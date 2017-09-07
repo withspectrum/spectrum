@@ -18,9 +18,11 @@ import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
 import {
   Title,
+  CommunityUpsellTitle,
   MiniTitle,
   LargeTitle,
   Subtitle,
+  CommunityUpsellSubtitle,
   MiniSubtitle,
   LargeSubtitle,
   Actions,
@@ -28,6 +30,7 @@ import {
   UpgradeError,
   Profile,
   Cost,
+  CommunityUpsellCost,
   LargeEmoji,
   UpsellIconContainer,
   SignupButton,

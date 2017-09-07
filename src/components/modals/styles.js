@@ -106,11 +106,26 @@ export const Description = styled.p`
   }
 `;
 
+export const UpsellDescription = styled(Description)`
+  padding: 8px 16px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background: ${props => props.theme.space.dark};
+  color: ${props => props.theme.text.reverse};
+
+  a {
+    color: ${props => props.theme.text.reverse};
+    font-weight: 600;
+    display: block;
+    margin-top: 4px;
+  }
+`;
+
 export const Notice = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 4px;
-  background: #FFF1CC;
+  background: #fff1cc;
   border: 1px solid #ffd566;
   color: #715818;
 `;

@@ -31,6 +31,7 @@ import {
   Upsell404Channel,
   UpsellRequestToJoinChannel,
 } from '../../components/upsell';
+import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
@@ -198,27 +199,40 @@ class ChannelViewPure extends Component {
               <ChannelProfile data={{ channel }} profileSize="full" />
 
               {loggedInUser &&
-                hasRights &&
+              hasRights && (
                 <NotificationsToggle
                   value={channel.channelPermissions.receiveNotifications}
                   channel={channel}
-                />}
+                />
+              )}
 
               {loggedInUser &&
-                isOwner &&
-                <PendingUsersNotification channel={channel} id={channel.id} />}
+              isOwner && (
+                <PendingUsersNotification channel={channel} id={channel.id} />
+              )}
             </Column>
 
             <Column type="primary" alignItems="center">
-              {!loggedInUser &&
-                <UpsellSignIn view={{ data: channel, type: 'channel' }} />}
+              {!loggedInUser && (
+                <UpsellSignIn view={{ data: channel, type: 'channel' }} />
+              )}
 
               {loggedInUser &&
-                hasRights &&
+              hasRights &&
+              !channel.community.isPro && (
+                <UpsellUpgradeCommunityPrivateChannel
+                  community={channel.community}
+                />
+              )}
+
+              {loggedInUser &&
+              hasRights &&
+              channel.community.isPro && (
                 <ThreadComposer
                   activeCommunity={communitySlug}
                   activeChannel={channelSlug}
-                />}
+                />
+              )}
 
               <ThreadFeedWithData
                 viewContext="channel"
@@ -250,11 +264,12 @@ class ChannelViewPure extends Component {
       return (
         <AppViewWrapper>
           <Titlebar noComposer />
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <LoadingProfile />
               <LoadingList />
-            </Column>}
+            </Column>
+          )}
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />

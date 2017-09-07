@@ -15,6 +15,7 @@ import { Upsell404User } from '../../components/upsell';
 import RecurringPaymentsList from './components/recurringPaymentsList';
 import EmailSettings from './components/emailSettings';
 import NotificationSettings from './components/notificationSettings';
+import Invoices from './components/invoices';
 import { GetUserProfile } from './queries';
 import { FlexCol } from '../../components/globals';
 import Titlebar from '../titlebar';
@@ -78,6 +79,7 @@ const UserSettings = ({ data, currentUser, match }) => {
           <EmailSettings largeOnly currentUser={data.user} />
           {'serviceWorker' in navigator &&
           'PushManager' in window && <NotificationSettings largeOnly />}
+          <Invoices />
         </Column>
       </AppViewWrapper>
     </FlexCol>

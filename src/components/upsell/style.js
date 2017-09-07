@@ -25,6 +25,11 @@ export const Title = styled.h1`
   letter-spacing: 0.2px;
 `;
 
+export const CommunityUpsellTitle = styled(Title)`
+  text-align: left;
+  font-size: 20px;
+`;
+
 export const MiniTitle = styled(Title)`
   font-weight: 700;
   font-size: 1rem;
@@ -65,6 +70,17 @@ export const Subtitle = styled.h2`
   }
 `;
 
+export const CommunityUpsellSubtitle = styled(Subtitle)`
+  text-align: left;
+  padding: 0;
+  font-size: 14px;
+  color: ${props => props.theme.text.default};
+
+  li {
+    margin-top: 16px;
+  }
+`;
+
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
@@ -72,9 +88,7 @@ export const MiniSubtitle = styled(Subtitle)`
   line-height: 1.4;
 `;
 
-export const SmallTitle = styled(Title)`
-  font-size: 18px;
-`;
+export const SmallTitle = styled(Title)`font-size: 18px;`;
 
 export const LargeTitle = styled(Title)`
   font-size: 40px;
@@ -83,17 +97,19 @@ export const LargeTitle = styled(Title)`
   margin-bottom: 16px;
 `;
 
-export const SmallSubtitle = styled(Subtitle)`
-  font-size: 15px;
-`;
+export const SmallSubtitle = styled(Subtitle)`font-size: 15px;`;
 
-export const LargeSubtitle = styled(Subtitle)`
-  font-size: 20px;
-`;
+export const LargeSubtitle = styled(Subtitle)`font-size: 20px;`;
 
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
   font-weight: bold;
+`;
+
+export const CommunityUpsellCost = styled(Cost)`
+  text-align: left;
+  padding: 0;
+  margin-bottom: 32px;
 `;
 
 export const NullCol = styled(FlexCol)`
@@ -322,9 +338,9 @@ export const SigninButton = styled.a`
 `;
 
 export const ButtonTwitter = styled(SigninButton)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.twitter.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
@@ -333,16 +349,16 @@ export const ButtonTwitter = styled(SigninButton)`
     color: ${props => props.theme.social.twitter.default};
   }
 
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.twitter.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'};
+  }
 `;
 
 export const ButtonFacebook = styled(SigninButton)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.facebook.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.facebook.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
@@ -351,16 +367,16 @@ export const ButtonFacebook = styled(SigninButton)`
     color: ${props => props.theme.social.facebook.default};
   }
 
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.facebook.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'};
+  }
 `;
 
 export const ButtonGoogle = styled(SigninButton)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.google.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.google.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
@@ -369,8 +385,8 @@ export const ButtonGoogle = styled(SigninButton)`
     color: ${props => props.theme.social.google.default};
   }
 
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.google.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'};
+  }
 `;

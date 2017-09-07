@@ -9,6 +9,8 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
+import { Link } from 'react-router-dom';
+// $FlowFixMe
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
@@ -23,8 +25,14 @@ import {
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
-import { modalStyles, Description } from '../styles';
-import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
+import { modalStyles, Description, UpsellDescription } from '../styles';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  Error,
+  Checkbox,
+} from '../../formElements';
 import { Form, Actions } from './style';
 
 class CreateChannelModal extends Component {
@@ -218,6 +226,7 @@ class CreateChannelModal extends Component {
 
   render() {
     const { isOpen, modalProps } = this.props;
+
     const {
       name,
       slug,
@@ -256,23 +265,22 @@ class CreateChannelModal extends Component {
               Channel Name
             </Input>
 
-            {nameError &&
-              <Error>Channel names can be up to 20 characters long.</Error>}
+            {nameError && (
+              <Error>Channel names can be up to 20 characters long.</Error>
+            )}
 
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
               {`sp.chat/${modalProps.slug}/`}
             </UnderlineInput>
 
-            {slugTaken &&
+            {slugTaken && (
               <Error>
-                This url is already taken - feel free to change it if
-                you're set on the name {name}!
-              </Error>}
+                This url is already taken - feel free to change it if you're set
+                on the name {name}!
+              </Error>
+            )}
 
-            {slugError &&
-              <Error>
-                Slugs can be up to 24 characters long.
-              </Error>}
+            {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
             <TextArea
               id="slug"
@@ -282,29 +290,47 @@ class CreateChannelModal extends Component {
               Describe it in 140 characters or less
             </TextArea>
 
-            {descriptionError &&
+            {descriptionError && (
               <Error>
                 Oop, that's more than 140 characters - try trimming that up.
-              </Error>}
+              </Error>
+            )}
 
-            {/* <Checkbox
+            <Checkbox
               id="isPrivate"
               checked={isPrivate}
               onChange={this.changePrivate}
+              disabled={!modalProps.isPro}
             >
               Private channel
-            </Checkbox> */}
+            </Checkbox>
 
-            {isPrivate
-              ? <Description>
-                  Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
-                </Description>
-              : <Description>
-                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members. If you want to create private channels,
-                  {' '}
-                  <a href="mailto:hi@spectrum.chat">get in touch</a>
-                  .
-                </Description>}
+            {!modalProps.isPro && (
+              <UpsellDescription>
+                Pro communities can create private channels to protect threads,
+                messages, and manually approve all new members.
+                <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
+                  Learn more
+                </Link>
+              </UpsellDescription>
+            )}
+
+            {modalProps.isPro &&
+            isPrivate && (
+              <Description>
+                Only approved people on Spectrum can see the threads, messages,
+                and members in this channel. You can manually approve users who
+                request to join this channel.
+              </Description>
+            )}
+
+            {modalProps.isPro &&
+            !isPrivate && (
+              <Description>
+                Anyone on Spectrum can join this channel, post threads and
+                messages, and will be able to see other members.
+              </Description>
+            )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
@@ -317,10 +343,11 @@ class CreateChannelModal extends Component {
               </Button>
             </Actions>
 
-            {createError &&
+            {createError && (
               <Error>
                 Please fix any errors above before creating this community.
-              </Error>}
+              </Error>
+            )}
           </Form>
         </ModalContainer>
       </Modal>

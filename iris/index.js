@@ -36,6 +36,9 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
+import stripeRoutes from './routes/stripe';
+app.use('/stripe', stripeRoutes);
+
 // In production use express to server-side render the React app
 // In development we don't server-side render to get live reloading etc.
 if (IS_PROD || process.env.DEV_SSR) {

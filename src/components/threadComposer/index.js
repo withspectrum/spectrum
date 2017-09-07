@@ -118,7 +118,12 @@ class ThreadComposerWithData extends Component {
         channel =>
           channel.channelPermissions.isMember ||
           channel.channelPermissions.isOwner
-      );
+      )
+      .filter(channel => {
+        if (!channel.isPrivate) return channel;
+        if (!channel.community.isPro) return null;
+        return channel;
+      });
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
