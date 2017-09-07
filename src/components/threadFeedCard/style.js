@@ -80,7 +80,8 @@ export const Attachments = styled(FlexRow)`
   align-self: stretch;
   align-items: center;
   justify-content: space-between;
-  margin: 12px 0 8px;
+  margin: 0;
+  margin-top: 8px;
 `;
 
 export const CreatorName = styled.span`
