@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
-import { SERVER_URL, CLIENT_URL } from '../../api';
+import { SERVER_URL, CLIENT_URL } from '../../api/constants';
 import {
   LargeTitle,
   LargeSubtitle,
@@ -73,15 +73,11 @@ export class Login extends Component {
           <UpsellIconContainer>
             <Icon glyph={'emoji'} size={64} />
           </UpsellIconContainer>
-          <LargeTitle>
-            {viewTitle}
-          </LargeTitle>
-          <LargeSubtitle>
-            {viewSubtitle}
-          </LargeSubtitle>
+          <LargeTitle>{viewTitle}</LargeTitle>
+          <LargeSubtitle>{viewSubtitle}</LargeSubtitle>
 
           <SigninButtonsContainer noShadow>
-            {preferredSigninMethod &&
+            {preferredSigninMethod && (
               <Col>
                 <ButtonTwitter
                   preferred={preferredSigninMethod === 'twitter'}
@@ -112,9 +108,10 @@ export class Login extends Component {
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
                 </ButtonGoogle>
-              </Col>}
+              </Col>
+            )}
 
-            {!preferredSigninMethod &&
+            {!preferredSigninMethod && (
               <Col>
                 <ButtonTwitter
                   preferred
@@ -142,7 +139,8 @@ export class Login extends Component {
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
                 </ButtonGoogle>
-              </Col>}
+              </Col>
+            )}
           </SigninButtonsContainer>
 
           <CodeOfConduct>

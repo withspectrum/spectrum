@@ -9,35 +9,35 @@ export const Cluster = styled.img`
 `;
 
 export const ClusterOne = styled(Cluster)`
-	max-width: 120px;
-	max-height: 120px;
-	top: 10%;
-	left: 10%;
-	z-index: ${zIndex.background};
+  max-width: 120px;
+  max-height: 120px;
+  top: 10%;
+  left: 10%;
+  z-index: ${zIndex.background};
 `;
 
 export const ClusterTwo = styled(Cluster)`
-	max-width: 160px;
-	max-height: 160px;
-	top: 60%;
-	right: 10%;
-	z-index: ${zIndex.background};
+  max-width: 160px;
+  max-height: 160px;
+  top: 60%;
+  right: 10%;
+  z-index: ${zIndex.background};
 `;
 
 export const ClusterThree = styled(Cluster)`
-	max-width: 80px;
-	max-height: 80px;
-	top: 10%;
-	right: 40%;
-	z-index: ${zIndex.background};
+  max-width: 80px;
+  max-height: 80px;
+  top: 10%;
+  right: 40%;
+  z-index: ${zIndex.background};
 `;
 
 export const ClusterFour = styled(Cluster)`
-	max-width: 80px;
-	max-height: 80px;
-	top: 80%;
-	left: 40%;
-	z-index: ${zIndex.background};
+  max-width: 80px;
+  max-height: 80px;
+  top: 80%;
+  left: 40%;
+  z-index: ${zIndex.background};
 `;
 
 export const Constellations = styled.div`
@@ -87,10 +87,11 @@ export const ConversationWrapper = styled.div`
   }
 `;
 
-export const Conversation = () =>
+export const Conversation = () => (
   <ConversationWrapper>
     <img src="/img/conversation.svg" />
-  </ConversationWrapper>;
+  </ConversationWrapper>
+);
 
 const DiscoverImage = styled.img`
   position: relative;

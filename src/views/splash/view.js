@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 // @Flow Fix Me
 import { Link } from 'react-router-dom';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../../api/constants';
 import { Button } from '../../components/buttons';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
@@ -38,10 +38,7 @@ import {
 
 // const Link = styled.a``;
 
-const Section = props =>
-  <Theme {...props}>
-    {props.children}
-  </Theme>;
+const Section = props => <Theme {...props}>{props.children}</Theme>;
 
 export const Overview = props => {
   const Text = styled(FlexCol)`
@@ -87,9 +84,7 @@ export const Overview = props => {
     }
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 16px;
-  `;
+  const ThisPrimaryCTA = styled(PrimaryCTA)`font-size: 16px;`;
 
   const ThisButton = styled(SecondaryCTA)`
     padding: 12px 16px;
@@ -144,9 +139,7 @@ export const Centralized = props => {
     }
   `;
 
-  const ThisCopy = styled(Copy)`
-    margin-top: 16px;
-  `;
+  const ThisCopy = styled(Copy)`margin-top: 16px;`;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     margin-top: 32px;
@@ -218,9 +211,7 @@ export const CommunitySearch = props => {
     }
   `;
 
-  const ThisTagline = styled(Tagline)`
-    margin-bottom: 16px;
-  `;
+  const ThisTagline = styled(Tagline)`margin-bottom: 16px;`;
 
   const ThisCopy = styled(Copy)`
     font-size: 18px;
@@ -257,9 +248,7 @@ export const Chat = props => {
     }
   `;
 
-  const ThisCopy = styled(Copy)`
-    margin-top: 16px;
-  `;
+  const ThisCopy = styled(Copy)`margin-top: 16px;`;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     background-color: ${props => props.theme.brand.alt};
@@ -321,9 +310,7 @@ export const Sell = props => {
     margin: 40px 0;
   `;
 
-  const ThisContent = styled(Content)`
-
-  `;
+  const ThisContent = styled(Content)``;
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 0;
@@ -345,9 +332,7 @@ export const Sell = props => {
     }
   `;
 
-  const ThisSection = styled(Section)`
-    margin-bottom: 40px;
-  `;
+  const ThisSection = styled(Section)`margin-bottom: 40px;`;
 
   return (
     <ThisSection goop={2} background="dark">

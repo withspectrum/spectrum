@@ -21,12 +21,13 @@ const ConnectedSwitch = connect(state => ({
 }))(Switch);
 
 const signedOutFallback = (Component, FallbackComponent) => {
-  return props =>
+  return props => (
     <ConnectedSwitch
       {...props}
       FallbackComponent={FallbackComponent}
       Component={Component}
-    />;
+    />
+  );
 };
 
 export default signedOutFallback;

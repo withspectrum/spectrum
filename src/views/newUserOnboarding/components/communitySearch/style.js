@@ -30,8 +30,7 @@ export const SearchInputWrapper = styled(FlexRow)`
   color: ${props => props.theme.text.placeholder};
 `;
 
-export const SearchIcon = styled(Icon)`
-`;
+export const SearchIcon = styled(Icon)``;
 
 export const SearchInput = styled.input`
   font-size: 18px;

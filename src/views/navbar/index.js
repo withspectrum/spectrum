@@ -366,6 +366,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -392,6 +393,7 @@ class Navbar extends Component {
               <IconLink
                 data-active={history.location.pathname === '/notifications'}
                 to="/notifications"
+                rel="nofollow"
               >
                 <Icon
                   glyph={
@@ -415,9 +417,11 @@ class Navbar extends Component {
                   `/users/${loggedInUser.username}`
                 }
                 to={
-                  loggedInUser.username
-                    ? `/users/${loggedInUser.username}`
-                    : '/'
+                  loggedInUser.username ? (
+                    `/users/${loggedInUser.username}`
+                  ) : (
+                    '/'
+                  )
                 }
               >
                 <UserProfileAvatar
@@ -437,6 +441,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -449,6 +454,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname === '/notifications'}
               to="/notifications"
+              rel="nofollow"
               onClick={this.markAllNotificationsSeen}
             >
               <Icon
@@ -501,10 +507,11 @@ class Navbar extends Component {
     } else {
       return (
         <Nav>
-          {isMobile ||
+          {isMobile || (
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>}
+            </LogoLink>
+          )}
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

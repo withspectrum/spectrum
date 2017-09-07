@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import StripeCheckout from 'react-stripe-checkout';
-import { PUBLIC_STRIPE_KEY } from '../../../api';
+import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
 import { upgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
@@ -168,10 +168,11 @@ class UpsellUpgradeCommunityPrivateChannelPure extends Component {
 
     return (
       <NullCard heading="This channel has been closed." copy={str}>
-        {community.communityPermissions.isOwner &&
+        {community.communityPermissions.isOwner && (
           <Button onClick={this.openCommunityUpgradeModal}>
             Upgrade {community.name} to Standard
-          </Button>}
+          </Button>
+        )}
       </NullCard>
     );
   }

@@ -1,6 +1,5 @@
 // @flow
 import { track, set } from '../helpers/events';
-import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
@@ -8,17 +7,20 @@ export const logout = dispatch => {
   track(`user`, `sign out`, null);
   // clear localStorage
   removeItemFromStorage('spectrum');
-  // clear Apollo's query cache
-  clearApolloStore();
-  // redirect to home page
-  window.location.href =
-    process.env.NODE_ENV === 'production'
-      ? '/auth/logout'
-      : 'http://localhost:3001/auth/logout';
-
-  dispatch({
-    type: 'CLEAR_USER',
-  });
+  import('../api')
+    .then(module => module.clearApolloStore)
+    .then(clearApolloStore => {
+      // clear Apollo's query cache
+      clearApolloStore();
+      // redirect to home page
+      window.location.href =
+        process.env.NODE_ENV === 'production'
+          ? '/auth/logout'
+          : 'http://localhost:3001/auth/logout';
+      dispatch({
+        type: 'CLEAR_USER',
+      });
+    });
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {

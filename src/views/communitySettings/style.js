@@ -32,9 +32,7 @@ export const MoreLink = styled(Link)`
   color: ${({ theme }) => theme.brand.alt};
 `;
 
-export const StyledCard = styled(Card)`
-  padding: 16px 16px 16px 20px;
-`;
+export const StyledCard = styled(Card)`padding: 16px 16px 16px 20px;`;
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -132,13 +130,9 @@ export const CustomMessageTextAreaStyles = {
   fontSize: '16px',
 };
 
-export const Title = styled(H1)`
-  font-size: 20px;
-`;
+export const Title = styled(H1)`font-size: 20px;`;
 
-export const Pitch = styled(FlexCol)`
-  margin: 0 0 32px 0;
-`;
+export const Pitch = styled(FlexCol)`margin: 0 0 32px 0;`;
 
 export const PitchItem = styled(FlexCol)`
   display: inline-block;

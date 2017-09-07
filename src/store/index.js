@@ -1,9 +1,8 @@
 /* eslint-disable */
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { crashReporter } from '../helpers/events';
-import reducers from '../reducers';
-import { client } from '../api';
+import crashReporter from '../helpers/sentry-redux-middleware';
+import getReducers from '../reducers';
 
 // this enables the chrome devtools for redux only in development
 const composeEnhancers =
@@ -13,21 +12,22 @@ const composeEnhancers =
   compose;
 
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
-export const initStore = initialState => {
+// Allow dependency injection of extra reducers and middleware, we need this for SSR
+export const initStore = (initialState, { middleware, reducers }) => {
   if (initialState) {
     return createStore(
-      reducers,
+      getReducers(reducers),
       initialState,
       composeEnhancers(
-        applyMiddleware(client.middleware(), thunkMiddleware, crashReporter)
+        applyMiddleware(...middleware, thunkMiddleware, crashReporter)
       )
     );
   } else {
     return createStore(
-      reducers,
+      getReducers(reducers),
       {},
       composeEnhancers(
-        applyMiddleware(client.middleware(), thunkMiddleware, crashReporter)
+        applyMiddleware(...middleware, thunkMiddleware, crashReporter)
       )
     );
   }
