@@ -21,13 +21,14 @@ export const addQueue = (name: string, data: any, opts: any) => {
 
 export const createJob = (
   name: string, // name of the queue the cron job should trigger
-  pattern: string // cron pattern
+  pattern: string, // cron pattern
+  timeframe?: string // an optional parameter to get passed into the addQueue function for adding variance to the timeframe of a cronjob
 ) => {
   try {
     console.log('🕑 New cron job initiated');
     return addQueue(
       name,
-      {},
+      { timeframe },
       {
         removeOnComplete: true,
         removeOnFail: true,

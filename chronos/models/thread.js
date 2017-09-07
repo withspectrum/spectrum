@@ -1,16 +1,25 @@
 // @flow
 const { db } = require('./db');
 
-export const getActiveThreadsInPastWeek = (): Promise<Array<Object>> => {
+export const getActiveThreadsInTimeframe = (
+  timeframe: string
+): Promise<Array<Object>> => {
+  let range;
+  switch (timeframe) {
+    case 'daily': {
+      range = 60 * 60 * 24;
+    }
+    case 'weekly': {
+      range = 60 * 60 * 24 * 7;
+    }
+    default: {
+      range = 60 * 60 * 24 * 7;
+    } // default to weekly
+  }
+
   return db
     .table('threads')
-    .filter(
-      db.row('lastActive').during(
-        // Change this to 60*60*24*7 to get weekly active users
-        db.now().sub(60 * 60 * 24 * 7),
-        db.now()
-      )
-    )
+    .filter(db.row('lastActive').during(db.now().sub(range), db.now()))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };

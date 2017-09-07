@@ -15,23 +15,24 @@ import {
   NEW_MESSAGE_COUNT_WEIGHT,
 } from './constants';
 const sendWeeklyDigestEmailQueue = createQueue(SEND_WEEKLY_DIGEST_EMAIL);
-import { getActiveThreadsInPastWeek } from '../models/thread';
-import { getUsersForWeeklyDigest } from '../models/usersSettings';
+import { getActiveThreadsInTimeframe } from '../models/thread';
+import { getUsersForDigest } from '../models/usersSettings';
 import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels';
 import { getUsersCommunityIds } from '../models/usersCommunities';
 import { getTotalMessageCount, getNewMessageCount } from '../models/message';
 import { getCommunityById, getTopCommunities } from '../models/community';
 
 export default job => {
+  const { timeframe } = job;
   debug(`\nnew job: ${job.id}`);
-  debug(`\nprocessing weekly digest`);
+  debug(`\nprocessing ${timeframe} digest`);
 
   /*
       1. Get all threads in the database that were active in the last week. For each thread, construct a new object containing the thread data and the message count from the server
   */
-  const allActiveThreadsThisWeek = async () => {
+  const allActiveThreadsInTimeframe = async () => {
     // returns array of thread ids
-    const threadIds = await getActiveThreadsInPastWeek();
+    const threadIds = await getActiveThreadsInTimeframe(timeframe);
     debug('\n ⚙️ Fetched all active threads this week');
 
     // if no threadIds, escape
@@ -73,7 +74,7 @@ export default job => {
   */
   const activeThreadsByChannel = async () => {
     // get all the active threads from this week
-    const topThreads = await allActiveThreadsThisWeek();
+    const topThreads = await allActiveThreadsInTimeframe();
 
     // if no topThreads, escape
     if (!topThreads || topThreads.length === 0) {
@@ -131,9 +132,9 @@ export default job => {
       b. for each person, get an array of channelIds where that user is a member
       c. determine if there is any overlap between the user's channels and the active threads from the past week. Note: this filters out people who are members of inactive communities, even if they are opted in to receive a weekly digest
   */
-  const eligibleUsersForWeeklyDigest = async () => {
+  const eligibleUsersForDigest = async () => {
     // get users who have opted to receive a weekly digest
-    const users = await getUsersForWeeklyDigest();
+    const users = await getUsersForDigest(timeframe);
     debug('\n ⚙️ Fetched users who want to receive a weekly digest');
 
     // for each user who wants a weekly digest, fetch an array of channelIds where they are a member
@@ -195,7 +196,7 @@ export default job => {
     }
 
     // we don't want to send a weekly digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
-    const eligibleUsersForWeeklyDigest = rawThreadsForUsersEmail
+    const eligibleUsersForDigest = rawThreadsForUsersEmail
       .filter(user => user.threads.length > MIN_THREADS_REQUIRED_FOR_DIGEST)
       // and finally, sort the user's threads in descending order by message count
       .map(({ channels, ...user }) => {
@@ -241,11 +242,11 @@ export default job => {
         messageCount: Number
       }
     */
-    return eligibleUsersForWeeklyDigest;
+    return eligibleUsersForDigest;
   };
 
   const processSendWeeklyDigests = async () => {
-    const eligibleUsers = await eligibleUsersForWeeklyDigest();
+    const eligibleUsers = await eligibleUsersForDigest();
     debug('\n ⚙️  Got eligible users');
     const topCommunities = await getTopCommunities(20);
     debug('\n ⚙️  Got top communities');
