@@ -15,8 +15,6 @@ const server = createWorker({
   [SEND_WEEKLY_DIGEST_EMAIL]: processSendWeeklyDigestEmail,
 });
 
-console.log(weeklyDigest);
-
 console.log(
   `🗄 Crons open for business ${(process.env.NODE_ENV === 'production' &&
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||

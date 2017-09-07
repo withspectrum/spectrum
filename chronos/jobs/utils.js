@@ -13,9 +13,11 @@ if (process.env.NODE_ENV !== 'development') {
   ).install();
 }
 
-export const addQueue = (name: string, data: any) => {
+export const addQueue = (name: string, data: any, opts: any) => {
   const worker = createQueue(name);
-  return worker.add({ ...data }).catch(err => Raven.captureException(err));
+  return worker
+    .add({ ...data }, { ...opts })
+    .catch(err => Raven.captureException(err));
 };
 
 export const createJob = (

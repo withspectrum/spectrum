@@ -95,28 +95,28 @@ module.exports = /******/ (function(modules) {
       /**
  * Database setup is done here
  */
-      var fs = __webpack_require__(13);
-      var path = __webpack_require__(14);
-      var IS_PROD = !process.env.FORCE_DEV && 'development' === 'production';
+      const fs = __webpack_require__(11);
+      const path = __webpack_require__(12);
+      const IS_PROD = !process.env.FORCE_DEV && 'development' === 'production';
 
-      var DEFAULT_CONFIG = {
+      const DEFAULT_CONFIG = {
         db: 'spectrum',
       };
 
-      var PRODUCTION_CONFIG = {
+      const PRODUCTION_CONFIG = {
         password: process.env.COMPOSE_RETHINKDB_PASSWORD,
         host: process.env.COMPOSE_RETHINKDB_URL,
         port: process.env.COMPOSE_RETHINKDB_PORT,
         ssl: {
-          ca: IS_PROD && __webpack_require__(15),
+          ca: IS_PROD && __webpack_require__(13),
         },
       };
 
-      var config = IS_PROD
+      const config = IS_PROD
         ? _extends({}, DEFAULT_CONFIG, PRODUCTION_CONFIG)
         : _extends({}, DEFAULT_CONFIG);
 
-      var r = __webpack_require__(16)(config);
+      var r = __webpack_require__(14)(config);
 
       module.exports = { db: r };
 
@@ -163,8 +163,8 @@ module.exports = /******/ (function(modules) {
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
-      var Queue = __webpack_require__(11);
-      var Raven = __webpack_require__(3);
+      const Queue = __webpack_require__(9);
+      const Raven = __webpack_require__(3);
 
       if (false) {
         Raven.config(
@@ -175,7 +175,7 @@ module.exports = /******/ (function(modules) {
         ).install();
       }
 
-      var redis = false
+      const redis = false
         ? {
             port: process.env.COMPOSE_REDIS_PORT,
             host: process.env.COMPOSE_REDIS_URL,
@@ -184,12 +184,12 @@ module.exports = /******/ (function(modules) {
         : undefined; // Use the local instance of Redis in development by not passing any connection string
 
       // Leave the options undefined if we're using the default redis connection
-      var options = redis && { redis: redis };
+      const options = redis && { redis: redis };
 
       function createQueue(name /*: string */) {
-        var queue = new Queue(name, options);
-        queue.on('stalled', function(job) {
-          var message = 'Job#' + job.id + ' stalled, processing again.';
+        const queue = new Queue(name, options);
+        queue.on('stalled', job => {
+          const message = `Job#${job.id} stalled, processing again.`;
           if (true) {
             console.error(message);
             return;
@@ -226,23 +226,23 @@ module.exports = /******/ (function(modules) {
 
       // counts for processing
       // the thread must have at least # total messages
-      var MIN_TOTAL_MESSAGE_COUNT = (exports.MIN_TOTAL_MESSAGE_COUNT = 1);
+      const MIN_TOTAL_MESSAGE_COUNT = (exports.MIN_TOTAL_MESSAGE_COUNT = 1);
       // # of the total messages must have been sent in the past week
-      var MIN_NEW_MESSAGE_COUNT = (exports.MIN_NEW_MESSAGE_COUNT = 1);
+      const MIN_NEW_MESSAGE_COUNT = (exports.MIN_NEW_MESSAGE_COUNT = 1);
       // # only show the top # threads per channel
-      var MAX_THREAD_COUNT_PER_CHANNEL = (exports.MAX_THREAD_COUNT_PER_CHANNEL = 10);
+      const MAX_THREAD_COUNT_PER_CHANNEL = (exports.MAX_THREAD_COUNT_PER_CHANNEL = 10);
       // don't send the digest if the email will have less than # total threads to show
-      var MIN_THREADS_REQUIRED_FOR_DIGEST = (exports.MIN_THREADS_REQUIRED_FOR_DIGEST = 1);
+      const MIN_THREADS_REQUIRED_FOR_DIGEST = (exports.MIN_THREADS_REQUIRED_FOR_DIGEST = 1);
       // cap the digest at # threads
-      var MAX_THREAD_COUNT_PER_DIGEST = (exports.MAX_THREAD_COUNT_PER_DIGEST = 10);
+      const MAX_THREAD_COUNT_PER_DIGEST = (exports.MAX_THREAD_COUNT_PER_DIGEST = 10);
       // upsell communities to join if the user has joined less than # communities
-      var COMMUNITY_UPSELL_THRESHOLD = (exports.COMMUNITY_UPSELL_THRESHOLD = 5);
+      const COMMUNITY_UPSELL_THRESHOLD = (exports.COMMUNITY_UPSELL_THRESHOLD = 5);
 
       // generate a score for each thread based on the total number of messages and number of new messages
       // new messages rank higher in order to devalue old threads that have a large amount of old messages (like pinned posts)
       // the end weekly digest will have threads sorted by the weight of (TOTAL * WEIGHT) + (NEW * WEIGHT)
-      var TOTAL_MESSAGE_COUNT_WEIGHT = (exports.TOTAL_MESSAGE_COUNT_WEIGHT = 0.1);
-      var NEW_MESSAGE_COUNT_WEIGHT = (exports.NEW_MESSAGE_COUNT_WEIGHT = 1.5);
+      const TOTAL_MESSAGE_COUNT_WEIGHT = (exports.TOTAL_MESSAGE_COUNT_WEIGHT = 0.1);
+      const NEW_MESSAGE_COUNT_WEIGHT = (exports.NEW_MESSAGE_COUNT_WEIGHT = 1.5);
 
       /*
   Example weighting:
@@ -252,7 +252,7 @@ module.exports = /******/ (function(modules) {
 */
 
       // queues
-      var SEND_WEEKLY_DIGEST_EMAIL = (exports.SEND_WEEKLY_DIGEST_EMAIL =
+      const SEND_WEEKLY_DIGEST_EMAIL = (exports.SEND_WEEKLY_DIGEST_EMAIL =
         'send weekly digest email');
 
       /***/
@@ -275,61 +275,36 @@ module.exports = /******/ (function(modules) {
 
       var _constants = __webpack_require__(4);
 
-      var _jobs = __webpack_require__(22);
+      var _jobs = __webpack_require__(20);
 
       function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
       }
 
-      function _defineProperty(obj, key, value) {
-        if (key in obj) {
-          Object.defineProperty(obj, key, {
-            value: value,
-            enumerable: true,
-            configurable: true,
-            writable: true,
-          });
-        } else {
-          obj[key] = value;
-        }
-        return obj;
-      }
+      const debug = __webpack_require__(2)('hermes');
+      const createWorker = __webpack_require__(24);
 
-      var debug = __webpack_require__(2)('hermes');
-      var createWorker = __webpack_require__(26);
-
-      var PORT = process.env.PORT || 3004;
+      const PORT = process.env.PORT || 3004;
 
       console.log('\n✉️ Chronos, the cron job worker, is starting...');
       debug('Logging with debug enabled!');
       console.log('');
 
-      var server = createWorker(
-        _defineProperty(
-          {},
-          _constants.SEND_WEEKLY_DIGEST_EMAIL,
-          _sendWeeklyDigestEmail2.default
-        )
-      );
-
-      console.log(_jobs.weeklyDigest);
+      const server = createWorker({
+        [_constants.SEND_WEEKLY_DIGEST_EMAIL]: _sendWeeklyDigestEmail2.default,
+      });
 
       console.log(
-        '\uD83D\uDDC4 Crons open for business ' +
-          (('development' === 'production' &&
-            'at ' +
-              process.env.COMPOSE_REDIS_URL +
-              ':' +
-              process.env.COMPOSE_REDIS_PORT) ||
-            'locally')
+        `🗄 Crons open for business ${('development' === 'production' &&
+          `at ${process.env.COMPOSE_REDIS_URL}:${process.env
+            .COMPOSE_REDIS_PORT}`) ||
+          'locally'}`
       );
 
-      server.listen(PORT, 'localhost', function() {
+      server.listen(PORT, 'localhost', () => {
         console.log(
-          '\uD83D\uDC89 Healthcheck server running at ' +
-            server.address().address +
-            ':' +
-            server.address().port
+          `💉 Healthcheck server running at ${server.address()
+            .address}:${server.address().port}`
         );
       });
 
@@ -342,10 +317,6 @@ module.exports = /******/ (function(modules) {
       Object.defineProperty(exports, '__esModule', {
         value: true,
       });
-
-      var _regenerator = __webpack_require__(8);
-
-      var _regenerator2 = _interopRequireDefault(_regenerator);
 
       var _extends =
         Object.assign ||
@@ -361,7 +332,7 @@ module.exports = /******/ (function(modules) {
           return target;
         };
 
-      var _lodash = __webpack_require__(10);
+      var _lodash = __webpack_require__(8);
 
       var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -371,31 +342,20 @@ module.exports = /******/ (function(modules) {
 
       var _constants = __webpack_require__(4);
 
-      var _thread = __webpack_require__(12);
+      var _thread = __webpack_require__(10);
 
-      var _usersSettings = __webpack_require__(17);
+      var _usersSettings = __webpack_require__(15);
 
-      var _usersChannels = __webpack_require__(18);
+      var _usersChannels = __webpack_require__(16);
 
-      var _usersCommunities = __webpack_require__(19);
+      var _usersCommunities = __webpack_require__(17);
 
-      var _message = __webpack_require__(20);
+      var _message = __webpack_require__(18);
 
-      var _community = __webpack_require__(21);
+      var _community = __webpack_require__(19);
 
       function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
-      }
-
-      function _toConsumableArray(arr) {
-        if (Array.isArray(arr)) {
-          for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-            arr2[i] = arr[i];
-          }
-          return arr2;
-        } else {
-          return Array.from(arr);
-        }
       }
 
       function _objectWithoutProperties(obj, keys) {
@@ -408,348 +368,134 @@ module.exports = /******/ (function(modules) {
         return target;
       }
 
-      function _asyncToGenerator(fn) {
-        return function() {
-          var gen = fn.apply(this, arguments);
-          return new Promise(function(resolve, reject) {
-            function step(key, arg) {
-              try {
-                var info = gen[key](arg);
-                var value = info.value;
-              } catch (error) {
-                reject(error);
-                return;
-              }
-              if (info.done) {
-                resolve(value);
-              } else {
-                return Promise.resolve(value).then(
-                  function(value) {
-                    step('next', value);
-                  },
-                  function(err) {
-                    step('throw', err);
-                  }
-                );
-              }
-            }
-            return step('next');
-          });
-        };
-      }
-
-      var debug = __webpack_require__(2)(
+      const debug = __webpack_require__(2)(
         'chronos:queue:send-weekly-digest-email'
       );
       // $FlowFixMe
 
-      var sendWeeklyDigestEmailQueue = (0, _createQueue2.default)(
+      const sendWeeklyDigestEmailQueue = (0, _createQueue2.default)(
         _constants.SEND_WEEKLY_DIGEST_EMAIL
       );
 
-      exports.default = function(job) {
-        debug('\nnew job: ' + job.id);
-        debug('\nprocessing weekly digest');
+      exports.default = job => {
+        debug(`\nnew job: ${job.id}`);
+        debug(`\nprocessing weekly digest`);
 
         /*
       1. Get all threads in the database that were active in the last week. For each thread, construct a new object containing the thread data and the message count from the server
   */
-        var allActiveThreadsThisWeek = (function() {
-          var _ref = _asyncToGenerator(
-            _regenerator2.default.mark(function _callee2() {
-              var threadIds,
-                messageCountPromises,
-                messageCounts,
-                filteredTopThreads;
-              return _regenerator2.default.wrap(
-                function _callee2$(_context2) {
-                  while (1) {
-                    switch ((_context2.prev = _context2.next)) {
-                      case 0:
-                        _context2.next = 2;
-                        return (0, _thread.getActiveThreadsInPastWeek)();
+        const allActiveThreadsThisWeek = async () => {
+          // returns array of thread ids
+          const threadIds = await (0, _thread.getActiveThreadsInPastWeek)();
+          debug('\n ⚙️ Fetched all active threads this week');
 
-                      case 2:
-                        threadIds = _context2.sent;
+          // if no threadIds, escape
+          if (!threadIds || threadIds.length === 0) {
+            debug('\n ❌  No active threads found');
+            return;
+          }
 
-                        debug('\n ⚙️ Fetched all active threads this week');
+          // for each thread that was active in the last week, return a new array containing a record for each thread with the thread data and the message count
+          const messageCountPromises = threadIds.map(async _ref => {
+            let { communityId, channelId, id, content } = _ref,
+              thread = _objectWithoutProperties(_ref, [
+                'communityId',
+                'channelId',
+                'id',
+                'content',
+              ]);
 
-                        // if no threadIds, escape
+            return {
+              communityId,
+              channelId,
+              id,
+              title: content.title,
+              newMessageCount: await (0, _message.getNewMessageCount)(id),
+              totalMessageCount: await (0, _message.getTotalMessageCount)(id),
+            };
+          });
 
-                        if (!(!threadIds || threadIds.length === 0)) {
-                          _context2.next = 7;
-                          break;
-                        }
+          // promise all the active threads and message counts
+          const messageCounts = await Promise.all(messageCountPromises);
+          debug('\n ⚙️ Fetched message counts for threads');
 
-                        debug('\n ❌  No active threads found');
-                        return _context2.abrupt('return');
+          // remove any threads where the total message count is less than 10
+          const filteredTopThreads = messageCounts
+            .filter(
+              thread =>
+                thread.totalMessageCount >= _constants.MIN_TOTAL_MESSAGE_COUNT
+            )
+            .filter(
+              thread =>
+                thread.newMessageCount >= _constants.MIN_NEW_MESSAGE_COUNT
+            );
+          debug('\n ⚙️ Filtered threads with enough messages');
 
-                      case 7:
-                        // for each thread that was active in the last week, return a new array containing a record for each thread with the thread data and the message count
-                        messageCountPromises = threadIds.map(
-                          (function() {
-                            var _ref3 = _asyncToGenerator(
-                              _regenerator2.default.mark(function _callee(
-                                _ref2
-                              ) {
-                                var communityId = _ref2.communityId,
-                                  channelId = _ref2.channelId,
-                                  id = _ref2.id,
-                                  content = _ref2.content,
-                                  thread = _objectWithoutProperties(_ref2, [
-                                    'communityId',
-                                    'channelId',
-                                    'id',
-                                    'content',
-                                  ]);
-
-                                return _regenerator2.default.wrap(
-                                  function _callee$(_context) {
-                                    while (1) {
-                                      switch ((_context.prev = _context.next)) {
-                                        case 0:
-                                          _context.t0 = communityId;
-                                          _context.t1 = channelId;
-                                          _context.t2 = id;
-                                          _context.t3 = content.title;
-                                          _context.next = 6;
-                                          return (
-                                            0,
-                                            _message.getNewMessageCount
-                                          )(id);
-
-                                        case 6:
-                                          _context.t4 = _context.sent;
-                                          _context.next = 9;
-                                          return (
-                                            0,
-                                            _message.getTotalMessageCount
-                                          )(id);
-
-                                        case 9:
-                                          _context.t5 = _context.sent;
-                                          return _context.abrupt('return', {
-                                            communityId: _context.t0,
-                                            channelId: _context.t1,
-                                            id: _context.t2,
-                                            title: _context.t3,
-                                            newMessageCount: _context.t4,
-                                            totalMessageCount: _context.t5,
-                                          });
-
-                                        case 11:
-                                        case 'end':
-                                          return _context.stop();
-                                      }
-                                    }
-                                  },
-                                  _callee,
-                                  undefined
-                                );
-                              })
-                            );
-
-                            return function(_x) {
-                              return _ref3.apply(this, arguments);
-                            };
-                          })()
-                        );
-
-                        // promise all the active threads and message counts
-
-                        _context2.next = 10;
-                        return Promise.all(messageCountPromises);
-
-                      case 10:
-                        messageCounts = _context2.sent;
-
-                        debug('\n ⚙️ Fetched message counts for threads');
-
-                        // remove any threads where the total message count is less than 10
-                        filteredTopThreads = messageCounts
-                          .filter(function(thread) {
-                            return (
-                              thread.totalMessageCount >=
-                              _constants.MIN_TOTAL_MESSAGE_COUNT
-                            );
-                          })
-                          .filter(function(thread) {
-                            return (
-                              thread.newMessageCount >=
-                              _constants.MIN_NEW_MESSAGE_COUNT
-                            );
-                          });
-
-                        debug('\n ⚙️ Filtered threads with enough messages');
-
-                        // returns an array of threads that are active in the last week and have the minimum required message count to be considered valuable
-                        return _context2.abrupt('return', filteredTopThreads);
-
-                      case 15:
-                      case 'end':
-                        return _context2.stop();
-                    }
-                  }
-                },
-                _callee2,
-                undefined
-              );
-            })
-          );
-
-          return function allActiveThreadsThisWeek() {
-            return _ref.apply(this, arguments);
-          };
-        })();
+          // returns an array of threads that are active in the last week and have the minimum required message count to be considered valuable
+          return filteredTopThreads;
+        };
 
         /*
       2. Given an array of all the active threads this week that contain the minimum message count required, we now aggregate them by the channel where they were posted.
        The return value from this function is an object with keys representing channelIds and values representing an array of threads
   */
-        var activeThreadsByChannel = (function() {
-          var _ref4 = _asyncToGenerator(
-            _regenerator2.default.mark(function _callee4() {
-              var topThreads,
-                obj,
-                getCommunity,
-                topThreadsWithCommunityDataPromises,
-                threadsWithCommunityData,
-                finalThreads,
-                finishedTopThreads;
-              return _regenerator2.default.wrap(
-                function _callee4$(_context4) {
-                  while (1) {
-                    switch ((_context4.prev = _context4.next)) {
-                      case 0:
-                        _context4.next = 2;
-                        return allActiveThreadsThisWeek();
+        const activeThreadsByChannel = async () => {
+          // get all the active threads from this week
+          const topThreads = await allActiveThreadsThisWeek();
 
-                      case 2:
-                        topThreads = _context4.sent;
+          // if no topThreads, escape
+          if (!topThreads || topThreads.length === 0) {
+            debug('\n ❌  No topThreads found');
+            return;
+          }
 
-                        if (!(!topThreads || topThreads.length === 0)) {
-                          _context4.next = 6;
-                          break;
-                        }
+          // create an empty object for the final output
+          let obj = {};
 
-                        debug('\n ❌  No topThreads found');
-                        return _context4.abrupt('return');
+          const getCommunity = id => (0, _community.getCommunityById)(id);
 
-                      case 6:
-                        // create an empty object for the final output
-                        obj = {};
+          // for each thread, get the community data that we'll need when rendering an email
+          const topThreadsWithCommunityDataPromises = topThreads.map(
+            async thread => {
+              const community = await getCommunity(thread.communityId);
 
-                        getCommunity = function getCommunity(id) {
-                          return (0, _community.getCommunityById)(id);
-                        };
-
-                        // for each thread, get the community data that we'll need when rendering an email
-
-                        topThreadsWithCommunityDataPromises = topThreads.map(
-                          (function() {
-                            var _ref5 = _asyncToGenerator(
-                              _regenerator2.default.mark(function _callee3(
-                                thread
-                              ) {
-                                var community, obj;
-                                return _regenerator2.default.wrap(
-                                  function _callee3$(_context3) {
-                                    while (1) {
-                                      switch ((_context3.prev =
-                                        _context3.next)) {
-                                        case 0:
-                                          _context3.next = 2;
-                                          return getCommunity(
-                                            thread.communityId
-                                          );
-
-                                        case 2:
-                                          community = _context3.sent;
-
-                                          // this is the final data we'll send to the email for each thread
-                                          obj = {
-                                            community: {
-                                              name: community.name,
-                                              slug: community.slug,
-                                              profilePhoto:
-                                                community.profilePhoto,
-                                            },
-                                            channelId: thread.channelId,
-                                            title: thread.title,
-                                            threadId: thread.id,
-                                            newMessageCount:
-                                              thread.newMessageCount,
-                                            totalMessageCount:
-                                              thread.totalMessageCount,
-                                          };
-                                          return _context3.abrupt(
-                                            'return',
-                                            obj
-                                          );
-
-                                        case 5:
-                                        case 'end':
-                                          return _context3.stop();
-                                      }
-                                    }
-                                  },
-                                  _callee3,
-                                  undefined
-                                );
-                              })
-                            );
-
-                            return function(_x2) {
-                              return _ref5.apply(this, arguments);
-                            };
-                          })()
-                        );
-                        _context4.next = 11;
-                        return Promise.all(topThreadsWithCommunityDataPromises);
-
-                      case 11:
-                        threadsWithCommunityData = _context4.sent;
-
-                        // for each of the active threads this week, determine if that that thread has been categorized yet into the new object. If so, push that thread into the array, otherwise create a new key/value pair in the object for the channel + thread
-                        finalThreads = threadsWithCommunityData.map(function(
-                          thread
-                        ) {
-                          return obj[thread.channelId]
-                            ? (obj[
-                                thread.channelId
-                              ] = [].concat(
-                                _toConsumableArray(obj[thread.channelId]),
-                                [_extends({}, thread)]
-                              ))
-                            : (obj[thread.channelId] = [_extends({}, thread)]);
-                        });
-                        _context4.next = 15;
-                        return Promise.all(finalThreads);
-
-                      case 15:
-                        finishedTopThreads = _context4.sent;
-
-                        debug('\n ⚙️ Organized top threads by channel');
-
-                        // return the final object containing keys for channelIds, and arrays of threads for values
-                        return _context4.abrupt('return', obj);
-
-                      case 18:
-                      case 'end':
-                        return _context4.stop();
-                    }
-                  }
+              // this is the final data we'll send to the email for each thread
+              const obj = {
+                community: {
+                  name: community.name,
+                  slug: community.slug,
+                  profilePhoto: community.profilePhoto,
                 },
-                _callee4,
-                undefined
-              );
-            })
+                channelId: thread.channelId,
+                title: thread.title,
+                threadId: thread.id,
+                newMessageCount: thread.newMessageCount,
+                totalMessageCount: thread.totalMessageCount,
+              };
+              return obj;
+            }
           );
 
-          return function activeThreadsByChannel() {
-            return _ref4.apply(this, arguments);
-          };
-        })();
+          const threadsWithCommunityData = await Promise.all(
+            topThreadsWithCommunityDataPromises
+          );
+          // for each of the active threads this week, determine if that that thread has been categorized yet into the new object. If so, push that thread into the array, otherwise create a new key/value pair in the object for the channel + thread
+          const finalThreads = threadsWithCommunityData.map(
+            thread =>
+              obj[thread.channelId]
+                ? (obj[thread.channelId] = [
+                    ...obj[thread.channelId],
+                    _extends({}, thread),
+                  ])
+                : (obj[thread.channelId] = [_extends({}, thread)])
+          );
+
+          const finishedTopThreads = await Promise.all(finalThreads);
+          debug('\n ⚙️ Organized top threads by channel');
+
+          // return the final object containing keys for channelIds, and arrays of threads for values
+          return obj;
+        };
 
         /*
       3. In this step we process and aggregate user settings, users channels, and the thread data fetched above
@@ -757,413 +503,189 @@ module.exports = /******/ (function(modules) {
       b. for each person, get an array of channelIds where that user is a member
       c. determine if there is any overlap between the user's channels and the active threads from the past week. Note: this filters out people who are members of inactive communities, even if they are opted in to receive a weekly digest
   */
-        var eligibleUsersForWeeklyDigest = (function() {
-          var _ref6 = _asyncToGenerator(
-            _regenerator2.default.mark(function _callee6() {
-              var users,
-                channelConnectionPromises,
-                usersWithChannels,
-                threadData,
-                threadChannelKeys,
-                getIntersectingChannels,
-                rawThreadsForUsersEmail,
-                eligibleUsersForWeeklyDigest;
-              return _regenerator2.default.wrap(
-                function _callee6$(_context6) {
-                  while (1) {
-                    switch ((_context6.prev = _context6.next)) {
-                      case 0:
-                        _context6.next = 2;
-                        return (0, _usersSettings.getUsersForWeeklyDigest)();
+        const eligibleUsersForWeeklyDigest = async () => {
+          // get users who have opted to receive a weekly digest
+          const users = await (0, _usersSettings.getUsersForWeeklyDigest)();
+          debug('\n ⚙️ Fetched users who want to receive a weekly digest');
 
-                      case 2:
-                        users = _context6.sent;
+          // for each user who wants a weekly digest, fetch an array of channelIds where they are a member
+          const channelConnectionPromises = users.map(async _ref2 => {
+            let { email, firstName, userId } = _ref2,
+              user = _objectWithoutProperties(_ref2, [
+                'email',
+                'firstName',
+                'userId',
+              ]);
 
-                        debug(
-                          '\n ⚙️ Fetched users who want to receive a weekly digest'
-                        );
-
-                        // for each user who wants a weekly digest, fetch an array of channelIds where they are a member
-                        channelConnectionPromises = users.map(
-                          (function() {
-                            var _ref8 = _asyncToGenerator(
-                              _regenerator2.default.mark(function _callee5(
-                                _ref7
-                              ) {
-                                var email = _ref7.email,
-                                  firstName = _ref7.firstName,
-                                  userId = _ref7.userId,
-                                  user = _objectWithoutProperties(_ref7, [
-                                    'email',
-                                    'firstName',
-                                    'userId',
-                                  ]);
-
-                                return _regenerator2.default.wrap(
-                                  function _callee5$(_context5) {
-                                    while (1) {
-                                      switch ((_context5.prev =
-                                        _context5.next)) {
-                                        case 0:
-                                          _context5.t0 = email;
-                                          _context5.t1 = firstName || null;
-                                          _context5.t2 = userId;
-                                          _context5.next = 5;
-                                          return (
-                                            0,
-                                            _usersChannels.getUsersChannelsEligibleForWeeklyDigest
-                                          )(userId);
-
-                                        case 5:
-                                          _context5.t3 = _context5.sent;
-                                          return _context5.abrupt('return', {
-                                            email: _context5.t0,
-                                            name: _context5.t1,
-                                            userId: _context5.t2,
-                                            channels: _context5.t3,
-                                          });
-
-                                        case 7:
-                                        case 'end':
-                                          return _context5.stop();
-                                      }
-                                    }
-                                  },
-                                  _callee5,
-                                  undefined
-                                );
-                              })
-                            );
-
-                            return function(_x3) {
-                              return _ref8.apply(this, arguments);
-                            };
-                          })()
-                        );
-
-                        // fetch all usersChannels
-
-                        _context6.next = 7;
-                        return Promise.all(channelConnectionPromises);
-
-                      case 7:
-                        usersWithChannels = _context6.sent;
-
-                        debug('\n ⚙️ Fetched users eligible channels');
-
-                        // get all the threads, organized by channel, in scope
-                        _context6.next = 11;
-                        return activeThreadsByChannel();
-
-                      case 11:
-                        threadData = _context6.sent;
-
-                        if (threadData) {
-                          _context6.next = 15;
-                          break;
-                        }
-
-                        debug('\n ❌  No threadData found');
-                        return _context6.abrupt('return');
-
-                      case 15:
-                        // get an array of all channels where there are active threads this week
-                        threadChannelKeys = Object.keys(threadData);
-
-                        // for each user, determine the overlapping channels where they are a member and where active threads occurred this week
-
-                        getIntersectingChannels = usersWithChannels.map(
-                          function(e) {
-                            return _extends({}, e, {
-                              channels: (0, _lodash2.default)(
-                                e.channels,
-                                threadChannelKeys
-                              ),
-                            });
-                          }
-                        );
-
-                        debug(
-                          '\n ⚙️ Filtered intersecting channels between the user and the top threads this week'
-                        );
-
-                        // based on the intersecting channels, get the threads that could appear in the user's weekly digest
-                        rawThreadsForUsersEmail = getIntersectingChannels.map(
-                          function(e) {
-                            var arr = [];
-                            e.channels.map(function(c) {
-                              return arr.push.apply(
-                                arr,
-                                _toConsumableArray(threadData[c])
-                              );
-                            });
-                            return _extends({}, e, {
-                              threads: [].concat(arr),
-                            });
-                          }
-                        );
-
-                        debug(
-                          '\n ⚙️ Fetched all the possible threads this user could receive in a weekly digest'
-                        );
-
-                        // if no rawThreadsForUsersEmail, escape
-
-                        if (
-                          !(
-                            !rawThreadsForUsersEmail ||
-                            rawThreadsForUsersEmail.length === 0
-                          )
-                        ) {
-                          _context6.next = 23;
-                          break;
-                        }
-
-                        debug('\n ❌  No rawThreads found');
-                        return _context6.abrupt('return');
-
-                      case 23:
-                        // we don't want to send a weekly digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
-                        eligibleUsersForWeeklyDigest = rawThreadsForUsersEmail
-                          .filter(function(user) {
-                            return (
-                              user.threads.length >
-                              _constants.MIN_THREADS_REQUIRED_FOR_DIGEST
-                            );
-                          })
-                          // and finally, sort the user's threads in descending order by message count
-                          .map(function(_ref9) {
-                            var channels = _ref9.channels,
-                              user = _objectWithoutProperties(_ref9, [
-                                'channels',
-                              ]);
-
-                            // for each thread, assign a score based on the total message count and new message count
-                            var threadsWithScores = user.threads.map(function(
-                              thread
-                            ) {
-                              return _extends({}, thread, {
-                                score:
-                                  thread.newMessageCount *
-                                    _constants.NEW_MESSAGE_COUNT_WEIGHT +
-                                  thread.totalMessageCount *
-                                    _constants.TOTAL_MESSAGE_COUNT_WEIGHT,
-                              });
-                            });
-
-                            return _extends({}, user, {
-                              threads: threadsWithScores
-                                .sort(function(a, b) {
-                                  return b.score - a.score;
-                                })
-                                .slice(
-                                  0,
-                                  _constants.MAX_THREAD_COUNT_PER_DIGEST
-                                ),
-                            });
-                          });
-
-                        debug(
-                          '\n ⚙️ Filtered users who have enough threads to qualify for a weekly digest'
-                        );
-
-                        /*
-                The result of our operations so far has given us an array with the following shape:
-                 [
-                  {
-                    userId: ID,
-                    email: String,
-                    name?: String // returns null if user doesn't have a first name
-                    threads: [{ thread1 }, { thread2}, ... ]
-                  }
-                  ...
-                ]
-                 Where a thread contains the following information:
-                {
-                  communityId: ID,
-                  channelId: ID,
-                  id: ID,
-                  title: String,
-                  messageCount: Number
-                }
-              */
-                        return _context6.abrupt(
-                          'return',
-                          eligibleUsersForWeeklyDigest
-                        );
-
-                      case 26:
-                      case 'end':
-                        return _context6.stop();
-                    }
-                  }
-                },
-                _callee6,
-                undefined
-              );
-            })
-          );
-
-          return function eligibleUsersForWeeklyDigest() {
-            return _ref6.apply(this, arguments);
-          };
-        })();
-
-        var processSendWeeklyDigests = (function() {
-          var _ref10 = _asyncToGenerator(
-            _regenerator2.default.mark(function _callee8() {
-              var eligibleUsers, topCommunities, sendDigestPromises;
-              return _regenerator2.default.wrap(
-                function _callee8$(_context8) {
-                  while (1) {
-                    switch ((_context8.prev = _context8.next)) {
-                      case 0:
-                        _context8.next = 2;
-                        return eligibleUsersForWeeklyDigest();
-
-                      case 2:
-                        eligibleUsers = _context8.sent;
-
-                        debug('\n ⚙️  Got eligible users');
-                        _context8.next = 6;
-                        return (0, _community.getTopCommunities)(20);
-
-                      case 6:
-                        topCommunities = _context8.sent;
-
-                        debug('\n ⚙️  Got top communities');
-
-                        // if no elegible users, escape
-
-                        if (!(!eligibleUsers || eligibleUsers.length === 0)) {
-                          _context8.next = 11;
-                          break;
-                        }
-
-                        debug('\n ❌  No eligible users');
-                        return _context8.abrupt('return');
-
-                      case 11:
-                        debug('\n👉 Eligible users data');
-                        debug(eligibleUsers);
-                        debug('\n👉 Example array of threads');
-                        debug(eligibleUsers[0].threads);
-                        debug('\n👉 Example thread data for email');
-                        debug(eligibleUsers[0].threads[0]);
-
-                        sendDigestPromises = function sendDigestPromises(
-                          topCommunities
-                        ) {
-                          return eligibleUsers.map(
-                            (function() {
-                              var _ref11 = _asyncToGenerator(
-                                _regenerator2.default.mark(function _callee7(
-                                  user
-                                ) {
-                                  var usersCommunityIds, communities;
-                                  return _regenerator2.default.wrap(
-                                    function _callee7$(_context7) {
-                                      while (1) {
-                                        switch ((_context7.prev =
-                                          _context7.next)) {
-                                          case 0:
-                                            _context7.next = 2;
-                                            return (
-                                              0,
-                                              _usersCommunities.getUsersCommunityIds
-                                            )(user.userId);
-
-                                          case 2:
-                                            usersCommunityIds = _context7.sent;
-
-                                            debug(
-                                              '\n ⚙️  Got users communities'
-                                            );
-                                            // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
-                                            communities =
-                                              usersCommunityIds.length <
-                                              _constants.COMMUNITY_UPSELL_THRESHOLD
-                                                ? topCommunities
-                                                    .filter(function(
-                                                      community
-                                                    ) {
-                                                      return (
-                                                        usersCommunityIds.indexOf(
-                                                          community.id
-                                                        ) <= -1
-                                                      );
-                                                    })
-                                                    .slice(0, 3)
-                                                : null;
-
-                                            debug(
-                                              '\n ⚙️  Processed community upsells for email digest'
-                                            );
-
-                                            _context7.next = 8;
-                                            return sendWeeklyDigestEmailQueue.add(
-                                              _extends({}, user, {
-                                                communities: communities,
-                                              })
-                                            );
-
-                                          case 8:
-                                            return _context7.abrupt(
-                                              'return',
-                                              _context7.sent
-                                            );
-
-                                          case 9:
-                                          case 'end':
-                                            return _context7.stop();
-                                        }
-                                      }
-                                    },
-                                    _callee7,
-                                    undefined
-                                  );
-                                })
-                              );
-
-                              return function(_x4) {
-                                return _ref11.apply(this, arguments);
-                              };
-                            })()
-                          );
-                        };
-
-                        _context8.next = 20;
-                        return Promise.all(sendDigestPromises(topCommunities));
-
-                      case 20:
-                        return _context8.abrupt('return', _context8.sent);
-
-                      case 21:
-                      case 'end':
-                        return _context8.stop();
-                    }
-                  }
-                },
-                _callee8,
-                undefined
-              );
-            })
-          );
-
-          return function processSendWeeklyDigests() {
-            return _ref10.apply(this, arguments);
-          };
-        })();
-
-        return processSendWeeklyDigests()
-          .then(function() {
-            return job.remove();
-          })
-          .catch(function(err) {
-            debug('❌  Error sending weekly digest');
-            debug(err);
-            console.log('Error sending weekly digests: ', err);
+            return {
+              email,
+              name: firstName || null,
+              userId,
+              channels: await (
+                0,
+                _usersChannels.getUsersChannelsEligibleForWeeklyDigest
+              )(userId),
+            };
           });
+
+          // fetch all usersChannels
+          const usersWithChannels = await Promise.all(
+            channelConnectionPromises
+          );
+          debug('\n ⚙️ Fetched users eligible channels');
+
+          // get all the threads, organized by channel, in scope
+          const threadData = await activeThreadsByChannel();
+
+          // if no threads exist
+          if (!threadData) {
+            debug('\n ❌  No threadData found');
+            return;
+          }
+
+          // get an array of all channels where there are active threads this week
+          const threadChannelKeys = Object.keys(threadData);
+
+          // for each user, determine the overlapping channels where they are a member and where active threads occurred this week
+          const getIntersectingChannels = usersWithChannels.map(e => {
+            return _extends({}, e, {
+              channels: (0, _lodash2.default)(e.channels, threadChannelKeys),
+            });
+          });
+          debug(
+            '\n ⚙️ Filtered intersecting channels between the user and the top threads this week'
+          );
+
+          // based on the intersecting channels, get the threads that could appear in the user's weekly digest
+          const rawThreadsForUsersEmail = getIntersectingChannels.map(e => {
+            let arr = [];
+            e.channels.map(c => arr.push(...threadData[c]));
+            return _extends({}, e, {
+              threads: [...arr],
+            });
+          });
+          debug(
+            '\n ⚙️ Fetched all the possible threads this user could receive in a weekly digest'
+          );
+
+          // if no rawThreadsForUsersEmail, escape
+          if (
+            !rawThreadsForUsersEmail ||
+            rawThreadsForUsersEmail.length === 0
+          ) {
+            debug('\n ❌  No rawThreads found');
+            return;
+          }
+
+          // we don't want to send a weekly digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
+          const eligibleUsersForWeeklyDigest = rawThreadsForUsersEmail
+            .filter(
+              user =>
+                user.threads.length > _constants.MIN_THREADS_REQUIRED_FOR_DIGEST
+            )
+            // and finally, sort the user's threads in descending order by message count
+            .map(_ref3 => {
+              let { channels } = _ref3,
+                user = _objectWithoutProperties(_ref3, ['channels']);
+
+              // for each thread, assign a score based on the total message count and new message count
+              const threadsWithScores = user.threads.map(thread =>
+                _extends({}, thread, {
+                  score:
+                    thread.newMessageCount *
+                      _constants.NEW_MESSAGE_COUNT_WEIGHT +
+                    thread.totalMessageCount *
+                      _constants.TOTAL_MESSAGE_COUNT_WEIGHT,
+                })
+              );
+
+              return _extends({}, user, {
+                threads: threadsWithScores
+                  .sort((a, b) => b.score - a.score)
+                  .slice(0, _constants.MAX_THREAD_COUNT_PER_DIGEST),
+              });
+            });
+
+          debug(
+            '\n ⚙️ Filtered users who have enough threads to qualify for a weekly digest'
+          );
+
+          /*
+      The result of our operations so far has given us an array with the following shape:
+       [
+        {
+          userId: ID,
+          email: String,
+          name?: String // returns null if user doesn't have a first name
+          threads: [{ thread1 }, { thread2}, ... ]
+        }
+        ...
+      ]
+       Where a thread contains the following information:
+      {
+        communityId: ID,
+        channelId: ID,
+        id: ID,
+        title: String,
+        messageCount: Number
+      }
+    */
+          return eligibleUsersForWeeklyDigest;
+        };
+
+        const processSendWeeklyDigests = async () => {
+          const eligibleUsers = await eligibleUsersForWeeklyDigest();
+          debug('\n ⚙️  Got eligible users');
+          const topCommunities = await (0, _community.getTopCommunities)(20);
+          debug('\n ⚙️  Got top communities');
+
+          // if no elegible users, escape
+          if (!eligibleUsers || eligibleUsers.length === 0) {
+            debug('\n ❌  No eligible users');
+            return;
+          }
+
+          debug('\n👉 Eligible users data');
+          debug(eligibleUsers);
+          debug('\n👉 Example array of threads');
+          debug(eligibleUsers[0].threads);
+          debug('\n👉 Example thread data for email');
+          debug(eligibleUsers[0].threads[0]);
+
+          const sendDigestPromises = topCommunities =>
+            eligibleUsers.map(async user => {
+              // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the weekly digest
+              const usersCommunityIds = await (
+                0,
+                _usersCommunities.getUsersCommunityIds
+              )(user.userId);
+              debug('\n ⚙️  Got users communities');
+              // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
+              const communities =
+                usersCommunityIds.length < _constants.COMMUNITY_UPSELL_THRESHOLD
+                  ? topCommunities
+                      .filter(
+                        community =>
+                          usersCommunityIds.indexOf(community.id) <= -1
+                      )
+                      .slice(0, 3)
+                  : null;
+
+              debug('\n ⚙️  Processed community upsells for email digest');
+
+              return await sendWeeklyDigestEmailQueue.add(
+                _extends({}, user, { communities })
+              );
+            });
+
+          return await Promise.all(sendDigestPromises(topCommunities));
+        };
+
+        return processSendWeeklyDigests().catch(err => {
+          debug('❌  Error sending weekly digest');
+          debug(err);
+          console.log('Error sending weekly digests: ', err);
+        });
       };
 
       // migration
@@ -1198,41 +720,27 @@ module.exports = /******/ (function(modules) {
       /***/
     },
     /* 8 */
-    /***/ function(module, exports, __webpack_require__) {
-      module.exports = __webpack_require__(9);
-
-      /***/
-    },
-    /* 9 */
-    /***/ function(module, exports) {
-      module.exports = require('regenerator-runtime');
-
-      /***/
-    },
-    /* 10 */
     /***/ function(module, exports) {
       module.exports = require('lodash.intersection');
 
       /***/
     },
-    /* 11 */
+    /* 9 */
     /***/ function(module, exports) {
       module.exports = require('bull');
 
       /***/
     },
-    /* 12 */
+    /* 10 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
       Object.defineProperty(exports, '__esModule', {
         value: true,
       });
+      const { db } = __webpack_require__(0);
 
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getActiveThreadsInPastWeek = (exports.getActiveThreadsInPastWeek = function getActiveThreadsInPastWeek() {
+      const getActiveThreadsInPastWeek = (exports.getActiveThreadsInPastWeek = () => {
         return db
           .table('threads')
           .filter(
@@ -1242,36 +750,78 @@ module.exports = /******/ (function(modules) {
               db.now()
             )
           )
-          .filter(function(thread) {
-            return db.not(thread.hasFields('deletedAt'));
-          })
+          .filter(thread => db.not(thread.hasFields('deletedAt')))
           .run();
       });
 
       /***/
     },
-    /* 13 */
+    /* 11 */
     /***/ function(module, exports) {
       module.exports = require('fs');
 
       /***/
     },
-    /* 14 */
+    /* 12 */
     /***/ function(module, exports) {
       module.exports = require('path');
 
       /***/
     },
-    /* 15 */
+    /* 13 */
     /***/ function(module, exports) {
       module.exports =
         '-----BEGIN CERTIFICATE-----\nMIIDbzCCAlegAwIBAgIEWRMkLjANBgkqhkiG9w0BAQ0FADA5MTcwNQYDVQQDDC5T\ncGFjZSBQcm9ncmFtLTc5Njk3YmRkYTQxNTg3YjFmMzk4MzYxNDhlNmJjMTZhMB4X\nDTE3MDUxMDE0MzExMFoXDTM3MDUxMDE0MDAwMFowOTE3MDUGA1UEAwwuU3BhY2Ug\nUHJvZ3JhbS03OTY5N2JkZGE0MTU4N2IxZjM5ODM2MTQ4ZTZiYzE2YTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBALwgqk6SZZah3eVlCvZ8sFHDaHPWekVt\n1k3XAUkV+SrxijNGWNPnzkumXEd+qWYS9gYL9ak1otEjbxPR9B7+zBiPOFbwX1fE\n5o97W0gxjwS8iJGL3brSmSuJAfqx3be3l2Da4tpdgmQgKVID3c7E4AVFdgh0snh5\nNAChbx/BZXtCyJNk8gRR0G9tX01EtAumoRe3PkHs6CN0ObUNX7W9l1G6J5N00ECU\nZBEcXIyQ/lNzpJrIzcBrZ75mocyCVkp5HINjs0mG+CrSgVzY5KMtWOPFlr1KuH9P\nDXwYBDAKI3sKxj3Bgmwq1WtFbhTfuZkynxSZ0rgnr+aVFcszL2ZRVDMCAwEAAaN/\nMH0wHQYDVR0OBBYEFIXsudbQwxml7S2NjYaFCcTs0meUMA4GA1UdDwEB/wQEAwIC\nBDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TBAUwAwEB/zAf\nBgNVHSMEGDAWgBSF7LnW0MMZpe0tjY2GhQnE7NJnlDANBgkqhkiG9w0BAQ0FAAOC\nAQEAfjae2H+mdzABC9Kkh/tLUPKtGu1c3/3QSq4RTPyOAsCgmtWO2NSUcEI928eo\n8EJvljx8Xo2vl3DbD9OmbWzPeUqQMm2Wsq98RB80KRvQAFSwOKMDqyv0+C/UGnnw\nry3UMfTuY5Y2rRwsY4Z6FDPWnLJJKIa6aKutYo1pzkkvphtwq8lPQO2NW4uTrpjG\nuhhH2cmtBUZRvRGIey29Z0TXufUNN6EAcbo0JxEuux6HotXbwI0wRwPmqHLNbSWw\ngCd/pne0Pjryvw6XHzd4CQUsElWafmOf/+N760O1RCC/XCzOnsjUSLiAt9R7C/Ao\niS3oQCP1KMbyfpulMFctZJR0kQ==\n-----END CERTIFICATE-----\n';
 
       /***/
     },
-    /* 16 */
+    /* 14 */
     /***/ function(module, exports) {
       module.exports = require('rethinkdbdash');
+
+      /***/
+    },
+    /* 15 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+      const { db } = __webpack_require__(0);
+
+      const getUsersForWeeklyDigest = (exports.getUsersForWeeklyDigest = () => {
+        return db
+          .table('usersSettings')
+          .filter(row =>
+            row('notifications')('types')('weeklyDigest')('email').eq(true)
+          )
+          .eqJoin('userId', db.table('users'))
+          .zip()
+          .pluck(['userId', 'email', 'firstName', 'name'])
+          .distinct()
+          .run();
+      });
+
+      /***/
+    },
+    /* 16 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+      const { db } = __webpack_require__(0);
+
+      const getUsersChannelsEligibleForWeeklyDigest = (exports.getUsersChannelsEligibleForWeeklyDigest = userId => {
+        return db
+          .table('usersChannels')
+          .getAll(userId, { index: 'userId' })
+          .filter({ isMember: true })
+          .map(row => row('channelId'))
+          .run();
+      });
 
       /***/
     },
@@ -1282,23 +832,26 @@ module.exports = /******/ (function(modules) {
       Object.defineProperty(exports, '__esModule', {
         value: true,
       });
+      const { db } = __webpack_require__(0);
+      const debug = __webpack_require__(2)(
+        'hermes:queue:send-weekly-digest-email'
+      );
 
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getUsersForWeeklyDigest = (exports.getUsersForWeeklyDigest = function getUsersForWeeklyDigest() {
-        return db
-          .table('usersSettings')
-          .filter(function(row) {
-            return row('notifications')('types')('weeklyDigest')('email').eq(
-              true
-            );
-          })
-          .eqJoin('userId', db.table('users'))
-          .zip()
-          .pluck(['userId', 'email', 'firstName', 'name'])
-          .distinct()
-          .run();
+      const getUsersCommunityIds = (exports.getUsersCommunityIds = userId => {
+        debug(userId);
+        return (
+          db
+            .table('usersCommunities')
+            .getAll(userId, { index: 'userId' })
+            .filter({ isMember: true })
+            .run()
+            // return an array of the userIds to be loaded by gql
+            .then(
+              communities =>
+                debug(communities) ||
+                communities.map(community => community.communityId)
+            )
+        );
       });
 
       /***/
@@ -1310,78 +863,9 @@ module.exports = /******/ (function(modules) {
       Object.defineProperty(exports, '__esModule', {
         value: true,
       });
+      const { db } = __webpack_require__(0);
 
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getUsersChannelsEligibleForWeeklyDigest = (exports.getUsersChannelsEligibleForWeeklyDigest = function getUsersChannelsEligibleForWeeklyDigest(
-        userId
-      ) {
-        return db
-          .table('usersChannels')
-          .getAll(userId, { index: 'userId' })
-          .filter({ isMember: true })
-          .map(function(row) {
-            return row('channelId');
-          })
-          .run();
-      });
-
-      /***/
-    },
-    /* 19 */
-    /***/ function(module, exports, __webpack_require__) {
-      'use strict';
-
-      Object.defineProperty(exports, '__esModule', {
-        value: true,
-      });
-
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var debug = __webpack_require__(2)(
-        'hermes:queue:send-weekly-digest-email'
-      );
-
-      var getUsersCommunityIds = (exports.getUsersCommunityIds = function getUsersCommunityIds(
-        userId
-      ) {
-        debug(userId);
-        return (
-          db
-            .table('usersCommunities')
-            .getAll(userId, { index: 'userId' })
-            .filter({ isMember: true })
-            .run()
-            // return an array of the userIds to be loaded by gql
-            .then(function(communities) {
-              return (
-                debug(communities) ||
-                communities.map(function(community) {
-                  return community.communityId;
-                })
-              );
-            })
-        );
-      });
-
-      /***/
-    },
-    /* 20 */
-    /***/ function(module, exports, __webpack_require__) {
-      'use strict';
-
-      Object.defineProperty(exports, '__esModule', {
-        value: true,
-      });
-
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getTotalMessageCount = (exports.getTotalMessageCount = function getTotalMessageCount(
-        threadId
-      ) {
+      const getTotalMessageCount = (exports.getTotalMessageCount = threadId => {
         return db
           .table('messages')
           .getAll(threadId, { index: 'threadId' })
@@ -1389,9 +873,7 @@ module.exports = /******/ (function(modules) {
           .run();
       });
 
-      var getNewMessageCount = (exports.getNewMessageCount = function getNewMessageCount(
-        threadId
-      ) {
+      const getNewMessageCount = (exports.getNewMessageCount = threadId => {
         return db
           .table('messages')
           .getAll(threadId, { index: 'threadId' })
@@ -1408,107 +890,81 @@ module.exports = /******/ (function(modules) {
 
       /***/
     },
-    /* 21 */
+    /* 19 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
       Object.defineProperty(exports, '__esModule', {
         value: true,
       });
+      const { db } = __webpack_require__(0);
 
-      function _toConsumableArray(arr) {
-        if (Array.isArray(arr)) {
-          for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-            arr2[i] = arr[i];
-          }
-          return arr2;
-        } else {
-          return Array.from(arr);
-        }
-      }
-
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getCommunityById = (exports.getCommunityById = function getCommunityById(
-        id
-      ) {
+      const getCommunityById = (exports.getCommunityById = id => {
         return db.table('communities').get(id).run();
       });
 
-      var getTopCommunities = (exports.getTopCommunities = function getTopCommunities(
-        amount
-      ) {
+      const getTopCommunities = (exports.getTopCommunities = amount => {
         return db
           .table('communities')
           .pluck('id')
           .run()
-          .then(function(communities) {
-            return communities.map(function(community) {
-              return community.id;
-            });
-          })
-          .then(function(communityIds) {
+          .then(communities => communities.map(community => community.id))
+          .then(communityIds => {
             return Promise.all(
-              communityIds.map(function(community) {
+              communityIds.map(community => {
                 return db
                   .table('usersCommunities')
                   .getAll(community, { index: 'communityId' })
                   .filter({ isMember: true })
                   .count()
                   .run()
-                  .then(function(count) {
+                  .then(count => {
                     return {
                       id: community,
-                      count: count,
+                      count,
                     };
                   });
               })
             );
           })
-          .then(function(data) {
-            var _db$table;
-
-            var sortedCommunities = data
-              .sort(function(x, y) {
+          .then(data => {
+            let sortedCommunities = data
+              .sort((x, y) => {
                 return y.count - x.count;
               })
-              .map(function(community) {
-                return community.id;
-              })
+              .map(community => community.id)
               .slice(0, amount);
 
-            return (_db$table = db.table('communities')).getAll
-              .apply(_db$table, _toConsumableArray(sortedCommunities))
-              .filter(function(community) {
-                return db.not(community.hasFields('deletedAt'));
-              })
+            return db
+              .table('communities')
+              .getAll(...sortedCommunities)
+              .filter(community => db.not(community.hasFields('deletedAt')))
               .run();
           });
       });
 
       /***/
     },
-    /* 22 */
+    /* 20 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
-      var _utils = __webpack_require__(23);
+      var _utils = __webpack_require__(21);
 
       // weekly digest
-      var weeklyDigest = (0, _utils.createJob)(
+      const weeklyDigest = (0, _utils.createJob)(
         'send weekly digest email',
         '01 * * * * *', // run every second
         true
       );
 
       module.exports = {
-        weeklyDigest: weeklyDigest,
+        weeklyDigest,
       };
 
       /***/
     },
-    /* 23 */
+    /* 21 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
@@ -1539,8 +995,8 @@ module.exports = /******/ (function(modules) {
         return obj && obj.__esModule ? obj : { default: obj };
       }
 
-      var CronJob = __webpack_require__(24).CronJob;
-      var createQueue = __webpack_require__(1);
+      const CronJob = __webpack_require__(22).CronJob;
+      const createQueue = __webpack_require__(1);
 
       // logging to Sentry for weekly digests
       if (false) {
@@ -1554,22 +1010,22 @@ module.exports = /******/ (function(modules) {
           .install();
       }
 
-      var addQueue = (exports.addQueue = function addQueue(name, data) {
-        var worker = createQueue(name);
-        return worker.add(_extends({}, data)).catch(function(err) {
-          return _raven2.default.captureException(err);
-        });
+      const addQueue = (exports.addQueue = (name, data, opts) => {
+        const worker = createQueue(name);
+        return worker
+          .add(_extends({}, data), _extends({}, opts))
+          .catch(err => _raven2.default.captureException(err));
       });
 
-      var createJob = (exports.createJob = function createJob(
+      const createJob = (exports.createJob = (
         name,
         pattern,
         start // start immediately
-      ) {
+      ) => {
         try {
-          var job = new CronJob({
+          const job = new CronJob({
             cronTime: pattern,
-            onTick: function onTick() {
+            onTick: () => {
               console.log('🕑 New cron job initiated');
               return addQueue(
                 name,
@@ -1577,7 +1033,7 @@ module.exports = /******/ (function(modules) {
                 { removeOnComplete: true, removeOnFail: true }
               );
             },
-            start: start,
+            start,
             timeZone: 'America/Los_Angeles',
           });
 
@@ -1589,7 +1045,7 @@ module.exports = /******/ (function(modules) {
 
       /***/
     },
-    /* 24 */
+    /* 22 */
     /***/ function(module, exports, __webpack_require__) {
       var __WEBPACK_AMD_DEFINE_FACTORY__,
         __WEBPACK_AMD_DEFINE_ARRAY__,
@@ -1597,7 +1053,7 @@ module.exports = /******/ (function(modules) {
       (function(root, factory) {
         if (true) {
           !(
-            (__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(25)]),
+            (__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(23)]),
             (__WEBPACK_AMD_DEFINE_FACTORY__ = factory),
             (__WEBPACK_AMD_DEFINE_RESULT__ =
               typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function'
@@ -2179,20 +1635,20 @@ module.exports = /******/ (function(modules) {
 
       /***/
     },
-    /* 25 */
+    /* 23 */
     /***/ function(module, exports) {
       module.exports = require('moment-timezone');
 
       /***/
     },
-    /* 26 */
+    /* 24 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
       // Create a worker with bull and start a small webserver which responds with
       // health information
-      var http = __webpack_require__(27);
-      var createQueue = __webpack_require__(1);
+      const http = __webpack_require__(25);
+      const createQueue = __webpack_require__(1);
 
       /*::
 type QueueMap = {
@@ -2202,32 +1658,28 @@ type QueueMap = {
 
       // Helper function to sum properties of an array of objects
       // e.g. [{ completed: 6 }, { completed: 2 }] => 8
-      var sumArr = function sumArr(
+      const sumArr = (
         input /*: Array<Object> */,
         prop /*: number */ /*: string */
-      ) {
-        return input.reduce(function(sum, item) {
-          return sum + item[prop];
-        }, 0);
+      ) => {
+        return input.reduce((sum, item) => sum + item[prop], 0);
       };
 
-      var createWorker = function createWorker(queueMap /*: QueueMap */) {
+      const createWorker = (queueMap /*: QueueMap */) => {
         // Start processing the queues
-        var queues = Object.keys(queueMap).map(function(name) {
-          var queue = createQueue(name);
+        const queues = Object.keys(queueMap).map(name => {
+          const queue = createQueue(name);
           queue.process(queueMap[name]);
           return queue;
         });
 
-        return http.createServer(function(req, res) {
+        return http.createServer((req, res) => {
           res.setHeader('Content-Type', 'application/json');
           // Summarize the data across all the queues
           Promise.all(
-            queues.map(function(queue) {
-              return queue.getJobCounts();
-            })
-          ).then(function(jobCounts) {
-            var data = {
+            queues.map(queue => queue.getJobCounts())
+          ).then(jobCounts => {
+            const data = {
               waiting: sumArr(jobCounts, 'waiting'),
               active: sumArr(jobCounts, 'active'),
               completed: sumArr(jobCounts, 'completed'),
@@ -2244,7 +1696,7 @@ type QueueMap = {
 
       /***/
     },
-    /* 27 */
+    /* 25 */
     /***/ function(module, exports) {
       module.exports = require('http');
 
