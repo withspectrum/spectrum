@@ -218,18 +218,18 @@ class ChannelViewPure extends Component {
               )}
 
               {loggedInUser &&
-                hasRights &&
-                channel.isPrivate &&
-                !channel.community.isPro &&
+              hasRights &&
+              channel.isPrivate &&
+              !channel.community.isPro && (
                 <UpsellUpgradeCommunityPrivateChannel
                   community={channel.community}
                 />
               )}
 
               {loggedInUser &&
-                hasRights &&
-                ((channel.isPrivate && channel.community.isPro) ||
-                  !channel.isPrivate) &&
+              hasRights &&
+              ((channel.isPrivate && channel.community.isPro) ||
+                !channel.isPrivate) && (
                 <ThreadComposer
                   activeCommunity={communitySlug}
                   activeChannel={channelSlug}
