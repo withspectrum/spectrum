@@ -11,6 +11,7 @@ import processThreadNotification from './queues/thread-notification';
 import processSlackImport from './queues/slack-import';
 import processCommunityInvite from './queues/community-invite';
 import processCommunityInvoicePaid from './queues/community-invoice-paid';
+import processProInvoicePaid from './queues/pro-invoice-paid';
 import {
   MESSAGE_NOTIFICATION,
   DIRECT_MESSAGE_NOTIFICATION,
@@ -21,6 +22,7 @@ import {
   SLACK_IMPORT,
   COMMUNITY_INVITE_NOTIFICATION,
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
+  PRO_INVOICE_PAID_NOTIFICATION,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3003;
@@ -39,6 +41,7 @@ const server = createWorker({
   [SLACK_IMPORT]: processSlackImport,
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
+  [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
 });
 
 console.log(

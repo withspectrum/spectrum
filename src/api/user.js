@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { userSettingsFragment } from './fragments/user/userSettings';
 
 /*
@@ -82,7 +83,7 @@ const UPGRADE_TO_PRO_MUTATION = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }
@@ -116,7 +117,7 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }
@@ -145,7 +146,7 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }
@@ -223,3 +224,29 @@ export const CHECK_UNIQUE_USERNAME_QUERY = gql`
     }
   }
 `;
+
+const GET_USER_INVOICES_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'network-only',
+  }),
+};
+
+const GET_USER_INVOICES_QUERY = gql`
+  query getUserInvoices {
+    user: currentUser {
+      id
+      invoices {
+        ...invoiceInfo
+      }
+    }
+  }
+  ${invoiceInfoFragment}
+`;
+
+export const getUserInvoices = graphql(
+  GET_USER_INVOICES_QUERY,
+  GET_USER_INVOICES_OPTIONS
+);

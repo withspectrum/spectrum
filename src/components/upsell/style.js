@@ -25,6 +25,11 @@ export const Title = styled.h1`
   letter-spacing: 0.2px;
 `;
 
+export const CommunityUpsellTitle = styled(Title)`
+  text-align: left;
+  font-size: 20px;
+`;
+
 export const MiniTitle = styled(Title)`
   font-weight: 700;
   font-size: 1rem;
@@ -65,6 +70,17 @@ export const Subtitle = styled.h2`
   }
 `;
 
+export const CommunityUpsellSubtitle = styled(Subtitle)`
+  text-align: left;
+  padding: 0;
+  font-size: 14px;
+  color: ${props => props.theme.text.default};
+
+  li {
+    margin-top: 16px;
+  }
+`;
+
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
@@ -94,6 +110,12 @@ export const LargeSubtitle = styled(Subtitle)`
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
   font-weight: bold;
+`;
+
+export const CommunityUpsellCost = styled(Cost)`
+  text-align: left;
+  padding: 0;
+  margin-bottom: 32px;
 `;
 
 export const NullCol = styled(FlexCol)`

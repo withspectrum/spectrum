@@ -31,6 +31,7 @@ import {
   Upsell404Channel,
   UpsellRequestToJoinChannel,
 } from '../../components/upsell';
+import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
@@ -215,6 +216,14 @@ class ChannelViewPure extends Component {
 
               {loggedInUser &&
                 hasRights &&
+                !channel.community.isPro &&
+                <UpsellUpgradeCommunityPrivateChannel
+                  community={channel.community}
+                />}
+
+              {loggedInUser &&
+                hasRights &&
+                channel.community.isPro &&
                 <ThreadComposer
                   activeCommunity={communitySlug}
                   activeChannel={channelSlug}

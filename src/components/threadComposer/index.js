@@ -118,7 +118,12 @@ class ThreadComposerWithData extends Component {
         channel =>
           channel.channelPermissions.isMember ||
           channel.channelPermissions.isOwner
-      );
+      )
+      .filter(channel => {
+        if (!channel.isPrivate) return channel;
+        if (!channel.community.isPro) return null;
+        return channel;
+      });
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -182,7 +187,14 @@ class ThreadComposerWithData extends Component {
         channel => channel.isDefault
       );
       // If there is no default channel capitulate and take the first one
-      if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+      if (activeChannel.length === 0) {
+        activeChannel = activeCommunityChannels;
+      } else if (activeChannel.length > 1) {
+        const generalChannel = activeChannel.filter(
+          channel => channel.slug === 'general'
+        );
+        if (generalChannel.length > 0) activeChannel = generalChannel;
+      }
     }
 
     // ensure that if no items were found for some reason, we don't crash the app
@@ -278,7 +290,15 @@ class ThreadComposerWithData extends Component {
           channel => channel.isDefault
         );
         // If there is no default channel capitulate and take the first one
-        if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+        if (activeChannel.length === 0) {
+          activeChannel = activeCommunityChannels;
+          // If there are more than one default ones, try and choose the "General" one if it exists
+        } else if (activeChannel.length > 1) {
+          const generalChannel = activeChannel.filter(
+            channel => channel.slug === 'general'
+          );
+          if (generalChannel.length > 0) activeChannel = generalChannel;
+        }
       }
 
       // ensure that if no items were found for some reason, we don't crash the app

@@ -7,10 +7,7 @@ import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
-import {
-  upgradeToProMutation,
-  downgradeFromProMutation,
-} from '../../../api/user';
+import { downgradeFromProMutation } from '../../../api/user';
 import { addToastWithTimeout } from '../../../actions/toasts';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -53,37 +50,6 @@ class UpgradeModal extends React.Component {
 
   closeModal = () => {
     this.props.dispatch(closeModal());
-  };
-
-  upgradeToPro = token => {
-    this.setState({
-      isLoading: true,
-    });
-
-    const input = {
-      plan: 'beta-pro',
-      token: JSON.stringify(token),
-    };
-
-    this.props
-      .upgradeToPro(input)
-      .then(({ data: { upgradeToPro } }) => {
-        track('pro', 'upgraded', null);
-
-        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
-        this.setState({
-          isLoading: false,
-          upgradeError: '',
-        });
-        this.closeModal();
-      })
-      .catch(err => {
-        this.setState({
-          isLoading: false,
-          upgradeError: err.message,
-        });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
   };
 
   downgradeFromPro = () => {
@@ -185,8 +151,6 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default compose(
-  upgradeToProMutation,
-  downgradeFromProMutation,
-  connect(mapStateToProps)
-)(UpgradeModal);
+export default compose(downgradeFromProMutation, connect(mapStateToProps))(
+  UpgradeModal
+);

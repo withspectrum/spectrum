@@ -31,6 +31,13 @@ const general = /* GraphQL */ `
     size: Int!
     path: String!
   }
+
+	type RecurringPayment {
+		plan: String
+		amount: String
+		createdAt: String
+		status: String
+	}
 `;
 
 module.exports = general;
