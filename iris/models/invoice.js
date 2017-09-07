@@ -66,13 +66,13 @@ export const createInvoice = (
     });
 };
 
-export const getInvoiceByChargeId = (chargeId: string): Promise<any> => {
+export const getInvoiceByChargeId = (chargeId: string): Promise<Boolean> => {
   return db
     .table('invoices')
     .filter({ chargeId })
     .run()
     .then(result => {
-      if (!result || result.length === 0) return null;
+      if (!result || result.length === 0) return false;
       return true;
     });
 };
