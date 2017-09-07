@@ -1,8 +1,9 @@
 // @flow
-const debug = require('debug')('hermes');
+// $FlowFixMe
+const debug = require('debug')('chronos');
 const createWorker = require('../shared/bull/create-worker');
-import processSendWeeklyDigestEmail from './queues/send-weekly-digest-email';
-import { SEND_WEEKLY_DIGEST_EMAIL } from './queues/constants';
+import processWeeklyDigestEmail from './queues/process-weekly-digest-email';
+import { PROCESS_WEEKLY_DIGEST_EMAIL } from './queues/constants';
 import { weeklyDigest } from './jobs';
 
 const PORT = process.env.PORT || 3004;
@@ -12,8 +13,11 @@ debug('Logging with debug enabled!');
 console.log('');
 
 const server = createWorker({
-  [SEND_WEEKLY_DIGEST_EMAIL]: processSendWeeklyDigestEmail,
+  [PROCESS_WEEKLY_DIGEST_EMAIL]: processWeeklyDigestEmail,
 });
+
+// start the jobs
+weeklyDigest();
 
 console.log(
   `🗄 Crons open for business ${(process.env.NODE_ENV === 'production' &&

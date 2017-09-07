@@ -43,7 +43,10 @@ export default (job: SendWeeklyDigestJob) => {
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
   const { email, name, threads, communities } = job.data;
-  if (!email) return;
+  if (!email) {
+    debug(`\nno email found for this weekly digest, returning`);
+    return;
+  }
 
   const greeting = name ? `Hey ${name},` : 'Hey there,';
 

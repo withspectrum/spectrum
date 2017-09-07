@@ -1,5 +1,4 @@
 // @flow
-const CronJob = require('../node_modules/cron').CronJob;
 const createQueue = require('../../shared/bull/create-queue');
 import Raven from 'raven';
 
@@ -22,25 +21,19 @@ export const addQueue = (name: string, data: any, opts: any) => {
 
 export const createJob = (
   name: string, // name of the queue the cron job should trigger
-  pattern: string, // cron pattern
-  start: boolean // start immediately
+  pattern: string // cron pattern
 ) => {
   try {
-    const job = new CronJob({
-      cronTime: pattern,
-      onTick: () => {
-        console.log('🕑 New cron job initiated');
-        return addQueue(
-          name,
-          {},
-          { removeOnComplete: true, removeOnFail: true }
-        );
-      },
-      start,
-      timeZone: 'America/Los_Angeles',
-    });
-
-    return job.start();
+    console.log('🕑 New cron job initiated');
+    return addQueue(
+      name,
+      {},
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+        repeat: { cron: pattern },
+      }
+    );
   } catch (err) {
     console.log('❌ Error processing cron job:\n' + err);
   }
