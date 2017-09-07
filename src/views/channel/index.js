@@ -216,6 +216,7 @@ class ChannelViewPure extends Component {
 
               {loggedInUser &&
                 hasRights &&
+                channel.isPrivate &&
                 !channel.community.isPro &&
                 <UpsellUpgradeCommunityPrivateChannel
                   community={channel.community}
@@ -223,7 +224,8 @@ class ChannelViewPure extends Component {
 
               {loggedInUser &&
                 hasRights &&
-                channel.community.isPro &&
+                ((channel.isPrivate && channel.community.isPro) ||
+                  !channel.isPrivate) &&
                 <ThreadComposer
                   activeCommunity={communitySlug}
                   activeChannel={channelSlug}
