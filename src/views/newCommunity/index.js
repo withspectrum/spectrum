@@ -170,30 +170,28 @@ class NewCommunity extends Component {
           <Column type="primary">
             <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
               <Stepper activeStep={activeStep} />
-              <Title centered={activeStep === 3}>
-                {title}
-              </Title>
+              <Title centered={activeStep === 3}>{title}</Title>
               <Description centered={activeStep === 3}>
                 {description}
               </Description>
 
               {// gather community meta info
               activeStep === 1 &&
-                !community &&
-                <CreateCommunityForm
-                  communityCreated={this.communityCreated}
-                />}
+              !community && (
+                <CreateCommunityForm communityCreated={this.communityCreated} />
+              )}
 
               {activeStep === 1 &&
-                community &&
+              community && (
                 <EditCommunityForm
                   communityUpdated={this.communityCreated}
                   community={community}
-                />}
+                />
+              )}
 
               {activeStep === 2 &&
-                community &&
-                community.id &&
+              community &&
+              community.id && (
                 <ContentContainer>
                   <Divider />
                   <ImportSlackWithoutCard
@@ -207,31 +205,34 @@ class NewCommunity extends Component {
                     community={community}
                     hasInvitedPeople={this.hasInvitedPeople}
                   />
-                </ContentContainer>}
+                </ContentContainer>
+              )}
 
               {// connect a slack team or invite via email
-              activeStep === 2 &&
+              activeStep === 2 && (
                 <Actions>
                   <TextButton onClick={() => this.step('previous')}>
                     Back
                   </TextButton>
-                  {hasInvitedPeople
-                    ? <Button onClick={() => this.step('next')}>
-                        Continue
-                      </Button>
-                    : <TextButton
-                        color={'brand.default'}
-                        onClick={() => this.step('next')}
-                      >
-                        Skip this step
-                      </TextButton>}
-                </Actions>}
+                  {hasInvitedPeople ? (
+                    <Button onClick={() => this.step('next')}>Continue</Button>
+                  ) : (
+                    <TextButton
+                      color={'brand.default'}
+                      onClick={() => this.step('next')}
+                    >
+                      Skip this step
+                    </TextButton>
+                  )}
+                </Actions>
+              )}
 
               {// share the community
-              activeStep === 3 &&
+              activeStep === 3 && (
                 <ContentContainer>
                   <Share community={community} onboarding={true} />
-                </ContentContainer>}
+                </ContentContainer>
+              )}
             </Container>
           </Column>
         </AppViewWrapper>

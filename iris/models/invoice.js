@@ -3,11 +3,17 @@ import { db } from './db';
 import { addQueue } from '../utils/workerQueue';
 
 export const getInvoice = (id: string): Promise<Array<Object>> => {
-  return db.table('invoices').get(id).run();
+  return db
+    .table('invoices')
+    .get(id)
+    .run();
 };
 
 export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
-  return db.table('invoices').getAll(id, { index: 'communityId' }).run();
+  return db
+    .table('invoices')
+    .getAll(id, { index: 'communityId' })
+    .run();
 };
 
 export const getInvoicesByUser = (id: string): Promise<Array<Object>> => {

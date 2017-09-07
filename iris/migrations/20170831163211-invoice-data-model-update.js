@@ -32,13 +32,19 @@ exports.up = function(r, conn) {
       return Promise.all([
         cleanInvoices,
         // delete all the old records in recurringPayments table
-        r.table('invoices').delete().run(conn),
+        r
+          .table('invoices')
+          .delete()
+          .run(conn),
       ]);
     })
     .then(([cleanInvoices]) => {
       // insert each new clean record into the table
       return cleanInvoices.map(invoice => {
-        return r.table('invoices').insert(invoice).run(conn);
+        return r
+          .table('invoices')
+          .insert(invoice)
+          .run(conn);
       });
     });
 };

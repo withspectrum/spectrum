@@ -267,10 +267,11 @@ class Search extends Component {
 
     return (
       <SearchWrapper>
-        {searchIsLoading &&
+        {searchIsLoading && (
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
-          </SearchSpinnerContainer>}
+          </SearchSpinnerContainer>
+        )}
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
@@ -285,7 +286,7 @@ class Search extends Component {
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        searchString &&
+        searchString && (
           <SearchResultsDropdown>
             {searchResults.length > 0 &&
               searchResults.map(community => {
@@ -297,56 +298,57 @@ class Search extends Component {
                     <SearchResultImage community src={community.profilePhoto} />
 
                     <SearchResultMetaWrapper>
-                      <SearchResultName>
-                        {community.name}
-                      </SearchResultName>
-                      {community.metaData &&
+                      <SearchResultName>{community.name}</SearchResultName>
+                      {community.metaData && (
                         <SearchResultMetadata>
                           {community.metaData.members} members
-                        </SearchResultMetadata>}
+                        </SearchResultMetadata>
+                      )}
                       <SearchResultDescription>
                         {community.description}
                       </SearchResultDescription>
                     </SearchResultMetaWrapper>
 
                     <div>
-                      {community.communityPermissions.isMember
-                        ? <OutlineButton
-                            onClick={() => this.toggleMembership(community.id)}
-                            gradientTheme="none"
-                            color={'pro.alt'}
-                            hoverColor={'pro.default'}
-                            loading={loading === community.id}
-                          >
-                            Joined!
-                          </OutlineButton>
-                        : <Button
-                            onClick={() => this.toggleMembership(community.id)}
-                            loading={loading === community.id}
-                            gradientTheme={'success'}
-                            style={{ fontSize: '16px' }}
-                            icon={'plus'}
-                          >
-                            Join
-                          </Button>}
+                      {community.communityPermissions.isMember ? (
+                        <OutlineButton
+                          onClick={() => this.toggleMembership(community.id)}
+                          gradientTheme="none"
+                          color={'pro.alt'}
+                          hoverColor={'pro.default'}
+                          loading={loading === community.id}
+                        >
+                          Joined!
+                        </OutlineButton>
+                      ) : (
+                        <Button
+                          onClick={() => this.toggleMembership(community.id)}
+                          loading={loading === community.id}
+                          gradientTheme={'success'}
+                          style={{ fontSize: '16px' }}
+                          icon={'plus'}
+                        >
+                          Join
+                        </Button>
+                      )}
                     </div>
                   </SearchResult>
                 );
               })}
 
             {searchResults.length === 0 &&
-              isFocused &&
+            isFocused && (
               <SearchResult>
                 <SearchResultNull>
-                  <p>
-                    No communities found matching "{searchString}"
-                  </p>
+                  <p>No communities found matching "{searchString}"</p>
                   <Link to={'/new/community'}>
                     <Button>Create a Community</Button>
                   </Link>
                 </SearchResultNull>
-              </SearchResult>}
-          </SearchResultsDropdown>}
+              </SearchResult>
+            )}
+          </SearchResultsDropdown>
+        )}
       </SearchWrapper>
     );
   }

@@ -513,18 +513,14 @@ module.exports = /******/ (function(modules) {
                                           _context.t2 = id;
                                           _context.t3 = content.title;
                                           _context.next = 6;
-                                          return (
-                                            0,
-                                            _message.getNewMessageCount
-                                          )(id);
+                                          return (0,
+                                          _message.getNewMessageCount)(id);
 
                                         case 6:
                                           _context.t4 = _context.sent;
                                           _context.next = 9;
-                                          return (
-                                            0,
-                                            _message.getTotalMessageCount
-                                          )(id);
+                                          return (0,
+                                          _message.getTotalMessageCount)(id);
 
                                         case 9:
                                           _context.t5 = _context.sent;
@@ -809,10 +805,10 @@ module.exports = /******/ (function(modules) {
                                           _context5.t1 = firstName || null;
                                           _context5.t2 = userId;
                                           _context5.next = 5;
-                                          return (
-                                            0,
-                                            _usersChannels.getUsersChannelsEligibleForWeeklyDigest
-                                          )(userId);
+                                          return (0,
+                                          _usersChannels.getUsersChannelsEligibleForWeeklyDigest)(
+                                            userId
+                                          );
 
                                         case 5:
                                           _context5.t3 = _context5.sent;
@@ -1068,10 +1064,10 @@ module.exports = /******/ (function(modules) {
                                           _context7.next)) {
                                           case 0:
                                             _context7.next = 2;
-                                            return (
-                                              0,
-                                              _usersCommunities.getUsersCommunityIds
-                                            )(user.userId);
+                                            return (0,
+                                            _usersCommunities.getUsersCommunityIds)(
+                                              user.userId
+                                            );
 
                                           case 2:
                                             usersCommunityIds = _context7.sent;
@@ -1433,7 +1429,10 @@ module.exports = /******/ (function(modules) {
       var getCommunityById = (exports.getCommunityById = function getCommunityById(
         id
       ) {
-        return db.table('communities').get(id).run();
+        return db
+          .table('communities')
+          .get(id)
+          .run();
       });
 
       var getTopCommunities = (exports.getTopCommunities = function getTopCommunities(
@@ -1596,19 +1595,17 @@ module.exports = /******/ (function(modules) {
         __WEBPACK_AMD_DEFINE_RESULT__;
       (function(root, factory) {
         if (true) {
-          !(
-            (__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(25)]),
-            (__WEBPACK_AMD_DEFINE_FACTORY__ = factory),
-            (__WEBPACK_AMD_DEFINE_RESULT__ =
-              typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function'
-                ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(
-                    exports,
-                    __WEBPACK_AMD_DEFINE_ARRAY__
-                  )
-                : __WEBPACK_AMD_DEFINE_FACTORY__),
-            __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &&
-              (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)
-          );
+          !((__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(25)]),
+          (__WEBPACK_AMD_DEFINE_FACTORY__ = factory),
+          (__WEBPACK_AMD_DEFINE_RESULT__ =
+            typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function'
+              ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(
+                  exports,
+                  __WEBPACK_AMD_DEFINE_ARRAY__
+                )
+              : __WEBPACK_AMD_DEFINE_FACTORY__),
+          __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &&
+            (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else if (typeof exports === 'object') {
           module.exports = factory(
             require('moment-timezone'),
@@ -2204,7 +2201,7 @@ type QueueMap = {
       // e.g. [{ completed: 6 }, { completed: 2 }] => 8
       var sumArr = function sumArr(
         input /*: Array<Object> */,
-        prop /*: number */ /*: string */
+        prop /*: string */ /*: number */
       ) {
         return input.reduce(function(sum, item) {
           return sum + item[prop];

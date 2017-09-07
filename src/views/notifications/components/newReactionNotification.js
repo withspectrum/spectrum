@@ -40,7 +40,12 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.payload.threadId}`,
+        }}
+      />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />
@@ -48,7 +53,8 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
         </ReactionContext>
         <Content>
           <TextContent pointer={true}>
-            {' '}{actors.asString} {event} {context.asString} {date}{' '}
+            {' '}
+            {actors.asString} {event} {context.asString} {date}{' '}
           </TextContent>
           <AttachmentsWash>
             <HzRule>
@@ -59,7 +65,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
             <BubbleContainer me={true}>
               <BubbleGroupContainer me={true}>
                 <MessagesWrapper>
-                  {message.messageType === 'text' &&
+                  {message.messageType === 'text' && (
                     <MessageWrapper
                       me={false}
                       timestamp={convertTimestampToTime(message.timestamp)}
@@ -83,8 +89,9 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
                           color={'text.reverse'}
                         />
                       </ReactionWrapper>
-                    </MessageWrapper>}
-                  {message.messageType === 'media' &&
+                    </MessageWrapper>
+                  )}
+                  {message.messageType === 'media' && (
                     <MessageWrapper
                       me={false}
                       timestamp={convertTimestampToTime(message.timestamp)}
@@ -108,7 +115,8 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
                           color={'text.reverse'}
                         />
                       </ReactionWrapper>
-                    </MessageWrapper>}
+                    </MessageWrapper>
+                  )}
                 </MessagesWrapper>
               </BubbleGroupContainer>
             </BubbleContainer>
@@ -135,7 +143,12 @@ export const MiniNewReactionNotification = ({
 
   return (
     <NotificationListRow>
-      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.payload.threadId}`,
+        }}
+      />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />
@@ -143,7 +156,8 @@ export const MiniNewReactionNotification = ({
         </ReactionContext>
         <Content>
           <TextContent pointer={false}>
-            {' '}{actors.asString} {event} {context.asString}{' '}
+            {' '}
+            {actors.asString} {event} {context.asString}{' '}
             {messageStr && `"${messageStr}"`} {date}{' '}
           </TextContent>
         </Content>

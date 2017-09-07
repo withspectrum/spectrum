@@ -19,6 +19,7 @@ import { CommunityInviteNotification } from './components/communityInviteNotific
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Head from '../../components/head';
 import Titlebar from '../../views/titlebar';
 import {
   displayLoadingNotifications,
@@ -45,6 +46,7 @@ import {
   UpsellNullNotifications,
 } from '../../components/upsell';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
+import generateMetaInfo from 'shared/generate-meta-info';
 
 class NotificationsPure extends Component {
   state: {
@@ -175,10 +177,15 @@ class NotificationsPure extends Component {
       );
     }
 
+    const { title, description } = generateMetaInfo({
+      type: 'notifications',
+    });
+
     if (!data.notifications || data.notifications.edges.length === 0) {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
+            <Head title={title} description={description} />
             <UpsellNullNotifications />
           </Column>
         </AppViewWrapper>
@@ -198,15 +205,17 @@ class NotificationsPure extends Component {
 
     return (
       <FlexCol style={{ flex: '1 1 auto' }}>
+        <Head title={title} description={description} />
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
-            {this.state.showWebPushPrompt &&
+            {this.state.showWebPushPrompt && (
               <BrowserNotificationRequest
                 onSubscribe={this.subscribeToWebPush}
                 onDismiss={this.dismissWebPushRequest}
                 loading={this.state.webPushPromptLoading}
-              />}
+              />
+            )}
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}

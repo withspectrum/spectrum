@@ -80,7 +80,8 @@ export const zIndex = new function() {
 }();
 
 export const fontStack = css`
-	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe',
+    sans-serif;
 `;
 
 const spin = keyframes`
@@ -166,10 +167,10 @@ export const Input = styled.input`
   ${props =>
     props.type === 'checkbox' &&
     css`
-    flex: initial;
-    width: initial;
-    margin-right: 0.5rem;
-  `} &::placeholder {
+      flex: initial;
+      width: initial;
+      margin-right: 0.5rem;
+    `} &::placeholder {
     color: ${({ theme }) => theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
@@ -422,32 +423,34 @@ const returnTooltip = props => {
 };
 
 export const Tooltip = props => css`
-	position: relative;
+  position: relative;
 
-	&:after,
-	&:before {
-		line-height: 1;
+  &:after,
+  &:before {
+    line-height: 1;
     user-select: none;
     pointer-events: none;
     position: absolute;
     opacity: 0;
     display: block;
     text-transform: none;
-	}
+  }
 
-	&:before {
-		content: '';
+  &:before {
+    content: '';
     z-index: ${zIndex.tooltip + 1};
     border: 5px solid transparent;
   }
 
-	&:after {
-		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
+  &:after {
+    content: ${props.tipText && !props.onboarding
+      ? `'${props.tipText}'`
+      : `''`};
     z-index: ${zIndex.tooltip};
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
-		min-width: 3em;
+    min-width: 3em;
     max-width: 21em;
     white-space: nowrap;
     overflow: hidden;
@@ -457,14 +460,14 @@ export const Tooltip = props => css`
     box-shadow: ${Shadow.mid} ${hexa(props.theme.bg.reverse, 0.25)};
     background: ${props.theme.bg.reverse};
     color: ${props.theme.text.reverse};
-	}
+  }
 
   ${props.tipText && !props.onboarding ? returnTooltip(props) : ''};
 
-	&:hover:after,
-	&:hover:before {
-		opacity: 1;
-		transition: all 0.1s ease-in 0.1s;
+  &:hover:after,
+  &:hover:before {
+    opacity: 1;
+    transition: all 0.1s ease-in 0.1s;
   }
 `;
 
@@ -502,8 +505,8 @@ export const Onboarding = props => css`
     padding-left: 20px;
     border-radius: 12px;
     background-color: ${props.theme.bg.default};
-    background: ${props.theme.bg
-      .default} url(/img/goopy-top.svg) center top no-repeat;
+    background: ${props.theme.bg.default} url(/img/goopy-top.svg) center top
+      no-repeat;
     background-size: 100%;
     color: ${props.theme.text.default};
     box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
@@ -537,5 +540,4 @@ export const HorizontalRule = styled(FlexRow)`
   div {
     margin: 0 16px;
   }
-
 `;

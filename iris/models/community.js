@@ -51,7 +51,11 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       .zip()
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
-      .filter(row => row('isMember').eq(true).or(row('isOwner').eq(true)))
+      .filter(row =>
+        row('isMember')
+          .eq(true)
+          .or(row('isOwner').eq(true))
+      )
       .run()
   );
 };
@@ -471,9 +475,13 @@ const userIsMemberOfCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
-  return db.table('communities').get(communityId).run().then(community => {
-    return community.members.indexOf(userId) > -1;
-  });
+  return db
+    .table('communities')
+    .get(communityId)
+    .run()
+    .then(community => {
+      return community.members.indexOf(userId) > -1;
+    });
 };
 
 const userIsMemberOfAnyChannelInCommunity = (

@@ -16,7 +16,10 @@ const getUser = (input: Object): Promise<Object> => {
 };
 
 const getUserById = (userId: string): Promise<Object> => {
-  return db.table('users').get(userId).run();
+  return db
+    .table('users')
+    .get(userId)
+    .run();
 };
 
 const getUserByEmail = (email: string): Promise<Object> => {
@@ -41,7 +44,10 @@ const getUserByUsername = (username: string): Promise<Object> => {
 };
 
 const getUsers = (userIds: Array<string>): Promise<Array<Object>> => {
-  return db.table('users').getAll(...userIds).run();
+  return db
+    .table('users')
+    .getAll(...userIds)
+    .run();
 };
 
 const getUsersBySearchString = (string: string): Promise<Array<Object>> => {
@@ -61,10 +67,14 @@ const getUsersBySearchString = (string: string): Promise<Array<Object>> => {
 // space. This function is only invoked for signups when checking
 // for an existing user on the previous Firebase stack.
 const getUserByProviderId = (providerId: string): Promise<Object> => {
-  return db.table('users').filter({ providerId }).run().then(result => {
-    if (result && result.length > 0) return result[0];
-    throw new new UserError('No user found with this providerId')();
-  });
+  return db
+    .table('users')
+    .filter({ providerId })
+    .run()
+    .then(result => {
+      if (result && result.length > 0) return result[0];
+      throw new new UserError('No user found with this providerId')();
+    });
 };
 
 const storeUser = (user: Object): Promise<Object> => {
@@ -224,7 +234,11 @@ const getUsersThreadCount = (
   threadIds: Array<string>
 ): Promise<Array<Object>> => {
   const getThreadCounts = threadIds.map(creatorId =>
-    db.table('threads').getAll(creatorId, { index: 'creatorId' }).count().run()
+    db
+      .table('threads')
+      .getAll(creatorId, { index: 'creatorId' })
+      .count()
+      .run()
   );
 
   return Promise.all(getThreadCounts).then(result => {

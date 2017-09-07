@@ -70,11 +70,11 @@ export const ViewSubtitle = styled(H2)`
 `;
 
 export const ListCard = styled(StyledCard)`
-padding: 0;
-@media (max-width: 768px) {
-  display: flex;
-  margin-bottom: 32px;
-}
+  padding: 0;
+  @media (max-width: 768px) {
+    display: flex;
+    margin-bottom: 32px;
+  }
 `;
 
 export const Section = styled(FlexCol)`
@@ -157,7 +157,8 @@ export const Row = styled(ScrollRow)`
   overflow-x: scroll;
   align-items: flex-start;
 
-  &:after, &:before{
+  &:after,
+  &:before {
     content: '';
     display: inline-block;
     flex: 0 0 32px;
@@ -182,7 +183,7 @@ export const Item = styled(FlexCol)`
 
   &:hover {
     box-shadow: ${Shadow.high} ${props =>
-  hexa(props.theme.text.placeholder, 1)};
+        hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
@@ -269,7 +270,7 @@ export const SearchWrapper = styled(Card)`
   transition: ${Transition.hover.off};
   z-index: ${zIndex.search};
 
-  &:hover{
+  &:hover {
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
     transition: ${Transition.hover.on};
   }
@@ -280,8 +281,7 @@ export const SearchInputWrapper = styled(FlexRow)`
   color: ${props => props.theme.text.placeholder};
 `;
 
-export const SearchIcon = styled(Icon)`
-`;
+export const SearchIcon = styled(Icon)``;
 
 export const SearchInput = styled.input`
   font-size: 16px;
@@ -371,17 +371,12 @@ export const SearchLink = styled(Link)`
   display: flex;
   align-items: center;
   width: 100%;
-  ${Truncate()}
-  padding: 8px 16px 8px 8px;
+  ${Truncate()} padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled(Avatar)`
-  margin: 4px 6px 8px 4px;
-`;
+export const SearchResultImage = styled(Avatar)`margin: 4px 6px 8px 4px;`;
 
-export const SearchResultMetaWrapper = styled(FlexCol)`
-  margin-left: 16px;
-`;
+export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
 
 export const SearchResultName = styled.h2`
   font-size: 16px;

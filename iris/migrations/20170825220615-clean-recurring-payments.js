@@ -38,9 +38,15 @@ exports.up = function(r, conn) {
       return Promise.all([
         cleanSubscriptions,
         // delete all the old records in recurringPayments table
-        r.table('recurringPayments').delete().run(conn),
+        r
+          .table('recurringPayments')
+          .delete()
+          .run(conn),
         // also create a new index against communityId for faster isPro lookups on communities
-        r.table('recurringPayments').indexCreate('communityId').run(conn),
+        r
+          .table('recurringPayments')
+          .indexCreate('communityId')
+          .run(conn),
       ]);
     })
     .then(([cleanSubscriptions]) => {
