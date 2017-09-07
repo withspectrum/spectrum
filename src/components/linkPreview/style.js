@@ -10,7 +10,7 @@ export const LinkPreviewContainer = styled.a`
   border: 1px solid ${({ theme }) => theme.border.default};
   ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
-  margin: 0;
+  margin: ${props => (props.margin ? props.margin : '0')};
   padding: 0;
   transition: ${Transition.reaction.off};
   flex: auto;
