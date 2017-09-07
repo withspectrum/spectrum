@@ -347,6 +347,17 @@ class CommunityWithData extends Component {
           </Input>
 
           <Actions>
+            <Button
+              loading={isLoading}
+              onClick={this.save}
+              disabled={photoSizeError}
+              type="submit"
+            >
+              Save
+            </Button>
+            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
+              Cancel
+            </TextButton>
             <TertiaryActionContainer>
               <IconButton
                 glyph="delete"
@@ -357,16 +368,6 @@ class CommunityWithData extends Component {
                 onClick={e => this.triggerDeleteCommunity(e, community.id)}
               />
             </TertiaryActionContainer>
-            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
-              Cancel
-            </TextButton>
-            <Button
-              loading={isLoading}
-              onClick={this.save}
-              disabled={photoSizeError}
-            >
-              Save
-            </Button>
           </Actions>
 
           {photoSizeError && (

@@ -93,7 +93,7 @@ export const Description = styled.p`
 `;
 
 export const ExtLink = styled(FlexRow)`
-  margin-top: 8px;
+  margin-top: 16px;
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
