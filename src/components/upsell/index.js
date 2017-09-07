@@ -9,7 +9,7 @@ import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
-import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
+import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
@@ -52,14 +52,8 @@ export const NullCard = props => {
   return (
     <Card noShadow={props.noShadow}>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.heading &&
-          <Title>
-            {props.heading}
-          </Title>}
-        {props.copy &&
-          <Subtitle>
-            {props.copy}
-          </Subtitle>}
+        {props.heading && <Title>{props.heading}</Title>}
+        {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
       </NullCol>
     </Card>
@@ -70,38 +64,28 @@ export const MiniNullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.emoji &&
+        {props.emoji && (
           <LargeEmoji>
             <span role="img" aria-label="Howdy!">
               {props.emoji}
             </span>
-          </LargeEmoji>}
-        {props.heading &&
-          <MiniTitle>
-            {props.heading}
-          </MiniTitle>}
-        {props.copy &&
-          <MiniSubtitle>
-            {props.copy}
-          </MiniSubtitle>}
+          </LargeEmoji>
+        )}
+        {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
+        {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
         {props.children}
       </NullCol>
     </Card>
   );
 };
 
-export const NullState = props =>
+export const NullState = props => (
   <NullCol bg={props.bg}>
-    {props.heading &&
-      <Title>
-        {props.heading}
-      </Title>}
-    {props.copy &&
-      <Subtitle>
-        {props.copy}
-      </Subtitle>}
+    {props.heading && <Title>{props.heading}</Title>}
+    {props.copy && <Subtitle>{props.copy}</Subtitle>}
     {props.children}
-  </NullCol>;
+  </NullCol>
+);
 
 const login = method => {
   // log the user in and return them to this page
@@ -134,12 +118,8 @@ export const UpsellCreateCommunity = ({ close }) => {
 
   return (
     <NullCard bg={'onboarding'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Link to="/new/community">
           <Button onClick={close}>Get Started</Button>
@@ -197,12 +177,8 @@ export class UpsellSignIn extends Component {
           <UpsellIconContainer>
             <Icon glyph={glyph || 'explore'} size={56} />
           </UpsellIconContainer>
-          <Title>
-            {title || 'Find your people.'}
-          </Title>
-          <Subtitle>
-            {subtitle}
-          </Subtitle>
+          <Title>{title || 'Find your people.'}</Title>
+          <Subtitle>{subtitle}</Subtitle>
 
           <SignupButton onClick={() => this.toggleSigningIn('signup')}>
             Sign up
@@ -210,7 +186,8 @@ export class UpsellSignIn extends Component {
           <SignupFooter>
             Already have an account?{' '}
             <SigninLink onClick={() => this.toggleSigningIn('login')}>
-              {' '}Log in
+              {' '}
+              Log in
             </SigninLink>
           </SignupFooter>
         </NullCard>
@@ -230,9 +207,7 @@ export const UpsellJoinChannelState = ({
   return (
     <NullState bg="channel">
       <Title>Ready to join the conversation?</Title>
-      <Subtitle>
-        Join ~{channel.name} to get involved!
-      </Subtitle>
+      <Subtitle>Join ~{channel.name} to get involved!</Subtitle>
       <Button
         loading={loading}
         onClick={() => subscribe(channel.id)}
@@ -270,22 +245,24 @@ export const UpsellRequestToJoinChannel = ({
       </Subtitle>
 
       {// user is not logged in
-      !currentUser &&
+      !currentUser && (
         <Button icon="twitter" onClick={login}>
           Sign in with Twitter
-        </Button>}
+        </Button>
+      )}
 
       {// has user already requested to join?
-      currentUser && isPending
-        ? <OutlineButton
-            onClick={() => subscribe(channel.id)}
-            icon="minus"
-            loading={loading}
-            label
-          >
-            Cancel request
-          </OutlineButton>
-        : currentUser &&
+      currentUser && isPending ? (
+        <OutlineButton
+          onClick={() => subscribe(channel.id)}
+          icon="minus"
+          loading={loading}
+          label
+        >
+          Cancel request
+        </OutlineButton>
+      ) : (
+        currentUser && (
           <Button
             onClick={() => subscribe(channel.id)}
             icon="private-unlocked"
@@ -293,7 +270,9 @@ export const UpsellRequestToJoinChannel = ({
             label
           >
             Request to join {channel.name}
-          </Button>}
+          </Button>
+        )
+      )}
     </NullCard>
   );
 };
@@ -324,12 +303,8 @@ export const Upsell404Channel = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Button onClick={() => (window.location.href = returnUrl)}>
           Take me back
@@ -365,22 +340,20 @@ export const Upsell404Community = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
 
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
-        create
-          ? <Link to={`/home`}>
-              <OutlineButton>Take me home</OutlineButton>
-            </Link>
-          : <Link to={`/home`}>
-              <Button>Take me home</Button>
-            </Link>}
+        create ? (
+          <Link to={`/home`}>
+            <OutlineButton>Take me home</OutlineButton>
+          </Link>
+        ) : (
+          <Link to={`/home`}>
+            <Button>Take me home</Button>
+          </Link>
+        )}
 
         {create && <Button onClick={create}>Create this Community</Button>}
       </Actions>
@@ -443,9 +416,7 @@ export class UpsellNewUser extends Component {
             👋
           </span>
         </LargeEmoji>
-        <Title>
-          Howdy, {user.name}!
-        </Title>
+        <Title>Howdy, {user.name}!</Title>
         <Subtitle>
           Spectrum is a place where communities live. It's easy to follow the
           things that you care about most, or even create your own community to
@@ -601,10 +572,7 @@ class UpsellUpgradeToProPure extends Component {
           </Button>
         </StripeCheckout>
 
-        {!upgradeError &&
-          <UpgradeError>
-            {upgradeError}
-          </UpgradeError>}
+        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
       </NullCard>
     );
   }
@@ -642,7 +610,7 @@ export const UpsellNullNotifications = () => {
   );
 };
 
-export const UpsellReload = () =>
+export const UpsellReload = () => (
   <NullCard
     bg="error"
     heading={`Whoops!`}
@@ -651,4 +619,5 @@ export const UpsellReload = () =>
     <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload
     </Button>
-  </NullCard>;
+  </NullCard>
+);

@@ -103,7 +103,7 @@ class UpgradeModal extends React.Component {
           title={!user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'}
           closeModal={this.closeModal}
         >
-          {user.isPro &&
+          {user.isPro && (
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want to
@@ -128,17 +128,17 @@ class UpgradeModal extends React.Component {
                   Get Support
                 </Button>
               </SectionActions>
-              {upgradeError &&
+              {upgradeError && (
                 <SectionError
                   width={'100%'}
                   centered={true}
                   error={upgradeError}
                 >
-                  <Padding padding={'0.5rem'}>
-                    {upgradeError}
-                  </Padding>
-                </SectionError>}
-            </Section>}
+                  <Padding padding={'0.5rem'}>{upgradeError}</Padding>
+                </SectionError>
+              )}
+            </Section>
+          )}
 
           {!user.isPro && <UpsellUpgradeToPro complete={this.closeModal} />}
         </ModalContainer>

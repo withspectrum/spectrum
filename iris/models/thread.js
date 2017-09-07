@@ -6,7 +6,10 @@ const { listenToNewDocumentsIn } = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 
 export const getThread = (threadId: string): Promise<Object> => {
-  return db.table('threads').get(threadId).run();
+  return db
+    .table('threads')
+    .get(threadId)
+    .run();
 };
 
 export const getThreads = (
@@ -115,7 +118,9 @@ export const getViewableThreadsByUser = (
       .eqJoin('channelId', db.table('usersChannels'), { index: 'channelId' })
       // return only objects where the thread is not in a private channel or is in a channel where the current user is a member
       .filter(row =>
-        row('left')('isPrivate').eq(false).or(row('right')('isMember').eq(true))
+        row('left')('isPrivate')
+          .eq(false)
+          .or(row('right')('isMember').eq(true))
       )
       // filter down to only threads where the currentUser matches the criteria above
       .filter({
@@ -223,13 +228,20 @@ export const setThreadLock = (
         result =>
           result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run()
+            : db
+                .table('threads')
+                .get(threadId)
+                .run()
       )
   );
 };
 
 export const setThreadLastActive = (threadId: string, value: Date) =>
-  db.table('threads').get(threadId).update({ lastActive: value }).run();
+  db
+    .table('threads')
+    .get(threadId)
+    .update({ lastActive: value })
+    .run();
 
 /*
   Non-destructively delete a thread by setting the `deletedAt` field to a date.

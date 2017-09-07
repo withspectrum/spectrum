@@ -78,8 +78,7 @@ const UserSettings = ({ data, currentUser, match }) => {
           <RecurringPaymentsList data={data} currentUser={data.user} />
           <EmailSettings largeOnly currentUser={data.user} />
           {'serviceWorker' in navigator &&
-            'PushManager' in window &&
-            <NotificationSettings largeOnly />}
+          'PushManager' in window && <NotificationSettings largeOnly />}
           <Invoices />
         </Column>
       </AppViewWrapper>

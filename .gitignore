@@ -15,3 +15,4 @@ build-chronos
 package-lock.json
 .vscode
 dump.rdb
+*.swp

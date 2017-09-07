@@ -265,18 +265,20 @@ class CreateChannelModal extends Component {
               Channel Name
             </Input>
 
-            {nameError &&
-              <Error>Channel names can be up to 20 characters long.</Error>}
+            {nameError && (
+              <Error>Channel names can be up to 20 characters long.</Error>
+            )}
 
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
               {`sp.chat/${modalProps.slug}/`}
             </UnderlineInput>
 
-            {slugTaken &&
+            {slugTaken && (
               <Error>
                 This url is already taken - feel free to change it if you're set
                 on the name {name}!
-              </Error>}
+              </Error>
+            )}
 
             {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
@@ -288,10 +290,11 @@ class CreateChannelModal extends Component {
               Describe it in 140 characters or less
             </TextArea>
 
-            {descriptionError &&
+            {descriptionError && (
               <Error>
                 Oop, that's more than 140 characters - try trimming that up.
-              </Error>}
+              </Error>
+            )}
 
             <Checkbox
               id="isPrivate"
@@ -302,29 +305,32 @@ class CreateChannelModal extends Component {
               Private channel
             </Checkbox>
 
-            {!modalProps.isPro &&
+            {!modalProps.isPro && (
               <UpsellDescription>
                 Pro communities can create private channels to protect threads,
                 messages, and manually approve all new members.
                 <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
                   Learn more
                 </Link>
-              </UpsellDescription>}
+              </UpsellDescription>
+            )}
 
             {modalProps.isPro &&
-              isPrivate &&
+            isPrivate && (
               <Description>
                 Only approved people on Spectrum can see the threads, messages,
                 and members in this channel. You can manually approve users who
                 request to join this channel.
-              </Description>}
+              </Description>
+            )}
 
             {modalProps.isPro &&
-              !isPrivate &&
+            !isPrivate && (
               <Description>
                 Anyone on Spectrum can join this channel, post threads and
                 messages, and will be able to see other members.
-              </Description>}
+              </Description>
+            )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
@@ -337,10 +343,11 @@ class CreateChannelModal extends Component {
               </Button>
             </Actions>
 
-            {createError &&
+            {createError && (
               <Error>
                 Please fix any errors above before creating this community.
-              </Error>}
+              </Error>
+            )}
           </Form>
         </ModalContainer>
       </Modal>

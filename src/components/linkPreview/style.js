@@ -10,7 +10,7 @@ export const LinkPreviewContainer = styled.a`
   border: 1px solid ${({ theme }) => theme.border.default};
   ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
-  margin: 0;
+  margin: ${props => (props.margin ? props.margin : '0')};
   padding: 0;
   transition: ${Transition.reaction.off};
   flex: auto;
@@ -131,56 +131,56 @@ const Cover = styled.div`
 `;
 
 export const CoverLeft = styled(Cover)`
-	left: 140px;
-	width: 24px;
-	height: 100%;
+  left: 140px;
+  width: 24px;
+  height: 100%;
 `;
 
 export const CoverTop = styled(Cover)`
-	right: 0;
-	top: 0;
-	height: 40px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 0;
+  height: 40px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddle = styled(Cover)`
-	right: 0;
-	top: 52px;
-	height: 16px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 52px;
+  height: 16px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddleMiddle = styled(Cover)`
-	right: 0;
-	top: 80px;
-	height: 20px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 80px;
+  height: 20px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddleTopRight = styled(Cover)`
-	right: 0;
-	top: 34px;
-	height: 20px;
-	width: calc(100% - 482px);
+  right: 0;
+  top: 34px;
+  height: 20px;
+  width: calc(100% - 482px);
 `;
 
 export const CoverMiddleBottomRight = styled(Cover)`
-	right: 0;
-	top: 64px;
-	height: 20px;
-	width: calc(100% - 342px);
+  right: 0;
+  top: 64px;
+  height: 20px;
+  width: calc(100% - 342px);
 `;
 
 export const CoverMiddleMiddleBottomRight = styled(Cover)`
-	right: 0;
-	top: 88px;
-	height: 20px;
-	width: calc(100% - 382px);
+  right: 0;
+  top: 88px;
+  height: 20px;
+  width: calc(100% - 382px);
 `;
 
 export const CoverBottom = styled(Cover)`
-	right: 0;
-	bottom: 0;
-	height: 30px;
-	width: calc(100% - 152px);
+  right: 0;
+  bottom: 0;
+  height: 30px;
+  width: calc(100% - 152px);
 `;
