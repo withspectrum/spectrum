@@ -6,7 +6,7 @@ import { PROCESS_WEEKLY_DIGEST_EMAIL } from '../queues/constants';
 const weeklyDigest = () =>
   createJob(
     PROCESS_WEEKLY_DIGEST_EMAIL,
-    '0 9 * * 1' // run at 9am every Monday
+    '0 6 * * 1' // run at 9am every Monday
   );
 
 module.exports = {
