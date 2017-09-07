@@ -95,9 +95,11 @@ class CommunityUpgradeModal extends React.Component {
       <Modal
         isOpen={isOpen}
         contentLabel={
-          !community.isPro
-            ? 'Upgrade your community'
-            : 'Manage your subscription'
+          !community.isPro ? (
+            'Upgrade your community'
+          ) : (
+            'Manage your subscription'
+          )
         }
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
@@ -107,13 +109,15 @@ class CommunityUpgradeModal extends React.Component {
         <ModalContainer
           noHeader={!user.isPro}
           title={
-            !community.isPro
-              ? 'Upgrade your community'
-              : 'Manage your subscription'
+            !community.isPro ? (
+              'Upgrade your community'
+            ) : (
+              'Manage your subscription'
+            )
           }
           closeModal={this.closeModal}
         >
-          {community.isPro &&
+          {community.isPro && (
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want to
@@ -145,23 +149,24 @@ class CommunityUpgradeModal extends React.Component {
                   Get Support
                 </Button>
               </SectionActions>
-              {upgradeError &&
+              {upgradeError && (
                 <SectionError
                   width={'100%'}
                   centered={true}
                   error={upgradeError}
                 >
-                  <Padding padding={'0.5rem'}>
-                    {upgradeError}
-                  </Padding>
-                </SectionError>}
-            </Section>}
+                  <Padding padding={'0.5rem'}>{upgradeError}</Padding>
+                </SectionError>
+              )}
+            </Section>
+          )}
 
-          {!community.isPro &&
+          {!community.isPro && (
             <UpsellUpgradeCommunity
               community={community}
               complete={this.closeModal}
-            />}
+            />
+          )}
         </ModalContainer>
       </Modal>
     );

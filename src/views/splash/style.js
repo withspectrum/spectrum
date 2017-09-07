@@ -12,11 +12,11 @@ import {
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
-	flex: 1 0 auto;
-	width: 100%;
-	background-color: ${({ theme }) => theme.bg.default};
+  flex: 1 0 auto;
+  width: 100%;
+  background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
-	overflow-x: hidden;
+  overflow-x: hidden;
   z-index: ${zIndex.base};
 `;
 
@@ -31,27 +31,27 @@ export const Flexer = styled(FlexRow)`
 export const Header = styled(FlexRow)`
   padding: 32px;
   justify-content: space-between;
-  z-index: ${zIndex.card}
+  z-index: ${zIndex.card};
 `;
 
 export const Content = styled(FlexRow)`
-	flex: auto;
-	align-self: stretch;
-	align-items: center;
-	justify-content: center;
-	position: relative;
+  flex: auto;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 
-	@media (max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
-	}
+  }
 `;
 
 export const Tagline = styled(H2)`
-	font-weight: 900;
-	font-size: 32px;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	color: inherit;
+  font-weight: 900;
+  font-size: 32px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: inherit;
 
   @media (max-width: 768px) {
     margin-bottom: 32px;
@@ -59,16 +59,16 @@ export const Tagline = styled(H2)`
 `;
 
 export const Copy = styled(P)`
-	max-width: 480px;
-	width: 100%;
-	font-size: 16px;
-	line-height: 1.5;
-	color: inherit;
-	font-weight: 500;
+  max-width: 480px;
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.5;
+  color: inherit;
+  font-weight: 500;
 
-	&:not(:first-of-type){
-		margin-top: 16px;
-	}
+  &:not(:first-of-type) {
+    margin-top: 16px;
+  }
 
   @media (max-width: 768px) {
     text-align: left;
@@ -217,55 +217,54 @@ export const LoginCard = styled.div`
 `;
 
 export const ButtonTwitter = styled(Button)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.twitter.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.twitter.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'};
+  }
 `;
 
 export const ButtonFacebook = styled(Button)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.facebook.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.facebook.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
-
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.facebook.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'};
+  }
 `;
 
 export const ButtonGoogle = styled(Button)`
-	background: ${props =>
+  background: ${props =>
     props.preferred ? props.theme.social.google.default : 'none'};
-	color: ${props =>
+  color: ${props =>
     props.whitebg
       ? props.theme.social.google.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
-	&:hover {
-		color: ${props =>
-      props.whitebg ? props.theme.social.google.default : '#fff'}
-	}
+  &:hover {
+    color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'};
+  }
 `;
 
 export const Footer = styled(FlexRow)`
-	position: relative;
-	flex: auto;
+  position: relative;
+  flex: auto;
   justify-content: space-between;
   padding: 24px 24px 24px 40px;
   background-color: ${({ theme }) => theme.bg.reverse};
-	color: ${({ theme }) => theme.text.reverse};
+  color: ${({ theme }) => theme.text.reverse};
 
   @media (max-width: 768px) {
     flex-direction: column;

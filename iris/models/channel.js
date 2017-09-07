@@ -280,7 +280,9 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
 };
 
 const getChannelMemberCount = (channelId: string): number => {
-  return db.table('channels').get(channelId)('members').count().run();
+  return db.table('channels').get(channelId)('members')
+    .count()
+    .run();
 };
 
 module.exports = {

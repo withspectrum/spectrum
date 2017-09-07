@@ -7,9 +7,7 @@ import { addQueue } from '../utils/workerQueue';
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'), { raise: false });
-}
+env(path.resolve(__dirname, '../.env'), { raise: false });
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
 if (!IS_PROD) {

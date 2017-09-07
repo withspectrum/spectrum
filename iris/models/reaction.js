@@ -10,11 +10,17 @@ export type ReactionInput = {
 };
 
 export const getReactions = (messageId: string): Promise<Array<Object>> => {
-  return db.table('reactions').getAll(messageId, { index: 'messageId' }).run();
+  return db
+    .table('reactions')
+    .getAll(messageId, { index: 'messageId' })
+    .run();
 };
 
 export const getReaction = (reactionId: string): Promise<Object> => {
-  return db.table('reactions').get(reactionId).run();
+  return db
+    .table('reactions')
+    .get(reactionId)
+    .run();
 };
 
 export const toggleReaction = (
@@ -30,7 +36,11 @@ export const toggleReaction = (
       // this user has already reacted to the message, remove the reaction
       if (result.length > 0) {
         const existing = result[0];
-        return db.table('reactions').get(existing.id).delete().run();
+        return db
+          .table('reactions')
+          .get(existing.id)
+          .delete()
+          .run();
       } else {
         return db
           .table('reactions')
@@ -53,6 +63,9 @@ export const toggleReaction = (
     })
     .then(() => {
       // return the message object itself in order to more easily update the UI with the apollo store
-      return db.table('messages').get(reaction.messageId).run();
+      return db
+        .table('messages')
+        .get(reaction.messageId)
+        .run();
     });
 };

@@ -10,7 +10,10 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 export type MessageTypes = 'text' | 'media';
 
 const getMessage = (messageId: string): Promise<Object> => {
-  return db.table('messages').get(messageId).run();
+  return db
+    .table('messages')
+    .get(messageId)
+    .run();
 };
 
 const getMessages = (threadId: String): Promise<Array<Object>> => {

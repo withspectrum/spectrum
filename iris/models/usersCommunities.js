@@ -109,7 +109,12 @@ const removeMemberInCommunity = (
       receiveNotifications: false,
     })
     .run()
-    .then(() => db.table('communities').get(communityId).run());
+    .then(() =>
+      db
+        .table('communities')
+        .get(communityId)
+        .run()
+    );
 };
 
 // removes all the user relationships to a community. will be invoked when a
