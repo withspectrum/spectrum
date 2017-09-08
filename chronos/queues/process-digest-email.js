@@ -1,10 +1,10 @@
 // @flow
-const debug = require('debug')('chronos:queue:send-weekly-digest-email');
+const debug = require('debug')('chronos:queue:send-digest-email');
 // $FlowFixMe
 import intersection from 'lodash.intersection';
 import createQueue from '../../shared/bull/create-queue';
 import {
-  SEND_WEEKLY_DIGEST_EMAIL,
+  SEND_DIGEST_EMAIL,
   MIN_TOTAL_MESSAGE_COUNT,
   MIN_NEW_MESSAGE_COUNT,
   MAX_THREAD_COUNT_PER_CHANNEL,
@@ -14,7 +14,7 @@ import {
   TOTAL_MESSAGE_COUNT_WEIGHT,
   NEW_MESSAGE_COUNT_WEIGHT,
 } from './constants';
-const sendWeeklyDigestEmailQueue = createQueue(SEND_WEEKLY_DIGEST_EMAIL);
+const sendDigestEmailQueue = createQueue(SEND_DIGEST_EMAIL);
 import { getActiveThreadsInTimeframe } from '../models/thread';
 import { getUsersForDigest } from '../models/usersSettings';
 import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels';
@@ -23,7 +23,8 @@ import { getTotalMessageCount, getNewMessageCount } from '../models/message';
 import { getCommunityById, getTopCommunities } from '../models/community';
 
 export default job => {
-  const { timeframe } = job;
+  const { timeframe } = job.data;
+  console.log('timeframe', timeframe);
   debug(`\nnew job: ${job.id}`);
   debug(`\nprocessing ${timeframe} digest`);
 
@@ -128,16 +129,16 @@ export default job => {
   /*
       3. In this step we process and aggregate user settings, users channels, and the thread data fetched above
 
-      a. first, get all the userIds of people who have opted to receive a weekly digest
+      a. first, get all the userIds of people who have opted to receive a digest
       b. for each person, get an array of channelIds where that user is a member
-      c. determine if there is any overlap between the user's channels and the active threads from the past week. Note: this filters out people who are members of inactive communities, even if they are opted in to receive a weekly digest
+      c. determine if there is any overlap between the user's channels and the active threads from the past week. Note: this filters out people who are members of inactive communities, even if they are opted in to receive a digest
   */
   const eligibleUsersForDigest = async () => {
-    // get users who have opted to receive a weekly digest
+    // get users who have opted to receive a digest
     const users = await getUsersForDigest(timeframe);
-    debug('\n ⚙️ Fetched users who want to receive a weekly digest');
+    debug('\n ⚙️ Fetched users who want to receive a digest');
 
-    // for each user who wants a weekly digest, fetch an array of channelIds where they are a member
+    // for each user who wants a digest, fetch an array of channelIds where they are a member
     const channelConnectionPromises = users.map(
       async ({ email, firstName, userId, ...user }) => {
         return {
@@ -176,7 +177,7 @@ export default job => {
       '\n ⚙️ Filtered intersecting channels between the user and the top threads this week'
     );
 
-    // based on the intersecting channels, get the threads that could appear in the user's weekly digest
+    // based on the intersecting channels, get the threads that could appear in the user's digest
     const rawThreadsForUsersEmail = getIntersectingChannels.map(e => {
       let arr = [];
       e.channels.map(c => arr.push(...threadData[c]));
@@ -186,7 +187,7 @@ export default job => {
       };
     });
     debug(
-      '\n ⚙️ Fetched all the possible threads this user could receive in a weekly digest'
+      '\n ⚙️ Fetched all the possible threads this user could receive in a digest'
     );
 
     // if no rawThreadsForUsersEmail, escape
@@ -195,7 +196,7 @@ export default job => {
       return;
     }
 
-    // we don't want to send a weekly digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
+    // we don't want to send a digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
     const eligibleUsersForDigest = rawThreadsForUsersEmail
       .filter(user => user.threads.length > MIN_THREADS_REQUIRED_FOR_DIGEST)
       // and finally, sort the user's threads in descending order by message count
@@ -217,7 +218,7 @@ export default job => {
       });
 
     debug(
-      '\n ⚙️ Filtered users who have enough threads to qualify for a weekly digest'
+      '\n ⚙️ Filtered users who have enough threads to qualify for a digest'
     );
 
     /*
@@ -266,7 +267,7 @@ export default job => {
 
     const sendDigestPromises = topCommunities =>
       eligibleUsers.map(async user => {
-        // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the weekly digest
+        // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the digest
         const usersCommunityIds = await getUsersCommunityIds(user.userId);
         debug('\n ⚙️  Got users communities');
         // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
@@ -281,15 +282,19 @@ export default job => {
 
         debug('\n ⚙️  Processed community upsells for email digest');
 
-        return await sendWeeklyDigestEmailQueue.add({ ...user, communities });
+        return await sendDigestEmailQueue.add({
+          ...user,
+          communities,
+          timeframe,
+        });
       });
 
     return await Promise.all(sendDigestPromises(topCommunities));
   };
 
   return processSendWeeklyDigests().catch(err => {
-    debug('❌  Error sending weekly digest');
+    debug('❌  Error sending digest');
     debug(err);
-    console.log('Error sending weekly digests: ', err);
+    console.log('Error sending digests: ', err);
   });
 };

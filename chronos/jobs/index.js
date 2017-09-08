@@ -1,20 +1,25 @@
 // @flow
 import { createJob } from './utils';
-import { PROCESS_DIGEST_EMAIL } from '../queues/constants';
+import {
+  PROCESS_WEEKLY_DIGEST_EMAIL,
+  PROCESS_DAILY_DIGEST_EMAIL,
+} from '../queues/constants';
 
 // weekly digest
 const weeklyDigest = () =>
   createJob(
-    PROCESS_DIGEST_EMAIL,
-    '0 6 * * 1', // run at 6am on Monday
-    'weekkly'
+    PROCESS_WEEKLY_DIGEST_EMAIL,
+    // '0 6 * * 1', // run at 6am on Monday
+    '* * * * *',
+    'weekly'
   );
 
 // daily digest
 const dailyDigest = () =>
   createJob(
-    PROCESS_DIGEST_EMAIL,
-    '0 18 * * *', // run at 6pm every day
+    PROCESS_DAILY_DIGEST_EMAIL,
+    // '0 18 * * *', // run at 6pm every day
+    '* * * * *',
     'daily'
   );
 

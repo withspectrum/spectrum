@@ -25,7 +25,7 @@ export const createJob = (
   timeframe?: string // an optional parameter to get passed into the addQueue function for adding variance to the timeframe of a cronjob
 ) => {
   try {
-    console.log('🕑 New cron job initiated');
+    console.log('🕑 New cron job initiated: ' + name + ' - ' + timeframe);
     return addQueue(
       name,
       { timeframe },

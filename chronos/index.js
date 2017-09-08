@@ -3,7 +3,10 @@
 const debug = require('debug')('chronos');
 const createWorker = require('../shared/bull/create-worker');
 import processDigestEmail from './queues/process-digest-email';
-import { PROCESS_DIGEST_EMAIL } from './queues/constants';
+import {
+  PROCESS_WEEKLY_DIGEST_EMAIL,
+  PROCESS_DAILY_DIGEST_EMAIL,
+} from './queues/constants';
 import { weeklyDigest, dailyDigest } from './jobs';
 
 const PORT = process.env.PORT || 3004;
@@ -13,7 +16,8 @@ debug('Logging with debug enabled!');
 console.log('');
 
 const server = createWorker({
-  [PROCESS_DIGEST_EMAIL]: processDigestEmail,
+  [PROCESS_WEEKLY_DIGEST_EMAIL]: processDigestEmail,
+  [PROCESS_DAILY_DIGEST_EMAIL]: processDigestEmail,
 });
 
 // start the jobs

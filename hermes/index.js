@@ -9,7 +9,7 @@ import processSendNewCommunityWelcomeEmail from './queues/send-new-community-wel
 import processSendCommunityInvoiceReceiptEmail from './queues/send-community-invoice-receipt-email';
 import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt-email';
 import processSendNewThreadEmail from './queues/send-new-thread-email';
-import processSendWeeklyDigestEmail from './queues/send-weekly-digest-email';
+import processSendDigestEmail from './queues/send-digest-email';
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
@@ -19,7 +19,7 @@ import {
   SEND_NEW_USER_WELCOME_EMAIL,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-  SEND_WEEKLY_DIGEST_EMAIL,
+  SEND_DIGEST_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -37,7 +37,7 @@ const server = createWorker({
   [SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL]: processSendCommunityInvoiceReceiptEmail,
   [SEND_PRO_INVOICE_RECEIPT_EMAIL]: processSendProInvoiceReceiptEmail,
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
-  [SEND_WEEKLY_DIGEST_EMAIL]: processSendWeeklyDigestEmail,
+  [SEND_DIGEST_EMAIL]: processSendDigestEmail,
 });
 
 console.log(
