@@ -78,7 +78,7 @@ export const Subtitle = styled.div`
 export const Description = styled.p`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px 16px;
+  padding: 0 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
@@ -99,6 +99,9 @@ export const ExtLink = styled(FlexRow)`
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
+  padding: 16px;
+  padding-top: 0;
+  font-size: 14px;
 
   > a:hover {
     text-decoration: underline;
