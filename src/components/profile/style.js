@@ -78,13 +78,13 @@ export const Subtitle = styled.div`
 export const Description = styled.p`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px;
+  padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
   a {
     font-weight: 500;
-    color: ${props => props.theme.brand.default};
+    color: ${props => props.theme.brand.alt};
 
     &:hover {
       text-decoration: underline;
@@ -93,7 +93,6 @@ export const Description = styled.p`
 `;
 
 export const ExtLink = styled(FlexRow)`
-  margin-top: 16px;
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
