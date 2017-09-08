@@ -23,6 +23,7 @@ const parseNotificationTypes = notifications => {
     type => type !== '__typename'
   );
   return types.map(type => {
+    if (!notifications.types[type]) return {};
     switch (type) {
       case 'newMessageInThreads':
         return {
@@ -84,7 +85,9 @@ class EmailSettings extends Component {
 
   render() {
     const { currentUser: { settings: { notifications } } } = this.props;
-    const settings = parseNotificationTypes(notifications);
+    const settings = parseNotificationTypes(notifications).filter(
+      notification => notification.emailValue && notification
+    );
 
     return (
       <StyledCard
