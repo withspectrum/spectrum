@@ -201,8 +201,8 @@ class CommunityViewPure extends Component {
               // add a button on top of the cover photo that will allow
               // the person to leave the community
               isLoggedIn &&
-                (!community.communityPermissions.isOwner &&
-                  community.communityPermissions.isMember) &&
+              (!community.communityPermissions.isOwner &&
+                community.communityPermissions.isMember) && (
                 <CoverButton
                   glyph="minus-fill"
                   color="bg.default"
@@ -211,18 +211,20 @@ class CommunityViewPure extends Component {
                   tipText="Leave community"
                   tipLocation="left"
                   onClick={() => this.toggleMembership(community.id)}
-                />}
+                />
+              )}
             </CoverPhoto>
 
             <CoverRow className={'flexy'}>
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
 
-                {!isMobile &&
+                {!isMobile && (
                   <ChannelListCard
                     slug={communitySlug.toLowerCase()}
                     currentUser={isLoggedIn}
-                  />}
+                  />
+                )}
               </Column>
 
               <Column type="primary">
@@ -249,7 +251,7 @@ class CommunityViewPure extends Component {
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
-                    Members ({community.metaData.members})
+                    Members ({community.metaData.members.toLocaleString})
                   </Segment>
                 </SegmentedControl>
 
@@ -257,33 +259,34 @@ class CommunityViewPure extends Component {
                 // and is a member of the community, they should see a
                 // new thread composer
                 isLoggedIn &&
-                  selectedView === 'threads' &&
-                  isOwnerOrMember &&
+                selectedView === 'threads' &&
+                isOwnerOrMember && (
                   <ThreadComposer
                     activeCommunity={communitySlug}
                     showComposerUpsell={showComposerUpsell}
-                  />}
+                  />
+                )}
 
                 {// if the user is logged in but doesn't own the community
                 // or isn't a member yet, prompt them to join the community
                 isLoggedIn &&
-                  !isOwnerOrMember &&
+                !isOwnerOrMember && (
                   <UpsellJoinCommunity
                     community={community}
                     loading={isLoading}
                     join={this.toggleMembership}
-                  />}
+                  />
+                )}
 
                 {// if the user hasn't signed up yet, show them a spectrum
                 // upsell signup prompt
                 !isLoggedIn &&
-                  selectedView === 'threads' &&
-                  <UpsellSignIn
-                    view={{ data: community, type: 'community' }}
-                  />}
+                selectedView === 'threads' && (
+                  <UpsellSignIn view={{ data: community, type: 'community' }} />
+                )}
 
                 {// thread list
-                selectedView === 'threads' &&
+                selectedView === 'threads' && (
                   <CommunityThreadFeed
                     viewContext="community"
                     slug={communitySlug}
@@ -294,11 +297,13 @@ class CommunityViewPure extends Component {
                     isNewAndOwned={isNewAndOwned}
                     community={community}
                     pinnedThreadId={community.pinnedThreadId}
-                  />}
+                  />
+                )}
 
                 {// members grid
-                selectedView === 'members' &&
-                  <CommunityMemberGrid id={community.id} />}
+                selectedView === 'members' && (
+                  <CommunityMemberGrid id={community.id} />
+                )}
 
                 {//search
                 selectedView === 'search' && <Search community={community} />}
@@ -333,11 +338,12 @@ class CommunityViewPure extends Component {
       return (
         <AppViewWrapper>
           <Titlebar noComposer />
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <LoadingProfile />
               <LoadingList />
-            </Column>}
+            </Column>
+          )}
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />
