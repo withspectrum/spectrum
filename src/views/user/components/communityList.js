@@ -46,9 +46,11 @@ const CommunityList = props => {
     return (
       <StyledCard largeOnly>
         <ListHeader>
-          {user === currentUser
-            ? <ListHeading>My Communities</ListHeading>
-            : <ListHeading>Member of</ListHeading>}
+          {user === currentUser ? (
+            <ListHeading>My Communities</ListHeading>
+          ) : (
+            <ListHeading>Member of</ListHeading>
+          )}
         </ListHeader>
         <ListContainer>
           {communities.map(item => {
@@ -58,13 +60,8 @@ const CommunityList = props => {
                   contents={item.node}
                   withDescription={withDescription}
                   withMeta={withMeta}
-                  meta={`${item.node.metaData.members > 1
-                    ? `${item.node.metaData.members} members`
-                    : `${item.node.metaData.members} member`}
-                     ·
-                    ${item.node.metaData.channels > 1
-                      ? `${item.node.metaData.channels} channels`
-                      : `${item.node.metaData.channels} channel`}`}
+                  meta={`${item.node.communityPermissions
+                    .reputation} reputation`}
                 >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>

@@ -334,8 +334,9 @@ const getReputationByUser = (userId: string): Promise<Number> => {
   return db
     .table('usersCommunities')
     .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
     .map(rec => rec('reputation'))
-    .reduce((l, r) => r.add(r))
+    .reduce((l, r) => l.add(r))
     .default(0)
     .run();
 };
