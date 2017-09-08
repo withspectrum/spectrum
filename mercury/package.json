@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start": "NODE_ENV=production node main.js"
+  },
+  "dependencies": {
+    "bull": "^3.0.0-rc.8",
+    "debug": "^2.6.8",
+    "postmark": "^1.3.1",
+    "rethinkdbdash": "^2.3.29",
+    "source-map-support": "^0.4.15"
+  },
+  "devDependencies": {
+    "json-stringify-pretty-compact": "^1.0.4"
+  }
+}

@@ -32,7 +32,7 @@ To install all necessary dependencies for the frontend and for `iris` (the web s
 npm install
 ```
 
-To install the dependencies for `athena` and `hermes`:
+To install the dependencies for `athena`, `hermes`, `chronos`, and `mercury`:
 
 ```sh
 # Navigate to the hermes/ folder
@@ -43,6 +43,18 @@ npm install
 cd ..
 # Navigate to the athena/ folder
 cd athena
+# Install the dependencies
+npm install
+# Navigate back to the root folder
+cd ..
+# Navigate to the chronos/ folder
+cd chronos
+# Install the dependencies
+npm install
+# Navigate back to the root folder
+cd ..
+# Navigate to the mercury/ folder
+cd mercury
 # Install the dependencies
 npm install
 # Navigate back to the root folder
