@@ -72,13 +72,9 @@ class DirectMessages extends Component {
     const { activeThread } = this.state;
 
     // no user found, get them to the home page to log in
-    console.log('data', data);
     if (!data.user || !currentUser) {
-      console.log('no user');
       return <Splash />;
     }
-
-    console.log('continuing');
 
     // if the user exists, but does not have any dm threads, show the null state
     if (
