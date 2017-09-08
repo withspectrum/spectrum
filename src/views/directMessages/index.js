@@ -70,11 +70,6 @@ class DirectMessages extends Component {
 
     const { activeThread } = this.state;
 
-    // no user found, get them to the home page to log in
-    if (!data.user) {
-      window.location.href = '/';
-    }
-
     // if the user exists, but does not have any dm threads, show the null state
     if (
       (data.user && !data.user.directMessageThreadsConnection) ||
