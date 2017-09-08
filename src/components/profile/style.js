@@ -84,7 +84,7 @@ export const Description = styled.p`
 
   a {
     font-weight: 500;
-    color: ${props => props.theme.brand.default};
+    color: ${props => props.theme.brand.alt};
 
     &:hover {
       text-decoration: underline;
@@ -93,12 +93,14 @@ export const Description = styled.p`
 `;
 
 export const ExtLink = styled(FlexRow)`
-  margin-top: 16px;
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
+  padding: 16px;
+  padding-top: 0;
+  font-size: 14px;
 
   > a:hover {
     text-decoration: underline;

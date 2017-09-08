@@ -175,16 +175,15 @@ class CommunityWithData extends Component {
           </ProfileHeader>
           <Description>
             {renderDescriptionWithLinks(community.description)}
-
-            {community.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a href={addProtocolToString(community.website)}>
-                  {community.website}
-                </a>
-              </ExtLink>
-            )}
           </Description>
+          {community.website && (
+            <ExtLink>
+              <Icon glyph="link" size={24} />
+              <a href={addProtocolToString(community.website)}>
+                {community.website}
+              </a>
+            </ExtLink>
+          )}
         </Card>
       );
     } else if (componentSize === 'miniWithAction') {
