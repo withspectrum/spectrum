@@ -20,6 +20,7 @@ import CommunityView from './views/community';
 import ChannelView from './views/channel';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
+import Inbox from './views/inbox';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
 import UserSettings from './views/userSettings';
@@ -31,11 +32,10 @@ import signedOutFallback from './helpers/signed-out-fallback';
 import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
 
-const About = () => (
+const About = () =>
   <div>
     <h3>About</h3>
-  </div>
-);
+  </div>;
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -76,12 +76,12 @@ class Routes extends Component {
             <Route
               exact
               path="/"
-              component={signedOutFallback(Dashboard, Splash)}
+              component={signedOutFallback(Inbox, Splash)}
             />
             <Route
               exact
               path="/home"
-              component={signedOutFallback(Dashboard, Splash)}
+              component={signedOutFallback(Inbox, Splash)}
             />
 
             {/* Public Business Pages */}
