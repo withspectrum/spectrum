@@ -11,6 +11,12 @@ export const userSettingsFragment = gql`
           newThreadCreated {
             email
           }
+          weeklyDigest {
+            email
+          }
+          dailyDigest {
+            email
+          }
         }
       }
     }

@@ -58,6 +58,8 @@ const User = /* GraphQL */ `
 	type NotificationSettingsType {
 		newMessageInThreads: NotificationKindSettings
 		newThreadCreated: NotificationKindSettings
+		weeklyDigest: NotificationKindSettings
+		dailyDigest: NotificationKindSettings
 	}
 
 	type UserNotificationsSettings {
