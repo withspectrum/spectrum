@@ -65,3 +65,14 @@ export const createInvoice = (
       return invoice;
     });
 };
+
+export const getInvoiceByChargeId = (chargeId: string): Promise<Boolean> => {
+  return db
+    .table('invoices')
+    .filter({ chargeId })
+    .run()
+    .then(result => {
+      if (!result || result.length === 0) return false;
+      return true;
+    });
+};

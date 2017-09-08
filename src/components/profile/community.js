@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+// $FlowFixMe
+import replace from 'string-replace-to-array';
 import Card from '../card';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -103,6 +105,15 @@ class CommunityWithData extends Component {
     } = this.props;
     const { isLoading } = this.state;
     const componentSize = profileSize || 'mini';
+    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+
+    const renderDescriptionWithLinks = text => {
+      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+        <a href={url} target="_blank" rel="noopener nofollower">
+          {text}
+        </a>
+      ));
+    };
 
     if (loading) {
       return <LoadingProfile />;
@@ -148,32 +159,31 @@ class CommunityWithData extends Component {
             <CommunityAvatar community size={40} src={community.profilePhoto} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>
-                  {community.name}
-                </Title>
+                <Title>{community.name}</Title>
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
             {currentUser &&
-              community.communityPermissions.isOwner &&
+            community.communityPermissions.isOwner && (
               <Link to={`/${community.slug}/settings`}>
                 <ProfileHeaderAction
                   glyph="settings"
                   tipText="Edit community"
                   tipLocation="top-left"
                 />
-              </Link>}
+              </Link>
+            )}
           </ProfileHeader>
           <Description>
-            <p>
-              {community.description}
-            </p>
-            {community.website &&
+            {renderDescriptionWithLinks(community.description)}
+
+            {community.website && (
               <ExtLink>
                 <Icon glyph="link" size={24} />
                 <a href={addProtocolToString(community.website)}>
                   {community.website}
                 </a>
-              </ExtLink>}
+              </ExtLink>
+            )}
           </Description>
         </Card>
       );
@@ -184,17 +194,14 @@ class CommunityWithData extends Component {
             <CommunityAvatar community src={community.profilePhoto} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>
-                  {community.name}
-                </Title>
-                {community.metaData &&
-                  <Subtitle>
-                    {community.metaData.members}
-                  </Subtitle>}
+                <Title>{community.name}</Title>
+                {community.metaData && (
+                  <Subtitle>{community.metaData.members}</Subtitle>
+                )}
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
             {currentUser &&
-              member &&
+            member && (
               <Button
                 loading={isLoading}
                 icon="checkmark"
@@ -204,9 +211,10 @@ class CommunityWithData extends Component {
                 onClick={() => this.toggleMembership(community.id)}
               >
                 Joined
-              </Button>}
+              </Button>
+            )}
             {currentUser &&
-              !member &&
+            !member && (
               <Button
                 loading={isLoading}
                 icon="plus-fill"
@@ -214,7 +222,8 @@ class CommunityWithData extends Component {
                 onClick={() => this.toggleMembership(community.id)}
               >
                 Join
-              </Button>}
+              </Button>
+            )}
           </ProfileHeader>
         </ProfileCard>
       );
@@ -224,17 +233,14 @@ class CommunityWithData extends Component {
           <CommunityAvatar community src={community.profilePhoto} />
           <ProfileHeaderLink to={`/${community.slug}`}>
             <ProfileHeaderMeta>
-              <Title>
-                {community.name}
-              </Title>
-              {community.metaData &&
-                <Subtitle>
-                  {community.metaData.members} members
-                </Subtitle>}
+              <Title>{community.name}</Title>
+              {community.metaData && (
+                <Subtitle>{community.metaData.members} members</Subtitle>
+              )}
             </ProfileHeaderMeta>
           </ProfileHeaderLink>
           {currentUser &&
-            member &&
+          member && (
             <Button
               loading={isLoading}
               icon="checkmark"
@@ -244,9 +250,10 @@ class CommunityWithData extends Component {
               onClick={() => this.toggleMembership(community.id)}
             >
               Joined
-            </Button>}
+            </Button>
+          )}
           {currentUser &&
-            !member &&
+          !member && (
             <Button
               loading={isLoading}
               icon="plus-fill"
@@ -254,7 +261,8 @@ class CommunityWithData extends Component {
               onClick={() => this.toggleMembership(community.id)}
             >
               Join
-            </Button>}
+            </Button>
+          )}
         </ProfileHeader>
       );
     } else {
@@ -264,48 +272,56 @@ class CommunityWithData extends Component {
             <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>
-                  {community.name}
-                </Title>
+                <Title>{community.name}</Title>
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
 
             {currentUser &&
-              !community.communityPermissions.isOwner &&
+            !community.communityPermissions.isOwner && (
               <ProfileHeaderAction
                 glyph={
-                  community.communityPermissions.isMember
-                    ? 'minus'
-                    : 'plus-fill'
+                  community.communityPermissions.isMember ? (
+                    'minus'
+                  ) : (
+                    'plus-fill'
+                  )
                 }
                 color={
-                  community.communityPermissions.isMember
-                    ? 'text.placeholder'
-                    : 'brand.alt'
+                  community.communityPermissions.isMember ? (
+                    'text.placeholder'
+                  ) : (
+                    'brand.alt'
+                  )
                 }
                 hoverColor={
-                  community.communityPermissions.isMember
-                    ? 'warn.default'
-                    : 'brand.alt'
+                  community.communityPermissions.isMember ? (
+                    'warn.default'
+                  ) : (
+                    'brand.alt'
+                  )
                 }
                 tipText={
-                  community.communityPermissions.isMember
-                    ? `Leave community`
-                    : 'Join community'
+                  community.communityPermissions.isMember ? (
+                    `Leave community`
+                  ) : (
+                    'Join community'
+                  )
                 }
                 tipLocation="top-left"
                 onClick={() => this.toggleMembership(community.id)}
-              />}
+              />
+            )}
 
             {currentUser &&
-              community.communityPermissions.isOwner &&
+            community.communityPermissions.isOwner && (
               <Link to={`/${community.slug}/settings`}>
                 <ProfileHeaderAction
                   glyph="settings"
                   tipText="Edit community"
                   tipLocation="top-left"
                 />
-              </Link>}
+              </Link>
+            )}
           </ProfileHeader>
         </Card>
       );
