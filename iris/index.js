@@ -36,9 +36,6 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-import stripeRoutes from './routes/stripe';
-app.use('/stripe', stripeRoutes);
-
 // Use express to server-side render the React app
 const renderer = require('./renderer').default;
 app.use(

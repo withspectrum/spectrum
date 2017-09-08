@@ -1,11 +1,11 @@
 // @flow
 // $FlowFixMe
 import { Router } from 'express';
-const webhookRouter = Router();
+const stripeRouter = Router();
 
-import { processInvoicePaid } from './functions';
+import { processInvoicePaid } from '../webhooks';
 
-webhookRouter.post('/', (req, res) => {
+stripeRouter.post('/', (req, res) => {
   const event = req.body;
 
   switch (event.type) {
@@ -22,4 +22,4 @@ webhookRouter.post('/', (req, res) => {
   }
 });
 
-export default webhookRouter;
+export default stripeRouter;
