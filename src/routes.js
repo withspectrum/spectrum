@@ -50,6 +50,27 @@ const Body = styled(FlexCol)`
   }
 `;
 
+const DashboardFallback = signedOutFallback(Dashboard, Splash);
+const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
+  <Redirect to="/login" />
+));
+const MessagesFallback = signedOutFallback(DirectMessages, () => (
+  <Redirect to="/login" />
+));
+const UserSettingsFallback = signedOutFallback(UserSettings, () => (
+  <Redirect to="/login" />
+));
+const CommunitySettingsFallback = signedOutFallback(communitySettings, () => (
+  <Redirect to="/login" />
+));
+const ChannelSettingsFallback = signedOutFallback(channelSettings, () => (
+  <Redirect to="/login" />
+));
+const NotificationsFallback = signedOutFallback(Notifications, () => (
+  <Redirect to="/login" />
+));
+
 class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
@@ -74,8 +95,8 @@ class Routes extends Component {
               https://reacttraining.com/react-router/web/api/Switch
             */}
             <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route exact path="/home" component={Dashboard} />
+              <Route exact path="/" component={DashboardFallback} />
+              <Route exact path="/home" component={HomeFallback} />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />
@@ -85,32 +106,25 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
-              <Route
-                path="/new/community"
-                component={signedOutFallback(NewCommunity, () => (
-                  <Redirect to="/login" />
-                ))}
-              />
+              <Route path="/new/community" component={NewCommunityFallback} />
               <Route
                 path="/new"
                 render={() => <Redirect to="/new/community" />}
               />
               <Route path="/login" component={Login} />
               <Route path="/explore" component={Explore} />
-              <Route path="/messages/new" component={DirectMessages} />
-              <Route path="/messages/:threadId" component={DirectMessages} />
-              <Route path="/messages" component={DirectMessages} />
+              <Route path="/messages/new" component={MessagesFallback} />
+              <Route path="/messages/:threadId" component={MessagesFallback} />
+              <Route path="/messages" component={MessagesFallback} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />
               <Route
                 exact
                 path="/users/:username/settings"
-                component={signedOutFallback(UserSettings, () => (
-                  <Redirect to="/login" />
-                ))}
+                component={UserSettingsFallback}
               />
-              <Route path="/notifications" component={Notifications} />
+              <Route path="/notifications" component={NotificationsFallback} />
 
               {/*
               We check communitySlug last to ensure none of the above routes
@@ -119,11 +133,11 @@ class Routes extends Component {
             */}
               <Route
                 path="/:communitySlug/:channelSlug/settings"
-                component={channelSettings}
+                component={ChannelSettingsFallback}
               />
               <Route
                 path="/:communitySlug/settings"
-                component={communitySettings}
+                component={CommunitySettingsFallback}
               />
               <Route
                 path="/:communitySlug/:channelSlug"

@@ -37,6 +37,6 @@ const LoadingState = () => (
 );
 
 export const displayLoadingState = branch(
-  props => !props.data || props.data.loading,
+  props => !props.data.user && !props.data.error,
   renderComponent(LoadingState)
 );
