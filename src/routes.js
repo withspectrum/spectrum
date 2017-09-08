@@ -74,18 +74,8 @@ class Routes extends Component {
               https://reacttraining.com/react-router/web/api/Switch
             */}
             <Switch>
-              <Route
-                exact
-                path="/"
-                component={signedOutFallback(Dashboard, Splash)}
-              />
-              <Route
-                exact
-                path="/home"
-                component={signedOutFallback(Dashboard, () => (
-                  <Redirect to="/" />
-                ))}
-              />
+              <Route exact path="/" component={Dashboard} />
+              <Route exact path="/home" component={Dashboard} />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />
@@ -107,24 +97,9 @@ class Routes extends Component {
               />
               <Route path="/login" component={Login} />
               <Route path="/explore" component={Explore} />
-              <Route
-                path="/messages/new"
-                component={signedOutFallback(DirectMessages, () => (
-                  <Redirect to="/login" />
-                ))}
-              />
-              <Route
-                path="/messages/:threadId"
-                component={signedOutFallback(DirectMessages, () => (
-                  <Redirect to="/login" />
-                ))}
-              />
-              <Route
-                path="/messages"
-                component={signedOutFallback(DirectMessages, () => (
-                  <Redirect to="/login" />
-                ))}
-              />
+              <Route path="/messages/new" component={DirectMessages} />
+              <Route path="/messages/:threadId" component={DirectMessages} />
+              <Route path="/messages" component={DirectMessages} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />
@@ -135,12 +110,7 @@ class Routes extends Component {
                   <Redirect to="/login" />
                 ))}
               />
-              <Route
-                path="/notifications"
-                component={signedOutFallback(Notifications, () => (
-                  <Redirect to="/login" />
-                ))}
-              />
+              <Route path="/notifications" component={Notifications} />
 
               {/*
               We check communitySlug last to ensure none of the above routes

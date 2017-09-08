@@ -300,6 +300,8 @@ class Navbar extends Component {
     const isHome =
       history.location.pathname === '/' ||
       history.location.pathname === '/home';
+    const isNotifications = history.location.pathname === '/notifications';
+    const isMessages = history.location.pathname === '/messages';
     const {
       allUnseenCount,
       dmUnseenCount,
@@ -309,6 +311,8 @@ class Navbar extends Component {
 
     // Bail out if the splash page is showing
     if (!currentUserExists && isHome) return null;
+    if (!currentUserExists && isNotifications) return null;
+    if (!currentUserExists && isMessages) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input

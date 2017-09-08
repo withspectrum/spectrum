@@ -47,6 +47,7 @@ import {
 } from '../../components/upsell';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
+import Splash from '../splash';
 
 class NotificationsPure extends Component {
   state: {
@@ -158,13 +159,7 @@ class NotificationsPure extends Component {
     const { currentUser, data } = this.props;
 
     if (!currentUser) {
-      return (
-        <AppViewWrapper>
-          <Column type={'primary'}>
-            <UpsellSignIn />
-          </Column>
-        </AppViewWrapper>
-      );
+      return <Splash />;
     }
 
     if (!data || data.error || data.loading) {

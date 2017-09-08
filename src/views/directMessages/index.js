@@ -17,6 +17,7 @@ import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import { View, MessagesList, ComposeHeader } from './style';
 import Titlebar from '../titlebar';
+import Splash from '../splash';
 
 class DirectMessages extends Component {
   state: {
@@ -72,7 +73,7 @@ class DirectMessages extends Component {
 
     // no user found, get them to the home page to log in
     if (!data.user) {
-      window.location.href = '/';
+      return <Splash />;
     }
 
     // if the user exists, but does not have any dm threads, show the null state

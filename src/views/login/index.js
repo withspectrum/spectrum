@@ -57,7 +57,7 @@ export class Login extends Component {
         ? "We're happy to see you again - log in below to get back into the conversation!"
         : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.';
 
-    const verb = signinType === 'login' ? 'Log in ' : 'Sign up ';
+    const verb = signinType === 'login' ? 'Log in ' : 'Sign in ';
 
     const postAuthRedirectPath = redirectPath
       ? `?r=${redirectPath}`
