@@ -30,7 +30,6 @@ import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
 //$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-import Splash from '../splash';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
@@ -147,9 +146,6 @@ class DashboardPure extends Component {
         </AppViewWrapper>
       );
     }
-
-    // If there's no error but also no user they gotta sign in
-    return <Splash />;
   }
 }
 
