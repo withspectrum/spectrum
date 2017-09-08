@@ -11,6 +11,7 @@ iris/.env
 build-iris
 build-athena
 build-hermes
+build-chronos
 package-lock.json
 .vscode
 dump.rdb

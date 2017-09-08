@@ -7,6 +7,8 @@ exports.up = function(r, conn) {
     .then(invoices => {
       // for each subscription record, map it and create a new object with a cleaner data model
       return invoices.map(invoice => {
+        if (!invoice.stripeData) return invoice;
+
         return Object.assign(
           {},
           {
