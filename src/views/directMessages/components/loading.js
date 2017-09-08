@@ -11,7 +11,7 @@ import Icon from '../../../components/icons';
 import { LoadingDM } from '../../../components/loading';
 import { View, MessagesList, ComposeHeader } from '../style';
 
-const LoadingState = () =>
+const LoadingState = () => (
   <View>
     <MessagesList>
       <Link to="/messages/new">
@@ -33,9 +33,10 @@ const LoadingState = () =>
         <LoadingDM />
       </div>
     </MessagesList>
-  </View>;
+  </View>
+);
 
 export const displayLoadingState = branch(
-  props => !props.data.user && !props.data.error,
+  props => !props.data || props.data.loading,
   renderComponent(LoadingState)
 );
