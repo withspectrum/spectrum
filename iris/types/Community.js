@@ -93,10 +93,7 @@ const Community = /* GraphQL */ `
 		website: String
 		profilePhoto: String
 		coverPhoto: String
-		isOwner: Boolean
-		isMember: Boolean
-		isModerator: Boolean
-		isBlocked: Boolean
+		reputation: Int
 		pinnedThreadId: String
 		communityPermissions: CommunityPermissions!
 		channelConnection: CommunityChannelsConnection!

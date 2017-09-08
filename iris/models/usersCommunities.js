@@ -330,6 +330,16 @@ const getUserPermissionsInCommunity = (
     });
 };
 
+const getReputationByUser = (userId: string): Promise<Number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .map(rec => rec('reputation'))
+    .reduce((l, r) => r.add(r))
+    .default(0)
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInCommunity,
@@ -346,4 +356,5 @@ module.exports = {
   getModeratorsInCommunity,
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
+  getReputationByUser,
 };

@@ -113,7 +113,6 @@ class ThreadFeedPure extends Component {
             threshold={750}
           >
             {threads.map(thread => {
-              console.log(thread);
               return (
                 <ThreadFeedCard
                   key={thread.node.id}

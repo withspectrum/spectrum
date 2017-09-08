@@ -23,6 +23,7 @@ const general = /* GraphQL */ `
 		isOwner: Boolean
 		isModerator: Boolean
 		receiveNotifications: Boolean
+		reputation: Int
 	}
 
   input File {

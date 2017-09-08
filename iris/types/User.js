@@ -84,6 +84,7 @@ const User = /* GraphQL */ `
 		lastSeen: Date!
 		isOnline: Boolean
 		timezone: Int
+		totalReputation: Int
 
 		# non-schema fields
 		threadCount: Int
