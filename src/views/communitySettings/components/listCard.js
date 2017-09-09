@@ -38,7 +38,7 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ChannelListItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members`}
+                  meta={`${item.node.metaData.members.toLocaleString()} members`}
                 >
                   <IconButton glyph="settings" />
                 </ChannelListItem>

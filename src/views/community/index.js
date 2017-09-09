@@ -243,7 +243,7 @@ class CommunityViewPure extends Component {
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
-                    Members ({community.metaData.members})
+                    Members ({community.metaData.members.toLocaleString()})
                   </Segment>
                 </SegmentedControl>
 
