@@ -9,8 +9,8 @@ import {
 const weeklyDigest = () =>
   createJob(
     PROCESS_WEEKLY_DIGEST_EMAIL,
-    // '0 6 * * 1', // run at 6am on Monday
-    '* * * * *',
+    '0 6 * * 1', // run at 6am on Monday
+    // '*/10 * * * *',
     'weekly'
   );
 
@@ -18,8 +18,8 @@ const weeklyDigest = () =>
 const dailyDigest = () =>
   createJob(
     PROCESS_DAILY_DIGEST_EMAIL,
-    // '0 18 * * *', // run at 6pm every day
-    '* * * * *',
+    '0 18 * * *', // run at 6pm every day
+    // '*/10 * * * *',
     'daily'
   );
 
