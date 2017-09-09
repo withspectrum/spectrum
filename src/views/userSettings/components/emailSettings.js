@@ -23,6 +23,7 @@ const parseNotificationTypes = notifications => {
     type => type !== '__typename'
   );
   return types.map(type => {
+    if (!notifications.types[type]) return {};
     switch (type) {
       case 'newMessageInThreads':
         return {
@@ -30,6 +31,7 @@ const parseNotificationTypes = notifications => {
           emailValue: notifications.types[type].email,
           label:
             "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
+          display: 'flex-start',
         };
       case 'newThreadCreated':
         return {
@@ -37,6 +39,23 @@ const parseNotificationTypes = notifications => {
           emailValue: notifications.types[type].email,
           label:
             'Email me when a new thread is published in channels where I receive notifications.',
+          display: 'flex-start',
+        };
+      case 'dailyDigest':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label:
+            'Email me every day with the top conversations in my communities.',
+          display: 'center',
+        };
+      case 'weeklyDigest':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label:
+            'Email me once every week with the top conversations in my communities',
+          display: 'center',
         };
       default:
       case 'null':
@@ -66,7 +85,9 @@ class EmailSettings extends Component {
 
   render() {
     const { currentUser: { settings: { notifications } } } = this.props;
-    const settings = parseNotificationTypes(notifications);
+    const settings = parseNotificationTypes(notifications).filter(
+      notification => notification.emailValue && notification
+    );
 
     return (
       <StyledCard
@@ -84,11 +105,11 @@ class EmailSettings extends Component {
                   checked={setting.emailValue}
                   onChange={this.handleChange}
                   id={setting.type}
-                  align={'flex-start'}
+                  align={setting.display}
                 >
                   <CheckboxContent>
                     {setting.label}
-                    {setting.type === 'newMessageInThreads' &&
+                    {setting.type === 'newMessageInThreads' && (
                       <Notice>
                         <strong>
                           Trying to mute a specific conversation?
@@ -99,14 +120,16 @@ class EmailSettings extends Component {
                           <Icon glyph="notification" size="16" />
                         </InlineIcon>{' '}
                         at the top of a post.
-                      </Notice>}
+                      </Notice>
+                    )}
 
-                    {setting.type === 'newThreadCreated' &&
+                    {setting.type === 'newThreadCreated' && (
                       <Notice>
                         You can turn off email notifications for individual
                         channels by turning thread notifications off on in the
                         sidebar of the individual channel's page.
-                      </Notice>}
+                      </Notice>
+                    )}
                   </CheckboxContent>
                 </Checkbox>
               </EmailListItem>

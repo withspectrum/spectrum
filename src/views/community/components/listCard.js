@@ -85,19 +85,17 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      ) : (
-                        `${channel.metaData.members} member ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      )
+                      channel.metaData.members > 1
+                        ? `${channel.metaData.members.toLocaleString()} members ${data
+                            .community.communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                            : ``}`
+                        : `${channel.metaData.members} member ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -123,19 +121,17 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      ) : (
-                        `${channel.metaData.members} member ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      )
+                      channel.metaData.members > 1
+                        ? `${channel.metaData.members.toLocaleString()} members ${data
+                            .community.communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
+                        : `${channel.metaData.members.toLocaleString()} member ${data
+                            .community.communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -161,19 +157,17 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      ) : (
-                        `${channel.metaData.members} member ${data.community
-                          .communityPermissions.isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
-                          : ``}`
-                      )
+                      channel.metaData.members > 1
+                        ? `${channel.metaData.members.toLocaleString()} members ${data
+                            .community.communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                            : ``}`
+                        : `${channel.metaData.members} member ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />

@@ -61,7 +61,7 @@ const createMemberInChannel = (
             {
               createdAt: new Date(),
               isMember: true,
-              receiveNotifications: false,
+              receiveNotifications: true,
             },
             { returnChanges: 'always' }
           )
@@ -79,7 +79,7 @@ const createMemberInChannel = (
               isModerator: false,
               isBlocked: false,
               isPending: false,
-              receiveNotifications: false,
+              receiveNotifications: true,
             },
             { returnChanges: true }
           )
@@ -263,7 +263,7 @@ const approvePendingUserInChannel = (
       {
         isMember: true,
         isPending: false,
-        receiveNotifications: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -283,7 +283,7 @@ const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
       {
         isMember: true,
         isPending: false,
-        receiveNotifications: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )

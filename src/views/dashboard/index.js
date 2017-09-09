@@ -94,14 +94,15 @@ class DashboardPure extends Component {
           <Titlebar />
 
           {currentUser.username &&
-            communities.length === 0 &&
+          communities.length === 0 && (
             <NewUserOnboarding
               noCloseButton
               close={() => {}}
               currentUser={currentUser}
-            />}
+            />
+          )}
 
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <UserProfile profileSize="mini" data={{ user: user }} />
               <CommunityList
@@ -113,7 +114,8 @@ class DashboardPure extends Component {
               />
               <UpsellMiniCreateCommunity largeOnly />
               {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
-            </Column>}
+            </Column>
+          )}
 
           <Column type="primary">
             <FlexCol>
@@ -131,11 +133,12 @@ class DashboardPure extends Component {
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar noComposer />
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <LoadingProfile />
               <LoadingList />
-            </Column>}
+            </Column>
+          )}
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />
@@ -143,17 +146,6 @@ class DashboardPure extends Component {
         </AppViewWrapper>
       );
     }
-
-    // If there's no error but also no user they gotta sign in
-    return (
-      <AppViewWrapper>
-        <Head title={title} description={description} />
-        <Titlebar noComposer />
-        <Column type="primary" alignItems="center">
-          <UpsellSignIn />
-        </Column>
-      </AppViewWrapper>
-    );
   }
 }
 
