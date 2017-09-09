@@ -48,23 +48,23 @@ export const parseNotification = notification => {
   });
 };
 
-export const renderBubbleHeader = actor =>
+export const renderBubbleHeader = actor => (
   <Byline>
     <Link to={`/users/${actor.username}`}>
-      <Name>
-        {actor.name}
-      </Name>
+      <Name>{actor.name}</Name>
       {actor.isAdmin && <Badge type="admin" />}
       {actor.isPro && <Badge type="pro" />}
     </Link>
-  </Byline>;
+  </Byline>
+);
 
-export const renderAvatar = actor =>
+export const renderAvatar = actor => (
   <Link to={`/users/${actor.username}`} style={{ alignSelf: 'flex-end' }}>
     <AvatarLabel tipText={actor.name} tipLocation="right">
       <UserAvatar isOnline={actor.isOnline} src={actor.profilePhoto} />
     </AvatarLabel>
-  </Link>;
+  </Link>
+);
 
 const actorsToString = actors => {
   // reverse to show the most recent first
@@ -78,9 +78,7 @@ const actorsToString = actors => {
   if (actors.length === 1) {
     return (
       <span>
-        <Link to={`/users/${data[0].username}`}>
-          {`${names[0]}`}
-        </Link>
+        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link>
       </span>
     );
   } else if (actors.length === 2) {
@@ -165,11 +163,7 @@ export const parseEvent = event => {
 export const parseNotificationDate = date => {
   const now = new Date().getTime();
   const timestamp = new Date(date).getTime();
-  return (
-    <Timestamp>
-      · {timeDifferenceShort(now, timestamp)}
-    </Timestamp>
-  );
+  return <Timestamp>· {timeDifferenceShort(now, timestamp)}</Timestamp>;
 };
 
 const threadToString = (context, currentUser) => {
@@ -177,8 +171,14 @@ const threadToString = (context, currentUser) => {
   const str = isCreator ? 'in your thread' : 'in';
   return (
     <span>
-      {' '}{str}{' '}
-      <Link to={`?thread=${context.payload.id}`}>
+      {' '}
+      {str}{' '}
+      <Link
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${context.payload.id}`,
+        }}
+      >
         {context.payload.content.title}
       </Link>
     </span>
@@ -192,17 +192,14 @@ const messageToString = context => {
 const communityToString = context => {
   return (
     <span>
-      {' '}<Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
+      {' '}
+      <Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
     </span>
   );
 };
 
 const channelToString = context => {
-  return (
-    <span>
-      {' '}{context.payload.name}
-    </span>
-  );
+  return <span> {context.payload.name}</span>;
 };
 
 export const parseContext = (context, currentUser) => {

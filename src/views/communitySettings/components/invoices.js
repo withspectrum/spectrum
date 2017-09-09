@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { getCommunityInvoices } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import { InvoiceListItem } from '../../../components/listItems';
+import { sortByDate } from '../../../helpers/utils';
 import {
   StyledCard,
   LargeListHeading,
@@ -25,17 +26,15 @@ class InvoicesPure extends Component {
     }
 
     const { invoices } = community;
+    const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
 
     return (
       <StyledCard>
-        <LargeListHeading>Community Billing</LargeListHeading>
-        <Description>
-          Communities are billed 10¢ per member, per month.
-        </Description>
+        <LargeListHeading>Payment History</LargeListHeading>
 
         <ListContainer style={{ marginTop: '16px' }}>
-          {invoices &&
-            invoices.map(invoice => {
+          {sortedInvoices &&
+            sortedInvoices.map(invoice => {
               return <InvoiceListItem invoice={invoice} key={invoice.id} />;
             })}
         </ListContainer>

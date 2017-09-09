@@ -12,13 +12,9 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const ProfileAvatar = styled(Avatar)`
-  margin-right: 16px;
-`;
+export const ProfileAvatar = styled(Avatar)`margin-right: 16px;`;
 
-export const CommunityAvatar = styled(ProfileAvatar)`
-  margin-right: 16px;
-`;
+export const CommunityAvatar = styled(ProfileAvatar)`margin-right: 16px;`;
 
 export const ProfileHeaderLink = styled(Link)`
   display: flex;
@@ -28,7 +24,7 @@ export const ProfileHeaderLink = styled(Link)`
   flex: auto;
   min-width: 0;
 
-  &:hover h3{
+  &:hover h3 {
     transition: ${Transition.hover.on};
     color: ${props => props.theme.brand.alt};
   }
@@ -79,20 +75,32 @@ export const Subtitle = styled.div`
   }
 `;
 
-export const Description = styled.div`
+export const Description = styled.p`
   font-size: 14px;
   color: ${props => props.theme.text.default};
   padding: 0 16px 16px;
   line-height: 1.4;
+  white-space: pre-wrap;
+
+  a {
+    font-weight: 500;
+    color: ${props => props.theme.brand.alt};
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const ExtLink = styled(FlexRow)`
-  margin-top: 8px;
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
+  padding: 16px;
+  padding-top: 0;
+  font-size: 14px;
 
   > a:hover {
     text-decoration: underline;
@@ -115,7 +123,6 @@ export const Actions = styled(FlexRow)`
 `;
 
 export const Action = styled(Button)`
-
   &:last-of-type:not(:first-of-type) {
     margin-left: 8px;
   }
@@ -210,7 +217,8 @@ export const CoverDescription = styled(Description)`
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
 export const ProfileCard = styled(Card)`
-  > div:first-of-type, > a > div {
+  > div:first-of-type,
+  > a > div {
     padding: 16px;
 
     h4 > a:hover {

@@ -8,6 +8,7 @@ const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const match = require('micromatch');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
@@ -29,5 +30,6 @@ const setCustomSwPrecacheOptions = config => {
 
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
-  return rewireStyledComponents(config, env);
+  config.plugins.push(WriteFilePlugin());
+  return rewireStyledComponents(config, env, { ssr: true });
 };

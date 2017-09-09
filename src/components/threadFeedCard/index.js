@@ -33,20 +33,29 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
 
   return (
     <StyledThreadFeedCard>
-      <CardLink to={`?thread=${props.data.id}`} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${props.data.id}`,
+        }}
+      />
       <CardContent>
         <FormattedThreadLocation {...props} />
-        <Link to={`?thread=${props.data.id}`}>
-          <Title>
-            {props.data.content.title}
-          </Title>
-          {props.isPinned &&
+        <Link
+          to={{
+            pathname: window.location.pathname,
+            search: `?thread=${props.data.id}`,
+          }}
+        >
+          <Title>{props.data.content.title}</Title>
+          {props.isPinned && (
             <Pinned>
               <PinnedBanner />
               <PinnedIconWrapper>
                 <Icon glyph="pin-fill" size={24} />
               </PinnedIconWrapper>
-            </Pinned>}
+            </Pinned>
+          )}
         </Link>
         {attachmentsExist &&
           attachments.map((attachment, i) => {
@@ -68,17 +77,17 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           })}
         <ContentInfo>
           {participantsExist && <FacePile {...props} />}
-          {props.data.messageCount > 0
-            ? <MessageCount>
-                <Icon size={20} glyph="message-fill" />
-                <span>
-                  {props.data.messageCount}
-                </span>
-              </MessageCount>
-            : <MetaNew>
-                <Icon size={20} glyph="notification-fill" />
-                <span>Fresh thread!</span>
-              </MetaNew>}
+          {props.data.messageCount > 0 ? (
+            <MessageCount>
+              <Icon size={20} glyph="message-fill" />
+              <span>{props.data.messageCount}</span>
+            </MessageCount>
+          ) : (
+            <MetaNew>
+              <Icon size={20} glyph="notification-fill" />
+              <span>Fresh thread!</span>
+            </MetaNew>
+          )}
         </ContentInfo>
       </CardContent>
     </StyledThreadFeedCard>

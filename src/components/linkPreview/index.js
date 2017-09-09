@@ -41,24 +41,18 @@ export class LinkPreview extends Component {
         href={url || trueUrl}
         margin={margin}
       >
-        {editable &&
+        {editable && (
           <Close onClick={this.remove}>
             <Icon size={16} glyph="view-close" subtle color="warn.alt" />
-          </Close>}
+          </Close>
+        )}
 
         {image && <LinkPreviewImage image={image} />}
 
         <LinkPreviewTextContainer padding={image}>
-          <FlexCol>
-            {title &&
-              <MetaTitle>
-                {title}
-              </MetaTitle>}
-          </FlexCol>
+          <FlexCol>{title && <MetaTitle>{title}</MetaTitle>}</FlexCol>
 
-          <MetaUrl>
-            {url ? url : trueUrl}
-          </MetaUrl>
+          <MetaUrl>{url ? url : trueUrl}</MetaUrl>
         </LinkPreviewTextContainer>
       </LinkPreviewContainer>
     );

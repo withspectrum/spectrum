@@ -51,13 +51,6 @@ const User = /* GraphQL */ `
 		threads: Int
 	}
 
-	type RecurringPayment {
-		plan: String
-		amount: String
-		created: String
-		status: String
-	}
-
 	type NotificationKindSettings {
 		email: Boolean
 	}
@@ -65,6 +58,8 @@ const User = /* GraphQL */ `
 	type NotificationSettingsType {
 		newMessageInThreads: NotificationKindSettings
 		newThreadCreated: NotificationKindSettings
+		weeklyDigest: NotificationKindSettings
+		dailyDigest: NotificationKindSettings
 	}
 
 	type UserNotificationsSettings {
@@ -100,6 +95,7 @@ const User = /* GraphQL */ `
 		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
 		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
+		invoices: [Invoice]
 		settings: UserSettings
 	}
 

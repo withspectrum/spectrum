@@ -61,16 +61,17 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
       <StyledCard largeOnly>
         <ListHeader>
           <ListHeading>Channels</ListHeading>
-          {data.community.communityPermissions.isOwner &&
+          {data.community.communityPermissions.isOwner && (
             <IconButton
               glyph="plus"
               color="text.placeholder"
               onClick={() =>
                 dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
-            />}
+            />
+          )}
         </ListHeader>
 
-        {!currentUser &&
+        {!currentUser && (
           <ListContainer>
             {channels.map(channel => {
               return (
@@ -102,10 +103,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {currentUser &&
-          !data.community.communityPermissions.isMember &&
+        !data.community.communityPermissions.isMember && (
           <ListContainer>
             {channels.map(channel => {
               return (
@@ -137,10 +139,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {joinedChannels &&
-          data.community.communityPermissions.isMember &&
+        data.community.communityPermissions.isMember && (
           <ListContainer>
             {joinedChannels.map(channel => {
               return (
@@ -172,10 +175,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {nonJoinedChannels.length > 0 &&
-          data.community.communityPermissions.isMember &&
+        data.community.communityPermissions.isMember && (
           <span>
             <ListHeader secondary>
               <ListHeading>Additional Channels</ListHeading>
@@ -194,9 +198,10 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 })}
               </ul>
             </ListContainer>
-          </span>}
+          </span>
+        )}
 
-        {data.community.communityPermissions.isOwner &&
+        {data.community.communityPermissions.isOwner && (
           <ListFooter>
             <TextButton
               onClick={() =>
@@ -204,7 +209,8 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
             >
               Create a Channel
             </TextButton>
-          </ListFooter>}
+          </ListFooter>
+        )}
       </StyledCard>
     );
   } else {

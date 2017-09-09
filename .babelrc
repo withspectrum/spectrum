@@ -1,8 +1,25 @@
 {
-  "presets": ["backpack-core/babel", ["env", {
-    "targets": {
-      "node": "current"
-    }
-  }]],
-  "plugins": ["transform-flow-strip-types", "transform-object-rest-spread", "babel-plugin-transform-react-jsx", "syntax-dynamic-import"]
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "useBuiltIns": true,
+        "exclude": [
+          "babel-plugin-transform-regenerator",
+          "transform-async-to-generator"
+        ]
+      }
+    ]
+  ],
+  "plugins": [
+    "babel-plugin-transform-class-properties",
+    ["styled-components", { "ssr": true }],
+    "transform-flow-strip-types",
+    "transform-object-rest-spread",
+    "babel-plugin-transform-react-jsx",
+    "syntax-dynamic-import"
+  ]
 }

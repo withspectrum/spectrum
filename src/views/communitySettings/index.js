@@ -15,6 +15,7 @@ import ListCard from './components/listCard';
 import ImportSlack from './components/importSlack';
 import EmailInvites from './components/emailInvites';
 import Invoices from './components/invoices';
+import RecurringPaymentsList from './components/recurringPaymentsList';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
@@ -98,13 +99,14 @@ const SettingsPure = ({
 
       <Column type="secondary">
         <CommunityEditForm community={community} />
+        <RecurringPaymentsList community={community} />
       </Column>
       <Column type="primary">
-        <Invoices id={community.id} />
         <ImportSlack community={community} id={community.id} />
         <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
+        <Invoices id={community.id} />
       </Column>
     </AppViewWrapper>
   );

@@ -465,3 +465,100 @@ export const getTopCommunities = graphql(
     options: { fetchPolicy: 'cache-and-network' },
   }
 );
+
+/*
+  Get a current user's recurring payments
+*/
+const GET_COMMUNITY_RECURRING_PAYMENTS_QUERY = gql`
+  query getCommunityRecurringPayments($id: ID!) {
+    community(id: $id) {
+      ...communityInfo
+      recurringPayments {
+        plan
+        amount
+        createdAt
+        status
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+export const getCommunityRecurringPayments = graphql(
+  GET_COMMUNITY_RECURRING_PAYMENTS_QUERY,
+  {
+    options: ({ id }) => ({
+      variables: {
+        id,
+      },
+    }),
+  }
+);
+
+/*
+  Upgrade a user to Pro
+*/
+const UPGRADE_COMMUNITY_MUTATION = gql`
+  mutation upgradeCommunity($input: UpgradeCommunityInput!) {
+    upgradeCommunity(input: $input) {
+      ...communityInfo
+      recurringPayments {
+        plan
+        amount
+        createdAt
+        status
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const UPGRADE_COMMUNITY_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    upgradeCommunity: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const upgradeCommunityMutation = graphql(
+  UPGRADE_COMMUNITY_MUTATION,
+  UPGRADE_COMMUNITY_OPTIONS
+);
+
+/*
+  Downgrade from pro
+*/
+const DOWNGRADE_COMMUNITY_MUTATION = gql`
+  mutation downgradeCommunity($input: DowngradeCommunityInput!) {
+    downgradeCommunity(input: $input) {
+      ...communityInfo
+      recurringPayments {
+        plan
+        amount
+        createdAt
+        status
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const DOWNGRADE_COMMUNITY_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    downgradeCommunity: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const downgradeCommunityMutation = graphql(
+  DOWNGRADE_COMMUNITY_MUTATION,
+  DOWNGRADE_COMMUNITY_OPTIONS
+);

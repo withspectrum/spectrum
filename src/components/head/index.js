@@ -17,12 +17,19 @@ export default ({ title, description, showUnreadFavicon }: Props) => {
       <meta name="og:description" content={description} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      {showUnreadFavicon &&
+      {showUnreadFavicon ? (
         <link
           rel="shortcut icon"
           id="dynamic-favicon"
           href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
-        />}
+        />
+      ) : (
+        <link
+          rel="shortcut icon"
+          id="dynamic-favicon"
+          href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+        />
+      )}
     </Helmet>
   );
 };

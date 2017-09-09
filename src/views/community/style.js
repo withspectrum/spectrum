@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
+import { Button } from '../../components/buttons';
 import {
   FlexRow,
   FlexCol,
@@ -10,11 +11,26 @@ import {
   zIndex,
 } from '../../components/globals';
 
+export const LogoutButton = styled(Button)`
+  width: 100%;
+  margin: 16px 0;
+  padding: 16px 0;
+  background-image: none;
+  background-color: ${props => props.theme.text.alt};
+
+  &:hover {
+    background-color: ${props => props.theme.warn.default};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    margin: 0;
+  }
+`;
+
 export const CoverRow = styled(FlexRow)`
   align-items: flex-start;
-${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ ''}
-
-  > .inset {
+  ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ ''} > .inset {
     position: relative;
     top: -64px;
 
@@ -39,8 +55,7 @@ export const CoverColumn = styled(FlexCol)`
   max-width: 1024px;
   padding-top: 32px;
 
-${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''}
-  > .flexy {
+  ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''} > .flexy {
     display: flex;
   }
 
@@ -142,7 +157,7 @@ export const Segment = styled(FlexRow)`
     border-left: 2px solid ${props => props.theme.border.default};
   }
 
-  &:hover{
+  &:hover {
     color: ${props =>
       props.selected ? props.theme.text.default : props.theme.text.default};
   }
@@ -165,8 +180,8 @@ export const SearchContainer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) =>
-  hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high}
+      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {

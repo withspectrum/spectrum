@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+// $FlowFixMe
+import replace from 'string-replace-to-array';
 import Card from '../card';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -103,6 +105,15 @@ class CommunityWithData extends Component {
     } = this.props;
     const { isLoading } = this.state;
     const componentSize = profileSize || 'mini';
+    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+
+    const renderDescriptionWithLinks = text => {
+      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+        <a href={url} target="_blank" rel="noopener nofollower">
+          {text}
+        </a>
+      ));
+    };
 
     if (loading) {
       return <LoadingProfile />;
@@ -163,16 +174,16 @@ class CommunityWithData extends Component {
             )}
           </ProfileHeader>
           <Description>
-            <p>{community.description}</p>
-            {community.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a href={addProtocolToString(community.website)}>
-                  {community.website}
-                </a>
-              </ExtLink>
-            )}
+            {renderDescriptionWithLinks(community.description)}
           </Description>
+          {community.website && (
+            <ExtLink>
+              <Icon glyph="link" size={24} />
+              <a href={addProtocolToString(community.website)}>
+                {community.website}
+              </a>
+            </ExtLink>
+          )}
         </Card>
       );
     } else if (componentSize === 'miniWithAction') {
