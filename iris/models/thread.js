@@ -202,6 +202,11 @@ export const publishThread = (
       const thread = result.changes[0].new_val;
 
       addQueue('thread notification', { thread, userId });
+      addQueue('process reputation event', {
+        userId,
+        type: 'thread created',
+        entityId: thread.id,
+      });
 
       return thread;
     });
