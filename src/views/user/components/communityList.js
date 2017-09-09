@@ -61,8 +61,8 @@ const CommunityList = props => {
                   withDescription={withDescription}
                   withMeta={withMeta}
                   meta={`${item.node.metaData.members > 1
-                    ? `${item.node.metaData.members.toLocaleString} members`
-                    : `${item.node.metaData.members.toLocaleString} member`}
+                    ? `${item.node.metaData.members.toLocaleString()} members`
+                    : `${item.node.metaData.members.toLocaleString()} member`}
                      ·
                     ${item.node.metaData.channels > 1
                       ? `${item.node.metaData.channels} channels`
