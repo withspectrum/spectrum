@@ -3,7 +3,7 @@
 const debug = require('debug')('mercury');
 const createWorker = require('../shared/bull/create-worker');
 import processReputationEvent from './queues/processReputationEvent';
-import { PROCESS_REPUTATION_EVENT } from './queues/constants';
+import { PROCESS_REPUTATION_EVENT } from './constants';
 
 const PORT = process.env.PORT || 3004;
 

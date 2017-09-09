@@ -74,24 +74,8 @@ module.exports = /******/ (function(modules) {
 })(
   /************************************************************************/
   /******/ [
-    /* 0 */
-    /***/ function(module, exports, __webpack_require__) {
-      'use strict';
-
-      Object.defineProperty(exports, '__esModule', {
-        value: true,
-      });
-
-      // queues
-      const PROCESS_REPUTATION_EVENT = (exports.PROCESS_REPUTATION_EVENT =
-        'process reputation event');
-
-      // reputation event types
-      const THREAD_CREATED = (exports.THREAD_CREATED = 'thread created');
-
-      /***/
-    },
-    /* 1 */
+    ,
+    /* 0 */ /* 1 */
     /***/ function(module, exports) {
       module.exports = require('debug');
 
@@ -113,7 +97,7 @@ module.exports = /******/ (function(modules) {
         _processReputationEvent
       );
 
-      var _constants = __webpack_require__(0);
+      var _constants = __webpack_require__(10);
 
       function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
@@ -157,13 +141,23 @@ module.exports = /******/ (function(modules) {
         value: true,
       });
 
-      var _constants = __webpack_require__(0);
+      var _processThreadCreated = __webpack_require__(12);
+
+      var _processThreadCreated2 = _interopRequireDefault(
+        _processThreadCreated
+      );
+
+      var _constants = __webpack_require__(10);
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+      }
 
       const debug = __webpack_require__(1)(
         'mercury:queue:process-reputation-event'
       );
 
-      exports.default = job => {
+      exports.default = async job => {
         const { type, userId, entityId } = job.data;
         debug(`\nnew job: ${job.id}`);
         debug(`\nprocessing reputation type: ${type}`);
@@ -172,9 +166,16 @@ module.exports = /******/ (function(modules) {
         // if the event came in with bad data, escape
         if (!type || !userId || !entityId) return Promise.resolve();
 
-        //
-
-        return Promise.resolve();
+        // parse event types
+        switch (type) {
+          case _constants.THREAD_CREATED: {
+            return await (0, _processThreadCreated2.default)(job.data);
+          }
+          default: {
+            debug('❌ No reputation event type matched');
+            return Promise.resolve();
+          }
+        }
       };
 
       /***/
@@ -294,6 +295,177 @@ type QueueMap = {
     /* 9 */
     /***/ function(module, exports) {
       module.exports = require('raven');
+
+      /***/
+    },
+    /* 10 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+
+      // queues
+      const PROCESS_REPUTATION_EVENT = (exports.PROCESS_REPUTATION_EVENT =
+        'process reputation event');
+
+      // reputation event types
+      const THREAD_CREATED = (exports.THREAD_CREATED = 'thread created');
+
+      // scores
+      const THREAD_CREATED_SCORE = (exports.THREAD_CREATED_SCORE = 10);
+      const THREAD_DELETED_SCORE = (exports.THREAD_DELETED_SCORE = -10);
+
+      /***/
+    },
+    /* 11 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      var _extends =
+        Object.assign ||
+        function(target) {
+          for (var i = 1; i < arguments.length; i++) {
+            var source = arguments[i];
+            for (var key in source) {
+              if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+              }
+            }
+          }
+          return target;
+        };
+
+      /**
+ * Database setup is done here
+ */
+      const fs = __webpack_require__(14);
+      const path = __webpack_require__(15);
+      const IS_PROD = !process.env.FORCE_DEV && 'development' === 'production';
+
+      const DEFAULT_CONFIG = {
+        db: 'spectrum',
+      };
+
+      const PRODUCTION_CONFIG = {
+        password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+        host: process.env.COMPOSE_RETHINKDB_URL,
+        port: process.env.COMPOSE_RETHINKDB_PORT,
+        ssl: {
+          ca: IS_PROD && __webpack_require__(16),
+        },
+      };
+
+      const config = IS_PROD
+        ? _extends({}, DEFAULT_CONFIG, PRODUCTION_CONFIG)
+        : _extends({}, DEFAULT_CONFIG);
+
+      var r = __webpack_require__(17)(config);
+
+      module.exports = { db: r };
+
+      /***/
+    },
+    /* 12 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+
+      var _usersCommunities = __webpack_require__(13);
+
+      var _thread = __webpack_require__(18);
+
+      var _constants = __webpack_require__(10);
+
+      const debug = __webpack_require__(1)(
+        'mercury:queue:process-thread-created'
+      );
+
+      exports.default = async data => {
+        // entityId represents the threadId
+        const { userId, entityId } = data;
+        const { communityId } = await (0, _thread.getThread)(entityId);
+        debug(`Processing thread created reputation event`);
+        debug(`Got communityId: ${communityId}`);
+        return (0, _usersCommunities.updateReputation)(
+          userId,
+          communityId,
+          _constants.THREAD_CREATED_SCORE
+        );
+      };
+
+      /***/
+    },
+    /* 13 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+      const { db } = __webpack_require__(11);
+
+      const updateReputation = (exports.updateReputation = (
+        userId,
+        communityId,
+        score
+      ) => {
+        return db
+          .table('usersCommunities')
+          .getAll(userId, { index: 'userId' })
+          .filter({ communityId })
+          .update({
+            reputation: db.row('reputation').add(score),
+          })
+          .run();
+      });
+
+      /***/
+    },
+    /* 14 */
+    /***/ function(module, exports) {
+      module.exports = require('fs');
+
+      /***/
+    },
+    /* 15 */
+    /***/ function(module, exports) {
+      module.exports = require('path');
+
+      /***/
+    },
+    /* 16 */
+    /***/ function(module, exports) {
+      module.exports =
+        '-----BEGIN CERTIFICATE-----\nMIIDbzCCAlegAwIBAgIEWRMkLjANBgkqhkiG9w0BAQ0FADA5MTcwNQYDVQQDDC5T\ncGFjZSBQcm9ncmFtLTc5Njk3YmRkYTQxNTg3YjFmMzk4MzYxNDhlNmJjMTZhMB4X\nDTE3MDUxMDE0MzExMFoXDTM3MDUxMDE0MDAwMFowOTE3MDUGA1UEAwwuU3BhY2Ug\nUHJvZ3JhbS03OTY5N2JkZGE0MTU4N2IxZjM5ODM2MTQ4ZTZiYzE2YTCCASIwDQYJ\nKoZIhvcNAQEBBQADggEPADCCAQoCggEBALwgqk6SZZah3eVlCvZ8sFHDaHPWekVt\n1k3XAUkV+SrxijNGWNPnzkumXEd+qWYS9gYL9ak1otEjbxPR9B7+zBiPOFbwX1fE\n5o97W0gxjwS8iJGL3brSmSuJAfqx3be3l2Da4tpdgmQgKVID3c7E4AVFdgh0snh5\nNAChbx/BZXtCyJNk8gRR0G9tX01EtAumoRe3PkHs6CN0ObUNX7W9l1G6J5N00ECU\nZBEcXIyQ/lNzpJrIzcBrZ75mocyCVkp5HINjs0mG+CrSgVzY5KMtWOPFlr1KuH9P\nDXwYBDAKI3sKxj3Bgmwq1WtFbhTfuZkynxSZ0rgnr+aVFcszL2ZRVDMCAwEAAaN/\nMH0wHQYDVR0OBBYEFIXsudbQwxml7S2NjYaFCcTs0meUMA4GA1UdDwEB/wQEAwIC\nBDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TBAUwAwEB/zAf\nBgNVHSMEGDAWgBSF7LnW0MMZpe0tjY2GhQnE7NJnlDANBgkqhkiG9w0BAQ0FAAOC\nAQEAfjae2H+mdzABC9Kkh/tLUPKtGu1c3/3QSq4RTPyOAsCgmtWO2NSUcEI928eo\n8EJvljx8Xo2vl3DbD9OmbWzPeUqQMm2Wsq98RB80KRvQAFSwOKMDqyv0+C/UGnnw\nry3UMfTuY5Y2rRwsY4Z6FDPWnLJJKIa6aKutYo1pzkkvphtwq8lPQO2NW4uTrpjG\nuhhH2cmtBUZRvRGIey29Z0TXufUNN6EAcbo0JxEuux6HotXbwI0wRwPmqHLNbSWw\ngCd/pne0Pjryvw6XHzd4CQUsElWafmOf/+N760O1RCC/XCzOnsjUSLiAt9R7C/Ao\niS3oQCP1KMbyfpulMFctZJR0kQ==\n-----END CERTIFICATE-----\n';
+
+      /***/
+    },
+    /* 17 */
+    /***/ function(module, exports) {
+      module.exports = require('rethinkdbdash');
+
+      /***/
+    },
+    /* 18 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+      const { db } = __webpack_require__(11);
+
+      const getThread = (exports.getThread = id => {
+        return db
+          .table('threads')
+          .get(id)
+          .run();
+      });
 
       /***/
     },
