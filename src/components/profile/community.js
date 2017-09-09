@@ -234,7 +234,9 @@ class CommunityWithData extends Component {
             <ProfileHeaderMeta>
               <Title>{community.name}</Title>
               {community.metaData && (
-                <Subtitle>{community.metaData.members} members</Subtitle>
+                <Subtitle>
+                  {community.metaData.members.toLocaleString()} members
+                </Subtitle>
               )}
             </ProfileHeaderMeta>
           </ProfileHeaderLink>

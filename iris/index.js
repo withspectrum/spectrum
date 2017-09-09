@@ -37,11 +37,18 @@ import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
 // Use express to server-side render the React app
-const renderer = require('./renderer').default;
-app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-);
-app.get('*', renderer);
+if (IS_PROD || process.env.SSR) {
+  const renderer = require('./renderer').default;
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  );
+  app.get('*', renderer);
+  console.log(
+    `Web server running at http://localhost:${PORT} (server-side rendering enabled)`
+  );
+} else {
+  console.log(`Server-side rendering disabled for development`);
+}
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
@@ -63,6 +70,3 @@ server.listen(PORT);
 // Start database listeners
 listeners.start();
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
-console.log(
-  `Web server running at http://localhost:${PORT}, server-side rendering enabled`
-);

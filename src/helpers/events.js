@@ -14,6 +14,7 @@ export const set = id => {
 	*
 	*/
 
+  if (!ga) return;
   try {
     ga('set', 'userId', id); // Set the user ID using signed-in user_id.
   } catch (err) {
@@ -47,6 +48,7 @@ export const track = (category, action, label) => {
   if (process.env.NODE_ENV !== 'production') {
     console.log('tracking: ', category, action, label);
   } else {
+    if (!ga) return;
     // only send events from production
     try {
       ga('send', 'event', category, action, label);

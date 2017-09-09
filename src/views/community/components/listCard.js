@@ -86,16 +86,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
+                        `${channel.metaData.members.toLocaleString()} members ${data
+                          .community.communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
+                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
                           : ``}`
                       ) : (
                         `${channel.metaData.members} member ${data.community
                           .communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
+                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
                           : ``}`
                       )
                     }
@@ -124,16 +124,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
+                        `${channel.metaData.members.toLocaleString()} members ${data
+                          .community.communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
                           ? `(${channel.pendingUsers.length} pending)`
                           : ``}`
                       ) : (
-                        `${channel.metaData.members} member ${data.community
-                          .communityPermissions.isOwner &&
+                        `${channel.metaData.members.toLocaleString()} member ${data
+                          .community.communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
+                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
                           : ``}`
                       )
                     }
@@ -162,16 +162,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1 ? (
-                        `${channel.metaData.members} members ${data.community
-                          .communityPermissions.isOwner &&
+                        `${channel.metaData.members.toLocaleString()} members ${data
+                          .community.communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
+                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
                           : ``}`
                       ) : (
                         `${channel.metaData.members} member ${data.community
                           .communityPermissions.isOwner &&
                         channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length} pending)`
+                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
                           : ``}`
                       )
                     }
