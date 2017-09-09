@@ -8,9 +8,11 @@ export const getActiveThreadsInTimeframe = (
   switch (timeframe) {
     case 'daily': {
       range = 60 * 60 * 24;
+      break;
     }
     case 'weekly': {
       range = 60 * 60 * 24 * 7;
+      break;
     }
     default: {
       range = 60 * 60 * 24 * 7;

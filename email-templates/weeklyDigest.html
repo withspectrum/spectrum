@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{threads.0.replies.0.sender.name}} replied to your thread</title>
+    <title>Your Spectrum {{timeframe.subject}} digest</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
@@ -135,7 +135,7 @@
     }
 
     .post {
-      padding: 8px 0 24px;
+      padding: 8px 0 16px;
     }
 
     .reply-container {
@@ -145,6 +145,10 @@
 
     .header-cell {
       padding: 32px 32px 0 32px
+    }
+
+    .header-cell p {
+      margin-bottom: 8px;
     }
 
     .content-cell {
@@ -219,6 +223,14 @@
         text-decoration: none;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       }
+    }
+
+    .button.outline {
+      background-color: #fff;
+      border: 2px solid #7B16FF;
+      color: #7B16FF;
+      box-shadow: none;
+      margin-left: 8px;
     }
 
     /* Type ------------------------------ */
@@ -341,7 +353,7 @@
     }
 
     .section-divider {
-      margin: 32px 0;
+      margin: 24px 0;
       border-top: 2px solid #DFE7EF;
       display: block;
       width: 100%;
@@ -361,6 +373,10 @@
       white-space: nowrap;
       overflow: hidden;
       max-width: 480px;
+    }
+
+    .newMessageCount {
+      color: #E3353C;
     }
     </style>
   </head>
@@ -400,7 +416,7 @@
                                     <img class="community-icon" src="{{community.profilePhoto}}" width="20" height="20" />
                                   </td>
                                   <td class="community-name">
-                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a> · {{messageCount}} messages
+                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a> · {{totalMessageCount}} messages <span class="newMessageCount">({{newMessageCount}} new)</span>
                                   </td>
                                 </tr>
                               </table>
@@ -457,7 +473,7 @@
                   <tr>
                     <td class="content-cell">
                       <a class="feed button" href="https://spectrum.chat/">Go to my feed</a>
-                      <a class="feed button" href="https://spectrum.chat/explore">Explore communities</a>
+                      <a class="feed button outline" href="https://spectrum.chat/explore">Explore communities</a>
                     </td>
                   </tr>
 

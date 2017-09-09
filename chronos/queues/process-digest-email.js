@@ -24,8 +24,7 @@ import { getCommunityById, getTopCommunities } from '../models/community';
 
 export default job => {
   const { timeframe } = job.data;
-  console.log('timeframe', timeframe);
-  debug(`\nnew job: ${job.id}`);
+  debug(`\n\n\nnew job: ${job.id}`);
   debug(`\nprocessing ${timeframe} digest`);
 
   /*
@@ -258,18 +257,20 @@ export default job => {
       return;
     }
 
-    debug('\n👉 Eligible users data');
-    debug(eligibleUsers);
-    debug('\n👉 Example array of threads');
-    debug(eligibleUsers[0].threads);
-    debug('\n👉 Example thread data for email');
-    debug(eligibleUsers[0].threads[0]);
+    // debug('\n👉 Eligible users data');
+    // debug(eligibleUsers);
+    // debug('\n👉 Example array of threads');
+    // debug(eligibleUsers[0].threads);
+    // debug('\n👉 Example thread data for email');
+    // debug(eligibleUsers[0].threads[0]);
 
-    const sendDigestPromises = topCommunities =>
-      eligibleUsers.map(async user => {
+    const sendDigestPromises = topCommunities => {
+      debug('\n ⚙️  Attaching community upsells if required...');
+
+      return eligibleUsers.map(async user => {
         // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the digest
         const usersCommunityIds = await getUsersCommunityIds(user.userId);
-        debug('\n ⚙️  Got users communities');
+
         // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
         const communities =
           usersCommunityIds.length < COMMUNITY_UPSELL_THRESHOLD
@@ -280,16 +281,18 @@ export default job => {
                 .slice(0, 3)
             : null;
 
-        debug('\n ⚙️  Processed community upsells for email digest');
-
         return await sendDigestEmailQueue.add({
           ...user,
           communities,
           timeframe,
         });
       });
+    };
 
-    return await Promise.all(sendDigestPromises(topCommunities));
+    return await Promise.all(sendDigestPromises(topCommunities)).then(() => {
+      debug('\n ✅ ' + timeframe + ' digests processed and sent!');
+      return;
+    });
   };
 
   return processSendWeeklyDigests().catch(err => {
