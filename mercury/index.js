@@ -5,7 +5,7 @@ const createWorker = require('../shared/bull/create-worker');
 import processReputationEvent from './queues/processReputationEvent';
 import { PROCESS_REPUTATION_EVENT } from './constants';
 
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.PORT || 3005;
 
 console.log('\n✉️ Mercury, the reputation worker, is starting...');
 debug('Logging with debug enabled!');
