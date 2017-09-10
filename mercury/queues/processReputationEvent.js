@@ -5,9 +5,11 @@ import processThreadDeleted from '../functions/processThreadDeleted';
 import processMessageCreated from '../functions/processMessageCreated';
 import processReactionCreated from '../functions/processReactionCreated';
 import processReactionDeleted from '../functions/processReactionDeleted';
+import processThreadDeletedByModeration from '../functions/processThreadDeletedByModeration';
 import {
   THREAD_CREATED,
   THREAD_DELETED,
+  THREAD_DELETED_BY_MODERATION,
   MESSAGE_CREATED,
   REACTION_CREATED,
   REACTION_DELETED,
@@ -29,6 +31,9 @@ export default async job => {
     }
     case THREAD_DELETED: {
       return await processThreadDeleted(job.data);
+    }
+    case THREAD_DELETED_BY_MODERATION: {
+      return await processThreadDeletedByModeration(job.data);
     }
     case MESSAGE_CREATED: {
       return await processMessageCreated(job.data);
