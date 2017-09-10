@@ -17,6 +17,9 @@ export const THREAD_DELETED_SCORE = -100;
 export const THREAD_DELETED_BY_MODERATION_SCORE = 50;
 export const MESSAGE_CREATED_SCORE = 5;
 export const MESSAGE_CREATED_POST_AUTHOR_SCORE = 2;
+export const MESSAGE_DELETED_POST_AUTHOR_SCORE = -2;
+// occurs when a post is deleted - we treat each child message as being deleted
+export const MESSAGE_DELETED_SCORE = -5;
 export const REACTION_CREATED_SCORE = 10;
 export const REACTION_CREATED_POST_AUTHOR_SCORE = 1;
 export const REACTION_DELETED_SCORE = -10;

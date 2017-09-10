@@ -14,12 +14,28 @@ export default async data => {
   // get the communityId where the message was posted
   const { communityId, creatorId } = await getThread(entityId);
 
+  // if the message creator and thread creator aren't the same person, give reputation to the message creator - this avoids people spamming their own threads to gain reputation
+  const updateMessageCreatorReputation =
+    userId !== creatorId
+      ? await updateReputation(userId, communityId, MESSAGE_CREATED_SCORE)
+      : Promise.resolve();
+
+  // if the message creator and thread creator aren't the same person, give reputation to the thread creator - this avoids people spamming their own threads to gain reputation
+  const updateThreadCreatorReputation =
+    userId !== creatorId
+      ? await updateReputation(
+          creatorId,
+          communityId,
+          MESSAGE_CREATED_POST_AUTHOR_SCORE
+        )
+      : Promise.resolve();
+
   debug(`Processing message created reputation event`);
   debug(`Got communityId: ${communityId}`);
   return Promise.all([
     // give reputation to the person who posted the message
-    updateReputation(userId, communityId, MESSAGE_CREATED_SCORE),
+    updateMessageCreatorReputation,
     // give reputation to the thread creator
-    updateReputation(creatorId, communityId, MESSAGE_CREATED_POST_AUTHOR_SCORE),
+    updateThreadCreatorReputation,
   ]);
 };

@@ -205,7 +205,7 @@ export const publishThread = (
       addQueue('process reputation event', {
         userId,
         type: 'thread created',
-        entityId: thread.communityId,
+        entityId: thread.id,
       });
 
       return thread;
@@ -275,7 +275,7 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
       addQueue('process reputation event', {
         userId: thread.creatorId,
         type: 'thread deleted',
-        entityId: thread.communityId,
+        entityId: thread.id,
       });
 
       return result.replaced >= 1 ? true : false;

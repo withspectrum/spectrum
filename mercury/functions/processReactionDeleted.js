@@ -8,9 +8,6 @@ import {
   REACTION_DELETED_POST_AUTHOR_SCORE,
 } from '../constants';
 
-/*
-  If a reaction was deleted, reverse any reputation given to the message creator and thread creator
-*/
 export default async data => {
   // entityId represents the messageId
   const { entityId } = data;
