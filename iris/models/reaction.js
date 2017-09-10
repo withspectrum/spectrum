@@ -36,12 +36,25 @@ export const toggleReaction = (
       // this user has already reacted to the message, remove the reaction
       if (result.length > 0) {
         const existing = result[0];
+
+        addQueue('process reputation event', {
+          userId,
+          type: 'reaction deleted',
+          entityId: existing.messageId,
+        });
+
         return db
           .table('reactions')
           .get(existing.id)
           .delete()
           .run();
       } else {
+        addQueue('process reputation event', {
+          userId,
+          type: 'reaction created',
+          entityId: reaction.messageId,
+        });
+
         return db
           .table('reactions')
           .insert(

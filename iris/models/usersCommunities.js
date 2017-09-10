@@ -30,6 +30,7 @@ const createOwnerInCommunity = (
         isModerator: false,
         isBlocked: false,
         receiveNotifications: true,
+        reputation: 0,
       },
       { returnChanges: true }
     )
@@ -82,6 +83,7 @@ const createMemberInCommunity = (
               isModerator: false,
               isBlocked: false,
               receiveNotifications: true,
+              reputation: 0,
             },
             { returnChanges: true }
           )

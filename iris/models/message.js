@@ -66,6 +66,12 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
       addQueue('message notification', { message, userId });
 
       if (message.threadType === 'story') {
+        addQueue('process reputation event', {
+          userId,
+          type: 'message created',
+          entityId: message.threadId,
+        });
+
         setThreadLastActive(message.threadId, message.timestamp);
       }
 
