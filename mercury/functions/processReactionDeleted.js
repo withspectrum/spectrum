@@ -4,6 +4,8 @@ import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';
 import { getThread } from '../models/thread';
 import {
+  REACTION_DELETED,
+  REACTION_DELETED_POST_AUTHOR_BONUS,
   REACTION_DELETED_SCORE,
   REACTION_DELETED_POST_AUTHOR_SCORE,
 } from '../constants';
@@ -22,12 +24,18 @@ export default async data => {
   debug(`Got communityId: ${communityId}`);
   return Promise.all([
     // remove reputation from the person who posted the message
-    updateReputation(senderId, communityId, REACTION_DELETED_SCORE),
+    updateReputation(
+      senderId,
+      communityId,
+      REACTION_DELETED_SCORE,
+      REACTION_DELETED
+    ),
     // remove reputation from the person who created the thread - smaller amount
     updateReputation(
       creatorId,
       communityId,
-      REACTION_DELETED_POST_AUTHOR_SCORE
+      REACTION_DELETED_POST_AUTHOR_SCORE,
+      REACTION_DELETED_POST_AUTHOR_BONUS
     ),
   ]);
 };

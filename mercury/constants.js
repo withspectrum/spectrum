@@ -8,8 +8,17 @@ export const THREAD_CREATED = 'thread created';
 export const THREAD_DELETED = 'thread deleted';
 export const THREAD_DELETED_BY_MODERATION = 'thread deleted by moderation';
 export const MESSAGE_CREATED = 'message created';
+export const MESSAGE_CREATED_POST_AUTHOR_BONUS =
+  'message created post author bonus';
+export const MESSAGE_DELETED = 'message deleted';
+export const MESSAGE_DELETED_POST_AUTHOR_BONUS =
+  'message deleted post author bonus';
 export const REACTION_CREATED = 'reaction created';
+export const REACTION_CREATED_POST_AUTHOR_BONUS =
+  'reaction created post author bonus';
 export const REACTION_DELETED = 'reaction deleted';
+export const REACTION_DELETED_POST_AUTHOR_BONUS =
+  'reaction deleted post author bonus';
 
 // scores
 export const THREAD_CREATED_SCORE = 100;

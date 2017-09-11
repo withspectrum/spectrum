@@ -4,7 +4,10 @@ const debug = require('debug')(
 );
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';
-import { THREAD_DELETED_BY_MODERATION_SCORE } from '../constants';
+import {
+  THREAD_DELETED_BY_MODERATION,
+  THREAD_DELETED_BY_MODERATION_SCORE,
+} from '../constants';
 
 export default async data => {
   // entityId represents the communityId
@@ -16,6 +19,7 @@ export default async data => {
   return updateReputation(
     userId,
     communityId,
-    THREAD_DELETED_BY_MODERATION_SCORE
+    THREAD_DELETED_BY_MODERATION_SCORE,
+    THREAD_DELETED_BY_MODERATION
   );
 };

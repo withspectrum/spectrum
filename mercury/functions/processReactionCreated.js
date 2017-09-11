@@ -4,6 +4,8 @@ import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';
 import { getThread } from '../models/thread';
 import {
+  REACTION_CREATED,
+  REACTION_CREATED_POST_AUTHOR_BONUS,
   REACTION_CREATED_SCORE,
   REACTION_CREATED_POST_AUTHOR_SCORE,
 } from '../constants';
@@ -28,12 +30,18 @@ export default async data => {
   debug(`Got communityId: ${communityId}`);
   return Promise.all([
     // give reputation to the person who posted the message
-    updateReputation(senderId, communityId, REACTION_CREATED_SCORE),
+    updateReputation(
+      senderId,
+      communityId,
+      REACTION_CREATED_SCORE,
+      REACTION_CREATED
+    ),
     // give reputation to the person who created the thread - smaller amount
     updateReputation(
       creatorId,
       communityId,
-      REACTION_CREATED_POST_AUTHOR_SCORE
+      REACTION_CREATED_POST_AUTHOR_SCORE,
+      REACTION_CREATED_POST_AUTHOR_BONUS
     ),
   ]);
 };

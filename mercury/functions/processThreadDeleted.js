@@ -5,11 +5,16 @@ import { getThread } from '../models/thread';
 import { getMessagesByThreadId, getMessage } from '../models/message';
 import { getAllReactionsInThread } from '../models/reaction';
 import {
+  THREAD_DELETED,
   THREAD_DELETED_SCORE,
+  MESSAGE_DELETED,
   MESSAGE_DELETED_SCORE,
   MESSAGE_DELETED_POST_AUTHOR_SCORE,
+  MESSAGE_DELETED_POST_AUTHOR_BONUS,
+  REACTION_DELETED,
   REACTION_DELETED_SCORE,
   REACTION_DELETED_POST_AUTHOR_SCORE,
+  REACTION_DELETED_POST_AUTHOR_BONUS,
 } from '../constants';
 
 /*
@@ -39,7 +44,12 @@ export default async data => {
   const removeMessagesReputation =
     messagesByNonAuthor.length > 0
       ? messagesByNonAuthor.map(message =>
-          updateReputation(message.senderId, communityId, MESSAGE_DELETED_SCORE)
+          updateReputation(
+            message.senderId,
+            communityId,
+            MESSAGE_DELETED_SCORE,
+            MESSAGE_DELETED
+          )
         )
       : messages;
 
@@ -63,7 +73,8 @@ export default async data => {
           return updateReputation(
             senderId,
             communityId,
-            REACTION_DELETED_SCORE
+            REACTION_DELETED_SCORE,
+            REACTION_DELETED
           );
         })
       : reactions;
@@ -75,21 +86,44 @@ export default async data => {
   debug(`Processing thread deleted reputation event`);
   debug(`Got communityId: ${communityId}`);
 
+  const removePostAuthorMessageBonus = messagesByNonAuthor.map(message =>
+    updateReputation(
+      threadCreatorId,
+      communityId,
+      MESSAGE_DELETED_POST_AUTHOR_SCORE,
+      MESSAGE_DELETED_POST_AUTHOR_BONUS
+    )
+  );
+
+  const removePostAuthorMessageBonusPromises = await Promise.all(
+    removePostAuthorMessageBonus
+  );
+
+  const removePostAuthorReactionBonus = reactions.map(reaction =>
+    updateReputation(
+      threadCreatorId,
+      communityId,
+      REACTION_DELETED_POST_AUTHOR_SCORE,
+      REACTION_DELETED_POST_AUTHOR_BONUS
+    )
+  );
+
+  const removePostAuthorReactionBonusPromises = await Promise.all(
+    removePostAuthorReactionBonus
+  );
+
   return Promise.all([
     // delete the reputation from the thread creator
-    updateReputation(threadCreatorId, communityId, THREAD_DELETED_SCORE),
+    updateReputation(
+      threadCreatorId,
+      communityId,
+      THREAD_DELETED_SCORE,
+      THREAD_DELETED
+    ),
     // delete the reputation the thread author gained for each message left on the thread
-    updateReputation(
-      threadCreatorId,
-      communityId,
-      MESSAGE_DELETED_POST_AUTHOR_SCORE * messagesByNonAuthor.length
-    ),
+    removePostAuthorMessageBonusPromises,
     // delete the reputation the thread author gained for each reaction left on messages in the thread
-    updateReputation(
-      threadCreatorId,
-      communityId,
-      REACTION_DELETED_POST_AUTHOR_SCORE * reactions.length
-    ),
+    removePostAuthorReactionBonusPromises,
     // delete the reputation for each message left on the thread
     messages.length > 0 && removeMessagesReputationPromises,
     // delete the reputation gained by each message creator from reactions

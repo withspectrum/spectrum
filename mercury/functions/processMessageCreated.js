@@ -3,8 +3,10 @@ const debug = require('debug')('mercury:queue:process-message-created');
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';
 import {
+  MESSAGE_CREATED,
   MESSAGE_CREATED_SCORE,
   MESSAGE_CREATED_POST_AUTHOR_SCORE,
+  MESSAGE_CREATED_POST_AUTHOR_BONUS,
 } from '../constants';
 
 export default async data => {
@@ -17,7 +19,12 @@ export default async data => {
   // if the message creator and thread creator aren't the same person, give reputation to the message creator - this avoids people spamming their own threads to gain reputation
   const updateMessageCreatorReputation =
     userId !== creatorId
-      ? await updateReputation(userId, communityId, MESSAGE_CREATED_SCORE)
+      ? await updateReputation(
+          userId,
+          communityId,
+          MESSAGE_CREATED_SCORE,
+          MESSAGE_CREATED
+        )
       : Promise.resolve();
 
   // if the message creator and thread creator aren't the same person, give reputation to the thread creator - this avoids people spamming their own threads to gain reputation
@@ -26,7 +33,8 @@ export default async data => {
       ? await updateReputation(
           creatorId,
           communityId,
-          MESSAGE_CREATED_POST_AUTHOR_SCORE
+          MESSAGE_CREATED_POST_AUTHOR_SCORE,
+          MESSAGE_CREATED_POST_AUTHOR_BONUS
         )
       : Promise.resolve();
 
