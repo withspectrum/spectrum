@@ -17,15 +17,11 @@ const Thread = props => {
 
   return (
     <Link to={`?thread=${thread.id}`}>
-      <ThreadListItem selected={currentThread}>
+      <ThreadListItem selected={currentThread} className={'thread-list-item'}>
         <Avatar src={thread.creator.profilePhoto} size={40} />
         <ThreadDetails>
-          <Title>
-            {thread.content.title}
-          </Title>
-          <Preview>
-            {thread.content.body.substring(0, 40)}
-          </Preview>
+          <Title>{thread.content.title}</Title>
+          <Preview>{thread.content.body.substring(0, 40)}</Preview>
         </ThreadDetails>
       </ThreadListItem>
     </Link>
@@ -40,11 +36,14 @@ const ThreadList = props => {
   } else {
     return (
       <List>
-        {threads.map(threadNode => {
-          const thread = threadNode.node;
+        {threads &&
+          threads.map(threadNode => {
+            const thread = threadNode.node;
 
-          return <Thread key={thread.id} thread={thread} location={location} />;
-        })}
+            return (
+              <Thread key={thread.id} thread={thread} location={location} />
+            );
+          })}
       </List>
     );
   }
@@ -53,11 +52,17 @@ const ThreadList = props => {
 export const Master = compose(getEverythingThreads)(ThreadList);
 
 export const Detail = props => {
-  const { location } = props;
-  // const threadId = queryString.parse(location.search).thread;
+  const { location, networkStatus } = props;
+  const parsed = queryString.parse(location.search);
+  const threadId = parsed.thread;
 
-  return (
-    <div />
-    // <ThreadContainer threadId={threadId} slider/>
-  );
+  if (networkStatus !== 7) {
+    return <div />;
+  } else {
+    console.log(threadId);
+    return (
+      <div />
+      // <ThreadContainer threadId={threadId} slider/>
+    );
+  }
 };

@@ -10,7 +10,8 @@ export const View = styled.div`
 
 export const List = styled.div`
   display: flex;
-  flex: 0 0 320px;
+  flex: 0 0 30%;
+  min-width: 320px;
   justify-content: flex-start;
   flex-direction: column;
   border-right: 2px solid ${props => props.theme.border.default};
