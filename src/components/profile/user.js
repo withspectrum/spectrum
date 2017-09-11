@@ -148,7 +148,7 @@ const UserWithData = ({
           <ReputationIcon />
 
           <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> reputation
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
           </ReputationCount>
         </ReputationContainer>
       </Card>
@@ -189,7 +189,7 @@ const UserWithData = ({
           <ReputationIcon />
 
           <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> reputation
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
           </ReputationCount>
         </ReputationContainer>
       </Card>
@@ -262,7 +262,7 @@ const UserWithData = ({
           <ReputationIcon />
 
           <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> reputation
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
           </ReputationCount>
         </ReputationContainer>
       </Card>
