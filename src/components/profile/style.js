@@ -236,7 +236,8 @@ export const ProUpgrade = styled.div`
 
 export const ReputationContainer = styled.div`
   border-top: 2px solid ${props => props.theme.border.default};
-  padding: 12px 16px;
+  padding: 12px 0;
+  margin: 0 16px;
   display: flex;
 `;
 
