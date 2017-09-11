@@ -487,7 +487,7 @@ class ThreadDetailPure extends Component {
               <AuthorUsername>
                 {thread.creator.totalReputation && (
                   <span>
-                    <ReputationMini />
+                    <ReputationMini color={'text.alt'} />
                     {thread.creator.totalReputation.toLocaleString()}
                   </span>
                 )}

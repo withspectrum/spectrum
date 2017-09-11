@@ -128,7 +128,7 @@ class ChatMessages extends Component {
                 {!me && (
                   <span>
                     {' '}
-                    · <ReputationMini />
+                    · <ReputationMini color={'text.alt'} />
                     {user.totalReputation.toLocaleString()}
                   </span>
                 )}
