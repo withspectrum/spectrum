@@ -20,6 +20,7 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
+import ReputationIcon from '../reputation';
 import {
   ProfileAvatar,
   ProfileHeader,
@@ -36,6 +37,8 @@ import {
   Subtitle,
   ExtLink,
   ProUpgrade,
+  ReputationContainer,
+  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -46,6 +49,8 @@ type UserProps = {
   username: string,
   threadCount: number,
   website: string,
+  isOnline: string,
+  totalReputation: number,
 };
 
 type CurrentUserProps = {
@@ -114,8 +119,6 @@ const UserWithData = ({
         {(user.description || user.website) && (
           <CoverDescription>
             {user.description && <p>{user.description}</p>}
-
-            {user.totalReputation && <p>Reputation: {user.totalReputation}</p>}
             {user.website && (
               <ExtLink>
                 <Icon glyph="link" size={24} />
@@ -140,6 +143,14 @@ const UserWithData = ({
             </Button>
           </ProUpgrade>
         )}
+
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation}</strong> reputation
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   } else if (componentSize === 'simple') {
@@ -173,6 +184,14 @@ const UserWithData = ({
             <p>{user.description}</p>
           </CoverDescription>
         )}
+
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation}</strong> reputation
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   } else {
@@ -239,6 +258,13 @@ const UserWithData = ({
             />
           )}
         </ProfileHeader>
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation}</strong> reputation
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   }

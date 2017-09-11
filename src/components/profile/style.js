@@ -75,7 +75,7 @@ export const Subtitle = styled.div`
   }
 `;
 
-export const Description = styled.p`
+export const Description = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.default};
   padding: 0 16px 16px;
@@ -98,9 +98,8 @@ export const ExtLink = styled(FlexRow)`
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
-  padding: 16px;
-  padding-top: 0;
   font-size: 14px;
+  padding-top: 16px;
 
   > a:hover {
     text-decoration: underline;
@@ -207,13 +206,7 @@ export const CoverSubtitle = styled(Subtitle)`
   justify-content: center;
 `;
 
-export const CoverDescription = styled(Description)`
-  text-align: center;
-
-  p {
-    margin-bottom: 16px;
-  }
-`;
+export const CoverDescription = styled(Description)`text-align: center;`;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
 export const ProfileCard = styled(Card)`
@@ -238,5 +231,21 @@ export const ProUpgrade = styled.div`
   button {
     width: 100%;
     text-align: center;
+  }
+`;
+
+export const ReputationContainer = styled.div`
+  border-top: 2px solid ${props => props.theme.border.default};
+  padding: 12px 16px;
+  display: flex;
+`;
+
+export const ReputationCount = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+
+  strong {
+    font-weight: 700;
   }
 `;

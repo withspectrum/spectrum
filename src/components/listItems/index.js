@@ -17,6 +17,7 @@ import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { ReputationMini } from '../reputation';
 import {
   Wrapper,
   WrapperLi,
@@ -162,11 +163,15 @@ export const UserListItem = ({
               <span>{user.name}</span>
             )}
           </Heading>
-          {user.username && (
-            <Meta>
-              <Link to={`/users/${user.username}`}>@{user.username}</Link>
-            </Meta>
-          )}
+          <Meta>
+            {user.username && (
+              <span>
+                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
+              </span>
+            )}
+            <ReputationMini />
+            {user.totalReputation}
+          </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>
