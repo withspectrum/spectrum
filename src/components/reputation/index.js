@@ -1,17 +1,16 @@
 // @flow
 import React from 'react';
+import Icon from '../icons';
 import { ReputationIcon, ReputationIconMini, Circle } from './style';
 
 export default () => (
   <ReputationIcon>
-    <Circle />
-    <Circle />
+    <Icon glyph="rep" size="24" />
   </ReputationIcon>
 );
 
 export const ReputationMini = () => (
   <ReputationIconMini>
-    <Circle />
-    <Circle />
+    <Icon glyph="rep" size="20" />
   </ReputationIconMini>
 );
