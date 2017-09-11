@@ -5,10 +5,12 @@ export const saveReputationEvent = ({
   userId,
   type,
   communityId,
+  score,
 }: {
   userId: string,
   type: string,
   communityId: string,
+  score: number,
 }): Promise<Object> => {
   return db
     .table('reputationEvents')
@@ -17,6 +19,7 @@ export const saveReputationEvent = ({
       userId,
       type,
       communityId,
+      score,
     })
     .run();
 };

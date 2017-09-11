@@ -21,6 +21,7 @@ export const updateReputation = (
         userId,
         type,
         communityId,
+        score,
       })
     );
 };
