@@ -67,9 +67,9 @@ module.exports = {
   },
   Community: {
     communityPermissions: (
-      { id }: { id: String },
+      { id }: { id: string },
       _: any,
-      { user }: Context
+      { user }: GraphQLContext
     ) => {
       if (!id || !user) return false;
       return getUserPermissionsInCommunity(id, user.id);
@@ -85,7 +85,7 @@ module.exports = {
       ),
     }),
     memberConnection: (
-      { id },
+      { id }: { id: string },
       { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
@@ -112,9 +112,9 @@ module.exports = {
         }));
     },
     threadConnection: (
-      { id, ...community }: { id: string, community: object },
+      { id, ...community }: { id: string, community: Object },
       { first = 10, after }: PaginationOptions,
-      { user }
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       const currentUser = user;
@@ -191,7 +191,7 @@ module.exports = {
         };
       });
     },
-    slackImport: ({ id }, _, { user }) => {
+    slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -206,7 +206,7 @@ module.exports = {
         };
       });
     },
-    invoices: ({ id }, _, { user }) => {
+    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -215,7 +215,11 @@ module.exports = {
 
       return getInvoicesByCommunity(id);
     },
-    recurringPayments: ({ id }, _, { user }) => {
+    recurringPayments: (
+      { id }: { id: string },
+      _: any,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       if (!currentUser) {

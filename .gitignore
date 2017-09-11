@@ -12,6 +12,7 @@ build-iris
 build-athena
 build-hermes
 build-chronos
+build-mercury
 package-lock.json
 .vscode
 dump.rdb

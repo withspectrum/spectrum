@@ -18,12 +18,13 @@ import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 import { Divider } from './style';
 
-const NullState = () =>
+const NullState = () => (
   <NullCard
     bg="post"
     heading={`Sorry, no threads here yet...`}
     copy={`But you could start one!`}
-  />;
+  />
+);
 
 const UpsellState = ({ community }) => {
   return (
@@ -42,7 +43,7 @@ const UpsellState = ({ community }) => {
   );
 };
 
-const ErrorState = () =>
+const ErrorState = () => (
   <NullCard
     bg="error"
     heading={`Whoops!`}
@@ -51,7 +52,8 @@ const ErrorState = () =>
     <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload
     </Button>
-  </NullCard>;
+  </NullCard>
+);
 
 const Threads = styled.div`
   min-width: 100%;

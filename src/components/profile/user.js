@@ -20,6 +20,7 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
+import ReputationIcon from '../reputation';
 import {
   ProfileAvatar,
   ProfileHeader,
@@ -36,6 +37,8 @@ import {
   Subtitle,
   ExtLink,
   ProUpgrade,
+  ReputationContainer,
+  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -46,6 +49,8 @@ type UserProps = {
   username: string,
   threadCount: number,
   website: string,
+  isOnline: string,
+  totalReputation: number,
 };
 
 type CurrentUserProps = {
@@ -102,9 +107,7 @@ const UserWithData = ({
               src={`${user.profilePhoto}`}
               noLink
             />
-            <CoverTitle>
-              {user.name}
-            </CoverTitle>
+            <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
         </CoverPhoto>
         <CoverSubtitle center>
@@ -113,13 +116,10 @@ const UserWithData = ({
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
-        {(user.description || user.website) &&
+        {(user.description || user.website) && (
           <CoverDescription>
-            {user.description &&
-              <p>
-                {user.description}
-              </p>}
-            {user.website &&
+            {user.description && <p>{user.description}</p>}
+            {user.website && (
               <ExtLink>
                 <Icon glyph="link" size={24} />
                 <a
@@ -129,17 +129,28 @@ const UserWithData = ({
                 >
                   {user.website}
                 </a>
-              </ExtLink>}
-          </CoverDescription>}
+              </ExtLink>
+            )}
+          </CoverDescription>
+        )}
 
         {!user.isPro &&
-          currentUser &&
-          user.id === currentUser.id &&
+        currentUser &&
+        user.id === currentUser.id && (
           <ProUpgrade>
             <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
               Upgrade to Pro
             </Button>
-          </ProUpgrade>}
+          </ProUpgrade>
+        )}
+
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   } else if (componentSize === 'simple') {
@@ -159,9 +170,7 @@ const UserWithData = ({
               src={`${user.profilePhoto}`}
               noLink
             />
-            <CoverTitle>
-              {user.name}
-            </CoverTitle>
+            <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
         </CoverPhoto>
         <CoverSubtitle center>
@@ -170,76 +179,92 @@ const UserWithData = ({
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
-        {user.description &&
+        {user.description && (
           <CoverDescription>
-            <p>
-              {user.description}
-            </p>
-          </CoverDescription>}
+            <p>{user.description}</p>
+          </CoverDescription>
+        )}
+
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   } else {
     return (
       <Card>
         <ProfileHeader>
-          {user.username
-            ? <ProfileHeaderLink to={`/users/${user.username}`}>
-                <ProfileAvatar
-                  size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
-                />
-                <ProfileHeaderMeta>
-                  <Title>
-                    {user.name}
-                  </Title>
-                  {user.username &&
-                    <Subtitle>
-                      @{user.username}
-                      {user.isAdmin && <Badge type="admin" />}
-                      {user.isPro && <Badge type="pro" />}
-                    </Subtitle>}
-                </ProfileHeaderMeta>
-              </ProfileHeaderLink>
-            : <ProfileHeaderNoLink>
-                <ProfileAvatar
-                  size={32}
-                  radius={32}
-                  isOnline={user.isOnline}
-                  src={`${user.profilePhoto}`}
-                  noLink
-                />
-                <ProfileHeaderMeta>
-                  <Title>
-                    {user.name}
-                  </Title>
-                  {user.username &&
-                    <Subtitle>
-                      @{user.username}
-                      {user.isAdmin && <Badge type="admin" />}
-                      {user.isPro && <Badge type="pro" />}
-                    </Subtitle>}
-                </ProfileHeaderMeta>
-              </ProfileHeaderNoLink>}
-          {currentUser && currentUser.id === user.id
-            ? <Link to={`../users/${currentUser.username}/settings`}>
-                <ProfileHeaderAction
-                  glyph="settings"
-                  tipText={`Edit profile`}
-                  tipLocation={'top-left'}
-                />
-              </Link>
-            : <ProfileHeaderAction
-                glyph="message-fill"
-                color="text.alt"
-                hoverColor="brand.alt"
-                onClick={() => initMessage()}
-                tipText={`Message ${user.name}`}
+          {user.username ? (
+            <ProfileHeaderLink to={`/users/${user.username}`}>
+              <ProfileAvatar
+                size={32}
+                radius={32}
+                isOnline={user.isOnline}
+                src={`${user.profilePhoto}`}
+                noLink
+              />
+              <ProfileHeaderMeta>
+                <Title>{user.name}</Title>
+                {user.username && (
+                  <Subtitle>
+                    @{user.username}
+                    {user.isAdmin && <Badge type="admin" />}
+                    {user.isPro && <Badge type="pro" />}
+                  </Subtitle>
+                )}
+              </ProfileHeaderMeta>
+            </ProfileHeaderLink>
+          ) : (
+            <ProfileHeaderNoLink>
+              <ProfileAvatar
+                size={32}
+                radius={32}
+                isOnline={user.isOnline}
+                src={`${user.profilePhoto}`}
+                noLink
+              />
+              <ProfileHeaderMeta>
+                <Title>{user.name}</Title>
+                {user.username && (
+                  <Subtitle>
+                    @{user.username}
+                    {user.isAdmin && <Badge type="admin" />}
+                    {user.isPro && <Badge type="pro" />}
+                  </Subtitle>
+                )}
+              </ProfileHeaderMeta>
+            </ProfileHeaderNoLink>
+          )}
+          {currentUser && currentUser.id === user.id ? (
+            <Link to={`../users/${currentUser.username}/settings`}>
+              <ProfileHeaderAction
+                glyph="settings"
+                tipText={`Edit profile`}
                 tipLocation={'top-left'}
-              />}
+              />
+            </Link>
+          ) : (
+            <ProfileHeaderAction
+              glyph="message-fill"
+              color="text.alt"
+              hoverColor="brand.alt"
+              onClick={() => initMessage()}
+              tipText={`Message ${user.name}`}
+              tipLocation={'top-left'}
+            />
+          )}
         </ProfileHeader>
+        <ReputationContainer>
+          <ReputationIcon />
+
+          <ReputationCount>
+            <strong>{user.totalReputation.toLocaleString()}</strong> rep
+          </ReputationCount>
+        </ReputationContainer>
       </Card>
     );
   }

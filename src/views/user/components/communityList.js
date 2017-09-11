@@ -60,13 +60,7 @@ const CommunityList = props => {
                   contents={item.node}
                   withDescription={withDescription}
                   withMeta={withMeta}
-                  meta={`${item.node.metaData.members > 1
-                    ? `${item.node.metaData.members.toLocaleString()} members`
-                    : `${item.node.metaData.members.toLocaleString()} member`}
-                     ·
-                    ${item.node.metaData.channels > 1
-                      ? `${item.node.metaData.channels} channels`
-                      : `${item.node.metaData.channels} channel`}`}
+                  meta={`${item.node.communityPermissions.reputation.toLocaleString()} reputation`}
                 >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>
