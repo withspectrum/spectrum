@@ -48,7 +48,7 @@ export default job => {
         channelId,
         id,
         title: content.title,
-        newMessageCount: await getNewMessageCount(id),
+        newMessageCount: await getNewMessageCount(id, timeframe),
         totalMessageCount: await getTotalMessageCount(id),
       })
     );
