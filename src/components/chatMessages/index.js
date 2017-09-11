@@ -124,8 +124,14 @@ class ChatMessages extends Component {
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
               <Name>
-                {me ? 'You' : user.name} · <ReputationMini />
-                {user.totalReputation}
+                {me ? 'You' : user.name}
+                {!me && (
+                  <span>
+                    {' '}
+                    · <ReputationMini />
+                    {user.totalReputation}
+                  </span>
+                )}
               </Name>
             </Link>
             {user.isAdmin && <Badge type="admin" />}
