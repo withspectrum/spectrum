@@ -20,7 +20,7 @@ export const createJob = (
       {
         removeOnComplete: true,
         removeOnFail: true,
-        repeat: { cron: pattern },
+        repeat: { cron: pattern, tz: 'America/Los_Angeles' },
       }
     );
   } catch (err) {
