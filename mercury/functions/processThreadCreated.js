@@ -7,7 +7,7 @@ import { THREAD_CREATED_SCORE } from '../constants';
 export default async data => {
   // entityId represents the communityId
   const { userId, entityId } = data;
-  const communityId = entityId;
+  const { communityId } = await getThread(entityId);
 
   debug(`Processing thread created reputation event`);
   debug(`Got communityId: ${communityId}`);

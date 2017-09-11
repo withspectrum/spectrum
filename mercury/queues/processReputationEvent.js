@@ -25,28 +25,32 @@ export default async job => {
   if (!type || !userId || !entityId) return Promise.resolve();
 
   // parse event types
-  switch (type) {
-    case THREAD_CREATED: {
-      return await processThreadCreated(job.data);
+  try {
+    switch (type) {
+      case THREAD_CREATED: {
+        return await processThreadCreated(job.data);
+      }
+      case THREAD_DELETED: {
+        return await processThreadDeleted(job.data);
+      }
+      case THREAD_DELETED_BY_MODERATION: {
+        return await processThreadDeletedByModeration(job.data);
+      }
+      case MESSAGE_CREATED: {
+        return await processMessageCreated(job.data);
+      }
+      case REACTION_CREATED: {
+        return await processReactionCreated(job.data);
+      }
+      case REACTION_DELETED: {
+        return await processReactionDeleted(job.data);
+      }
+      default: {
+        debug('❌ No reputation event type matched');
+        return Promise.resolve();
+      }
     }
-    case THREAD_DELETED: {
-      return await processThreadDeleted(job.data);
-    }
-    case THREAD_DELETED_BY_MODERATION: {
-      return await processThreadDeletedByModeration(job.data);
-    }
-    case MESSAGE_CREATED: {
-      return await processMessageCreated(job.data);
-    }
-    case REACTION_CREATED: {
-      return await processReactionCreated(job.data);
-    }
-    case REACTION_DELETED: {
-      return await processReactionDeleted(job.data);
-    }
-    default: {
-      debug('❌ No reputation event type matched');
-      return Promise.resolve();
-    }
+  } catch (err) {
+    debug('❌ Error processing reputation event: ', err);
   }
 };

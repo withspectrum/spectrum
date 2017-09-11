@@ -23,29 +23,37 @@ import {
 export default async data => {
   // entityId represents the threadId
   const { userId, entityId } = data;
-  const threadCreatorId = userId;
 
   // get the community where the thread was posted
-  const { communityId } = await getThread(entityId);
+  const { communityId, creatorId } = await getThread(entityId);
+  const threadCreatorId = creatorId;
 
   // get the messages posted in the thread
   const messages = await getMessagesByThreadId(entityId);
 
+  const messagesByNonAuthor = messages.filter(
+    message => message.senderId !== threadCreatorId
+  );
+  debug(messagesByNonAuthor);
+
   // for each message, remove the reputation for the message creator
   const removeMessagesReputation =
-    messages.length > 0
-      ? messages.map(message =>
+    messagesByNonAuthor.length > 0
+      ? messagesByNonAuthor.map(message =>
           updateReputation(message.senderId, communityId, MESSAGE_DELETED_SCORE)
         )
-      : Promise.resolve();
+      : messages;
+
+  debug(removeMessagesReputation);
 
   const removeMessagesReputationPromises = await Promise.all(
     removeMessagesReputation
   );
+  debug(removeMessagesReputationPromises);
 
   // convert all the messages into an array of messageIds in order to efficiently fetch reactions
   const messageIds =
-    messages.length > 0 ? messages.map(message => message.id) : [];
+    messagesByNonAuthor.length > 0 ? messages.map(message => message.id) : [];
 
   // get any reactions left on any of the messages in the thread
   const reactions =
@@ -55,13 +63,17 @@ export default async data => {
     reactions.length > 0
       ? reactions.map(async reaction => {
           const { senderId } = await getMessage(reaction.messageId);
+
+          // don't remove extra reaction bonuses
+          if (senderId === threadCreatorId) return;
+
           return updateReputation(
             senderId,
             communityId,
             REACTION_DELETED_SCORE
           );
         })
-      : Promise.resolve();
+      : reactions;
 
   const removeReactionsReputationPromises = await Promise.all(
     removeReactionsReputation
@@ -85,8 +97,8 @@ export default async data => {
       REACTION_DELETED_POST_AUTHOR_SCORE * reactions.length
     ),
     // delete the reputation for each message left on the thread
-    removeMessagesReputationPromises,
+    messages.length > 0 && removeMessagesReputationPromises,
     // delete the reputation gained by each message creator from reactions
-    removeReactionsReputationPromises,
+    reactions.length > 0 && removeReactionsReputationPromises,
   ]);
 };
