@@ -129,7 +129,7 @@ class ChatMessages extends Component {
                   <span>
                     {' '}
                     · <ReputationMini />
-                    {user.totalReputation}
+                    {user.totalReputation.toLocaleString()}
                   </span>
                 )}
               </Name>
