@@ -12,6 +12,8 @@ type GetMessageProps = {
 type Root = {
   messageId: string,
   senderId: string,
+  threadId: string,
+  threadType: 'directMessageThread' | 'story',
 };
 
 module.exports = {
@@ -22,11 +24,16 @@ module.exports = {
   },
   Message: {
     sender: async (
-      { senderId, threadId }: Root,
+      { senderId, threadId, threadType }: Root,
       _: any,
       { loaders }: GraphQLContext
     ) => {
       const sender = await loaders.user.load(senderId);
+
+      // there will be no community to resolve in direct message threads, so we can escape early
+      // and only return the sender
+      if (threadType === 'directMessageThread') return sender;
+
       const { communityId } = await getThread(threadId);
       const {
         reputation,
