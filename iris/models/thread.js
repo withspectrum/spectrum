@@ -202,6 +202,11 @@ export const publishThread = (
       const thread = result.changes[0].new_val;
 
       addQueue('thread notification', { thread, userId });
+      addQueue('process reputation event', {
+        userId,
+        type: 'thread created',
+        entityId: thread.id,
+      });
 
       return thread;
     });
@@ -261,10 +266,20 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
       }
     )
     .run()
-    .then(result => {
-      return Promise.all([result, turnOffAllThreadNotifications(threadId)]);
-    })
-    .then(([result]) => (result.replaced >= 1 ? true : false));
+    .then(result =>
+      Promise.all([result, turnOffAllThreadNotifications(threadId)])
+    )
+    .then(([result]) => {
+      const thread = result.changes[0].new_val;
+
+      addQueue('process reputation event', {
+        userId: thread.creatorId,
+        type: 'thread deleted',
+        entityId: thread.id,
+      });
+
+      return result.replaced >= 1 ? true : false;
+    });
 };
 
 type EditThreadInput = {

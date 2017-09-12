@@ -15,6 +15,7 @@ import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Badge from '../badges';
 import Reaction from '../reaction';
+import { ReputationMini } from '../reputation';
 
 import {
   UserAvatar,
@@ -119,12 +120,19 @@ class ChatMessages extends Component {
 
       const renderBubbleHeader = (group: Object, me: boolean) => {
         const user = group.sender;
-
         return (
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
               <Name>
                 {me ? 'You' : user.name}
+                {!me &&
+                user.totalReputation && (
+                  <span>
+                    {' '}
+                    · <ReputationMini color={'text.alt'} />
+                    {user.totalReputation.toLocaleString()}
+                  </span>
+                )}
               </Name>
             </Link>
             {user.isAdmin && <Badge type="admin" />}
@@ -143,9 +151,7 @@ class ChatMessages extends Component {
               return (
                 <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
                   <hr />
-                  <Time>
-                    {time}
-                  </Time>
+                  <Time>{time}</Time>
                   <hr />
                 </Timestamp>
               );
@@ -188,14 +194,15 @@ class ChatMessages extends Component {
                             (which has a typeof number)
                           */}
                           {!emojiOnly &&
-                            typeof message.id === 'string' &&
+                          typeof message.id === 'string' && (
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
                               dispatch={dispatch}
-                            />}
+                            />
+                          )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {
@@ -214,14 +221,15 @@ class ChatMessages extends Component {
                             pending={message.id < 0}
                             hashed={hash === message.id}
                           />
-                          {typeof message.id === 'string' &&
+                          {typeof message.id === 'string' && (
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
                               dispatch={dispatch}
-                            />}
+                            />
+                          )}
                         </MessageWrapper>
                       );
                     } else {

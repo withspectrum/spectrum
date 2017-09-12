@@ -24,6 +24,7 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import ImgixClient from 'imgix-core-js';
+import { getReputationByUser } from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -191,16 +192,20 @@ module.exports = {
         }
       });
     },
-    settings: (_, __, { user }) => {
+    settings: (_: any, __: any, { user }: GraphQLContext) => {
       if (!user) return new UserError('You must be signed in to continue.');
       return getUsersSettings(user.id);
     },
-    invoices: ({ id }, _, { user }) => {
+    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError('You must be logged in to view these settings.');
 
       return getInvoicesByUser(currentUser.id);
+    },
+    totalReputation: ({ id }: { id: string }, _: any, __: any) => {
+      if (!id) return 0;
+      return getReputationByUser(id);
     },
   },
 };

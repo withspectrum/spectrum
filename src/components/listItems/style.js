@@ -16,7 +16,8 @@ export const Wrapper = styled(FlexCol)`
   justify-content: center;
   max-width: 100%;
 
-  &:hover > div > div h3, &:hover .action {
+  &:hover > div > div h3,
+  &:hover .action {
     color: ${props => (props.clickable ? props.theme.brand.alt : '')};
   }
 `;
@@ -35,9 +36,7 @@ export const WrapperLi = styled.li`
   }
 `;
 
-export const Col = styled(FlexCol)`
-  flex: auto;
-`;
+export const Col = styled(FlexCol)`flex: auto;`;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
@@ -60,7 +59,11 @@ export const Meta = styled(H4)`
   font-weight: 500;
   color: ${({ theme }) => theme.text.alt};
 
-  ${props => (props.nowrap ? Truncate() : '')}
+  a {
+    display: inline-block;
+  }
+
+  ${props => (props.nowrap ? Truncate() : '')};
 `;
 
 export const ActionContainer = styled(FlexCol)`
@@ -158,7 +161,7 @@ export const Notice = styled(Description)`
   padding: 8px 12px;
   margin: 16px 0;
   border-radius: 4px;
-  background: #FFF1CC;
+  background: #fff1cc;
   border: 1px solid #ffd566;
   color: #715818;
 

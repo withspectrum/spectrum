@@ -30,6 +30,7 @@ const createOwnerInCommunity = (
         isModerator: false,
         isBlocked: false,
         receiveNotifications: true,
+        reputation: 0,
       },
       { returnChanges: true }
     )
@@ -82,6 +83,7 @@ const createMemberInCommunity = (
               isModerator: false,
               isBlocked: false,
               receiveNotifications: true,
+              reputation: 0,
             },
             { returnChanges: true }
           )
@@ -330,6 +332,17 @@ const getUserPermissionsInCommunity = (
     });
 };
 
+const getReputationByUser = (userId: string): Promise<Number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(rec => rec('reputation'))
+    .reduce((l, r) => l.add(r))
+    .default(0)
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInCommunity,
@@ -346,4 +359,5 @@ module.exports = {
   getModeratorsInCommunity,
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
+  getReputationByUser,
 };

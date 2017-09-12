@@ -22,6 +22,7 @@ const {
   updateThreadWithImages,
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
+import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
   Mutation: {
@@ -310,6 +311,15 @@ module.exports = {
               currentUserCommunityPermissions.isModerator ||
               thread.creatorId === currentUser.id
             ) {
+              // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
+              if (currentUser.id !== thread.creatorId) {
+                addQueue('process reputation event', {
+                  userId: currentUser.id,
+                  type: 'thread deleted by moderation',
+                  entityId: thread.communityId,
+                });
+              }
+
               return deleteThread(threadId);
             }
 
