@@ -424,9 +424,21 @@ const setUserOnline = (id: string, isOnline: boolean) => {
     .then(result => result.changes[0].new_val);
 };
 
+const updateUserEmail = (userId: string, email: string): Promise<Object> => {
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      email,
+    })
+    .run()
+    .then(() => getUserById(userId));
+};
+
 module.exports = {
   getUser,
   getUserById,
+  getUserByEmail,
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,
@@ -435,4 +447,5 @@ module.exports = {
   editUser,
   getEverything,
   setUserOnline,
+  updateUserEmail,
 };

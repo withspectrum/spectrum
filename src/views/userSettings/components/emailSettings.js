@@ -5,9 +5,14 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { toggleNotificationSettingsMutation } from '../../../api/user';
-import { Checkbox } from '../../../components/formElements';
+import {
+  toggleNotificationSettingsMutation,
+  updateUserEmailMutation,
+} from '../../../api/user';
+import { Checkbox, Input, Error } from '../../../components/formElements';
 import Icon from '../../../components/icons';
+import { Button } from '../../../components/buttons';
+import { IS_EMAIL } from '../../../helpers/regexps';
 import {
   StyledCard,
   LargeListHeading,
@@ -16,7 +21,7 @@ import {
   Notice,
   InlineIcon,
 } from '../../../components/listItems/style';
-import { EmailListItem, CheckboxContent } from '../style';
+import { EmailListItem, CheckboxContent, EmailForm } from '../style';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -65,6 +70,47 @@ const parseNotificationTypes = notifications => {
 };
 
 class EmailSettings extends Component {
+  state: {
+    email: string,
+    emailError: string,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      email: '',
+      emailError: '',
+    };
+  }
+
+  handleEmailChange = e => {
+    this.setState({
+      email: e.target.value,
+      emailError: '',
+    });
+  };
+
+  saveEmail = e => {
+    e.preventDefault();
+    const { email } = this.state;
+    const { updateUserEmail } = this.props;
+
+    if (!email.match(IS_EMAIL)) {
+      return this.setState({
+        emailError: 'Please enter a valid email address',
+      });
+    }
+
+    return updateUserEmail(email)
+      .then(({ data: { updateUserEmail } }) => {
+        this.props.dispatch(addToastWithTimeout('success', 'Email saved!'));
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
   handleChange = e => {
     let notificationType = e.target.id;
     let deliveryMethod = 'email';
@@ -84,10 +130,42 @@ class EmailSettings extends Component {
   };
 
   render() {
-    const { currentUser: { settings: { notifications } } } = this.props;
+    const {
+      currentUser: { settings: { notifications } },
+      currentUser,
+    } = this.props;
+    const { emailError } = this.state;
     const settings = parseNotificationTypes(notifications).filter(
-      notification => notification.emailValue && notification
+      notification => notification && notification.emailValue
     );
+
+    if (!currentUser.email) {
+      return (
+        <StyledCard
+          smallOnly={this.props.smallOnly}
+          largeOnly={this.props.largeOnly}
+        >
+          <ListHeader>
+            <LargeListHeading>Turn on email notifications</LargeListHeading>
+          </ListHeader>
+          <ListContainer>
+            <EmailForm onSubmit={this.saveEmail}>
+              <Input
+                type="text"
+                defaultValue={null}
+                onChange={this.handleEmailChange}
+                placeholder={'Add your email address'}
+              >
+                Email Address
+              </Input>
+
+              <Button onClick={this.saveEmail}>Save</Button>
+            </EmailForm>
+            {emailError && <Error>{emailError}</Error>}
+          </ListContainer>
+        </StyledCard>
+      );
+    }
 
     return (
       <StyledCard
@@ -141,6 +219,8 @@ class EmailSettings extends Component {
   }
 }
 
-export default compose(toggleNotificationSettingsMutation, connect())(
-  EmailSettings
-);
+export default compose(
+  toggleNotificationSettingsMutation,
+  updateUserEmailMutation,
+  connect()
+)(EmailSettings);

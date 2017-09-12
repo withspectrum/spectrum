@@ -1,5 +1,11 @@
 // @flow
-import { editUser, getUsers, getUser } from '../models/user';
+import {
+  editUser,
+  getUsers,
+  getUser,
+  getUserByEmail,
+  updateUserEmail,
+} from '../models/user';
 import type { EditUserArguments } from '../models/user';
 import {
   getUsersSettings,
@@ -129,8 +135,28 @@ module.exports = {
         throw new UserError(
           'Can only unsubscribe from web push notifications when logged in.'
         );
-      return removeSubscription(endpoint).then(() => true).catch(err => {
-        throw new UserError(`Couldn't remove web push subscription.`);
+      return removeSubscription(endpoint)
+        .then(() => true)
+        .catch(err => {
+          throw new UserError(`Couldn't remove web push subscription.`);
+        });
+    },
+    updateUserEmail: (_, { email }, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to update your email address'
+        );
+      }
+
+      return getUserByEmail(email).then(result => {
+        if (result && result.email === email) {
+          return new UserError(
+            'Another person on Spectrum is already using this email.'
+          );
+        }
+
+        return updateUserEmail(currentUser.id, email);
       });
     },
   },

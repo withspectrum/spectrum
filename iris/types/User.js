@@ -143,6 +143,7 @@ const User = /* GraphQL */ `
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
+		updateUserEmail(email: String!): User
 	}
 `;
 
