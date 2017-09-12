@@ -111,6 +111,7 @@ class DashboardPure extends Component {
                 user={user}
                 communities={communities}
                 networkStatus={networkStatus}
+                withMeta={true}
               />
               <UpsellMiniCreateCommunity largeOnly />
               {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}

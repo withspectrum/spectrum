@@ -52,7 +52,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
         />
         <Col style={{ marginLeft: '12px' }}>
           <Heading>{props.contents.name}</Heading>
-          <Meta>{props.meta}</Meta>
+          {props.withMeta && <Meta>{props.meta}</Meta>}
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
