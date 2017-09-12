@@ -56,7 +56,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
             <Meta>
               {props.meta && (
                 <span>
-                  <ReputationMini color={'text.alt'} />
+                  <ReputationMini tipText={'Your rep in this community'} />
                   {props.meta}
                 </span>
               )}
@@ -180,7 +180,7 @@ export const UserListItem = ({
             )}
             {user.totalReputation && (
               <span>
-                <ReputationMini />
+                <ReputationMini tipText={'Your rep in this community'} />
                 {user.totalReputation}
               </span>
             )}

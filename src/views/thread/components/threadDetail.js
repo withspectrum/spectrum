@@ -38,7 +38,7 @@ import Editor, {
 } from '../../../components/editor';
 import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
-import { ReputationMini } from '../../../components/reputation';
+import Reputation from '../../../components/reputation';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
@@ -486,13 +486,14 @@ class ThreadDetailPure extends Component {
                 {thread.creator.isPro && <Badge type="pro" />}
               </AuthorUsername>
               <AuthorUsername>
-                {thread.creator.contextPermissions.reputation && (
+                {thread.creator.contextPermissions.reputation > 0 && (
                   <span>
-                    <ReputationMini color={'text.alt'} />
+                    <Reputation tipText={'Author rep in this community'} />
                     {truncateNumber(
                       thread.creator.contextPermissions.reputation,
                       2
-                    )}
+                    )}{' '}
+                    rep
                   </span>
                 )}
               </AuthorUsername>
