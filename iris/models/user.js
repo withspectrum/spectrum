@@ -427,6 +427,7 @@ const setUserOnline = (id: string, isOnline: boolean) => {
 module.exports = {
   getUser,
   getUserById,
+  getUserByUsername,
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,

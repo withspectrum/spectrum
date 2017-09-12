@@ -70,12 +70,6 @@ const User = /* GraphQL */ `
 		notifications: UserNotificationsSettings
 	}
 
-	type UserContextPermissions {
-		reputation: Int
-		isModerator: Boolean
-		isOwner: Boolean
-	}
-
 	type User {
 		id: ID!
 		name: String
@@ -104,7 +98,7 @@ const User = /* GraphQL */ `
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
-		contextPermissions: UserContextPermissions
+		contextPermissions: ContextPermissions
 	}
 
 	extend type Query {

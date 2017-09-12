@@ -10,6 +10,7 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
+  truncateNumber,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
@@ -130,7 +131,7 @@ class ChatMessages extends Component {
                   <span>
                     {' '}
                     · <ReputationMini color={'text.alt'} />
-                    {user.contextPermissions.reputation.toLocaleString()}
+                    {truncateNumber(user.contextPermissions.reputation)}
                   </span>
                 )}
               </Name>

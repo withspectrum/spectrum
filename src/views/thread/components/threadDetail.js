@@ -14,6 +14,7 @@ import {
   getLinkPreviewFromUrl,
   timeDifference,
   convertTimestampToDate,
+  truncateNumber,
 } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -485,10 +486,13 @@ class ThreadDetailPure extends Component {
                 {thread.creator.isPro && <Badge type="pro" />}
               </AuthorUsername>
               <AuthorUsername>
-                {thread.creator.totalReputation && (
+                {thread.creator.contextPermissions.reputation && (
                   <span>
                     <ReputationMini color={'text.alt'} />
-                    {thread.creator.totalReputation.toLocaleString()}
+                    {truncateNumber(
+                      thread.creator.contextPermissions.reputation,
+                      2
+                    )}
                   </span>
                 )}
               </AuthorUsername>

@@ -15,6 +15,11 @@ export const threadInfoFragment = gql`
     creator {
       ...userInfo
       ...userMetaData
+      contextPermissions {
+        reputation
+        isOwner
+        isModerator
+      }
     }
     channel {
       ...channelInfo

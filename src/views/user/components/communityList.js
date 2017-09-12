@@ -61,7 +61,8 @@ const CommunityList = props => {
                   withDescription={withDescription}
                   withMeta={withMeta}
                   meta={
-                    item.node.communityPermissions.reputation &&
+                    item.node.communityPermissions &&
+                    item.node.communityPermissions.reputation > 0 &&
                     `${item.node.communityPermissions.reputation.toLocaleString()} reputation`
                   }
                 >

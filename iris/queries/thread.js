@@ -5,6 +5,7 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
+const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
@@ -130,11 +131,28 @@ module.exports = {
           })),
         }));
     },
-    creator: (
-      { creatorId }: { creatorId: string },
+    creator: async (
+      { creatorId, communityId }: { creatorId: string, communityId: string },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.user.load(creatorId),
+    ) => {
+      const creator = await loaders.user.load(creatorId);
+
+      const {
+        reputation,
+        isModerator,
+        isOwner,
+      } = await getUserPermissionsInCommunity(communityId, creatorId);
+
+      return {
+        ...creator,
+        contextPermissions: {
+          reputation,
+          isModerator,
+          isOwner,
+        },
+      };
+    },
     messageCount: ({ id }: { id: string }) => getMessageCount(id),
   },
 };

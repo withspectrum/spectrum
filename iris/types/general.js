@@ -39,6 +39,12 @@ const general = /* GraphQL */ `
 		createdAt: String
 		status: String
 	}
+
+	type ContextPermissions {
+		reputation: Int
+		isModerator: Boolean
+		isOwner: Boolean
+	}
 `;
 
 module.exports = general;

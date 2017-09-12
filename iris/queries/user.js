@@ -213,14 +213,14 @@ module.exports = {
       return getReputationByUser(id);
     },
     contextPermissions: (user: any, _: any, __: any, info: any) => {
-      // this resolver uses the fourth 'info' variable used in gql resolvers in order to return context-specific permissions for a user. The info argument contains details about the parent gql query, which we would be unable to access here otherwise - for example, we can get the threadId from a thread info query, or a communityId for a community query.
-      // more info:http://dev.apollodata.com/tools/graphql-tools/resolvers.html#Resolver-function-signature
+      // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
+      if (user.contextPermissions) return user.contextPermissions;
 
-      // In this resolver we parse the info.operation field to determine how we should return proper permissions.
       const queryName = info.operation.name.value;
 
       const handleCheck = async () => {
         switch (queryName) {
+          case 'getThread':
           case 'getThreadMessages': {
             const threadId = info.variableValues.id;
             const { communityId } = await getThread(threadId);

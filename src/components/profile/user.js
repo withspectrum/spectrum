@@ -144,7 +144,7 @@ const UserWithData = ({
           </ProUpgrade>
         )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
             <ReputationIcon />
 
@@ -187,7 +187,7 @@ const UserWithData = ({
           </CoverDescription>
         )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
             <ReputationIcon />
 
@@ -263,7 +263,7 @@ const UserWithData = ({
           )}
         </ProfileHeader>
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
             <ReputationIcon />
 
