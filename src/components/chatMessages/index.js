@@ -16,7 +16,6 @@ import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Badge from '../badges';
 import Reaction from '../reaction';
-import { ReputationMini } from '../reputation';
 
 import {
   UserAvatar,
@@ -124,17 +123,7 @@ class ChatMessages extends Component {
         return (
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
-              <Name>
-                {me ? 'You' : user.name}
-                {!me &&
-                user.contextPermissions.reputation > 0 && (
-                  <span>
-                    {' '}
-                    · <ReputationMini color={'text.alt'} />
-                    {truncateNumber(user.contextPermissions.reputation)}
-                  </span>
-                )}
-              </Name>
+              <Name>{me ? 'You' : user.name}</Name>
             </Link>
             {user.isAdmin && <Badge type="admin" />}
             {user.isPro && <Badge type="pro" />}

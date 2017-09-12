@@ -63,7 +63,7 @@ const CommunityList = props => {
                   meta={
                     item.node.communityPermissions &&
                     item.node.communityPermissions.reputation > 0 &&
-                    `${item.node.communityPermissions.reputation.toLocaleString()} reputation`
+                    `${item.node.communityPermissions.reputation.toLocaleString()} rep`
                   }
                 >
                   <Icon glyph="view-forward" />
