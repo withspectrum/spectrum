@@ -23,32 +23,32 @@ const FormattedThreadLocation = props => {
 
   return (
     <ThreadContext>
-      {needsCommunityDetails &&
+      {needsCommunityDetails && (
         <ThreadContextAvatar>
           <Avatar
             community
             size={20}
+            radius={8}
             src={props.data.channel.community.profilePhoto}
           />
-        </ThreadContextAvatar>}
+        </ThreadContextAvatar>
+      )}
       <ThreadContextMeta>
-        {(needsCommunityDetails || needsChannelDetails) &&
+        {(needsCommunityDetails || needsChannelDetails) && (
           <Location>
-            {needsCommunityDetails &&
+            {needsCommunityDetails && (
               <Link to={`/${props.data.channel.community.slug}`}>
                 {props.data.channel.community.name}
-              </Link>}
+              </Link>
+            )}
             {needsCommunityDetails &&
-              needsChannelDetails &&
-              <span>
-                {' / '}
-              </span>}
-            {needsChannelDetails &&
+            needsChannelDetails && <span>{' / '}</span>}
+            {needsChannelDetails && (
               <Link
                 to={`/${props.data.channel.community.slug}/${props.data.channel
                   .slug}`}
               >
-                {props.data.channel.isPrivate &&
+                {props.data.channel.isPrivate && (
                   <Lock>
                     <Icon
                       glyph="private"
@@ -56,10 +56,13 @@ const FormattedThreadLocation = props => {
                       tipLocation="top-right"
                       size={12}
                     />
-                  </Lock>}
+                  </Lock>
+                )}
                 {props.data.channel.name}
-              </Link>}
-          </Location>}
+              </Link>
+            )}
+          </Location>
+        )}
       </ThreadContextMeta>
     </ThreadContext>
   );

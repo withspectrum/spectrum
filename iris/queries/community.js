@@ -14,6 +14,7 @@ const {
   getUserPermissionsInCommunity,
   getMembersInCommunity,
 } = require('../models/usersCommunities');
+const { getUserByUsername } = require('../models/user');
 const { getThreadsByChannels, getThreads } = require('../models/thread');
 const {
   getChannelsByCommunity,

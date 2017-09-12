@@ -98,6 +98,7 @@ const User = /* GraphQL */ `
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
+		contextPermissions: ContextPermissions
 	}
 
 	extend type Query {

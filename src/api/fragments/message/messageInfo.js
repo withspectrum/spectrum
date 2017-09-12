@@ -10,6 +10,11 @@ export const messageInfoFragment = gql`
     messageType
     sender {
       ...userInfo
+      contextPermissions {
+        reputation
+        isOwner
+        isModerator
+      }
     }
     reactions {
       count

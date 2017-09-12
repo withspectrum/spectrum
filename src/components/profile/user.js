@@ -144,9 +144,9 @@ const UserWithData = ({
           </ProUpgrade>
         )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
+            <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
               <strong>{user.totalReputation.toLocaleString()}</strong> rep
@@ -187,9 +187,9 @@ const UserWithData = ({
           </CoverDescription>
         )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
+            <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
               <strong>{user.totalReputation.toLocaleString()}</strong> rep
@@ -263,9 +263,9 @@ const UserWithData = ({
           )}
         </ProfileHeader>
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
+            <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
               <strong>{user.totalReputation.toLocaleString()}</strong> rep

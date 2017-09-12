@@ -52,7 +52,16 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
         />
         <Col style={{ marginLeft: '12px' }}>
           <Heading>{props.contents.name}</Heading>
-          {props.withMeta && <Meta>{props.meta}</Meta>}
+          {props.withMeta && (
+            <Meta>
+              {props.meta && (
+                <span>
+                  <ReputationMini tipText={'Your rep in this community'} />
+                  {props.meta}
+                </span>
+              )}
+            </Meta>
+          )}
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
@@ -171,7 +180,7 @@ export const UserListItem = ({
             )}
             {user.totalReputation && (
               <span>
-                <ReputationMini />
+                <ReputationMini tipText={'Your rep in this community'} />
                 {user.totalReputation}
               </span>
             )}

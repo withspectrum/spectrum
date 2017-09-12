@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+import ImgixClient from 'imgix-core-js';
 const {
   getEverything,
   getUser,
@@ -8,6 +10,7 @@ const { getUsersSettings } = require('../models/usersSettings');
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const {
+  getThread,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
 } = require('../models/thread');
@@ -23,8 +26,10 @@ import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
-import ImgixClient from 'imgix-core-js';
-import { getReputationByUser } from '../models/usersCommunities';
+import {
+  getReputationByUser,
+  getUserPermissionsInCommunity,
+} from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -203,9 +208,37 @@ module.exports = {
 
       return getInvoicesByUser(currentUser.id);
     },
-    totalReputation: ({ id }: { id: string }, _: any, __: any) => {
+    totalReputation: async ({ id }: { id: string }, _: any, __: any) => {
       if (!id) return 0;
       return getReputationByUser(id);
+    },
+    contextPermissions: (user: any, _: any, __: any, info: any) => {
+      // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
+      if (user.contextPermissions) return user.contextPermissions;
+
+      const queryName = info.operation.name.value;
+
+      const handleCheck = async () => {
+        switch (queryName) {
+          case 'getThread':
+          case 'getThreadMessages': {
+            const threadId = info.variableValues.id;
+            const { communityId } = await getThread(threadId);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(communityId, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+        }
+      };
+
+      return handleCheck();
     },
   },
 };

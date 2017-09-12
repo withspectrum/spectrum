@@ -7,7 +7,7 @@ export const ReputationIcon = styled.div`
   top: 1px;
   vertical-align: middle;
   flex: none;
-  color: ${props => (props.color ? props.color : props.theme.brand.alt)};
+  color: inherit;
   margin-right: 4px;
 `;
 

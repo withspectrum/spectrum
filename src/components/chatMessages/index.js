@@ -10,12 +10,12 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
+  truncateNumber,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Badge from '../badges';
 import Reaction from '../reaction';
-import { ReputationMini } from '../reputation';
 
 import {
   UserAvatar,
@@ -123,17 +123,7 @@ class ChatMessages extends Component {
         return (
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
-              <Name>
-                {me ? 'You' : user.name}
-                {!me &&
-                user.totalReputation && (
-                  <span>
-                    {' '}
-                    · <ReputationMini color={'text.alt'} />
-                    {user.totalReputation.toLocaleString()}
-                  </span>
-                )}
-              </Name>
+              <Name>{me ? 'You' : user.name}</Name>
             </Link>
             {user.isAdmin && <Badge type="admin" />}
             {user.isPro && <Badge type="pro" />}
