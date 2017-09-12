@@ -455,7 +455,7 @@ class ThreadComposerWithData extends Component {
         });
 
         // redirect the user to the thread
-        this.props.history.push(`/thread/${id}`);
+        this.props.history.push(`?thread=${id}`);
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );

@@ -135,7 +135,9 @@ const init = () => {
           description: profile.about ? profile.about : '',
           website: profile.website ? profile.website : '',
           email:
-            profile.emails.length > 0 && profile.emails[0].value !== undefined
+            profile.emails &&
+            profile.emails.length > 0 &&
+            profile.emails[0].value !== undefined
               ? profile.emails[0].value
               : null,
           profilePhoto:
