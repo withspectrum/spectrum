@@ -144,13 +144,15 @@ const UserWithData = ({
           </ProUpgrade>
         )}
 
-        <ReputationContainer>
-          <ReputationIcon />
+        {user.totalReputation && (
+          <ReputationContainer>
+            <ReputationIcon />
 
-          <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> rep
-          </ReputationCount>
-        </ReputationContainer>
+            <ReputationCount>
+              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+            </ReputationCount>
+          </ReputationContainer>
+        )}
       </Card>
     );
   } else if (componentSize === 'simple') {
@@ -185,13 +187,15 @@ const UserWithData = ({
           </CoverDescription>
         )}
 
-        <ReputationContainer>
-          <ReputationIcon />
+        {user.totalReputation && (
+          <ReputationContainer>
+            <ReputationIcon />
 
-          <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> rep
-          </ReputationCount>
-        </ReputationContainer>
+            <ReputationCount>
+              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+            </ReputationCount>
+          </ReputationContainer>
+        )}
       </Card>
     );
   } else {
@@ -258,13 +262,16 @@ const UserWithData = ({
             />
           )}
         </ProfileHeader>
-        <ReputationContainer>
-          <ReputationIcon />
 
-          <ReputationCount>
-            <strong>{user.totalReputation.toLocaleString()}</strong> rep
-          </ReputationCount>
-        </ReputationContainer>
+        {user.totalReputation && (
+          <ReputationContainer>
+            <ReputationIcon />
+
+            <ReputationCount>
+              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+            </ReputationCount>
+          </ReputationContainer>
+        )}
       </Card>
     );
   }

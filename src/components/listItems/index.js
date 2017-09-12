@@ -169,8 +169,12 @@ export const UserListItem = ({
                 <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
               </span>
             )}
-            <ReputationMini />
-            {user.totalReputation}
+            {user.totalReputation && (
+              <span>
+                <ReputationMini />
+                {user.totalReputation}
+              </span>
+            )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>

@@ -125,7 +125,8 @@ class ChatMessages extends Component {
             <Link to={`/users/${user.username}`}>
               <Name>
                 {me ? 'You' : user.name}
-                {!me && (
+                {!me &&
+                user.totalReputation && (
                   <span>
                     {' '}
                     · <ReputationMini color={'text.alt'} />
