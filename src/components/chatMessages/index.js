@@ -126,11 +126,11 @@ class ChatMessages extends Component {
               <Name>
                 {me ? 'You' : user.name}
                 {!me &&
-                user.totalReputation && (
+                user.contextPermissions.reputation > 0 && (
                   <span>
                     {' '}
                     · <ReputationMini color={'text.alt'} />
-                    {user.totalReputation.toLocaleString()}
+                    {user.contextPermissions.reputation.toLocaleString()}
                   </span>
                 )}
               </Name>

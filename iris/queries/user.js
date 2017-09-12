@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+import ImgixClient from 'imgix-core-js';
 const {
   getEverything,
   getUser,
@@ -8,6 +10,7 @@ const { getUsersSettings } = require('../models/usersSettings');
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const {
+  getThread,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
 } = require('../models/thread');
@@ -23,8 +26,10 @@ import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
-import ImgixClient from 'imgix-core-js';
-import { getReputationByUser } from '../models/usersCommunities';
+import {
+  getReputationByUser,
+  getUserPermissionsInCommunity,
+} from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -203,9 +208,37 @@ module.exports = {
 
       return getInvoicesByUser(currentUser.id);
     },
-    totalReputation: ({ id }: { id: string }, _: any, __: any) => {
+    totalReputation: async ({ id }: { id: string }, _: any, __: any) => {
       if (!id) return 0;
       return getReputationByUser(id);
+    },
+    contextPermissions: (user: any, _: any, __: any, info: any) => {
+      // this resolver uses the fourth 'info' variable used in gql resolvers in order to return context-specific permissions for a user. The info argument contains details about the parent gql query, which we would be unable to access here otherwise - for example, we can get the threadId from a thread info query, or a communityId for a community query.
+      // more info:http://dev.apollodata.com/tools/graphql-tools/resolvers.html#Resolver-function-signature
+
+      // In this resolver we parse the info.operation field to determine how we should return proper permissions.
+      const queryName = info.operation.name.value;
+
+      const handleCheck = async () => {
+        switch (queryName) {
+          case 'getThreadMessages': {
+            const threadId = info.variableValues.id;
+            const { communityId } = await getThread(threadId);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(communityId, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+        }
+      };
+
+      return handleCheck();
     },
   },
 };

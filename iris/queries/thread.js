@@ -1,5 +1,5 @@
 //@flow
-const { getChannels, getChannelPermissions } = require('../models/channel');
+const { getChannels } = require('../models/channel');
 const {
   getCommunities,
   getCommunityPermissions,
@@ -54,7 +54,7 @@ module.exports = {
       }),
   },
   Thread: {
-    attachments: ({ attachments }) =>
+    attachments: ({ attachments }: { attachments: Array<any> }) =>
       attachments &&
       attachments.map(attachment => {
         return {
@@ -72,18 +72,26 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    participants: ({ id, creatorId }, _, { loaders }) => {
+    participants: (
+      { id, creatorId }: { id: string, creatorId: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
       return getParticipantsInThread(id);
     },
     isCreator: (
-      { creatorId }: { creatorId: String },
+      { creatorId }: { creatorId: string },
       _: any,
-      { user }: Context
+      { user }: GraphQLContext
     ) => {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
-    receiveNotifications: ({ id }, __, { user }) => {
+    receiveNotifications: (
+      { id }: { id: string },
+      __: any,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
@@ -123,7 +131,7 @@ module.exports = {
         }));
     },
     creator: (
-      { creatorId }: { creatorId: String },
+      { creatorId }: { creatorId: string },
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.user.load(creatorId),
