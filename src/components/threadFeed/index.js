@@ -91,18 +91,17 @@ class ThreadFeedPure extends Component {
   }
 
   render() {
-    const {
-      data: { threads, networkStatus, error },
-      community,
-      fetchMore,
-      hasNextPage,
-      pinnedThreadId,
-      viewContext,
-      setThreadsStatus,
-      isNewAndOwned,
-    } = this.props;
+    const { data: { threads, networkStatus, error }, viewContext } = this.props;
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
+    const isCommunityMember =
+      this.props.community &&
+      (this.props.community.communityPermissions.isMember ||
+        this.props.community.communityPermissions.isOwner ||
+        this.props.community.communityPermissions.isModerator) &&
+      !this.props.community.communityPermissions.isBlocked;
+    console.log('props', this.props);
+    console.log('community/channel/member?', isCommunityMember);
 
     if (networkStatus === 8 || error) {
       return <ErrorState />;
@@ -113,8 +112,8 @@ class ThreadFeedPure extends Component {
         <Threads>
           <InfiniteList
             pageStart={0}
-            loadMore={fetchMore}
-            hasMore={hasNextPage}
+            loadMore={this.props.data.fetchMore}
+            hasMore={this.props.data.hasNextPage}
             loader={<LoadingThread />}
             useWindow={false}
             initialLoad={false}
@@ -127,7 +126,7 @@ class ThreadFeedPure extends Component {
                   key={thread.node.id}
                   data={thread.node}
                   viewContext={viewContext}
-                  isPinned={thread.node.id === pinnedThreadId}
+                  isPinned={thread.node.id === this.props.pinnedThreadId}
                 />
               );
             })}
@@ -138,15 +137,14 @@ class ThreadFeedPure extends Component {
 
     if (networkStatus === 7) {
       // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-      if (setThreadsStatus) {
-        setThreadsStatus();
+      if (this.props.setThreadsStatus) {
+        this.props.setThreadsStatus();
       }
-      if (isNewAndOwned) {
-        return <UpsellState community={community} />;
-        // } else if (community.communitypermissions.isMember){
-        //   return <NullState />;
+      if (this.props.isNewAndOwned) {
+        return <UpsellState community={this.props.community} />;
+      } else if (isCommunityMember || this.props.viewContext === 'channel') {
+        return <NullState />;
       } else {
-        console.log(this.props.community);
         return null;
       }
     } else {
