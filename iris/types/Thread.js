@@ -41,6 +41,7 @@ const Thread = /* GraphQL */ `
 		isLocked: Boolean
 		isCreator: Boolean
 		receiveNotifications: Boolean
+		lastActive: Date
 		type: ThreadType
 		edits: [Edit!]
 		participants: [User]
@@ -86,6 +87,10 @@ const Thread = /* GraphQL */ `
 		setThreadLock(threadId: ID!, value: Boolean!): Thread
 		toggleThreadNotifications(threadId: ID!): Thread
 		deleteThread(threadId: ID!): Boolean
+	}
+
+	extend type Subscription {
+		threadUpdated: Thread
 	}
 `;
 

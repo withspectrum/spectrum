@@ -11,6 +11,7 @@ export const threadInfoFragment = gql`
     messageCount
     createdAt
     modifiedAt
+    lastActive
     receiveNotifications
     creator {
       ...userInfo

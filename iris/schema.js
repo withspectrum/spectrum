@@ -50,6 +50,7 @@ const metaMutations = require('./mutations/meta');
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
+const threadSubscriptions = require('./subscriptions/thread');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -102,7 +103,8 @@ const resolvers = merge(
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
-  directMessageThreadSubscriptions
+  directMessageThreadSubscriptions,
+  threadSubscriptions
 );
 
 if (process.env.NODE_ENV === 'development' && debug.enabled) {
