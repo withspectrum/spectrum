@@ -407,6 +407,8 @@ class Navbar extends Component {
                 markAllRead={this.markAllNotificationsRead}
                 currentUser={loggedInUser}
                 width={'480px'}
+                loading={networkStatus < 7}
+                error={networkStatus === 8}
               />
             </IconDrop>
 
