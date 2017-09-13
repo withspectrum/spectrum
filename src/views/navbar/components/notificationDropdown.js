@@ -37,7 +37,11 @@ const NotificationContainer = props => {
   const noNotifications = !rawNotifications || rawNotifications.length === 0;
 
   if (loading) {
-    return <Loading />;
+    return (
+      <div style={{ margin: '32px 0' }}>
+        <Loading />
+      </div>
+    );
   } else if (noNotifications || error) {
     return <NullNotifications />;
   } else {
