@@ -491,7 +491,7 @@ class ThreadDetailPure extends Component {
                     <Reputation tipText={'Author rep in this community'} />
                     {truncateNumber(
                       thread.creator.contextPermissions.reputation,
-                      2
+                      1
                     )}{' '}
                     rep
                   </span>
