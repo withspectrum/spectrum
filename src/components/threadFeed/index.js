@@ -100,8 +100,6 @@ class ThreadFeedPure extends Component {
         this.props.community.communityPermissions.isOwner ||
         this.props.community.communityPermissions.isModerator) &&
       !this.props.community.communityPermissions.isBlocked;
-    console.log('props', this.props);
-    console.log('community/channel/member?', isCommunityMember);
 
     if (networkStatus === 8 || error) {
       return <ErrorState />;
