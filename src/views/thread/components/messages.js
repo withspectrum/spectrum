@@ -13,7 +13,7 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = () =>
+export const EmptyChat = () => (
   <ChatWrapper>
     <HorizontalRule>
       <hr />
@@ -24,7 +24,8 @@ export const EmptyChat = () =>
       heading={`🔥 This thread is hot off the presses...`}
       copy={`Why don't you kick off the conversation?`}
     />
-  </ChatWrapper>;
+  </ChatWrapper>
+);
 
 class MessagesWithData extends Component {
   state: {
@@ -36,6 +37,14 @@ class MessagesWithData extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    // force scroll to bottom if the user is a participant/creator, after the messages load in
+    if (
+      this.props.data.networkStatus === 7 &&
+      this.props.shouldForceScrollOnMessageLoad
+    ) {
+      this.props.forceScrollToBottom();
+    }
+
     // force scroll to bottom when a message is sent in the same thread
     if (
       prevProps &&
@@ -80,7 +89,9 @@ class MessagesWithData extends Component {
       currentUser,
       toggleReaction,
       forceScrollToBottom,
+      shouldForceScrollOnMessageLoad,
     } = this.props;
+
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;

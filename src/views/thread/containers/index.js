@@ -36,7 +36,7 @@ import {
   UpsellSignIn,
 } from '../../../components/upsell';
 
-const LoadingView = () =>
+const LoadingView = () => (
   <View>
     <Titlebar provideBack={true} backRoute={`/`} noComposer />
     <Content>
@@ -52,7 +52,8 @@ const LoadingView = () =>
         </ChatWrapper>
       </Detail>
     </Content>
-  </View>;
+  </View>
+);
 
 class ThreadContainerPure extends Component {
   state: {
@@ -81,7 +82,7 @@ class ThreadContainerPure extends Component {
   contextualScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 280) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
   };
@@ -178,6 +179,11 @@ class ThreadContainerPure extends Component {
       // with their first community they should join
       this.props.dispatch(addCommunityToOnboarding(thread.channel.community));
 
+      const isParticipantOrCreator =
+        thread.participants.some(
+          participant => participant.id === currentUser.id
+        ) || thread.isCreator;
+
       return (
         <View slider={this.props.slider}>
           <Head title={title} description={description} />
@@ -204,32 +210,36 @@ class ThreadContainerPure extends Component {
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 viewStatus={networkStatus}
+                shouldForceScrollOnMessageLoad={isParticipantOrCreator}
               />
 
-              {isFrozen &&
-                <NullState copy="This conversation has been frozen by a moderator." />}
+              {isFrozen && (
+                <NullState copy="This conversation has been frozen by a moderator." />
+              )}
 
               {loggedInUser &&
-                !hasRights &&
+              !hasRights && (
                 <UpsellJoinChannelState
                   channel={thread.channel}
                   subscribe={this.toggleSubscription}
                   loading={isLoading}
-                />}
+                />
+              )}
 
-              {!loggedInUser &&
+              {!loggedInUser && (
                 <UpsellSignIn
                   title={'Join the conversation'}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
-                />}
+                />
+              )}
             </Detail>
           </Content>
 
           {loggedInUser &&
-            hasRights &&
-            !isFrozen &&
+          hasRights &&
+          !isFrozen && (
             <Input>
               <ChatInputWrapper type="only">
                 <ChatInput
@@ -239,7 +249,8 @@ class ThreadContainerPure extends Component {
                   forceScrollToBottom={this.forceScrollToBottom}
                 />
               </ChatInputWrapper>
-            </Input>}
+            </Input>
+          )}
         </View>
       );
     } else if (networkStatus === 7 && isUnavailable) {
