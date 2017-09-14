@@ -127,8 +127,6 @@ class ThreadFeedPure extends Component {
 
     const threadNodes =
       dataExists && threads.slice().map(thread => thread.node);
-    const threadsSortedByActivity =
-      dataExists && sortByDate(threadNodes, 'lastActive', 'desc');
 
     if (dataExists) {
       return (
@@ -143,7 +141,7 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {threadsSortedByActivity.map(thread => {
+            {threadNodes.map(thread => {
               return (
                 <ThreadFeedCard
                   key={thread.id}

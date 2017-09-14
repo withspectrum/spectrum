@@ -5,7 +5,7 @@
 import { withFilter } from 'graphql-subscriptions';
 import pubsub from './listeners/pubsub';
 import { THREAD_UPDATED } from './listeners/channels';
-import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import { getUserPermissionsInChannel } from '../models/usersChannels';
 
 module.exports = {
   Subscription: {
@@ -14,8 +14,8 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator(THREAD_UPDATED),
         async (thread, _, { user }) => {
-          const { isMember } = await getUserPermissionsInCommunity(
-            thread.communityId,
+          const { isMember } = await getUserPermissionsInChannel(
+            thread.channelId,
             user.id
           );
           return isMember;
