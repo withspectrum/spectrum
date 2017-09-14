@@ -94,6 +94,12 @@ class ThreadFeedPure extends Component {
     const { data: { threads, networkStatus, error }, viewContext } = this.props;
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
+    const isCommunityMember =
+      this.props.community &&
+      (this.props.community.communityPermissions.isMember ||
+        this.props.community.communityPermissions.isOwner ||
+        this.props.community.communityPermissions.isModerator) &&
+      !this.props.community.communityPermissions.isBlocked;
 
     if (networkStatus === 8 || error) {
       return <ErrorState />;
@@ -134,8 +140,10 @@ class ThreadFeedPure extends Component {
       }
       if (this.props.isNewAndOwned) {
         return <UpsellState community={this.props.community} />;
-      } else {
+      } else if (isCommunityMember || this.props.viewContext === 'channel') {
         return <NullState />;
+      } else {
+        return null;
       }
     } else {
       return (

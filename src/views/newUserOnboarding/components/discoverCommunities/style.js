@@ -10,7 +10,7 @@ import {
 
 export const Row = styled.div`
   width: 100%;
-  flex: 1 0 100%;
+  flex: auto;
   flex-wrap: wrap;
   display: flex;
   justify-content: center;

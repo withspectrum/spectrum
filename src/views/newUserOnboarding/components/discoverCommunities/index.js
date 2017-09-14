@@ -91,40 +91,37 @@ class TopCommunitiesPure extends Component {
                 <CoverPhoto url={community.coverPhoto}>
                   <CoverLink to={`/${community.slug}`}>
                     <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-                    <CoverTitle>
-                      {community.name}
-                    </CoverTitle>
+                    <CoverTitle>{community.name}</CoverTitle>
                   </CoverLink>
                 </CoverPhoto>
                 <CoverSubtitle>
                   {community.metaData.members} members
                 </CoverSubtitle>
 
-                <CoverDescription>
-                  {community.description}
-                </CoverDescription>
+                <CoverDescription>{community.description}</CoverDescription>
 
                 <ButtonContainer>
-                  {community.communityPermissions.isMember
-                    ? <OutlineButton
-                        onClick={() => this.toggleMembership(community.id)}
-                        gradientTheme="none"
-                        color={'pro.alt'}
-                        hoverColor={'pro.default'}
-                        style={{ fontSize: '16px' }}
-                        loading={loading === community.id}
-                      >
-                        Joined!
-                      </OutlineButton>
-                    : <Button
-                        onClick={() => this.toggleMembership(community.id)}
-                        loading={loading === community.id}
-                        gradientTheme={'success'}
-                        style={{ fontSize: '16px' }}
-                        icon={'plus'}
-                      >
-                        Join
-                      </Button>}
+                  {community.communityPermissions.isMember ? (
+                    <OutlineButton
+                      onClick={() => this.toggleMembership(community.id)}
+                      gradientTheme="none"
+                      color={'pro.alt'}
+                      hoverColor={'pro.default'}
+                      style={{ fontSize: '16px' }}
+                      loading={loading === community.id}
+                    >
+                      Joined!
+                    </OutlineButton>
+                  ) : (
+                    <Button
+                      onClick={() => this.toggleMembership(community.id)}
+                      loading={loading === community.id}
+                      gradientTheme={'success'}
+                      style={{ fontSize: '16px' }}
+                    >
+                      Join
+                    </Button>
+                  )}
                 </ButtonContainer>
               </Container>
             );
