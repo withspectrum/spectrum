@@ -338,6 +338,7 @@ export const Upsell404Community = ({
     ? "You'll have to get permission (or be 1337) to get access."
     : `We can't find a community by the name of ${community}. Want to make one?`;
 
+  // prettier-ignore
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
       <Title>{title}</Title>
@@ -358,7 +359,7 @@ export const Upsell404Community = ({
         {create && <Button onClick={create}>Create this Community</Button>}
       </Actions>
     </NullCard>
-  );
+  )
 };
 
 export const UpsellJoinCommunity = ({
@@ -396,13 +397,14 @@ export const Upsell404User = ({
     ? `But, that's not for you...`
     : `We don't know anyone who goes by that name. Sorry!`;
 
+  // prettier-ignore
   return (
     <NullCard bg="user" heading={title} copy={subtitle}>
       <Button onClick={() => (window.location.href = '/home')}>
         Take me home
       </Button>
     </NullCard>
-  );
+  )
 };
 
 export class UpsellNewUser extends Component {
