@@ -247,6 +247,7 @@ class ThreadContainerPure extends Component {
                   thread={thread.id}
                   currentUser={loggedInUser}
                   forceScrollToBottom={this.forceScrollToBottom}
+                  autoFocus={isParticipantOrCreator}
                 />
               </ChatInputWrapper>
             </Input>
