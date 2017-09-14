@@ -146,6 +146,16 @@ class DashboardPure extends Component {
           </Column>
         </AppViewWrapper>
       );
+    } else {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
     }
   }
 }
