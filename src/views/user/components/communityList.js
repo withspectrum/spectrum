@@ -36,11 +36,20 @@ const CommunityList = props => {
   if (networkStatus === 8) {
     return (
       <NullCard
-        heading={`Something went wrong loading ${user.username}'s communities...`}
+        heading={`Something went wrong loading ${user.username}\'s communities...`}
         bg={'error'}
       />
     );
   }
+
+  const sorted = communities
+    .slice()
+    .sort((a, b) => {
+      const bc = parseInt(b.node.communityPermissions.reputation);
+      const ac = parseInt(a.node.communityPermissions.reputation);
+      return bc <= ac ? -1 : 1;
+    })
+    .map(community => community.node);
 
   if (dataExists) {
     return (
@@ -53,17 +62,17 @@ const CommunityList = props => {
           )}
         </ListHeader>
         <ListContainer>
-          {communities.map(item => {
+          {sorted.map(community => {
             return (
-              <Link key={item.node.id} to={`/${item.node.slug}`}>
+              <Link key={community.id} to={`/${community.slug}`}>
                 <CommunityListItem
-                  contents={item.node}
+                  contents={community}
                   withDescription={withDescription}
                   withMeta={withMeta}
                   meta={
-                    item.node.communityPermissions &&
-                    item.node.communityPermissions.reputation > 0 &&
-                    `${item.node.communityPermissions.reputation.toLocaleString()} rep`
+                    community.communityPermissions &&
+                    community.communityPermissions.reputation > 0 &&
+                    `${community.communityPermissions.reputation.toLocaleString()} rep`
                   }
                 >
                   <Icon glyph="view-forward" />
