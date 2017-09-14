@@ -7,6 +7,7 @@ import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
@@ -19,7 +20,9 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, user, networkStatus } }) => ({
+  props: ({
+    data: { fetchMore, error, loading, user, networkStatus, subscribeToMore },
+  }) => ({
     data: {
       error,
       loading,
@@ -27,6 +30,40 @@ const threadsQueryOptions = {
       networkStatus,
       threads: user ? user.everything.edges : '',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            // determine if the incoming thread already exists in the cache. If not, it's new - so we'll send a prop down to the client to render a 'new activity' bubble which will trigger a re-render
+            // const prevThreadIds = prev.user.everything.edges.map(thread => thread.node.id)
+            // const isNewThread = prevThreadIds.indexOf(updatedThread.id) < 0
+
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
+              user: {
+                ...prev.user,
+                everything: {
+                  ...prev.user.everything,
+                  edges: [
+                    ...prev.user.everything.edges.map(thread => {
+                      if (thread.node.id !== updatedThread.id) return thread;
+                      return {
+                        node: updatedThread,
+                        cursor: '__this-is-a-cursor__',
+                        __typename: 'Thread',
+                      };
+                    }),
+                  ],
+                },
+              },
+            });
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,

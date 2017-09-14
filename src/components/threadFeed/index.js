@@ -17,6 +17,7 @@ import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 import { Divider } from './style';
+import { sortByDate } from '../../helpers/utils';
 
 const NullState = () => (
   <NullCard
@@ -75,11 +76,35 @@ const Threads = styled.div`
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
 class ThreadFeedPure extends Component {
+  state: {
+    scrollElement: any,
+    subscription: ?Function,
+  };
+
   constructor() {
     super();
     this.state = {
       scrollElement: null,
+      subscription: null,
     };
+  }
+
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.data.subscribeToUpdatedThreads(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   componentDidMount() {
@@ -88,6 +113,7 @@ class ThreadFeedPure extends Component {
       // the AppViewWrapper which is the scrolling part of the site.
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
+    this.subscribe();
   }
 
   render() {
@@ -105,6 +131,9 @@ class ThreadFeedPure extends Component {
       return <ErrorState />;
     }
 
+    const threadNodes =
+      dataExists && threads.slice().map(thread => thread.node);
+
     if (dataExists) {
       return (
         <Threads>
@@ -118,13 +147,13 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {threads.map(thread => {
+            {threadNodes.map(thread => {
               return (
                 <ThreadFeedCard
-                  key={thread.node.id}
-                  data={thread.node}
+                  key={thread.id}
+                  data={thread}
                   viewContext={viewContext}
-                  isPinned={thread.node.id === this.props.pinnedThreadId}
+                  isPinned={thread.id === this.props.pinnedThreadId}
                 />
               );
             })}

@@ -2,12 +2,9 @@
 // $FlowFixMe
 import { gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
-import {
-  notificationInfoFragment,
-} from './fragments/notification/notificationInfo';
-import {
-  directMessageThreadInfoFragment,
-} from './fragments/directMessageThread/directMessageThreadInfo';
+import { notificationInfoFragment } from './fragments/notification/notificationInfo';
+import { threadInfoFragment } from './fragments/thread/threadInfo';
+import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
 
 export const subscribeToNewMessages = gql`
 	subscription subscribeToNewMessages($thread: ID!) {
@@ -34,4 +31,13 @@ export const subscribeToUpdatedDirectMessageThreads = gql`
     }
   }
   ${directMessageThreadInfoFragment}
+`;
+
+export const subscribeToUpdatedThreads = gql`
+  subscription subscribeToUpdatedThreads {
+    threadUpdated {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
 `;

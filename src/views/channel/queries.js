@@ -7,6 +7,7 @@ import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 
 const LoadMoreThreads = gql`
   query loadMoreChannelThreads($id: ID, $after: String) {
@@ -20,7 +21,16 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, channel, networkStatus } }) => ({
+  props: ({
+    data: {
+      fetchMore,
+      error,
+      loading,
+      channel,
+      networkStatus,
+      subscribeToMore,
+    },
+  }) => ({
     data: {
       error,
       loading,
@@ -30,6 +40,39 @@ const threadsQueryOptions = {
       hasNextPage: channel
         ? channel.threadConnection.pageInfo.hasNextPage
         : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            return {
+              ...prev,
+              channel: {
+                ...prev.channel,
+                threadConnection: {
+                  ...prev.channel.threadConnection,
+                  pageInfo: {
+                    ...prev.channel.threadConnection.pageInfo,
+                  },
+                  edges: [
+                    ...prev.channel.threadConnection.edges.map(thread => {
+                      if (thread.channelId !== prev.channel.id) return;
+                      if (thread.node.id !== updatedThread.id) return thread;
+                      return {
+                        node: updatedThread,
+                        cursor: '__this-is-a-cursor__',
+                        __typename: 'Thread',
+                      };
+                    }),
+                  ],
+                },
+              },
+            };
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,

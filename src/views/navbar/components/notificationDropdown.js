@@ -65,7 +65,6 @@ const NotificationDropdownPure = props => {
     loading,
   } = props;
 
-  console.log('props', props);
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
