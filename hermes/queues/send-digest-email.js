@@ -30,7 +30,8 @@ type SendWeeklyDigestJobData = {
   name?: string,
   userId: string,
   threads: ThreadType,
-  communities?: Array<TopCommunityType>,
+  reputationGained: ?number,
+  communities: ?Array<TopCommunityType>,
   timeframe: 'daily' | 'weekly',
 };
 
@@ -43,7 +44,14 @@ export default (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
-  const { email, name, threads, communities, timeframe } = job.data;
+  const {
+    email,
+    name,
+    threads,
+    communities,
+    timeframe,
+    reputationString,
+  } = job.data;
   if (!email) {
     debug(`\nno email found for this weekly digest, returning`);
     return;
@@ -59,6 +67,7 @@ export default (job: SendWeeklyDigestJob) => {
         threads,
         greeting,
         communities,
+        reputationString,
         timeframe: {
           subject: timeframe,
           time: timeframe === 'daily' ? 'day' : 'week',

@@ -12,7 +12,7 @@ export const MIN_THREADS_REQUIRED_FOR_DIGEST = 1;
 // cap the digest at # threads
 export const MAX_THREAD_COUNT_PER_DIGEST = 10;
 // upsell communities to join if the user has joined less than # communities
-export const COMMUNITY_UPSELL_THRESHOLD = 5;
+export const COMMUNITY_UPSELL_THRESHOLD = 10;
 
 // generate a score for each thread based on the total number of messages and number of new messages
 // new messages rank higher in order to devalue old threads that have a large amount of old messages (like pinned posts)
