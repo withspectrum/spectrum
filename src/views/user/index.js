@@ -90,7 +90,11 @@ const UserViewPure = ({
             />
           )}
           {user.threadCount > 0 && (
-            <ThreadFeedWithData username={username} viewContext="profile" />
+            <ThreadFeedWithData
+              userId={user.id}
+              username={username}
+              viewContext="profile"
+            />
           )}
         </Column>
       </AppViewWrapper>
