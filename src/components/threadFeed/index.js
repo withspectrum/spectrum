@@ -82,7 +82,6 @@ class ThreadFeedPure extends Component {
   state: {
     scrollElement: any,
     subscription: ?Function,
-    refetching: boolean,
   };
 
   constructor() {
@@ -90,7 +89,6 @@ class ThreadFeedPure extends Component {
     this.state = {
       scrollElement: null,
       subscription: null,
-      refetching: false,
     };
   }
 
@@ -127,7 +125,7 @@ class ThreadFeedPure extends Component {
       viewContext,
       newActivityIndicator,
     } = this.props;
-    const { scrollElement, refetching } = this.state;
+    const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
       this.props.community &&
