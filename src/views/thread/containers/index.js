@@ -180,9 +180,11 @@ class ThreadContainerPure extends Component {
       this.props.dispatch(addCommunityToOnboarding(thread.channel.community));
 
       const isParticipantOrCreator =
-        thread.participants.some(
-          participant => participant.id === currentUser.id
-        ) || thread.isCreator;
+        (thread.participants.length > 0 &&
+          thread.participants.some(
+            participant => participant.id === currentUser.id
+          )) ||
+        thread.isCreator;
 
       return (
         <View slider={this.props.slider}>
