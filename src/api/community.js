@@ -180,6 +180,11 @@ const LoadMoreMembers = gql`
           cursor
           node {
             ...userInfo
+            contextPermissions {
+              reputation
+              isOwner
+              isModerator
+            }
           }
         }
       }
@@ -260,6 +265,11 @@ export const getCommunityMembersQuery = graphql(
             cursor
             node {
               ...userInfo
+              contextPermissions {
+                reputation
+                isOwner
+                isModerator
+              }
             }
           }
         }

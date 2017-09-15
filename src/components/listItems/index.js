@@ -181,7 +181,11 @@ export const UserListItem = ({
             {user.totalReputation && (
               <span>
                 <ReputationMini tipText={'Your rep in this community'} />
-                {user.totalReputation}
+                {user.contextPermissions ? (
+                  user.contextPermissions.reputation.toLocaleString()
+                ) : (
+                  user.totalReputation.toLocaleString()
+                )}
               </span>
             )}
           </Meta>

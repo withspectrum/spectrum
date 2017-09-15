@@ -32,7 +32,11 @@ module.exports = {
 
       // there will be no community to resolve in direct message threads, so we can escape early
       // and only return the sender
-      if (threadType === 'directMessageThread') return sender;
+      if (
+        threadType === 'directMessageThread' ||
+        threadType === 'DIRECT_MESSAGE_GROUP'
+      )
+        return sender;
 
       const { communityId } = await getThread(threadId);
       const {

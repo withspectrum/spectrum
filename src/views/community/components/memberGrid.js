@@ -33,6 +33,7 @@ const MemberGridPure = props => {
     return <UpsellReload />;
   } else {
     const members = community.memberConnection.edges;
+
     return (
       <FlexCol>
         <Grid>
@@ -48,13 +49,14 @@ const MemberGridPure = props => {
             );
           })}
         </Grid>
-        {community.memberConnection.pageInfo.hasNextPage &&
+        {community.memberConnection.pageInfo.hasNextPage && (
           <StyledButton
             loading={networkStatus === 3}
             onClick={() => fetchMore()}
           >
             Load more...
-          </StyledButton>}
+          </StyledButton>
+        )}
       </FlexCol>
     );
   }
