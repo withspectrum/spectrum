@@ -9,6 +9,7 @@ import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads($username: String, $after: String) {
@@ -23,6 +24,7 @@ const LoadMoreThreads = gql`
 
 const threadsQueryOptions = {
   props: ({
+    ownProps,
     data: { fetchMore, error, loading, networkStatus, user, subscribeToMore },
   }) => ({
     data: {
@@ -39,6 +41,12 @@ const threadsQueryOptions = {
             const updatedThread = subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
+            const newThreads = parseRealtimeThreads(
+              prev.user.threadConnection.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
             return {
               ...prev,
               user: {
@@ -48,17 +56,7 @@ const threadsQueryOptions = {
                   pageInfo: {
                     ...prev.user.threadConnection.pageInfo,
                   },
-                  edges: [
-                    ...prev.user.threadConnection.edges.map(thread => {
-                      if (thread.creatorId !== prev.user.id) return;
-                      if (thread.node.id !== updatedThread.id) return thread;
-                      return {
-                        node: updatedThread,
-                        cursor: '__this-is-a-cursor__',
-                        __typename: 'Thread',
-                      };
-                    }),
-                  ],
+                  edges: newThreads,
                 },
               },
             };

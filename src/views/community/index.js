@@ -48,7 +48,7 @@ import { getCommunityThreads, getCommunityChannels } from './queries';
 import { getCommunity, getCommunityMembersQuery } from '../../api/community';
 
 const CommunityMemberGrid = compose(getCommunityMembersQuery)(MemberGrid);
-const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
+const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 const ChannelListCard = compose(getCommunityChannels, displayLoadingCard)(
   ListCard
 );

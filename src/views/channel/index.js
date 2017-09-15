@@ -34,7 +34,7 @@ import {
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
-const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
+const ThreadFeedWithData = compose(connect(), getChannelThreads)(ThreadFeed);
 
 class ChannelViewPure extends Component {
   state: {

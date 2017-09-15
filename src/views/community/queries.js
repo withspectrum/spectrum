@@ -10,9 +10,10 @@ import { communityThreadsFragment } from '../../api/fragments/community/communit
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query communityThreads($slug: String, $after: String) {
+  query loadMoreCommunityThreads($slug: String, $after: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityThreads
@@ -24,6 +25,7 @@ const LoadMoreThreads = gql`
 
 const threadsQueryOptions = {
   props: ({
+    ownProps,
     data: {
       fetchMore,
       error,
@@ -49,6 +51,12 @@ const threadsQueryOptions = {
             const updatedThread = subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
+            const newThreads = parseRealtimeThreads(
+              prev.community.threadConnection.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
             return {
               ...prev,
               community: {
@@ -58,17 +66,7 @@ const threadsQueryOptions = {
                   pageInfo: {
                     ...prev.community.threadConnection.pageInfo,
                   },
-                  edges: [
-                    ...prev.community.threadConnection.edges.map(thread => {
-                      if (thread.communityId !== prev.community.id) return;
-                      if (thread.node.id !== updatedThread.id) return thread;
-                      return {
-                        node: updatedThread,
-                        cursor: '__this-is-a-cursor__',
-                        __typename: 'Thread',
-                      };
-                    }),
-                  ],
+                  edges: newThreads,
                 },
               },
             };
