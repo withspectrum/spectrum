@@ -376,7 +376,7 @@
     }
 
     .newMessageCount {
-      color: #E3353C;
+      color: #E2197A;
     }
     </style>
   </head>
@@ -393,9 +393,27 @@
                   <tr>
                     <td class="header-cell">
                       <p><strong>{{greeting}}</strong></p>
-                      <p>Another {{timeframe.time}} down! Here are the top conversations from your communities on Spectrum.</p>
+
+                      <p>Another {{timeframe.time}} down!</p>
+
+                      {{#reputationString}}
+                        <p>{{.}}</p>
+                      {{/reputationString}}
                     </td>
                   </tr>
+
+                  <tr>
+                    <td>
+                      <div class="section-divider"></div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <h2 class="suggest-communities-title">Jump into active conversations in your communities:</h2>
+                    </td>
+                  </tr>
+
                   <tr>
                     <td class="content-cell">
 
@@ -416,7 +434,9 @@
                                     <img class="community-icon" src="{{community.profilePhoto}}" width="20" height="20" />
                                   </td>
                                   <td class="community-name">
-                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a> · {{totalMessageCount}} messages <span class="newMessageCount">({{newMessageCount}} new)</span>
+                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;/&nbsp;
+                                    <a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>&nbsp;·&nbsp;
+                                    {{{messageCountString}}}
                                   </td>
                                 </tr>
                               </table>
@@ -434,7 +454,7 @@
 
                   <tr>
                     <td>
-                      <h2 class="suggest-communities-title">More communities for you</h2>
+                      <h2 class="suggest-communities-title">Discover more communities:</h2>
                     </td>
                   </tr>
                   {{/communities}}
