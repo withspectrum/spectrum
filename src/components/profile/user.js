@@ -149,7 +149,14 @@ const UserWithData = ({
             <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+              <strong>
+                {user.contextPermissions ? (
+                  user.contextPermissions.reputation.toLocaleString()
+                ) : (
+                  user.totalReputation.toLocaleString()
+                )}
+              </strong>{' '}
+              rep
             </ReputationCount>
           </ReputationContainer>
         )}
@@ -192,7 +199,14 @@ const UserWithData = ({
             <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+              <strong>
+                {user.contextPermissions ? (
+                  user.contextPermissions.reputation.toLocaleString()
+                ) : (
+                  user.totalReputation.toLocaleString()
+                )}
+              </strong>{' '}
+              rep
             </ReputationCount>
           </ReputationContainer>
         )}
@@ -268,7 +282,14 @@ const UserWithData = ({
             <ReputationIcon tipText={'Total rep across all communities'} />
 
             <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
+              <strong>
+                {user.contextPermissions ? (
+                  user.contextPermissions.reputation.toLocaleString()
+                ) : (
+                  user.totalReputation.toLocaleString()
+                )}
+              </strong>{' '}
+              rep
             </ReputationCount>
           </ReputationContainer>
         )}
