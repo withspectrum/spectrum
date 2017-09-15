@@ -94,7 +94,9 @@ class ThreadFeedPure extends Component {
 
   subscribe = () => {
     this.setState({
-      subscription: this.props.data.subscribeToUpdatedThreads(),
+      subscription:
+        this.props.data.subscribeToUpdatedThreads &&
+        this.props.data.subscribeToUpdatedThreads(),
     });
   };
 
