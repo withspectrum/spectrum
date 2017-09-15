@@ -109,7 +109,7 @@ class CommunityWithData extends Component {
 
     const renderDescriptionWithLinks = text => {
       return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-        <a href={url} target="_blank" rel="noopener nofollower">
+        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
           {text}
         </a>
       ));

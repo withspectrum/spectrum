@@ -13,7 +13,7 @@ import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query communityThreads($slug: String, $after: String) {
+  query loadMoreCommunityThreads($slug: String, $after: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityThreads

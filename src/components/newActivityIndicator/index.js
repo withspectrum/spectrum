@@ -38,6 +38,21 @@ const Pill = styled.div`
     transform: translateX(-50%) translateY(80px);
     transition: all 0.1s ease-in-out;
   }
+
+  @media (max-width: 768px) {
+    transform: translateX(-50%) translateY(${props =>
+      props.active ? '60px' : '40px'});
+
+    &:hover {
+      transform: translateX(-50%) translateY(58px);
+      transition: all 0.2s ease-in-out;
+    }
+
+    &:active {
+      transform: translateX(-50%) translateY(60px);
+      transition: all 0.1s ease-in-out;
+    }
+  }
 `;
 
 const scrollTo = (element, to, duration) => {

@@ -21,7 +21,7 @@ export default (
     dispatch(addActivityIndicator());
   }
 
-  const newThreads = hasNewThread
+  return hasNewThread
     ? [
         {
           node: updatedThread,
@@ -40,7 +40,4 @@ export default (
           };
         }),
       ];
-
-  console.log('new threads are: ', newThreads);
-  return newThreads;
 };
