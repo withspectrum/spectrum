@@ -3,6 +3,11 @@ const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
 import { DIGEST_TEMPLATE } from './constants';
 
+type ChannelType = {
+  name: string,
+  slug: string,
+};
+
 type CommunityType = {
   name: string,
   slug: string,
@@ -20,9 +25,11 @@ type TopCommunityType = {
 
 type ThreadType = {
   community: CommunityType,
+  channel: ChannelType,
   channelId: string,
   title: string,
   threadId: string,
+  messageCountString: string,
 };
 
 type SendWeeklyDigestJobData = {
@@ -30,7 +37,7 @@ type SendWeeklyDigestJobData = {
   name?: string,
   userId: string,
   threads: ThreadType,
-  reputationGained: ?number,
+  reputationString: string,
   communities: ?Array<TopCommunityType>,
   timeframe: 'daily' | 'weekly',
 };

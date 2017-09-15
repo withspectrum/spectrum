@@ -123,8 +123,6 @@ export default job => {
         channelId: thread.channelId,
         title: thread.title,
         threadId: thread.id,
-        newMessageCount: thread.newMessageCount,
-        totalMessageCount: thread.totalMessageCount,
         messageCountString,
       };
       return obj;
