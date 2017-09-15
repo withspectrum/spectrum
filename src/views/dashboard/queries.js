@@ -100,33 +100,6 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ params }) => ({
-    reducer: (prev, action, variables) => {
-      if (
-        action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishThread'
-      ) {
-        const newThread = action.result.data.publishThread;
-        const cursor = encode(newThread.id);
-        const newEdge = {
-          cursor,
-          node: {
-            ...newThread,
-          },
-        };
-        return update(prev, {
-          user: {
-            everything: {
-              edges: {
-                $unshift: [newEdge],
-              },
-            },
-          },
-        });
-      }
-      return prev;
-    },
-  }),
 };
 
 export const getEverythingThreads = graphql(

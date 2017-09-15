@@ -241,6 +241,7 @@ class ChannelViewPure extends Component {
                 channelSlug={channelSlug}
                 communitySlug={communitySlug}
                 currentUser={loggedInUser}
+                channelId={channel.id}
               />
             </Column>
           </AppViewWrapper>
