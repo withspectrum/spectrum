@@ -38,8 +38,7 @@ import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
-const createQueue = require('../../shared/bull/create-queue');
-const communityInvitationQueue = createQueue('community invite notification');
+import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
   Mutation: {
@@ -398,7 +397,7 @@ module.exports = {
               .filter(user => !!user.email)
               .filter(user => user.email !== currentUser.email)
               .map(user => {
-                return communityInvitationQueue.add({
+                return addQueue('community invite notification', {
                   recipient: {
                     email: user.email,
                     firstName: user.firstName ? user.firstName : null,
@@ -437,7 +436,7 @@ module.exports = {
           return input.contacts
             .filter(user => user.email !== currentUser.email)
             .map(user => {
-              return communityInvitationQueue.add({
+              return addQueue('community invite notification', {
                 recipient: {
                   email: user.email,
                   firstName: user.firstName ? user.firstName : null,

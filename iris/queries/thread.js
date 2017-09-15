@@ -1,10 +1,11 @@
 //@flow
-const { getChannels, getChannelPermissions } = require('../models/channel');
+const { getChannels } = require('../models/channel');
 const {
   getCommunities,
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
+const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
@@ -24,7 +25,9 @@ module.exports = {
       { loaders, user }: GraphQLContext
     ) =>
       loaders.thread.load(id).then(thread => {
-        //if (!thread) return null;
+        // if a thread wasn't found
+        if (!thread) return null;
+
         /*
           If no user exists, we need to make sure the thread being fetched is not in a private channel
         */
@@ -52,7 +55,7 @@ module.exports = {
       }),
   },
   Thread: {
-    attachments: ({ attachments }) =>
+    attachments: ({ attachments }: { attachments: Array<any> }) =>
       attachments &&
       attachments.map(attachment => {
         return {
@@ -70,18 +73,26 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    participants: ({ id, creatorId }, _, { loaders }) => {
+    participants: (
+      { id, creatorId }: { id: string, creatorId: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
       return getParticipantsInThread(id);
     },
     isCreator: (
-      { creatorId }: { creatorId: String },
+      { creatorId }: { creatorId: string },
       _: any,
-      { user }: Context
+      { user }: GraphQLContext
     ) => {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
-    receiveNotifications: ({ id }, __, { user }) => {
+    receiveNotifications: (
+      { id }: { id: string },
+      __: any,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
@@ -120,11 +131,28 @@ module.exports = {
           })),
         }));
     },
-    creator: (
-      { creatorId }: { creatorId: String },
+    creator: async (
+      { creatorId, communityId }: { creatorId: string, communityId: string },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.user.load(creatorId),
+    ) => {
+      const creator = await loaders.user.load(creatorId);
+
+      const {
+        reputation,
+        isModerator,
+        isOwner,
+      } = await getUserPermissionsInCommunity(communityId, creatorId);
+
+      return {
+        ...creator,
+        contextPermissions: {
+          reputation,
+          isModerator,
+          isOwner,
+        },
+      };
+    },
     messageCount: ({ id }: { id: string }) => getMessageCount(id),
   },
 };

@@ -1,20 +1,26 @@
 import { combineReducers } from 'redux';
-import { client } from '../api';
 import users from './users';
 import composer from './composer';
 import modals from './modals';
 import toasts from './toasts';
 import directMessageThreads from './directMessageThreads';
 import gallery from './gallery';
+import newUserOnboarding from './newUserOnboarding';
+import newActivityIndicator from './newActivityIndicator';
 
-const apollo = client.reducer();
+// Allow dependency injection of extra reducers, we need this for SSR
+const getReducers = extraReducers => {
+  return combineReducers({
+    users,
+    modals,
+    toasts,
+    directMessageThreads,
+    gallery,
+    composer,
+    newUserOnboarding,
+    newActivityIndicator,
+    ...extraReducers,
+  });
+};
 
-export default combineReducers({
-  users,
-  modals,
-  toasts,
-  directMessageThreads,
-  gallery,
-  apollo,
-  composer,
-});
+export default getReducers;

@@ -5,6 +5,7 @@ import { getChannels } from '../models/channel';
 import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import {
   createParticipantInThread,
   createNotifiedUserInThread,
@@ -21,6 +22,7 @@ const {
   updateThreadWithImages,
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
+import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
   Mutation: {
@@ -38,27 +40,45 @@ module.exports = {
         currentUser.id
       );
 
+      const parentCommunityIsPro = getCommunityRecurringPayments(
+        thread.communityId
+      ).then(subs => {
+        let filtered = subs && subs.filter(sub => sub.status === 'active');
+        return !filtered || filtered.length === 0 ? false : true;
+      });
+
       // get the channel object where the thread is being posted
       const channels = getChannels([thread.channelId]);
 
-      return Promise.all([currentUserChannelPermissions, channels])
-        .then(([currentUserChannelPermissions, channels]) => {
-          // select the channel to evaluate
-          const channelToEvaluate = channels[0];
+      return Promise.all([
+        currentUserChannelPermissions,
+        parentCommunityIsPro,
+        channels,
+      ])
+        .then(
+          ([currentUserChannelPermissions, parentCommunityIsPro, channels]) => {
+            // select the channel to evaluate
+            const channelToEvaluate = channels[0];
 
-          // if channel wasn't found or is deleted
-          if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-            return new UserError("This channel doesn't exist");
-          }
+            // if channel wasn't found or is deleted
+            if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+              return new UserError("This channel doesn't exist");
+            }
 
-          // if user isn't a channel member
-          if (!currentUserChannelPermissions.isMember) {
-            return new UserError(
-              "You don't have permission to create threads in this channel."
-            );
-          }
+            // if user isn't a channel member
+            if (!currentUserChannelPermissions.isMember) {
+              return new UserError(
+                "You don't have permission to create threads in this channel."
+              );
+            }
 
-          /*
+            if (!parentCommunityIsPro && channelToEvaluate.isPrivate) {
+              return new UserError(
+                'Communities must be on the Pro plan to publish new threads in private channels'
+              );
+            }
+
+            /*
             If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
 
             {
@@ -68,29 +88,30 @@ module.exports = {
 
             But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
           */
-          let attachments = [];
-          // if the thread has attachments
-          if (thread.attachments) {
-            // iterate through them and construct a new attachment object
-            thread.attachments.map(attachment => {
-              attachments.push({
-                attachmentType: attachment.attachmentType,
-                data: JSON.parse(attachment.data),
+            let attachments = [];
+            // if the thread has attachments
+            if (thread.attachments) {
+              // iterate through them and construct a new attachment object
+              thread.attachments.map(attachment => {
+                attachments.push({
+                  attachmentType: attachment.attachmentType,
+                  data: JSON.parse(attachment.data),
+                });
               });
-            });
 
-            // create a new thread object, overriding the attachments field with our new array
-            const newThread = Object.assign({}, thread, {
-              attachments,
-            });
+              // create a new thread object, overriding the attachments field with our new array
+              const newThread = Object.assign({}, thread, {
+                attachments,
+              });
 
-            // publish the thread
-            return publishThread(newThread, currentUser.id);
-          } else {
-            // if there are no attachments, publish the thread
-            return publishThread(thread, currentUser.id);
+              // publish the thread
+              return publishThread(newThread, currentUser.id);
+            } else {
+              // if there are no attachments, publish the thread
+              return publishThread(thread, currentUser.id);
+            }
           }
-        })
+        )
         .then(newThread => {
           // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain
           createParticipantInThread(newThread.id, currentUser.id);
@@ -291,6 +312,15 @@ module.exports = {
               currentUserCommunityPermissions.isModerator ||
               thread.creatorId === currentUser.id
             ) {
+              // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
+              if (currentUser.id !== thread.creatorId) {
+                addQueue('process reputation event', {
+                  userId: currentUser.id,
+                  type: 'thread deleted by moderation',
+                  entityId: thread.communityId,
+                });
+              }
+
               return deleteThread(threadId);
             }
 

@@ -19,7 +19,7 @@ import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
 import Titlebar from '../titlebar';
 
-const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
+const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 
 const UserViewPure = ({
   match,
@@ -83,13 +83,15 @@ const UserViewPure = ({
         </Column>
 
         <Column type="primary" alignItems="center">
-          {user.threadCount === 0 &&
+          {user.threadCount === 0 && (
             <NullState
               bg="message"
               heading={`${user.name} hasn't posted anything yet.`}
-            />}
-          {user.threadCount > 0 &&
-            <ThreadFeedWithData username={username} viewContext="profile" />}
+            />
+          )}
+          {user.threadCount > 0 && (
+            <ThreadFeedWithData username={username} viewContext="profile" />
+          )}
         </Column>
       </AppViewWrapper>
     );

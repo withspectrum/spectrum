@@ -23,27 +23,29 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
     dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
+  if (!user || user === undefined) return null;
+
   // make sure to only display active subs for now
-  const filteredRecurringPayments = user.recurringPayments &&
-    user.recurringPayments.length > 0
-    ? user.recurringPayments.filter(sub => sub.status === 'active')
-    : [];
+  const filteredRecurringPayments =
+    user.recurringPayments && user.recurringPayments.length > 0
+      ? user.recurringPayments.filter(sub => sub.status === 'active')
+      : [];
 
   if (filteredRecurringPayments.length > 0) {
     return (
       <StyledCard>
         <ListHeader>
-          <LargeListHeading>Billing</LargeListHeading>
+          <LargeListHeading>Pro</LargeListHeading>
         </ListHeader>
         <ListContainer>
           {filteredRecurringPayments.map(payment => {
             const amount = payment.amount / 100;
-            const timestamp = new Date(payment.created * 1000).getTime();
+            const timestamp = new Date(payment.createdAt * 1000).getTime();
             const created = convertTimestampToDate(timestamp);
             const meta = `$${amount}/month · Upgraded on ${created}`;
             return (
               <BillingListItem
-                key={payment.created}
+                key={payment.createdAt}
                 contents={{ name: payment.plan }}
                 withDescription={false}
                 meta={meta}

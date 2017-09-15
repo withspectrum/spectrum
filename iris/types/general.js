@@ -23,6 +23,7 @@ const general = /* GraphQL */ `
 		isOwner: Boolean
 		isModerator: Boolean
 		receiveNotifications: Boolean
+		reputation: Int
 	}
 
   input File {
@@ -31,6 +32,19 @@ const general = /* GraphQL */ `
     size: Int!
     path: String!
   }
+
+	type RecurringPayment {
+		plan: String
+		amount: String
+		createdAt: String
+		status: String
+	}
+
+	type ContextPermissions {
+		reputation: Int
+		isModerator: Boolean
+		isOwner: Boolean
+	}
 `;
 
 module.exports = general;

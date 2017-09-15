@@ -3,21 +3,21 @@
 import styled, { css } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import { zIndex } from '../../components/globals';
 
 const animation = css`
   opacity: 0;
   transform: translateX(1em) translate3d(0, 0, 0);
-  transition: opacity ${props =>
-    props.duration}ms ease-out, transform ${props =>
-  props.duration}ms ease-in-out;
+  transition: opacity ${props => props.duration}ms ease-out,
+    transform ${props => props.duration}ms ease-in-out;
 
   ${props =>
     props.entering || props.entered
       ? css`
-    opacity: 1;
-    transform: translateX(0em) translate3d(0, 0, 0);
-  `
-      : ''}
+          opacity: 1;
+          transform: translateX(0em) translate3d(0, 0, 0);
+        `
+      : ''};
 `;
 
 export const Container = styled.div``;
@@ -29,7 +29,7 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.15);
-  z-index: 1004;
+  z-index: ${zIndex.slider + 2};
 
   ${animation};
 `;
@@ -42,14 +42,13 @@ export const Thread = styled.div`
   bottom: 0;
   width: 650px;
   background: #fff;
-  z-index: 1008;
+  z-index: ${zIndex.slider + 3};
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   max-width: 100%;
 
   @media (max-width: 768px) {
     top: -48px;
-    bottom: 48px;
     width: 100%;
   }
 

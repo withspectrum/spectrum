@@ -331,6 +331,8 @@ class CreateCommunityForm extends Component {
       photoSizeError,
     } = this.state;
 
+    const isMobile = window.innerWidth < 768;
+
     return (
       <FormContainer>
         <Form>
@@ -339,41 +341,48 @@ class CreateCommunityForm extends Component {
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif
             />
 
             <PhotoInput
               onChange={this.setCommunityPhoto}
               defaultValue={image}
+              user={null}
+              community
+              allowGif
             />
           </ImageInputWrapper>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '32px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
 
           <Spacer height={8} />
 
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={true}
+            autoFocus={!isMobile}
           >
             What is your community called?
           </Input>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
           <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
             sp.chat/
           </UnderlineInput>
 
-          {slugTaken &&
+          {slugTaken && (
             <Error>
               This url is already taken - feel free to change it if you're set
               on the name {name}!
-            </Error>}
+            </Error>
+          )}
 
           {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
@@ -384,16 +393,13 @@ class CreateCommunityForm extends Component {
             Describe it in 140 characters or less
           </TextArea>
 
-          {descriptionError &&
+          {descriptionError && (
             <Error>
               Oop, that's more than 140 characters - try trimming that up.
-            </Error>}
+            </Error>
+          )}
 
-          <Input
-            defaultValue={website}
-            onChange={this.changeWebsite}
-            autoFocus={true}
-          >
+          <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
           </Input>
 
@@ -411,10 +417,11 @@ class CreateCommunityForm extends Component {
             </span>
           </Checkbox>
 
-          {createError &&
+          {createError && (
             <Error>
               Please fix any errors above before creating this community.
-            </Error>}
+            </Error>
+          )}
         </Form>
 
         <Actions>

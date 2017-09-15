@@ -1,11 +1,9 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow, Transition } from '../../globals';
+import { FlexRow, Transition, zIndex } from '../../globals';
 
-export const Row = styled(FlexRow)`
-  margin: 16px 24px;
-`;
+export const Row = styled(FlexRow)`margin: 16px 24px;`;
 
 export const HiddenInput = styled.input`
   visibility: hidden;
@@ -23,7 +21,7 @@ export const ImageInputLabel = styled.label`
 export const ProfileImage = styled.img`
   display: block;
   margin: 0 auto;
-  z-index: 9;
+  z-index: ${zIndex.modal};
   width: 48px;
   height: 48px;
   border-radius: 8px;
@@ -31,7 +29,7 @@ export const ProfileImage = styled.img`
 
 export const InputOverlay = styled.div`
   position: absolute;
-  z-index: 10;
+  z-index: ${zIndex.modal + 1};
   top: 0;
   right: 0;
   bottom: 0;

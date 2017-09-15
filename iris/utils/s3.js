@@ -5,9 +5,7 @@ const Uploader = require('s3-image-uploader');
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'), { raise: false });
-}
+env(path.resolve(__dirname, '../.env'), { raise: false });
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;

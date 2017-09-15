@@ -28,6 +28,7 @@ import {
   saveUserDataToLocalStorage,
   logout,
 } from '../../actions/authentication';
+import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   Section,
   Nav,
@@ -45,6 +46,7 @@ class Navbar extends Component {
     dmUnseenCount: number,
     notifications: Array<Object>,
     subscription: ?Function,
+    showNewUserOnboarding: boolean,
   };
 
   constructor(props) {
@@ -52,6 +54,7 @@ class Navbar extends Component {
     this.state = {
       ...this.calculateUnseenCounts(),
       subscription: null,
+      showNewUserOnboarding: false,
     };
 
     this.markAllNotificationsSeen = throttle(
@@ -172,6 +175,15 @@ class Navbar extends Component {
       }
       dispatch(saveUserDataToLocalStorage(user));
 
+      // if the user doesn't have a username or they haven't joined any
+      // communities, we hide the nav to make room for the fullscreen onboarding
+      // flow
+      if (!user.username) {
+        this.setState({
+          showNewUserOnboarding: true,
+        });
+      }
+
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
       // so we can redirect to the root url
@@ -268,13 +280,71 @@ class Navbar extends Component {
     this.props.dispatch(openModal('LOGIN'));
   };
 
+  closeNewUserOnboarding = () => {
+    return this.setState({
+      showNewUserOnboarding: false,
+    });
+  };
+
   render() {
-    const { match, data: { user, networkStatus }, currentUser } = this.props;
+    const {
+      history,
+      match,
+      data: { user, networkStatus },
+      currentUser,
+    } = this.props;
     const loggedInUser = user || currentUser;
     const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
-    const { allUnseenCount, dmUnseenCount, notifications } = this.state;
+    const isHome =
+      history.location.pathname === '/' ||
+      history.location.pathname === '/home';
+    const {
+      allUnseenCount,
+      dmUnseenCount,
+      notifications,
+      showNewUserOnboarding,
+    } = this.state;
+
+    // Bail out if the splash page is showing
+    if (!currentUserExists && isHome) return null;
+
+    // if the user is mobile and is viewing a thread or DM thread, don't
+    // render a navbar - it will be replaced with a chat input
+    const params = queryString.parse(history.location.search);
+    const threadParam = params.thread;
+    const parts = history.location.pathname.split('/');
+    const isViewingThread = parts[1] === 'thread';
+    const isViewingDm =
+      parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
+    const isComposingDm = history.location.pathname === '/messages/new';
+    const isViewingThreadSlider = threadParam !== undefined;
+    if (
+      isMobile &&
+      (isViewingThreadSlider || isComposingDm || isViewingThread || isViewingDm)
+    ) {
+      return null;
+    }
+
+    // this only shows if the user does not have a username
+    if (
+      (user && showNewUserOnboarding) ||
+      ((history.location.pathname === '/' ||
+        history.location.pathname === '/home') &&
+        user &&
+        user.communityConnection.edges.length === 0)
+    ) {
+      return (
+        <NewUserOnboarding
+          close={this.closeNewUserOnboarding}
+          currentUser={user}
+          // if the user doesn't have a username, they can't close
+          // the onboarding
+          noCloseButton
+        />
+      );
+    }
 
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
@@ -282,6 +352,7 @@ class Navbar extends Component {
       return (
         <Nav>
           <Head showUnreadFavicon={showUnreadFavicon} />
+
           <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
@@ -293,8 +364,9 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url.includes('/messages')}
+              data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -304,7 +376,10 @@ class Navbar extends Component {
               <Label>Messages</Label>
             </IconLink>
 
-            <IconLink data-active={match.url === '/explore'} to="/explore">
+            <IconLink
+              data-active={history.location.pathname === '/explore'}
+              to="/explore"
+            >
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
@@ -316,8 +391,9 @@ class Navbar extends Component {
               onClick={this.markAllNotificationsSeen}
             >
               <IconLink
-                data-active={match.url === '/notifications'}
+                data-active={history.location.pathname === '/notifications'}
                 to="/notifications"
+                rel="nofollow"
               >
                 <Icon
                   glyph={
@@ -331,12 +407,17 @@ class Navbar extends Component {
                 markAllRead={this.markAllNotificationsRead}
                 currentUser={loggedInUser}
                 width={'480px'}
+                loading={networkStatus < 7}
+                error={networkStatus === 8}
               />
             </IconDrop>
 
             <IconDrop>
               <IconLink
-                data-active={match.url === `/users/${loggedInUser.username}`}
+                data-active={
+                  history.location.pathname ===
+                  `/users/${loggedInUser.username}`
+                }
                 to={
                   loggedInUser.username
                     ? `/users/${loggedInUser.username}`
@@ -358,8 +439,9 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url.includes('/messages')}
+              data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -370,8 +452,9 @@ class Navbar extends Component {
               <Label>Messages</Label>
             </IconLink>
             <IconLink
-              data-active={match.url === '/notifications'}
+              data-active={history.location.pathname === '/notifications'}
               to="/notifications"
+              rel="nofollow"
               onClick={this.markAllNotificationsSeen}
             >
               <Icon
@@ -383,13 +466,18 @@ class Navbar extends Component {
               <Label>Notifications</Label>
             </IconLink>
 
-            <IconLink data-active={match.url === '/explore'} to="/explore">
+            <IconLink
+              data-active={history.location.pathname === '/explore'}
+              to="/explore"
+            >
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
 
             <IconLink
-              data-active={match.url === `/users/${loggedInUser.username}`}
+              data-active={
+                history.location.pathname === `/users/${loggedInUser.username}`
+              }
               to={
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
@@ -419,10 +507,11 @@ class Navbar extends Component {
     } else {
       return (
         <Nav>
-          {isMobile ||
+          {isMobile || (
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>}
+            </LogoLink>
+          )}
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );
@@ -441,6 +530,5 @@ export default compose(
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
-  withRouter,
   connect(mapStateToProps)
 )(Navbar);

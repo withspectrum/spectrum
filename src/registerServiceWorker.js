@@ -20,7 +20,7 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 const swUrl = IS_PROD
   ? `${process.env.PUBLIC_URL}/service-worker.js`
-  : `${process.env.PUBLIC_URL}/push-sw.js`;
+  : `${process.env.PUBLIC_URL}/push-sw-v1.js`;
 
 export default function register(): Promise<ServiceWorkerResult> {
   if ('serviceWorker' in navigator) {

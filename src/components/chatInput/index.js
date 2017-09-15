@@ -206,12 +206,12 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onChange, currentUser } = this.props;
+    const { state, onChange, currentUser, autoFocus } = this.props;
     const { isFocused, photoSizeError } = this.state;
 
     return (
-      <div>
-        {photoSizeError &&
+      <ChatInputWrapper focus={isFocused}>
+        {photoSizeError && (
           <PhotoSizeError>
             <p
               onClick={() =>
@@ -227,27 +227,27 @@ class ChatInputWithMutation extends Component {
               size={16}
               color={'warn.default'}
             />
-          </PhotoSizeError>}
-          <ChatInputWrapper focus={isFocused}>
-            <MediaInput onChange={this.sendMediaMessage} />
-            <Form focus={isFocused}>
-              <EditorInput
-                focus={isFocused}
-                placeholder="Your message here..."
-                state={state}
-                handleReturn={this.submit}
-                onChange={onChange}
-                markdown={false}
-                onFocus={this.onFocus}
-                onBlur={this.onBlur}
-                singleLine
-                images={false}
-                editorRef={editor => (this.editor = editor)}
-              />
-              <SendButton glyph="send-fill" onClick={this.submit} />
-            </Form>
-          </ChatInputWrapper>
-      </div>
+          </PhotoSizeError>
+        )}
+        <MediaInput onChange={this.sendMediaMessage} />
+        <Form focus={isFocused}>
+          <EditorInput
+            focus={isFocused}
+            placeholder="Your message here..."
+            state={state}
+            handleReturn={this.submit}
+            onChange={onChange}
+            markdown={false}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
+            singleLine
+            images={false}
+            editorRef={editor => (this.editor = editor)}
+            autoFocus={autoFocus}
+          />
+          <SendButton glyph="send-fill" onClick={this.submit} />
+        </Form>
+      </ChatInputWrapper>
     );
   }
 }

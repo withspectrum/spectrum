@@ -401,26 +401,28 @@ class UserWithData extends Component {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif
             />
             <PhotoInput
               onChange={this.setProfilePhoto}
               defaultValue={image}
               user
+              allowGif
             />
           </ImageInputWrapper>
 
-          {photoSizeError &&
-            <Notice style={{ marginTop: '32px' }}>
-              {photoSizeError}
-            </Notice>}
+          {photoSizeError && (
+            <Notice style={{ marginTop: '32px' }}>{photoSizeError}</Notice>
+          )}
 
-          {proGifError &&
+          {proGifError && (
             <Notice style={{ marginTop: '32px' }}>
               Upgrade to Pro to use a gif as your profile or cover photo{' '}
               <span role="img" aria-label="finger pointing right emoji">
                 👉
               </span>
-            </Notice>}
+            </Notice>
+          )}
 
           <Input
             type="text"
@@ -439,16 +441,16 @@ class UserWithData extends Component {
             onChange={this.changeUsername}
           >
             Username
-            {isUsernameSearching &&
+            {isUsernameSearching && (
               <Loading>
                 <Spinner size={16} color={'brand.default'} />
-              </Loading>}
+              </Loading>
+            )}
           </Input>
 
-          {usernameError &&
-            <Notice style={{ marginTop: '16px' }}>
-              {usernameError}
-            </Notice>}
+          {usernameError && (
+            <Notice style={{ marginTop: '16px' }}>{usernameError}</Notice>
+          )}
 
           <TextArea
             defaultValue={description}
@@ -465,7 +467,6 @@ class UserWithData extends Component {
           </Input>
 
           <Actions>
-            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
             <Button
               disabled={!name || nameError || !username || usernameError}
               loading={isLoading}
@@ -473,10 +474,12 @@ class UserWithData extends Component {
             >
               Save
             </Button>
+            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
           </Actions>
 
-          {createError &&
-            <Error>Please fix any errors above to save your profile.</Error>}
+          {createError && (
+            <Error>Please fix any errors above to save your profile.</Error>
+          )}
         </Form>
       </StyledCard>
     );

@@ -13,12 +13,14 @@ import Icon from '../../components/icons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
+// import { Button } from '../../components/buttons';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import Search from './components/search';
 import MemberGrid from './components/memberGrid';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
@@ -27,6 +29,7 @@ import {
   LoadingList,
   LoadingComposer,
   LoadingFeed,
+  displayLoadingCard,
 } from '../../components/loading';
 import {
   UpsellSignIn,
@@ -39,13 +42,16 @@ import {
   CoverButton,
   SegmentedControl,
   Segment,
+  LogoutButton,
 } from './style';
 import { getCommunityThreads, getCommunityChannels } from './queries';
 import { getCommunity, getCommunityMembersQuery } from '../../api/community';
 
 const CommunityMemberGrid = compose(getCommunityMembersQuery)(MemberGrid);
-const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
-const ChannelListCard = compose(getCommunityChannels)(ListCard);
+const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
+const ChannelListCard = compose(getCommunityChannels, displayLoadingCard)(
+  ListCard
+);
 
 class CommunityViewPure extends Component {
   state: {
@@ -77,10 +83,6 @@ class CommunityViewPure extends Component {
 
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        this.setState({
-          isLoading: false,
-        });
-
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
 
@@ -92,6 +94,10 @@ class CommunityViewPure extends Component {
 
         const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
+
+        this.setState({
+          isLoading: false,
+        });
       })
       .catch(err => {
         this.setState({
@@ -167,6 +173,11 @@ class CommunityViewPure extends Component {
         },
       });
 
+      // if the user is new and signed up through a community page, push
+      // the community data into the store to hydrate the new user experience
+      // with their first community they should join
+      this.props.dispatch(addCommunityToOnboarding(community));
+
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
       // components to show nux upsells to create a thread or invite people
@@ -187,33 +198,25 @@ class CommunityViewPure extends Component {
           <Head title={title} description={description} />
 
           <CoverColumn>
-            <CoverPhoto src={community.coverPhoto}>
-              {// if the user is logged in and doesn't own the community,
-              // add a button on top of the cover photo that will allow
-              // the person to leave the community
-              isLoggedIn &&
-                (!community.communityPermissions.isOwner &&
-                  community.communityPermissions.isMember) &&
-                <CoverButton
-                  glyph="minus-fill"
-                  color="bg.default"
-                  hoverColor="bg.default"
-                  opacity="0.5"
-                  tipText="Leave community"
-                  tipLocation="left"
-                  onClick={() => this.toggleMembership(community.id)}
-                />}
-            </CoverPhoto>
-
+            <CoverPhoto src={community.coverPhoto} />
             <CoverRow className={'flexy'}>
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
-
-                {!isMobile &&
+                {isLoggedIn &&
+                  (!community.communityPermissions.isOwner &&
+                    community.communityPermissions.isMember) && (
+                    <LogoutButton
+                      onClick={() => this.toggleMembership(community.id)}
+                    >
+                      Leave {community.name}
+                    </LogoutButton>
+                  )}
+                {!isMobile && (
                   <ChannelListCard
                     slug={communitySlug.toLowerCase()}
                     currentUser={isLoggedIn}
-                  />}
+                  />
+                )}
               </Column>
 
               <Column type="primary">
@@ -240,7 +243,7 @@ class CommunityViewPure extends Component {
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
-                    Members ({community.metaData.members})
+                    Members ({community.metaData.members.toLocaleString()})
                   </Segment>
                 </SegmentedControl>
 
@@ -249,32 +252,35 @@ class CommunityViewPure extends Component {
                 // new thread composer
                 isLoggedIn &&
                   selectedView === 'threads' &&
-                  isOwnerOrMember &&
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />}
+                  isOwnerOrMember && (
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  )}
 
                 {// if the user is logged in but doesn't own the community
                 // or isn't a member yet, prompt them to join the community
                 isLoggedIn &&
-                  !isOwnerOrMember &&
-                  <UpsellJoinCommunity
-                    community={community}
-                    loading={isLoading}
-                    join={this.toggleMembership}
-                  />}
+                  !isOwnerOrMember && (
+                    <UpsellJoinCommunity
+                      community={community}
+                      loading={isLoading}
+                      join={this.toggleMembership}
+                    />
+                  )}
 
                 {// if the user hasn't signed up yet, show them a spectrum
                 // upsell signup prompt
                 !isLoggedIn &&
-                  selectedView === 'threads' &&
-                  <UpsellSignIn
-                    view={{ data: community, type: 'community' }}
-                  />}
+                  selectedView === 'threads' && (
+                    <UpsellSignIn
+                      view={{ data: community, type: 'community' }}
+                    />
+                  )}
 
                 {// thread list
-                selectedView === 'threads' &&
+                selectedView === 'threads' && (
                   <CommunityThreadFeed
                     viewContext="community"
                     slug={communitySlug}
@@ -285,11 +291,13 @@ class CommunityViewPure extends Component {
                     isNewAndOwned={isNewAndOwned}
                     community={community}
                     pinnedThreadId={community.pinnedThreadId}
-                  />}
+                  />
+                )}
 
                 {// members grid
-                selectedView === 'members' &&
-                  <CommunityMemberGrid id={community.id} />}
+                selectedView === 'members' && (
+                  <CommunityMemberGrid id={community.id} />
+                )}
 
                 {//search
                 selectedView === 'search' && <Search community={community} />}
@@ -324,11 +332,12 @@ class CommunityViewPure extends Component {
       return (
         <AppViewWrapper>
           <Titlebar noComposer />
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <LoadingProfile />
               <LoadingList />
-            </Column>}
+            </Column>
+          )}
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />

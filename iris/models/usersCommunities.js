@@ -2,9 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
-// $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const communityNotificationQueue = createQueue('community notification');
+import { addQueue } from '../utils/workerQueue';
 
 /*
 ===========================================================
@@ -32,6 +30,7 @@ const createOwnerInCommunity = (
         isModerator: false,
         isBlocked: false,
         receiveNotifications: true,
+        reputation: 0,
       },
       { returnChanges: true }
     )
@@ -84,6 +83,7 @@ const createMemberInCommunity = (
               isModerator: false,
               isBlocked: false,
               receiveNotifications: true,
+              reputation: 0,
             },
             { returnChanges: true }
           )
@@ -91,11 +91,7 @@ const createMemberInCommunity = (
       }
     })
     .then(result => {
-      communityNotificationQueue.add({
-        communityId,
-        userId,
-      });
-
+      addQueue('community notification', { communityId, userId });
       return result.changes[0].new_val;
     });
 };
@@ -115,7 +111,12 @@ const removeMemberInCommunity = (
       receiveNotifications: false,
     })
     .run()
-    .then(() => db.table('communities').get(communityId).run());
+    .then(() =>
+      db
+        .table('communities')
+        .get(communityId)
+        .run()
+    );
 };
 
 // removes all the user relationships to a community. will be invoked when a
@@ -258,6 +259,7 @@ const getMembersInCommunity = (communityId: string): Promise<Array<string>> => {
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isMember: true })
+      .orderBy(db.desc('reputation'))
       .run()
       // return an array of the userIds to be loaded by gql
       .then(users => users.map(user => user.userId))
@@ -331,6 +333,17 @@ const getUserPermissionsInCommunity = (
     });
 };
 
+const getReputationByUser = (userId: string): Promise<Number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .map(rec => rec('reputation'))
+    .reduce((l, r) => l.add(r))
+    .default(0)
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInCommunity,
@@ -347,4 +360,5 @@ module.exports = {
   getModeratorsInCommunity,
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
+  getReputationByUser,
 };

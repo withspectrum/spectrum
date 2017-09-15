@@ -110,6 +110,15 @@ class NewThread extends Component {
     user's displayNames and usernames
   */
   search = (string: string) => {
+    // if the user has cleared the search input, make sure there are no search
+    // results or focused users
+    if (!string || string.length === 0) {
+      return this.setState({
+        searchResults: [],
+        focusedSearchResult: '',
+      });
+    }
+
     const { selectedUsersForNewThread } = this.state;
     const { currentUser, client } = this.props;
 
@@ -330,6 +339,7 @@ class NewThread extends Component {
     if (e.keyCode === 13) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
+      if (!searchResults || searchResults.length === 0) return;
 
       // 1
       this.addUserToSelectedUsersList(
@@ -559,14 +569,13 @@ class NewThread extends Component {
 
     // if no users have been selected, break out of this function and throw
     // an error
-    if (selectedUsersForNewThread.length < 1) {
-      this.props.dispatch(
+    if (selectedUsersForNewThread.length === 0) {
+      return this.props.dispatch(
         addToastWithTimeout(
           'error',
           'Choose some people to send this message to first!'
         )
       );
-      return;
     }
 
     const input = {
@@ -642,7 +651,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, initNewThreadWithUser } = this.props;
 
     return (
       <MessagesContainer>
@@ -654,7 +663,7 @@ class NewThread extends Component {
         />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
-          selectedUsersForNewThread.length > 0 &&
+          selectedUsersForNewThread.length > 0 && (
             <SelectedUsersPills>
               {selectedUsersForNewThread.map(user => {
                 return (
@@ -667,12 +676,14 @@ class NewThread extends Component {
                   </Pill>
                 );
               })}
-            </SelectedUsersPills>}
+            </SelectedUsersPills>
+          )}
 
-          {searchIsLoading &&
+          {searchIsLoading && (
             <SearchSpinnerContainer>
               <Spinner size={16} color={'brand.default'} />
-            </SearchSpinnerContainer>}
+            </SearchSpinnerContainer>
+          )}
 
           <ComposerInput
             ref="input"
@@ -680,11 +691,11 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={true}
+            autoFocus={!initNewThreadWithUser.length > 0}
           />
 
           {// user has typed in a search string
-          searchString &&
+          searchString && (
             //if there are selected users already, we manually shift
             // the search results position down
             <SearchResultsDropdown moved={selectedUsersForNewThread.length > 0}>
@@ -706,24 +717,27 @@ class NewThread extends Component {
                         <SearchResultDisplayName>
                           {user.name}
                         </SearchResultDisplayName>
-                        {user.username &&
+                        {user.username && (
                           <SearchResultUsername>
                             @{user.username}
-                          </SearchResultUsername>}
+                          </SearchResultUsername>
+                        )}
                       </SearchResultTextContainer>
                     </SearchResult>
                   );
                 })}
 
-              {searchResults.length === 0 &&
+              {searchResults.length === 0 && (
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
                       No users found matching "{searchString}"
                     </SearchResultNull>
                   </SearchResultTextContainer>
-                </SearchResult>}
-            </SearchResultsDropdown>}
+                </SearchResult>
+              )}
+            </SearchResultsDropdown>
+          )}
         </ComposerInputWrapper>
 
         <ViewContent
@@ -731,24 +745,28 @@ class NewThread extends Component {
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
-            existingThreadWithMessages.id &&
-            <Header
-              thread={existingThreadWithMessages}
-              currentUser={currentUser}
-            />}
+            existingThreadWithMessages.id && (
+              <Header
+                thread={existingThreadWithMessages}
+                currentUser={currentUser}
+              />
+            )}
 
-          {existingThreadBasedOnSelectedUsers &&
+          {existingThreadBasedOnSelectedUsers && (
             <Messages
               id={existingThreadBasedOnSelectedUsers}
               currentUser={currentUser}
               forceScrollToBottom={this.forceScrollToBottom}
-            />}
+            />
+          )}
 
-          {!existingThreadBasedOnSelectedUsers &&
+          {!existingThreadBasedOnSelectedUsers && (
             <Grow>
-              {loadingExistingThreadMessages &&
-                <Spinner size={16} color={'brand.default'} />}
-            </Grow>}
+              {loadingExistingThreadMessages && (
+                <Spinner size={16} color={'brand.default'} />
+              )}
+            </Grow>
+          )}
         </ViewContent>
         <ChatInput
           thread={
@@ -758,6 +776,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
+          autoFocus={initNewThreadWithUser.length > 0}
         />
       </MessagesContainer>
     );

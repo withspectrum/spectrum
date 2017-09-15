@@ -226,6 +226,21 @@ export const truncate = (str, length) => {
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
 
+// takes a number like 1,480 and returns a truncated number: 1.5k
+// takes an option 'places' argument to round - default to 1 (e.g. 1 = 1.5k. 2 = 1.48k)
+export const truncateNumber = (number: number, places = 1) => {
+  const truncated =
+    number > 999 ? (number / 1000).toFixed(places) + 'k' : number;
+  // if the last number is 0 and we are rounding to one place, just ommit
+  const lastDigit = truncated.toString().slice(-2);
+
+  if (lastDigit === '0k' && places === 1) {
+    return truncated.toString().slice(0, -3) + 'k';
+  } else {
+    return truncated;
+  }
+};
+
 export const hasProtocol = url => {
   const PROTOCOL = /(http(s?)):\/\//gi;
   const hasProtocol = url.match(PROTOCOL);

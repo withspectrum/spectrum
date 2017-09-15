@@ -3,6 +3,11 @@ import { Router } from 'express';
 
 const middlewares = Router();
 
+if (process.env.NODE_ENV === 'development') {
+  const logging = require('./logging');
+  middlewares.use(logging);
+}
+
 if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   // Raven (Sentry client) needs to come before everything else
   const raven = require('./raven').default;

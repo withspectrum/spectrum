@@ -7,6 +7,7 @@ import {
   Shadow,
   hexa,
   Gradient,
+  zIndex,
 } from '../globals';
 import Card from '../card';
 
@@ -38,13 +39,13 @@ export const CardLink = styled(Link)`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: ${zIndex.card};
 `;
 
 export const CardContent = styled(FlexCol)`
   align-self: flex-start;
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
   width: 100%;
@@ -52,16 +53,15 @@ export const CardContent = styled(FlexCol)`
 
 export const Title = styled.h2`
   font-weight: 800;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.2;
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.default};
   pointer-events: all;
-  margin-bottom: 8px;
 `;
 
 export const MessageCount = styled(FlexRow)`
-  align-self: stretch;
+  align-self: flex-end;
   align-items: center;
   justify-content: flex-start;
 
@@ -70,7 +70,6 @@ export const MessageCount = styled(FlexRow)`
   line-height: 1;
   vertical-align: middle;
   color: ${({ theme }) => theme.text.alt};
-  margin-bottom: 4px;
 
   div {
     margin-right: 4px;
@@ -81,6 +80,8 @@ export const Attachments = styled(FlexRow)`
   align-self: stretch;
   align-items: center;
   justify-content: space-between;
+  margin: 0;
+  margin-top: 8px;
 `;
 
 export const CreatorName = styled.span`
@@ -92,11 +93,11 @@ export const CreatorName = styled.span`
 
 export const ThreadContext = styled(FlexRow)`
   align-items: center;
-  margin-top: 8px;
+  margin-bottom: 8px;
 `;
 
 export const ThreadContextAvatar = styled(FlexRow)`
-  margin-right: 12px;
+  margin-right: 8px;
   align-items: center;
 `;
 
@@ -122,15 +123,7 @@ export const Meta = styled.span`
 
 export const MetaNew = styled(Meta)`
   color: ${({ theme }) => theme.success.default};
-`;
-
-export const ParticipantCount = styled.span`
-  margin-left: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  vertical-align: middle;
-  color: ${({ theme }) => theme.text.alt};
+  align-self: flex-end;
 `;
 
 export const Location = styled.span`
@@ -138,9 +131,9 @@ export const Location = styled.span`
   flex: 0 0 auto;
   font-size: 13px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.default};
+  color: ${({ theme }) => theme.text.alt};
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 
   > a {
     pointer-events: all;
@@ -189,4 +182,53 @@ export const PinnedIconWrapper = styled.span`
   right: -36px;
   top: 4px;
   color: ${props => props.theme.text.reverse};
+`;
+
+export const ParticipantHeads = styled(FlexRow)`
+  align-items: center;
+
+  > *:not(:first-child) {
+    margin-left: 4px;
+    pointer-events: auto;
+  }
+`;
+
+export const ParticipantCount = styled.span`
+  display: inline-block;
+  border-radius: 100%;
+  height: 32px;
+  width: 32px;
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.text.alt};
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  text-overflow: clip;
+`;
+
+export const Creator = styled.div`
+  padding: 2px;
+  border-radius: 100%;
+  border: 2px solid ${({ theme }) => theme.brand.alt};
+  pointer-events: all;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+
+  > div:after,
+  > a > div:after {
+    right: -3px;
+    bottom: -2px;
+  }
+`;
+
+export const ContentInfo = styled(FlexRow)`
+  margin-top: 8px;
+  justify-content: space-between;
+  flex: none;
+  align-self: stretch;
+  align-items: center;
 `;

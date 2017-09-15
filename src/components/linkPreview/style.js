@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition, Shadow, hexa } from '../globals';
+import { Transition, Shadow, hexa, zIndex } from '../globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;
@@ -8,14 +8,13 @@ export const LinkPreviewContainer = styled.a`
   border-radius: 4px;
   background: ${props => props.theme.bg.default};
   border: 1px solid ${({ theme }) => theme.border.default};
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
-  overflow: hidden;
+  ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
-  padding: ${props => (props.padding ? 0 : '16px')};
+  margin: ${props => (props.margin ? props.margin : '0')};
+  padding: 0;
   transition: ${Transition.reaction.off};
-  max-height: ${props => (props.size === 'large' ? '140px' : '100%')};
-  margin: ${props => (props.margin ? props.margin : '16px')};
-  flex: 1;
+  flex: auto;
+  pointer-events: auto;
 
   &:hover {
     transition: ${Transition.reaction.on};
@@ -32,15 +31,11 @@ export const Close = styled.span`
 
 export const LinkPreviewImage = styled.div`
   overflow: hidden;
-  min-width: ${props => (props.size === 'large' ? '100%' : '140px')};
-  min-height: 140px;
-  background: ${props => props.theme.bg.wash};
-  background: ${props => `url("${props.image}") no-repeat center center`};
+  min-width: ${props => (props.size === 'large' ? '100%' : '64px')};
+  min-height: 64px;
+  background: ${props =>
+    `${props.theme.bg.wash} url("${props.image}") no-repeat center center`};
   background-size: cover;
-  ${props =>
-    props.size === 'large'
-      ? `border-bottom: 1px solid ${props.theme.border.default}`
-      : `border-right: 1px solid ${props.theme.border.default}`};
 `;
 
 export const LinkPreviewTextContainer = styled.div`
@@ -49,7 +44,7 @@ export const LinkPreviewTextContainer = styled.div`
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
-  padding: ${props => (props.padding ? '12px 16px' : 0)};
+  padding: 8px 12px;
   align-self: stretch;
 `;
 
@@ -62,11 +57,11 @@ export const BaseMeta = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 16px);
+  align-self: stretch;
 `;
 
 export const MetaTitle = styled(BaseMeta)`
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   white-space: normal;
   color: ${({ theme }) => theme.text.default};
@@ -97,7 +92,7 @@ export const LinkPreviewSkeleton = styled.div`
   overflow: hidden;
   position: relative;
   height: 140px;
-  z-index: 2;
+  z-index: ${zIndex.loading};
   margin: ${props => (props.margin ? props.margin : '16px')};
 `;
 
@@ -114,7 +109,7 @@ export const AnimatedBackground = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 4;
+  z-index: ${zIndex.loading + 2};
   animation-duration: 2.5s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
@@ -126,66 +121,66 @@ export const AnimatedBackground = styled.div`
     ${({ theme }) => theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
-  z-index: 3;
+  z-index: ${zIndex.loading + 1};
 `;
 
 const Cover = styled.div`
   position: absolute;
   background: ${props => props.theme.bg.default};
-  z-index: 4;
+  z-index: ${zIndex.loading + 2};
 `;
 
 export const CoverLeft = styled(Cover)`
-	left: 140px;
-	width: 24px;
-	height: 100%;
+  left: 140px;
+  width: 24px;
+  height: 100%;
 `;
 
 export const CoverTop = styled(Cover)`
-	right: 0;
-	top: 0;
-	height: 40px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 0;
+  height: 40px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddle = styled(Cover)`
-	right: 0;
-	top: 52px;
-	height: 16px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 52px;
+  height: 16px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddleMiddle = styled(Cover)`
-	right: 0;
-	top: 80px;
-	height: 20px;
-	width: calc(100% - 152px);
+  right: 0;
+  top: 80px;
+  height: 20px;
+  width: calc(100% - 152px);
 `;
 
 export const CoverMiddleTopRight = styled(Cover)`
-	right: 0;
-	top: 34px;
-	height: 20px;
-	width: calc(100% - 482px);
+  right: 0;
+  top: 34px;
+  height: 20px;
+  width: calc(100% - 482px);
 `;
 
 export const CoverMiddleBottomRight = styled(Cover)`
-	right: 0;
-	top: 64px;
-	height: 20px;
-	width: calc(100% - 342px);
+  right: 0;
+  top: 64px;
+  height: 20px;
+  width: calc(100% - 342px);
 `;
 
 export const CoverMiddleMiddleBottomRight = styled(Cover)`
-	right: 0;
-	top: 88px;
-	height: 20px;
-	width: calc(100% - 382px);
+  right: 0;
+  top: 88px;
+  height: 20px;
+  width: calc(100% - 382px);
 `;
 
 export const CoverBottom = styled(Cover)`
-	right: 0;
-	bottom: 0;
-	height: 30px;
-	width: calc(100% - 152px);
+  right: 0;
+  bottom: 0;
+  height: 30px;
+  width: calc(100% - 152px);
 `;

@@ -44,7 +44,7 @@ users.forEach(user => {
 console.log('Generating communities...');
 const communities = [
   ...DEFAULT_COMMUNITIES,
-  ...randomAmount({ max: 10 }, () => {
+  ...randomAmount({ min: 10, max: 20 }, () => {
     return generateCommunity();
   }),
 ];
@@ -169,22 +169,62 @@ const db = require('rethinkdbdash')({
 
 console.log(
   `Inserting ${users.length} users,
-  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
+  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length +
+    direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
 );
 Promise.all([
-  db.table('communities').insert(communities).run(),
-  db.table('channels').insert(channels).run(),
-  db.table('threads').insert(threads).run(),
-  db.table('messages').insert(messages).run(),
-  db.table('users').insert(users).run(),
-  db.table('usersSettings').insert(usersSettings).run(),
-  db.table('reactions').insert(reactions).run(),
-  db.table('directMessageThreads').insert(directMessageThreads).run(),
-  db.table('messages').insert(direct_messages).run(),
-  db.table('usersCommunities').insert(usersCommunities).run(),
-  db.table('usersChannels').insert(usersChannels).run(),
-  db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
-  db.table('usersThreads').insert(usersThreads).run(),
+  db
+    .table('communities')
+    .insert(communities)
+    .run(),
+  db
+    .table('channels')
+    .insert(channels)
+    .run(),
+  db
+    .table('threads')
+    .insert(threads)
+    .run(),
+  db
+    .table('messages')
+    .insert(messages)
+    .run(),
+  db
+    .table('users')
+    .insert(users)
+    .run(),
+  db
+    .table('usersSettings')
+    .insert(usersSettings)
+    .run(),
+  db
+    .table('reactions')
+    .insert(reactions)
+    .run(),
+  db
+    .table('directMessageThreads')
+    .insert(directMessageThreads)
+    .run(),
+  db
+    .table('messages')
+    .insert(direct_messages)
+    .run(),
+  db
+    .table('usersCommunities')
+    .insert(usersCommunities)
+    .run(),
+  db
+    .table('usersChannels')
+    .insert(usersChannels)
+    .run(),
+  db
+    .table('usersDirectMessageThreads')
+    .insert(usersDirectMessageThreads)
+    .run(),
+  db
+    .table('usersThreads')
+    .insert(usersThreads)
+    .run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

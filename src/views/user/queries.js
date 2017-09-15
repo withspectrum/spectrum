@@ -8,6 +8,8 @@ import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads($username: String, $after: String) {
@@ -21,7 +23,10 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, networkStatus, user } }) => ({
+  props: ({
+    ownProps,
+    data: { fetchMore, error, loading, networkStatus, user, subscribeToMore },
+  }) => ({
     data: {
       error,
       loading,
@@ -29,6 +34,35 @@ const threadsQueryOptions = {
       networkStatus,
       threads: user ? user.threadConnection.edges : '',
       hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const newThreads = parseRealtimeThreads(
+              prev.user.threadConnection.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
+            return {
+              ...prev,
+              user: {
+                ...prev.user,
+                threadConnection: {
+                  ...prev.user.threadConnection,
+                  pageInfo: {
+                    ...prev.user.threadConnection.pageInfo,
+                  },
+                  edges: newThreads,
+                },
+              },
+            };
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,

@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Gradient } from '../globals';
+import { Gradient, zIndex } from '../globals';
 import { optimize } from '../../helpers/images';
 
 const StyledAvatarFallback = styled.img`
@@ -17,7 +17,7 @@ const StyledAvatarFallback = styled.img`
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
+  border-radius: ${props => (props.community ? `8px` : '100%')};
   width: 100%;
   height: 100%;
   margin: 0;
@@ -26,7 +26,7 @@ const StyledAvatarFallback = styled.img`
   background-image: ${({ theme }) =>
     Gradient(theme.generic.alt, theme.generic.default)};
   position: relative;
-  z-index: 9;
+  z-index: ${zIndex.avatar - 1};
 `;
 
 const StyledAvatarStatus = styled.div`
@@ -34,20 +34,15 @@ const StyledAvatarStatus = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
+  border-radius: ${props => (props.community ? `8px` : '100%')};
+  border: none;
 
   &:after {
     content: '';
     position: absolute;
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props =>
-      props.onlineSize === 'large'
-        ? '8px'
-        : props.onlineSize === 'small' ? '6px' : '6px'};
-    height: ${props =>
-      props.onlineSize === 'large'
-        ? '8px'
-        : props.onlineSize === 'small' ? '6px' : '6px'};
+    width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
+    height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     background: ${props => props.theme.pro.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
@@ -59,15 +54,16 @@ const StyledAvatarStatus = styled.div`
       props.onlineSize === 'large'
         ? '0'
         : props.onlineSize === 'small' ? '-6px' : '-3px'};
-    z-index: 10;
+    z-index: ${zIndex.avatar};
   }
 `;
 
 const StyledAvatar = styled.object`
   position: relative;
+  display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
+  border-radius: ${props => (props.community ? `8px` : '100%')};
   object-fit: cover;
 `;
 
@@ -80,11 +76,13 @@ const StyledAvatarLink = styled(Link)`
   pointer-events: auto;
 `;
 
-const AvatarWithFallback = props =>
-  <StyledAvatarStatus {...props}>
+const AvatarWithFallback = ({ style, ...props }) => (
+  <StyledAvatarStatus size={props.size || 32} {...props}>
     <StyledAvatar
       data={optimize(props.src, { w: props.size, dpr: 2, format: 'png' })}
       type="image/png"
+      size={props.size || 32}
+      style={style}
       {...props}
     >
       <StyledAvatarFallback
@@ -96,7 +94,8 @@ const AvatarWithFallback = props =>
         }
       />
     </StyledAvatar>
-  </StyledAvatarStatus>;
+  </StyledAvatarStatus>
+);
 
 const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link && !props.noLink) {

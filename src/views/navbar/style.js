@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow, hexa } from '../../components/globals';
+import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
@@ -40,10 +40,10 @@ export const Nav = styled(FlexRow)`
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
-  z-index: 1010;
+  z-index: ${zIndex.navBar};
+  -webkit-transform: translate3d(0, 0, 0);
 
   @media (max-width: 768px) {
-    z-index: 1000;
     padding: 0;
     order: 3;
     position: relative;
@@ -71,12 +71,12 @@ export const LogoLink = styled(Link)`
   ${() =>
     process.env.NODE_ENV !== 'production' &&
     css`
-    &:after {
-      content: "Dev";
-      margin-top: 4px;
-      font-size: 0.75em;
-    }
-  `}
+      &:after {
+        content: 'Dev';
+        margin-top: 4px;
+        font-size: 0.75em;
+      }
+    `};
 `;
 
 export const SigninLink = styled.button`
@@ -159,7 +159,7 @@ export const IconLink = styled(Link)`
     opacity: 1;
   }
 
-  &[data-active~="true"] {
+  &[data-active~='true'] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
     opacity: 1;
   }
@@ -169,7 +169,7 @@ export const IconLink = styled(Link)`
     opacity: 0.7;
     margin: 0;
 
-    &[data-active~="true"] {
+    &[data-active~='true'] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
     }

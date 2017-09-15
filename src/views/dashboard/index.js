@@ -4,15 +4,16 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
+import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   UpsellSignIn,
   UpsellToReload,
   UpsellMiniCreateCommunity,
   UpsellMiniUpgrade,
 } from '../../components/upsell';
-import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
   LoadingProfile,
   LoadingList,
@@ -31,7 +32,9 @@ import CommunityList from '../user/components/communityList';
 //$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 
-const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
+const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
+  ThreadFeed
+);
 
 class DashboardPure extends Component {
   state: {
@@ -65,36 +68,11 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, networkStatus, error } } = this.props;
+    const { data: { user, networkStatus } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
-    const noData = !user && !error;
     const { title, description } = generateMetaInfo();
-
-    // Got no data
-    if (noData) {
-      // if no data exists and the fetch is done, redirect home
-      if (networkStatus === 7) {
-        return this.graduate();
-      }
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          {!isMobile &&
-            <Column type="secondary">
-              <LoadingProfile />
-              <LoadingList />
-            </Column>}
-          <Column type="primary">
-            {!isMobile && <LoadingComposer />}
-            <LoadingFeed />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
 
     // Error, prompt reload
     if (networkStatus === 8) {
@@ -109,34 +87,25 @@ class DashboardPure extends Component {
       );
     }
 
-    // New user onboarding
-    if (isNewUser) {
-      const communities = user.communityConnection.edges;
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-          <Column type="primary">
-            <UpsellNewUser
-              user={user}
-              graduate={this.graduate}
-              communities={communities}
-            />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-
     if (dataExists) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar />
 
-          {!isMobile &&
+          {currentUser.username &&
+            communities.length === 0 && (
+              <NewUserOnboarding
+                noCloseButton
+                close={() => {}}
+                currentUser={currentUser}
+              />
+            )}
+
+          {!isMobile && (
             <Column type="secondary">
               <UserProfile profileSize="mini" data={{ user: user }} />
               <CommunityList
@@ -145,10 +114,12 @@ class DashboardPure extends Component {
                 user={user}
                 communities={communities}
                 networkStatus={networkStatus}
+                withMeta={true}
               />
               <UpsellMiniCreateCommunity largeOnly />
               {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
-            </Column>}
+            </Column>
+          )}
 
           <Column type="primary">
             <FlexCol>
@@ -160,16 +131,35 @@ class DashboardPure extends Component {
       );
     }
 
-    // If there's no error but also no user they gotta sign in
-    return (
-      <AppViewWrapper>
-        <Head title={title} description={description} />
-        <Titlebar noComposer />
-        <Column type="primary" alignItems="center">
-          <UpsellSignIn />
-        </Column>
-      </AppViewWrapper>
-    );
+    // Got no data
+    if (networkStatus !== 7) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          {!isMobile && (
+            <Column type="secondary">
+              <LoadingProfile />
+              <LoadingList />
+            </Column>
+          )}
+          <Column type="primary">
+            {!isMobile && <LoadingComposer />}
+            <LoadingFeed />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
   }
 }
 

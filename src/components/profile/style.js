@@ -12,13 +12,9 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const ProfileAvatar = styled(Avatar)`
-  margin-right: 16px;
-`;
+export const ProfileAvatar = styled(Avatar)`margin-right: 16px;`;
 
-export const CommunityAvatar = styled(ProfileAvatar)`
-  margin-right: 16px;
-`;
+export const CommunityAvatar = styled(ProfileAvatar)`margin-right: 16px;`;
 
 export const ProfileHeaderLink = styled(Link)`
   display: flex;
@@ -28,7 +24,21 @@ export const ProfileHeaderLink = styled(Link)`
   flex: auto;
   min-width: 0;
 
-  &:hover h3{
+  &:hover h3 {
+    transition: ${Transition.hover.on};
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const ProfileHeaderNoLink = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  flex: auto;
+  min-width: 0;
+
+  &:hover h3 {
     transition: ${Transition.hover.on};
     color: ${props => props.theme.brand.alt};
   }
@@ -70,15 +80,26 @@ export const Description = styled.div`
   color: ${props => props.theme.text.default};
   padding: 0 16px 16px;
   line-height: 1.4;
+  white-space: pre-wrap;
+
+  a {
+    font-weight: 500;
+    color: ${props => props.theme.brand.alt};
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const ExtLink = styled(FlexRow)`
-  margin-top: 8px;
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
+  font-size: 14px;
+  padding-top: 16px;
 
   > a:hover {
     text-decoration: underline;
@@ -101,7 +122,6 @@ export const Actions = styled(FlexRow)`
 `;
 
 export const Action = styled(Button)`
-
   &:last-of-type:not(:first-of-type) {
     margin-left: 8px;
   }
@@ -186,17 +206,12 @@ export const CoverSubtitle = styled(Subtitle)`
   justify-content: center;
 `;
 
-export const CoverDescription = styled(Description)`
-  text-align: center;
-
-  p {
-    margin-bottom: 16px;
-  }
-`;
+export const CoverDescription = styled(Description)`text-align: center;`;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
 export const ProfileCard = styled(Card)`
-  > div:first-of-type, > a > div {
+  > div:first-of-type,
+  > a > div {
     padding: 16px;
 
     h4 > a:hover {
@@ -216,5 +231,22 @@ export const ProUpgrade = styled.div`
   button {
     width: 100%;
     text-align: center;
+  }
+`;
+
+export const ReputationContainer = styled.div`
+  border-top: 2px solid ${props => props.theme.border.default};
+  padding: 12px 0;
+  margin: 0 16px;
+  display: flex;
+`;
+
+export const ReputationCount = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+
+  strong {
+    font-weight: 700;
   }
 `;

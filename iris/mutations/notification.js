@@ -1,4 +1,5 @@
 // @flow
+import UserError from '../utils/UserError';
 const {
   markAllNotificationsSeen,
   markSingleNotificationSeen,
@@ -8,15 +9,30 @@ const {
 
 module.exports = {
   Mutation: {
-    markAllNotificationsSeen: (_, __, { user }) =>
-      markAllNotificationsSeen(user.id),
-    markAllNotificationsRead: (_, __, { user }) =>
-      markAllNotificationsRead(user.id),
-    markDirectMessageNotificationsSeen: (_, __, { user }) =>
-      markDirectMessageNotificationsSeen(user.id),
-    markSingleNotificationSeen: (_, { id }, { user }) =>
-      markSingleNotificationSeen(id, user.id),
-    toggleNotificationReadState: (_, { id }, { user }) =>
-      toggleNotificationReadState(id, user.id),
+    markAllNotificationsSeen: (_, __, { user }) => {
+      if (!user)
+        return new UserError('You must be logged in to view notifications');
+      return markAllNotificationsSeen(user.id);
+    },
+    markAllNotificationsRead: (_, __, { user }) => {
+      if (!user)
+        return new UserError('You must be logged in to view notifications');
+      return markAllNotificationsRead(user.id);
+    },
+    markDirectMessageNotificationsSeen: (_, __, { user }) => {
+      if (!user)
+        return new UserError('You must be logged in to view notifications');
+      return markDirectMessageNotificationsSeen(user.id);
+    },
+    markSingleNotificationSeen: (_, { id }, { user }) => {
+      if (!user)
+        return new UserError('You must be logged in to view notifications');
+      return markSingleNotificationSeen(id, user.id);
+    },
+    toggleNotificationReadState: (_, { id }, { user }) => {
+      if (!user)
+        return new UserError('You must be logged in to view notifications');
+      return toggleNotificationReadState(id, user.id);
+    },
   },
 };

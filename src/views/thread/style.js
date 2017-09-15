@@ -9,17 +9,21 @@ import {
   H4,
   Transition,
   hexa,
+  zIndex,
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
   ${props =>
     !props.slider &&
     css`
-      background-image: linear-gradient(to right, ${props.theme.bg
-        .wash}, ${props.theme.bg.default} 10%, ${props.theme.bg
-      .default} 90%, ${props.theme.bg.wash});
-    `}
-  flex: auto;
+      background-image: linear-gradient(
+        to right,
+        ${props.theme.bg.wash},
+        ${props.theme.bg.default} 10%,
+        ${props.theme.bg.default} 90%,
+        ${props.theme.bg.wash}
+      );
+    `} flex: auto;
   align-items: stretch;
   overflow-y: scroll;
 
@@ -44,12 +48,17 @@ export const Content = styled(FlexRow)`
 export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
-  z-index: 1003;
+  z-index: ${zIndex.chatInput};
+
+  @media (max-width: 768px) {
+    z-index: ${zIndex.mobileInput};
+  }
 `;
 
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
+  align-self: stretch;
 `;
 
 export const ChatInputWrapper = styled(Column)`
@@ -57,6 +66,7 @@ export const ChatInputWrapper = styled(Column)`
   align-items: stretch;
   margin: 0;
   flex: auto;
+  position: relative;
 
   > div {
     background-image: ${({ theme }) =>
@@ -94,7 +104,6 @@ export const Container = styled(FlexCol)`
   overflow-y: scroll;
 
   @media (max-width: 768px) {
-
     padding-top: 16px;
   }
 `;
@@ -153,9 +162,7 @@ export const DropWrap = styled(FlexCol)`
   }
 `;
 
-export const FlyoutRow = styled(FlexRow)`
-  padding: 8px;
-`;
+export const FlyoutRow = styled(FlexRow)`padding: 8px;`;
 
 export const Byline = styled.div`
   font-weight: 500;
@@ -178,9 +185,7 @@ export const BylineMeta = styled(FlexCol)`
   }
 `;
 
-export const AuthorAvatar = styled(Avatar)`
-  cursor: pointer;
-`;
+export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
 export const AuthorName = styled(H3)`
   font-weight: 700;
@@ -241,9 +246,7 @@ export const Timestamp = styled.span`
   color: ${({ theme }) => theme.text.alt};
 `;
 
-export const Edited = styled(Timestamp)`
-  margin-left: 4px;
-`;
+export const Edited = styled(Timestamp)`margin-left: 4px;`;
 
 export const ChatWrapper = styled.div`width: 100%;`;
 

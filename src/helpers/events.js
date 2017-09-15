@@ -14,6 +14,7 @@ export const set = id => {
 	*
 	*/
 
+  if (!ga) return;
   try {
     ga('set', 'userId', id); // Set the user ID using signed-in user_id.
   } catch (err) {
@@ -47,41 +48,12 @@ export const track = (category, action, label) => {
   if (process.env.NODE_ENV !== 'production') {
     console.log('tracking: ', category, action, label);
   } else {
+    if (!ga) return;
     // only send events from production
     try {
       ga('send', 'event', category, action, label);
     } catch (err) {
       console.log(err);
     }
-  }
-};
-
-export const crashReporter = store => next => action => {
-  // Handle THROW_ERROR actions
-  if (action.type === 'THROW_ERROR') {
-    console.error('Caught an exception!', action.err);
-    if (process.env.NODE_ENV !== 'development') {
-      Raven.captureException(action.err, {
-        extra: {
-          action,
-          state: store.getState(),
-        },
-      });
-    }
-  }
-
-  try {
-    return next(action);
-  } catch (err) {
-    console.error('Caught an exception!', err);
-    if (process.env.NODE_ENV !== 'development') {
-      Raven.captureException(err, {
-        extra: {
-          action,
-          state: store.getState(),
-        },
-      });
-    }
-    throw err;
   }
 };

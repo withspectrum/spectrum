@@ -34,6 +34,12 @@ const SEND_MESSAGE_OPTIONS = {
             __typename: 'Message',
             sender: {
               ...ownProps.currentUser,
+              contextPermissions: {
+                isOwner: false,
+                isModerator: false,
+                reputation: 0,
+                __typename: 'ContextPermissions',
+              },
               __typename: 'User',
             },
             timestamp: +new Date(),
@@ -94,9 +100,10 @@ const SEND_MESSAGE_OPTIONS = {
 
             // ignore the addMessage from the server, apollo will automatically
             // override the optimistic object
-            if (addMessage && typeof addMessage.id === 'string') {
+            if (!addMessage || typeof addMessage.id === 'string') {
               return;
             }
+
             data.directMessageThread.messageConnection.edges.push({
               cursor: addMessage.id,
               node: addMessage,

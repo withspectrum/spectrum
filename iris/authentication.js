@@ -3,9 +3,7 @@
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, './.env'), { raise: false });
-}
+env(path.resolve(__dirname, './.env'), { raise: false });
 // $FlowFixMe
 const passport = require('passport');
 // $FlowFixMe
@@ -19,6 +17,7 @@ const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
 
 let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
+let FACEBOOK_OAUTH_CLIENT_ID = process.env.FACEBOOK_OAUTH_CLIENT_ID;
 let FACEBOOK_OAUTH_CLIENT_SECRET = process.env.FACEBOOK_OAUTH_CLIENT_SECRET;
 let GOOGLE_OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
 let GITHUB_OAUTH_CLIENT_SECRET = process.env.GITHUB_OAUTH_CLIENT_SECRET;
@@ -70,6 +69,19 @@ const init = () => {
               profile.photos.length > 0 &&
               profile.photos[0].value) ||
             null,
+          coverPhoto: profile._json.profile_background_image_url_https
+            ? profile._json.profile_background_image_url_https
+            : null,
+          description:
+            profile._json.description && profile._json.description.length > 0
+              ? profile._json.description
+              : '',
+          website:
+            profile._json.entities.url &&
+            profile._json.entities.url.urls &&
+            profile._json.entities.url.urls.length > 0
+              ? profile._json.entities.url.urls[0].expanded_url
+              : '',
           createdAt: new Date(),
           lastSeen: new Date(),
         };
@@ -89,10 +101,20 @@ const init = () => {
   passport.use(
     new FacebookStrategy(
       {
-        clientID: '130723117513387',
+        clientID: FACEBOOK_OAUTH_CLIENT_ID,
         clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/facebook/callback`,
-        profileFields: ['id', 'displayName', 'email', 'photos'],
+        profileFields: [
+          'id',
+          'displayName',
+          'email',
+          'photos',
+          'about',
+          'cover',
+          'first_name',
+          'last_name',
+          'website',
+        ],
       },
       (token, tokenSecret, profile, done) => {
         const user = {
@@ -102,8 +124,20 @@ const init = () => {
           githubProviderId: null,
           username: null,
           name: profile.displayName,
+          firstName:
+            profile.name && profile.name.givenName
+              ? profile.name.givenName
+              : '',
+          lastName:
+            profile.name && profile.name.familyName
+              ? profile.name.familyName
+              : '',
+          description: profile.about ? profile.about : '',
+          website: profile.website ? profile.website : '',
           email:
-            profile.emails.length > 0 && profile.emails[0].value !== undefined
+            profile.emails &&
+            profile.emails.length > 0 &&
+            profile.emails[0].value !== undefined
               ? profile.emails[0].value
               : null,
           profilePhoto:
@@ -112,6 +146,7 @@ const init = () => {
             profile.photos[0].value !== undefined
               ? profile.photos[0].value
               : null,
+          coverPhoto: profile._json.cover ? profile._json.cover.source : '',
           createdAt: new Date(),
           lastSeen: new Date(),
         };
@@ -148,6 +183,15 @@ const init = () => {
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
             null,
+          firstName:
+            profile.name && profile.name.givenName
+              ? profile.name.givenName
+              : '',
+          lastName:
+            profile.name && profile.name.familyName
+              ? profile.name.familyName
+              : '',
+          description: profile.tagline ? profile.tagline : '',
           email:
             (profile.emails &&
               profile.emails.length > 0 &&
@@ -158,6 +202,16 @@ const init = () => {
               profile.photos.length > 0 &&
               profile.photos[0].value) ||
             null,
+          coverPhoto:
+            profile._json.cover &&
+            profile._json.cover.coverPhoto &&
+            profile._json.cover.coverPhoto.url
+              ? profile._json.cover.coverPhoto.url
+              : '',
+          website:
+            profile._json.urls && profile._json.urls.length > 0
+              ? profile._json.urls[0].value
+              : '',
           createdAt: new Date(),
           lastSeen: new Date(),
         };

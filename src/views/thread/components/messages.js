@@ -13,7 +13,7 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = () =>
+export const EmptyChat = () => (
   <ChatWrapper>
     <HorizontalRule>
       <hr />
@@ -24,7 +24,8 @@ export const EmptyChat = () =>
       heading={`🔥 This thread is hot off the presses...`}
       copy={`Why don't you kick off the conversation?`}
     />
-  </ChatWrapper>;
+  </ChatWrapper>
+);
 
 class MessagesWithData extends Component {
   state: {
@@ -36,26 +37,36 @@ class MessagesWithData extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    // force scroll to bottom when a message is sent in the same thread
-    if (
+    const newMessageSent =
       prevProps &&
       prevProps.data &&
       prevProps.data.thread &&
       prevProps.data.thread.messageConnection !==
-        this.props.data.thread.messageConnection
+        this.props.data.thread.messageConnection;
+
+    // force scroll to bottom if the user is a participant/creator, after the messages load in
+    if (
+      (!newMessageSent &&
+        this.props.data.thread &&
+        this.props.data.thread.messageConnection &&
+        this.props.shouldForceScrollOnMessageLoad) ||
+      (!newMessageSent &&
+        this.props.data.networkStatus === 7 &&
+        this.props.shouldForceScrollOnMessageLoad)
     ) {
+      setTimeout(() => this.props.forceScrollToBottom(), 1);
+    }
+
+    // force scroll to bottom when a message is sent in the same thread
+    if (newMessageSent) {
       this.props.contextualScrollToBottom();
     }
   }
 
   componentDidMount() {
-    const { currentUser, participants } = this.props;
+    const { currentUser } = this.props;
     if (!currentUser || !currentUser.id) return;
 
-    const isParticipant = participants.some(user => user === currentUser.id);
-    if (isParticipant) {
-      this.props.forceScrollToBottom();
-    }
     this.subscribe();
   }
 
@@ -84,7 +95,9 @@ class MessagesWithData extends Component {
       currentUser,
       toggleReaction,
       forceScrollToBottom,
+      shouldForceScrollOnMessageLoad,
     } = this.props;
+
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;

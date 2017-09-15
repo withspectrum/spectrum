@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+import ImgixClient from 'imgix-core-js';
 const {
   getEverything,
   getUser,
@@ -8,6 +10,7 @@ const { getUsersSettings } = require('../models/usersSettings');
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const {
+  getThread,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
 } = require('../models/thread');
@@ -16,12 +19,17 @@ const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
 const { getNotificationsByUser } = require('../models/notification');
+import { getInvoicesByUser } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
-import ImgixClient from 'imgix-core-js';
+import {
+  getReputationByUser,
+  getUserPermissionsInCommunity,
+} from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -66,12 +74,7 @@ module.exports = {
       return loaders.userRecurringPayments
         .load(id)
         .then(
-          sub =>
-            !(sub == null) &&
-            sub.stripeData &&
-            sub.stripeData.status === 'active'
-              ? true
-              : false
+          sub => (!(sub == null) && sub.status === 'active' ? true : false)
         );
     },
     everything: (
@@ -139,7 +142,6 @@ module.exports = {
       { user }
     ) => {
       const currentUser = user;
-
       // if a logged in user is viewing the profile, handle logic to get viewable threads
       const getThreads =
         currentUser && currentUser !== null
@@ -173,21 +175,84 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
-    recurringPayments: (_, __, { user }) =>
-      getUserRecurringPayments(user.id).then(subs => {
-        if (!subs || subs.length === 0) {
+    recurringPayments: (_, __, { user }) => {
+      if (!user) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      return getUserRecurringPayments(user.id).then(subs => {
+        const userProSubs =
+          subs && subs.filter(obj => obj.planId === 'beta-pro');
+        if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {
-          return subs.map(sub => {
+          return userProSubs.map(subscription => {
             return {
-              amount: subs[0].stripeData.plan.amount,
-              created: subs[0].stripeData.created,
-              plan: subs[0].stripeData.plan.name,
-              status: subs[0].stripeData.status,
+              amount: subscription.amount,
+              createdAt: subscription.createdAt,
+              plan: subscription.planName,
+              status: subscription.status,
             };
           });
         }
-      }),
-    settings: (_, __, { user }) => getUsersSettings(user.id),
+      });
+    },
+    settings: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!user) return new UserError('You must be signed in to continue.');
+      return getUsersSettings(user.id);
+    },
+    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+      const currentUser = user;
+      if (!currentUser)
+        return new UserError('You must be logged in to view these settings.');
+
+      return getInvoicesByUser(currentUser.id);
+    },
+    totalReputation: async ({ id }: { id: string }, _: any, __: any) => {
+      if (!id) return 0;
+      return getReputationByUser(id);
+    },
+    contextPermissions: (user: any, _: any, __: any, info: any) => {
+      // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
+      if (user.contextPermissions) return user.contextPermissions;
+
+      const queryName = info.operation.name.value;
+
+      const handleCheck = async () => {
+        switch (queryName) {
+          case 'getThread':
+          case 'getThreadMessages': {
+            const threadId = info.variableValues.id;
+            const { communityId } = await getThread(threadId);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(communityId, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          case 'loadMoreCommunityMembers':
+          case 'getCommunityMembers': {
+            const communityId = info.variableValues.id;
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(communityId, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+        }
+      };
+
+      return handleCheck();
+    },
   },
 };

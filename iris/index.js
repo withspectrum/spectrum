@@ -10,6 +10,7 @@ import fs from 'fs';
 import { createServer } from 'http';
 //$FlowFixMe
 import express from 'express';
+import * as graphql from 'graphql';
 
 import schema from './schema';
 import { init as initPassport } from './authentication.js';
@@ -18,6 +19,7 @@ import getMeta from './utils/get-page-meta';
 import listeners from './subscriptions/listeners';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
+
 const PORT = 3001;
 
 // Initialize authentication
@@ -34,37 +36,18 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-// In production use express to serve the React app
-// In development this is done by react-scripts, which starts its own server
-if (IS_PROD) {
-  const { graphql } = require('graphql');
-  // Load index.html into memory
-  var index = fs
-    .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
-    .toString();
+// Use express to server-side render the React app
+if (IS_PROD || process.env.SSR) {
+  const renderer = require('./renderer').default;
   app.use(
     express.static(path.resolve(__dirname, '..', 'build'), { index: false })
   );
-  app.get('*', function(req, res) {
-    getMeta(req.url, (query: string): Promise =>
-      graphql(schema, query, undefined, {
-        loaders: createLoaders(),
-        user: req.user,
-      })
-    ).then(({ title, description, extra }) => {
-      // In production inject the meta title and description
-      res.send(
-        index
-          // Replace "Spectrum" with proper title, but make sure to not replace the twitter site:name
-          // (which is set to Spectrum.chat)
-          .replace(/Spectrum(?!\.chat)/g, title)
-          // Replace "Where communities live." with proper description for page
-          .replace(/Where communities live\./g, description)
-          // Add any extra meta tags at the end
-          .replace(/<meta name="%OG_EXTRA%">/g, extra || '')
-      );
-    });
-  });
+  app.get('*', renderer);
+  console.log(
+    `Web server running at http://localhost:${PORT} (server-side rendering enabled)`
+  );
+} else {
+  console.log(`Server-side rendering disabled for development`);
 }
 
 import type { Loader } from './loaders/types';
@@ -86,4 +69,4 @@ server.listen(PORT);
 
 // Start database listeners
 listeners.start();
-console.log(`GraphQL server running at port ${PORT}!`);
+console.log(`GraphQL server running at http://localhost:${PORT}/api`);

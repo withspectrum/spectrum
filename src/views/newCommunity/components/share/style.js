@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
+import { zIndex } from '../../../../components/globals';
 
 export const ButtonRow = styled.div`
   display: flex;
@@ -49,7 +50,7 @@ export const Input = styled.div`
   display: flex;
   align-self: center;
   max-width: 100%;
-  z-index: 2;
+  z-index: ${zIndex.form};
 
   &:hover {
     cursor: pointer;
@@ -73,6 +74,6 @@ export const Input = styled.div`
     padding: 4px 12px;
     border-left: 2px solid ${props => props.theme.border.default};
     border-radius: 0 8px 8px 0;
-    z-index: 3;
+    z-index: ${zIndex.form + 1};
   }
 `;

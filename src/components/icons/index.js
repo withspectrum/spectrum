@@ -30,27 +30,28 @@ export const SvgWrapper = styled.div`
   ${props =>
     props.count &&
     css`
-    background-color: transparent;
-    &:after {
-      content: ${props.count ? `'${props.count}'` : `''`};
-      position: absolute;
-      left: calc(100% - 12px);
-      top: -2px;
-      font-size: 14px;
-      font-weight: 600;
-      background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};
-      border-radius: 8px;
-      padding: 2px 4px;
-      border: 2px solid ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};
-    }
-  `};
+      background-color: transparent;
+      &:after {
+        content: ${props.count ? `'${props.count}'` : `''`};
+        position: absolute;
+        left: calc(100% - 12px);
+        top: -2px;
+        font-size: 14px;
+        font-weight: 600;
+        background: ${({ theme }) => theme.bg.default};
+        color: ${({ theme }) =>
+          process.env.NODE_ENV === 'production'
+            ? theme.text.default
+            : theme.warn.alt};
+        border-radius: 8px;
+        padding: 2px 4px;
+        border: 2px solid
+          ${({ theme }) =>
+            process.env.NODE_ENV === 'production'
+              ? theme.text.default
+              : theme.warn.alt};
+      }
+    `};
 `;
 
 class Icon extends React.Component {
@@ -412,6 +413,12 @@ class Icon extends React.Component {
             <path d="M28,15.972c0,11 -1,12 -12,12c-11,0 -12,-1 -12,-12c0,-11 1,-12 12,-12c11,0 12,1 12,12Zm-9.47,0.456c0.199,-0.215 0.47,-0.773 0.47,-2.456c0,-1.657 -1.343,-3 -3,-3c-1.657,0 -3,1.343 -3,3c0,1.683 0.271,2.241 0.47,2.456c0.162,0.176 0.679,0.544 2.53,0.544c1.851,0 2.368,-0.368 2.53,-0.544Zm2.47,-2.456c0,1.873 -0.286,3.173 -1.165,3.977c1.664,0.911 2.969,2.396 3.648,4.189c0.125,0.328 0.154,0.709 -0.051,0.993c-0.568,0.789 -1.674,-0.111 -2.13,-0.97c-1.008,-1.897 -3.004,-3.189 -5.302,-3.189c-2.298,0 -4.295,1.292 -5.302,3.189c-0.456,0.859 -1.562,1.759 -2.13,0.97c-0.205,-0.284 -0.176,-0.665 -0.052,-0.993c0.68,-1.793 1.985,-3.278 3.649,-4.189c-0.879,-0.804 -1.165,-2.104 -1.165,-3.977c0,-2.761 2.239,-5 5,-5c2.761,0 5,2.239 5,5Z" />
           </g>
         );
+      case 'rep':
+        return (
+          <g>
+            <path d="M5.815,20.951c1.65,1.649 5.256,0.718 8.055,-2.081c2.799,-2.799 3.73,-6.405 2.081,-8.054c-1.65,-1.65 -5.256,-0.718 -8.055,2.08c-2.799,2.799 -3.73,6.405 -2.081,8.055Zm14.685,0.049c-2.098,0 -3.963,-0.305 -5.152,-0.78c0.732,-0.741 1.365,-1.544 1.882,-2.376c0.886,0.098 1.83,0.154 2.77,0.156c2.106,-0.005 4.226,-0.278 5.688,-0.688c0.425,-0.124 0.877,-0.291 1.29,-0.477c0.015,0.055 0.022,0.11 0.022,0.165l0,2c0,1.105 -2.91,2 -6.5,2Zm0,-5c-0.806,0 -1.578,-0.045 -2.29,-0.127c0.12,-0.321 0.222,-0.641 0.305,-0.961c0.395,-1.528 0.393,-3.315 -0.539,-4.755c0.776,-0.101 1.629,-0.157 2.524,-0.157c3.59,0 6.5,0.896 6.5,2l0,2c0,1.105 -2.91,2 -6.5,2Z" />
+          </g>
+        );
       case 'search':
         return (
           <g>
@@ -515,9 +522,7 @@ class Icon extends React.Component {
           fit
           id={this.props.glyph}
         >
-          <title id="title">
-            {this.props.glyph}
-          </title>
+          <title id="title">{this.props.glyph}</title>
           {this.returnGlyph()}
         </InlineSvg>
       </SvgWrapper>

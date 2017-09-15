@@ -20,6 +20,7 @@ import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
+import { Login } from '../../views/login';
 import { getCommunityByIdQuery } from '../../api/community';
 import {
   Actions,
@@ -149,84 +150,99 @@ class NewCommunity extends Component {
   };
 
   render() {
+    const { currentUser } = this.props;
     const { activeStep, community, existingId, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
 
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Create a Community'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <Column type="primary">
-          <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
-            <Stepper activeStep={activeStep} />
-            <Title centered={activeStep === 3}>
-              {title}
-            </Title>
-            <Description centered={activeStep === 3}>
-              {description}
-            </Description>
+    if (!currentUser) {
+      return <Login redirectPath={`${window.location.href}`} />;
+    } else {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Create a Community'}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
+          />
 
-            {// gather community meta info
-            activeStep === 1 &&
-              !community &&
-              <CreateCommunityForm communityCreated={this.communityCreated} />}
+          <Column type="primary">
+            <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
+              <Stepper activeStep={activeStep} />
+              <Title centered={activeStep === 3}>{title}</Title>
+              <Description centered={activeStep === 3}>
+                {description}
+              </Description>
 
-            {activeStep === 1 &&
-              community &&
-              <EditCommunityForm
-                communityUpdated={this.communityCreated}
-                community={community}
-              />}
+              {// gather community meta info
+              activeStep === 1 &&
+                !community && (
+                  <CreateCommunityForm
+                    communityCreated={this.communityCreated}
+                  />
+                )}
 
-            {activeStep === 2 &&
-              community &&
-              community.id &&
-              <ContentContainer>
-                <Divider />
-                <ImportSlackWithoutCard
-                  community={community}
-                  id={community.id || existingId}
-                  isOnboarding
-                  hasInvitedPeople={this.hasInvitedPeople}
-                />
-                <Divider />
-                <EmailInvitesWithoutCard
-                  community={community}
-                  hasInvitedPeople={this.hasInvitedPeople}
-                />
-              </ContentContainer>}
+              {activeStep === 1 &&
+                community && (
+                  <EditCommunityForm
+                    communityUpdated={this.communityCreated}
+                    community={community}
+                  />
+                )}
 
-            {// connect a slack team or invite via email
-            activeStep === 2 &&
-              <Actions>
-                <TextButton onClick={() => this.step('previous')}>
-                  Back
-                </TextButton>
-                {hasInvitedPeople
-                  ? <Button onClick={() => this.step('next')}>Continue</Button>
-                  : <TextButton
+              {activeStep === 2 &&
+                community &&
+                community.id && (
+                  <ContentContainer>
+                    <Divider />
+                    <ImportSlackWithoutCard
+                      community={community}
+                      id={community.id || existingId}
+                      isOnboarding
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                    <Divider />
+                    <EmailInvitesWithoutCard
+                      community={community}
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                  </ContentContainer>
+                )}
+
+              {// connect a slack team or invite via email
+              activeStep === 2 && (
+                <Actions>
+                  <TextButton onClick={() => this.step('previous')}>
+                    Back
+                  </TextButton>
+                  {hasInvitedPeople ? (
+                    <Button onClick={() => this.step('next')}>Continue</Button>
+                  ) : (
+                    <TextButton
                       color={'brand.default'}
                       onClick={() => this.step('next')}
                     >
                       Skip this step
-                    </TextButton>}
-              </Actions>}
+                    </TextButton>
+                  )}
+                </Actions>
+              )}
 
-            {// share the community
-            activeStep === 3 &&
-              <ContentContainer>
-                <Share community={community} onboarding={true} />
-              </ContentContainer>}
-          </Container>
-        </Column>
-      </AppViewWrapper>
-    );
+              {// share the community
+              activeStep === 3 && (
+                <ContentContainer>
+                  <Share community={community} onboarding={true} />
+                </ContentContainer>
+              )}
+            </Container>
+          </Column>
+        </AppViewWrapper>
+      );
+    }
   }
 }
-
-export default compose(pure, withApollo, connect())(NewCommunity);
+const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+export default compose(pure, withApollo, connect(mapStateToProps))(
+  NewCommunity
+);

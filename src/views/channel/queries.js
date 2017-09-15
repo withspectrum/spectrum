@@ -7,6 +7,8 @@ import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreChannelThreads($id: ID, $after: String) {
@@ -20,7 +22,17 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, channel, networkStatus } }) => ({
+  props: ({
+    ownProps,
+    data: {
+      fetchMore,
+      error,
+      loading,
+      channel,
+      networkStatus,
+      subscribeToMore,
+    },
+  }) => ({
     data: {
       error,
       loading,
@@ -30,6 +42,35 @@ const threadsQueryOptions = {
       hasNextPage: channel
         ? channel.threadConnection.pageInfo.hasNextPage
         : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const newThreads = parseRealtimeThreads(
+              prev.channel.threadConnection.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
+            return {
+              ...prev,
+              channel: {
+                ...prev.channel,
+                threadConnection: {
+                  ...prev.channel.threadConnection,
+                  pageInfo: {
+                    ...prev.channel.threadConnection.pageInfo,
+                  },
+                  edges: newThreads,
+                },
+              },
+            };
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,

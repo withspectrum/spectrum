@@ -8,14 +8,13 @@ import {
   Transition,
   hexa,
   Shadow,
+  zIndex,
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
 import { IconButton } from '../../components/buttons';
 
-export const HzRule = styled(HorizontalRule)`
-  margin: 0;
-`;
+export const HzRule = styled(HorizontalRule)`margin: 0;`;
 
 export const NotificationCard = styled(Card)`
   padding: 16px;
@@ -118,7 +117,7 @@ export const NotificationListRow = styled(FlexCol)`
   align-items: flex-start;
   color: ${({ theme }) => theme.text.default};
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.card};
   flex: none;
   transition: ${Transition.hover.off};
   max-width: 100%;
@@ -155,7 +154,8 @@ export const ActorPhoto = styled.img`width: 100%;`;
 export const ContextRow = styled(FlexRow)`
   align-items: center;
 
-  > div + div, > div + p {
+  > div + div,
+  > div + p {
     margin-left: 8px;
   }
   margin-bottom: 8px;

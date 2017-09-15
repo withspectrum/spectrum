@@ -114,6 +114,11 @@ class Search extends Component {
 
     // if user presses enter
     if (e.keyCode === 13) {
+      if (
+        searchResults.length === 0 ||
+        searchResults[indexOfFocusedSearchResult] === undefined
+      )
+        return;
       const slug = searchResults[indexOfFocusedSearchResult].slug;
       return this.props.history.push(`/${slug}`);
     }
@@ -180,14 +185,13 @@ class Search extends Component {
       isFocused,
     } = this.state;
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <SearchWrapper>
-        {searchIsLoading &&
+        {searchIsLoading && (
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
-          </SearchSpinnerContainer>}
+          </SearchSpinnerContainer>
+        )}
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
@@ -197,12 +201,11 @@ class Search extends Component {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
-            autoFocus={!isMobile}
           />
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        searchString &&
+        searchString && (
           <SearchResultsDropdown>
             {searchResults.length > 0 &&
               searchResults.map(community => {
@@ -218,13 +221,12 @@ class Search extends Component {
                       />
                       <SearchResultTextContainer>
                         <SearchResultMetaWrapper>
-                          <SearchResultName>
-                            {community.name}
-                          </SearchResultName>
-                          {community.metaData &&
+                          <SearchResultName>{community.name}</SearchResultName>
+                          {community.metaData && (
                             <SearchResultMetadata>
                               {community.metaData.members} members
-                            </SearchResultMetadata>}
+                            </SearchResultMetadata>
+                          )}
                         </SearchResultMetaWrapper>
                       </SearchResultTextContainer>
                     </SearchLink>
@@ -233,20 +235,20 @@ class Search extends Component {
               })}
 
             {searchResults.length === 0 &&
-              isFocused &&
-              <SearchResult>
-                <SearchResultTextContainer>
-                  <SearchResultNull>
-                    <p>
-                      No communities found matching "{searchString}"
-                    </p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResultTextContainer>
-              </SearchResult>}
-          </SearchResultsDropdown>}
+              isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>No communities found matching "{searchString}"</p>
+                      <Link to={'/new/community'}>
+                        <Button>Create a Community</Button>
+                      </Link>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+          </SearchResultsDropdown>
+        )}
       </SearchWrapper>
     );
   }

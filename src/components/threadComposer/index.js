@@ -88,14 +88,15 @@ class ThreadComposerWithData extends Component {
     };
   }
 
-  handleIncomingProps = () => {
-    const props = this.props;
-
+  handleIncomingProps = props => {
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
       that don't have any channels yet
     */
+
+    // if the user doesn't exist, bust outta here
+    if (!props.data.user || props.data.user === undefined) return;
 
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
@@ -119,7 +120,12 @@ class ThreadComposerWithData extends Component {
         channel =>
           channel.channelPermissions.isMember ||
           channel.channelPermissions.isOwner
-      );
+      )
+      .filter(channel => {
+        if (!channel.isPrivate) return channel;
+        if (!channel.community.isPro) return null;
+        return channel;
+      });
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -128,13 +134,16 @@ class ThreadComposerWithData extends Component {
       If no defaults are set, we use the first available community, and then
       find the first available channel within that available community
     */
+    const activeCommunityFromPropsOrState =
+      props.activeCommunity || this.state.activeCommunity;
+
     let activeCommunity =
       availableCommunities &&
-      (props.activeCommunity
+      (activeCommunityFromPropsOrState
         ? availableCommunities.filter(community => {
             return (
               community.slug.toLowerCase() ===
-              props.activeCommunity.toLowerCase()
+              activeCommunityFromPropsOrState.toLowerCase()
             );
           })
         : availableCommunities);
@@ -180,7 +189,14 @@ class ThreadComposerWithData extends Component {
         channel => channel.isDefault
       );
       // If there is no default channel capitulate and take the first one
-      if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+      if (activeChannel.length === 0) {
+        activeChannel = activeCommunityChannels;
+      } else if (activeChannel.length > 1) {
+        const generalChannel = activeChannel.filter(
+          channel => channel.slug === 'general'
+        );
+        if (generalChannel.length > 0) activeChannel = generalChannel;
+      }
     }
 
     // ensure that if no items were found for some reason, we don't crash the app
@@ -203,7 +219,7 @@ class ThreadComposerWithData extends Component {
   };
 
   componentDidMount() {
-    this.handleIncomingProps();
+    this.handleIncomingProps(this.props);
   }
 
   componentWillUpdate(nextProps) {
@@ -277,7 +293,15 @@ class ThreadComposerWithData extends Component {
           channel => channel.isDefault
         );
         // If there is no default channel capitulate and take the first one
-        if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+        if (activeChannel.length === 0) {
+          activeChannel = activeCommunityChannels;
+          // If there are more than one default ones, try and choose the "General" one if it exists
+        } else if (activeChannel.length > 1) {
+          const generalChannel = activeChannel.filter(
+            channel => channel.slug === 'general'
+          );
+          if (generalChannel.length > 0) activeChannel = generalChannel;
+        }
       }
 
       // ensure that if no items were found for some reason, we don't crash the app
@@ -296,6 +320,22 @@ class ThreadComposerWithData extends Component {
     const isOpen = this.props.isOpen;
     if (!isOpen) {
       this.props.dispatch(openComposer());
+      this.props.data.refetch().then(result => {
+        // we have to rebuild a new props object to pass to `this.handleIncomingProps`
+        // in order to retain all the previous props passed in from the parent
+        // component and the initial data functions provided by apollo
+        const newProps = Object.assign({}, this.props, {
+          ...this.props,
+          data: {
+            ...this.props.data,
+            user: {
+              ...this.props.data.user,
+              ...result.data.user,
+            },
+          },
+        });
+        this.handleIncomingProps(newProps);
+      });
       this.refs.titleTextarea.focus();
     }
   };
@@ -419,7 +459,7 @@ class ThreadComposerWithData extends Component {
         });
 
         // redirect the user to the thread
-        this.props.history.push(`/thread/${id}`);
+        this.props.history.push(`?thread=${id}`);
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );

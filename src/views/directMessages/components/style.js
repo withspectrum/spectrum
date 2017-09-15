@@ -8,6 +8,7 @@ import {
   H4,
   P,
   hexa,
+  zIndex,
 } from '../../../components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
@@ -59,9 +60,7 @@ export const Wrapper = styled(FlexCol)`
   }
 `;
 
-export const Col = styled(FlexCol)`
-  flex: 1;
-`;
+export const Col = styled(FlexCol)`flex: 1;`;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
@@ -73,16 +72,14 @@ export const Row = styled(FlexRow)`
   }
 `;
 
-export const Heading = styled(H3)`
-  font-weight: 700;
-`;
+export const Heading = styled(H3)`font-weight: 700;`;
 
 export const Meta = styled(H4)`
   font-weight: ${props => (props.isUnread ? 600 : 400)};
   color: ${props =>
     props.isUnread ? props.theme.text.default : props.theme.text.alt};
 
-  ${props => (props.nowrap ? Truncate() : '')}
+  ${props => (props.nowrap ? Truncate() : '')};
 `;
 
 export const Description = styled(P)`
@@ -172,14 +169,14 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
 
     &:first-child {
       position: absolute;
-      z-index: 2;
+      z-index: ${zIndex.avatar};
       top: 4px;
       left: 0;
     }
 
     &:last-child {
       position: absolute;
-      z-index: 3;
+      z-index: ${zIndex.avatar + 1};
       bottom: 4px;
       right: 0;
     }
@@ -189,7 +186,7 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
 export const TwoAvatarWrap = styled(AvatarContainer)`
   &:first-child {
     position: absolute;
-    z-index: 2;
+    z-index: ${zIndex.avatar};
     top: 4px;
     left: 0;
     width: 34px;
@@ -198,7 +195,7 @@ export const TwoAvatarWrap = styled(AvatarContainer)`
 
   &:last-child {
     position: absolute;
-    z-index: 3;
+    z-index: ${zIndex.avatar + 1};
     bottom: 4px;
     right: 0;
     margin: 0;
@@ -260,7 +257,7 @@ export const ComposerInput = styled.input`
   width: 100%;
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.search};
 
   @media (max-width: 768px) {
     padding: 20px 16px;
@@ -273,7 +270,7 @@ export const SearchSpinnerContainer = styled.span`
   right: 8px;
   width: 32px;
   height: 32px;
-  z-index: 5;
+  z-index: ${zIndex.loading};
 `;
 
 export const SearchResultsDropdown = styled.ul`
@@ -287,7 +284,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 320px;
   max-height: 420px;
   overflow-y: scroll;
-  z-index: 1000;
+  z-index: ${zIndex.dropdown};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -318,9 +315,7 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled(Avatar)`
-  margin-right: 8px;
-`;
+export const SearchResultImage = styled(Avatar)`margin-right: 8px;`;
 
 export const SearchResultTextContainer = styled.div`
   display: flex;
@@ -355,7 +350,7 @@ export const SelectedUsersPills = styled.ul`
   font-size: 16px;
   padding: 9px 12px;
   width: 100%;
-  z-index: 3;
+  z-index: ${zIndex.chatInput + 1};
   background: #fff;
 `;
 
@@ -398,9 +393,7 @@ export const PhotoWrapper = styled.span`
   display: inline-block;
 `;
 
-export const Photo = styled(Avatar)`
-  border: 1px solid #fff;
-`;
+export const Photo = styled(Avatar)`border: 1px solid #fff;`;
 
 export const Names = styled.h2`
   display: block;

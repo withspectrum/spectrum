@@ -5,16 +5,10 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
-import {
-  userEverythingFragment,
-} from '../../api/fragments/user/userEverything';
-import {
-  userCommunitiesFragment,
-} from '../../api/fragments/user/userCommunities';
-// import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
+import { userEverythingFragment } from '../../api/fragments/user/userEverything';
+import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
@@ -27,20 +21,59 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, user, networkStatus } }) => ({
+  props: ({
+    ownProps,
+    data: {
+      fetchMore,
+      error,
+      loading,
+      user,
+      networkStatus,
+      subscribeToMore,
+      refetch,
+    },
+  }) => ({
     data: {
       error,
       loading,
       user,
       networkStatus,
+      refetch,
       threads: user ? user.everything.edges : '',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const newThreads = parseRealtimeThreads(
+              prev.user.everything.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
+              user: {
+                ...prev.user,
+                everything: {
+                  ...prev.user.everything,
+                  edges: newThreads,
+                },
+              },
+            });
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
           variables: {
-            after: user.everything.edges[user.everything.edges.length - 1]
-              .cursor,
+            after:
+              user.everything.edges[user.everything.edges.length - 1].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.user) {
@@ -127,31 +160,4 @@ export const getCurrentUserProfile = graphql(
     ${userCommunitiesFragment}
 	`,
   { options: { fetchPolicy: 'cache-and-network' } }
-);
-
-/*
-  Gets top communities for the onboarding flow.
-*/
-export const getTopCommunities = graphql(
-  gql`
-		{
-		  topCommunities {
-        ...communityInfo
-        metaData {
-          members
-        }
-      }
-    }
-    ${communityInfoFragment}
-	`,
-  {
-    props: ({ data: { error, loading, topCommunities } }) => ({
-      data: {
-        error,
-        loading,
-        topCommunities,
-      },
-    }),
-    options: { fetchPolicy: 'cache-and-network' },
-  }
 );

@@ -11,6 +11,7 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
+  truncateNumber,
   draftOnlyContainsEmoji,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
@@ -123,13 +124,10 @@ class ChatMessages extends Component {
 
       const renderBubbleHeader = (group: Object, me: boolean) => {
         const user = group.sender;
-
         return (
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
-              <Name>
-                {me ? 'You' : user.name}
-              </Name>
+              <Name>{me ? 'You' : user.name}</Name>
             </Link>
             {user.isAdmin && <Badge type="admin" />}
             {user.isPro && <Badge type="pro" />}
@@ -147,9 +145,7 @@ class ChatMessages extends Component {
               return (
                 <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
                   <hr />
-                  <Time>
-                    {time}
-                  </Time>
+                  <Time>{time}</Time>
                   <hr />
                 </Timestamp>
               );
@@ -192,14 +188,15 @@ class ChatMessages extends Component {
                             (which has a typeof number)
                           */}
                           {!emojiOnly &&
-                            typeof message.id === 'string' &&
-                            <Reaction
-                              message={message}
-                              toggleReaction={toggleReaction}
-                              me={me}
-                              currentUser={currentUser}
-                              dispatch={dispatch}
-                            />}
+                            typeof message.id === 'string' && (
+                              <Reaction
+                                message={message}
+                                toggleReaction={toggleReaction}
+                                me={me}
+                                currentUser={currentUser}
+                                dispatch={dispatch}
+                              />
+                            )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {
@@ -218,14 +215,15 @@ class ChatMessages extends Component {
                             pending={message.id < 0}
                             hashed={hash === message.id}
                           />
-                          {typeof message.id === 'string' &&
+                          {typeof message.id === 'string' && (
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
                               dispatch={dispatch}
-                            />}
+                            />
+                          )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'draftjs') {
@@ -253,14 +251,15 @@ class ChatMessages extends Component {
                             generated via an optimistic response with apollo
                             (which has a typeof number)
                           */}
-                          {typeof message.id === 'string' &&
+                          {typeof message.id === 'string' && (
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
                               dispatch={dispatch}
-                            />}
+                            />
+                          )}
                         </MessageWrapper>
                       );
                     } else {

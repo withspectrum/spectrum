@@ -15,6 +15,7 @@ import {
   getLinkPreviewFromUrl,
   timeDifference,
   convertTimestampToDate,
+  truncateNumber,
 } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -39,6 +40,7 @@ import Editor, {
 } from '../../../components/draftjs-editor';
 import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
+import Reputation from '../../../components/reputation';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
@@ -420,11 +422,13 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        {!isEditing &&
+        {!isEditing && (
           <Location>
-            {this.props.slider
-              ? <div style={{ width: '16px' }} />
-              : <Icon glyph="view-back" size={16} />}
+            {this.props.slider ? (
+              <div style={{ width: '16px' }} />
+            ) : (
+              <Icon glyph="view-back" size={16} />
+            )}
             <Link to={`/${thread.channel.community.slug}`}>
               {thread.channel.community.name}
             </Link>
@@ -434,13 +438,14 @@ class ThreadDetailPure extends Component {
             >
               {thread.channel.name}
             </Link>
-          </Location>}
+          </Location>
+        )}
 
         <ContextRow>
           <Byline>
             <AuthorAvatar
-              size={40}
-              radius={40}
+              size={48}
+              radius={48}
               onlineSize={'large'}
               isOnline={thread.creator.isOnline}
               src={thread.creator.profilePhoto}
@@ -452,124 +457,142 @@ class ThreadDetailPure extends Component {
             />
             <BylineMeta>
               <Link to={`/users/${thread.creator.username}`}>
-                <AuthorName>
-                  {thread.creator.name}
-                </AuthorName>
+                <AuthorName>{thread.creator.name}</AuthorName>
               </Link>
               <AuthorUsername>
-                @{thread.creator.username}
+                {thread.creator.username && `@${thread.creator.username}`}
                 {thread.creator.isAdmin && <Badge type="admin" />}
                 {thread.creator.isPro && <Badge type="pro" />}
+              </AuthorUsername>
+              <AuthorUsername>
+                {thread.creator.contextPermissions.reputation > 0 && (
+                  <span>
+                    <Reputation tipText={'Author rep in this community'} />
+                    {truncateNumber(
+                      thread.creator.contextPermissions.reputation,
+                      1
+                    )}{' '}
+                    rep
+                  </span>
+                )}
               </AuthorUsername>
             </BylineMeta>
           </Byline>
           {currentUser &&
             !isEditing &&
             isChannelMember &&
-            (isChannelOwner || isCommunityOwner || thread.isCreator) &&
-            <DropWrap className={flyoutOpen ? 'open' : ''}>
-              <IconButton glyph="settings" onClick={this.toggleFlyout} />
-              <Flyout>
-                {isCommunityOwner &&
-                  !thread.channel.isPrivate &&
-                  <FlyoutRow>
-                    <IconButton
-                      glyph={isPinned ? 'pin-fill' : 'pin'}
-                      hoverColor={isPinned ? 'warn.default' : 'special.default'}
-                      tipText={
-                        isPinned
-                          ? 'Un-pin thread'
-                          : `Pin in ${thread.channel.community.name}`
-                      }
-                      tipLocation="top-left"
-                      onClick={this.togglePinThread}
-                    />
-                  </FlyoutRow>}
-                {(isChannelOwner || isCommunityOwner) &&
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="freeze"
-                      hoverColor="space.light"
-                      tipText={
-                        thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                      }
-                      tipLocation="top-left"
-                      onClick={this.threadLock}
-                    />
-                  </FlyoutRow>}
-                {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="delete"
-                      hoverColor="warn.alt"
-                      tipText="Delete thread"
-                      tipLocation="top-left"
-                      onClick={this.triggerDelete}
-                    />
-                  </FlyoutRow>}
-                {thread.isCreator &&
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="edit"
-                      hoverColor="text.alt"
-                      tipText="Edit"
-                      tipLocation="top-left"
-                      onClick={this.toggleEdit}
-                    />
-                  </FlyoutRow>}
-              </Flyout>
-            </DropWrap>}
+            (isChannelOwner || isCommunityOwner || thread.isCreator) && (
+              <DropWrap className={flyoutOpen ? 'open' : ''}>
+                <IconButton glyph="settings" onClick={this.toggleFlyout} />
+                <Flyout>
+                  {isCommunityOwner &&
+                    !thread.channel.isPrivate && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph={isPinned ? 'pin-fill' : 'pin'}
+                          hoverColor={
+                            isPinned ? 'warn.default' : 'special.default'
+                          }
+                          tipText={
+                            isPinned
+                              ? 'Un-pin thread'
+                              : `Pin in ${thread.channel.community.name}`
+                          }
+                          tipLocation="top-left"
+                          onClick={this.togglePinThread}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {(isChannelOwner || isCommunityOwner) && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph="freeze"
+                          hoverColor="space.light"
+                          tipText={
+                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                          }
+                          tipLocation="top-left"
+                          onClick={this.threadLock}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph="delete"
+                          hoverColor="warn.alt"
+                          tipText="Delete thread"
+                          tipLocation="top-left"
+                          onClick={this.triggerDelete}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {thread.isCreator && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph="edit"
+                        hoverColor="text.alt"
+                        tipText="Edit"
+                        tipLocation="top-left"
+                        onClick={this.toggleEdit}
+                      />
+                    </FlyoutRow>
+                  )}
+                </Flyout>
+              </DropWrap>
+            )}
 
           {isChannelMember &&
             !isEditing &&
-            currentUser &&
-            <DropWrap>
-              <IconButton
-                glyph={
-                  thread.receiveNotifications
-                    ? 'notification-fill'
-                    : 'notification'
-                }
-                hoverColor="text.alt"
-                tipText={
-                  thread.receiveNotifications
-                    ? 'Turn off notifications'
-                    : 'Get notifications'
-                }
-                tipLocation="top-left"
-                onClick={this.toggleNotification}
-              />
-            </DropWrap>}
+            currentUser && (
+              <DropWrap>
+                <IconButton
+                  glyph={
+                    thread.receiveNotifications
+                      ? 'notification-fill'
+                      : 'notification'
+                  }
+                  hoverColor="text.alt"
+                  tipText={
+                    thread.receiveNotifications
+                      ? 'Turn off notifications'
+                      : 'Get notifications'
+                  }
+                  tipLocation="top-left"
+                  onClick={this.toggleNotification}
+                />
+              </DropWrap>
+            )}
 
-          {isEditing &&
+          {isEditing && (
             <EditDone>
               <Button loading={isSavingEdit} onClick={this.saveEdit}>
                 Save
               </Button>
-            </EditDone>}
+            </EditDone>
+          )}
         </ContextRow>
 
         <span>
-          {isEditing
-            ? <Textarea
-                onChange={this.changeTitle}
-                style={ThreadTitle}
-                value={this.state.title}
-                placeholder={'A title for your thread...'}
-                ref="titleTextarea"
-                autoFocus
-              />
-            : <ThreadHeading>
-                {thread.content.title}
-              </ThreadHeading>}
+          {isEditing ? (
+            <Textarea
+              onChange={this.changeTitle}
+              style={ThreadTitle}
+              value={this.state.title}
+              placeholder={'A title for your thread...'}
+              ref="titleTextarea"
+              autoFocus
+            />
+          ) : (
+            <ThreadHeading>{thread.content.title}</ThreadHeading>
+          )}
           <FlexRow>
-            <Timestamp>
-              {convertTimestampToDate(thread.createdAt)}
-            </Timestamp>
-            {thread.modifiedAt &&
+            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+            {thread.modifiedAt && (
               <Edited>
                 (Edited {timeDifference(Date.now(), editedTimestamp)})
-              </Edited>}
+              </Edited>
+            )}
           </FlexRow>
           <div className="markdown">
             <Highlight continuously={false}>
@@ -582,14 +605,15 @@ class ThreadDetailPure extends Component {
           </div>
 
           {linkPreview &&
-            !fetchingLinkPreview &&
-            <LinkPreview
-              trueUrl={linkPreview.url}
-              data={linkPreview}
-              size={'large'}
-              editable={false}
-              margin={'16px 0 0 0'}
-            />}
+            !fetchingLinkPreview && (
+              <LinkPreview
+                trueUrl={linkPreview.url}
+                data={linkPreview}
+                size={'large'}
+                editable={false}
+                margin={'16px 0 0 0'}
+              />
+            )}
         </span>
       </ThreadWrapper>
     );

@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { hexa, Shadow, FlexRow } from '../../components/globals';
+import { hexa, Shadow, FlexRow, zIndex } from '../../components/globals';
 
 export const TitleBar = styled(FlexRow)`
   width: 100%;
@@ -13,10 +13,9 @@ export const TitleBar = styled(FlexRow)`
   ${/* position: fixed;
   top: 0;
   left: 0;
-  right: 0; */ ''}
-  order: 0;
+  right: 0; */ ''} order: 0;
   flex: 0 0 48px;
-  z-index: 10;
+  z-index: ${zIndex.chrome};
   box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   justify-content: space-between;
   align-items: center;

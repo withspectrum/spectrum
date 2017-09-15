@@ -15,9 +15,9 @@ import Badge from '../badges';
 import { Avatar } from '../avatar';
 import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { PUBLIC_STRIPE_KEY } from '../../api';
-import { payInvoiceMutation } from '../../api/invoice';
+import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { ReputationMini } from '../reputation';
 import {
   Wrapper,
   WrapperLi,
@@ -48,26 +48,28 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
           radius={4}
           src={`${props.contents.profilePhoto}`}
           size={32}
-          style={{ marginRight: '12px' }}
           noLink
         />
-        <Col>
-          <Heading>
-            {props.contents.name}
-          </Heading>
-          <Meta>
-            {props.meta}
-          </Meta>
+        <Col style={{ marginLeft: '12px' }}>
+          <Heading>{props.contents.name}</Heading>
+          {props.withMeta && (
+            <Meta>
+              {props.meta && (
+                <span>
+                  <ReputationMini tipText={'Your rep in this community'} />
+                  {props.meta}
+                </span>
+              )}
+            </Meta>
+          )}
         </Col>
-        <ActionContainer className={'action'}>
-          {props.children}
-        </ActionContainer>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription
-        ? <Description>
-            {props.contents.description}
-          </Description>
-        : ''}
+      {!!props.contents.description && props.withDescription ? (
+        <Description>{props.contents.description}</Description>
+      ) : (
+        ''
+      )}
     </Wrapper>
   );
 };
@@ -78,7 +80,7 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Col>
           <Heading>
-            {props.contents.isPrivate &&
+            {props.contents.isPrivate && (
               <Lock>
                 <Icon
                   glyph={'private'}
@@ -86,22 +88,19 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
                   tipLocation="top-right"
                   size={16}
                 />
-              </Lock>}
+              </Lock>
+            )}
             {props.contents.name}
           </Heading>
-          <Meta>
-            {props.meta}
-          </Meta>
+          <Meta>{props.meta}</Meta>
         </Col>
-        <ActionContainer className={'action'}>
-          {props.children}
-        </ActionContainer>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription
-        ? <Description>
-            {props.contents.description}
-          </Description>
-        : ''}
+      {!!props.contents.description && props.withDescription ? (
+        <Description>{props.contents.description}</Description>
+      ) : (
+        ''
+      )}
     </Wrapper>
   );
 };
@@ -111,12 +110,8 @@ export const ThreadListItem = (props: CardProps): React$Element<any> => {
     <Wrapper clickable={props.clickable}>
       <Row>
         <Col>
-          <Heading>
-            {props.contents.content.title}
-          </Heading>
-          <Meta>
-            {props.meta}
-          </Meta>
+          <Heading>{props.contents.content.title}</Heading>
+          <Meta>{props.meta}</Meta>
         </Col>
       </Row>
     </Wrapper>
@@ -130,7 +125,7 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
             <Heading>
-              {props.contents.isPrivate &&
+              {props.contents.isPrivate && (
                 <Lock>
                   <Icon
                     glyph={'private'}
@@ -138,23 +133,20 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
                     tipLocation="top-right"
                     size={16}
                   />
-                </Lock>}
+                </Lock>
+              )}
               {props.contents.name}
             </Heading>
           </Link>
-          <Meta>
-            {props.meta}
-          </Meta>
+          <Meta>{props.meta}</Meta>
         </Col>
-        <ActionContainer className={'action'}>
-          {props.children}
-        </ActionContainer>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription
-        ? <Description>
-            {props.contents.description}
-          </Description>
-        : ''}
+      {!!props.contents.description && props.withDescription ? (
+        <Description>{props.contents.description}</Description>
+      ) : (
+        ''
+      )}
     </WrapperLi>
   );
 };
@@ -170,29 +162,33 @@ export const UserListItem = ({
           radius={20}
           src={`${user.profilePhoto}`}
           size={40}
-          style={{ marginRight: '16px' }}
           link={user.username ? `/users/${user.username}` : null}
         />
-        <Col>
+        <Col style={{ marginLeft: '16px' }}>
           <Heading>
-            {user.username
-              ? <Link to={`/users/${user.username}`}>
-                  {user.name}
-                </Link>
-              : <span>
-                  {user.name}
-                </span>}
+            {user.username ? (
+              <Link to={`/users/${user.username}`}>{user.name}</Link>
+            ) : (
+              <span>{user.name}</span>
+            )}
           </Heading>
-          {user.username &&
-            <Meta>
-              <Link to={`/users/${user.username}`}>
-                @{user.username}
-              </Link>
-            </Meta>}
+          <Meta>
+            {user.username && (
+              <span>
+                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
+              </span>
+            )}
+            {user.totalReputation && (
+              <span>
+                <ReputationMini tipText={'Your rep in this community'} />
+                {user.contextPermissions
+                  ? user.contextPermissions.reputation.toLocaleString()
+                  : user.totalReputation.toLocaleString()}
+              </span>
+            )}
+          </Meta>
         </Col>
-        <ActionContainer className={'action'}>
-          {children}
-        </ActionContainer>
+        <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>
     </Wrapper>
   );
@@ -203,74 +199,31 @@ export const BillingListItem = props => {
     <div>
       <Wrapper>
         <Row>
-          <BadgeContainer>
-            <Badge type="pro" />
-          </BadgeContainer>
+          {props.badge && (
+            <BadgeContainer>
+              <Badge type={props.badge || 'pro'} />
+            </BadgeContainer>
+          )}
           <Col>
-            <Heading>
-              {props.contents.name}
-            </Heading>
-            <Meta>
-              {props.meta}
-            </Meta>
+            <Heading>{props.contents.name}</Heading>
+            <Meta>{props.meta}</Meta>
           </Col>
           <ActionContainer className={'action'}>
             {props.children}
           </ActionContainer>
         </Row>
-        {!!props.contents.description && props.withDescription
-          ? <Description>
-              {props.contents.description}
-            </Description>
-          : ''}
+        {!!props.contents.description && props.withDescription ? (
+          <Description>{props.contents.description}</Description>
+        ) : (
+          ''
+        )}
       </Wrapper>
     </div>
   );
 };
 
 class InvoiceListItemPure extends Component {
-  state: {
-    isLoading: boolean,
-  };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-    };
-  }
-
-  initPayInvoice = token => {
-    this.setState({
-      isLoading: true,
-    });
-
-    const input = {
-      id: this.props.invoice.id,
-      token: JSON.stringify(token),
-    };
-
-    this.props
-      .payInvoice(input)
-      .then(({ data: { payInvoice }, data }) => {
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Invoice paid - thank you!')
-        );
-        this.setState({
-          isLoading: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isLoading: false,
-        });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   render() {
-    const { isLoading } = this.state;
     const { invoice } = this.props;
 
     return (
@@ -278,38 +231,21 @@ class InvoiceListItemPure extends Component {
         <Row>
           <Col>
             <Heading>
-              {invoice.note}
-            </Heading>
-            <Meta>
               ${(invoice.amount / 100)
                 .toFixed(2)
-                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}{' '}
-              ·{' '}
+                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
+            </Heading>
+            <Meta>
               {invoice.paidAt
-                ? `Paid ${convertTimestampToDate(invoice.paidAt)}`
-                : 'Unpaid'}
+                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+                : 'Unpaid'}{' '}
+              · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>
-          {!invoice.paidAt &&
-            <StripeCheckout
-              token={this.initPayInvoice}
-              stripeKey={PUBLIC_STRIPE_KEY}
-              name="🔐   Pay Securely"
-              description="Secured and Encrypted by Stripe"
-              panelLabel="Pay "
-              amount={invoice.amount}
-              currency="USD"
-            >
-              <Button disabled={isLoading} loading={isLoading}>
-                Pay Now
-              </Button>
-            </StripeCheckout>}
         </Row>
       </WrapperLi>
     );
   }
 }
 
-export const InvoiceListItem = compose(payInvoiceMutation, pure, connect())(
-  InvoiceListItemPure
-);
+export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);

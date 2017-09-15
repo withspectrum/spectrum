@@ -10,6 +10,7 @@ import { track } from '../../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { addCommunityToOnboarding } from '../../../actions/newUserOnboarding';
 import Titlebar from '../../../views/titlebar';
 import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
@@ -35,7 +36,7 @@ import {
   UpsellSignIn,
 } from '../../../components/upsell';
 
-const LoadingView = () =>
+const LoadingView = () => (
   <View>
     <Titlebar provideBack={true} backRoute={`/`} noComposer />
     <Content>
@@ -51,7 +52,8 @@ const LoadingView = () =>
         </ChatWrapper>
       </Detail>
     </Content>
-  </View>;
+  </View>
+);
 
 class ThreadContainerPure extends Component {
   state: {
@@ -80,7 +82,7 @@ class ThreadContainerPure extends Component {
   contextualScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 280) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
   };
@@ -172,6 +174,16 @@ class ThreadContainerPure extends Component {
           ? [...participantIds, thread.creator.id]
           : [thread.creator.id];
 
+      // if the user is new and signed up through a thread view, push
+      // the thread's community data into the store to hydrate the new user experience
+      // with their first community they should join
+      this.props.dispatch(addCommunityToOnboarding(thread.channel.community));
+
+      const isParticipantOrCreator =
+        thread.participants.some(
+          participant => participant.id === currentUser.id
+        ) || thread.isCreator;
+
       return (
         <View slider={this.props.slider}>
           <Head title={title} description={description} />
@@ -194,47 +206,52 @@ class ThreadContainerPure extends Component {
               <Messages
                 threadType={thread.threadType}
                 id={thread.id}
-                participants={participantsAndCreator}
                 currentUser={loggedInUser}
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 viewStatus={networkStatus}
+                shouldForceScrollOnMessageLoad={isParticipantOrCreator}
               />
 
-              {isFrozen &&
-                <NullState copy="This conversation has been frozen by a moderator." />}
+              {isFrozen && (
+                <NullState copy="This conversation has been frozen by a moderator." />
+              )}
 
               {loggedInUser &&
-                !hasRights &&
-                <UpsellJoinChannelState
-                  channel={thread.channel}
-                  subscribe={this.toggleSubscription}
-                  loading={isLoading}
-                />}
+                !hasRights && (
+                  <UpsellJoinChannelState
+                    channel={thread.channel}
+                    subscribe={this.toggleSubscription}
+                    loading={isLoading}
+                  />
+                )}
 
-              {!loggedInUser &&
+              {!loggedInUser && (
                 <UpsellSignIn
                   title={'Join the conversation'}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
-                />}
+                />
+              )}
             </Detail>
           </Content>
 
           {loggedInUser &&
             hasRights &&
-            !isFrozen &&
-            <Input>
-              <ChatInputWrapper type="only">
-                <ChatInput
-                  threadType="story"
-                  thread={thread.id}
-                  currentUser={loggedInUser}
-                  forceScrollToBottom={this.forceScrollToBottom}
-                />
-              </ChatInputWrapper>
-            </Input>}
+            !isFrozen && (
+              <Input>
+                <ChatInputWrapper type="only">
+                  <ChatInput
+                    threadType="story"
+                    thread={thread.id}
+                    currentUser={loggedInUser}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    autoFocus={isParticipantOrCreator}
+                  />
+                </ChatInputWrapper>
+              </Input>
+            )}
         </View>
       );
     } else if (networkStatus === 7 && isUnavailable) {

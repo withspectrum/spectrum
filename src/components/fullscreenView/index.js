@@ -5,9 +5,9 @@ import {
   ClusterTwo,
   ClusterThree,
   ClusterFour,
-} from '../../views/homepage/style';
+} from '../../views/splash/components/illustrations';
 import Icon from '../../components/icons';
-import { FullscreenViewContainer, Close } from './style';
+import { FullscreenViewContainer, Illustrations, Close } from './style';
 
 class FullscreenView extends Component {
   componentDidMount() {
@@ -19,7 +19,11 @@ class FullscreenView extends Component {
   }
 
   handleKeyPress = e => {
-    const { close } = this.props;
+    const { close, noCloseButton } = this.props;
+
+    // if we don't want the user to close the onboarding flow - when they
+    // are setting a username - ignore esc key presses
+    if (noCloseButton) return;
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
@@ -28,21 +32,24 @@ class FullscreenView extends Component {
   };
 
   render() {
-    const { close, hasBackground, children } = this.props;
+    const { close, hasBackground, children, noCloseButton } = this.props;
 
     return (
       <FullscreenViewContainer>
-        <Close onClick={close}>
-          <Icon glyph={'view-close'} size={32} />
-        </Close>
+        {!noCloseButton && (
+          <Close onClick={close}>
+            <Icon glyph={'view-close'} size={32} />
+          </Close>
+        )}
 
-        {hasBackground &&
-          <span>
+        {hasBackground && (
+          <Illustrations>
             <ClusterOne src="/img/cluster-2.svg" role="presentation" />
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-          </span>}
+          </Illustrations>
+        )}
 
         {children}
       </FullscreenViewContainer>

@@ -1,13 +1,15 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const threadNotificationQueue = createQueue('thread notification');
-const { listenToNewDocumentsIn } = require('./utils');
+import { addQueue } from '../utils/workerQueue';
+const { listenToNewDocumentsIn, NEW_DOCUMENTS } = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 
 export const getThread = (threadId: string): Promise<Object> => {
-  return db.table('threads').get(threadId).run();
+  return db
+    .table('threads')
+    .get(threadId)
+    .run();
 };
 
 export const getThreads = (
@@ -116,7 +118,9 @@ export const getViewableThreadsByUser = (
       .eqJoin('channelId', db.table('usersChannels'), { index: 'channelId' })
       // return only objects where the thread is not in a private channel or is in a channel where the current user is a member
       .filter(row =>
-        row('left')('isPrivate').eq(false).or(row('right')('isMember').eq(true))
+        row('left')('isPrivate')
+          .eq(false)
+          .or(row('right')('isMember').eq(true))
       )
       // filter down to only threads where the currentUser matches the criteria above
       .filter({
@@ -197,9 +201,11 @@ export const publishThread = (
     .then(result => {
       const thread = result.changes[0].new_val;
 
-      threadNotificationQueue.add({
-        thread,
+      addQueue('thread notification', { thread, userId });
+      addQueue('process reputation event', {
         userId,
+        type: 'thread created',
+        entityId: thread.id,
       });
 
       return thread;
@@ -227,13 +233,20 @@ export const setThreadLock = (
         result =>
           result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run()
+            : db
+                .table('threads')
+                .get(threadId)
+                .run()
       )
   );
 };
 
 export const setThreadLastActive = (threadId: string, value: Date) =>
-  db.table('threads').get(threadId).update({ lastActive: value }).run();
+  db
+    .table('threads')
+    .get(threadId)
+    .update({ lastActive: value })
+    .run();
 
 /*
   Non-destructively delete a thread by setting the `deletedAt` field to a date.
@@ -253,10 +266,20 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
       }
     )
     .run()
-    .then(result => {
-      return Promise.all([result, turnOffAllThreadNotifications(threadId)]);
-    })
-    .then(([result]) => (result.replaced >= 1 ? true : false));
+    .then(result =>
+      Promise.all([result, turnOffAllThreadNotifications(threadId)])
+    )
+    .then(([result]) => {
+      const thread = result.changes[0].new_val;
+
+      addQueue('process reputation event', {
+        userId: thread.creatorId,
+        type: 'thread deleted',
+        entityId: thread.id,
+      });
+
+      return result.replaced >= 1 ? true : false;
+    });
 };
 
 type EditThreadInput = {
@@ -324,6 +347,25 @@ export const updateThreadWithImages = (id: string, body: string) => {
     });
 };
 
-export const listenToNewThreads = (cb: Function): Function => {
-  return listenToNewDocumentsIn('threads', cb);
+const hasChanged = (field: string) =>
+  db.row('old_val')(field).ne(db.row('new_val')(field));
+const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
+
+export const listenToUpdatedThreads = (cb: Function): Function => {
+  return db
+    .table('threads')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val').run(
+    { cursor: true },
+    (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    }
+  );
 };

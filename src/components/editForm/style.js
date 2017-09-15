@@ -2,9 +2,7 @@ import styled from 'styled-components';
 import Card from '../card';
 import { FlexRow, FlexCol, Truncate } from '../globals';
 
-export const StyledCard = styled(Card)`
-  padding: 16px;
-`;
+export const StyledCard = styled(Card)`padding: 16px;`;
 
 export const Form = styled.form`
   display: inline-block;
@@ -49,7 +47,8 @@ export const TertiaryActionContainer = styled(FlexRow)`
 
 export const Actions = styled(FlexRow)`
   margin-top: 24px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
 
   button + button {
     margin-left: 8px;

@@ -1,3 +1,3 @@
-# `athena`: The processing worker
+# `athena`: The notifications worker
 
-Athena is responsible for processing many of our background jobs, at the moment all of them related to notifications.
+Athena is responsible for processing notifications.

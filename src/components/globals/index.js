@@ -42,8 +42,46 @@ export const Transition = {
   },
 };
 
+export const zIndex = new function() {
+  // Write down a camel-cased element descriptor as the name (e.g. modal or chatInput).
+  // Define at a component level here, then use math to handle order at a local level.
+  // (e.g. const ModalInput = styled.input`z-index: zIndex.modal + 1`;)
+  // This uses constructor syntax because that allows self-referential math
+
+  this.base = 1; // z-index: auto content will go here or inherit z-index from a parent
+
+  this.background = this.base - 1; // content that should always be behind other things (e.g. textures/illos)
+  this.hidden = this.base - 2; // this content should be hidden completely (USE ADD'L MEANS OF HIDING)
+
+  this.card = this.base + 1; // all cards should default to one layer above the base content
+  this.loading = this.card + 1; // loading elements should never appear behind cards
+  this.avatar = this.card + 1; // avatars should never appear behind cards
+  this.tooltip = this.card + 1; // tooltips should never appear behind cards
+  this.form = this.card + 1; // form elements should never appear behind cards
+  this.search = this.form; // search is a type of form and should appear at the same level
+  this.dmInput = this.form;
+
+  this.chrome = 3000; // chrome should be visible in modal contexts
+  this.navBar = this.chrome; // navBar is chrome and should appear at the same level
+  this.mobileInput = this.chrome + 1; // the chatInput on mobile should appear above the navBar
+  this.dropDown = this.chrome + 1; // dropDowns shouldn't appear behind the navBar
+
+  this.slider = window.innerWidth < 768 ? this.chrome + 1 : this.chrome; // slider should appear significantly above the base to leave room for other elements
+  this.composer = this.slider - 2; // composer should never appear above the slider
+  this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
+  this.flyout = this.chatInput + 1; // flyout may overlap with chatInput and should take precedence
+
+  this.fullscreen = 4000; // fullscreen elements should cover all screen content except toasts
+
+  this.modal = 5000; // modals should completely cover base content and slider as well
+  this.gallery = this.modal + 1; // gallery should never appear behind a modal
+
+  this.toast = 6000; // toasts should be visible in every context
+}();
+
 export const fontStack = css`
-	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe',
+    sans-serif;
 `;
 
 const spin = keyframes`
@@ -129,10 +167,10 @@ export const Input = styled.input`
   ${props =>
     props.type === 'checkbox' &&
     css`
-    flex: initial;
-    width: initial;
-    margin-right: 0.5rem;
-  `} &::placeholder {
+      flex: initial;
+      width: initial;
+      margin-right: 0.5rem;
+    `} &::placeholder {
     color: ${({ theme }) => theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
@@ -385,32 +423,34 @@ const returnTooltip = props => {
 };
 
 export const Tooltip = props => css`
-	position: relative;
+  position: relative;
 
-	&:after,
-	&:before {
-		line-height: 1;
+  &:after,
+  &:before {
+    line-height: 1;
     user-select: none;
     pointer-events: none;
     position: absolute;
     opacity: 0;
     display: block;
     text-transform: none;
-	}
+  }
 
-	&:before {
-		content: '';
-    z-index: 9999;
+  &:before {
+    content: '';
+    z-index: ${zIndex.tooltip + 1};
     border: 5px solid transparent;
   }
 
-	&:after {
-		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
-    z-index: 9998;
+  &:after {
+    content: ${props.tipText && !props.onboarding
+      ? `'${props.tipText}'`
+      : `''`};
+    z-index: ${zIndex.tooltip};
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
-		min-width: 3em;
+    min-width: 3em;
     max-width: 21em;
     white-space: nowrap;
     overflow: hidden;
@@ -420,14 +460,14 @@ export const Tooltip = props => css`
     box-shadow: ${Shadow.mid} ${hexa(props.theme.bg.reverse, 0.25)};
     background: ${props.theme.bg.reverse};
     color: ${props.theme.text.reverse};
-	}
+  }
 
   ${props.tipText && !props.onboarding ? returnTooltip(props) : ''};
 
-	&:hover:after,
-	&:hover:before {
-		opacity: 1;
-		transition: all 0.1s ease-in 0.1s;
+  &:hover:after,
+  &:hover:before {
+    opacity: 1;
+    transition: all 0.1s ease-in 0.1s;
   }
 `;
 
@@ -446,13 +486,13 @@ export const Onboarding = props => css`
 
   &:before {
     content: '';
-    z-index: 1000;
+    z-index: ${zIndex.tooltip + 1};
     border: 5px solid transparent;
   }
 
   &:after {
     content: ${props.onboarding ? `'${props.onboarding}'` : `''`};
-    z-index: 1000;
+    z-index: ${zIndex.tooltip};
     ${fontStack};
     text-align: left;
     line-height: 20px;
@@ -465,8 +505,8 @@ export const Onboarding = props => css`
     padding-left: 20px;
     border-radius: 12px;
     background-color: ${props.theme.bg.default};
-    background: ${props.theme.bg
-      .default} url(/img/goopy-top.svg) center top no-repeat;
+    background: ${props.theme.bg.default} url(/img/goopy-top.svg) center top
+      no-repeat;
     background-size: 100%;
     color: ${props.theme.text.default};
     box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
@@ -500,5 +540,4 @@ export const HorizontalRule = styled(FlexRow)`
   div {
     margin: 0 16px;
   }
-
 `;

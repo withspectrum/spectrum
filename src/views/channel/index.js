@@ -10,6 +10,7 @@ import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -30,9 +31,10 @@ import {
   Upsell404Channel,
   UpsellRequestToJoinChannel,
 } from '../../components/upsell';
+import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
-const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
+const ThreadFeedWithData = compose(connect(), getChannelThreads)(ThreadFeed);
 
 class ChannelViewPure extends Component {
   state: {
@@ -176,6 +178,11 @@ class ChannelViewPure extends Component {
           },
         });
 
+        // if the user is new and signed up through a channel page, push
+        // the channel's community data into the store to hydrate the new user experience
+        // with their first community they should join
+        this.props.dispatch(addCommunityToOnboarding(channel.community));
+
         track('channel', 'profile viewed', null);
 
         return (
@@ -192,27 +199,42 @@ class ChannelViewPure extends Component {
               <ChannelProfile data={{ channel }} profileSize="full" />
 
               {loggedInUser &&
-                hasRights &&
-                <NotificationsToggle
-                  value={channel.channelPermissions.receiveNotifications}
-                  channel={channel}
-                />}
+                hasRights && (
+                  <NotificationsToggle
+                    value={channel.channelPermissions.receiveNotifications}
+                    channel={channel}
+                  />
+                )}
 
               {loggedInUser &&
-                isOwner &&
-                <PendingUsersNotification channel={channel} id={channel.id} />}
+                isOwner && (
+                  <PendingUsersNotification channel={channel} id={channel.id} />
+                )}
             </Column>
 
             <Column type="primary" alignItems="center">
-              {!loggedInUser &&
-                <UpsellSignIn view={{ data: channel, type: 'channel' }} />}
+              {!loggedInUser && (
+                <UpsellSignIn view={{ data: channel, type: 'channel' }} />
+              )}
 
               {loggedInUser &&
                 hasRights &&
-                <ThreadComposer
-                  activeCommunity={communitySlug}
-                  activeChannel={channelSlug}
-                />}
+                channel.isPrivate &&
+                !channel.community.isPro && (
+                  <UpsellUpgradeCommunityPrivateChannel
+                    community={channel.community}
+                  />
+                )}
+
+              {loggedInUser &&
+                hasRights &&
+                ((channel.isPrivate && channel.community.isPro) ||
+                  !channel.isPrivate) && (
+                  <ThreadComposer
+                    activeCommunity={communitySlug}
+                    activeChannel={channelSlug}
+                  />
+                )}
 
               <ThreadFeedWithData
                 viewContext="channel"
@@ -244,11 +266,12 @@ class ChannelViewPure extends Component {
       return (
         <AppViewWrapper>
           <Titlebar noComposer />
-          {!isMobile &&
+          {!isMobile && (
             <Column type="secondary">
               <LoadingProfile />
               <LoadingList />
-            </Column>}
+            </Column>
+          )}
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />

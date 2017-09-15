@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Avatar } from '../avatar';
 import Icon from '../icons';
+import { FauxOutlineButton } from '../buttons';
 
 import {
   StyledLabel,
@@ -41,7 +42,7 @@ export const Input = (props: InputProps) => {
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         onChange={props.onChange}
-        autofocus={props.autofocus}
+        autoFocus={props.autoFocus}
         disabled={props.disabled}
       />
     </StyledLabel>
@@ -50,16 +51,24 @@ export const Input = (props: InputProps) => {
 
 export const PhotoInput = (props: InputProps) => {
   return (
-    <PhotoInputLabel user={props.user}>
+    <PhotoInputLabel user={props.user} size={props.size || 48}>
       <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <Avatar size={48} src={`${props.defaultValue}`} user={props.user} />
+      <Avatar
+        style={{ border: '2px solid #fff' }}
+        size={props.size || 48}
+        src={`${props.defaultValue}`}
+        user={props.user}
+        community={props.community}
+      />
       <StyledHiddenInput
         type="file"
         id="file"
         name="file"
-        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        accept={
+          props.allowGif ? '.png, .jpg, .jpeg, .gif, .mp4' : '.png, .jpg, .jpeg'
+        }
         multiple={false}
         onChange={props.onChange}
       />
@@ -71,7 +80,13 @@ export const CoverInput = (props: InputProps) => {
   return (
     <CoverInputLabel>
       <InputOverlay>
-        <Icon glyph="photo" />
+        <FauxOutlineButton
+          color={'bg.default'}
+          hoverColor={'bg.default'}
+          icon={'photo'}
+        >
+          Add Cover Photo
+        </FauxOutlineButton>
       </InputOverlay>
       <CoverImage
         src={`${props.defaultValue}${props.preview ? '' : '?w=320&dpr=2'}`}
@@ -81,7 +96,9 @@ export const CoverInput = (props: InputProps) => {
         type="file"
         id="file"
         name="file"
-        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        accept={
+          props.allowGif ? '.png, .jpg, .jpeg, .gif, .mp4' : '.png, .jpg, .jpeg'
+        }
         multiple={false}
         onChange={props.onChange}
       />
@@ -145,17 +162,9 @@ export class UnderlineInput extends Component {
 }
 
 export const Error = (props: Object) => {
-  return (
-    <StyledError>
-      {props.children}
-    </StyledError>
-  );
+  return <StyledError>{props.children}</StyledError>;
 };
 
 export const Success = (props: Object) => {
-  return (
-    <StyledSuccess>
-      {props.children}
-    </StyledSuccess>
-  );
+  return <StyledSuccess>{props.children}</StyledSuccess>;
 };

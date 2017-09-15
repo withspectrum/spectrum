@@ -2,17 +2,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //$FlowFixMe
-import { ThemeProvider } from 'styled-components';
-//$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
-import queryString from 'query-string';
+//$FlowFixMe
+import { Router } from 'react-router';
 import { history } from './helpers/history';
+import queryString from 'query-string';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
-import Homepage from './views/homepage';
+import Splash from './views/splash';
 import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
@@ -29,44 +29,33 @@ if (thread) {
 }
 
 const existingUser = getItemFromStorage('spectrum');
-let store;
+let initialState;
 if (existingUser) {
-  store = initStore({
+  initialState = {
     users: {
       currentUser: existingUser.currentUser,
     },
-  });
+  };
 } else {
-  store = initStore({});
+  initialState = {};
 }
 
+const store = initStore(window.__SERVER_STATE__ || initialState, {
+  middleware: [client.middleware()],
+  reducers: {
+    apollo: client.reducer(),
+  },
+});
+
 function render() {
-  // if user is not stored in localStorage and they visit a blacklist url
-  if (
-    (!existingUser || existingUser === null) &&
-    (window.location.pathname === '/' ||
-      window.location.pathname === '/messages' ||
-      window.location.pathname === '/messages/new' ||
-      window.location.pathname === '/notifications')
-  ) {
-    return ReactDOM.render(
-      <ThemeProvider theme={theme}>
-        <Homepage />
-      </ThemeProvider>,
-      document.querySelector('#root')
-    );
-  } else {
-    // otherwise load the app and we'll handle logged-out and logged-in users
-    // further down the tree
-    return ReactDOM.render(
-      <ApolloProvider store={store} client={client}>
-        <ThemeProvider theme={theme}>
-          <Routes />
-        </ThemeProvider>
-      </ApolloProvider>,
-      document.querySelector('#root')
-    );
-  }
+  return ReactDOM.render(
+    <ApolloProvider store={store} client={client}>
+      <Router history={history}>
+        <Routes />
+      </Router>
+    </ApolloProvider>,
+    document.querySelector('#root')
+  );
 }
 
 try {

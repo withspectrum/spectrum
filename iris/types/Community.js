@@ -74,6 +74,16 @@ const Community = /* GraphQL */ `
 		customMessage: String
 	}
 
+	input UpgradeCommunityInput {
+		plan: String!
+		token: String!
+		communityId: String!
+	}
+
+	input DowngradeCommunityInput {
+		id: String!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -83,10 +93,7 @@ const Community = /* GraphQL */ `
 		website: String
 		profilePhoto: String
 		coverPhoto: String
-		isOwner: Boolean
-		isMember: Boolean
-		isModerator: Boolean
-		isBlocked: Boolean
+		reputation: Int
 		pinnedThreadId: String
 		communityPermissions: CommunityPermissions!
 		channelConnection: CommunityChannelsConnection!
@@ -95,6 +102,8 @@ const Community = /* GraphQL */ `
 		metaData: CommunityMetaData
 		slackImport: SlackImport
 		invoices: [Invoice]
+		recurringPayments: [RecurringPayment]
+		isPro: Boolean
 	}
 
 	extend type Query {
@@ -113,6 +122,8 @@ const Community = /* GraphQL */ `
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
+		upgradeCommunity(input: UpgradeCommunityInput!): Community
+		downgradeCommunity(input: DowngradeCommunityInput!): Community
 	}
 `;
 

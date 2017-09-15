@@ -141,7 +141,9 @@ class CommunityWithData extends Component {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
@@ -310,11 +312,15 @@ class CommunityWithData extends Component {
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif
             />
 
             <PhotoInput
               onChange={this.setCommunityPhoto}
               defaultValue={image}
+              community
+              user={null}
+              allowGif
             />
           </ImageInputWrapper>
 
@@ -325,8 +331,9 @@ class CommunityWithData extends Component {
             sp.chat/
           </UnderlineInput>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
           <TextArea
             defaultValue={description}
@@ -335,15 +342,22 @@ class CommunityWithData extends Component {
             Description
           </TextArea>
 
-          <Input
-            defaultValue={website}
-            onChange={this.changeWebsite}
-            autoFocus={true}
-          >
+          <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
           </Input>
 
           <Actions>
+            <Button
+              loading={isLoading}
+              onClick={this.save}
+              disabled={photoSizeError}
+              type="submit"
+            >
+              Save
+            </Button>
+            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
+              Cancel
+            </TextButton>
             <TertiaryActionContainer>
               <IconButton
                 glyph="delete"
@@ -354,22 +368,13 @@ class CommunityWithData extends Component {
                 onClick={e => this.triggerDeleteCommunity(e, community.id)}
               />
             </TertiaryActionContainer>
-            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
-              Cancel
-            </TextButton>
-            <Button
-              loading={isLoading}
-              onClick={this.save}
-              disabled={photoSizeError}
-            >
-              Save
-            </Button>
           </Actions>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '16px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
         </Form>
       </StyledCard>
     );

@@ -1,6 +1,8 @@
 //@flow
 const { getMessage, getMediaMessagesForThread } = require('../models/message');
 import { getReactions } from '../models/reaction';
+import { getThread } from '../models/thread';
+import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import type { GraphQLContext } from '../';
 
 type GetMessageProps = {
@@ -10,6 +12,8 @@ type GetMessageProps = {
 type Root = {
   messageId: string,
   senderId: string,
+  threadId: string,
+  threadType: 'directMessageThread' | 'story',
 };
 
 module.exports = {
@@ -19,8 +23,37 @@ module.exports = {
       getMediaMessagesForThread(threadId),
   },
   Message: {
-    sender: ({ senderId }: Root, _: any, { loaders }: GraphQLContext) =>
-      loaders.user.load(senderId),
+    sender: async (
+      { senderId, threadId, threadType }: Root,
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
+      const sender = await loaders.user.load(senderId);
+
+      // there will be no community to resolve in direct message threads, so we can escape early
+      // and only return the sender
+      if (
+        threadType === 'directMessageThread' ||
+        threadType === 'DIRECT_MESSAGE_GROUP'
+      )
+        return sender;
+
+      const { communityId } = await getThread(threadId);
+      const {
+        reputation,
+        isModerator,
+        isOwner,
+      } = await getUserPermissionsInCommunity(communityId, senderId);
+
+      return {
+        ...sender,
+        contextPermissions: {
+          reputation,
+          isModerator,
+          isOwner,
+        },
+      };
+    },
     reactions: ({ id }: Root, _, { user }) =>
       getReactions(id).then(reactions => {
         return {

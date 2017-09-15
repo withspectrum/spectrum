@@ -3,7 +3,16 @@ import styled from 'styled-components';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import { Button } from '../buttons';
-import { FlexCol, FlexRow, Shadow, hexa, H1, H4, Transition } from '../globals';
+import {
+  FlexCol,
+  FlexRow,
+  Shadow,
+  hexa,
+  H1,
+  H4,
+  Transition,
+  zIndex,
+} from '../globals';
 
 export const FeaturePhoto = styled.img`
   height: 120px;
@@ -119,7 +128,7 @@ export const MemberButton = styled(Button)`
 export const FeatureWrapper = styled(FlexCol)`
   position: relative;
   align-self: center;
-  z-index: 3;
+  z-index: ${zIndex.base + 1};
   color: ${({ theme }) => theme.text.reverse};
 `;
 
@@ -140,14 +149,16 @@ export const Feature = styled(FlexRow)`
   margin-top: 16px;
   align-items: flex-start;
 
-  > a, > button {
+  > a,
+  > button {
     display: none;
   }
 
   @media (max-width: 768px) {
     flex-direction: column;
 
-    > a, > button {
+    > a,
+    > button {
       display: flex;
       align-self: center;
     }
@@ -157,7 +168,8 @@ export const Feature = styled(FlexRow)`
 export const FeaturePresentation = styled(FlexCol)`
   align-items: center;
 
-  > a:nth-of-type(2), > button {
+  > a:nth-of-type(2),
+  > button {
     display: flex;
   }
 
@@ -166,7 +178,8 @@ export const FeaturePresentation = styled(FlexCol)`
     flex-direction: row;
     justify-content: center;
 
-    > a:nth-of-type(2), > button {
+    > a:nth-of-type(2),
+    > button {
       display: none;
     }
   }

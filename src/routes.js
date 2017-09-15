@@ -1,12 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import { Router, Route, Switch, Redirect } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import generateMetaInfo from 'shared/generate-meta-info';
+import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
-import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
@@ -26,14 +26,16 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
+import Splash from './views/splash';
+import signedOutFallback from './helpers/signed-out-fallback';
+import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
 
-import Editor from './components/draftjs-editor';
-
-const About = () =>
+const About = () => (
   <div>
     <h3>About</h3>
-  </div>;
+  </div>
+);
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -42,23 +44,47 @@ const Body = styled(FlexCol)`
   overflow-y: scroll;
   background: ${props => props.theme.bg.wash};
 
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     height: 100vh;
-    max-height: ${window.innerHeight}px;
+    max-height: 100vh;
   }
 `;
+
+const DashboardFallback = signedOutFallback(Dashboard, Splash);
+const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
+  <Redirect to="/login" />
+));
+const MessagesFallback = signedOutFallback(DirectMessages, () => (
+  <Redirect to="/login" />
+));
+const UserSettingsFallback = signedOutFallback(UserSettings, () => (
+  <Redirect to="/login" />
+));
+const CommunitySettingsFallback = signedOutFallback(communitySettings, () => (
+  <Redirect to="/login" />
+));
+const ChannelSettingsFallback = signedOutFallback(channelSettings, () => (
+  <Redirect to="/login" />
+));
+const NotificationsFallback = signedOutFallback(Notifications, () => (
+  <Redirect to="/login" />
+));
 
 class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
+
     return (
-      <Router history={history}>
+      <ThemeProvider theme={theme}>
         <ScrollManager>
           <Body>
             {/* Default meta tags, get overriden by anything further down the tree */}
             <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
+
             <Route component={Navbar} />
+
             <Route component={ModalRoot} />
             <Route component={Toasts} />
             <Route component={Gallery} />
@@ -69,8 +95,8 @@ class Routes extends Component {
               https://reacttraining.com/react-router/web/api/Switch
             */}
             <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route exact path="/home" component={Dashboard} />
+              <Route exact path="/" component={DashboardFallback} />
+              <Route exact path="/home" component={HomeFallback} />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />
@@ -80,24 +106,25 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
-              <Route path="/new/community" component={NewCommunity} />
+              <Route path="/new/community" component={NewCommunityFallback} />
               <Route
                 path="/new"
                 render={() => <Redirect to="/new/community" />}
               />
+              <Route path="/login" component={Login} />
               <Route path="/explore" component={Explore} />
-              <Route path="/messages/new" component={DirectMessages} />
-              <Route path="/messages/:threadId" component={DirectMessages} />
-              <Route path="/messages" component={DirectMessages} />
+              <Route path="/messages/new" component={MessagesFallback} />
+              <Route path="/messages/:threadId" component={MessagesFallback} />
+              <Route path="/messages" component={MessagesFallback} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />
               <Route
                 exact
                 path="/users/:username/settings"
-                component={UserSettings}
+                component={UserSettingsFallback}
               />
-              <Route path="/notifications" component={Notifications} />
+              <Route path="/notifications" component={NotificationsFallback} />
 
               {/*
               We check communitySlug last to ensure none of the above routes
@@ -106,11 +133,11 @@ class Routes extends Component {
             */}
               <Route
                 path="/:communitySlug/:channelSlug/settings"
-                component={channelSettings}
+                component={ChannelSettingsFallback}
               />
               <Route
                 path="/:communitySlug/settings"
-                component={communitySettings}
+                component={CommunitySettingsFallback}
               />
               <Route
                 path="/:communitySlug/:channelSlug"
@@ -120,7 +147,7 @@ class Routes extends Component {
             </Switch>
           </Body>
         </ScrollManager>
-      </Router>
+      </ThemeProvider>
     );
   }
 }

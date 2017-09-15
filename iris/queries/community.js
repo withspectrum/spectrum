@@ -14,6 +14,7 @@ const {
   getUserPermissionsInCommunity,
   getMembersInCommunity,
 } = require('../models/usersCommunities');
+const { getUserByUsername } = require('../models/user');
 const { getThreadsByChannels, getThreads } = require('../models/thread');
 const {
   getChannelsByCommunity,
@@ -22,6 +23,7 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
+import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -66,9 +68,9 @@ module.exports = {
   },
   Community: {
     communityPermissions: (
-      { id }: { id: String },
+      { id }: { id: string },
       _: any,
-      { user }: Context
+      { user }: GraphQLContext
     ) => {
       if (!id || !user) return false;
       return getUserPermissionsInCommunity(id, user.id);
@@ -84,7 +86,7 @@ module.exports = {
       ),
     }),
     memberConnection: (
-      { id },
+      { id }: { id: string },
       { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
@@ -111,9 +113,9 @@ module.exports = {
         }));
     },
     threadConnection: (
-      { id, ...community }: { id: string, community: object },
+      { id, ...community }: { id: string, community: Object },
       { first = 10, after }: PaginationOptions,
-      { user }
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       const currentUser = user;
@@ -190,7 +192,7 @@ module.exports = {
         };
       });
     },
-    slackImport: ({ id }, _, { user }) => {
+    slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -205,7 +207,7 @@ module.exports = {
         };
       });
     },
-    invoices: ({ id }, _, { user }) => {
+    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -213,6 +215,47 @@ module.exports = {
         );
 
       return getInvoicesByCommunity(id);
+    },
+    recurringPayments: (
+      { id }: { id: string },
+      _: any,
+      { user }: GraphQLContext
+    ) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      const queryRecurringPayments = async () => {
+        const userPermissions = await getUserPermissionsInCommunity(
+          id,
+          currentUser.id
+        );
+        if (!userPermissions.isOwner) return;
+
+        const rPayments = await getCommunityRecurringPayments(id);
+        const communitySubscriptions =
+          rPayments &&
+          rPayments.filter(obj => obj.planId === 'community-standard');
+
+        if (!communitySubscriptions || communitySubscriptions.length === 0)
+          return;
+        return communitySubscriptions.map(subscription => ({
+          amount: subscription.amount * subscription.quantity,
+          createdAt: subscription.createdAt,
+          plan: subscription.planName,
+          status: subscription.status,
+        }));
+      };
+
+      return queryRecurringPayments();
+    },
+    isPro: ({ id }: { id: string }, _: any, __: any) => {
+      return getCommunityRecurringPayments(id).then(subs => {
+        let filtered = subs && subs.filter(sub => sub.status === 'active');
+        return !filtered || filtered.length === 0 ? false : true;
+      });
     },
   },
 };
