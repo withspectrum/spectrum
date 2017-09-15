@@ -9,6 +9,7 @@ import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import { addActivityIndicator } from '../../actions/newActivityIndicator';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads($username: String, $after: String) {
@@ -23,6 +24,7 @@ const LoadMoreThreads = gql`
 
 const threadsQueryOptions = {
   props: ({
+    ownProps,
     data: { fetchMore, error, loading, networkStatus, user, subscribeToMore },
   }) => ({
     data: {
@@ -39,6 +41,44 @@ const threadsQueryOptions = {
             const updatedThread = subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
+            // determine if the incoming thread already exists in the cache. If not, it's new - so we'll send a prop down to the client to render a 'new activity' bubble which will trigger a re-render
+            const prevThreadIds = prev.user.threadConnection.edges.map(
+              thread => thread.node.id
+            );
+            const hasNewThread = prevThreadIds.indexOf(updatedThread.id) < 0;
+
+            if (hasNewThread) {
+              ownProps.dispatch(addActivityIndicator());
+            }
+
+            // if we have a new thread, insert it at the top of the array
+            const newThreads = hasNewThread
+              ? [
+                  {
+                    node: updatedThread,
+                    cursor: '__this-is-a-cursor__',
+                    __typename: 'Thread',
+                  },
+                  ...prev.user.threadConnection.edges.map(thread => {
+                    if (thread.node.id !== updatedThread.id) return thread;
+                    return {
+                      node: updatedThread,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'Thread',
+                    };
+                  }),
+                ]
+              : [
+                  ...prev.user.threadConnection.edges.map(thread => {
+                    if (thread.node.id !== updatedThread.id) return thread;
+                    return {
+                      node: updatedThread,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'Thread',
+                    };
+                  }),
+                ];
+
             return {
               ...prev,
               user: {
@@ -48,17 +88,7 @@ const threadsQueryOptions = {
                   pageInfo: {
                     ...prev.user.threadConnection.pageInfo,
                   },
-                  edges: [
-                    ...prev.user.threadConnection.edges.map(thread => {
-                      if (thread.creatorId !== prev.user.id) return;
-                      if (thread.node.id !== updatedThread.id) return thread;
-                      return {
-                        node: updatedThread,
-                        cursor: '__this-is-a-cursor__',
-                        __typename: 'Thread',
-                      };
-                    }),
-                  ],
+                  edges: newThreads,
                 },
               },
             };

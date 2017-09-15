@@ -9,6 +9,7 @@ import pure from 'recompose/pure';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import { connect } from 'react-redux';
 import { ImportSlackWithoutCard } from '../../views/communitySettings/components/importSlack';
 import { EmailInvitesWithoutCard } from '../../views/communitySettings/components/emailInvites';
 import Share from '../../views/newCommunity/components/share';
@@ -18,6 +19,8 @@ import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 import { Divider } from './style';
 import { sortByDate } from '../../helpers/utils';
+import { clearActivityIndicator } from '../../actions/newActivityIndicator';
+import NewActivityIndicator from '../../components/newActivityIndicator';
 
 const NullState = () => (
   <NullCard
@@ -79,6 +82,7 @@ class ThreadFeedPure extends Component {
   state: {
     scrollElement: any,
     subscription: ?Function,
+    refetching: boolean,
   };
 
   constructor() {
@@ -86,6 +90,7 @@ class ThreadFeedPure extends Component {
     this.state = {
       scrollElement: null,
       subscription: null,
+      refetching: false,
     };
   }
 
@@ -117,8 +122,12 @@ class ThreadFeedPure extends Component {
   }
 
   render() {
-    const { data: { threads, networkStatus, error }, viewContext } = this.props;
-    const { scrollElement } = this.state;
+    const {
+      data: { threads, networkStatus, error },
+      viewContext,
+      newActivityIndicator,
+    } = this.props;
+    const { scrollElement, refetching } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
       this.props.community &&
@@ -137,6 +146,7 @@ class ThreadFeedPure extends Component {
     if (dataExists) {
       return (
         <Threads>
+          {newActivityIndicator && <NewActivityIndicator />}
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
@@ -193,6 +203,9 @@ class ThreadFeedPure extends Component {
   }
 }
 
-const ThreadFeed = compose(pure)(ThreadFeedPure);
+const map = state => ({
+  newActivityIndicator: state.newActivityIndicator.hasNew,
+});
+const ThreadFeed = compose(connect(map), pure)(ThreadFeedPure);
 
 export default ThreadFeed;

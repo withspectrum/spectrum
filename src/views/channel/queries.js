@@ -8,6 +8,7 @@ import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import { addActivityIndicator } from '../../actions/newActivityIndicator';
 
 const LoadMoreThreads = gql`
   query loadMoreChannelThreads($id: ID, $after: String) {
@@ -22,6 +23,7 @@ const LoadMoreThreads = gql`
 
 const threadsQueryOptions = {
   props: ({
+    ownProps,
     data: {
       fetchMore,
       error,
@@ -47,6 +49,44 @@ const threadsQueryOptions = {
             const updatedThread = subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
+            // determine if the incoming thread already exists in the cache. If not, it's new - so we'll send a prop down to the client to render a 'new activity' bubble which will trigger a re-render
+            const prevThreadIds = prev.channel.threadConnection.edges.map(
+              thread => thread.node.id
+            );
+            const hasNewThread = prevThreadIds.indexOf(updatedThread.id) < 0;
+
+            if (hasNewThread) {
+              ownProps.dispatch(addActivityIndicator());
+            }
+
+            // if we have a new thread, insert it at the top of the array
+            const newThreads = hasNewThread
+              ? [
+                  {
+                    node: updatedThread,
+                    cursor: '__this-is-a-cursor__',
+                    __typename: 'Thread',
+                  },
+                  ...prev.channel.threadConnection.edges.map(thread => {
+                    if (thread.node.id !== updatedThread.id) return thread;
+                    return {
+                      node: updatedThread,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'Thread',
+                    };
+                  }),
+                ]
+              : [
+                  ...prev.channel.threadConnection.edges.map(thread => {
+                    if (thread.node.id !== updatedThread.id) return thread;
+                    return {
+                      node: updatedThread,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'Thread',
+                    };
+                  }),
+                ];
+
             return {
               ...prev,
               channel: {
@@ -56,17 +96,7 @@ const threadsQueryOptions = {
                   pageInfo: {
                     ...prev.channel.threadConnection.pageInfo,
                   },
-                  edges: [
-                    ...prev.channel.threadConnection.edges.map(thread => {
-                      if (thread.channelId !== prev.channel.id) return;
-                      if (thread.node.id !== updatedThread.id) return thread;
-                      return {
-                        node: updatedThread,
-                        cursor: '__this-is-a-cursor__',
-                        __typename: 'Thread',
-                      };
-                    }),
-                  ],
+                  edges: newThreads,
                 },
               },
             };

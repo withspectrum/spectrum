@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -31,7 +32,9 @@ import CommunityList from '../user/components/communityList';
 //$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 
-const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
+const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
+  ThreadFeed
+);
 
 class DashboardPure extends Component {
   state: {
