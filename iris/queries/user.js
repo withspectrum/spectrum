@@ -235,6 +235,20 @@ module.exports = {
               isOwner,
             };
           }
+          case 'loadMoreCommunityMembers':
+          case 'getCommunityMembers': {
+            const communityId = info.variableValues.id;
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(communityId, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
         }
       };
 

@@ -259,6 +259,7 @@ const getMembersInCommunity = (communityId: string): Promise<Array<string>> => {
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isMember: true })
+      .orderBy(db.desc('reputation'))
       .run()
       // return an array of the userIds to be loaded by gql
       .then(users => users.map(user => user.userId))
