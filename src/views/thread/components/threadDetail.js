@@ -486,7 +486,9 @@ class ThreadDetailPure extends Component {
                 {thread.creator.isPro && <Badge type="pro" />}
               </AuthorUsername>
               <AuthorUsername>
-                {thread.creator.contextPermissions.reputation > 0 && (
+                {thread.creator &&
+                thread.creator.contextPermissions &&
+                thread.creator.contextPermissions.reputation > 0 && (
                   <span>
                     <Reputation tipText={'Author rep in this community'} />
                     {truncateNumber(
