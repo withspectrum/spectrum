@@ -35,7 +35,11 @@ exports.up = function(r, conn) {
       .then(threads =>
         Promise.all(
           threads.map(thread =>
-            r.table('threads').get(thread.id).update(thread).run(conn)
+            r
+              .table('threads')
+              .get(thread.id)
+              .update(thread)
+              .run(conn)
           )
         )
       )
