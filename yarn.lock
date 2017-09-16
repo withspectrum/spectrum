@@ -2653,19 +2653,19 @@ draft-js-image-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-import-element@>=0.5.0:
+draft-js-import-element@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.1.0.tgz#65bcd97bf6b25eed62e44c9d158cf7b1344321ac"
   dependencies:
     draft-js-utils "^1.1.0"
     synthetic-dom "^1.1.0"
 
-draft-js-import-markdown@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-0.3.0.tgz#e4500c6ff52c9d66d01f7cdc94328a5eaee14956"
+draft-js-import-markdown@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.1.0.tgz#1576ff731ff384631824505c71d396268e6d6a13"
   dependencies:
-    draft-js-import-element ">=0.5.0"
-    synthetic-dom "^0.2.0"
+    draft-js-import-element "^1.1.0"
+    synthetic-dom "^1.1.0"
 
 draft-js-markdown-shortcuts-plugin@^0.3.0:
   version "0.3.0"
@@ -8405,10 +8405,6 @@ symbol-observable@^1.0.1, symbol-observable@^1.0.2, symbol-observable@^1.0.3, sy
 symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
-
-synthetic-dom@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-0.2.1.tgz#6c76fcf91ea9a5231318f8f415e27883d534df86"
 
 synthetic-dom@^1.1.0:
   version "1.1.0"
