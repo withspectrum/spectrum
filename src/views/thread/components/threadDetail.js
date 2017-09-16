@@ -233,6 +233,13 @@ class ThreadDetailPure extends Component {
       isSavingEdit: true,
     });
 
+    const jsonBody = toJSON(body);
+
+    const content = {
+      title,
+      body: JSON.stringify(jsonBody),
+    };
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -245,23 +252,16 @@ class ThreadDetailPure extends Component {
       });
     }
 
-    const content = {
-      title,
-      body: JSON.stringify(toJSON(body)),
-    };
-
-    // TODO(@mxstbr): FIX FILE UPLOADING
-    const filesToUpload = [];
     // Get the images
-    // const filesToUpload = Object.keys(body.entityMap)
-    //   .filter(key => body.entityMap[key].type === 'image')
-    //   .map(key => body.entityMap[key].data.src);
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {
       threadId,
       content,
       attachments,
-      // filesToUpload,
+      filesToUpload,
     };
 
     editThread(input)

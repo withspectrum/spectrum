@@ -228,8 +228,10 @@ module.exports = {
           ]);
         })
         .then(([editedThread, urls]) => {
+          return editedThread;
           if (!urls) return editedThread;
 
+          // TODO MAYBE FIXME (see above)
           // update the slate body with markdown images instead of image nodes
           const slateState = JSON.parse(editedThread.content.body);
           let fileIndex = 0;
