@@ -94,7 +94,7 @@ class Editor extends React.Component {
     // Add images to editorState
     // eslint-disable-next-line
     for (var i = 0, file; (file = files[i]); i++) {
-      onChange(addImage(state, window.URL.createObjectURL(file)));
+      onChange(addImage(state, window.URL.createObjectURL(file), { file }));
     }
   };
 
@@ -147,25 +147,26 @@ class Editor extends React.Component {
           }}
           {...rest}
         />
-        {showLinkPreview && linkPreview && linkPreview.loading
-          ? <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          : showLinkPreview && linkPreview && linkPreview.data
-            ? <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={true}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            : null}
+        {showLinkPreview && linkPreview && linkPreview.loading ? (
+          <LinkPreviewLoading margin={'16px 0 24px 0'} />
+        ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          <LinkPreview
+            data={linkPreview.data}
+            size={'large'}
+            remove={linkPreview.remove}
+            editable={true}
+            trueUrl={linkPreview.trueUrl}
+            margin={'16px 0 24px 0'}
+          />
+        ) : null}
         {images !== false &&
-          !this.props.readOnly &&
-          <MediaRow>
-            <MediaInput onChange={this.addImage} multiple>
-              Add
-            </MediaInput>
-          </MediaRow>}
+          !this.props.readOnly && (
+            <MediaRow>
+              <MediaInput onChange={this.addImage} multiple>
+                Add
+              </MediaInput>
+            </MediaRow>
+          )}
       </Wrapper>
     );
   }

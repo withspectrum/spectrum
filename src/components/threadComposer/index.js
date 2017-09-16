@@ -405,10 +405,11 @@ class ThreadComposerWithData extends Component {
     } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
+    const jsonBody = toJSON(body);
 
     const content = {
       title,
-      body: JSON.stringify(toJSON(body)),
+      body: JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -423,12 +424,10 @@ class ThreadComposerWithData extends Component {
       });
     }
 
-    // TODO(@mxstbr): FIX FILE UPLOADING
-    const filesToUpload = [];
     // Get the images
-    // const filesToUpload = Object.keys(body.entityMap)
-    //   .filter(key => body.entityMap[key].type === 'image')
-    //   .map(key => body.entityMap[key].data.src);
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
