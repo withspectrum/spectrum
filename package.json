@@ -39,7 +39,7 @@
     "draft-js": "^0.10.1",
     "draft-js-drag-n-drop-plugin": "2.0.0-rc2",
     "draft-js-focus-plugin": "2.0.0-rc2",
-    "draft-js-image-plugin": "2.0.0-rc2",
+    "draft-js-image-plugin": "2.0.0-rc7",
     "draft-js-import-markdown": "^1.1.0",
     "draft-js-markdown-shortcuts-plugin": "^0.3.0",
     "draft-js-plugins-editor": "2.0.0-rc2",

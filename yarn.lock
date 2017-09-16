@@ -2643,9 +2643,9 @@ draft-js-focus-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-image-plugin@2.0.0-rc2:
-  version "2.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.0-rc2.tgz#c14d5834419dae3f7bb0ac65f2039cf588ed95ca"
+draft-js-image-plugin@2.0.0-rc7:
+  version "2.0.0-rc7"
+  resolved "https://registry.yarnpkg.com/draft-js-image-plugin/-/draft-js-image-plugin-2.0.0-rc7.tgz#ed8fce2f48971a2f6ef31a5ab954fed12a2af3dd"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.0.2"
