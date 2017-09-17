@@ -27,6 +27,7 @@ export const getReputationChangeInTimeframe = (
     })
     .map(row => row('score'))
     .reduce((l, r) => l.add(r))
+    .default(0)
     .run();
 };
 
@@ -38,5 +39,6 @@ export const getTotalReputation = (userId: string): Promise<number> => {
     })
     .map(row => row('score'))
     .reduce((l, r) => l.add(r))
+    .default(0)
     .run();
 };
