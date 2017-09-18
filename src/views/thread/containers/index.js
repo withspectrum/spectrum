@@ -77,15 +77,10 @@ class ThreadContainerPure extends Component {
     if (window && window.innerWidth < 768) return;
 
     const { currentUser, data: { thread } } = this.props;
-    console.log('1');
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
     if (!thread) return;
-    console.log('2');
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
-    console.log('thread', thread);
-    console.log('prevProps.data.thread', prevProps.data.thread);
 
-    console.log('3');
     const isParticipantOrCreator =
       thread.isCreator ||
       (currentUser &&
@@ -96,7 +91,6 @@ class ThreadContainerPure extends Component {
         ));
 
     if (isParticipantOrCreator) {
-      console.log('4');
       this.chatInput.triggerFocus();
     }
   }
