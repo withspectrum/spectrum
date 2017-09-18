@@ -17,6 +17,12 @@ class ExistingThread extends Component {
     this.props.setActiveThread(threadId);
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
+
+    // autofocus on desktop
+    if (window && window.innerWidth > 768) {
+      this.chatInput.triggerFocus();
+    }
+
     track('direct message thread', 'viewed', null);
   }
 
@@ -26,6 +32,10 @@ class ExistingThread extends Component {
       this.props.setActiveThread(threadId);
       this.props.setLastSeen(threadId);
       this.forceScrollToBottom();
+      // autofocus on desktop
+      if (window && window.innerWidth > 768) {
+        this.chatInput.triggerFocus();
+      }
     }
   }
 
@@ -68,6 +78,7 @@ class ExistingThread extends Component {
             currentUser={currentUser}
             threadType={'directMessageThread'}
             forceScrollToBottom={this.forceScrollToBottom}
+            onRef={chatInput => (this.chatInput = chatInput)}
           />
         </MessagesContainer>
       );

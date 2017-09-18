@@ -104,7 +104,7 @@ export default job => {
           ? `<span class="newMessageCount">${thread.newMessageCount} new messages</span>`
           : `
             <span class="totalMessageCount">
-              ${thread.totalMessageCount} mesages
+              ${thread.totalMessageCount} messages
             </span>
             <span class="newMessageCount">(${thread.newMessageCount} new)</span>
         `;
@@ -124,6 +124,8 @@ export default job => {
         title: thread.title,
         threadId: thread.id,
         messageCountString,
+        newMessageCount: thread.newMessageCount,
+        totalMessageCount: thread.totalMessageCount,
       };
       return obj;
     });
