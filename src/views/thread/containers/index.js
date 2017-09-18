@@ -72,6 +72,35 @@ class ThreadContainerPure extends Component {
     track('thread', 'viewed', null);
   }
 
+  componentDidUpdate(prevProps) {
+    // we never autofocus on mobile
+    if (window && window.innerWidth < 768) return;
+
+    const { currentUser, data: { thread } } = this.props;
+    console.log('1');
+    // if no thread has been returned yet from the query, we don't know whether or not to focus yet
+    if (!thread) return;
+    console.log('2');
+    // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
+    console.log('thread', thread);
+    console.log('prevProps.data.thread', prevProps.data.thread);
+
+    console.log('3');
+    const isParticipantOrCreator =
+      thread.isCreator ||
+      (currentUser &&
+        thread.participants &&
+        thread.participants.length > 0 &&
+        thread.participants.some(
+          participant => participant.id === currentUser.id
+        ));
+
+    if (isParticipantOrCreator) {
+      console.log('4');
+      this.chatInput.triggerFocus();
+    }
+  }
+
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
 
@@ -135,8 +164,8 @@ class ThreadContainerPure extends Component {
 
   render() {
     const { data: { thread, networkStatus, user }, currentUser } = this.props;
+    const { isLoading, shouldFocus } = this.state;
 
-    const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
     const isUnavailable = !thread || thread.deleted;
@@ -251,7 +280,7 @@ class ThreadContainerPure extends Component {
                   thread={thread.id}
                   currentUser={loggedInUser}
                   forceScrollToBottom={this.forceScrollToBottom}
-                  autoFocus={isParticipantOrCreator}
+                  onRef={chatInput => (this.chatInput = chatInput)}
                 />
               </ChatInputWrapper>
             </Input>
