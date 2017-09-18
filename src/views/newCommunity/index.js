@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import { track } from '../../helpers/events';
+// $FlowFixMe
+import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
@@ -43,11 +45,11 @@ class NewCommunity extends Component {
   constructor() {
     super();
 
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    let step = params.get('s');
+    const parsed = queryString.parse(window.location.search);
+    let step = parsed.s;
+    const id = parsed.id;
+
     step = step ? parseInt(step, 10) : 1;
-    const id = params.get('id');
 
     this.state = {
       activeStep: step,
