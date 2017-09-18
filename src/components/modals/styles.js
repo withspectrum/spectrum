@@ -110,8 +110,9 @@ export const UpsellDescription = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 8px;
-  background: ${props => props.theme.space.dark};
-  color: ${props => props.theme.text.reverse};
+  border: 2px solid ${props => props.theme.success.border};
+  background: ${props => props.theme.success.wash};
+  color: ${props => props.theme.success.default};
 
   a {
     color: ${props => props.theme.text.reverse};
