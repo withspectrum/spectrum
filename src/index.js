@@ -12,7 +12,6 @@ import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
-import Splash from './views/splash';
 import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';

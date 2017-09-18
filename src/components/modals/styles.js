@@ -126,7 +126,7 @@ export const Notice = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 4px;
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 2px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
 `;
