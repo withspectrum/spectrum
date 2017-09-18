@@ -41,7 +41,7 @@ export const InputRow = styled.div`
 export const Input = styled.div`
   padding: 4px 12px;
   border-radius: 8px;
-  border: 2px solid ${props => props.theme.border.default};
+  border: 2px solid ${props => props.theme.bg.border};
   background: #fff;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
@@ -72,7 +72,7 @@ export const Input = styled.div`
     bottom: 0;
     background: #fff;
     padding: 4px 12px;
-    border-left: 2px solid ${props => props.theme.border.default};
+    border-left: 2px solid ${props => props.theme.bg.border};
     border-radius: 0 8px 8px 0;
     z-index: ${zIndex.form + 1};
   }

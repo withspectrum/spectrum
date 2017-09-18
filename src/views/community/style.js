@@ -119,7 +119,7 @@ export const SegmentedControl = styled(FlexRow)`
 //   &:hover {
 //     transition: ${Transition.hover.on};
 //     border-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.01) : props.theme.text.alt};
-//     background-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.75) : props.theme.border.default};
+//     background-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.75) : props.theme.bg.border};
 //   }
 //
 //   &:first-of-type {
@@ -154,7 +154,7 @@ export const Segment = styled(FlexRow)`
   cursor: pointer;
 
   + div {
-    border-left: 2px solid ${props => props.theme.border.default};
+    border-left: 2px solid ${props => props.theme.bg.border};
   }
 
   &:hover {

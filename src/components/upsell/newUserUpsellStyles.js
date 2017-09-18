@@ -12,9 +12,11 @@ export const Section = styled.section`
   flex-direction: column;
   padding: ${props => (props.noPadding ? '2rem 0 0' : '2rem')};
 
-  ${props => props.noPadding && `h2 {
+  ${props =>
+    props.noPadding &&
+    `h2 {
       padding: 0 56px;
-    }`}
+    }`};
 `;
 
 export const SectionHeader = styled.div`
@@ -58,9 +60,9 @@ export const FriendlyError = styled.p`
   font-size: 14px;
   margin: 16px 0;
   font-weight: 600;
-  color: ${props => props.theme.pro.alt};
+  color: ${props => props.theme.success.alt};
   padding: 8px 12px;
-  border: 2px solid #00D6A9;
+  border: 2px solid #00d6a9;
   border-radius: 8px;
   background: #ecfffb;
 `;
@@ -73,7 +75,8 @@ export const Row = styled(ScrollRow)`
   overflow-x: scroll;
   align-items: flex-start;
 
-  &:after, &:before{
+  &:after,
+  &:before {
     content: '';
     display: inline-block;
     flex: 0 0 32px;

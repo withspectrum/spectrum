@@ -167,7 +167,7 @@ export const Centralized = props => {
   `;
 
   return (
-    <Section goop={6} color={'space.light'}>
+    <Section goop={6} color={'space.alt'}>
       <ThisContent>
         <Discover />
         <Text>

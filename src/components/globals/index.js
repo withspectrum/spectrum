@@ -158,7 +158,7 @@ export const Input = styled.input`
   font-weight: 500;
   width: 100%;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.inactive};
+  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
   margin-top: 0.125rem;
@@ -194,7 +194,7 @@ export const TextArea = styled.textarea`
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.inactive};
+  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.75rem;
   margin-top: 0.125rem;
@@ -222,7 +222,7 @@ export const UnderlineInput = styled.input`
   font-size: inherit;
   font-weight: inherit;
   color: ${({ theme }) => theme.text.default};
-  border-bottom: 0.125rem solid ${({ theme }) => theme.inactive};
+  border-bottom: 0.125rem solid ${({ theme }) => theme.bg.inactive};
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -527,7 +527,7 @@ export const HorizontalRule = styled(FlexRow)`
   align-items: center;
   align-self: stretch;
   margin: 0 32px;
-  color: ${props => props.theme.border.default};
+  color: ${props => props.theme.bg.border};
 
   hr {
     display: inline-block;

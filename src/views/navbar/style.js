@@ -41,7 +41,7 @@ export const Nav = styled(FlexRow)`
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: ${zIndex.navBar};
-  -webkit-transform: translate3d(0,0,0);
+  -webkit-transform: translate3d(0, 0, 0);
 
   @media (max-width: 768px) {
     padding: 0;
@@ -71,12 +71,12 @@ export const LogoLink = styled(Link)`
   ${() =>
     process.env.NODE_ENV !== 'production' &&
     css`
-    &:after {
-      content: "Dev";
-      margin-top: 4px;
-      font-size: 0.75em;
-    }
-  `}
+      &:after {
+        content: 'Dev';
+        margin-top: 4px;
+        font-size: 0.75em;
+      }
+    `};
 `;
 
 export const SigninLink = styled.button`
@@ -159,7 +159,7 @@ export const IconLink = styled(Link)`
     opacity: 1;
   }
 
-  &[data-active~="true"] {
+  &[data-active~='true'] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
     opacity: 1;
   }
@@ -169,7 +169,7 @@ export const IconLink = styled(Link)`
     opacity: 0.7;
     margin: 0;
 
-    &[data-active~="true"] {
+    &[data-active~='true'] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
     }
@@ -232,6 +232,6 @@ export const DropdownFooter = styled(FlexRow)`
 export const Notification = styled.div`
   color: ${props => props.theme.text.default};
   padding: 8px;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   overflow-x: hidden;
 `;
