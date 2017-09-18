@@ -11,7 +11,7 @@ export const getActiveThreadsInTimeframe = (
       break;
     }
     case 'weekly': {
-      range = 60 * 60 * 24 * 7;
+      range = 60 * 60 * 24 * 30;
       break;
     }
     default: {
