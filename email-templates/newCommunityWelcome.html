@@ -143,7 +143,7 @@
       border-bottom: 2px solid #DFE7EF;
     }
 
-    .reply-container {      
+    .reply-container {
       display: block;
     }
 
@@ -363,6 +363,18 @@
     </style>
   </head>
   <body>
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      Your {{community.name}} is live on Spectrum!
+    </div>
+
+    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    </div>
+
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center">
@@ -380,11 +392,11 @@
                       <p class="emoji large">✨</p>
                       <h1 class="title"><a href="https://spectrum.chat/{{community.slug}}"><b>{{community.name}}</a> is live on Spectrum!</b></h1>
                       <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation started!</p>
-                      
+
                       <table class="button-group">
                         <tr>
                           <td>
-                            <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share on Twitter</a> 
+                            <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share on Twitter</a>
                           </td>
 
                           <td>
@@ -392,7 +404,7 @@
                           </td>
                         </tr>
                       </table>
- 
+
                       <div class="section-divider"></div>
                       <h2 class="section-title">Threads: The building blocks of communities</h2>
                       <p>Threads are the building blocks of communities on Spectrum - they're rich posts that can contain text, photos, videos, embedded content, and more. Your community is new, so there aren't any threads yet.</p>

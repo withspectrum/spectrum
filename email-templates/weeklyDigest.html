@@ -306,13 +306,11 @@
     }
 
     .community-icon {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 4px;
       display: inline-block;
       margin-right: 8px;
-      position: relative;
-      top: 2px;
     }
 
     .community-name {
@@ -381,6 +379,18 @@
     </style>
   </head>
   <body>
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      View the top conversations in your communities in the past {{timeframe.time}}.
+    </div>
+
+    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    </div>
+
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center">
@@ -434,9 +444,15 @@
                                     <img class="community-icon" src="{{community.profilePhoto}}" width="20" height="20" />
                                   </td>
                                   <td class="community-name">
-                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;/&nbsp;
-                                    <a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>&nbsp;·&nbsp;
-                                    {{{messageCountString}}}
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                      <tr>
+                                        <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;/&nbsp;
+                                        <a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
+                                      </tr>
+                                      <tr>
+                                        <td>{{{messageCountString}}}</td>
+                                      </tr>
+                                    </table>
                                   </td>
                                 </tr>
                               </table>
