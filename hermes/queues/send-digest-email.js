@@ -3,6 +3,11 @@ const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
 import { DIGEST_TEMPLATE } from './constants';
 
+type ChannelType = {
+  name: string,
+  slug: string,
+};
+
 type CommunityType = {
   name: string,
   slug: string,
@@ -20,9 +25,11 @@ type TopCommunityType = {
 
 type ThreadType = {
   community: CommunityType,
+  channel: ChannelType,
   channelId: string,
   title: string,
   threadId: string,
+  messageCountString: string,
 };
 
 type SendWeeklyDigestJobData = {
@@ -30,7 +37,8 @@ type SendWeeklyDigestJobData = {
   name?: string,
   userId: string,
   threads: ThreadType,
-  communities?: Array<TopCommunityType>,
+  reputationString: string,
+  communities: ?Array<TopCommunityType>,
   timeframe: 'daily' | 'weekly',
 };
 
@@ -43,7 +51,14 @@ export default (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
-  const { email, name, threads, communities, timeframe } = job.data;
+  const {
+    email,
+    name,
+    threads,
+    communities,
+    timeframe,
+    reputationString,
+  } = job.data;
   if (!email) {
     debug(`\nno email found for this weekly digest, returning`);
     return;
@@ -59,6 +74,7 @@ export default (job: SendWeeklyDigestJob) => {
         threads,
         greeting,
         communities,
+        reputationString,
         timeframe: {
           subject: timeframe,
           time: timeframe === 'daily' ? 'day' : 'week',

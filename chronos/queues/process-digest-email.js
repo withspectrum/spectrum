@@ -21,6 +21,11 @@ import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels
 import { getUsersCommunityIds } from '../models/usersCommunities';
 import { getTotalMessageCount, getNewMessageCount } from '../models/message';
 import { getCommunityById, getTopCommunities } from '../models/community';
+import { getChannelById } from '../models/channel';
+import {
+  getReputationChangeInTimeframe,
+  getTotalReputation,
+} from '../models/reputationEvent';
 
 export default job => {
   const { timeframe } = job.data;
@@ -86,10 +91,23 @@ export default job => {
     let obj = {};
 
     const getCommunity = id => getCommunityById(id);
+    const getChannel = id => getChannelById(id);
 
     // for each thread, get the community data that we'll need when rendering an email
     const topThreadsWithCommunityDataPromises = topThreads.map(async thread => {
       const community = await getCommunity(thread.communityId);
+      const channel = await getChannel(thread.channelId);
+
+      // if the thread was created in the timeframe being evaluated, it's dumb to say: 10 messages (10 new!) - so here we're composing a string that will be passed to the email that determins what we should show for the message count. If all 10 messages are new, it will simply say '10 new!'
+      const messageCountString =
+        thread.newMessageCount === thread.totalMessageCount
+          ? `<span class="newMessageCount">${thread.newMessageCount} new messages</span>`
+          : `
+            <span class="totalMessageCount">
+              ${thread.totalMessageCount} messages
+            </span>
+            <span class="newMessageCount">(${thread.newMessageCount} new)</span>
+        `;
 
       // this is the final data we'll send to the email for each thread
       const obj = {
@@ -98,9 +116,14 @@ export default job => {
           slug: community.slug,
           profilePhoto: community.profilePhoto,
         },
+        channel: {
+          name: channel.name,
+          slug: channel.slug,
+        },
         channelId: thread.channelId,
         title: thread.title,
         threadId: thread.id,
+        messageCountString,
         newMessageCount: thread.newMessageCount,
         totalMessageCount: thread.totalMessageCount,
       };
@@ -268,6 +291,13 @@ export default job => {
       debug('\n ⚙️  Attaching community upsells if required...');
 
       return eligibleUsers.map(async user => {
+        // also tell the person how much rep they gained during whatever timeframe is being evaluated
+        const reputationGained = await getReputationChangeInTimeframe(
+          user.userId,
+          timeframe
+        );
+        // also show their total reputation to date
+        const totalReputation = await getTotalReputation(user.userId);
         // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the digest
         const usersCommunityIds = await getUsersCommunityIds(user.userId);
 
@@ -281,9 +311,27 @@ export default job => {
                 .slice(0, 3)
             : null;
 
+        const hasGainedReputation = reputationGained > 0;
+        const isFirstReputation = totalReputation === reputationGained;
+        const reputationString = hasGainedReputation
+          ? // user gained some reputation during the last timeframe range
+            isFirstReputation
+            ? // if the total reputation and reputation gained are the same amount, this means the user has gained their first bit of rep!
+              timeframe === 'weekly'
+              ? // if this is a weekly digest
+                `Since last week you've gained ${reputationGained} rep! Your rep will keep growing as you start and join more conversations.`
+              : `Since yesterday you've gained ${reputationGained} rep - nice work!`
+            : // if the total reputation is greater than the reputation gained, it means this is an incremental amount of rep for the user
+              timeframe === 'weekly'
+              ? `Since last week you've gained ${reputationGained} rep! You're now sitting strong at ${totalReputation} - keep it up.`
+              : `Since yesterday you've gained ${reputationGained} rep - nice work! You now have ${totalReputation} total rep across all of your communities - well done!`
+          : // has not gained any reputation
+            `You've been a little quiet this week – this week try joining some conversations, your community wants to hear from you!`;
+
         return await sendDigestEmailQueue.add({
           ...user,
           communities,
+          reputationString,
           timeframe,
         });
       });

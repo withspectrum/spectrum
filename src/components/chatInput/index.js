@@ -50,6 +50,18 @@ class ChatInputWithMutation extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.onRef(this);
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined);
+  }
+
+  triggerFocus = () => {
+    this.chatInput.focus();
+  };
+
   submit = e => {
     if (e) e.preventDefault();
 
@@ -243,7 +255,7 @@ class ChatInputWithMutation extends Component {
             singleLine
             images={false}
             editorRef={editor => (this.editor = editor)}
-            autoFocus={autoFocus}
+            innerRef={input => (this.chatInput = input)}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>

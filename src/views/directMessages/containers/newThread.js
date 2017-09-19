@@ -541,9 +541,21 @@ class NewThread extends Component {
   */
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
+
+    const { initNewThreadWithUser } = this.props;
+
+    // focus the composer input if no users were already in the composer
+    if (initNewThreadWithUser.length === 0) {
+      const input = findDOMNode(this.refs.input);
+      return input.focus();
+    }
+
+    return this.chatInput.triggerFocus();
+
     // clear the redux store of this inited user, in case the person
     // sends more messages later in the session
     this.props.dispatch(clearDirectMessagesComposer());
+
     if (this.state.selectedUsersForNewThread.length > 0) {
       // trigger a new search for an existing thread with these users
       this.getMessagesForExistingDirectMessageThread();
@@ -691,7 +703,6 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={!initNewThreadWithUser.length > 0}
           />
 
           {// user has typed in a search string
@@ -776,7 +787,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
-          autoFocus={initNewThreadWithUser.length > 0}
+          onRef={chatInput => (this.chatInput = chatInput)}
         />
       </MessagesContainer>
     );

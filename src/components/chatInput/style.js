@@ -15,7 +15,7 @@ export const ChatInputWrapper = styled(FlexRow)`
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
-    position: ${props => (props.focus ? 'fixed' : 'relative')};
+    position: relative;
     background-color: ${props => props.theme.bg.default};
     z-index: ${zIndex.mobileInput};
   }

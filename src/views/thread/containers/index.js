@@ -72,6 +72,29 @@ class ThreadContainerPure extends Component {
     track('thread', 'viewed', null);
   }
 
+  componentDidUpdate(prevProps) {
+    // we never autofocus on mobile
+    if (window && window.innerWidth < 768) return;
+
+    const { currentUser, data: { thread } } = this.props;
+    // if no thread has been returned yet from the query, we don't know whether or not to focus yet
+    if (!thread) return;
+    // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
+
+    const isParticipantOrCreator =
+      thread.isCreator ||
+      (currentUser &&
+        thread.participants &&
+        thread.participants.length > 0 &&
+        thread.participants.some(
+          participant => participant.id === currentUser.id
+        ));
+
+    if (isParticipantOrCreator) {
+      this.chatInput.triggerFocus();
+    }
+  }
+
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
 
@@ -135,8 +158,8 @@ class ThreadContainerPure extends Component {
 
   render() {
     const { data: { thread, networkStatus, user }, currentUser } = this.props;
+    const { isLoading, shouldFocus } = this.state;
 
-    const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
     const isUnavailable = !thread || thread.deleted;
@@ -180,9 +203,13 @@ class ThreadContainerPure extends Component {
       this.props.dispatch(addCommunityToOnboarding(thread.channel.community));
 
       const isParticipantOrCreator =
-        thread.participants.some(
-          participant => participant.id === currentUser.id
-        ) || thread.isCreator;
+        (currentUser &&
+          thread.participants &&
+          thread.participants.length > 0 &&
+          thread.participants.some(
+            participant => participant.id === currentUser.id
+          )) ||
+        thread.isCreator;
 
       return (
         <View slider={this.props.slider}>
@@ -248,6 +275,7 @@ class ThreadContainerPure extends Component {
                     currentUser={loggedInUser}
                     forceScrollToBottom={this.forceScrollToBottom}
                     autoFocus={isParticipantOrCreator}
+                    onRef={chatInput => (this.chatInput = chatInput)}
                   />
                 </ChatInputWrapper>
               </Input>

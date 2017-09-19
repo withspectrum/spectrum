@@ -419,9 +419,12 @@ const setUserOnline = (id: string, isOnline: boolean) => {
   return db
     .table('users')
     .get(id)
-    .update(data, { returnChanges: true })
+    .update(data, { returnChanges: 'always' })
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      if (result.changes[0].new_val) return result.changes[0].new_val;
+      return result.changes[0].old_val;
+    });
 };
 
 module.exports = {
