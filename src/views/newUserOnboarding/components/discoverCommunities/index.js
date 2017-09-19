@@ -97,8 +97,8 @@ class TopCommunitiesPure extends Component {
                     <OutlineButton
                       onClick={() => this.toggleMembership(community.id)}
                       gradientTheme="none"
-                      color={'pro.alt'}
-                      hoverColor={'pro.default'}
+                      color={'success.alt'}
+                      hoverColor={'success.default'}
                       style={{ fontSize: '16px' }}
                       loading={loading === community.id}
                     >
