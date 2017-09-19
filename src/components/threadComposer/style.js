@@ -31,8 +31,8 @@ export const Composer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) =>
-  hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high}
+      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {
@@ -103,8 +103,8 @@ export const ContentContainer = styled.div`
 `;
 
 export const Actions = styled(FlexRow)`
-  background: #F8FBFE;
-  border-top: 2px solid ${props => props.theme.border.default};
+  background: #f8fbfe;
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 8px 8px 8px 0;
   border-radius: 0 0 12px 12px;
   width: 100%;
@@ -130,7 +130,7 @@ export const Dropdowns = styled(FlexRow)`
     display: block;
     padding: 8px 12px;
     border: none;
-    border: 2px solid ${props => props.theme.border.default};
+    border: 2px solid ${props => props.theme.bg.border};
     border-radius: 8px;
     box-shadow: none;
     color: ${props => props.theme.text.default};

@@ -11,7 +11,7 @@ export const ChatInputWrapper = styled(FlexRow)`
   width: 100%;
   margin: 0;
   padding: 8px;
-  border-top: 2px solid ${({ theme }) => theme.border.default};
+  border-top: 2px solid ${({ theme }) => theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};

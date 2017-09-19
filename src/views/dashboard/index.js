@@ -9,7 +9,6 @@ import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
-  UpsellSignIn,
   UpsellToReload,
   UpsellMiniCreateCommunity,
   UpsellMiniUpgrade,
@@ -69,7 +68,6 @@ class DashboardPure extends Component {
 
   render() {
     const { data: { user, networkStatus } } = this.props;
-    const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
     const { title, description } = generateMetaInfo();

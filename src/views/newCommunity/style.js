@@ -20,7 +20,7 @@ export const Container = styled(Card)`
 export const Actions = styled.div`
   display: flex;
   justify-content: space-between;
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 24px;
   background: #fff;
   border-radius: 0 0 12px 12px;
@@ -45,7 +45,7 @@ export const Description = styled.h3`
 `;
 
 export const Divider = styled.div`
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   width: 100%;
   display: block;
   padding-top: 24px;

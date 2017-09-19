@@ -43,7 +43,7 @@ const StyledAvatarStatus = styled.div`
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
     width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    background: ${props => props.theme.pro.alt};
+    background: ${props => props.theme.success.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
     bottom: ${props =>
@@ -76,7 +76,7 @@ const StyledAvatarLink = styled(Link)`
   pointer-events: auto;
 `;
 
-const AvatarWithFallback = ({ style, ...props }) =>
+const AvatarWithFallback = ({ style, ...props }) => (
   <StyledAvatarStatus size={props.size || 32} {...props}>
     <StyledAvatar
       data={optimize(props.src, { w: props.size, dpr: 2, format: 'png' })}
@@ -88,13 +88,16 @@ const AvatarWithFallback = ({ style, ...props }) =>
       <StyledAvatarFallback
         {...props}
         src={
-          props.community
-            ? `/img/default_community.svg`
-            : `/img/default_avatar.svg`
+          props.community ? (
+            `/img/default_community.svg`
+          ) : (
+            `/img/default_avatar.svg`
+          )
         }
       />
     </StyledAvatar>
-  </StyledAvatarStatus>;
+  </StyledAvatarStatus>
+);
 
 const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link && !props.noLink) {

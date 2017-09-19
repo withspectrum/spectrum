@@ -8,15 +8,10 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
-import StripeCheckout from 'react-stripe-checkout';
 import Icon from '../icons';
 import Badge from '../badges';
 import { Avatar } from '../avatar';
-import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { PUBLIC_STRIPE_KEY } from '../../api/constants';
-import { addToastWithTimeout } from '../../actions/toasts';
 import { ReputationMini } from '../reputation';
 import {
   Wrapper,

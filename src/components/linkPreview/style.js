@@ -7,7 +7,7 @@ export const LinkPreviewContainer = styled.a`
   align-items: ${props => (props.size === 'large' ? 'flex-start' : 'center')};
   border-radius: 4px;
   background: ${props => props.theme.bg.default};
-  border: 1px solid ${({ theme }) => theme.border.default};
+  border: 1px solid ${({ theme }) => theme.bg.border};
   ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
   margin: ${props => (props.margin ? props.margin : '0')};
@@ -19,7 +19,7 @@ export const LinkPreviewContainer = styled.a`
   &:hover {
     transition: ${Transition.reaction.on};
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.1)};
-    border: 1px solid ${({ theme }) => theme.border.default};
+    border: 1px solid ${({ theme }) => theme.bg.border};
   }
 `;
 
@@ -87,7 +87,7 @@ export const LinkPreviewSkeleton = styled.div`
   align-items: center;
   border-radius: 4px;
   background: #fff;
-  border: 1px solid ${({ theme }) => theme.border.default};
+  border: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
   overflow: hidden;
   position: relative;

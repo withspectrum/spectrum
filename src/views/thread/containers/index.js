@@ -183,20 +183,6 @@ class ThreadContainerPure extends Component {
         },
       });
 
-      // create an array of participant Ids and the creator Id
-      // which gets passed into the <Messages> component - if the current
-      // user is a participant or the thread creator, we will trigger
-      // a forceScrollToBottom on mount
-      const participantIds =
-        thread.participants && thread.participants.map(user => user.id);
-      // add checks to make sure that participantIds has ids in it. if there
-      // are no participants yet, only pass the creator id to the forceScrollToBottom
-      // method
-      const participantsAndCreator =
-        participantIds.length > 0
-          ? [...participantIds, thread.creator.id]
-          : [thread.creator.id];
-
       // if the user is new and signed up through a thread view, push
       // the thread's community data into the store to hydrate the new user experience
       // with their first community they should join

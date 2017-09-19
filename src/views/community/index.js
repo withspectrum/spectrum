@@ -39,7 +39,6 @@ import {
 import {
   CoverRow,
   CoverColumn,
-  CoverButton,
   SegmentedControl,
   Segment,
   LogoutButton,

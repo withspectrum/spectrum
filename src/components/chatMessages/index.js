@@ -10,7 +10,6 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
-  truncateNumber,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';

@@ -22,6 +22,7 @@ class Splash extends Component {
     super();
 
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+
     this.state = {
       preferredSigninMethod,
     };
@@ -37,8 +38,6 @@ class Splash extends Component {
   };
 
   render() {
-    const { preferredSigninMethod } = this.state;
-
     return (
       <Wrapper>
         <Overview />

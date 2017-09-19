@@ -6,7 +6,7 @@ export const View = styled(FlexRow)`
   background: #fff;
   flex: auto;
 
-  @media( max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     flex: auto;
   }
@@ -28,7 +28,7 @@ export const MessagesList = styled(FlexCol)`
   flex: 0 0 25%;
   min-width: 320px;
   background: ${props => props.theme.bg.default};
-  border-right: 2px solid ${props => props.theme.border.default};
+  border-right: 2px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     flex: auto;
@@ -38,14 +38,12 @@ export const MessagesList = styled(FlexCol)`
   }
 `;
 
-export const MessagesContainer = styled(FlexCol)`
-  flex: auto;
-`;
+export const MessagesContainer = styled(FlexCol)`flex: auto;`;
 
 export const ComposeHeader = styled(FlexRow)`
   justify-content: flex-end;
   padding: 8px;
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   color: ${props => props.theme.brand.default};
 
   @media (max-width: 768px) {
