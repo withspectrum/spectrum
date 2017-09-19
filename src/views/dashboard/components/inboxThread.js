@@ -8,6 +8,7 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import Icon from '../../../components/icons';
 import Facepile from './facepile';
 import ThreadCommunityInfo from './threadCommunityInfo';
 import {
@@ -18,6 +19,7 @@ import {
   AttachmentsContainer,
   ThreadMeta,
   MetaText,
+  MiniLinkPreview,
 } from '../style';
 
 class InboxThread extends Component {
@@ -51,13 +53,24 @@ class InboxThread extends Component {
               .filter(att => att.attachmentType === 'linkPreview')
               .map(att => (
                 <AttachmentsContainer active={active} key={att.data.trueUrl}>
-                  foo
+                  <MiniLinkPreview
+                    active={active}
+                    to={JSON.parse(att.data).trueUrl}
+                    target="_blank"
+                  >
+                    <Icon glyph="link" size={16} />
+                    {JSON.parse(att.data).trueUrl}
+                  </MiniLinkPreview>
                 </AttachmentsContainer>
               ))}
 
           <ThreadMeta>
             {participantsExist && (
-              <Facepile participants={participants} creator={data.creator} />
+              <Facepile
+                active={active}
+                participants={participants}
+                creator={data.creator}
+              />
             )}
 
             {data.messageCount > 0 ? (

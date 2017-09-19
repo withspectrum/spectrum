@@ -8,11 +8,11 @@ import {
 } from '../style';
 const NUM_TO_DISPLAY = 8;
 
-const messageAvatars = list => {
+const messageAvatars = (list, active) => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
 
   return avatarList.map((participant, i) => (
-    <ParticipantHead offset={i + 1}>
+    <ParticipantHead offset={i + 1} active={active}>
       <Avatar
         size={24}
         isOnline={false}
@@ -25,7 +25,7 @@ const messageAvatars = list => {
   ));
 };
 
-const Facepile = ({ participants, creator }) => {
+const Facepile = ({ participants, creator, active }) => {
   const participantList = participants.filter(
     participant => participant.id !== creator.id
   );
@@ -33,7 +33,7 @@ const Facepile = ({ participants, creator }) => {
 
   return (
     <FacepileContainer>
-      <ParticipantHead offset={0} role="presentation">
+      <ParticipantHead active={active} offset={0} role="presentation">
         <Avatar
           size={24}
           isOnline={creator.isOnline}
@@ -43,7 +43,7 @@ const Facepile = ({ participants, creator }) => {
           key={creator.id}
         />
       </ParticipantHead>
-      {messageAvatars(participantList)}
+      {messageAvatars(participantList, active)}
       {participantCount > NUM_TO_DISPLAY && (
         <EmptyParticipantHead
           offset={NUM_TO_DISPLAY + 1}

@@ -137,7 +137,8 @@ export const ParticipantHead = styled.span`
   position: relative;
   left: -${props => props.offset * 8}px;
   border-radius: 24px;
-  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
+  box-shadow: 0 0 0 2px
+    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
 `;
 
 export const EmptyParticipantHead = styled(ParticipantHead)`
@@ -222,5 +223,18 @@ export const PillLink = styled(Link)`
       props.active ? props.theme.brand.alt : props.theme.text.default};
     background: ${props =>
       props.active ? props.theme.text.reverse : props.theme.bg.reverse};
+  }
+`;
+
+export const MiniLinkPreview = styled(Link)`
+  display: flex;
+  font-size: 14px;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+  font-weight: ${props => (props.active ? '500' : '400')};
+  margin: 0 0 8px;
+  align-items: center;
+  ${Truncate} .icon {
+    margin-right: 4px;
   }
 `;
