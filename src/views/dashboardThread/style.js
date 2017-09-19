@@ -10,6 +10,7 @@ export const Container = styled.div`
   flex: auto;
   align-self: stretch;
   overflow-y: hidden;
+  height: 100%;
   max-height: 100%;
   position: relative;
   left: 1px;

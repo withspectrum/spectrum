@@ -74,15 +74,19 @@ class InboxThread extends Component {
             )}
 
             {data.messageCount > 0 ? (
-              <MetaText active={active}>{data.messageCount} messages</MetaText>
+              <MetaText offset={participants.length} active={active}>
+                {data.messageCount > 1
+                  ? `${data.messageCount} messages`
+                  : `${data.messageCount} message`}
+              </MetaText>
             ) : (
-              <MetaText active={active} new>
+              <MetaText offset={participants.length} active={active} new>
                 New thread!
               </MetaText>
             )}
 
             {data.creator.username && (
-              <MetaText active={active}>
+              <MetaText offset={participants.length} active={active}>
                 <span>&nbsp;· by&nbsp;</span>
                 <Link to={`/users/${data.creator.username}`}>
                   @{data.creator.username}

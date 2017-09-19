@@ -158,8 +158,16 @@ export const MetaText = styled.span`
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
-
-  a {
+  position: relative;
+  ${props => {
+    if (props.offset > 5) {
+      return `-48px`;
+    } else if (props.offset === 5) {
+      return `-40px`;
+    } else {
+      return `-${props.offset * 12}px`;
+    }
+  }} a {
     font-weight: 600;
   }
 

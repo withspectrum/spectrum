@@ -6,7 +6,7 @@ import {
   ParticipantHead,
   EmptyParticipantHead,
 } from '../style';
-const NUM_TO_DISPLAY = 8;
+const NUM_TO_DISPLAY = 5;
 
 const messageAvatars = (list, active) => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
@@ -36,7 +36,7 @@ const Facepile = ({ participants, creator, active }) => {
       <ParticipantHead active={active} offset={0} role="presentation">
         <Avatar
           size={24}
-          isOnline={creator.isOnline}
+          isOnline={false}
           link={creator.username ? `/users/${creator.username}` : null}
           src={creator.profilePhoto}
           role="presentation"
