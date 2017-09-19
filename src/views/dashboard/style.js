@@ -169,11 +169,11 @@ export const MetaText = styled.span`
   position: relative;
   ${props => {
     if (props.offset > 5) {
-      return `left: -24px;`;
+      return `left: -${props.offset * 8}px;`;
     } else if (props.offset === 5) {
-      return `left: -20px;`;
+      return `left: -${props.offset * 6}px;`;
     } else if (props.offset > 1) {
-      return `left: -${props.offset * 6.5}px;`;
+      return `left: -${props.offset * 4}px;`;
     } else {
       return `left: 0;`;
     }
