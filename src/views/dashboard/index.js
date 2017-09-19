@@ -26,7 +26,7 @@ import DashboardError from './components/dashboardError';
 import DashboardThread from '../dashboardThread';
 import Composer from './components/inboxComposer';
 import {
-  DashboardWrapper,
+  Wrapper,
   InboxWrapper,
   InboxScroller,
   ThreadWrapper,
@@ -36,6 +36,8 @@ import {
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
 );
+
+const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 
 class Dashboard extends Component {
   render() {
@@ -65,7 +67,7 @@ class Dashboard extends Component {
           <Titlebar />
 
           <InboxWrapper>
-            <InboxScroller>
+            <InboxScroller id="scroller-for-inbox">
               <Composer />
               <EverythingThreadFeed selectedId={threadId} />
             </InboxScroller>

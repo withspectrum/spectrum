@@ -55,7 +55,7 @@ class ThreadFeed extends Component {
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement: document.getElementById('scroller-for-inbox'),
     });
     this.subscribe();
   }
@@ -74,6 +74,7 @@ class ThreadFeed extends Component {
     // error
     if (networkStatus === 8) return <ErrorThreadFeed />;
 
+    // no threads yet
     if (threads.length === 0) return <EmptyThreadFeed />;
 
     const threadNodes = threads.slice().map(thread => thread.node);

@@ -12,10 +12,6 @@ export const Wrapper = styled.div`
   flex: auto;
 `;
 
-export const DashboardWrapper = props => (
-  <Wrapper id="scroller-for-inbox">{props.children}</Wrapper>
-);
-
 export const InboxWrapper = styled.div`
   display: flex;
   flex: 0 0 33%;
