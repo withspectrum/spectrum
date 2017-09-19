@@ -11,8 +11,7 @@ import { withRouter } from 'react-router';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { connect } from 'react-redux';
-import NewActivityIndicator from '../../../components/newActivityIndicator';
+import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
@@ -94,9 +93,10 @@ class ThreadFeed extends Component {
 
     const threadNodes = threads.slice().map(thread => thread.node);
 
+    const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+
     return (
       <div>
-        {newActivityIndicator && <NewActivityIndicator />}
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
@@ -107,7 +107,7 @@ class ThreadFeed extends Component {
           scrollElement={scrollElement}
           threshold={750}
         >
-          {threadNodes.map(thread => {
+          {sortedThreadNodes.map(thread => {
             return (
               <InboxThread
                 key={thread.id}
@@ -122,7 +122,4 @@ class ThreadFeed extends Component {
   }
 }
 
-const map = state => ({
-  newActivityIndicator: state.newActivityIndicator.hasNew,
-});
-export default compose(connect(map), withRouter, pure)(ThreadFeed);
+export default compose(withRouter, pure)(ThreadFeed);

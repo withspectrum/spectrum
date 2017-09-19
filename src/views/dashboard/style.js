@@ -153,7 +153,14 @@ export const ThreadTitle = styled.h3`
   ${Truncate};
 `;
 
-export const AttachmentsContainer = styled.div`margin: 8px 16px;`;
+export const AttachmentsContainer = styled.div`
+  margin: 8px 16px;
+
+  a {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.alt};
+  }
+`;
 
 export const ThreadMeta = styled.div`
   display: flex;
@@ -220,6 +227,24 @@ export const CommunityInfoContainer = styled.div`
   display: flex;
   align-items: center;
   margin: 16px 16px 0;
+
+  a {
+    box-shadow: 0 0 0 1px
+      ${props =>
+        props.active ? props.theme.text.reverse : props.theme.bg.border};
+    background: ${props =>
+      props.active ? 'transparent' : props.theme.bg.wash};
+    font-weight: ${props => (props.active ? '500' : '400')};
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.alt};
+  }
+
+  a:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.default};
+    background: ${props =>
+      props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
+  }
 `;
 
 export const AvatarLink = styled(Link)`
@@ -254,28 +279,14 @@ export const CommunityLink = styled(Link)`
 export const PillLink = styled(Link)`
   display: inline-block;
   height: 20px;
-  box-shadow: 0 0 0 1px
-    ${props =>
-      props.active ? props.theme.text.reverse : props.theme.bg.border};
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
   margin-right: 8px;
-  background: ${props => (props.active ? 'transparent' : props.theme.bg.wash)};
   font-size: 12px;
-  font-weight: ${props => (props.active ? '500' : '400')};
   max-height: 24px;
   line-height: 1;
   pointer-events: all;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.alt};
-
-  &:hover {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.text.default};
-    background: ${props =>
-      props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
-  }
 `;
 
 export const MiniLinkPreview = styled(Link)`

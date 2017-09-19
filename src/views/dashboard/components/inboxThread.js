@@ -61,7 +61,6 @@ class InboxThread extends Component {
                   key={JSON.parse(att.data).trueUrl}
                 >
                   <MiniLinkPreview
-                    active={active}
                     to={JSON.parse(att.data).trueUrl}
                     target="_blank"
                   >

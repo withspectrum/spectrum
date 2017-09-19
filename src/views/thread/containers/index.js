@@ -58,6 +58,7 @@ const LoadingView = () => (
 class ThreadContainerPure extends Component {
   state: {
     isLoading: boolean,
+    scrollElement: any,
   };
 
   constructor() {
@@ -65,19 +66,40 @@ class ThreadContainerPure extends Component {
 
     this.state = {
       isLoading: false,
+      scrollElement: null,
     };
   }
 
   componentDidMount() {
     track('thread', 'viewed', null);
+    const elem = document.getElementById('scroller-for-inbox-thread-view');
+    this.setState({
+      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
+      // the AppViewWrapper which is the scrolling part of the site.
+      scrollElement: elem,
+    });
   }
 
   componentDidUpdate(prevProps) {
+    // if the user is in the inbox and changes threads, it should initially scroll
+    // to the top before continuing with logic to force scroll to the bottom
+    if (
+      prevProps.data.thread &&
+      prevProps.data.thread.id !== this.props.data.thread.id
+    ) {
+      if (this.state.scrollElement) {
+        console.log('scrolling thread to top');
+        this.state.scrollElement.scrollTop = 0;
+      }
+    }
+
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
     const { currentUser, data: { thread } } = this.props;
+
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
+
     if (!thread) return;
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
 

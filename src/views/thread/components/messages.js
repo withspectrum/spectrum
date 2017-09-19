@@ -61,6 +61,15 @@ class MessagesWithData extends Component {
     if (newMessageSent) {
       this.props.contextualScrollToBottom();
     }
+
+    // if the thread changes in the inbox we have to update the subscription
+    if (
+      prevProps.data.thread &&
+      prevProps.data.thread.id !== this.props.data.thread.id
+    ) {
+      console.log('thread changed, swap out the subscription');
+      this.unsubscribe().then(() => this.subscribe());
+    }
   }
 
   componentDidMount() {
@@ -84,7 +93,7 @@ class MessagesWithData extends Component {
     const { subscription } = this.state;
     if (subscription) {
       // This unsubscribes the subscription
-      subscription();
+      return Promise.resolve(subscription());
     }
   };
 

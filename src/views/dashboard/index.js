@@ -7,9 +7,9 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
-import { connect } from 'react-redux';
-// $FlowFixMe
 import queryString from 'query-string';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -23,6 +23,7 @@ import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
+import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
 import Composer from './components/inboxComposer';
 import {
@@ -42,7 +43,7 @@ const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 
 class Dashboard extends Component {
   render() {
-    const { data: { user, networkStatus } } = this.props;
+    const { data: { user, networkStatus }, newActivityIndicator } = this.props;
     const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
     const parsed = queryString.parse(this.props.location.search);
@@ -71,13 +72,16 @@ class Dashboard extends Component {
             <FeedHeaderContainer>
               <Composer />
             </FeedHeaderContainer>
+            {newActivityIndicator && (
+              <NewActivityIndicator elem="scroller-for-inbox" />
+            )}
             <InboxScroller id="scroller-for-inbox">
               <EverythingThreadFeed selectedId={threadId} />
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
-            <ThreadScroller>
+            <ThreadScroller id="scroller-for-inbox-thread-view">
               <DashboardThread threadId={threadId} />
             </ThreadScroller>
           </ThreadWrapper>
@@ -95,4 +99,7 @@ class Dashboard extends Component {
   }
 }
 
-export default compose(getCurrentUserProfile, pure)(Dashboard);
+const map = state => ({
+  newActivityIndicator: state.newActivityIndicator.hasNew,
+});
+export default compose(connect(map), getCurrentUserProfile, pure)(Dashboard);
