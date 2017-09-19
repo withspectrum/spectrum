@@ -213,7 +213,7 @@ export const PillLink = styled(Link)`
   overflow: hidden;
   padding: 4px 8px;
   background: ${props =>
-    props.active ? 'rgba(255,255,255,0.9)' : props.theme.bg.wash};
+    props.active ? props.theme.text.reverse : props.theme.bg.wash};
   font-size: 12px;
   font-weight: 400;
   max-height: 24px;

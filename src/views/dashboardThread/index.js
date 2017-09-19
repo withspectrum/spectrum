@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import { Button } from '../../components/buttons';
+import ThreadComposer from '../../components/threadComposer';
 import { Link } from 'react-router-dom';
 import ThreadContainer from '../thread/containers';
 import {
@@ -18,6 +19,7 @@ class DashboardThread extends Component {
   render() {
     const { threadId } = this.props;
 
+    // no thread has been selected
     if (!threadId)
       return (
         <NullContainer>
@@ -40,13 +42,17 @@ class DashboardThread extends Component {
         </NullContainer>
       );
 
+    // composer is selected
     if (threadId === 'new')
       return (
-        <Container>
-          <Thread>New post!</Thread>
-        </Container>
+        <NullContainer>
+          <NullThread>
+            <Heading>New thread composer will go here</Heading>
+          </NullThread>
+        </NullContainer>
       );
 
+    // otherwise return the thread that was selected
     return (
       <Container>
         <Thread>

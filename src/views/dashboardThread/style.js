@@ -10,18 +10,18 @@ export const Container = styled.div`
   flex: auto;
   align-self: stretch;
   overflow-y: hidden;
-  padding: 32px 32px 0;
+  max-height: 100%;
+  position: relative;
+  left: 1px;
 `;
 
 export const Thread = styled.div`
   display: flex;
   background: #fff;
   flex: auto;
-  z-index: ${zIndex.slider + 3};
+  z-index: ${zIndex.chrome - 1};
   flex-direction: column;
   max-width: 100%;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
 `;
 
 export const NullContainer = styled.div`
@@ -35,13 +35,13 @@ export const NullContainer = styled.div`
 
 export const NullThread = styled.div`
   display: flex;
-  background: #fff;
+
   flex: auto;
   z-index: ${zIndex.slider + 3};
   flex-direction: column;
   max-width: 100%;
   border-radius: 8px;
-  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
+
   align-items: center;
   justify-content: center;
 
