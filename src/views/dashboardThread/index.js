@@ -1,8 +1,18 @@
 //@flow
 import React, { Component } from 'react';
-import { Container, Thread } from './style';
 import Icon from '../../components/icons';
+import { Button } from '../../components/buttons';
+import { Link } from 'react-router-dom';
 import ThreadContainer from '../thread/containers';
+import {
+  NullContainer,
+  Container,
+  NullThread,
+  Thread,
+  Illo,
+  Heading,
+  Subheading,
+} from './style';
 
 class DashboardThread extends Component {
   render() {
@@ -10,9 +20,24 @@ class DashboardThread extends Component {
 
     if (!threadId)
       return (
-        <Container>
-          <Thread>No thread selected</Thread>
-        </Container>
+        <NullContainer>
+          <NullThread>
+            <Illo />
+            <Heading>Jump into a conversation!</Heading>
+            <Subheading>
+              Select a thread from your feed on the left. Or if you want to
+              start a conversation of your own, your community is ready for you!
+            </Subheading>
+            <Link
+              to={{
+                pathname: window.location.pathname,
+                search: `?t=new`,
+              }}
+            >
+              <Button>Start a conversation</Button>
+            </Link>
+          </NullThread>
+        </NullContainer>
       );
 
     if (threadId === 'new')
