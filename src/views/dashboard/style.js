@@ -116,13 +116,13 @@ export const ThreadTitle = styled.h3`
   font-weight: ${props => (props.active ? '600' : '400')};
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 8px 16px 0;
+  margin: 16px 16px 8px;
   max-width: 100%;
   pointer-events: all;
   ${Truncate};
 `;
 
-export const AttachmentsContainer = styled.div`margin: 8px 16px 0;`;
+export const AttachmentsContainer = styled.div`margin: 8px 16px;`;
 
 export const ThreadMeta = styled.div`
   display: flex;
@@ -153,6 +153,10 @@ export const EmptyParticipantHead = styled(ParticipantHead)`
   font-size: 12px;
   font-weight: 600;
   color: ${props => props.theme.text.alt};
+  box-shadow: 0 0 0 2px
+    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
+  width: 24px;
+  height: 24px;
 `;
 
 export const MetaText = styled.span`
@@ -169,7 +173,7 @@ export const MetaText = styled.span`
     } else if (props.offset === 5) {
       return `left: -20px;`;
     } else if (props.offset > 1) {
-      return `left: -${props.offset * 4}px;`;
+      return `left: -${props.offset * 6.5}px;`;
     } else {
       return `left: 0;`;
     }
@@ -226,6 +230,7 @@ export const PillLink = styled(Link)`
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
+  margin-right: 4px;
   background: ${props =>
     props.active ? props.theme.text.reverse : props.theme.bg.wash};
   font-size: 12px;

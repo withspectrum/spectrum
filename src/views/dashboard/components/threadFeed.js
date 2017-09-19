@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
@@ -46,6 +48,13 @@ class ThreadFeed extends Component {
       subscription();
     }
   };
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.data.threads && this.props.data.threads) {
+      const firstThreadId = this.props.data.threads[0].node.id;
+      this.props.history.push({ search: `?t=${firstThreadId}` });
+    }
+  }
 
   componentWillUnmount() {
     this.unsubscribe();
@@ -110,4 +119,4 @@ class ThreadFeed extends Component {
 const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
 });
-export default compose(connect(map), pure)(ThreadFeed);
+export default compose(connect(map), withRouter, pure)(ThreadFeed);

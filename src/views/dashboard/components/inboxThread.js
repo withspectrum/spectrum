@@ -84,15 +84,6 @@ class InboxThread extends Component {
                 New thread!
               </MetaText>
             )}
-
-            {data.creator.username && (
-              <MetaText offset={participants.length} active={active}>
-                <span>&nbsp;· by&nbsp;</span>
-                <Link to={`/users/${data.creator.username}`}>
-                  @{data.creator.username}
-                </Link>
-              </MetaText>
-            )}
           </ThreadMeta>
         </InboxThreadContent>
       </InboxThreadItem>

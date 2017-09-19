@@ -21,26 +21,27 @@ class DashboardThread extends Component {
 
     // no thread has been selected
     if (!threadId)
-      return (
-        <NullContainer>
-          <NullThread>
-            <Illo />
-            <Heading>Jump into a conversation!</Heading>
-            <Subheading>
-              Select a thread from your feed on the left. Or if you want to
-              start a conversation of your own, your community is ready for you!
-            </Subheading>
-            <Link
-              to={{
-                pathname: window.location.pathname,
-                search: `?t=new`,
-              }}
-            >
-              <Button>Start a conversation</Button>
-            </Link>
-          </NullThread>
-        </NullContainer>
-      );
+      // return (
+      //   <NullContainer>
+      //     <NullThread>
+      //       <Illo />
+      //       <Heading>Jump into a conversation!</Heading>
+      //       <Subheading>
+      //         Select a thread from your feed on the left. Or if you want to
+      //         start a conversation of your own, your community is ready for you!
+      //       </Subheading>
+      //       <Link
+      //         to={{
+      //           pathname: window.location.pathname,
+      //           search: `?t=new`,
+      //         }}
+      //       >
+      //         <Button>Start a conversation</Button>
+      //       </Link>
+      //     </NullThread>
+      //   </NullContainer>
+      // );
+      return null;
 
     // composer is selected
     if (threadId === 'new')

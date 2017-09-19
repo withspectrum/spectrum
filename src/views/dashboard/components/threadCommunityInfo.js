@@ -20,11 +20,11 @@ export default ({ thread, active }) => {
       <AvatarLink to={`/${channel.community.slug}`}>
         <CommunityAvatar src={`${channel.community.profilePhoto}?w=20`} />
       </AvatarLink>
-      {isGeneral ? (
-        <CommunityLink active={active} to={`/${channel.community.slug}`}>
-          {channel.community.name}
-        </CommunityLink>
-      ) : (
+      <PillLink active={active} to={`/${channel.community.slug}`}>
+        {channel.community.name}
+      </PillLink>
+
+      {!isGeneral && (
         <PillLink
           active={active}
           to={`/${channel.community.slug}/${channel.slug}`}
