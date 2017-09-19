@@ -2653,19 +2653,19 @@ draft-js-image-plugin@2.0.0-rc7:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-import-element@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.1.0.tgz#65bcd97bf6b25eed62e44c9d158cf7b1344321ac"
+draft-js-import-element@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-1.2.0.tgz#05d5be599528144877d1192905c00419461b3c8f"
   dependencies:
-    draft-js-utils "^1.1.0"
-    synthetic-dom "^1.1.0"
+    draft-js-utils "^1.2.0"
+    synthetic-dom "^1.2.0"
 
-draft-js-import-markdown@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.1.0.tgz#1576ff731ff384631824505c71d396268e6d6a13"
+draft-js-import-markdown@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.0.tgz#8fcb6fa784d3f003c109142ba304ba8ca2bcf522"
   dependencies:
-    draft-js-import-element "^1.1.0"
-    synthetic-dom "^1.1.0"
+    draft-js-import-element "^1.2.0"
+    synthetic-dom "^1.2.0"
 
 draft-js-markdown-shortcuts-plugin@^0.3.0:
   version "0.3.0"
@@ -2699,9 +2699,9 @@ draft-js-single-line-plugin@^2.0.1:
   dependencies:
     immutable "^3.8.1"
 
-draft-js-utils@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.1.0.tgz#652876abdd4910a7996b1fdb64c8d771e4397f75"
+draft-js-utils@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
 
 draft-js@^0.10.1, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.1"
@@ -8406,9 +8406,9 @@ symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
 
-synthetic-dom@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-1.1.0.tgz#069e04cefe6b1fc7317b70015902dea39155d4ff"
+synthetic-dom@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-1.2.0.tgz#f3589aafe2b5e299f337bb32973a9be42dd5625e"
 
 table@^4.0.1:
   version "4.0.1"
