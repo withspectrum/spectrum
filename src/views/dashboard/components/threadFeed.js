@@ -64,6 +64,7 @@ class ThreadFeed extends Component {
     const {
       data: { threads, networkStatus },
       newActivityIndicator,
+      selectedId,
     } = this.props;
     const { scrollElement } = this.state;
 
@@ -91,7 +92,13 @@ class ThreadFeed extends Component {
           threshold={750}
         >
           {threadNodes.map(thread => {
-            return <InboxThread key={thread.id} data={thread} />;
+            return (
+              <InboxThread
+                key={thread.id}
+                data={thread}
+                active={selectedId === thread.id}
+              />
+            );
           })}
         </InfiniteList>
       </div>

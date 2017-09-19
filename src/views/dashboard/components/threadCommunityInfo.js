@@ -12,7 +12,7 @@ import {
   PillLink,
 } from '../style';
 
-export default ({ thread }) => {
+export default ({ thread, active }) => {
   const { channel } = thread;
   const isGeneral = channel.slug === 'general';
   return (
@@ -21,11 +21,14 @@ export default ({ thread }) => {
         <CommunityAvatar src={`${channel.community.profilePhoto}?w=20`} />
       </AvatarLink>
       {isGeneral ? (
-        <CommunityLink to={`/${channel.community.slug}`}>
+        <CommunityLink active={active} to={`/${channel.community.slug}`}>
           {channel.community.name}
         </CommunityLink>
       ) : (
-        <PillLink to={`/${channel.community.slug}/${channel.slug}`}>
+        <PillLink
+          active={active}
+          to={`/${channel.community.slug}/${channel.slug}`}
+        >
           {channel.name}
         </PillLink>
       )}

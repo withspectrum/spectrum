@@ -87,8 +87,10 @@ export const ComposerLeft = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
+  border-top: 1px solid
+    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
+  background: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
 `;
 
@@ -115,8 +117,9 @@ export const InboxThreadContent = styled.div`
 
 export const ThreadTitle = styled.h3`
   font-size: 18px;
-  font-weight: 400;
-  color: ${props => props.theme.text.default};
+  font-weight: ${props => (props.active ? '600' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.default};
   margin: 8px 16px 0;
   max-width: 100%;
   ${Truncate};
@@ -153,7 +156,10 @@ export const EmptyParticipantHead = styled(ParticipantHead)`
 
 export const MetaText = styled.span`
   font-size: 14px;
-  color: ${props => (props.new ? props.theme.warn.alt : props.theme.text.alt)};
+  color: ${props =>
+    props.new
+      ? props.active ? props.theme.text.reverse : props.theme.warn.alt
+      : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
 
   a {
@@ -188,7 +194,8 @@ export const CommunityAvatar = styled.img`
 export const CommunityLink = styled(Link)`
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
   line-height: 1.28;
 
   &:hover {
@@ -199,19 +206,25 @@ export const CommunityLink = styled(Link)`
 export const PillLink = styled(Link)`
   display: inline-block;
   height: 20px;
-  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
+  box-shadow: 0 0 0 1px
+    ${props =>
+      props.active ? props.theme.text.reverse : props.theme.bg.border};
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
-  background: ${props => props.theme.bg.wash};
+  background: ${props =>
+    props.active ? 'rgba(255,255,255,0.9)' : props.theme.bg.wash};
   font-size: 12px;
   font-weight: 400;
   max-height: 24px;
   line-height: 1;
-  color: ${props => props.theme.text.alt};
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.alt};
 
   &:hover {
-    color: ${props => props.theme.text.default};
-    background: ${props => props.theme.bg.reverse};
+    color: ${props =>
+      props.active ? props.theme.brand.alt : props.theme.text.default};
+    background: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.bg.reverse};
   }
 `;

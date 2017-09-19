@@ -67,7 +67,7 @@ class Dashboard extends Component {
           <InboxWrapper>
             <InboxScroller>
               <Composer />
-              <EverythingThreadFeed viewContext="dashboard" />
+              <EverythingThreadFeed selectedId={threadId} />
             </InboxScroller>
           </InboxWrapper>
 
