@@ -8,10 +8,13 @@ import pure from 'recompose/pure';
 import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import queryString from 'query-string';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import { Column } from '../../components/column';
+import Icon from '../../components/icons';
 import { UserProfile } from '../../components/profile';
 import DashboardThreadFeed from './components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
@@ -21,6 +24,7 @@ import CommunityList from '../user/components/communityList';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import DashboardThread from '../dashboardThread';
+import Composer from './components/inboxComposer';
 import {
   DashboardWrapper,
   InboxWrapper,
@@ -38,6 +42,8 @@ class Dashboard extends Component {
     const { data: { user, networkStatus } } = this.props;
     const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
+    const parsed = queryString.parse(this.props.location.search);
+    const threadId = parsed.t;
 
     // if the query is no longer loading and we successfully returned a user from the server we can load the dashboard
     if (dataExists) {
@@ -60,14 +66,14 @@ class Dashboard extends Component {
 
           <InboxWrapper>
             <InboxScroller>
-              <ThreadComposer />
+              <Composer />
               <EverythingThreadFeed viewContext="dashboard" />
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
             <ThreadScroller>
-              <DashboardThread />
+              <DashboardThread threadId={threadId} />
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>

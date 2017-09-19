@@ -50,6 +50,40 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
+export const CreateThreadComposer = styled(Link)`
+  font-size: 18px;
+  font-weight: 400;
+  padding: 8px 16px;
+  border-top: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.border.default};
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  align-items: center;
+  margin: 8px 0;
+  justify-content: space-between;
+  background: ${props => props.theme.bg.default};
+`;
+
+export const ComposeIconContainer = styled.div`
+  margin-right: 12px;
+  opacity: 0.6;
+  position: relative;
+  top: 2px;
+`;
+
+export const ChevronIconContainer = styled.div`
+  align-self: flex-end;
+  display: flex;
+  opacity: 0.4;
+  position: relative;
+  top: -4px;
+`;
+
+export const ComposerLeft = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -81,7 +115,7 @@ export const InboxThreadContent = styled.div`
 
 export const ThreadTitle = styled.h3`
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 400;
   color: ${props => props.theme.text.default};
   margin: 8px 16px 0;
   max-width: 100%;
