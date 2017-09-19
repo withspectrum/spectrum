@@ -10,19 +10,28 @@ export const Wrapper = styled.div`
   justify-content: flex-start;
   overflow: hidden;
   flex: auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const InboxWrapper = styled.div`
   display: flex;
   flex: 0 0 33%;
-  max-width: 420px;
-  min-width: 240px;
+  max-width: 528px;
+  min-width: 320px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
   flex-direction: column;
   background: ${props => props.theme.bg.wash};
   box-shadow: 1px 0 0 0 ${props => props.theme.bg.border};
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    flex: auto;
+  }
 `;
 
 export const InboxScroller = styled.div`
@@ -39,6 +48,10 @@ export const FeedHeaderContainer = styled.div`
     0 1px 3px rgba(0, 0, 0, 0.01);
   position: relative;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const ThreadWrapper = styled.div`
@@ -47,6 +60,10 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const ThreadScroller = styled.div`
@@ -182,7 +199,7 @@ export const MetaText = styled.span`
   position: relative;
   ${props => {
     if (props.offset > 5) {
-      return `left: -${props.offset * 8}px;`;
+      return `left: -${props.offset * 6}px;`;
     } else if (props.offset === 5) {
       return `left: -${props.offset * 6}px;`;
     } else if (props.offset > 1) {
@@ -243,7 +260,7 @@ export const PillLink = styled(Link)`
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
-  margin-right: 4px;
+  margin-right: 8px;
   background: ${props => (props.active ? 'transparent' : props.theme.bg.wash)};
   font-size: 12px;
   font-weight: ${props => (props.active ? '500' : '400')};
@@ -258,9 +275,6 @@ export const PillLink = styled(Link)`
       props.active ? props.theme.text.reverse : props.theme.text.default};
     background: ${props =>
       props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
-    box-shadow: 0 0 0 1px
-      ${props =>
-        props.active ? props.theme.text.reverse : props.theme.text.alt};
   }
 `;
 

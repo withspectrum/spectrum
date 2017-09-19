@@ -33,7 +33,8 @@ class InboxThread extends Component {
         <InboxLinkWrapper
           to={{
             pathname: window.location.pathname,
-            search: `?t=${data.id}`,
+            search:
+              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
           }}
         />
 
@@ -42,7 +43,10 @@ class InboxThread extends Component {
           <Link
             to={{
               pathname: window.location.pathname,
-              search: `?t=${data.id}`,
+              search:
+                window.innerWidth < 768
+                  ? `?thread=${data.id}`
+                  : `?t=${data.id}`,
             }}
           >
             <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
@@ -52,7 +56,10 @@ class InboxThread extends Component {
             attachments
               .filter(att => att.attachmentType === 'linkPreview')
               .map(att => (
-                <AttachmentsContainer active={active} key={att.data.trueUrl}>
+                <AttachmentsContainer
+                  active={active}
+                  key={JSON.parse(att.data).trueUrl}
+                >
                   <MiniLinkPreview
                     active={active}
                     to={JSON.parse(att.data).trueUrl}

@@ -50,7 +50,13 @@ class ThreadFeed extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.data.threads && this.props.data.threads) {
+    const hasThreadsButNoneSelected =
+      this.props.data.threads && !this.props.selectedId;
+    const justLoadedThreads =
+      !prevProps.data.threads && this.props.data.threads;
+    const isDesktop = window.innerWidth > 768;
+
+    if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {
       const firstThreadId = this.props.data.threads[0].node.id;
       this.props.history.push({ search: `?t=${firstThreadId}` });
     }

@@ -12,14 +12,13 @@ const messageAvatars = (list, active) => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
 
   return avatarList.map((participant, i) => (
-    <ParticipantHead offset={i + 1} active={active}>
+    <ParticipantHead offset={i + 1} active={active} key={participant.id}>
       <Avatar
         size={24}
         isOnline={false}
         link={participant.username ? `/users/${participant.username}` : null}
         src={`${participant.profilePhoto}`}
         role="presentation"
-        key={participant.id}
       />
     </ParticipantHead>
   ));
@@ -33,14 +32,18 @@ const Facepile = ({ participants, creator, active }) => {
 
   return (
     <FacepileContainer>
-      <ParticipantHead active={active} offset={0} role="presentation">
+      <ParticipantHead
+        active={active}
+        offset={0}
+        role="presentation"
+        key={creator.id}
+      >
         <Avatar
           size={24}
           isOnline={false}
           link={creator.username ? `/users/${creator.username}` : null}
           src={creator.profilePhoto}
           role="presentation"
-          key={creator.id}
         />
       </ParticipantHead>
       {messageAvatars(participantList, active)}
