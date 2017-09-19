@@ -9,8 +9,6 @@ import { IconButton } from '../../../components/buttons';
 import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
-import { getCommunityRecurringPayments } from '../../../api/community';
-import { displayLoadingCard } from '../../../components/loading';
 import {
   StyledCard,
   LargeListHeading,

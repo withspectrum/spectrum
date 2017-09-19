@@ -25,14 +25,7 @@ const NullNotifications = () => (
 );
 
 const NotificationContainer = props => {
-  const {
-    rawNotifications,
-    markAllRead,
-    currentUser,
-    history,
-    error,
-    loading,
-  } = props;
+  const { rawNotifications, currentUser, history, error, loading } = props;
 
   const noNotifications = !rawNotifications || rawNotifications.length === 0;
 
@@ -56,14 +49,7 @@ const NotificationContainer = props => {
 };
 
 const NotificationDropdownPure = props => {
-  const {
-    rawNotifications,
-    markAllRead,
-    currentUser,
-    history,
-    error,
-    loading,
-  } = props;
+  const { rawNotifications, currentUser, history } = props;
 
   return (
     <Dropdown style={{ width: '400px' }}>

@@ -12,10 +12,8 @@ import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { displayLoadingState } from '../../../../components/loading';
 import { Button, OutlineButton } from '../../../../components/buttons';
-import { ContinueButton } from '../../style';
 import {
   Row,
-  StickyRow,
   CoverPhoto,
   Container,
   CoverAvatar,
@@ -57,12 +55,6 @@ class TopCommunitiesPure extends Component {
           isMember ? 'community joined' : 'community unjoined',
           null
         );
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
 
         this.props.joinedCommunity(isMember ? 1 : -1, false);
       })

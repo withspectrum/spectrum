@@ -21,10 +21,6 @@ export const theme = {
     default: '#E6ECF7',
     alt: '#F6FBFC',
   },
-  pro: {
-    default: '#E58306',
-    alt: '#F1C742',
-  },
   social: {
     facebook: {
       default: '#3B5998',
@@ -60,18 +56,20 @@ export const theme = {
   success: {
     default: '#008C52',
     alt: '#00D5BD',
+    dark: '00663C',
     wash: '#D9FFF2',
     border: '#9FF5D9',
   },
   text: {
     default: '#16171A',
-    alt: '#6C7480',
+    alt: '#828C99',
     reverse: '#FFFFFF',
-    placeholder: '#8D97A6',
+    placeholder: '#A3AFBF',
   },
   warn: {
-    default: '#B5001E',
+    default: '#C21F3A',
     alt: '#E2197A',
+    dark: '#85000C',
     wash: '#FFEDF6',
     border: '#FFCCE5',
   },

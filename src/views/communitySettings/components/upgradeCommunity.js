@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -70,7 +68,7 @@ class UpsellUpgradeCommunityPure extends Component {
   };
 
   render() {
-    const { upgradeError, isLoading } = this.state;
+    const { isLoading } = this.state;
     const { community } = this.props;
 
     return (
@@ -152,7 +150,7 @@ export const UpsellUpgradeCommunity = compose(
 
 class UpsellUpgradeCommunityPrivateChannelPure extends Component {
   openCommunityUpgradeModal = () => {
-    const { dispatch, currentUser, community } = this.props;
+    const { currentUser, community } = this.props;
 
     this.props.dispatch(
       openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })

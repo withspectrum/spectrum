@@ -14,7 +14,6 @@ import {
   StyledCard,
   LargeListHeading,
   ListContainer,
-  Description,
 } from '../../../components/listItems/style';
 
 class InvoicesPure extends Component {

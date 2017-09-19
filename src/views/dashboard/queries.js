@@ -1,9 +1,6 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-// $FlowFixMe
-import update from 'immutability-helper';
-import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';

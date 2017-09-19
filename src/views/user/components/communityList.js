@@ -36,7 +36,7 @@ const CommunityList = props => {
   if (networkStatus === 8) {
     return (
       <NullCard
-        heading={`Something went wrong loading ${user.username}\'s communities...`}
+        heading={`Something went wrong loading ${user.username}'s communities...`}
         bg={'error'}
       />
     );
@@ -45,8 +45,8 @@ const CommunityList = props => {
   const sorted = communities
     .slice()
     .sort((a, b) => {
-      const bc = parseInt(b.node.communityPermissions.reputation);
-      const ac = parseInt(a.node.communityPermissions.reputation);
+      const bc = parseInt(b.node.communityPermissions.reputation, 10);
+      const ac = parseInt(a.node.communityPermissions.reputation, 10);
       return bc <= ac ? -1 : 1;
     })
     .map(community => community.node);
