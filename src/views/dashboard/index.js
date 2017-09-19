@@ -29,6 +29,7 @@ import {
   Wrapper,
   InboxWrapper,
   InboxScroller,
+  FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
 } from './style';
@@ -67,8 +68,10 @@ class Dashboard extends Component {
           <Titlebar />
 
           <InboxWrapper>
-            <InboxScroller id="scroller-for-inbox">
+            <FeedHeaderContainer>
               <Composer />
+            </FeedHeaderContainer>
+            <InboxScroller id="scroller-for-inbox">
               <EverythingThreadFeed selectedId={threadId} />
             </InboxScroller>
           </InboxWrapper>

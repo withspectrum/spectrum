@@ -20,6 +20,7 @@ export const InboxWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
+  flex-direction: column;
   background: ${props => props.theme.bg.wash};
   box-shadow: 1px 0 0 0 ${props => props.theme.bg.border};
 `;
@@ -29,6 +30,15 @@ export const InboxScroller = styled.div`
   width: 100%;
   overflow-y: scroll;
   position: relative;
+`;
+
+export const FeedHeaderContainer = styled.div`
+  background: ${props => props.theme.bg.default};
+  padding: 8px 16px;
+  box-shadow: 0 1px 0 0 ${props => props.theme.bg.border},
+    0 1px 3px rgba(0, 0, 0, 0.01);
+  position: relative;
+  z-index: 10;
 `;
 
 export const ThreadWrapper = styled.div`
@@ -46,39 +56,43 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
+// export const CreateThreadComposer = styled(Link)`
+//   font-size: 18px;
+//   font-weight: 400;
+//   padding: 8px 16px;
+//   border-top: 1px solid ${props => props.theme.bg.border};
+//   border-bottom: 1px solid ${props => props.theme.bg.border};
+//   display: flex;
+//   color: ${props => props.theme.text.alt};
+//   align-items: center;
+//   justify-content: flex-end;
+//   background: ${props => props.theme.bg.default};
+// `;
+
 export const CreateThreadComposer = styled(Link)`
-  font-size: 18px;
-  font-weight: 400;
-  padding: 8px 16px;
-  border-top: 1px solid ${props => props.theme.bg.border};
-  border-bottom: 1px solid ${props => props.theme.bg.border};
   display: flex;
-  color: ${props => props.theme.text.alt};
   align-items: center;
-  margin: 8px 0;
-  justify-content: space-between;
-  background: ${props => props.theme.bg.default};
+  justify-content: flex-end;
 `;
 
 export const ComposeIconContainer = styled.div`
-  margin-right: 12px;
-  opacity: 0.6;
   position: relative;
   top: 2px;
+  color: ${props => props.theme.brand.alt};
 `;
 
-export const ChevronIconContainer = styled.div`
-  align-self: flex-end;
-  display: flex;
-  opacity: 0.4;
-  position: relative;
-  top: -4px;
-`;
+// export const ChevronIconContainer = styled.div`
+//   align-self: flex-end;
+//   display: flex;
+//   opacity: 0.4;
+//   position: relative;
+//   top: -4px;
+// `;
 
-export const ComposerLeft = styled.div`
-  display: flex;
-  align-items: center;
-`;
+// export const ComposerLeft = styled.div`
+//   display: flex;
+//   align-items: center;
+// `;
 
 export const InboxThreadItem = styled.div`
   display: flex;
@@ -127,7 +141,6 @@ export const AttachmentsContainer = styled.div`margin: 8px 16px;`;
 export const ThreadMeta = styled.div`
   display: flex;
   margin: 8px 16px 16px;
-  pointer-events: all;
 `;
 
 export const FacepileContainer = styled.div`
@@ -231,21 +244,20 @@ export const PillLink = styled(Link)`
   overflow: hidden;
   padding: 4px 8px;
   margin-right: 4px;
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.bg.wash};
+  background: ${props => (props.active ? 'transparent' : props.theme.bg.wash)};
   font-size: 12px;
-  font-weight: 400;
+  font-weight: ${props => (props.active ? '500' : '400')};
   max-height: 24px;
   line-height: 1;
   pointer-events: all;
   color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.alt};
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
 
   &:hover {
     color: ${props =>
-      props.active ? props.theme.brand.alt : props.theme.text.default};
+      props.active ? props.theme.text.reverse : props.theme.text.default};
     background: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.bg.wash};
+      props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
     box-shadow: 0 0 0 1px
       ${props =>
         props.active ? props.theme.text.reverse : props.theme.text.alt};
