@@ -20,7 +20,14 @@ import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
-import { DashboardWrapper, InboxWrapper, InboxScroller } from './style';
+import DashboardThread from '../dashboardThread';
+import {
+  DashboardWrapper,
+  InboxWrapper,
+  InboxScroller,
+  ThreadWrapper,
+  ThreadScroller,
+} from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -57,6 +64,12 @@ class Dashboard extends Component {
               <EverythingThreadFeed viewContext="dashboard" />
             </InboxScroller>
           </InboxWrapper>
+
+          <ThreadWrapper>
+            <ThreadScroller>
+              <DashboardThread />
+            </ThreadScroller>
+          </ThreadWrapper>
         </DashboardWrapper>
       );
     }

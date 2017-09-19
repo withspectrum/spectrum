@@ -31,7 +31,7 @@ class InboxThread extends Component {
         <InboxLinkWrapper
           to={{
             pathname: window.location.pathname,
-            search: `?thread=${data.id}`,
+            search: `?t=${data.id}`,
           }}
         />
 
@@ -68,8 +68,7 @@ class InboxThread extends Component {
 
             {data.creator.username && (
               <MetaText>
-                {' '}
-                {'·'} by{' '}
+                <span>&nbsp;· by&nbsp;</span>
                 <Link to={`/users/${data.creator.username}`}>
                   @{data.creator.username}
                 </Link>

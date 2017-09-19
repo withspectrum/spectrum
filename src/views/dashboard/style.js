@@ -35,11 +35,27 @@ export const InboxScroller = styled.div`
   position: relative;
 `;
 
+export const ThreadWrapper = styled.div`
+  display: flex;
+  flex: auto;
+  overflow-y: hidden;
+  position: relative;
+  align-self: stretch;
+`;
+
+export const ThreadScroller = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  position: relative;
+`;
+
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
   border-top: 1px solid ${props => props.theme.border.default};
   background: ${props => props.theme.bg.default};
+  position: relative;
 `;
 
 export const InboxLinkWrapper = styled(Link)`
@@ -65,7 +81,7 @@ export const InboxThreadContent = styled.div`
 
 export const ThreadTitle = styled.h3`
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
   color: ${props => props.theme.text.default};
   margin: 8px 16px 0;
   max-width: 100%;
@@ -88,7 +104,6 @@ export const ParticipantHead = styled.span`
   position: relative;
   left: -${props => props.offset * 8}px;
   border-radius: 24px;
-  overflow: hidden;
   box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
 `;
 
@@ -113,5 +128,56 @@ export const MetaText = styled.span`
 
   a:hover {
     color: ${props => props.theme.text.default};
+  }
+`;
+
+export const CommunityInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 16px 16px 0;
+`;
+
+export const AvatarLink = styled(Link)`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+`;
+
+export const CommunityAvatar = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+export const CommunityLink = styled(Link)`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  line-height: 1.28;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const PillLink = styled(Link)`
+  display: inline-block;
+  height: 20px;
+  box-shadow: 0 0 0 1px ${props => props.theme.border.default};
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  background: ${props => props.theme.bg.wash};
+  font-size: 12px;
+  font-weight: 400;
+  max-height: 24px;
+  line-height: 1;
+  color: ${props => props.theme.text.alt};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+    background: ${props => props.theme.bg.reverse};
   }
 `;
