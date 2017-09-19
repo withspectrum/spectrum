@@ -187,7 +187,7 @@ export const EmptyParticipantHead = styled(ParticipantHead)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: ${props => props.theme.text.alt};
   box-shadow: 0 0 0 2px
@@ -206,7 +206,7 @@ export const MetaText = styled.span`
   position: relative;
   ${props => {
     if (props.offset > 5) {
-      return `left: -${props.offset * 6}px;`;
+      return `left: -42px;`;
     } else if (props.offset === 5) {
       return `left: -${props.offset * 6}px;`;
     } else if (props.offset > 1) {
