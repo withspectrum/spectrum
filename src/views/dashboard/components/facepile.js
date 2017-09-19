@@ -49,6 +49,7 @@ const Facepile = ({ participants, creator, active }) => {
       {messageAvatars(participantList, active)}
       {participantCount > NUM_TO_DISPLAY && (
         <EmptyParticipantHead
+          active={active}
           offset={NUM_TO_DISPLAY + 1}
         >{`+${participantCount - NUM_TO_DISPLAY}`}</EmptyParticipantHead>
       )}

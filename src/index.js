@@ -16,13 +16,13 @@ import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
-const { thread, t } = queryString.parse(history.location.search);
-if (thread || t) {
+const { thread } = queryString.parse(history.location.search);
+if (thread) {
   const hash = window.location.hash.substr(1);
   if (hash && hash.length > 1) {
-    history.replace(`/thread/${thread || t}#${hash}`);
+    history.replace(`/thread/${thread}#${hash}`);
   } else {
-    history.replace(`/thread/${thread || t}`);
+    history.replace(`/thread/${thread}`);
   }
 }
 

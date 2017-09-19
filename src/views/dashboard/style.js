@@ -183,7 +183,8 @@ export const ParticipantHead = styled.span`
 `;
 
 export const EmptyParticipantHead = styled(ParticipantHead)`
-  background: ${props => props.theme.bg.wash};
+  background: ${props =>
+    props.active ? props.theme.bg.default : props.theme.bg.wash};
   display: flex;
   align-items: center;
   justify-content: center;
