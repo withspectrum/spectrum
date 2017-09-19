@@ -223,12 +223,24 @@ export const MetaText = styled.span`
   }
 `;
 
+export const MetaCommunityName = styled(Link)`
+  padding-right: 8px;
+  pointer-events: all;
+`;
+
 export const CommunityInfoContainer = styled.div`
   display: flex;
   align-items: center;
   margin: 16px 16px 0;
 
   a {
+    font-size: 14px;
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.alt};
+  }
+
+  a.pill {
+    font-size: 12px;
     box-shadow: 0 0 0 1px
       ${props =>
         props.active ? props.theme.text.reverse : props.theme.bg.border};
@@ -242,6 +254,9 @@ export const CommunityInfoContainer = styled.div`
   a:hover {
     color: ${props =>
       props.active ? props.theme.text.reverse : props.theme.text.default};
+  }
+
+  a.pill:hover {
     background: ${props =>
       props.active ? 'rgba(255,255,255,0.1)' : props.theme.bg.wash};
   }

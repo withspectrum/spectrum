@@ -10,6 +10,7 @@ import {
   CommunityAvatar,
   CommunityLink,
   PillLink,
+  MetaCommunityName,
 } from '../style';
 
 export default ({ thread, active }) => {
@@ -20,12 +21,16 @@ export default ({ thread, active }) => {
       <AvatarLink to={`/${channel.community.slug}`}>
         <CommunityAvatar src={`${channel.community.profilePhoto}?w=20`} />
       </AvatarLink>
-      <PillLink to={`/${channel.community.slug}`}>
+
+      <MetaCommunityName to={`/${channel.community.slug}`}>
         {channel.community.name}
-      </PillLink>
+      </MetaCommunityName>
 
       {!isGeneral && (
-        <PillLink to={`/${channel.community.slug}/${channel.slug}`}>
+        <PillLink
+          className="pill"
+          to={`/${channel.community.slug}/${channel.slug}`}
+        >
           {channel.name}
         </PillLink>
       )}
