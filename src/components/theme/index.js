@@ -32,7 +32,7 @@ export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#171A21',
-    wash: '#F2F5F9',
+    wash: '#F6F7F8',
   },
   text: {
     default: '#171A21',

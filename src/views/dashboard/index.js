@@ -1,169 +1,74 @@
-//@flow
+// @flow
 import React, { Component } from 'react';
-//$FlowFixMe
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
+// $FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
+import generateMetaInfo from 'shared/generate-meta-info';
+// $FlowFixMe
 import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
-import {
-  UpsellSignIn,
-  UpsellToReload,
-  UpsellMiniCreateCommunity,
-  UpsellMiniUpgrade,
-} from '../../components/upsell';
-import {
-  LoadingProfile,
-  LoadingList,
-  LoadingFeed,
-  LoadingComposer,
-} from '../../components/loading';
-import { FlexCol } from '../../components/globals';
-import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import ThreadFeed from '../../components/threadFeed';
+import DashboardThreadFeed from './components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
-//$FlowFixMe
-import generateMetaInfo from 'shared/generate-meta-info';
+import DashboardLoading from './components/dashboardLoading';
+import DashboardError from './components/dashboardError';
+import { DashboardWrapper, InboxWrapper, InboxScroller } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
-  ThreadFeed
+  DashboardThreadFeed
 );
 
-class DashboardPure extends Component {
-  state: {
-    isNewUser: boolean,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isNewUser: false,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.data.user && this.props.data.user) {
-      const user = this.props.data.user;
-      const communities =
-        this.props.data.user && this.props.data.user.communityConnection.edges;
-      const isNewUser =
-        (user && communities.length <= 0) || (user && !user.username);
-
-      this.setState({
-        isNewUser,
-      });
-    }
-  }
-
-  graduate = () => {
-    window.location.href = '/';
-  };
-
+class Dashboard extends Component {
   render() {
     const { data: { user, networkStatus } } = this.props;
-    const { isNewUser } = this.state;
-    const isMobile = window.innerWidth < 768;
-    const dataExists = user && user.communityConnection;
+    const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
 
-    // Error, prompt reload
-    if (networkStatus === 8) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-
+    // if the query is no longer loading and we successfully returned a user from the server we can load the dashboard
     if (dataExists) {
-      const currentUser = user;
-      const communities = user.communityConnection.edges;
+      // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
+      if (user.username && user.communityConnection.edges.length === 0) {
+        return (
+          <NewUserOnboarding
+            noCloseButton
+            close={() => {}}
+            currentUser={user}
+          />
+        );
+      }
 
+      // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
       return (
-        <AppViewWrapper>
+        <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
 
-          {currentUser.username &&
-          communities.length === 0 && (
-            <NewUserOnboarding
-              noCloseButton
-              close={() => {}}
-              currentUser={currentUser}
-            />
-          )}
-
-          {!isMobile && (
-            <Column type="secondary">
-              <UserProfile profileSize="mini" data={{ user: user }} />
-              <CommunityList
-                withDescription={false}
-                currentUser={currentUser}
-                user={user}
-                communities={communities}
-                networkStatus={networkStatus}
-                withMeta={true}
-              />
-              <UpsellMiniCreateCommunity largeOnly />
-              {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
-            </Column>
-          )}
-
-          <Column type="primary">
-            <FlexCol>
+          <InboxWrapper>
+            <InboxScroller>
               <ThreadComposer />
               <EverythingThreadFeed viewContext="dashboard" />
-            </FlexCol>
-          </Column>
-        </AppViewWrapper>
+            </InboxScroller>
+          </InboxWrapper>
+        </DashboardWrapper>
       );
     }
 
-    // Got no data
-    if (networkStatus !== 7) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          {!isMobile && (
-            <Column type="secondary">
-              <LoadingProfile />
-              <LoadingList />
-            </Column>
-          )}
-          <Column type="primary">
-            {!isMobile && <LoadingComposer />}
-            <LoadingFeed />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
+    // loading state
+    if (networkStatus !== 7)
+      return <DashboardLoading title={title} description={description} />;
+
+    // error
+    if (networkStatus === 8)
+      return <DashboardError title={title} description={description} />;
   }
 }
 
-const Dashboard = compose(getCurrentUserProfile, withInfiniteScroll, pure)(
-  DashboardPure
-);
-export default Dashboard;
+export default compose(getCurrentUserProfile, pure)(Dashboard);
