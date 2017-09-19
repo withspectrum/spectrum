@@ -118,6 +118,7 @@ export const ThreadTitle = styled.h3`
     props.active ? props.theme.text.reverse : props.theme.text.default};
   margin: 8px 16px 0;
   max-width: 100%;
+  pointer-events: all;
   ${Truncate};
 `;
 
@@ -126,17 +127,20 @@ export const AttachmentsContainer = styled.div`margin: 8px 16px 0;`;
 export const ThreadMeta = styled.div`
   display: flex;
   margin: 8px 16px 16px;
+  pointer-events: all;
 `;
 
 export const FacepileContainer = styled.div`
   display: flex;
   margin-right: 8px;
+  pointer-events: all;
 `;
 
 export const ParticipantHead = styled.span`
   position: relative;
   left: -${props => props.offset * 8}px;
   border-radius: 24px;
+  pointer-events: all;
   box-shadow: 0 0 0 2px
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
 `;
@@ -161,11 +165,13 @@ export const MetaText = styled.span`
   position: relative;
   ${props => {
     if (props.offset > 5) {
-      return `-48px`;
+      return `left: -24px;`;
     } else if (props.offset === 5) {
-      return `-40px`;
+      return `left: -20px;`;
+    } else if (props.offset > 1) {
+      return `left: -${props.offset * 4}px;`;
     } else {
-      return `-${props.offset * 12}px`;
+      return `left: 0;`;
     }
   }} a {
     font-weight: 600;
@@ -188,12 +194,14 @@ export const AvatarLink = styled(Link)`
   height: 20px;
   margin-right: 8px;
   border-radius: 4px;
+  pointer-events: all;
   overflow: hidden;
 `;
 
 export const CommunityAvatar = styled.img`
   width: 100%;
   height: 100%;
+  pointer-events: all;
 `;
 
 export const CommunityLink = styled(Link)`
@@ -202,6 +210,7 @@ export const CommunityLink = styled(Link)`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   line-height: 1.28;
+  pointer-events: all;
 
   &:hover {
     color: ${props => props.theme.text.default};
@@ -223,6 +232,7 @@ export const PillLink = styled(Link)`
   font-weight: 400;
   max-height: 24px;
   line-height: 1;
+  pointer-events: all;
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.alt};
 
@@ -230,7 +240,10 @@ export const PillLink = styled(Link)`
     color: ${props =>
       props.active ? props.theme.brand.alt : props.theme.text.default};
     background: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.bg.reverse};
+      props.active ? props.theme.text.reverse : props.theme.bg.wash};
+    box-shadow: 0 0 0 1px
+      ${props =>
+        props.active ? props.theme.text.reverse : props.theme.text.alt};
   }
 `;
 
@@ -242,7 +255,13 @@ export const MiniLinkPreview = styled(Link)`
   font-weight: ${props => (props.active ? '500' : '400')};
   margin: 0 0 8px;
   align-items: center;
+  pointer-events: all;
   ${Truncate} .icon {
     margin-right: 4px;
+  }
+
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.default};
   }
 `;

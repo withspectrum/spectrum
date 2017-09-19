@@ -42,7 +42,7 @@ class InboxThread extends Component {
           <Link
             to={{
               pathname: window.location.pathname,
-              search: `?thread=${data.id}`,
+              search: `?t=${data.id}`,
             }}
           >
             <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
