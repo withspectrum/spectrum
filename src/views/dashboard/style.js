@@ -175,7 +175,7 @@ export const FacepileContainer = styled.div`
 
 export const ParticipantHead = styled.span`
   position: relative;
-  left: -${props => props.offset * 8}px;
+  margin-left: -8px;
   border-radius: 24px;
   pointer-events: auto;
   box-shadow: 0 0 0 2px
@@ -204,18 +204,8 @@ export const MetaText = styled.span`
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
-  position: relative;
-  ${props => {
-    if (props.offset > 5) {
-      return `left: -42px;`;
-    } else if (props.offset === 5) {
-      return `left: -${props.offset * 6}px;`;
-    } else if (props.offset > 1) {
-      return `left: -${props.offset * 4}px;`;
-    } else {
-      return `left: 0;`;
-    }
-  }} a {
+
+  a {
     font-weight: 600;
   }
 
