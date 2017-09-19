@@ -29,7 +29,7 @@ const Span = styled.span`
 const ProBadge = styled(Span)`
   background-color: ${props => props.theme.special.default};
   background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)}
+    Gradient(props.theme.special.alt, props.theme.special.default)};
   cursor: pointer;
 
   &:hover {
