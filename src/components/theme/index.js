@@ -56,7 +56,7 @@ export const theme = {
   success: {
     default: '#008C52',
     alt: '#00D5BD',
-    dark: '00663C',
+    dark: '#00663C',
     wash: '#D9FFF2',
     border: '#9FF5D9',
   },
