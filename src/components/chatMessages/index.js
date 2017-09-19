@@ -10,7 +10,6 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
-  truncateNumber,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
@@ -184,15 +183,15 @@ class ChatMessages extends Component {
                             (which has a typeof number)
                           */}
                           {!emojiOnly &&
-                          typeof message.id === 'string' && (
-                            <Reaction
-                              message={message}
-                              toggleReaction={toggleReaction}
-                              me={me}
-                              currentUser={currentUser}
-                              dispatch={dispatch}
-                            />
-                          )}
+                            typeof message.id === 'string' && (
+                              <Reaction
+                                message={message}
+                                toggleReaction={toggleReaction}
+                                me={me}
+                                currentUser={currentUser}
+                                dispatch={dispatch}
+                              />
+                            )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {

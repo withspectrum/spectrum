@@ -143,7 +143,7 @@ export const DropWrap = styled(FlexCol)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    color: ${({ theme }) => theme.border.default};
+    color: ${({ theme }) => theme.bg.border};
     transition: ${Transition.hover.on};
   }
 

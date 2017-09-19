@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import queryString from 'query-string';
@@ -419,11 +417,9 @@ class Navbar extends Component {
                   `/users/${loggedInUser.username}`
                 }
                 to={
-                  loggedInUser.username ? (
-                    `/users/${loggedInUser.username}`
-                  ) : (
-                    '/'
-                  )
+                  loggedInUser.username
+                    ? `/users/${loggedInUser.username}`
+                    : '/'
                 }
               >
                 <UserProfileAvatar

@@ -7,7 +7,7 @@ export const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   padding-bottom: 16px;
 `;
 
@@ -58,7 +58,7 @@ export const EmailInviteInput = styled.input`
   border-radius: 4px;
   border: 2px solid
     ${props =>
-      props.error ? props.theme.warn.default : props.theme.border.default};
+      props.error ? props.theme.warn.default : props.theme.bg.border};
   margin-bottom: 8px;
   margin-top: 8px;
   margin-left: 4px;

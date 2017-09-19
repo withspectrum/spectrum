@@ -18,8 +18,6 @@ import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 import { Divider } from './style';
-import { sortByDate } from '../../helpers/utils';
-import { clearActivityIndicator } from '../../actions/newActivityIndicator';
 import NewActivityIndicator from '../../components/newActivityIndicator';
 
 const NullState = () => (

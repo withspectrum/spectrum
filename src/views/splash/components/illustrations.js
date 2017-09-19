@@ -1,7 +1,7 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { zIndex, Shadow } from '../../../components/globals';
+import { zIndex } from '../../../components/globals';
 
 export const Cluster = styled.img`
   position: absolute;
@@ -89,7 +89,7 @@ export const ConversationWrapper = styled.div`
 
 export const Conversation = () => (
   <ConversationWrapper>
-    <img src="/img/conversation.svg" />
+    <img src="/img/conversation.svg" alt="conversation screenshot" />
   </ConversationWrapper>
 );
 

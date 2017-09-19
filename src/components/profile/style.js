@@ -137,7 +137,7 @@ export const ActionOutline = styled(OutlineButton)`
 
 export const Meta = styled.div`
   background: #f8fbfe;
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 8px 16px;
   width: 100%;
   border-radius: 0 0 12px 12px;
@@ -151,7 +151,7 @@ export const MetaListItem = styled.li`
   font-weight: 600;
   color: ${props => props.theme.text.alt};
   padding: 8px 0;
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -235,7 +235,7 @@ export const ProUpgrade = styled.div`
 `;
 
 export const ReputationContainer = styled.div`
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 12px 0;
   margin: 0 16px;
   display: flex;
