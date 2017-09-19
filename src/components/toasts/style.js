@@ -56,13 +56,19 @@ const Toast = styled.div`
 `;
 
 export const ErrorToast = styled(Toast)`
-  background: ${props => props.theme.warn.default};
+  background-color: ${props => props.theme.warn.default};
+  background-image: ${props =>
+    Gradient(props.theme.warn.alt, props.theme.warn.default)};
 `;
 
 export const SuccessToast = styled(Toast)`
-  background: ${props => props.theme.success.default};
+  background-color: ${props => props.theme.success.default};
+  background-image: ${props =>
+    Gradient(props.theme.success.alt, props.theme.success.default)};
 `;
 
 export const NeutralToast = styled(Toast)`
-  background: ${props => props.theme.text.alt};
+  background-color: ${props => props.theme.text.alt};
+  background-image: ${props =>
+    Gradient(props.theme.text.placeholder, props.theme.text.alt)};
 `;
