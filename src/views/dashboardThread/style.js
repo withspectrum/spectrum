@@ -21,7 +21,7 @@ export const Thread = styled.div`
   flex-direction: column;
   max-width: 100%;
   border-radius: 8px 8px 0 0;
-  box-shadow: 0 0 0 1px ${props => props.theme.border.default};
+  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     top: -48px;

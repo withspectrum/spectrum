@@ -8,7 +8,12 @@ class DashboardThread extends Component {
   render() {
     const { threadId } = this.props;
 
-    if (!threadId) return null;
+    if (!threadId)
+      return (
+        <Container>
+          <Thread>No thread selected</Thread>
+        </Container>
+      );
 
     if (threadId === 'new')
       return (

@@ -25,7 +25,7 @@ export const InboxWrapper = styled.div`
   position: relative;
   align-self: stretch;
   background: ${props => props.theme.bg.wash};
-  box-shadow: 1px 0 0 0 ${props => props.theme.border.default};
+  box-shadow: 1px 0 0 0 ${props => props.theme.bg.border};
 `;
 
 export const InboxScroller = styled.div`
@@ -54,8 +54,8 @@ export const CreateThreadComposer = styled(Link)`
   font-size: 18px;
   font-weight: 400;
   padding: 8px 16px;
-  border-top: 1px solid ${props => props.theme.border.default};
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   display: flex;
   color: ${props => props.theme.text.alt};
   align-items: center;
@@ -87,7 +87,7 @@ export const ComposerLeft = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid ${props => props.theme.border.default};
+  border-top: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   position: relative;
 `;
@@ -199,7 +199,7 @@ export const CommunityLink = styled(Link)`
 export const PillLink = styled(Link)`
   display: inline-block;
   height: 20px;
-  box-shadow: 0 0 0 1px ${props => props.theme.border.default};
+  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
