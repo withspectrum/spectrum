@@ -16,6 +16,7 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
+  InboxClickWrapper,
   InboxThreadContent,
   ThreadTitle,
   AttachmentsContainer,
@@ -35,12 +36,17 @@ class InboxThread extends Component {
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
+    const isMobile = window && window.innerWidth < 768;
 
     return (
       <InboxThreadItem active={active}>
-        <InboxLinkWrapper
-          onClick={() => this.props.dispatch(changeActiveThread(data.id))}
-        />
+        {isMobile ? (
+          <InboxLinkWrapper to={`?thread=${data.id}`} />
+        ) : (
+          <InboxClickWrapper
+            onClick={() => this.props.dispatch(changeActiveThread(data.id))}
+          />
+        )}
         <InboxThreadContent>
           <ThreadCommunityInfo
             thread={data}

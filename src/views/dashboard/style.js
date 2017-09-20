@@ -33,6 +33,7 @@ export const InboxWrapper = styled.div`
   @media (max-width: 768px) {
     max-width: 100%;
     flex: auto;
+    border-right: none;
   }
 `;
 
@@ -214,7 +215,23 @@ export const InboxThreadItem = styled.div`
   }
 `;
 
-export const InboxLinkWrapper = styled.span`
+export const InboxLinkWrapper = styled(Link)`
+  position: absolute;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: ${zIndex.card};
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const InboxClickWrapper = styled.span`
   position: absolute;
   display: inline-block;
   height: 100%;
