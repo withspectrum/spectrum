@@ -47,6 +47,7 @@ export const CommunityListWrapper = styled.div`
   padding-top: 8px;
   display: flex;
   width: 65px;
+  min-width: 65px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
