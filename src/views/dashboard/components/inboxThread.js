@@ -31,6 +31,7 @@ class InboxThread extends Component {
       data,
       active,
       location,
+      hasActiveCommunity,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
@@ -41,7 +42,10 @@ class InboxThread extends Component {
           onClick={() => this.props.dispatch(changeActiveThread(data.id))}
         />
         <InboxThreadContent>
-          <ThreadCommunityInfo thread={data} active={active} />
+          {!hasActiveCommunity && (
+            <ThreadCommunityInfo thread={data} active={active} />
+          )}
+
           <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
 
           {attachmentsExist &&

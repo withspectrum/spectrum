@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  flex: 0 0 25%;
+  flex: auto;
   max-width: 528px;
   min-width: 320px;
   overflow-y: hidden;
@@ -44,50 +44,105 @@ export const InboxScroller = styled.div`
 `;
 
 export const CommunityListWrapper = styled.div`
+  padding-top: 8px;
   display: flex;
-  width: 60px;
+  width: 65px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
   flex-direction: column;
   background: ${props => props.theme.bg.wash};
   border-right: 1px solid ${props => props.theme.bg.border};
+  opacity: 0.5;
+  transform: translateZ(0);
+  filter: grayscale(50%);
+  transition: all 0.2s ease-in-out;
+  box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    transform: translateZ(0);
+    width: 256px;
+    filter: grayscale(0%);
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const CommunityListItem = styled.div`
-  width: 40px;
-  height: 40px;
-  margin: 16px auto;
-  border-radius: 8px;
+  margin: 8px 14px;
+  border-radius: 6px;
   transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  color: ${props =>
+    props.active ? props.theme.brand.default : props.theme.text.alt};
+  background: ${props =>
+    props.active ? props.theme.brand.default : props.theme.bg.wash};
+  padding: 2px 8px 2px 2px;
 
   ${props =>
     props.active &&
     css`
-      box-shadow: 0 0 0 2px ${props.theme.brand.default};
+      img {
+        border: 1px solid
+          ${props => (props.active ? props.theme.bg.default : 'transparent')};
+        box-shadow: 0 0 0 2px ${props.theme.brand.default};
+      }
     `} &:hover {
     transition: all 0.2s ease-in-out;
+    background: ${props =>
+      props.active ? props.theme.brand.default : props.theme.bg.border};
 
     ${props =>
       props.active
         ? css`
-            box-shadow: 0 0 0 2px ${props.theme.brand.default};
+            img {
+              box-shadow: 0 0 0 2px ${props.theme.brand.default};
+            }
           `
         : css`
-            box-shadow: 0 0 0 2px ${props.theme.bg.border};
+            img {
+              box-shadow: 0 0 0 2px ${props.theme.bg.border};
+            }
           `};
   }
 `;
 
-export const AllCommunityListItem = styled(CommunityListItem)`
+export const CommunityListName = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.default};
+
+  ${Truncate};
+`;
+
+export const AllCommunityListItem = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: ${props => props.theme.bg.border};
 `;
 
 export const CommunityListAvatar = styled.img`
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  cursor: pointer;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  display: inline-block;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-right: 16px;
 `;
 
 export const CommunityListScroller = styled.div`
@@ -116,6 +171,8 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
+  max-width: 840px;
+  border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     display: none;
@@ -183,12 +240,11 @@ export const InboxThreadContent = styled.div`
 
 export const ThreadTitle = styled.h3`
   font-size: 18px;
-  font-weight: ${props => (props.active ? '600' : '400')};
+  font-weight: 600;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
   margin: 16px 16px 8px;
   max-width: 100%;
-  pointer-events: auto;
   line-height: 1.4;
 `;
 

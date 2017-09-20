@@ -99,7 +99,10 @@ class Dashboard extends Component {
               {!activeCommunity ? (
                 <EverythingThreadFeed selectedId={activeThread} />
               ) : (
-                <CommunityThreadFeed id={activeCommunity} />
+                <CommunityThreadFeed
+                  id={activeCommunity}
+                  hasActiveCommunity={activeCommunity}
+                />
               )}
             </InboxScroller>
           </InboxWrapper>

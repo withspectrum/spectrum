@@ -121,6 +121,7 @@ class ThreadFeed extends Component {
                 key={thread.id}
                 data={thread}
                 active={selectedId === thread.id}
+                hasActiveCommunity={this.props.hasActiveCommunity}
               />
             );
           })}

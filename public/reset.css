@@ -45,10 +45,6 @@ textarea {
   color: #ffffff;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 body {
   position: relative;
   height: 100%;

@@ -6,9 +6,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
+import Icon from '../../../components/icons';
 import {
   AllCommunityListItem,
   CommunityListItem,
+  CommunityListName,
   CommunityListAvatar,
 } from '../style';
 import { changeActiveCommunity } from '../../../actions/dashboardFeed';
@@ -23,22 +25,28 @@ class CommunityList extends Component {
 
     return (
       <div>
-        <AllCommunityListItem
-          tipText={'All communities'}
-          tipLocation={'right'}
+        <CommunityListItem
           active={!this.props.activeCommunity}
           onClick={() => this.props.dispatch(changeActiveCommunity(''))}
-        />
+        >
+          <AllCommunityListItem>
+            <Icon glyph={'everything'} />
+          </AllCommunityListItem>
+          <CommunityListName active={!this.props.activeCommunity}>
+            All Communities
+          </CommunityListName>
+        </CommunityListItem>
 
         {sortedCommunities.map(c => (
           <CommunityListItem
             key={c.id}
-            tipText={c.name}
-            tipLocation={'right'}
             active={c.id === this.props.activeCommunity}
             onClick={() => this.props.dispatch(changeActiveCommunity(c.id))}
           >
             <CommunityListAvatar src={c.profilePhoto} />
+            <CommunityListName active={c.id === this.props.activeCommunity}>
+              {c.name}
+            </CommunityListName>
           </CommunityListItem>
         ))}
       </div>
