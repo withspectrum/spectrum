@@ -88,7 +88,6 @@ class ThreadContainerPure extends Component {
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
       if (this.state.scrollElement) {
-        console.log('scrolling thread to top');
         this.state.scrollElement.scrollTop = 0;
       }
     }

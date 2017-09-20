@@ -8,6 +8,7 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
 import Facepile from './facepile';
 import ThreadCommunityInfo from './threadCommunityInfo';
@@ -24,7 +25,12 @@ import {
 
 class InboxThread extends Component {
   render() {
-    const { data: { attachments, participants }, data, active } = this.props;
+    const {
+      data: { attachments, participants },
+      data,
+      active,
+      location,
+    } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
 
@@ -32,9 +38,11 @@ class InboxThread extends Component {
       <InboxThreadItem active={active}>
         <InboxLinkWrapper
           to={{
-            pathname: window.location.pathname,
+            pathname: location.pathname,
             search:
-              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+              window && window.innerWidth < 768
+                ? `?thread=${data.id}`
+                : `?t=${data.id}`,
           }}
         />
 
@@ -42,9 +50,9 @@ class InboxThread extends Component {
           <ThreadCommunityInfo thread={data} active={active} />
           <Link
             to={{
-              pathname: window.location.pathname,
+              pathname: location.pathname,
               search:
-                window.innerWidth < 768
+                window && window.innerWidth < 768
                   ? `?thread=${data.id}`
                   : `?t=${data.id}`,
             }}
@@ -97,4 +105,4 @@ class InboxThread extends Component {
   }
 }
 
-export default compose(connect(), pure)(InboxThread);
+export default compose(connect(), withRouter, pure)(InboxThread);

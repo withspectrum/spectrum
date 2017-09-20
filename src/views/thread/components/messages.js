@@ -67,7 +67,6 @@ class MessagesWithData extends Component {
       prevProps.data.thread &&
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
-      console.log('thread changed, swap out the subscription');
       this.unsubscribe().then(() => this.subscribe());
     }
   }

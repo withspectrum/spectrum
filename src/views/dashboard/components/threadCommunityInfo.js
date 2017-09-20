@@ -19,7 +19,7 @@ export default ({ thread, active }) => {
   return (
     <CommunityInfoContainer active={active}>
       <AvatarLink to={`/${channel.community.slug}`}>
-        <CommunityAvatar src={`${channel.community.profilePhoto}?w=20`} />
+        <CommunityAvatar src={`${channel.community.profilePhoto}?w=20&dpr=2`} />
       </AvatarLink>
 
       <MetaCommunityName to={`/${channel.community.slug}`}>
