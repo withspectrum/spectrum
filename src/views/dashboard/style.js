@@ -160,6 +160,11 @@ export const AttachmentsContainer = styled.div`
     color: ${props =>
       props.active ? props.theme.text.reverse : props.theme.text.alt};
   }
+
+  a:hover {
+    color: ${props =>
+      props.active ? props.theme.text.reverse : props.theme.text.default};
+  }
 `;
 
 export const ThreadMeta = styled.div`
