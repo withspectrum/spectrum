@@ -170,6 +170,7 @@ export const ThreadMeta = styled.div`
 export const FacepileContainer = styled.div`
   display: flex;
   margin-right: 8px;
+  margin-left: 8px;
   pointer-events: auto;
 `;
 
