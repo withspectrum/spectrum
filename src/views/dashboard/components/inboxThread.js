@@ -63,20 +63,20 @@ class InboxThread extends Component {
           {attachmentsExist &&
             attachments
               .filter(att => att.attachmentType === 'linkPreview')
-              .map(att => (
-                <AttachmentsContainer
-                  active={active}
-                  key={JSON.parse(att.data).trueUrl}
-                >
-                  <MiniLinkPreview
-                    to={JSON.parse(att.data).trueUrl}
-                    target="_blank"
-                  >
-                    <Icon glyph="link" size={16} />
-                    {JSON.parse(att.data).trueUrl}
-                  </MiniLinkPreview>
-                </AttachmentsContainer>
-              ))}
+              .map(att => {
+                const attData = JSON.parse(att.data);
+                const url = attData.trueUrl || attData.url;
+                if (!url) return null;
+
+                return (
+                  <AttachmentsContainer active={active} key={url}>
+                    <MiniLinkPreview to={url} target="_blank">
+                      <Icon glyph="link" size={16} />
+                      {url}
+                    </MiniLinkPreview>
+                  </AttachmentsContainer>
+                );
+              })}
 
           <ThreadMeta>
             {participantsExist && (
