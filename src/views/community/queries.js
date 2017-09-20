@@ -41,6 +41,7 @@ const threadsQueryOptions = {
       hasNextPage: community
         ? community.threadConnection.pageInfo.hasNextPage
         : false,
+      feed: community && community.id,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,

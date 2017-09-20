@@ -47,7 +47,7 @@ class ThreadFeed extends Component {
     const { subscription } = this.state;
     if (subscription) {
       // This unsubscribes the subscription
-      subscription();
+      return Promise.resolve(subscription());
     }
   };
 
@@ -66,6 +66,23 @@ class ThreadFeed extends Component {
       if (hasFirstThread) {
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
+    }
+
+    // if the user changes the feed from all to a specific community, we need to reset the active thread in the inbox and reset our subscription for updates
+    if (
+      (!prevProps.data.feed && this.props.data.feed) ||
+      (prevProps.data.feed && prevProps.data.feed !== this.props.data.feed)
+    ) {
+      const hasFirstThread = this.props.data.threads.length > 0;
+      const firstThreadId = hasFirstThread
+        ? this.props.data.threads[0].node.id
+        : '';
+      if (hasFirstThread) {
+        this.props.dispatch(changeActiveThread(firstThreadId));
+      }
+
+      this.state.scrollElement.scrollTop = 0;
+      this.unsubscribe().then(() => this.subscribe());
     }
   }
 
@@ -91,7 +108,8 @@ class ThreadFeed extends Component {
     const { scrollElement } = this.state;
 
     // loading state
-    if (networkStatus !== 7) return <LoadingThreadFeed />;
+    if (networkStatus !== 7 && networkStatus !== 3)
+      return <LoadingThreadFeed />;
 
     // error
     if (networkStatus === 8) return <ErrorThreadFeed />;

@@ -74,6 +74,9 @@ class Dashboard extends Component {
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
       const communities = user.communityConnection.edges.map(c => c.node);
+      const activeCommunityObject = communities.filter(
+        c => c.id === activeCommunity
+      );
       return (
         <DashboardWrapper>
           <Head title={title} description={description} />
@@ -101,7 +104,9 @@ class Dashboard extends Component {
               ) : (
                 <CommunityThreadFeed
                   id={activeCommunity}
+                  selectedId={activeThread}
                   hasActiveCommunity={activeCommunity}
+                  community={activeCommunityObject}
                 />
               )}
             </InboxScroller>

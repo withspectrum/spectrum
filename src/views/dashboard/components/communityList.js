@@ -13,9 +13,17 @@ import {
   CommunityListName,
   CommunityListAvatar,
 } from '../style';
-import { changeActiveCommunity } from '../../../actions/dashboardFeed';
+import {
+  changeActiveCommunity,
+  changeActiveThread,
+} from '../../../actions/dashboardFeed';
 
 class CommunityList extends Component {
+  changeCommunity = id => {
+    this.props.dispatch(changeActiveCommunity(id));
+    this.props.dispatch(changeActiveThread(''));
+  };
+
   render() {
     const sortedCommunities = this.props.communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
@@ -27,7 +35,7 @@ class CommunityList extends Component {
       <div>
         <CommunityListItem
           active={!this.props.activeCommunity}
-          onClick={() => this.props.dispatch(changeActiveCommunity(''))}
+          onClick={() => this.changeCommunity('')}
         >
           <AllCommunityListItem>
             <Icon glyph={'everything'} />
@@ -41,7 +49,7 @@ class CommunityList extends Component {
           <CommunityListItem
             key={c.id}
             active={c.id === this.props.activeCommunity}
-            onClick={() => this.props.dispatch(changeActiveCommunity(c.id))}
+            onClick={() => this.changeCommunity(c.id)}
           >
             <CommunityListAvatar src={c.profilePhoto} />
             <CommunityListName active={c.id === this.props.activeCommunity}>

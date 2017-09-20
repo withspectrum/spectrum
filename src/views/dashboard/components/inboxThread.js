@@ -77,9 +77,11 @@ class InboxThread extends Component {
 
             {data.messageCount > 0 ? (
               <MetaText offset={participants.length} active={active}>
-                {data.messageCount > 1
-                  ? `${data.messageCount} messages`
-                  : `${data.messageCount} message`}
+                {data.messageCount > 1 ? (
+                  `${data.messageCount} messages`
+                ) : (
+                  `${data.messageCount} message`
+                )}
               </MetaText>
             ) : (
               <MetaText offset={participants.length} active={active} new>
