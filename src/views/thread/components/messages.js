@@ -104,11 +104,14 @@ class MessagesWithData extends Component {
       toggleReaction,
       forceScrollToBottom,
       hasMessagesToLoad,
+      viewStatus,
     } = this.props;
 
-    const dataExists = data.thread && data.thread.messageConnection;
+    const dataExists =
+      networkStatus === 7 && data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
+
     if (networkStatus === 8 || error) {
       return (
         <NullState
