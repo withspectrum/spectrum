@@ -13,7 +13,6 @@ export const Container = styled.div`
   height: 100%;
   max-height: 100%;
   position: relative;
-  left: 1px;
 `;
 
 export const Thread = styled.div`
@@ -36,13 +35,11 @@ export const NullContainer = styled.div`
 
 export const NullThread = styled.div`
   display: flex;
-
   flex: auto;
   z-index: ${zIndex.slider + 3};
   flex-direction: column;
   max-width: 100%;
   border-radius: 8px;
-
   align-items: center;
   justify-content: center;
 
@@ -51,16 +48,6 @@ export const NullThread = styled.div`
     font-size: 18px;
     font-weight: 600;
   }
-`;
-
-export const Illo = styled.div`
-  background-image: url('/img/discover.svg');
-  width: 250px;
-  height: 360px;
-  -webkit-filter: grayscale(50%);
-  filter: grayscale(50%);
-  background-repeat: no-repeat;
-  opacity: 0.2;
 `;
 
 export const Heading = styled.h3`

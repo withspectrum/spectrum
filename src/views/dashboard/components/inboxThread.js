@@ -12,6 +12,7 @@ import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
 import Facepile from './facepile';
 import ThreadCommunityInfo from './threadCommunityInfo';
+import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
@@ -37,28 +38,11 @@ class InboxThread extends Component {
     return (
       <InboxThreadItem active={active}>
         <InboxLinkWrapper
-          to={{
-            pathname: location.pathname,
-            search:
-              window && window.innerWidth < 768
-                ? `?thread=${data.id}`
-                : `?t=${data.id}`,
-          }}
+          onClick={() => this.props.dispatch(changeActiveThread(data.id))}
         />
-
         <InboxThreadContent>
           <ThreadCommunityInfo thread={data} active={active} />
-          <Link
-            to={{
-              pathname: location.pathname,
-              search:
-                window && window.innerWidth < 768
-                  ? `?thread=${data.id}`
-                  : `?t=${data.id}`,
-            }}
-          >
-            <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
-          </Link>
+          <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
 
           {attachmentsExist &&
             attachments

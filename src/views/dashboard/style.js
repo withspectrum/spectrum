@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+// $FlowFixMe
+import styled, { css } from 'styled-components';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { zIndex, Truncate, Tooltip } from '../../components/globals';
 
@@ -18,7 +20,7 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  flex: 0 0 33%;
+  flex: 0 0 25%;
   max-width: 528px;
   min-width: 320px;
   overflow-y: hidden;
@@ -26,7 +28,7 @@ export const InboxWrapper = styled.div`
   align-self: stretch;
   flex-direction: column;
   background: ${props => props.theme.bg.wash};
-  box-shadow: 1px 0 0 0 ${props => props.theme.bg.border};
+  border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -35,6 +37,60 @@ export const InboxWrapper = styled.div`
 `;
 
 export const InboxScroller = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  position: relative;
+`;
+
+export const CommunityListWrapper = styled.div`
+  display: flex;
+  width: 60px;
+  overflow-y: hidden;
+  position: relative;
+  align-self: stretch;
+  flex-direction: column;
+  background: ${props => props.theme.bg.wash};
+  border-right: 1px solid ${props => props.theme.bg.border};
+`;
+
+export const CommunityListItem = styled.div`
+  width: 40px;
+  height: 40px;
+  margin: 16px auto;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+
+  ${props =>
+    props.active &&
+    css`
+      box-shadow: 0 0 0 2px ${props.theme.brand.default};
+    `} &:hover {
+    transition: all 0.2s ease-in-out;
+
+    ${props =>
+      props.active
+        ? css`
+            box-shadow: 0 0 0 2px ${props.theme.brand.default};
+          `
+        : css`
+            box-shadow: 0 0 0 2px ${props.theme.bg.border};
+          `};
+  }
+`;
+
+export const AllCommunityListItem = styled(CommunityListItem)`
+  background: ${props => props.theme.bg.border};
+`;
+
+export const CommunityListAvatar = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+`;
+
+export const CommunityListScroller = styled.div`
   height: 100%;
   width: 100%;
   overflow-y: scroll;
@@ -73,19 +129,6 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
-// export const CreateThreadComposer = styled(Link)`
-//   font-size: 18px;
-//   font-weight: 400;
-//   padding: 8px 16px;
-//   border-top: 1px solid ${props => props.theme.bg.border};
-//   border-bottom: 1px solid ${props => props.theme.bg.border};
-//   display: flex;
-//   color: ${props => props.theme.text.alt};
-//   align-items: center;
-//   justify-content: flex-end;
-//   background: ${props => props.theme.bg.default};
-// `;
-
 export const CreateThreadComposer = styled(Link)`
   display: flex;
   align-items: center;
@@ -97,19 +140,6 @@ export const ComposeIconContainer = styled.div`
   top: 2px;
   color: ${props => props.theme.brand.alt};
 `;
-
-// export const ChevronIconContainer = styled.div`
-//   align-self: flex-end;
-//   display: flex;
-//   opacity: 0.4;
-//   position: relative;
-//   top: -4px;
-// `;
-
-// export const ComposerLeft = styled.div`
-//   display: flex;
-//   align-items: center;
-// `;
 
 export const InboxThreadItem = styled.div`
   display: flex;
@@ -126,7 +156,7 @@ export const InboxThreadItem = styled.div`
   }
 `;
 
-export const InboxLinkWrapper = styled(Link)`
+export const InboxLinkWrapper = styled.span`
   position: absolute;
   display: inline-block;
   height: 100%;
@@ -136,6 +166,10 @@ export const InboxLinkWrapper = styled(Link)`
   left: 0;
   right: 0;
   z-index: ${zIndex.card};
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const InboxThreadContent = styled.div`

@@ -11,6 +11,7 @@ import queryString from 'query-string';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
+import { getCommunityThreads } from '../../views/community/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import { Column } from '../../components/column';
@@ -20,16 +21,18 @@ import DashboardThreadFeed from './components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import CommunityList from '../user/components/communityList';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
 import Composer from './components/inboxComposer';
+import CommunityList from './components/communityList';
 import {
   Wrapper,
   InboxWrapper,
   InboxScroller,
+  CommunityListWrapper,
+  CommunityListScroller,
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
@@ -39,15 +42,22 @@ const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
 );
 
+const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
+  DashboardThreadFeed
+);
+
 const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 
 class Dashboard extends Component {
   render() {
-    const { data: { user, networkStatus }, newActivityIndicator } = this.props;
+    const {
+      data: { user, networkStatus },
+      newActivityIndicator,
+      activeThread,
+      activeCommunity,
+    } = this.props;
     const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
-    const parsed = queryString.parse(this.props.location.search);
-    const threadId = parsed.t;
 
     // if the query is no longer loading and we successfully returned a user from the server we can load the dashboard
     if (dataExists) {
@@ -63,10 +73,20 @@ class Dashboard extends Component {
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
+      const communities = user.communityConnection.edges.map(c => c.node);
       return (
         <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
+
+          <CommunityListWrapper>
+            <CommunityListScroller>
+              <CommunityList
+                communities={communities}
+                activeCommunity={activeCommunity}
+              />
+            </CommunityListScroller>
+          </CommunityListWrapper>
 
           <InboxWrapper>
             <FeedHeaderContainer>
@@ -76,13 +96,17 @@ class Dashboard extends Component {
               <NewActivityIndicator elem="scroller-for-inbox" />
             )}
             <InboxScroller id="scroller-for-inbox">
-              <EverythingThreadFeed selectedId={threadId} />
+              {!activeCommunity ? (
+                <EverythingThreadFeed selectedId={activeThread} />
+              ) : (
+                <CommunityThreadFeed id={activeCommunity} />
+              )}
             </InboxScroller>
           </InboxWrapper>
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <DashboardThread threadId={threadId} />
+              <DashboardThread threadId={activeThread} />
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>
@@ -101,5 +125,7 @@ class Dashboard extends Component {
 
 const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
+  activeThread: state.dashboardFeed.activeThread,
+  activeCommunity: state.dashboardFeed.activeCommunity,
 });
 export default compose(connect(map), getCurrentUserProfile, pure)(Dashboard);

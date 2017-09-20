@@ -8,11 +8,14 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
+import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
@@ -56,8 +59,13 @@ class ThreadFeed extends Component {
     const isDesktop = window.innerWidth > 768;
 
     if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {
-      const firstThreadId = this.props.data.threads[0].node.id;
-      this.props.history.push({ search: `?t=${firstThreadId}` });
+      const hasFirstThread = this.props.data.threads.length > 0;
+      const firstThreadId = hasFirstThread
+        ? this.props.data.threads[0].node.id
+        : '';
+      if (hasFirstThread) {
+        this.props.dispatch(changeActiveThread(firstThreadId));
+      }
     }
   }
 
@@ -122,4 +130,4 @@ class ThreadFeed extends Component {
   }
 }
 
-export default compose(withRouter, pure)(ThreadFeed);
+export default compose(withRouter, connect(), pure)(ThreadFeed);
