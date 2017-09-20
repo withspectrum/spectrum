@@ -17,7 +17,7 @@ const messageAvatars = (list, active) => {
       active={active}
       key={participant.id}
       tipText={participant.name}
-      tipLocation={'top-left'}
+      tipLocation={'top-right'}
     >
       <Avatar
         size={24}
@@ -44,7 +44,7 @@ const Facepile = ({ participants, creator, active }) => {
         role="presentation"
         key={creator.id}
         tipText={`Posted by ${creator.name}`}
-        tipLocation={'top-left'}
+        tipLocation={'top-right'}
       >
         <Avatar
           size={24}
@@ -60,7 +60,7 @@ const Facepile = ({ participants, creator, active }) => {
           active={active}
           offset={NUM_TO_DISPLAY + 1}
           tipText={`+${participantCount - NUM_TO_DISPLAY} more`}
-          tipLocation={'top-left'}
+          tipLocation={'top-right'}
         >{`+${participantCount - NUM_TO_DISPLAY}`}</EmptyParticipantHead>
       )}
     </FacepileContainer>

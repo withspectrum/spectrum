@@ -183,7 +183,7 @@ export const FacepileContainer = styled.div`
   margin-right: 8px;
   margin-left: 8px;
   pointer-events: auto;
-  order: 2;
+  order: 1;
 `;
 
 export const ParticipantHead = styled.span`
@@ -223,6 +223,7 @@ export const MetaText = styled.span`
       ? props.active ? props.theme.text.reverse : props.theme.warn.alt
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
+  order: 2;
 
   a {
     font-weight: 600;
