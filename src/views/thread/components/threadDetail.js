@@ -61,6 +61,8 @@ import {
   Location,
 } from '../style';
 
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
+
 class ThreadDetailPure extends Component {
   state: {
     isEditing: boolean,
@@ -302,29 +304,27 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
+    this.listenForUrl(state);
     this.setState({
       body: state,
     });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
@@ -345,7 +345,7 @@ class ThreadDetailPure extends Component {
           // this.props.dispatch(stopLoading());
 
           this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
+            linkPreview: data,
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
@@ -596,26 +596,21 @@ class ThreadDetailPure extends Component {
               </Edited>
             )}
           </FlexRow>
-          <div className="markdown">
-            <Highlight continuously={false}>
-              <Editor
-                readOnly={!this.state.isEditing}
-                state={body}
-                onChange={this.changeBody}
-              />
-            </Highlight>
-          </div>
-
-          {linkPreview &&
-            !fetchingLinkPreview && (
-              <LinkPreview
-                trueUrl={linkPreview.url}
-                data={linkPreview}
-                size={'large'}
-                editable={false}
-                margin={'16px 0 0 0'}
-              />
-            )}
+          <Highlight continuously={false}>
+            <Editor
+              readOnly={!this.state.isEditing}
+              state={body}
+              onChange={this.changeBody}
+              placeholder="Write more thoughts here, add photos, and anything else!"
+              showLinkPreview={true}
+              linkPreview={{
+                loading: fetchingLinkPreview,
+                remove: this.removeLinkPreview,
+                trueUrl: linkPreview && linkPreview.url,
+                data: linkPreview,
+              }}
+            />
+          </Highlight>
         </span>
       </ThreadWrapper>
     );

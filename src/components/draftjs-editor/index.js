@@ -131,26 +131,27 @@ class Editor extends React.Component {
     } = this.props;
 
     return (
-      <Wrapper
-        className={`${className} ${markdown !== false && 'markdown'}`}
-        style={style}
-        onClick={this.focus}
-        focus={focus}
-      >
-        <DraftEditor
-          editorState={state}
-          onChange={onChange}
-          plugins={this.state.plugins}
-          handleDroppedFiles={this.handleDroppedFiles}
-          blockRenderMap={
-            singleLine === true && this.state.singleLineBlockRenderMap
-          }
-          ref={editor => {
-            this.editor = editor;
-            if (this.props.editorRef) this.props.editorRef(editor);
-          }}
-          {...rest}
-        />
+      <div style={style}>
+        <Wrapper
+          className={`${className} ${markdown !== false && 'markdown'}`}
+          onClick={this.focus}
+          focus={focus}
+        >
+          <DraftEditor
+            editorState={state}
+            onChange={onChange}
+            plugins={this.state.plugins}
+            handleDroppedFiles={this.handleDroppedFiles}
+            blockRenderMap={
+              singleLine === true && this.state.singleLineBlockRenderMap
+            }
+            ref={editor => {
+              this.editor = editor;
+              if (this.props.editorRef) this.props.editorRef(editor);
+            }}
+            {...rest}
+          />
+        </Wrapper>
         {showLinkPreview && linkPreview && linkPreview.loading ? (
           <LinkPreviewLoading margin={'16px 0 24px 0'} />
         ) : showLinkPreview && linkPreview && linkPreview.data ? (
@@ -158,7 +159,7 @@ class Editor extends React.Component {
             data={linkPreview.data}
             size={'large'}
             remove={linkPreview.remove}
-            editable={true}
+            editable={!this.props.readOnly}
             trueUrl={linkPreview.trueUrl}
             margin={'16px 0 24px 0'}
           />
@@ -171,7 +172,7 @@ class Editor extends React.Component {
               </MediaInput>
             </MediaRow>
           )}
-      </Wrapper>
+      </div>
     );
   }
 }
