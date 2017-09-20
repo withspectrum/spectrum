@@ -2,13 +2,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { zIndex, Truncate } from '../../components/globals';
+import { zIndex, Truncate, Tooltip } from '../../components/globals';
 
 export const Wrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  overflow: hidden;
+  overflow-y: hidden;
   flex: auto;
 
   @media (max-width: 768px) {
@@ -119,6 +119,11 @@ export const InboxThreadItem = styled.div`
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
+
+  &:hover {
+    background: ${props =>
+      props.active ? props.theme.brand.alt : props.theme.bg.wash};
+  }
 `;
 
 export const InboxLinkWrapper = styled(Link)`
@@ -188,6 +193,12 @@ export const ParticipantHead = styled.span`
   pointer-events: auto;
   box-shadow: 0 0 0 2px
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
+  transform: translateY(0);
+  transition: all 0.2s ease-in-out;
+  ${Tooltip} &:hover {
+    transform: translateY(-4px);
+    transition: all 0.2s ease-in-out;
+  }
 `;
 
 export const EmptyParticipantHead = styled(ParticipantHead)`

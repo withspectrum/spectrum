@@ -12,7 +12,13 @@ const messageAvatars = (list, active) => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
 
   return avatarList.map((participant, i) => (
-    <ParticipantHead offset={i + 1} active={active} key={participant.id}>
+    <ParticipantHead
+      offset={i + 1}
+      active={active}
+      key={participant.id}
+      tipText={participant.name}
+      tipLocation={'top-left'}
+    >
       <Avatar
         size={24}
         isOnline={false}
@@ -37,6 +43,8 @@ const Facepile = ({ participants, creator, active }) => {
         offset={0}
         role="presentation"
         key={creator.id}
+        tipText={`Posted by ${creator.name}`}
+        tipLocation={'top-left'}
       >
         <Avatar
           size={24}
@@ -51,6 +59,8 @@ const Facepile = ({ participants, creator, active }) => {
         <EmptyParticipantHead
           active={active}
           offset={NUM_TO_DISPLAY + 1}
+          tipText={`+${participantCount - NUM_TO_DISPLAY} more`}
+          tipLocation={'top-left'}
         >{`+${participantCount - NUM_TO_DISPLAY}`}</EmptyParticipantHead>
       )}
     </FacepileContainer>
