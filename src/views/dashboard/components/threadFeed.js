@@ -59,10 +59,12 @@ class ThreadFeed extends Component {
     const isDesktop = window.innerWidth > 768;
 
     if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {
-      const hasFirstThread = this.props.data.threads.length > 0;
-      const firstThreadId = hasFirstThread
-        ? this.props.data.threads[0].node.id
-        : '';
+      const threadNodes = this.props.data.threads
+        .slice()
+        .map(thread => thread.node);
+      const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+      const hasFirstThread = sortedThreadNodes.length > 0;
+      const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
@@ -73,10 +75,12 @@ class ThreadFeed extends Component {
       (!prevProps.data.feed && this.props.data.feed) ||
       (prevProps.data.feed && prevProps.data.feed !== this.props.data.feed)
     ) {
-      const hasFirstThread = this.props.data.threads.length > 0;
-      const firstThreadId = hasFirstThread
-        ? this.props.data.threads[0].node.id
-        : '';
+      const threadNodes = this.props.data.threads
+        .slice()
+        .map(thread => thread.node);
+      const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+      const hasFirstThread = sortedThreadNodes.length > 0;
+      const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
