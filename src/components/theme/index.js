@@ -12,7 +12,7 @@ export const theme = {
     inactive: '#DFE7EF',
   },
   brand: {
-    default: '#2102CB',
+    default: '#4400CC',
     alt: '#7B16FF',
     wash: '#E8E5FF',
     border: '#DDD9FF',
@@ -40,7 +40,7 @@ export const theme = {
     },
   },
   space: {
-    default: '#0059C2',
+    default: '#0062D6',
     alt: '#1CD2F2',
     wash: '#E5F0FF',
     border: '#BDD8FF',
@@ -54,7 +54,7 @@ export const theme = {
     border: '#FFE6BF',
   },
   success: {
-    default: '#008C52',
+    default: '#00B88B',
     alt: '#00D5BD',
     dark: '#00663C',
     wash: '#D9FFF2',
