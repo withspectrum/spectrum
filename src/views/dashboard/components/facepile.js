@@ -59,8 +59,6 @@ const Facepile = ({ participants, creator, active }) => {
         <EmptyParticipantHead
           active={active}
           offset={NUM_TO_DISPLAY + 1}
-          tipText={`+${participantCount - NUM_TO_DISPLAY} more`}
-          tipLocation={'top-right'}
         >{`+${participantCount - NUM_TO_DISPLAY}`}</EmptyParticipantHead>
       )}
     </FacepileContainer>

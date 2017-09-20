@@ -13,18 +13,26 @@ import {
   MetaCommunityName,
 } from '../style';
 
-export default ({ thread, active }) => {
+export default ({ thread, active, activeCommunity }) => {
   const { channel } = thread;
   const isGeneral = channel.slug === 'general';
+  if (activeCommunity && isGeneral) return null;
+
   return (
     <CommunityInfoContainer active={active}>
-      <AvatarLink to={`/${channel.community.slug}`}>
-        <CommunityAvatar src={`${channel.community.profilePhoto}?w=20&dpr=2`} />
-      </AvatarLink>
+      {!activeCommunity && (
+        <AvatarLink to={`/${channel.community.slug}`}>
+          <CommunityAvatar
+            src={`${channel.community.profilePhoto}?w=20&dpr=2`}
+          />
+        </AvatarLink>
+      )}
 
-      <MetaCommunityName to={`/${channel.community.slug}`}>
-        {channel.community.name}
-      </MetaCommunityName>
+      {!activeCommunity && (
+        <MetaCommunityName to={`/${channel.community.slug}`}>
+          {channel.community.name}
+        </MetaCommunityName>
+      )}
 
       {!isGeneral && (
         <PillLink

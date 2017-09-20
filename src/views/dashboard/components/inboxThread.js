@@ -42,9 +42,11 @@ class InboxThread extends Component {
           onClick={() => this.props.dispatch(changeActiveThread(data.id))}
         />
         <InboxThreadContent>
-          {!hasActiveCommunity && (
-            <ThreadCommunityInfo thread={data} active={active} />
-          )}
+          <ThreadCommunityInfo
+            thread={data}
+            active={active}
+            activeCommunity={hasActiveCommunity}
+          />
 
           <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
 

@@ -118,7 +118,6 @@ class ThreadContainerPure extends Component {
 
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
-
     let node = this.scrollBody;
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
@@ -253,13 +252,13 @@ class ThreadContainerPure extends Component {
               )}
 
               {loggedInUser &&
-                !hasRights && (
-                  <UpsellJoinChannelState
-                    channel={thread.channel}
-                    subscribe={this.toggleSubscription}
-                    loading={isLoading}
-                  />
-                )}
+              !hasRights && (
+                <UpsellJoinChannelState
+                  channel={thread.channel}
+                  subscribe={this.toggleSubscription}
+                  loading={isLoading}
+                />
+              )}
 
               {!loggedInUser && (
                 <UpsellSignIn
@@ -273,20 +272,20 @@ class ThreadContainerPure extends Component {
           </Content>
 
           {loggedInUser &&
-            hasRights &&
-            !isFrozen && (
-              <Input>
-                <ChatInputWrapper type="only">
-                  <ChatInput
-                    threadType="story"
-                    thread={thread.id}
-                    currentUser={loggedInUser}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    onRef={chatInput => (this.chatInput = chatInput)}
-                  />
-                </ChatInputWrapper>
-              </Input>
-            )}
+          hasRights &&
+          !isFrozen && (
+            <Input>
+              <ChatInputWrapper type="only">
+                <ChatInput
+                  threadType="story"
+                  thread={thread.id}
+                  currentUser={loggedInUser}
+                  forceScrollToBottom={this.forceScrollToBottom}
+                  onRef={chatInput => (this.chatInput = chatInput)}
+                />
+              </ChatInputWrapper>
+            </Input>
+          )}
         </View>
       );
     } else if (networkStatus === 7 && isUnavailable) {
