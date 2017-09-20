@@ -165,6 +165,7 @@ export const AttachmentsContainer = styled.div`
 export const ThreadMeta = styled.div`
   display: flex;
   margin: 8px 16px 16px;
+  justify-content: space-between;
 `;
 
 export const FacepileContainer = styled.div`
@@ -172,6 +173,7 @@ export const FacepileContainer = styled.div`
   margin-right: 8px;
   margin-left: 8px;
   pointer-events: auto;
+  order: 2;
 `;
 
 export const ParticipantHead = styled.span`
