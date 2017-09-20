@@ -246,6 +246,7 @@ class ThreadContainerPure extends Component {
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 viewStatus={networkStatus}
                 shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                hasMessagesToLoad={thread.messageCount > 0}
               />
 
               {isFrozen && (

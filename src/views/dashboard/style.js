@@ -150,7 +150,7 @@ export const ThreadTitle = styled.h3`
   margin: 16px 16px 8px;
   max-width: 100%;
   pointer-events: auto;
-  ${Truncate};
+  line-height: 1.4;
 `;
 
 export const AttachmentsContainer = styled.div`

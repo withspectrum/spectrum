@@ -104,6 +104,7 @@ class MessagesWithData extends Component {
       currentUser,
       toggleReaction,
       forceScrollToBottom,
+      hasMessagesToLoad,
     } = this.props;
 
     const dataExists = data.thread && data.thread.messageConnection;
@@ -163,7 +164,7 @@ class MessagesWithData extends Component {
             <Icon glyph={'message'} />
             <hr />
           </HorizontalRule>
-          <LoadingChat />
+          {hasMessagesToLoad && <LoadingChat />}
         </ChatWrapper>
       );
     }
