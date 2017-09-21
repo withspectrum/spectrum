@@ -38,6 +38,7 @@ class InboxThread extends Component {
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
     const isMobile = window && window.innerWidth < 768;
+    const isPinned = data.id === this.props.pinnedThreadId;
 
     return (
       <InboxThreadItem active={active}>
@@ -53,6 +54,7 @@ class InboxThread extends Component {
             thread={data}
             active={active}
             activeCommunity={hasActiveCommunity}
+            isPinned={isPinned}
           />
 
           <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
@@ -68,7 +70,7 @@ class InboxThread extends Component {
                 return (
                   <AttachmentsContainer active={active} key={url}>
                     <MiniLinkPreview to={url} target="_blank">
-                      <Icon glyph="link" size={16} />
+                      <Icon glyph="link" size={18} />
                       {url}
                     </MiniLinkPreview>
                   </AttachmentsContainer>

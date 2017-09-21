@@ -107,16 +107,9 @@ class ThreadContainerPure extends Component {
     if (!thread) return;
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
 
-    const isParticipantOrCreator =
-      thread.isCreator ||
-      (currentUser &&
-        thread.participants &&
-        thread.participants.length > 0 &&
-        thread.participants.some(
-          participant => participant.id === currentUser.id
-        ));
+    const threadAndUser = currentUser && thread;
 
-    if (isParticipantOrCreator) {
+    if (threadAndUser) {
       this.chatInput.triggerFocus();
     }
   }

@@ -89,6 +89,7 @@ class Dashboard extends Component {
             <CommunityListScroller>
               <CommunityList
                 communities={communities}
+                user={user}
                 activeCommunity={activeCommunity}
               />
             </CommunityListScroller>
@@ -121,6 +122,7 @@ class Dashboard extends Component {
                   selectedId={activeThread}
                   hasActiveCommunity={activeCommunity}
                   community={activeCommunityObject}
+                  pinnedThreadId={activeCommunityObject.pinnedThreadId}
                 />
               )}
             </InboxScroller>

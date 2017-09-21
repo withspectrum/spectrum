@@ -11,15 +11,17 @@ import {
   CommunityAvatar,
   CommunityLink,
   PillLink,
+  PillLinkPinned,
+  PinIcon,
   PillLabel,
   MetaCommunityName,
   Lock,
 } from '../style';
 
-export default ({ thread, active, activeCommunity }) => {
+export default ({ thread, active, activeCommunity, isPinned }) => {
   const { channel } = thread;
   const isGeneral = channel.slug === 'general';
-  if (activeCommunity && isGeneral) return null;
+  if (activeCommunity && isGeneral && !isPinned) return null;
 
   return (
     <CommunityInfoContainer active={active}>
@@ -49,6 +51,15 @@ export default ({ thread, active, activeCommunity }) => {
           )}
           <PillLabel isPrivate={channel.isPrivate}>{channel.name}</PillLabel>
         </PillLink>
+      )}
+
+      {isPinned && (
+        <PillLinkPinned>
+          <PinIcon>
+            <Icon glyph="pin-fill" size={12} />
+          </PinIcon>
+          <PillLabel>Pinned</PillLabel>
+        </PillLinkPinned>
       )}
     </CommunityInfoContainer>
   );

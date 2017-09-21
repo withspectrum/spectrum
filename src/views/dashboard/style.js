@@ -21,6 +21,7 @@ export const Wrapper = styled.div`
 export const InboxWrapper = styled.div`
   display: flex;
   flex: auto;
+  flex 1 0 25%;
   max-width: 528px;
   min-width: 320px;
   overflow-y: hidden;
@@ -55,19 +56,27 @@ export const CommunityListWrapper = styled.div`
   flex-direction: column;
   background: ${props => props.theme.bg.wash};
   border-right: 1px solid ${props => props.theme.bg.border};
-  opacity: 0.5;
   transform: translateZ(0);
-  filter: grayscale(50%);
   transition: all 0.2s ease-in-out;
   box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.04);
+
+  img {
+    opacity: 0.5;
+    filter: grayscale(50%);
+    transition: all 0.2s ease-in-out;
+  }
 
   &:hover {
     transform: translateZ(0);
     width: 256px;
-    filter: grayscale(0%);
-    opacity: 1;
     transition: all 0.2s ease-in-out;
     box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.08);
+
+    img {
+      filter: grayscale(0%);
+      opacity: 1;
+      transition: all 0.2s ease-in-out;
+    }
   }
 
   @media (max-width: 768px) {
@@ -96,6 +105,7 @@ export const CommunityListItem = styled.div`
         border: 1px solid
           ${props => (props.active ? props.theme.bg.default : 'transparent')};
         box-shadow: 0 0 0 2px ${props.theme.brand.alt};
+        opacity: 1;
       }
     `} &:hover {
     transition: all 0.2s ease-in-out;
@@ -120,17 +130,24 @@ export const CommunityListItem = styled.div`
 export const CommunityListName = styled.p`
   font-size: 14px;
   font-weight: 500;
+  margin-left: 12px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
 
   ${Truncate};
 `;
 
+export const CommunityListDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background: ${props => props.theme.bg.border};
+  margin: 16px 0;
+`;
+
 export const AllCommunityListItem = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  margin-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,7 +161,6 @@ export const CommunityListAvatar = styled.img`
   display: inline-block;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  margin-right: 16px;
 `;
 
 export const CommunityListScroller = styled.div`
@@ -319,14 +335,16 @@ export const ParticipantHead = styled.span`
   position: relative;
   margin-left: -8px;
   border-radius: 24px;
+  max-width: 24px;
+  max-height: 24px;
   pointer-events: auto;
   box-shadow: 0 0 0 2px
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
   transform: translateY(0);
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   ${Tooltip} &:hover {
     transform: translateY(-4px);
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
   }
 `;
 
@@ -369,10 +387,10 @@ export const MetaTextPill = styled(MetaText)`
   background: ${props =>
     props.active ? props.theme.text.reverse : props.theme.warn.alt};
   border-radius: 20px;
-  padding: 2px 12px;
+  padding: 0 12px;
   font-size: 11px;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 700;
   display: flex;
   align-items: center;
 `;
@@ -380,6 +398,7 @@ export const MetaTextPill = styled(MetaText)`
 export const MetaCommunityName = styled(Link)`
   padding-right: 8px;
   pointer-events: auto;
+  white-space: nowrap;
 `;
 
 export const CommunityInfoContainer = styled.div`
@@ -458,6 +477,25 @@ export const PillLink = styled(Link)`
   pointer-events: auto;
 `;
 
+export const PillLinkPinned = styled.div`
+  background: #fff1cc;
+  border: 1px solid #ffd566;
+  color: #715818;
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  max-height: 24px;
+  line-height: 1;
+
+  .icon {
+    top: -1px;
+  }
+`;
+
 export const PillLabel = styled.span`
   ${props =>
     props.isPrivate &&
@@ -468,16 +506,18 @@ export const PillLabel = styled.span`
 `;
 
 export const MiniLinkPreview = styled(Link)`
-  display: flex;
+  display: inline-block;
   font-size: 14px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.active ? '500' : '400')};
   margin: 0 0 8px;
-  align-items: center;
   pointer-events: auto;
+  max-width: calc(100%);
   ${Truncate} .icon {
     margin-right: 4px;
+    position: relative;
+    top: 4px;
   }
 
   &:hover {
@@ -505,3 +545,7 @@ export const NullHeading = styled.p`
 `;
 
 export const Lock = styled.span`margin-right: 4px;`;
+export const PinIcon = styled.span`
+  margin-right: 4px;
+  margin-left: -2px;
+`;

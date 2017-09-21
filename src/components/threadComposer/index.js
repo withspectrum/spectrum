@@ -103,7 +103,12 @@ class ThreadComposerWithData extends Component {
         community =>
           community.communityPermissions.isMember ||
           community.communityPermissions.isOwner
-      );
+      )
+      .sort((a, b) => {
+        const bc = parseInt(b.communityPermissions.reputation, 10);
+        const ac = parseInt(a.communityPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
 
     /*
       Iterate through each of our community nodes to construct a new array

@@ -6,12 +6,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
+//$FlowFixMe
+import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
+import { Avatar } from '../../../components/avatar';
 import {
   AllCommunityListItem,
   CommunityListItem,
   CommunityListName,
   CommunityListAvatar,
+  CommunityListDivider,
 } from '../style';
 import {
   changeActiveCommunity,
@@ -25,7 +29,9 @@ class CommunityList extends Component {
   };
 
   render() {
-    const sortedCommunities = this.props.communities.slice().sort((a, b) => {
+    const { user, activeCommunity, communities } = this.props;
+
+    const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);
       return bc <= ac ? -1 : 1;
@@ -33,14 +39,23 @@ class CommunityList extends Component {
 
     return (
       <div>
+        <Link to={`/users/${user.username}`}>
+          <CommunityListItem>
+            <Avatar src={user.profilePhoto} size={32} />
+            <CommunityListName>{user.name}</CommunityListName>
+          </CommunityListItem>
+        </Link>
+
+        <CommunityListDivider />
+
         <CommunityListItem
-          active={!this.props.activeCommunity}
+          active={!activeCommunity}
           onClick={() => this.changeCommunity('')}
         >
           <AllCommunityListItem>
             <Icon glyph={'everything'} />
           </AllCommunityListItem>
-          <CommunityListName active={!this.props.activeCommunity}>
+          <CommunityListName active={!activeCommunity}>
             All Communities
           </CommunityListName>
         </CommunityListItem>
@@ -48,11 +63,11 @@ class CommunityList extends Component {
         {sortedCommunities.map(c => (
           <CommunityListItem
             key={c.id}
-            active={c.id === this.props.activeCommunity}
+            active={c.id === activeCommunity}
             onClick={() => this.changeCommunity(c.id)}
           >
             <CommunityListAvatar src={c.profilePhoto} />
-            <CommunityListName active={c.id === this.props.activeCommunity}>
+            <CommunityListName active={c.id === activeCommunity}>
               {c.name}
             </CommunityListName>
           </CommunityListItem>

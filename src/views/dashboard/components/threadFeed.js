@@ -144,6 +144,7 @@ class ThreadFeed extends Component {
                 data={thread}
                 active={selectedId === thread.id}
                 hasActiveCommunity={this.props.hasActiveCommunity}
+                pinnedThreadId={this.props.pinnedThreadId}
               />
             );
           })}
