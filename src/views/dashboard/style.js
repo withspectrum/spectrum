@@ -441,3 +441,21 @@ export const MiniLinkPreview = styled(Link)`
       props.active ? props.theme.text.reverse : props.theme.text.default};
   }
 `;
+
+export const NullThreadFeed = styled.div`
+  display: flex;
+  flex: auto;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  flex-direction: column;
+`;
+
+export const NullHeading = styled.p`
+  font-size: 18px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  text-align: center;
+  margin-bottom: 32px;
+`;
