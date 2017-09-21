@@ -188,16 +188,36 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
-export const CreateThreadComposer = styled(Link)`
+export const CreateThreadComposer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
 `;
 
+export const ThreadComposerContainer = styled.div`
+  margin: 16px;
+
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+`;
+
 export const ComposeIconContainer = styled.div`
   position: relative;
   top: 2px;
-  color: ${props => props.theme.brand.alt};
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.default};
+  }
+
+  div {
+    margin-right: 8px;
+  }
 `;
 
 export const InboxThreadItem = styled.div`

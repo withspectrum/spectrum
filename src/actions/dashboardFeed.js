@@ -12,3 +12,9 @@ export const changeActiveCommunity = (communityId: string) => {
     communityId,
   };
 };
+
+export const toggleComposer = () => {
+  return {
+    type: 'TOGGLE_COMPOSER',
+  };
+};

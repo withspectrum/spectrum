@@ -1,5 +1,8 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { openComposer } from '../../../actions/composer';
 import {
   CreateThreadComposer,
   ComposerLeft,
@@ -8,15 +11,13 @@ import {
 } from '../style';
 import Icon from '../../../components/icons';
 
-export default () => (
-  <CreateThreadComposer
-    to={{
-      pathname: window.location.pathname,
-      search: `?t=new`,
-    }}
-  >
+const Composer = ({ dispatch }) => (
+  <CreateThreadComposer onClick={() => dispatch(openComposer())}>
     <ComposeIconContainer>
       <Icon glyph={'post'} size={32} />
+      Start a new conversation
     </ComposeIconContainer>
   </CreateThreadComposer>
 );
+
+export default connect()(Composer);

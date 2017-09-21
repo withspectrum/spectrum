@@ -36,6 +36,7 @@ import {
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
+  ThreadComposerContainer,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -55,6 +56,7 @@ class Dashboard extends Component {
       newActivityIndicator,
       activeThread,
       activeCommunity,
+      composerIsOpen,
     } = this.props;
     const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
@@ -76,7 +78,8 @@ class Dashboard extends Component {
       const communities = user.communityConnection.edges.map(c => c.node);
       const activeCommunityObject = communities.filter(
         c => c.id === activeCommunity
-      );
+      )[0];
+
       return (
         <DashboardWrapper>
           <Head title={title} description={description} />
@@ -97,6 +100,17 @@ class Dashboard extends Component {
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
+            )}
+            {composerIsOpen && (
+              <ThreadComposerContainer>
+                <ThreadComposer
+                  activeCommunity={
+                    activeCommunityObject && activeCommunityObject.slug
+                  }
+                  activeChannel={'general'}
+                  isInbox
+                />
+              </ThreadComposerContainer>
             )}
             <InboxScroller id="scroller-for-inbox">
               {!activeCommunity ? (
@@ -135,5 +149,6 @@ const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
+  composerIsOpen: state.composer.isOpen,
 });
 export default compose(connect(map), getCurrentUserProfile, pure)(Dashboard);
