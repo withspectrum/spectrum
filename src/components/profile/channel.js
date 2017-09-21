@@ -119,9 +119,7 @@ class ChannelWithData extends Component {
 
     const communityLink = () => {
       return (
-        <Link to={`/${channel.community.slug}`}>
-          {channel.community.name}
-        </Link>
+        <Link to={`/${channel.community.slug}`}>{channel.community.name}</Link>
       );
     };
 
@@ -202,7 +200,7 @@ class ChannelWithData extends Component {
             channelIcon={false}
           >
             {currentUser &&
-              member &&
+            member && (
               <Button
                 loading={isLoading}
                 icon="checkmark"
@@ -212,9 +210,10 @@ class ChannelWithData extends Component {
                 onClick={() => this.toggleSubscription(channel.id)}
               >
                 Joined
-              </Button>}
+              </Button>
+            )}
             {currentUser &&
-              !member &&
+            !member && (
               <Button
                 loading={isLoading}
                 icon="plus-fill"
@@ -222,7 +221,8 @@ class ChannelWithData extends Component {
                 onClick={() => this.toggleSubscription(channel.id)}
               >
                 Join
-              </Button>}
+              </Button>
+            )}
           </ChannelListItem>
         </ProfileCard>
       );
@@ -236,7 +236,7 @@ class ChannelWithData extends Component {
           channelIcon={false}
         >
           {currentUser &&
-            member &&
+          member && (
             <Button
               loading={isLoading}
               icon="checkmark"
@@ -246,19 +246,21 @@ class ChannelWithData extends Component {
               onClick={() => this.toggleSubscription(channel.id)}
             >
               Joined
-            </Button>}
+            </Button>
+          )}
           {currentUser &&
-            !member &&
+          !member && (
             <Button
               size={'small'}
               loading={isLoading}
               icon="plus-fill"
-              color={'success.default'}
+              color={'success.alt'}
               gradientTheme="success"
               onClick={() => this.toggleSubscription(channel.id)}
             >
               Join
-            </Button>}
+            </Button>
+          )}
         </ChannelListItemLi>
       );
     }
