@@ -69,7 +69,7 @@ export const SectionActions = styled(Section)`
 `;
 
 export const SectionAlert = styled(Section)`
-  background-color: ${({ theme }) => theme.success.default};
+  background-color: ${({ theme }) => theme.success.alt};
   background-image: ${({ theme }) =>
     Gradient(theme.success.alt, theme.success.default)};
   color: ${({ theme }) => theme.text.reverse};
@@ -171,7 +171,7 @@ export const Profile = styled.div`
   }
 
   span {
-    background-color: ${({ theme }) => theme.success.default};
+    background-color: ${({ theme }) => theme.success.alt};
     background-image: ${({ theme }) =>
       Gradient(theme.success.alt, theme.success.default)};
     position: absolute;

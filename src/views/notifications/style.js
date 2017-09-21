@@ -162,25 +162,25 @@ export const ContextRow = styled(FlexRow)`
 `;
 
 export const SuccessContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.success.default};
-`;
-
-export const ReactionContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.warn.default};
-`;
-
-export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
 `;
 
+export const ReactionContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.warn.alt};
+`;
+
+export const JoinContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.space.default};
+`;
+
 export const ThreadContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.default};
+  color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
 
 export const CreatedContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.default};
+  color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;

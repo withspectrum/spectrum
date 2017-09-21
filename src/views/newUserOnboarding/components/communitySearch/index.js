@@ -308,8 +308,8 @@ class Search extends Component {
                         <OutlineButton
                           onClick={() => this.toggleMembership(community.id)}
                           gradientTheme="none"
-                          color={'pro.alt'}
-                          hoverColor={'pro.default'}
+                          color={'success.alt'}
+                          hoverColor={'success.default'}
                           loading={loading === community.id}
                         >
                           Joined!
