@@ -59,7 +59,7 @@ const parseNotificationTypes = notifications => {
         };
       default:
       case 'null':
-        return null;
+        return {};
     }
   });
 };
