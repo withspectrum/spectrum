@@ -84,9 +84,9 @@ export const CommunityListItem = styled.div`
   cursor: pointer;
   position: relative;
   color: ${props =>
-    props.active ? props.theme.brand.default : props.theme.text.alt};
+    props.active ? props.theme.brand.alt : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.brand.default : props.theme.bg.wash};
+    props.active ? props.theme.brand.alt : props.theme.bg.wash};
   padding: 2px 8px 2px 2px;
 
   ${props =>
@@ -95,18 +95,18 @@ export const CommunityListItem = styled.div`
       img {
         border: 1px solid
           ${props => (props.active ? props.theme.bg.default : 'transparent')};
-        box-shadow: 0 0 0 2px ${props.theme.brand.default};
+        box-shadow: 0 0 0 2px ${props.theme.brand.alt};
       }
     `} &:hover {
     transition: all 0.2s ease-in-out;
     background: ${props =>
-      props.active ? props.theme.brand.default : props.theme.bg.border};
+      props.active ? props.theme.brand.alt : props.theme.bg.border};
 
     ${props =>
       props.active
         ? css`
             img {
-              box-shadow: 0 0 0 2px ${props.theme.brand.default};
+              box-shadow: 0 0 0 2px ${props.theme.brand.alt};
             }
           `
         : css`
@@ -195,7 +195,8 @@ export const CreateThreadComposer = styled.div`
 `;
 
 export const ThreadComposerContainer = styled.div`
-  margin: 16px;
+  padding: 16px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     margin: 0;
@@ -212,7 +213,7 @@ export const ComposeIconContainer = styled.div`
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.default};
+    color: ${props => props.theme.brand.alt};
   }
 
   div {

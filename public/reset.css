@@ -76,6 +76,10 @@ body {
    color:    #B2B9C6;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 #root {
   display: flex;
   display: -webkit-box;

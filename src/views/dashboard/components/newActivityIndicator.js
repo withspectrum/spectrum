@@ -7,7 +7,7 @@ import { Gradient } from '../../../components/globals';
 
 const NewActivityBar = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
-  color: ${props => props.theme.brand.default};
+  color: ${props => props.theme.brand.alt};
   background: ${props => props.theme.bg.wash};
   font-size: 14px;
   font-weight: 600;
@@ -27,7 +27,7 @@ const NewActivityBar = styled.div`
   width: 100%;
 
   &:hover {
-    background: ${props => props.theme.brand.default};
+    background: ${props => props.theme.brand.alt};
     color: ${props => props.theme.text.reverse};
   }
 `;
