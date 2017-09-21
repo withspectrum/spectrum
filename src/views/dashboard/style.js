@@ -363,6 +363,18 @@ export const MetaText = styled.span`
   }
 `;
 
+export const MetaTextPill = styled(MetaText)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.reverse};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+  border-radius: 20px;
+  padding: 2px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 800;
+`;
+
 export const MetaCommunityName = styled(Link)`
   padding-right: 8px;
   pointer-events: auto;

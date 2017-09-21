@@ -22,6 +22,7 @@ import {
   AttachmentsContainer,
   ThreadMeta,
   MetaText,
+  MetaTextPill,
   MiniLinkPreview,
 } from '../style';
 
@@ -92,9 +93,9 @@ class InboxThread extends Component {
                 )}
               </MetaText>
             ) : (
-              <MetaText offset={participants.length} active={active} new>
+              <MetaTextPill offset={participants.length} active={active} new>
                 New thread!
-              </MetaText>
+              </MetaTextPill>
             )}
           </ThreadMeta>
         </InboxThreadContent>
