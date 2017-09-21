@@ -591,7 +591,6 @@ class ThreadComposerWithData extends Component {
 
               <Editor
                 onChange={this.changeBody}
-                onKeyDown={this.listenForUrl}
                 state={this.state.body}
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
