@@ -59,7 +59,7 @@ const parseNotificationTypes = notifications => {
         };
       default:
       case 'null':
-        return null;
+        return {};
     }
   });
 };
@@ -85,9 +85,9 @@ class EmailSettings extends Component {
 
   render() {
     const { currentUser: { settings: { notifications } } } = this.props;
-    const settings = parseNotificationTypes(notifications).filter(
-      notification => notification.emailValue && notification
-    );
+    const settings = parseNotificationTypes(
+      notifications
+    ).filter(notification => notification.hasOwnProperty('emailValue'));
 
     return (
       <StyledCard
