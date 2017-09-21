@@ -29,7 +29,7 @@ import {
 class InboxThread extends Component {
   render() {
     const {
-      data: { attachments, participants },
+      data: { attachments, participants, creator },
       data,
       active,
       location,
@@ -76,7 +76,7 @@ class InboxThread extends Component {
               })}
 
           <ThreadMeta>
-            {participantsExist && (
+            {(participantsExist || creator) && (
               <Facepile
                 active={active}
                 participants={participants}

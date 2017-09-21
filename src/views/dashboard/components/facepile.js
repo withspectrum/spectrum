@@ -31,6 +31,29 @@ const messageAvatars = (list, active) => {
 };
 
 const Facepile = ({ participants, creator, active }) => {
+  if (!participants || participants.length === 0) {
+    return (
+      <FacepileContainer>
+        <ParticipantHead
+          active={active}
+          offset={0}
+          role="presentation"
+          key={creator.id}
+          tipText={`Posted by ${creator.name}`}
+          tipLocation={'top-right'}
+        >
+          <Avatar
+            size={24}
+            isOnline={false}
+            link={creator.username ? `/users/${creator.username}` : null}
+            src={creator.profilePhoto}
+            role="presentation"
+          />
+        </ParticipantHead>
+      </FacepileContainer>
+    );
+  }
+
   const participantList = participants.filter(
     participant => participant.id !== creator.id
   );
