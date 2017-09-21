@@ -38,7 +38,12 @@ import {
 
 const LoadingView = () => (
   <View>
-    <Titlebar provideBack={true} backRoute={`/`} noComposer />
+    <Titlebar
+      provideBack={true}
+      backRoute={`/`}
+      noComposer
+      style={{ gridArea: 'header' }}
+    />
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
@@ -207,6 +212,7 @@ class ThreadContainerPure extends Component {
             provideBack={true}
             backRoute={`/`}
             noComposer
+            style={{ gridArea: 'header' }}
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Detail type="only">
