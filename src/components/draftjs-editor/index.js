@@ -10,7 +10,7 @@ import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
-import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
@@ -91,7 +91,7 @@ class Editor extends React.Component {
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
-        props.markdown !== false && createMarkdownShortcutsPlugin(),
+        props.markdown !== false && createMarkdownPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,
         props.singleLine === true && singleLine,
