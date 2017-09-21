@@ -14,24 +14,15 @@ import {
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  ${props =>
-    !props.slider &&
-    css`
-      background-image: linear-gradient(
-        to right,
-        ${props.theme.bg.wash},
-        ${props.theme.bg.default} 10%,
-        ${props.theme.bg.default} 90%,
-        ${props.theme.bg.wash}
-      );
-    `} flex: auto;
-  align-items: stretch;
-  overflow-y: scroll;
-
-  @media (max-width: 1024px) {
-    background-color: ${({ theme }) => theme.bg.default};
-    background-image: none;
-  }
+  background-color: ${({ theme }) => theme.bg.default};
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+  flex: auto;
+  align-self: stretch;
+  grid-template-rows: 48px 1fr 64px;
+  grid-template-columns: 100%;
+  grid-template-areas: 'header' 'body' 'footer';
 `;
 
 export const Content = styled(FlexRow)`
@@ -40,6 +31,7 @@ export const Content = styled(FlexRow)`
   flex: auto;
   overflow-y: scroll;
   padding-top: 32px;
+  grid-area: body;
 
   @media (max-width: 768px) {
     padding-top: 16px;
@@ -50,6 +42,7 @@ export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
   z-index: ${zIndex.chatInput};
+  grid-area: footer;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
