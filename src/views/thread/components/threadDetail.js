@@ -508,7 +508,7 @@ class ThreadDetailPure extends Component {
                       <FlyoutRow>
                         <IconButton
                           glyph="freeze"
-                          hoverColor="space.light"
+                          hoverColor="space.alt"
                           tipText={
                             thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
                           }

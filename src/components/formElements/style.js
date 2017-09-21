@@ -20,14 +20,14 @@ export const StyledLabel = styled.label`
   &:hover > input,
   &:hover > textarea {
     border-color: ${props =>
-      props.disabled ? props.theme.border.default : props.theme.text.alt};
+      props.disabled ? props.theme.bg.border : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
 
   &:hover > input:focus,
   &:hover > textarea:focus {
     border-color: ${props =>
-      props.disabled ? props.theme.inactive : props.theme.brand.alt};
+      props.disabled ? props.theme.bg.inactive : props.theme.brand.alt};
   }
 `;
 
@@ -47,7 +47,7 @@ export const StyledPrefixLabel = styled.label`
 
   &:hover > input {
     border-color: ${props =>
-      props.disabled ? props.theme.inactive : props.theme.text.alt};
+      props.disabled ? props.theme.bg.inactive : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
 `;
@@ -61,7 +61,7 @@ export const StyledInput = styled.input`
   font-size: 14px;
   border: 2px solid
     ${props =>
-      props.disabled ? props.theme.border.default : props.theme.inactive};
+      props.disabled ? props.theme.bg.border : props.theme.bg.inactive};
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 2px;
@@ -106,7 +106,7 @@ export const StyledTextArea = styled.textarea`
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
   font-size: 14px;
-  border: 2px solid ${({ theme }) => theme.inactive};
+  border: 2px solid ${({ theme }) => theme.bg.inactive};
   border-radius: 4px;
   padding: 12px;
   margin-top: 2px;
@@ -140,7 +140,7 @@ export const StyledUnderlineInput = styled.input`
   border-bottom: ${props =>
     props.disabled
       ? '2px solid transparent'
-      : `2px solid ${props.theme.inactive}`};
+      : `2px solid ${props.theme.bg.inactive}`};
   width: 50%;
   transition: ${Transition.hover.off};
 

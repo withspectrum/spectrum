@@ -92,7 +92,7 @@ export const CreateUpsellContainer = styled.div`
   margin-top: 32px;
   background: ${props => props.theme.bg.wash};
   padding: ${props => (props.extra ? '32px 32px 116px' : '32px')};
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   width: calc(100% + 64px);
   margin-bottom: -32px;
   margin-left: -32px;
@@ -113,7 +113,7 @@ export const StickyRow = styled.div`
   left: 0;
   right: 0;
   background: ${props => props.theme.bg.default};
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   z-index: ${zIndex.fullscreen + 1};
   transition: all 0.3s ease-in-out;
   -webkit-transform: translate3d(0, 0, 0);

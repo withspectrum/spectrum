@@ -21,7 +21,6 @@ import {
   ViewHeader,
   Section,
   SectionWrapper,
-  SectionWithGradientTransition,
   SectionTitle,
   Constellations,
 } from './style';

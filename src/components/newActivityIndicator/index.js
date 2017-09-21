@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { clearActivityIndicator } from '../../actions/newActivityIndicator';
 import styled from 'styled-components';
-import { Gradient, Spinner } from '../globals';
+import { Gradient } from '../globals';
 
 const Pill = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};

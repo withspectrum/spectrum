@@ -11,7 +11,6 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
-  truncateNumber,
   draftOnlyContainsEmoji,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';

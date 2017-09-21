@@ -7,9 +7,8 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../../components/icons';
-import FullscreenView from '../../components/fullscreenView';
-import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
-import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api/constants';
+import { storeItem } from '../../helpers/localStorage';
+import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
@@ -18,31 +17,19 @@ import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
 import {
   Title,
-  CommunityUpsellTitle,
   MiniTitle,
-  LargeTitle,
   Subtitle,
-  CommunityUpsellSubtitle,
   MiniSubtitle,
-  LargeSubtitle,
   Actions,
   NullCol,
   UpgradeError,
   Profile,
   Cost,
-  CommunityUpsellCost,
   LargeEmoji,
   UpsellIconContainer,
   SignupButton,
   SignupFooter,
   SigninLink,
-  FullscreenContent,
-  CodeOfConduct,
-  SigninButtonsContainer,
-  ButtonTwitter,
-  ButtonFacebook,
-  ButtonGoogle,
-  Col,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -159,7 +146,6 @@ export class UpsellSignIn extends Component {
   render() {
     const { view, noShadow, title, glyph } = this.props;
     const { isSigningIn, signinType } = this.state;
-    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     if (isSigningIn) {
       return <Login close={this.toggleSigningIn} signinType={signinType} />;

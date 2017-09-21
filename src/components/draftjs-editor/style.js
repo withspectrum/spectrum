@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
 export const MediaRow = styled.div`
   display: flex;
   background: #f8fbfe;
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 0 16px;
   margin-left: -24px;
   margin-bottom: -28px;

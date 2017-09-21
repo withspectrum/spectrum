@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import queryString from 'query-string';

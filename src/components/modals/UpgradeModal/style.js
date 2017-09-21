@@ -69,9 +69,9 @@ export const SectionActions = styled(Section)`
 `;
 
 export const SectionAlert = styled(Section)`
-  background-color: ${({ theme }) => theme.success.default};
+  background-color: ${({ theme }) => theme.success.alt};
   background-image: ${({ theme }) =>
-    Gradient(theme.space.light, theme.success.default)};
+    Gradient(theme.success.alt, theme.success.default)};
   color: ${({ theme }) => theme.text.reverse};
   line-height: 1.3;
   font-weight: 600;
@@ -170,9 +170,9 @@ export const Profile = styled.div`
   }
 
   span {
-    background-color: ${({ theme }) => theme.success.default};
+    background-color: ${({ theme }) => theme.success.alt};
     background-image: ${({ theme }) =>
-      Gradient(theme.space.light, theme.success.default)};
+      Gradient(theme.success.alt, theme.success.default)};
     position: absolute;
     left: 52%;
     top: 32px;

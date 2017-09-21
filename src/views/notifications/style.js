@@ -129,7 +129,7 @@ export const NotificationListRow = styled(FlexCol)`
 
   &:hover {
     transition: ${Transition.hover.on};
-    background-color: ${({ theme }) => hexa(theme.space.soft, 0.15)};
+    background-color: ${({ theme }) => hexa(theme.brand.wash, 0.15)};
     box-shadow: inset 8px 0 0 0 ${({ theme }) => theme.brand.alt};
     cursor: pointer;
   }
@@ -162,25 +162,25 @@ export const ContextRow = styled(FlexRow)`
 `;
 
 export const SuccessContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.success.default};
-`;
-
-export const ReactionContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.warn.default};
-`;
-
-export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
 `;
 
+export const ReactionContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.warn.alt};
+`;
+
+export const JoinContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.space.default};
+`;
+
 export const ThreadContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.default};
+  color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
 
 export const CreatedContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.default};
+  color: ${({ theme }) => theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;

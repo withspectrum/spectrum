@@ -82,12 +82,6 @@ class Search extends Component {
           null
         );
 
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-
         this.props.joinedCommunity(isMember ? 1 : -1, false);
 
         const { searchResults } = this.state;
@@ -314,8 +308,8 @@ class Search extends Component {
                         <OutlineButton
                           onClick={() => this.toggleMembership(community.id)}
                           gradientTheme="none"
-                          color={'pro.alt'}
-                          hoverColor={'pro.default'}
+                          color={'success.alt'}
+                          hoverColor={'success.default'}
                           loading={loading === community.id}
                         >
                           Joined!

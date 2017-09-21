@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
-import { displayLoadingCard } from '../../../components/loading';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
@@ -218,7 +217,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
       <NullCard
         bg="community"
         heading={`There are no channels here...`}
-        copy={`Which really shouldn\'t be possible. Mind reloading?`}
+        copy={`Which really shouldn't be possible. Mind reloading?`}
       >
         <Button icon="view-reload" onClick={() => window.location.reload(true)}>
           Reload

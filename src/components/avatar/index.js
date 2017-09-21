@@ -43,7 +43,7 @@ const StyledAvatarStatus = styled.div`
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
     width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    background: ${props => props.theme.pro.alt};
+    background: ${props => props.theme.success.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
     bottom: ${props =>
@@ -88,9 +88,11 @@ const AvatarWithFallback = ({ style, ...props }) => (
       <StyledAvatarFallback
         {...props}
         src={
-          props.community
-            ? `/img/default_community.svg`
-            : `/img/default_avatar.svg`
+          props.community ? (
+            `/img/default_community.svg`
+          ) : (
+            `/img/default_avatar.svg`
+          )
         }
       />
     </StyledAvatar>

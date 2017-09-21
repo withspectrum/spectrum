@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Icon from '../icons';
-import { ReputationIcon, ReputationIconMini, Circle } from './style';
+import { ReputationIcon, ReputationIconMini } from './style';
 
 export default ({ tipText }) => (
   <ReputationIcon>

@@ -23,7 +23,7 @@ export const ReactionWrapper = styled.b`
       ? Gradient(props.theme.warn.alt, props.theme.warn.default)
       : 'none'}
 			`
-      : `background-color: ${props.theme.border.default};
+      : `background-color: ${props.theme.bg.border};
 		background-image: none;`};
 
   padding: ${props => (props.hasCount ? '0 10px 0 6px' : '0')};
@@ -35,10 +35,10 @@ export const ReactionWrapper = styled.b`
   ${props =>
     props.dummy &&
     css`
-		height: 26px;
-    padding: 0;
-    justify-content: center;
-	`} i {
+      height: 26px;
+      padding: 0;
+      justify-content: center;
+    `} i {
     /* count */
     position: relative;
     transform: ${props =>

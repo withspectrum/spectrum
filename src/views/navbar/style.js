@@ -232,6 +232,6 @@ export const DropdownFooter = styled(FlexRow)`
 export const Notification = styled.div`
   color: ${props => props.theme.text.default};
   padding: 8px;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   overflow-x: hidden;
 `;
