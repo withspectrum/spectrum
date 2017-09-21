@@ -150,7 +150,10 @@ class Editor extends React.Component {
     } = this.props;
 
     return (
-      <div className={className} style={{ width: '100%', height: '100%' }}>
+      <div
+        className={className}
+        style={{ width: '100%', height: '100%', ...style }}
+      >
         <Wrapper
           className={markdown !== false && 'markdown'}
           onClick={this.focus}
