@@ -12,6 +12,19 @@ import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-scala';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-kotlin';
+import 'prismjs/components/prism-perl';
+import 'prismjs/components/prism-ruby';
+import 'prismjs/components/prism-swift';
+import createPrismPlugin from 'draft-js-prism-plugin';
 // NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
 // and stuff like that. We have to import the raw CSS file and inject it with
 // styled-components to make sure it works when we SSR.
@@ -19,6 +32,8 @@ import createSingleLinePlugin from 'draft-js-single-line-plugin';
 /* eslint-disable import/no-webpack-loader-syntax */
 import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
 injectGlobal`${draftGlobalCSS}`;
+import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
+injectGlobal`${prismGlobalCSS}`;
 
 import Image from './Image';
 import { Wrapper, MediaRow } from './style';
@@ -56,6 +71,9 @@ class Editor extends React.Component {
 
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
+    const prismPlugin = createPrismPlugin({
+      prism: Prism,
+    });
 
     const decorator = composeDecorators(
       focusPlugin.decorator,
@@ -72,6 +90,7 @@ class Editor extends React.Component {
     this.state = {
       plugins: [
         props.image !== false && imagePlugin,
+        props.markdown !== false && prismPlugin,
         props.markdown !== false && createMarkdownShortcutsPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,

@@ -2693,6 +2693,21 @@ draft-js-plugins-editor@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
+draft-js-prism-plugin@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/draft-js-prism-plugin/-/draft-js-prism-plugin-0.1.1.tgz#c8cdf3841e6e3fdfc766f2131e47a49fb972367e"
+  dependencies:
+    draft-js-prism ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb
+    react "*"
+
+draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
+  version "1.0.3"
+  resolved "https://codeload.github.com/ngs/draft-js-prism/tar.gz/6edb31c3805dd1de3fb897cc27fced6bac1bafbb"
+  dependencies:
+    extend "^3.0.0"
+    immutable "*"
+    prismjs "^1.5.0"
+
 draft-js-single-line-plugin@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/draft-js-single-line-plugin/-/draft-js-single-line-plugin-2.0.1.tgz#3aea1b100b1562d7ef3d5d02e73190da12953857"
@@ -2703,7 +2718,15 @@ draft-js-utils@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
 
-draft-js@^0.10.1, draft-js@~0.10.0, draft-js@~0.10.1:
+draft-js@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.2.tgz#b722613cb306cfee910f9de1789f2cc3023772e7"
+  dependencies:
+    fbjs "^0.8.12"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
+draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.1.tgz#6f1219d8095729691429ca6fd7a58d2a8be5cb67"
   dependencies:
@@ -3337,7 +3360,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.12, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.9:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.15.tgz#4f0695fdfcc16c37c0b07facec8cb4c4091685b9"
   dependencies:
@@ -4214,7 +4237,7 @@ immutability-helper@^2.2.0:
   dependencies:
     invariant "^2.2.0"
 
-immutable@^3.8.1:
+immutable@*, immutable@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
@@ -6862,6 +6885,12 @@ pretty-format@^20.0.3:
     ansi-regex "^2.1.1"
     ansi-styles "^3.0.0"
 
+prismjs@^1.5.0, prismjs@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.8.1.tgz#bd0cdc32e9a561c1c8c3c9733765a7f1ec3b54ee"
+  optionalDependencies:
+    clipboard "^1.5.5"
+
 prismjs@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.7.0.tgz#6c03898d388762f460cb06d2773c7f4e6d2cd614"
@@ -7282,7 +7311,7 @@ react-trend@^1.2.4:
   dependencies:
     prop-types "^15.5.8"
 
-"react@^0.14.0 || ^15.0.0", "react@^15 || ^16", react@^15.4.1:
+react@*, "react@^0.14.0 || ^15.0.0", "react@^15 || ^16", react@^15.4.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
   dependencies:

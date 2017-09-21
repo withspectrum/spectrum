@@ -31,7 +31,6 @@ import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
-import Highlight from '../../../components/highlight';
 import { track } from '../../../helpers/events';
 import Editor, {
   toJSON,
@@ -596,21 +595,19 @@ class ThreadDetailPure extends Component {
               </Edited>
             )}
           </FlexRow>
-          <Highlight continuously={false}>
-            <Editor
-              readOnly={!this.state.isEditing}
-              state={body}
-              onChange={this.changeBody}
-              placeholder="Write more thoughts here, add photos, and anything else!"
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreview && linkPreview.url,
-                data: linkPreview,
-              }}
-            />
-          </Highlight>
+          <Editor
+            readOnly={!this.state.isEditing}
+            state={body}
+            onChange={this.changeBody}
+            placeholder="Write more thoughts here, add photos, and anything else!"
+            showLinkPreview={true}
+            linkPreview={{
+              loading: fetchingLinkPreview,
+              remove: this.removeLinkPreview,
+              trueUrl: linkPreview && linkPreview.url,
+              data: linkPreview,
+            }}
+          />
         </span>
       </ThreadWrapper>
     );
