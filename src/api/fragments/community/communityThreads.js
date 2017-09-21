@@ -23,6 +23,7 @@ export const communityThreadsFragment = gql`
             id
             name
             slug
+            isPrivate
             community {
               id
               name

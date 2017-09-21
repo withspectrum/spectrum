@@ -26,6 +26,7 @@ export const userEverythingFragment = gql`
             id
             name
             slug
+            isPrivate
             community {
               id
               name

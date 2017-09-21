@@ -373,6 +373,8 @@ export const MetaTextPill = styled(MetaText)`
   font-size: 11px;
   text-transform: uppercase;
   font-weight: 800;
+  display: flex;
+  align-items: center;
 `;
 
 export const MetaCommunityName = styled(Link)`
@@ -456,6 +458,15 @@ export const PillLink = styled(Link)`
   pointer-events: auto;
 `;
 
+export const PillLabel = styled.span`
+  ${props =>
+    props.isPrivate &&
+    css`
+      position: relative;
+      top: -2px;
+    `};
+`;
+
 export const MiniLinkPreview = styled(Link)`
   display: flex;
   font-size: 14px;
@@ -492,3 +503,5 @@ export const NullHeading = styled.p`
   text-align: center;
   margin-bottom: 32px;
 `;
+
+export const Lock = styled.span`margin-right: 4px;`;

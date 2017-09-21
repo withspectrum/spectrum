@@ -4,13 +4,16 @@ import React from 'react';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import Icon from '../../../components/icons';
 import {
   CommunityInfoContainer,
   AvatarLink,
   CommunityAvatar,
   CommunityLink,
   PillLink,
+  PillLabel,
   MetaCommunityName,
+  Lock,
 } from '../style';
 
 export default ({ thread, active, activeCommunity }) => {
@@ -39,7 +42,12 @@ export default ({ thread, active, activeCommunity }) => {
           className="pill"
           to={`/${channel.community.slug}/${channel.slug}`}
         >
-          {channel.name}
+          {channel.isPrivate && (
+            <Lock>
+              <Icon glyph="private" size={12} />
+            </Lock>
+          )}
+          <PillLabel isPrivate={channel.isPrivate}>{channel.name}</PillLabel>
         </PillLink>
       )}
     </CommunityInfoContainer>
