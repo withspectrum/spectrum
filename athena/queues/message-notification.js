@@ -15,6 +15,7 @@ import { getThreadNotificationUsers } from '../models/usersThreads';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
 import bufferNotificationEmail from './buffer-message-notification-email';
+import { toPlainText, toState } from 'shared/draft-utils';
 
 const formatAndBufferNotificationEmail = (
   recipient,
@@ -46,7 +47,10 @@ const formatAndBufferNotificationEmail = (
             name: user.name,
           },
           content: {
-            body: message.content.body,
+            body:
+              message.messageType === 'draftjs'
+                ? toPlainText(toState(JSON.parse(message.content.body)))
+                : message.content.body,
           },
         },
       ],
