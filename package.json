@@ -41,7 +41,7 @@
     "draft-js-focus-plugin": "2.0.0-rc2",
     "draft-js-image-plugin": "2.0.0-rc8",
     "draft-js-import-markdown": "^1.2.0",
-    "draft-js-markdown-plugin": "^0.4.1",
+    "draft-js-markdown-plugin": "^1.0.0",
     "draft-js-plugins-editor": "2.0.0-rc2",
     "draft-js-prism-plugin": "0.1.1",
     "draft-js-single-line-plugin": "^2.0.1",

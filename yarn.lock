@@ -2692,9 +2692,9 @@ draft-js-import-markdown@^1.2.0:
     draft-js-import-element "^1.2.0"
     synthetic-dom "^1.2.0"
 
-draft-js-markdown-plugin@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-0.4.1.tgz#a1ce5cd405169c5dbbd3defb5cc4015694db252e"
+draft-js-markdown-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/draft-js-markdown-plugin/-/draft-js-markdown-plugin-1.0.0.tgz#520fb7c23f1aaa173fd106f422fa1478c57718b7"
   dependencies:
     decorate-component-with-props "^1.0.2"
     draft-js "~0.10.1"
