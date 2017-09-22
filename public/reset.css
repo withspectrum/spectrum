@@ -3,7 +3,7 @@ body {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  background: #F2F5F9;
+  background: #f5f8fc;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -58,7 +58,7 @@ body {
   font-size: 16px;
   line-height: 24px;
   background: #fff;
-  color: #171a21;
+  color: #16171A;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   overflow-x: hidden;
@@ -66,18 +66,18 @@ body {
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #B2B9C6;
+    color:    #A3AFBF;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    #B2B9C6;
+   color:    #A3AFBF;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    #B2B9C6;
+   color:    #A3AFBF;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color:    #B2B9C6;
+   color:    #A3AFBF;
 }
 
 #root {
@@ -106,7 +106,7 @@ body {
 .markdown {
   font-size: 16px;
   line-height: 24px;
-  color: #171a21;
+  color: #16171A;
 }
 
 .markdown > *:first-of-type {
@@ -173,8 +173,8 @@ body {
 }
 
 .markdown blockquote {
-  color: #747E8D;
-  border-left: 4px solid #747E8D;
+  color: #828C99;
+  border-left: 4px solid #7B16FF;
   padding: 4px 8px 4px 16px;
   font-size: 24px;
   font-weight: 300;
@@ -210,11 +210,11 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  background-color: #f6f7f8;
+  background-color: #f5f8fc;
   padding: 2px 4px;
   display: inline;
   width: 100%;
-  border: 1px solid #D6E0EE;
+  border: 1px solid #DFE7EF;
   border-radius: 4px;
   margin-bottom: 16px;
 }
