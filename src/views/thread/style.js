@@ -52,7 +52,7 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
-  align-self: stretch;
+  align: stretch;
 `;
 
 export const ChatInputWrapper = styled(Column)`
@@ -242,7 +242,10 @@ export const Timestamp = styled.span`
 
 export const Edited = styled(Timestamp)`margin-left: 4px;`;
 
-export const ChatWrapper = styled.div`width: 100%;`;
+export const ChatWrapper = styled.div`
+  width: 100%;
+  flex: none;
+`;
 
 export const ThreadContent = styled(Markdown)`
   margin-top: 1rem;
