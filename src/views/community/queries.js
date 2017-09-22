@@ -10,8 +10,8 @@ import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query loadMoreCommunityThreads($slug: String, $after: String) {
-    community(slug: $slug) {
+  query loadMoreCommunityThreads($slug: String, $after: String, $id: ID) {
+    community(slug: $slug, id: $id) {
       ...communityInfo
       ...communityThreads
     }
@@ -41,6 +41,7 @@ const threadsQueryOptions = {
       hasNextPage: community
         ? community.threadConnection.pageInfo.hasNextPage
         : false,
+      feed: community && community.id,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
@@ -111,9 +112,10 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ slug, params }) => ({
+  options: ({ slug, params, id }) => ({
     variables: {
-      slug: slug.toLowerCase(),
+      slug: slug && slug.toLowerCase(),
+      id,
     },
     fetchPolicy: 'cache-and-network',
   }),
@@ -121,8 +123,8 @@ const threadsQueryOptions = {
 
 export const getCommunityThreads = graphql(
   gql`
-		query communityThreads($slug: String, $after: String) {
-			community(slug: $slug) {
+		query communityThreads($slug: String, $after: String, $id: ID) {
+			community(slug: $slug, id: $id) {
         ...communityInfo
         ...communityThreads
       }

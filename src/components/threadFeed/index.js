@@ -144,7 +144,9 @@ class ThreadFeedPure extends Component {
     if (dataExists) {
       return (
         <Threads>
-          {newActivityIndicator && <NewActivityIndicator />}
+          {newActivityIndicator && (
+            <NewActivityIndicator elem="scroller-for-thread-feed" />
+          )}
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}

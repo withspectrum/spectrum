@@ -7,7 +7,7 @@ export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#16171A',
-    wash: '#F5F8FC',
+    wash: '#F6F7F8',
     border: '#DFE7EF',
     inactive: '#DFE7EF',
   },

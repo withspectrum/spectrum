@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
+import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
 import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
@@ -105,7 +106,12 @@ class ThreadComposerWithData extends Component {
         community =>
           community.communityPermissions.isMember ||
           community.communityPermissions.isOwner
-      );
+      )
+      .sort((a, b) => {
+        const bc = parseInt(b.communityPermissions.reputation, 10);
+        const ac = parseInt(a.communityPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -459,7 +465,11 @@ class ThreadComposerWithData extends Component {
         });
 
         // redirect the user to the thread
-        this.props.history.push(`?thread=${id}`);
+        // if they are in the inbox, select it
+        this.props.isInbox
+          ? this.props.dispatch(changeActiveThread(id))
+          : this.props.history.push(`?thread=${id}`);
+
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );
@@ -552,7 +562,7 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus } } = this.props;
+    const { isOpen, data: { networkStatus }, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
     if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
@@ -571,9 +581,17 @@ class ThreadComposerWithData extends Component {
       );
     } else {
       return (
-        <Container isOpen={isOpen}>
-          <Overlay isOpen={isOpen} onClick={this.closeComposer} />
-          <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
+        <Container isOpen={isOpen} isInbox={isInbox}>
+          <Overlay
+            isOpen={isOpen}
+            onClick={this.closeComposer}
+            isInbox={isInbox}
+          />
+          <Composer
+            isOpen={isOpen}
+            onClick={this.handleOpenComposer}
+            isInbox={isInbox}
+          >
             {!isOpen && showCommunityOwnerUpsell && <Upsell />}
             <Placeholder isOpen={isOpen}>
               <Icon glyph="post" onboarding="foo" tipLocation="top" />
@@ -585,7 +603,7 @@ class ThreadComposerWithData extends Component {
                 onChange={this.changeTitle}
                 style={ThreadTitle}
                 value={this.state.title}
-                placeholder={'A title for your thread...'}
+                placeholder={'A title for your conversation...'}
                 ref="titleTextarea"
                 autoFocus
               />
@@ -608,46 +626,38 @@ class ThreadComposerWithData extends Component {
               />
 
               <Actions>
-                <Dropdowns>
-                  <Icon
-                    glyph="community"
-                    tipText="Select a community"
-                    tipLocation="top-right"
-                  />
-                  <select
-                    onChange={this.setActiveCommunity}
-                    value={activeCommunity}
-                  >
-                    {availableCommunities.map(community => {
-                      return (
-                        <option key={community.id} value={community.id}>
-                          {community.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <Icon
-                    glyph="channel"
-                    tipText="Select a channel"
-                    tipLocation="top-right"
-                  />
-                  <select
-                    onChange={this.setActiveChannel}
-                    value={activeChannel}
-                  >
-                    {availableChannels
-                      .filter(
-                        channel => channel.community.id === activeCommunity
-                      )
-                      .map((channel, i) => {
+                <FlexRow>
+                  <Dropdowns>
+                    <select
+                      onChange={this.setActiveCommunity}
+                      value={activeCommunity}
+                    >
+                      {availableCommunities.map(community => {
                         return (
-                          <option key={channel.id} value={channel.id}>
-                            {channel.name}
+                          <option key={community.id} value={community.id}>
+                            {community.name}
                           </option>
                         );
                       })}
-                  </select>
-                </Dropdowns>
+                    </select>
+                    <select
+                      onChange={this.setActiveChannel}
+                      value={activeChannel}
+                    >
+                      {availableChannels
+                        .filter(
+                          channel => channel.community.id === activeCommunity
+                        )
+                        .map((channel, i) => {
+                          return (
+                            <option key={channel.id} value={channel.id}>
+                              {channel.name}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </Dropdowns>
+                </FlexRow>
                 <FlexRow>
                   <TextButton
                     hoverColor="warn.alt"

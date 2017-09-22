@@ -3,7 +3,7 @@ body {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  background: #f2f5f9;
+  background: #f5f8fc;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -46,10 +46,6 @@ textarea {
   color: #ffffff;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 body {
   position: relative;
   height: 100%;
@@ -59,7 +55,7 @@ body {
   font-size: 16px;
   line-height: 24px;
   background: #fff;
-  color: #171a21;
+  color: #16171A;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -67,23 +63,19 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-::-webkit-input-placeholder {
-  /* WebKit, Blink, Edge */
-  color: #b2b9c6;
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #A3AFBF;
 }
-:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  color: #b2b9c6;
-  opacity: 1;
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #A3AFBF;
+   opacity:  1;
 }
-::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  color: #b2b9c6;
-  opacity: 1;
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #A3AFBF;
+   opacity:  1;
 }
-:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: #b2b9c6;
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #A3AFBF;
 }
 
 #root {
@@ -112,7 +104,7 @@ body {
 .markdown {
   font-size: 16px;
   line-height: 24px;
-  color: #171a21;
+  color: #16171A;
 }
 
 .markdown > *:first-of-type {
@@ -179,8 +171,8 @@ body {
 }
 
 .markdown blockquote {
-  color: #747e8d;
-  border-left: 4px solid #747e8d;
+  color: #828C99;
+  border-left: 4px solid #7B16FF;
   padding: 4px 8px 4px 16px;
   font-size: 24px;
   font-weight: 300;
@@ -216,11 +208,11 @@ body {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  background-color: #f6f7f8;
+  background-color: #f5f8fc;
   padding: 2px 4px;
   display: inline;
   width: 100%;
-  border: 1px solid #d6e0ee;
+  border: 1px solid #DFE7EF;
   border-radius: 4px;
   margin-bottom: 16px;
 }

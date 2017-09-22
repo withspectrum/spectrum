@@ -37,6 +37,7 @@ const threadsQueryOptions = {
       networkStatus,
       refetch,
       threads: user ? user.everything.edges : '',
+      feed: 'everything',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({

@@ -1,57 +1,34 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { clearActivityIndicator } from '../../actions/newActivityIndicator';
+import { clearActivityIndicator } from '../../../actions/newActivityIndicator';
 import styled from 'styled-components';
-import { Gradient } from '../globals';
+import { Gradient } from '../../../components/globals';
 
-const Pill = styled.div`
+const NewActivityBar = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
-  border-radius: 20px;
-  color: ${props => props.theme.text.reverse};
-  background: ${props =>
-    Gradient(props.theme.brand.alt, props.theme.brand.default)};};
+  color: ${props => props.theme.brand.alt};
+  background: ${props => props.theme.bg.wash};
   font-size: 14px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   align-self: center;
-  position: fixed;
-  top: 0;
-  opacity: ${props => (props.active ? '1' : '0')};
+  padding: 12px 16px;
+  height: ${props => (props.active ? '40px' : '0')};
   pointer-events: ${props => (props.active ? 'auto' : 'none')};
-  left: 50%;
-  z-index: 9999;
-  transform: translateX(-50%) translateY(${props =>
-    props.active ? '80px' : '60px'});
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 0px ${props => props.theme.bg.border},
+    0 -1px 0px ${props => props.theme.bg.border};
+  z-index: 10;
+  position: relative;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  width: 100%;
 
   &:hover {
-    transform: translateX(-50%) translateY(78px);
-    transition: all 0.2s ease-in-out;
-  }
-
-  &:active {
-    transform: translateX(-50%) translateY(80px);
-    transition: all 0.1s ease-in-out;
-  }
-
-  @media (max-width: 768px) {
-    transform: translateX(-50%) translateY(${props =>
-      props.active ? '60px' : '40px'});
-
-    &:hover {
-      transform: translateX(-50%) translateY(58px);
-      transition: all 0.2s ease-in-out;
-    }
-
-    &:active {
-      transform: translateX(-50%) translateY(60px);
-      transition: all 0.1s ease-in-out;
-    }
+    background: ${props => props.theme.brand.alt};
+    color: ${props => props.theme.text.reverse};
   }
 `;
 
@@ -98,7 +75,7 @@ class Indicator extends Component {
     });
 
     // if the component mounted while the user is scrolled to the top, immediately clear the redux store of the activity indicator - since the user can see the top of the feed, they don't need an indicator
-    if (elem.scrollTop < window.innerHeight / 2) {
+    if (elem.scrollTop < window.innerHeight / 4) {
       this.props.dispatch(clearActivityIndicator());
     }
   }
@@ -126,9 +103,9 @@ class Indicator extends Component {
     }
 
     return (
-      <Pill active={active} onClick={this.clearActivityIndicator}>
+      <NewActivityBar active={active} onClick={this.clearActivityIndicator}>
         New conversations!
-      </Pill>
+      </NewActivityBar>
     );
   }
 }
