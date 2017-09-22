@@ -113,6 +113,10 @@ export const CommunityListItem = styled.div`
     border: 1px solid ${props => props.theme.bg.border};
     background: ${props => props.theme.bg.default};
     color: ${props => props.theme.text.default};
+
+    img {
+      box-shadow: 0;
+    }
   }
 `;
 
@@ -173,7 +177,7 @@ export const CommunityListAvatar = styled.img`
   height: 32px;
   display: inline-block;
   border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: ${props => (props.active ? '0' : '0 1px 2px rgba(0, 0, 0, 0.1)')};
 `;
 
 export const CommunityListScroller = styled.div`

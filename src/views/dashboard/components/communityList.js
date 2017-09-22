@@ -58,7 +58,10 @@ class CommunityList extends Component {
             active={c.id === activeCommunity}
             onClick={() => this.changeCommunity(c.id)}
           >
-            <CommunityListAvatar src={c.profilePhoto} />
+            <CommunityListAvatar
+              active={c.id === activeCommunity}
+              src={c.profilePhoto}
+            />
             <CommunityListName active={c.id === activeCommunity}>
               {c.name}
             </CommunityListName>
