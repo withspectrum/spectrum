@@ -41,15 +41,6 @@ import MediaInput from '../mediaInput';
 import { ThreadDescription } from '../threadComposer/style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
-const toPlainText = editorState =>
-  editorState.getCurrentContent().getPlainText();
-
-const fromPlainText = text =>
-  EditorState.createWithContent(ContentState.createFromText(text));
-
-const toJSON = editorState => convertToRaw(editorState.getCurrentContent());
-const toState = json => EditorState.createWithContent(convertFromRaw(json));
-
 type EditorProps = {
   markdown?: boolean,
   state?: Object,
@@ -198,7 +189,5 @@ class Editor extends React.Component {
     );
   }
 }
-
-export { toPlainText, fromPlainText, toJSON, toState };
 
 export default Editor;

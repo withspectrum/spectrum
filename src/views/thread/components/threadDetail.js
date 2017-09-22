@@ -32,11 +32,8 @@ import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
-import Editor, {
-  toJSON,
-  toPlainText,
-  toState,
-} from '../../../components/draftjs-editor';
+import Editor from '../../../components/draftjs-editor';
+import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
 import Reputation from '../../../components/reputation';

@@ -12,11 +12,7 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { track } from '../../helpers/events';
-import {
-  toJSON,
-  fromPlainText,
-  toPlainText,
-} from '../../components/draftjs-editor';
+import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import {

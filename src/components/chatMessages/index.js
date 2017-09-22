@@ -18,7 +18,7 @@ import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
 import Reaction from '../reaction';
-import { toState, toPlainText } from '../draftjs-editor';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 import {
   UserAvatar,
