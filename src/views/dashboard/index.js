@@ -84,7 +84,6 @@ class Dashboard extends Component {
         <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-
           <CommunityListWrapper>
             <CommunityListScroller>
               <CommunityList
