@@ -6,7 +6,7 @@
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-env": "^5.0.5",
-    "flow-bin": "^0.43.0",
+    "flow-bin": "^0.54.1",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
     "newrelic": "^2.2.0",

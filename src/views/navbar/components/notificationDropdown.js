@@ -63,16 +63,16 @@ const NotificationDropdownPure = props => {
       <NotificationContainer {...props} />
 
       {rawNotifications &&
-      rawNotifications.length > 0 && (
-        <DropdownFooter>
-          <TextButton
-            color={'brand.default'}
-            onClick={() => history.push('/notifications')}
-          >
-            View all
-          </TextButton>
-        </DropdownFooter>
-      )}
+        rawNotifications.length > 0 && (
+          <DropdownFooter>
+            <TextButton
+              color={'brand.default'}
+              onClick={() => history.push('/notifications')}
+            >
+              View all
+            </TextButton>
+          </DropdownFooter>
+        )}
     </Dropdown>
   );
 };

@@ -417,11 +417,9 @@ class Navbar extends Component {
                   `/users/${loggedInUser.username}`
                 }
                 to={
-                  loggedInUser.username ? (
-                    `/users/${loggedInUser.username}`
-                  ) : (
-                    '/'
-                  )
+                  loggedInUser.username
+                    ? `/users/${loggedInUser.username}`
+                    : '/'
                 }
               >
                 <UserProfileAvatar

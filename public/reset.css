@@ -45,10 +45,6 @@ textarea {
   color: #ffffff;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 body {
   position: relative;
   height: 100%;
@@ -78,6 +74,10 @@ body {
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
    color:    #A3AFBF;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 #root {

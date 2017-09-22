@@ -176,11 +176,9 @@ export const UserListItem = ({
             {user.totalReputation && (
               <span>
                 <ReputationMini tipText={'Your rep in this community'} />
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
+                {user.contextPermissions
+                  ? user.contextPermissions.reputation.toLocaleString()
+                  : user.totalReputation.toLocaleString()}
               </span>
             )}
           </Meta>
@@ -233,11 +231,9 @@ class InvoiceListItemPure extends Component {
                 .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
             </Heading>
             <Meta>
-              {invoice.paidAt ? (
-                `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-              ) : (
-                'Unpaid'
-              )}{' '}
+              {invoice.paidAt
+                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+                : 'Unpaid'}{' '}
               · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>
