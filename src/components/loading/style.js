@@ -59,6 +59,16 @@ export const ShimmerThread = styled(Card)`
   }
 `;
 
+export const ShimmerInboxThread = styled.div`
+  background: ${props => props.theme.bg.default};
+  padding: 16px;
+  border-top: 1px solid ${props => props.theme.bg.border};
+
+  section {
+    min-height: 96px;
+  }
+`;
+
 export const ShimmerProfile = styled(Card)`
   padding: 16px;
 
@@ -164,6 +174,22 @@ export const ShimmerChat = styled(FlexCol)`
 
 export const ShimmerComposer = styled(Card)`
   padding: 16px;
+
+  section {
+    min-height: 32px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ShimmerInboxComposer = styled.div`
+  padding: 16px;
+  background: ${props => props.theme.bg.default};
+  margin: 8px 0;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 
   section {
     min-height: 32px;

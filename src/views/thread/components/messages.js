@@ -61,6 +61,14 @@ class MessagesWithData extends Component {
     if (newMessageSent) {
       this.props.contextualScrollToBottom();
     }
+
+    // if the thread changes in the inbox we have to update the subscription
+    if (
+      prevProps.data.thread &&
+      prevProps.data.thread.id !== this.props.data.thread.id
+    ) {
+      this.unsubscribe().then(() => this.subscribe());
+    }
   }
 
   componentDidMount() {
@@ -84,7 +92,7 @@ class MessagesWithData extends Component {
     const { subscription } = this.state;
     if (subscription) {
       // This unsubscribes the subscription
-      subscription();
+      return Promise.resolve(subscription());
     }
   };
 
@@ -95,11 +103,15 @@ class MessagesWithData extends Component {
       currentUser,
       toggleReaction,
       forceScrollToBottom,
+      hasMessagesToLoad,
+      viewStatus,
     } = this.props;
 
-    const dataExists = data.thread && data.thread.messageConnection;
+    const dataExists =
+      networkStatus === 7 && data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
+
     if (networkStatus === 8 || error) {
       return (
         <NullState
@@ -154,7 +166,7 @@ class MessagesWithData extends Component {
             <Icon glyph={'message'} />
             <hr />
           </HorizontalRule>
-          <LoadingChat />
+          {hasMessagesToLoad && <LoadingChat />}
         </ChatWrapper>
       );
     }

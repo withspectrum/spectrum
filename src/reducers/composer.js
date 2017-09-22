@@ -7,9 +7,10 @@ const initialState = {
 export default function modal(state = initialState, action) {
   switch (action.type) {
     case 'OPEN_COMPOSER':
-      return {
+      return Object.assign({}, state, {
+        ...state,
         isOpen: true,
-      };
+      });
     case 'CLOSE_COMPOSER':
       return {
         isOpen: false,
