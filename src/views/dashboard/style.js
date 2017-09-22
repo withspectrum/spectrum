@@ -57,7 +57,7 @@ export const CommunityListWrapper = styled.div`
   border-right: 1px solid ${props => props.theme.bg.border};
   transform: translateZ(0);
   transition: all 0.2s ease-in-out;
-  box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.04);
+  padding-bottom: 48px;
 
   img {
     opacity: 0.4;
@@ -69,7 +69,6 @@ export const CommunityListWrapper = styled.div`
     transform: translateZ(0);
     width: 256px;
     transition: all 0.2s ease-in-out;
-    box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.08);
 
     img {
       filter: grayscale(0%);
@@ -84,7 +83,9 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 8px 16px;
+  padding: 3px;
+  margin: 4px 12px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -92,7 +93,9 @@ export const CommunityListItem = styled.div`
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.bg.border : props.theme.bg.wash};
+    props.active ? props.theme.bg.default : props.theme.bg.wash};
+  border: 1px solid
+    ${props => (props.active ? props.theme.bg.border : 'transparent')};
 
   a {
     display: flex;
@@ -107,9 +110,31 @@ export const CommunityListItem = styled.div`
         filter: grayscale(0%);
       }
     `} &:hover {
-    background: ${props =>
-      props.active ? props.theme.bg.border : props.theme.bg.border};
+    border: 1px solid ${props => props.theme.bg.border};
+    background: ${props => props.theme.bg.default};
     color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ExploreCommunityListItem = styled(CommunityListItem)`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 255px;
+  color: ${props => props.theme.text.alt};
+  box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 0;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+    background: ${props => props.theme.bg.default};
+    border: 1px solid transparent;
+
+    div {
+      color: ${props => props.theme.brand.alt};
+    }
   }
 `;
 
@@ -124,11 +149,12 @@ export const CommunityListName = styled.p`
 export const AllCommunityListItem = styled.div`
   width: 32px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => props.theme.bg.default};
+  background: ${props =>
+    props.active ? props.theme.bg.default : props.theme.bg.wash};
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.alt};
 `;
@@ -138,7 +164,7 @@ export const ExploreListItem = styled(AllCommunityListItem)`
   height: 32px;
   background: none;
   margin-right: 3px;
-  color: ${props => props.theme.brand.alt};
+  border-radius: 0;
 `;
 
 export const CommunityListAvatar = styled.img`
@@ -146,7 +172,7 @@ export const CommunityListAvatar = styled.img`
   min-width: 32px;
   height: 32px;
   display: inline-block;
-  border-radius: 6px;
+  border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
@@ -154,6 +180,7 @@ export const CommunityListScroller = styled.div`
   width: 100%;
   overflow-y: scroll;
   position: relative;
+  padding-bottom: 16px;
 `;
 
 export const FeedHeaderContainer = styled.div`
@@ -283,7 +310,7 @@ export const ThreadTitle = styled.h3`
   font-weight: 600;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 16px 16px 8px;
+  margin: 12px 16px 8px;
   max-width: 100%;
   line-height: 1.4;
 `;
@@ -304,7 +331,7 @@ export const AttachmentsContainer = styled.div`
 
 export const ThreadMeta = styled.div`
   display: flex;
-  margin: 8px 16px 16px;
+  margin: 10px 16px 16px;
   justify-content: space-between;
 `;
 
@@ -356,6 +383,8 @@ export const MetaText = styled.span`
       : props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.new ? 600 : 400)};
   order: 2;
+  position: relative;
+  top: 4px;
 
   a {
     font-weight: 600;

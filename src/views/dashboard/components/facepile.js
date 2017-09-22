@@ -59,6 +59,12 @@ const Facepile = ({ participants, creator, active }) => {
   );
   const participantCount = participants.length;
 
+  const hasOverflow = participantCount > NUM_TO_DISPLAY;
+  const overflowAmount =
+    participantCount - NUM_TO_DISPLAY > 9
+      ? '...'
+      : `+${participantCount - NUM_TO_DISPLAY}`;
+
   return (
     <FacepileContainer>
       <ParticipantHead
@@ -78,11 +84,10 @@ const Facepile = ({ participants, creator, active }) => {
         />
       </ParticipantHead>
       {messageAvatars(participantList, active)}
-      {participantCount > NUM_TO_DISPLAY && (
-        <EmptyParticipantHead
-          active={active}
-          offset={NUM_TO_DISPLAY + 1}
-        >{`+${participantCount - NUM_TO_DISPLAY}`}</EmptyParticipantHead>
+      {hasOverflow && (
+        <EmptyParticipantHead active={active} offset={NUM_TO_DISPLAY + 1}>
+          {overflowAmount}
+        </EmptyParticipantHead>
       )}
     </FacepileContainer>
   );

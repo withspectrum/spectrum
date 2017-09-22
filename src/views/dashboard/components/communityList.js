@@ -13,6 +13,7 @@ import { Avatar } from '../../../components/avatar';
 import {
   ExploreListItem,
   AllCommunityListItem,
+  ExploreCommunityListItem,
   CommunityListItem,
   CommunityListName,
   CommunityListAvatar,
@@ -47,7 +48,7 @@ class CommunityList extends Component {
             <Icon glyph={'everything'} />
           </AllCommunityListItem>
           <CommunityListName active={!activeCommunity}>
-            All Communities
+            Everything
           </CommunityListName>
         </CommunityListItem>
 
@@ -64,14 +65,14 @@ class CommunityList extends Component {
           </CommunityListItem>
         ))}
 
-        <CommunityListItem>
+        <ExploreCommunityListItem>
           <Link to={`/explore`}>
             <ExploreListItem>
               <Icon glyph={'plus'} size={40} />
             </ExploreListItem>
             <CommunityListName>Explore communities</CommunityListName>
           </Link>
-        </CommunityListItem>
+        </ExploreCommunityListItem>
       </div>
     );
   }
