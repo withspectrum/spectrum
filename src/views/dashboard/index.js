@@ -144,6 +144,8 @@ class Dashboard extends Component {
     // error
     if (networkStatus === 8)
       return <DashboardError title={title} description={description} />;
+
+    return null;
   }
 }
 

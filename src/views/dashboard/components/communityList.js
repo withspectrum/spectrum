@@ -11,11 +11,11 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import { Avatar } from '../../../components/avatar';
 import {
+  ExploreListItem,
   AllCommunityListItem,
   CommunityListItem,
   CommunityListName,
   CommunityListAvatar,
-  CommunityListDivider,
 } from '../style';
 import {
   changeActiveCommunity,
@@ -39,20 +39,11 @@ class CommunityList extends Component {
 
     return (
       <div>
-        <Link to={`/users/${user.username}`}>
-          <CommunityListItem>
-            <Avatar src={user.profilePhoto} size={32} />
-            <CommunityListName>{user.name}</CommunityListName>
-          </CommunityListItem>
-        </Link>
-
-        <CommunityListDivider />
-
         <CommunityListItem
           active={!activeCommunity}
           onClick={() => this.changeCommunity('')}
         >
-          <AllCommunityListItem>
+          <AllCommunityListItem active={!activeCommunity}>
             <Icon glyph={'everything'} />
           </AllCommunityListItem>
           <CommunityListName active={!activeCommunity}>
@@ -72,6 +63,15 @@ class CommunityList extends Component {
             </CommunityListName>
           </CommunityListItem>
         ))}
+
+        <CommunityListItem>
+          <Link to={`/explore`}>
+            <ExploreListItem>
+              <Icon glyph={'plus'} size={40} />
+            </ExploreListItem>
+            <CommunityListName>Explore communities</CommunityListName>
+          </Link>
+        </CommunityListItem>
       </div>
     );
   }

@@ -15,7 +15,6 @@ const Composer = ({ dispatch }) => (
   <CreateThreadComposer onClick={() => dispatch(openComposer())}>
     <ComposeIconContainer>
       <Icon glyph={'post'} size={32} />
-      Start a new conversation
     </ComposeIconContainer>
   </CreateThreadComposer>
 );

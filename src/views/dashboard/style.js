@@ -39,7 +39,6 @@ export const InboxWrapper = styled.div`
 `;
 
 export const InboxScroller = styled.div`
-  height: 100%;
   width: 100%;
   overflow-y: scroll;
   position: relative;
@@ -61,8 +60,8 @@ export const CommunityListWrapper = styled.div`
   box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.04);
 
   img {
-    opacity: 0.5;
-    filter: grayscale(50%);
+    opacity: 0.4;
+    filter: grayscale(60%);
     transition: all 0.2s ease-in-out;
   }
 
@@ -85,45 +84,32 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  margin: 8px 14px;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   cursor: pointer;
   position: relative;
   color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.alt};
+    props.active ? props.theme.text.default : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.bg.wash};
-  padding: 2px 8px 2px 2px;
+    props.active ? props.theme.bg.border : props.theme.bg.wash};
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 
   ${props =>
     props.active &&
     css`
       img {
-        border: 1px solid
-          ${props => (props.active ? props.theme.bg.default : 'transparent')};
-        box-shadow: 0 0 0 2px ${props.theme.brand.alt};
         opacity: 1;
+        filter: grayscale(0%);
       }
     `} &:hover {
-    transition: all 0.2s ease-in-out;
     background: ${props =>
-      props.active ? props.theme.brand.alt : props.theme.bg.border};
-
-    ${props =>
-      props.active
-        ? css`
-            img {
-              box-shadow: 0 0 0 2px ${props.theme.brand.alt};
-            }
-          `
-        : css`
-            img {
-              box-shadow: 0 0 0 2px ${props.theme.bg.border};
-            }
-          `};
+      props.active ? props.theme.bg.border : props.theme.bg.border};
+    color: ${props => props.theme.text.default};
   }
 `;
 
@@ -131,27 +117,28 @@ export const CommunityListName = styled.p`
   font-size: 14px;
   font-weight: 500;
   margin-left: 12px;
-  color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.default};
 
   ${Truncate};
-`;
-
-export const CommunityListDivider = styled.div`
-  width: 100%;
-  height: 1px;
-  background: ${props => props.theme.bg.border};
-  margin: 16px 0;
 `;
 
 export const AllCommunityListItem = styled.div`
   width: 32px;
   height: 32px;
-  border-radius: 4px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.default};
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.alt};
+`;
+
+export const ExploreListItem = styled(AllCommunityListItem)`
+  width: 32px;
+  height: 32px;
+  background: none;
+  margin-right: 3px;
+  color: ${props => props.theme.brand.alt};
 `;
 
 export const CommunityListAvatar = styled.img`
@@ -159,12 +146,11 @@ export const CommunityListAvatar = styled.img`
   min-width: 32px;
   height: 32px;
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 export const CommunityListScroller = styled.div`
-  height: 100%;
   width: 100%;
   overflow-y: scroll;
   position: relative;
@@ -172,7 +158,7 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 8px 16px;
+  padding: 16px;
   box-shadow: 0 1px 0 0 ${props => props.theme.bg.border},
     0 1px 3px rgba(0, 0, 0, 0.01);
   position: relative;
@@ -198,7 +184,6 @@ export const ThreadWrapper = styled.div`
 `;
 
 export const ThreadScroller = styled.div`
-  height: 100%;
   width: 100%;
   overflow-y: scroll;
   position: relative;
@@ -222,14 +207,14 @@ export const ThreadComposerContainer = styled.div`
 export const ComposeIconContainer = styled.div`
   position: relative;
   top: 2px;
-  color: ${props => props.theme.text.alt};
+  color: ${props => props.theme.brand.alt};
   display: flex;
   align-items: center;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${props => props.theme.brand.default};
   }
 
   div {

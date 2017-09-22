@@ -109,7 +109,7 @@ class ThreadContainerPure extends Component {
 
     const threadAndUser = currentUser && thread;
 
-    if (threadAndUser) {
+    if (threadAndUser && this.chatInput) {
       this.chatInput.triggerFocus();
     }
   }
