@@ -52,7 +52,7 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
-  align: stretch;
+  align-self: stretch;
 `;
 
 export const ChatInputWrapper = styled(Column)`
