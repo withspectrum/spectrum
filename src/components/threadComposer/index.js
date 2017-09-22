@@ -595,6 +595,7 @@ class ThreadComposerWithData extends Component {
                 state={this.state.body}
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
+                editorKey="thread-composer"
                 placeholder="Write more thoughts here, add photos, and anything else!"
                 className={'threadComposer'}
                 showLinkPreview={true}

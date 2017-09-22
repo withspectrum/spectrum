@@ -252,6 +252,7 @@ class ChatInputWithMutation extends Component {
             images={false}
             editorRef={editor => (this.editor = editor)}
             innerRef={input => (this.chatInput = input)}
+            editorKey="chat-input"
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>

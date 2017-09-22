@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import redraft from 'redraft';
 import {
   getLinkPreviewFromUrl,
   timeDifference,
@@ -596,6 +595,7 @@ class ThreadDetailPure extends Component {
             readOnly={!this.state.isEditing}
             state={body}
             onChange={this.changeBody}
+            editorKey="thread-detail"
             placeholder="Write more thoughts here, add photos, and anything else!"
             showLinkPreview={true}
             linkPreview={{
