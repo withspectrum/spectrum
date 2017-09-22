@@ -62,7 +62,7 @@ const Facepile = ({ participants, creator, active }) => {
   const hasOverflow = participantCount > NUM_TO_DISPLAY;
   const overflowAmount =
     participantCount - NUM_TO_DISPLAY > 9
-      ? '...'
+      ? '···'
       : `+${participantCount - NUM_TO_DISPLAY}`;
 
   return (
@@ -85,7 +85,14 @@ const Facepile = ({ participants, creator, active }) => {
       </ParticipantHead>
       {messageAvatars(participantList, active)}
       {hasOverflow && (
-        <EmptyParticipantHead active={active} offset={NUM_TO_DISPLAY + 1}>
+        <EmptyParticipantHead
+          active={active}
+          offset={NUM_TO_DISPLAY + 1}
+          tipText={
+            participantCount - NUM_TO_DISPLAY > 9 ? `+${overflowAmount}` : false
+          }
+          tipLocation={'top-right'}
+        >
           {overflowAmount}
         </EmptyParticipantHead>
       )}
