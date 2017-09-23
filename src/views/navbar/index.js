@@ -142,7 +142,13 @@ class Navbar extends Component {
               notification.context.id === id
             ) {
               // if the notification context matches the current route, go ahead and mark it as seen
-              this.props.markSingleNotificationSeen(notification.id);
+              this.props.client.mutate({
+                mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+                variables: {
+                  id: notification.id,
+                },
+              });
+
               return null;
             }
 
