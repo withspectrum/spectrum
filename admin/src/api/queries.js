@@ -1,30 +1,51 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
-import { communityInfoFragment } from './fragments/community/communityInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 const META_INFORMATION_QUERY = gql`
   query {
     meta {
-      userGrowth {
-        createdAt
+      usersGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
-      communityGrowth {
-        createdAt
+      communitiesGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
-      channelGrowth {
-        createdAt
+      channelsGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
-      threadGrowth {
-        createdAt
+      threadsGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
-      messageGrowth {
-        createdAt
+      directMessageThreadsGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
-      subscriptionGrowth {
-        amount
-        createdAt
-        plan
+      threadMessagesGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
+      }
+      directMessagesGrowth {
+        count
+        weeklyGrowth
+        monthlyGrowth
+        quarterlyGrowth
       }
     }
   }

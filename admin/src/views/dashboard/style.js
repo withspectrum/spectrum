@@ -7,12 +7,13 @@ export const Section = styled.section`
 
 export const OverviewRow = styled.div`
   display: flex;
-  flex-direction: column;
-  padding: 32px;
-  border-bottom: 1px solid ${props => props.theme.border.default};
   width: 100%;
-  max-width: 768px;
   margin: 0 auto;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -24,13 +25,16 @@ export const SectionTitle = styled.h2`
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
+  border: 1px solid ${props => props.theme.border.default};
+  background: ${props => props.theme.bg.default};
+  margin: 8px 0 0 8px;
+  border-radius: 4px;
 `;
 
 export const Subsection = styled.div`
   display: flex;
-  flex-direction: row;
-  padding: 16px 0;
-  justify-content: space-between;
+  flex-direction: column;
+  flex: 0 0 25%;
 
   @media (max-width: 768px) {
     flex: 1 0 100%;
@@ -38,15 +42,17 @@ export const Subsection = styled.div`
 `;
 
 export const Subtext = styled.h3`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   color: ${props => props.theme.text.alt};
+  margin: 16px 16px 8px;
 `;
 
 export const Count = styled.h4`
   font-size: 24px;
   font-weight: 800;
+  margin: 0 16px 24px;
 `;
 
 export const HeaderZoneBoy = styled.div`
@@ -56,6 +62,7 @@ export const HeaderZoneBoy = styled.div`
   border-bottom: 1px solid ${props => props.theme.border.default};
   align-items: center;
   padding: 32px;
+  background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
     align-items: flex-start;
@@ -105,3 +112,25 @@ export const RangeItem = styled.li`
     width: 33%;
   }
 `;
+
+export const Growth = styled.div`
+  padding: 8px;
+  border-top: 1px solid ${props => props.theme.border.default};
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: ${props => props.theme.text.alt};
+  margin: 0 8px;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+`;
+
+export const Positive = styled.div`
+  color: ${props => props.theme.success.default};
+`;
+
+export const Negative = styled.div`color: ${props => props.theme.warn.alt};`;
+
+export const Neutral = styled.div`color: ${props => props.theme.text.alt};`;
+
+export const Label = styled.div``;
