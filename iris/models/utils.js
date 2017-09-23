@@ -65,7 +65,11 @@ export const getGrowth = async (
     .run();
 
   const rate = (await (currentPeriodCount - prevPeriodCount)) / prevPeriodCount;
-  return Math.round(rate * 100);
+  return {
+    currentPeriodCount,
+    prevPeriodCount,
+    growth: Math.round(rate * 100),
+  };
 };
 
 export const getCount = (table: string, filter: mixed) => {

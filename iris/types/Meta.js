@@ -1,9 +1,15 @@
 const Meta = /* GraphQL */ `
+  type GrowthDataCounts {
+    growth: Float
+    currentPeriodCount: Int
+    prevPeriodCount: Int
+  }
+  
   type GrowthData {
     count: Int
-    weeklyGrowth: Float
-    monthlyGrowth: Float
-    quarterlyGrowth: Float
+    weeklyGrowth: GrowthDataCounts
+    monthlyGrowth: GrowthDataCounts
+    quarterlyGrowth: GrowthDataCounts
   }
 
   type Meta {

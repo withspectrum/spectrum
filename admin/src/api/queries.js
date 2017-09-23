@@ -7,45 +7,129 @@ const META_INFORMATION_QUERY = gql`
     meta {
       usersGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       communitiesGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       channelsGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       threadsGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       directMessageThreadsGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       threadMessagesGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
       directMessagesGrowth {
         count
-        weeklyGrowth
-        monthlyGrowth
-        quarterlyGrowth
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
     }
   }

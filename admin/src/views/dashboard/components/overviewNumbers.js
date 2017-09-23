@@ -14,7 +14,9 @@ import {
   Positive,
   Negative,
   Neutral,
+  RangeLabel,
   Label,
+  Row,
 } from '../style';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
@@ -41,26 +43,53 @@ const OverviewNumbers = ({ data }) => {
     },
   } = data;
 
-  const displayGrowthPercentage = (num, range) => {
-    if (num > 0) {
+  const displayGrowthPercentage = (
+    { growth, currentPeriodCount, prevPeriodCount },
+    range
+  ) => {
+    if (growth > 0) {
       return (
         <Growth>
-          <Positive>+{num}%</Positive>
-          <Label>{range}</Label>
+          <Row>
+            <Positive>+{growth}%</Positive>
+            <RangeLabel>{range}</RangeLabel>
+          </Row>
+          <Row>
+            <Label>Curr. period: {currentPeriodCount}</Label>
+          </Row>
+          <Row>
+            <Label>Prev. period: {prevPeriodCount}</Label>
+          </Row>
         </Growth>
       );
-    } else if (num < 0) {
+    } else if (growth < 0) {
       return (
         <Growth>
-          <Negative>{num}%</Negative>
-          <Label>{range}</Label>
+          <Row>
+            <Negative>{growth}%</Negative>
+            <RangeLabel>{range}</RangeLabel>
+          </Row>
+          <Row>
+            <Label>Curr. period: {currentPeriodCount}</Label>
+          </Row>
+          <Row>
+            <Label>Prev. period: {prevPeriodCount}</Label>
+          </Row>
         </Growth>
       );
     } else {
       return (
         <Growth>
-          <Neutral>+0%</Neutral>
-          <Label>{range}</Label>
+          <Row>
+            <Neutral>+0%</Neutral>
+            <RangeLabel>{range}</RangeLabel>
+          </Row>
+          <Row>
+            <Label>Curr. period: {currentPeriodCount}</Label>
+          </Row>
+          <Row>
+            <Label>Prev. period: {prevPeriodCount}</Label>
+          </Row>
         </Growth>
       );
     }
@@ -72,9 +101,9 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Users</Subtext>
           <Count>{usersGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(usersGrowth.weeklyGrowth, '7 days')}
-          {displayGrowthPercentage(usersGrowth.monthlyGrowth, '30 days')}
-          {displayGrowthPercentage(usersGrowth.quarterlyGrowth, '90 days')}
+          {displayGrowthPercentage(usersGrowth.weeklyGrowth, 'weekly')}
+          {displayGrowthPercentage(usersGrowth.monthlyGrowth, 'monthly')}
+          {displayGrowthPercentage(usersGrowth.quarterlyGrowth, 'quarterly')}
         </Column>
       </Subsection>
 
@@ -82,11 +111,11 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Communities</Subtext>
           <Count>{communitiesGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(communitiesGrowth.weeklyGrowth, '7 days')}
-          {displayGrowthPercentage(communitiesGrowth.monthlyGrowth, '30 days')}
+          {displayGrowthPercentage(communitiesGrowth.weeklyGrowth, 'weekly')}
+          {displayGrowthPercentage(communitiesGrowth.monthlyGrowth, 'monthly')}
           {displayGrowthPercentage(
             communitiesGrowth.quarterlyGrowth,
-            '90 days'
+            'quarterly'
           )}
         </Column>
       </Subsection>
@@ -95,9 +124,9 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Channels</Subtext>
           <Count>{channelsGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(channelsGrowth.weeklyGrowth, '7 days')}
-          {displayGrowthPercentage(channelsGrowth.monthlyGrowth, '30 days')}
-          {displayGrowthPercentage(channelsGrowth.quarterlyGrowth, '90 days')}
+          {displayGrowthPercentage(channelsGrowth.weeklyGrowth, 'weekly')}
+          {displayGrowthPercentage(channelsGrowth.monthlyGrowth, 'monthly')}
+          {displayGrowthPercentage(channelsGrowth.quarterlyGrowth, 'quarterly')}
         </Column>
       </Subsection>
 
@@ -105,9 +134,9 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Threads</Subtext>
           <Count>{threadsGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(threadsGrowth.weeklyGrowth, '7 days')}
-          {displayGrowthPercentage(threadsGrowth.monthlyGrowth, '30 days')}
-          {displayGrowthPercentage(threadsGrowth.quarterlyGrowth, '90 days')}
+          {displayGrowthPercentage(threadsGrowth.weeklyGrowth, 'weekly')}
+          {displayGrowthPercentage(threadsGrowth.monthlyGrowth, 'monthly')}
+          {displayGrowthPercentage(threadsGrowth.quarterlyGrowth, 'quarterly')}
         </Column>
       </Subsection>
 
@@ -115,14 +144,14 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Thread Messages</Subtext>
           <Count>{threadMessagesGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(threadMessagesGrowth.weeklyGrowth, '7 days')}
+          {displayGrowthPercentage(threadMessagesGrowth.weeklyGrowth, 'weekly')}
           {displayGrowthPercentage(
             threadMessagesGrowth.monthlyGrowth,
-            '30 days'
+            'monthly'
           )}
           {displayGrowthPercentage(
             threadMessagesGrowth.quarterlyGrowth,
-            '90 days'
+            'quarterly'
           )}
         </Column>
       </Subsection>
@@ -133,15 +162,15 @@ const OverviewNumbers = ({ data }) => {
           <Count>{directMessageThreadsGrowth.count.toLocaleString()}</Count>
           {displayGrowthPercentage(
             directMessageThreadsGrowth.weeklyGrowth,
-            '7 days'
+            'weekly'
           )}
           {displayGrowthPercentage(
             directMessageThreadsGrowth.monthlyGrowth,
-            '30 days'
+            'monthly'
           )}
           {displayGrowthPercentage(
             directMessageThreadsGrowth.quarterlyGrowth,
-            '90 days'
+            'quarterly'
           )}
         </Column>
       </Subsection>
@@ -150,14 +179,14 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Direct Messages</Subtext>
           <Count>{directMessagesGrowth.count.toLocaleString()}</Count>
-          {displayGrowthPercentage(directMessagesGrowth.weeklyGrowth, '7 days')}
+          {displayGrowthPercentage(directMessagesGrowth.weeklyGrowth, 'weekly')}
           {displayGrowthPercentage(
             directMessagesGrowth.monthlyGrowth,
-            '30 days'
+            'monthly'
           )}
           {displayGrowthPercentage(
             directMessagesGrowth.quarterlyGrowth,
-            '90 days'
+            'quarterly'
           )}
         </Column>
       </Subsection>

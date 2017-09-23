@@ -83,16 +83,16 @@ module.exports = {
 
       return {
         count: await getCount('messages', {
-          threadType: 'directMessageThread',
+          threadType: 'story',
         }),
         weeklyGrowth: await getGrowth('messages', 'weekly', 'timestamp', {
-          threadType: 'directMessageThread',
+          threadType: 'story',
         }),
         monthlyGrowth: await getGrowth('messages', 'monthly', 'timestamp', {
-          threadType: 'directMessageThread',
+          threadType: 'story',
         }),
         quarterlyGrowth: await getGrowth('messages', 'quarterly', 'timestamp', {
-          threadType: 'directMessageThread',
+          threadType: 'story',
         }),
       };
     },
@@ -100,15 +100,17 @@ module.exports = {
       if (!isAdmin(user.id)) return null;
 
       return {
-        count: await getCount('messages', { threadType: 'story' }),
+        count: await getCount('messages', {
+          threadType: 'directMessageThread',
+        }),
         weeklyGrowth: await getGrowth('messages', 'weekly', 'timestamp', {
-          threadType: 'story',
+          threadType: 'directMessageThread',
         }),
         monthlyGrowth: await getGrowth('messages', 'monthly', 'timestamp', {
-          threadType: 'story',
+          threadType: 'directMessageThread',
         }),
         quarterlyGrowth: await getGrowth('messages', 'quarterly', 'timestamp', {
-          threadType: 'story',
+          threadType: 'directMessageThread',
         }),
       };
     },

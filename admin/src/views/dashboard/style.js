@@ -8,7 +8,7 @@ export const Section = styled.section`
 export const OverviewRow = styled.div`
   display: flex;
   width: 100%;
-  margin: 0 auto;
+  padding: 0 4px;
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
@@ -27,14 +27,14 @@ export const Column = styled.div`
   flex-direction: column;
   border: 1px solid ${props => props.theme.border.default};
   background: ${props => props.theme.bg.default};
-  margin: 8px 0 0 8px;
+  margin: 8px 4px 0;
   border-radius: 4px;
 `;
 
 export const Subsection = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 0 0 25%;
+  flex: 1 0 24%;
 
   @media (max-width: 768px) {
     flex: 1 0 100%;
@@ -46,7 +46,7 @@ export const Subtext = styled.h3`
   font-weight: 500;
   text-transform: uppercase;
   color: ${props => props.theme.text.alt};
-  margin: 16px 16px 8px;
+  margin: 16px 16px 4px;
 `;
 
 export const Count = styled.h4`
@@ -117,20 +117,36 @@ export const Growth = styled.div`
   padding: 8px;
   border-top: 1px solid ${props => props.theme.border.default};
   display: flex;
-  align-items: center;
   font-size: 14px;
   color: ${props => props.theme.text.alt};
   margin: 0 8px;
   justify-content: space-between;
-  flex-direction: row-reverse;
+  flex-direction: column;
 `;
 
 export const Positive = styled.div`
+  margin-right: 8px;
+  font-weight: 600;
   color: ${props => props.theme.success.default};
 `;
 
-export const Negative = styled.div`color: ${props => props.theme.warn.alt};`;
+export const Negative = styled.div`
+  margin-right: 8px;
+  font-weight: 600;
+  color: ${props => props.theme.warn.alt};
+`;
 
-export const Neutral = styled.div`color: ${props => props.theme.text.alt};`;
+export const Neutral = styled.div`
+  margin-right: 8px;
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+`;
 
-export const Label = styled.div``;
+export const Label = styled.div`margin-right: 8px;`;
+
+export const RangeLabel = styled.div`
+  color: ${props => props.theme.text.default};
+  font-weight: 600;
+`;
+
+export const Row = styled.div`display: flex;`;
