@@ -129,10 +129,6 @@ class Navbar extends Component {
         notifications &&
         notifications.length > 0 &&
         notifications
-          .filter(
-            notification =>
-              notification.context.type !== 'DIRECT_MESSAGE_THREAD'
-          )
           .filter(notification => notification.isSeen === false)
           .filter(notification => {
             // SEE NOTE ABOVE
