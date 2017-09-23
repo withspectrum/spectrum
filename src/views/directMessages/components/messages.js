@@ -9,6 +9,7 @@ import ChatMessages from '../../../components/chatMessages';
 import { Loading } from '../../../components/loading';
 import { Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
+import { setLastSeenMutation } from '../../../api/directMessageThread';
 import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
 
@@ -27,7 +28,7 @@ class MessagesWithData extends Component {
   }
 
   componentDidUpdate(prev) {
-    const { contextualScrollToBottom, data } = this.props;
+    const { contextualScrollToBottom, data, setLastSeen } = this.props;
 
     if (this.props.data.loading) {
       this.unsubscribe();
@@ -43,6 +44,8 @@ class MessagesWithData extends Component {
     }
     // force scroll to bottom when a message is sent in the same thread
     if (prev.data.messages !== data.messages && contextualScrollToBottom) {
+      // mark this thread as unread when new messages come in and i'm viewing it
+      setLastSeen(data.directMessageThread.id);
       contextualScrollToBottom();
     }
   }
@@ -84,17 +87,20 @@ class MessagesWithData extends Component {
 
       return (
         <MessagesScrollWrapper>
-          {hasNextPage &&
+          {hasNextPage && (
             <HasNextPage>
               <NextPageButton
                 loading={networkStatus === 3}
                 onClick={() => fetchMore()}
               >
-                {networkStatus === 3
-                  ? <Spinner size={16} color={'brand.default'} />
-                  : 'Load previous messages'}
+                {networkStatus === 3 ? (
+                  <Spinner size={16} color={'brand.default'} />
+                ) : (
+                  'Load previous messages'
+                )}
               </NextPageButton>
-            </HasNextPage>}
+            </HasNextPage>
+          )}
           <ChatMessages
             toggleReaction={this.props.toggleReaction}
             messages={sortedMessages}
@@ -117,6 +123,7 @@ class MessagesWithData extends Component {
 
 const Messages = compose(
   toggleReactionMutation,
+  setLastSeenMutation,
   getDirectMessageThreadMessages,
   pure
 )(MessagesWithData);
