@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   ProfileHeader,
   CommunityAvatar,
@@ -19,13 +19,10 @@ export const CommunityProfile = ({ community }) => {
       />
       <ProfileHeaderLink to={`/communities/${community.slug}`}>
         <ProfileHeaderMeta>
-          <Title>
-            {community.name}
-          </Title>
-          {community.metaData &&
-            <Subtitle>
-              {community.metaData.members} members
-            </Subtitle>}
+          <Title>{community.name}</Title>
+          {community.metaData && (
+            <Subtitle>{community.metaData.members} members</Subtitle>
+          )}
         </ProfileHeaderMeta>
       </ProfileHeaderLink>
     </ProfileHeader>
