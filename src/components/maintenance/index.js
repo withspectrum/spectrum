@@ -42,12 +42,11 @@ const MaintenanceDowntime = props => {
         <Emoji>🛠</Emoji>
         <Tagline>Spectrum is currently undergoing maintenance</Tagline>
         <Text>
-          We'll be back by{' '}
-          {new Date(timeInUTC)
+          We'll be back by 3pm UTC ({new Date(timeInUTC)
             .toLocaleTimeString()
             .replace(/:\d\d:\d\d\s/, '')
             .toLowerCase()}{' '}
-          (3pm UTC), check{' '}
+          your time), check{' '}
           <a href="https://twitter.com/withspectrum">
             @withspectrum on Twitter
           </a>{' '}
