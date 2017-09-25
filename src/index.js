@@ -49,7 +49,9 @@ function render() {
   return ReactDOM.render(
     <ApolloProvider store={store} client={client}>
       <Router history={history}>
-        <Routes />
+        <Routes
+          maintenanceMode={process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'}
+        />
       </Router>
     </ApolloProvider>,
     document.querySelector('#root')

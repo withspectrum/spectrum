@@ -12,6 +12,7 @@ import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
+import Maintenance from './components/maintenance';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Thread from './views/thread';
@@ -74,6 +75,22 @@ const NotificationsFallback = signedOutFallback(Notifications, () => (
 class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
+
+    if (this.props.maintenanceMode) {
+      return (
+        <ThemeProvider theme={theme}>
+          <ScrollManager>
+            <Body>
+              <Head
+                title="Spectrum Maintenance Downtime"
+                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
+              />
+              <Maintenance />
+            </Body>
+          </ScrollManager>
+        </ThemeProvider>
+      );
+    }
 
     return (
       <ThemeProvider theme={theme}>
