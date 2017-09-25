@@ -35,13 +35,19 @@ const Text = styled(Copy)`
 `;
 
 const MaintenanceDowntime = props => {
+  const timeInUTC = 'September 25, 2017 15:00:00 UTC';
   return (
     <Theme background="constellations">
       <Wrapper>
         <Emoji>🛠</Emoji>
         <Tagline>Spectrum is currently undergoing maintenance</Tagline>
         <Text>
-          We'll be back by 3pm UTC, check{' '}
+          We'll be back by{' '}
+          {new Date(timeInUTC)
+            .toLocaleTimeString()
+            .replace(/:\d\d:\d\d\s/, '')
+            .toLowerCase()}{' '}
+          (3pm UTC), check{' '}
           <a href="https://twitter.com/withspectrum">
             @withspectrum on Twitter
           </a>{' '}
