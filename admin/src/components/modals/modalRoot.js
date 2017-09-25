@@ -2,12 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
-
-const MODAL_COMPONENTS = {
-  DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
-};
-
+const MODAL_COMPONENTS = {};
 /*
   Takes a modalType and modalProps to dynamically return the
   modal component we imported above
