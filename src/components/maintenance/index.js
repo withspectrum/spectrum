@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import AppViewWrapper from '../appViewWrapper';
-import { Column } from '../column';
-import Card from '../card';
-import { H1 } from '../globals';
+import { FlexCol } from '../globals';
+import { Tagline, Copy } from '../../views/splash/style';
+import Theme from '../../views/splash/components/themes';
 
 const Emoji = styled.div`
   font-size: 3em;
@@ -13,37 +12,43 @@ const Emoji = styled.div`
   margin-bottom: 0.25em;
 `;
 
-const Wrapper = styled.div`
-  margin: 2em;
+const Wrapper = styled(FlexCol)`
+  margin: 0 auto;
+  text-align: center;
+`;
+const Text = styled(Copy)`
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 500;
+  opacity: 0.95;
+  margin: 0 auto;
+  max-width: none;
 
   a {
-    color: ${props => props.theme.brand.default};
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+    text-align: center;
   }
 `;
 
-const Title = H1.extend`margin-bottom: 0.5em;`;
-
 const MaintenanceDowntime = props => {
   return (
-    <AppViewWrapper>
-      <Column type="primary" alignItems="center">
-        <Card>
-          <Wrapper>
-            <Emoji>🛠</Emoji>
-            <Title>
-              Spectrum is currently undergoing scheduled maintenance
-            </Title>
-            <p>
-              We'll be back at 3pm UTC, check{' '}
-              <a href="https://twitter.com/withspectrum">
-                twitter.com/withspectrum
-              </a>{' '}
-              for ongoing updates.
-            </p>
-          </Wrapper>
-        </Card>
-      </Column>
-    </AppViewWrapper>
+    <Theme background="constellations">
+      <Wrapper>
+        <Emoji>🛠</Emoji>
+        <Tagline>Spectrum is currently undergoing maintenance</Tagline>
+        <Text>
+          We'll be back by 3pm UTC, check{' '}
+          <a href="https://twitter.com/withspectrum">
+            @withspectrum on Twitter
+          </a>{' '}
+          for updates.
+        </Text>
+      </Wrapper>
+    </Theme>
   );
 };
 

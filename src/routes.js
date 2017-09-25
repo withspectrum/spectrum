@@ -82,7 +82,7 @@ class Routes extends Component {
           <ScrollManager>
             <Body>
               <Head
-                title="Spectrum Maintenance Downtime"
+                title="Ongoing Maintenance - Spectrum"
                 description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
               />
               <Maintenance />
