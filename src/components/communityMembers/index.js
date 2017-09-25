@@ -1,13 +1,12 @@
 //@flow
 import React, { Component } from 'react';
 import { UserListItem } from '../listItems';
-import { Button } from '../buttons';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { LoadingCard } from '../loading';
-import { NullCard } from '../upsell';
+import ViewError from '../viewError';
 import { getCommunityMembersQuery } from '../../api/community';
 import { FetchMoreButton } from '../threadFeed/style';
 import {
@@ -17,17 +16,6 @@ import {
   ListContainer,
   ListFooter,
 } from '../listItems/style';
-
-const ErrorState = () =>
-  <NullCard
-    bg="error"
-    heading={`Whoops!`}
-    copy={`Something went wrong on our end... Mind reloading?`}
-  >
-    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-      Reload
-    </Button>
-  </NullCard>;
 
 class CommunityMembers extends Component {
   render() {
@@ -42,7 +30,11 @@ class CommunityMembers extends Component {
     if (networkStatus === 1) {
       return <LoadingCard />;
     } else if (error) {
-      return <ErrorState />;
+      return (
+        <StyledCard>
+          <ViewError />
+        </StyledCard>
+      );
     } else {
       return (
         <StyledCard>
@@ -61,7 +53,7 @@ class CommunityMembers extends Component {
               })}
           </ListContainer>
 
-          {community.memberConnection.pageInfo.hasNextPage &&
+          {community.memberConnection.pageInfo.hasNextPage && (
             <ListFooter>
               <FetchMoreButton
                 color={'brand.default'}
@@ -70,7 +62,8 @@ class CommunityMembers extends Component {
               >
                 Load more
               </FetchMoreButton>
-            </ListFooter>}
+            </ListFooter>
+          )}
         </StyledCard>
       );
     }

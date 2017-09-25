@@ -14,11 +14,12 @@ import { ImportSlackWithoutCard } from '../../views/communitySettings/components
 import { EmailInvitesWithoutCard } from '../../views/communitySettings/components/emailInvites';
 import Share from '../../views/newCommunity/components/share';
 import ThreadFeedCard from '../threadFeedCard';
+import { Card } from '../card';
 import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
-import { Button } from '../buttons';
 import { Divider } from './style';
 import NewActivityIndicator from '../../components/newActivityIndicator';
+import ViewError from '../viewError';
 
 const NullState = () => (
   <NullCard
@@ -44,18 +45,6 @@ const UpsellState = ({ community }) => {
     </NullCard>
   );
 };
-
-const ErrorState = () => (
-  <NullCard
-    bg="error"
-    heading={`Whoops!`}
-    copy={`Something went wrong on our end... Mind reloading?`}
-  >
-    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-      Reload
-    </Button>
-  </NullCard>
-);
 
 const Threads = styled.div`
   min-width: 100%;
@@ -135,7 +124,17 @@ class ThreadFeedPure extends Component {
       !this.props.community.communityPermissions.isBlocked;
 
     if (networkStatus === 8 || error) {
-      return <ErrorState />;
+      return (
+        <Card>
+          <ViewError
+            heading={'We ran into an issue loading the feed'}
+            subheading={
+              'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
+            }
+            refresh
+          />
+        </Card>
+      );
     }
 
     const threadNodes =

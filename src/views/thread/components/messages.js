@@ -104,7 +104,6 @@ class MessagesWithData extends Component {
       toggleReaction,
       forceScrollToBottom,
       hasMessagesToLoad,
-      viewStatus,
     } = this.props;
 
     const dataExists =

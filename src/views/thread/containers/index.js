@@ -7,6 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
+// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -29,12 +30,12 @@ import {
   ChatWrapper,
 } from '../style';
 import {
-  UpsellRequestToJoinChannel,
   UpsellJoinChannelState,
   Upsell404Thread,
   NullState,
   UpsellSignIn,
 } from '../../../components/upsell';
+import RequestToJoinChannel from '../../../components/upsell/requestToJoinChannel';
 
 const LoadingView = () => (
   <View>
@@ -88,12 +89,13 @@ class ThreadContainerPure extends Component {
   componentDidUpdate(prevProps) {
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
+    const { scrollElement } = this.state;
     if (
       prevProps.data.thread &&
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
-      if (this.state.scrollElement) {
-        this.state.scrollElement.scrollTop = 0;
+      if (scrollElement) {
+        scrollElement.scrollTop = 0;
       }
     }
 
@@ -176,7 +178,7 @@ class ThreadContainerPure extends Component {
 
   render() {
     const { data: { thread, networkStatus, user }, currentUser } = this.props;
-    const { isLoading, shouldFocus } = this.state;
+    const { isLoading } = this.state;
 
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
@@ -314,12 +316,10 @@ class ThreadContainerPure extends Component {
           />
           <Content>
             <Detail type="primary">
-              <UpsellRequestToJoinChannel
+              <RequestToJoinChannel
                 channel={thread.channel}
-                community={thread.channel.community.slug}
+                community={thread.channel.community}
                 isPending={thread.channel.channelPermissions.isPending}
-                subscribe={() => this.toggleSubscription(thread.channel.id)}
-                currentUser={loggedInUser}
               />
             </Detail>
           </Content>

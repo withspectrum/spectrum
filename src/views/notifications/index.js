@@ -40,11 +40,8 @@ import {
   markNotificationsSeenMutation,
 } from '../../api/notification';
 import { subscribeToWebPush } from '../../api/web-push-subscriptions';
-import {
-  UpsellSignIn,
-  UpsellToReload,
-  UpsellNullNotifications,
-} from '../../components/upsell';
+import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
+import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 
@@ -170,9 +167,7 @@ class NotificationsPure extends Component {
     if (!data || data.error || data.loading) {
       return (
         <AppViewWrapper>
-          <Column type={'primary'}>
-            <UpsellToReload />
-          </Column>
+          <ViewError />
         </AppViewWrapper>
       );
     }

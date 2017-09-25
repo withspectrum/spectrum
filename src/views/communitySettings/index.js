@@ -6,9 +6,8 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { track } from '../../helpers/events';
 import { getThisCommunity, getChannelsByCommunity } from './queries';
-import { displayLoadingScreen } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
@@ -19,41 +18,46 @@ import RecurringPaymentsList from './components/recurringPaymentsList';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
+import ViewError from '../../components/viewError';
 import Titlebar from '../titlebar';
 const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
   history,
-  data: { community, error },
+  data: { community },
   location,
   dispatch,
+  isLoading,
+  hasError,
 }) => {
-  track('community', 'settings viewed', null);
-
   const communitySlug = match.params.communitySlug;
+  const create = () => history.push('/new/community');
 
-  const create = () => {
-    return history.push('/new/community');
-  };
+  if (isLoading) {
+    return <Loading />;
+  }
 
-  if (error) {
+  if (hasError) {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`No Community Found`}
+          title={`Error fetching community`}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
-        <Column type="primary">
-          <Upsell404Community community={communitySlug} />
-        </Column>
+        <ViewError
+          refresh
+          error={hasError}
+          heading={"There was an error fetching this community's settings."}
+        />
       </AppViewWrapper>
     );
   }
 
-  if (!community || community.deleted) {
+  if (!community) {
     return (
       <AppViewWrapper>
         <Titlebar
@@ -62,10 +66,12 @@ const SettingsPure = ({
           backRoute={`/${communitySlug}`}
           noComposer
         />
-
-        <Column type="primary">
-          <Upsell404Community community={communitySlug} create={create} />
-        </Column>
+        <ViewError
+          heading={`We couldn’t find a community called ${communitySlug}.`}
+          subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
+        >
+          <Upsell404Community create={create} />
+        </ViewError>
       </AppViewWrapper>
     );
   }
@@ -112,7 +118,7 @@ const SettingsPure = ({
   );
 };
 
-const CommunitySettings = compose(getThisCommunity, displayLoadingScreen, pure)(
+const CommunitySettings = compose(getThisCommunity, viewNetworkHandler, pure)(
   SettingsPure
 );
 export default connect()(CommunitySettings);

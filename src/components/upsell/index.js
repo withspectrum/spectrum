@@ -74,11 +74,6 @@ export const NullState = props => (
   </NullCol>
 );
 
-const login = method => {
-  // log the user in and return them to this page
-  storeItem('preferred_signin_method', method);
-};
-
 export const UpsellMiniCreateCommunity = () => {
   return (
     <MiniNullCard
@@ -206,106 +201,20 @@ export const UpsellJoinChannelState = ({
   );
 };
 
-export const UpsellRequestToJoinChannel = ({
-  channel,
-  community,
-  isPending,
-  subscribe,
-  currentUser,
-  loading,
-}: {
-  channel: Object,
-  community: string,
-  isPending: boolean,
-  subscribe: Function,
-  currentUser: Object,
-  loading: boolean,
-}) => {
+export const Upsell404Channel = ({ community }: { community: string }) => {
   return (
-    <NullCard bg="locked">
-      <Title>Top secret!</Title>
-      <Subtitle>
-        This channel is private - you may request to join <b>{channel.name}</b>{' '}
-        or <Link to={`/${community}`}>Go back</Link>
-        .
-      </Subtitle>
-
-      {// user is not logged in
-      !currentUser && (
-        <Button icon="twitter" onClick={login}>
-          Sign in with Twitter
-        </Button>
-      )}
-
-      {// has user already requested to join?
-      currentUser && isPending ? (
-        <OutlineButton
-          onClick={() => subscribe(channel.id)}
-          icon="minus"
-          loading={loading}
-          label
-        >
-          Cancel request
-        </OutlineButton>
-      ) : (
-        currentUser && (
-          <Button
-            onClick={() => subscribe(channel.id)}
-            icon="private-unlocked"
-            loading={loading}
-            label
-          >
-            Request to join {channel.name}
-          </Button>
-        )
-      )}
-    </NullCard>
-  );
-};
-
-export const Upsell404Channel = ({
-  channel,
-  community,
-  noPermission,
-}: {
-  channel: Object,
-  noPermission: boolean,
-}) => {
-  // if a user doesn't have permission, it means they likely tried to view
-  // the settings page for a channel. In this case, we will return
-  // them to the channel view.
-  // if the user does have permission, but this component gets rendered, it means
-  // something went wrong - most likely the channel doesn't exists (404) so
-  // we should return the user back to the community url
-  const returnUrl = noPermission ? `/${community}/${channel}` : `/${community}`;
-
-  const title = noPermission
-    ? "I see you sneakin' around here..."
-    : 'Oops, something got lost!';
-
-  const subtitle = noPermission
-    ? "You'll have to get permission (or be 1337) to get access."
-    : `We can't find a channel by the name of ${channel.name}.`;
-
-  return (
-    <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-      <Actions>
-        <Button onClick={() => (window.location.href = returnUrl)}>
-          Take me back
-        </Button>
-      </Actions>
-    </NullCard>
+    <Actions>
+      <Link to={`/${community}`}>
+        <Button large>Take me back</Button>
+      </Link>
+    </Actions>
   );
 };
 
 export const Upsell404Community = ({
-  community,
   noPermission,
   create,
 }: {
-  community: string,
   noPermission: boolean,
   create: Function,
 }) => {
@@ -316,35 +225,22 @@ export const Upsell404Community = ({
   // something went wrong - most likely the community doesn't exists (404) so
   // we should return the user back to homepage
 
-  const title = noPermission
-    ? "I see you sneakin' around here..."
-    : 'Oops, something got lost!';
-
-  const subtitle = noPermission
-    ? "You'll have to get permission (or be 1337) to get access."
-    : `We can't find a community by the name of ${community}. Want to make one?`;
-
   // prettier-ignore
   return (
-    <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create ? (
-          <Link to={`/home`}>
-            <OutlineButton>Take me home</OutlineButton>
+          <Link to={`/`}>
+            <OutlineButton large>Take me back</OutlineButton>
           </Link>
         ) : (
-          <Link to={`/home`}>
-            <Button>Take me home</Button>
+          <Link to={`/`}>
+            <Button large>Take me back</Button>
           </Link>
         )}
 
-        {create && <Button onClick={create}>Create this Community</Button>}
+        {create && <Button large onClick={create}>Create this Community</Button>}
       </Actions>
-    </NullCard>
   )
 };
 
@@ -573,20 +469,6 @@ export const UpsellUpgradeToPro = compose(
   upgradeToProMutation,
   connect(mapStateToProps)
 )(UpsellUpgradeToProPure);
-
-export const UpsellToReload = () => {
-  return (
-    <NullCard
-      bg="error"
-      heading="Whoops! Someone done goofed."
-      copy="Mind reloading?"
-    >
-      <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-        Reload
-      </Button>
-    </NullCard>
-  );
-};
 
 export const UpsellNullNotifications = () => {
   return (

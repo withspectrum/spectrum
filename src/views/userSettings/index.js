@@ -18,6 +18,7 @@ import NotificationSettings from './components/notificationSettings';
 import Invoices from './components/invoices';
 import { GetUserProfile } from './queries';
 import { FlexCol } from '../../components/globals';
+import ViewError from '../../components/viewError';
 import Titlebar from '../titlebar';
 
 const UserSettings = ({ data, currentUser, match }) => {
@@ -33,9 +34,14 @@ const UserSettings = ({ data, currentUser, match }) => {
           noComposer
         />
         <AppViewWrapper>
-          <Column type="primary">
-            <Upsell404User username={match.params.username} />
-          </Column>
+          <ViewError
+            heading={'We ran into an error finding this user’s settings.'}
+            subheading={
+              'If you are trying to view your own settings, refresh the page below to log in again.'
+            }
+            clearStorage
+            refresh
+          />
         </AppViewWrapper>
       </FlexCol>
     );

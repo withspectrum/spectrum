@@ -220,7 +220,7 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onChange, currentUser, autoFocus } = this.props;
+    const { state, onChange, currentUser } = this.props;
     const { isFocused, photoSizeError } = this.state;
 
     return (
