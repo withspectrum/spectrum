@@ -20,13 +20,8 @@ import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
 import { getChannelThreads, getChannel } from './queries';
-import { Login } from '../login';
-import {
-  LoadingProfile,
-  LoadingList,
-  LoadingComposer,
-  LoadingFeed,
-} from '../../components/loading';
+import Login from '../login';
+import { LoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
@@ -34,7 +29,7 @@ import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreads)(ThreadFeed);
 
-class ChannelViewPure extends Component {
+class ChannelView extends Component {
   render() {
     const {
       match,
@@ -43,9 +38,12 @@ class ChannelViewPure extends Component {
       isLoading,
       hasError,
     } = this.props;
-    const isMobile = window.innerWidth < 768;
     const { communitySlug, channelSlug } = match.params;
     const isLoggedIn = currentUser;
+
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
 
     if (hasError) {
       return (
@@ -60,24 +58,6 @@ class ChannelViewPure extends Component {
             refresh
             heading={'There was an error fetching this channel.'}
           />
-        </AppViewWrapper>
-      );
-    }
-
-    if (isLoading) {
-      return (
-        <AppViewWrapper>
-          <Titlebar noComposer />
-          {!isMobile && (
-            <Column type="secondary">
-              <LoadingProfile />
-              <LoadingList />
-            </Column>
-          )}
-          <Column type="primary">
-            {!isMobile && <LoadingComposer />}
-            <LoadingFeed />
-          </Column>
         </AppViewWrapper>
       );
     }
@@ -267,5 +247,5 @@ const map = state => ({
 });
 
 export default compose(connect(map), getChannel, viewNetworkHandler, pure)(
-  ChannelViewPure
+  ChannelView
 );
