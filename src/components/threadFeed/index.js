@@ -110,7 +110,7 @@ class ThreadFeedPure extends Component {
 
   render() {
     const {
-      data: { threads, networkStatus, error },
+      data: { threads, networkStatus, error, loading },
       viewContext,
       newActivityIndicator,
     } = this.props;
@@ -123,22 +123,9 @@ class ThreadFeedPure extends Component {
         this.props.community.communityPermissions.isModerator) &&
       !this.props.community.communityPermissions.isBlocked;
 
-    if (networkStatus === 8 || error) {
-      return (
-        <Card>
-          <ViewError
-            heading={'We ran into an issue loading the feed'}
-            subheading={
-              'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
-            }
-            refresh
-          />
-        </Card>
-      );
-    }
-
-    const threadNodes =
-      dataExists && threads.slice().map(thread => thread.node);
+    const threadNodes = dataExists
+      ? threads.slice().map(thread => thread.node)
+      : [];
 
     if (dataExists) {
       return (
@@ -171,19 +158,7 @@ class ThreadFeedPure extends Component {
       );
     }
 
-    if (networkStatus === 7) {
-      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-      if (this.props.setThreadsStatus) {
-        this.props.setThreadsStatus();
-      }
-      if (this.props.isNewAndOwned) {
-        return <UpsellState community={this.props.community} />;
-      } else if (isCommunityMember || this.props.viewContext === 'channel') {
-        return <NullState />;
-      } else {
-        return null;
-      }
-    } else {
+    if (networkStatus <= 2) {
       return (
         <Threads>
           <LoadingThread />
@@ -198,6 +173,32 @@ class ThreadFeedPure extends Component {
           <LoadingThread />
         </Threads>
       );
+    }
+
+    if (networkStatus === 8 || error) {
+      return (
+        <Card>
+          <ViewError
+            heading={'We ran into an issue loading the feed'}
+            subheading={
+              'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
+            }
+            refresh
+          />
+        </Card>
+      );
+    }
+
+    // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
+    if (this.props.setThreadsStatus) {
+      this.props.setThreadsStatus();
+    }
+    if (this.props.isNewAndOwned) {
+      return <UpsellState community={this.props.community} />;
+    } else if (isCommunityMember || this.props.viewContext === 'channel') {
+      return <NullState />;
+    } else {
+      return null;
     }
   }
 }

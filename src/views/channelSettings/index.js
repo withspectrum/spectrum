@@ -106,6 +106,68 @@ class CommunitySettings extends React.Component<Props> {
       return <Login redirectPath={`${window.location.href}`} />;
     }
 
+    if (channel) {
+      // at this point the view is no longer loading, has not encountered an error, and has returned a community record
+      const { isOwner, isModerator } = channel.channelPermissions;
+      const userHasPermissions =
+        isOwner ||
+        isModerator ||
+        channel.community.communityPermissions.isOwner ||
+        channel.community.communityPermissions.isModerator;
+
+      if (!userHasPermissions) {
+        return (
+          <AppViewWrapper>
+            <Titlebar
+              title={`Channel settings`}
+              provideBack={true}
+              backRoute={`/${communitySlug}`}
+              noComposer
+            />
+            <ViewError
+              heading={`You don’t have permission to manage this channel.`}
+              subheading={`Head back to the ${channel.community
+                .name} community to get back on track.`}
+            >
+              <Upsell404Channel community={communitySlug} />
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
+
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={`${channel.name} · ${channel.community.name}`}
+            subtitle={'Settings'}
+            provideBack={true}
+            backRoute={`/${channel.community.slug}/${channel.slug}`}
+            noComposer
+          />
+          <Column type="secondary">
+            <ChannelEditForm channel={channel} />
+          </Column>
+          <Column type="primary">
+            {channel.isPrivate && (
+              <span>
+                <PendingUsers
+                  togglePending={this.togglePending}
+                  channel={channel}
+                  id={channel.id}
+                />
+                <BlockedUsers
+                  unblock={this.unblock}
+                  channel={channel}
+                  id={channel.id}
+                />
+              </span>
+            )}
+            {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
     if (isLoading) {
       return <LoadingScreen />;
     }
@@ -127,82 +189,20 @@ class CommunitySettings extends React.Component<Props> {
       );
     }
 
-    if (!channel) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={`Channel not found`}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
-          <ViewError
-            heading={`We couldn’t find a channel with this name.`}
-            subheading={`Head back to the ${communitySlug} community to get back on track.`}
-          >
-            <Upsell404Channel community={communitySlug} />
-          </ViewError>
-        </AppViewWrapper>
-      );
-    }
-
-    // at this point the view is no longer loading, has not encountered an error, and has returned a community record
-    const { isOwner, isModerator } = channel.channelPermissions;
-    const userHasPermissions =
-      isOwner ||
-      isModerator ||
-      channel.community.communityPermissions.isOwner ||
-      channel.community.communityPermissions.isModerator;
-
-    if (!userHasPermissions) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={`Channel settings`}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
-          <ViewError
-            heading={`You don’t have permission to manage this channel.`}
-            subheading={`Head back to the ${channel.community
-              .name} community to get back on track.`}
-          >
-            <Upsell404Channel community={communitySlug} />
-          </ViewError>
-        </AppViewWrapper>
-      );
-    }
-
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`${channel.name} · ${channel.community.name}`}
-          subtitle={'Settings'}
+          title={`Channel not found`}
           provideBack={true}
-          backRoute={`/${channel.community.slug}/${channel.slug}`}
+          backRoute={`/${communitySlug}`}
           noComposer
         />
-        <Column type="secondary">
-          <ChannelEditForm channel={channel} />
-        </Column>
-        <Column type="primary">
-          {channel.isPrivate && (
-            <span>
-              <PendingUsers
-                togglePending={this.togglePending}
-                channel={channel}
-                id={channel.id}
-              />
-              <BlockedUsers
-                unblock={this.unblock}
-                channel={channel}
-                id={channel.id}
-              />
-            </span>
-          )}
-          {!channel.isPrivate && <ChannelMembers id={channel.id} />}
-        </Column>
+        <ViewError
+          heading={`We couldn’t find a channel with this name.`}
+          subheading={`Head back to the ${communitySlug} community to get back on track.`}
+        >
+          <Upsell404Channel community={communitySlug} />
+        </ViewError>
       </AppViewWrapper>
     );
   }

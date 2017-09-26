@@ -32,56 +32,57 @@ class ChannelMembers extends Component<Props> {
   render() {
     const {
       data: { channel, fetchMore },
+      data,
       isLoading,
       isFetchingMore,
       hasError,
     } = this.props;
 
-    if (isLoading) {
-      return <LoadingCard />;
-    }
+    if (data && data.channel) {
+      const members =
+        channel.memberConnection &&
+        channel.memberConnection.edges.map(member => member.node);
+      const totalCount = channel.metaData && channel.metaData.members;
 
-    if (hasError || !channel) {
       return (
         <StyledCard>
-          <ViewError />
+          <ListHeader>
+            <LargeListHeading>{totalCount} Members</LargeListHeading>
+          </ListHeader>
+
+          <ListContainer>
+            {members &&
+              members.map(user => {
+                return (
+                  <section key={user.id}>
+                    <UserListItem user={user} />
+                  </section>
+                );
+              })}
+          </ListContainer>
+
+          {channel.memberConnection.pageInfo.hasNextPage && (
+            <ListFooter>
+              <FetchMoreButton
+                color={'brand.default'}
+                loading={isFetchingMore}
+                onClick={() => fetchMore()}
+              >
+                Load more
+              </FetchMoreButton>
+            </ListFooter>
+          )}
         </StyledCard>
       );
     }
 
-    const members =
-      channel.memberConnection &&
-      channel.memberConnection.edges.map(member => member.node);
-    const totalCount = channel.metaData && channel.metaData.members;
+    if (isLoading) {
+      return <LoadingCard />;
+    }
 
     return (
       <StyledCard>
-        <ListHeader>
-          <LargeListHeading>{totalCount} Members</LargeListHeading>
-        </ListHeader>
-
-        <ListContainer>
-          {members &&
-            members.map(user => {
-              return (
-                <section key={user.id}>
-                  <UserListItem user={user} />
-                </section>
-              );
-            })}
-        </ListContainer>
-
-        {channel.memberConnection.pageInfo.hasNextPage && (
-          <ListFooter>
-            <FetchMoreButton
-              color={'brand.default'}
-              loading={isFetchingMore}
-              onClick={() => fetchMore()}
-            >
-              Load more
-            </FetchMoreButton>
-          </ListFooter>
-        )}
+        <ViewError />
       </StyledCard>
     );
   }

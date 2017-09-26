@@ -36,55 +36,55 @@ class ChannelList extends React.Component<Props> {
       communitySlug,
     } = this.props;
 
-    if (isLoading) {
-      return <LoadingCard />;
-    }
+    if (community) {
+      const channels = community.channelConnection.edges.map(c => c.node);
 
-    if (hasError || !community) {
       return (
         <StyledCard>
-          <ViewError
-            refresh
-            small
-            heading={`We couldn’t load the channels for this community.`}
-          />
+          <ListHeader>
+            <ListHeading>Manage Channels</ListHeading>
+            <Button
+              icon={'plus'}
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+            >
+              Create Channel
+            </Button>
+          </ListHeader>
+          <ListContainer>
+            {channels.length > 0 &&
+              channels.map(item => {
+                return (
+                  <Link
+                    key={item.id}
+                    to={`/${communitySlug}/${item.slug}/settings`}
+                  >
+                    <ChannelListItem
+                      contents={item}
+                      withDescription={false}
+                      meta={`${item.metaData.members.toLocaleString()} members`}
+                    >
+                      <IconButton glyph="settings" />
+                    </ChannelListItem>
+                  </Link>
+                );
+              })}
+          </ListContainer>
         </StyledCard>
       );
     }
 
-    const channels = community.channelConnection.edges.map(c => c.node);
+    if (isLoading) {
+      return <LoadingCard />;
+    }
 
     return (
       <StyledCard>
-        <ListHeader>
-          <ListHeading>Manage Channels</ListHeading>
-          <Button
-            icon={'plus'}
-            onClick={() =>
-              dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
-          >
-            Create Channel
-          </Button>
-        </ListHeader>
-        <ListContainer>
-          {channels.length > 0 &&
-            channels.map(item => {
-              return (
-                <Link
-                  key={item.id}
-                  to={`/${communitySlug}/${item.slug}/settings`}
-                >
-                  <ChannelListItem
-                    contents={item}
-                    withDescription={false}
-                    meta={`${item.metaData.members.toLocaleString()} members`}
-                  >
-                    <IconButton glyph="settings" />
-                  </ChannelListItem>
-                </Link>
-              );
-            })}
-        </ListContainer>
+        <ViewError
+          refresh
+          small
+          heading={`We couldn’t load the channels for this community.`}
+        />
       </StyledCard>
     );
   }

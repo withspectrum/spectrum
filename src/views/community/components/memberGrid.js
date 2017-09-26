@@ -35,44 +35,44 @@ class CommunityMemberGrid extends React.Component<Props> {
       isFetchingMore,
     } = this.props;
 
+    if (community) {
+      const { edges: members } = community.memberConnection;
+
+      return (
+        <FlexCol>
+          <Grid>
+            {members.map(member => {
+              const user = member.node;
+              return (
+                <UserProfile
+                  key={user.id}
+                  data={{ user }}
+                  username={user.username}
+                  profileSize="simple"
+                />
+              );
+            })}
+          </Grid>
+          {community.memberConnection.pageInfo.hasNextPage && (
+            <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
+              Load more...
+            </StyledButton>
+          )}
+        </FlexCol>
+      );
+    }
+
     if (isLoading) {
       return <LoadingProfileGrid />;
     }
 
-    if (hasError || !community) {
-      return (
-        <Card>
-          <ViewError
-            refresh
-            heading={`We weren’t able to fetch the members of this community.`}
-          />
-        </Card>
-      );
-    }
-
-    const { edges: members } = community.memberConnection;
-
     return (
-      <FlexCol>
-        <Grid>
-          {members.map(member => {
-            const user = member.node;
-            return (
-              <UserProfile
-                key={user.id}
-                data={{ user }}
-                username={user.username}
-                profileSize="simple"
-              />
-            );
-          })}
-        </Grid>
-        {community.memberConnection.pageInfo.hasNextPage && (
-          <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-            Load more...
-          </StyledButton>
-        )}
-      </FlexCol>
+      <Card>
+        <ViewError
+          refresh
+          heading={`We weren’t able to fetch the members of this community.`}
+        />
+      </Card>
     );
   }
 }

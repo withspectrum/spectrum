@@ -58,19 +58,6 @@ class Dashboard extends Component {
     } = this.props;
     const { title, description } = generateMetaInfo();
 
-    // loading state
-    if (isLoading)
-      return <DashboardLoading title={title} description={description} />;
-
-    if (hasError)
-      return (
-        <DashboardError
-          title={title}
-          description={description}
-          error={hasError}
-        />
-      );
-
     if (user) {
       // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
       if (user.username && user.communityConnection.edges.length === 0) {
@@ -145,6 +132,19 @@ class Dashboard extends Component {
         </DashboardWrapper>
       );
     }
+
+    // loading state
+    if (isLoading)
+      return <DashboardLoading title={title} description={description} />;
+
+    if (hasError)
+      return (
+        <DashboardError
+          title={title}
+          description={description}
+          error={hasError}
+        />
+      );
 
     // if the user reached here it most likely that they have a user in localstorage but we weren't able to auth them - either because of a bad session token or otherwise. In this case we should clear local storage and load the home page to get them to log in again
     removeItemFromStorage('spectrum');

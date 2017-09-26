@@ -44,153 +44,155 @@ class ChannelList extends React.Component<Props> {
       data: { community },
     } = this.props;
 
+    if (community) {
+      const { isMember, isOwner } = community.communityPermissions;
+      const channels = community.channelConnection.edges
+        .map(channel => channel.node)
+        .filter(channel => {
+          if (channel.isPrivate && !channel.channelPermissions.isMember)
+            return null;
+
+          return channel;
+        })
+        .filter(channel => !channel.channelPermissions.isBlocked);
+
+      const joinedChannels = channels
+        .slice()
+        .filter(channel => channel.channelPermissions.isMember);
+      const nonJoinedChannels = channels
+        .slice()
+        .filter(channel => !channel.channelPermissions.isMember);
+
+      return (
+        <StyledCard largeOnly>
+          <ListHeader>
+            <ListHeading>Channels</ListHeading>
+            {isOwner && (
+              <IconButton
+                glyph="plus"
+                color="text.placeholder"
+                onClick={() =>
+                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+              />
+            )}
+          </ListHeader>
+
+          {/*
+            user isn't logged in, channel list is used for navigation
+            or
+            user is logged in but hasn't joined this community, channel list is used for navigation
+          */}
+          {(!currentUser || (currentUser && !isMember)) && (
+              <ListContainer>
+                {channels.map(channel => {
+                  return (
+                    <Link
+                      key={channel.id}
+                      to={`/${communitySlug}/${channel.slug}`}
+                    >
+                      <ChannelListItem
+                        clickable
+                        contents={channel}
+                        withDescription={false}
+                        channelIcon
+                        meta={
+                          channel.metaData.members > 1
+                            ? `${channel.metaData.members.toLocaleString()} members ${isOwner &&
+                              channel.pendingUsers.length > 0
+                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                                : ``}`
+                            : `${channel.metaData.members} member ${isOwner &&
+                              channel.pendingUsers.length > 0
+                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                                : ``}`
+                        }
+                      >
+                        <Icon glyph="view-forward" />
+                      </ChannelListItem>
+                    </Link>
+                  );
+                })}
+              </ListContainer>
+            )}
+
+          {/* user is logged in and is a member of community, channel list is used to join/leave */}
+          {joinedChannels &&
+            isMember && (
+              <ListContainer>
+                {joinedChannels.map(channel => {
+                  return (
+                    <Link
+                      key={channel.id}
+                      to={`/${communitySlug}/${channel.slug}`}
+                    >
+                      <ChannelListItem
+                        clickable
+                        contents={channel}
+                        withDescription={false}
+                        channelIcon
+                        meta={
+                          channel.metaData.members > 1
+                            ? `${channel.metaData.members.toLocaleString()} members ${isOwner &&
+                              channel.pendingUsers.length > 0
+                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                                : ``}`
+                            : `${channel.metaData.members} member ${isOwner &&
+                              channel.pendingUsers.length > 0
+                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
+                                : ``}`
+                        }
+                      >
+                        <Icon glyph="view-forward" />
+                      </ChannelListItem>
+                    </Link>
+                  );
+                })}
+              </ListContainer>
+            )}
+
+          {nonJoinedChannels.length > 0 &&
+            isMember && (
+              <span>
+                <ListHeader secondary>
+                  <ListHeading>Additional Channels</ListHeading>
+                </ListHeader>
+
+                <ListContainer>
+                  <ul>
+                    {nonJoinedChannels.map(channel => {
+                      return (
+                        <ChannelProfile
+                          key={channel.id}
+                          profileSize="listItemWithAction"
+                          data={{ channel }}
+                        />
+                      );
+                    })}
+                  </ul>
+                </ListContainer>
+              </span>
+            )}
+
+          {/* user owns the community and can creat new channels */}
+          {isOwner && (
+            <ListFooter>
+              <TextButton
+                onClick={() =>
+                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+              >
+                Create a Channel
+              </TextButton>
+            </ListFooter>
+          )}
+        </StyledCard>
+      );
+    }
+
     if (isLoading) {
       return <LoadingCard />;
     }
 
-    if (hasError || !community || !community.channelConnection) {
-      return null;
-    }
-
-    const { isMember, isOwner } = community.communityPermissions;
-    const channels = community.channelConnection.edges
-      .map(channel => channel.node)
-      .filter(channel => {
-        if (channel.isPrivate && !channel.channelPermissions.isMember)
-          return null;
-
-        return channel;
-      })
-      .filter(channel => !channel.channelPermissions.isBlocked);
-
-    const joinedChannels = channels
-      .slice()
-      .filter(channel => channel.channelPermissions.isMember);
-    const nonJoinedChannels = channels
-      .slice()
-      .filter(channel => !channel.channelPermissions.isMember);
-
-    return (
-      <StyledCard largeOnly>
-        <ListHeader>
-          <ListHeading>Channels</ListHeading>
-          {isOwner && (
-            <IconButton
-              glyph="plus"
-              color="text.placeholder"
-              onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
-            />
-          )}
-        </ListHeader>
-
-        {/*
-          user isn't logged in, channel list is used for navigation
-          or
-          user is logged in but hasn't joined this community, channel list is used for navigation
-        */}
-        {(!currentUser || (currentUser && !isMember)) && (
-          <ListContainer>
-            {channels.map(channel => {
-              return (
-                <Link key={channel.id} to={`/${communitySlug}/${channel.slug}`}>
-                  <ChannelListItem
-                    clickable
-                    contents={channel}
-                    withDescription={false}
-                    channelIcon
-                    meta={
-                      channel.metaData.members > 1 ? (
-                        `${channel.metaData.members.toLocaleString()} members ${isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                          : ``}`
-                      ) : (
-                        `${channel.metaData.members} member ${isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                          : ``}`
-                      )
-                    }
-                  >
-                    <Icon glyph="view-forward" />
-                  </ChannelListItem>
-                </Link>
-              );
-            })}
-          </ListContainer>
-        )}
-
-        {/* user is logged in and is a member of community, channel list is used to join/leave */}
-        {joinedChannels &&
-        isMember && (
-          <ListContainer>
-            {joinedChannels.map(channel => {
-              return (
-                <Link key={channel.id} to={`/${communitySlug}/${channel.slug}`}>
-                  <ChannelListItem
-                    clickable
-                    contents={channel}
-                    withDescription={false}
-                    channelIcon
-                    meta={
-                      channel.metaData.members > 1 ? (
-                        `${channel.metaData.members.toLocaleString()} members ${isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                          : ``}`
-                      ) : (
-                        `${channel.metaData.members} member ${isOwner &&
-                        channel.pendingUsers.length > 0
-                          ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                          : ``}`
-                      )
-                    }
-                  >
-                    <Icon glyph="view-forward" />
-                  </ChannelListItem>
-                </Link>
-              );
-            })}
-          </ListContainer>
-        )}
-
-        {nonJoinedChannels.length > 0 &&
-        isMember && (
-          <span>
-            <ListHeader secondary>
-              <ListHeading>Additional Channels</ListHeading>
-            </ListHeader>
-
-            <ListContainer>
-              <ul>
-                {nonJoinedChannels.map(channel => {
-                  return (
-                    <ChannelProfile
-                      key={channel.id}
-                      profileSize="listItemWithAction"
-                      data={{ channel }}
-                    />
-                  );
-                })}
-              </ul>
-            </ListContainer>
-          </span>
-        )}
-
-        {/* user owns the community and can creat new channels */}
-        {isOwner && (
-          <ListFooter>
-            <TextButton
-              onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
-            >
-              Create a Channel
-            </TextButton>
-          </ListFooter>
-        )}
-      </StyledCard>
-    );
+    return null;
   }
 }
 

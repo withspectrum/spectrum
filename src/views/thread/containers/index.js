@@ -140,6 +140,7 @@ class ThreadContainer extends React.Component<Props, State> {
   render() {
     const {
       data: { thread },
+      data,
       currentUser,
       isLoading,
       hasError,
@@ -149,143 +150,143 @@ class ThreadContainer extends React.Component<Props, State> {
 
     const isLoggedIn = currentUser;
 
+    if (data && data.thread) {
+      // successful network request to get a thread
+      const { title, description } = generateMetaInfo({
+        type: 'thread',
+        data: {
+          title: thread.content.title,
+          body: thread.content.body,
+          type: thread.type,
+          channelName: thread.channel.name,
+        },
+      });
+
+      // if the user is new and signed up through a thread view, push
+      // the thread's community data into the store to hydrate the new user experience
+      // with their first community they should join
+      dispatch(addCommunityToOnboarding(thread.channel.community));
+
+      // get the data we need to render the view
+      const { channelPermissions, isPrivate } = thread.channel;
+      const { isLocked, isCreator, participants } = thread;
+      const isRestricted = isPrivate && !channelPermissions.isMember;
+      const canSendMessages = currentUser && channelPermissions.isMember;
+      const isParticipantOrCreator =
+        currentUser &&
+        (isCreator ||
+          (participants &&
+            participants.length > 0 &&
+            participants.some(
+              participant => participant.id === currentUser.id
+            )));
+
+      // if the thread is in a private channel where the user isn't a member the user can request to join the channel
+      if (isRestricted) {
+        return (
+          <View>
+            <Titlebar
+              title={'Private thread'}
+              provideBack={true}
+              backRoute={`/`}
+              noComposer
+            />
+            <Content>
+              <Detail type="primary">
+                <ViewError
+                  heading={`This thread is private.`}
+                  subheading={`Request to join this channel and the admins will be notified.`}
+                >
+                  <RequestToJoinChannel
+                    channel={thread.channel}
+                    community={thread.channel.community}
+                    isPending={thread.channel.channelPermissions.isPending}
+                  />
+                </ViewError>
+              </Detail>
+            </Content>
+          </View>
+        );
+      }
+
+      return (
+        <View slider={slider}>
+          <Head title={title} description={description} />
+          <Titlebar
+            title={thread.content.title}
+            subtitle={`${thread.channel.community.name} / ${thread.channel
+              .name}`}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
+            style={{ gridArea: 'header' }}
+          />
+          <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+            <Detail type="only">
+              <ThreadDetail thread={thread} slider={slider} />
+
+              <Messages
+                threadType={thread.threadType}
+                id={thread.id}
+                currentUser={currentUser}
+                forceScrollToBottom={this.forceScrollToBottom}
+                contextualScrollToBottom={this.contextualScrollToBottom}
+                shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                hasMessagesToLoad={thread.messageCount > 0}
+              />
+
+              {isLocked && (
+                <NullState copy="This conversation has been frozen by a moderator." />
+              )}
+
+              {isLoggedIn &&
+                !canSendMessages && <JoinChannel channel={thread.channel} />}
+
+              {!isLoggedIn && (
+                <UpsellSignIn
+                  title={'Join the conversation'}
+                  glyph={'message-new'}
+                  view={{ data: thread.community, type: 'community' }}
+                  noShadow
+                />
+              )}
+            </Detail>
+          </Content>
+
+          {isLoggedIn &&
+            canSendMessages &&
+            !isLocked && (
+              <Input>
+                <ChatInputWrapper type="only">
+                  <ChatInput
+                    threadType="story"
+                    thread={thread.id}
+                    currentUser={isLoggedIn}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    onRef={chatInput => (this.chatInput = chatInput)}
+                  />
+                </ChatInputWrapper>
+              </Input>
+            )}
+        </View>
+      );
+    }
+
     if (isLoading) {
       return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <View slider={slider}>
-          <ViewError heading={`We had trouble loading this thread.`} refresh />
-        </View>
-      );
-    }
-
-    if (!thread) {
-      return (
-        <View slider={slider}>
-          <ViewError
-            heading={`We had trouble loading this thread.`}
-            subheading={`It may be private, or may have been deleted by an author or moderator.`}
-          />
-        </View>
-      );
-    }
-
-    // successful network request to get a thread
-    const { title, description } = generateMetaInfo({
-      type: 'thread',
-      data: {
-        title: thread.content.title,
-        body: thread.content.body,
-        type: thread.type,
-        channelName: thread.channel.name,
-      },
-    });
-
-    // if the user is new and signed up through a thread view, push
-    // the thread's community data into the store to hydrate the new user experience
-    // with their first community they should join
-    dispatch(addCommunityToOnboarding(thread.channel.community));
-
-    // get the data we need to render the view
-    const { channelPermissions, isPrivate } = thread.channel;
-    const { isLocked, isCreator, participants } = thread;
-    const isRestricted = isPrivate && !channelPermissions.isMember;
-    const canSendMessages = currentUser && channelPermissions.isMember;
-    const isParticipantOrCreator =
-      currentUser &&
-      (isCreator ||
-        (participants &&
-          participants.length > 0 &&
-          participants.some(participant => participant.id === currentUser.id)));
-
-    // if the thread is in a private channel where the user isn't a member the user can request to join the channel
-    if (isRestricted) {
-      return (
-        <View>
-          <Titlebar
-            title={'Private thread'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-          <Content>
-            <Detail type="primary">
-              <ViewError
-                heading={`This thread is private.`}
-                subheading={`Request to join this channel and the admins will be notified.`}
-              >
-                <RequestToJoinChannel
-                  channel={thread.channel}
-                  community={thread.channel.community}
-                  isPending={thread.channel.channelPermissions.isPending}
-                />
-              </ViewError>
-            </Detail>
-          </Content>
-        </View>
-      );
-    }
-
     return (
       <View slider={slider}>
-        <Head title={title} description={description} />
-        <Titlebar
-          title={thread.content.title}
-          subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-          style={{ gridArea: 'header' }}
+        <ViewError
+          heading={`We had trouble loading this thread.`}
+          subheading={
+            !hasError
+              ? `It may be private, or may have been deleted by an author or moderator.`
+              : ''
+          }
+          refresh={hasError}
         />
-        <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-          <Detail type="only">
-            <ThreadDetail thread={thread} slider={slider} />
-
-            <Messages
-              threadType={thread.threadType}
-              id={thread.id}
-              currentUser={currentUser}
-              forceScrollToBottom={this.forceScrollToBottom}
-              contextualScrollToBottom={this.contextualScrollToBottom}
-              shouldForceScrollOnMessageLoad={isParticipantOrCreator}
-              hasMessagesToLoad={thread.messageCount > 0}
-            />
-
-            {isLocked && (
-              <NullState copy="This conversation has been frozen by a moderator." />
-            )}
-
-            {isLoggedIn &&
-            !canSendMessages && <JoinChannel channel={thread.channel} />}
-
-            {!isLoggedIn && (
-              <UpsellSignIn
-                title={'Join the conversation'}
-                glyph={'message-new'}
-                view={{ data: thread.community, type: 'community' }}
-                noShadow
-              />
-            )}
-          </Detail>
-        </Content>
-
-        {isLoggedIn &&
-        canSendMessages &&
-        !isLocked && (
-          <Input>
-            <ChatInputWrapper type="only">
-              <ChatInput
-                threadType="story"
-                thread={thread.id}
-                currentUser={isLoggedIn}
-                forceScrollToBottom={this.forceScrollToBottom}
-                onRef={chatInput => (this.chatInput = chatInput)}
-              />
-            </ChatInputWrapper>
-          </Input>
-        )}
       </View>
     );
   }

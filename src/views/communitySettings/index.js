@@ -33,6 +33,52 @@ const SettingsPure = ({
 }) => {
   const communitySlug = match.params.communitySlug;
 
+  if (community) {
+    if (!community.communityPermissions.isOwner) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={`No Permission`}
+            provideBack={true}
+            backRoute={`/${communitySlug}`}
+            noComposer
+          />
+
+          <ViewError
+            heading={`You dont’t have permission to manage this community.`}
+            subheading={`If you want to create your own community, you can get started below.`}
+          >
+            <Upsell404Community />
+          </ViewError>
+        </AppViewWrapper>
+      );
+    }
+
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={community.name}
+          subtitle={'Settings'}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+          noComposer
+        />
+
+        <Column type="secondary">
+          <CommunityEditForm community={community} />
+          <RecurringPaymentsList community={community} />
+        </Column>
+        <Column type="primary">
+          <ImportSlack community={community} id={community.id} />
+          <EmailInvites community={community} />
+          <ChannelList communitySlug={communitySlug} />
+          <CommunityMembers id={community.id} />
+          <Invoices id={community.id} />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
   if (isLoading) {
     return <Loading />;
   }
@@ -55,66 +101,20 @@ const SettingsPure = ({
     );
   }
 
-  if (!community) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={`No Community Found`}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={`We weren’t able to find this community.`}
-          subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
-        >
-          <Upsell404Community />
-        </ViewError>
-      </AppViewWrapper>
-    );
-  }
-
-  if (!community.communityPermissions.isOwner) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={`No Permission`}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-
-        <ViewError
-          heading={`You dont’t have permission to manage this community.`}
-          subheading={`If you want to create your own community, you can get started below.`}
-        >
-          <Upsell404Community />
-        </ViewError>
-      </AppViewWrapper>
-    );
-  }
-
   return (
     <AppViewWrapper>
       <Titlebar
-        title={community.name}
-        subtitle={'Settings'}
+        title={`No Community Found`}
         provideBack={true}
         backRoute={`/${communitySlug}`}
         noComposer
       />
-
-      <Column type="secondary">
-        <CommunityEditForm community={community} />
-        <RecurringPaymentsList community={community} />
-      </Column>
-      <Column type="primary">
-        <ImportSlack community={community} id={community.id} />
-        <EmailInvites community={community} />
-        <ChannelList communitySlug={communitySlug} />
-        <CommunityMembers id={community.id} />
-        <Invoices id={community.id} />
-      </Column>
+      <ViewError
+        heading={`We weren’t able to find this community.`}
+        subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
+      >
+        <Upsell404Community />
+      </ViewError>
     </AppViewWrapper>
   );
 };

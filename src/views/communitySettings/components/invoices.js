@@ -40,29 +40,29 @@ class Invoices extends React.Component<Props> {
   render() {
     const { data: { community }, isLoading, hasError } = this.props;
 
+    if (community) {
+      const { invoices } = community;
+      const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
+
+      return (
+        <StyledCard>
+          <LargeListHeading>Payment History</LargeListHeading>
+
+          <ListContainer style={{ marginTop: '16px' }}>
+            {sortedInvoices &&
+              sortedInvoices.map(invoice => {
+                return <InvoiceListItem invoice={invoice} key={invoice.id} />;
+              })}
+          </ListContainer>
+        </StyledCard>
+      );
+    }
+
     if (isLoading) {
       return <LoadingCard />;
     }
 
-    if (hasError || !community || community.invoices.length === 0) {
-      return null;
-    }
-
-    const { invoices } = community;
-    const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
-
-    return (
-      <StyledCard>
-        <LargeListHeading>Payment History</LargeListHeading>
-
-        <ListContainer style={{ marginTop: '16px' }}>
-          {sortedInvoices &&
-            sortedInvoices.map(invoice => {
-              return <InvoiceListItem invoice={invoice} key={invoice.id} />;
-            })}
-        </ListContainer>
-      </StyledCard>
-    );
+    return null;
   }
 }
 
