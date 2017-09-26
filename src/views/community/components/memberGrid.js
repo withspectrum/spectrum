@@ -8,8 +8,6 @@ import { getCommunityMembersQuery } from '../../../api/community';
 import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
-import { Button } from '../../../components/buttons';
-import { UpsellReload } from '../../../components/upsell';
 import { LoadingProfileGrid } from '../../../components/loading';
 import { UserProfile } from '../../../components/profile';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';

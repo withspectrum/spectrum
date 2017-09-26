@@ -230,7 +230,7 @@ class ImportSlack extends React.Component<Props, State> {
               <Button
                 gradientTheme="success"
                 onClick={this.sendInvites}
-                loading={isLoading}
+                loading={isSendingInvites}
                 disabled={hasCustomMessage && customMessageError}
               >
                 Invite {count} people to Spectrum

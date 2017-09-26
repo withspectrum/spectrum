@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getThisCommunity, getChannelsByCommunity } from './queries';
+import { getThisCommunity } from './queries';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';

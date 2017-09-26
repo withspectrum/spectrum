@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-import { addToastWithTimeout } from '../../../actions/toasts';
 import { addCommunityToOnboarding } from '../../../actions/newUserOnboarding';
 import Titlebar from '../../../views/titlebar';
 import ThreadDetail from '../components/threadDetail';
@@ -30,11 +29,7 @@ import {
   ChatInputWrapper,
   ChatWrapper,
 } from '../style';
-import {
-  Upsell404Thread,
-  NullState,
-  UpsellSignIn,
-} from '../../../components/upsell';
+import { NullState, UpsellSignIn } from '../../../components/upsell';
 import JoinChannel from '../../../components/upsell/joinChannel';
 import RequestToJoinChannel from '../../../components/upsell/requestToJoinChannel';
 
@@ -195,11 +190,9 @@ class ThreadContainer extends React.Component<Props, State> {
 
     // get the data we need to render the view
     const { channelPermissions, isPrivate } = thread.channel;
-    const { communityPermissions } = thread.channel.community;
     const { isLocked, isCreator, participants } = thread;
     const isRestricted = isPrivate && !channelPermissions.isMember;
     const canSendMessages = currentUser && channelPermissions.isMember;
-    const canManageThread = currentUser && isCreator;
     const isParticipantOrCreator =
       currentUser &&
       (isCreator ||
