@@ -312,8 +312,11 @@ const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .between([userId, communityId], [userId, communityId], {
+      index: 'userIdAndCommunityId',
+      rightBound: 'closed',
+      leftBound: 'closed',
+    })
     .run()
     .then(data => {
       // if a record exists
