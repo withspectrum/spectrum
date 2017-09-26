@@ -1,8 +1,8 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components/primitives';
+import styled from 'styled-components';
 
-export const StyledHeading = styled.Text`
+export const StyledHeading = styled.h1`
   font-size: ${props => props.theme.typeSize[props.size]};
   font-weight: ${props => props.theme.typeWeight[props.weight]}
   color: ${props =>
