@@ -156,7 +156,7 @@ class ThreadContainer extends React.Component<Props, State> {
     if (hasError) {
       return (
         <View slider={slider}>
-          <ViewError refresh />
+          <ViewError heading={`We had trouble loading this thread.`} refresh />
         </View>
       );
     }
@@ -165,8 +165,8 @@ class ThreadContainer extends React.Component<Props, State> {
       return (
         <View slider={slider}>
           <ViewError
-            heading={`This thread couldn’t be loaded.`}
-            subheading={`It may be private, or may have been deleted by the author or a moderator.`}
+            heading={`We had trouble loading this thread.`}
+            subheading={`It may be private, or may have been deleted by an author or moderator.`}
           />
         </View>
       );
