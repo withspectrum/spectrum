@@ -84,9 +84,12 @@ const SettingsPure = ({
           noComposer
         />
 
-        <Column type="primary">
-          <Upsell404Community community={communitySlug} noPermission />
-        </Column>
+        <ViewError
+          heading={`You dont’t have permission to manage this community.`}
+          subheading={`If you want to create your own community, you can get started below.`}
+        >
+          <Upsell404Community />
+        </ViewError>
       </AppViewWrapper>
     );
   }

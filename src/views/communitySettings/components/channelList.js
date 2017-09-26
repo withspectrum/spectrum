@@ -12,7 +12,7 @@ import { ChannelListItem } from '../../../components/listItems';
 import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
-import { getChannelsByCommunity } from '../queries';
+import { getCommunityChannels } from '../queries';
 import { StyledCard, ListHeading, ListContainer, ListHeader } from '../style';
 
 type Props = {
@@ -32,6 +32,7 @@ class ChannelList extends React.Component<Props> {
       isLoading,
       hasError,
       dispatch,
+      data,
       communitySlug,
     } = this.props;
 
@@ -51,7 +52,7 @@ class ChannelList extends React.Component<Props> {
       );
     }
 
-    const channels = community.channelConnection.edges.map(c => c);
+    const channels = community.channelConnection.edges.map(c => c.node);
 
     return (
       <StyledCard>
@@ -89,6 +90,6 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getChannelsByCommunity, viewNetworkHandler)(
+export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
   ChannelList
 );
