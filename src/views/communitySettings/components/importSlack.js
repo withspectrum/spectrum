@@ -13,7 +13,7 @@ import {
   getSlackImport,
   sendSlackInvitationsMutation,
 } from '../../../api/slackImport';
-import { LoadingCard } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -137,7 +137,7 @@ class ImportSlack extends React.Component<Props, State> {
     } = this.state;
 
     if (isLoading) {
-      return <LoadingCard />;
+      return <Loading />;
     }
 
     if (hasError || !community) {
