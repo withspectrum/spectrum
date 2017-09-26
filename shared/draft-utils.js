@@ -27,7 +27,7 @@ var emptyContentState = convertFromRaw({
   blocks: [
     {
       text: '',
-      key: 'totally-empty-asdf123',
+      key: 'foo',
       type: 'unstyled',
       entityRanges: [],
     },
