@@ -1,6 +1,7 @@
 [ignore]
 .*/node_modules/.*
 .*/build.*
+.*/*.test.js
 
 [include]
 
@@ -9,3 +10,6 @@
 [options]
 suppress_comment=.*\\$FlowFixMe
 esproposal.class_instance_fields=enable
+
+[version]
+0.55.0
