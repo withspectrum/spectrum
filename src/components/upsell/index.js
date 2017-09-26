@@ -177,30 +177,6 @@ export class UpsellSignIn extends Component {
   }
 }
 
-export const UpsellJoinChannelState = ({
-  channel,
-  subscribe,
-  loading,
-}: {
-  channel: Object,
-  subscribe: Function,
-}) => {
-  return (
-    <NullState bg="channel">
-      <Title>Ready to join the conversation?</Title>
-      <Subtitle>Join ~{channel.name} to get involved!</Subtitle>
-      <Button
-        loading={loading}
-        onClick={() => subscribe(channel.id)}
-        icon="plus"
-        label
-      >
-        Join
-      </Button>
-    </NullState>
-  );
-};
-
 export const Upsell404Channel = ({ community }: { community: string }) => {
   return (
     <Actions>

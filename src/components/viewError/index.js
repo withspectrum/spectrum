@@ -20,6 +20,7 @@ type Props = {
   clearStorage?: boolean,
   refresh?: boolean,
   children?: React.Node,
+  small?: boolean,
 };
 
 class ViewError extends React.Component<Props> {
@@ -31,6 +32,7 @@ class ViewError extends React.Component<Props> {
       refresh,
       emoji,
       children,
+      small,
     } = this.props;
 
     if (clearStorage) {
@@ -39,19 +41,19 @@ class ViewError extends React.Component<Props> {
 
     const moji = emoji || '😌';
     const head = heading || 'We could all use a refresh.';
-    const subhead = subheading || 'Refresh this page to try again';
+    const subhead = subheading || 'Refresh this page to try again.';
 
     return (
-      <FillSpaceError>
-        <LargeEmoji role="img" aria-label="Emoji">
+      <FillSpaceError small={small}>
+        <LargeEmoji small={small} role="img" aria-label="Emoji">
           {moji}
         </LargeEmoji>
-        <Heading>{head}</Heading>
-        <Subheading>{subhead}</Subheading>
+        <Heading small={small}>{head}</Heading>
+        <Subheading small={small}>{subhead}</Subheading>
 
         {refresh && (
           <Button
-            large
+            large={!small}
             icon="view-reload"
             onClick={() => window.location.reload(true)}
           >

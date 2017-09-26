@@ -1,9 +1,10 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import { Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled, { ThemeProvider } from 'styled-components';
+// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
@@ -71,7 +72,7 @@ const NotificationsFallback = signedOutFallback(Notifications, () => (
   <Redirect to="/login" />
 ));
 
-class Routes extends Component {
+class Routes extends React.Component<{}> {
   render() {
     const { title, description } = generateMetaInfo();
 

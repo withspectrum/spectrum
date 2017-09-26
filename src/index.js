@@ -5,8 +5,9 @@ import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 //$FlowFixMe
 import { Router } from 'react-router';
-import { history } from './helpers/history';
+// $FlowFixMe
 import queryString from 'query-string';
+import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';

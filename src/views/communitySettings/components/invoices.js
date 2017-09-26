@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
@@ -7,7 +7,8 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { getCommunityInvoices } from '../../../api/community';
-import { displayLoadingCard } from '../../../components/loading';
+import { LoadingCard } from '../../../components/loading';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
 import {
@@ -16,11 +17,34 @@ import {
   ListContainer,
 } from '../../../components/listItems/style';
 
-class InvoicesPure extends Component {
-  render() {
-    const { data: { error, community } } = this.props;
+type InvoiceType = {
+  id: string,
+  paidAt: string,
+  amount: number,
+  sourceBrand: string,
+  sourceLast4: string,
+  planName: string,
+};
 
-    if (!community || community.invoices.length === 0 || error !== undefined) {
+type Props = {
+  data: {
+    community: {
+      invoices: Array<InvoiceType>,
+    },
+  },
+  isLoading: boolean,
+  hasError: boolean,
+};
+
+class Invoices extends React.Component<Props> {
+  render() {
+    const { data: { community }, isLoading, hasError } = this.props;
+
+    if (isLoading) {
+      return <LoadingCard />;
+    }
+
+    if (hasError || !community || community.invoices.length === 0) {
       return null;
     }
 
@@ -42,11 +66,9 @@ class InvoicesPure extends Component {
   }
 }
 
-const Invoices = compose(
+export default compose(
   getCommunityInvoices,
-  displayLoadingCard,
+  viewNetworkHandler,
   connect(),
   pure
-)(InvoicesPure);
-
-export default Invoices;
+)(Invoices);

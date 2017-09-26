@@ -10,7 +10,7 @@ import { getThisCommunity, getChannelsByCommunity } from './queries';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import ListCard from './components/listCard';
+import ChannelList from './components/channelList';
 import ImportSlack from './components/importSlack';
 import EmailInvites from './components/emailInvites';
 import Invoices from './components/invoices';
@@ -21,7 +21,6 @@ import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import Titlebar from '../titlebar';
-const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
@@ -109,7 +108,7 @@ const SettingsPure = ({
       <Column type="primary">
         <ImportSlack community={community} id={community.id} />
         <EmailInvites community={community} />
-        <ChannelListCard slug={communitySlug} />
+        <ChannelList communitySlug={communitySlug} />
         <CommunityMembers id={community.id} />
         <Invoices id={community.id} />
       </Column>
