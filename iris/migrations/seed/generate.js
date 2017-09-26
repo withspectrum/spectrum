@@ -49,6 +49,12 @@ const generateUsersSettings = userId => {
         newThreadCreated: {
           email: true,
         },
+        dailyDigest: {
+          email: true,
+        },
+        weeklyDigest: {
+          email: true,
+        },
       },
     },
   };
