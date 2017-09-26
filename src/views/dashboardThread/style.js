@@ -1,8 +1,6 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import { zIndex } from '../../components/globals';
 
 export const Container = styled.div`

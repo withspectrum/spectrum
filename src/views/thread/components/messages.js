@@ -9,6 +9,7 @@ import { HorizontalRule } from '../../../components/globals';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import { NullState } from '../../../components/upsell';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -98,35 +99,23 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      data: { networkStatus, error },
       data,
+      isLoading,
+      hasError,
       currentUser,
       toggleReaction,
       forceScrollToBottom,
       hasMessagesToLoad,
-      viewStatus,
+      id,
     } = this.props;
 
     const dataExists =
-      networkStatus === 7 && data.thread && data.thread.messageConnection;
+      data &&
+      data.thread &&
+      data.thread.id === id &&
+      data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
-
-    if (networkStatus === 8 || error) {
-      return (
-        <NullState
-          heading="Sorry, we lost connection to the server..."
-          copy="Mind reloading the page?"
-        >
-          <Button
-            icon="view-reload"
-            onClick={() => window.location.reload(true)}
-          >
-            Reload
-          </Button>
-        </NullState>
-      );
-    }
 
     if (messagesExist) {
       const unsortedMessages = data.thread.messageConnection.edges.map(
@@ -152,13 +141,15 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (networkStatus === 7) {
+    if (dataExists) {
       if (currentUser) {
         return <EmptyChat />;
       } else {
         return null;
       }
-    } else {
+    }
+
+    if (isLoading) {
       return (
         <ChatWrapper>
           <HorizontalRule>
@@ -170,11 +161,24 @@ class MessagesWithData extends Component {
         </ChatWrapper>
       );
     }
+
+    return (
+      <NullState
+        heading="Sorry, we lost connection to the server..."
+        copy="Mind reloading the page?"
+      >
+        <Button icon="view-reload" onClick={() => window.location.reload(true)}>
+          Reload
+        </Button>
+      </NullState>
+    );
   }
 }
 
-const Messages = compose(toggleReactionMutation, getThreadMessages)(
-  MessagesWithData
-);
+const Messages = compose(
+  toggleReactionMutation,
+  getThreadMessages,
+  viewNetworkHandler
+)(MessagesWithData);
 
 export default Messages;

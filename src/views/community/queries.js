@@ -158,4 +158,16 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   ${channelMetaDataFragment}
 `;
 
-export const getCommunityChannels = graphql(GET_COMMUNITY_CHANNELS_QUERY);
+export const GET_COMMUNITY_CHANNELS_OPTIONS = {
+  options: ({ communitySlug }: { communitySlug: string }) => ({
+    variables: {
+      slug: communitySlug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getCommunityChannels = graphql(
+  GET_COMMUNITY_CHANNELS_QUERY,
+  GET_COMMUNITY_CHANNELS_OPTIONS
+);

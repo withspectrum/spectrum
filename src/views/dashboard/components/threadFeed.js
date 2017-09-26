@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import styled from 'styled-components';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
@@ -52,6 +50,8 @@ class ThreadFeed extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    const { scrollElement } = this.state;
+
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
@@ -85,7 +85,10 @@ class ThreadFeed extends Component {
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
 
-      this.state.scrollElement.scrollTop = 0;
+      if (scrollElement) {
+        scrollElement.scrollTop = 0;
+      }
+
       this.unsubscribe().then(() => this.subscribe());
     }
   }
@@ -104,11 +107,7 @@ class ThreadFeed extends Component {
   }
 
   render() {
-    const {
-      data: { threads, networkStatus },
-      newActivityIndicator,
-      selectedId,
-    } = this.props;
+    const { data: { threads, networkStatus }, selectedId } = this.props;
     const { scrollElement } = this.state;
 
     // loading state

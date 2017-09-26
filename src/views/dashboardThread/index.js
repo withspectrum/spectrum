@@ -1,19 +1,7 @@
 //@flow
 import React, { Component } from 'react';
-import Icon from '../../components/icons';
-import { Button } from '../../components/buttons';
-import ThreadComposer from '../../components/threadComposer';
-import { Link } from 'react-router-dom';
 import ThreadContainer from '../thread/containers';
-import {
-  NullContainer,
-  Container,
-  NullThread,
-  Thread,
-  Illo,
-  Heading,
-  Subheading,
-} from './style';
+import { NullContainer, Container, NullThread, Thread, Heading } from './style';
 
 class DashboardThread extends Component {
   render() {

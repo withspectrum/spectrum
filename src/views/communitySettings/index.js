@@ -6,12 +6,11 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { track } from '../../helpers/events';
-import { getThisCommunity, getChannelsByCommunity } from './queries';
-import { displayLoadingScreen } from '../../components/loading';
+import { getThisCommunity } from './queries';
+import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import ListCard from './components/listCard';
+import ChannelList from './components/channelList';
 import ImportSlack from './components/importSlack';
 import EmailInvites from './components/emailInvites';
 import Invoices from './components/invoices';
@@ -19,70 +18,85 @@ import RecurringPaymentsList from './components/recurringPaymentsList';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
+import ViewError from '../../components/viewError';
 import Titlebar from '../titlebar';
-const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
   history,
-  data: { community, error },
+  data: { community },
   location,
   dispatch,
+  isLoading,
+  hasError,
 }) => {
-  track('community', 'settings viewed', null);
-
   const communitySlug = match.params.communitySlug;
 
-  const create = () => {
-    return history.push('/new/community');
-  };
+  if (community) {
+    if (!community.communityPermissions.isOwner) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={`No Permission`}
+            provideBack={true}
+            backRoute={`/${communitySlug}`}
+            noComposer
+          />
 
-  if (error) {
+          <ViewError
+            heading={`You dont’t have permission to manage this community.`}
+            subheading={`If you want to create your own community, you can get started below.`}
+          >
+            <Upsell404Community />
+          </ViewError>
+        </AppViewWrapper>
+      );
+    }
+
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`No Community Found`}
+          title={community.name}
+          subtitle={'Settings'}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
+
+        <Column type="secondary">
+          <CommunityEditForm community={community} />
+          <RecurringPaymentsList community={community} />
+        </Column>
         <Column type="primary">
-          <Upsell404Community community={communitySlug} />
+          <ImportSlack community={community} id={community.id} />
+          <EmailInvites community={community} />
+          <ChannelList communitySlug={communitySlug} />
+          <CommunityMembers id={community.id} />
+          <Invoices id={community.id} />
         </Column>
       </AppViewWrapper>
     );
   }
 
-  if (!community || community.deleted) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={`No Community Found`}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-
-        <Column type="primary">
-          <Upsell404Community community={communitySlug} create={create} />
-        </Column>
-      </AppViewWrapper>
-    );
+  if (isLoading) {
+    return <Loading />;
   }
 
-  if (!community.communityPermissions.isOwner) {
+  if (hasError) {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`No Permission`}
+          title={`Error fetching community`}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
-
-        <Column type="primary">
-          <Upsell404Community community={communitySlug} noPermission />
-        </Column>
+        <ViewError
+          refresh
+          error={hasError}
+          heading={'There was an error fetching this community’s settings.'}
+        />
       </AppViewWrapper>
     );
   }
@@ -90,29 +104,22 @@ const SettingsPure = ({
   return (
     <AppViewWrapper>
       <Titlebar
-        title={community.name}
-        subtitle={'Settings'}
+        title={`No Community Found`}
         provideBack={true}
         backRoute={`/${communitySlug}`}
         noComposer
       />
-
-      <Column type="secondary">
-        <CommunityEditForm community={community} />
-        <RecurringPaymentsList community={community} />
-      </Column>
-      <Column type="primary">
-        <ImportSlack community={community} id={community.id} />
-        <EmailInvites community={community} />
-        <ChannelListCard slug={communitySlug} />
-        <CommunityMembers id={community.id} />
-        <Invoices id={community.id} />
-      </Column>
+      <ViewError
+        heading={`We weren’t able to find this community.`}
+        subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
+      >
+        <Upsell404Community />
+      </ViewError>
     </AppViewWrapper>
   );
 };
 
-const CommunitySettings = compose(getThisCommunity, displayLoadingScreen, pure)(
+const CommunitySettings = compose(getThisCommunity, viewNetworkHandler, pure)(
   SettingsPure
 );
 export default connect()(CommunitySettings);

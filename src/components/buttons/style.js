@@ -11,16 +11,19 @@ const baseButton = css`
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
   word-break: keep-all;
   transition: ${Transition.hover.off};
   cursor: pointer;
-  font-size: 14px;
+  font-size: ${props => (props.large ? '18px' : '14px')};
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '4px 8px' : '12px 16px')};
+  padding: ${props =>
+    props.icon
+      ? props.large ? '8px 12px' : '4px 8px'
+      : props.large ? '16px 32px' : '12px 16px'};
 
   &:hover {
     transition: ${Transition.hover.on};

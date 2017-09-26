@@ -164,6 +164,7 @@ class ChatMessages extends Component {
                       const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                       return (
                         <MessageWrapper me={me} key={message.id}>
+                          {/* eslint-disable jsx-a11y/anchor-has-content */}
                           <a name={`${message.id}`} />
                           {renderTimestamp(me, message)}
                           <TextBubble
@@ -183,20 +184,21 @@ class ChatMessages extends Component {
                             (which has a typeof number)
                           */}
                           {!emojiOnly &&
-                            typeof message.id === 'string' && (
-                              <Reaction
-                                message={message}
-                                toggleReaction={toggleReaction}
-                                me={me}
-                                currentUser={currentUser}
-                                dispatch={dispatch}
-                              />
-                            )}
+                          typeof message.id === 'string' && (
+                            <Reaction
+                              message={message}
+                              toggleReaction={toggleReaction}
+                              me={me}
+                              currentUser={currentUser}
+                              dispatch={dispatch}
+                            />
+                          )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {
                       return (
                         <MessageWrapper me={me} key={message.id}>
+                          {/* eslint-disable jsx-a11y/anchor-has-content */}
                           <a name={`${message.id}`} />
                           {renderTimestamp(me, message)}
                           <ImgBubble
