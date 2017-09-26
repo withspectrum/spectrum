@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import queryString from 'query-string';
+// $FlowFixMe
+import { withApollo } from 'react-apollo';
 import { getCurrentUserProfile, editUserMutation } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
   markNotificationsSeenMutation,
-  markSingleNotificationSeenMutation,
+  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
@@ -26,6 +28,7 @@ import {
   saveUserDataToLocalStorage,
   logout,
 } from '../../actions/authentication';
+import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   Section,
@@ -50,7 +53,9 @@ class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...this.calculateUnseenCounts(),
+      allUnseenCount: 0,
+      dmUnseenCount: 0,
+      notifications: [],
       subscription: null,
       showNewUserOnboarding: false,
     };
@@ -67,8 +72,8 @@ class Navbar extends Component {
       notificationsQuery: { networkStatus },
       notificationsQuery,
       currentUser,
-      match,
       history,
+      activeInboxThread,
     } = this.props;
     const loggedInUser = user || currentUser;
 
@@ -84,7 +89,12 @@ class Navbar extends Component {
         NOTE:
         This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
       */
-      const id = match.url.substr(match.url.lastIndexOf('/') + 1);
+      const pathname = window.location.pathname;
+      const lastIndex = pathname.lastIndexOf('/');
+      const firstIndex = pathname.indexOf('/');
+      const route = pathname.substr(firstIndex + 1, lastIndex - 1);
+      const isMessages = route && route === 'messages';
+      const id = pathname.substr(lastIndex + 1);
       const params = queryString.parse(history.location.search);
       const threadParam = params.thread;
 
@@ -95,10 +105,19 @@ class Navbar extends Component {
           .filter(notification => notification.isSeen === false)
           .filter(notification => {
             // SEE NOTE ABOVE
-            if (notification.context.id !== id) return notification;
-            // if the notification context matches the current route, go ahead and mark it as seen
-            this.props.markSingleNotificationSeen(notification.id);
-            return null;
+            if (notification.context.id === id || isMessages) {
+              // if the notification context matches the current route, go ahead and mark it as seen
+              this.props.client.mutate({
+                mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+                variables: {
+                  id: notification.id,
+                },
+              });
+
+              return null;
+            }
+
+            return notification;
           })
           .filter(
             notification =>
@@ -113,13 +132,22 @@ class Navbar extends Component {
           .filter(notification => {
             // SEE NOTE ABOVE
             if (
-              notification.context.id !== id ||
-              notification.context.id !== threadParam
-            )
-              return notification;
-            // if the notification context matches the current route, go ahead and mark it as seen
-            this.props.markSingleNotificationSeen(notification.id);
-            return null;
+              notification.context.id === activeInboxThread ||
+              notification.context.id === threadParam ||
+              notification.context.id === id
+            ) {
+              // if the notification context matches the current route, go ahead and mark it as seen
+              this.props.client.mutate({
+                mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+                variables: {
+                  id: notification.id,
+                },
+              });
+
+              return null;
+            }
+
+            return notification;
           })
           .filter(
             notification =>
@@ -165,7 +193,10 @@ class Navbar extends Component {
     const { data: { user }, dispatch, history, match } = this.props;
 
     // if no user was found, escape
-    if (!user) return;
+    if (!user) {
+      // clear localstorage first
+      return removeItemFromStorage('spectrum');
+    }
 
     if (prevProps.data.user !== user && user !== null) {
       if (!user.timezone) {
@@ -519,14 +550,15 @@ class Navbar extends Component {
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
+  activeInboxThread: state.dashboardFeed.activeThread,
 });
 export default compose(
   getCurrentUserProfile,
   getNotificationsForNavbar,
   editUserMutation,
-  markSingleNotificationSeenMutation,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
+  withApollo,
   connect(mapStateToProps)
 )(Navbar);

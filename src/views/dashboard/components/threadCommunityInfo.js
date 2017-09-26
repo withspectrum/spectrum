@@ -1,15 +1,10 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import styled from 'styled-components';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import {
   CommunityInfoContainer,
   AvatarLink,
   CommunityAvatar,
-  CommunityLink,
   PillLink,
   PillLinkPinned,
   PinIcon,

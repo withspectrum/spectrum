@@ -3,12 +3,7 @@ import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { openComposer } from '../../../actions/composer';
-import {
-  CreateThreadComposer,
-  ComposerLeft,
-  ComposeIconContainer,
-  ChevronIconContainer,
-} from '../style';
+import { CreateThreadComposer, ComposeIconContainer } from '../style';
 import Icon from '../../../components/icons';
 
 const Composer = ({ dispatch }) => (

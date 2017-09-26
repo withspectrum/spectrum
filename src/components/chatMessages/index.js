@@ -168,6 +168,7 @@ class ChatMessages extends Component {
                       const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                       return (
                         <MessageWrapper me={me} key={message.id}>
+                          {/* eslint-disable jsx-a11y/anchor-has-content */}
                           <a name={`${message.id}`} />
                           {renderTimestamp(me, message)}
                           <TextBubble
@@ -201,6 +202,7 @@ class ChatMessages extends Component {
                     } else if (message.messageType === 'media') {
                       return (
                         <MessageWrapper me={me} key={message.id}>
+                          {/* eslint-disable jsx-a11y/anchor-has-content */}
                           <a name={`${message.id}`} />
                           {renderTimestamp(me, message)}
                           <ImgBubble

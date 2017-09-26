@@ -1,5 +1,5 @@
 //@flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Avatar } from '../avatar';
 import Icon from '../icons';
 import { FauxOutlineButton } from '../buttons';
@@ -21,7 +21,7 @@ import {
 } from './style';
 
 type InputProps = {
-  children?: React$Element<any>,
+  children?: React.Node,
   inputType?: string,
   defaultValue?: ?string,
   placeholder?: string,
@@ -142,7 +142,7 @@ export const TextArea = (props: InputProps) => {
   );
 };
 
-export class UnderlineInput extends Component {
+export class UnderlineInput extends React.Component {
   render() {
     return (
       <StyledPrefixLabel disabled={this.props.disabled}>

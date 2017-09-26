@@ -25,6 +25,9 @@ import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
 
+const IN_MAINTENANCE_MODE =
+  process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
+
 const renderer = (req, res) => {
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
@@ -56,7 +59,7 @@ const renderer = (req, res) => {
   const frontend = (
     <ApolloProvider store={store} client={client}>
       <StaticRouter location={req.url} context={context}>
-        <Routes />
+        <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
       </StaticRouter>
     </ApolloProvider>
   );
@@ -72,8 +75,13 @@ const renderer = (req, res) => {
       // Get the resulting data
       const state = store.getState();
       const helmet = Helmet.renderStatic();
+      if (IN_MAINTENANCE_MODE) {
+        res.status(503);
+        res.set('Retry-After', 3600);
+      } else {
+        res.status(200);
+      }
       // Compile the HTML and send it down
-      res.status(200);
       res.send(
         getHTML({
           content,

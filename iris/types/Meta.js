@@ -1,21 +1,25 @@
 const Meta = /* GraphQL */ `
-  type GrowthData {
-    createdAt: Date
+  type GrowthDataCounts {
+    growth: Float
+    currentPeriodCount: Int
+    prevPeriodCount: Int
   }
-
-  type SubscriptionGrowthData {
-    amount: Int
-    createdAt: Date
-    plan: String
+  
+  type GrowthData {
+    count: Int
+    weeklyGrowth: GrowthDataCounts
+    monthlyGrowth: GrowthDataCounts
+    quarterlyGrowth: GrowthDataCounts
   }
 
   type Meta {
-    userGrowth: [GrowthData]
-    communityGrowth: [GrowthData]
-    channelGrowth: [GrowthData]
-    threadGrowth: [GrowthData]
-    messageGrowth: [GrowthData]
-    subscriptionGrowth: [SubscriptionGrowthData]
+    usersGrowth: GrowthData
+    communitiesGrowth: GrowthData
+    channelsGrowth: GrowthData
+    threadsGrowth: GrowthData
+    directMessageThreadsGrowth: GrowthData
+    threadMessagesGrowth: GrowthData
+    directMessagesGrowth: GrowthData
   }
 
   extend type Query {

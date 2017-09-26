@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { clearActivityIndicator } from '../../../actions/newActivityIndicator';
 import styled from 'styled-components';
-import { Gradient } from '../../../components/globals';
 
 const NewActivityBar = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};

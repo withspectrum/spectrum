@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { openComposer } from '../../../actions/composer';
 import { Button } from '../../../components/buttons';
