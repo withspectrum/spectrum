@@ -550,7 +550,7 @@ class NewThread extends Component {
       return input.focus();
     }
 
-    return this.chatInput.triggerFocus();
+    this.chatInput.triggerFocus();
 
     // clear the redux store of this inited user, in case the person
     // sends more messages later in the session
@@ -663,7 +663,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser, initNewThreadWithUser } = this.props;
+    const { currentUser } = this.props;
 
     return (
       <MessagesContainer>

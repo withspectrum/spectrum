@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -11,12 +11,16 @@ import { SearchContainer, SearchInput } from '../style';
 
 const SearchThreadFeed = compose(searchCommunityThreadsQuery)(ThreadFeed);
 
-class Search extends Component {
-  state: {
-    searchString: string,
-    sendStringToServer: string,
-  };
+type Props = {
+  community: Object,
+};
 
+type State = {
+  searchString: string,
+  sendStringToServer: string,
+};
+
+class Search extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -28,6 +32,16 @@ class Search extends Component {
     this.search = throttle(this.search, 500);
   }
 
+  search = searchString => {
+    // don't start searching until at least 3 characters are typed
+    if (searchString.length < 3) return;
+
+    // start the input loading spinner
+    this.setState({
+      sendStringToServer: searchString,
+    });
+  };
+
   handleChange = (e: any) => {
     const searchString = e.target.value.toLowerCase().trim();
 
@@ -38,16 +52,6 @@ class Search extends Component {
 
     // trigger a new search based on the search input
     this.search(searchString);
-  };
-
-  search = (searchString: string) => {
-    // don't start searching until at least 3 characters are typed
-    if (searchString.length < 3) return;
-
-    // start the input loading spinner
-    this.setState({
-      sendStringToServer: searchString,
-    });
   };
 
   render() {
@@ -66,14 +70,15 @@ class Search extends Component {
           />
         </SearchContainer>
         {searchString &&
-          sendStringToServer &&
-          <SearchThreadFeed
-            viewContext="community"
-            communityId={community.id}
-            searchString={sendStringToServer}
-            community={community}
-            pinnedThreadId={community.pinnedThreadId}
-          />}
+          sendStringToServer && (
+            <SearchThreadFeed
+              viewContext="community"
+              communityId={community.id}
+              searchString={sendStringToServer}
+              community={community}
+              pinnedThreadId={community.pinnedThreadId}
+            />
+          )}
       </div>
     );
   }

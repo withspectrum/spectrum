@@ -19,9 +19,26 @@ var toPlainText = function toPlainText(
   return editorState.getCurrentContent().getPlainText();
 };
 
+// This is necessary for SSR, if you create an empty editor on the server and on the client they have to
+// have matching keys, so just doing fromPlainText('') breaks checksum matching because the key
+// of the block is randomly generated twice and thusly does't match
+var emptyContentState = convertFromRaw({
+  entityMap: {},
+  blocks: [
+    {
+      text: '',
+      key: 'foo',
+      type: 'unstyled',
+      entityRanges: [],
+    },
+  ],
+});
+
 var fromPlainText = function fromPlainText(
   text /*: string */
 ) /*: typeof EditorState */ {
+  if (!text || text === '')
+    return EditorState.createWithContent(emptyContentState);
   return EditorState.createWithContent(ContentState.createFromText(text));
 };
 
@@ -40,4 +57,5 @@ module.exports = {
   toState: toState,
   toPlainText: toPlainText,
   fromPlainText: fromPlainText,
+  emptyContentState: emptyContentState,
 };

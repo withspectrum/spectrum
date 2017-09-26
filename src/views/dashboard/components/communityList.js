@@ -3,13 +3,10 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
-import { withRouter } from 'react-router';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
-import { Avatar } from '../../../components/avatar';
 import {
   ExploreListItem,
   AllCommunityListItem,
@@ -30,7 +27,7 @@ class CommunityList extends Component {
   };
 
   render() {
-    const { user, activeCommunity, communities } = this.props;
+    const { activeCommunity, communities } = this.props;
 
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);

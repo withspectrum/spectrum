@@ -75,7 +75,9 @@ export const markSingleNotificationSeen = (
       },
       { returnChanges: true }
     )
-    .run();
+    .run()
+    .then(() => true)
+    .catch(err => false);
 };
 
 export const markNotificationsSeen = (notifications: Array<string>) => {
@@ -107,9 +109,7 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
       )
     )
     .then(() => true)
-    .catch(err => {
-      return false;
-    });
+    .catch(err => false);
 };
 
 // marks all notifications for a user as read
@@ -129,7 +129,8 @@ export const markAllNotificationsRead = (userId: string): Promise<Object> => {
         })
       );
     })
-    .then(() => getNotificationsByUser(userId));
+    .then(() => true)
+    .catch(err => false);
 };
 
 export const markDirectMessageNotificationsSeen = (
@@ -152,9 +153,7 @@ export const markDirectMessageNotificationsSeen = (
       )
     )
     .then(() => true)
-    .catch(err => {
-      return false;
-    });
+    .catch(err => false);
 };
 
 /*

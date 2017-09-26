@@ -15,10 +15,11 @@ import Icon from '../icons';
 type ButtonProps = {
   loading?: boolean,
   disabled?: boolean,
+  large?: boolean,
   color?: string,
   gradientTheme?: string,
   icon?: string,
-  children?: React$Element<any>,
+  children?: any,
 };
 
 type IconProps = {

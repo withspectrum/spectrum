@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Avatar } from '../../components/avatar';
 import Column from '../../components/column';
 import {

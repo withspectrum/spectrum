@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -10,87 +10,39 @@ import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { displayLoadingScreen } from '../../components/loading';
+import { LoadingScreen } from '../../components/loading';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ChannelEditForm } from '../../components/editForm';
 import PendingUsers from './components/pendingUsers';
 import BlockedUsers from './components/blockedUsers';
 import ChannelMembers from '../../components/channelMembers';
 import { Upsell404Channel } from '../../components/upsell';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
 } from '../../api/channel';
 import Titlebar from '../titlebar';
+import Login from '../login';
+import ViewError from '../../components/viewError';
 
-const SettingsPure = ({
-  match,
-  data: { error, channel },
-  dispatch,
-  history,
-  togglePendingUser,
-  unblockUser,
-}) => {
-  const communitySlug = match.params.communitySlug;
-  const channelSlug = match.params.channelSlug;
+type Props = {
+  data: {
+    channel: Object,
+  },
+  match: Object,
+  isLoading: boolean,
+  hasError: boolean,
+  currentUser: Object,
+  dispatch: Function,
+  togglePendingUser: Function,
+  unblockUser: Function,
+};
 
-  if (error) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Channel Not Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <Column type="primary">
-          <Upsell404Channel channel={channelSlug} community={communitySlug} />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
+class CommunitySettings extends React.Component<Props> {
+  togglePending = (userId, action) => {
+    const { data: { channel }, togglePendingUser, dispatch } = this.props;
 
-  if (!channel || channel.isDeleted) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Channel Not Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <Column type="primary">
-          <Upsell404Channel channel={channelSlug} community={communitySlug} />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
-
-  if (
-    !channel.channelPermissions.isOwner &&
-    !channel.community.communityPermissions.isOwner
-  ) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'No Permission'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-
-        <Column type="primary">
-          <Upsell404Channel
-            channel={channelSlug}
-            community={communitySlug}
-            noPermission
-          />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
-
-  const togglePending = (userId, action) => {
     const input = {
       channelId: channel.id,
       userId,
@@ -117,7 +69,9 @@ const SettingsPure = ({
       });
   };
 
-  const unblock = userId => {
+  unblock = (userId: string) => {
+    const { data: { channel }, unblockUser, dispatch } = this.props;
+
     const input = {
       channelId: channel.id,
       userId,
@@ -136,41 +90,133 @@ const SettingsPure = ({
       });
   };
 
-  track('channel', 'settings viewed', null);
+  render() {
+    const {
+      match,
+      data: { channel },
+      isLoading,
+      hasError,
+      currentUser,
+    } = this.props;
+    const { communitySlug, channelSlug } = match.params;
+    const isLoggedIn = currentUser;
 
-  return (
-    <AppViewWrapper>
-      <Titlebar
-        title={`${channel.name} · ${channel.community.name}`}
-        subtitle={'Settings'}
-        provideBack={true}
-        backRoute={`/${channel.community.slug}/${channel.slug}`}
-        noComposer
-      />
-      <Column type="secondary">
-        <ChannelEditForm channel={channel} />
-      </Column>
-      <Column type="primary">
-        {channel.isPrivate &&
-          <span>
-            <PendingUsers
-              togglePending={togglePending}
-              channel={channel}
-              id={channel.id}
+    // if a user isn't logged in they should never be able to view settings
+    if (!isLoggedIn) {
+      return <Login redirectPath={`${window.location.href}`} />;
+    }
+
+    if (channel) {
+      // at this point the view is no longer loading, has not encountered an error, and has returned a community record
+      const { isOwner, isModerator } = channel.channelPermissions;
+      const userHasPermissions =
+        isOwner ||
+        isModerator ||
+        channel.community.communityPermissions.isOwner ||
+        channel.community.communityPermissions.isModerator;
+
+      if (!userHasPermissions) {
+        return (
+          <AppViewWrapper>
+            <Titlebar
+              title={`Channel settings`}
+              provideBack={true}
+              backRoute={`/${communitySlug}`}
+              noComposer
             />
-            <BlockedUsers unblock={unblock} channel={channel} id={channel.id} />
-          </span>}
-        {!channel.isPrivate && <ChannelMembers id={channel.id} />}
-      </Column>
-    </AppViewWrapper>
-  );
-};
+            <ViewError
+              heading={`You don’t have permission to manage this channel.`}
+              subheading={`Head back to the ${channel.community
+                .name} community to get back on track.`}
+            >
+              <Upsell404Channel community={communitySlug} />
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
 
-const ChannelSettings = compose(
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={`${channel.name} · ${channel.community.name}`}
+            subtitle={'Settings'}
+            provideBack={true}
+            backRoute={`/${channel.community.slug}/${channel.slug}`}
+            noComposer
+          />
+          <Column type="secondary">
+            <ChannelEditForm channel={channel} />
+          </Column>
+          <Column type="primary">
+            {channel.isPrivate && (
+              <span>
+                <PendingUsers
+                  togglePending={this.togglePending}
+                  channel={channel}
+                  id={channel.id}
+                />
+                <BlockedUsers
+                  unblock={this.unblock}
+                  channel={channel}
+                  id={channel.id}
+                />
+              </span>
+            )}
+            {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
+
+    if (hasError) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Channel not found'}
+            provideBack={true}
+            backRoute={`/${communitySlug}/${channelSlug}`}
+            noComposer
+          />
+          <ViewError
+            refresh
+            heading={'There was an error fetching this channel.'}
+          />
+        </AppViewWrapper>
+      );
+    }
+
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`Channel not found`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+          noComposer
+        />
+        <ViewError
+          heading={`We couldn’t find a channel with this name.`}
+          subheading={`Head back to the ${communitySlug} community to get back on track.`}
+        >
+          <Upsell404Channel community={communitySlug} />
+        </ViewError>
+      </AppViewWrapper>
+    );
+  }
+}
+
+const map = state => ({
+  currentUser: state.users.currentUser,
+});
+
+export default compose(
+  connect(map),
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
-  displayLoadingScreen,
+  viewNetworkHandler,
   pure
-)(SettingsPure);
-export default connect()(ChannelSettings);
+)(CommunitySettings);

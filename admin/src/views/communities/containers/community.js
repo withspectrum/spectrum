@@ -7,7 +7,6 @@ import pure from 'recompose/pure';
 import { getCommunityBySlug } from '../../../api/community';
 import { displayLoadingState } from '../../../components/loading';
 import { CommunityProfileHeader } from '../../../components/profileHeader';
-import CommunitySettings from '../components/communitySettings';
 import { View, CommunitySettingsContainer, SectionHeader } from '../style';
 
 class UserContainer extends Component {

@@ -1,5 +1,4 @@
 // @flow
-import React from 'react';
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 // $FlowFixMe

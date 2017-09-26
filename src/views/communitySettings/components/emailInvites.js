@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
@@ -14,6 +14,7 @@ import { IS_EMAIL } from '../../../helpers/regexps';
 import { sendEmailInvitationsMutation } from '../../../api/community';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
   ButtonContainer,
   EmailInviteForm,
@@ -29,18 +30,34 @@ import {
   Description,
 } from '../../../components/listItems/style';
 
-class EmailInvites extends Component {
-  state: {
-    isLoading: boolean,
-    contacts: Array<any>,
-    hasCustomMessage: boolean,
-    customMessageString: string,
-    customMessageError: boolean,
-  };
+type Props = {
+  community: Object,
+  dispatch: Function,
+  currentUser: Object,
+  hasInvitedPeople?: Function,
+  sendEmailInvites: Function,
+};
 
+type ContactProps = {
+  email: string,
+  firstName: string,
+  lastName: string,
+  error: boolean,
+};
+
+type State = {
+  isLoading: boolean,
+  contacts: Array<ContactProps>,
+  hasCustomMessage: boolean,
+  customMessageString: string,
+  customMessageError: boolean,
+};
+
+class EmailInvites extends React.Component<Props, State> {
   constructor() {
     super();
 
+    // seed the default state with 3 empty email contacts
     this.state = {
       isLoading: false,
       contacts: [
@@ -78,6 +95,7 @@ class EmailInvites extends Component {
       }
       unique[array[i].email] = 0;
     }
+
     return distinct;
   };
 
@@ -88,8 +106,8 @@ class EmailInvites extends Component {
       customMessageError,
       customMessageString,
     } = this.state;
-    const { community, dispatch, currentUser } = this.props;
-    this.props.hasInvitedPeople && this.props.hasInvitedPeople();
+    const { community, dispatch, currentUser, hasInvitedPeople } = this.props;
+    hasInvitedPeople && hasInvitedPeople();
 
     this.setState({
       isLoading: true,
@@ -283,7 +301,7 @@ class EmailInvites extends Component {
             : 'Optional: Add a custom message to your invitation'}
         </CustomMessageToggle>
 
-        {hasCustomMessage &&
+        {hasCustomMessage && (
           <Textarea
             autoFocus
             value={customMessageString}
@@ -295,13 +313,15 @@ class EmailInvites extends Component {
                 : '2px solid #DFE7EF',
             }}
             onChange={this.handleCustomMessageChange}
-          />}
+          />
+        )}
 
         {hasCustomMessage &&
-          customMessageError &&
-          <Error>
-            Your custom invitation message can be up to 500 characters.
-          </Error>}
+          customMessageError && (
+            <Error>
+              Your custom invitation message can be up to 500 characters.
+            </Error>
+          )}
 
         <ButtonContainer>
           <Button
@@ -317,10 +337,11 @@ class EmailInvites extends Component {
   }
 }
 
-const EmailInvitesCard = props =>
+const EmailInvitesCard = props => (
   <StyledCard>
     <EmailInvites {...props} />
-  </StyledCard>;
+  </StyledCard>
+);
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;
 
@@ -331,11 +352,13 @@ const map = state => ({
 export const EmailInvitesWithoutCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
+  viewNetworkHandler,
   pure
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
+  viewNetworkHandler,
   pure
 )(EmailInvitesCard);
 export default EmailInvitesWithCard;

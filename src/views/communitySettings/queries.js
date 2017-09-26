@@ -28,23 +28,35 @@ export const getThisCommunity = graphql(
   }
 );
 
-export const getChannelsByCommunity = graphql(
-  gql`
-    query channelsByCommunity($slug: String) {
-			community(slug: $slug) {
-        ...communityInfo
-        channelConnection {
-          edges {
-            node {
-              ...channelInfo
-              ...channelMetaData
-            }
+export const GET_COMMUNITY_CHANNELS_QUERY = gql`
+  query getCommunityChannels($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+      channelConnection {
+        edges {
+          node {
+            ...channelInfo
+            ...channelMetaData
           }
         }
       }
-		}
-    ${communityInfoFragment}
-    ${channelInfoFragment}
-    ${channelMetaDataFragment}
-	`
+    }
+  }
+  ${channelInfoFragment}
+  ${communityInfoFragment}
+  ${channelMetaDataFragment}
+`;
+
+export const GET_COMMUNITY_CHANNELS_OPTIONS = {
+  options: ({ communitySlug }: { communitySlug: string }) => ({
+    variables: {
+      slug: communitySlug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getCommunityChannels = graphql(
+  GET_COMMUNITY_CHANNELS_QUERY,
+  GET_COMMUNITY_CHANNELS_OPTIONS
 );

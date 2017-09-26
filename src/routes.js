@@ -1,9 +1,10 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import { Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled, { ThemeProvider } from 'styled-components';
+// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
@@ -12,6 +13,7 @@ import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
+import Maintenance from './components/maintenance';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Thread from './views/thread';
@@ -71,9 +73,25 @@ const NotificationsFallback = signedOutFallback(Notifications, () => (
   <Redirect to="/login" />
 ));
 
-class Routes extends Component {
+class Routes extends React.Component<{}> {
   render() {
     const { title, description } = generateMetaInfo();
+
+    if (this.props.maintenanceMode) {
+      return (
+        <ThemeProvider theme={theme}>
+          <ScrollManager>
+            <Body>
+              <Head
+                title="Ongoing Maintenance - Spectrum"
+                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
+              />
+              <Maintenance />
+            </Body>
+          </ScrollManager>
+        </ThemeProvider>
+      );
+    }
 
     return (
       <ThemeProvider theme={theme}>
