@@ -41,6 +41,7 @@ export const ShimmerList = styled(Card)`
 
 export const ShimmerThreadDetail = styled(FlexCol)`
   padding: 40px 32px;
+  display: inline-block;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -114,6 +115,8 @@ export const ShimmerBubble = styled(FlexCol)`
 `;
 
 export const ShimmerChat = styled(FlexCol)`
+  margin-top: 32px;
+
   > div:nth-of-type(2n + 2) {
     width: 40%;
 

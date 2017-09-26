@@ -4,7 +4,14 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { zIndex, Truncate, Tooltip } from '../../components/globals';
+import {
+  zIndex,
+  Truncate,
+  Tooltip,
+  Transition,
+  Shadow,
+  hexa,
+} from '../../components/globals';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -20,9 +27,8 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  flex: auto;
-  flex 1 0 25%;
-  max-width: 528px;
+  width: 100%;
+  max-width: 440px;
   min-width: 320px;
   overflow-y: hidden;
   position: relative;
@@ -56,24 +62,24 @@ export const CommunityListWrapper = styled.div`
   background: ${props => props.theme.bg.wash};
   border-right: 1px solid ${props => props.theme.bg.border};
   transform: translateZ(0);
-  transition: all 0.2s ease-in-out;
+  transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
   img {
     opacity: 0.4;
     filter: grayscale(60%);
-    transition: all 0.2s ease-in-out;
+    transition: ${Transition.hover.on};
   }
 
   &:hover {
     transform: translateZ(0);
     width: 256px;
-    transition: all 0.2s ease-in-out;
+    transition: ${Transition.hover.on};
 
     img {
       filter: grayscale(0%);
       opacity: 1;
-      transition: all 0.2s ease-in-out;
+      transition: ${Transition.hover.on};
     }
   }
 
@@ -128,7 +134,7 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   color: ${props => props.theme.text.alt};
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
   margin: 0;
-  padding: 8px 16px;
+  padding: 12px 16px;
   border-radius: 0;
 
   &:hover {
@@ -189,9 +195,8 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 16px;
-  box-shadow: 0 1px 0 0 ${props => props.theme.bg.border},
-    0 1px 3px rgba(0, 0, 0, 0.01);
+  padding: 8px;
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: 10;
 
@@ -206,8 +211,6 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
-  max-width: 840px;
-  border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     display: none;
@@ -220,7 +223,7 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
-export const CreateThreadComposer = styled.div`
+export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -265,6 +268,10 @@ export const InboxThreadItem = styled.div`
   &:hover {
     background: ${props =>
       props.active ? props.theme.brand.alt : props.theme.bg.wash};
+  }
+
+  &:first-of-type {
+    border-top: none;
   }
 `;
 

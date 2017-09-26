@@ -18,14 +18,14 @@ import { Column } from '../../components/column';
 import Icon from '../../components/icons';
 import { UserProfile } from '../../components/profile';
 import DashboardThreadFeed from './components/threadFeed';
-import ThreadComposer from '../../components/threadComposer';
+import Composer from '../../components/composer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
-import Composer from './components/inboxComposer';
+import Header from './components/threadSelectorHeader';
 import CommunityList from './components/communityList';
 import {
   Wrapper,
@@ -96,21 +96,10 @@ class Dashboard extends Component {
 
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Composer />
+              <Header />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
-            )}
-            {composerIsOpen && (
-              <ThreadComposerContainer>
-                <ThreadComposer
-                  activeCommunity={
-                    activeCommunityObject && activeCommunityObject.slug
-                  }
-                  activeChannel={'general'}
-                  isInbox
-                />
-              </ThreadComposerContainer>
             )}
             <InboxScroller id="scroller-for-inbox">
               {!activeCommunity ? (
@@ -129,7 +118,13 @@ class Dashboard extends Component {
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <DashboardThread threadId={activeThread} />
+              <DashboardThread
+                threadId={activeThread}
+                activeCommunity={
+                  activeCommunityObject && activeCommunityObject.slug
+                }
+                activeChannel={'general'}
+              />
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>

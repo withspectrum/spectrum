@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 
 export const MediaRow = styled.div`
   display: flex;
-  background: #f8fbfe;
+  background: ${props => props.theme.bg.wash};
   border-top: 2px solid ${props => props.theme.bg.border};
   padding: 0 16px;
   margin-left: -24px;
@@ -24,5 +24,19 @@ export const MediaRow = styled.div`
   @media (max-width: 768px) {
     position: absolute;
     top: calc(100% - 90px);
+  }
+`;
+
+export const ComposerBase = styled.div`
+  position: relative;
+
+  > label {
+    position: absolute;
+    right: calc(100% + 8px);
+    top: auto;
+    bottom: -12px;
+    padding: 0;
+    margin: 0;
+    color: ${props => props.theme.text.placeholder};
   }
 `;

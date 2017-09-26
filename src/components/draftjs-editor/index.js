@@ -36,7 +36,7 @@ import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
 
 import Image from './Image';
-import { Wrapper, MediaRow } from './style';
+import { Wrapper, MediaRow, ComposerBase } from './style';
 import MediaInput from '../mediaInput';
 import { ThreadDescription } from '../threadComposer/style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
@@ -137,15 +137,13 @@ class Editor extends React.Component {
       linkPreview,
       focus,
       singleLine,
+      version,
       ...rest
     } = this.props;
 
-    return (
-      <div
-        className={className}
-        style={{ width: '100%', height: '100%', ...style }}
-      >
-        <Wrapper
+    if (version === 2) {
+      return (
+        <ComposerBase
           className={markdown !== false && 'markdown'}
           onClick={this.focus}
           focus={focus}
@@ -164,29 +162,75 @@ class Editor extends React.Component {
             }}
             {...rest}
           />
-        </Wrapper>
-        {showLinkPreview && linkPreview && linkPreview.loading ? (
-          <LinkPreviewLoading margin={'16px 0 24px 0'} />
-        ) : showLinkPreview && linkPreview && linkPreview.data ? (
-          <LinkPreview
-            data={linkPreview.data}
-            size={'large'}
-            remove={linkPreview.remove}
-            editable={!this.props.readOnly}
-            trueUrl={linkPreview.trueUrl}
-            margin={'16px 0 24px 0'}
-          />
-        ) : null}
-        {images !== false &&
-          !this.props.readOnly && (
-            <MediaRow>
+          {showLinkPreview && linkPreview && linkPreview.loading ? (
+            <LinkPreviewLoading margin={'16px 0 24px 0'} />
+          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+            <LinkPreview
+              data={linkPreview.data}
+              size={'large'}
+              remove={linkPreview.remove}
+              editable={!this.props.readOnly}
+              trueUrl={linkPreview.trueUrl}
+              margin={'16px 0 24px 0'}
+            />
+          ) : null}
+          {images !== false &&
+            !this.props.readOnly && (
               <MediaInput onChange={this.addImage} multiple>
                 Add
               </MediaInput>
-            </MediaRow>
-          )}
-      </div>
-    );
+            )}
+        </ComposerBase>
+      );
+    } else {
+      return (
+        <div
+          className={className}
+          style={{ width: '100%', height: '100%', ...style }}
+        >
+          <Wrapper
+            className={markdown !== false && 'markdown'}
+            onClick={this.focus}
+            focus={focus}
+          >
+            <DraftEditor
+              editorState={state}
+              onChange={onChange}
+              plugins={this.state.plugins}
+              handleDroppedFiles={this.handleDroppedFiles}
+              blockRenderMap={
+                singleLine === true && this.state.singleLineBlockRenderMap
+              }
+              ref={editor => {
+                this.editor = editor;
+                if (this.props.editorRef) this.props.editorRef(editor);
+              }}
+              {...rest}
+            />
+          </Wrapper>
+          {showLinkPreview && linkPreview && linkPreview.loading ? (
+            <LinkPreviewLoading margin={'16px 0 24px 0'} />
+          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+            <LinkPreview
+              data={linkPreview.data}
+              size={'large'}
+              remove={linkPreview.remove}
+              editable={!this.props.readOnly}
+              trueUrl={linkPreview.trueUrl}
+              margin={'16px 0 24px 0'}
+            />
+          ) : null}
+          {images !== false &&
+            !this.props.readOnly && (
+              <MediaRow>
+                <MediaInput onChange={this.addImage} multiple>
+                  Add
+                </MediaInput>
+              </MediaRow>
+            )}
+        </div>
+      );
+    }
   }
 }
 

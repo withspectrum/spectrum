@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import { Button } from '../../components/buttons';
-import ThreadComposer from '../../components/threadComposer';
+import Composer from '../../components/composer';
 import { Link } from 'react-router-dom';
 import ThreadContainer from '../thread/containers';
 import {
@@ -25,11 +25,11 @@ class DashboardThread extends Component {
     // composer is selected
     if (threadId === 'new')
       return (
-        <NullContainer>
-          <NullThread>
-            <Heading>New thread composer will go here</Heading>
-          </NullThread>
-        </NullContainer>
+        <Container>
+          <Thread>
+            <Composer {...this.props} />
+          </Thread>
+        </Container>
       );
 
     // otherwise return the thread that was selected

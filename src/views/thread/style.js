@@ -54,24 +54,12 @@ export const Detail = styled(Column)`
   align-self: stretch;
 `;
 
-export const ChatInputWrapper = styled(Column)`
+export const ChatInputWrapper = styled(FlexCol)`
   align-self: stretch;
   align-items: stretch;
   margin: 0;
   flex: auto;
   position: relative;
-
-  > div {
-    background-image: ${({ theme }) =>
-      `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(
-        theme.bg.wash,
-        0.25
-      )} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
-
-    > form > div {
-      background-color: ${({ theme }) => theme.bg.default};
-    }
-  }
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -104,7 +92,8 @@ export const Container = styled(FlexCol)`
 export const ThreadWrapper = styled(FlexCol)`
   padding: 16px 32px;
   font-size: 14px;
-  flex: 1 0 auto;
+  flex: none;
+  min-width: 320px;
 
   @media (max-width: 768px) {
     padding: 16px;
