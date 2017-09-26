@@ -31,7 +31,6 @@ const UserViewPure = ({
 
   const username = match.params.username;
   const dataExists = user;
-  console.log(data);
 
   if (networkStatus === 8 || error) {
     return (
