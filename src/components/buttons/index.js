@@ -40,7 +40,7 @@ type IconProps = {
 };
 
 export const Button = (props: ButtonProps) => (
-  <StyledSolidButton large={props.large} disabled={props.loading} {...props}>
+  <StyledSolidButton disabled={props.loading} {...props}>
     {props.icon ? props.loading ? (
       <SpinnerContainer>
         <Spinner color="text.reverse" size="16" />
@@ -58,7 +58,7 @@ export const Button = (props: ButtonProps) => (
 );
 
 export const OutlineButton = (props: ButtonProps) => (
-  <StyledOutlineButton large={props.large} {...props}>
+  <StyledOutlineButton {...props}>
     {props.icon ? props.loading ? (
       <SpinnerContainer>
         <Spinner color="brand.alt" size="16" />
@@ -77,7 +77,7 @@ export const OutlineButton = (props: ButtonProps) => (
 
 // looks like a button, but isn't a button so it won't submit forms
 export const FauxOutlineButton = (props: ButtonProps) => (
-  <StyledFauxOutlineButton large={props.large} {...props}>
+  <StyledFauxOutlineButton {...props}>
     {props.icon ? props.loading ? (
       <SpinnerContainer>
         <Spinner color="brand.alt" size="16" />
@@ -95,7 +95,7 @@ export const FauxOutlineButton = (props: ButtonProps) => (
 );
 
 export const TextButton = (props: ButtonProps) => (
-  <StyledTextButton large={props.large} {...props}>
+  <StyledTextButton {...props}>
     {props.icon ? props.loading ? (
       <SpinnerContainer>
         <Spinner color="text.alt" size="16" />
@@ -111,7 +111,7 @@ export const TextButton = (props: ButtonProps) => (
 );
 
 export const IconButton = (props: IconProps) => (
-  <StyledIconButton large={props.large} {...props}>
+  <StyledIconButton {...props}>
     <Icon
       glyph={props.glyph}
       tipText={props.tipText}
