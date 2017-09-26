@@ -14,6 +14,12 @@ export const createNewUsersSettings = (userId: string): Promise<Object> => {
         newThreadCreated: {
           email: true,
         },
+        dailyDigest: {
+          email: true,
+        },
+        weeklyDigest: {
+          email: true,
+        },
       },
     },
   });
