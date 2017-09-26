@@ -201,3 +201,13 @@ export const SpinnerContainer = styled.div`
   height: 32px;
   position: relative;
 `;
+
+export const StyledButtonRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 8px;
+  }
+`;

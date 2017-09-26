@@ -228,30 +228,6 @@ export const UpsellJoinCommunity = ({
   );
 };
 
-export const Upsell404User = ({
-  username,
-  noPermission,
-}: {
-  username: string,
-  noPermission: boolean,
-}) => {
-  const title = noPermission
-    ? "I see you sneakin' around here..."
-    : `${username}? What's a ${username}?`;
-  const subtitle = noPermission
-    ? `But, that's not for you...`
-    : `We don't know anyone who goes by that name. Sorry!`;
-
-  // prettier-ignore
-  return (
-    <NullCard bg="user" heading={title} copy={subtitle}>
-      <Button onClick={() => (window.location.href = '/home')}>
-        Take me home
-      </Button>
-    </NullCard>
-  )
-};
-
 export class UpsellNewUser extends Component {
   render() {
     const { user } = this.props;

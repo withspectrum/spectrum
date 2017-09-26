@@ -33,12 +33,11 @@ type Props = {
     },
   },
   isLoading: boolean,
-  hasError: boolean,
 };
 
 class Invoices extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading, hasError } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       const { invoices } = community;
