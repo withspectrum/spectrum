@@ -10,12 +10,9 @@ const DEFAULT_CONFIG = {
 };
 
 const PRODUCTION_CONFIG = {
-  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
-  host: process.env.COMPOSE_RETHINKDB_URL,
-  port: process.env.COMPOSE_RETHINKDB_PORT,
-  ssl: {
-    ca: IS_PROD && require('raw-loader!../../cacert'),
-  },
+  password: process.env.AWS_RETHINKDB_PASSWORD,
+  host: process.env.AWS_RETHINKDB_URL,
+  port: process.env.AWS_RETHINKDB_PORT,
 };
 
 const config = IS_PROD
