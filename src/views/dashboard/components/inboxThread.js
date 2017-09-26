@@ -5,8 +5,6 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
@@ -32,7 +30,6 @@ class InboxThread extends Component {
       data: { attachments, participants, creator },
       data,
       active,
-      location,
       hasActiveCommunity,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;

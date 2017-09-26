@@ -7,19 +7,14 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
-import queryString from 'query-string';
-// $FlowFixMe
 import { connect } from 'react-redux';
+import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
-import { Column } from '../../components/column';
-import Icon from '../../components/icons';
-import { UserProfile } from '../../components/profile';
 import DashboardThreadFeed from './components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
-import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
@@ -27,6 +22,7 @@ import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
 import Composer from './components/inboxComposer';
 import CommunityList from './components/communityList';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
   Wrapper,
   InboxWrapper,
@@ -52,17 +48,17 @@ const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 class Dashboard extends Component {
   render() {
     const {
-      data: { user, networkStatus },
+      data: { user },
       newActivityIndicator,
       activeThread,
       activeCommunity,
       composerIsOpen,
+      isLoading,
+      hasError,
     } = this.props;
-    const dataExists = networkStatus === 7 && user;
     const { title, description } = generateMetaInfo();
 
-    // if the query is no longer loading and we successfully returned a user from the server we can load the dashboard
-    if (dataExists) {
+    if (user) {
       // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
       if (user.username && user.communityConnection.edges.length === 0) {
         return (
@@ -138,13 +134,21 @@ class Dashboard extends Component {
     }
 
     // loading state
-    if (networkStatus !== 7)
+    if (isLoading)
       return <DashboardLoading title={title} description={description} />;
 
-    // error
-    if (networkStatus === 8)
-      return <DashboardError title={title} description={description} />;
+    if (hasError)
+      return (
+        <DashboardError
+          title={title}
+          description={description}
+          error={hasError}
+        />
+      );
 
+    // if the user reached here it most likely that they have a user in localstorage but we weren't able to auth them - either because of a bad session token or otherwise. In this case we should clear local storage and load the home page to get them to log in again
+    removeItemFromStorage('spectrum');
+    window.location.href = '/';
     return null;
   }
 }
@@ -155,4 +159,9 @@ const map = state => ({
   activeCommunity: state.dashboardFeed.activeCommunity,
   composerIsOpen: state.composer.isOpen,
 });
-export default compose(connect(map), getCurrentUserProfile, pure)(Dashboard);
+export default compose(
+  connect(map),
+  getCurrentUserProfile,
+  viewNetworkHandler,
+  pure
+)(Dashboard);

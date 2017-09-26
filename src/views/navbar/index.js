@@ -13,7 +13,6 @@ import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
   markNotificationsSeenMutation,
-  markSingleNotificationSeenMutation,
   MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
@@ -29,6 +28,7 @@ import {
   saveUserDataToLocalStorage,
   logout,
 } from '../../actions/authentication';
+import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   Section,
@@ -72,7 +72,6 @@ class Navbar extends Component {
       notificationsQuery: { networkStatus },
       notificationsQuery,
       currentUser,
-      match,
       history,
       activeInboxThread,
     } = this.props;
@@ -194,7 +193,10 @@ class Navbar extends Component {
     const { data: { user }, dispatch, history, match } = this.props;
 
     // if no user was found, escape
-    if (!user) return;
+    if (!user) {
+      // clear localstorage first
+      return removeItemFromStorage('spectrum');
+    }
 
     if (prevProps.data.user !== user && user !== null) {
       if (!user.timezone) {
