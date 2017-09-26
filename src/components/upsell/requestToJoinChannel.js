@@ -1,8 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 // $FlowFixMe
-import PropTypes from 'prop-types';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -14,7 +12,19 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { Button, OutlineButton } from '../buttons';
 import { Actions } from './style';
 
-class RequestToJoinChannel extends Component {
+type Props = {
+  isPending: boolean,
+  community: Object,
+  channel: Object,
+  toggleChannelSubscription: Function,
+  dispatch: Function,
+};
+
+type State = {
+  isLoading: boolean,
+};
+
+class RequestToJoinChannel extends Component<Props, State> {
   state: {
     isLoading: boolean,
   };
@@ -106,12 +116,6 @@ class RequestToJoinChannel extends Component {
     );
   }
 }
-
-RequestToJoinChannel.propTypes = {
-  isPending: PropTypes.bool.isRequired,
-  community: PropTypes.object.isRequired,
-  channel: PropTypes.object.isRequired,
-};
 
 export default compose(connect(), toggleChannelSubscriptionMutation)(
   RequestToJoinChannel

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -29,7 +29,23 @@ import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreads)(ThreadFeed);
 
-class ChannelView extends Component {
+type Props = {
+  match: {
+    params: {
+      communitySlug: string,
+      channelSlug: string,
+    },
+  },
+  data: {
+    channel: Object,
+  },
+  currentUser: Object,
+  isLoading: boolean,
+  hasError: boolean,
+  dispatch: Function,
+};
+
+class ChannelView extends React.Component<Props> {
   render() {
     const {
       match,

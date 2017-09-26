@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
@@ -16,7 +16,21 @@ import {
   ListContainer,
 } from '../../../components/listItems/style';
 
-class NotificationsTogglePure extends Component {
+type Props = {
+  value: boolean,
+  channel: {
+    id: string,
+    name: string,
+  },
+  toggleChannelNotifications: Function,
+  dispatch: Function,
+};
+
+type State = {
+  isReceiving: boolean,
+};
+
+class NotificationsTogglePure extends React.Component<Props, State> {
   state: {
     isReceiving: boolean,
   };

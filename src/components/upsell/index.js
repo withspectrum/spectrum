@@ -211,37 +211,24 @@ export const Upsell404Channel = ({ community }: { community: string }) => {
   );
 };
 
-export const Upsell404Community = ({
-  noPermission,
-  create,
-}: {
-  noPermission: boolean,
-  create: Function,
-}) => {
+export const Upsell404Community = () => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a community. In this case, we will return
   // them to the community view.
   // if the user does have permission, but this component gets rendered, it means
   // something went wrong - most likely the community doesn't exists (404) so
   // we should return the user back to homepage
-
-  // prettier-ignore
   return (
-      <Actions>
-        {// de-emphasizes the 'take me home' button if a create prompt is shown
-        create ? (
-          <Link to={`/`}>
-            <OutlineButton large>Take me back</OutlineButton>
-          </Link>
-        ) : (
-          <Link to={`/`}>
-            <Button large>Take me back</Button>
-          </Link>
-        )}
+    <Actions>
+      <Link to={`/`}>
+        <OutlineButton large>Take me back</OutlineButton>
+      </Link>
 
-        {create && <Button large onClick={create}>Create this Community</Button>}
-      </Actions>
-  )
+      <Link to={`/new/community`}>
+        <Button large>Create a community</Button>
+      </Link>
+    </Actions>
+  );
 };
 
 export const UpsellJoinCommunity = ({

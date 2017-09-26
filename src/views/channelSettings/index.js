@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -26,7 +26,20 @@ import Titlebar from '../titlebar';
 import Login from '../login';
 import ViewError from '../../components/viewError';
 
-class CommunitySettings extends Component {
+type Props = {
+  data: {
+    channel: Object,
+  },
+  match: Object,
+  isLoading: boolean,
+  hasError: boolean,
+  currentUser: Object,
+  dispatch: Function,
+  togglePendingUser: Function,
+  unblockUser: Function,
+};
+
+class CommunitySettings extends React.Component<Props> {
   togglePending = (userId, action) => {
     const { data: { channel }, togglePendingUser, dispatch } = this.props;
 

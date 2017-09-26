@@ -1,4 +1,5 @@
 // @flow
+// $FlowFixMe
 import styled from 'styled-components';
 
 export const FillSpaceError = styled.div`
