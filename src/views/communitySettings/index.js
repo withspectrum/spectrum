@@ -33,7 +33,6 @@ const SettingsPure = ({
   hasError,
 }) => {
   const communitySlug = match.params.communitySlug;
-  const create = () => history.push('/new/community');
 
   if (isLoading) {
     return <Loading />;
@@ -51,7 +50,7 @@ const SettingsPure = ({
         <ViewError
           refresh
           error={hasError}
-          heading={"There was an error fetching this community's settings."}
+          heading={'There was an error fetching this community’s settings.'}
         />
       </AppViewWrapper>
     );
@@ -67,10 +66,10 @@ const SettingsPure = ({
           noComposer
         />
         <ViewError
-          heading={`We couldn’t find a community called ${communitySlug}.`}
+          heading={`We weren’t able to find this community.`}
           subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
         >
-          <Upsell404Community create={create} />
+          <Upsell404Community />
         </ViewError>
       </AppViewWrapper>
     );

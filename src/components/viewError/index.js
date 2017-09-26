@@ -1,7 +1,5 @@
 // @flow
-import React, { Component } from 'react';
-// $FlowFixMe
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import { FillSpaceError, LargeEmoji, Heading, Subheading } from './style';
 import { Button } from '../buttons';
 import { removeItemFromStorage } from '../../helpers/localStorage';
@@ -15,8 +13,16 @@ import { removeItemFromStorage } from '../../helpers/localStorage';
   - refresh: if this prop is present, we will show a button that the user can click to refresh the view. This will most often be used in conjunction with clearStorage
   - children: the error component can receive any other miscellaneous children in order to customize the error view based on the context it's in
 */
+type Props = {
+  emoji?: string,
+  heading?: string,
+  subheading?: string,
+  clearStorage?: boolean,
+  refresh?: boolean,
+  children?: React.Node,
+};
 
-class ViewError extends Component {
+class ViewError extends React.Component<Props> {
   render() {
     const {
       clearStorage,
@@ -58,13 +64,5 @@ class ViewError extends Component {
     );
   }
 }
-
-ViewError.propTypes = {
-  emoji: PropTypes.string,
-  heading: PropTypes.string,
-  subheading: PropTypes.string,
-  clearStorage: PropTypes.bool,
-  refresh: PropTypes.bool,
-};
 
 export default ViewError;

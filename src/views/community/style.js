@@ -204,3 +204,14 @@ export const SearchInput = styled.input`
   width: 100%;
   border-radius: 12px;
 `;
+
+export const StyledButton = styled(Button)`
+  flex: none;
+
+  @media (max-width: 768px) {
+    margin: 2px 0;
+    padding: 16px 0;
+    width: 100%;
+    border-radius: 0;
+  }
+`;

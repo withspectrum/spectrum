@@ -1,38 +1,58 @@
 //$FlowFixMe
-import React from 'react';
+import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import styled from 'styled-components';
+import { getCommunityMembersQuery } from '../../../api/community';
 import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
+import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
 import { UpsellReload } from '../../../components/upsell';
 import { LoadingProfileGrid } from '../../../components/loading';
 import { UserProfile } from '../../../components/profile';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import ViewError from '../../../components/viewError';
+import { StyledButton } from '../style';
 
-const StyledButton = styled(Button)`
-  flex: none;
+type Props = {
+  data: {
+    community: {
+      memberConnection: Object,
+    },
+    fetchMore: Function,
+  },
+  isLoading: boolean,
+  hasError: boolean,
+  isFetchingMore: boolean,
+};
 
-  @media (max-width: 768px) {
-    margin: 2px 0;
-    padding: 16px 0;
-    width: 100%;
-    border-radius: 0;
-  }
-`;
+class CommunityMemberGrid extends React.Component<Props> {
+  render() {
+    const {
+      data: { community, fetchMore },
+      isLoading,
+      hasError,
+      isFetchingMore,
+    } = this.props;
 
-const MemberGridPure = props => {
-  const { data: { community, networkStatus, fetchMore } } = props;
-  const dataExists = community && community.memberConnection;
+    if (isLoading) {
+      return <LoadingProfileGrid />;
+    }
 
-  if (networkStatus < 7 && !dataExists) {
-    return <LoadingProfileGrid />;
-  } else if (networkStatus === 8) {
-    return <UpsellReload />;
-  } else {
-    const members = community.memberConnection.edges;
+    if (hasError || !community) {
+      return (
+        <Card>
+          <ViewError
+            refresh
+            heading={`We weren’t able to fetch the members of this community.`}
+          />
+        </Card>
+      );
+    }
+
+    const { edges: members } = community.memberConnection;
 
     return (
       <FlexCol>
@@ -50,17 +70,15 @@ const MemberGridPure = props => {
           })}
         </Grid>
         {community.memberConnection.pageInfo.hasNextPage && (
-          <StyledButton
-            loading={networkStatus === 3}
-            onClick={() => fetchMore()}
-          >
+          <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
             Load more...
           </StyledButton>
         )}
       </FlexCol>
     );
   }
-};
+}
 
-const MemberGrid = compose(pure)(MemberGridPure);
-export default MemberGrid;
+export default compose(getCommunityMembersQuery, viewNetworkHandler, pure)(
+  CommunityMemberGrid
+);

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
@@ -13,9 +13,10 @@ import {
   getSlackImport,
   sendSlackInvitationsMutation,
 } from '../../../api/slackImport';
-import { displayLoadingCard } from '../../../components/loading';
+import { LoadingCard } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
   ButtonContainer,
   CustomMessageToggle,
@@ -29,19 +30,32 @@ import {
 } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 
-class ImportSlack extends Component {
-  state: {
-    isLoading: boolean,
-    hasCustomMessage: boolean,
-    customMessageString: string,
-    customMessageError: boolean,
-  };
+type Props = {
+  data: {
+    community: Object,
+    startPolling: Function,
+    stopPolling: Function,
+  },
+  hasInvitedPeople: Function,
+  sendSlackInvites: Function,
+  dispatch: Function,
+  isLoading: boolean,
+  hasError: boolean,
+};
 
+type State = {
+  isSendingInvites: boolean,
+  hasCustomMessage: boolean,
+  customMessageString: string,
+  customMessageError: boolean,
+};
+
+class ImportSlack extends React.Component<Props, State> {
   constructor() {
     super();
 
     this.state = {
-      isLoading: false,
+      isSendingInvites: false,
       hasCustomMessage: false,
       customMessageString: '',
       customMessageError: false,
@@ -62,7 +76,7 @@ class ImportSlack extends Component {
       hasCustomMessage && !customMessageError ? customMessageString : null;
 
     this.setState({
-      isLoading: true,
+      isSendingInvites: true,
     });
 
     this.props
@@ -72,7 +86,7 @@ class ImportSlack extends Component {
       })
       .then(({ data: { sendSlackInvites } }) => {
         this.setState({
-          isLoading: false,
+          isSendingInvites: false,
           hasCustomMessage: false,
         });
         this.props.dispatch(
@@ -81,7 +95,7 @@ class ImportSlack extends Component {
       })
       .catch(err => {
         this.setState({
-          isLoading: false,
+          isSendingInvites: false,
         });
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
@@ -111,16 +125,22 @@ class ImportSlack extends Component {
 
   render() {
     const {
-      data: { error, community, startPolling, stopPolling },
+      data: { community, startPolling, stopPolling },
+      isLoading,
+      hasError,
     } = this.props;
     const {
-      isLoading,
+      isSendingInvites,
       customMessageString,
       hasCustomMessage,
       customMessageError,
     } = this.state;
 
-    if (!community || error !== undefined) {
+    if (isLoading) {
+      return <LoadingCard />;
+    }
+
+    if (hasError || !community) {
       return null;
     }
 
@@ -192,9 +212,7 @@ class ImportSlack extends Component {
               community.
             </Description>
             <ButtonContainer>
-              <Button disabled>
-                Invites sent to {count} people
-              </Button>
+              <Button disabled>Invites sent to {count} people</Button>
             </ButtonContainer>
           </div>
         );
@@ -224,12 +242,14 @@ class ImportSlack extends Component {
                 glyph={hasCustomMessage ? 'view-close' : 'post'}
                 size={20}
               />
-              {hasCustomMessage
-                ? 'Remove custom message'
-                : 'Optional: Add a custom message to your invitation'}
+              {hasCustomMessage ? (
+                'Remove custom message'
+              ) : (
+                'Optional: Add a custom message to your invitation'
+              )}
             </CustomMessageToggle>
 
-            {hasCustomMessage &&
+            {hasCustomMessage && (
               <Textarea
                 autoFocus
                 value={customMessageString}
@@ -241,13 +261,15 @@ class ImportSlack extends Component {
                     : '2px solid #DFE7EF',
                 }}
                 onChange={this.handleChange}
-              />}
+              />
+            )}
 
             {hasCustomMessage &&
-              customMessageError &&
+            customMessageError && (
               <Error>
                 Your custom invitation message can be up to 500 characters.
-              </Error>}
+              </Error>
+            )}
           </div>
         );
       }
@@ -255,25 +277,26 @@ class ImportSlack extends Component {
   }
 }
 
-const ImportSlackCard = props =>
+const ImportSlackCard = props => (
   <StyledCard>
     <ImportSlack {...props} />
-  </StyledCard>;
+  </StyledCard>
+);
 
 const ImportSlackNoCard = props => <ImportSlack {...props} />;
 
 export const ImportSlackWithoutCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
-  displayLoadingCard,
   connect(),
+  viewNetworkHandler,
   pure
 )(ImportSlackNoCard);
 export const ImportSlackWithCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
-  displayLoadingCard,
   connect(),
+  viewNetworkHandler,
   pure
 )(ImportSlackCard);
 export default ImportSlackWithCard;

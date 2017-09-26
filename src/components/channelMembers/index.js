@@ -18,7 +18,17 @@ import {
   ListFooter,
 } from '../listItems/style';
 
-class ChannelMembers extends Component {
+type Props = {
+  data: {
+    channel: Object,
+    fetchMore: Function,
+  },
+  isLoading: boolean,
+  isFetchingMore: boolean,
+  hasError: boolean,
+};
+
+class ChannelMembers extends Component<Props> {
   render() {
     const {
       data: { channel, fetchMore },
