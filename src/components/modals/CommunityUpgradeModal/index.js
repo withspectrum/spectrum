@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import Modal from 'react-modal';

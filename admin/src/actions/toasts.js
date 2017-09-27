@@ -1,4 +1,3 @@
-// @flow
 type Toasts = 'success' | 'error' | 'neutral';
 
 const addToast = (id: number, kind: Toasts, message: string) => {

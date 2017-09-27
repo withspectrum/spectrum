@@ -1,4 +1,3 @@
-// @flow
 import { db } from './db';
 
 const parseStripeDataToDb = (stripeData): Object => ({

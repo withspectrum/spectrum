@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Step, Line, Container } from './style';
 

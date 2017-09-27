@@ -1,4 +1,3 @@
-//@flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 const { storeMessage } = require('../models/message');

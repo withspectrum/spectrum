@@ -1,4 +1,3 @@
-// @flow
 
 export type PaginationOptions = {
   first: number,

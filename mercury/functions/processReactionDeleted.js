@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('mercury:queue:process-reaction-deleted');
 import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';

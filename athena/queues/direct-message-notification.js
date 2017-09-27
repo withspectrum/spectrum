@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:direct-message-notification');
 
 const processDirectMessageNotificationQueue = job => {

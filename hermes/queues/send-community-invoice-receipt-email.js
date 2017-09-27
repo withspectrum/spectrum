@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')(
   'hermes:queue:send-community-invoice-receipt-email'
 );

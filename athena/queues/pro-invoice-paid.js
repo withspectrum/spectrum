@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:pro-invoice-paid-notification');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_PRO_INVOICE_RECEIPT_EMAIL } from './constants';

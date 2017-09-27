@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import hoistStatics from 'hoist-non-react-statics';

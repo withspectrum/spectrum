@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';

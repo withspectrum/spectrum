@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import ImgixClient from 'imgix-core-js';
 const {

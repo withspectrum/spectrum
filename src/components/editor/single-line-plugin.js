@@ -1,4 +1,3 @@
-// @flow
 // Taken from https://github.com/ianstormtaylor/slate/issues/419
 // TODO: Make separate package
 const SingleLinePlugin = {

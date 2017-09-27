@@ -1,4 +1,3 @@
-// @flow
 // Server-side renderer for our React code
 import React from 'react';
 import ReactDOM from 'react-dom/server';

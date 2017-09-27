@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { Router, Route, Switch } from 'react-router';
