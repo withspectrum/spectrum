@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-import-inspector": "^2.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-env": "^5.0.5",
     "flow-bin": "^0.55.0",
@@ -78,6 +79,7 @@
     "react-dom": "^15.4.1",
     "react-helmet": "5.x",
     "react-infinite-scroller-with-scroll-element": "^1.0.4",
+    "react-loadable": "^4.0.5",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.2",
     "react-remarkable": "^1.1.1",
@@ -103,6 +105,7 @@
     "striptags": "2.x",
     "styled-components": "2.1.2",
     "subscriptions-transport-ws": "^0.7.0",
+    "sw-precache-webpack-plugin": "^0.11.4",
     "web-push": "^3.2.2"
   },
   "scripts": {
