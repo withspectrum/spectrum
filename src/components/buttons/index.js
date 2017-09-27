@@ -8,6 +8,7 @@ import {
   StyledOutlineButton,
   StyledFauxOutlineButton,
   SpinnerContainer,
+  StyledButtonRow,
 } from './style';
 import { Spinner } from '../globals';
 import Icon from '../icons';
@@ -118,4 +119,8 @@ export const IconButton = (props: IconProps) => (
       tipLocation={props.tipLocation}
     />
   </StyledIconButton>
+);
+
+export const ButtonRow = props => (
+  <StyledButtonRow>{props.children}</StyledButtonRow>
 );

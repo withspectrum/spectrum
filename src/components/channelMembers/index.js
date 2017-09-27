@@ -25,7 +25,6 @@ type Props = {
   },
   isLoading: boolean,
   isFetchingMore: boolean,
-  hasError: boolean,
 };
 
 class ChannelMembers extends Component<Props> {
@@ -35,7 +34,6 @@ class ChannelMembers extends Component<Props> {
       data,
       isLoading,
       isFetchingMore,
-      hasError,
     } = this.props;
 
     if (data && data.channel) {

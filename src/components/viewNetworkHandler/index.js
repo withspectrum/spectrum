@@ -51,6 +51,7 @@ const viewNetworkHandler = Component => {
     // 1: if  the view is running a query for the first time
     // 2: the view has already mounted but the variables have changed, the component should be loading. For example, if you are viewing a user profile but click directly onto another user's profile from a thread facepile, the userProfile component has already loaded, but now the variable (userId) has been changed. This should force a loading state.
     const isLoading = data.networkStatus === 1 || data.networkStatus === 2;
+    const queryVarIsChanging = data.networkStatus === 2;
     const isFetchingMore = data.networkStatus === 3;
     const isRefetching = data.networkStatus === 4;
     const isPolling = data.networkStatus === 6;
@@ -65,6 +66,7 @@ const viewNetworkHandler = Component => {
         isFetchingMore={isFetchingMore}
         isRefetching={isRefetching}
         isPolling={isPolling}
+        queryVarIsChanging={queryVarIsChanging}
         ref={wrappedComponentRef}
       />
     );
