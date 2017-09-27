@@ -1,0 +1,67 @@
+// @flow
+import * as React from 'react';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
+import { convertTimestampToDate } from '../../../helpers/utils';
+import {
+  StyledThreadListItem,
+  ThreadListItemTitle,
+  ThreadListItemSubtitle,
+} from '../style';
+
+type ThreadProps = {
+  id: string,
+  creator: {
+    name: string,
+    username: string,
+  },
+  content: {
+    title: string,
+  },
+  createdAt: string,
+  messageCount: number,
+};
+
+type Props = {
+  thread: ThreadProps,
+};
+
+class ThreadListItem extends React.Component<Props> {
+  render() {
+    const {
+      thread: {
+        id,
+        creator: { name, username },
+        content: { title },
+        createdAt,
+        messageCount,
+      },
+    } = this.props;
+
+    return (
+      <StyledThreadListItem>
+        <ThreadListItemTitle>
+          <Link
+            to={{
+              pathname: window.location.pathname,
+              search: `?thread=${id}`,
+            }}
+          >
+            {title}
+          </Link>
+        </ThreadListItemTitle>
+        {messageCount > 0 && (
+          <ThreadListItemSubtitle>
+            {messageCount > 1 ? `${messageCount} messages` : `1 message`}
+          </ThreadListItemSubtitle>
+        )}
+        <ThreadListItemSubtitle>
+          <Link to={`/users/${username}`}>By {name}</Link> ·{' '}
+          {convertTimestampToDate(createdAt)}
+        </ThreadListItemSubtitle>
+      </StyledThreadListItem>
+    );
+  }
+}
+
+export default ThreadListItem;

@@ -45,9 +45,9 @@ class MemberGrowth extends React.Component<Props> {
         <SectionCard>
           <SectionSubtitle>Members</SectionSubtitle>
           <SectionTitle>{count}</SectionTitle>
-          {parseGrowth(weeklyGrowth, 'weekly')}
-          {parseGrowth(monthlyGrowth, 'monthly')}
-          {parseGrowth(quarterlyGrowth, 'quarterly')}
+          {parseGrowth(weeklyGrowth, '7 days')}
+          {parseGrowth(monthlyGrowth, '30 days')}
+          {parseGrowth(quarterlyGrowth, '90 days')}
         </SectionCard>
       );
     }

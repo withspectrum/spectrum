@@ -3,6 +3,7 @@
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
+import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
 
 export const getThisCommunity = graphql(
   gql`
@@ -135,4 +136,36 @@ const COMMUNITY_TOP_MEMBERS_OPTIONS = {
 export const getCommunityTopMembers = graphql(
   COMMUNITY_TOP_MEMBERS_QUERY,
   COMMUNITY_TOP_MEMBERS_OPTIONS
+);
+
+const COMMUNITY_TOP_NEW_THREADS_QUERY = gql`
+  query getCommunityTopAndNewThreads($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+      topAndNewThreads {
+        topThreads {
+          ...threadInfo
+        }
+        newThreads {
+          ...threadInfo
+        }
+      }
+    }
+  }
+  ${communityInfoFragment}
+  ${threadInfoFragment}
+`;
+
+const COMMUNITY_TOP_NEW_THREADS_OPTIONS = {
+  options: ({ communitySlug }: { communitySlug: string }) => ({
+    variables: {
+      slug: communitySlug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getCommunityTopAndNewThreads = graphql(
+  COMMUNITY_TOP_NEW_THREADS_QUERY,
+  COMMUNITY_TOP_NEW_THREADS_OPTIONS
 );

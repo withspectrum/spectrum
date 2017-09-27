@@ -18,8 +18,13 @@ const {
   getUserPermissionsInCommunity,
   getMembersInCommunity,
 } = require('../models/usersCommunities');
+import { getMessageCount } from '../models/message';
 const { getUserByUsername } = require('../models/user');
-const { getThreadsByChannels, getThreads } = require('../models/thread');
+const {
+  getThreadsByChannels,
+  getThreads,
+  getThreadsByCommunityInTimeframe,
+} = require('../models/thread');
 const {
   getChannelsByCommunity,
   getChannelsByUserAndCommunity,
@@ -383,6 +388,57 @@ module.exports = {
       return getTopMembersInCommunity(id).then(users => {
         if (!users) return [];
         return loaders.user.loadMany(users);
+      });
+    },
+    topAndNewThreads: async (
+      { id }: { id: string },
+      __: any,
+      { user, loaders }: GraphQLContext
+    ) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      const { isOwner } = await getUserPermissionsInCommunity(
+        id,
+        currentUser.id
+      );
+
+      return getThreadsByCommunityInTimeframe(
+        id,
+        'week'
+      ).then(async threads => {
+        if (!threads) return { topThreads: [], newThreads: [] };
+
+        const messageCountPromises = threads.map(async ({ id, ...thread }) => ({
+          id,
+          messageCount: await getMessageCount(id),
+        }));
+
+        // promise all the active threads and message counts
+        const threadsWithMessageCounts = await Promise.all(
+          messageCountPromises
+        );
+        const topThreads = threadsWithMessageCounts
+          .filter(t => t.messageCount > 0)
+          .sort((a, b) => {
+            const bc = parseInt(b.messageCount, 10);
+            const ac = parseInt(a.messageCount, 10);
+            return bc >= ac ? -1 : 1;
+          })
+          .slice(0, 10)
+          .map(t => t.id);
+
+        const newThreads = threadsWithMessageCounts
+          .filter(t => t.messageCount === 0)
+          .map(t => t.id);
+
+        return {
+          topThreads: await getThreads([...topThreads]),
+          newThreads: await getThreads([...newThreads]),
+        };
       });
     },
   },

@@ -25,7 +25,7 @@ export const getTopMembersInCommunity = (
           const ac = parseInt(a.reputation, 10);
           return bc <= ac ? -1 : 1;
         })
-        .slice(0, 10)
+        .slice(0, 20)
         .map(c => c.userId);
 
       return sorted;

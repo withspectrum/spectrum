@@ -16,6 +16,7 @@ export const SectionsContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
   flex-wrap: wrap;
+  padding: 8px;
 `;
 
 export const Column = styled.div`
@@ -65,6 +66,7 @@ export const GrowthText = styled.h5`
       : props.negative ? props.theme.warn.alt : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
+  font-size: 14px;
 `;
 
 export const Heading = styled.h1`
@@ -96,4 +98,31 @@ export const HeaderText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+`;
+
+export const StyledThreadListItem = styled.div`
+  display: flex;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding: 16px 0;
+  flex-direction: column;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+`;
+export const ThreadListItemTitle = styled.h4`
+  font-size: 16px;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+`;
+
+export const ThreadListItemSubtitle = styled.h5`
+  font-size: 14px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1.28;
+  margin-top: 4px;
+
+  a:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;

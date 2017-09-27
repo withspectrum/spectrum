@@ -19,6 +19,7 @@ import Header from './components/header';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
+import TopAndNewThreads from './components/topAndNewThreads';
 import { View, SectionsContainer, Column } from './style';
 
 type Props = {
@@ -67,12 +68,11 @@ class CommunitySettings extends React.Component<Props, State> {
             <SectionsContainer>
               <Column>
                 <MemberGrowth communitySlug={communitySlug} />
+                <TopMembers communitySlug={communitySlug} />
               </Column>
               <Column>
                 <ConversationGrowth communitySlug={communitySlug} />
-              </Column>
-              <Column>
-                <TopMembers communitySlug={communitySlug} />
+                <TopAndNewThreads communitySlug={communitySlug} />
               </Column>
             </SectionsContainer>
           </View>

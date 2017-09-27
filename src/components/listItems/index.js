@@ -177,6 +177,8 @@ export const UserListItem = ({
               <span>
                 <ReputationMini tipText={'Your rep in this community'} />
                 {user.contextPermissions ? (
+                  user.contextPermissions.reputation &&
+                  user.contextPermissions.reputation > 0 &&
                   user.contextPermissions.reputation.toLocaleString()
                 ) : (
                   user.totalReputation.toLocaleString()

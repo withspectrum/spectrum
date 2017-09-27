@@ -84,6 +84,11 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	type TopAndNewThreads {
+		topThreads: [Thread]
+		newThreads: [Thread]
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -107,6 +112,7 @@ const Community = /* GraphQL */ `
 		memberGrowth: GrowthData
 		conversationGrowth: GrowthData
 		topMembers: [User]
+		topAndNewThreads: TopAndNewThreads
 	}
 
 	extend type Query {
