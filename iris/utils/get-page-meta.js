@@ -1,4 +1,3 @@
-// @flow
 const { parse } = require('url');
 const generateMetaInfo = require('../../shared/generate-meta-info');
 

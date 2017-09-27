@@ -1,4 +1,3 @@
-//@flow
 const { getChannels } = require('../models/channel');
 const {
   getCommunities,

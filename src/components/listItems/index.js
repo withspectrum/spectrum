@@ -1,5 +1,4 @@
-//@flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
@@ -25,49 +24,53 @@ import {
   BadgeContainer,
   Lock,
 } from './style';
-type CardProps = {
-  contents: {
+
+type CommunityProps = {
+  community: {
+    profilePhoto: string,
     name: string,
-    description?: string,
+    slug: string,
+    description: string,
   },
-  children?: React$Element<any>,
-  meta?: string,
+  showDescription?: boolean,
+  showMeta?: boolean,
+  meta?: any,
+  children?: any,
 };
 
-export const CommunityListItem = (props: CardProps): React$Element<any> => {
-  return (
-    <Wrapper>
-      <Row>
-        <Avatar
-          community
-          radius={4}
-          src={`${props.contents.profilePhoto}`}
-          size={32}
-          noLink
-        />
-        <Col style={{ marginLeft: '12px' }}>
-          <Heading>{props.contents.name}</Heading>
-          {props.withMeta && (
-            <Meta>
-              {props.meta && (
-                <span>
-                  <ReputationMini tipText={'Your rep in this community'} />
-                  {props.meta}
-                </span>
-              )}
-            </Meta>
-          )}
-        </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
-      </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
-    </Wrapper>
-  );
-};
+export class CommunityListItem extends React.Component<CommunityProps> {
+  render() {
+    const { community, showDescription, showMeta, meta, children } = this.props;
+    return (
+      <Wrapper>
+        <Row>
+          <Avatar
+            community
+            radius={4}
+            src={`${community.profilePhoto}`}
+            size={32}
+            noLink
+          />
+          <Col style={{ marginLeft: '12px' }}>
+            <Heading>{community.name}</Heading>
+            {showMeta && (
+              <Meta>
+                {meta && (
+                  <span>
+                    <ReputationMini tipText={'Your rep in this community'} />
+                    {meta}
+                  </span>
+                )}
+              </Meta>
+            )}
+          </Col>
+          <ActionContainer className={'action'}>{children}</ActionContainer>
+        </Row>
+        {showDescription && <Description>{community.description}</Description>}
+      </Wrapper>
+    );
+  }
+}
 
 export const ChannelListItem = (props: CardProps): React$Element<any> => {
   return (
@@ -176,9 +179,11 @@ export const UserListItem = ({
             {user.totalReputation && (
               <span>
                 <ReputationMini tipText={'Your rep in this community'} />
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
+                {user.contextPermissions ? (
+                  user.contextPermissions.reputation.toLocaleString()
+                ) : (
+                  user.totalReputation.toLocaleString()
+                )}
               </span>
             )}
           </Meta>
@@ -217,7 +222,7 @@ export const BillingListItem = props => {
   );
 };
 
-class InvoiceListItemPure extends Component {
+class InvoiceListItemPure extends React.Component {
   render() {
     const { invoice } = this.props;
 
@@ -231,9 +236,11 @@ class InvoiceListItemPure extends Component {
                 .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
             </Heading>
             <Meta>
-              {invoice.paidAt
-                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-                : 'Unpaid'}{' '}
+              {invoice.paidAt ? (
+                `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+              ) : (
+                'Unpaid'
+              )}{' '}
               · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>

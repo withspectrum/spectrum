@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 const { v4: uuid } = require('uuid');
 // $FlowFixMe

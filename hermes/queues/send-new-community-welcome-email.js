@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('hermes:queue:send-new-community-welcome-email');
 import sendEmail from '../send-email';
 import { NEW_COMMUNITY_WELCOME_TEMPLATE } from './constants';

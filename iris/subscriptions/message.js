@@ -1,4 +1,3 @@
-// @flow
 import { withFilter } from 'graphql-subscriptions';
 import pubsub from './listeners/pubsub';
 import { MESSAGE_ADDED } from './listeners/channels';

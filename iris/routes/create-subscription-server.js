@@ -1,4 +1,3 @@
-// @flow
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { execute, subscribe } from 'graphql';
 

@@ -1,4 +1,3 @@
-//@flow
 const { getMessage, getMediaMessagesForThread } = require('../models/message');
 import { getReactions } from '../models/reaction';
 import { getThread } from '../models/thread';

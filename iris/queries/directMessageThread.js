@@ -1,4 +1,3 @@
-//@flow
 const { getDirectMessageThread } = require('../models/directMessageThread');
 const {
   getMembersInDirectMessageThread,

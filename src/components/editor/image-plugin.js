@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Block } from 'slate';
 import Image, { ImageContainer, ActiveOverlay } from './Image';

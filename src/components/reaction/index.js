@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import Icon from '../icons';
 import { track } from '../../helpers/events';

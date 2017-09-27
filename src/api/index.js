@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
 // $FlowFixMe

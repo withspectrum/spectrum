@@ -1,4 +1,3 @@
-// @flow
 import { editUser, getUsers, getUser } from '../models/user';
 import type { EditUserArguments } from '../models/user';
 import {

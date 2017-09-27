@@ -1,4 +1,3 @@
-// @flow
 var apollo = require('react-apollo'),
   toIdValue = apollo.toIdValue;
 

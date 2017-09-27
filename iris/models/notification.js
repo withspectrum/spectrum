@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 import paginate from '../utils/paginate-arrays';
 const { listenToNewDocumentsIn } = require('./utils');

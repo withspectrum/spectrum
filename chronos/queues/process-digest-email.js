@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
 // $FlowFixMe
 import intersection from 'lodash.intersection';

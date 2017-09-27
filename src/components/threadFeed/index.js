@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import styled from 'styled-components';
@@ -110,7 +109,7 @@ class ThreadFeedPure extends Component {
 
   render() {
     const {
-      data: { threads, networkStatus, error, loading },
+      data: { threads, networkStatus, error },
       viewContext,
       newActivityIndicator,
     } = this.props;

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Community query resolvers
  */

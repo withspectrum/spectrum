@@ -1,4 +1,3 @@
-// @flow
 import { sortByDate } from './utils';
 
 export const sortAndGroupMessages = messagesToSort => {

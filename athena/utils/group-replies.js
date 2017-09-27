@@ -1,4 +1,3 @@
-// @flow
 
 const groupReplies = replies => {
   let newReplies = [];

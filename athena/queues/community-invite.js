@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:community-invitation');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
