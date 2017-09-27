@@ -161,9 +161,10 @@ export default job => {
 
     // for each user who wants a digest, fetch an array of channelIds where they are a member
     const channelConnectionPromises = users.map(
-      async ({ email, firstName, userId, ...user }) => {
+      async ({ email, firstName, userId, username, ...user }) => {
         return {
           email,
+          username,
           name: firstName || null,
           userId,
           channels: await getUsersChannelsEligibleForWeeklyDigest(userId),
