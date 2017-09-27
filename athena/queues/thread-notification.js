@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:community-notification');
 import createQueue from '../../shared/bull/create-queue';
 import { fetchPayload, createPayload } from '../utils/payloads';

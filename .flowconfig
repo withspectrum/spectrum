@@ -10,6 +10,10 @@
 [options]
 suppress_comment=.*\\$FlowFixMe
 esproposal.class_instance_fields=enable
+include_warnings=true
+
+[lints]
+all=warn
 
 [version]
 0.55.0

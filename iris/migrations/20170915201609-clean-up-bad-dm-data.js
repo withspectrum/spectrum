@@ -1,4 +1,3 @@
-// @flow
 exports.up = function(r, conn) {
   return Promise.all([
     r

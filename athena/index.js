@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena');
 import createWorker from '../shared/bull/create-worker';
 // Our job-processing worker server

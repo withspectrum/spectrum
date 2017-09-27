@@ -1,4 +1,3 @@
-// @flow
 // Taken from https://github.com/kadirahq/graphql-errors
 
 export const IsUserError = Symbol('IsUserError');

@@ -1,4 +1,3 @@
-// @flow
 
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12

@@ -1,4 +1,3 @@
-// @flow
 import { addActivityIndicator } from '../actions/newActivityIndicator';
 
 // used to update feed caches with new threads in real time

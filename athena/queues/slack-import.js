@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:slack-import');
 import {
   getSlackUserListData,

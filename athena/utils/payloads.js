@@ -1,4 +1,3 @@
-// @flow
 import type { EntityTypes } from './types';
 import { getMessageById } from '../models/message';
 import { getThreadById } from '../models/thread';

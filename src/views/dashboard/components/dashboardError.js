@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import AppViewWrapper from '../../../components/appViewWrapper';
 import Head from '../../../components/head';

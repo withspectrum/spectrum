@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';

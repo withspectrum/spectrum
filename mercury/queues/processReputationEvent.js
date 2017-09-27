@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('mercury:queue:process-reputation-event');
 import processThreadCreated from '../functions/processThreadCreated';
 import processThreadDeleted from '../functions/processThreadDeleted';

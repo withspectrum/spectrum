@@ -1,4 +1,3 @@
-// @flow
 export const clearStorage = () => localStorage.clear();
 
 export const getItemFromStorage = (key: string) =>

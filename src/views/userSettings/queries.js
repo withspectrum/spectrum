@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';

@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('mercury:queue:process-thread-created');
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';

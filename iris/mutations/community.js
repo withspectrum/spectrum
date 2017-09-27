@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import {
