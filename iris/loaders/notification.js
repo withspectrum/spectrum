@@ -1,4 +1,3 @@
-// @flow
 import { getNotifications } from '../models/notification';
 import createLoader from './create-loader';
 import type { Loader } from './types';

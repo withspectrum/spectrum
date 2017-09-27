@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { RequestCard, CloseRequest } from '../style';
 import { FlexRow } from '../../../components/globals';

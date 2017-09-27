@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -101,7 +100,6 @@ class MessagesWithData extends Component {
     const {
       data,
       isLoading,
-      hasError,
       currentUser,
       toggleReaction,
       forceScrollToBottom,

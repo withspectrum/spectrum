@@ -1,4 +1,3 @@
-//@flow
 import React, { Component } from 'react';
 import ThreadContainer from '../thread/containers';
 import { NullContainer, Container, NullThread, Thread, Heading } from './style';

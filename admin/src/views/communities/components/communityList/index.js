@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { CommunityProfile } from '../../../../components/profiles';
 import { ListCard, Label, CommunityItem } from './style';

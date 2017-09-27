@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { ModalBody, Header, ModalContent, Title, CloseButton } from './styles';
 

@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
   migrationsDirectory: 'iris/migrations',
 };
 
-const RUN_IN_PROD = !!process.env.COMPOSE_RETHINKDB_PASSWORD;
+const RUN_IN_PROD = !!process.env.AWS_RETHINKDB_PASSWORD;
 
 if (RUN_IN_PROD && process.argv[4] === 'down') {
   throw new Error('Do not drop the production database!!!!!');
@@ -21,10 +21,7 @@ if (RUN_IN_PROD) console.log('Running migration in production...');
 module.exports = !RUN_IN_PROD
   ? DEFAULT_CONFIG
   : Object.assign({}, DEFAULT_CONFIG, {
-      password: process.env.COMPOSE_RETHINKDB_PASSWORD,
-      host: process.env.COMPOSE_RETHINKDB_URL,
-      port: process.env.COMPOSE_RETHINKDB_PORT,
-      ssl: {
-        ca: fs.readFileSync(path.resolve(__dirname, '../../cacert')),
-      },
+      password: process.env.AWS_RETHINKDB_PASSWORD,
+      host: process.env.AWS_RETHINKDB_URL,
+      port: process.env.AWS_RETHINKDB_PORT,
     });

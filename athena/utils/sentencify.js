@@ -1,4 +1,3 @@
-// @flow
 
 type Options = {
   max?: number,

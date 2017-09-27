@@ -20,7 +20,6 @@ type Props = {
     community: Object,
   },
   isLoading: boolean,
-  hasError: boolean,
   dispatch: Function,
   communitySlug: string,
 };
@@ -30,9 +29,7 @@ class ChannelList extends React.Component<Props> {
     const {
       data: { community },
       isLoading,
-      hasError,
       dispatch,
-      data,
       communitySlug,
     } = this.props;
 

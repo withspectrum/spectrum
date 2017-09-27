@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('hermes:queue:send-pro-invoice-receipt-email');
 import sendEmail from '../send-email';
 import { PRO_INVOICE_RECEIPT_TEMPLATE } from './constants';

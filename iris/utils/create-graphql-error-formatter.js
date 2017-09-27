@@ -1,4 +1,3 @@
-// @flow
 import Raven from 'raven';
 import { IsUserError } from './UserError';
 

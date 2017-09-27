@@ -1,4 +1,3 @@
-// @flow
 import { Router } from 'express';
 import passport from 'passport';
 import isSpectrumUrl from '../../utils/is-spectrum-url';

@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';

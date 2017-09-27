@@ -22,7 +22,6 @@ type Props = {
     fetchMore: Function,
   },
   isLoading: boolean,
-  hasError: boolean,
   isFetchingMore: boolean,
 };
 
@@ -31,7 +30,6 @@ class CommunityMemberGrid extends React.Component<Props> {
     const {
       data: { community, fetchMore },
       isLoading,
-      hasError,
       isFetchingMore,
     } = this.props;
 

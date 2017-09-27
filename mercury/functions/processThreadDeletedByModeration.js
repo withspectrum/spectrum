@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')(
   'mercury:queue:process-thread-deleted-by-moderation'
 );

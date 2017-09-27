@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -6,6 +5,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';

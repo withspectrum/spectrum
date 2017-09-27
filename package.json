@@ -15,6 +15,7 @@
     "raw-loader": "^0.5.1",
     "react-scripts": "^1.0.0",
     "rimraf": "^2.6.1",
+    "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
     "write-file-webpack-plugin": "^4.1.0"
   },
@@ -50,6 +51,7 @@
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "faker": "^4.1.0",
+    "flow-typed": "^2.1.5",
     "graphql-date": "^1.0.3",
     "graphql-log": "0.1.2",
     "graphql-server-express": "0.8.x",

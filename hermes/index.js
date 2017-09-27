@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('hermes');
 const createWorker = require('../shared/bull/create-worker');
 import processSendNewMessageEmail from './queues/send-new-message-email';

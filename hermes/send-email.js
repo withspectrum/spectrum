@@ -1,4 +1,3 @@
-// @flow
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
