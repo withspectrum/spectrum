@@ -53,7 +53,9 @@ const Img = styled.img`
     `} max-width: 100%;
 `;
 
-const Image = props => {
+type ImageProps = Object;
+
+const Image = (props: ImageProps) => {
   const {
     block, // eslint-disable-line no-unused-vars
     theme, // eslint-disable-line no-unused-vars
