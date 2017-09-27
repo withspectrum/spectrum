@@ -40,23 +40,21 @@ class ThreadListItem extends React.Component<Props> {
 
     return (
       <StyledThreadListItem>
-        <ThreadListItemTitle>
-          <Link
-            to={{
-              pathname: window.location.pathname,
-              search: `?thread=${id}`,
-            }}
-          >
-            {title}
-          </Link>
-        </ThreadListItemTitle>
+        <Link
+          to={{
+            pathname: window.location.pathname,
+            search: `?thread=${id}`,
+          }}
+        >
+          <ThreadListItemTitle>{title}</ThreadListItemTitle>
+        </Link>
         {messageCount > 0 && (
           <ThreadListItemSubtitle>
             {messageCount > 1 ? `${messageCount} messages` : `1 message`}
           </ThreadListItemSubtitle>
         )}
         <ThreadListItemSubtitle>
-          <Link to={`/users/${username}`}>By {name}</Link> ·{' '}
+          By <Link to={`/users/${username}`}>{name}</Link> ·{' '}
           {convertTimestampToDate(createdAt)}
         </ThreadListItemSubtitle>
       </StyledThreadListItem>

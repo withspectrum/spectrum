@@ -114,6 +114,10 @@ export const ThreadListItemTitle = styled.h4`
   font-size: 16px;
   color: ${props => props.theme.text.default};
   line-height: 1.28;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
 `;
 
 export const ThreadListItemSubtitle = styled.h5`
