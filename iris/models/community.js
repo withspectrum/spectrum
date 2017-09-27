@@ -3,6 +3,7 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
+import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import { addQueue } from '../utils/workerQueue';
@@ -76,6 +77,15 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
     .run();
 
   return Promise.all([getChannelCount, getMemberCount]);
+};
+
+const getMemberCount = (communityId: string): Promise<number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .count()
+    .run();
 };
 
 export type CreateCommunityArguments = {
@@ -575,6 +585,47 @@ const searchThreadsInCommunity = (
     .run();
 };
 
+const getThreadCount = async (communityId: string) => {
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .count()
+    .run();
+};
+
+export const getCommunityGrowth = async (
+  table: string,
+  range: string,
+  field: string,
+  communityId: string,
+  filter?: mixed
+) => {
+  const { current, previous } = parseRange(range);
+  const currentPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(current), db.now()))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const prevPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(previous), db.now().sub(current)))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const rate = (await (currentPeriodCount - prevPeriodCount)) / prevPeriodCount;
+  return {
+    currentPeriodCount,
+    prevPeriodCount,
+    growth: Math.round(rate * 100),
+  };
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -591,4 +642,7 @@ module.exports = {
   getRecentCommunities,
   getCommunitiesBySearchString,
   searchThreadsInCommunity,
+  getMemberCount,
+  getThreadCount,
+  getCommunityGrowth,
 };

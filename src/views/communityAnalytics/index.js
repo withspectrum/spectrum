@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-//$flowignore
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$flowignore
+//$FlowFixMe
 import pure from 'recompose/pure';
-// $flowignore
+// $FlowFixMe
 import { connect } from 'react-redux';
-// $flowignore
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
 import { Loading } from '../../components/loading';
@@ -16,6 +16,10 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import Titlebar from '../titlebar';
 import Header from './components/header';
+import MemberGrowth from './components/memberGrowth';
+import ConversationGrowth from './components/conversationGrowth';
+import TopMembers from './components/topMembers';
+import { View, SectionsContainer, Column } from './style';
 
 type Props = {
   match: {
@@ -27,6 +31,7 @@ type Props = {
     community: {
       name: string,
       profilePhoto: string,
+      slug: string,
     },
   },
   isLoading: boolean,
@@ -56,7 +61,21 @@ class CommunitySettings extends React.Component<Props, State> {
             noComposer
           />
 
-          <Header community={community} />
+          <View>
+            <Header community={community} />
+
+            <SectionsContainer>
+              <Column>
+                <MemberGrowth communitySlug={communitySlug} />
+              </Column>
+              <Column>
+                <ConversationGrowth communitySlug={communitySlug} />
+              </Column>
+              <Column>
+                <TopMembers communitySlug={communitySlug} />
+              </Column>
+            </SectionsContainer>
+          </View>
         </AppViewWrapper>
       );
     }

@@ -104,6 +104,9 @@ const Community = /* GraphQL */ `
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
 		isPro: Boolean
+		memberGrowth: GrowthData
+		conversationGrowth: GrowthData
+		topMembers: [User]
 	}
 
 	extend type Query {

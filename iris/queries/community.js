@@ -9,7 +9,11 @@ const {
   getRecentCommunities,
   getCommunitiesBySearchString,
   searchThreadsInCommunity,
+  getMemberCount,
+  getThreadCount,
+  getCommunityGrowth,
 } = require('../models/community');
+const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const {
   getUserPermissionsInCommunity,
   getMembersInCommunity,
@@ -255,6 +259,130 @@ module.exports = {
       return getCommunityRecurringPayments(id).then(subs => {
         let filtered = subs && subs.filter(sub => sub.status === 'active');
         return !filtered || filtered.length === 0 ? false : true;
+      });
+    },
+    memberGrowth: async (
+      { id }: { id: string },
+      __: any,
+      { user }: GraphQLContext
+    ) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      const { isOwner } = await getUserPermissionsInCommunity(
+        id,
+        currentUser.id
+      );
+
+      if (!isOwner) {
+        return new UserError(
+          'You must be the owner of this community to view analytics.'
+        );
+      }
+
+      return {
+        count: await getMemberCount(id),
+        weeklyGrowth: await getCommunityGrowth(
+          'usersCommunities',
+          'weekly',
+          'createdAt',
+          id,
+          {
+            isMember: true,
+          }
+        ),
+        monthlyGrowth: await getCommunityGrowth(
+          'usersCommunities',
+          'monthly',
+          'createdAt',
+          id,
+          {
+            isMember: true,
+          }
+        ),
+        quarterlyGrowth: await getCommunityGrowth(
+          'usersCommunities',
+          'quarterly',
+          'createdAt',
+          id,
+          {
+            isMember: true,
+          }
+        ),
+      };
+    },
+    conversationGrowth: async (
+      { id }: { id: string },
+      __: any,
+      { user }: GraphQLContext
+    ) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      const { isOwner } = await getUserPermissionsInCommunity(
+        id,
+        currentUser.id
+      );
+
+      if (!isOwner) {
+        return new UserError(
+          'You must be the owner of this community to view analytics.'
+        );
+      }
+
+      return {
+        count: await getThreadCount(id),
+        weeklyGrowth: await getCommunityGrowth(
+          'threads',
+          'weekly',
+          'createdAt',
+          id
+        ),
+        monthlyGrowth: await getCommunityGrowth(
+          'threads',
+          'monthly',
+          'createdAt',
+          id
+        ),
+        quarterlyGrowth: await getCommunityGrowth(
+          'threads',
+          'quarterly',
+          'createdAt',
+          id
+        ),
+      };
+    },
+    topMembers: async (
+      { id }: { id: string },
+      __: any,
+      { user, loaders }: GraphQLContext
+    ) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      const { isOwner } = await getUserPermissionsInCommunity(
+        id,
+        currentUser.id
+      );
+
+      if (!isOwner) {
+        return new UserError(
+          'You must be the owner of this community to view analytics.'
+        );
+      }
+
+      return getTopMembersInCommunity(id).then(users => {
+        if (!users) return [];
+        return loaders.user.loadMany(users);
       });
     },
   },

@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
-import { StyledHeader, Heading, Subheading } from '../style';
+import { StyledHeader, Heading, Subheading, HeaderText } from '../style';
 import { Avatar } from '../../../components/avatar';
-import { FlexCol } from '../../../components/globals';
 
 type Props = {
   community: {
@@ -17,10 +16,10 @@ class Header extends React.Component<Props> {
     return (
       <StyledHeader>
         <Avatar community src={profilePhoto} size={48} radius={8} />
-        <FlexCol>
+        <HeaderText>
           <Subheading>{name}</Subheading>
           <Heading>Analytics</Heading>
-        </FlexCol>
+        </HeaderText>
       </StyledHeader>
     );
   }
