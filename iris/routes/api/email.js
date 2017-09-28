@@ -14,7 +14,7 @@ emailRouter.get('/unsubscribe', async (req, res) => {
   const { token } = req.query;
 
   // if no token was provided
-  if (!token) return res.status(400).send('No token found to unsubscribe');
+  if (!token) return res.status(400).send('No token provided to unsubscribe.');
 
   // verify that the token signature matches our env signature
   let decoded;
@@ -22,7 +22,15 @@ emailRouter.get('/unsubscribe', async (req, res) => {
     decoded = jwt.verify(token, process.env.EMAIL_JWT_SIGNATURE);
   } catch (err) {
     // if the signature can't be verified
-    return res.status(400).send('Token not valid');
+    let errMessage;
+    if (err.name === 'TokenExpiredError') {
+      errMessage =
+        'This unsubscribe token has expired. You can unsubscribe from this email type in your user settings.';
+    } else {
+      errMessage =
+        'This unsubscribe token is invalid. You can unsubscribe from this email type in your user settings.';
+    }
+    return res.status(400).send(errMessage);
   }
 
   // once the token is verified, we can decode it to get the userId and type
@@ -30,17 +38,26 @@ emailRouter.get('/unsubscribe', async (req, res) => {
 
   // if the token doesn't have the necessary info
   if (!userId || !type) {
-    return res.status(400).send('Token body not valid');
+    return res
+      .status(400)
+      .send(
+        'We were not able to verify this request to unsubscribe. You can unsubscribe from this email type in your users settings.'
+      );
   }
 
   // and send a database request to unsubscribe from a particular email type
   try {
     return unsubscribeUserFromEmailNotification(userId, type).then(() =>
-      res.status(200).send('Unsubscribe request completed')
+      res
+        .status(200)
+        .send('You have been successfully unsubscribed from this email.')
     );
   } catch (err) {
-    console.log(err);
-    return res.status(400).send('Error unsubscribing from this email');
+    return res
+      .status(400)
+      .send(
+        'We ran into an issue unsubscribing you from this email. You can always unsubscribe from this email type in your user settings, or get in touch with us at hi@spectrum.chat.'
+      );
   }
 });
 

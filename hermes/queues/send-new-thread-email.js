@@ -1,7 +1,11 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-thread-email');
 import sendEmail from '../send-email';
-import { NEW_THREAD_CREATED_TEMPLATE } from './constants';
+import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import {
+  NEW_THREAD_CREATED_TEMPLATE,
+  TYPE_NEW_THREAD_CREATED,
+} from './constants';
 
 type SendNewThreadNotificationJobData = {
   to: string,
@@ -10,6 +14,7 @@ type SendNewThreadNotificationJobData = {
   channel: Object,
   thread: Object,
   recipient: Object,
+  userId: string,
 };
 
 type SendNewThreadEmailJob = {
@@ -17,9 +22,17 @@ type SendNewThreadEmailJob = {
   id: string,
 };
 
-export default (job: SendNewThreadEmailJob) => {
+export default async (job: SendNewThreadEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending new thread email to: ${job.data.to}`);
+
+  const unsubscribeToken = await generateUnsubscribeToken(
+    job.data.userId,
+    TYPE_NEW_THREAD_CREATED
+  );
+
+  if (!unsubscribeToken)
+    return new Error('No unsubscribe token generated, aborting.');
 
   try {
     return sendEmail({
@@ -31,6 +44,7 @@ export default (job: SendNewThreadEmailJob) => {
         channel: job.data.channel,
         thread: job.data.thread,
         recipient: job.data.recipient,
+        unsubscribeToken,
       },
     });
   } catch (err) {
