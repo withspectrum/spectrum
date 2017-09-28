@@ -1,4 +1,3 @@
-//@flow
 import React, { Component } from 'react';
 import Composer from '../../components/composer';
 import ThreadContainer from '../thread/containers';

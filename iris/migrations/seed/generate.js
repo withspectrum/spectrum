@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 const { v4: uuid } = require('uuid');
 // $FlowFixMe
@@ -47,6 +46,12 @@ const generateUsersSettings = userId => {
           email: true,
         },
         newThreadCreated: {
+          email: true,
+        },
+        dailyDigest: {
+          email: true,
+        },
+        weeklyDigest: {
           email: true,
         },
       },

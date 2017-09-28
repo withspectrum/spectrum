@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import axios from 'axios';
 const querystring = require('querystring');

@@ -1,4 +1,3 @@
-// @flow
 import groupBy from 'lodash/groupBy';
 import moment from 'moment';
 

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // @FlowFixMe
 import styled from 'styled-components';

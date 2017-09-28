@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 const Uploader = require('s3-image-uploader');
 // $FlowFixMe

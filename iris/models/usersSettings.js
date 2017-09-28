@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
@@ -12,6 +11,12 @@ export const createNewUsersSettings = (userId: string): Promise<Object> => {
           email: true,
         },
         newThreadCreated: {
+          email: true,
+        },
+        dailyDigest: {
+          email: true,
+        },
+        weeklyDigest: {
           email: true,
         },
       },

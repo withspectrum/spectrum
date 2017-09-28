@@ -8,9 +8,13 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
+//$FlowIssue
 var EditorState = require('draft-js/lib/EditorState');
+//$FlowIssue
 var ContentState = require('draft-js/lib/ContentState');
+//$FlowIssue
 var convertFromRaw = require('draft-js/lib/convertFromRawToDraftState');
+//$FlowIssue
 var convertToRaw = require('draft-js/lib/convertFromDraftStateToRaw');
 
 var toPlainText = function toPlainText(

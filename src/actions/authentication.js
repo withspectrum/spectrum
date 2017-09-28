@@ -1,4 +1,3 @@
-// @flow
 import { track, set } from '../helpers/events';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';

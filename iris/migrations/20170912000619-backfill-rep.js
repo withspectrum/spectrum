@@ -1,4 +1,3 @@
-// @flow
 exports.up = function(r, conn) {
   const updateReputation = (userId, communityId, score, type) => {
     return r

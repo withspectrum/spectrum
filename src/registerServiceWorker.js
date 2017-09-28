@@ -1,4 +1,3 @@
-// @flow
 // In production, we register a service worker to serve assets from local cache.
 
 import webPushManager from './helpers/web-push-manager';

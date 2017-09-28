@@ -1,4 +1,3 @@
-// @flow
 import { Router } from 'express';
 import UserError from '../../utils/UserError';
 import { getCommunities } from '../../models/community';

@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 // $FlowFixMe
 import axios from 'axios';

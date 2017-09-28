@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 
 export const NEW_DOCUMENTS = db

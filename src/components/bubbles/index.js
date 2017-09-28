@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 import replace from 'string-replace-to-array';
 import { TextBubble, Emoji, ImageBubble } from './style';

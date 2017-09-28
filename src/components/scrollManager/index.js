@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 // $FlowFixMe
 import { withRouter } from 'react-router';

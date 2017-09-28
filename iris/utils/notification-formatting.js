@@ -1,4 +1,3 @@
-//@flow
 import onlyContainsEmoji from '../../shared/only-contains-emoji';
 import sentencify from '../../shared/sentencify';
 import { short as timeDifferenceShort } from '../../shared/time-difference';

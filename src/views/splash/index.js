@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { track } from '../../helpers/events';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';

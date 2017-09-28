@@ -1,4 +1,3 @@
-// @flow
 /**
  * This file is shared between server and client.
  * ⚠️ DON'T PUT ANY NODE.JS OR BROWSER-SPECIFIC CODE IN HERE ⚠️

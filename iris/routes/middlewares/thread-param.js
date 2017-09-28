@@ -1,4 +1,3 @@
-// @flow
 // Redirect any route ?thread=<id> to /thread/<id>
 
 const threadParamRedirect = (req, res, next) => {
