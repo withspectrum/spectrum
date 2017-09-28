@@ -34,47 +34,55 @@ const timedOut = recipient => {
         notificationsInScope.map(notification => notification.id)
       );
     })
-    .then(notifications => {
-      if (!notifications) return;
-      debug('notifications loaded, finding unseen threads');
-      const unseenThreadIds = notifications
-        .filter(notification => !notification.isSeen && !notification.isRead)
-        .map(notification => notification.context.id);
-      if (unseenThreadIds.length === 0) {
-        debug('aborting, no unseen threads');
-        return;
-      }
-      debug(`filter unseen threads, merge replies`);
-      // Convert threads to object, merge replies to same thread
-      const threads = threadsInScope
-        .filter(thread => unseenThreadIds.includes(thread.id))
-        .reduce((map, thread) => {
-          if (!map[thread.id]) {
-            map[thread.id] = thread;
+    .then(
+      notifications => {
+        if (!notifications) return;
+        debug('notifications loaded, finding unseen threads');
+        const unseenThreadIds = notifications
+          .filter(notification => !notification.isSeen && !notification.isRead)
+          .map(notification => notification.context.id);
+        if (unseenThreadIds.length === 0) {
+          debug('aborting, no unseen threads');
+          return;
+        }
+        debug(`filter unseen threads, merge replies`);
+        // Convert threads to object, merge replies to same thread
+        const threads = threadsInScope
+          .filter(thread => unseenThreadIds.includes(thread.id))
+          .reduce((map, thread) => {
+            if (!map[thread.id]) {
+              map[thread.id] = thread;
+              return map;
+            }
+            map[thread.id] = {
+              ...map[thread.id],
+              replies: map[thread.id].replies.concat(thread.replies),
+            };
             return map;
-          }
-          map[thread.id] = {
-            ...map[thread.id],
-            replies: map[thread.id].replies.concat(thread.replies),
-          };
-          return map;
-        }, {});
-      debug(`group replies`);
-      // Group replies by sender, turn it back into an array
-      const threadsWithGroupedReplies = Object.keys(threads).map(threadId => ({
-        ...threads[threadId],
-        replies: groupReplies(threads[threadId].replies),
-      }));
-      debug(`adding email for @${recipient.username} to queue`);
-      return sendNewMessageEmailQueue.add({
-        to: recipient.email,
-        user: {
-          displayName: recipient.name,
-          username: recipient.username,
-        },
-        threads: threadsWithGroupedReplies,
-      });
-    });
+          }, {});
+        debug(`group replies`);
+        // Group replies by sender, turn it back into an array
+        const threadsWithGroupedReplies = Object.keys(
+          threads
+        ).map(threadId => ({
+          ...threads[threadId],
+          replies: groupReplies(threads[threadId].replies),
+        }));
+        debug(`adding email for @${recipient.username} to queue`);
+        return sendNewMessageEmailQueue.add({
+          to: recipient.email,
+          user: {
+            displayName: recipient.name,
+            username: recipient.username,
+          },
+          threads: threadsWithGroupedReplies,
+        });
+      },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
 };
 
 type Timeouts = {

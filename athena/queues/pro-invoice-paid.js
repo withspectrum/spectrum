@@ -35,18 +35,23 @@ export default async job => {
   debug('sending pro invoice receipt email');
 
   return sendProInvoiceReceiptQueue
-    .add({
-      to: email,
-      invoice: {
-        plan: invoice.planName,
-        amount,
-        paidAt,
-        brand,
-        last4,
-        planName: invoice.planName,
-        id: invoice.id,
+    .add(
+      {
+        to: email,
+        invoice: {
+          plan: invoice.planName,
+          amount,
+          paidAt,
+          brand,
+          last4,
+          planName: invoice.planName,
+          id: invoice.id,
+        },
       },
-    })
-    .then(() => job.remove())
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    )
     .catch(err => new Error(err));
 };
