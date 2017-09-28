@@ -161,9 +161,10 @@ export default job => {
 
     // for each user who wants a digest, fetch an array of channelIds where they are a member
     const channelConnectionPromises = users.map(
-      async ({ email, firstName, userId, ...user }) => {
+      async ({ email, firstName, userId, username, ...user }) => {
         return {
           email,
+          username,
           name: firstName || null,
           userId,
           channels: await getUsersChannelsEligibleForWeeklyDigest(userId),
@@ -319,11 +320,11 @@ export default job => {
               timeframe === 'weekly'
               ? // if this is a weekly digest
                 `Since last week you've gained ${reputationGained} rep! Your rep will keep growing as you start and join more conversations.`
-              : `Since yesterday you've gained ${reputationGained} rep - nice work!`
+              : `Since yesterday you've gained ${reputationGained} rep!`
             : // if the total reputation is greater than the reputation gained, it means this is an incremental amount of rep for the user
               timeframe === 'weekly'
-              ? `Since last week you've gained ${reputationGained} rep! You're now sitting strong at ${totalReputation} - keep it up.`
-              : `Since yesterday you've gained ${reputationGained} rep - nice work! You now have ${totalReputation} total rep across all of your communities - well done!`
+              ? `Since last week you've gained ${reputationGained} rep. You're now sitting strong at ${totalReputation.toLocaleString()} - keep it up!`
+              : `Since yesterday you've gained ${reputationGained} rep. You now have ${totalReputation.toLocaleString()} total rep across all of your communities - well done!`
           : // has not gained any reputation
             `You've been a little quiet this week – this week try joining some conversations, your community wants to hear from you!`;
 

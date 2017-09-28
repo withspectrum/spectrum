@@ -35,6 +35,7 @@ type ThreadType = {
 type SendWeeklyDigestJobData = {
   email: string,
   name?: string,
+  username: string,
   userId: string,
   threads: ThreadType,
   reputationString: string,
@@ -54,6 +55,7 @@ export default (job: SendWeeklyDigestJob) => {
   const {
     email,
     name,
+    username,
     threads,
     communities,
     timeframe,
@@ -75,6 +77,7 @@ export default (job: SendWeeklyDigestJob) => {
         greeting,
         communities,
         reputationString,
+        username,
         timeframe: {
           subject: timeframe,
           time: timeframe === 'daily' ? 'day' : 'week',
