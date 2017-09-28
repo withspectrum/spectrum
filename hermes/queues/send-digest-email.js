@@ -2,6 +2,8 @@
 const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
 import { DIGEST_TEMPLATE } from './constants';
+import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
 
 type ChannelType = {
   name: string,
@@ -37,6 +39,7 @@ type SendWeeklyDigestJobData = {
   name?: string,
   username: string,
   userId: string,
+  userId: string,
   threads: ThreadType,
   reputationString: string,
   communities: ?Array<TopCommunityType>,
@@ -48,12 +51,13 @@ type SendWeeklyDigestJob = {
   id: string,
 };
 
-export default (job: SendWeeklyDigestJob) => {
+export default async (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
   const {
     email,
+    userId,
     name,
     username,
     threads,
@@ -61,10 +65,20 @@ export default (job: SendWeeklyDigestJob) => {
     timeframe,
     reputationString,
   } = job.data;
-  if (!email) {
-    debug(`\nno email found for this weekly digest, returning`);
+  if (!email || !userId) {
+    debug(`\nno email or userId found for this weekly digest, returning`);
     return;
   }
+
+  const unsubscribeType =
+    timeframe === 'daily' ? TYPE_DAILY_DIGEST : TYPE_WEEKLY_DIGEST;
+  const unsubscribeToken = await generateUnsubscribeToken(
+    userId,
+    unsubscribeType
+  );
+
+  if (!unsubscribeToken)
+    return new Error('No unsubscribe token generated, aborting.');
 
   const greeting = name ? `Hey ${name},` : 'Hey there,';
 
@@ -78,6 +92,7 @@ export default (job: SendWeeklyDigestJob) => {
         communities,
         reputationString,
         username,
+        unsubscribeToken,
         timeframe: {
           subject: timeframe,
           time: timeframe === 'daily' ? 'day' : 'week',

@@ -74,6 +74,7 @@ const timedOut = recipient => {
           user: {
             displayName: recipient.name,
             username: recipient.username,
+            userId: recipient.userId,
           },
           threads: threadsWithGroupedReplies,
         });
