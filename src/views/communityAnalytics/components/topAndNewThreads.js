@@ -48,7 +48,7 @@ class TopAndNewThreads extends React.Component<Props> {
       const sortedTopThreads = topThreads.slice().sort((a, b) => {
         const bc = parseInt(b.messageCount, 10);
         const ac = parseInt(a.messageCount, 10);
-        return bc >= ac ? -1 : 1;
+        return bc <= ac ? -1 : 1;
       });
 
       return (

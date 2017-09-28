@@ -18,7 +18,7 @@ type ThreadProps = {
   content: {
     title: string,
   },
-  createdAt: string,
+  createdAt: Date,
   messageCount: number,
 };
 
