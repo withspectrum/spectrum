@@ -20,7 +20,7 @@
     "transform-flow-strip-types",
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
-    "syntax-dynamic-import",
+    "dynamic-import-node",
     [
       "import-inspector",
       {
