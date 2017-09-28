@@ -5,14 +5,13 @@ if (!IS_PROD) {
   env(path.resolve(__dirname, '../.env'), { raise: false });
 }
 import { Router } from 'express';
-// $FlowFixMe
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
 import { processInvoicePaid } from '../webhooks';
 
-emailRouter.post('/unsubscribe', (req, res) => {
-  const { token } = req.body;
+emailRouter.get('/unsubscribe', async (req, res) => {
+  const { token } = req.query;
 
   // if no token was provided
   if (!token) return res.status(400).send('No token found to unsubscribe');
@@ -40,25 +39,9 @@ emailRouter.post('/unsubscribe', (req, res) => {
       res.status(200).send('Unsubscribe request completed')
     );
   } catch (err) {
+    console.log(err);
     return res.status(400).send('Error unsubscribing from this email');
   }
-});
-
-emailRouter.post('/generateUnsubscribeToken', (req, res) => {
-  const { userId, type } = req.body;
-  if (!userId || !type)
-    return res.status(400).send('No user id or token provided');
-
-  let token;
-  try {
-    token = jwt.sign({ userId, type }, process.env.EMAIL_JWT_SIGNATURE, {
-      expiresIn: 60 * 60 * 24 * 7,
-    });
-  } catch (err) {
-    return res.status(400).send('Error generating token');
-  }
-
-  return res.status(200).send({ token });
 });
 
 export default emailRouter;
