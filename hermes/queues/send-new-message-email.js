@@ -73,8 +73,8 @@ export default async (job: SendNewMessageEmailJob) => {
           // Don't capitalize the one in the subject though because in a DM thread
           // that is "your conversation with X", so we don't want to capitalize it.
           title: capitalize(thread.content.title),
-          unsubscribeToken,
         })),
+        unsubscribeToken,
       },
     });
   } catch (err) {
