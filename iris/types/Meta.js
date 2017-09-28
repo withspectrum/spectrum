@@ -4,7 +4,7 @@ const Meta = /* GraphQL */ `
     currentPeriodCount: Int
     prevPeriodCount: Int
   }
-  
+
   type GrowthData {
     count: Int
     weeklyGrowth: GrowthDataCounts
@@ -12,8 +12,18 @@ const Meta = /* GraphQL */ `
     quarterlyGrowth: GrowthDataCounts
   }
 
+  type UsersGrowthData {
+    count: Int
+    dau: Int
+    wau: Int
+    mau: Int
+    weeklyGrowth: GrowthDataCounts
+    monthlyGrowth: GrowthDataCounts
+    quarterlyGrowth: GrowthDataCounts
+  }
+
   type Meta {
-    usersGrowth: GrowthData
+    usersGrowth: UsersGrowthData
     communitiesGrowth: GrowthData
     channelsGrowth: GrowthData
     threadsGrowth: GrowthData

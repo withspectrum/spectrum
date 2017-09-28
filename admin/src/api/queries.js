@@ -7,6 +7,9 @@ const META_INFORMATION_QUERY = gql`
     meta {
       usersGrowth {
         count
+        dau
+        wau
+        mau
         weeklyGrowth {
           growth
           currentPeriodCount
