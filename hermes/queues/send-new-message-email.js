@@ -67,6 +67,7 @@ export default async (job: SendNewMessageEmailJob) => {
       TemplateModel: {
         subject,
         user: job.data.user,
+        username: job.data.user.username,
         threads: job.data.threads.map(thread => ({
           ...thread,
           // Capitalize the first letter of all titles in the body of the email

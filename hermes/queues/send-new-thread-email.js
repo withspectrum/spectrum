@@ -15,6 +15,7 @@ type SendNewThreadNotificationJobData = {
   thread: Object,
   recipient: Object,
   userId: string,
+  username: string,
 };
 
 type SendNewThreadEmailJob = {
@@ -44,6 +45,7 @@ export default async (job: SendNewThreadEmailJob) => {
         channel: job.data.channel,
         thread: job.data.thread,
         recipient: job.data.recipient,
+        username: job.data.username,
         unsubscribeToken,
       },
     });

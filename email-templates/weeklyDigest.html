@@ -541,7 +541,9 @@
           <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
             <tr>
               <td class="content-cell">
-                <p class="sub">Easily <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">unsubscribe in one click</a> or <a href="https://spectrum.chat/users/{{username}}/settings">manage your preferences in your settings</a>.</p>
+                <p class="sub">Easily
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">unsubscribe in one click</a>
+                  {{#username}}or <a href="https://spectrum.chat/users/{{.}}/settings">manage your preferences in your settings</a>{{/username}}.</p>
                 <br />
                 <br />
                 <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>

@@ -64,6 +64,7 @@ const createThreadNotificationEmail = thread => {
                 author,
                 thread,
                 userId: recipient.id,
+                username: recipient.username,
               },
               {
                 removeOnComplete: true,
