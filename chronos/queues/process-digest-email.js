@@ -328,12 +328,18 @@ export default job => {
           : // has not gained any reputation
             `You've been a little quiet this week – this week try joining some conversations, your community wants to hear from you!`;
 
-        return await sendDigestEmailQueue.add({
-          ...user,
-          communities,
-          reputationString,
-          timeframe,
-        });
+        return await sendDigestEmailQueue.add(
+          {
+            ...user,
+            communities,
+            reputationString,
+            timeframe,
+          },
+          {
+            removeOnComplete: true,
+            removeOnFail: true,
+          }
+        );
       });
     };
 

@@ -55,14 +55,20 @@ const createThreadNotificationEmail = thread => {
           ).then(shouldSendEmail => {
             if (!shouldSendEmail) return;
 
-            return sendThreadCreatedNotificationEmailQueue.add({
-              to: recipient.email,
-              recipient,
-              channel,
-              community,
-              author,
-              thread,
-            });
+            return sendThreadCreatedNotificationEmailQueue.add(
+              {
+                to: recipient.email,
+                recipient,
+                channel,
+                community,
+                author,
+                thread,
+              },
+              {
+                removeOnComplete: true,
+                removeOnFail: true,
+              }
+            );
           });
         });
     });
@@ -182,6 +188,5 @@ export default job => {
           });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };
