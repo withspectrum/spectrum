@@ -1,22 +1,24 @@
 //@flow
 import striptags from 'striptags';
-const { db } = require('./db');
+import { db } from './db';
 import { addQueue } from '../utils/workerQueue';
-const { listenToNewDocumentsIn } = require('./utils');
-const { setThreadLastActive } = require('./thread');
+import { listenToNewDocumentsIn } from './utils';
+import { setThreadLastActive } from './thread';
 import markdownLinkify from '../utils/markdown-linkify';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
+// TODO: Fix this
+export type Message = Object;
 
-const getMessage = (messageId: string): Promise<Object> => {
+export const getMessage = (messageId: string): Promise<Message> => {
   return db
     .table('messages')
     .get(messageId)
     .run();
 };
 
-const getMessages = (threadId: String): Promise<Array<Object>> => {
+export const getMessages = (threadId: String): Promise<Array<Message>> => {
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
@@ -26,7 +28,7 @@ const getMessages = (threadId: String): Promise<Array<Object>> => {
     .run();
 };
 
-const getLastMessage = (threadId: string): Promise<Object> => {
+export const getLastMessage = (threadId: string): Promise<Message> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -34,15 +36,18 @@ const getLastMessage = (threadId: string): Promise<Object> => {
     .run();
 };
 
-const getMediaMessagesForThread = (
+export const getMediaMessagesForThread = (
   threadId: String
-): Promise<Array<Object>> => {
+): Promise<Array<Message>> => {
   return getMessages(threadId).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };
 
-const storeMessage = (message: Object, userId: string): Promise<Object> => {
+export const storeMessage = (
+  message: Message,
+  userId: string
+): Promise<Message> => {
   // Insert a message
   return db
     .table('messages')
@@ -79,11 +84,11 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     });
 };
 
-const listenToNewMessages = (cb: Function): Function => {
+export const listenToNewMessages = (cb: Function): Function => {
   return listenToNewDocumentsIn('messages', cb);
 };
 
-const getMessageCount = (threadId: string): Promise<number> => {
+export const getMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -91,12 +96,10 @@ const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
-module.exports = {
-  getMessage,
-  getMessages,
-  getLastMessage,
-  getMediaMessagesForThread,
-  storeMessage,
-  listenToNewMessages,
-  getMessageCount,
+export const deleteMessage = (id: string) => {
+  return db
+    .table('messages')
+    .get(id)
+    .delete()
+    .run();
 };

@@ -1,18 +1,32 @@
-// $FlowFixMe
+// @flow
+import Raven from 'raven';
 import UserError from '../utils/UserError';
-const { storeMessage } = require('../models/message');
-import type { MessageProps } from '../models/message';
+import { storeMessage, getMessage, deleteMessage } from '../models/message';
 import { setDirectMessageThreadLastActive } from '../models/directMessageThread';
 import { createParticipantInThread } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
+import { getThread } from '../models/thread';
+import { getDirectMessageThread } from '../models/directMessageThread';
+import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { uploadImage } from '../utils/s3';
+import type { Message } from '../models/message';
+import type { GraphQLContext } from '../';
 
 type AddMessageProps = {
-  message: MessageProps,
+  message: Message,
 };
+
+type DeleteMessageInput = {
+  id: string,
+};
+
 module.exports = {
   Mutation: {
-    addMessage: (_, { message }: AddMessageProps, { user }) => {
+    addMessage: (
+      _: any,
+      { message }: AddMessageProps,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
       // user must be authed to send a message
       if (!currentUser) {
@@ -58,6 +72,46 @@ module.exports = {
       } else {
         return new UserError('Unknown message type on this bad boy.');
       }
+    },
+    deleteMessage: async (
+      _: any,
+      { id }: DeleteMessageInput,
+      { user }: GraphQLContext
+    ) => {
+      const currentUser = user;
+      if (!currentUser)
+        throw new UserError('You must be signed in to delete a message.');
+
+      const message = await getMessage(id);
+      if (!message) throw new UserError('This message does not exist.');
+
+      const deleteTheMessage = () =>
+        deleteMessage(id)
+          .then(() => true)
+          .catch(err => {
+            console.log(err);
+            if (process.env.NODE_ENV === 'production')
+              Raven.captureException(err);
+            throw new UserError('Oops, something went wrong! Maybe try again?');
+          });
+
+      if (message.senderId === currentUser.id) return deleteTheMessage();
+
+      // Only the sender can delete a directMessageThread message
+      if (message.threadType === 'directMessageThread')
+        throw new UserError('You can only delete your own messages.');
+
+      const thread = await getThread(message.threadId);
+      const { isModerator, isOwner } = await getUserPermissionsInCommunity(
+        thread.communityId,
+        currentUser.id
+      );
+      if (!isModerator && !isOwner)
+        throw new UserError(
+          'You have to be a moderator in the community to delete a message.'
+        );
+
+      return deleteTheMessage();
     },
   },
 };
