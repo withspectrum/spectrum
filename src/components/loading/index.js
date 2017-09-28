@@ -26,6 +26,7 @@ import {
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
+  ShimmerSelect,
   Cover,
   LoadingOverlay,
   LoadingNavbarContainer,
@@ -831,11 +832,11 @@ export const LoadingProfileGrid = () => (
   </Grid>
 );
 
-/*
-  Outputs a full-screen loader with shimmering cards and columns. This is useful
-  when an entire view is wrapped in a query and we need certain data (like
-  permission checks) before we render anything.
-*/
+export const LoadingSelect = () => (
+  <ShimmerSelect>
+    <ShimmerBase />
+  </ShimmerSelect>
+);
 
 const isMobile = window.innerWidth < 768;
 

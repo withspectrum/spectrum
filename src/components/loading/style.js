@@ -203,6 +203,24 @@ export const ShimmerInboxComposer = styled.div`
   }
 `;
 
+export const ShimmerSelect = styled.div`
+  padding: 10px 12px;
+  width: 196px;
+  margin-left: 8px;
+  border-radius: 8px;
+  background: ${props => props.theme.bg.default};
+  border: 2px solid ${props => props.theme.bg.border};
+
+  @media (max-width: 768px) {
+    width: calc(50% - 12px);
+  }
+
+  section {
+    min-height: 12px;
+    width: calc(100% - 16px);
+  }
+`;
+
 const placeHolderShimmer = keyframes`
 	0%{
 			transform: translateX(-100%) translateY(0%);

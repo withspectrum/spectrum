@@ -33,16 +33,14 @@ import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
-import { LinkPreview } from '../../../components/linkPreview';
-import { ThreadTitle, ThreadDescription } from '../style';
 import Reputation from '../../../components/reputation';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
+  ThreadTitle,
   ThreadWrapper,
   ThreadHeading,
   Byline,
-  ThreadContent,
   ContextRow,
   DropWrap,
   FlyoutRow,
@@ -397,7 +395,6 @@ class ThreadDetailPure extends Component {
     const {
       isEditing,
       linkPreview,
-      linkPreviewTrueUrl,
       body,
       fetchingLinkPreview,
       flyoutOpen,

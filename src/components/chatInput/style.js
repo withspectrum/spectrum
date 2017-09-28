@@ -43,9 +43,7 @@ export const EditorInput = styled(Editor)`
   max-width: 100%;
   padding: 8px 40px 8px 16px;
   border-radius: 24px;
-  border: 2px solid ${props => props.theme.text.placeholder};
-  border-color: ${props =>
-    props.focus ? props.theme.brand.default : props.theme.text.placeholder};
+  border: 2px solid ${props => props.theme.bg.border};
   transition: border 0.3s ease-out;
   color: ${props => props.theme.text.default};
   overflow-y: scroll;

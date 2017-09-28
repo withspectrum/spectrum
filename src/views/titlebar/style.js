@@ -10,16 +10,14 @@ export const TitleBar = styled(FlexRow)`
   color: ${({ theme }) => theme.text.reverse};
   min-height: 48px;
   height: 48px;
-  ${/* position: fixed;
-  top: 0;
-  left: 0;
-  right: 0; */ ''} order: 0;
+  order: 0;
   flex: 0 0 48px;
   z-index: ${zIndex.chrome};
   box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   justify-content: space-between;
   align-items: center;
   padding: 0 8px;
+  grid-area: 'title';
 
   @media (min-width: 768px) {
     display: none;

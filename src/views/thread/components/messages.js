@@ -101,7 +101,6 @@ class MessagesWithData extends Component {
     const {
       data,
       isLoading,
-      hasError,
       currentUser,
       toggleReaction,
       forceScrollToBottom,

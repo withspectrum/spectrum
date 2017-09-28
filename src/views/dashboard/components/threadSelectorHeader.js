@@ -3,14 +3,8 @@ import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
-import {
-  HeaderWrapper,
-  ComposerLeft,
-  ComposeIconContainer,
-  ChevronIconContainer,
-} from '../style';
+import { HeaderWrapper } from '../style';
 import { IconButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
 
 const Header = ({ dispatch }) => (
   <HeaderWrapper>

@@ -29,12 +29,15 @@ export const MediaRow = styled.div`
 
 export const ComposerBase = styled.div`
   position: relative;
+  flex: none;
+  flex-direction: column;
+  display: flex;
 
   > label {
     position: absolute;
     right: calc(100% + 8px);
     top: auto;
-    bottom: -12px;
+    bottom: -11px;
     padding: 0;
     margin: 0;
     color: ${props => props.theme.text.placeholder};

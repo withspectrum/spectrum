@@ -14,8 +14,6 @@ import { getCommunityThreads } from '../../views/community/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
-import Composer from '../../components/composer';
-import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
@@ -33,7 +31,6 @@ import {
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
-  ThreadComposerContainer,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -53,7 +50,6 @@ class Dashboard extends Component {
       newActivityIndicator,
       activeThread,
       activeCommunity,
-      composerIsOpen,
       isLoading,
       hasError,
     } = this.props;
@@ -152,7 +148,6 @@ const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
-  composerIsOpen: state.composer.isOpen,
 });
 export default compose(
   connect(map),

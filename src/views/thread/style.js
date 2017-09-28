@@ -8,7 +8,6 @@ import {
   H3,
   H4,
   Transition,
-  hexa,
   zIndex,
 } from '../../components/globals';
 

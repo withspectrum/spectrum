@@ -9,8 +9,6 @@ import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
 
 import { track } from '../../helpers/events';
@@ -24,26 +22,17 @@ import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
-import { FlexRow, FlexCol } from '../../components/globals';
-import Icon from '../icons';
-import { displayLoadingComposer } from '../loading';
-import { NullCard } from '../upsell';
-import { Avatar } from '../avatar';
+import { FlexRow } from '../../components/globals';
+import { LoadingSelect } from '../loading';
+import Titlebar from '../../views/titlebar';
 import {
   Container,
-  ComposerCard,
-  Overlay,
-  Placeholder,
-  PlaceholderLabel,
   ThreadDescription,
   ThreadTitle,
   ThreadInputs,
-  ContentContainer,
   Actions,
   Dropdowns,
-  ComposerUpsell,
-  UpsellPulse,
-  UpsellDot,
+  RequiredSelector,
 } from './style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -90,8 +79,9 @@ class ComposerWithData extends Component {
     */
 
     // if the user doesn't exist, bust outta here
+    console.log('1', props);
     if (!props.data.user || props.data.user === undefined) return;
-
+    console.log('2', props);
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(
@@ -262,6 +252,10 @@ class ComposerWithData extends Component {
   componentDidUpdate(prevProps) {
     const { availableCommunities, availableChannels } = this.state;
     let activeCommunity;
+
+    if (!prevProps.data.user && this.props.data.user) {
+      this.handleIncomingProps(this.props);
+    }
 
     if (prevProps.activeCommunity !== this.props.activeCommunity) {
       activeCommunity = this.props.activeCommunity
@@ -458,9 +452,7 @@ class ComposerWithData extends Component {
 
         // redirect the user to the thread
         // if they are in the inbox, select it
-        this.props.isInbox
-          ? this.props.dispatch(changeActiveThread(id))
-          : this.props.history.push(`?thread=${id}`);
+        this.props.dispatch(changeActiveThread(id));
 
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
@@ -554,29 +546,31 @@ class ComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus }, isInbox } = this.props;
-    const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
+    console.log('component props', this.props);
+    console.log('component state', this.state);
 
-    if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
-      return (
-        <NullCard
-          bg="community"
-          heading={`Once you join a community, you can start conversations there!`}
-          copy={`Let's find you something worth joining...`}
-        >
-          <Link to={`/explore`}>
-            <Button icon="explore" color="text.alt">
-              Browse communities
-            </Button>
-          </Link>
-        </NullCard>
-      );
-    } else {
-      return (
-        <Container>
-          <Dropdowns>
-            <span>New conversation in: </span>
-            <select onChange={this.setActiveCommunity} value={activeCommunity}>
+    const { data: { user } } = this.props;
+    const dataExists = user && availableCommunities && availableChannels;
+
+    console.log(
+      availableCommunities,
+      activeCommunity,
+      availableChannels,
+      activeChannel
+    );
+
+    return (
+      <Container>
+        <Titlebar />
+        <Dropdowns>
+          <span>To:</span>
+          {!dataExists ? (
+            <LoadingSelect />
+          ) : (
+            <RequiredSelector
+              onChange={this.setActiveCommunity}
+              value={activeCommunity}
+            >
               {availableCommunities.map(community => {
                 return (
                   <option key={community.id} value={community.id}>
@@ -584,8 +578,15 @@ class ComposerWithData extends Component {
                   </option>
                 );
               })}
-            </select>
-            <select onChange={this.setActiveChannel} value={activeChannel}>
+            </RequiredSelector>
+          )}
+          {!dataExists ? (
+            <LoadingSelect />
+          ) : (
+            <RequiredSelector
+              onChange={this.setActiveChannel}
+              value={activeChannel}
+            >
               {availableChannels
                 .filter(channel => channel.community.id === activeCommunity)
                 .map((channel, i) => {
@@ -595,61 +596,63 @@ class ComposerWithData extends Component {
                     </option>
                   );
                 })}
-            </select>
-          </Dropdowns>
-          <ThreadInputs>
-            <Textarea
-              onChange={this.changeTitle}
-              style={ThreadTitle}
-              value={this.state.title}
-              placeholder={`What's up?`}
-              ref="titleTextarea"
-              autoFocus
-            />
+            </RequiredSelector>
+          )}
+        </Dropdowns>
+        <ThreadInputs>
+          <Textarea
+            onChange={this.changeTitle}
+            style={ThreadTitle}
+            value={this.state.title}
+            placeholder={`What's up?`}
+            ref="titleTextarea"
+            autoFocus
+          />
 
-            <Editor
-              version={2}
-              onChange={this.changeBody}
-              state={this.state.body}
-              style={ThreadDescription}
-              editorRef={editor => (this.bodyEditor = editor)}
-              editorKey="thread-composer"
-              placeholder={`Write more thoughts here, add photos, and anything else!`}
-              className={'threadComposer'}
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreviewTrueUrl,
-                data: linkPreview,
-              }}
-            />
-          </ThreadInputs>
-          <Actions>
-            <FlexRow>
-              <TextButton hoverColor="warn.alt" onClick={this.closeComposer}>
-                Cancel
-              </TextButton>
-              <Button
-                onClick={this.publishThread}
-                loading={isPublishing}
-                disabled={!title || isPublishing}
-                color={'brand'}
-              >
-                Publish
-              </Button>
-            </FlexRow>
-          </Actions>
-        </Container>
-      );
-    }
+          <Editor
+            version={2}
+            onChange={this.changeBody}
+            state={this.state.body}
+            style={ThreadDescription}
+            editorRef={editor => (this.bodyEditor = editor)}
+            editorKey="thread-composer"
+            placeholder={`Write more thoughts here, add photos, and anything else!`}
+            className={'threadComposer'}
+            showLinkPreview={true}
+            linkPreview={{
+              loading: fetchingLinkPreview,
+              remove: this.removeLinkPreview,
+              trueUrl: linkPreviewTrueUrl,
+              data: linkPreview,
+            }}
+          />
+        </ThreadInputs>
+        <Actions>
+          <FlexRow>
+            <TextButton
+              hoverColor="warn.alt"
+              onClick={() => this.props.dispatch(changeActiveThread(null))}
+            >
+              Cancel
+            </TextButton>
+            <Button
+              onClick={this.publishThread}
+              loading={isPublishing}
+              disabled={!title || isPublishing}
+              color={'brand'}
+            >
+              Publish
+            </Button>
+          </FlexRow>
+        </Actions>
+      </Container>
+    );
   }
 }
 
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  displayLoadingComposer, // handle loading state while query is fetching
   withRouter, // needed to use history.push() as a post-publish action
   pure
 )(ComposerWithData);

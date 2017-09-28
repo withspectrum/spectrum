@@ -1,11 +1,6 @@
 import React from 'react';
-import styled, { injectGlobal } from 'styled-components';
-import {
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-  ContentState,
-} from 'draft-js';
+import { injectGlobal } from 'styled-components';
+import { EditorState } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
@@ -38,7 +33,6 @@ injectGlobal`${prismGlobalCSS}`;
 import Image from './Image';
 import { Wrapper, MediaRow, ComposerBase } from './style';
 import MediaInput from '../mediaInput';
-import { ThreadDescription } from '../threadComposer/style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 type EditorProps = {
