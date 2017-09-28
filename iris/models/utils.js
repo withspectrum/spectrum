@@ -27,6 +27,9 @@ export const listenToNewDocumentsIn = (table, cb) => {
 
 const parseRange = timeframe => {
   switch (timeframe) {
+    case 'daily': {
+      return { current: 60 * 60 * 24, previous: 60 * 60 * 24 * 2 };
+    }
     case 'weekly': {
       return { current: 60 * 60 * 24 * 7, previous: 60 * 60 * 24 * 14 };
     }
@@ -40,6 +43,16 @@ const parseRange = timeframe => {
       return { current: 60 * 60 * 24 * 7, previous: 60 * 60 * 24 * 14 };
     }
   }
+};
+
+export const getAu = (range: string) => {
+  const { current } = parseRange(range);
+  return db
+    .table('users')
+    .filter(db.row('lastSeen').during(db.now().sub(current), db.now()))
+    .count()
+    .default(0)
+    .run();
 };
 
 export const getGrowth = async (
