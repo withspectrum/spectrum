@@ -78,9 +78,7 @@ class ComposerWithData extends Component {
     */
 
     // if the user doesn't exist, bust outta here
-    console.log('1', props);
     if (!props.data.user || props.data.user === undefined) return;
-    console.log('2', props);
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(
@@ -551,18 +549,8 @@ class ComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    console.log('component props', this.props);
-    console.log('component state', this.state);
-
     const { data: { user } } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
-
-    console.log(
-      availableCommunities,
-      activeCommunity,
-      availableChannels,
-      activeChannel
-    );
 
     return (
       <Container>
