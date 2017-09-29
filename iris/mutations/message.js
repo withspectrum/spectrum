@@ -1,11 +1,12 @@
 // @flow
 import Raven from 'raven';
+const debug = require('debug')('iris:mutations:message');
 import UserError from '../utils/UserError';
 import {
   storeMessage,
   getMessage,
   deleteMessage,
-  getMessages,
+  userHasMessagesInThread,
 } from '../models/message';
 import { setDirectMessageThreadLastActive } from '../models/directMessageThread';
 import {
@@ -86,6 +87,7 @@ module.exports = {
       { id }: DeleteMessageInput,
       { user }: GraphQLContext
     ) => {
+      debug(`delete message#${id}`);
       const currentUser = user;
       if (!currentUser)
         throw new UserError('You must be signed in to delete a message.');
@@ -111,18 +113,21 @@ module.exports = {
       }
 
       // Delete message and remove participant from thread if it's the only message from that person
+      debug(`permission checks pass, actually delete message#${id}`);
       return deleteMessage(id).then(() => {
         // We don't need to delete participants of direct message threads
         if (message.threadType === 'directMessageThread') return true;
 
-        return getMessages(message.threadId).then(messages => {
-          const hasMoreMessages = messages.find(
-            message => message.senderId === currentUser.id
-          );
+        debug(`thread message, check if user has more messages in thread`);
+        return userHasMessagesInThread(
+          message.threadId,
+          message.senderId
+        ).then(hasMoreMessages => {
           if (hasMoreMessages) return true;
+          debug('user has no more messages, delete userThread record');
           return deleteParticipantInThread(
             message.threadId,
-            currentUser.id
+            message.senderId
           ).then(() => true);
         });
       });

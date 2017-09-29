@@ -112,3 +112,12 @@ export const deleteMessage = (id: string) => {
     })
     .run();
 };
+
+export const userHasMessagesInThread = (threadId: string, userId: string) => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())('senderId')
+    .contains(userId)
+    .run();
+};
