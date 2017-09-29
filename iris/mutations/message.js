@@ -1,9 +1,17 @@
 // @flow
 import Raven from 'raven';
 import UserError from '../utils/UserError';
-import { storeMessage, getMessage, deleteMessage } from '../models/message';
+import {
+  storeMessage,
+  getMessage,
+  deleteMessage,
+  getMessages,
+} from '../models/message';
 import { setDirectMessageThreadLastActive } from '../models/directMessageThread';
-import { createParticipantInThread } from '../models/usersThreads';
+import {
+  createParticipantInThread,
+  deleteParticipantInThread,
+} from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
 import { getDirectMessageThread } from '../models/directMessageThread';
@@ -85,33 +93,39 @@ module.exports = {
       const message = await getMessage(id);
       if (!message) throw new UserError('This message does not exist.');
 
-      const deleteTheMessage = () =>
-        deleteMessage(id)
-          .then(() => true)
-          .catch(err => {
-            console.log(err);
-            if (process.env.NODE_ENV === 'production')
-              Raven.captureException(err);
-            throw new UserError('Oops, something went wrong! Maybe try again?');
-          });
+      if (message.senderId !== currentUser.id) {
+        // Only the sender can delete a directMessageThread message
+        if (message.threadType === 'directMessageThread') {
+          throw new UserError('You can only delete your own messages.');
+        }
 
-      if (message.senderId === currentUser.id) return deleteTheMessage();
-
-      // Only the sender can delete a directMessageThread message
-      if (message.threadType === 'directMessageThread')
-        throw new UserError('You can only delete your own messages.');
-
-      const thread = await getThread(message.threadId);
-      const { isModerator, isOwner } = await getUserPermissionsInCommunity(
-        thread.communityId,
-        currentUser.id
-      );
-      if (!isModerator && !isOwner)
-        throw new UserError(
-          'You have to be a moderator in the community to delete a message.'
+        const thread = await getThread(message.threadId);
+        const { isModerator, isOwner } = await getUserPermissionsInCommunity(
+          thread.communityId,
+          currentUser.id
         );
+        if (!isModerator && !isOwner)
+          throw new UserError(
+            'You have to be a moderator in the community to delete a message.'
+          );
+      }
 
-      return deleteTheMessage();
+      // Delete message and remove participant from thread if it's the only message from that person
+      return deleteMessage(id).then(() => {
+        // We don't need to delete participants of direct message threads
+        if (message.threadType === 'directMessageThread') return true;
+
+        return getMessages(message.threadId).then(messages => {
+          const hasMoreMessages = messages.find(
+            message => message.senderId === currentUser.id
+          );
+          if (hasMoreMessages) return true;
+          return deleteParticipantInThread(
+            message.threadId,
+            currentUser.id
+          ).then(() => true);
+        });
+      });
     },
   },
 };
