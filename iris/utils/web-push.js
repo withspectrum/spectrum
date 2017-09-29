@@ -63,8 +63,6 @@ export const sendNotificationAsWebPush = notification => {
             ...payload,
           })
         )
-      ).then(() =>
-        markSingleNotificationSeen(notification.id, notification.userId)
       );
     })
     .catch(err => {

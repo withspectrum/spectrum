@@ -13,5 +13,13 @@ if (process.env.NODE_ENV !== 'development') {
 
 export const addQueue = (name: string, data: any) => {
   const worker = createQueue(name);
-  return worker.add({ ...data }).catch(err => Raven.captureException(err));
+  return worker
+    .add(
+      { ...data },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    )
+    .catch(err => Raven.captureException(err));
 };
