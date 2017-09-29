@@ -560,7 +560,7 @@ class ComposerWithData extends Component {
 
     return (
       <Container>
-        <Titlebar />
+        <Titlebar provideBack title={`New conversation`} noComposer />
         <Dropdowns>
           <span>To:</span>
           {!dataExists ? (
