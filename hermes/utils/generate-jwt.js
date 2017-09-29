@@ -7,17 +7,20 @@ if (!IS_PROD) {
 const jwt = require('jsonwebtoken');
 
 export const generateUnsubscribeToken = (userId, type) => {
-  if (!userId || !type)
-    return new Error('Insufficient arguments to generate token');
+  if (!userId || !type) return null;
+
   let token;
   try {
     token = jwt.sign({ userId, type }, process.env.EMAIL_JWT_SIGNATURE, {
       expiresIn: 60 * 60 * 24 * 7,
     });
   } catch (err) {
-    return new Error('Error generating token', err.message);
+    return null;
   }
 
-  if (!token || token === undefined) return new Error('Token not generated');
+  if (!token || token === undefined) {
+    return null;
+  }
+
   return token;
 };

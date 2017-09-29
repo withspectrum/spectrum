@@ -2,7 +2,11 @@
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
-import { NEW_MESSAGE_TEMPLATE, TYPE_NEW_MESSAGE_IN_THREAD } from './constants';
+import {
+  NEW_MESSAGE_TEMPLATE,
+  TYPE_NEW_MESSAGE_IN_THREAD,
+  DEBUG_TEMPLATE,
+} from './constants';
 import capitalize from '../utils/capitalize';
 
 type ReplyData = {
@@ -57,28 +61,41 @@ export default async (job: SendNewMessageEmailJob) => {
     TYPE_NEW_MESSAGE_IN_THREAD
   );
 
-  if (!unsubscribeToken)
-    return new Error('No unsubscribe token generated, aborting.');
-
-  try {
-    return sendEmail({
-      TemplateId: NEW_MESSAGE_TEMPLATE,
-      To: job.data.to,
-      TemplateModel: {
-        subject,
-        user: job.data.user,
-        username: job.data.user.username,
-        threads: job.data.threads.map(thread => ({
-          ...thread,
-          // Capitalize the first letter of all titles in the body of the email
-          // Don't capitalize the one in the subject though because in a DM thread
-          // that is "your conversation with X", so we don't want to capitalize it.
-          title: capitalize(thread.content.title),
-        })),
-        unsubscribeToken,
-      },
-    });
-  } catch (err) {
-    console.log(err);
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: job.data.user,
+          type: TYPE_NEW_MESSAGE_IN_THREAD,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      return sendEmail({
+        TemplateId: NEW_MESSAGE_TEMPLATE,
+        To: job.data.to,
+        TemplateModel: {
+          subject,
+          user: job.data.user,
+          username: job.data.user.username,
+          threads: job.data.threads.map(thread => ({
+            ...thread,
+            // Capitalize the first letter of all titles in the body of the email
+            // Don't capitalize the one in the subject though because in a DM thread
+            // that is "your conversation with X", so we don't want to capitalize it.
+            title: capitalize(thread.content.title),
+          })),
+          unsubscribeToken,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
