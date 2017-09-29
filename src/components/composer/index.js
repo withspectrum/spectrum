@@ -457,7 +457,7 @@ class ComposerWithData extends Component {
           addToastWithTimeout('success', 'Thread published!')
         );
 
-        this.props.dispatch(closeComposer('', ''));
+        this.props.dispatch(changeActiveThread(null));
       })
       .catch(err => {
         this.setState({
