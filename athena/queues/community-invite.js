@@ -24,13 +24,19 @@ const addToSendCommunityInviteEmailQueue = (
     return Promise.resolve();
   }
 
-  return sendCommunityInviteEmailQueue.add({
-    to: recipient.email,
-    recipient,
-    sender,
-    community,
-    customMessage,
-  });
+  return sendCommunityInviteEmailQueue.add(
+    {
+      to: recipient.email,
+      recipient,
+      sender,
+      community,
+      customMessage,
+    },
+    {
+      removeOnComplete: true,
+      removeOnFail: true,
+    }
+  );
 };
 
 /*

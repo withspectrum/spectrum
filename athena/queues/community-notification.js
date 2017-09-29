@@ -113,6 +113,5 @@ new job for ${incomingCommunityId} by ${currentUserId}`
           });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };
