@@ -15,7 +15,7 @@ class DashboardThread extends Component {
       return (
         <Container>
           <Thread>
-            <Composer {...this.props} />
+            <Composer isInbox={true} {...this.props} />
           </Thread>
         </Container>
       );
