@@ -43,3 +43,8 @@ export const ComposerBase = styled.div`
     color: ${props => props.theme.text.placeholder};
   }
 `;
+
+export const SideToolbarWrapper = styled.div`
+  position: fixed;
+  margin-top: -0.5em;
+`;

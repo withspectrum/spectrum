@@ -31,7 +31,8 @@ import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
 
 import Image from './Image';
-import { Wrapper, MediaRow, ComposerBase } from './style';
+import { Wrapper, MediaRow, ComposerBase, SideToolbarWrapper } from './style';
+import SideToolbar from './SideToolbar';
 import MediaInput from '../mediaInput';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
@@ -156,6 +157,16 @@ class Editor extends React.Component {
             }}
             {...rest}
           />
+          {images !== false &&
+            !rest.readOnly && (
+              <SideToolbar editorState={state} editorRef={this.editor}>
+                {({ style }) => (
+                  <SideToolbarWrapper style={style}>
+                    <MediaInput onChange={this.addImage} multiple />
+                  </SideToolbarWrapper>
+                )}
+              </SideToolbar>
+            )}
           {showLinkPreview && linkPreview && linkPreview.loading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
           ) : showLinkPreview && linkPreview && linkPreview.data ? (
@@ -168,12 +179,6 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
-          {images !== false &&
-            !this.props.readOnly && (
-              <MediaInput onChange={this.addImage} multiple>
-                Add
-              </MediaInput>
-            )}
         </ComposerBase>
       );
     } else {
@@ -201,6 +206,16 @@ class Editor extends React.Component {
               }}
               {...rest}
             />
+            {images !== false &&
+              !rest.readOnly && (
+                <SideToolbar editorState={state} editorRef={this.editor}>
+                  {({ style }) => (
+                    <SideToolbarWrapper style={style}>
+                      <MediaInput onChange={this.addImage} multiple />
+                    </SideToolbarWrapper>
+                  )}
+                </SideToolbar>
+              )}
           </Wrapper>
           {showLinkPreview && linkPreview && linkPreview.loading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
@@ -214,14 +229,6 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
-          {images !== false &&
-            !this.props.readOnly && (
-              <MediaRow>
-                <MediaInput onChange={this.addImage} multiple>
-                  Add
-                </MediaInput>
-              </MediaRow>
-            )}
         </div>
       );
     }
