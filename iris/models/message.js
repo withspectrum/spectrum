@@ -15,7 +15,11 @@ export const getMessage = (messageId: string): Promise<Message> => {
   return db
     .table('messages')
     .get(messageId)
-    .run();
+    .run()
+    .then(message => {
+      if (message.deletedAt) return null;
+      return message;
+    });
 };
 
 export const getMessages = (threadId: String): Promise<Array<Message>> => {
@@ -25,6 +29,7 @@ export const getMessages = (threadId: String): Promise<Array<Message>> => {
       index: 'threadIdAndTimestamp',
     })
     .orderBy({ index: 'threadIdAndTimestamp' })
+    .filter(db.row.hasFields('deletedAt').not())
     .run();
 };
 
@@ -32,6 +37,7 @@ export const getLastMessage = (threadId: string): Promise<Message> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .max('timestamp')
     .run();
 };
@@ -92,6 +98,7 @@ export const getMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .count()
     .run();
 };
@@ -100,6 +107,8 @@ export const deleteMessage = (id: string) => {
   return db
     .table('messages')
     .get(id)
-    .delete()
+    .update({
+      deletedAt: new Date(),
+    })
     .run();
 };
