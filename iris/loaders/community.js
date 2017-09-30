@@ -1,7 +1,11 @@
 // @flow
 import { getCommunities, getCommunitiesBySlug } from '../models/community';
+import { getCommunitiesRecurringPayments } from '../models/recurringPayment';
 import createLoader from './create-loader';
 import type { Loader } from './types';
+
+export const __createCommunityRecurringPaymentsLoader = () =>
+  createLoader(communities => getCommunitiesRecurringPayments(communities));
 
 export const __createCommunityLoader = () =>
   createLoader(communities => getCommunities(communities));
