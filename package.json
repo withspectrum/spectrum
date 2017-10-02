@@ -135,7 +135,7 @@
     "postbuild:mercury": "cp mercury/package.json build-mercury/package.json && cp now.json build-mercury/now.json",
     "build:client": "cross-env NODE_PATH=./ react-app-rewired build",
     "pretest": "babel-node shared/testing/setup-db.js",
-    "test": "cross-env NODE_PATH=./ react-app-rewired test",
+    "test": "cross-env NODE_PATH=./ jest --setupTestFrameworkScriptFile='./src/setupTests.js' --forceExit",
     "posttest": "babel-node shared/testing/teardown-db.js",
     "test:ci": "cross-env CI=true npm run test",
     "db:migrate": "npm run rethinkdb:migrate -- up",
@@ -147,10 +147,7 @@
     "lint:staged": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote --trailing-comma es5",
-      "git add"
-    ]
+    "*.js": ["prettier --write --single-quote --trailing-comma es5", "git add"]
   },
   "pre-commit": "lint:staged"
 }
