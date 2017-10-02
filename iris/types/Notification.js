@@ -1,3 +1,4 @@
+// @flow
 const Notification = /* GraphQL */ `
 	enum NotificationEventType {
 		REACTION_CREATED

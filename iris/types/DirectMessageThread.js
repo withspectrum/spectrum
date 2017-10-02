@@ -1,3 +1,4 @@
+// @flow
 const DirectMessageThread = /* GraphQL */ `
 	type DirectMessagesConnection {
 		pageInfo: PageInfo!
