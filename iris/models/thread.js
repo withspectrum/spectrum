@@ -346,6 +346,23 @@ export const updateThreadWithImages = (id: string, body: string) => {
     });
 };
 
+export const moveThread = (id: string, channelId: string) => {
+  return db
+    .table('threads')
+    .get(id)
+    .update(
+      {
+        channelId,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      if (result.replaced === 1) return result.changes[0].new_val;
+      return null;
+    });
+};
+
 const hasChanged = (field: string) =>
   db.row('old_val')(field).ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
