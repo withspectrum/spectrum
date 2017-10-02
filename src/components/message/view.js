@@ -5,13 +5,13 @@ import {
   onlyContainsEmoji,
   renderMarkdownLinks,
 } from '../../helpers/utils';
+import { Flyout } from '../flyout';
 import {
   Text,
   Emoji,
   Image,
   ActionUI,
   Indicator,
-  Flyout,
   ModeratorActions,
   Action,
   Time,
@@ -21,18 +21,23 @@ export const Body = props => {
   const { imgSrc, message, openGallery, pending, type } = props;
 
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
+
+  //TODO: Add renderMarkdownLinks() back in to the text bubble...
+
   switch (type) {
     case 'text':
     default:
       return <Text pending={pending}>{renderMarkdownLinks(message.body)}</Text>;
     case 'emoji':
       return <Emoji pending={pending}>{message.body}</Emoji>;
-    case 'image':
+    case 'media':
       return (
         <Image
           onClick={openGallery}
           pending={pending}
-          src={`${imgSrc}${pending ? '' : `?max-w=${window.innerWidth * 0.6}`}`}
+          src={`${message.content.body}${pending
+            ? ''
+            : `?max-w=${window.innerWidth * 0.6}`}`}
         />
       );
   }

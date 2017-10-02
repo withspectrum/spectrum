@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { openGallery } from '../../actions/gallery';
+import { convertTimestampToTime } from '../../helpers/utils';
 import { Timestamp, Body, Actions } from './view';
 import { Wrapper } from './style';
 
@@ -14,14 +15,6 @@ class Message extends Component {
   toggleOpenGallery = messageId => {
     const { threadId } = this.props;
     this.props.dispatch(openGallery(threadId, messageId));
-  };
-
-  renderMarkdownLinks = text => {
-    return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
-      <a href={url} target="_blank" rel="noopener nofollower">
-        {text}
-      </a>
-    ));
   };
 
   render() {
@@ -39,24 +32,25 @@ class Message extends Component {
     } = this.props;
 
     return (
-      <MessageWrapper>
+      <Wrapper>
         {shareable && <a name={`${message.id}`} />}
-        <MessageTimestamp time={convertTimestampToTime(message.timestamp)} />
-        <MessageBody
-          type={message.type}
-          imgSrc={imgSrc}
+        <Timestamp time={convertTimestampToTime(message.timestamp)} />
+        <Body
+          type={message.messageType}
           pending={message.id < 0}
           hash={hash}
-          action={toggleOpenGallery}
-          message={message}
+          action={this.toggleOpenGallery}
+          message={message.content}
         />
-        <MessageActions
+        <Actions
           me={me}
           reaction={reaction}
           shareable={shareable}
           canModerate={canModerate}
         />
-      </MessageWrapper>
+      </Wrapper>
     );
   }
 }
+
+export default Message;

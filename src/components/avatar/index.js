@@ -108,4 +108,6 @@ const AvatarPure = (props: Object): React$Element<any> => {
   }
 };
 
-export const Avatar = compose(pure)(AvatarPure);
+const Avatar = compose(pure)(AvatarPure);
+
+export default Avatar;

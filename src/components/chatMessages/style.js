@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 
 export const UserAvatar = styled(Avatar)`
   width: 24px;
@@ -113,15 +113,15 @@ export const MessageTimestamp = styled.p`
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-	margin: 16px 32px 8px 32px;
-	text-align: center;
-	-webkit-user-select: none; /* Chrome/Safari */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+ */
+  margin: 16px 32px 8px 32px;
+  text-align: center;
+  -webkit-user-select: none; /* Chrome/Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 
-	/* Rules below not implemented in browsers yet */
-	-o-user-select: none;
-	user-select: none;
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
 `;
 
 export const Time = styled.span`

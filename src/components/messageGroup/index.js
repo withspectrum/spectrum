@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import Icon from '../../components/icons';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import Badge from '../badges';
+import Avatar from '../avatar';
+import Message from '../message';
+import Icon from '../icons';
 
 import {
-  UserAvatar,
   AvatarLabel,
   Byline,
   Name,
@@ -56,18 +57,12 @@ class Messages extends Component {
       const { sender } = props;
 
       return (
-        <AvatarLabel
-          tipText={sender.name}
-          tipLocation="right"
-          style={{ alignSelf: 'flex-end' }}
-        >
-          <UserAvatar
-            isOnline={sender.isOnline}
-            src={sender.profilePhoto}
-            username={sender.username}
-            link={sender.username ? `/users/${sender.username}` : null}
-          />
-        </AvatarLabel>
+        <Avatar
+          isOnline={sender.isOnline}
+          src={sender.profilePhoto}
+          username={sender.username}
+          link={sender.username ? `/users/${sender.username}` : null}
+        />
       );
     };
 
@@ -88,22 +83,22 @@ class Messages extends Component {
     return (
       <Container>
         {messages.map((group, i) => {
-          const evaluating = group[0];
-          const roboText = evaluating.sender.id === 'robo';
+          // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+          const initialMessage = group[0];
+
+          const sender = initialMessage.sender;
+          const roboText = sender.id === 'robo';
+          const me = currentUser ? sender.id === currentUser.id : false;
 
           if (roboText) {
-            const time = convertTimestampToDate(evaluating.message.content);
             return (
-              <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
+              <Timestamp key={i}>
                 <hr />
-                <Time>{time}</Time>
+                <Time>{convertTimestampToDate(initialMessage.timestamp)}</Time>
                 <hr />
               </Timestamp>
             );
           }
-
-          const sender = evaluating.sender;
-          const me = currentUser ? sender.id === currentUser.id : false;
 
           return (
             <BubbleGroupContainer key={i}>
@@ -111,16 +106,16 @@ class Messages extends Component {
               <MessagesWrapper>
                 <AuthorByline sender={sender} me={me} />
                 {group.map((message, i) => {
+                  console.log('message', message);
                   return (
                     <Message
-                      imgSrc={imgSrc}
+                      key={i}
                       message={message}
-                      link={link}
+                      link={`#${message.id}`}
                       reaction={'like'}
                       me={me}
-                      canModerate={canModerate}
-                      hash={hash}
-                      pending={pending}
+                      // canModerate={canModerate}
+                      pending={message.id < 0}
                     />
                   );
                 })}
@@ -135,6 +130,6 @@ class Messages extends Component {
 
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-const ConnectedChatMessages = connect(mapStateToProps)(ChatMessages);
+const ConnectedChatMessages = connect(mapStateToProps)(Messages);
 
 export default ConnectedChatMessages;

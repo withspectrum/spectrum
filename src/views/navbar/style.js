@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
   flex: 0 0 24px;

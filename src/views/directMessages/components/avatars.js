@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import {
   AvatarContainer,
   TwoAvatarContainer,
@@ -102,7 +102,9 @@ export const renderAvatars = users => {
           return null;
         })}
 
-        <Remainder><span>+{remainder}</span></Remainder>
+        <Remainder>
+          <span>+{remainder}</span>
+        </Remainder>
       </ThreeAvatarContainer>
     );
   }

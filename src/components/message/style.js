@@ -3,6 +3,18 @@
 import styled from 'styled-components';
 import { Gradient } from '../globals';
 
+export const Wrapper = styled.div``;
+
+export const ActionUI = styled.div``;
+
+export const Indicator = styled.div``;
+
+export const Action = styled.div``;
+
+export const ModeratorActions = styled.div``;
+
+export const Time = styled.div``;
+
 export const Text = styled.p`
   padding: 8px 16px;
   vertical-align: middle;
