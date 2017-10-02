@@ -447,7 +447,7 @@ module.exports = {
         thread.communityId,
         currentUser.id
       );
-      if (!isOwner && !isModerator)
+      if (thread.creatorId !== currentUser.id && !isOwner && !isModerator)
         throw new UserError(
           'You have to be a moderator or owner of the community to move a thread.'
         );
