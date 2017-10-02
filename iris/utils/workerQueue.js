@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
 import Raven from 'raven';
+// $FlowIssue
 import commitHash from 'shared/get-commit-hash';
 const createQueue = require('../../shared/bull/create-queue');
 if (process.env.NODE_ENV !== 'development') {

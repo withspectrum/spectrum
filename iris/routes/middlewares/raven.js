@@ -1,5 +1,6 @@
 // @flow
 import Raven from 'raven';
+// $FlowIssue
 import commitHash from 'shared/get-commit-hash';
 
 Raven.config(
