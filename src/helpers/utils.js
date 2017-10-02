@@ -1,8 +1,10 @@
-
+import React from 'react';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
 // $FlowFixMe
 import createEmojiRegex from 'emoji-regex';
+
+import replace from 'string-replace-to-array';
 
 export const convertTimestampToDate = (timestamp: Date) => {
   let monthNames = [
@@ -263,4 +265,14 @@ export const sortByDate = (array, key, order) => {
     const val = order === 'desc' ? y - x : x - y;
     return val;
   });
+};
+
+export const renderMarkdownLinks = text => {
+  const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+
+  return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+    <a href={url} target="_blank" rel="noopener nofollower">
+      {text}
+    </a>
+  ));
 };
