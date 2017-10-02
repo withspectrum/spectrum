@@ -3,9 +3,21 @@ const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
 import UserError from '../utils/UserError';
 
+type DBChannel = {
+  communityId: string,
+  createdAt: Date,
+  deletedAt?: Date,
+  description: string,
+  id: string,
+  isDefault: boolean,
+  isPrivate: boolean,
+  name: string,
+  slug: string,
+};
+
 const getChannelsByCommunity = (
   communityId: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBChannel>> => {
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -20,7 +32,7 @@ const getChannelsByCommunity = (
 */
 const getPublicChannelsByCommunity = (
   communityId: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBChannel>> => {
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -39,7 +51,7 @@ const getPublicChannelsByCommunity = (
 const getChannelsByUserAndCommunity = (
   communityId: string,
   userId: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBChannel>> => {
   return (
     db
       .table('channels')
@@ -63,7 +75,7 @@ const getChannelsByUserAndCommunity = (
   );
 };
 
-const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
+const getChannelsByUser = (userId: string): Promise<Array<DBChannel>> => {
   return (
     db
       .table('usersChannels')
@@ -86,7 +98,7 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
 const getChannelBySlug = (
   channelSlug: string,
   communitySlug: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return db
     .table('channels')
     .filter(channel =>
@@ -115,7 +127,7 @@ type GetChannelBySlugArgs = {
 
 export type GetChannelArgs = GetChannelByIdArgs | GetChannelBySlugArgs;
 
-const getChannels = (channelIds: Array<string>): Promise<Array<Object>> => {
+const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
   return db
     .table('channels')
     .getAll(...channelIds)
@@ -166,7 +178,7 @@ const createChannel = (
     input: { communityId, name, slug, description, isPrivate, isDefault },
   }: CreateChannelArguments,
   userId: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return db
     .table('channels')
     .insert(
@@ -196,7 +208,7 @@ const createChannel = (
 const createGeneralChannel = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return createChannel(
     {
       input: {
@@ -214,7 +226,7 @@ const createGeneralChannel = (
 
 const editChannel = ({
   input: { name, slug, description, isPrivate, channelId },
-}: EditChannelArguments): Object => {
+}: EditChannelArguments): DBChannel => {
   return db
     .table('channels')
     .get(channelId)
