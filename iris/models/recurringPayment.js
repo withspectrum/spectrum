@@ -93,6 +93,15 @@ export const getCommunityRecurringPayments = (
     .then(result => (result && result.length > 0 ? result : null));
 };
 
+export const getCommunitiesRecurringPayments = (
+  communityIds: Array<string>
+): Promise<Object> => {
+  return db
+    .table('recurringPayments')
+    .getAll(...communityIds, { index: 'communityId' })
+    .run();
+};
+
 export const getUsersRecurringPayments = (
   userIds: Array<string>
 ): Promise<Object> => {

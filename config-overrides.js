@@ -6,6 +6,7 @@
 
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
+const { injectBabelPlugin } = require('react-app-rewired');
 const fs = require('fs');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
@@ -31,5 +32,9 @@ const setCustomSwPrecacheOptions = config => {
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
   config.plugins.push(WriteFilePlugin());
+  injectBabelPlugin('babel-macros', config);
+  injectBabelPlugin('preval', config);
+  // Necessary for babel-macros to work
+  config.node.module = 'empty';
   return rewireStyledComponents(config, env, { ssr: true });
 };
