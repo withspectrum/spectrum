@@ -22,8 +22,6 @@ export const Body = props => {
 
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
 
-  //TODO: Add renderMarkdownLinks() back in to the text bubble...
-
   switch (type) {
     case 'text':
     default:

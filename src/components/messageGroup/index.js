@@ -106,7 +106,6 @@ class Messages extends Component {
               <MessagesWrapper>
                 <AuthorByline sender={sender} me={me} />
                 {group.map((message, i) => {
-                  console.log('message', message);
                   return (
                     <Message
                       key={i}
