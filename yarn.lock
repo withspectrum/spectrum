@@ -725,6 +725,10 @@ babel-loader@^7.1.0:
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
 
+babel-macros@^1.0.0, babel-macros@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/babel-macros/-/babel-macros-1.0.2.tgz#04475889990243cc58a0afb5ea3308ec6b89e797"
+
 babel-messages@^6.23.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.23.0.tgz#f3cdf4703858035b2a2951c6ec5edf6c62f2630e"
@@ -756,6 +760,16 @@ babel-plugin-istanbul@^4.0.0:
 babel-plugin-jest-hoist@^20.0.3:
   version "20.0.3"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-20.0.3.tgz#afedc853bd3f8dc3548ea671fbe69d03cc2c1767"
+
+babel-plugin-preval@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-preval/-/babel-plugin-preval-1.5.0.tgz#be4e3353ce6ec4fd0c6b199701193306033bf54b"
+  dependencies:
+    babel-core "^6.26.0"
+    babel-macros "^1.0.0"
+    babel-register "^6.26.0"
+    babylon "^6.18.0"
+    require-from-string "^1.2.1"
 
 babel-plugin-styled-components@^1.1.4, babel-plugin-styled-components@^1.1.7:
   version "1.2.0"
@@ -7650,7 +7664,7 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
 
-require-from-string@^1.1.0:
+require-from-string@^1.1.0, require-from-string@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-1.2.1.tgz#529c9ccef27380adfec9a2f965b649bbee636418"
 
@@ -8444,7 +8458,7 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-sw-precache-webpack-plugin@0.11.4:
+sw-precache-webpack-plugin@0.11.4, sw-precache-webpack-plugin@^0.11.4:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/sw-precache-webpack-plugin/-/sw-precache-webpack-plugin-0.11.4.tgz#a695017e54eed575551493a519dc1da8da2dc5e0"
   dependencies:
