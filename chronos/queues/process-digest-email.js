@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
 import Raven from 'raven';
-import commitHash from 'shared/get-commit-hash';
+import commitHash from '../../shared/get-commit-hash';
 Raven.config(
   'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
   {
@@ -11,7 +11,7 @@ Raven.config(
   }
 ).install();
 import intersection from 'lodash.intersection';
-import createQueue from 'shared/bull/create-queue';
+import createQueue from '../../shared/bull/create-queue';
 import {
   SEND_DIGEST_EMAIL,
   MIN_TOTAL_MESSAGE_COUNT,
@@ -36,7 +36,14 @@ import {
   getTotalReputation,
 } from '../models/reputationEvent';
 
-export default job => {
+type DigestJob = {
+  data: {
+    timeframe: string,
+  },
+  id: string,
+};
+
+export default (job: DigestJob) => {
   const { timeframe } = job.data;
   debug(`\n\n\nnew job: ${job.id}`);
   debug(`\nprocessing ${timeframe} digest`);
