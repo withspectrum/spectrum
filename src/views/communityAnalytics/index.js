@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
+import { openModal } from '../../actions/modals';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import ViewError from '../../components/viewError';
@@ -33,10 +34,12 @@ type Props = {
       name: string,
       profilePhoto: string,
       slug: string,
+      isPro: boolean,
     },
   },
   isLoading: boolean,
   hasError: boolean,
+  dispatch: Function,
 };
 
 type State = {
@@ -44,6 +47,13 @@ type State = {
 };
 
 class CommunitySettings extends React.Component<Props, State> {
+  upgrade = () => {
+    const { dispatch, currentUser, data: { community } } = this.props;
+    dispatch(
+      openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })
+    );
+  };
+
   render() {
     const {
       match: { params: { communitySlug } },
@@ -53,6 +63,30 @@ class CommunitySettings extends React.Component<Props, State> {
     } = this.props;
 
     if (community) {
+      if (!community.isPro) {
+        return (
+          <AppViewWrapper>
+            <Titlebar
+              title={`Community analytics`}
+              provideBack={true}
+              backRoute={`/${communitySlug}`}
+              noComposer
+            />
+
+            <ViewError
+              heading={`Community analytics are available on the Standard plan.`}
+              subheading={`To explore analytics for your community, unlock private channels, add multiple moderators, and more, please upgrade to the standard plan.`}
+            >
+              <ButtonRow>
+                <Button onClick={this.upgrade} large>
+                  Upgrade to Standard
+                </Button>
+              </ButtonRow>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
+
       return (
         <AppViewWrapper>
           <Titlebar
@@ -112,6 +146,10 @@ class CommunitySettings extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), getThisCommunity, viewNetworkHandler, pure)(
-  CommunitySettings
-);
+const map = state => ({ currentUser: state.users.currentUser });
+export default compose(
+  connect(map),
+  getThisCommunity,
+  viewNetworkHandler,
+  pure
+)(CommunitySettings);

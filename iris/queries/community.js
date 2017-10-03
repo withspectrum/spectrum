@@ -435,6 +435,12 @@ module.exports = {
       });
     },
     isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
-      loaders.communityRecurringPayments.load(id),
+      // loaders.communityRecurringPayments.load(id),
+      {
+        return getCommunityRecurringPayments(id).then(subs => {
+          let filtered = subs && subs.filter(sub => sub.status === 'active');
+          return !filtered || filtered.length === 0 ? false : true;
+        });
+      },
   },
 };
