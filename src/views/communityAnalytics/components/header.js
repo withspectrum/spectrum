@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import { StyledHeader, Heading, Subheading, HeaderText } from '../style';
 import { Avatar } from '../../../components/avatar';

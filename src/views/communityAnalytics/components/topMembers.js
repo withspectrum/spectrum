@@ -1,8 +1,5 @@
-// @flow
 import * as React from 'react';
-// $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';

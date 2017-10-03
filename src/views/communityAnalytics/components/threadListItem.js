@@ -1,6 +1,4 @@
-// @flow
 import * as React from 'react';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { convertTimestampToDate } from '../../../helpers/utils';
 import {
