@@ -4,6 +4,8 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-macros": "^1.0.2",
+    "babel-plugin-preval": "^1.5.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-env": "^5.0.5",
     "flow-bin": "^0.55.0",
@@ -52,6 +54,7 @@
     "imgix-core-js": "^1.0.6",
     "immutability-helper": "^2.2.0",
     "json-stringify-pretty-compact": "^1.0.4",
+    "jsonwebtoken": "^8.0.1",
     "linkify-it": "^2.0.3",
     "localstorage-memory": "^1.0.2",
     "lodash": "^4.17.4",
@@ -103,6 +106,7 @@
     "striptags": "2.x",
     "styled-components": "2.1.2",
     "subscriptions-transport-ws": "^0.7.0",
+    "sw-precache-webpack-plugin": "^0.11.4",
     "web-push": "^3.2.2"
   },
   "scripts": {
@@ -134,7 +138,7 @@
     "postbuild:mercury": "cp mercury/package.json build-mercury/package.json && cp now.json build-mercury/now.json",
     "build:client": "cross-env NODE_PATH=./ react-app-rewired build",
     "pretest": "babel-node shared/testing/setup-db.js",
-    "test": "cross-env NODE_PATH=./ react-app-rewired test",
+    "test": "cross-env NODE_PATH=./ jest --setupTestFrameworkScriptFile='./src/setupTests.js' --forceExit",
     "posttest": "babel-node shared/testing/teardown-db.js",
     "test:ci": "cross-env CI=true npm run test",
     "db:migrate": "npm run rethinkdb:migrate -- up",
@@ -146,10 +150,7 @@
     "lint:staged": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote --trailing-comma es5",
-      "git add"
-    ]
+    "*.js": ["prettier --write --single-quote --trailing-comma es5", "git add"]
   },
   "pre-commit": "lint:staged"
 }

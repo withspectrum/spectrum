@@ -44,24 +44,28 @@ export default async job => {
         : `${quantity - 1},`}999 members`;
     };
 
-    return sendCommunityInvoiceReceiptQueue.add({
-      to: owner.email,
-      community: {
-        name: community.name,
+    return sendCommunityInvoiceReceiptQueue.add(
+      {
+        to: owner.email,
+        community: {
+          name: community.name,
+        },
+        invoice: {
+          amount,
+          paidAt,
+          brand,
+          last4,
+          planName: invoice.planName,
+          memberCount: memberCountString(invoice.quantity),
+          id,
+        },
       },
-      invoice: {
-        amount,
-        paidAt,
-        brand,
-        last4,
-        planName: invoice.planName,
-        memberCount: memberCountString(invoice.quantity),
-        id,
-      },
-    });
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
   });
 
-  return Promise.all(sendOwnerEmails)
-    .then(() => job.remove())
-    .catch(err => Raven.captureException(err));
+  return Promise.all(sendOwnerEmails).catch(err => Raven.captureException(err));
 };

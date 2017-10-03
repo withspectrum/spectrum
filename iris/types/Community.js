@@ -1,3 +1,4 @@
+// @flow
 const Community = /* GraphQL */ `
 	type CommunityChannelsConnection {
 		pageInfo: PageInfo!

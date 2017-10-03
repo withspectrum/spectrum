@@ -21,3 +21,10 @@ export const COMMUNITY_INVOICE_RECEIPT_TEMPLATE = 2647483;
 export const PRO_INVOICE_RECEIPT_TEMPLATE = 3037461;
 export const NEW_THREAD_CREATED_TEMPLATE = 2713302;
 export const DIGEST_TEMPLATE = 3071361;
+export const DEBUG_TEMPLATE = 3374841;
+
+// types used to generate unsubscribe tokens
+export const TYPE_DAILY_DIGEST = 'dailyDigest';
+export const TYPE_WEEKLY_DIGEST = 'weeklyDigest';
+export const TYPE_NEW_THREAD_CREATED = 'newThreadCreated';
+export const TYPE_NEW_MESSAGE_IN_THREAD = 'newMessageInThreads';

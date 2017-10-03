@@ -38,7 +38,6 @@ export default job => {
       // save the members back to the slackImport record in the db
       return saveSlackImportData(importId, members);
     })
-    .then(() => job.remove())
     .catch(err => {
       throw new Error(err);
     });

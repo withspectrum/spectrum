@@ -1,11 +1,34 @@
+// @flow
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
 import { addQueue } from '../utils/workerQueue';
+import type { PaginationOptions } from '../utils/paginate-arrays';
 
-const getUser = (input: Object): Promise<Object> => {
+type DBUser = {
+  id: string,
+  email?: string,
+  createdAt: Date,
+  name: string,
+  profilePhoto: string,
+  providerId?: string,
+  githubProviderId?: string,
+  fbProviderId?: string,
+  googleProviderId?: string,
+  username?: string,
+  timezone?: number,
+  isOnline?: boolean,
+  lastSeen?: Date,
+};
+
+type GetUserInput = {
+  id?: string,
+  username?: string,
+};
+
+const getUser = (input: GetUserInput): Promise<DBUser> => {
   if (input.id) return getUserById(input.id);
   if (input.username) return getUserByUsername(input.username);
 
@@ -14,14 +37,14 @@ const getUser = (input: Object): Promise<Object> => {
   );
 };
 
-const getUserById = (userId: string): Promise<Object> => {
+const getUserById = (userId: string): Promise<DBUser> => {
   return db
     .table('users')
     .get(userId)
     .run();
 };
 
-const getUserByEmail = (email: string): Promise<Object> => {
+const getUserByEmail = (email: string): Promise<DBUser> => {
   return db
     .table('users')
     .getAll(email, { index: 'email' })
@@ -29,7 +52,7 @@ const getUserByEmail = (email: string): Promise<Object> => {
     .then(results => (results.length > 0 ? results[0] : null));
 };
 
-const getUserByUsername = (username: string): Promise<Object> => {
+const getUserByUsername = (username: string): Promise<DBUser> => {
   return db
     .table('users')
     .getAll(username, { index: 'username' })
@@ -42,14 +65,14 @@ const getUserByUsername = (username: string): Promise<Object> => {
     );
 };
 
-const getUsers = (userIds: Array<string>): Promise<Array<Object>> => {
+const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
     .getAll(...userIds)
     .run();
 };
 
-const getUsersBySearchString = (string: string): Promise<Array<Object>> => {
+const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
   return (
     db
       .table('users')
@@ -65,7 +88,7 @@ const getUsersBySearchString = (string: string): Promise<Array<Object>> => {
 // leaving the filter here as an index on providerId would be a waste of
 // space. This function is only invoked for signups when checking
 // for an existing user on the previous Firebase stack.
-const getUserByProviderId = (providerId: string): Promise<Object> => {
+const getUserByProviderId = (providerId: string): Promise<DBUser> => {
   return db
     .table('users')
     .filter({ providerId })
@@ -76,7 +99,7 @@ const getUserByProviderId = (providerId: string): Promise<Object> => {
     });
 };
 
-const storeUser = (user: Object): Promise<Object> => {
+const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
     .insert(user, { returnChanges: true })
@@ -128,7 +151,7 @@ const getUserByIndex = (indexName, indexValue) => {
 const createOrFindUser = (
   user: Object,
   providerMethod: string
-): Promise<Object> => {
+): Promise<DBUser | {}> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   let promise;
@@ -202,7 +225,7 @@ const setUsername = (id: string, username: string) => {
 
 const getEverything = (
   userId: string,
-  { first, after }
+  { first, after }: PaginationOptions
 ): Promise<Array<any>> => {
   return db
     .table('usersChannels')
@@ -229,9 +252,14 @@ const getEverything = (
     );
 };
 
+type UserThreadCount = {
+  id: string,
+  count: number,
+};
+
 const getUsersThreadCount = (
   threadIds: Array<string>
-): Promise<Array<Object>> => {
+): Promise<Array<UserThreadCount>> => {
   const getThreadCounts = threadIds.map(creatorId =>
     db
       .table('threads')
@@ -250,17 +278,20 @@ const getUsersThreadCount = (
 
 export type EditUserArguments = {
   input: {
-    file: any,
-    name: string,
-    description: string,
-    website: string,
+    file?: any,
+    name?: string,
+    description?: string,
+    website?: string,
+    coverFile?: string,
+    username?: string,
+    timezone?: number,
   },
 };
 
 const editUser = (
   input: EditUserArguments,
   userId: string
-): Promise<Object> => {
+): Promise<DBUser> => {
   const {
     input: { name, description, website, file, coverFile, username, timezone },
   } = input;
@@ -406,10 +437,10 @@ const editUser = (
     });
 };
 
-const setUserOnline = (id: string, isOnline: boolean) => {
-  let data = {
-    isOnline,
-  };
+const setUserOnline = (id: string, isOnline: boolean): DBUser => {
+  let data = {};
+
+  data.isOnline = isOnline;
 
   // If a user is going offline, store their lastSeen
   if (isOnline === false) {
