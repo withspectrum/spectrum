@@ -306,8 +306,8 @@ class CreateChannelModal extends Component {
 
             {!modalProps.isPro && (
               <UpsellDescription>
-                Pro communities can create private channels to protect threads,
-                messages, and manually approve all new members.
+                Standard communities can create private channels to protect
+                threads, messages, and manually approve all new members.
                 <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
                   Learn more
                 </Link>

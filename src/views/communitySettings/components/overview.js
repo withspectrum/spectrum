@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { SectionsContainer, Column } from '../style';
-import { CommunityEditForm } from '../../../components/editForm';
+import EditForm from './editForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import ChannelList from './channelList';
 import ImportSlack from './importSlack';
 import EmailInvites from './emailInvites';
 import Invoices from './invoices';
-import CommunityMembers from '../../../components/communityMembers';
+import CommunityMembers from './communityMembers';
 
 class Overview extends React.Component<Props> {
   render() {
@@ -15,15 +15,17 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <CommunityEditForm community={community} />
+          <EditForm community={community} />
           <RecurringPaymentsList community={community} />
+          <Invoices id={community.id} />
         </Column>
         <Column>
           <ImportSlack community={community} id={community.id} />
           <EmailInvites community={community} />
           <ChannelList communitySlug={communitySlug} />
+        </Column>
+        <Column>
           <CommunityMembers id={community.id} />
-          <Invoices id={community.id} />
         </Column>
       </SectionsContainer>
     );

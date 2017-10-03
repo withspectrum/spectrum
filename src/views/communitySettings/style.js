@@ -51,7 +51,7 @@ export const EmailInviteForm = styled.div`
 `;
 
 export const EmailInviteInput = styled.input`
-  display: flex;
+  display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   flex: 1 1 50%;
   padding: 8px 12px;
   font-size: 14px;
@@ -262,6 +262,16 @@ export const SectionCard = styled.div`
   flex-direction: column;
 `;
 
+export const SectionCardFooter = styled.div`
+  border-top: 1px solid ${props => props.theme.bg.border};
+  width: 100%;
+  padding: 16px 0 0;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
 export const SectionSubtitle = styled.h4`
   font-size: 14px;
   font-weight: 500;
@@ -279,14 +289,14 @@ export const Heading = styled.h1`
   margin-left: 16px;
   font-size: 32px;
   color: ${props => props.theme.text.default};
-  font-weight: 800;
+  font-weight: 600;
 `;
 
 export const Subheading = styled.h3`
   margin-left: 16px;
   font-size: 16px;
   color: ${props => props.theme.text.alt};
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   margin-bottom: 8px;
 `;
@@ -298,6 +308,7 @@ export const StyledHeader = styled.div`
   background: ${props => props.theme.bg.default};
   width: 100%;
   align-items: center;
+  flex: none;
 
   @media (max-width: 768px) {
     display: none;
@@ -310,17 +321,19 @@ export const StyledSubnav = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   width: 100%;
-  align-items: center;
+  flex: none;
 
   @media (max-width: 768px) {
     padding: 0 16px;
     display: block;
+    justify-content: center;
   }
 `;
 
 export const SubnavList = styled.ul`
   list-style-type: none;
   display: flex;
+  align-items: center;
 `;
 
 export const SubnavListItem = styled.li`
