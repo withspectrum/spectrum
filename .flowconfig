@@ -1,12 +1,19 @@
 [ignore]
 .*/node_modules/.*
-.*/styled-components/src/.*
+.*/build.*
+.*/*.test.js
 
 [include]
 
 [libs]
-node_modules/styled-components/flow-typed/*.js
 
 [options]
 suppress_comment=.*\\$FlowFixMe
+suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
+
+[lints]
+all=warn
+
+[version]
+0.55.0

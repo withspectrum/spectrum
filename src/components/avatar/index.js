@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
@@ -88,9 +87,11 @@ const AvatarWithFallback = ({ style, ...props }) => (
       <StyledAvatarFallback
         {...props}
         src={
-          props.community
-            ? `/img/default_community.svg`
-            : `/img/default_avatar.svg`
+          props.community ? (
+            `/img/default_community.svg`
+          ) : (
+            `/img/default_avatar.svg`
+          )
         }
       />
     </StyledAvatar>

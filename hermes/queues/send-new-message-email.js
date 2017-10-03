@@ -1,7 +1,12 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
-import { NEW_MESSAGE_TEMPLATE } from './constants';
+import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import {
+  NEW_MESSAGE_TEMPLATE,
+  TYPE_NEW_MESSAGE_IN_THREAD,
+  DEBUG_TEMPLATE,
+} from './constants';
 import capitalize from '../utils/capitalize';
 
 type ReplyData = {
@@ -29,6 +34,7 @@ type SendNewMessageEmailJobData = {
   user: {
     displayName: string,
     username: string,
+    userId: string,
   },
   to: string,
   threads: Array<ThreadData>,
@@ -39,7 +45,7 @@ type SendNewMessageEmailJob = {
   id: string,
 };
 
-export default (job: SendNewMessageEmailJob) => {
+export default async (job: SendNewMessageEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   const repliesAmount = job.data.threads.reduce(
     (total, thread) => total + thread.replies.length,
@@ -49,23 +55,47 @@ export default (job: SendNewMessageEmailJob) => {
   const postfix = job.data.threads.length > 1 ? ' and other threads' : '';
   const subject = `You've got ${repliesText} in ${job.data.threads[0].content
     .title}${postfix}`;
-  try {
-    return sendEmail({
-      TemplateId: NEW_MESSAGE_TEMPLATE,
-      To: job.data.to,
-      TemplateModel: {
-        subject,
-        user: job.data.user,
-        threads: job.data.threads.map(thread => ({
-          ...thread,
-          // Capitalize the first letter of all titles in the body of the email
-          // Don't capitalize the one in the subject though because in a DM thread
-          // that is "your conversation with X", so we don't want to capitalize it.
-          title: capitalize(thread.content.title),
-        })),
-      },
-    });
-  } catch (err) {
-    console.log(err);
+
+  const unsubscribeToken = await generateUnsubscribeToken(
+    job.data.user.userId,
+    TYPE_NEW_MESSAGE_IN_THREAD
+  );
+
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: job.data.user,
+          type: TYPE_NEW_MESSAGE_IN_THREAD,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      return sendEmail({
+        TemplateId: NEW_MESSAGE_TEMPLATE,
+        To: job.data.to,
+        TemplateModel: {
+          subject,
+          user: job.data.user,
+          username: job.data.user.username,
+          threads: job.data.threads.map(thread => ({
+            ...thread,
+            // Capitalize the first letter of all titles in the body of the email
+            // Don't capitalize the one in the subject though because in a DM thread
+            // that is "your conversation with X", so we don't want to capitalize it.
+            title: capitalize(thread.content.title),
+          })),
+          unsubscribeToken,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };

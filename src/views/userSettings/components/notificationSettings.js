@@ -1,4 +1,3 @@
-//@flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -108,15 +107,16 @@ class NotificationSettings extends Component {
         </ListHeader>
         <ListContainer>
           <EmailListItem>
-            {subscription !== null &&
+            {subscription !== null && (
               <Checkbox
                 checked={!!subscription}
                 disabled={webPushBlocked}
                 onChange={onChange}
               >
                 Enable browser push notifications
-              </Checkbox>}
-            {webPushBlocked &&
+              </Checkbox>
+            )}
+            {webPushBlocked && (
               <Notice>
                 <strong>
                   You have blocked browser push notifications on this device!
@@ -125,7 +125,8 @@ class NotificationSettings extends Component {
                 <a href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications">
                   these steps
                 </a>.
-              </Notice>}
+              </Notice>
+            )}
           </EmailListItem>
         </ListContainer>
       </StyledCard>

@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 import { NotificationListContainer } from '../style';
 import { parseNotification } from '../utils';

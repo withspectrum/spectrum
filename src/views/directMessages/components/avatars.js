@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Avatar } from '../../../components/avatar';
 import {
@@ -103,7 +102,9 @@ export const renderAvatars = users => {
           return null;
         })}
 
-        <Remainder><span>+{remainder}</span></Remainder>
+        <Remainder>
+          <span>+{remainder}</span>
+        </Remainder>
       </ThreeAvatarContainer>
     );
   }

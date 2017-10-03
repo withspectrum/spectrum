@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:channel-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -132,6 +131,5 @@ new job for ${incomingChannel.id} by ${currentUserId}`
           });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };

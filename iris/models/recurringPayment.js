@@ -1,4 +1,3 @@
-// @flow
 import { db } from './db';
 
 const parseStripeDataToDb = (stripeData): Object => ({
@@ -92,6 +91,15 @@ export const getCommunityRecurringPayments = (
     .getAll(communityId, { index: 'communityId' })
     .run()
     .then(result => (result && result.length > 0 ? result : null));
+};
+
+export const getCommunitiesRecurringPayments = (
+  communityIds: Array<string>
+): Promise<Object> => {
+  return db
+    .table('recurringPayments')
+    .getAll(...communityIds, { index: 'communityId' })
+    .run();
 };
 
 export const getUsersRecurringPayments = (

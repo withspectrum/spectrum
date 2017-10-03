@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -110,16 +109,20 @@ class ChannelView extends React.Component<Props> {
             <ViewError
               emoji={isPending ? '🕓' : '🔑'}
               heading={
-                isPending
-                  ? `Your request to join this channel is pending`
-                  : `This channel is private`
+                isPending ? (
+                  `Your request to join this channel is pending`
+                ) : (
+                  `This channel is private`
+                )
               }
               subheading={
-                isPending
-                  ? `Return to the ${channel.community
-                      .name} community until you hear back.`
-                  : `Request to join this channel and the admins of ${channel
-                      .community.name} will be notified.`
+                isPending ? (
+                  `Return to the ${channel.community
+                    .name} community until you hear back.`
+                ) : (
+                  `Request to join this channel and the admins of ${channel
+                    .community.name} will be notified.`
+                )
               }
             >
               <RequestToJoinChannel
@@ -162,18 +165,18 @@ class ChannelView extends React.Component<Props> {
 
             {/* user is signed in and is a member of the channel */}
             {isLoggedIn &&
-              userHasPermissions && (
-                <NotificationsToggle
-                  value={channel.channelPermissions.receiveNotifications}
-                  channel={channel}
-                />
-              )}
+            userHasPermissions && (
+              <NotificationsToggle
+                value={channel.channelPermissions.receiveNotifications}
+                channel={channel}
+              />
+            )}
 
             {/* user is signed in and has permissions to view pending users */}
             {isLoggedIn &&
-              (isOwner || isGlobalOwner) && (
-                <PendingUsersNotification channel={channel} id={channel.id} />
-              )}
+            (isOwner || isGlobalOwner) && (
+              <PendingUsersNotification channel={channel} id={channel.id} />
+            )}
           </Column>
 
           <Column type="primary" alignItems="center">
@@ -183,24 +186,24 @@ class ChannelView extends React.Component<Props> {
 
             {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
             {isLoggedIn &&
-              userHasPermissions &&
-              channel.isPrivate &&
-              !channel.community.isPro && (
-                <UpsellUpgradeCommunityPrivateChannel
-                  community={channel.community}
-                />
-              )}
+            userHasPermissions &&
+            channel.isPrivate &&
+            !channel.community.isPro && (
+              <UpsellUpgradeCommunityPrivateChannel
+                community={channel.community}
+              />
+            )}
 
             {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
             {isLoggedIn &&
-              userHasPermissions &&
-              ((channel.isPrivate && channel.community.isPro) ||
-                !channel.isPrivate) && (
-                <ThreadComposer
-                  activeCommunity={communitySlug}
-                  activeChannel={channelSlug}
-                />
-              )}
+            userHasPermissions &&
+            ((channel.isPrivate && channel.community.isPro) ||
+              !channel.isPrivate) && (
+              <ThreadComposer
+                activeCommunity={communitySlug}
+                activeChannel={channelSlug}
+              />
+            )}
 
             <ThreadFeedWithData
               viewContext="channel"

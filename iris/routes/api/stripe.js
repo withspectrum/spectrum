@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { Router } from 'express';
 const stripeRouter = Router();

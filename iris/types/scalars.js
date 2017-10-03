@@ -1,3 +1,4 @@
+// @flow
 /**
  * Custom scalars (data types, like Int, String,...) live in this file,
  * both their type definitions and their resolvers

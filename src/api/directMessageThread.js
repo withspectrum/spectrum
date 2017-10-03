@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';

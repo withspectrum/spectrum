@@ -1,6 +1,15 @@
 // @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
-// $FlowFixMe
+import Raven from 'raven';
+import commitHash from '../../shared/get-commit-hash';
+Raven.config(
+  'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
+  {
+    environment: process.env.NODE_ENV,
+    release: commitHash,
+    tags: { git_commit: commitHash },
+  }
+).install();
 import intersection from 'lodash.intersection';
 import createQueue from '../../shared/bull/create-queue';
 import {
@@ -27,7 +36,14 @@ import {
   getTotalReputation,
 } from '../models/reputationEvent';
 
-export default job => {
+type DigestJob = {
+  data: {
+    timeframe: string,
+  },
+  id: string,
+};
+
+export default (job: DigestJob) => {
   const { timeframe } = job.data;
   debug(`\n\n\nnew job: ${job.id}`);
   debug(`\nprocessing ${timeframe} digest`);
@@ -162,9 +178,10 @@ export default job => {
 
     // for each user who wants a digest, fetch an array of channelIds where they are a member
     const channelConnectionPromises = users.map(
-      async ({ email, firstName, userId, ...user }) => {
+      async ({ email, firstName, userId, username, ...user }) => {
         return {
           email,
+          username,
           name: firstName || null,
           userId,
           channels: await getUsersChannelsEligibleForWeeklyDigest(userId),
@@ -220,7 +237,7 @@ export default job => {
 
     // we don't want to send a digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
     const eligibleUsersForDigest = rawThreadsForUsersEmail
-      .filter(user => user.threads.length > MIN_THREADS_REQUIRED_FOR_DIGEST)
+      .filter(user => user.threads.length >= MIN_THREADS_REQUIRED_FOR_DIGEST)
       // and finally, sort the user's threads in descending order by message count
       .map(({ channels, ...user }) => {
         // for each thread, assign a score based on the total message count and new message count
@@ -280,13 +297,6 @@ export default job => {
       return;
     }
 
-    // debug('\n👉 Eligible users data');
-    // debug(eligibleUsers);
-    // debug('\n👉 Example array of threads');
-    // debug(eligibleUsers[0].threads);
-    // debug('\n👉 Example thread data for email');
-    // debug(eligibleUsers[0].threads[0]);
-
     const sendDigestPromises = topCommunities => {
       debug('\n ⚙️  Attaching community upsells if required...');
 
@@ -303,7 +313,7 @@ export default job => {
 
         // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
         const communities =
-          usersCommunityIds.length < COMMUNITY_UPSELL_THRESHOLD
+          usersCommunityIds.length <= COMMUNITY_UPSELL_THRESHOLD
             ? topCommunities
                 .filter(
                   community => usersCommunityIds.indexOf(community.id) <= -1
@@ -320,20 +330,26 @@ export default job => {
               timeframe === 'weekly'
               ? // if this is a weekly digest
                 `Since last week you've gained ${reputationGained} rep! Your rep will keep growing as you start and join more conversations.`
-              : `Since yesterday you've gained ${reputationGained} rep - nice work!`
+              : `Since yesterday you've gained ${reputationGained} rep!`
             : // if the total reputation is greater than the reputation gained, it means this is an incremental amount of rep for the user
               timeframe === 'weekly'
-              ? `Since last week you've gained ${reputationGained} rep! You're now sitting strong at ${totalReputation} - keep it up.`
-              : `Since yesterday you've gained ${reputationGained} rep - nice work! You now have ${totalReputation} total rep across all of your communities - well done!`
+              ? `Since last week you've gained ${reputationGained} rep. You're now sitting strong at ${totalReputation.toLocaleString()} - keep it up!`
+              : `Since yesterday you've gained ${reputationGained} rep. You now have ${totalReputation.toLocaleString()} total rep across all of your communities - well done!`
           : // has not gained any reputation
             `You've been a little quiet this week – this week try joining some conversations, your community wants to hear from you!`;
 
-        return await sendDigestEmailQueue.add({
-          ...user,
-          communities,
-          reputationString,
-          timeframe,
-        });
+        return await sendDigestEmailQueue.add(
+          {
+            ...user,
+            communities,
+            reputationString,
+            timeframe,
+          },
+          {
+            removeOnComplete: true,
+            removeOnFail: true,
+          }
+        );
       });
     };
 
@@ -346,6 +362,7 @@ export default job => {
   return processSendWeeklyDigests().catch(err => {
     debug('❌  Error sending digest');
     debug(err);
+    Raven.captureException(err);
     console.log('Error sending digests: ', err);
   });
 };

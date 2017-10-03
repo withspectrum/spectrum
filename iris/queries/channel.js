@@ -1,4 +1,3 @@
-// @flow
 const {
   getChannelBySlug,
   getChannelMetaData,

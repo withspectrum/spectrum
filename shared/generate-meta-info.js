@@ -1,4 +1,3 @@
-// @flow
 /**
  * This file is shared between server and client.
  * ⚠️ DON'T PUT ANY NODE.JS OR BROWSER-SPECIFIC CODE IN HERE ⚠️
@@ -98,7 +97,8 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         });
       return setDefault({
         title: data && data.title + ' · ' + data.channelName,
-        description: data &&
+        description:
+          data &&
           data.body &&
           (data.type === 'SLATE'
             ? slate.toPlainText(slate.toState(JSON.parse(data.body)))

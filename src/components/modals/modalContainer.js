@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { ModalBody, Header, ModalContent, Title, CloseButton } from './styles';
 
@@ -13,9 +12,11 @@ const ModalContainer = ({
   children,
   title,
   noHeader,
-}: { closeModal: Function, children?: Object, title: string }): React$Element<
-  any
-> => {
+}: {
+  closeModal: Function,
+  children?: Object,
+  title: string,
+}): React$Element<any> => {
   return (
     <ModalBody>
       <Header noHeader={noHeader}>
@@ -23,9 +24,7 @@ const ModalContainer = ({
         <CloseButton onClick={() => closeModal()} glyph="view-close" />
       </Header>
 
-      <ModalContent>
-        {children}
-      </ModalContent>
+      <ModalContent>{children}</ModalContent>
     </ModalBody>
   );
 };

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Community query resolvers
  */
@@ -260,12 +259,6 @@ module.exports = {
 
       return queryRecurringPayments();
     },
-    isPro: ({ id }: { id: string }, _: any, __: any) => {
-      return getCommunityRecurringPayments(id).then(subs => {
-        let filtered = subs && subs.filter(sub => sub.status === 'active');
-        return !filtered || filtered.length === 0 ? false : true;
-      });
-    },
     memberGrowth: async (
       { id }: { id: string },
       __: any,
@@ -441,5 +434,7 @@ module.exports = {
         };
       });
     },
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
+      loaders.communityRecurringPayments.load(id),
   },
 };

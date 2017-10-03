@@ -1,5 +1,3 @@
-// @flow
-
 type Options = {
   max?: number,
   overflowPostfix?: string,

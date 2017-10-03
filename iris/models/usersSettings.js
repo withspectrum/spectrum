@@ -1,4 +1,3 @@
-// @flow
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
@@ -48,5 +47,19 @@ export const updateUsersNotificationSettings = (
     .update({
       ...settings,
     })
+    .run();
+};
+
+export const unsubscribeUserFromEmailNotification = (
+  userId: string,
+  type: object
+): Promise<Object> => {
+  const obj = { notifications: { types: {} } };
+  obj['notifications']['types'][type] = { email: false };
+
+  return db
+    .table('usersSettings')
+    .getAll(userId, { index: 'userId' })
+    .update({ ...obj })
     .run();
 };

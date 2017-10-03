@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import slugg from 'slugg';
@@ -189,19 +188,16 @@ class SetUsername extends Component {
             autoFocus={true}
           />
 
-          {isSearching &&
+          {isSearching && (
             <Loading>
               <Spinner size={16} color={'brand.default'} />
-            </Loading>}
+            </Loading>
+          )}
         </Row>
         <Row>
-          <Error>
-            {error ? error : <span>&nbsp;</span>}
-          </Error>
+          <Error>{error ? error : <span>&nbsp;</span>}</Error>
 
-          <Success>
-            {success ? success : <span>&nbsp;</span>}
-          </Success>
+          <Success>{success ? success : <span>&nbsp;</span>}</Success>
         </Row>
 
         <Row>

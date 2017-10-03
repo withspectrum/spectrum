@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -240,7 +239,7 @@ class ThreadContainer extends React.Component<Props, State> {
               )}
 
               {isLoggedIn &&
-                !canSendMessages && <JoinChannel channel={thread.channel} />}
+              !canSendMessages && <JoinChannel channel={thread.channel} />}
 
               {!isLoggedIn && (
                 <UpsellSignIn
@@ -254,20 +253,20 @@ class ThreadContainer extends React.Component<Props, State> {
           </Content>
 
           {isLoggedIn &&
-            canSendMessages &&
-            !isLocked && (
-              <Input>
-                <ChatInputWrapper type="only">
-                  <ChatInput
-                    threadType="story"
-                    thread={thread.id}
-                    currentUser={isLoggedIn}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    onRef={chatInput => (this.chatInput = chatInput)}
-                  />
-                </ChatInputWrapper>
-              </Input>
-            )}
+          canSendMessages &&
+          !isLocked && (
+            <Input>
+              <ChatInputWrapper type="only">
+                <ChatInput
+                  threadType="story"
+                  thread={thread.id}
+                  currentUser={isLoggedIn}
+                  forceScrollToBottom={this.forceScrollToBottom}
+                  onRef={chatInput => (this.chatInput = chatInput)}
+                />
+              </ChatInputWrapper>
+            </Input>
+          )}
         </View>
       );
     }
@@ -281,9 +280,11 @@ class ThreadContainer extends React.Component<Props, State> {
         <ViewError
           heading={`We had trouble loading this thread.`}
           subheading={
-            !hasError
-              ? `It may be private, or may have been deleted by an author or moderator.`
-              : ''
+            !hasError ? (
+              `It may be private, or may have been deleted by an author or moderator.`
+            ) : (
+              ''
+            )
           }
           refresh={hasError}
         />

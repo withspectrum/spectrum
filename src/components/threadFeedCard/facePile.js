@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Avatar } from '../../components/avatar';
 import { ParticipantHeads, ParticipantCount, Creator } from './style';
@@ -6,7 +5,7 @@ import { ParticipantHeads, ParticipantCount, Creator } from './style';
 const messageAvatars = list => {
   const avatarList = list.slice(0, 5);
 
-  return avatarList.map(participant =>
+  return avatarList.map(participant => (
     <Avatar
       size={32}
       isOnline={participant.isOnline}
@@ -15,7 +14,7 @@ const messageAvatars = list => {
       role="presentation"
       key={participant.id}
     />
-  );
+  ));
 };
 
 const FacePile = props => {
@@ -38,8 +37,9 @@ const FacePile = props => {
         />
       </Creator>
       {messageAvatars(participantList)}
-      {participantCount > 6 &&
-        <ParticipantCount>{`+${participantCount - 6}`}</ParticipantCount>}
+      {participantCount > 6 && (
+        <ParticipantCount>{`+${participantCount - 6}`}</ParticipantCount>
+      )}
     </ParticipantHeads>
   );
 };

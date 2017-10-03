@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getGrowth, getCount } from '../models/utils';
+import { getGrowth, getCount, getAu } from '../models/utils';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -13,6 +13,9 @@ module.exports = {
 
       return {
         count: await getCount('users'),
+        dau: await getAu('daily'),
+        wau: await getAu('weekly'),
+        mau: await getAu('monthly'),
         weeklyGrowth: await getGrowth('users', 'weekly', 'createdAt'),
         monthlyGrowth: await getGrowth('users', 'monthly', 'createdAt'),
         quarterlyGrowth: await getGrowth('users', 'quarterly', 'createdAt'),

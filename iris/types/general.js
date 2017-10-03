@@ -1,3 +1,4 @@
+// @flow
 /**
  * General, reusable types
  */

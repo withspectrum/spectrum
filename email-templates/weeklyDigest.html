@@ -144,7 +144,7 @@
     }
 
     .header-cell {
-      padding: 32px 32px 0 32px
+      padding: 32px 16px 0 16px
     }
 
     .header-cell p {
@@ -152,7 +152,7 @@
     }
 
     .content-cell {
-      padding: 24px 32px;
+      padding: 24px 16px;
       display: block;
     }
 
@@ -300,6 +300,11 @@
       margin-bottom: 16px;
     }
 
+    h2.title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
     .button.feed {
       margin-top: 16px;
       font-size: 18px;
@@ -316,6 +321,7 @@
     .community-name {
       font-size: 14px;
       color: #747E8D;
+      font-weight: 400;
     }
 
     .thread-meta {
@@ -324,14 +330,15 @@
     }
 
     .community-name a {
-      color: #171A21;
-      font-weight: 500;
+      color: #747E8D;
+      font-weight: 400;
     }
 
     .community-description {
       font-size: 14px;
       color: #747E8D;
       max-width: 400px;
+      font-weight: 400;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -359,9 +366,9 @@
     }
 
     .suggest-communities-title {
-      margin-left: 32px;
-      font-size: 20px;
-      font-weight: 700;
+      margin-left: 16px;
+      font-size: 18px;
+      font-weight: 500;
       margin-top: 16px;
     }
 
@@ -389,6 +396,14 @@
       &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
       &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
       &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
     </div>
 
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
@@ -402,7 +417,7 @@
                   <!-- Body content -->
                   <tr>
                     <td class="header-cell">
-                      <p><strong>{{greeting}}</strong></p>
+                      <p>{{greeting}}</p>
 
                       <p>Another {{timeframe.time}} down!</p>
 
@@ -420,7 +435,7 @@
 
                   <tr>
                     <td>
-                      <h2 class="suggest-communities-title">Jump into active conversations in your communities:</h2>
+                      <h2 class="suggest-communities-title">The most active conversations in your communities:</h2>
                     </td>
                   </tr>
 
@@ -526,7 +541,9 @@
           <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
             <tr>
               <td class="content-cell">
-                <p class="sub">Easily <a href="https://spectrum.chat/users/{{user.username}}/settings">unsubscribe in your email settings</a>.</p>
+                <p class="sub">Easily
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">unsubscribe in one click</a>
+                  {{#username}}or <a href="https://spectrum.chat/users/{{.}}/settings">manage your preferences in your settings</a>{{/username}}.</p>
                 <br />
                 <br />
                 <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>

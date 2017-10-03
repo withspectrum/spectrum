@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 const debug = require('debug')('mercury');
 const createWorker = require('../shared/bull/create-worker');

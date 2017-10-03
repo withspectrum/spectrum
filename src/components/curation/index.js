@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -89,12 +88,8 @@ export const FeaturedCommunityWithData = props => {
   } else if (error || !community) {
     return (
       <FeatureDescription>
-        <Title>
-          Explore Spectrum
-        </Title>
-        <NullDescription>
-          Discover and join new communities!
-        </NullDescription>
+        <Title>Explore Spectrum</Title>
+        <NullDescription>Discover and join new communities!</NullDescription>
       </FeatureDescription>
     );
   } else {
@@ -110,9 +105,10 @@ export const FeaturedCommunityWithData = props => {
           </FeaturePresentation>
           <FeatureDescription>
             <ProfileLink to={`/${community.slug}`}>
-              <Title>{community.name}</Title>
-              {' '}
-              <FlexRow>Visit <Icon glyph="view-forward" size={16} /></FlexRow>
+              <Title>{community.name}</Title>{' '}
+              <FlexRow>
+                Visit <Icon glyph="view-forward" size={16} />
+              </FlexRow>
             </ProfileLink>
             <Description>{community.description}</Description>
             <Tag>Editor's note</Tag>

@@ -1,4 +1,3 @@
-// @flow
 import { Router } from 'express';
 const debug = require('debug')('iris:routes:auth:logout');
 import { destroySession } from '../../models/session';

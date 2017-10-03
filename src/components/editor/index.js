@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { Editor as SlateEditor, Raw, Plain } from 'slate';
@@ -118,25 +117,26 @@ class Editor extends Component {
           {...rest}
         />
 
-        {showLinkPreview && linkPreview && linkPreview.loading
-          ? <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          : showLinkPreview && linkPreview && linkPreview.data
-            ? <LinkPreview
-                data={linkPreview.data}
-                size={'large'}
-                remove={linkPreview.remove}
-                editable={true}
-                trueUrl={linkPreview.trueUrl}
-                margin={'16px 0 24px 0'}
-              />
-            : null}
+        {showLinkPreview && linkPreview && linkPreview.loading ? (
+          <LinkPreviewLoading margin={'16px 0 24px 0'} />
+        ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          <LinkPreview
+            data={linkPreview.data}
+            size={'large'}
+            remove={linkPreview.remove}
+            editable={true}
+            trueUrl={linkPreview.trueUrl}
+            margin={'16px 0 24px 0'}
+          />
+        ) : null}
 
-        {images !== false &&
+        {images !== false && (
           <MediaRow>
             <MediaInput onChange={this.addImage} multiple>
               Add
             </MediaInput>
-          </MediaRow>}
+          </MediaRow>
+        )}
       </Wrapper>
     );
   }

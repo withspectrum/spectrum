@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:reaction-notification');
 import { TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -150,6 +149,5 @@ new job for ${incomingReaction.id} by ${currentUserId}`
         });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };

@@ -1,4 +1,3 @@
-// @flow
 const Linkify = require('linkify-it');
 
 const linkifier = new Linkify(undefined, {

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Define the notification subscription resolvers
  */

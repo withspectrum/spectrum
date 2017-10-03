@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -29,9 +28,10 @@ const NewChannel = compose(getChannelById, displayLoadingCard, pure)(
 export const NewChannelNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newChannelCount = notification.entities.length > 1
-    ? `${notification.entities.length} new channels were`
-    : 'A new channel was';
+  const newChannelCount =
+    notification.entities.length > 1
+      ? `${notification.entities.length} new channels were`
+      : 'A new channel was';
 
   return (
     <SegmentedNotificationCard>
@@ -61,9 +61,10 @@ export const MiniNewChannelNotification = ({
 }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newChannelCount = notification.entities.length > 1
-    ? `${notification.entities.length} new channels were`
-    : 'A new channel was';
+  const newChannelCount =
+    notification.entities.length > 1
+      ? `${notification.entities.length} new channels were`
+      : 'A new channel was';
 
   return (
     <SegmentedNotificationListRow>

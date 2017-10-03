@@ -7,6 +7,20 @@ import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import { addQueue } from '../utils/workerQueue';
+import { removeMemberInChannel } from './usersChannels';
+
+type DBCommunity = {
+  coverPhoto: string,
+  createdAt: Date,
+  description: string,
+  id: string,
+  name: string,
+  profilePhoto: string,
+  slug: string,
+  website?: string,
+  deletedAt?: Date,
+  pinnedThreadId?: string,
+};
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -20,7 +34,7 @@ export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
 const getCommunities = (
   communityIds: Array<string>
-): Promise<Array<Object>> => {
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .getAll(...communityIds)
@@ -28,7 +42,9 @@ const getCommunities = (
     .run();
 };
 
-const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
+const getCommunitiesBySlug = (
+  slugs: Array<string>
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .filter(community => db.expr(slugs).contains(community('slug')))
@@ -36,7 +52,7 @@ const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
     .run();
 };
 
-const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
+const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
   return (
     db
       .table('usersCommunities')
@@ -106,16 +122,20 @@ export type EditCommunityArguments = {
     description: string,
     website: string,
     file: Object,
+    coverFile: Object,
     communityId: string,
   },
 };
+
+// TODO(@mxstbr): Use DBUser type
+type CommunityCreator = Object;
 
 const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
   }: CreateCommunityArguments,
-  user
-): Promise<Object> => {
+  user: CommunityCreator
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .insert(
@@ -277,7 +297,7 @@ const createCommunity = (
 
 const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
-}: EditCommunityArguments): Promise<Object> => {
+}: EditCommunityArguments): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -434,7 +454,7 @@ const editCommunity = ({
   - run logs for deletions over time
   - etc
 */
-const deleteCommunity = (communityId: string): Promise<Object> => {
+const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -454,7 +474,7 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
 const setPinnedThreadInCommunity = (
   communityId: string,
   value: string
-): Promise<Object> => {
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -477,7 +497,7 @@ const unsubscribeFromAllChannelsInCommunity = (
     .getAll(communityId, { index: 'communityId' })
     .run()
     .then(channels => {
-      return channels.map(channel => leaveChannel(channel.id, userId));
+      return channels.map(channel => removeMemberInChannel(channel.id, userId));
     });
 };
 
@@ -512,7 +532,7 @@ const userIsMemberOfAnyChannelInCommunity = (
     });
 };
 
-const getTopCommunities = (amount: number): Array<Object> => {
+const getTopCommunities = (amount: number): Array<DBCommunity> => {
   return db
     .table('communities')
     .pluck('id')
@@ -552,7 +572,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
     });
 };
 
-const getRecentCommunities = (amount: number): Array<Object> => {
+const getRecentCommunities = (amount: number): Array<DBCommunity> => {
   return db
     .table('communities')
     .orderBy({ index: db.desc('createdAt') })
@@ -563,7 +583,7 @@ const getRecentCommunities = (amount: number): Array<Object> => {
 
 const getCommunitiesBySearchString = (
   string: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .filter(community => community.coerceTo('string').match(`(?i)${string}`))
@@ -572,6 +592,7 @@ const getCommunitiesBySearchString = (
     .run();
 };
 
+// TODO(@mxstbr): Replace Array<Object> with Array<DBThread>
 const searchThreadsInCommunity = (
   channels: Array<string>,
   searchString: string

@@ -1,4 +1,3 @@
-// @flow
 const initialState = {
   community: null,
 };

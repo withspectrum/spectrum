@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -77,40 +76,43 @@ class UserProfileModal extends Component {
           the action to the 'close' icon in the top right corner of all modals
         */}
         <ModalContainer title={'Edit profile'} closeModal={this.close}>
-
           {/*
             if the current user is viewing their own profile, show an
             editable state, otherwise we will just show a normal user profile
              */}
-          {currentUser.id === user.id
-            ? <Row>
-                <ImageInputLabel>
-                  <InputOverlay>
-                    <Icon glyph="photo" />
-                  </InputOverlay>
-                  {user.profilePhoto &&
-                    <ProfileImage
-                      src={`${user.profilePhoto}?w=40&dpr=2`}
-                      role="presentation"
-                    />}
-                  <HiddenInput
-                    type="file"
-                    id="file"
-                    name="file"
-                    accept=".png, .jpg, .jpeg, .gif, .mp4"
-                    multiple={false}
-                    onChange={this.stageProfilePhotoForUpload}
-                  />
-                </ImageInputLabel>
-              </Row>
-            : <Row>
-                {user.profilePhoto &&
+          {currentUser.id === user.id ? (
+            <Row>
+              <ImageInputLabel>
+                <InputOverlay>
+                  <Icon glyph="photo" />
+                </InputOverlay>
+                {user.profilePhoto && (
                   <ProfileImage
                     src={`${user.profilePhoto}?w=40&dpr=2`}
                     role="presentation"
-                  />}
-                <Button onClick={this.initMessage}>Message</Button>
-              </Row>}
+                  />
+                )}
+                <HiddenInput
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept=".png, .jpg, .jpeg, .gif, .mp4"
+                  multiple={false}
+                  onChange={this.stageProfilePhotoForUpload}
+                />
+              </ImageInputLabel>
+            </Row>
+          ) : (
+            <Row>
+              {user.profilePhoto && (
+                <ProfileImage
+                  src={`${user.profilePhoto}?w=40&dpr=2`}
+                  role="presentation"
+                />
+              )}
+              <Button onClick={this.initMessage}>Message</Button>
+            </Row>
+          )}
         </ModalContainer>
       </Modal>
     );
