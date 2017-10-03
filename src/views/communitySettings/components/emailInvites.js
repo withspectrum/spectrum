@@ -257,6 +257,7 @@ class EmailInvites extends React.Component<Props, State> {
   };
 
   render() {
+    const isMobile = window.innerWidth < 768;
     const {
       contacts,
       isLoading,
@@ -284,7 +285,7 @@ class EmailInvites extends React.Component<Props, State> {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
-                hideOnMobile
+                hideOnMobile={isMobile}
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />
