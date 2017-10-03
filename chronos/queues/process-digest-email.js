@@ -1,7 +1,17 @@
+// @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
-// $FlowFixMe
+import Raven from 'raven';
+import commitHash from 'shared/get-commit-hash';
+Raven.config(
+  'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
+  {
+    environment: process.env.NODE_ENV,
+    release: commitHash,
+    tags: { git_commit: commitHash },
+  }
+).install();
 import intersection from 'lodash.intersection';
-import createQueue from '../../shared/bull/create-queue';
+import createQueue from 'shared/bull/create-queue';
 import {
   SEND_DIGEST_EMAIL,
   MIN_TOTAL_MESSAGE_COUNT,
@@ -220,7 +230,7 @@ export default job => {
 
     // we don't want to send a digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
     const eligibleUsersForDigest = rawThreadsForUsersEmail
-      .filter(user => user.threads.length > MIN_THREADS_REQUIRED_FOR_DIGEST)
+      .filter(user => user.threads.length >= MIN_THREADS_REQUIRED_FOR_DIGEST)
       // and finally, sort the user's threads in descending order by message count
       .map(({ channels, ...user }) => {
         // for each thread, assign a score based on the total message count and new message count
@@ -280,13 +290,6 @@ export default job => {
       return;
     }
 
-    // debug('\n👉 Eligible users data');
-    // debug(eligibleUsers);
-    // debug('\n👉 Example array of threads');
-    // debug(eligibleUsers[0].threads);
-    // debug('\n👉 Example thread data for email');
-    // debug(eligibleUsers[0].threads[0]);
-
     const sendDigestPromises = topCommunities => {
       debug('\n ⚙️  Attaching community upsells if required...');
 
@@ -303,7 +306,7 @@ export default job => {
 
         // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
         const communities =
-          usersCommunityIds.length < COMMUNITY_UPSELL_THRESHOLD
+          usersCommunityIds.length <= COMMUNITY_UPSELL_THRESHOLD
             ? topCommunities
                 .filter(
                   community => usersCommunityIds.indexOf(community.id) <= -1
@@ -352,6 +355,7 @@ export default job => {
   return processSendWeeklyDigests().catch(err => {
     debug('❌  Error sending digest');
     debug(err);
+    Raven.captureException(err);
     console.log('Error sending digests: ', err);
   });
 };
