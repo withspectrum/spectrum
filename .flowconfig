@@ -9,6 +9,7 @@
 
 [options]
 suppress_comment=.*\\$FlowFixMe
+suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
 include_warnings=true
 

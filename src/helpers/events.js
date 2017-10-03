@@ -1,7 +1,12 @@
 import Raven from 'raven-js';
+// $FlowIssue
+import commitHash from /* preval */ 'shared/get-commit-hash';
+
 Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', {
   whitelistUrls: [/spectrum\.chat/, /www\.spectrum\.chat/],
   environment: process.env.NODE_ENV,
+  release: commitHash,
+  tags: { git_commit: commitHash },
 }).install();
 
 const ga = window.ga;
