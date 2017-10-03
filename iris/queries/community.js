@@ -250,11 +250,7 @@ module.exports = {
 
       return queryRecurringPayments();
     },
-    isPro: ({ id }: { id: string }, _: any, __: any) => {
-      return getCommunityRecurringPayments(id).then(subs => {
-        let filtered = subs && subs.filter(sub => sub.status === 'active');
-        return !filtered || filtered.length === 0 ? false : true;
-      });
-    },
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
+      loaders.communityRecurringPayments.load(id),
   },
 };

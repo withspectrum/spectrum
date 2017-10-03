@@ -1,3 +1,4 @@
+// @flow
 const Thread = /* GraphQL */ `
 	type ThreadMessagesConnection {
 		pageInfo: PageInfo!

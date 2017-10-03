@@ -1,3 +1,4 @@
+// @flow
 const Meta = /* GraphQL */ `
   type GrowthDataCounts {
     growth: Float
