@@ -1,12 +1,13 @@
 import React from 'react';
 import { injectGlobal } from 'styled-components';
-import { EditorState } from 'draft-js';
+import { EditorState, Entity, convertToRaw } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
+import createEmbedPlugin from 'draft-js-embed-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
@@ -31,6 +32,7 @@ import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
 
 import Image from './Image';
+import Embed from './Embed';
 import { Wrapper, MediaRow, ComposerBase } from './style';
 import MediaInput from '../mediaInput';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
@@ -56,6 +58,9 @@ class Editor extends React.Component {
 
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
+    const embedPlugin = createEmbedPlugin({
+      EmbedComponent: Embed,
+    });
     const prismPlugin = createPrismPlugin({
       prism: Prism,
     });
@@ -76,12 +81,14 @@ class Editor extends React.Component {
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
+        props.markdown !== false && embedPlugin,
         props.markdown !== false && createMarkdownPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,
         props.singleLine === true && singleLine,
       ],
       singleLineBlockRenderMap: singleLine.blockRenderMap,
+      addEmbed: embedPlugin.addEmbed,
       addImage: imagePlugin.addImage,
       editorState: props.initialState || EditorState.createEmpty(),
     };

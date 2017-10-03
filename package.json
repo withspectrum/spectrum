@@ -7,8 +7,10 @@
     "babel-macros": "^1.0.2",
     "babel-plugin-preval": "^1.5.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "cheerio": "^1.0.0-rc.2",
     "cross-env": "^5.0.5",
     "flow-bin": "^0.55.0",
+    "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
     "newrelic": "^2.2.0",
@@ -41,6 +43,7 @@
     "debug": "^2.6.8",
     "draft-js": "^0.10.2",
     "draft-js-drag-n-drop-plugin": "2.0.0-rc2",
+    "draft-js-embed-plugin": "^1.2.0",
     "draft-js-focus-plugin": "2.0.0-rc2",
     "draft-js-image-plugin": "2.0.0-rc8",
     "draft-js-import-markdown": "^1.2.0",
@@ -163,7 +166,10 @@
     "lint:staged": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["prettier --write --single-quote --trailing-comma es5", "git add"]
+    "*.js": [
+      "prettier --write --single-quote --trailing-comma es5",
+      "git add"
+    ]
   },
   "pre-commit": "lint:staged"
 }
