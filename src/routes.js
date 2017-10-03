@@ -67,7 +67,7 @@ const UserSettingsFallback = signedOutFallback(UserSettings, () => (
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
   <Redirect to="/login" />
 ));
-const CommunityAnalyticsFallback = signedOutFallback(CommunityAnalytics, () => (
+const CommunityAnalyticsFallback = signedOutFallback(CommunitySettings, () => (
   <Redirect to="/login" />
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (

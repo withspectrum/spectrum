@@ -40,7 +40,7 @@ export const SectionCard = styled.div`
   border-radius: 4px;
   border: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -80,7 +80,7 @@ export const Subheading = styled.h3`
   margin-left: 16px;
   font-size: 16px;
   color: ${props => props.theme.text.alt};
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   margin-bottom: 8px;
 `;

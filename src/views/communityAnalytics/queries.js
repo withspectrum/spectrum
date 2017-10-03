@@ -17,7 +17,7 @@ export const getThisCommunity = graphql(
   {
     options: props => ({
       variables: {
-        slug: props.match.params.communitySlug.toLowerCase(),
+        slug: props.communitySlug.toLowerCase(),
       },
       fetchPolicy: 'network-only',
     }),
