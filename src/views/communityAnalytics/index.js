@@ -1,12 +1,7 @@
-// @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
 import { openModal } from '../../actions/modals';
