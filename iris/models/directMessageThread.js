@@ -2,15 +2,25 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 
+type DBDirectMessageThread = {
+  createdAt: Date,
+  id: string,
+  name?: string,
+  threadLastActive: Date,
+};
+
 const getDirectMessageThread = (
   directMessageThreadId: String
-): Promise<Object> => {
-  return db.table('directMessageThreads').get(directMessageThreadId).run();
+): Promise<DBDirectMessageThread> => {
+  return db
+    .table('directMessageThreads')
+    .get(directMessageThreadId)
+    .run();
 };
 
 const getDirectMessageThreadsByUser = (
   userId: String
-): Promise<Array<Object>> => {
+): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
@@ -22,7 +32,7 @@ const getDirectMessageThreadsByUser = (
     .run();
 };
 
-const createDirectMessageThread = (isGroup: boolean): Object => {
+const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .insert(
@@ -38,7 +48,9 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
     .then(result => result.changes[0].new_val);
 };
 
-const setDirectMessageThreadLastActive = (id: string): Object => {
+const setDirectMessageThreadLastActive = (
+  id: string
+): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .get(id)

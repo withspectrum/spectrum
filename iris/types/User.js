@@ -1,3 +1,4 @@
+// @flow
 const User = /* GraphQL */ `
 	type UserCommunitiesConnection {
 		pageInfo: PageInfo!

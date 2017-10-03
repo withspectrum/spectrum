@@ -4,19 +4,27 @@ import { addQueue } from '../utils/workerQueue';
 
 type ReactionType = 'like';
 
+type DBReaction = {
+  id: string,
+  messageId: string,
+  timestamp: Date,
+  type: ReactionType,
+  userId: string,
+};
+
 export type ReactionInput = {
   messageId: string,
   type: ReactionType,
 };
 
-export const getReactions = (messageId: string): Promise<Array<Object>> => {
+export const getReactions = (messageId: string): Promise<Array<DBReaction>> => {
   return db
     .table('reactions')
     .getAll(messageId, { index: 'messageId' })
     .run();
 };
 
-export const getReaction = (reactionId: string): Promise<Object> => {
+export const getReaction = (reactionId: string): Promise<DBReaction> => {
   return db
     .table('reactions')
     .get(reactionId)
@@ -26,7 +34,7 @@ export const getReaction = (reactionId: string): Promise<Object> => {
 export const toggleReaction = (
   reaction: ReactionInput,
   userId: string
-): Promise<Object> => {
+): Promise<DBReaction> => {
   return db
     .table('reactions')
     .getAll(reaction.messageId, { index: 'messageId' })

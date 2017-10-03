@@ -1,3 +1,4 @@
+// @flow
 /**
  * The entry point for the server, this is where everything starts
  */

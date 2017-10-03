@@ -1,3 +1,4 @@
+// @flow
 const Message = /* GraphQL */ `
 	enum MessageTypes {
 		text
