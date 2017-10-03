@@ -183,7 +183,7 @@ class ImportSlack extends React.Component<Props, State> {
         startPolling(5000);
         return (
           <div>
-            <SectionTitle>Inivite a Slack Team</SectionTitle>
+            <SectionTitle>Invite a Slack Team</SectionTitle>
             <SectionCardFooter>
               <Button loading>Connecting with Slack...</Button>
             </SectionCardFooter>
