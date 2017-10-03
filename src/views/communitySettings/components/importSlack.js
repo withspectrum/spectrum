@@ -272,11 +272,7 @@ class ImportSlack extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return (
-        <SectionCard>
-          <Loading />
-        </SectionCard>
-      );
+      return <Loading />;
     }
 
     return null;
