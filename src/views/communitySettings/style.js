@@ -109,6 +109,7 @@ export const RemoveRow = styled.div`
 export const CustomMessageToggle = styled.h4`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
+  margin-top: 16px;
 
   &:hover {
     color: ${props => props.theme.brand.default};
@@ -127,7 +128,7 @@ export const CustomMessageTextAreaStyles = {
   borderRadius: '8px',
   padding: '16px',
   marginTop: '8px',
-  fontSize: '16px',
+  fontSize: '14px',
 };
 
 export const Title = styled(H1)`font-size: 20px;`;

@@ -220,16 +220,6 @@ class ImportSlack extends React.Component<Props, State> {
                 with email addresses - you can invite them to your Spectrum
                 community in one click.
               </Description>
-              <SectionCardFooter>
-                <Button
-                  gradientTheme="success"
-                  onClick={this.sendInvites}
-                  loading={isSendingInvites}
-                  disabled={hasCustomMessage && customMessageError}
-                >
-                  Invite {count} people to Spectrum
-                </Button>
-              </SectionCardFooter>
 
               <CustomMessageToggle onClick={this.toggleCustomMessage}>
                 <Icon
@@ -251,8 +241,8 @@ class ImportSlack extends React.Component<Props, State> {
                   style={{
                     ...CustomMessageTextAreaStyles,
                     border: customMessageError
-                      ? '2px solid #E3353C'
-                      : '2px solid #DFE7EF',
+                      ? '1px solid #E3353C'
+                      : '1px solid #DFE7EF',
                   }}
                   onChange={this.handleChange}
                 />
@@ -264,6 +254,17 @@ class ImportSlack extends React.Component<Props, State> {
                   Your custom invitation message can be up to 500 characters.
                 </Error>
               )}
+
+              <SectionCardFooter>
+                <Button
+                  gradientTheme="success"
+                  onClick={this.sendInvites}
+                  loading={isSendingInvites}
+                  disabled={hasCustomMessage && customMessageError}
+                >
+                  Invite {count} people to Spectrum
+                </Button>
+              </SectionCardFooter>
             </div>
           );
         }
