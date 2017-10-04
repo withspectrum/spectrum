@@ -34,8 +34,8 @@ class ConversationGrowth extends React.Component<Props> {
 
     if (community && community.topMembers.length > 0) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
-        const bc = parseInt(b.reputation, 10);
-        const ac = parseInt(a.reputation, 10);
+        const bc = parseInt(b.contextPermissions.reputation, 10);
+        const ac = parseInt(a.contextPermissions.reputation, 10);
         return bc <= ac ? -1 : 1;
       });
       return (
