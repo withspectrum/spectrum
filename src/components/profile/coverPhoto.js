@@ -39,27 +39,27 @@ export const CoverPhoto = (props: Object) => {
   if (props.user) {
     return (
       <PhotoContainer coverURL={props.user.coverPhoto}>
-        {props.currentUser && props.currentUser.id === props.user.id
-          ? <Link to={`../users/${props.user.username}/settings`}>
-              <CoverAction
-                glyph="settings"
-                color="text.reverse"
-                opacity="0.5"
-                hoverColor="text.reverse"
-                tipText={`Edit profile`}
-                tipLocation={'left'}
-              />
-            </Link>
-          : props.currentUser
-            ? <CoverAction
-                glyph="message-fill"
-                color="text.reverse"
-                hoverColor="text.reverse"
-                onClick={props.onClick}
-                tipText={`Message ${props.user.name}`}
-                tipLocation={'left'}
-              />
-            : null}
+        {props.currentUser && props.currentUser.id === props.user.id ? (
+          <Link to={`../users/${props.user.username}/settings`}>
+            <CoverAction
+              glyph="settings"
+              color="text.reverse"
+              opacity="0.5"
+              hoverColor="text.reverse"
+              tipText={`Edit profile`}
+              tipLocation={'left'}
+            />
+          </Link>
+        ) : props.currentUser ? (
+          <CoverAction
+            glyph="message-fill"
+            color="text.reverse"
+            hoverColor="text.reverse"
+            onClick={props.onClick}
+            tipText={`Message ${props.user.name}`}
+            tipLocation={'left'}
+          />
+        ) : null}
         {props.children}
       </PhotoContainer>
     );

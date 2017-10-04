@@ -2,7 +2,11 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { addQueue } from '../utils/workerQueue';
-const { listenToNewDocumentsIn, NEW_DOCUMENTS } = require('./utils');
+const {
+  listenToNewDocumentsIn,
+  NEW_DOCUMENTS,
+  parseRange,
+} = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
@@ -111,6 +115,19 @@ export const getThreadsByCommunity = (
       rightBound: 'open',
     })
     .orderBy({ index: db.desc('communityIdAndLastActive') })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
+export const getThreadsByCommunityInTimeframe = (
+  communityId: string,
+  range: string
+): Promise<Array<Object>> => {
+  const { current } = parseRange(range);
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };

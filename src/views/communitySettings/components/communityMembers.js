@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { UserListItem } from '../listItems';
-// $FlowFixMe
+import * as React from 'react';
+import { UserListItem } from '../../../components/listItems';
 import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
-import { LoadingCard } from '../loading';
-import ViewError from '../viewError';
-import { getCommunityMembersQuery } from '../../api/community';
-import { FetchMoreButton } from '../threadFeed/style';
+import { Loading } from '../../../components/loading';
+import ViewError from '../../../components/viewError';
+import { getCommunityMembersQuery } from '../../../api/community';
+import { FetchMoreButton } from '../../../components/threadFeed/style';
 import {
   StyledCard,
   ListHeader,
   LargeListHeading,
   ListContainer,
   ListFooter,
-} from '../listItems/style';
+} from '../../../components/listItems/style';
+import { SectionCard, SectionCardFooter, SectionTitle } from '../style';
 
-class CommunityMembers extends Component {
+type Props = {};
+class CommunityMembers extends React.Component<Props> {
   render() {
     const { data: { error, community, networkStatus, fetchMore } } = this.props;
     const members =
@@ -27,19 +27,21 @@ class CommunityMembers extends Component {
       community && community.metaData && community.metaData.members;
 
     if (networkStatus === 1) {
-      return <LoadingCard />;
+      return (
+        <SectionCard>
+          <Loading />
+        </SectionCard>
+      );
     } else if (error) {
       return (
-        <StyledCard>
-          <ViewError />
-        </StyledCard>
+        <SectionCard>
+          <ViewError small />
+        </SectionCard>
       );
     } else {
       return (
-        <StyledCard>
-          <ListHeader>
-            <LargeListHeading>{totalCount} Members</LargeListHeading>
-          </ListHeader>
+        <SectionCard>
+          <SectionTitle>{totalCount.toLocaleString()} Members</SectionTitle>
 
           <ListContainer>
             {members &&
@@ -53,7 +55,7 @@ class CommunityMembers extends Component {
           </ListContainer>
 
           {community.memberConnection.pageInfo.hasNextPage && (
-            <ListFooter>
+            <SectionCardFooter>
               <FetchMoreButton
                 color={'brand.default'}
                 loading={networkStatus === 3}
@@ -61,9 +63,9 @@ class CommunityMembers extends Component {
               >
                 Load more
               </FetchMoreButton>
-            </ListFooter>
+            </SectionCardFooter>
           )}
-        </StyledCard>
+        </SectionCard>
       );
     }
   }
