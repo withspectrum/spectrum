@@ -1,10 +1,8 @@
 //@flow
-import striptags from 'striptags';
 const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
-import markdownLinkify from '../utils/markdown-linkify';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
@@ -55,7 +53,7 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
             message.messageType === 'media'
               ? message.content.body
               : // For text messages linkify URLs and strip HTML tags
-                markdownLinkify(striptags(message.content.body)),
+                message.content.body,
         },
       }),
       { returnChanges: true }
