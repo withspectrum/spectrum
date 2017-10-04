@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { SectionSubtitle, GrowthText } from './style';
+import { SectionSubtitle, GrowthText } from '../communitySettings/style';
 
 export const parseGrowth = (
   {

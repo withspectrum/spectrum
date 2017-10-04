@@ -3,7 +3,11 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
-import { SectionCard, SectionSubtitle, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionSubtitle,
+  SectionTitle,
+} from '../../communitySettings/style';
 import { getCommunityConversationGrowth } from '../queries';
 import { parseGrowth } from '../utils';
 
