@@ -178,13 +178,15 @@ export const UserListItem = ({
             )}
             {(user.totalReputation || user.contextPermissions) && (
               <span>
-                <ReputationMini tipText={'Your rep in this community'} />
+                <ReputationMini tipText={'Rep in this community'} />
                 {user.contextPermissions ? (
                   user.contextPermissions.reputation &&
                   user.contextPermissions.reputation > 0 &&
                   user.contextPermissions.reputation.toLocaleString()
-                ) : (
+                ) : user.totalReputation && user.totalReputation > 0 ? (
                   user.totalReputation.toLocaleString()
+                ) : (
+                  '0'
                 )}
               </span>
             )}

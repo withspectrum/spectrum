@@ -262,7 +262,7 @@ module.exports = {
               isOwner,
             } = await getUserPermissionsInCommunity(id, user.id);
             return {
-              reputation,
+              reputation: reputation || 0,
               isModerator,
               isOwner,
             };
