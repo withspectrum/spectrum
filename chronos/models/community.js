@@ -2,7 +2,10 @@
 const { db } = require('./db');
 
 export const getCommunityById = (id: string): Promise<Object> => {
-  return db.table('communities').get(id).run();
+  return db
+    .table('communities')
+    .get(id)
+    .run();
 };
 
 export const getTopCommunities = (amount: number): Array<Object> => {

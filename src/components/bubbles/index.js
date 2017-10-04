@@ -31,8 +31,8 @@ export const Bubble = (props: BubbleProps) => {
 };
 
 export const EmojiBubble = (props: BubbleProps) => {
-  const { me, message } = props;
-  return <Emoji me={me}>{message.body}</Emoji>;
+  const { me } = props;
+  return <Emoji me={me}>{props.children || props.message.body}</Emoji>;
 };
 
 export const ImgBubble = (props: Object) => {

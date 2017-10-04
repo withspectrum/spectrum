@@ -184,15 +184,15 @@ class CommunityView extends React.Component<Props, State> {
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
                 {isLoggedIn &&
-                (!isMobile &&
-                  !community.communityPermissions.isOwner &&
-                  community.communityPermissions.isMember) && (
-                  <LogoutButton
-                    onClick={() => this.toggleMembership(community.id)}
-                  >
-                    Leave {community.name}
-                  </LogoutButton>
-                )}
+                  (!isMobile &&
+                    !community.communityPermissions.isOwner &&
+                    community.communityPermissions.isMember) && (
+                    <LogoutButton
+                      onClick={() => this.toggleMembership(community.id)}
+                    >
+                      Leave {community.name}
+                    </LogoutButton>
+                  )}
                 {!isMobile && (
                   <ChannelList communitySlug={communitySlug.toLowerCase()} />
                 )}
@@ -230,31 +230,33 @@ class CommunityView extends React.Component<Props, State> {
                 // and is a member of the community, they should see a
                 // new thread composer
                 isLoggedIn &&
-                selectedView === 'threads' &&
-                userHasPermissions && (
-                  <ThreadComposer
-                    activeCommunity={communitySlug}
-                    showComposerUpsell={showComposerUpsell}
-                  />
-                )}
+                  selectedView === 'threads' &&
+                  userHasPermissions && (
+                    <ThreadComposer
+                      activeCommunity={communitySlug}
+                      showComposerUpsell={showComposerUpsell}
+                    />
+                  )}
 
                 {// if the user is logged in but doesn't own the community
                 // or isn't a member yet, prompt them to join the community
                 isLoggedIn &&
-                !userHasPermissions && (
-                  <UpsellJoinCommunity
-                    community={community}
-                    loading={isLoading}
-                    join={this.toggleMembership}
-                  />
-                )}
+                  !userHasPermissions && (
+                    <UpsellJoinCommunity
+                      community={community}
+                      loading={isLoading}
+                      join={this.toggleMembership}
+                    />
+                  )}
 
                 {// if the user hasn't signed up yet, show them a spectrum
                 // upsell signup prompt
                 !isLoggedIn &&
-                selectedView === 'threads' && (
-                  <UpsellSignIn view={{ data: community, type: 'community' }} />
-                )}
+                  selectedView === 'threads' && (
+                    <UpsellSignIn
+                      view={{ data: community, type: 'community' }}
+                    />
+                  )}
 
                 {// thread list
                 selectedView === 'threads' && (

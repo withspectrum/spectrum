@@ -134,33 +134,7 @@ module.exports = {
         })
         .then(([newThread, urls]) => {
           // if no files were uploaded, return the new thread object
-          if (!urls) return newThread;
-
-          // otherwise we need to update the slate object of the thread to replace the image nodes with markdown image text
-          const slateState = JSON.parse(newThread.content.body);
-          let fileIndex = 0;
-          const newSlateState = {
-            ...slateState,
-            nodes: slateState.nodes.map(node => {
-              if (node.type !== 'image') return node;
-              fileIndex++;
-              return {
-                kind: 'block',
-                type: 'paragraph',
-                nodes: [
-                  {
-                    kind: 'text',
-                    text: `![](${urls[fileIndex - 1]}?max-w=800)`,
-                  },
-                ],
-              };
-            }),
-          };
-
-          return updateThreadWithImages(
-            newThread.id,
-            JSON.stringify(newSlateState)
-          );
+          return newThread;
         });
     },
     editThread: (_, { input }, { user }) => {
@@ -226,33 +200,7 @@ module.exports = {
           ]);
         })
         .then(([editedThread, urls]) => {
-          if (!urls) return editedThread;
-
-          // update the slate body with markdown images instead of image nodes
-          const slateState = JSON.parse(editedThread.content.body);
-          let fileIndex = 0;
-          const newSlateState = {
-            ...slateState,
-            nodes: slateState.nodes.map(node => {
-              if (node.type !== 'image') return node;
-              fileIndex++;
-              return {
-                kind: 'block',
-                type: 'paragraph',
-                nodes: [
-                  {
-                    kind: 'text',
-                    text: `![](${urls[fileIndex - 1]})`,
-                  },
-                ],
-              };
-            }),
-          };
-
-          return updateThreadWithImages(
-            editedThread.id,
-            JSON.stringify(newSlateState)
-          );
+          return editedThread;
         });
     },
     deleteThread: (_, { threadId }, { user }) => {

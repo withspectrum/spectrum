@@ -41,6 +41,7 @@ export const ShimmerList = styled(Card)`
 
 export const ShimmerThreadDetail = styled(FlexCol)`
   padding: 40px 32px;
+  display: inline-block;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -114,6 +115,8 @@ export const ShimmerBubble = styled(FlexCol)`
 `;
 
 export const ShimmerChat = styled(FlexCol)`
+  margin-top: 32px;
+
   > div:nth-of-type(2n + 2) {
     width: 40%;
 
@@ -197,6 +200,24 @@ export const ShimmerInboxComposer = styled.div`
 
   @media (max-width: 768px) {
     display: none;
+  }
+`;
+
+export const ShimmerSelect = styled.div`
+  padding: 10px 12px;
+  width: 196px;
+  margin-left: 8px;
+  border-radius: 8px;
+  background: ${props => props.theme.bg.default};
+  border: 2px solid ${props => props.theme.bg.border};
+
+  @media (max-width: 768px) {
+    width: calc(50% - 12px);
+  }
+
+  section {
+    min-height: 12px;
+    width: calc(100% - 16px);
   }
 `;
 

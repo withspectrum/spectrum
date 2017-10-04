@@ -177,19 +177,17 @@ export const UserListItem = ({
               </span>
             )}
             {(user.totalReputation || user.contextPermissions) && (
-              <span>
-                <ReputationMini tipText={'Rep in this community'} />
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation &&
-                  user.contextPermissions.reputation > 0 &&
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : user.totalReputation && user.totalReputation > 0 ? (
-                  user.totalReputation.toLocaleString()
-                ) : (
-                  '0'
-                )}
-              </span>
-            )}
+                <span>
+                  <ReputationMini tipText={'Rep in this community'} />
+                  {user.contextPermissions
+                    ? user.contextPermissions.reputation &&
+                      user.contextPermissions.reputation > 0 &&
+                      user.contextPermissions.reputation.toLocaleString()
+                    : user.totalReputation && user.totalReputation > 0
+                      ? user.totalReputation.toLocaleString()
+                      : '0'}
+                </span>
+              )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
@@ -240,11 +238,9 @@ class InvoiceListItemPure extends React.Component {
                 .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
             </Heading>
             <Meta>
-              {invoice.paidAt ? (
-                `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-              ) : (
-                'Unpaid'
-              )}{' '}
+              {invoice.paidAt
+                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+                : 'Unpaid'}{' '}
               · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>

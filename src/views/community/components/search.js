@@ -69,15 +69,15 @@ class Search extends React.Component<Props, State> {
           />
         </SearchContainer>
         {searchString &&
-        sendStringToServer && (
-          <SearchThreadFeed
-            viewContext="community"
-            communityId={community.id}
-            searchString={sendStringToServer}
-            community={community}
-            pinnedThreadId={community.pinnedThreadId}
-          />
-        )}
+          sendStringToServer && (
+            <SearchThreadFeed
+              viewContext="community"
+              communityId={community.id}
+              searchString={sendStringToServer}
+              community={community}
+              pinnedThreadId={community.pinnedThreadId}
+            />
+          )}
       </div>
     );
   }

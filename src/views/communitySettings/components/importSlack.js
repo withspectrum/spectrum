@@ -226,11 +226,9 @@ class ImportSlack extends React.Component<Props, State> {
                   glyph={hasCustomMessage ? 'view-close' : 'post'}
                   size={20}
                 />
-                {hasCustomMessage ? (
-                  'Remove custom message'
-                ) : (
-                  'Optional: Add a custom message to your invitation'
-                )}
+                {hasCustomMessage
+                  ? 'Remove custom message'
+                  : 'Optional: Add a custom message to your invitation'}
               </CustomMessageToggle>
 
               {hasCustomMessage && (
@@ -249,11 +247,11 @@ class ImportSlack extends React.Component<Props, State> {
               )}
 
               {hasCustomMessage &&
-              customMessageError && (
-                <Error>
-                  Your custom invitation message can be up to 500 characters.
-                </Error>
-              )}
+                customMessageError && (
+                  <Error>
+                    Your custom invitation message can be up to 500 characters.
+                  </Error>
+                )}
 
               <SectionCardFooter>
                 <Button

@@ -75,20 +75,18 @@ class InboxThread extends Component {
 
           <ThreadMeta>
             {(participantsExist || creator) && (
-              <Facepile
-                active={active}
-                participants={participants}
-                creator={data.creator}
-              />
-            )}
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={data.creator}
+                />
+              )}
 
             {data.messageCount > 0 ? (
               <MetaText offset={participants.length} active={active}>
-                {data.messageCount > 1 ? (
-                  `${data.messageCount} messages`
-                ) : (
-                  `${data.messageCount} message`
-                )}
+                {data.messageCount > 1
+                  ? `${data.messageCount} messages`
+                  : `${data.messageCount} message`}
               </MetaText>
             ) : (
               <MetaTextPill offset={participants.length} active={active} new>

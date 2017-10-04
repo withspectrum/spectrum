@@ -27,12 +27,11 @@ const StyledRow = styled(FlexRow)`
   top: -8px;
 `;
 
-const FlyoutPure = (props: Object): React$Element<any> =>
+const FlyoutPure = (props: Object): React$Element<any> => (
   <StyledFlyout className={'flyout'} {...props}>
-    <StyledRow>
-      {props.children}
-    </StyledRow>
-  </StyledFlyout>;
+    <StyledRow>{props.children}</StyledRow>
+  </StyledFlyout>
+);
 
 export const Flyout = compose(pure)(FlyoutPure);
 export default Flyout;

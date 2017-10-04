@@ -94,11 +94,9 @@ class CommunityUpgradeModal extends React.Component {
       <Modal
         isOpen={isOpen}
         contentLabel={
-          !community.isPro ? (
-            'Upgrade your community'
-          ) : (
-            'Manage your subscription'
-          )
+          !community.isPro
+            ? 'Upgrade your community'
+            : 'Manage your subscription'
         }
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}

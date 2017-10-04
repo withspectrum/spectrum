@@ -30,21 +30,16 @@ import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
-import Editor, {
-  toJSON,
-  toPlainText,
-  toState,
-} from '../../../components/editor';
-import { LinkPreview } from '../../../components/linkPreview';
-import { ThreadTitle, ThreadDescription } from '../style';
+import Editor from '../../../components/draftjs-editor';
+import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Reputation from '../../../components/reputation';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
+  ThreadTitle,
   ThreadWrapper,
   ThreadHeading,
   Byline,
-  ThreadContent,
   ContextRow,
   DropWrap,
   FlyoutRow,
@@ -58,11 +53,12 @@ import {
   Location,
 } from '../style';
 
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
+
 class ThreadDetailPure extends Component {
   state: {
     isEditing: boolean,
-    viewBody: string,
-    editBody: string,
+    body: any,
     title: string,
     linkPreview: Object,
     linkPreviewTrueUrl: string,
@@ -92,20 +88,9 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const viewBody =
-      thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
-
-    const editBody =
-      thread.type === 'SLATE'
-        ? toState(JSON.parse(thread.content.body))
-        : thread.content.body;
-
     this.setState({
       isEditing: false,
-      viewBody,
-      editBody,
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
@@ -228,7 +213,7 @@ class ThreadDetailPure extends Component {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
+    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
     if (!title || title.length === 0) {
@@ -242,6 +227,13 @@ class ThreadDetailPure extends Component {
       isSavingEdit: true,
     });
 
+    const jsonBody = toJSON(body);
+
+    const content = {
+      title,
+      body: JSON.stringify(jsonBody),
+    };
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -254,21 +246,10 @@ class ThreadDetailPure extends Component {
       });
     }
 
-    let bodyToSave = editBody;
-    if (thread.type === 'SLATE') {
-      bodyToSave = JSON.stringify(toJSON(bodyToSave));
-    }
-
-    const content = {
-      title,
-      body: bodyToSave,
-    };
-
     // Get the images
-    const filesToUpload = editBody.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {
       threadId,
@@ -286,13 +267,6 @@ class ThreadDetailPure extends Component {
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
-
-          this.setState({
-            viewBody:
-              thread.type === 'SLATE'
-                ? toPlainText(toState(JSON.parse(editThread.content.body)))
-                : editThread.content.body,
-          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -322,29 +296,27 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
+    this.listenForUrl(state);
     this.setState({
-      editBody: state,
+      body: state,
     });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
@@ -365,7 +337,7 @@ class ThreadDetailPure extends Component {
           // this.props.dispatch(stopLoading());
 
           this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
+            linkPreview: data,
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
@@ -422,8 +394,7 @@ class ThreadDetailPure extends Component {
     const {
       isEditing,
       linkPreview,
-      linkPreviewTrueUrl,
-      viewBody,
+      body,
       fetchingLinkPreview,
       flyoutOpen,
       isSavingEdit,
@@ -470,9 +441,9 @@ class ThreadDetailPure extends Component {
               isOnline={thread.creator.isOnline}
               src={thread.creator.profilePhoto}
               link={
-                thread.creator.username ? (
-                  `/users/${thread.creator.username}`
-                ) : null
+                thread.creator.username
+                  ? `/users/${thread.creator.username}`
+                  : null
               }
             />
             <BylineMeta>
@@ -486,110 +457,105 @@ class ThreadDetailPure extends Component {
               </AuthorUsername>
               <AuthorUsername>
                 {thread.creator &&
-                thread.creator.contextPermissions &&
-                thread.creator.contextPermissions.reputation > 0 && (
-                  <span>
-                    <Reputation tipText={'Author rep in this community'} />
-                    {truncateNumber(
-                      thread.creator.contextPermissions.reputation,
-                      1
-                    )}{' '}
-                    rep
-                  </span>
-                )}
+                  thread.creator.contextPermissions &&
+                  thread.creator.contextPermissions.reputation > 0 && (
+                    <span>
+                      <Reputation tipText={'Author rep in this community'} />
+                      {truncateNumber(
+                        thread.creator.contextPermissions.reputation,
+                        1
+                      )}{' '}
+                      rep
+                    </span>
+                  )}
               </AuthorUsername>
             </BylineMeta>
           </Byline>
           {currentUser &&
-          !isEditing &&
-          isChannelMember &&
-          (isChannelOwner || isCommunityOwner || thread.isCreator) && (
-            <DropWrap className={flyoutOpen ? 'open' : ''}>
-              <IconButton glyph="settings" onClick={this.toggleFlyout} />
-              <Flyout>
-                {isCommunityOwner &&
-                !thread.channel.isPrivate && (
-                  <FlyoutRow>
-                    <IconButton
-                      glyph={isPinned ? 'pin-fill' : 'pin'}
-                      hoverColor={isPinned ? 'warn.default' : 'special.default'}
-                      tipText={
-                        isPinned ? (
-                          'Un-pin thread'
-                        ) : (
-                          `Pin in ${thread.channel.community.name}`
-                        )
-                      }
-                      tipLocation="top-left"
-                      onClick={this.togglePinThread}
-                    />
-                  </FlyoutRow>
-                )}
-                {(isChannelOwner || isCommunityOwner) && (
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="freeze"
-                      hoverColor="space.alt"
-                      tipText={
-                        thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                      }
-                      tipLocation="top-left"
-                      onClick={this.threadLock}
-                    />
-                  </FlyoutRow>
-                )}
-                {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="delete"
-                      hoverColor="warn.alt"
-                      tipText="Delete thread"
-                      tipLocation="top-left"
-                      onClick={this.triggerDelete}
-                    />
-                  </FlyoutRow>
-                )}
-                {thread.isCreator &&
-                thread.type === 'SLATE' && (
-                  <FlyoutRow>
-                    <IconButton
-                      glyph="edit"
-                      hoverColor="text.alt"
-                      tipText="Edit"
-                      tipLocation="top-left"
-                      onClick={this.toggleEdit}
-                    />
-                  </FlyoutRow>
-                )}
-              </Flyout>
-            </DropWrap>
-          )}
+            !isEditing &&
+            isChannelMember &&
+            (isChannelOwner || isCommunityOwner || thread.isCreator) && (
+              <DropWrap className={flyoutOpen ? 'open' : ''}>
+                <IconButton glyph="settings" onClick={this.toggleFlyout} />
+                <Flyout>
+                  {isCommunityOwner &&
+                    !thread.channel.isPrivate && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph={isPinned ? 'pin-fill' : 'pin'}
+                          hoverColor={
+                            isPinned ? 'warn.default' : 'special.default'
+                          }
+                          tipText={
+                            isPinned
+                              ? 'Un-pin thread'
+                              : `Pin in ${thread.channel.community.name}`
+                          }
+                          tipLocation="top-left"
+                          onClick={this.togglePinThread}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {(isChannelOwner || isCommunityOwner) && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph="freeze"
+                          hoverColor="space.alt"
+                          tipText={
+                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                          }
+                          tipLocation="top-left"
+                          onClick={this.threadLock}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
+                      <FlyoutRow>
+                        <IconButton
+                          glyph="delete"
+                          hoverColor="warn.alt"
+                          tipText="Delete thread"
+                          tipLocation="top-left"
+                          onClick={this.triggerDelete}
+                        />
+                      </FlyoutRow>
+                    )}
+                  {thread.isCreator && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph="edit"
+                        hoverColor="text.alt"
+                        tipText="Edit"
+                        tipLocation="top-left"
+                        onClick={this.toggleEdit}
+                      />
+                    </FlyoutRow>
+                  )}
+                </Flyout>
+              </DropWrap>
+            )}
 
           {isChannelMember &&
-          !isEditing &&
-          currentUser && (
-            <DropWrap>
-              <IconButton
-                glyph={
-                  thread.receiveNotifications ? (
-                    'notification-fill'
-                  ) : (
-                    'notification'
-                  )
-                }
-                hoverColor="text.alt"
-                tipText={
-                  thread.receiveNotifications ? (
-                    'Turn off notifications'
-                  ) : (
-                    'Get notifications'
-                  )
-                }
-                tipLocation="top-left"
-                onClick={this.toggleNotification}
-              />
-            </DropWrap>
-          )}
+            !isEditing &&
+            currentUser && (
+              <DropWrap>
+                <IconButton
+                  glyph={
+                    thread.receiveNotifications
+                      ? 'notification-fill'
+                      : 'notification'
+                  }
+                  hoverColor="text.alt"
+                  tipText={
+                    thread.receiveNotifications
+                      ? 'Turn off notifications'
+                      : 'Get notifications'
+                  }
+                  tipLocation="top-left"
+                  onClick={this.toggleNotification}
+                />
+              </DropWrap>
+            )}
 
           {isEditing && (
             <EditDone>
@@ -600,36 +566,8 @@ class ThreadDetailPure extends Component {
           )}
         </ContextRow>
 
-        {!isEditing && (
-          <span>
-            <ThreadHeading>{thread.content.title}</ThreadHeading>
-            <FlexRow>
-              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
-              {thread.modifiedAt && (
-                <Edited>
-                  (Edited {timeDifference(Date.now(), editedTimestamp)})
-                </Edited>
-              )}
-            </FlexRow>
-            <div className="markdown">
-              <ThreadContent>{viewBody}</ThreadContent>
-            </div>
-
-            {linkPreview &&
-            !fetchingLinkPreview && (
-              <LinkPreview
-                trueUrl={linkPreview.url}
-                data={linkPreview}
-                size={'large'}
-                editable={false}
-                margin={'16px 0 0 0'}
-              />
-            )}
-          </span>
-        )}
-
-        {isEditing && (
-          <span>
+        <span>
+          {isEditing ? (
             <Textarea
               onChange={this.changeTitle}
               style={ThreadTitle}
@@ -638,25 +576,32 @@ class ThreadDetailPure extends Component {
               ref="titleTextarea"
               autoFocus
             />
-
-            <Editor
-              onChange={this.changeBody}
-              onKeyDown={this.listenForUrl}
-              state={this.state.editBody}
-              style={ThreadDescription}
-              ref="bodyTextarea"
-              editorRef={editor => (this.bodyEditor = editor)}
-              placeholder="Write more thoughts here, add photos, and anything else!"
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreviewTrueUrl,
-                data: linkPreview,
-              }}
-            />
-          </span>
-        )}
+          ) : (
+            <ThreadHeading>{thread.content.title}</ThreadHeading>
+          )}
+          <FlexRow>
+            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+            {thread.modifiedAt && (
+              <Edited>
+                (Edited {timeDifference(Date.now(), editedTimestamp)})
+              </Edited>
+            )}
+          </FlexRow>
+          <Editor
+            readOnly={!this.state.isEditing}
+            state={body}
+            onChange={this.changeBody}
+            editorKey="thread-detail"
+            placeholder="Write more thoughts here, add photos, and anything else!"
+            showLinkPreview={true}
+            linkPreview={{
+              loading: fetchingLinkPreview,
+              remove: this.removeLinkPreview,
+              trueUrl: linkPreview && linkPreview.url,
+              data: linkPreview,
+            }}
+          />
+        </span>
       </ThreadWrapper>
     );
   }

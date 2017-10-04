@@ -40,15 +40,6 @@ class Titlebar extends Component {
     }
   };
 
-  toggleComposer = () => {
-    const isOpen = this.props.isOpen;
-    if (!isOpen) {
-      this.props.dispatch(openComposer());
-    } else {
-      this.props.dispatch(closeComposer());
-    }
-  };
-
   render() {
     const {
       title,
@@ -83,11 +74,9 @@ class Titlebar extends Component {
             <IconButton glyph="message-new" color="text.reverse" />
           </Link>
         ) : (
-          <IconButton
-            glyph="post"
-            color="text.reverse"
-            onClick={this.toggleComposer}
-          />
+          <Link to={`/new/thread`}>
+            <IconButton glyph="post" color="text.reverse" />
+          </Link>
         )}
       </TitleBar>
     );
@@ -96,6 +85,5 @@ class Titlebar extends Component {
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
-  isOpen: state.composer.isOpen,
 });
 export default compose(withRouter, connect(mapStateToProps))(Titlebar);

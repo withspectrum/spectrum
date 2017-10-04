@@ -755,12 +755,12 @@ class NewThread extends Component {
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
-          existingThreadWithMessages.id && (
-            <Header
-              thread={existingThreadWithMessages}
-              currentUser={currentUser}
-            />
-          )}
+            existingThreadWithMessages.id && (
+              <Header
+                thread={existingThreadWithMessages}
+                currentUser={currentUser}
+              />
+            )}
 
           {existingThreadBasedOnSelectedUsers && (
             <Messages

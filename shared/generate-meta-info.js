@@ -7,7 +7,7 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-var slate = require('./slate-utils');
+var draft = require('./draft-utils');
 var truncate = require('./truncate');
 var striptags = require('striptags');
 
@@ -100,9 +100,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         description:
           data &&
           data.body &&
-          (data.type === 'SLATE'
-            ? slate.toPlainText(slate.toState(JSON.parse(data.body)))
-            : data.body),
+          draft.toPlainText(draft.toState(JSON.parse(data.body))),
       });
     }
     case 'user': {

@@ -30,6 +30,7 @@ import CommunityAnalytics from './views/communityAnalytics';
 import ChannelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 import Splash from './views/splash';
+import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
@@ -44,7 +45,6 @@ const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
   height: 100vh;
-  overflow-y: scroll;
   background: ${props => props.theme.bg.wash};
 
   @media (max-width: 768px) {
@@ -129,6 +129,7 @@ class Routes extends React.Component<{}> {
 
               {/* App Pages */}
               <Route path="/new/community" component={NewCommunityFallback} />
+              <Route path="/new/thread" component={Composer} />
               <Route
                 path="/new"
                 render={() => <Redirect to="/new/community" />}

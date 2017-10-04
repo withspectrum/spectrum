@@ -231,14 +231,14 @@ class ChannelWithData extends Component {
 
             {// if the user is moving from private to public
             this.props.channel.isPrivate &&
-            !isPrivate && (
-              <Notice>
-                When a private channel is made public all pending users will be
-                added as members of the channel. Blocked users will remain
-                blocked from viewing all content in this channel but in the
-                future any new person will be able to join.
-              </Notice>
-            )}
+              !isPrivate && (
+                <Notice>
+                  When a private channel is made public all pending users will
+                  be added as members of the channel. Blocked users will remain
+                  blocked from viewing all content in this channel but in the
+                  future any new person will be able to join.
+                </Notice>
+              )}
 
             <Actions>
               <Button onClick={this.save} loading={isLoading}>
