@@ -41,7 +41,7 @@ class CommunityMembers extends React.Component<Props> {
     } else {
       return (
         <SectionCard>
-          <SectionTitle>{totalCount} Members</SectionTitle>
+          <SectionTitle>{totalCount.toLocaleString()} Members</SectionTitle>
 
           <ListContainer>
             {members &&
