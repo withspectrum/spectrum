@@ -166,7 +166,7 @@ export const CommunityListName = styled.p`
   ${Truncate};
 `;
 
-export const CommunityListReputation = styled.p`
+export const CommunityListReputation = styled.div`
   font-size: 13px;
   font-weight: 400;
   margin-left: 12px;
