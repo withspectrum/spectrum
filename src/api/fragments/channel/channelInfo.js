@@ -8,6 +8,7 @@ export const channelInfoFragment = gql`
     slug
     description
     isPrivate
+    createdAt
     channelPermissions {
       isMember
       isPending

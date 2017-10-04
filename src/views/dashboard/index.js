@@ -132,7 +132,7 @@ class Dashboard extends Component {
                 activeCommunity={
                   activeCommunityObject && activeCommunityObject.slug
                 }
-                activeChannel={'general'}
+                activeChannel={activeChannel}
               />
             </ThreadScroller>
           </ThreadWrapper>

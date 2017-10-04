@@ -36,6 +36,7 @@ class CommunityList extends Component {
   };
 
   clearActiveChannel = () => {
+    this.props.dispatch(changeActiveThread(''));
     this.props.dispatch(changeActiveChannel(''));
   };
 

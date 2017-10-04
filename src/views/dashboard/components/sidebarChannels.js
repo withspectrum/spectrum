@@ -2,24 +2,27 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { getCommunityChannels } from '../../community/queries';
 import { connect } from 'react-redux';
+import Icon from '../../../components/icons';
 import {
   changeActiveChannel,
   changeActiveThread,
 } from '../../../actions/dashboardFeed';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
+import { sortByDate } from '../../../helpers/utils';
 import compose from 'recompose/compose';
 import {
   ChannelsContainer,
   ChannelListItem,
   ChannelListDivider,
+  LoadingContainer,
+  LoadingBar,
 } from '../style';
 
 type Props = {};
 class SidebarChannels extends React.Component<Props> {
   changeChannel = id => {
-    this.props.dispatch(changeActiveChannel(id));
     this.props.dispatch(changeActiveThread(''));
+    this.props.dispatch(changeActiveChannel(id));
   };
 
   render() {
@@ -41,17 +44,30 @@ class SidebarChannels extends React.Component<Props> {
 
           return channel;
         })
+        .filter(channel => {
+          if (channel.isPrivate && !channel.community.isPro) {
+            return null;
+          }
+          return channel;
+        })
+        .filter(channel => channel.channelPermissions.isMember)
         .filter(channel => !channel.channelPermissions.isBlocked);
+
+      const sortedChannels = sortByDate(channels, 'createdAt', 'desc');
 
       return (
         <ChannelsContainer>
-          {channels.map(channel => {
+          {sortedChannels.map(channel => {
             return (
               <ChannelListItem
                 key={channel.id}
                 active={activeChannel === channel.id}
                 onClick={() => this.changeChannel(channel.id)}
               >
+                {channel.isPrivate && (
+                  <Icon glyph="channel-private" size={16} />
+                )}
+
                 {channel.name}
               </ChannelListItem>
             );
@@ -81,7 +97,11 @@ class SidebarChannels extends React.Component<Props> {
     if (isLoading || queryVarIsChanging) {
       return (
         <ChannelsContainer>
-          <Loading size={16} color={'text.alt'} />
+          <LoadingContainer>
+            <LoadingBar width={56} />
+            <LoadingBar width={128} />
+            <LoadingBar width={72} />
+          </LoadingContainer>
         </ChannelsContainer>
       );
     }

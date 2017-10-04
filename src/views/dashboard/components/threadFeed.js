@@ -54,7 +54,8 @@ class ThreadFeed extends Component {
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
-      !prevProps.data.threads && this.props.data.threads;
+      (!prevProps.data.threads && this.props.data.threads) ||
+      (prevProps.data.loading && !this.props.data.loading);
     const isDesktop = window.innerWidth > 768;
 
     if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {

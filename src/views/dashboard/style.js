@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import {
@@ -171,7 +171,7 @@ export const CommunityListReputation = styled.div`
   font-size: 13px;
   font-weight: 400;
   margin-left: 12px;
-  line-height: 1.28;
+  line-height: 1;
   color: ${props => props.theme.text.alt};
 
   ${Truncate};
@@ -293,6 +293,12 @@ export const InboxThreadItem = styled.div`
 
   &:first-of-type {
     border-top: none;
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid
+      ${props =>
+        props.active ? props.theme.brand.alt : props.theme.bg.border};
   }
 `;
 
@@ -659,6 +665,12 @@ export const ChannelListItem = styled.div`
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
 
+  .icon {
+    position: relative;
+    top: 4px;
+    left: -2px;
+  }
+
   &:hover {
     color: ${props => props.theme.text.default};
   }
@@ -669,4 +681,43 @@ export const ChannelListDivider = styled.div`
   border-top: 1px solid ${props => props.theme.bg.border};
   height: 1px;
   margin: 12px 0 4px -14px;
+`;
+
+const placeHolderShimmer = keyframes`
+	0%{
+			transform: translateX(-200%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
+	}
+	100%{
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
+	}
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  padding: 0 8px;
+  flex-direction: column;
+  margin-left: 36px;
+  overflow: hidden;
+`;
+
+export const LoadingBar = styled.div`
+  width: ${props => `${props.width}px`};
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 8px;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  animation-name: ${placeHolderShimmer};
 `;
