@@ -8,6 +8,7 @@ import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import createEmbedPlugin from 'draft-js-embed-plugin';
+import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
@@ -58,6 +59,9 @@ class Editor extends React.Component {
 
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
+    const linkifyPlugin = createLinkifyPlugin({
+      target: '_blank',
+    });
     const embedPlugin = createEmbedPlugin({
       EmbedComponent: Embed,
     });
@@ -82,6 +86,7 @@ class Editor extends React.Component {
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
         props.markdown !== false && embedPlugin,
+        props.markdown !== false && linkifyPlugin,
         props.markdown !== false && createMarkdownPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,

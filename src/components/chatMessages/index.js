@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
-import redraft from 'redraft';
 import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
@@ -13,7 +12,7 @@ import {
   draftOnlyContainsEmoji,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
-import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
+import { Bubble, EmojiBubble, ImgBubble, renderLinks } from '../bubbles';
 import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
 import Reaction from '../reaction';
@@ -243,7 +242,7 @@ class ChatMessages extends Component {
                             type={message.messageType}
                             pending={message.id < 0}
                           >
-                            {redraft(body)}
+                            {renderLinks(toPlainText(toState(body)))}
                           </TextBubble>
                           {/*
                             we check if typof equals a string to determine
