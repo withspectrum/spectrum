@@ -65,6 +65,7 @@ class ThreadFeed extends Component {
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
+        this.props.history.replace(`/?t=${firstThreadId}`);
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
     }
@@ -81,6 +82,7 @@ class ThreadFeed extends Component {
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
+        this.props.history.replace(`/?t=${firstThreadId}`);
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
 

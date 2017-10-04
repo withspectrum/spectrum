@@ -450,6 +450,7 @@ class ComposerWithData extends Component {
         // redirect the user to the thread
         // if they are in the inbox, select it
         if (this.props.isInbox) {
+          this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);

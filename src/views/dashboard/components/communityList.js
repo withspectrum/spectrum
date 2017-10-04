@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
+import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import {
@@ -22,6 +20,7 @@ import {
 class CommunityList extends Component {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
+    this.props.history.replace(`/`);
     this.props.dispatch(changeActiveThread(''));
   };
 
@@ -77,4 +76,4 @@ class CommunityList extends Component {
   }
 }
 
-export default compose(connect())(CommunityList);
+export default compose(connect(), withRouter)(CommunityList);
