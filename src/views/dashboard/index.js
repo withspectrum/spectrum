@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
+import { getChannelThreads } from '../../views/channel/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -41,6 +42,10 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
   DashboardThreadFeed
 );
 
+const ChannelThreadFeed = compose(connect(), getChannelThreads)(
+  DashboardThreadFeed
+);
+
 const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 
 class Dashboard extends Component {
@@ -50,6 +55,7 @@ class Dashboard extends Component {
       newActivityIndicator,
       activeThread,
       activeCommunity,
+      activeChannel,
       isLoading,
       hasError,
     } = this.props;
@@ -84,6 +90,7 @@ class Dashboard extends Component {
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
+                activeChannel={activeChannel}
               />
             </CommunityListScroller>
           </CommunityListWrapper>
@@ -98,6 +105,14 @@ class Dashboard extends Component {
             <InboxScroller id="scroller-for-inbox">
               {!activeCommunity ? (
                 <EverythingThreadFeed selectedId={activeThread} />
+              ) : activeChannel ? (
+                <ChannelThreadFeed
+                  id={activeChannel}
+                  selectedId={activeThread}
+                  hasActiveCommunity={activeCommunity}
+                  community={activeCommunityObject}
+                  pinnedThreadId={activeCommunityObject.pinnedThreadId}
+                />
               ) : (
                 <CommunityThreadFeed
                   id={activeCommunity}
@@ -149,6 +164,7 @@ const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
+  activeChannel: state.dashboardFeed.activeChannel,
 });
 export default compose(
   connect(map),

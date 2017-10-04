@@ -91,7 +91,8 @@ export const CommunityListItem = styled.div`
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   cursor: pointer;
   position: relative;
   color: ${props =>
@@ -642,4 +643,30 @@ export const UserProfileSettingsLink = styled(Link)`
   &:hover {
     color: ${props => props.theme.text.default};
   }
+`;
+
+export const ChannelsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 4px;
+`;
+
+export const ChannelListItem = styled.div`
+  font-size: 14px;
+  padding-left: 36px;
+  margin-top: 4px;
+  font-weight: ${props => (props.active ? '500' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.default : props.theme.text.alt};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ChannelListDivider = styled.div`
+  width: calc(100% + 28px);
+  border-top: 1px solid ${props => props.theme.bg.border};
+  height: 1px;
+  margin: 12px 0 4px -14px;
 `;
