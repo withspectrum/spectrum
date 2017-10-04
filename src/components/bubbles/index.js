@@ -5,11 +5,11 @@ import { TextBubble, Emoji, ImageBubble } from './style';
 const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
 const renderMarkdownLinks = text => {
-  return replace(text, MARKDOWN_LINK, (fullLink, text, url) =>
+  return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
     <a href={url} target="_blank" rel="noopener nofollower">
       {text}
     </a>
-  );
+  ));
 };
 
 type BubbleProps = {
@@ -32,11 +32,7 @@ export const Bubble = (props: BubbleProps) => {
 
 export const EmojiBubble = (props: BubbleProps) => {
   const { me, message } = props;
-  return (
-    <Emoji me={me}>
-      {message.body}
-    </Emoji>
-  );
+  return <Emoji me={me}>{message.body}</Emoji>;
 };
 
 export const ImgBubble = (props: Object) => {

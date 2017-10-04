@@ -97,7 +97,8 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         });
       return setDefault({
         title: data && data.title + ' · ' + data.channelName,
-        description: data &&
+        description:
+          data &&
           data.body &&
           (data.type === 'SLATE'
             ? slate.toPlainText(slate.toState(JSON.parse(data.body)))

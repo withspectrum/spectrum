@@ -59,31 +59,36 @@ class Titlebar extends Component {
     } = this.props;
     return (
       <TitleBar>
-        {provideBack
-          ? <IconButton
-              glyph="view-back"
-              color="text.reverse"
-              onClick={this.handleBack}
-            />
-          : <Spacer />}
+        {provideBack ? (
+          <IconButton
+            glyph="view-back"
+            color="text.reverse"
+            onClick={this.handleBack}
+          />
+        ) : (
+          <Spacer />
+        )}
         <Text>
           {subtitle && <Subtitle>{subtitle}</Subtitle>}
-          {title
-            ? <Title large={subtitle ? false : true}>{title}</Title>
-            : <Icon glyph="logo" />}
-
+          {title ? (
+            <Title large={subtitle ? false : true}>{title}</Title>
+          ) : (
+            <Icon glyph="logo" />
+          )}
         </Text>
-        {noComposer
-          ? <Spacer />
-          : messageComposer
-              ? <Link to={`/messages/new`}>
-                  <IconButton glyph="message-new" color="text.reverse" />
-                </Link>
-              : <IconButton
-                  glyph="post"
-                  color="text.reverse"
-                  onClick={this.toggleComposer}
-                />}
+        {noComposer ? (
+          <Spacer />
+        ) : messageComposer ? (
+          <Link to={`/messages/new`}>
+            <IconButton glyph="message-new" color="text.reverse" />
+          </Link>
+        ) : (
+          <IconButton
+            glyph="post"
+            color="text.reverse"
+            onClick={this.toggleComposer}
+          />
+        )}
       </TitleBar>
     );
   }

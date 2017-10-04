@@ -21,10 +21,12 @@ import {
   ButtonContainer,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  SectionCard,
+  SectionCardFooter,
+  SectionTitle,
 } from '../style';
 import {
   StyledCard,
-  LargeListHeading,
   Description,
   Notice,
 } from '../../../components/listItems/style';
@@ -160,31 +162,31 @@ class ImportSlack extends React.Component<Props, State> {
       if (noImport) {
         return (
           <div>
-            <LargeListHeading>Invite a Slack Team</LargeListHeading>
+            <SectionTitle>Invite a Slack Team</SectionTitle>
             <Description>
               Easily invite your team from an existing Slack team to Spectrum.
               Get started by connecting your team below.{' '}
             </Description>
             <Notice>
               <strong>Note:</strong> We will not invite any of your team members
-              until you're ready. We will prompt for admin access to ensure that
+              until you’re ready. We will prompt for admin access to ensure that
               you own the Slack team.
             </Notice>
-            <ButtonContainer>
+            <SectionCardFooter>
               <a href={url}>
                 <Button>Connect a Slack Team</Button>
               </a>
-            </ButtonContainer>
+            </SectionCardFooter>
           </div>
         );
       } else if (partialImport) {
         startPolling(5000);
         return (
           <div>
-            <LargeListHeading>Inivite a Slack Team</LargeListHeading>
-            <ButtonContainer>
+            <SectionTitle>Invite a Slack Team</SectionTitle>
+            <SectionCardFooter>
               <Button loading>Connecting with Slack...</Button>
-            </ButtonContainer>
+            </SectionCardFooter>
           </div>
         );
       } else if (fullImport) {
@@ -196,38 +198,28 @@ class ImportSlack extends React.Component<Props, State> {
         if (hasAlreadyBeenSent) {
           return (
             <div>
-              <LargeListHeading>Invite a Slack Team</LargeListHeading>
+              <SectionTitle>Invite your Slack team</SectionTitle>
               <Description>
                 This community has been connected to the{' '}
                 <strong>{teamName}</strong> Slack team. We found {count} members
                 with email addresses - you have already invited them to join
                 your community.
               </Description>
-              <ButtonContainer>
+              <SectionCardFooter>
                 <Button disabled>Invites sent to {count} people</Button>
-              </ButtonContainer>
+              </SectionCardFooter>
             </div>
           );
         } else {
           return (
             <div>
-              <LargeListHeading>Invite a Slack Team</LargeListHeading>
+              <SectionTitle>Invite a Slack Team</SectionTitle>
               <Description>
                 This community has been connected to the{' '}
                 <strong>{teamName}</strong> Slack team. We found {count} members
                 with email addresses - you can invite them to your Spectrum
                 community in one click.
               </Description>
-              <ButtonContainer>
-                <Button
-                  gradientTheme="success"
-                  onClick={this.sendInvites}
-                  loading={isSendingInvites}
-                  disabled={hasCustomMessage && customMessageError}
-                >
-                  Invite {count} people to Spectrum
-                </Button>
-              </ButtonContainer>
 
               <CustomMessageToggle onClick={this.toggleCustomMessage}>
                 <Icon
@@ -249,8 +241,8 @@ class ImportSlack extends React.Component<Props, State> {
                   style={{
                     ...CustomMessageTextAreaStyles,
                     border: customMessageError
-                      ? '2px solid #E3353C'
-                      : '2px solid #DFE7EF',
+                      ? '1px solid #E3353C'
+                      : '1px solid #DFE7EF',
                   }}
                   onChange={this.handleChange}
                 />
@@ -262,6 +254,17 @@ class ImportSlack extends React.Component<Props, State> {
                   Your custom invitation message can be up to 500 characters.
                 </Error>
               )}
+
+              <SectionCardFooter>
+                <Button
+                  gradientTheme="success"
+                  onClick={this.sendInvites}
+                  loading={isSendingInvites}
+                  disabled={hasCustomMessage && customMessageError}
+                >
+                  Invite {count} people to Spectrum
+                </Button>
+              </SectionCardFooter>
             </div>
           );
         }
@@ -277,9 +280,9 @@ class ImportSlack extends React.Component<Props, State> {
 }
 
 const ImportSlackCard = props => (
-  <StyledCard>
+  <SectionCard>
     <ImportSlack {...props} />
-  </StyledCard>
+  </SectionCard>
 );
 
 const ImportSlackNoCard = props => <ImportSlack {...props} />;

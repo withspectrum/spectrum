@@ -1,8 +1,8 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
 import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
+import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import { addQueue } from '../utils/workerQueue';
@@ -31,7 +31,7 @@ type GetCommunityBySlugArgs = {
 
 export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
-const getCommunities = (
+export const getCommunities = (
   communityIds: Array<string>
 ): Promise<Array<DBCommunity>> => {
   return db
@@ -41,7 +41,7 @@ const getCommunities = (
     .run();
 };
 
-const getCommunitiesBySlug = (
+export const getCommunitiesBySlug = (
   slugs: Array<string>
 ): Promise<Array<DBCommunity>> => {
   return db
@@ -51,7 +51,9 @@ const getCommunitiesBySlug = (
     .run();
 };
 
-const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
+export const getCommunitiesByUser = (
+  userId: string
+): Promise<Array<DBCommunity>> => {
   return (
     db
       .table('usersCommunities')
@@ -76,7 +78,9 @@ const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
   );
 };
 
-const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
+export const getCommunityMetaData = (
+  communityId: string
+): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -92,6 +96,15 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
     .run();
 
   return Promise.all([getChannelCount, getMemberCount]);
+};
+
+export const getMemberCount = (communityId: string): Promise<number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .count()
+    .run();
 };
 
 export type CreateCommunityArguments = {
@@ -120,7 +133,7 @@ export type EditCommunityArguments = {
 // TODO(@mxstbr): Use DBUser type
 type CommunityCreator = Object;
 
-const createCommunity = (
+export const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
   }: CreateCommunityArguments,
@@ -285,7 +298,7 @@ const createCommunity = (
     });
 };
 
-const editCommunity = ({
+export const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
 }: EditCommunityArguments): Promise<DBCommunity> => {
   return db
@@ -444,7 +457,7 @@ const editCommunity = ({
   - run logs for deletions over time
   - etc
 */
-const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
+export const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -461,7 +474,7 @@ const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
     .run();
 };
 
-const setPinnedThreadInCommunity = (
+export const setPinnedThreadInCommunity = (
   communityId: string,
   value: string
 ): Promise<DBCommunity> => {
@@ -478,7 +491,7 @@ const setPinnedThreadInCommunity = (
     .then(result => result.changes[0].new_val);
 };
 
-const unsubscribeFromAllChannelsInCommunity = (
+export const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Array<Object>> => {
@@ -491,7 +504,7 @@ const unsubscribeFromAllChannelsInCommunity = (
     });
 };
 
-const userIsMemberOfCommunity = (
+export const userIsMemberOfCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
@@ -504,7 +517,7 @@ const userIsMemberOfCommunity = (
     });
 };
 
-const userIsMemberOfAnyChannelInCommunity = (
+export const userIsMemberOfAnyChannelInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
@@ -522,7 +535,7 @@ const userIsMemberOfAnyChannelInCommunity = (
     });
 };
 
-const getTopCommunities = (amount: number): Array<DBCommunity> => {
+export const getTopCommunities = (amount: number): Array<DBCommunity> => {
   return db
     .table('communities')
     .pluck('id')
@@ -562,7 +575,7 @@ const getTopCommunities = (amount: number): Array<DBCommunity> => {
     });
 };
 
-const getRecentCommunities = (amount: number): Array<DBCommunity> => {
+export const getRecentCommunities = (amount: number): Array<DBCommunity> => {
   return db
     .table('communities')
     .orderBy({ index: db.desc('createdAt') })
@@ -571,7 +584,7 @@ const getRecentCommunities = (amount: number): Array<DBCommunity> => {
     .run();
 };
 
-const getCommunitiesBySearchString = (
+export const getCommunitiesBySearchString = (
   string: string
 ): Promise<Array<DBCommunity>> => {
   return db
@@ -583,7 +596,7 @@ const getCommunitiesBySearchString = (
 };
 
 // TODO(@mxstbr): Replace Array<Object> with Array<DBThread>
-const searchThreadsInCommunity = (
+export const searchThreadsInCommunity = (
   channels: Array<string>,
   searchString: string
 ): Promise<Array<Object>> => {
@@ -596,20 +609,43 @@ const searchThreadsInCommunity = (
     .run();
 };
 
-module.exports = {
-  getCommunities,
-  getCommunitiesBySlug,
-  getCommunityMetaData,
-  getCommunitiesByUser,
-  createCommunity,
-  editCommunity,
-  deleteCommunity,
-  setPinnedThreadInCommunity,
-  unsubscribeFromAllChannelsInCommunity,
-  userIsMemberOfCommunity,
-  userIsMemberOfAnyChannelInCommunity,
-  getTopCommunities,
-  getRecentCommunities,
-  getCommunitiesBySearchString,
-  searchThreadsInCommunity,
+export const getThreadCount = async (communityId: string) => {
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .count()
+    .run();
+};
+
+export const getCommunityGrowth = async (
+  table: string,
+  range: string,
+  field: string,
+  communityId: string,
+  filter?: mixed
+) => {
+  const { current, previous } = parseRange(range);
+  const currentPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(current), db.now()))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const prevPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(previous), db.now().sub(current)))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const rate = (await (currentPeriodCount - prevPeriodCount)) / prevPeriodCount;
+  return {
+    currentPeriodCount,
+    prevPeriodCount,
+    growth: Math.round(rate * 100),
+  };
 };

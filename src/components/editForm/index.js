@@ -6,7 +6,6 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import User from './user';
 import Channel from './channel';
-import Community from './community';
 
 const EditFormPure = (props: Object): React$Element<any> => {
   const { type } = props;
@@ -17,9 +16,6 @@ const EditFormPure = (props: Object): React$Element<any> => {
     }
     case 'channel': {
       return <Channel {...props} />;
-    }
-    case 'community': {
-      return <Community {...props} />;
     }
   }
 };
@@ -34,7 +30,4 @@ export const UserEditForm = (props: FormProps) => (
 );
 export const ChannelEditForm = (props: FormProps) => (
   <EditForm type="channel" {...props} />
-);
-export const CommunityEditForm = (props: FormProps) => (
-  <EditForm type="community" {...props} />
 );

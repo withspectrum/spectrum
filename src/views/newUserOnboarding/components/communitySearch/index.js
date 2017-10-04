@@ -330,16 +330,16 @@ class Search extends Component {
               })}
 
             {searchResults.length === 0 &&
-              isFocused && (
-                <SearchResult>
-                  <SearchResultNull>
-                    <p>No communities found matching "{searchString}"</p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResult>
-              )}
+            isFocused && (
+              <SearchResult>
+                <SearchResultNull>
+                  <p>No communities found matching "{searchString}"</p>
+                  <Link to={'/new/community'}>
+                    <Button>Create a Community</Button>
+                  </Link>
+                </SearchResultNull>
+              </SearchResult>
+            )}
           </SearchResultsDropdown>
         )}
       </SearchWrapper>

@@ -28,5 +28,9 @@ export const saveSlackImportData = (
   importId: string,
   members: Array<Object>
 ): Promise<Array<string>> => {
-  return db.table('slackImports').get(importId).update({ members }).run();
+  return db
+    .table('slackImports')
+    .get(importId)
+    .update({ members })
+    .run();
 };
