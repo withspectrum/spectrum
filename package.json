@@ -4,8 +4,6 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-macros": "^1.0.2",
-    "babel-plugin-preval": "^1.5.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cross-env": "^5.0.5",
     "flow-bin": "^0.55.0",
@@ -106,7 +104,6 @@
     "striptags": "2.x",
     "styled-components": "2.1.2",
     "subscriptions-transport-ws": "^0.7.0",
-    "sw-precache-webpack-plugin": "^0.11.4",
     "web-push": "^3.2.2"
   },
   "scripts": {
