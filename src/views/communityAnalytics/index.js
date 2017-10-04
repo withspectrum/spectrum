@@ -15,7 +15,7 @@ import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import { View, SectionsContainer, Column } from './style';
+import { View, SectionsContainer, Column } from '../communitySettings/style';
 
 type Props = {
   community: {

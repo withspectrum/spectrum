@@ -234,6 +234,7 @@ export const SectionsContainer = styled.div`
   flex: 1 0 auto;
   flex-wrap: wrap;
   padding: 8px;
+  justify-content: center;
 `;
 
 export const Column = styled.div`
@@ -241,6 +242,7 @@ export const Column = styled.div`
   flex-direction: column;
   padding: 8px;
   flex: 1 0 33%;
+  max-width: 600px;
 
   @media (max-width: 768px) {
     flex: 1 0 100%;
@@ -360,4 +362,14 @@ export const HeaderText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+`;
+
+export const GrowthText = styled.h5`
+  color: ${props =>
+    props.positive
+      ? props.theme.success.default
+      : props.negative ? props.theme.warn.alt : props.theme.text.alt};
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 14px;
 `;

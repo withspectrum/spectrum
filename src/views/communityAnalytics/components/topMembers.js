@@ -5,7 +5,11 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import { UserListItem } from '../../../components/listItems';
-import { SectionCard, SectionSubtitle, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionSubtitle,
+  SectionTitle,
+} from '../../communitySettings/style';
 import { getCommunityTopMembers } from '../queries';
 
 type User = {
@@ -29,6 +33,11 @@ class ConversationGrowth extends React.Component<Props> {
     const { data: { community }, isLoading } = this.props;
 
     if (community && community.topMembers.length > 0) {
+      const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
+        const bc = parseInt(b.reputation, 10);
+        const ac = parseInt(a.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
       return (
         <SectionCard>
           <SectionSubtitle>Top members this week</SectionSubtitle>
