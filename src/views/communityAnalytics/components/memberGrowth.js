@@ -44,11 +44,11 @@ class MemberGrowth extends React.Component<Props> {
       } = community.memberGrowth;
       return (
         <SectionCard>
-          <SectionSubtitle>Members</SectionSubtitle>
-          <SectionTitle>{count}</SectionTitle>
-          {parseGrowth(weeklyGrowth, '7 days')}
-          {parseGrowth(monthlyGrowth, '30 days')}
-          {parseGrowth(quarterlyGrowth, '90 days')}
+          <SectionSubtitle>Your community</SectionSubtitle>
+          <SectionTitle>{count.toLocaleString()} members</SectionTitle>
+          {parseGrowth(weeklyGrowth, 'this week')}
+          {parseGrowth(monthlyGrowth, 'this month')}
+          {parseGrowth(quarterlyGrowth, 'this quarter')}
         </SectionCard>
       );
     }

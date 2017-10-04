@@ -41,6 +41,7 @@ export const StyledThreadListItem = styled.div`
 
   &:last-of-type {
     border-bottom: 0;
+    padding-bottom: 0;
   }
 `;
 export const ThreadListItemTitle = styled.h4`
