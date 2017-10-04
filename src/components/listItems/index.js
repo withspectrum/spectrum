@@ -154,7 +154,7 @@ export const UserListItem = ({
   children,
 }: Object): React$Element<any> => {
   return (
-    <Wrapper>
+    <Wrapper border>
       <Row>
         <Avatar
           radius={20}

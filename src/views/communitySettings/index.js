@@ -47,7 +47,7 @@ class CommunitySettings extends React.Component<Props> {
             />
 
             <ViewError
-              heading={`You dont’t have permission to manage this community.`}
+              heading={`You don’t have permission to manage this community.`}
               subheading={`If you want to create your own community, you can get started below.`}
             >
               <Upsell404Community />

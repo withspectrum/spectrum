@@ -44,11 +44,13 @@ class ConversationGrowth extends React.Component<Props> {
       } = community.conversationGrowth;
       return (
         <SectionCard>
-          <SectionSubtitle>Conversations</SectionSubtitle>
-          <SectionTitle>{count}</SectionTitle>
-          {parseGrowth(weeklyGrowth, '7 days')}
-          {parseGrowth(monthlyGrowth, '30 days')}
-          {parseGrowth(quarterlyGrowth, '90 days')}
+          <SectionSubtitle>Your community‘s conversations</SectionSubtitle>
+          <SectionTitle>
+            {count.toLocaleString()} total conversations
+          </SectionTitle>
+          {parseGrowth(weeklyGrowth, 'this week')}
+          {parseGrowth(monthlyGrowth, 'this month')}
+          {parseGrowth(quarterlyGrowth, 'this quarter')}
         </SectionCard>
       );
     }

@@ -52,8 +52,7 @@ class ThreadListItem extends React.Component<Props> {
           </ThreadListItemSubtitle>
         )}
         <ThreadListItemSubtitle>
-          By <Link to={`/users/${username}`}>{name}</Link> ·{' '}
-          {convertTimestampToDate(createdAt)}
+          By <Link to={`/users/${username}`}>{name}</Link>
         </ThreadListItemSubtitle>
       </StyledThreadListItem>
     );

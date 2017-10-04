@@ -55,7 +55,7 @@ class TopAndNewThreads extends React.Component<Props> {
       return (
         <span>
           <SectionCard>
-            <SectionSubtitle>Top this week</SectionSubtitle>
+            <SectionTitle>Top conversations this week</SectionTitle>
             {sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
                 return <ThreadListItem key={thread.id} thread={thread} />;
@@ -70,7 +70,7 @@ class TopAndNewThreads extends React.Component<Props> {
             )}
           </SectionCard>
           <SectionCard>
-            <SectionSubtitle>Unanswered this week</SectionSubtitle>
+            <SectionTitle>Unanswered conversations this week</SectionTitle>
             {newThreads.length > 0 ? (
               newThreads.map(thread => {
                 return <ThreadListItem key={thread.id} thread={thread} />;

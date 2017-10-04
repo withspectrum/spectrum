@@ -414,12 +414,13 @@ module.exports = {
         const threadsWithMessageCounts = await Promise.all(
           messageCountPromises
         );
+
         const topThreads = threadsWithMessageCounts
           .filter(t => t.messageCount > 0)
           .sort((a, b) => {
             const bc = parseInt(b.messageCount, 10);
             const ac = parseInt(a.messageCount, 10);
-            return bc >= ac ? -1 : 1;
+            return bc <= ac ? -1 : 1;
           })
           .slice(0, 10)
           .map(t => t.id);
