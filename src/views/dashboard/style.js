@@ -50,10 +50,9 @@ export const InboxScroller = styled.div`
 `;
 
 export const CommunityListWrapper = styled.div`
-  padding-top: 8px;
   display: flex;
-  width: 65px;
-  min-width: 65px;
+  width: 256px;
+  min-width: 256px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -72,7 +71,7 @@ export const CommunityListWrapper = styled.div`
 
   &:hover {
     transform: translateZ(0);
-    width: 256px;
+    // width: 256px;
     transition: ${Transition.hover.on};
 
     img {
@@ -88,7 +87,7 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 3px;
+  padding: 6px;
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
@@ -105,6 +104,10 @@ export const CommunityListItem = styled.div`
   a {
     display: flex;
     align-items: center;
+  }
+
+  &:first-of-type {
+    margin-top: 16px;
   }
 
   ${props =>
@@ -133,7 +136,7 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   color: ${props => props.theme.text.alt};
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
   margin: 0;
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 0;
 
   &:hover {
@@ -147,10 +150,28 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   }
 `;
 
+export const CommunityListText = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ${Truncate};
+`;
+
 export const CommunityListName = styled.p`
   font-size: 14px;
   font-weight: 500;
   margin-left: 12px;
+  line-height: 1.28;
+
+  ${Truncate};
+`;
+
+export const CommunityListReputation = styled.p`
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 12px;
+  line-height: 1.28;
+  color: ${props => props.theme.text.alt};
 
   ${Truncate};
 `;
@@ -572,4 +593,53 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+`;
+
+export const UserProfileContainer = styled.div`
+  display: flex;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  align-items: center;
+`;
+
+export const UserProfileText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex: auto;
+  margin-left: 14px;
+  justify-content: center;
+`;
+
+export const UserProfileName = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileNameLink = styled(Link)`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileReputation = styled.div`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  font-size: 13px;
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileSettingsLink = styled(Link)`
+  color: ${props => props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;

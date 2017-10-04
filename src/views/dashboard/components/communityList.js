@@ -6,12 +6,16 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
+import { ReputationMiniCommunity } from '../../../components/reputation';
+import { truncateNumber } from '../../../helpers/utils';
 import {
   ExploreListItem,
   AllCommunityListItem,
   ExploreCommunityListItem,
   CommunityListItem,
+  CommunityListText,
   CommunityListName,
+  CommunityListReputation,
   CommunityListAvatar,
 } from '../style';
 import {
@@ -27,7 +31,6 @@ class CommunityList extends Component {
 
   render() {
     const { activeCommunity, communities } = this.props;
-
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);
@@ -58,16 +61,22 @@ class CommunityList extends Component {
               active={c.id === activeCommunity}
               src={c.profilePhoto}
             />
-            <CommunityListName active={c.id === activeCommunity}>
-              {c.name}
-            </CommunityListName>
+            <CommunityListText>
+              <CommunityListName active={c.id === activeCommunity}>
+                {c.name}
+              </CommunityListName>
+              <CommunityListReputation active={c.id === activeCommunity}>
+                <ReputationMiniCommunity />
+                {truncateNumber(c.communityPermissions.reputation)}
+              </CommunityListReputation>
+            </CommunityListText>
           </CommunityListItem>
         ))}
 
         <ExploreCommunityListItem>
           <Link to={`/explore`}>
             <ExploreListItem>
-              <Icon glyph={'plus'} size={40} />
+              <Icon glyph={'explore'} size={40} />
             </ExploreListItem>
             <CommunityListName>Explore communities</CommunityListName>
           </Link>
