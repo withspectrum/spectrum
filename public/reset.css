@@ -111,6 +111,16 @@ textarea {
   color: #16171a;
 }
 
+.markdown p,
+.markdown div[data-block='true'] {
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-top: 16px;
+  font-weight: 400;
+  display: block;
+}
+
 .markdown > *:first-of-type {
   margin-top: 16px;
 }
@@ -145,16 +155,6 @@ textarea {
   color: inherit;
   font-size: inherit;
   font-weight: 700;
-}
-
-.markdown p,
-.markdown [data-block='true'] {
-  color: inherit;
-  font-size: 16px;
-  line-height: 1.5;
-  margin-top: 16px;
-  font-weight: 400;
-  display: block;
 }
 
 .markdown span {
