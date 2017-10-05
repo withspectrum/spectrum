@@ -329,12 +329,13 @@ const returnTooltip = props => {
     case 'top-left':
       return `
           &:after {
-            bottom: calc(100% + 5px);
+            bottom: calc(100% + 4px);
             right: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             bottom: 100%;
+            right: 0;
+            transform: translateX(-100%);
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -344,12 +345,13 @@ const returnTooltip = props => {
     case 'top-right':
       return `
           &:after {
-            bottom: calc(100% + 5px);
+            bottom: calc(100% + 4px);
             left: 0;
           }
           &:before {
-            left: calc(50% - 5px);
             bottom: 100%;
+            left: 0;
+            transform: translateX(100%);
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -360,13 +362,13 @@ const returnTooltip = props => {
     default:
       return `
           &:after {
-            left: calc(100% + 5px);
             top: 50%;
+            left: calc(100% + 4px);
             transform: translateY(-50%);
           }
           &:before{
-            left: 100%;
             top: calc(50% - 5px);
+            left: 100%;
             border-left-width: 0;
             border-right-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -376,12 +378,13 @@ const returnTooltip = props => {
     case 'bottom-left':
       return `
           &:after {
-            top: calc(100% + 5px);
+            top: calc(100% + 4px);
             right: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             top: 100%;
+            right: 0;
+            transform: translateX(-100%);
       	    border-top-width: 0;
       	    border-bottom-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -391,12 +394,13 @@ const returnTooltip = props => {
     case 'bottom-right':
       return `
           &:after {
-            top: calc(100% + 5px);
+            top: calc(100% + 4px);
             left: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             top: 100%;
+            left: 0;
+            transform: translateX(100%);
       	    border-top-width: 0;
       	    border-bottom-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -406,7 +410,7 @@ const returnTooltip = props => {
     case 'left':
       return `
           &:after {
-            right: calc(100% + 5px);
+            right: calc(100% + 4px);
             top: 50%;
             transform: translateY(-50%);
           }

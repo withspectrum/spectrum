@@ -5,20 +5,20 @@ import {
   onlyContainsEmoji,
   renderMarkdownLinks,
 } from '../../helpers/utils';
-import { Flyout } from '../flyout';
+import Icon from '../icons';
 import {
   Text,
   Emoji,
   Image,
   ActionUI,
   Indicator,
-  ModeratorActions,
-  Action,
+  ActionWrapper,
+  ModActionWrapper,
   Time,
 } from './style';
 
 export const Body = props => {
-  const { imgSrc, message, openGallery, pending, type } = props;
+  const { message, openGallery, pending, type } = props;
 
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
 
@@ -33,7 +33,7 @@ export const Body = props => {
         <Image
           onClick={openGallery}
           pending={pending}
-          src={`${message.content.body}${pending
+          src={`${message.body}${pending
             ? ''
             : `?max-w=${window.innerWidth * 0.6}`}`}
         />
@@ -41,24 +41,59 @@ export const Body = props => {
   }
 };
 
+const Action = props => {
+  const { me, action, deleteMessage } = props;
+
+  switch (action) {
+    case 'share':
+    default:
+      return (
+        <ActionWrapper>
+          <Icon
+            glyph="share"
+            tipText={`Share`}
+            tipLocation={me ? 'top-left' : `top-right`}
+            size={20}
+          />
+        </ActionWrapper>
+      );
+    case 'delete':
+      return (
+        <ModActionWrapper me={me}>
+          <Icon
+            glyph="delete"
+            tipText={`Delete`}
+            tipLocation={me ? 'top-left' : `top-right`}
+            size={20}
+            onClick={deleteMessage}
+          />
+        </ModActionWrapper>
+      );
+  }
+};
+
 export const Actions = props => {
-  const { me, reaction, toggleReaction, shareable, canModerate } = props;
+  const {
+    me,
+    reaction,
+    toggleReaction,
+    shareable,
+    canModerate,
+    deleteMessage,
+  } = props;
+
+  console.log(reaction);
 
   return (
-    <ActionUI>
-      <Indicator reaction={reaction} />
-      <Flyout>
-        {/* This takes the default reaction for this postType. Defaults to 'like' */}
-        <Action action={reaction.type} />
-        {shareable && <Action action={'share'} />}
-        {canModerate && (
-          <ModeratorActions>
-            <Action action={'delete'} />
-          </ModeratorActions>
-        )}
-      </Flyout>
+    <ActionUI me={me}>
+      {props.children}
+      {/* {shareable && <Action me={me} action={'share'} /> } */}
+      {canModerate && (
+        <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
+      )}
+      <Indicator reaction={reaction} me={me} />
     </ActionUI>
   );
 };
 
-export const Timestamp = props => <Time>{props.time}</Time>;
+export const Timestamp = props => <Time me={props.me}>{props.time}</Time>;

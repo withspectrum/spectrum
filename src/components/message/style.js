@@ -1,27 +1,193 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components';
-import { Gradient } from '../globals';
+import styled, { css } from 'styled-components';
+import { Gradient, zIndex, Transition, Tooltip } from '../globals';
 
-export const Wrapper = styled.div``;
+export const Indicator = styled.div`
+  position: absolute;
+  display: flex;
+  flex: none;
+  height: 8px;
+  width: 8px;
+  align-self: flex-end;
+  border-radius: 8px;
+  background-color: ${props => props.theme.bg.border};
+  z-index: ${zIndex.card + 1};
+  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
+  ${props => (props.me ? 'margin-right: 4px' : 'margin-left: 4px')};
+`;
 
-export const ActionUI = styled.div``;
+export const ActionWrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
+  background-color: transparent;
+  height: 24px;
+  padding: 0 4px;
+  ${props => (props.me ? 'margin-right: 4px' : 'margin-left: 4px')};
+  cursor: pointer;
 
-export const Indicator = styled.div``;
+  color: ${props => props.theme.text.placeholder};
 
-export const Action = styled.div``;
+  span {
+    padding-left: 4px;
+    font-size: 14px;
+  }
+`;
 
-export const ModeratorActions = styled.div``;
+export const ModActionWrapper = styled(ActionWrapper)`
+  padding: 0 8px;
+  ${props =>
+    props.me
+      ? `border-right: 2px solid ${props.theme.bg.wash}`
+      : `border-left: 2px solid ${props.theme.bg.wash}`};
+`;
 
-export const Time = styled.div``;
+export const ReactionWrapper = styled(ActionWrapper)`
+  ${props =>
+    props.hasCount
+      ? 'visibility: visible !important; opacity: 1 !important;'
+      : ''} color: ${props =>
+      props.hasReacted ? props.theme.warn.alt : props.theme.text.placeholder};
 
-export const Text = styled.p`
-  padding: 8px 16px;
-  vertical-align: middle;
+  &:hover {
+    color: ${props =>
+      props.hasReacted ? props.theme.warn.default : props.theme.text.alt};
+  }
+
+  & ~ ${Indicator} {
+    ${props => (props.hasCount ? 'opacity: 0 !important' : '')};
+    ${props => (props.hasCount ? 'visibility: hidden' : '')};
+  }
+`;
+
+export const ActionUI = styled.div`
+  display: flex;
+  flex: none;
+  position: absolute;
+  right: ${props => (props.me ? '100%' : 'auto')};
+  left: ${props => (props.me ? 'auto' : '100%')};
+  bottom: 0;
+  flex-direction: ${props => (props.me ? 'row-reverse' : 'row')};
+  align-items: stretch;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    transition: ${Transition.hover.on};
+
+    ${ActionWrapper} {
+      visibility: visible;
+      opacity: 1;
+      transition: ${Transition.hover.on};
+    }
+
+    ${Indicator} {
+      transition: ${Transition.hover.on};
+      visibility: hidden;
+      opacity: 0;
+      ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+    }
+  }
+
+  ${ActionWrapper} {
+    transition: ${Transition.hover.off};
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  ${Indicator} {
+    transition: ${Transition.hover.off};
+    visibility: visible;
+    opacity: 1;
+    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
+  }
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  position: relative;
+  max-width: 65%;
+  transition: ${Transition.hover.off};
+  ${props => (props.tipText ? Tooltip(props) : '')};
+
+  &:hover {
+    ${ActionUI} {
+      transition: ${Transition.hover.on};
+
+      ${ActionWrapper} {
+        visibility: visible;
+        opacity: 1;
+        transition: ${Transition.hover.on};
+      }
+
+      ${Indicator} {
+        transition: ${Transition.hover.on};
+        visibility: hidden;
+        opacity: 0;
+        ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+      }
+    }
+  }
+
+  ${ActionWrapper} {
+    transition: ${Transition.hover.off};
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  ${Indicator} {
+    transition: ${Transition.hover.off};
+    visibility: visible;
+    opacity: 1;
+    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
+  }
+`;
+
+export const Time = styled.div`
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  position: absolute;
+  ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
+  top: 4px;
+`;
+
+const Bubble = styled.div`
+  display: inline-block;
   border-radius: 16px;
+  z-index: ${zIndex.card};
+
+  vertical-align: middle;
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-word;
+
+  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
+
+  box-shadow: ${props =>
+    props.hashed
+      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
+          .default}`
+      : ''};
+  margin-top: 4px;
+  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
+
+  clear: both;
+
+  &::selection {
+    background-color: ${props =>
+      props.me ? props.theme.text.default : props.theme.brand.alt};
+  }
+`;
+
+export const Text = styled(Bubble)`
+  padding: 8px 16px;
   font-size: 14px;
-  line-height: 20px;
-  transition: opacity 0.2s ease-out;
+  line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
   background-image: ${props =>
@@ -30,19 +196,7 @@ export const Text = styled.p`
       : Gradient(props.theme.generic.alt, props.theme.generic.default)};
   color: ${props =>
     props.me ? props.theme.text.reverse : props.theme.text.default};
-  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
   font-weight: ${props => (props.me ? `500` : `400`)};
-  clear: both;
-  white-space: pre-line;
-  word-wrap: break-word;
-  word-break: break-word;
-  box-shadow: ${props =>
-    props.hashed
-      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
-          .default}`
-      : ''};
-  margin-top: ${props => (props.hashed ? '4px' : '0')};
-  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
 
   & + & {
     margin-top: 2px;
@@ -52,20 +206,15 @@ export const Text = styled.p`
     text-decoration: underline;
     word-break: break-word;
   }
-
-  &::selection {
-    background-color: ${props =>
-      props.me ? props.theme.text.default : props.theme.brand.alt};
-  }
 `;
 
-export const Emoji = styled.div`
-  font-size: 40px;
-  padding: 4px 0 8px;
+export const Emoji = styled(Bubble)`
+  font-size: 48px;
+  line-height: 1;
+  vertical-align: middle;
   clear: both;
   display: block;
-  margin-top: 8px;
-  margin-bottom: 12px;
+  margin-top: 12px;
   display: flex;
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
 
@@ -83,7 +232,7 @@ export const Emoji = styled.div`
   }
 
   & + img {
-    margin-top: 8px; /* if emoj is followed by an image */
+    margin-top: 8px; /* if emoji is followed by an image */
     margin-bottom: 8px;
   }
 

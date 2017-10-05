@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { openGallery } from '../../actions/gallery';
-import { convertTimestampToTime } from '../../helpers/utils';
+import { convertTimestampToTime, onlyContainsEmoji } from '../../helpers/utils';
+import Reaction from '../reaction';
 import { Timestamp, Body, Actions } from './view';
 import { Wrapper } from './style';
 
@@ -17,37 +18,65 @@ class Message extends Component {
     this.props.dispatch(openGallery(threadId, messageId));
   };
 
+  toggleMessageFocus = messageId => {
+    const { threadId } = this.props;
+    // TODO: make it so people can tap/click on messages to set focus and display the message's actions
+  };
+
+  deleteMessage = messageId => {
+    //@mxstbr: get all up in here...
+  };
+
   render() {
     const {
+      canModerate,
+      currentUser,
+      dispatch,
+      hash,
       imgSrc,
-      message,
       link,
+      me,
+      message,
+      pending,
       reaction,
       toggleReaction,
-      me,
-      shareable,
-      canModerate,
-      hash,
-      pending,
     } = this.props;
+    const emojiOnly = onlyContainsEmoji(message.content.body);
+    const shareable = message.messageType !== 'directMessageThread';
 
     return (
-      <Wrapper>
+      <Wrapper
+        me={me}
+        tipText={convertTimestampToTime(message.timestamp)}
+        tipLocation={me ? 'bottom-left' : 'bottom-right'}
+      >
         {shareable && <a name={`${message.id}`} />}
-        <Timestamp time={convertTimestampToTime(message.timestamp)} />
         <Body
-          type={message.messageType}
+          type={emojiOnly ? 'emoji' : message.messageType}
           pending={message.id < 0}
-          hash={hash}
-          action={this.toggleOpenGallery}
+          openGallery={this.toggleOpenGallery}
+          focus={this.toggleMessageFocus}
           message={message.content}
         />
         <Actions
           me={me}
-          reaction={reaction}
           shareable={shareable}
+          currentUser={currentUser}
           canModerate={canModerate}
-        />
+          deleteMessage={this.deleteMessage}
+        >
+          {!emojiOnly &&
+          message.messageType !== 'media' &&
+          typeof message.id === 'string' && (
+            <Reaction
+              message={message}
+              toggleReaction={toggleReaction}
+              me={me}
+              currentUser={currentUser}
+              dispatch={dispatch}
+            />
+          )}
+        </Actions>
       </Wrapper>
     );
   }

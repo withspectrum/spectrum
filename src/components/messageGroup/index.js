@@ -14,11 +14,11 @@ import {
   AvatarLabel,
   Byline,
   Name,
-  BubbleGroupContainer,
+  Wrapper,
   Timestamp,
   Time,
-  Container,
-  MessagesWrapper,
+  Sender,
+  MessageGroup,
 } from './style';
 
 const NullChat = () => (
@@ -62,6 +62,7 @@ class Messages extends Component {
           src={sender.profilePhoto}
           username={sender.username}
           link={sender.username ? `/users/${sender.username}` : null}
+          size={24}
         />
       );
     };
@@ -81,7 +82,7 @@ class Messages extends Component {
     };
 
     return (
-      <Container>
+      <Wrapper>
         {messages.map((group, i) => {
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
           const initialMessage = group[0];
@@ -101,9 +102,9 @@ class Messages extends Component {
           }
 
           return (
-            <BubbleGroupContainer key={i}>
+            <Sender key={i} me={me}>
               {!me && !roboText && <AuthorAvatar sender={sender} />}
-              <MessagesWrapper>
+              <MessageGroup me={me}>
                 <AuthorByline sender={sender} me={me} />
                 {group.map((message, i) => {
                   return (
@@ -113,22 +114,23 @@ class Messages extends Component {
                       link={`#${message.id}`}
                       reaction={'like'}
                       me={me}
-                      // canModerate={canModerate}
+                      canModerate={me}
                       pending={message.id < 0}
+                      currentUser={currentUser}
                     />
                   );
                 })}
-              </MessagesWrapper>
-            </BubbleGroupContainer>
+              </MessageGroup>
+            </Sender>
           );
         })}
-      </Container>
+      </Wrapper>
     );
   }
 }
 
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-const ConnectedChatMessages = connect(mapStateToProps)(Messages);
+const ChatMessages = connect(mapStateToProps)(Messages);
 
-export default ConnectedChatMessages;
+export default ChatMessages;
