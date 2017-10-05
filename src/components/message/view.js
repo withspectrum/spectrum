@@ -88,8 +88,6 @@ export const Actions = props => {
     deleteMessage,
   } = props;
 
-  console.log(reaction);
-
   return (
     <ActionUI me={me}>
       {props.children}
