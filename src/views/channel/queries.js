@@ -109,10 +109,9 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ channelSlug, communitySlug }) => ({
+  options: ({ id }) => ({
     variables: {
-      channelSlug: channelSlug.toLowerCase(),
-      communitySlug: communitySlug.toLowerCase(),
+      id,
     },
     fetchPolicy: 'cache-and-network',
   }),
@@ -120,8 +119,8 @@ const threadsQueryOptions = {
 
 export const getChannelThreads = graphql(
   gql`
-    query getChannelThreads($channelSlug: String, $communitySlug: String, $after: String) {
-			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
+    query getChannelThreads($id: ID, $after: String) {
+			channel(id: $id) {
         ...channelInfo
         ...channelThreads
       }

@@ -22,7 +22,7 @@ export const Wrapper = styled(FlexCol)`
     border-top: 0;
   }
 
-  &:last-of-type {
+  &:last-of-type:not(:first-of-type) {
     padding-bottom: 0;
   }
 
