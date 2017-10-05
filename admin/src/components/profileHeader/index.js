@@ -11,12 +11,8 @@ export const ProfileHeader = ({ user }) => {
       <Row>
         <Avatar size={48} radius={48} src={user.profilePhoto} />
         <Column>
-          <Name>
-            {user.name}
-          </Name>
-          <Username>
-            @{user.username}
-          </Username>
+          <Name>{user.name}</Name>
+          <Username>@{user.username}</Username>
         </Column>
       </Row>
 
@@ -37,12 +33,8 @@ export const CommunityProfileHeader = ({ community }) => {
       <Row>
         <Avatar size={48} radius={8} src={community.profilePhoto} />
         <Column>
-          <Name>
-            {community.name}
-          </Name>
-          <Username>
-            {community.metaData.members} members
-          </Username>
+          <Name>{community.name}</Name>
+          <Username>{community.metaData.members} members</Username>
         </Column>
       </Row>
 

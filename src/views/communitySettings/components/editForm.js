@@ -1,24 +1,19 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-import { track } from '../../helpers/events';
+import { track } from '../../../helpers/events';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
-} from '../../api/community';
-import { openModal } from '../../actions/modals';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { Button, TextButton, IconButton } from '../buttons';
-import { Notice } from '../listItems/style';
-import Icon from '../../components/icons';
+} from '../../../api/community';
+import { openModal } from '../../../actions/modals';
+import { addToastWithTimeout } from '../../../actions/toasts';
+import { Button, TextButton, IconButton } from '../../../components/buttons';
+import { Notice } from '../../../components/listItems/style';
+import Icon from '../../../components/icons';
 import {
   Input,
   UnderlineInput,
@@ -26,7 +21,7 @@ import {
   PhotoInput,
   Error,
   CoverInput,
-} from '../formElements';
+} from '../../../components/formElements';
 import {
   StyledCard,
   Form,
@@ -36,9 +31,11 @@ import {
   TertiaryActionContainer,
   ImageInputWrapper,
   Location,
-} from './style';
+} from '../../../components/editForm/style';
+import { SectionCard, SectionCardFooter, SectionTitle } from '../style';
 
-class CommunityWithData extends Component {
+type Props = {};
+class EditForm extends React.Component<Props> {
   state: {
     name: string,
     slug: string,
@@ -54,6 +51,7 @@ class CommunityWithData extends Component {
     nameError: boolean,
     isLoading: boolean,
   };
+
   constructor(props) {
     super(props);
 
@@ -229,7 +227,7 @@ class CommunityWithData extends Component {
         this.props.dispatch(
           addToastWithTimeout(
             'error',
-            `Something went wrong and we weren't able to save these changes. ${err}`
+            `Something went wrong and we weren’t able to save these changes. ${err}`
           )
         );
       });
@@ -252,7 +250,7 @@ class CommunityWithData extends Component {
         <p>
           <b>{communityData.metaData.members} members</b> will be removed from
           the community and the{' '}
-          <b>{communityData.metaData.channels} channels</b> you've created will
+          <b>{communityData.metaData.channels} channels</b> you’ve created will
           be deleted.
         </p>
         <p>
@@ -288,23 +286,19 @@ class CommunityWithData extends Component {
 
     if (!community) {
       return (
-        <StyledCard>
-          <FormTitle>This community doesn't exist yet.</FormTitle>
+        <SectionCard>
+          <FormTitle>This community doesn’t exist yet.</FormTitle>
           <Description>Want to make it?</Description>
           <Actions>
             <Button>Create</Button>
           </Actions>
-        </StyledCard>
+        </SectionCard>
       );
     }
 
     return (
-      <StyledCard>
-        <Location>
-          <Icon glyph="view-back" size={16} />
-          <Link to={`/${community.slug}`}>Return to Community</Link>
-        </Location>
-        <FormTitle>Community Settings</FormTitle>
+      <SectionCard>
+        <SectionTitle>Community Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
@@ -342,7 +336,7 @@ class CommunityWithData extends Component {
           </TextArea>
 
           <Input defaultValue={website} onChange={this.changeWebsite}>
-            Optional: Add your community's website
+            Optional: Add your community’s website
           </Input>
 
           <Actions>
@@ -375,15 +369,15 @@ class CommunityWithData extends Component {
             </Notice>
           )}
         </Form>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }
 
-const Community = compose(
+export default compose(
+  connect(),
   deleteCommunityMutation,
   editCommunityMutation,
   withRouter,
   pure
-)(CommunityWithData);
-export default connect()(Community);
+)(EditForm);

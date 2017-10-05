@@ -22,6 +22,9 @@ import {
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  SectionCard,
+  SectionTitle,
+  SectionCardFooter,
 } from '../style';
 import {
   StyledCard,
@@ -254,6 +257,7 @@ class EmailInvites extends React.Component<Props, State> {
   };
 
   render() {
+    const isMobile = window.innerWidth < 768;
     const {
       contacts,
       isLoading,
@@ -263,11 +267,8 @@ class EmailInvites extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <div style={{ width: '100%' }}>
-        <LargeListHeading>Invite by Email</LargeListHeading>
-        <Description>
-          Invite people to your community directly by email.
-        </Description>
+      <div>
+        <SectionTitle>Invite members by email</SectionTitle>
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -284,6 +285,7 @@ class EmailInvites extends React.Component<Props, State> {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
+                hideOnMobile={isMobile}
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />
@@ -295,11 +297,9 @@ class EmailInvites extends React.Component<Props, State> {
 
         <CustomMessageToggle onClick={this.toggleCustomMessage}>
           <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
-          {hasCustomMessage ? (
-            'Remove custom message'
-          ) : (
-            'Optional: Add a custom message to your invitation'
-          )}
+          {hasCustomMessage
+            ? 'Remove custom message'
+            : 'Optional: Add a custom message to your invitation'}
         </CustomMessageToggle>
 
         {hasCustomMessage && (
@@ -318,13 +318,13 @@ class EmailInvites extends React.Component<Props, State> {
         )}
 
         {hasCustomMessage &&
-        customMessageError && (
-          <Error>
-            Your custom invitation message can be up to 500 characters.
-          </Error>
-        )}
+          customMessageError && (
+            <Error>
+              Your custom invitation message can be up to 500 characters.
+            </Error>
+          )}
 
-        <ButtonContainer>
+        <SectionCardFooter>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
@@ -332,16 +332,16 @@ class EmailInvites extends React.Component<Props, State> {
           >
             Send Invitations
           </Button>
-        </ButtonContainer>
+        </SectionCardFooter>
       </div>
     );
   }
 }
 
 const EmailInvitesCard = props => (
-  <StyledCard>
+  <SectionCard>
     <EmailInvites {...props} />
-  </StyledCard>
+  </SectionCard>
 );
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;

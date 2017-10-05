@@ -80,14 +80,10 @@ class JoinFirstCommunityPure extends Component {
           <CoverPhoto url={community.coverPhoto}>
             <CoverLink to={`/${community.slug}`}>
               <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-              <CoverTitle>
-                {community.name}
-              </CoverTitle>
+              <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
           </CoverPhoto>
-          <CoverSubtitle>
-            {community.metaData.members} members
-          </CoverSubtitle>
+          <CoverSubtitle>{community.metaData.members} members</CoverSubtitle>
 
           <CoverDescription style={{ paddingBottom: '16px' }}>
             {community.description}

@@ -259,8 +259,9 @@ class CommunityWithData extends Component {
             sp.chat/
           </UnderlineInput>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
           <TextArea
             defaultValue={description}
@@ -277,10 +278,11 @@ class CommunityWithData extends Component {
             Optional: Add your community's website
           </Input>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '16px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
         </Form>
 
         <Actions>

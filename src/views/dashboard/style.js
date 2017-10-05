@@ -1,9 +1,16 @@
 // @flow
 // $FlowFixMe
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { zIndex, Truncate, Tooltip } from '../../components/globals';
+import {
+  zIndex,
+  Truncate,
+  Tooltip,
+  Transition,
+  Shadow,
+  hexa,
+} from '../../components/globals';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -19,9 +26,8 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  flex: auto;
-  flex 1 0 25%;
-  max-width: 528px;
+  width: 100%;
+  max-width: 440px;
   min-width: 320px;
   overflow-y: hidden;
   position: relative;
@@ -41,13 +47,13 @@ export const InboxScroller = styled.div`
   width: 100%;
   overflow-y: scroll;
   position: relative;
+  flex: 1;
 `;
 
 export const CommunityListWrapper = styled.div`
-  padding-top: 8px;
   display: flex;
-  width: 65px;
-  min-width: 65px;
+  width: 256px;
+  min-width: 256px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -55,24 +61,24 @@ export const CommunityListWrapper = styled.div`
   background: ${props => props.theme.bg.wash};
   border-right: 1px solid ${props => props.theme.bg.border};
   transform: translateZ(0);
-  transition: all 0.2s ease-in-out;
+  transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
   img {
     opacity: 0.4;
     filter: grayscale(60%);
-    transition: all 0.2s ease-in-out;
+    transition: ${Transition.hover.on};
   }
 
   &:hover {
     transform: translateZ(0);
-    width: 256px;
-    transition: all 0.2s ease-in-out;
+    // width: 256px;
+    transition: ${Transition.hover.on};
 
     img {
       filter: grayscale(0%);
       opacity: 1;
-      transition: all 0.2s ease-in-out;
+      transition: ${Transition.hover.on};
     }
   }
 
@@ -82,11 +88,12 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 3px;
+  padding: 6px;
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   cursor: pointer;
   position: relative;
   color: ${props =>
@@ -99,6 +106,10 @@ export const CommunityListItem = styled.div`
   a {
     display: flex;
     align-items: center;
+  }
+
+  &:first-of-type {
+    margin-top: 16px;
   }
 
   ${props =>
@@ -141,10 +152,28 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   }
 `;
 
+export const CommunityListText = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ${Truncate};
+`;
+
 export const CommunityListName = styled.p`
   font-size: 14px;
   font-weight: 500;
   margin-left: 12px;
+  line-height: 1.28;
+
+  ${Truncate};
+`;
+
+export const CommunityListReputation = styled.div`
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 12px;
+  line-height: 1;
+  color: ${props => props.theme.text.alt};
 
   ${Truncate};
 `;
@@ -188,9 +217,8 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 16px;
-  box-shadow: 0 1px 0 0 ${props => props.theme.bg.border},
-    0 1px 3px rgba(0, 0, 0, 0.01);
+  padding: 8px;
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: 10;
 
@@ -205,8 +233,6 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
-  max-width: 840px;
-  border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     display: none;
@@ -219,7 +245,7 @@ export const ThreadScroller = styled.div`
   position: relative;
 `;
 
-export const CreateThreadComposer = styled.div`
+export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -264,6 +290,16 @@ export const InboxThreadItem = styled.div`
   &:hover {
     background: ${props =>
       props.active ? props.theme.brand.alt : props.theme.bg.wash};
+  }
+
+  &:first-of-type {
+    border-top: none;
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid
+      ${props =>
+        props.active ? props.theme.brand.alt : props.theme.bg.border};
   }
 `;
 
@@ -545,7 +581,7 @@ export const MiniLinkPreview = styled(Link)`
 
 export const NullThreadFeed = styled.div`
   display: flex;
-  flex: auto;
+  flex: 1;
   height: 100%;
   align-items: center;
   justify-content: center;
@@ -565,4 +601,124 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+`;
+
+export const UserProfileContainer = styled.div`
+  display: flex;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  align-items: center;
+`;
+
+export const UserProfileText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex: auto;
+  margin-left: 14px;
+  justify-content: center;
+`;
+
+export const UserProfileName = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileNameLink = styled(Link)`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileReputation = styled.div`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  font-size: 13px;
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileSettingsLink = styled(Link)`
+  color: ${props => props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ChannelsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 4px;
+`;
+
+export const ChannelListItem = styled.div`
+  font-size: 14px;
+  padding-left: 36px;
+  margin-top: 4px;
+  font-weight: ${props => (props.active ? '500' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.default : props.theme.text.alt};
+
+  .icon {
+    position: relative;
+    top: 4px;
+    left: -2px;
+  }
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ChannelListDivider = styled.div`
+  width: calc(100% + 28px);
+  border-top: 1px solid ${props => props.theme.bg.border};
+  height: 1px;
+  margin: 12px 0 4px -14px;
+`;
+
+const placeHolderShimmer = keyframes`
+	0%{
+			transform: translateX(-200%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
+	}
+	100%{
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
+	}
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  padding: 0 8px;
+  flex-direction: column;
+  margin-left: 36px;
+  overflow: hidden;
+`;
+
+export const LoadingBar = styled.div`
+  width: ${props => `${props.width}px`};
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 8px;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  animation-name: ${placeHolderShimmer};
 `;

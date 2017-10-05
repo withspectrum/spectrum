@@ -1,18 +1,5 @@
 // @flow
 const Meta = /* GraphQL */ `
-  type GrowthDataCounts {
-    growth: Float
-    currentPeriodCount: Int
-    prevPeriodCount: Int
-  }
-
-  type GrowthData {
-    count: Int
-    weeklyGrowth: GrowthDataCounts
-    monthlyGrowth: GrowthDataCounts
-    quarterlyGrowth: GrowthDataCounts
-  }
-
   type UsersGrowthData {
     count: Int
     dau: Int

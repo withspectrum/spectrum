@@ -178,36 +178,38 @@ class NewCommunity extends Component {
 
               {// gather community meta info
               activeStep === 1 &&
-              !community && (
-                <CreateCommunityForm communityCreated={this.communityCreated} />
-              )}
+                !community && (
+                  <CreateCommunityForm
+                    communityCreated={this.communityCreated}
+                  />
+                )}
 
               {activeStep === 1 &&
-              community && (
-                <EditCommunityForm
-                  communityUpdated={this.communityCreated}
-                  community={community}
-                />
-              )}
+                community && (
+                  <EditCommunityForm
+                    communityUpdated={this.communityCreated}
+                    community={community}
+                  />
+                )}
 
               {activeStep === 2 &&
-              community &&
-              community.id && (
-                <ContentContainer>
-                  <Divider />
-                  <ImportSlackWithoutCard
-                    community={community}
-                    id={community.id || existingId}
-                    isOnboarding
-                    hasInvitedPeople={this.hasInvitedPeople}
-                  />
-                  <Divider />
-                  <EmailInvitesWithoutCard
-                    community={community}
-                    hasInvitedPeople={this.hasInvitedPeople}
-                  />
-                </ContentContainer>
-              )}
+                community &&
+                community.id && (
+                  <ContentContainer>
+                    <Divider />
+                    <ImportSlackWithoutCard
+                      community={community}
+                      id={community.id || existingId}
+                      isOnboarding
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                    <Divider />
+                    <EmailInvitesWithoutCard
+                      community={community}
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                  </ContentContainer>
+                )}
 
               {// connect a slack team or invite via email
               activeStep === 2 && (

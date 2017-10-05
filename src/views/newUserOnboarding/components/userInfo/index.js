@@ -285,10 +285,11 @@ class UserInfoPure extends Component {
             />
           </ImageInputWrapper>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '64px', marginBottom: '-32px' }}>
               {photoSizeError}
-            </Notice>}
+            </Notice>
+          )}
 
           <div style={{ display: 'flex', marginTop: '40px' }}>
             <Input
@@ -321,11 +322,12 @@ class UserInfoPure extends Component {
             A few words about yourself
           </TextArea>
 
-          {descriptionError &&
+          {descriptionError && (
             <Error>
               Whoa there Homer, let's try and keep this brief - like, 140
               characters brief.
-            </Error>}
+            </Error>
+          )}
 
           <ContinueButton
             onClick={this.save}

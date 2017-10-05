@@ -10,17 +10,18 @@ import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
+import { getChannelThreads } from '../../views/channel/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
-import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
-import Composer from './components/inboxComposer';
+import Header from './components/threadSelectorHeader';
 import CommunityList from './components/communityList';
+import UserProfile from './components/userProfile';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
   Wrapper,
@@ -31,7 +32,6 @@ import {
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
-  ThreadComposerContainer,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -39,6 +39,10 @@ const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
 );
 
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
+  DashboardThreadFeed
+);
+
+const ChannelThreadFeed = compose(connect(), getChannelThreads)(
   DashboardThreadFeed
 );
 
@@ -51,7 +55,7 @@ class Dashboard extends Component {
       newActivityIndicator,
       activeThread,
       activeCommunity,
-      composerIsOpen,
+      activeChannel,
       isLoading,
       hasError,
     } = this.props;
@@ -79,38 +83,37 @@ class Dashboard extends Component {
         <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-
           <CommunityListWrapper>
             <CommunityListScroller>
+              <UserProfile user={user} />
               <CommunityList
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
+                activeChannel={activeChannel}
               />
             </CommunityListScroller>
           </CommunityListWrapper>
 
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Composer />
+              <Header />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
             )}
-            {composerIsOpen && (
-              <ThreadComposerContainer>
-                <ThreadComposer
-                  activeCommunity={
-                    activeCommunityObject && activeCommunityObject.slug
-                  }
-                  activeChannel={'general'}
-                  isInbox
-                />
-              </ThreadComposerContainer>
-            )}
             <InboxScroller id="scroller-for-inbox">
               {!activeCommunity ? (
                 <EverythingThreadFeed selectedId={activeThread} />
+              ) : activeChannel ? (
+                <ChannelThreadFeed
+                  id={activeChannel}
+                  selectedId={activeThread}
+                  hasActiveCommunity={activeCommunity}
+                  hasActiveChannel={activeChannel}
+                  community={activeCommunityObject}
+                  pinnedThreadId={activeCommunityObject.pinnedThreadId}
+                />
               ) : (
                 <CommunityThreadFeed
                   id={activeCommunity}
@@ -125,7 +128,13 @@ class Dashboard extends Component {
 
           <ThreadWrapper>
             <ThreadScroller id="scroller-for-inbox-thread-view">
-              <DashboardThread threadId={activeThread} />
+              <DashboardThread
+                threadId={activeThread}
+                activeCommunity={
+                  activeCommunityObject && activeCommunityObject.slug
+                }
+                activeChannel={activeChannel}
+              />
             </ThreadScroller>
           </ThreadWrapper>
         </DashboardWrapper>
@@ -156,7 +165,7 @@ const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
-  composerIsOpen: state.composer.isOpen,
+  activeChannel: state.dashboardFeed.activeChannel,
 });
 export default compose(
   connect(map),

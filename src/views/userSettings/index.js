@@ -123,7 +123,7 @@ class UserSettings extends React.Component<Props> {
             <RecurringPaymentsList data={data} currentUser={user} />
             <EmailSettings largeOnly currentUser={user} />
             {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
+              'PushManager' in window && <NotificationSettings largeOnly />}
             <Invoices />
           </Column>
         </AppViewWrapper>

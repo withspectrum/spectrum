@@ -1,13 +1,3 @@
-html,
-body {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  background: #f5f8fc;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
-
 * {
   border: 0;
   box-sizing: inherit;
@@ -20,6 +10,33 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+html {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #ffffff;
+  color: #16171a;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+body {
+  display: flex;
+  box-sizing: border-box;
+  flex: auto;
+  align-self: stretch;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 a {
@@ -35,7 +52,8 @@ textarea {
   resize: none;
 }
 
-::-moz-selection { /* Code for Firefox */
+::-moz-selection {
+  /* Code for Firefox */
   background: #3818e5;
   color: #ffffff;
 }
@@ -45,39 +63,23 @@ textarea {
   color: #ffffff;
 }
 
-body {
-  position: relative;
-  height: 100%;
-  max-height: 100%;
-  width: 100vw;
-  -webkit-font-smoothing: antialiased;
-  font-size: 16px;
-  line-height: 24px;
-  background: #fff;
-  color: #16171A;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: #a3afbf;
 }
-
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #A3AFBF;
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #a3afbf;
+  opacity: 1;
 }
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    #A3AFBF;
-   opacity:  1;
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #a3afbf;
+  opacity: 1;
 }
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    #A3AFBF;
-   opacity:  1;
-}
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color:    #A3AFBF;
-}
-
-::-webkit-scrollbar {
-  display: none;
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #a3afbf;
 }
 
 #root {
@@ -106,7 +108,17 @@ body {
 .markdown {
   font-size: 16px;
   line-height: 24px;
-  color: #16171A;
+  color: #16171a;
+}
+
+.markdown p,
+.markdown div[data-block='true'] {
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-top: 16px;
+  font-weight: 400;
+  display: block;
 }
 
 .markdown > *:first-of-type {
@@ -130,7 +142,7 @@ body {
 .markdown img:hover {
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .markdown em {
@@ -143,14 +155,6 @@ body {
   color: inherit;
   font-size: inherit;
   font-weight: 700;
-}
-
-.markdown p {
-  color: inherit;
-  font-size: 16px;
-  line-height: 1.5;
-  margin-top: 16px;
-  font-weight: 400;
 }
 
 .markdown span {
@@ -173,8 +177,8 @@ body {
 }
 
 .markdown blockquote {
-  color: #828C99;
-  border-left: 4px solid #7B16FF;
+  color: #828c99;
+  border-left: 4px solid #7b16ff;
   padding: 4px 8px 4px 16px;
   font-size: 24px;
   font-weight: 300;
@@ -201,12 +205,12 @@ body {
 }
 
 .markdown a:visited {
-  opacity: .6;
+  opacity: 0.6;
   transition: all 0.2s ease-in;
 }
 
 .markdown code {
-  font-family: "Input Mono", "Menlo", "Inconsolata", "Roboto Mono", monospace;
+  font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -214,7 +218,7 @@ body {
   padding: 2px 4px;
   display: inline;
   width: 100%;
-  border: 1px solid #DFE7EF;
+  border: 1px solid #dfe7ef;
   border-radius: 4px;
   margin-bottom: 16px;
 }
@@ -245,7 +249,7 @@ body {
 .markdown hr {
   width: 100%;
   height: 1px;
-  background: #DFE7EF;
+  background: #dfe7ef;
   display: block;
   margin: 32px 0;
 }
@@ -253,7 +257,7 @@ body {
 .markdown h1 {
   font-size: 24px;
   line-height: 40px;
-  border-bottom: 1px solid #DFE7EF;
+  border-bottom: 1px solid #dfe7ef;
   font-weight: 800;
   margin-top: 1rem;
   margin-bottom: 8px;
@@ -303,4 +307,71 @@ body {
   margin-bottom: 8px;
   text-transform: lowercase;
   font-variant: small-caps;
+}
+
+.hljs {
+  display: block;
+  background: white;
+  padding: 0.5em;
+  color: #333333;
+  overflow-x: auto;
+}
+
+.hljs-comment,
+.hljs-meta {
+  color: #969896;
+}
+
+.hljs-string,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-strong,
+.hljs-emphasis,
+.hljs-quote {
+  color: #df5000;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+  color: #a71d5d;
+}
+
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-attribute {
+  color: #0086b3;
+}
+
+.hljs-section,
+.hljs-name {
+  color: #63a35c;
+}
+
+.hljs-tag {
+  color: #333333;
+}
+
+.hljs-title,
+.hljs-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #795da3;
+}
+
+.hljs-addition {
+  color: #55a532;
+  background-color: #eaffea;
+}
+
+.hljs-deletion {
+  color: #bd2c00;
+  background-color: #ffecec;
+}
+
+.hljs-link {
+  text-decoration: underline;
 }

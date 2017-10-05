@@ -40,9 +40,9 @@ class ThreadSlider extends Component {
     return (
       <div>
         <Transition in={!!threadId} timeout={ANIMATION_DURATION}>
-          {state =>
+          {state => (
             <div>
-              {threadId &&
+              {threadId && (
                 <Container>
                   <Link to={this.props.location.pathname}>
                     <Overlay
@@ -65,8 +65,10 @@ class ThreadSlider extends Component {
 
                     <ThreadContainer threadId={threadId} slider />
                   </Thread>
-                </Container>}
-            </div>}
+                </Container>
+              )}
+            </div>
+          )}
         </Transition>
       </div>
     );

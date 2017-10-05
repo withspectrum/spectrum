@@ -306,8 +306,8 @@ class CreateChannelModal extends Component {
 
             {!modalProps.isPro && (
               <UpsellDescription>
-                Pro communities can create private channels to protect threads,
-                messages, and manually approve all new members.
+                Standard communities can create private channels to protect
+                threads, messages, and manually approve all new members.
                 <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
                   Learn more
                 </Link>
@@ -315,21 +315,21 @@ class CreateChannelModal extends Component {
             )}
 
             {modalProps.isPro &&
-            isPrivate && (
-              <Description>
-                Only approved people on Spectrum can see the threads, messages,
-                and members in this channel. You can manually approve users who
-                request to join this channel.
-              </Description>
-            )}
+              isPrivate && (
+                <Description>
+                  Only approved people on Spectrum can see the threads,
+                  messages, and members in this channel. You can manually
+                  approve users who request to join this channel.
+                </Description>
+              )}
 
             {modalProps.isPro &&
-            !isPrivate && (
-              <Description>
-                Anyone on Spectrum can join this channel, post threads and
-                messages, and will be able to see other members.
-              </Description>
-            )}
+              !isPrivate && (
+                <Description>
+                  Anyone on Spectrum can join this channel, post threads and
+                  messages, and will be able to see other members.
+                </Description>
+              )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>

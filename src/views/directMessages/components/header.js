@@ -13,7 +13,7 @@ const Header = ({ thread, currentUser }) => {
     user => user.userId !== currentUser.id
   );
 
-  const photos = trimmedUsers.map(user =>
+  const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>
       <Photo
         size={60}
@@ -24,7 +24,7 @@ const Header = ({ thread, currentUser }) => {
         link={user.username ? `/users/${user.username}` : null}
       />
     </PhotoWrapper>
-  );
+  ));
 
   const names = trimmedUsers.map(user => user.name).join(', ');
   const username =
@@ -34,15 +34,9 @@ const Header = ({ thread, currentUser }) => {
 
   return (
     <StyledHeader>
-      <PhotosContainer>
-        {photos}
-      </PhotosContainer>
-      <Names>
-        {names}
-      </Names>
-      <Username>
-        {username && `@${username}`}
-      </Username>
+      <PhotosContainer>{photos}</PhotosContainer>
+      <Names>{names}</Names>
+      <Username>{username && `@${username}`}</Username>
     </StyledHeader>
   );
 };

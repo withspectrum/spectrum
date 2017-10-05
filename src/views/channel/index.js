@@ -203,8 +203,7 @@ class ChannelView extends React.Component<Props> {
 
             <ThreadFeedWithData
               viewContext="channel"
-              channelSlug={channelSlug}
-              communitySlug={communitySlug}
+              id={channel.id}
               currentUser={isLoggedIn}
               channelId={channel.id}
             />

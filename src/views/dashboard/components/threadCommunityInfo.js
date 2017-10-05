@@ -12,10 +12,17 @@ import {
   Lock,
 } from '../style';
 
-export default ({ thread, active, activeCommunity, isPinned }) => {
+export default ({
+  thread,
+  active,
+  activeCommunity,
+  activeChannel,
+  isPinned,
+}) => {
   const { channel } = thread;
   const isGeneral = channel.slug === 'general';
   if (activeCommunity && isGeneral && !isPinned) return null;
+  if (activeChannel === channel.id) return null;
 
   return (
     <CommunityInfoContainer active={active}>

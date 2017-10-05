@@ -56,7 +56,7 @@ module.exports = {
       }
 
       // all checks passed
-      if (message.messageType === 'text') {
+      if (message.messageType === 'text' || message.messageType === 'draftjs') {
         // send a normal text message
         return storeMessage(message, currentUser.id);
       } else if (message.messageType === 'media') {

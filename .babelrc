@@ -20,8 +20,6 @@
     "transform-flow-strip-types",
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
-    "syntax-dynamic-import",
-    "preval",
-    "babel-macros"
+    "syntax-dynamic-import"
   ]
 }

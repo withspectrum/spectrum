@@ -154,7 +154,7 @@ export const UserListItem = ({
   children,
 }: Object): React$Element<any> => {
   return (
-    <Wrapper>
+    <Wrapper border>
       <Row>
         <Avatar
           radius={20}
@@ -176,14 +176,18 @@ export const UserListItem = ({
                 <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
               </span>
             )}
-            {user.totalReputation && (
-              <span>
-                <ReputationMini tipText={'Your rep in this community'} />
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </span>
-            )}
+            {(user.totalReputation || user.contextPermissions) && (
+                <span>
+                  <ReputationMini tipText={'Your rep in this community'} />
+                  {user.contextPermissions
+                    ? user.contextPermissions.reputation &&
+                      user.contextPermissions.reputation > 0 &&
+                      user.contextPermissions.reputation.toLocaleString()
+                    : user.totalReputation && user.totalReputation > 0
+                      ? user.totalReputation.toLocaleString()
+                      : '0'}
+                </span>
+              )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>

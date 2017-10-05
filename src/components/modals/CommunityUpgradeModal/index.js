@@ -94,11 +94,9 @@ class CommunityUpgradeModal extends React.Component {
       <Modal
         isOpen={isOpen}
         contentLabel={
-          !community.isPro ? (
-            'Upgrade your community'
-          ) : (
-            'Manage your subscription'
-          )
+          !community.isPro
+            ? 'Upgrade your community'
+            : 'Manage your subscription'
         }
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
@@ -107,13 +105,7 @@ class CommunityUpgradeModal extends React.Component {
       >
         <ModalContainer
           noHeader={!user.isPro}
-          title={
-            !community.isPro ? (
-              'Upgrade your community'
-            ) : (
-              'Manage your subscription'
-            )
-          }
+          title={null}
           closeModal={this.closeModal}
         >
           {community.isPro && (
@@ -161,10 +153,12 @@ class CommunityUpgradeModal extends React.Component {
           )}
 
           {!community.isPro && (
-            <UpsellUpgradeCommunity
-              community={community}
-              complete={this.closeModal}
-            />
+            <div style={{ padding: '16px' }}>
+              <UpsellUpgradeCommunity
+                community={community}
+                complete={this.closeModal}
+              />
+            </div>
           )}
         </ModalContainer>
       </Modal>

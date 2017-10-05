@@ -14,6 +14,6 @@ export default ({
       multiple={multiple}
       onChange={onChange}
     />
-    <Icon glyph="photo" tipLocation="top-right" tipText="Upload Photo" subtle />
+    <Icon glyph="photo" tipLocation="top-right" tipText="Upload Photo" />
   </MediaLabel>
 );
