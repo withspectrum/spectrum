@@ -110,6 +110,7 @@ class Dashboard extends Component {
                   id={activeChannel}
                   selectedId={activeThread}
                   hasActiveCommunity={activeCommunity}
+                  hasActiveChannel={activeChannel}
                   community={activeCommunityObject}
                   pinnedThreadId={activeCommunityObject.pinnedThreadId}
                 />

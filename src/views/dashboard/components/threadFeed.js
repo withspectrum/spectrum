@@ -143,6 +143,7 @@ class ThreadFeed extends Component {
                 data={thread}
                 active={selectedId === thread.id}
                 hasActiveCommunity={this.props.hasActiveCommunity}
+                hasActiveChannel={this.props.hasActiveChannel}
                 pinnedThreadId={this.props.pinnedThreadId}
               />
             );

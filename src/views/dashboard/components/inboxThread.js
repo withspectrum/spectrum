@@ -30,6 +30,7 @@ class InboxThread extends Component {
       data,
       active,
       hasActiveCommunity,
+      hasActiveChannel,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
@@ -50,6 +51,7 @@ class InboxThread extends Component {
             thread={data}
             active={active}
             activeCommunity={hasActiveCommunity}
+            activeChannel={hasActiveChannel}
             isPinned={isPinned}
           />
 

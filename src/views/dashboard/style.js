@@ -47,6 +47,7 @@ export const InboxScroller = styled.div`
   width: 100%;
   overflow-y: scroll;
   position: relative;
+  flex: 1;
 `;
 
 export const CommunityListWrapper = styled.div`
@@ -580,7 +581,7 @@ export const MiniLinkPreview = styled(Link)`
 
 export const NullThreadFeed = styled.div`
   display: flex;
-  flex: auto;
+  flex: 1;
   height: 100%;
   align-items: center;
   justify-content: center;
