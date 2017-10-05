@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { openGallery } from '../../actions/gallery';
 import { convertTimestampToTime, onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
 import { Timestamp, Body, Actions } from './view';
 import { Wrapper } from './style';
+import { deleteMessage } from '../../api/message';
+import { addToastWithTimeout } from '../../actions/toasts';
 
 class Message extends Component {
   componentDidMount() {
@@ -23,8 +27,18 @@ class Message extends Component {
     // TODO: make it so people can tap/click on messages to set focus and display the message's actions
   };
 
-  deleteMessage = messageId => {
-    //@mxstbr: get all up in here...
+  deleteMessage = () => {
+    this.props
+      .deleteMessage(this.props.message.id)
+      .then(() => {
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Message successfully deleted.')
+        );
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err));
+        console.error(err);
+      });
   };
 
   render() {
@@ -66,20 +80,20 @@ class Message extends Component {
           deleteMessage={this.deleteMessage}
         >
           {!emojiOnly &&
-          message.messageType !== 'media' &&
-          typeof message.id === 'string' && (
-            <Reaction
-              message={message}
-              toggleReaction={toggleReaction}
-              me={me}
-              currentUser={currentUser}
-              dispatch={dispatch}
-            />
-          )}
+            message.messageType !== 'media' &&
+            typeof message.id === 'string' && (
+              <Reaction
+                message={message}
+                toggleReaction={toggleReaction}
+                me={me}
+                currentUser={currentUser}
+                dispatch={dispatch}
+              />
+            )}
         </Actions>
       </Wrapper>
     );
   }
 }
 
-export default Message;
+export default compose(connect(), deleteMessage)(Message);

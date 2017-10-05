@@ -44,6 +44,7 @@ class Messages extends Component {
       toggleReaction,
       dispatch,
       threadType,
+      threadId,
     } = this.props;
 
     const hash = window.location.hash.substr(1);
@@ -117,6 +118,8 @@ class Messages extends Component {
                       canModerate={me}
                       pending={message.id < 0}
                       currentUser={currentUser}
+                      threadType={threadType}
+                      threadId={threadId}
                     />
                   );
                 })}

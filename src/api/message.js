@@ -5,6 +5,74 @@ import { messageInfoFragment } from './fragments/message/messageInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
+const DELETE_MESSAGE_MUTATION = gql`
+  mutation deleteMessage($id: ID!) {
+    deleteMessage(id: $id)
+  }
+`;
+const DELETE_MESSAGE_OPTIONS = {
+  props: ({ ownProps, mutate }) => ({
+    ...ownProps,
+    deleteMessage: id =>
+      mutate({
+        variables: {
+          id,
+        },
+        update: store => {
+          // we have to split out the optimistic update by thread type
+          // because DMs and story threads have different queries and response
+          // shapes
+          if (ownProps.threadType === 'story') {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              variables: {
+                id: ownProps.threadId,
+              },
+            });
+
+            data.thread.messageConnection.edges = data.thread.messageConnection.edges.filter(
+              ({ node }) => node.id !== id
+            );
+
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              data,
+              variables: {
+                id: ownProps.threadId,
+              },
+            });
+          } else if (ownProps.threadType === 'directMessageThread') {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              variables: {
+                id: ownProps.threadId,
+              },
+            });
+
+            data.directMessageThread.messageConnection.edges = data.directMessageThread.messageConnection.edges.filter(
+              message => message.id !== id
+            );
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              data,
+              variables: {
+                id: ownProps.threadId,
+              },
+            });
+          }
+        },
+      }),
+  }),
+};
+export const deleteMessage = graphql(
+  DELETE_MESSAGE_MUTATION,
+  DELETE_MESSAGE_OPTIONS
+);
+
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
 */
