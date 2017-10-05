@@ -30,7 +30,7 @@ type DBThreadEdits = {
   timestamp: Date,
 };
 
-type DBThread = {
+export type DBThread = {
   channelId: string,
   communityId: string,
   content: {

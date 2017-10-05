@@ -1,6 +1,8 @@
 import { withFilter } from 'graphql-subscriptions';
+import { getThread } from '../models/thread';
 import pubsub from './listeners/pubsub';
 import { MESSAGE_ADDED } from './listeners/channels';
+import { userCanViewChannel } from './utils';
 
 /**
  * Define the message subscription resolvers
@@ -17,7 +19,18 @@ module.exports = {
       },
       subscribe: withFilter(
         () => pubsub.asyncIterator(MESSAGE_ADDED),
-        (message, { thread }) => message.threadId === thread
+        async (message, { thread }, { user }) => {
+          // Message was sent in different thread, early return
+          if (message.threadId !== thread) return false;
+
+          const threadData = await getThread(message.threadId);
+          if (!threadData) return false;
+
+          return await userCanViewChannel(
+            threadData.channelId,
+            user && user.id
+          );
+        }
       ),
     },
   },
