@@ -3,8 +3,9 @@ import replace from 'string-replace-to-array';
 import {
   convertTimestampToTime,
   onlyContainsEmoji,
-  renderMarkdownLinks,
+  renderLinks,
 } from '../../helpers/utils';
+import { toPlainText, toState } from 'shared/draft-utils';
 import Icon from '../icons';
 import {
   Text,
@@ -23,9 +24,14 @@ export const Body = props => {
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
 
   switch (type) {
+    case 'draftjs':
     case 'text':
     default:
-      return <Text pending={pending}>{renderMarkdownLinks(message.body)}</Text>;
+      const body =
+        type === 'draftjs'
+          ? toPlainText(toState(JSON.parse(message.body)))
+          : message.body;
+      return <Text pending={pending}>{renderLinks(body)}</Text>;
     case 'emoji':
       return <Emoji pending={pending}>{message.body}</Emoji>;
     case 'media':
