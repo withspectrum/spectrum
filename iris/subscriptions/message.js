@@ -8,7 +8,13 @@ import { MESSAGE_ADDED } from './listeners/channels';
 module.exports = {
   Subscription: {
     messageAdded: {
-      resolve: message => message,
+      resolve: message => {
+        // NOTE(@mxstbr): For some reason I have to wrap timestamp in new Date here. I have no idea why but otherwise message subscriptions don't work.
+        return {
+          ...message,
+          timestamp: new Date(message.timestamp),
+        };
+      },
       subscribe: withFilter(
         () => pubsub.asyncIterator(MESSAGE_ADDED),
         (message, { thread }) => message.threadId === thread

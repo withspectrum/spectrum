@@ -3994,6 +3994,15 @@ graphql-log@0.1.2:
     deep-for-each "^1.0.6"
     is-function "^1.0.1"
 
+graphql-redis-subscriptions@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-1.3.1.tgz#a8790fbb1bd22103713befdcf1f27d5a14306509"
+  dependencies:
+    graphql-subscriptions "^0.4.2"
+    iterall "^1.1.1"
+  optionalDependencies:
+    ioredis "^3.1.2"
+
 graphql-server-core@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-core/-/graphql-server-core-0.8.5.tgz#6d03e9d7d0ceebdbcfbad57c9f8a61eb0d3fb6da"
@@ -4014,7 +4023,7 @@ graphql-server-module-graphiql@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.8.5.tgz#bf43caa20e7e7f912003a67bb31710c6ebc7ab18"
 
-graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.3:
+graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.2, graphql-subscriptions@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.4.tgz#39cff32d08dd3c990113864bab77154403727e9b"
   dependencies:
@@ -4527,7 +4536,7 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-ioredis@^3.1.4:
+ioredis@^3.1.2, ioredis@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.1.4.tgz#8688293f5f2f1757e1c812ad17cce49f46d811bc"
   dependencies:
