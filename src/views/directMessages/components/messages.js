@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
-import ChatMessages from '../../../components/chatMessages';
+import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import { Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
@@ -70,6 +70,7 @@ class MessagesWithData extends Component {
   render() {
     const {
       data: { error, messages, hasNextPage, fetchMore, networkStatus },
+      toggleReaction,
     } = this.props;
 
     if (error) {
@@ -101,7 +102,7 @@ class MessagesWithData extends Component {
             </HasNextPage>
           )}
           <ChatMessages
-            toggleReaction={this.props.toggleReaction}
+            toggleReaction={toggleReaction}
             messages={sortedMessages}
             forceScrollToBottom={this.props.forceScrollToBottom}
             contextualScrollToBottom={this.props.contextualScrollToBottom}
