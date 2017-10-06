@@ -67,8 +67,8 @@ class Message extends Component {
     return (
       <Wrapper
         me={me}
-        tipText={convertTimestampToTime(message.timestamp)}
-        tipLocation={me ? 'bottom-left' : 'bottom-right'}
+        // tipText={convertTimestampToTime(message.timestamp)}
+        // tipLocation={me ? 'bottom-left' : 'bottom-right'}
       >
         {shareable && <a name={`${message.id}`} />}
         <Body
