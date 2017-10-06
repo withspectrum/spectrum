@@ -614,7 +614,6 @@ class NewThread extends Component {
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
           if (!createDirectMessageThread) {
-            console.error('Direct message thread failed to create.');
             this.props.dispatch(
               addToastWithTimeout(
                 'error',
