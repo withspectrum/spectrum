@@ -17,6 +17,7 @@ import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessa
 import { getThread } from '../models/thread';
 import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
@@ -79,7 +80,7 @@ module.exports = {
           })
           .then(newMessage => storeMessage(newMessage, currentUser.id));
       } else {
-        return new UserError('Unknown message type on this bad boy.');
+        return new UserError('Unknown message type');
       }
     },
     deleteMessage: async (
@@ -102,13 +103,22 @@ module.exports = {
         }
 
         const thread = await getThread(message.threadId);
-        const { isModerator, isOwner } = await getUserPermissionsInCommunity(
+        const communityPermissions = await getUserPermissionsInCommunity(
           thread.communityId,
           currentUser.id
         );
-        if (!isModerator && !isOwner)
+        const channelPermissions = await getUserPermissionsInChannel(
+          thread.channelId,
+          currentUser.id
+        );
+        const canModerate =
+          channelPermissions.isOwner ||
+          communityPermissions.isOwner ||
+          channelPermissions.isModerator ||
+          communityPermissions.isModerator;
+        if (!canModerate)
           throw new UserError(
-            'You have to be a moderator in the community to delete a message.'
+            `You don't have permission to delete this message.`
           );
       }
 

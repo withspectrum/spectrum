@@ -73,7 +73,7 @@ class Messages extends Component {
       dispatch,
       threadType,
       threadId,
-      canModerate,
+      isModerator,
     } = this.props;
 
     const hash = window.location.hash.substr(1);
@@ -92,6 +92,7 @@ class Messages extends Component {
 
           const roboText = sender.id === 'robo';
           const me = currentUser ? sender.id === currentUser.id : false;
+          const canModerate = me || isModerator;
 
           if (roboText) {
             return (
