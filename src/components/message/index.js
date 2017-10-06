@@ -59,10 +59,8 @@ class Message extends Component {
     const emojiOnly = onlyContainsEmoji(message.content.body);
     const actionable = context !== 'notification';
     const shareable = message.messageType !== 'directMessageThread';
-    const reactable =
-      !emojiOnly &&
-      message.messageType !== 'media' &&
-      typeof message.id === 'string';
+    const reactable = !emojiOnly && typeof message.id === 'string';
+    const hideIndicator = !reactable && !shareable && !canModerate;
 
     return (
       <Wrapper
@@ -86,6 +84,7 @@ class Message extends Component {
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
+            hideIndicator={hideIndicator}
           >
             {reaction &&
               reactable && (
