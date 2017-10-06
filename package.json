@@ -158,7 +158,7 @@
     "test:ci": "cross-env CI=true npm run test",
     "db:migrate": "npm run rethinkdb:migrate -- up",
     "db:drop": "npm run rethinkdb:migrate -- down",
-    "db:seed": "node iris/migrations/seed/index.js",
+    "db:seed": "cross-env NODE_PATH=./ node iris/migrations/seed/index.js",
     "db:reset": "yarn run db:drop && yarn run db:migrate && yarn run db:seed",
     "rethinkdb:migrate": "rethinkdb-migrate -f ./iris/migrations/config.js",
     "eject": "react-scripts eject",
