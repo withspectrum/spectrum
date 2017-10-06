@@ -156,18 +156,15 @@ class ComposerWithData extends Component {
     activeCommunity
   ) => {
     const props = this.props;
-
     // get the channels for the proper community
     const activeCommunityChannels = availableChannels.filter(
       channel => channel.community.id === activeCommunity
     );
     let activeChannel = [];
-
     // Get the active channel if there is one
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
-        channel =>
-          channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
+        channel => channel.id === props.activeChannel
       );
     } else {
       // Try and get the default channel for the active community
@@ -275,7 +272,7 @@ class ComposerWithData extends Component {
       // Get the active channel if there is one
       if (this.props.activeChannel) {
         activeChannel = activeCommunityChannels.filter(
-          channel => channel.slug === this.props.activeChannel
+          channel => channel.id === this.props.activeChannel
         );
       } else {
         // Try and get the default channel for the active community
