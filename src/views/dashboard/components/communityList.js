@@ -102,7 +102,7 @@ class CommunityList extends Component {
         <ExploreCommunityListItem>
           <Link to={`/explore`}>
             <ExploreListItem>
-              <Icon glyph={'explore'} size={40} />
+              <Icon glyph={'explore'} size={32} />
             </ExploreListItem>
             <CommunityListName>Explore communities</CommunityListName>
           </Link>
