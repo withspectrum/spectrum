@@ -536,9 +536,7 @@ export const HorizontalRule = styled(FlexRow)`
   hr {
     display: inline-block;
     flex: 1 0 auto;
-    border-top: ${props => (props.border ? props.border : `2px solid`)};
-    border-color: ${props =>
-      props.color ? eval(`props.theme.${props.color}`) : 'currentColor'};
+    border-top: 2px solid ${props => props.theme.bg.wash};
   }
 
   div {

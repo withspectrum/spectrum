@@ -120,6 +120,7 @@ class Messages extends Component {
                       currentUser={currentUser}
                       threadType={threadType}
                       threadId={threadId}
+                      toggleReaction={toggleReaction}
                     />
                   );
                 })}
