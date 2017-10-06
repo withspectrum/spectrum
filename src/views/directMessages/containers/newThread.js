@@ -613,6 +613,16 @@ class NewThread extends Component {
       this.props
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) {
+            console.error('Direct message thread failed to create.');
+            this.props.dispatch(
+              addToastWithTimeout(
+                'error',
+                'Failed to create direct message thread, please try again!'
+              )
+            );
+            return;
+          }
           track(
             'direct message thread',
             `${isPrivate ? 'private thread' : 'group thread'} created`,
