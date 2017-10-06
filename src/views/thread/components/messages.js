@@ -72,9 +72,6 @@ class MessagesWithData extends Component {
   }
 
   componentDidMount() {
-    const { currentUser } = this.props;
-    if (!currentUser || !currentUser.id) return;
-
     this.subscribe();
   }
 
