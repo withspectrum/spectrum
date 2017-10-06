@@ -92,7 +92,8 @@ class Messages extends Component {
 
           const roboText = sender.id === 'robo';
           const me = currentUser ? sender.id === currentUser.id : false;
-          const canModerate = me || isModerator;
+          const canModerate =
+            threadType !== 'directMessageThread' && (me || isModerator);
 
           if (roboText) {
             return (
