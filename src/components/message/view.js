@@ -19,7 +19,7 @@ import {
 } from './style';
 
 export const Body = props => {
-  const { message, openGallery, pending, type } = props;
+  const { message, openGallery, pending, type, me } = props;
 
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
 
@@ -31,7 +31,11 @@ export const Body = props => {
         type === 'draftjs'
           ? toPlainText(toState(JSON.parse(message.body)))
           : message.body;
-      return <Text pending={pending}>{renderLinks(body)}</Text>;
+      return (
+        <Text me={me} pending={pending}>
+          {renderLinks(body)}
+        </Text>
+      );
     case 'emoji':
       return <Emoji pending={pending}>{message.body}</Emoji>;
     case 'media':
