@@ -10,10 +10,9 @@ module.exports = {
     notificationAdded: {
       resolve: notification => ({
         ...notification,
-        notificationAdded:
-          notification.notificationAdded &&
-          new Date(notification.notificationAdded),
         createdAt: notification.createdAt && new Date(notification.createdAt),
+        modifiedAt:
+          notification.modifiedAt && new Date(notification.modifiedAt),
       }),
       subscribe: withFilter(
         () => pubsub.asyncIterator(NOTIFICATION_ADDED),

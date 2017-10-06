@@ -13,9 +13,6 @@ module.exports = {
     directMessageThreadUpdated: {
       resolve: (directMessageThread: DBDirectMessageThread) => ({
         ...directMessageThread,
-        directMessageThreadUpdated:
-          directMessageThread.directMessageThreadUpdated &&
-          new Date(directMessageThread.directMessageThreadUpdated),
         threadLastActive:
           directMessageThread.threadLastActive &&
           new Date(directMessageThread.threadLastActive),
