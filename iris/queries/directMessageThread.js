@@ -7,6 +7,7 @@ import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
+import { toPlainText, toState } from 'shared/draft-utils';
 
 type DirectMessageUser = {
   userId: any,
@@ -53,7 +54,9 @@ module.exports = {
     snippet: ({ id }) => {
       return getLastMessage(id).then(message => {
         if (!message) return 'No messages yet...';
-        return message.content.body;
+        return message.messageType === 'draftjs'
+          ? toPlainText(toState(JSON.parse(message.content.body)))
+          : message.content.body;
       });
     },
   },
