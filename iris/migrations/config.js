@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const DEFAULT_CONFIG = {
   driver: 'rethinkdbdash',
-  db: 'spectrum',
+  db: process.env.NODE_ENV === 'test' ? 'testing' : 'spectrum',
   host: 'localhost',
   port: 28015,
   migrationsDirectory: 'iris/migrations',

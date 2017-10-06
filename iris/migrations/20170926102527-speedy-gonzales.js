@@ -3,7 +3,6 @@
 exports.up = function(r, conn) {
   return Promise.all([
     r
-      .db('spectrum')
       .table('usersCommunities')
       .indexCreate('userIdAndCommunityId', [
         r.row('userId'),
