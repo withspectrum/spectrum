@@ -144,6 +144,8 @@ class Editor extends React.Component {
       focus,
       singleLine,
       version,
+      placeholder,
+      readOnly,
       ...rest
     } = this.props;
 
@@ -166,6 +168,8 @@ class Editor extends React.Component {
               this.editor = editor;
               if (this.props.editorRef) this.props.editorRef(editor);
             }}
+            readOnly={readOnly}
+            placeholder={!readOnly && placeholder}
             {...rest}
           />
           {showLinkPreview && linkPreview && linkPreview.loading ? (
@@ -211,6 +215,8 @@ class Editor extends React.Component {
                 this.editor = editor;
                 if (this.props.editorRef) this.props.editorRef(editor);
               }}
+              readOnly={readOnly}
+              placeholder={!readOnly && placeholder}
               {...rest}
             />
           </Wrapper>
