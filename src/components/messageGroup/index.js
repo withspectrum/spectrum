@@ -73,6 +73,7 @@ class Messages extends Component {
       dispatch,
       threadType,
       threadId,
+      isModerator,
     } = this.props;
 
     const hash = window.location.hash.substr(1);
@@ -91,6 +92,7 @@ class Messages extends Component {
 
           const roboText = sender.id === 'robo';
           const me = currentUser ? sender.id === currentUser.id : false;
+          const canModerate = me || isModerator;
 
           if (roboText) {
             return (
@@ -115,7 +117,7 @@ class Messages extends Component {
                       link={`#${message.id}`}
                       reaction={'like'}
                       me={me}
-                      canModerate={me}
+                      canModerate={canModerate}
                       pending={message.id < 0}
                       currentUser={currentUser}
                       threadType={threadType}

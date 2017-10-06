@@ -592,7 +592,7 @@ class ThreadDetailPure extends Component {
             state={body}
             onChange={this.changeBody}
             editorKey="thread-detail"
-            placeholder="Write more thoughts here, add photos, and anything else!"
+            placeholder="Write more thoughts here..."
             showLinkPreview={true}
             linkPreview={{
               loading: fetchingLinkPreview,
