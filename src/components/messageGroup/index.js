@@ -28,6 +28,34 @@ const NullChat = () => (
     copy={`Why don't you kick off the conversation?`}
   />
 );
+
+export const AuthorAvatar = props => {
+  const { sender } = props;
+
+  return (
+    <Avatar
+      isOnline={sender.isOnline}
+      src={sender.profilePhoto}
+      username={sender.username}
+      link={sender.username ? `/users/${sender.username}` : null}
+      size={24}
+    />
+  );
+};
+
+export const AuthorByline = props => {
+  const { me, sender } = props;
+
+  return (
+    <Byline>
+      <Link to={`/users/${sender.username}`}>
+        <Name>{me ? 'Me' : sender.name}</Name>
+      </Link>
+      {sender.isAdmin && <Badge type="admin" />}
+      {sender.isPro && <Badge type="pro" />}
+    </Byline>
+  );
+};
 /*
   Messages expects to receive sorted and grouped messages.
   They will arrive as an array of arrays, where each top-level array is a group
@@ -53,34 +81,6 @@ class Messages extends Component {
     if (!messagesExist) {
       return <NullChat />;
     }
-
-    const AuthorAvatar = props => {
-      const { sender } = props;
-
-      return (
-        <Avatar
-          isOnline={sender.isOnline}
-          src={sender.profilePhoto}
-          username={sender.username}
-          link={sender.username ? `/users/${sender.username}` : null}
-          size={24}
-        />
-      );
-    };
-
-    const AuthorByline = props => {
-      const { me, sender } = props;
-
-      return (
-        <Byline>
-          <Link to={`/users/${sender.username}`}>
-            <Name>{me ? 'Me' : sender.name}</Name>
-          </Link>
-          {sender.isAdmin && <Badge type="admin" />}
-          {sender.isPro && <Badge type="pro" />}
-        </Byline>
-      );
-    };
 
     return (
       <Wrapper>
