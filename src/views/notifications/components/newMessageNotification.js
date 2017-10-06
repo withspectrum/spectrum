@@ -39,37 +39,6 @@ import {
   Content,
 } from '../style';
 
-// const renderBubbleHeader = (sender: Object, me: boolean) => {
-//   if (!sender.name) return;
-//
-//   return (
-//     <Byline me={me}>
-//       <Link to={sender.username ? `/users/${sender.username}` : '/'}>
-//         <Name>{me ? 'You' : sender.name}</Name>
-//       </Link>
-//     </Byline>
-//   );
-// };
-//
-// const renderAvatar = (sender: Object, me: boolean) => {
-//   if (me) return;
-//
-//   return (
-//     <AvatarLabel
-//       tipText={sender.name}
-//       tipLocation="right"
-//       style={{ alignSelf: 'flex-end' }}
-//     >
-//       <UserAvatar
-//         isOnline={sender.isOnline}
-//         src={sender.profilePhoto}
-//         username={sender.username}
-//         link={sender.username ? `/users/${sender.username}` : null}
-//       />
-//     </AvatarLabel>
-//   );
-// };
-
 export const NewMessageNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser, false);
   const event = parseEvent(notification.event);
