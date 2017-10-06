@@ -36,7 +36,7 @@ class Message extends Component {
         );
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
         console.error(err);
       });
   };
