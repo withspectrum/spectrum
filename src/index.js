@@ -17,24 +17,6 @@ import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
-const { thread, t } = queryString.parse(history.location.search);
-if (thread) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${thread}#${hash}`);
-  } else {
-    history.replace(`/thread/${thread}`);
-  }
-}
-if (t) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${t}#${hash}`);
-  } else {
-    history.replace(`/thread/${t}`);
-  }
-}
-
 const existingUser = getItemFromStorage('spectrum');
 let initialState;
 if (existingUser) {
@@ -45,6 +27,24 @@ if (existingUser) {
   };
 } else {
   initialState = {};
+}
+
+const { thread, t } = queryString.parse(history.location.search);
+if (thread) {
+  const hash = window.location.hash.substr(1);
+  if (hash && hash.length > 1) {
+    history.replace(`/thread/${thread}#${hash}`);
+  } else {
+    history.replace(`/thread/${thread}`);
+  }
+}
+if (t && (!existingUser || !existingUser.currentUser)) {
+  const hash = window.location.hash.substr(1);
+  if (hash && hash.length > 1) {
+    history.replace(`/thread/${t}#${hash}`);
+  } else {
+    history.replace(`/thread/${t}`);
+  }
 }
 
 const store = initStore(window.__SERVER_STATE__ || initialState, {
