@@ -18,6 +18,7 @@ import {
   CommunityListName,
   CommunityListReputation,
   CommunityListAvatar,
+  Fixed,
 } from '../style';
 import {
   changeActiveCommunity,
@@ -99,14 +100,18 @@ class CommunityList extends Component {
           </CommunityListItem>
         ))}
 
-        <ExploreCommunityListItem>
-          <Link to={`/explore`}>
-            <ExploreListItem>
-              <Icon glyph={'explore'} size={32} />
-            </ExploreListItem>
-            <CommunityListName>Explore communities</CommunityListName>
-          </Link>
-        </ExploreCommunityListItem>
+        <Fixed>
+          <ExploreCommunityListItem>
+            <Link to={'/explore'}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AllCommunityListItem>
+                  <Icon glyph={'explore'} />
+                </AllCommunityListItem>
+                <CommunityListName>Explore communities</CommunityListName>
+              </div>
+            </Link>
+          </ExploreCommunityListItem>
+        </Fixed>
       </div>
     );
   }

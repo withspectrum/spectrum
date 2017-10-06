@@ -52,8 +52,8 @@ export const InboxScroller = styled.div`
 
 export const CommunityListWrapper = styled.div`
   display: flex;
-  width: 256px;
-  min-width: 256px;
+  width: 72px;
+  min-width: 72px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -72,7 +72,7 @@ export const CommunityListWrapper = styled.div`
 
   &:hover {
     transform: translateZ(0);
-    // width: 256px;
+    width: 256px;
     transition: ${Transition.hover.on};
 
     img {
@@ -130,20 +130,33 @@ export const CommunityListItem = styled.div`
   }
 `;
 
-export const ExploreCommunityListItem = styled(CommunityListItem)`
+export const Fixed = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 255px;
-  color: ${props => props.theme.text.alt};
+  width: 100%;
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
-  margin: 0;
-  padding: 8px 16px;
-  border-radius: 0;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
     background: ${props => props.theme.bg.default};
+
+    div {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.default};
+    }
+  }
+`;
+
+export const ExploreCommunityListItem = styled(CommunityListItem)`
+  color: ${props => props.theme.text.alt};
+  margin: 1px 12px;
+  margin-top: 0 !important; //need to override the first child selector above
+  padding: 6px;
+  border-radius: 0;
+
+  ${Truncate} &:hover {
+    color: ${props => props.theme.brand.alt};
     border: 1px solid transparent;
 
     div {
@@ -197,6 +210,7 @@ export const ExploreListItem = styled(AllCommunityListItem)`
   background: none;
   margin-right: 3px;
   border-radius: 0;
+  ${Truncate};
 `;
 
 export const CommunityListAvatar = styled.img`
