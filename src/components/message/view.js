@@ -90,6 +90,7 @@ export const Actions = props => {
     shareable,
     canModerate,
     deleteMessage,
+    hideIndicator,
   } = props;
 
   return (
@@ -99,7 +100,7 @@ export const Actions = props => {
       {canModerate && (
         <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
       )}
-      <Indicator reaction={reaction} me={me} />
+      {hideIndicator || <Indicator reaction={reaction} me={me} />}
     </ActionUI>
   );
 };
