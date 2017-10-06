@@ -79,7 +79,6 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const unsortedMessages = notification.entities.map(notif => notif.payload);
   const sortedMessages = sortAndGroupNotificationMessages(unsortedMessages);
 
-  console.log(sortedMessages);
   return (
     <NotificationCard>
       <CardLink
