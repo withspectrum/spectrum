@@ -31,6 +31,7 @@ class SidebarChannels extends React.Component<Props> {
       isLoading,
       queryVarIsChanging,
       activeChannel,
+      isHovered,
     } = this.props;
 
     if (community) {
@@ -95,7 +96,7 @@ class SidebarChannels extends React.Component<Props> {
       );
     }
 
-    if (isLoading || queryVarIsChanging) {
+    if (isHovered && (isLoading || queryVarIsChanging)) {
       return (
         <ChannelsContainer className={'channelsContainer'}>
           <LoadingContainer>

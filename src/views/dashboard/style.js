@@ -50,12 +50,6 @@ export const InboxScroller = styled.div`
   flex: 1;
 `;
 
-const borderAnimation = keyframes`
-  0% { opacity:0; }
-  50% { opacity:1; }
-  100% { opacity:1; }
-`;
-
 export const CommunityListWrapper = styled.div`
   display: flex;
   width: 72px;
@@ -73,13 +67,20 @@ export const CommunityListWrapper = styled.div`
   .channelsContainer {
     max-height: 0;
     padding: 0;
-    transition-delay: 1.5s;
+    transition-delay: 1s;
+    transform: translateZ(0);
     transition: ${Transition.hover.off};
-  }
 
-  .divider {
-    animation-duration: 3s;
-    animation-name: ${borderAnimation};
+    .divider {
+      max-width: 0;
+      border-top: 1px solid ${props => props.theme.bg.wash};
+      height: 0;
+      margin: 12px 0 8px -28px;
+      position: relative;
+      right: -14px;
+      transition-delay: 1s;
+      transition: ${Transition.hover.on};
+    }
   }
 
   img {
@@ -91,19 +92,24 @@ export const CommunityListWrapper = styled.div`
   &:hover {
     transform: translateZ(0);
     width: 256px;
+    min-width: 256px;
     transition: ${Transition.hover.on};
-    transition-delay: 1.5s;
-
-    .divider {
-      animation-duration: 3s;
-      animation-name: ${borderAnimation};
-    }
+    transition-delay: 1s;
 
     .channelsContainer {
       max-height: 1000px;
       padding: 8px 8px 4px;
+      transform: translateZ(0);
       transition: ${Transition.hover.on};
-      transition-delay: 1.5s;
+      transition-delay: 1s;
+
+      .divider {
+        max-width: 256px;
+        border-top: 1px solid ${props => props.theme.bg.border};
+        height: 1px;
+        transition-delay: 1s;
+        transition: ${Transition.hover.on};
+      }
     }
 
     img {
@@ -721,12 +727,7 @@ export const ChannelListItem = styled.div`
   }
 `;
 
-export const ChannelListDivider = styled.div`
-  width: calc(100% + 28px);
-  border-top: 1px solid ${props => props.theme.bg.border};
-  height: 1px;
-  margin: 12px 0 4px -14px;
-`;
+export const ChannelListDivider = styled.div``;
 
 const placeHolderShimmer = keyframes`
 	0%{

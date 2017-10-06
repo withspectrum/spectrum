@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import { ReputationMiniCommunity } from '../../../components/reputation';
@@ -42,7 +39,12 @@ class CommunityList extends Component {
   };
 
   render() {
-    const { activeCommunity, activeChannel, communities } = this.props;
+    const {
+      activeCommunity,
+      activeChannel,
+      communities,
+      isHovered,
+    } = this.props;
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);
@@ -95,6 +97,7 @@ class CommunityList extends Component {
               <SidebarChannels
                 activeChannel={activeChannel}
                 communitySlug={c.slug}
+                isHovered={isHovered}
               />
             )}
           </CommunityListItem>
