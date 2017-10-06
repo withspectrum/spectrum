@@ -22,7 +22,7 @@ export const EmptyChat = () => (
     </HorizontalRule>
     <NullState
       heading={`🔥 This thread is hot off the presses...`}
-      copy={`Why don't you kick off the conversation?`}
+      copy={`Why don’t you kick off the conversation?`}
     />
   </ChatWrapper>
 );
@@ -117,7 +117,21 @@ class MessagesWithData extends Component {
       const unsortedMessages = data.thread.messageConnection.edges.map(
         message => message.node
       );
-      const sortedMessages = sortAndGroupMessages(unsortedMessages);
+
+      const unique = array => {
+        const processed = [];
+        for (let i = array.length - 1; i >= 0; i--) {
+          if (processed.indexOf(array[i].id) < 0) {
+            processed.push(array[i].id);
+          } else {
+            array.splice(i, 1);
+          }
+        }
+        return array;
+      };
+
+      const uniqueMessages = unique(unsortedMessages);
+      const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
         <ChatWrapper>
