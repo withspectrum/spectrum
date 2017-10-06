@@ -66,6 +66,7 @@ class Message extends Component {
       >
         {shareable && <a name={`${message.id}`} />}
         <Body
+          me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
           pending={message.id < 0}
           openGallery={this.toggleOpenGallery}
