@@ -11,8 +11,12 @@ import type { DBDirectMessageThread } from '../models/directMessageThread';
 module.exports = {
   Subscription: {
     directMessageThreadUpdated: {
-      resolve: (directMessageThread: DBDirectMessageThread) =>
-        directMessageThread,
+      resolve: (directMessageThread: DBDirectMessageThread) => ({
+        ...directMessageThread,
+        threadLastActive:
+          directMessageThread.threadLastActive &&
+          new Date(directMessageThread.threadLastActive),
+      }),
       subscribe: withFilter(
         () => pubsub.asyncIterator(DIRECT_MESSAGE_THREAD_UPDATED),
         (directMessageThread, _, { user }) => {

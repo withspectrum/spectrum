@@ -1,11 +1,11 @@
 // @flow
 /**
- * Define the notification subscription resolvers
+ * Define the thread subscription resolvers
  */
 import { withFilter } from 'graphql-subscriptions';
 import pubsub from './listeners/pubsub';
 import { THREAD_UPDATED } from './listeners/channels';
-import { userCanViewChannel } from './utils';
+import { userIsMemberOfChannel } from './utils';
 import type { DBThread } from '../models/thread';
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator(THREAD_UPDATED),
         async (thread, _, { user }) =>
-          await userCanViewChannel(thread.channelId, user && user.id)
+          await userIsMemberOfChannel(thread.channelId, user && user.id)
       ),
     },
   },
