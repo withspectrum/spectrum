@@ -1,11 +1,4 @@
-import { graphql } from 'graphql';
-import createLoaders from '../loaders';
-
-import schema from '../schema';
-
-// Nice little helper function for tests
-const request = query =>
-  graphql(schema, query, undefined, { loaders: createLoaders() });
+import { request } from './utils';
 
 describe('queries', () => {
   it('should fetch a user', () => {
