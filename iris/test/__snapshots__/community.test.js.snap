@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a communities threads 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "The first thread! 🎉",
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`should fetch a community 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "coverPhoto": "http://lorempixel.com/640/480/fashion",
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "The future of communities",
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "profilePhoto": "http://lorempixel.com/640/480/business",
+      "slug": "spectrum",
+      "website": "https://spectrum.chat",
+    },
+  },
+}
+`;
