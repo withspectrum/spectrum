@@ -86,7 +86,7 @@ class SidebarChannels extends React.Component<Props> {
 
           {isOwner &&
             community.isPro && (
-              <Link to={`/${community.slug}/settings/settings`}>
+              <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>Analytics</ChannelListItem>
               </Link>
             )}
