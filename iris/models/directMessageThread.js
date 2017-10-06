@@ -2,7 +2,7 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 
-type DBDirectMessageThread = {
+export type DBDirectMessageThread = {
   createdAt: Date,
   id: string,
   name?: string,
