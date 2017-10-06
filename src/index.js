@@ -17,6 +17,8 @@ import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
+const { thread, t } = queryString.parse(history.location.search);
+
 const existingUser = getItemFromStorage('spectrum');
 let initialState;
 if (existingUser) {
@@ -24,12 +26,14 @@ if (existingUser) {
     users: {
       currentUser: existingUser.currentUser,
     },
+    dashboardFeed: {
+      activeThread: t ? t : '',
+    },
   };
 } else {
   initialState = {};
 }
 
-const { thread, t } = queryString.parse(history.location.search);
 if (thread) {
   const hash = window.location.hash.substr(1);
   if (hash && hash.length > 1) {
