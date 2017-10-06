@@ -36,7 +36,7 @@ class Message extends Component {
         );
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
         console.error(err);
       });
   };
@@ -59,16 +59,14 @@ class Message extends Component {
     const emojiOnly = onlyContainsEmoji(message.content.body);
     const actionable = context !== 'notification';
     const shareable = message.messageType !== 'directMessageThread';
-    const reactable =
-      !emojiOnly &&
-      message.messageType !== 'media' &&
-      typeof message.id === 'string';
+    const reactable = !emojiOnly && typeof message.id === 'string';
+    const hideIndicator = !reactable && !shareable && !canModerate;
 
     return (
       <Wrapper
         me={me}
-        tipText={convertTimestampToTime(message.timestamp)}
-        tipLocation={me ? 'bottom-left' : 'bottom-right'}
+        // tipText={convertTimestampToTime(message.timestamp)}
+        // tipLocation={me ? 'bottom-left' : 'bottom-right'}
       >
         {shareable && <a name={`${message.id}`} />}
         <Body
@@ -86,6 +84,7 @@ class Message extends Component {
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
+            hideIndicator={hideIndicator}
           >
             {reaction &&
               reactable && (
