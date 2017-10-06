@@ -56,7 +56,7 @@ class SidebarChannels extends React.Component<Props> {
       const sortedChannels = sortByDate(channels, 'createdAt', 'desc');
 
       return (
-        <ChannelsContainer>
+        <ChannelsContainer className={'channelsContainer'}>
           {sortedChannels.map(channel => {
             return (
               <ChannelListItem
@@ -73,7 +73,8 @@ class SidebarChannels extends React.Component<Props> {
             );
           })}
 
-          <ChannelListDivider />
+          <ChannelListDivider className={'divider'} />
+
           <Link to={`/${community.slug}`}>
             <ChannelListItem>View community</ChannelListItem>
           </Link>
@@ -96,7 +97,7 @@ class SidebarChannels extends React.Component<Props> {
 
     if (isLoading || queryVarIsChanging) {
       return (
-        <ChannelsContainer>
+        <ChannelsContainer className={'channelsContainer'}>
           <LoadingContainer>
             <LoadingBar width={56} />
             <LoadingBar width={128} />

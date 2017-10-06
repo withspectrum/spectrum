@@ -50,6 +50,12 @@ export const InboxScroller = styled.div`
   flex: 1;
 `;
 
+const borderAnimation = keyframes`
+  0% { opacity:0; }
+  50% { opacity:1; }
+  100% { opacity:1; }
+`;
+
 export const CommunityListWrapper = styled.div`
   display: flex;
   width: 72px;
@@ -64,6 +70,18 @@ export const CommunityListWrapper = styled.div`
   transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
+  .channelsContainer {
+    max-height: 0;
+    padding: 0;
+    transition-delay: 1.5s;
+    transition: ${Transition.hover.off};
+  }
+
+  .divider {
+    animation-duration: 3s;
+    animation-name: ${borderAnimation};
+  }
+
   img {
     opacity: 0.4;
     filter: grayscale(60%);
@@ -74,6 +92,19 @@ export const CommunityListWrapper = styled.div`
     transform: translateZ(0);
     width: 256px;
     transition: ${Transition.hover.on};
+    transition-delay: 1.5s;
+
+    .divider {
+      animation-duration: 3s;
+      animation-name: ${borderAnimation};
+    }
+
+    .channelsContainer {
+      max-height: 1000px;
+      padding: 8px 8px 4px;
+      transition: ${Transition.hover.on};
+      transition-delay: 1.5s;
+    }
 
     img {
       filter: grayscale(0%);
@@ -679,8 +710,7 @@ export const ChannelListItem = styled.div`
   font-weight: ${props => (props.active ? '500' : '400')};
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
-
-  .icon {
+  ${Truncate} .icon {
     position: relative;
     top: 4px;
     left: -2px;
