@@ -5,6 +5,7 @@
   "dependencies": {
     "bull": "^3.0.0-rc.8",
     "debug": "^2.6.8",
+    "draft-js": "^0.10.3",
     "lodash.intersection": "^4.4.0",
     "postmark": "^1.3.1",
     "raven": "^2.1.1",
