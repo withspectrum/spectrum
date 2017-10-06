@@ -7,7 +7,7 @@ import { createNewUsersSettings } from './usersSettings';
 import { addQueue } from '../utils/workerQueue';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
-type DBUser = {
+export type DBUser = {
   id: string,
   email?: string,
   createdAt: Date,

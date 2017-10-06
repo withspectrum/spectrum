@@ -95,12 +95,16 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         return setDefault({
           extra: HIDE_FROM_CRAWLERS,
         });
+
+      var body =
+        data &&
+        data.body &&
+        (data.type === 'DRAFTJS'
+          ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
+          : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.channelName,
-        description:
-          data &&
-          data.body &&
-          draft.toPlainText(draft.toState(JSON.parse(data.body))),
+        description: body,
       });
     }
     case 'user': {

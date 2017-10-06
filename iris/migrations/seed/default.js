@@ -1,3 +1,5 @@
+const { fromPlainText, toJSON } = require('shared/draft-utils');
+
 // 2017/01/01
 const DATE = 1483225200000;
 
@@ -89,9 +91,12 @@ const DEFAULT_THREADS = [
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isPublished: true,
     isLocked: false,
+    type: 'DRAFTJS',
     content: {
       title: 'The first thread! 🎉',
-      body: 'This is it, we got a thread here',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is it, we got a thread here'))
+      ),
     },
     attachments: [],
     edits: [
@@ -137,6 +142,7 @@ const DEFAULT_USERS_COMMUNITIES = [
     isMember: true,
     isBlocked: false,
     receiveNotifications: true,
+    reputation: 1,
   },
 ];
 
