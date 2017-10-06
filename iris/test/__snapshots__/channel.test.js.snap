@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a channel 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "General chatter",
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
+      "isDefault": true,
+      "isPrivate": false,
+      "modifiedAt": null,
+      "name": "General",
+      "slug": "general",
+    },
+  },
+}
+`;
