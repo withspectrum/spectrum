@@ -82,8 +82,8 @@ class Reaction extends Component {
           glyph="like-fill"
           size={16}
           color={'text.reverse'}
-          tipText={'Like'}
-          tipLocation={me ? 'top-left' : 'top-right'}
+          tipText={me ? null : 'Like'}
+          tipLocation={me ? null : 'top-right'}
         />
         <span>{count}</span>
       </ReactionWrapper>
