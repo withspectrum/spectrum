@@ -167,10 +167,17 @@ class ThreadContainer extends React.Component<Props, State> {
       dispatch(addCommunityToOnboarding(thread.channel.community));
 
       // get the data we need to render the view
-      const { channelPermissions, isPrivate } = thread.channel;
+      const {
+        channelPermissions,
+        isPrivate,
+        community: { communityPermissions },
+      } = thread.channel;
       const { isLocked, isCreator, participants } = thread;
       const isRestricted = isPrivate && !channelPermissions.isMember;
       const canSendMessages = currentUser && channelPermissions.isMember;
+      const isChannelOwner = channelPermissions.isOwner;
+      const isCommunityOwner = communityPermissions.isOwner;
+      const canModerate = isChannelOwner || isCommunityOwner;
       const isParticipantOrCreator =
         currentUser &&
         (isCreator ||
@@ -232,6 +239,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 shouldForceScrollOnMessageLoad={isParticipantOrCreator}
                 hasMessagesToLoad={thread.messageCount > 0}
+                canModerate={canModerate}
               />
 
               {isLocked && (

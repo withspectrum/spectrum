@@ -102,6 +102,7 @@ class MessagesWithData extends Component {
       forceScrollToBottom,
       hasMessagesToLoad,
       id,
+      canModerate,
     } = this.props;
 
     const dataExists =
@@ -131,6 +132,7 @@ class MessagesWithData extends Component {
             messages={sortedMessages}
             threadType={'story'}
             forceScrollToBottom={forceScrollToBottom}
+            canModerate={canModerate}
           />
         </ChatWrapper>
       );
