@@ -54,9 +54,15 @@ class Message extends Component {
       pending,
       reaction,
       toggleReaction,
+      context,
     } = this.props;
     const emojiOnly = onlyContainsEmoji(message.content.body);
+    const actionable = context !== 'notification';
     const shareable = message.messageType !== 'directMessageThread';
+    const reactable =
+      !emojiOnly &&
+      message.messageType !== 'media' &&
+      typeof message.id === 'string';
 
     return (
       <Wrapper
@@ -73,25 +79,27 @@ class Message extends Component {
           focus={this.toggleMessageFocus}
           message={message.content}
         />
-        <Actions
-          me={me}
-          shareable={shareable}
-          currentUser={currentUser}
-          canModerate={canModerate}
-          deleteMessage={this.deleteMessage}
-        >
-          {!emojiOnly &&
-            message.messageType !== 'media' &&
-            typeof message.id === 'string' && (
-              <Reaction
-                message={message}
-                toggleReaction={toggleReaction}
-                me={me}
-                currentUser={currentUser}
-                dispatch={dispatch}
-              />
-            )}
-        </Actions>
+        {actionable && (
+          <Actions
+            me={me}
+            shareable={shareable}
+            currentUser={currentUser}
+            canModerate={canModerate}
+            deleteMessage={this.deleteMessage}
+          >
+            {reaction &&
+              reactable && (
+                <Reaction
+                  message={message}
+                  toggleReaction={toggleReaction}
+                  me={me}
+                  currentUser={currentUser}
+                  dispatch={dispatch}
+                  reaction={reaction}
+                />
+              )}
+          </Actions>
+        )}
       </Wrapper>
     );
   }

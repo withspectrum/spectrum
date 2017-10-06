@@ -11,7 +11,8 @@ export const Indicator = styled.div`
   width: 8px;
   align-self: flex-end;
   border-radius: 8px;
-  background-color: ${props => props.theme.bg.border};
+  background-color: ${props =>
+    props.me ? props.theme.brand.alt : props.theme.bg.border};
   z-index: ${zIndex.card + 1};
   box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
   ${props => (props.me ? 'margin-right: 4px' : 'margin-left: 4px')};
@@ -50,8 +51,9 @@ export const ReactionWrapper = styled(ActionWrapper)`
   ${props =>
     props.hasCount
       ? 'visibility: visible !important; opacity: 1 !important;'
-      : ''} color: ${props =>
-      props.hasReacted ? props.theme.warn.alt : props.theme.text.placeholder};
+      : ''};
+  color: ${props =>
+    props.hasReacted ? props.theme.warn.alt : props.theme.text.placeholder};
 
   &:hover {
     color: ${props =>

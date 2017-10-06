@@ -28,6 +28,34 @@ const NullChat = () => (
     copy={`Why don't you kick off the conversation?`}
   />
 );
+
+export const AuthorAvatar = props => {
+  const { sender } = props;
+
+  return (
+    <Avatar
+      isOnline={sender.isOnline}
+      src={sender.profilePhoto}
+      username={sender.username}
+      link={sender.username ? `/users/${sender.username}` : null}
+      size={24}
+    />
+  );
+};
+
+export const AuthorByline = props => {
+  const { me, sender } = props;
+
+  return (
+    <Byline>
+      <Link to={`/users/${sender.username}`}>
+        <Name>{me ? 'Me' : sender.name}</Name>
+      </Link>
+      {sender.isAdmin && <Badge type="admin" />}
+      {sender.isPro && <Badge type="pro" />}
+    </Byline>
+  );
+};
 /*
   Messages expects to receive sorted and grouped messages.
   They will arrive as an array of arrays, where each top-level array is a group
@@ -54,41 +82,13 @@ class Messages extends Component {
       return <NullChat />;
     }
 
-    const AuthorAvatar = props => {
-      const { sender } = props;
-
-      return (
-        <Avatar
-          isOnline={sender.isOnline}
-          src={sender.profilePhoto}
-          username={sender.username}
-          link={sender.username ? `/users/${sender.username}` : null}
-          size={24}
-        />
-      );
-    };
-
-    const AuthorByline = props => {
-      const { me, sender } = props;
-
-      return (
-        <Byline>
-          <Link to={`/users/${sender.username}`}>
-            <Name>{me ? 'Me' : sender.name}</Name>
-          </Link>
-          {sender.isAdmin && <Badge type="admin" />}
-          {sender.isPro && <Badge type="pro" />}
-        </Byline>
-      );
-    };
-
     return (
       <Wrapper>
         {messages.map((group, i) => {
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
           const initialMessage = group[0];
+          const { sender } = initialMessage;
 
-          const sender = initialMessage.sender;
           const roboText = sender.id === 'robo';
           const me = currentUser ? sender.id === currentUser.id : false;
 
@@ -120,6 +120,7 @@ class Messages extends Component {
                       currentUser={currentUser}
                       threadType={threadType}
                       threadId={threadId}
+                      toggleReaction={toggleReaction}
                     />
                   );
                 })}
