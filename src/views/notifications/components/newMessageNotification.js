@@ -94,7 +94,6 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                           canModerate={me}
                           pending={message.id < 0}
                           currentUser={currentUser}
-                          // threadId={threadId}
                           context={'notification'}
                         />
                       );
