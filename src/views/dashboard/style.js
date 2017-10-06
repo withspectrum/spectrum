@@ -82,7 +82,7 @@ export const CommunityListWrapper = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 956px) {
     display: none;
   }
 `;
