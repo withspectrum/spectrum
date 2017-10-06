@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReputationMiniCommunity } from '../../../components/reputation';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import Icon from '../../../components/icons';
 import { truncateNumber } from '../../../helpers/utils';
 import {

@@ -9,7 +9,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { ReputationMini } from '../reputation';
 import {
@@ -178,7 +178,7 @@ export const UserListItem = ({
             )}
             {(user.totalReputation || user.contextPermissions) && (
                 <span>
-                  <ReputationMini tipText={'Rep in this community'} />
+                  <ReputationMini tipText={'Your rep in this community'} />
                   {user.contextPermissions
                     ? user.contextPermissions.reputation &&
                       user.contextPermissions.reputation > 0 &&

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from '../../../helpers/messages';
-import ChatMessages from '../../../components/chatMessages';
+import ChatMessages from '../../../components/messageGroup';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { LoadingChat } from '../../../components/loading';

@@ -2,7 +2,7 @@ import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 import {
   ThreadContext,
   ThreadContextAvatar,

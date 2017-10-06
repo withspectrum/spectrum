@@ -510,6 +510,7 @@ class Icon extends React.Component {
         onboarding={this.props.onboarding}
         count={this.props.withCount}
         className={'icon'}
+        onClick={this.props.onClick}
       >
         <InlineSvg
           fillRule="evenodd"
