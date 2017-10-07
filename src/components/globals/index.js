@@ -358,6 +358,23 @@ const returnTooltip = props => {
               : props.theme.bg.reverse};
           }
       `;
+    case 'top':
+      return `
+          &:after {
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          &:before {
+            bottom: calc(100% + 3px);
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-width: 0;
+            border-top-color: ${props.onboarding
+              ? props.theme.brand.alt
+              : props.theme.bg.reverse};
+          }
+      `;
     case 'right':
     default:
       return `
@@ -407,6 +424,23 @@ const returnTooltip = props => {
               : props.theme.bg.reverse};
           }
       `;
+    case 'bottom':
+      return `
+        &:after {
+          top: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:before {
+          top: calc(100% + 3px);
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom-width: 0;
+          border-top-color: ${props.onboarding
+            ? props.theme.brand.alt
+            : props.theme.bg.reverse};
+        }
+      `;
     case 'left':
       return `
           &:after {
@@ -454,7 +488,7 @@ export const Tooltip = props => css`
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
-    min-width: 3em;
+    min-width: 8px;
     max-width: 21em;
     white-space: nowrap;
     overflow: hidden;
