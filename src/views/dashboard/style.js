@@ -224,6 +224,7 @@ export const CommunityListReputation = styled.div`
   margin-left: 12px;
   line-height: 1;
   color: ${props => props.theme.text.alt};
+  width: 100%;
 
   ${Truncate};
 `;
