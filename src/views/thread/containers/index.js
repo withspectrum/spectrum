@@ -2,8 +2,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
 // $FlowFixMe
@@ -300,6 +298,6 @@ class ThreadContainer extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getThread, viewNetworkHandler, pure)(
+export default compose(connect(map), getThread, viewNetworkHandler)(
   ThreadContainer
 );

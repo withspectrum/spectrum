@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -613,8 +611,7 @@ const ThreadDetail = compose(
   editThreadMutation,
   pinThreadMutation,
   toggleThreadNotificationsMutation,
-  withRouter,
-  pure
+  withRouter
 )(ThreadDetailPure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

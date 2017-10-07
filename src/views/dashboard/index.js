@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -199,9 +197,6 @@ const map = state => ({
   activeCommunity: state.dashboardFeed.activeCommunity,
   activeChannel: state.dashboardFeed.activeChannel,
 });
-export default compose(
-  connect(map),
-  getCurrentUserProfile,
-  viewNetworkHandler,
-  pure
-)(Dashboard);
+export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
+  Dashboard
+);

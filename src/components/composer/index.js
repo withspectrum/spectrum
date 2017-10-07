@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -641,8 +639,7 @@ class ComposerWithData extends Component {
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ComposerWithData);
 
 const mapStateToProps = state => ({

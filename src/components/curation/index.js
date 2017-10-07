@@ -2,8 +2,6 @@ import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
@@ -125,6 +123,5 @@ const mapStateToProps = state => ({ currentUser: state.users.currentUser });
 
 export const FeaturedCommunity = compose(
   toggleCommunityMembershipMutation,
-  connect(mapStateToProps),
-  pure
+  connect(mapStateToProps)
 )(FeaturedCommunityWithData);

@@ -1,7 +1,5 @@
 //@flow
 import React from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 
@@ -13,56 +11,58 @@ import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 */
 const buildArray = (meta: Object): Array<any> => {
   // Apollo returns a __typename field in the data object; filter it out
-  return Object.keys(meta).filter(item => item !== '__typename').map(item => {
-    if (item === 'threads') {
-      return Object.assign(
-        {},
-        {
-          icon: 'post',
-          label: 'Threads',
-          count: meta[item],
-        }
-      );
-    }
+  return Object.keys(meta)
+    .filter(item => item !== '__typename')
+    .map(item => {
+      if (item === 'threads') {
+        return Object.assign(
+          {},
+          {
+            icon: 'post',
+            label: 'Threads',
+            count: meta[item],
+          }
+        );
+      }
 
-    if (item === 'channels') {
-      return Object.assign(
-        {},
-        {
-          icon: 'channel',
-          label: 'Channels',
-          count: meta[item],
-        }
-      );
-    }
+      if (item === 'channels') {
+        return Object.assign(
+          {},
+          {
+            icon: 'channel',
+            label: 'Channels',
+            count: meta[item],
+          }
+        );
+      }
 
-    if (item === 'subscribers') {
-      return Object.assign(
-        {},
-        {
-          icon: 'person',
-          label: 'Subscribers',
-          count: meta[item],
-        }
-      );
-    }
+      if (item === 'subscribers') {
+        return Object.assign(
+          {},
+          {
+            icon: 'person',
+            label: 'Subscribers',
+            count: meta[item],
+          }
+        );
+      }
 
-    if (item === 'members') {
-      return Object.assign(
-        {},
-        {
-          icon: 'person',
-          label: 'Members',
-          count: meta[item],
-        }
-      );
-    }
+      if (item === 'members') {
+        return Object.assign(
+          {},
+          {
+            icon: 'person',
+            label: 'Members',
+            count: meta[item],
+          }
+        );
+      }
 
-    return {};
-  });
+      return {};
+    });
 };
 
-const MetaDataPure = ({ data }) => {
+export const MetaData = ({ data }: any) => {
   const arr = buildArray(data);
 
   return (
@@ -83,5 +83,3 @@ const MetaDataPure = ({ data }) => {
     </Meta>
   );
 };
-
-export const MetaData = pure(MetaDataPure);

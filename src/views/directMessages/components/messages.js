@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
@@ -124,8 +122,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   setLastSeenMutation,
-  getDirectMessageThreadMessages,
-  pure
+  getDirectMessageThreadMessages
 )(MessagesWithData);
 
 export default Messages;

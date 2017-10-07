@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -102,4 +100,4 @@ class InboxThread extends Component {
   }
 }
 
-export default compose(connect(), withRouter, pure)(InboxThread);
+export default compose(connect(), withRouter)(InboxThread);

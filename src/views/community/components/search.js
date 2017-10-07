@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { throttle } from '../../../helpers/utils';
 import { searchCommunityThreadsQuery } from '../../../api/community';
 import ThreadFeed from '../../../components/threadFeed';
@@ -83,4 +81,4 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(pure)(Search);
+export default compose()(Search);

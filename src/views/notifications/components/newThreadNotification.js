@@ -1,8 +1,6 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getThreadById } from '../../../api/thread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
@@ -37,7 +35,7 @@ const ThreadCreatedComponent = ({ data }) => {
   return <ThreadProfile profileSize="mini" data={data} />;
 };
 
-const ThreadCreated = compose(getThreadById, displayLoadingCard, pure)(
+const ThreadCreated = compose(getThreadById, displayLoadingCard)(
   ThreadCreatedComponent
 );
 
