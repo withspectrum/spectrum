@@ -74,7 +74,7 @@ class CommunityList extends Component {
                 {user.totalReputation > 0
                   ? truncateNumber(user.totalReputation)
                   : '0'}{' '}
-                rep
+                total rep
               </CommunityListReputation>
             </CommunityListText>
           </div>
