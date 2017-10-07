@@ -58,7 +58,7 @@ class Message extends Component {
     } = this.props;
     const emojiOnly = onlyContainsEmoji(message.content.body);
     const actionable = context !== 'notification';
-    const shareable = message.messageType !== 'directMessageThread';
+    const shareable = message.threadType !== 'directMessageThread';
     const reactable = !emojiOnly && typeof message.id === 'string';
     const hideIndicator = !reactable && !shareable && !canModerate;
 
@@ -66,7 +66,7 @@ class Message extends Component {
       <Wrapper
         me={me}
         // tipText={convertTimestampToTime(message.timestamp)}
-        // tipLocation={me ? 'bottom-left' : 'bottom-right'}
+        // tipLocation={'bottom'}
       >
         {shareable && <a name={`${message.id}`} />}
         <Body
