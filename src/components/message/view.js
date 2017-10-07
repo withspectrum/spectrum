@@ -59,12 +59,7 @@ const Action = props => {
     default:
       return (
         <ActionWrapper>
-          <Icon
-            glyph="share"
-            tipText={`Share`}
-            tipLocation={me ? 'top-left' : `top-right`}
-            size={20}
-          />
+          <Icon glyph="share" tipText={`Share`} tipLocation={'top'} size={20} />
         </ActionWrapper>
       );
     case 'delete':
@@ -73,7 +68,7 @@ const Action = props => {
           <Icon
             glyph="delete"
             tipText={`Delete`}
-            tipLocation={me ? 'top-left' : `top-right`}
+            tipLocation={'top'}
             size={20}
             onClick={deleteMessage}
           />
