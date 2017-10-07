@@ -582,9 +582,9 @@ export const PillLink = styled(Link)`
 `;
 
 export const PillLinkPinned = styled.div`
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
   display: flex;
   height: 20px;
   border-radius: 4px;
@@ -656,7 +656,7 @@ export const PinIcon = styled.span`
 
 export const UserProfileContainer = styled.div`
   display: flex;
-  padding: 16px 16px 12px;
+  padding: 16px 20px 12px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   align-items: center;
 `;
@@ -666,7 +666,7 @@ export const UserProfileText = styled.div`
   flex-direction: column;
   align-self: stretch;
   flex: auto;
-  margin-left: 14px;
+  margin-left: 18px;
   justify-content: center;
 `;
 

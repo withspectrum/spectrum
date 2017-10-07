@@ -44,6 +44,7 @@ class CommunityList extends Component {
       activeChannel,
       communities,
       isHovered,
+      user,
     } = this.props;
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
@@ -61,9 +62,21 @@ class CommunityList extends Component {
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
-            <CommunityListName active={!activeCommunity}>
-              Everything
-            </CommunityListName>
+            <CommunityListText>
+              <CommunityListName active={!activeCommunity}>
+                My Communities
+              </CommunityListName>
+              <CommunityListReputation>
+                <ReputationMiniCommunity
+                  tipLocation={'bottom-right'}
+                  tipText={'Your total reputation'}
+                />
+                {user.totalReputation > 0
+                  ? truncateNumber(user.totalReputation)
+                  : '0'}{' '}
+                rep
+              </CommunityListReputation>
+            </CommunityListText>
           </div>
         </CommunityListItem>
 

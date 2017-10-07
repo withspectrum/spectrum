@@ -63,7 +63,8 @@ export const Section = styled(FlexRow)`
 `;
 
 export const LogoLink = styled(Link)`
-  margin-right: 32px;
+  margin-left: 8px;
+  margin-right: 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;

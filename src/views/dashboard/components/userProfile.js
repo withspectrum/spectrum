@@ -28,7 +28,7 @@ class UserProfile extends React.Component<Props> {
         <Avatar
           src={user.profilePhoto}
           link={user.username ? `/users/${user.username}` : null}
-          size={40}
+          size={32}
         />
 
         <UserProfileText>
