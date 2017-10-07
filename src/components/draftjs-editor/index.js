@@ -170,6 +170,10 @@ class Editor extends React.Component {
             }}
             readOnly={readOnly}
             placeholder={!readOnly && placeholder}
+            spellCheck="false"
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
             {...rest}
           />
           {showLinkPreview && linkPreview && linkPreview.loading ? (
@@ -184,12 +188,12 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
-          {/* {images !== false &&
+          {images !== false &&
             !this.props.readOnly && (
               <MediaInput onChange={this.addImage} multiple>
                 Add
               </MediaInput>
-            )} */}
+            )}
         </ComposerBase>
       );
     } else {
@@ -217,6 +221,10 @@ class Editor extends React.Component {
               }}
               readOnly={readOnly}
               placeholder={!readOnly && placeholder}
+              spellCheck="false"
+              autoCapitalize="off"
+              autoComplete="off"
+              autoCorrect="off"
               {...rest}
             />
           </Wrapper>
@@ -232,14 +240,14 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
-          {/* {images !== false &&
+          {images !== false &&
             !this.props.readOnly && (
               <MediaRow>
                 <MediaInput onChange={this.addImage} multiple>
                   Add
                 </MediaInput>
               </MediaRow>
-            )} */}
+            )}
         </div>
       );
     }
