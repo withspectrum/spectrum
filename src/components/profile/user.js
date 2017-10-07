@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
@@ -294,7 +292,7 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

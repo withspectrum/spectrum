@@ -2,8 +2,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { getCommunityMembersQuery } from '../../../api/community';
 import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
@@ -75,6 +73,6 @@ class CommunityMemberGrid extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMembersQuery, viewNetworkHandler, pure)(
+export default compose(getCommunityMembersQuery, viewNetworkHandler)(
   CommunityMemberGrid
 );

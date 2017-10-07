@@ -2,8 +2,6 @@ import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
@@ -216,6 +214,5 @@ export default compose(
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(CommunitySettings);

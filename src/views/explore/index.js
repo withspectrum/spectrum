@@ -3,8 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
@@ -27,7 +25,7 @@ import {
 
 import { getCommunity } from './queries';
 
-const Feature = compose(getCommunity, pure)(FeaturedCommunity);
+const Feature = compose(getCommunity)(FeaturedCommunity);
 
 const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
@@ -64,7 +62,7 @@ const ExplorePure = props => {
   );
 };
 
-const Explore = compose(pure)(ExplorePure);
+const Explore = compose()(ExplorePure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });

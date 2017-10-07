@@ -6,8 +6,6 @@ import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -493,7 +491,6 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  connect(map),
-  pure
+  connect(map)
 )(UserWithData);
 export default UserSettings;

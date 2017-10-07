@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { track } from '../../../../helpers/events';
 import { getTopCommunities } from '../../../../api/community';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
@@ -127,7 +125,6 @@ const TopCommunities = compose(
   getTopCommunities,
   toggleCommunityMembershipMutation,
   displayLoadingState,
-  connect(),
-  pure
+  connect()
 )(TopCommunitiesPure);
 export default TopCommunities;

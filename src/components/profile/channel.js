@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -266,9 +264,7 @@ class ChannelWithData extends Component {
   }
 }
 
-const Channel = compose(toggleChannelSubscriptionMutation, pure)(
-  ChannelWithData
-);
+const Channel = compose(toggleChannelSubscriptionMutation)(ChannelWithData);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

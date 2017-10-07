@@ -1,5 +1,4 @@
 import * as React from 'react';
-import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
@@ -100,6 +99,6 @@ class TopAndNewThreads extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityTopAndNewThreads, viewNetworkHandler, pure)(
+export default compose(getCommunityTopAndNewThreads, viewNetworkHandler)(
   TopAndNewThreads
 );

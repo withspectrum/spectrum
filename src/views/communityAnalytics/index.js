@@ -1,6 +1,5 @@
 import React from 'react';
 import compose from 'recompose/compose';
-import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
@@ -96,9 +95,6 @@ class CommunitySettings extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  connect(map),
-  getThisCommunity,
-  viewNetworkHandler,
-  pure
-)(CommunitySettings);
+export default compose(connect(map), getThisCommunity, viewNetworkHandler)(
+  CommunitySettings
+);

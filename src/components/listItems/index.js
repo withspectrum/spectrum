@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
 import Avatar from '../avatar';
@@ -250,4 +248,4 @@ class InvoiceListItemPure extends React.Component {
   }
 }
 
-export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);
+export const InvoiceListItem = compose(connect())(InvoiceListItemPure);

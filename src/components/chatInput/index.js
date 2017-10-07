@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import withState from 'recompose/withState';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
@@ -270,8 +268,7 @@ const ChatInput = compose(
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
-  connect(map),
-  pure
+  connect(map)
 )(ChatInputWithMutation);
 
 export default ChatInput;

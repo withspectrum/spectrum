@@ -1,8 +1,6 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getChannelById } from '../../../api/channel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
@@ -21,7 +19,7 @@ const NewChannelComponent = ({ data }) => {
   return <ChannelProfile profileSize="miniWithAction" data={data} />;
 };
 
-const NewChannel = compose(getChannelById, displayLoadingCard, pure)(
+const NewChannel = compose(getChannelById, displayLoadingCard)(
   NewChannelComponent
 );
 
