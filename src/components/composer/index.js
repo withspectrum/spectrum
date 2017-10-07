@@ -446,19 +446,17 @@ class ComposerWithData extends Component {
 
         // redirect the user to the thread
         // if they are in the inbox, select it
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Thread published!')
+        );
         if (this.props.isInbox) {
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);
         } else {
           this.props.history.push(`?thread=${id}`);
+          this.props.dispatch(changeActiveThread(null));
         }
-
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Thread published!')
-        );
-
-        this.props.dispatch(changeActiveThread(null));
       })
       .catch(err => {
         this.setState({

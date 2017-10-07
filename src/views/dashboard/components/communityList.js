@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import { ReputationMiniCommunity } from '../../../components/reputation';
@@ -18,6 +15,7 @@ import {
   CommunityListName,
   CommunityListReputation,
   CommunityListAvatar,
+  Fixed,
 } from '../style';
 import {
   changeActiveCommunity,
@@ -41,7 +39,13 @@ class CommunityList extends Component {
   };
 
   render() {
-    const { activeCommunity, activeChannel, communities } = this.props;
+    const {
+      activeCommunity,
+      activeChannel,
+      communities,
+      isHovered,
+      user,
+    } = this.props;
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);
@@ -58,9 +62,21 @@ class CommunityList extends Component {
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
-            <CommunityListName active={!activeCommunity}>
-              Everything
-            </CommunityListName>
+            <CommunityListText>
+              <CommunityListName active={!activeCommunity}>
+                My Communities
+              </CommunityListName>
+              <CommunityListReputation>
+                <ReputationMiniCommunity
+                  tipLocation={'bottom-right'}
+                  tipText={'Your total reputation'}
+                />
+                {user.totalReputation > 0
+                  ? truncateNumber(user.totalReputation)
+                  : '0'}{' '}
+                total rep
+              </CommunityListReputation>
+            </CommunityListText>
           </div>
         </CommunityListItem>
 
@@ -94,19 +110,24 @@ class CommunityList extends Component {
               <SidebarChannels
                 activeChannel={activeChannel}
                 communitySlug={c.slug}
+                isHovered={isHovered}
               />
             )}
           </CommunityListItem>
         ))}
 
-        <ExploreCommunityListItem>
-          <Link to={`/explore`}>
-            <ExploreListItem>
-              <Icon glyph={'explore'} size={32} />
-            </ExploreListItem>
-            <CommunityListName>Explore communities</CommunityListName>
-          </Link>
-        </ExploreCommunityListItem>
+        <Fixed>
+          <ExploreCommunityListItem>
+            <Link to={'/explore'}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AllCommunityListItem>
+                  <Icon glyph={'explore'} />
+                </AllCommunityListItem>
+                <CommunityListName>Explore communities</CommunityListName>
+              </div>
+            </Link>
+          </ExploreCommunityListItem>
+        </Fixed>
       </div>
     );
   }
