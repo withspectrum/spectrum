@@ -133,8 +133,26 @@ module.exports = {
           }
         })
         .then(([newThread, urls]) => {
-          // if no files were uploaded, return the new thread object
-          return newThread;
+          if (!urls || urls.length === 0) return newThread;
+
+          // Replace the local image srcs with the remote image src
+          const body = JSON.parse(newThread.content.body);
+          const imageKeys = Object.keys(body.entityMap).filter(
+            key => body.entityMap[key].type === 'image'
+          );
+          urls.forEach((url, index) => {
+            if (!body.entityMap[imageKeys[index]]) return;
+            body.entityMap[imageKeys[index]].data.src = url;
+          });
+
+          // Update the thread with the new links
+          return editThread({
+            threadId: newThread.id,
+            content: {
+              ...newThread.content,
+              body: JSON.stringify(body),
+            },
+          });
         });
     },
     editThread: (_, { input }, { user }) => {
@@ -199,8 +217,27 @@ module.exports = {
             ),
           ]);
         })
-        .then(([editedThread, urls]) => {
-          return editedThread;
+        .then(([newThread, urls]) => {
+          if (!urls || urls.length === 0) return newThread;
+
+          // Replace the local image srcs with the remote image src
+          const body = JSON.parse(newThread.content.body);
+          const imageKeys = Object.keys(body.entityMap).filter(
+            key => body.entityMap[key].type === 'image'
+          );
+          urls.forEach((url, index) => {
+            if (!body.entityMap[imageKeys[index]]) return;
+            body.entityMap[imageKeys[index]].data.src = url;
+          });
+
+          // Update the thread with the new links
+          return editThread({
+            threadId: newThread.id,
+            content: {
+              ...newThread.content,
+              body: JSON.stringify(body),
+            },
+          });
         });
     },
     deleteThread: (_, { threadId }, { user }) => {
