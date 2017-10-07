@@ -64,7 +64,7 @@ class CommunityList extends Component {
             </AllCommunityListItem>
             <CommunityListText>
               <CommunityListName active={!activeCommunity}>
-                My Communities
+                Everything
               </CommunityListName>
               <CommunityListReputation>
                 <ReputationMiniCommunity
