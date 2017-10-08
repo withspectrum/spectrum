@@ -39,9 +39,8 @@ export default class Toolbar extends React.Component<Props, State> {
 
   setPosition = (editorState: EditorState, editorRef: EditorRef) => {
     if (!editorRef) return;
-    const selection = editorState.getSelection();
-    if (!selection.getHasFocus()) return;
 
+    const selection = editorState.getSelection();
     const currentContent = editorState.getCurrentContent();
     const currentBlock = currentContent.getBlockForKey(selection.getStartKey());
     if (!currentBlock) return;
@@ -57,7 +56,7 @@ export default class Toolbar extends React.Component<Props, State> {
       const scrollY =
         window.scrollY == null ? window.pageYOffset : window.scrollY;
       const editor = findDOMNode(editorRef);
-      if (!editor) return;
+      if (!editor || typeof editor.getBoundingClientRect !== 'function') return;
       this.setState({
         position: {
           top: top + scrollY,
@@ -68,7 +67,13 @@ export default class Toolbar extends React.Component<Props, State> {
   };
 
   render() {
+    const { editorState } = this.props;
     const { position } = this.state;
+    if (editorState) {
+      const selection = editorState.getSelection();
+      const content = editorState.getCurrentContent();
+      if (!selection.getHasFocus() && !content.hasText()) return null;
+    }
     return this.props.children({ style: position });
   }
 }

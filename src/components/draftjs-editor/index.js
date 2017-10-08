@@ -178,7 +178,7 @@ class Editor extends React.Component {
             {...rest}
           />
           {images !== false &&
-            !rest.readOnly && (
+            !readOnly && (
               <SideToolbar editorState={state} editorRef={this.editor}>
                 {({ style }) => (
                   <SideToolbarWrapper style={style}>
@@ -233,7 +233,7 @@ class Editor extends React.Component {
               {...rest}
             />
             {images !== false &&
-              !rest.readOnly && (
+              !readOnly && (
                 <SideToolbar editorState={state} editorRef={this.editor}>
                   {({ style }) => (
                     <SideToolbarWrapper style={style}>
