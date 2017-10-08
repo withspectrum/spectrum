@@ -33,6 +33,12 @@ module.exports = {
         return new UserError('You must be signed in to publish a new thread.');
       }
 
+      if (thread.type === 'SLATE') {
+        throw new UserError(
+          "You're on an old version of Spectrum, please refresh your browser."
+        );
+      }
+
       // get the current user's permissions in the channel where the thread is being posted
       const currentUserChannelPermissions = getUserPermissionsInChannel(
         thread.channelId,
@@ -162,6 +168,12 @@ module.exports = {
       if (!currentUser) {
         return new UserError(
           'You must be signed in to make changes to this thread.'
+        );
+      }
+
+      if (thread.type === 'SLATE') {
+        throw new UserError(
+          "You're on an old version of Spectrum, please refresh your browser."
         );
       }
 
