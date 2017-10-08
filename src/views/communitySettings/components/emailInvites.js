@@ -2,7 +2,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -22,6 +21,9 @@ import {
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  SectionCard,
+  SectionTitle,
+  SectionCardFooter,
 } from '../style';
 import {
   StyledCard,
@@ -254,6 +256,7 @@ class EmailInvites extends React.Component<Props, State> {
   };
 
   render() {
+    const isMobile = window.innerWidth < 768;
     const {
       contacts,
       isLoading,
@@ -263,11 +266,8 @@ class EmailInvites extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <div style={{ width: '100%' }}>
-        <LargeListHeading>Invite by Email</LargeListHeading>
-        <Description>
-          Invite people to your community directly by email.
-        </Description>
+      <div>
+        <SectionTitle>Invite members by email</SectionTitle>
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -284,6 +284,7 @@ class EmailInvites extends React.Component<Props, State> {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
+                hideOnMobile={isMobile}
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />
@@ -322,7 +323,7 @@ class EmailInvites extends React.Component<Props, State> {
             </Error>
           )}
 
-        <ButtonContainer>
+        <SectionCardFooter>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
@@ -330,16 +331,16 @@ class EmailInvites extends React.Component<Props, State> {
           >
             Send Invitations
           </Button>
-        </ButtonContainer>
+        </SectionCardFooter>
       </div>
     );
   }
 }
 
 const EmailInvitesCard = props => (
-  <StyledCard>
+  <SectionCard>
     <EmailInvites {...props} />
-  </StyledCard>
+  </SectionCard>
 );
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;
@@ -351,13 +352,11 @@ const map = state => ({
 export const EmailInvitesWithoutCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesCard);
 export default EmailInvitesWithCard;

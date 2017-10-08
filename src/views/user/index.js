@@ -2,8 +2,6 @@ import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
@@ -169,6 +167,4 @@ class UserView extends React.Component<Props> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getUser, viewNetworkHandler, pure)(
-  UserView
-);
+export default compose(connect(map), getUser, viewNetworkHandler)(UserView);

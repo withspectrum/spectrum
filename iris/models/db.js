@@ -1,8 +1,7 @@
+// @flow
 /**
  * Database setup is done here
  */
-const fs = require('fs');
-const path = require('path');
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {

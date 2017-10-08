@@ -13,6 +13,13 @@ export const changeActiveCommunity = (communityId: string) => {
   };
 };
 
+export const changeActiveChannel = (channelId: string) => {
+  return {
+    type: 'SELECT_FEED_CHANNEL',
+    channelId,
+  };
+};
+
 export const toggleComposer = () => {
   return {
     type: 'TOGGLE_COMPOSER',

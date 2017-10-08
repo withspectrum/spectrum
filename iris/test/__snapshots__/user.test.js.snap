@@ -4,14 +4,14 @@ exports[`queries should fetch a user 1`] = `
 Object {
   "data": Object {
     "user": Object {
-      "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F2451223458%2F1479507323%2F1500x500?w=640&h=192&ixlib=js-1.0.6&s=99a223eea38922317d1ba7903dad4bf0",
+      "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F2451223458%2F1479507323%2F1500x500?w=640&h=192&ixlib=js-1.1.0&s=b860478fd198543b582046f1a55d0fab",
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
       "email": "contact@mxstbr.com",
       "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
       "lastSeen": "2016-12-31T23:00:00.000Z",
       "name": "Max Stoiber",
-      "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fimg.gs%2Fjztmrqvgzv%2F500%2Fmxstbr.com%2Fheadshot.jpeg?w=128&h=128&ixlib=js-1.0.6&s=fcdddb61b39b266b7a3ef7072b59cd4d",
+      "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fimg.gs%2Fjztmrqvgzv%2F500%2Fmxstbr.com%2Fheadshot.jpeg?w=128&h=128&ixlib=js-1.1.0&s=9b6e886953006a3441316d73683e7168",
       "providerId": "2451223458",
       "username": "mxstbr",
       "website": "https://mxstbr.com",

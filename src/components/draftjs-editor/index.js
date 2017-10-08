@@ -1,12 +1,14 @@
 import React from 'react';
 import { injectGlobal } from 'styled-components';
-import { EditorState } from 'draft-js';
+import { EditorState, Entity, convertToRaw } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
+import createEmbedPlugin from 'draft-js-embed-plugin';
+import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
@@ -33,6 +35,7 @@ injectGlobal`${prismGlobalCSS}`;
 import Image from './Image';
 import { Wrapper, MediaRow, ComposerBase, SideToolbarWrapper } from './style';
 import SideToolbar from './SideToolbar';
+import Embed from './Embed';
 import MediaInput from '../mediaInput';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
@@ -57,6 +60,12 @@ class Editor extends React.Component {
 
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
+    const linkifyPlugin = createLinkifyPlugin({
+      target: '_blank',
+    });
+    const embedPlugin = createEmbedPlugin({
+      EmbedComponent: Embed,
+    });
     const prismPlugin = createPrismPlugin({
       prism: Prism,
     });
@@ -77,12 +86,15 @@ class Editor extends React.Component {
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
+        props.markdown !== false && embedPlugin,
+        props.markdown !== false && linkifyPlugin,
         props.markdown !== false && createMarkdownPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,
         props.singleLine === true && singleLine,
       ],
       singleLineBlockRenderMap: singleLine.blockRenderMap,
+      addEmbed: embedPlugin.addEmbed,
       addImage: imagePlugin.addImage,
       editorState: props.initialState || EditorState.createEmpty(),
     };
@@ -133,6 +145,8 @@ class Editor extends React.Component {
       focus,
       singleLine,
       version,
+      placeholder,
+      readOnly,
       ...rest
     } = this.props;
 
@@ -155,6 +169,12 @@ class Editor extends React.Component {
               this.editor = editor;
               if (this.props.editorRef) this.props.editorRef(editor);
             }}
+            readOnly={readOnly}
+            placeholder={!readOnly && placeholder}
+            spellCheck="false"
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
             {...rest}
           />
           {images !== false &&
@@ -204,6 +224,12 @@ class Editor extends React.Component {
                 this.editor = editor;
                 if (this.props.editorRef) this.props.editorRef(editor);
               }}
+              readOnly={readOnly}
+              placeholder={!readOnly && placeholder}
+              spellCheck="false"
+              autoCapitalize="off"
+              autoComplete="off"
+              autoCorrect="off"
               {...rest}
             />
             {images !== false &&

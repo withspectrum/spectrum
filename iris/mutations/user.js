@@ -128,9 +128,11 @@ module.exports = {
         throw new UserError(
           'Can only unsubscribe from web push notifications when logged in.'
         );
-      return removeSubscription(endpoint).then(() => true).catch(err => {
-        throw new UserError(`Couldn't remove web push subscription.`);
-      });
+      return removeSubscription(endpoint)
+        .then(() => true)
+        .catch(err => {
+          throw new UserError(`Couldn't remove web push subscription.`);
+        });
     },
   },
 };

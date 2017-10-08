@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -37,5 +35,5 @@ const DropdownPure = (props: Object): React$Element<any> => (
   </StyledDropdown>
 );
 
-export const Dropdown = compose(pure)(DropdownPure);
+export const Dropdown = compose()(DropdownPure);
 export default Dropdown;

@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import {
@@ -47,13 +47,13 @@ export const InboxScroller = styled.div`
   width: 100%;
   overflow-y: scroll;
   position: relative;
+  flex: 1;
 `;
 
 export const CommunityListWrapper = styled.div`
-  padding-top: 8px;
   display: flex;
-  width: 65px;
-  min-width: 65px;
+  width: 72px;
+  min-width: 72px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -64,6 +64,25 @@ export const CommunityListWrapper = styled.div`
   transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
+  .channelsContainer {
+    max-height: 0;
+    padding: 0;
+    transition-delay: 1s;
+    transform: translateZ(0);
+    transition: ${Transition.hover.off};
+
+    .divider {
+      max-width: 0;
+      border-top: 1px solid ${props => props.theme.bg.wash};
+      height: 0;
+      margin: 12px 0 8px -28px;
+      position: relative;
+      right: -14px;
+      transition-delay: 1s;
+      transition: ${Transition.hover.on};
+    }
+  }
+
   img {
     opacity: 0.4;
     filter: grayscale(60%);
@@ -73,7 +92,25 @@ export const CommunityListWrapper = styled.div`
   &:hover {
     transform: translateZ(0);
     width: 256px;
+    min-width: 256px;
     transition: ${Transition.hover.on};
+    transition-delay: 1s;
+
+    .channelsContainer {
+      max-height: 1000px;
+      padding: 8px 8px 4px;
+      transform: translateZ(0);
+      transition: ${Transition.hover.on};
+      transition-delay: 1s;
+
+      .divider {
+        max-width: 256px;
+        border-top: 1px solid ${props => props.theme.bg.border};
+        height: 1px;
+        transition-delay: 1s;
+        transition: ${Transition.hover.on};
+      }
+    }
 
     img {
       filter: grayscale(0%);
@@ -88,11 +125,12 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 3px;
+  padding: 6px;
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   cursor: pointer;
   position: relative;
   color: ${props =>
@@ -105,6 +143,10 @@ export const CommunityListItem = styled.div`
   a {
     display: flex;
     align-items: center;
+  }
+
+  &:first-of-type {
+    margin-top: 16px;
   }
 
   ${props =>
@@ -125,20 +167,33 @@ export const CommunityListItem = styled.div`
   }
 `;
 
-export const ExploreCommunityListItem = styled(CommunityListItem)`
+export const Fixed = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 255px;
-  color: ${props => props.theme.text.alt};
+  width: 100%;
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
-  margin: 0;
-  padding: 12px 16px;
-  border-radius: 0;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
     background: ${props => props.theme.bg.default};
+
+    div {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.default};
+    }
+  }
+`;
+
+export const ExploreCommunityListItem = styled(CommunityListItem)`
+  color: ${props => props.theme.text.alt};
+  margin: 1px 12px;
+  margin-top: 0 !important; //need to override the first child selector above
+  padding: 6px;
+  border-radius: 0;
+
+  ${Truncate} &:hover {
+    color: ${props => props.theme.brand.alt};
     border: 1px solid transparent;
 
     div {
@@ -147,10 +202,29 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   }
 `;
 
+export const CommunityListText = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  ${Truncate};
+`;
+
 export const CommunityListName = styled.p`
   font-size: 14px;
   font-weight: 500;
   margin-left: 12px;
+  line-height: 1.28;
+
+  ${Truncate};
+`;
+
+export const CommunityListReputation = styled.div`
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 12px;
+  line-height: 1;
+  color: ${props => props.theme.text.alt};
+  width: 100%;
 
   ${Truncate};
 `;
@@ -174,6 +248,7 @@ export const ExploreListItem = styled(AllCommunityListItem)`
   background: none;
   margin-right: 3px;
   border-radius: 0;
+  ${Truncate};
 `;
 
 export const CommunityListAvatar = styled.img`
@@ -271,6 +346,12 @@ export const InboxThreadItem = styled.div`
 
   &:first-of-type {
     border-top: none;
+  }
+
+  &:last-of-type {
+    border-bottom: 1px solid
+      ${props =>
+        props.active ? props.theme.brand.alt : props.theme.bg.border};
   }
 `;
 
@@ -502,9 +583,9 @@ export const PillLink = styled(Link)`
 `;
 
 export const PillLinkPinned = styled.div`
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
   display: flex;
   height: 20px;
   border-radius: 4px;
@@ -552,7 +633,7 @@ export const MiniLinkPreview = styled(Link)`
 
 export const NullThreadFeed = styled.div`
   display: flex;
-  flex: auto;
+  flex: 1;
   height: 100%;
   align-items: center;
   justify-content: center;
@@ -572,4 +653,118 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+`;
+
+export const UserProfileContainer = styled.div`
+  display: flex;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  align-items: center;
+`;
+
+export const UserProfileText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex: auto;
+  margin-left: 18px;
+  justify-content: center;
+`;
+
+export const UserProfileName = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileNameLink = styled(Link)`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileReputation = styled.div`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  font-size: 13px;
+  line-height: 1.28;
+  ${Truncate};
+`;
+
+export const UserProfileSettingsLink = styled(Link)`
+  color: ${props => props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ChannelsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 4px;
+`;
+
+export const ChannelListItem = styled.div`
+  font-size: 14px;
+  padding-left: 36px;
+  margin-top: 4px;
+  font-weight: ${props => (props.active ? '500' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.default : props.theme.text.alt};
+  ${Truncate} .icon {
+    position: relative;
+    top: 4px;
+    left: -2px;
+  }
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ChannelListDivider = styled.div``;
+
+const placeHolderShimmer = keyframes`
+	0%{
+			transform: translateX(-200%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
+	}
+	100%{
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
+	}
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  padding: 0 8px;
+  flex-direction: column;
+  margin-left: 36px;
+  overflow: hidden;
+`;
+
+export const LoadingBar = styled.div`
+  width: ${props => `${props.width}px`};
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 8px;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  animation-name: ${placeHolderShimmer};
 `;

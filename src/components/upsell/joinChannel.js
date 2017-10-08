@@ -4,8 +4,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
@@ -101,6 +99,6 @@ class JoinChannel extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation, pure)(
+export default compose(connect(), toggleChannelSubscriptionMutation)(
   JoinChannel
 );

@@ -5,11 +5,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { ReputationMini } from '../reputation';
 import {
@@ -154,7 +152,7 @@ export const UserListItem = ({
   children,
 }: Object): React$Element<any> => {
   return (
-    <Wrapper>
+    <Wrapper border>
       <Row>
         <Avatar
           radius={20}
@@ -176,16 +174,18 @@ export const UserListItem = ({
                 <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
               </span>
             )}
-            {user.totalReputation && (
-              <span>
-                <ReputationMini tipText={'Your rep in this community'} />
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
-              </span>
-            )}
+            {(user.totalReputation || user.contextPermissions) && (
+                <span>
+                  <ReputationMini tipText={'Your rep in this community'} />
+                  {user.contextPermissions
+                    ? user.contextPermissions.reputation &&
+                      user.contextPermissions.reputation > 0 &&
+                      user.contextPermissions.reputation.toLocaleString()
+                    : user.totalReputation && user.totalReputation > 0
+                      ? user.totalReputation.toLocaleString()
+                      : '0'}
+                </span>
+              )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
@@ -236,11 +236,9 @@ class InvoiceListItemPure extends React.Component {
                 .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
             </Heading>
             <Meta>
-              {invoice.paidAt ? (
-                `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-              ) : (
-                'Unpaid'
-              )}{' '}
+              {invoice.paidAt
+                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+                : 'Unpaid'}{' '}
               · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>
@@ -250,4 +248,4 @@ class InvoiceListItemPure extends React.Component {
   }
 }
 
-export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);
+export const InvoiceListItem = compose(connect())(InvoiceListItemPure);

@@ -1,6 +1,7 @@
 const initialState = {
   activeCommunity: null,
   activeThread: null,
+  activeChannel: null,
 };
 
 export default function dashboardFeed(state = initialState, action) {
@@ -14,6 +15,11 @@ export default function dashboardFeed(state = initialState, action) {
       return Object.assign({}, ...state, {
         ...state,
         activeCommunity: action.communityId,
+      });
+    case 'SELECT_FEED_CHANNEL':
+      return Object.assign({}, ...state, {
+        ...state,
+        activeChannel: action.channelId,
       });
     default:
       return state;

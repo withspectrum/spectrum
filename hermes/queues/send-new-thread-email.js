@@ -5,6 +5,7 @@ import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
   NEW_THREAD_CREATED_TEMPLATE,
   TYPE_NEW_THREAD_CREATED,
+  DEBUG_TEMPLATE,
 } from './constants';
 
 type SendNewThreadNotificationJobData = {
@@ -32,24 +33,37 @@ export default async (job: SendNewThreadEmailJob) => {
     TYPE_NEW_THREAD_CREATED
   );
 
-  if (!unsubscribeToken)
-    return new Error('No unsubscribe token generated, aborting.');
-
-  try {
-    return sendEmail({
-      TemplateId: NEW_THREAD_CREATED_TEMPLATE,
-      To: job.data.to,
-      TemplateModel: {
-        author: job.data.author,
-        community: job.data.community,
-        channel: job.data.channel,
-        thread: job.data.thread,
-        recipient: job.data.recipient,
-        username: job.data.username,
-        unsubscribeToken,
-      },
-    });
-  } catch (err) {
-    console.log(err);
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: job.data.userId,
+          type: TYPE_NEW_THREAD_CREATED,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      return sendEmail({
+        TemplateId: NEW_THREAD_CREATED_TEMPLATE,
+        To: job.data.to,
+        TemplateModel: {
+          author: job.data.author,
+          community: job.data.community,
+          channel: job.data.channel,
+          thread: job.data.thread,
+          recipient: job.data.recipient,
+          username: job.data.username,
+          unsubscribeToken,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };

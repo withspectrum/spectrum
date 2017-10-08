@@ -25,7 +25,7 @@ export const listenToNewDocumentsIn = (table, cb) => {
   );
 };
 
-const parseRange = timeframe => {
+export const parseRange = timeframe => {
   switch (timeframe) {
     case 'daily': {
       return { current: 60 * 60 * 24, previous: 60 * 60 * 24 * 2 };

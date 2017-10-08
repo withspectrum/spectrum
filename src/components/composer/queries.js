@@ -29,6 +29,7 @@ query getComposerCommunitiesAndChannels {
             isBlocked
             isOwner
             isModerator
+            reputation
           }
         }
       }

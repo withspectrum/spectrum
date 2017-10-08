@@ -1,8 +1,6 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getChannelById } from '../../../api/channel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
@@ -21,16 +19,17 @@ const NewChannelComponent = ({ data }) => {
   return <ChannelProfile profileSize="miniWithAction" data={data} />;
 };
 
-const NewChannel = compose(getChannelById, displayLoadingCard, pure)(
+const NewChannel = compose(getChannelById, displayLoadingCard)(
   NewChannelComponent
 );
 
 export const NewChannelNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newChannelCount = notification.entities.length > 1
-    ? `${notification.entities.length} new channels were`
-    : 'A new channel was';
+  const newChannelCount =
+    notification.entities.length > 1
+      ? `${notification.entities.length} new channels were`
+      : 'A new channel was';
 
   return (
     <SegmentedNotificationCard>
@@ -60,9 +59,10 @@ export const MiniNewChannelNotification = ({
 }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newChannelCount = notification.entities.length > 1
-    ? `${notification.entities.length} new channels were`
-    : 'A new channel was';
+  const newChannelCount =
+    notification.entities.length > 1
+      ? `${notification.entities.length} new channels were`
+      : 'A new channel was';
 
   return (
     <SegmentedNotificationListRow>

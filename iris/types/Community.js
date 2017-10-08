@@ -1,3 +1,4 @@
+// @flow
 const Community = /* GraphQL */ `
 	type CommunityChannelsConnection {
 		pageInfo: PageInfo!
@@ -84,6 +85,11 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	type TopAndNewThreads {
+		topThreads: [Thread]
+		newThreads: [Thread]
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -104,6 +110,10 @@ const Community = /* GraphQL */ `
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
 		isPro: Boolean
+		memberGrowth: GrowthData
+		conversationGrowth: GrowthData
+		topMembers: [User]
+		topAndNewThreads: TopAndNewThreads
 	}
 
 	extend type Query {

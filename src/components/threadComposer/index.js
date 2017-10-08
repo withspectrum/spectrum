@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -613,7 +611,7 @@ class ThreadComposerWithData extends Component {
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
                 editorKey="thread-composer"
-                placeholder="Write more thoughts here, add photos, and anything else!"
+                placeholder="Write more thoughts here..."
                 className={'threadComposer'}
                 showLinkPreview={true}
                 linkPreview={{
@@ -686,8 +684,7 @@ export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
   displayLoadingComposer, // handle loading state while query is fetching
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({

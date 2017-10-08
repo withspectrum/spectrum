@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -156,18 +154,15 @@ class ComposerWithData extends Component {
     activeCommunity
   ) => {
     const props = this.props;
-
     // get the channels for the proper community
     const activeCommunityChannels = availableChannels.filter(
       channel => channel.community.id === activeCommunity
     );
     let activeChannel = [];
-
     // Get the active channel if there is one
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
-        channel =>
-          channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
+        channel => channel.id === props.activeChannel
       );
     } else {
       // Try and get the default channel for the active community
@@ -275,7 +270,7 @@ class ComposerWithData extends Component {
       // Get the active channel if there is one
       if (this.props.activeChannel) {
         activeChannel = activeCommunityChannels.filter(
-          channel => channel.slug === this.props.activeChannel
+          channel => channel.id === this.props.activeChannel
         );
       } else {
         // Try and get the default channel for the active community
@@ -449,19 +444,17 @@ class ComposerWithData extends Component {
 
         // redirect the user to the thread
         // if they are in the inbox, select it
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Thread published!')
+        );
         if (this.props.isInbox) {
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);
         } else {
           this.props.history.push(`?thread=${id}`);
+          this.props.dispatch(changeActiveThread(null));
         }
-
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Thread published!')
-        );
-
-        this.props.dispatch(changeActiveThread(null));
       })
       .catch(err => {
         this.setState({
@@ -609,7 +602,7 @@ class ComposerWithData extends Component {
             style={ThreadDescription}
             editorRef={editor => (this.bodyEditor = editor)}
             editorKey="thread-composer"
-            placeholder={`Write more thoughts here, add photos, and anything else!`}
+            placeholder={`Write more thoughts here...`}
             className={'threadComposer'}
             showLinkPreview={true}
             linkPreview={{
@@ -646,8 +639,7 @@ class ComposerWithData extends Component {
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ComposerWithData);
 
 const mapStateToProps = state => ({

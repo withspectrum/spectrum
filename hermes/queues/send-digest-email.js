@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
-import { DIGEST_TEMPLATE } from './constants';
+import { DIGEST_TEMPLATE, DEBUG_TEMPLATE } from './constants';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
 
@@ -77,29 +77,42 @@ export default async (job: SendWeeklyDigestJob) => {
     unsubscribeType
   );
 
-  if (!unsubscribeToken)
-    return new Error('No unsubscribe token generated, aborting.');
-
-  const greeting = name ? `Hey ${name},` : 'Hey there,';
-
-  try {
-    return sendEmail({
-      TemplateId: DIGEST_TEMPLATE,
-      To: email,
-      TemplateModel: {
-        threads,
-        greeting,
-        communities,
-        reputationString,
-        username,
-        unsubscribeToken,
-        timeframe: {
-          subject: timeframe,
-          time: timeframe === 'daily' ? 'day' : 'week',
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: userId,
+          type: unsubscribeType,
         },
-      },
-    });
-  } catch (err) {
-    console.log(err);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    const greeting = name ? `Hey ${name},` : 'Hey there,';
+
+    try {
+      return sendEmail({
+        TemplateId: DIGEST_TEMPLATE,
+        To: email,
+        TemplateModel: {
+          threads,
+          greeting,
+          communities,
+          reputationString,
+          username,
+          unsubscribeToken,
+          timeframe: {
+            subject: timeframe,
+            time: timeframe === 'daily' ? 'day' : 'week',
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };

@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -203,8 +201,7 @@ class ChannelView extends React.Component<Props> {
 
             <ThreadFeedWithData
               viewContext="channel"
-              channelSlug={channelSlug}
-              communitySlug={communitySlug}
+              id={channel.id}
               currentUser={isLoggedIn}
               channelId={channel.id}
             />
@@ -257,6 +254,6 @@ const map = state => ({
   currentUser: state.users.currentUser,
 });
 
-export default compose(connect(map), getChannel, viewNetworkHandler, pure)(
+export default compose(connect(map), getChannel, viewNetworkHandler)(
   ChannelView
 );

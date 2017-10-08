@@ -22,7 +22,9 @@ export const PlanSelector = props => {
           <CostSubtext>forever</CostSubtext>
         </Cost>
         <Description>
-          Build your community, audience, support group, open-source project, or really anything else on a platform purpose-built for open, constructive communities.
+          Build your community, audience, support group, open-source project, or
+          really anything else on a platform purpose-built for open,
+          constructive communities.
         </Description>
         <FeatureList>
           <Feature>Unlimited members</Feature>
@@ -40,7 +42,8 @@ export const PlanSelector = props => {
           </CostSubtext>
         </Cost>
         <Description>
-          Take your community to the next level with top-tier moderation and support tools.
+          Take your community to the next level with top-tier moderation and
+          support tools.
         </Description>
         <FeatureList>
           <Feature>Unlimited moderators</Feature>

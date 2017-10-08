@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -275,10 +273,7 @@ class ChannelWithData extends Component {
   }
 }
 
-const Channel = compose(
-  deleteChannelMutation,
-  editChannelMutation,
-  withRouter,
-  pure
-)(ChannelWithData);
+const Channel = compose(deleteChannelMutation, editChannelMutation, withRouter)(
+  ChannelWithData
+);
 export default connect()(Channel);

@@ -1,3 +1,4 @@
+// @flow
 const Channel = /* GraphQL */ `
 	type ChannelMembersConnection {
 		pageInfo: PageInfo!

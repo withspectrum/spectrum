@@ -37,6 +37,10 @@
   version "8.0.28"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.28.tgz#86206716f8d9251cf41692e384264cbd7058ad60"
 
+"@types/node@^6.0.46":
+  version "6.0.88"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.88.tgz#f618f11a944f6a18d92b5c472028728a3e3d4b66"
+
 "@types/serve-static@*":
   version "1.7.32"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.7.32.tgz#0f6732e4dab0813771dd8fc8fe14940f34728b4c"
@@ -1784,6 +1788,17 @@ cheerio@^0.22.0:
     lodash.reject "^4.4.0"
     lodash.some "^4.4.0"
 
+cheerio@^1.0.0-rc.2:
+  version "1.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.2.tgz#4b9f53a81b27e4d5dac31c0ffd0cfa03cc6830db"
+  dependencies:
+    css-select "~1.2.0"
+    dom-serializer "~0.1.0"
+    entities "~1.1.1"
+    htmlparser2 "^3.9.1"
+    lodash "^4.15.0"
+    parse5 "^3.0.1"
+
 chokidar@^1.6.0, chokidar@^1.6.1, chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
@@ -2688,6 +2703,12 @@ draft-js-drag-n-drop-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
+draft-js-embed-plugin@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-embed-plugin/-/draft-js-embed-plugin-1.2.0.tgz#cf41c6de58ce58c3662d8cd3d45325733587d3d1"
+  dependencies:
+    decorate-component-with-props "^1.0.2"
+
 draft-js-focus-plugin@2.0.0-rc2:
   version "2.0.0-rc2"
   resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.0.0-rc2.tgz#6b65e0c489a0cedc9cfad414b3313d44168375d9"
@@ -2721,6 +2742,17 @@ draft-js-import-markdown@^1.2.0:
   dependencies:
     draft-js-import-element "^1.2.0"
     synthetic-dom "^1.2.0"
+
+draft-js-linkify-plugin@^2.0.0-beta1:
+  version "2.0.0-rc8"
+  resolved "https://registry.yarnpkg.com/draft-js-linkify-plugin/-/draft-js-linkify-plugin-2.0.0-rc8.tgz#99f0d57673d440cef13e4310ba2ea0988f1c92c4"
+  dependencies:
+    decorate-component-with-props "^1.0.2"
+    immutable "~3.7.4"
+    linkify-it "^2.0.3"
+    prop-types "^15.5.8"
+    tlds "^1.189.0"
+    union-class-names "^1.0.0"
 
 draft-js-markdown-plugin@^1.0.0:
   version "1.0.0"
@@ -3962,6 +3994,15 @@ graphql-log@0.1.2:
     deep-for-each "^1.0.6"
     is-function "^1.0.1"
 
+graphql-redis-subscriptions@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-1.3.1.tgz#a8790fbb1bd22103713befdcf1f27d5a14306509"
+  dependencies:
+    graphql-subscriptions "^0.4.2"
+    iterall "^1.1.1"
+  optionalDependencies:
+    ioredis "^3.1.2"
+
 graphql-server-core@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-core/-/graphql-server-core-0.8.5.tgz#6d03e9d7d0ceebdbcfbad57c9f8a61eb0d3fb6da"
@@ -3982,7 +4023,7 @@ graphql-server-module-graphiql@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.8.5.tgz#bf43caa20e7e7f912003a67bb31710c6ebc7ab18"
 
-graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.3:
+graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.2, graphql-subscriptions@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.4.tgz#39cff32d08dd3c990113864bab77154403727e9b"
   dependencies:
@@ -4239,6 +4280,10 @@ html-minifier@^3.2.3:
     relateurl "0.2.x"
     uglify-js "3.1.x"
 
+html-tags@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-1.2.0.tgz#c78de65b5663aa597989dd2b7ab49200d7e4db98"
+
 html-webpack-plugin@2.29.0:
   version "2.29.0"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-2.29.0.tgz#e987f421853d3b6938c8c4c8171842e5fd17af23"
@@ -4491,7 +4536,7 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-ioredis@^3.1.4:
+ioredis@^3.1.2, ioredis@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.1.4.tgz#8688293f5f2f1757e1c812ad17cce49f46d811bc"
   dependencies:
@@ -4654,6 +4699,12 @@ is-glob@^3.1.0:
   resolved "https://registry.yarnpkg.com/is-glob/-/is-glob-3.1.0.tgz#7ba5ae24217804ac70707b96922567486cc3e84a"
   dependencies:
     is-extglob "^2.1.0"
+
+is-html@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/is-html/-/is-html-1.1.0.tgz#e04f1c18d39485111396f9a0273eab51af218464"
+  dependencies:
+    html-tags "^1.0.0"
 
 is-in-browser@^1.1.3:
   version "1.1.3"
@@ -6810,6 +6861,12 @@ parse-passwd@^1.0.0:
 parse5@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-1.5.1.tgz#9b7f3b0de32be78dc2401b17573ccaf0f6f59d94"
+
+parse5@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-3.0.2.tgz#05eff57f0ef4577fb144a79f8b9a967a6cc44510"
+  dependencies:
+    "@types/node" "^6.0.46"
 
 parseurl@~1.3.1:
   version "1.3.2"
@@ -9052,6 +9109,10 @@ tiny-emitter@^2.0.0:
 tinycolor@0.x:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/tinycolor/-/tinycolor-0.0.1.tgz#320b5a52d83abb5978d81a3e887d4aefb15a6164"
+
+tlds@^1.189.0:
+  version "1.197.0"
+  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.197.0.tgz#5e5463a2a0d78480aeb1768b6611e4f3bc22778d"
 
 tmp@^0.0.31:
   version "0.0.31"

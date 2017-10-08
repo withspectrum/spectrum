@@ -28,12 +28,13 @@ class ListCardItemDirectMessageThread extends Component {
       user => user.userId !== currentUser.id
     );
     // concat a string of users' names for thread messages
-    let participantsArray = participants.length > 1
-      ? participants
-          .map(user => user.name)
-          .join(', ')
-          .replace(/,(?!.*,)/gim, ' and')
-      : participants[0].name;
+    let participantsArray =
+      participants.length > 1
+        ? participants
+            .map(user => user.name)
+            .join(', ')
+            .replace(/,(?!.*,)/gim, ' and')
+        : participants[0].name;
     // pass participants to a helper function to generate the avatar displays
     const avatars = renderAvatars(participants);
 
@@ -62,7 +63,9 @@ class ListCardItemDirectMessageThread extends Component {
                   {threadTimeDifference}
                 </Timestamp>
               </MessageGroupByline>
-              <Meta isUnread={isUnread} nowrap>{thread.snippet}</Meta>
+              <Meta isUnread={isUnread} nowrap>
+                {thread.snippet}
+              </Meta>
             </MessageGroupTextContainer>
           </Row>
         </Link>

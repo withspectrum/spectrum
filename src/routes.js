@@ -25,8 +25,9 @@ import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
 import UserSettings from './views/userSettings';
-import communitySettings from './views/communitySettings';
-import channelSettings from './views/channelSettings';
+import CommunitySettings from './views/communitySettings';
+import CommunityAnalytics from './views/communityAnalytics';
+import ChannelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 import Splash from './views/splash';
 import Composer from './components/composer';
@@ -63,10 +64,13 @@ const MessagesFallback = signedOutFallback(DirectMessages, () => (
 const UserSettingsFallback = signedOutFallback(UserSettings, () => (
   <Redirect to="/login" />
 ));
-const CommunitySettingsFallback = signedOutFallback(communitySettings, () => (
+const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
   <Redirect to="/login" />
 ));
-const ChannelSettingsFallback = signedOutFallback(channelSettings, () => (
+const CommunityAnalyticsFallback = signedOutFallback(CommunitySettings, () => (
+  <Redirect to="/login" />
+));
+const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
   <Redirect to="/login" />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
@@ -153,6 +157,10 @@ class Routes extends React.Component<{}> {
               <Route
                 path="/:communitySlug/:channelSlug/settings"
                 component={ChannelSettingsFallback}
+              />
+              <Route
+                path="/:communitySlug/settings/analytics"
+                component={CommunityAnalyticsFallback}
               />
               <Route
                 path="/:communitySlug/settings"

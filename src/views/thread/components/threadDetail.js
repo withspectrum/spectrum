@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -592,7 +590,7 @@ class ThreadDetailPure extends Component {
             state={body}
             onChange={this.changeBody}
             editorKey="thread-detail"
-            placeholder="Write more thoughts here, add photos, and anything else!"
+            placeholder="Write more thoughts here..."
             showLinkPreview={true}
             linkPreview={{
               loading: fetchingLinkPreview,
@@ -613,8 +611,7 @@ const ThreadDetail = compose(
   editThreadMutation,
   pinThreadMutation,
   toggleThreadNotificationsMutation,
-  withRouter,
-  pure
+  withRouter
 )(ThreadDetailPure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -335,6 +333,5 @@ export default compose(
   connect(map),
   toggleCommunityMembershipMutation,
   getCommunity,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(CommunityView);

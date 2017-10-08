@@ -29,8 +29,7 @@ export default (
       /**
        * Thread
        */
-      promise = request(
-        /* GraphQL */ `
+      promise = request(/* GraphQL */ `
         {
           thread(id: "${second}") {
             content {
@@ -44,8 +43,7 @@ export default (
             }
           }
         }
-      `
-      ).then(res => {
+      `).then(res => {
         const { thread: { type, content, channel } } = res.data;
         return generateMetaInfo({
           type: 'thread',
@@ -64,8 +62,7 @@ export default (
       /**
        * User
        */
-      promise = request(
-        /* GraphQL */ `
+      promise = request(/* GraphQL */ `
         {
           user(username: "${second}") {
             name
@@ -74,8 +71,7 @@ export default (
             # coverPhoto
           }
         }
-      `
-      ).then(res => {
+      `).then(res => {
         const { user } = res.data;
         return generateMetaInfo({
           type: 'user',
@@ -94,8 +90,7 @@ export default (
         /**
          * Channel
          */
-        promise = request(
-          /* GraphQL */ `
+        promise = request(/* GraphQL */ `
           {
             channel(channelSlug: "${second}", communitySlug: "${first}") {
               name
@@ -106,8 +101,7 @@ export default (
               }
             }
           }
-        `
-        ).then(res => {
+        `).then(res => {
           const { channel, channel: { community } } = res.data;
           return generateMetaInfo({
             type: 'channel',
@@ -123,16 +117,14 @@ export default (
         /**
          * Community
          */
-        promise = request(
-          /* GraphQL */ `
+        promise = request(/* GraphQL */ `
           {
             community(slug: "${first}") {
               name
               description
             }
           }
-        `
-        ).then(res => {
+        `).then(res => {
           const { community } = res.data;
           return generateMetaInfo({
             type: 'community',

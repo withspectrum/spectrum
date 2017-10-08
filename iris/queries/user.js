@@ -6,7 +6,10 @@ const {
   getUsersBySearchString,
 } = require('../models/user');
 const { getUsersSettings } = require('../models/usersSettings');
-const { getCommunitiesByUser } = require('../models/community');
+const {
+  getCommunitiesByUser,
+  getCommunitiesBySlug,
+} = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const {
   getThread,
@@ -244,6 +247,22 @@ module.exports = {
             } = await getUserPermissionsInCommunity(communityId, user.id);
             return {
               reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          case 'getCommunityTopMembers': {
+            const communities = await getCommunitiesBySlug([
+              info.variableValues.slug,
+            ]);
+            const { id } = communities[0];
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(id, user.id);
+            return {
+              reputation: reputation || 0,
               isModerator,
               isOwner,
             };
