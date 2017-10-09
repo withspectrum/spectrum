@@ -37,7 +37,7 @@ type OtherInput = {
 };
 type ThreadInput = {
   type: 'thread',
-  data?: { title: string, body?: ?string, channelName?: string, privateChannel?: ?boolean type?: ?string },
+  data?: { title: string, body?: ?string, communityName?: string, privateChannel?: ?boolean type?: ?string },
 };
 type UserInput = {
   type: 'user',
@@ -50,6 +50,10 @@ type ChannelInput = {
 type CommunityInput = {
   type: 'community',
   data?: { name: string, description?: string },
+};
+type DirectMessageInput = {
+  type: 'directMessage',
+  data?: { new?: boolean },
 };
 type Input =
   | ThreadInput
@@ -103,7 +107,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
           ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
           : data.body);
       return setDefault({
-        title: data && data.title + ' · ' + data.channelName,
+        title: data && data.title + ' · ' + data.communityName,
         description: body,
       });
     }
@@ -119,13 +123,19 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
           extra: HIDE_FROM_CRAWLERS,
         });
       return setDefault({
-        title: data && data.name + ' · ' + data.communityName,
+        title: data && data.communityName + ' · ' + data.name,
         description: data && data.description,
       });
     }
     case 'community': {
       return setDefault({
         title: data && data.name,
+        description: data && data.description,
+      });
+    }
+    case 'directMessage': {
+      return setDefault({
+        title: data && data.title,
         description: data && data.description,
       });
     }

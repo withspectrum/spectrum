@@ -155,7 +155,7 @@ class ThreadContainer extends React.Component<Props, State> {
           title: thread.content.title,
           body: thread.content.body,
           type: thread.type,
-          channelName: thread.channel.name,
+          communityName: thread.community.name,
         },
       });
 
@@ -249,7 +249,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
               {!isLoggedIn && (
                 <UpsellSignIn
-                  title={'Join the conversation'}
+                  title={`Join the ${thread.community.name} community`}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow

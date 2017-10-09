@@ -252,6 +252,7 @@ class CommunityView extends React.Component<Props, State> {
                 !isLoggedIn &&
                   selectedView === 'threads' && (
                     <UpsellSignIn
+                      title={`Join the ${community.name} community`}
                       view={{ data: community, type: 'community' }}
                     />
                   )}
