@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
@@ -26,6 +27,7 @@ import {
 class CommunityList extends Component {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
+    this.props.history.replace(`/`);
     this.props.dispatch(changeActiveThread(''));
 
     if (id !== this.props.activeCommunity) {
@@ -133,4 +135,4 @@ class CommunityList extends Component {
   }
 }
 
-export default compose(connect())(CommunityList);
+export default compose(connect(), withRouter)(CommunityList);
