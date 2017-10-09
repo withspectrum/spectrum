@@ -53,7 +53,7 @@ type CommunityInput = {
 };
 type DirectMessageInput = {
   type: 'directMessage',
-  data?: { new?: boolean },
+  data?: { title: string, description?: string },
 };
 type Input =
   | ThreadInput
