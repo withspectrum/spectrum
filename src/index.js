@@ -28,6 +28,7 @@ if (existingUser) {
     },
     dashboardFeed: {
       activeThread: t ? t : '',
+      mountedWithActiveThread: t ? t : '',
     },
   };
 } else {

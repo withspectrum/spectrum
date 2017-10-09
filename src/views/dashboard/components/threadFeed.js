@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
@@ -16,12 +13,16 @@ import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
 import InboxThread from './inboxThread';
 
-class ThreadFeed extends Component {
-  state: {
-    scrollElement: any,
-    subscription: ?Function,
-  };
+type Props = {
+  mountedWithActiveThread: ?string,
+};
 
+type State = {
+  scrollElement: any,
+  subscription: ?Function,
+};
+
+class ThreadFeed extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -47,14 +48,24 @@ class ThreadFeed extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
+    const { mountedWithActiveThread } = this.props;
+
+    // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
+    if (this.props.data.threads && mountedWithActiveThread) {
+      if (!isDesktop) {
+        this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
+      }
+      this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
+      return;
+    }
 
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
       (!prevProps.data.threads && this.props.data.threads) ||
       (prevProps.data.loading && !this.props.data.loading);
-    const isDesktop = window.innerWidth > 768;
 
     if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {
       const threadNodes = this.props.data.threads
@@ -153,5 +164,7 @@ class ThreadFeed extends Component {
     );
   }
 }
-
-export default compose(withRouter, connect())(ThreadFeed);
+const map = state => ({
+  mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
+});
+export default compose(withRouter, connect(map))(ThreadFeed);
