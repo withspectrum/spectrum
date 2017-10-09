@@ -1,11 +1,7 @@
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';

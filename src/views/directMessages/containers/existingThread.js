@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
