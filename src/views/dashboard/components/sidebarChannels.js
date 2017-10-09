@@ -76,19 +76,31 @@ class SidebarChannels extends React.Component<Props> {
 
           <ChannelListDivider className={'divider'} />
 
-          <Link to={`/${community.slug}`}>
+          <Link
+            to={`/${community.slug}`}
+            target="_blank"
+            rel="nofollower noopener"
+          >
             <ChannelListItem>View community</ChannelListItem>
           </Link>
 
           {isOwner && (
-            <Link to={`/${community.slug}/settings`}>
+            <Link
+              to={`/${community.slug}/settings`}
+              target="_blank"
+              rel="nofollower noopener"
+            >
               <ChannelListItem>Settings</ChannelListItem>
             </Link>
           )}
 
           {isOwner &&
             community.isPro && (
-              <Link to={`/${community.slug}/settings/analytics`}>
+              <Link
+                to={`/${community.slug}/settings/analytics`}
+                target="_blank"
+                rel="nofollower noopener"
+              >
                 <ChannelListItem>Analytics</ChannelListItem>
               </Link>
             )}
