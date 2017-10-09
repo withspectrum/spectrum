@@ -11,7 +11,7 @@ import {
   onlyContainsEmoji,
   draftOnlyContainsEmoji,
 } from '../../helpers/utils';
-import { NullState } from '../upsell';
+import NewThreadShare from '../upsell/newThreadShare';
 import { Bubble, EmojiBubble, ImgBubble, renderLinks } from '../bubbles';
 import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
@@ -66,13 +66,7 @@ class ChatMessages extends Component {
     const hash = window.location.hash.substr(1);
 
     if (!messages || messages.length === 0) {
-      return (
-        <NullState
-          bg="chat"
-          heading={`🔥 This thread is hot off the presses...`}
-          copy={`Why don't you kick off the conversation?`}
-        />
-      );
+      return <NewThreadShare thread={null} />;
     } else {
       const renderTimestamp = (me, message) => {
         if (threadType === 'directMessageThread') {
