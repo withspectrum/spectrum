@@ -1,6 +1,5 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
-import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -378,6 +377,5 @@ export default compose(
   connect(),
   deleteCommunityMutation,
   editCommunityMutation,
-  withRouter,
-  pure
+  withRouter
 )(EditForm);

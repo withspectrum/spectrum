@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
 import Channel from './channel';
@@ -42,12 +40,16 @@ type ProfileProps = {
   <UserProfile /> and this file will handle the type declaration, which will
   then get passed to our switch statement above to return the right component.
 */
-export const Profile = compose(pure)(ProfilePure);
-export const UserProfile = (props: ProfileProps) =>
-  <Profile type="user" {...props} />;
-export const ChannelProfile = (props: ProfileProps) =>
-  <Profile type="channel" {...props} />;
-export const CommunityProfile = (props: ProfileProps) =>
-  <Profile type="community" {...props} />;
-export const ThreadProfile = (props: ProfileProps) =>
-  <Profile type="thread" {...props} />;
+export const Profile = compose()(ProfilePure);
+export const UserProfile = (props: ProfileProps) => (
+  <Profile type="user" {...props} />
+);
+export const ChannelProfile = (props: ProfileProps) => (
+  <Profile type="channel" {...props} />
+);
+export const CommunityProfile = (props: ProfileProps) => (
+  <Profile type="community" {...props} />
+);
+export const ThreadProfile = (props: ProfileProps) => (
+  <Profile type="thread" {...props} />
+);

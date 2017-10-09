@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import Icon from '../icons';
 import { FauxOutlineButton } from '../buttons';
 

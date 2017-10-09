@@ -52,8 +52,8 @@ export const InboxScroller = styled.div`
 
 export const CommunityListWrapper = styled.div`
   display: flex;
-  width: 256px;
-  min-width: 256px;
+  width: 72px;
+  min-width: 72px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -64,6 +64,25 @@ export const CommunityListWrapper = styled.div`
   transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
+  .channelsContainer {
+    max-height: 0;
+    padding: 0;
+    transition-delay: 1s;
+    transform: translateZ(0);
+    transition: ${Transition.hover.off};
+
+    .divider {
+      max-width: 0;
+      border-top: 1px solid ${props => props.theme.bg.wash};
+      height: 0;
+      margin: 12px 0 8px -28px;
+      position: relative;
+      right: -14px;
+      transition-delay: 1s;
+      transition: ${Transition.hover.on};
+    }
+  }
+
   img {
     opacity: 0.4;
     filter: grayscale(60%);
@@ -72,8 +91,26 @@ export const CommunityListWrapper = styled.div`
 
   &:hover {
     transform: translateZ(0);
-    // width: 256px;
+    width: 256px;
+    min-width: 256px;
     transition: ${Transition.hover.on};
+    transition-delay: 1s;
+
+    .channelsContainer {
+      max-height: 1000px;
+      padding: 8px 8px 4px;
+      transform: translateZ(0);
+      transition: ${Transition.hover.on};
+      transition-delay: 1s;
+
+      .divider {
+        max-width: 256px;
+        border-top: 1px solid ${props => props.theme.bg.border};
+        height: 1px;
+        transition-delay: 1s;
+        transition: ${Transition.hover.on};
+      }
+    }
 
     img {
       filter: grayscale(0%);
@@ -130,20 +167,33 @@ export const CommunityListItem = styled.div`
   }
 `;
 
-export const ExploreCommunityListItem = styled(CommunityListItem)`
+export const Fixed = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 255px;
-  color: ${props => props.theme.text.alt};
+  width: 100%;
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
-  margin: 0;
-  padding: 8px 16px;
-  border-radius: 0;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
     background: ${props => props.theme.bg.default};
+
+    div {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.default};
+    }
+  }
+`;
+
+export const ExploreCommunityListItem = styled(CommunityListItem)`
+  color: ${props => props.theme.text.alt};
+  margin: 1px 12px;
+  margin-top: 0 !important; //need to override the first child selector above
+  padding: 6px;
+  border-radius: 0;
+
+  ${Truncate} &:hover {
+    color: ${props => props.theme.brand.alt};
     border: 1px solid transparent;
 
     div {
@@ -174,6 +224,7 @@ export const CommunityListReputation = styled.div`
   margin-left: 12px;
   line-height: 1;
   color: ${props => props.theme.text.alt};
+  width: 100%;
 
   ${Truncate};
 `;
@@ -197,6 +248,7 @@ export const ExploreListItem = styled(AllCommunityListItem)`
   background: none;
   margin-right: 3px;
   border-radius: 0;
+  ${Truncate};
 `;
 
 export const CommunityListAvatar = styled.img`
@@ -531,9 +583,9 @@ export const PillLink = styled(Link)`
 `;
 
 export const PillLinkPinned = styled.div`
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
   display: flex;
   height: 20px;
   border-radius: 4px;
@@ -605,7 +657,7 @@ export const PinIcon = styled.span`
 
 export const UserProfileContainer = styled.div`
   display: flex;
-  padding: 16px 16px 12px;
+  padding: 16px 20px 12px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   align-items: center;
 `;
@@ -615,7 +667,7 @@ export const UserProfileText = styled.div`
   flex-direction: column;
   align-self: stretch;
   flex: auto;
-  margin-left: 14px;
+  margin-left: 18px;
   justify-content: center;
 `;
 
@@ -665,8 +717,7 @@ export const ChannelListItem = styled.div`
   font-weight: ${props => (props.active ? '500' : '400')};
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
-
-  .icon {
+  ${Truncate} .icon {
     position: relative;
     top: 4px;
     left: -2px;
@@ -677,12 +728,7 @@ export const ChannelListItem = styled.div`
   }
 `;
 
-export const ChannelListDivider = styled.div`
-  width: calc(100% + 28px);
-  border-top: 1px solid ${props => props.theme.bg.border};
-  height: 1px;
-  margin: 12px 0 4px -14px;
-`;
+export const ChannelListDivider = styled.div``;
 
 const placeHolderShimmer = keyframes`
 	0%{

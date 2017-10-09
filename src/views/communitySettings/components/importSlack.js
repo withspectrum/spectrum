@@ -3,8 +3,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
@@ -289,14 +287,12 @@ export const ImportSlackWithoutCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
   connect(),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(ImportSlackNoCard);
 export const ImportSlackWithCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
   connect(),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(ImportSlackCard);
 export default ImportSlackWithCard;

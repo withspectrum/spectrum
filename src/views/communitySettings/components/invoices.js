@@ -3,8 +3,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { getCommunityInvoices } from '../../../api/community';
 import { Loading } from '../../../components/loading';
@@ -73,9 +71,6 @@ class Invoices extends React.Component<Props> {
   }
 }
 
-export default compose(
-  getCommunityInvoices,
-  viewNetworkHandler,
-  connect(),
-  pure
-)(Invoices);
+export default compose(getCommunityInvoices, viewNetworkHandler, connect())(
+  Invoices
+);

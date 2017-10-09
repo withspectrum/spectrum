@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 import { ParticipantHeads, ParticipantCount, Creator } from './style';
 
 const messageAvatars = list => {

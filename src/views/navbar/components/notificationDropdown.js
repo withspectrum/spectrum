@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -77,6 +75,6 @@ const NotificationDropdownPure = props => {
   );
 };
 
-export const NotificationDropdown = compose(withRouter, pure)(
+export const NotificationDropdown = compose(withRouter)(
   NotificationDropdownPure
 );

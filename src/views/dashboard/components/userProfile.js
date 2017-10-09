@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReputationMiniCommunity } from '../../../components/reputation';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import Icon from '../../../components/icons';
 import { truncateNumber } from '../../../helpers/utils';
 import {
@@ -28,7 +28,7 @@ class UserProfile extends React.Component<Props> {
         <Avatar
           src={user.profilePhoto}
           link={user.username ? `/users/${user.username}` : null}
-          size={40}
+          size={32}
         />
 
         <UserProfileText>

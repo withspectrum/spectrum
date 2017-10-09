@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
@@ -156,4 +154,4 @@ class ThreadFeed extends Component {
   }
 }
 
-export default compose(withRouter, connect(), pure)(ThreadFeed);
+export default compose(withRouter, connect())(ThreadFeed);

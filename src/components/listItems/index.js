@@ -5,11 +5,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { ReputationMini } from '../reputation';
 import {
@@ -178,7 +176,7 @@ export const UserListItem = ({
             )}
             {(user.totalReputation || user.contextPermissions) && (
                 <span>
-                  <ReputationMini tipText={'Rep in this community'} />
+                  <ReputationMini tipText={'Your rep in this community'} />
                   {user.contextPermissions
                     ? user.contextPermissions.reputation &&
                       user.contextPermissions.reputation > 0 &&
@@ -250,4 +248,4 @@ class InvoiceListItemPure extends React.Component {
   }
 }
 
-export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);
+export const InvoiceListItem = compose(connect())(InvoiceListItemPure);

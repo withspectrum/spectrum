@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bull": "^3.0.0-rc.2",
+    "draft-js": "^0.10.3",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15"

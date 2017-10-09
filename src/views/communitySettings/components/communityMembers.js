@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { UserListItem } from '../../../components/listItems';
-import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
@@ -71,4 +70,4 @@ class CommunityMembers extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMembersQuery, pure)(CommunityMembers);
+export default compose(getCommunityMembersQuery)(CommunityMembers);

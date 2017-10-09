@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -49,6 +47,32 @@ const ChannelThreadFeed = compose(connect(), getChannelThreads)(
 const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
 
 class Dashboard extends Component {
+  state: {
+    isHovered: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isHovered: false,
+    };
+  }
+
+  setHover = () => {
+    setTimeout(() => {
+      this.setState({
+        isHovered: true,
+      });
+    }, 1000);
+  };
+
+  removeHover = () => {
+    this.setState({
+      isHovered: false,
+    });
+  };
+
   render() {
     const {
       data: { user },
@@ -59,6 +83,7 @@ class Dashboard extends Component {
       isLoading,
       hasError,
     } = this.props;
+    const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 
     if (user) {
@@ -83,10 +108,14 @@ class Dashboard extends Component {
         <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-          <CommunityListWrapper>
+          <CommunityListWrapper
+            onMouseEnter={this.setHover}
+            onMouseLeave={this.removeHover}
+          >
             <CommunityListScroller>
-              <UserProfile user={user} />
+              {/* <UserProfile user={user} /> */}
               <CommunityList
+                isHovered={isHovered}
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
@@ -113,6 +142,7 @@ class Dashboard extends Component {
                   hasActiveChannel={activeChannel}
                   community={activeCommunityObject}
                   pinnedThreadId={activeCommunityObject.pinnedThreadId}
+                  channelId={activeChannel}
                 />
               ) : (
                 <CommunityThreadFeed
@@ -167,9 +197,6 @@ const map = state => ({
   activeCommunity: state.dashboardFeed.activeCommunity,
   activeChannel: state.dashboardFeed.activeChannel,
 });
-export default compose(
-  connect(map),
-  getCurrentUserProfile,
-  viewNetworkHandler,
-  pure
-)(Dashboard);
+export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
+  Dashboard
+);

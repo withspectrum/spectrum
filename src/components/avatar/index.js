@@ -1,7 +1,5 @@
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -108,4 +106,6 @@ const AvatarPure = (props: Object): React$Element<any> => {
   }
 };
 
-export const Avatar = compose(pure)(AvatarPure);
+const Avatar = compose()(AvatarPure);
+
+export default Avatar;

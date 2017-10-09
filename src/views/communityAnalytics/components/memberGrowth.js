@@ -1,5 +1,4 @@
 import * as React from 'react';
-import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
@@ -65,6 +64,6 @@ class MemberGrowth extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMemberGrowth, viewNetworkHandler, pure)(
+export default compose(getCommunityMemberGrowth, viewNetworkHandler)(
   MemberGrowth
 );

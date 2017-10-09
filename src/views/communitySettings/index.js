@@ -1,6 +1,5 @@
 import React from 'react';
 import compose from 'recompose/compose';
-import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { getThisCommunity } from './queries';
 import { Loading } from '../../components/loading';
@@ -132,6 +131,6 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getThisCommunity, viewNetworkHandler, pure)(
+export default compose(connect(), getThisCommunity, viewNetworkHandler)(
   CommunitySettings
 );

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
 

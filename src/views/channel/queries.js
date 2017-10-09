@@ -36,6 +36,7 @@ const threadsQueryOptions = {
       networkStatus,
       channel,
       threads: channel ? channel.threadConnection.edges : '',
+      feed: channel && channel.id,
       hasNextPage: channel
         ? channel.threadConnection.pageInfo.hasNextPage
         : false,

@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
 import Channel from './channel';
@@ -24,7 +22,7 @@ type FormProps = {
   data?: Object,
 };
 
-export const EditForm = compose(pure)(EditFormPure);
+export const EditForm = compose()(EditFormPure);
 export const UserEditForm = (props: FormProps) => (
   <EditForm type="user" {...props} />
 );
