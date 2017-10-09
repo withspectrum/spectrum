@@ -205,9 +205,10 @@ export const SpinnerContainer = styled.div`
 export const StyledButtonRow = styled.div`
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
   > button,
   > a {
-    margin: 0 8px;
+    margin: 8px;
   }
 `;
