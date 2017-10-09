@@ -60,7 +60,7 @@ export default class Toolbar extends React.Component<Props, State> {
       this.setState({
         position: {
           top: top + scrollY,
-          left: editor.getBoundingClientRect().left - 80,
+          left: editor.getBoundingClientRect().left - 40,
         },
       });
     }, 0);
@@ -72,7 +72,7 @@ export default class Toolbar extends React.Component<Props, State> {
     if (editorState) {
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
-      if (!selection.getHasFocus() && !content.hasText()) return null;
+      // if (!selection.getHasFocus() && !content.hasText()) return null;
     }
     return this.props.children({ style: position });
   }
