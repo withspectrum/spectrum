@@ -14,6 +14,8 @@ type Arguments = {
   content: string,
 };
 
+const sentry = `<script src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script><script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', { whitelistUrls: [/spectrum.chat/, /www.spectrum.chat/] }).install();</script>`;
+
 export const getHTML = ({ styleTags, metaTags, state, content }: Arguments) => {
   return (
     html
@@ -27,6 +29,6 @@ export const getHTML = ({ styleTags, metaTags, state, content }: Arguments) => {
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)
       // Inject the style tags at the end of the <head>
-      .replace('</head>', `${styleTags}</head>`)
+      .replace('</head>', `${styleTags}${sentry}</head>`)
   );
 };
