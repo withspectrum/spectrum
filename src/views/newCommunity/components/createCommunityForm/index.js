@@ -13,7 +13,7 @@ import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { COMMUNITY_SLUG_BLACKLIST } from '../../../../helpers/regexps';
+import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,

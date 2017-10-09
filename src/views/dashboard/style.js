@@ -77,7 +77,7 @@ export const CommunityListWrapper = styled.div`
       height: 0;
       margin: 12px 0 8px -28px;
       position: relative;
-      right: -14px;
+      right: -20px;
       transition-delay: 1s;
       transition: ${Transition.hover.on};
     }
@@ -98,13 +98,13 @@ export const CommunityListWrapper = styled.div`
 
     .channelsContainer {
       max-height: 1000px;
-      padding: 8px 8px 4px;
+      padding: 8px 8px 12px;
       transform: translateZ(0);
       transition: ${Transition.hover.on};
       transition-delay: 1s;
 
       .divider {
-        max-width: 256px;
+        max-width: 230px;
         border-top: 1px solid ${props => props.theme.bg.border};
         height: 1px;
         transition-delay: 1s;
@@ -125,7 +125,6 @@ export const CommunityListWrapper = styled.div`
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 6px;
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
@@ -165,6 +164,11 @@ export const CommunityListItem = styled.div`
       box-shadow: 0;
     }
   }
+`;
+
+export const CommunityListPadding = styled.div`
+  display: flex;
+  padding: 6px;
 `;
 
 export const Fixed = styled.div`
@@ -707,7 +711,6 @@ export const UserProfileSettingsLink = styled(Link)`
 export const ChannelsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px 8px 4px;
 `;
 
 export const ChannelListItem = styled.div`

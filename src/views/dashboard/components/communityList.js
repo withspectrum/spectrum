@@ -16,6 +16,7 @@ import {
   CommunityListName,
   CommunityListReputation,
   CommunityListAvatar,
+  CommunityListPadding,
   Fixed,
 } from '../style';
 import {
@@ -40,6 +41,13 @@ class CommunityList extends Component {
     this.props.dispatch(changeActiveChannel(''));
   };
 
+  handleOnClick = id => {
+    this.clearActiveChannel();
+    if (this.props.activeCommunity !== id) {
+      this.changeCommunity(id);
+    }
+  };
+
   render() {
     const {
       activeCommunity,
@@ -60,7 +68,7 @@ class CommunityList extends Component {
           active={!activeCommunity}
           onClick={() => this.changeCommunity('')}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <CommunityListPadding>
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
@@ -79,25 +87,22 @@ class CommunityList extends Component {
                 total rep
               </CommunityListReputation>
             </CommunityListText>
-          </div>
+          </CommunityListPadding>
         </CommunityListItem>
 
         {sortedCommunities.map(c => (
-          <CommunityListItem
-            key={c.id}
-            active={c.id === activeCommunity}
-            onClick={() => this.changeCommunity(c.id)}
-          >
-            <div style={{ display: 'flex' }}>
+          <CommunityListItem key={c.id} active={c.id === activeCommunity}>
+            <CommunityListPadding
+              onClick={() => this.handleOnClick(c.id)}
+              active={c.id === activeCommunity}
+            >
               <CommunityListAvatar
                 active={c.id === activeCommunity}
                 src={c.profilePhoto}
-                onClick={this.clearActiveChannel}
               />
               <CommunityListText>
                 <CommunityListName
                   active={!activeChannel && c.id === activeCommunity}
-                  onClick={this.clearActiveChannel}
                 >
                   {c.name}
                 </CommunityListName>
@@ -106,7 +111,7 @@ class CommunityList extends Component {
                   {truncateNumber(c.communityPermissions.reputation)}
                 </CommunityListReputation>
               </CommunityListText>
-            </div>
+            </CommunityListPadding>
 
             {c.id === activeCommunity && (
               <SidebarChannels
