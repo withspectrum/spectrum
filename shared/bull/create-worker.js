@@ -13,7 +13,7 @@ type QueueMap = {
 // e.g. [{ completed: 6 }, { completed: 2 }] => 8
 const sumArr = (
   input /*: Array<Object> */,
-  prop /*: string */ /*: number */
+  prop /*: number */ /*: string */
 ) => {
   return input.reduce((sum, item) => sum + item[prop], 0);
 };
