@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { NullState } from '../upsell';
+import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
@@ -20,14 +20,6 @@ import {
   Sender,
   MessageGroup,
 } from './style';
-
-const NullChat = () => (
-  <NullState
-    bg="chat"
-    heading={`🔥 This thread is hot off the presses...`}
-    copy={`Why don't you kick off the conversation?`}
-  />
-);
 
 export const AuthorAvatar = props => {
   const { sender } = props;
@@ -73,6 +65,7 @@ class Messages extends Component {
       dispatch,
       threadType,
       threadId,
+      thread,
       isModerator,
     } = this.props;
 
@@ -80,7 +73,7 @@ class Messages extends Component {
     const messagesExist = messages && messages.length !== 0;
 
     if (!messagesExist) {
-      return <NullChat />;
+      return <NewThreadShare thread={thread} />;
     }
 
     return (

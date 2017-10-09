@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import {
   getLinkPreviewFromUrl,
@@ -31,7 +27,6 @@ import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Reputation from '../../../components/reputation';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
   ThreadTitle,
@@ -49,6 +44,10 @@ import {
   AuthorName,
   AuthorUsername,
   Location,
+  ShareLinks,
+  ShareLink,
+  ShareButtons,
+  ShareButton,
 } from '../style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -386,6 +385,31 @@ class ThreadDetailPure extends Component {
     }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
   };
 
+  copyLink = () => {
+    try {
+      // creating new textarea element and giveing it id 't'
+      let t = document.createElement('input');
+      t.id = 't';
+      // Optional step to make less noise in the page, if any!
+      t.style.height = 0;
+      // You have to append it to your page somewhere, I chose <body>
+      document.body.appendChild(t);
+      // Copy whatever is in your div to our new textarea
+      t.value = `https://spectrum.chat/thread/${this.props.thread.id}`;
+      // Now copy whatever inside the textarea to clipboard
+      let selector = document.querySelector('#t');
+      selector.select();
+      document.execCommand('copy');
+      // Remove the textarea
+      document.body.removeChild(t);
+      this.props.dispatch(
+        addToastWithTimeout('success', 'Copied to clipboard')
+      );
+    } catch (err) {
+      return;
+    }
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
@@ -578,13 +602,16 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>{thread.content.title}</ThreadHeading>
           )}
           <FlexRow>
-            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
-            {thread.modifiedAt && (
-              <Edited>
-                (Edited {timeDifference(Date.now(), editedTimestamp)})
-              </Edited>
-            )}
+            <Link to={`/thread/${thread.id}`}>
+              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+              {thread.modifiedAt && (
+                <Edited>
+                  (Edited {timeDifference(Date.now(), editedTimestamp)})
+                </Edited>
+              )}
+            </Link>
           </FlexRow>
+
           <Editor
             readOnly={!this.state.isEditing}
             state={body}
@@ -599,6 +626,69 @@ class ThreadDetailPure extends Component {
               data: linkPreview,
             }}
           />
+
+          <ShareLinks>
+            <ShareLink facebook>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                  .content.title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'facebook'} size={16} />
+                Share on Facebook
+              </a>
+            </ShareLink>
+
+            <ShareLink twitter>
+              <a
+                href={`https://twitter.com/share?text=${thread.content
+                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'twitter'} size={16} />
+                Share on Twitter
+              </a>
+            </ShareLink>
+
+            <ShareLink onClick={this.copyLink}>
+              <a>
+                <Icon glyph={'link'} size={16} />
+                Copy link
+              </a>
+            </ShareLink>
+          </ShareLinks>
+
+          <ShareButtons>
+            <ShareButton facebook>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                  .content.title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'facebook'} size={24} />
+              </a>
+            </ShareButton>
+
+            <ShareButton twitter>
+              <a
+                href={`https://twitter.com/share?text=${thread.content
+                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'twitter'} size={24} />
+              </a>
+            </ShareButton>
+
+            <ShareButton onClick={this.copyLink}>
+              <a>
+                <Icon glyph={'link'} size={24} />
+              </a>
+            </ShareButton>
+          </ShareButtons>
         </span>
       </ThreadWrapper>
     );

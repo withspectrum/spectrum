@@ -7,23 +7,21 @@ import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
+import NewThreadShare from '../../../components/upsell/newThreadShare';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = () => (
+export const EmptyChat = ({ thread }) => (
   <ChatWrapper>
     <HorizontalRule>
       <hr />
       <Icon glyph={'message'} />
       <hr />
     </HorizontalRule>
-    <NullState
-      heading={`🔥 This thread is hot off the presses...`}
-      copy={`Why don’t you kick off the conversation?`}
-    />
+    <NewThreadShare thread={thread} />
   </ChatWrapper>
 );
 
@@ -142,6 +140,7 @@ class MessagesWithData extends Component {
           </HorizontalRule>
           <ChatMessages
             threadId={data.thread.id}
+            thread={data.thread}
             toggleReaction={toggleReaction}
             messages={sortedMessages}
             threadType={'story'}
@@ -154,7 +153,7 @@ class MessagesWithData extends Component {
 
     if (dataExists) {
       if (currentUser) {
-        return <EmptyChat />;
+        return <EmptyChat thread={data.thread} />;
       } else {
         return null;
       }

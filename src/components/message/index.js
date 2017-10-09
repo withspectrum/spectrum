@@ -73,7 +73,7 @@ class Message extends Component {
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
           pending={message.id < 0}
-          openGallery={this.toggleOpenGallery}
+          openGallery={() => this.toggleOpenGallery(message.id)}
           focus={this.toggleMessageFocus}
           message={message.content}
         />
