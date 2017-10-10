@@ -245,7 +245,12 @@ class ThreadDetailPure extends Component {
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
       .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {

@@ -430,7 +430,12 @@ class ThreadComposerWithData extends Component {
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
       .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
