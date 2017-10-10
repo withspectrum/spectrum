@@ -141,7 +141,10 @@ class Dashboard extends Component {
                   hasActiveCommunity={activeCommunity}
                   hasActiveChannel={activeChannel}
                   community={activeCommunityObject}
-                  pinnedThreadId={activeCommunityObject.pinnedThreadId}
+                  pinnedThreadId={
+                    activeCommunityObject &&
+                    activeCommunityObject.pinnedThreadId
+                  }
                   channelId={activeChannel}
                 />
               ) : (
@@ -150,7 +153,10 @@ class Dashboard extends Component {
                   selectedId={activeThread}
                   hasActiveCommunity={activeCommunity}
                   community={activeCommunityObject}
-                  pinnedThreadId={activeCommunityObject.pinnedThreadId}
+                  pinnedThreadId={
+                    activeCommunityObject &&
+                    activeCommunityObject.pinnedThreadId
+                  }
                 />
               )}
             </InboxScroller>

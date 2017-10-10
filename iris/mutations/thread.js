@@ -171,7 +171,7 @@ module.exports = {
         );
       }
 
-      if (thread.type === 'SLATE') {
+      if (input.type === 'SLATE') {
         throw new UserError(
           "You're on an old version of Spectrum, please refresh your browser."
         );

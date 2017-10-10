@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import { ReputationMiniCommunity } from '../../../components/reputation';
 import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
+import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
   ExploreListItem,
   AllCommunityListItem,
@@ -15,6 +17,7 @@ import {
   CommunityListName,
   CommunityListReputation,
   CommunityListAvatar,
+  CommunityListPadding,
   Fixed,
 } from '../style';
 import {
@@ -26,6 +29,7 @@ import {
 class CommunityList extends Component {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
+    this.props.history.replace(`/`);
     this.props.dispatch(changeActiveThread(''));
 
     if (id !== this.props.activeCommunity) {
@@ -36,6 +40,13 @@ class CommunityList extends Component {
   clearActiveChannel = () => {
     this.props.dispatch(changeActiveThread(''));
     this.props.dispatch(changeActiveChannel(''));
+  };
+
+  handleOnClick = id => {
+    this.clearActiveChannel();
+    if (this.props.activeCommunity !== id) {
+      this.changeCommunity(id);
+    }
   };
 
   render() {
@@ -58,7 +69,7 @@ class CommunityList extends Component {
           active={!activeCommunity}
           onClick={() => this.changeCommunity('')}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <CommunityListPadding>
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
@@ -77,25 +88,22 @@ class CommunityList extends Component {
                 total rep
               </CommunityListReputation>
             </CommunityListText>
-          </div>
+          </CommunityListPadding>
         </CommunityListItem>
 
         {sortedCommunities.map(c => (
-          <CommunityListItem
-            key={c.id}
-            active={c.id === activeCommunity}
-            onClick={() => this.changeCommunity(c.id)}
-          >
-            <div style={{ display: 'flex' }}>
+          <CommunityListItem key={c.id} active={c.id === activeCommunity}>
+            <CommunityListPadding
+              onClick={() => this.handleOnClick(c.id)}
+              active={c.id === activeCommunity}
+            >
               <CommunityListAvatar
                 active={c.id === activeCommunity}
                 src={c.profilePhoto}
-                onClick={this.clearActiveChannel}
               />
               <CommunityListText>
                 <CommunityListName
                   active={!activeChannel && c.id === activeCommunity}
-                  onClick={this.clearActiveChannel}
                 >
                   {c.name}
                 </CommunityListName>
@@ -104,7 +112,7 @@ class CommunityList extends Component {
                   {truncateNumber(c.communityPermissions.reputation)}
                 </CommunityListReputation>
               </CommunityListText>
-            </div>
+            </CommunityListPadding>
 
             {c.id === activeCommunity && (
               <SidebarChannels
@@ -116,21 +124,33 @@ class CommunityList extends Component {
           </CommunityListItem>
         ))}
 
-        <Fixed>
-          <ExploreCommunityListItem>
-            <Link to={'/explore'}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AllCommunityListItem>
-                  <Icon glyph={'explore'} />
-                </AllCommunityListItem>
-                <CommunityListName>Explore communities</CommunityListName>
-              </div>
-            </Link>
-          </ExploreCommunityListItem>
-        </Fixed>
+        {// if user has joined less than 5 communities, upsell some popular ones
+        communities.length < 5 && (
+          <UpsellExploreCommunities
+            activeCommunity={activeCommunity}
+            communities={communities}
+            handleOnClick={this.handleOnClick}
+          />
+        )}
+
+        {// if user has joined more than 5 communities, show a small fixed upsell for explore
+        communities.length > 5 && (
+          <Fixed>
+            <ExploreCommunityListItem>
+              <Link to={'/explore'}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <AllCommunityListItem>
+                    <Icon glyph={'explore'} />
+                  </AllCommunityListItem>
+                  <CommunityListName>Explore communities</CommunityListName>
+                </div>
+              </Link>
+            </ExploreCommunityListItem>
+          </Fixed>
+        )}
       </div>
     );
   }
 }
 
-export default compose(connect())(CommunityList);
+export default compose(connect(), withRouter)(CommunityList);

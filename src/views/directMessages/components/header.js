@@ -1,4 +1,6 @@
 import React from 'react';
+import generateMetaInfo from 'shared/generate-meta-info';
+import Head from '../../../components/head';
 import {
   StyledHeader,
   PhotosContainer,
@@ -32,8 +34,17 @@ const Header = ({ thread, currentUser }) => {
       ? trimmedUsers[0].username
       : '';
 
+  const { title, description } = generateMetaInfo({
+    type: 'directMessage',
+    data: {
+      title: `${names}`,
+      description: `Conversation with ${names}`,
+    },
+  });
+
   return (
     <StyledHeader>
+      <Head title={title} description={description} />
       <PhotosContainer>{photos}</PhotosContainer>
       <Names>{names}</Names>
       <Username>{username && `@${username}`}</Username>

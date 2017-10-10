@@ -38,9 +38,18 @@ class InboxThread extends Component {
     return (
       <InboxThreadItem active={active}>
         {isMobile ? (
-          <InboxLinkWrapper to={`?thread=${data.id}`} />
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?thread=${data.id}`,
+            }}
+          />
         ) : (
-          <InboxClickWrapper
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?t=${data.id}`,
+            }}
             onClick={() => this.props.dispatch(changeActiveThread(data.id))}
           />
         )}

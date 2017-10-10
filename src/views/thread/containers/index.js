@@ -120,6 +120,12 @@ class ThreadContainer extends React.Component<Props, State> {
     }
   }
 
+  forceScrollToTop = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    node.scrollTop = 0;
+  };
+
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
@@ -155,7 +161,7 @@ class ThreadContainer extends React.Component<Props, State> {
           title: thread.content.title,
           body: thread.content.body,
           type: thread.type,
-          channelName: thread.channel.name,
+          communityName: thread.community.name,
         },
       });
 
@@ -234,8 +240,10 @@ class ThreadContainer extends React.Component<Props, State> {
                 id={thread.id}
                 currentUser={currentUser}
                 forceScrollToBottom={this.forceScrollToBottom}
+                forceScrollToTop={this.forceScrollToTop}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
                 hasMessagesToLoad={thread.messageCount > 0}
                 isModerator={isModerator}
               />
@@ -245,11 +253,16 @@ class ThreadContainer extends React.Component<Props, State> {
               )}
 
               {isLoggedIn &&
-                !canSendMessages && <JoinChannel channel={thread.channel} />}
+                !canSendMessages && (
+                  <JoinChannel
+                    community={thread.channel.community}
+                    channel={thread.channel}
+                  />
+                )}
 
               {!isLoggedIn && (
                 <UpsellSignIn
-                  title={'Join the conversation'}
+                  title={`Join the ${thread.community.name} community`}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
