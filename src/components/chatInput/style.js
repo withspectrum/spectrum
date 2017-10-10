@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition, zIndex } from '../globals';
 import Editor from '../../components/draftjs-editor';
@@ -71,6 +71,15 @@ export const EditorInput = styled(Editor)`
     border-color: ${props => props.theme.text.alt};
     transition: border-color 0.2s ease-in;
   }
+
+  ${props =>
+    props.code &&
+    css`
+      font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono',
+        monospace;
+      font-weight: 500;
+      background-color: #f5f8fc;
+    `};
 `;
 
 export const SendButton = styled(IconButton)`

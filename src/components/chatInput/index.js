@@ -7,6 +7,8 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
+import { KeyBindingUtil } from 'draft-js';
 import Icon from '../../components/icons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
@@ -40,6 +42,7 @@ class ChatInputWithMutation extends Component {
     this.state = {
       isFocused: false,
       photoSizeError: '',
+      code: false,
     };
   }
 
@@ -53,6 +56,14 @@ class ChatInputWithMutation extends Component {
 
   triggerFocus = () => {
     this.chatInput.focus();
+  };
+
+  toggleCodeMessage = () => {
+    const { onChange, state } = this.props;
+    onChange(changeCurrentBlockType(state, 'code-block', ''));
+    this.setState({
+      code: !this.state.code,
+    });
   };
 
   submit = e => {
@@ -76,16 +87,17 @@ class ChatInputWithMutation extends Component {
     }
 
     // If the input is empty don't do anything
-    if (toPlainText(state).trim() === '') return;
+    if (toPlainText(state).trim() === '') return 'handled';
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
-      return createThread({
+      createThread({
         messageBody: JSON.stringify(toJSON(state)),
         messageType: 'draftjs',
       });
+      return 'handled';
     }
 
     // user is sending a message to an existing thread id - either a thread
@@ -110,6 +122,15 @@ class ChatInputWithMutation extends Component {
       clear();
       this.editor.focus();
     });
+
+    return 'handled';
+  };
+
+  handleReturn = e => {
+    if (!this.state.code || KeyBindingUtil.hasCommandModifier(e))
+      return this.submit(e);
+
+    return 'not-handled';
   };
 
   sendMediaMessage = e => {
@@ -212,7 +233,7 @@ class ChatInputWithMutation extends Component {
 
   render() {
     const { state, onChange, currentUser } = this.props;
-    const { isFocused, photoSizeError } = this.state;
+    const { isFocused, photoSizeError, code } = this.state;
 
     return (
       <ChatInputWrapper focus={isFocused}>
@@ -235,20 +256,23 @@ class ChatInputWithMutation extends Component {
           </PhotoSizeError>
         )}
         <MediaInput onChange={this.sendMediaMessage} />
+        <button onClick={this.toggleCodeMessage}>Code</button>
         <Form focus={isFocused}>
           <EditorInput
             focus={isFocused}
-            placeholder="Your message here..."
+            placeholder={`Your ${code ? 'code' : 'message'} here...`}
             state={state}
-            handleReturn={this.submit}
+            handleReturn={this.handleReturn}
             onChange={onChange}
             markdown={false}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            singleLine
+            singleLine={code ? false : true}
+            code={code}
             images={false}
             editorRef={editor => (this.editor = editor)}
             innerRef={input => (this.chatInput = input)}
+            codeButton={true}
             editorKey="chat-input"
           />
           <SendButton glyph="send-fill" onClick={this.submit} />

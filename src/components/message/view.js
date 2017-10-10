@@ -1,5 +1,6 @@
 import React from 'react';
 import replace from 'string-replace-to-array';
+import redraft from 'redraft';
 import {
   convertTimestampToTime,
   onlyContainsEmoji,
@@ -16,7 +17,19 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
+  Pre,
 } from './style';
+
+const messageRenderer = {
+  blocks: {
+    unstyled: (children, { key }) => <p key={key}>{children}</p>,
+    'code-block': (children, { key }) => (
+      <Pre key={key}>
+        <code>{children}</code>
+      </Pre>
+    ),
+  },
+};
 
 export const Body = props => {
   const { message, openGallery, pending, type, me } = props;
@@ -29,11 +42,11 @@ export const Body = props => {
     default:
       const body =
         type === 'draftjs'
-          ? toPlainText(toState(JSON.parse(message.body)))
+          ? redraft(JSON.parse(message.body), messageRenderer)
           : message.body;
       return (
         <Text me={me} pending={pending}>
-          {renderLinks(body)}
+          {body}
         </Text>
       );
     case 'emoji':

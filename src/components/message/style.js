@@ -263,3 +263,9 @@ export const Image = styled.img`
           .default}`
       : ''};
 `;
+
+export const Pre = styled.pre.attrs({
+  className: 'markdown',
+})`
+  white-space: pre;
+`;

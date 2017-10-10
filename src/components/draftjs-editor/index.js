@@ -57,6 +57,30 @@ class Editor extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      plugins: [],
+      editorState: props.initialState || EditorState.createEmpty(),
+    };
+  }
+
+  componentWillMount() {
+    this.setPlugins();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.editorState !== nextProps.editorState ||
+      this.props !== nextProps
+    );
+  }
+
+  componentDidUpdate() {
+    this.setPlugins();
+  }
+
+  setPlugins = () => {
+    console.log('SET PLUGINS');
+    const props = this.props;
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
     const linkifyPlugin = createLinkifyPlugin({
@@ -81,7 +105,7 @@ class Editor extends React.Component {
 
     const singleLine = createSingleLinePlugin();
 
-    this.state = {
+    this.setState({
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
@@ -95,9 +119,8 @@ class Editor extends React.Component {
       singleLineBlockRenderMap: singleLine.blockRenderMap,
       addEmbed: embedPlugin.addEmbed,
       addImage: imagePlugin.addImage,
-      editorState: props.initialState || EditorState.createEmpty(),
-    };
-  }
+    });
+  };
 
   onChange = editorState => {
     this.setState({
@@ -149,6 +172,8 @@ class Editor extends React.Component {
       ...rest
     } = this.props;
 
+    console.log(singleLine, this.state.plugins);
+
     if (version === 2) {
       return (
         <ComposerBase
@@ -162,7 +187,9 @@ class Editor extends React.Component {
             plugins={this.state.plugins}
             handleDroppedFiles={this.handleDroppedFiles}
             blockRenderMap={
-              singleLine === true && this.state.singleLineBlockRenderMap
+              singleLine === true
+                ? this.state.singleLineBlockRenderMap
+                : undefined
             }
             ref={editor => {
               this.editor = editor;
@@ -213,7 +240,9 @@ class Editor extends React.Component {
               plugins={this.state.plugins}
               handleDroppedFiles={this.handleDroppedFiles}
               blockRenderMap={
-                singleLine === true && this.state.singleLineBlockRenderMap
+                singleLine === true
+                  ? this.state.singleLineBlockRenderMap
+                  : undefined
               }
               ref={editor => {
                 this.editor = editor;
