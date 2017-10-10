@@ -149,6 +149,8 @@ class Editor extends React.Component {
       readOnly,
       ...rest
     } = this.props;
+    const linkPreviewIsLoading = linkPreview && linkPreview.loading;
+    const linkPreviewIsReady = linkPreview && linkPreview.data;
 
     if (version === 2) {
       return (
@@ -187,9 +189,9 @@ class Editor extends React.Component {
                 )}
               </SideToolbar>
             )}
-          {showLinkPreview && linkPreview && linkPreview.loading ? (
+          {showLinkPreview && linkPreviewIsLoading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          ) : showLinkPreview && linkPreviewIsReady ? (
             <LinkPreview
               data={linkPreview.data}
               size={'large'}
@@ -232,20 +234,10 @@ class Editor extends React.Component {
               autoCorrect="off"
               {...rest}
             />
-            {images !== false &&
-              !readOnly && (
-                <SideToolbar editorState={state} editorRef={this.editor}>
-                  {({ style }) => (
-                    <SideToolbarWrapper style={style}>
-                      <MediaInput onChange={this.addImage} multiple />
-                    </SideToolbarWrapper>
-                  )}
-                </SideToolbar>
-              )}
           </Wrapper>
-          {showLinkPreview && linkPreview && linkPreview.loading ? (
+          {showLinkPreview && linkPreviewIsLoading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          ) : showLinkPreview && linkPreviewIsReady ? (
             <LinkPreview
               data={linkPreview.data}
               size={'large'}
@@ -255,6 +247,14 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
+          {images !== false &&
+            !this.props.readOnly && (
+              <MediaRow>
+                <MediaInput onChange={this.addImage} multiple>
+                  Add
+                </MediaInput>
+              </MediaRow>
+            )}
         </div>
       );
     }
