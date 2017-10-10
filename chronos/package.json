@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.0.0-rc.8",
+    "bull": "3.3.1",
     "debug": "^2.6.8",
     "draft-js": "^0.10.3",
     "lodash.intersection": "^4.4.0",
