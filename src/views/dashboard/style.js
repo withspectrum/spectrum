@@ -194,11 +194,13 @@ export const ExploreCommunityListItem = styled(CommunityListItem)`
   margin: 1px 12px;
   margin-top: 0 !important; //need to override the first child selector above
   padding: 6px;
-  border-radius: 0;
+  border-radius: ${props => (props.upsell ? '4px' : '0')};
 
   ${Truncate} &:hover {
-    color: ${props => props.theme.brand.alt};
-    border: 1px solid transparent;
+    color: ${props =>
+      props.upsell ? props.theme.text.default : props.theme.brand.alt};
+    border: 1px solid
+      ${props => (props.upsell ? props.theme.bg.border : 'transparent')};
 
     div {
       color: ${props => props.theme.brand.alt};
@@ -770,4 +772,11 @@ export const LoadingBar = styled.div`
     ${({ theme }) => theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
+`;
+
+export const UpsellExploreDivider = styled.div`
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  display: block;
+  width: 100%;
+  margin: 16px 0 16px;
 `;
