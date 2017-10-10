@@ -245,7 +245,12 @@ class ThreadContainer extends React.Component<Props, State> {
               )}
 
               {isLoggedIn &&
-                !canSendMessages && <JoinChannel channel={thread.channel} />}
+                !canSendMessages && (
+                  <JoinChannel
+                    community={thread.channel.community}
+                    channel={thread.channel}
+                  />
+                )}
 
               {!isLoggedIn && (
                 <UpsellSignIn
