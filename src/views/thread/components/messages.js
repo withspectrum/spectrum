@@ -52,7 +52,20 @@ class MessagesWithData extends Component {
         this.props.data.networkStatus === 7 &&
         this.props.shouldForceScrollOnMessageLoad)
     ) {
-      setTimeout(() => this.props.forceScrollToBottom(), 1);
+      setTimeout(() => this.props.forceScrollToBottom());
+    }
+
+    // force scroll to bottom if the user is a participant/creator, after the messages load in
+    if (
+      (!newMessageSent &&
+        this.props.data.thread &&
+        this.props.data.thread.messageConnection &&
+        this.props.shouldForceScrollToTopOnMessageLoad) ||
+      (!newMessageSent &&
+        this.props.data.networkStatus === 7 &&
+        this.props.shouldForceScrollToTopOnMessageLoad)
+    ) {
+      setTimeout(() => this.props.forceScrollToTop());
     }
 
     // force scroll to bottom when a message is sent in the same thread
