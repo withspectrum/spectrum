@@ -7,6 +7,7 @@ import Icon from '../../../components/icons';
 import { ReputationMiniCommunity } from '../../../components/reputation';
 import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
+import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
   ExploreListItem,
   AllCommunityListItem,
@@ -123,18 +124,30 @@ class CommunityList extends Component {
           </CommunityListItem>
         ))}
 
-        <Fixed>
-          <ExploreCommunityListItem>
-            <Link to={'/explore'}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AllCommunityListItem>
-                  <Icon glyph={'explore'} />
-                </AllCommunityListItem>
-                <CommunityListName>Explore communities</CommunityListName>
-              </div>
-            </Link>
-          </ExploreCommunityListItem>
-        </Fixed>
+        {// if user has joined less than 5 communities, upsell some popular ones
+        communities.length < 5 && (
+          <UpsellExploreCommunities
+            activeCommunity={activeCommunity}
+            communities={communities}
+            handleOnClick={this.handleOnClick}
+          />
+        )}
+
+        {// if user has joined more than 5 communities, show a small fixed upsell for explore
+        communities.length > 5 && (
+          <Fixed>
+            <ExploreCommunityListItem>
+              <Link to={'/explore'}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <AllCommunityListItem>
+                    <Icon glyph={'explore'} />
+                  </AllCommunityListItem>
+                  <CommunityListName>Explore communities</CommunityListName>
+                </div>
+              </Link>
+            </ExploreCommunityListItem>
+          </Fixed>
+        )}
       </div>
     );
   }
