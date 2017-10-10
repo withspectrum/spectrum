@@ -48,9 +48,11 @@ class UpsellExploreCommunities extends React.Component {
     const joinedCommunityIds = this.props.communities.map(c => c.id);
 
     if (
-      !prevProps.data.topCommunities &&
-      this.props.data.topCommunities &&
-      this.props.data.topCommunities.length > 0
+      (!prevProps.data.topCommunities &&
+        this.props.data.topCommunities &&
+        this.props.data.topCommunities.length > 0) ||
+      (this.props.data.topCommunities &&
+        this.state.communitiesToJoin.length === 0)
     ) {
       // don't upsell communities the user has already joined
       const filteredTopCommunities = this.props.data.topCommunities.filter(
