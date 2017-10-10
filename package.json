@@ -33,7 +33,7 @@
     "babel-preset-env": "^1.5.2",
     "backpack-core": "^0.4.1",
     "body-parser": "^1.17.1",
-    "bull": "3.0.0-rc.8",
+    "bull": "3.3.1",
     "casual": "^1.5.12",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
