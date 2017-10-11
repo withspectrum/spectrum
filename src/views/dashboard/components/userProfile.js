@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReputationMiniCommunity } from '../../../components/reputation';
+import Reputation from '../../../components/reputation';
 import Avatar from '../../../components/avatar';
 import Icon from '../../../components/icons';
 import { truncateNumber } from '../../../helpers/utils';
@@ -40,13 +40,11 @@ class UserProfile extends React.Component<Props> {
             <UserProfileName>{user.name}</UserProfileName>
           )}
           <UserProfileReputation>
-            <ReputationMiniCommunity
+            <Reputation
               tipLocation={'bottom-right'}
               tipText={'Your total reputation'}
+              reputation={user.totalReputation}
             />
-            {user.totalReputation > 0
-              ? truncateNumber(user.totalReputation)
-              : '0'}
           </UserProfileReputation>
         </UserProfileText>
 

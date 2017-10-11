@@ -1,12 +1,8 @@
 //@flow
 import * as React from 'react';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import { withRouter } from 'react-router';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import { CommunityListItem } from '../../../components/listItems';
 import Icon from '../../../components/icons';

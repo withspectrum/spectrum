@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
-import { ReputationMiniCommunity } from '../../../components/reputation';
+import Reputation from '../../../components/reputation';
 import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
@@ -78,14 +78,11 @@ class CommunityList extends Component {
                 Everything
               </CommunityListName>
               <CommunityListReputation>
-                <ReputationMiniCommunity
+                <Reputation
                   tipLocation={'bottom-right'}
                   tipText={'Your total reputation'}
+                  reputation={user.totalReputation}
                 />
-                {user.totalReputation > 0
-                  ? truncateNumber(user.totalReputation)
-                  : '0'}{' '}
-                total rep
               </CommunityListReputation>
             </CommunityListText>
           </CommunityListPadding>
@@ -108,8 +105,7 @@ class CommunityList extends Component {
                   {c.name}
                 </CommunityListName>
                 <CommunityListReputation active={c.id === activeCommunity}>
-                  <ReputationMiniCommunity />
-                  {truncateNumber(c.communityPermissions.reputation)}
+                  <Reputation reputation={c.communityPermissions.reputation} />
                 </CommunityListReputation>
               </CommunityListText>
             </CommunityListPadding>

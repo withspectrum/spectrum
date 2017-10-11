@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
 
-export const ReputationIcon = styled.div`
+export const ReputationWrapper = styled.div`
   display: inline-block;
   position: relative;
   top: 1px;
@@ -11,4 +11,4 @@ export const ReputationIcon = styled.div`
   margin-right: 4px;
 `;
 
-export const ReputationIconMini = styled(ReputationIcon)``;
+export const ReputationLabel = styled.span``;
