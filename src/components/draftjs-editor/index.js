@@ -31,12 +31,22 @@ import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
 injectGlobal`${draftGlobalCSS}`;
 import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
+import Icon from '../icons';
+import { IconButton } from '../buttons';
 
-import Image from './Image';
-import { Wrapper, MediaRow, ComposerBase, SideToolbarWrapper } from './style';
-import SideToolbar from './SideToolbar';
-import Embed from './Embed';
+import Image from './image';
+import Embed from './embed';
 import MediaInput from '../mediaInput';
+import SideToolbar from './toolbar';
+import {
+  Wrapper,
+  MediaRow,
+  ComposerBase,
+  SideToolbarWrapper,
+  Expander,
+  Action,
+  EmbedUI,
+} from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 type EditorProps = {
@@ -97,6 +107,8 @@ class Editor extends React.Component {
       addEmbed: embedPlugin.addEmbed,
       addImage: imagePlugin.addImage,
       editorState: props.initialState || EditorState.createEmpty(),
+      inserting: false,
+      embedding: false,
     };
   }
 
@@ -131,6 +143,24 @@ class Editor extends React.Component {
     this.editor.focus();
   };
 
+  toggleToolbarDisplayState = () => {
+    const { inserting } = this.state;
+
+    this.setState({
+      inserting: !inserting,
+      embedding: false,
+    });
+  };
+
+  toggleEmbedInputState = () => {
+    const { embedding } = this.state;
+
+    this.setState({
+      embedding: !embedding,
+      inserting: false,
+    });
+  };
+
   render() {
     const {
       state = this.state.editorState,
@@ -149,6 +179,7 @@ class Editor extends React.Component {
       readOnly,
       ...rest
     } = this.props;
+    const { embedding, inserting } = this.state;
     const linkPreviewIsLoading = linkPreview && linkPreview.loading;
     const linkPreviewIsReady = linkPreview && linkPreview.data;
 
@@ -182,11 +213,38 @@ class Editor extends React.Component {
           {images !== false &&
             !readOnly && (
               <SideToolbar editorState={state} editorRef={this.editor}>
-                {({ style }) => (
-                  <SideToolbarWrapper style={style}>
-                    <MediaInput onChange={this.addImage} multiple />
-                  </SideToolbarWrapper>
-                )}
+                <Expander inserting={inserting}>
+                  <IconButton
+                    glyph={'inserter'}
+                    onClick={this.toggleToolbarDisplayState}
+                  />
+                  {console.log('inserting', inserting)}
+                  <Action>
+                    <MediaInput
+                      onChange={this.addImage}
+                      multiple
+                      tipLocation={'right'}
+                    />
+                  </Action>
+                  <Action embedding={embedding}>
+                    <EmbedUI embedding={embedding}>
+                      <label htmlFor="embed-input">
+                        <Icon
+                          glyph={'embed'}
+                          tipText={'Embed a URL'}
+                          onClick={this.toggleEmbedInputState}
+                        />
+                        {console.log('embedding', embedding)}
+                        <input
+                          id="embed-input"
+                          type="url"
+                          placeholder="Enter a URL to embed"
+                        />
+                      </label>
+                      <button>Embed</button>
+                    </EmbedUI>
+                  </Action>
+                </Expander>
               </SideToolbar>
             )}
           {showLinkPreview && linkPreviewIsLoading ? (

@@ -5,6 +5,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 // $FlowIssue
 import DraftOffsetKey from 'draft-js/lib/DraftOffsetKey';
+import { SideToolbarWrapper } from './style';
 
 type EditorState = Object; // Draft.js editor state
 type EditorRef = any; // A reference to the editor DOM node
@@ -60,7 +61,7 @@ export default class Toolbar extends React.Component<Props, State> {
       this.setState({
         position: {
           top: top + scrollY,
-          left: editor.getBoundingClientRect().left - 40,
+          left: editor.getBoundingClientRect().left - 48,
         },
       });
     }, 0);
@@ -74,6 +75,10 @@ export default class Toolbar extends React.Component<Props, State> {
       const content = editorState.getCurrentContent();
       // if (!selection.getHasFocus() && !content.hasText()) return null;
     }
-    return this.props.children({ style: position });
+    return (
+      <SideToolbarWrapper style={position}>
+        {this.props.children}
+      </SideToolbarWrapper>
+    );
   }
 }

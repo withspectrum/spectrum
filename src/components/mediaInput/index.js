@@ -6,6 +6,7 @@ export default ({
   onChange,
   accept = '.png, .jpg, .jpeg, .gif, .mp4',
   multiple = false,
+  tipLocation,
 }) => (
   <MediaLabel>
     <MediaInput
@@ -14,6 +15,10 @@ export default ({
       multiple={multiple}
       onChange={onChange}
     />
-    <Icon glyph="photo" tipLocation="top-right" tipText="Upload Photo" />
+    <Icon
+      glyph="photo"
+      tipLocation={tipLocation ? tipLocation : 'top-right'}
+      tipText="Upload Photo"
+    />
   </MediaLabel>
 );
