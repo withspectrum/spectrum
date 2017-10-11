@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { Gradient, zIndex, Transition, Tooltip } from '../globals';
 
@@ -264,8 +264,24 @@ export const Image = styled.img`
       : ''};
 `;
 
-export const Pre = styled.pre.attrs({
-  className: 'markdown',
-})`
-  white-space: pre;
+const Pre = styled.pre`
+  margin: 0;
+
+  code {
+    margin: 0;
+  }
 `;
+
+type CodeProps = {
+  children: any,
+};
+
+export const Code = ({ children, ...props }: CodeProps) => {
+  return (
+    <div className="markdown">
+      <Pre {...props}>
+        <code>{children}</code>
+      </Pre>
+    </div>
+  );
+};

@@ -61,9 +61,9 @@ class ChatInputWithMutation extends Component {
   toggleCodeMessage = () => {
     const { onChange, state } = this.props;
     onChange(changeCurrentBlockType(state, 'code-block', ''));
-    this.setState({
-      code: !this.state.code,
-    });
+    this.setState(prevState => ({
+      code: !prevState.code,
+    }));
   };
 
   submit = e => {
@@ -100,6 +100,10 @@ class ChatInputWithMutation extends Component {
       return 'handled';
     }
 
+    this.setState({
+      code: false,
+    });
+
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
     sendMessage({
@@ -127,7 +131,7 @@ class ChatInputWithMutation extends Component {
   };
 
   handleReturn = e => {
-    if (!this.state.code || KeyBindingUtil.hasCommandModifier(e))
+    if (!this.state.code || e.shiftKey || KeyBindingUtil.hasCommandModifier(e))
       return this.submit(e);
 
     return 'not-handled';

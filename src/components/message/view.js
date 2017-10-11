@@ -17,16 +17,14 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
-  Pre,
+  Code,
 } from './style';
 
 const messageRenderer = {
   blocks: {
     unstyled: (children, { key }) => <p key={key}>{children}</p>,
     'code-block': (children, { key }) => (
-      <Pre key={key}>
-        <code>{children}</code>
-      </Pre>
+      <Code key={key}>{children.map(child => [child, <br />])}</Code>
     ),
   },
 };
