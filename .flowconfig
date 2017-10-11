@@ -9,8 +9,10 @@
 
 [options]
 suppress_comment=.*\\$FlowFixMe
+suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
-include_warnings=true
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=spectrum
 
 [lints]
 all=warn

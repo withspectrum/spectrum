@@ -3,8 +3,6 @@ import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { displayLoadingCard } from '../../../components/loading';
 import { getPendingUsersQuery } from '../../../api/channel';
@@ -25,8 +23,7 @@ const PendingUsersNotificationPure = ({ data: { channel } }) => {
 
 export const PendingUsersNotification = compose(
   getPendingUsersQuery,
-  displayLoadingCard,
-  pure
+  displayLoadingCard
 )(PendingUsersNotificationPure);
 
 export default PendingUsersNotification;

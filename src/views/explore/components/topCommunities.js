@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getTopCommunities } from '../queries';
 import { displayLoadingState } from '../../../components/loading';
 import { ListContainer } from '../../../components/listItems/style';
@@ -45,7 +43,7 @@ class CommunityList extends Component {
   }
 }
 
-const TopCommunityList = compose(getTopCommunities, displayLoadingState, pure)(
+const TopCommunityList = compose(getTopCommunities, displayLoadingState)(
   CommunityList
 );
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });

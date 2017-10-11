@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -92,7 +90,6 @@ class NotificationsTogglePure extends React.Component<Props, State> {
 
 export const NotificationsToggle = compose(
   toggleChannelNotificationsMutation,
-  connect(),
-  pure
+  connect()
 )(NotificationsTogglePure);
 export default NotificationsToggle;

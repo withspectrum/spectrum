@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -37,5 +35,5 @@ class ThreadWithData extends Component {
   }
 }
 
-const Thread = compose(pure, connect())(ThreadWithData);
+const Thread = compose(connect())(ThreadWithData);
 export default Thread;

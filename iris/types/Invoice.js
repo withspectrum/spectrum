@@ -1,3 +1,4 @@
+// @flow
 const Invoice = /* GraphQL */ `
 	type Invoice {
 		id: ID!

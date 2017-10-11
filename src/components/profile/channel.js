@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -199,29 +197,29 @@ class ChannelWithData extends Component {
             channelIcon={false}
           >
             {currentUser &&
-            member && (
-              <Button
-                loading={isLoading}
-                icon="checkmark"
-                gradientTheme="none"
-                color="text.placeholder"
-                hoverColor="text.placeholder"
-                onClick={() => this.toggleSubscription(channel.id)}
-              >
-                Joined
-              </Button>
-            )}
+              member && (
+                <Button
+                  loading={isLoading}
+                  icon="checkmark"
+                  gradientTheme="none"
+                  color="text.placeholder"
+                  hoverColor="text.placeholder"
+                  onClick={() => this.toggleSubscription(channel.id)}
+                >
+                  Joined
+                </Button>
+              )}
             {currentUser &&
-            !member && (
-              <Button
-                loading={isLoading}
-                icon="plus-fill"
-                gradientTheme="success"
-                onClick={() => this.toggleSubscription(channel.id)}
-              >
-                Join
-              </Button>
-            )}
+              !member && (
+                <Button
+                  loading={isLoading}
+                  icon="plus-fill"
+                  gradientTheme="success"
+                  onClick={() => this.toggleSubscription(channel.id)}
+                >
+                  Join
+                </Button>
+              )}
           </ChannelListItem>
         </ProfileCard>
       );
@@ -235,40 +233,38 @@ class ChannelWithData extends Component {
           channelIcon={false}
         >
           {currentUser &&
-          member && (
-            <Button
-              loading={isLoading}
-              icon="checkmark"
-              gradientTheme="none"
-              color="text.placeholder"
-              hoverColor="text.placeholder"
-              onClick={() => this.toggleSubscription(channel.id)}
-            >
-              Joined
-            </Button>
-          )}
+            member && (
+              <Button
+                loading={isLoading}
+                icon="checkmark"
+                gradientTheme="none"
+                color="text.placeholder"
+                hoverColor="text.placeholder"
+                onClick={() => this.toggleSubscription(channel.id)}
+              >
+                Joined
+              </Button>
+            )}
           {currentUser &&
-          !member && (
-            <Button
-              size={'small'}
-              loading={isLoading}
-              icon="plus-fill"
-              color={'success.alt'}
-              gradientTheme="success"
-              onClick={() => this.toggleSubscription(channel.id)}
-            >
-              Join
-            </Button>
-          )}
+            !member && (
+              <Button
+                size={'small'}
+                loading={isLoading}
+                icon="plus-fill"
+                color={'success.alt'}
+                gradientTheme="success"
+                onClick={() => this.toggleSubscription(channel.id)}
+              >
+                Join
+              </Button>
+            )}
         </ChannelListItemLi>
       );
     }
   }
 }
 
-const Channel = compose(toggleChannelSubscriptionMutation, pure)(
-  ChannelWithData
-);
+const Channel = compose(toggleChannelSubscriptionMutation)(ChannelWithData);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

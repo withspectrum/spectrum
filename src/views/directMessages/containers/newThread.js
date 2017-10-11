@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
+import Head from '../../../components/head';
 import { connect } from 'react-redux';
+import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import Titlebar from '../../titlebar';
@@ -613,6 +611,15 @@ class NewThread extends Component {
       this.props
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) {
+            this.props.dispatch(
+              addToastWithTimeout(
+                'error',
+                'Failed to create direct message thread, please try again!'
+              )
+            );
+            return;
+          }
           track(
             'direct message thread',
             `${isPrivate ? 'private thread' : 'group thread'} created`,
@@ -664,8 +671,17 @@ class NewThread extends Component {
     } = this.state;
     const { currentUser } = this.props;
 
+    const { title, description } = generateMetaInfo({
+      type: 'directMessage',
+      data: {
+        title: 'New message',
+        description: null,
+      },
+    });
+
     return (
       <MessagesContainer>
+        <Head title={title} description={description} />
         <Titlebar
           title={'New Message'}
           provideBack={true}
@@ -755,12 +771,12 @@ class NewThread extends Component {
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
-          existingThreadWithMessages.id && (
-            <Header
-              thread={existingThreadWithMessages}
-              currentUser={currentUser}
-            />
-          )}
+            existingThreadWithMessages.id && (
+              <Header
+                thread={existingThreadWithMessages}
+                currentUser={currentUser}
+              />
+            )}
 
           {existingThreadBasedOnSelectedUsers && (
             <Messages

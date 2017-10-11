@@ -2,8 +2,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
 // $FlowFixMe
@@ -98,6 +96,12 @@ class ThreadContainer extends React.Component<Props, State> {
     }
   }
 
+  forceScrollToTop = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    node.scrollTop = 0;
+  };
+
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
@@ -133,7 +137,7 @@ class ThreadContainer extends React.Component<Props, State> {
           title: thread.content.title,
           body: thread.content.body,
           type: thread.type,
-          channelName: thread.channel.name,
+          communityName: thread.community.name,
         },
       });
 
@@ -143,10 +147,17 @@ class ThreadContainer extends React.Component<Props, State> {
       dispatch(addCommunityToOnboarding(thread.channel.community));
 
       // get the data we need to render the view
-      const { channelPermissions, isPrivate } = thread.channel;
+      const {
+        channelPermissions,
+        isPrivate,
+        community: { communityPermissions },
+      } = thread.channel;
       const { isLocked, isCreator, participants } = thread;
       const isRestricted = isPrivate && !channelPermissions.isMember;
       const canSendMessages = currentUser && channelPermissions.isMember;
+      const isChannelOwner = currentUser && channelPermissions.isOwner;
+      const isCommunityOwner = currentUser && communityPermissions.isOwner;
+      const isModerator = isChannelOwner || isCommunityOwner;
       const isParticipantOrCreator =
         currentUser &&
         (isCreator ||
@@ -205,9 +216,12 @@ class ThreadContainer extends React.Component<Props, State> {
                 id={thread.id}
                 currentUser={currentUser}
                 forceScrollToBottom={this.forceScrollToBottom}
+                forceScrollToTop={this.forceScrollToTop}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
                 hasMessagesToLoad={thread.messageCount > 0}
+                isModerator={isModerator}
               />
 
               {isLocked && (
@@ -215,11 +229,15 @@ class ThreadContainer extends React.Component<Props, State> {
               )}
 
               {isLoggedIn &&
-              !canSendMessages && <JoinChannel channel={thread.channel} />}
-
+                !canSendMessages && (
+                  <JoinChannel
+                    community={thread.channel.community}
+                    channel={thread.channel}
+                  />
+                )}
               {!isLoggedIn && (
                 <UpsellSignIn
-                  title={'Join the conversation'}
+                  title={`Join the ${thread.community.name} community`}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
@@ -229,20 +247,20 @@ class ThreadContainer extends React.Component<Props, State> {
           </Content>
 
           {isLoggedIn &&
-          canSendMessages &&
-          !isLocked && (
-            <Input>
-              <ChatInputWrapper type="only">
-                <ChatInput
-                  threadType="story"
-                  thread={thread.id}
-                  currentUser={isLoggedIn}
-                  forceScrollToBottom={this.forceScrollToBottom}
-                  onRef={chatInput => (this.chatInput = chatInput)}
-                />
-              </ChatInputWrapper>
-            </Input>
-          )}
+            canSendMessages &&
+            !isLocked && (
+              <Input>
+                <ChatInputWrapper type="only">
+                  <ChatInput
+                    threadType="story"
+                    thread={thread.id}
+                    currentUser={isLoggedIn}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    onRef={chatInput => (this.chatInput = chatInput)}
+                  />
+                </ChatInputWrapper>
+              </Input>
+            )}
         </View>
       );
     }
@@ -256,11 +274,9 @@ class ThreadContainer extends React.Component<Props, State> {
         <ViewError
           heading={`We had trouble loading this thread.`}
           subheading={
-            !hasError ? (
-              `It may be private, or may have been deleted by an author or moderator.`
-            ) : (
-              ''
-            )
+            !hasError
+              ? `It may be private, or may have been deleted by an author or moderator.`
+              : ''
           }
           refresh={hasError}
         />
@@ -270,6 +286,6 @@ class ThreadContainer extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getThread, viewNetworkHandler, pure)(
+export default compose(connect(map), getThread, viewNetworkHandler)(
   ThreadContainer
 );

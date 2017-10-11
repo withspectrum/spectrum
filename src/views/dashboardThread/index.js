@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import Composer from '../../components/composer';
 import ThreadContainer from '../thread/containers';
-import { NullContainer, Container, NullThread, Thread, Heading } from './style';
+import { Container, Thread } from './style';
 
 class DashboardThread extends Component {
   render() {
@@ -12,11 +13,11 @@ class DashboardThread extends Component {
     // composer is selected
     if (threadId === 'new')
       return (
-        <NullContainer>
-          <NullThread>
-            <Heading>New thread composer will go here</Heading>
-          </NullThread>
-        </NullContainer>
+        <Container>
+          <Thread>
+            <Composer isInbox={true} {...this.props} />
+          </Thread>
+        </Container>
       );
 
     // otherwise return the thread that was selected

@@ -3,7 +3,7 @@ import { RequestCard, CloseRequest } from '../style';
 import { FlexRow } from '../../../components/globals';
 import { Button } from '../../../components/buttons';
 
-const FirstRequest = ({ onSubscribe, onDismiss, loading }) =>
+const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
   <RequestCard>
     <p>
       <span role="img" aria-label="mailbox emoji">
@@ -29,13 +29,15 @@ const FirstRequest = ({ onSubscribe, onDismiss, loading }) =>
         onClick={onDismiss}
       />
     </FlexRow>
-  </RequestCard>;
+  </RequestCard>
+);
 
-const BrowserNotificationRequest = ({ onSubscribe, onDismiss, loading }) =>
+const BrowserNotificationRequest = ({ onSubscribe, onDismiss, loading }) => (
   <FirstRequest
     onSubscribe={onSubscribe}
     onDismiss={onDismiss}
     loading={loading}
-  />;
+  />
+);
 
 export default BrowserNotificationRequest;

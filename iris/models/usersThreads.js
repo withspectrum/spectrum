@@ -33,6 +33,18 @@ export const createParticipantInThread = (
     });
 };
 
+export const deleteParticipantInThread = (
+  threadId: string,
+  userId: string
+): Promise<boolean> => {
+  return db
+    .table('usersThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .delete()
+    .run();
+};
+
 /*
   Users can opt in to notifications on a thread without having to leave a message or be the thread creator. This will only activate notifications and the user will not appear as a participant in the UI
 */

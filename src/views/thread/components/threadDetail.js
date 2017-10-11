@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import {
   getLinkPreviewFromUrl,
@@ -30,21 +24,15 @@ import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
-import Editor, {
-  toJSON,
-  toPlainText,
-  toState,
-} from '../../../components/editor';
-import { LinkPreview } from '../../../components/linkPreview';
-import { ThreadTitle, ThreadDescription } from '../style';
+import Editor from '../../../components/draftjs-editor';
+import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Reputation from '../../../components/reputation';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import {
+  ThreadTitle,
   ThreadWrapper,
   ThreadHeading,
   Byline,
-  ThreadContent,
   ContextRow,
   DropWrap,
   FlyoutRow,
@@ -56,13 +44,18 @@ import {
   AuthorName,
   AuthorUsername,
   Location,
+  ShareLinks,
+  ShareLink,
+  ShareButtons,
+  ShareButton,
 } from '../style';
+
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
 class ThreadDetailPure extends Component {
   state: {
     isEditing: boolean,
-    viewBody: string,
-    editBody: string,
+    body: any,
     title: string,
     linkPreview: Object,
     linkPreviewTrueUrl: string,
@@ -92,20 +85,9 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const viewBody =
-      thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
-
-    const editBody =
-      thread.type === 'SLATE'
-        ? toState(JSON.parse(thread.content.body))
-        : thread.content.body;
-
     this.setState({
       isEditing: false,
-      viewBody,
-      editBody,
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
@@ -228,7 +210,7 @@ class ThreadDetailPure extends Component {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
+    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
     if (!title || title.length === 0) {
@@ -242,6 +224,13 @@ class ThreadDetailPure extends Component {
       isSavingEdit: true,
     });
 
+    const jsonBody = toJSON(body);
+
+    const content = {
+      title,
+      body: JSON.stringify(jsonBody),
+    };
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -254,21 +243,15 @@ class ThreadDetailPure extends Component {
       });
     }
 
-    let bodyToSave = editBody;
-    if (thread.type === 'SLATE') {
-      bodyToSave = JSON.stringify(toJSON(bodyToSave));
-    }
-
-    const content = {
-      title,
-      body: bodyToSave,
-    };
-
     // Get the images
-    const filesToUpload = editBody.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
+      .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {
       threadId,
@@ -286,13 +269,6 @@ class ThreadDetailPure extends Component {
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
-
-          this.setState({
-            viewBody:
-              thread.type === 'SLATE'
-                ? toPlainText(toState(JSON.parse(editThread.content.body)))
-                : editThread.content.body,
-          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -322,29 +298,27 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
+    this.listenForUrl(state);
     this.setState({
-      editBody: state,
+      body: state,
     });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
@@ -365,7 +339,7 @@ class ThreadDetailPure extends Component {
           // this.props.dispatch(stopLoading());
 
           this.setState(prevState => ({
-            linkPreview: { ...data, trueUrl: urlToCheck },
+            linkPreview: data,
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
@@ -416,14 +390,38 @@ class ThreadDetailPure extends Component {
     }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
   };
 
+  copyLink = () => {
+    try {
+      // creating new textarea element and giveing it id 't'
+      let t = document.createElement('input');
+      t.id = 't';
+      // Optional step to make less noise in the page, if any!
+      t.style.height = 0;
+      // You have to append it to your page somewhere, I chose <body>
+      document.body.appendChild(t);
+      // Copy whatever is in your div to our new textarea
+      t.value = `https://spectrum.chat/thread/${this.props.thread.id}`;
+      // Now copy whatever inside the textarea to clipboard
+      let selector = document.querySelector('#t');
+      selector.select();
+      document.execCommand('copy');
+      // Remove the textarea
+      document.body.removeChild(t);
+      this.props.dispatch(
+        addToastWithTimeout('success', 'Copied to clipboard')
+      );
+    } catch (err) {
+      return;
+    }
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
     const {
       isEditing,
       linkPreview,
-      linkPreviewTrueUrl,
-      viewBody,
+      body,
       fetchingLinkPreview,
       flyoutOpen,
       isSavingEdit,
@@ -549,18 +547,17 @@ class ThreadDetailPure extends Component {
                         />
                       </FlyoutRow>
                     )}
-                  {thread.isCreator &&
-                    thread.type === 'SLATE' && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph="edit"
-                          hoverColor="text.alt"
-                          tipText="Edit"
-                          tipLocation="top-left"
-                          onClick={this.toggleEdit}
-                        />
-                      </FlyoutRow>
-                    )}
+                  {thread.isCreator && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph="edit"
+                        hoverColor="text.alt"
+                        tipText="Edit"
+                        tipLocation="top-left"
+                        onClick={this.toggleEdit}
+                      />
+                    </FlyoutRow>
+                  )}
                 </Flyout>
               </DropWrap>
             )}
@@ -596,36 +593,8 @@ class ThreadDetailPure extends Component {
           )}
         </ContextRow>
 
-        {!isEditing && (
-          <span>
-            <ThreadHeading>{thread.content.title}</ThreadHeading>
-            <FlexRow>
-              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
-              {thread.modifiedAt && (
-                <Edited>
-                  (Edited {timeDifference(Date.now(), editedTimestamp)})
-                </Edited>
-              )}
-            </FlexRow>
-            <div className="markdown">
-              <ThreadContent>{viewBody}</ThreadContent>
-            </div>
-
-            {linkPreview &&
-              !fetchingLinkPreview && (
-                <LinkPreview
-                  trueUrl={linkPreview.url}
-                  data={linkPreview}
-                  size={'large'}
-                  editable={false}
-                  margin={'16px 0 0 0'}
-                />
-              )}
-          </span>
-        )}
-
-        {isEditing && (
-          <span>
+        <span>
+          {isEditing ? (
             <Textarea
               onChange={this.changeTitle}
               style={ThreadTitle}
@@ -634,25 +603,104 @@ class ThreadDetailPure extends Component {
               ref="titleTextarea"
               autoFocus
             />
+          ) : (
+            <ThreadHeading>{thread.content.title}</ThreadHeading>
+          )}
+          <FlexRow>
+            <Link to={`/thread/${thread.id}`}>
+              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+              {thread.modifiedAt && (
+                <Edited>
+                  (Edited{' '}
+                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+                </Edited>
+              )}
+            </Link>
+          </FlexRow>
 
-            <Editor
-              onChange={this.changeBody}
-              onKeyDown={this.listenForUrl}
-              state={this.state.editBody}
-              style={ThreadDescription}
-              ref="bodyTextarea"
-              editorRef={editor => (this.bodyEditor = editor)}
-              placeholder="Write more thoughts here, add photos, and anything else!"
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreviewTrueUrl,
-                data: linkPreview,
-              }}
-            />
-          </span>
-        )}
+          <Editor
+            readOnly={!this.state.isEditing}
+            state={body}
+            onChange={this.changeBody}
+            editorKey="thread-detail"
+            placeholder="Write more thoughts here..."
+            showLinkPreview={true}
+            version={2}
+            linkPreview={{
+              loading: fetchingLinkPreview,
+              remove: this.removeLinkPreview,
+              trueUrl: linkPreview && linkPreview.url,
+              data: linkPreview,
+            }}
+          />
+
+          {!isEditing && (
+            <ShareLinks>
+              <ShareLink facebook>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                    .content.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'facebook'} size={16} />
+                  Share on Facebook
+                </a>
+              </ShareLink>
+
+              <ShareLink twitter>
+                <a
+                  href={`https://twitter.com/share?text=${thread.content
+                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'twitter'} size={16} />
+                  Share on Twitter
+                </a>
+              </ShareLink>
+
+              <ShareLink onClick={this.copyLink}>
+                <a>
+                  <Icon glyph={'link'} size={16} />
+                  Copy link
+                </a>
+              </ShareLink>
+            </ShareLinks>
+          )}
+
+          {!isEditing && (
+            <ShareButtons>
+              <ShareButton facebook>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                    .content.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'facebook'} size={24} />
+                </a>
+              </ShareButton>
+
+              <ShareButton twitter>
+                <a
+                  href={`https://twitter.com/share?text=${thread.content
+                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'twitter'} size={24} />
+                </a>
+              </ShareButton>
+
+              <ShareButton onClick={this.copyLink}>
+                <a>
+                  <Icon glyph={'link'} size={24} />
+                </a>
+              </ShareButton>
+            </ShareButtons>
+          )}
+        </span>
       </ThreadWrapper>
     );
   }
@@ -664,8 +712,7 @@ const ThreadDetail = compose(
   editThreadMutation,
   pinThreadMutation,
   toggleThreadNotificationsMutation,
-  withRouter,
-  pure
+  withRouter
 )(ThreadDetailPure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

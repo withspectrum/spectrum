@@ -10,7 +10,7 @@ import { storeItem } from '../../helpers/localStorage';
 import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';

@@ -2,14 +2,14 @@ import React from 'react';
 import replace from 'string-replace-to-array';
 import { TextBubble, Emoji, ImageBubble } from './style';
 
-const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+const URL = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/g;
 
-const renderMarkdownLinks = text => {
-  return replace(text, MARKDOWN_LINK, (fullLink, text, url) =>
+export const renderLinks = text => {
+  return replace(text, URL, (fullLink, text, url) => (
     <a href={url} target="_blank" rel="noopener nofollower">
       {text}
     </a>
-  );
+  ));
 };
 
 type BubbleProps = {
@@ -25,18 +25,14 @@ export const Bubble = (props: BubbleProps) => {
 
   return (
     <TextBubble hashed={hashed} me={me}>
-      {renderMarkdownLinks(message.body)}
+      {renderLinks(message.body)}
     </TextBubble>
   );
 };
 
 export const EmojiBubble = (props: BubbleProps) => {
-  const { me, message } = props;
-  return (
-    <Emoji me={me}>
-      {message.body}
-    </Emoji>
-  );
+  const { me } = props;
+  return <Emoji me={me}>{props.children || props.message.body}</Emoji>;
 };
 
 export const ImgBubble = (props: Object) => {

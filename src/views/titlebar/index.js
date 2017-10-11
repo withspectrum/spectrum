@@ -40,15 +40,6 @@ class Titlebar extends Component {
     }
   };
 
-  toggleComposer = () => {
-    const isOpen = this.props.isOpen;
-    if (!isOpen) {
-      this.props.dispatch(openComposer());
-    } else {
-      this.props.dispatch(closeComposer());
-    }
-  };
-
   render() {
     const {
       title,
@@ -59,31 +50,34 @@ class Titlebar extends Component {
     } = this.props;
     return (
       <TitleBar>
-        {provideBack
-          ? <IconButton
-              glyph="view-back"
-              color="text.reverse"
-              onClick={this.handleBack}
-            />
-          : <Spacer />}
+        {provideBack ? (
+          <IconButton
+            glyph="view-back"
+            color="text.reverse"
+            onClick={this.handleBack}
+          />
+        ) : (
+          <Spacer />
+        )}
         <Text>
           {subtitle && <Subtitle>{subtitle}</Subtitle>}
-          {title
-            ? <Title large={subtitle ? false : true}>{title}</Title>
-            : <Icon glyph="logo" />}
-
+          {title ? (
+            <Title large={subtitle ? false : true}>{title}</Title>
+          ) : (
+            <Icon glyph="logo" />
+          )}
         </Text>
-        {noComposer
-          ? <Spacer />
-          : messageComposer
-              ? <Link to={`/messages/new`}>
-                  <IconButton glyph="message-new" color="text.reverse" />
-                </Link>
-              : <IconButton
-                  glyph="post"
-                  color="text.reverse"
-                  onClick={this.toggleComposer}
-                />}
+        {noComposer ? (
+          <Spacer />
+        ) : messageComposer ? (
+          <Link to={`/messages/new`}>
+            <IconButton glyph="message-new" color="text.reverse" />
+          </Link>
+        ) : (
+          <Link to={`/new/thread`}>
+            <IconButton glyph="post" color="text.reverse" />
+          </Link>
+        )}
       </TitleBar>
     );
   }
@@ -91,6 +85,5 @@ class Titlebar extends Component {
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
-  isOpen: state.composer.isOpen,
 });
 export default compose(withRouter, connect(mapStateToProps))(Titlebar);

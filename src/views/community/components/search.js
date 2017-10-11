@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { throttle } from '../../../helpers/utils';
 import { searchCommunityThreadsQuery } from '../../../api/community';
 import ThreadFeed from '../../../components/threadFeed';
@@ -69,18 +67,18 @@ class Search extends React.Component<Props, State> {
           />
         </SearchContainer>
         {searchString &&
-        sendStringToServer && (
-          <SearchThreadFeed
-            viewContext="community"
-            communityId={community.id}
-            searchString={sendStringToServer}
-            community={community}
-            pinnedThreadId={community.pinnedThreadId}
-          />
-        )}
+          sendStringToServer && (
+            <SearchThreadFeed
+              viewContext="community"
+              communityId={community.id}
+              searchString={sendStringToServer}
+              community={community}
+              pinnedThreadId={community.pinnedThreadId}
+            />
+          )}
       </div>
     );
   }
 }
 
-export default compose(pure)(Search);
+export default compose()(Search);

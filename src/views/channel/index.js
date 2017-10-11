@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -177,7 +175,10 @@ class ChannelView extends React.Component<Props> {
 
           <Column type="primary" alignItems="center">
             {!isLoggedIn && (
-              <UpsellSignIn view={{ data: channel, type: 'channel' }} />
+              <UpsellSignIn
+                title={`Join the ${channel.community.name} community`}
+                view={{ data: channel, type: 'channel' }}
+              />
             )}
 
             {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
@@ -203,8 +204,7 @@ class ChannelView extends React.Component<Props> {
 
             <ThreadFeedWithData
               viewContext="channel"
-              channelSlug={channelSlug}
-              communitySlug={communitySlug}
+              id={channel.id}
               currentUser={isLoggedIn}
               channelId={channel.id}
             />
@@ -257,6 +257,6 @@ const map = state => ({
   currentUser: state.users.currentUser,
 });
 
-export default compose(connect(map), getChannel, viewNetworkHandler, pure)(
+export default compose(connect(map), getChannel, viewNetworkHandler)(
   ChannelView
 );

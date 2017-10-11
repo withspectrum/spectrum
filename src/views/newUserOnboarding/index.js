@@ -129,28 +129,25 @@ class NewUserOnboarding extends Component {
         <OnboardingContainer>
           <OnboardingContent>
             <IconContainer>
-              {steps[activeStep].emoji &&
-                <Emoji>
-                  {steps[activeStep].emoji}
-                </Emoji>}
+              {steps[activeStep].emoji && (
+                <Emoji>{steps[activeStep].emoji}</Emoji>
+              )}
             </IconContainer>
-            <Title>
-              {steps[activeStep].title}
-            </Title>
-            <Subtitle>
-              {steps[activeStep].subtitle}
-            </Subtitle>
+            <Title>{steps[activeStep].title}</Title>
+            <Subtitle>{steps[activeStep].subtitle}</Subtitle>
 
-            {activeStep === 'setUsername' &&
-              <SetUsername user={currentUser} save={this.saveUsername} />}
+            {activeStep === 'setUsername' && (
+              <SetUsername user={currentUser} save={this.saveUsername} />
+            )}
 
-            {activeStep === 'joinFirstCommunity' &&
+            {activeStep === 'joinFirstCommunity' && (
               <JoinFirstCommunity
                 community={community}
                 joinedFirstCommunity={() => this.joinedCommunity(1, true)}
-              />}
+              />
+            )}
 
-            {activeStep === 'discoverCommunities' &&
+            {activeStep === 'discoverCommunities' && (
               <Container>
                 <Search joinedCommunity={this.joinedCommunity} />
                 <TopCommunities
@@ -169,7 +166,8 @@ class NewUserOnboarding extends Component {
                     Continue to my home feed
                   </ContinueButton>
                 </StickyRow>
-              </Container>}
+              </Container>
+            )}
           </OnboardingContent>
         </OnboardingContainer>
       </FullscreenView>

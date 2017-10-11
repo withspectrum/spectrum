@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -16,7 +14,8 @@ import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
+import Editor from '../draftjs-editor';
+import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
@@ -42,6 +41,8 @@ import {
   UpsellDot,
 } from './style';
 
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
+
 const Upsell = () => {
   return (
     <ComposerUpsell>
@@ -56,7 +57,7 @@ class ThreadComposerWithData extends Component {
   // prop types
   state: {
     title: string,
-    body: string,
+    body: Object,
     availableCommunities: Array<any>,
     availableChannels: Array<any>,
     activeCommunity: ?string,
@@ -256,9 +257,10 @@ class ThreadComposerWithData extends Component {
     });
   };
 
-  changeBody = state => {
+  changeBody = body => {
+    this.listenForUrl(body);
     this.setState({
-      body: state,
+      body,
     });
   };
 
@@ -407,10 +409,11 @@ class ThreadComposerWithData extends Component {
     } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
+    const jsonBody = toJSON(body);
 
     const content = {
       title,
-      body: JSON.stringify(toJSON(body)),
+      body: JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -426,10 +429,14 @@ class ThreadComposerWithData extends Component {
     }
 
     // Get the images
-    const filesToUpload = body.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
+      .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -439,7 +446,7 @@ class ThreadComposerWithData extends Component {
           thread: {
             channelId,
             communityId,
-            type: 'SLATE',
+            type: 'DRAFTJS',
             content,
             attachments,
             filesToUpload,
@@ -479,24 +486,21 @@ class ThreadComposerWithData extends Component {
       });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
@@ -608,11 +612,11 @@ class ThreadComposerWithData extends Component {
 
               <Editor
                 onChange={this.changeBody}
-                onKeyDown={this.listenForUrl}
                 state={this.state.body}
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
-                placeholder="Write more thoughts here, add photos, and anything else!"
+                editorKey="thread-composer"
+                placeholder="Write more thoughts here..."
                 className={'threadComposer'}
                 showLinkPreview={true}
                 linkPreview={{
@@ -685,8 +689,7 @@ export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
   displayLoadingComposer, // handle loading state while query is fetching
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({

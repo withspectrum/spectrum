@@ -1,3 +1,4 @@
+// @flow
 const Thread = /* GraphQL */ `
 	type ThreadMessagesConnection {
 		pageInfo: PageInfo!
@@ -23,6 +24,7 @@ const Thread = /* GraphQL */ `
 
 	enum ThreadType {
 		SLATE
+		DRAFTJS
 	}
 
 	type Attachment {

@@ -39,7 +39,8 @@ export const NewUserInCommunityNotification = ({
       </CardContent>
       <Content>
         <TextContent pointer={true}>
-          {' '}{actors.asString} {event} {context.asString} {date}{' '}
+          {' '}
+          {actors.asString} {event} {context.asString} {date}{' '}
         </TextContent>
       </Content>
     </NotificationCard>
@@ -67,7 +68,8 @@ export const MiniNewUserInCommunityNotification = ({
       </CardContent>
       <Content>
         <TextContent pointer={false}>
-          {' '}{actors.asString} {event} {context.asString} {date}{' '}
+          {' '}
+          {actors.asString} {event} {context.asString} {date}{' '}
         </TextContent>
       </Content>
     </NotificationListRow>

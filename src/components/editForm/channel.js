@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -231,14 +229,14 @@ class ChannelWithData extends Component {
 
             {// if the user is moving from private to public
             this.props.channel.isPrivate &&
-            !isPrivate && (
-              <Notice>
-                When a private channel is made public all pending users will be
-                added as members of the channel. Blocked users will remain
-                blocked from viewing all content in this channel but in the
-                future any new person will be able to join.
-              </Notice>
-            )}
+              !isPrivate && (
+                <Notice>
+                  When a private channel is made public all pending users will
+                  be added as members of the channel. Blocked users will remain
+                  blocked from viewing all content in this channel but in the
+                  future any new person will be able to join.
+                </Notice>
+              )}
 
             <Actions>
               <Button onClick={this.save} loading={isLoading}>
@@ -275,10 +273,7 @@ class ChannelWithData extends Component {
   }
 }
 
-const Channel = compose(
-  deleteChannelMutation,
-  editChannelMutation,
-  withRouter,
-  pure
-)(ChannelWithData);
+const Channel = compose(deleteChannelMutation, editChannelMutation, withRouter)(
+  ChannelWithData
+);
 export default connect()(Channel);

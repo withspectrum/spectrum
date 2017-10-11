@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
@@ -116,32 +114,35 @@ const UserWithData = ({
         </CoverSubtitle>
 
         {(user.description || user.website) && (
-          <CoverDescription>
-            {user.description && <p>{user.description}</p>}
-            {user.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={addProtocolToString(user.website)}
-                >
-                  {user.website}
-                </a>
-              </ExtLink>
-            )}
-          </CoverDescription>
-        )}
+            <CoverDescription>
+              {user.description && <p>{user.description}</p>}
+              {user.website && (
+                <ExtLink>
+                  <Icon glyph="link" size={24} />
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={addProtocolToString(user.website)}
+                  >
+                    {user.website}
+                  </a>
+                </ExtLink>
+              )}
+            </CoverDescription>
+          )}
 
         {!user.isPro &&
-        currentUser &&
-        user.id === currentUser.id && (
-          <ProUpgrade>
-            <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
-              Upgrade to Pro
-            </Button>
-          </ProUpgrade>
-        )}
+          currentUser &&
+          user.id === currentUser.id && (
+            <ProUpgrade>
+              <Button
+                onClick={() => triggerUpgrade()}
+                gradientTheme={'success'}
+              >
+                Upgrade to Pro
+              </Button>
+            </ProUpgrade>
+          )}
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
@@ -149,11 +150,9 @@ const UserWithData = ({
 
             <ReputationCount>
               <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
+                {user.contextPermissions
+                  ? user.contextPermissions.reputation.toLocaleString()
+                  : user.totalReputation.toLocaleString()}
               </strong>{' '}
               rep
             </ReputationCount>
@@ -199,11 +198,9 @@ const UserWithData = ({
 
             <ReputationCount>
               <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
+                {user.contextPermissions
+                  ? user.contextPermissions.reputation.toLocaleString()
+                  : user.totalReputation.toLocaleString()}
               </strong>{' '}
               rep
             </ReputationCount>
@@ -282,11 +279,9 @@ const UserWithData = ({
 
             <ReputationCount>
               <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
+                {user.contextPermissions
+                  ? user.contextPermissions.reputation.toLocaleString()
+                  : user.totalReputation.toLocaleString()}
               </strong>{' '}
               rep
             </ReputationCount>
@@ -297,7 +292,7 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

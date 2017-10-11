@@ -3,8 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
@@ -27,14 +25,15 @@ import {
 
 import { getCommunity } from './queries';
 
-const Feature = compose(getCommunity, pure)(FeaturedCommunity);
+const Feature = compose(getCommunity)(FeaturedCommunity);
 
 const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'mental-health';
-  const featureNotes = `Mental Health is a community whose focus is to provide a safe, inclusive space for conversation about mental disorders. With a stated goal of "...help to foster a culture of openness within the design and tech industry...", we couldn't be more excited to promote this community.`;
+  // previous features include: Vectors, Frontend Cafe, Abstract, Work in Progress, Mental Health
+  const featureSlug = 'crypto';
+  const featureNotes = `Crypto is a place to discuss crypto-currencies and tokens. As blockchain technology becomes more and more mainstream, communities like Crypto allow more people to get involved, learn, and share what they know. We're all for that, so if you're an existing investor, a newcomer to crypto-currencies, or just interested in learning about blockchain, check out Crypto!`;
 
   return (
     <AppViewWrapper>
@@ -64,7 +63,7 @@ const ExplorePure = props => {
   );
 };
 
-const Explore = compose(pure)(ExplorePure);
+const Explore = compose()(ExplorePure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });

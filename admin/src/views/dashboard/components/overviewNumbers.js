@@ -43,6 +43,19 @@ const OverviewNumbers = ({ data }) => {
     },
   } = data;
 
+  const displayAu = (count: number, range: string) => {
+    return (
+      <Growth>
+        <Row>
+          <Neutral>{Math.round(count / usersGrowth.count * 100)}%</Neutral>
+          <RangeLabel>
+            {range} ({count.toLocaleString()})
+          </RangeLabel>
+        </Row>
+      </Growth>
+    );
+  };
+
   const displayGrowthPercentage = (
     { growth, currentPeriodCount, prevPeriodCount },
     range
@@ -101,6 +114,9 @@ const OverviewNumbers = ({ data }) => {
         <Column>
           <Subtext>Users</Subtext>
           <Count>{usersGrowth.count.toLocaleString()}</Count>
+          {displayAu(usersGrowth.dau, 'daily active')}
+          {displayAu(usersGrowth.wau, 'weekly active')}
+          {displayAu(usersGrowth.mau, 'monthly active')}
           {displayGrowthPercentage(usersGrowth.weeklyGrowth, 'weekly')}
           {displayGrowthPercentage(usersGrowth.monthlyGrowth, 'monthly')}
           {displayGrowthPercentage(usersGrowth.quarterlyGrowth, 'quarterly')}

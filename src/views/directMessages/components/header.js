@@ -1,4 +1,6 @@
 import React from 'react';
+import generateMetaInfo from 'shared/generate-meta-info';
+import Head from '../../../components/head';
 import {
   StyledHeader,
   PhotosContainer,
@@ -13,7 +15,7 @@ const Header = ({ thread, currentUser }) => {
     user => user.userId !== currentUser.id
   );
 
-  const photos = trimmedUsers.map(user =>
+  const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>
       <Photo
         size={60}
@@ -24,7 +26,7 @@ const Header = ({ thread, currentUser }) => {
         link={user.username ? `/users/${user.username}` : null}
       />
     </PhotoWrapper>
-  );
+  ));
 
   const names = trimmedUsers.map(user => user.name).join(', ');
   const username =
@@ -32,17 +34,20 @@ const Header = ({ thread, currentUser }) => {
       ? trimmedUsers[0].username
       : '';
 
+  const { title, description } = generateMetaInfo({
+    type: 'directMessage',
+    data: {
+      title: `${names}`,
+      description: `Conversation with ${names}`,
+    },
+  });
+
   return (
     <StyledHeader>
-      <PhotosContainer>
-        {photos}
-      </PhotosContainer>
-      <Names>
-        {names}
-      </Names>
-      <Username>
-        {username && `@${username}`}
-      </Username>
+      <Head title={title} description={description} />
+      <PhotosContainer>{photos}</PhotosContainer>
+      <Names>{names}</Names>
+      <Username>{username && `@${username}`}</Username>
     </StyledHeader>
   );
 };

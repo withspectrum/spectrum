@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -80,14 +78,10 @@ class JoinFirstCommunityPure extends Component {
           <CoverPhoto url={community.coverPhoto}>
             <CoverLink to={`/${community.slug}`}>
               <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-              <CoverTitle>
-                {community.name}
-              </CoverTitle>
+              <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
           </CoverPhoto>
-          <CoverSubtitle>
-            {community.metaData.members} members
-          </CoverSubtitle>
+          <CoverSubtitle>{community.metaData.members} members</CoverSubtitle>
 
           <CoverDescription style={{ paddingBottom: '16px' }}>
             {community.description}
@@ -113,7 +107,6 @@ const map = state => ({
 
 const JoinFirstCommunity = compose(
   toggleCommunityMembershipMutation,
-  connect(map),
-  pure
+  connect(map)
 )(JoinFirstCommunityPure);
 export default JoinFirstCommunity;

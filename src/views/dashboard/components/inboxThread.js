@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -30,6 +28,7 @@ class InboxThread extends Component {
       data,
       active,
       hasActiveCommunity,
+      hasActiveChannel,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
@@ -39,9 +38,18 @@ class InboxThread extends Component {
     return (
       <InboxThreadItem active={active}>
         {isMobile ? (
-          <InboxLinkWrapper to={`?thread=${data.id}`} />
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?thread=${data.id}`,
+            }}
+          />
         ) : (
-          <InboxClickWrapper
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?t=${data.id}`,
+            }}
             onClick={() => this.props.dispatch(changeActiveThread(data.id))}
           />
         )}
@@ -50,6 +58,7 @@ class InboxThread extends Component {
             thread={data}
             active={active}
             activeCommunity={hasActiveCommunity}
+            activeChannel={hasActiveChannel}
             isPinned={isPinned}
           />
 
@@ -75,20 +84,18 @@ class InboxThread extends Component {
 
           <ThreadMeta>
             {(participantsExist || creator) && (
-              <Facepile
-                active={active}
-                participants={participants}
-                creator={data.creator}
-              />
-            )}
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={data.creator}
+                />
+              )}
 
             {data.messageCount > 0 ? (
               <MetaText offset={participants.length} active={active}>
-                {data.messageCount > 1 ? (
-                  `${data.messageCount} messages`
-                ) : (
-                  `${data.messageCount} message`
-                )}
+                {data.messageCount > 1
+                  ? `${data.messageCount} messages`
+                  : `${data.messageCount} message`}
               </MetaText>
             ) : (
               <MetaTextPill offset={participants.length} active={active} new>
@@ -102,4 +109,4 @@ class InboxThread extends Component {
   }
 }
 
-export default compose(connect(), withRouter, pure)(InboxThread);
+export default compose(connect(), withRouter)(InboxThread);

@@ -1,3 +1,4 @@
+// @flow
 const DirectMessageThread = /* GraphQL */ `
 	type DirectMessagesConnection {
 		pageInfo: PageInfo!
@@ -35,6 +36,7 @@ const DirectMessageThread = /* GraphQL */ `
 	enum MessageType {
 		text
 		media
+        draftjs
 	}
 
 	input ContentInput {

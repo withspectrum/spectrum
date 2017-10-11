@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -254,6 +252,7 @@ class CommunityView extends React.Component<Props, State> {
                 !isLoggedIn &&
                   selectedView === 'threads' && (
                     <UpsellSignIn
+                      title={`Join the ${community.name} community`}
                       view={{ data: community, type: 'community' }}
                     />
                   )}
@@ -335,6 +334,5 @@ export default compose(
   connect(map),
   toggleCommunityMembershipMutation,
   getCommunity,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(CommunityView);

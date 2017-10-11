@@ -7,7 +7,7 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-var slate = require('./slate-utils');
+var draft = require('./draft-utils');
 var truncate = require('./truncate');
 var striptags = require('striptags');
 
@@ -37,7 +37,7 @@ type OtherInput = {
 };
 type ThreadInput = {
   type: 'thread',
-  data?: { title: string, body?: ?string, channelName?: string, privateChannel?: ?boolean type?: ?string },
+  data?: { title: string, body?: ?string, communityName?: string, privateChannel?: ?boolean type?: ?string },
 };
 type UserInput = {
   type: 'user',
@@ -50,6 +50,10 @@ type ChannelInput = {
 type CommunityInput = {
   type: 'community',
   data?: { name: string, description?: string },
+};
+type DirectMessageInput = {
+  type: 'directMessage',
+  data?: { title: string, description?: string },
 };
 type Input =
   | ThreadInput
@@ -95,13 +99,16 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         return setDefault({
           extra: HIDE_FROM_CRAWLERS,
         });
+
+      var body =
+        data &&
+        data.body &&
+        (data.type === 'DRAFTJS'
+          ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
+          : data.body);
       return setDefault({
-        title: data && data.title + ' · ' + data.channelName,
-        description: data &&
-          data.body &&
-          (data.type === 'SLATE'
-            ? slate.toPlainText(slate.toState(JSON.parse(data.body)))
-            : data.body),
+        title: data && data.title + ' · ' + data.communityName,
+        description: body,
       });
     }
     case 'user': {
@@ -116,13 +123,19 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
           extra: HIDE_FROM_CRAWLERS,
         });
       return setDefault({
-        title: data && data.name + ' · ' + data.communityName,
+        title: data && data.communityName + ' · ' + data.name,
         description: data && data.description,
       });
     }
     case 'community': {
       return setDefault({
         title: data && data.name,
+        description: data && data.description,
+      });
+    }
+    case 'directMessage': {
+      return setDefault({
+        title: data && data.title,
         description: data && data.description,
       });
     }

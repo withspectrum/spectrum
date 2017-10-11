@@ -4,8 +4,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
@@ -15,6 +13,7 @@ import { Button } from '../buttons';
 
 type Props = {
   channel: Object,
+  community: Object,
   toggleChannelSubscription: Function,
   dispatch: Function,
 };
@@ -83,24 +82,26 @@ class JoinChannel extends React.Component<Props, State> {
 
   render() {
     const { isLoading } = this.state;
-    const { channel } = this.props;
+    const { channel, community } = this.props;
     return (
-      <NullState bg="channel">
-        <Title>Ready to join the conversation?</Title>
-        <Subtitle>Join ~{channel.name} to get involved!</Subtitle>
+      <NullState bg={null}>
+        <Title>Join the {community.name} community</Title>
+        <Subtitle>
+          Once you join this community you'll be able to post your replies here!
+        </Subtitle>
         <Button
           loading={isLoading}
           onClick={this.toggleSubscription}
           icon="plus"
           label
         >
-          Join
+          Join {community.name}
         </Button>
       </NullState>
     );
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation, pure)(
+export default compose(connect(), toggleChannelSubscriptionMutation)(
   JoinChannel
 );

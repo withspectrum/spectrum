@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import withState from 'recompose/withState';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
@@ -11,7 +9,7 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { track } from '../../helpers/events';
-import { toPlainText, fromPlainText } from '../../components/editor';
+import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import {
@@ -58,7 +56,7 @@ class ChatInputWithMutation extends Component {
   };
 
   submit = e => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     const {
       state,
@@ -85,8 +83,8 @@ class ChatInputWithMutation extends Component {
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       return createThread({
-        messageBody: toPlainText(state),
-        messageType: 'text',
+        messageBody: JSON.stringify(toJSON(state)),
+        messageType: 'draftjs',
       });
     }
 
@@ -94,10 +92,10 @@ class ChatInputWithMutation extends Component {
     // or direct message thread
     sendMessage({
       threadId: thread,
-      messageType: 'text',
+      messageType: 'draftjs',
       threadType,
       content: {
-        body: toPlainText(state),
+        body: JSON.stringify(toJSON(state)),
       },
     })
       .then(({ data: { addMessage } }) => {
@@ -112,12 +110,6 @@ class ChatInputWithMutation extends Component {
       clear();
       this.editor.focus();
     });
-  };
-
-  handleEnter = e => {
-    //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-    e.preventDefault(); //=> prevent linebreak
-    this.submit(e); //=> send the message instead
   };
 
   sendMediaMessage = e => {
@@ -248,7 +240,7 @@ class ChatInputWithMutation extends Component {
             focus={isFocused}
             placeholder="Your message here..."
             state={state}
-            onEnter={this.handleEnter}
+            handleReturn={this.submit}
             onChange={onChange}
             markdown={false}
             onFocus={this.onFocus}
@@ -257,6 +249,7 @@ class ChatInputWithMutation extends Component {
             images={false}
             editorRef={editor => (this.editor = editor)}
             innerRef={input => (this.chatInput = input)}
+            editorKey="chat-input"
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
@@ -275,8 +268,7 @@ const ChatInput = compose(
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
-  connect(map),
-  pure
+  connect(map)
 )(ChatInputWithMutation);
 
 export default ChatInput;

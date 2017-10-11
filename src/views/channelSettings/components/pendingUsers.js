@@ -1,8 +1,6 @@
 //@flow
 import * as React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
@@ -80,6 +78,4 @@ class PendingUsers extends React.Component<Props> {
   }
 }
 
-export default compose(getPendingUsersQuery, displayLoadingCard, pure)(
-  PendingUsers
-);
+export default compose(getPendingUsersQuery, displayLoadingCard)(PendingUsers);

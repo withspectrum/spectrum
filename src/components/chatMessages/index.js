@@ -9,11 +9,14 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
+  draftOnlyContainsEmoji,
 } from '../../helpers/utils';
-import { NullState } from '../upsell';
-import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
+import NewThreadShare from '../upsell/newThreadShare';
+import { Bubble, EmojiBubble, ImgBubble, renderLinks } from '../bubbles';
+import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
 import Reaction from '../reaction';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 import {
   UserAvatar,
@@ -63,13 +66,7 @@ class ChatMessages extends Component {
     const hash = window.location.hash.substr(1);
 
     if (!messages || messages.length === 0) {
-      return (
-        <NullState
-          bg="chat"
-          heading={`🔥 This thread is hot off the presses...`}
-          copy={`Why don't you kick off the conversation?`}
-        />
-      );
+      return <NewThreadShare thread={null} />;
     } else {
       const renderTimestamp = (me, message) => {
         if (threadType === 'directMessageThread') {
@@ -183,15 +180,15 @@ class ChatMessages extends Component {
                             (which has a typeof number)
                           */}
                           {!emojiOnly &&
-                          typeof message.id === 'string' && (
-                            <Reaction
-                              message={message}
-                              toggleReaction={toggleReaction}
-                              me={me}
-                              currentUser={currentUser}
-                              dispatch={dispatch}
-                            />
-                          )}
+                            typeof message.id === 'string' && (
+                              <Reaction
+                                message={message}
+                                toggleReaction={toggleReaction}
+                                me={me}
+                                currentUser={currentUser}
+                                dispatch={dispatch}
+                              />
+                            )}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {
@@ -211,6 +208,42 @@ class ChatMessages extends Component {
                             pending={message.id < 0}
                             hashed={hash === message.id}
                           />
+                          {typeof message.id === 'string' && (
+                            <Reaction
+                              message={message}
+                              toggleReaction={toggleReaction}
+                              me={me}
+                              currentUser={currentUser}
+                              dispatch={dispatch}
+                            />
+                          )}
+                        </MessageWrapper>
+                      );
+                    } else if (message.messageType === 'draftjs') {
+                      const body = JSON.parse(message.content.body);
+                      const emojiOnly = draftOnlyContainsEmoji(body);
+                      const TextBubble = emojiOnly ? EmojiBubble : RawBubble;
+                      return (
+                        <MessageWrapper
+                          me={me}
+                          key={message.id}
+                          timestamp={convertTimestampToTime(message.timestamp)}
+                        >
+                          <TextBubble
+                            me={me}
+                            persisted={message.persisted}
+                            sender={sender}
+                            type={message.messageType}
+                            pending={message.id < 0}
+                          >
+                            {renderLinks(toPlainText(toState(body)))}
+                          </TextBubble>
+                          {/*
+                            we check if typof equals a string to determine
+                            if the message is coming from the server, or
+                            generated via an optimistic response with apollo
+                            (which has a typeof number)
+                          */}
                           {typeof message.id === 'string' && (
                             <Reaction
                               message={message}

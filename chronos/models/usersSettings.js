@@ -19,7 +19,7 @@ export const getUsersForDigest = (
     .filter(row => row('notifications')('types')(range)('email').eq(true))
     .eqJoin('userId', db.table('users'))
     .zip()
-    .pluck(['userId', 'email', 'firstName', 'name'])
+    .pluck(['userId', 'email', 'firstName', 'name', 'username'])
     .distinct()
     .run();
 };
