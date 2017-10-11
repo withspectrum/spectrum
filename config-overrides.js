@@ -4,6 +4,7 @@
  * This is using react-app-rewired by @timarney
  */
 
+const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
@@ -31,5 +32,15 @@ const setCustomSwPrecacheOptions = config => {
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
   config.plugins.push(WriteFilePlugin());
+  config = injectBabelPlugin(
+    [
+      'import-inspector',
+      {
+        serverSideRequirePath: true,
+        webpackRequireWeakId: true,
+      },
+    ],
+    config
+  );
   return rewireStyledComponents(config, env, { ssr: true });
 };

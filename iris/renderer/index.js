@@ -13,6 +13,7 @@ import { createStore } from 'redux';
 import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
+import { inspect } from 'import-inspector';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import schema from '../schema';
@@ -53,6 +54,10 @@ const renderer = (req, res) => {
       apollo: client.reducer(),
     },
   });
+  let imported = [];
+  const stopInspecting = inspect(metadata => {
+    imported.push(metadata);
+  });
   const context = {};
   // The client-side app will instead use <BrowserRouter>
   const frontend = (
@@ -80,6 +85,7 @@ const renderer = (req, res) => {
       } else {
         res.status(200);
       }
+      console.log(imported);
       // Compile the HTML and send it down
       res.send(
         getHTML({
