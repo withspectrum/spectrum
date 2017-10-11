@@ -29,5 +29,6 @@ export const NEW_MESSAGE_COUNT_WEIGHT = 1.5;
 
 // queues
 export const SEND_DIGEST_EMAIL = 'send digest email';
+export const PROCESS_INDIVIDUAL_DIGEST = 'send individual digest email';
 export const PROCESS_WEEKLY_DIGEST_EMAIL = 'process weekly digest email';
 export const PROCESS_DAILY_DIGEST_EMAIL = 'process daily digest email';
