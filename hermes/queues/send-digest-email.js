@@ -67,7 +67,6 @@ export default async (job: SendWeeklyDigestJob) => {
   } = job.data;
   if (!email || !userId) {
     debug(`\nno email or userId found for this weekly digest, returning`);
-    console.log(job.data);
     return;
   }
 
