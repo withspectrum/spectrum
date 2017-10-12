@@ -245,7 +245,12 @@ class ThreadDetailPure extends Component {
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
       .map(key => jsonBody.entityMap[key].data.file);
 
     const input = {
@@ -606,7 +611,8 @@ class ThreadDetailPure extends Component {
               <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
               {thread.modifiedAt && (
                 <Edited>
-                  (Edited {timeDifference(Date.now(), editedTimestamp)})
+                  (Edited{' '}
+                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
                 </Edited>
               )}
             </Link>
@@ -619,6 +625,7 @@ class ThreadDetailPure extends Component {
             editorKey="thread-detail"
             placeholder="Write more thoughts here..."
             showLinkPreview={true}
+            version={2}
             linkPreview={{
               loading: fetchingLinkPreview,
               remove: this.removeLinkPreview,
@@ -627,68 +634,72 @@ class ThreadDetailPure extends Component {
             }}
           />
 
-          <ShareLinks>
-            <ShareLink facebook>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                  .content.title}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'facebook'} size={16} />
-                Share on Facebook
-              </a>
-            </ShareLink>
+          {!isEditing && (
+            <ShareLinks>
+              <ShareLink facebook>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                    .content.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'facebook'} size={16} />
+                  Share on Facebook
+                </a>
+              </ShareLink>
 
-            <ShareLink twitter>
-              <a
-                href={`https://twitter.com/share?text=${thread.content
-                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'twitter'} size={16} />
-                Share on Twitter
-              </a>
-            </ShareLink>
+              <ShareLink twitter>
+                <a
+                  href={`https://twitter.com/share?text=${thread.content
+                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'twitter'} size={16} />
+                  Share on Twitter
+                </a>
+              </ShareLink>
 
-            <ShareLink onClick={this.copyLink}>
-              <a>
-                <Icon glyph={'link'} size={16} />
-                Copy link
-              </a>
-            </ShareLink>
-          </ShareLinks>
+              <ShareLink onClick={this.copyLink}>
+                <a>
+                  <Icon glyph={'link'} size={16} />
+                  Copy link
+                </a>
+              </ShareLink>
+            </ShareLinks>
+          )}
 
-          <ShareButtons>
-            <ShareButton facebook>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                  .content.title}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'facebook'} size={24} />
-              </a>
-            </ShareButton>
+          {!isEditing && (
+            <ShareButtons>
+              <ShareButton facebook>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                    .content.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'facebook'} size={24} />
+                </a>
+              </ShareButton>
 
-            <ShareButton twitter>
-              <a
-                href={`https://twitter.com/share?text=${thread.content
-                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon glyph={'twitter'} size={24} />
-              </a>
-            </ShareButton>
+              <ShareButton twitter>
+                <a
+                  href={`https://twitter.com/share?text=${thread.content
+                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon glyph={'twitter'} size={24} />
+                </a>
+              </ShareButton>
 
-            <ShareButton onClick={this.copyLink}>
-              <a>
-                <Icon glyph={'link'} size={24} />
-              </a>
-            </ShareButton>
-          </ShareButtons>
+              <ShareButton onClick={this.copyLink}>
+                <a>
+                  <Icon glyph={'link'} size={24} />
+                </a>
+              </ShareButton>
+            </ShareButtons>
+          )}
         </span>
       </ThreadWrapper>
     );
