@@ -49,7 +49,7 @@ export default async (job: DigestJob) => {
 
   // 2
   const users = await getUsersForDigest(timeframe);
-  if (!users) {
+  if (!users || users.length === 0) {
     debug('\n ❌ No users who want this digest');
     return;
   }
@@ -60,7 +60,6 @@ export default async (job: DigestJob) => {
   debug('\n ⚙️ Fetched top communities');
 
   // 4
-  console.log('users length', users.length);
   const usersPromises = users.map(user =>
     digestEmailWorker.add({ user, threadsWithData, topCommunities, timeframe })
   );

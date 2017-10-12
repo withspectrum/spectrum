@@ -23,14 +23,14 @@ const server = createWorker({
 });
 
 // start the jobs
-// weeklyDigest();
+weeklyDigest();
 dailyDigest();
 
 // $FlowIssue
 console.log(
-  `🗄 Crons open for business ${(process.env.NODE_ENV === 'production' &&
-    `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
-    'locally'}`
+  `🗄 Crons open for business ${process.env.NODE_ENV === 'production'
+    ? 'in production'
+    : 'locally'}`
 );
 
 server.listen(PORT, 'localhost', () => {
