@@ -22,21 +22,21 @@ class Reputation extends React.Component<Props> {
       dispatch,
       reputation,
     } = this.props;
+
+    if (!reputation) return null;
+
     const renderedReputation = reputation > 0 ? reputation : '0';
     const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';
 
     return (
       <ReputationWrapper
         onClick={() => dispatch(openModal('REP_EXPLAINER_MODAL'))}
+        tipText={`${tipText}`}
+        tipLocation={tipLocation}
       >
-        <Icon
-          glyph="rep"
-          size={iconSize}
-          tipText={tipText}
-          tipLocation={tipLocation}
-        />
+        <Icon glyph="rep" size={iconSize} />
 
-        <ReputationLabel tipText={`${reputation.toLocaleString()} rep`}>
+        <ReputationLabel size={size}>
           {truncateNumber(renderedReputation, 1)} rep
         </ReputationLabel>
       </ReputationWrapper>

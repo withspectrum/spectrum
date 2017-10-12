@@ -1,14 +1,15 @@
 // @flow
 import styled from 'styled-components';
+import { Tooltip } from '../globals';
 
 export const ReputationWrapper = styled.div`
-  display: inline-block;
-  position: relative;
-  top: 1px;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
   flex: none;
   color: inherit;
-  margin-right: 4px;
+  ${Tooltip};
 `;
 
-export const ReputationLabel = styled.span``;
+export const ReputationLabel = styled.span`
+  font-weight: ${props => (props.size === 'large' ? '600' : '400')};
+`;

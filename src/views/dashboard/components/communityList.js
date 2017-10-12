@@ -73,14 +73,15 @@ class CommunityList extends Component {
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
-            <CommunityListText>
+            <CommunityListText className={'communityListText'}>
               <CommunityListName active={!activeCommunity}>
                 Everything
               </CommunityListName>
               <CommunityListReputation>
                 <Reputation
-                  tipLocation={'bottom-right'}
-                  tipText={'Your total reputation'}
+                  size={'mini'}
+                  tipLocation={'top-right'}
+                  tipText={'Your total rep'}
                   reputation={user.totalReputation}
                 />
               </CommunityListReputation>
@@ -98,14 +99,18 @@ class CommunityList extends Component {
                 active={c.id === activeCommunity}
                 src={c.profilePhoto}
               />
-              <CommunityListText>
+              <CommunityListText className={'communityListText'}>
                 <CommunityListName
                   active={!activeChannel && c.id === activeCommunity}
                 >
                   {c.name}
                 </CommunityListName>
                 <CommunityListReputation active={c.id === activeCommunity}>
-                  <Reputation reputation={c.communityPermissions.reputation} />
+                  <Reputation
+                    size={'mini'}
+                    tipText={'Rep in this community'}
+                    reputation={c.communityPermissions.reputation}
+                  />
                 </CommunityListReputation>
               </CommunityListText>
             </CommunityListPadding>

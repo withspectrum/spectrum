@@ -38,7 +38,15 @@ type CommunityProps = {
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const { community, showDescription, showMeta, meta, children } = this.props;
+    const {
+      community,
+      showDescription,
+      showMeta,
+      meta,
+      children,
+      reputation,
+    } = this.props;
+
     return (
       <Wrapper>
         <Row>
@@ -51,16 +59,11 @@ export class CommunityListItem extends React.Component<CommunityProps> {
           />
           <Col style={{ marginLeft: '12px' }}>
             <Heading>{community.name}</Heading>
-            {showMeta && (
+
+            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+            {reputation > -1 && (
               <Meta>
-                {meta && (
-                  <span>
-                    <Reputation
-                      tipText={'Your rep in this community'}
-                      reputation={meta}
-                    />
-                  </span>
-                )}
+                <Reputation size={'default'} reputation={reputation} />
               </Meta>
             )}
           </Col>

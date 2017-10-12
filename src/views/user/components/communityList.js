@@ -28,11 +28,14 @@ class CommunityList extends React.Component<Props> {
       return null;
     }
 
-    const sortedCommunities = communities.slice().sort((a, b) => {
-      const bc = parseInt(b.communityPermissions.reputation, 10);
-      const ac = parseInt(a.communityPermissions.reputation, 10);
-      return bc <= ac ? -1 : 1;
-    });
+    let sortedCommunities = communities;
+    if (sortedCommunities[0].contextPermissions) {
+      sortedCommunities = communities.slice().sort((a, b) => {
+        const bc = parseInt(b.contextPermissions.reputation, 10);
+        const ac = parseInt(a.contextPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
+    }
 
     return (
       <StyledCard largeOnly>
@@ -47,7 +50,15 @@ class CommunityList extends React.Component<Props> {
           {sortedCommunities.map(community => {
             return (
               <Link key={community.id} to={`/${community.slug}`}>
-                <CommunityListItem community={community} showDescription>
+                <CommunityListItem
+                  community={community}
+                  reputation={
+                    community.contextPermissions
+                      ? community.contextPermissions.reputation
+                      : null
+                  }
+                  showDescription
+                >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>
               </Link>
