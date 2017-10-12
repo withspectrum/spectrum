@@ -34,8 +34,8 @@ injectGlobal`${prismGlobalCSS}`;
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 
-import Image from './image';
-import Embed from './embed';
+import Image from './Image';
+import Embed from './Embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
@@ -109,12 +109,35 @@ class Editor extends React.Component {
       editorState: props.initialState || EditorState.createEmpty(),
       inserting: false,
       embedding: false,
+      embedUrl: '',
     };
   }
 
   onChange = editorState => {
     this.setState({
       editorState,
+    });
+  };
+
+  changeEmbedUrl = evt => {
+    this.setState({
+      embedUrl: evt.target.value,
+    });
+  };
+
+  addEmbed = evt => {
+    evt && evt.preventDefault();
+
+    const {
+      state = this.state.editorState,
+      onChange = this.onChange,
+    } = this.props;
+
+    onChange(this.state.addEmbed(state, this.state.embedUrl));
+    this.setState({
+      embedUrl: '',
+      embedding: false,
+      inserting: false,
     });
   };
 
@@ -137,10 +160,6 @@ class Editor extends React.Component {
 
   handleDroppedFiles = (selection, files) => {
     this.addImages(files);
-  };
-
-  focus = () => {
-    this.editor.focus();
   };
 
   toggleToolbarDisplayState = () => {
@@ -187,7 +206,6 @@ class Editor extends React.Component {
       return (
         <ComposerBase
           className={markdown !== false && 'markdown'}
-          onClick={this.focus}
           focus={focus}
         >
           <DraftEditor
@@ -218,7 +236,6 @@ class Editor extends React.Component {
                     glyph={'inserter'}
                     onClick={this.toggleToolbarDisplayState}
                   />
-                  {console.log('inserting', inserting)}
                   <Action>
                     <MediaInput
                       onChange={this.addImage}
@@ -227,21 +244,22 @@ class Editor extends React.Component {
                     />
                   </Action>
                   <Action embedding={embedding}>
-                    <EmbedUI embedding={embedding}>
+                    <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
                       <label htmlFor="embed-input">
                         <Icon
                           glyph={'embed'}
                           tipText={'Embed a URL'}
                           onClick={this.toggleEmbedInputState}
                         />
-                        {console.log('embedding', embedding)}
                         <input
                           id="embed-input"
                           type="url"
                           placeholder="Enter a URL to embed"
+                          value={this.state.embedUrl}
+                          onChange={this.changeEmbedUrl}
                         />
                       </label>
-                      <button>Embed</button>
+                      <button onClick={this.addEmbed}>Embed</button>
                     </EmbedUI>
                   </Action>
                 </Expander>
@@ -267,11 +285,7 @@ class Editor extends React.Component {
           className={className}
           style={{ width: '100%', height: '100%', ...style }}
         >
-          <Wrapper
-            className={markdown !== false && 'markdown'}
-            onClick={this.focus}
-            focus={focus}
-          >
+          <Wrapper className={markdown !== false && 'markdown'} focus={focus}>
             <DraftEditor
               editorState={state}
               onChange={onChange}
