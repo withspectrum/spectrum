@@ -14,12 +14,16 @@ type Props = {
   dispatch: Function,
 };
 class Reputation extends React.Component<Props> {
+  open = e => {
+    e.preventDefault();
+    return this.props.dispatch(openModal('REP_EXPLAINER_MODAL'));
+  };
+
   render() {
     const {
       size = 'default',
       tipText = 'Reputation',
       tipLocation = 'top-right',
-      dispatch,
       reputation,
     } = this.props;
 
@@ -30,7 +34,7 @@ class Reputation extends React.Component<Props> {
 
     return (
       <ReputationWrapper
-        onClick={() => dispatch(openModal('REP_EXPLAINER_MODAL'))}
+        onClick={this.open}
         tipText={`${tipText}`}
         tipLocation={tipLocation}
       >

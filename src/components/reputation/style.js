@@ -1,12 +1,15 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip } from '../globals';
+import { Tooltip, zIndex } from '../globals';
 
 export const ReputationWrapper = styled.div`
   display: flex;
   align-items: center;
   flex: none;
   color: inherit;
+  cursor: pointer;
+  position: relative;
+  z-index: ${zIndex.fullScreen};
   ${Tooltip};
 `;
 
