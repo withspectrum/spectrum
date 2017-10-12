@@ -1,3 +1,4 @@
+// @flow
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
@@ -8,8 +9,12 @@ import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
+import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
+import { toggleUserChannelNotifications } from '../../models/usersChannels';
+import { getChannelsByCommunity } from '../../models/channel';
 import { processInvoicePaid } from '../webhooks';
 
+// $FlowIssue
 emailRouter.get('/unsubscribe', async (req, res) => {
   const { token } = req.query;
 
@@ -34,7 +39,7 @@ emailRouter.get('/unsubscribe', async (req, res) => {
   }
 
   // once the token is verified, we can decode it to get the userId and type
-  const { userId, type } = jwt.decode(token);
+  const { userId, type, dataId } = jwt.decode(token);
 
   // if the token doesn't have the necessary info
   if (!userId || !type) {
@@ -47,12 +52,64 @@ emailRouter.get('/unsubscribe', async (req, res) => {
 
   // and send a database request to unsubscribe from a particular email type
   try {
-    return unsubscribeUserFromEmailNotification(userId, type).then(() =>
-      res
-        .status(200)
-        .send('You have been successfully unsubscribed from this email.')
-    );
+    switch (type) {
+      case 'dailyDigest':
+      case 'weeklyDigest':
+      case 'newThreadCreated':
+      case 'newMessageInThreads':
+        return unsubscribeUserFromEmailNotification(userId, type).then(() =>
+          res
+            .status(200)
+            .send('You have been successfully unsubscribed from this email.')
+        );
+      case 'muteChannel':
+        return toggleUserChannelNotifications(userId, dataId, false).then(() =>
+          res
+            .status(200)
+            .send(
+              'You will no longer recieve new thread emails from this channel.'
+            )
+        );
+      case 'muteCommunity':
+        return getChannelsByCommunity(dataId)
+          .then(
+            channels =>
+              console.log('got channels', channels) || channels.map(c => c.id)
+          )
+          .then(channels =>
+            channels.map(
+              c =>
+                console.log('muting channel', c) ||
+                toggleUserChannelNotifications(userId, c, false)
+            )
+          )
+          .then(() =>
+            res
+              .status(200)
+              .send(
+                'You will no longer recieve new thread emails from this community.'
+              )
+          );
+      case 'muteThread':
+        return updateThreadNotificationStatusForUser(
+          dataId,
+          userId,
+          false
+        ).then(() =>
+          res
+            .status(200)
+            .send(
+              'You will no longer recieve emails about new messages in this thread.'
+            )
+        );
+      default: {
+        return res
+          .status(400)
+          .send("We couldn't identify this type of email to unsubscribe.");
+      }
+    }
   } catch (err) {
+    console.log(err);
     return res
       .status(400)
       .send(

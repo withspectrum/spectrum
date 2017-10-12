@@ -32,8 +32,8 @@ injectGlobal`${draftGlobalCSS}`;
 import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
 
-import Image from './image';
-import Embed from './embed';
+import Image from './Image';
+import Embed from './Embed';
 import { Wrapper, MediaRow, ComposerBase } from './style';
 import MediaInput from '../mediaInput';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
