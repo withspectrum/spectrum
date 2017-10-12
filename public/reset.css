@@ -160,10 +160,6 @@ textarea {
   font-weight: 700;
 }
 
-.markdown span {
-  font-size: inherit;
-}
-
 .markdown ul,
 .markdown ol {
   color: inherit;

@@ -48,7 +48,7 @@ export const LinkPreviewTextContainer = styled.div`
   align-self: stretch;
 `;
 
-export const BaseMeta = styled.p`
+export const BaseMeta = styled.span`
   display: flex;
   flex: none;
   line-height: 1.2;
