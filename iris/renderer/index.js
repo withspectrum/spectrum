@@ -15,8 +15,9 @@ import { createStore } from 'redux';
 import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
-import { inspect } from 'import-inspector';
-import manifestInspector from 'module-manifest-inspector';
+import Loadable from 'react-loadable';
+import { getBundles } from 'react-loadable/webpack';
+import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import schema from '../schema';
@@ -27,12 +28,6 @@ import { getHTML } from './get-html';
 import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
-
-// Load manigests generated at build time.
-const manifest = manifestInspector.multi(
-  JSON.parse(fs.readFileSync('build/client.manifest.json')),
-  JSON.parse(fs.readFileSync('build/server.manifest.json'))
-);
 
 const IN_MAINTENANCE_MODE =
   process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
@@ -64,31 +59,27 @@ const renderer = (req, res) => {
       apollo: client.reducer(),
     },
   });
-  let bundles = [];
-  const stopInspecting = inspect(data => {
-    const id = data.webpackRequireWeakId();
-    const bundle = manifest.getClientBundleForServerId(id);
-    if (!bundle) return;
-    debug(
-      `render requires code splitted module "${data.importedModulePath}"\nfound module in chunk "${bundle}"`
-    );
-    bundles.push(bundle);
-  });
+  let modules = [];
+  const report = moduleName => {
+    debug(`codesplitted module ${moduleName} used`);
+    modules.push(moduleName);
+  };
   const context = {};
   // The client-side app will instead use <BrowserRouter>
   const frontend = (
-    <ApolloProvider store={store} client={client}>
-      <StaticRouter location={req.url} context={context}>
-        <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
-      </StaticRouter>
-    </ApolloProvider>
+    <Loadable.Capture report={report}>
+      <ApolloProvider store={store} client={client}>
+        <StaticRouter location={req.url} context={context}>
+          <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
+        </StaticRouter>
+      </ApolloProvider>
+    </Loadable.Capture>
   );
   // Initialise the styled-components stylesheet and wrap the app with it
   const sheet = new ServerStyleSheet();
   debug(`render frontend`);
   renderToStringWithData(sheet.collectStyles(frontend))
     .then(content => {
-      stopInspecting();
       if (context.url) {
         debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
@@ -105,7 +96,7 @@ const renderer = (req, res) => {
       } else {
         res.status(200);
       }
-      console.log(bundles);
+      const bundles = getBundles(stats, modules);
       debug('compile and send html');
       // Compile the HTML and send it down
       res.send(
@@ -117,6 +108,18 @@ const renderer = (req, res) => {
             helmet.title.toString() +
             helmet.meta.toString() +
             helmet.link.toString(),
+          scriptTags: [
+            '<script src="/static/js/bootstrap.js"></script>',
+            ...bundles
+              .map(
+                bundle =>
+                  `<script src="/${bundle.file.replace(
+                    /\.map$/,
+                    ''
+                  )}"></script>`
+              )
+              .filter((value, index, self) => self.indexOf(value) === index),
+          ].join('\n'),
         })
       );
       res.end();

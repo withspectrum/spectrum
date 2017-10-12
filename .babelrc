@@ -21,13 +21,6 @@
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
     "syntax-dynamic-import",
-    [
-      "import-inspector",
-      {
-        "currentModuleFileName": false,
-        "serverSideRequirePath": true,
-        "webpackRequireWeakId": true
-      }
-    ]
+    "react-loadable/babel"
   ]
 }

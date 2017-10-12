@@ -11,6 +11,7 @@ import { createServer } from 'http';
 //$FlowFixMe
 import express from 'express';
 import * as graphql from 'graphql';
+import Loadable from 'react-loadable';
 
 import schema from './schema';
 import { init as initPassport } from './authentication.js';
@@ -64,9 +65,17 @@ const server = createServer(app);
 import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
-// Start webserver
-server.listen(PORT);
+const boot = () => {
+  // Start webserver
+  server.listen(PORT);
 
-// Start database listeners
-listeners.start();
-console.log(`GraphQL server running at http://localhost:${PORT}/api`);
+  // Start database listeners
+  listeners.start();
+  console.log(`GraphQL server running at http://localhost:${PORT}/api`);
+};
+
+if (IS_PROD || process.env.SSR) {
+  Loadable.preloadAll().then(boot);
+} else {
+  boot();
+}

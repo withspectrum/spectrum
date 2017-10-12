@@ -4,6 +4,7 @@
  * This is using react-app-rewired by @timarney
  */
 
+const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
@@ -11,6 +12,7 @@ const fs = require('fs');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const ManifestPlugin = require('webpack-module-manifest-plugin');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
@@ -38,16 +40,18 @@ module.exports = function override(config, env) {
       filename: './build/client.manifest.json',
     })
   );
-  config = injectBabelPlugin(
-    [
-      'import-inspector',
-      {
-        currentModuleFileName: false,
-        serverSideRequirePath: true,
-        webpackRequireWeakId: true,
-      },
-    ],
-    config
+  config.plugins.push(
+    new ReactLoadablePlugin({
+      filename: './build/react-loadable.json',
+    })
+  );
+  config = injectBabelPlugin('react-loadable/babel', config);
+  config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['bootstrap'],
+      filename: './static/js/[name].js',
+      minChunks: Infinity,
+    })
   );
   return rewireStyledComponents(config, env, { ssr: true });
 };

@@ -7,6 +7,7 @@ import { ApolloProvider } from 'react-apollo';
 import { Router } from 'react-router';
 // $FlowFixMe
 import queryString from 'query-string';
+import Loadable from 'react-loadable';
 import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
@@ -72,11 +73,7 @@ function render() {
   );
 }
 
-try {
-  render();
-} catch (err) {
-  render();
-}
+Loadable.preloadReady().then(render);
 
 registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
   if (newContent) {

@@ -101,7 +101,7 @@
     "react-dom": "^15.4.1",
     "react-helmet": "5.x",
     "react-infinite-scroller-with-scroll-element": "^1.0.4",
-    "react-loadable": "^4.0.5",
+    "react-loadable": "5.2.2",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.2",
     "react-remarkable": "^1.1.1",
