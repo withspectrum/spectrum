@@ -6,7 +6,7 @@ import { convertTimestampToTime, onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
 import { Timestamp, Body, Actions } from './view';
 import { Wrapper } from './style';
-import { deleteMessage } from '../../api/message';
+import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 class Message extends Component {
@@ -28,17 +28,15 @@ class Message extends Component {
   };
 
   deleteMessage = () => {
-    this.props
-      .deleteMessage(this.props.message.id)
-      .then(() => {
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Message successfully deleted.')
-        );
+    const message = `Are you sure you want to delete this message?`;
+
+    return this.props.dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: this.props.message.id,
+        entity: 'message',
+        message,
       })
-      .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-        console.error(err);
-      });
+    );
   };
 
   render() {
@@ -104,4 +102,4 @@ class Message extends Component {
   }
 }
 
-export default compose(connect(), deleteMessage)(Message);
+export default compose(connect())(Message);
