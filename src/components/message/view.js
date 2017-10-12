@@ -1,12 +1,5 @@
 import React from 'react';
-import replace from 'string-replace-to-array';
 import redraft from 'redraft';
-import {
-  convertTimestampToTime,
-  onlyContainsEmoji,
-  renderLinks,
-} from '../../helpers/utils';
-import { toPlainText, toState } from 'shared/draft-utils';
 import Icon from '../icons';
 import {
   Text,
@@ -92,8 +85,8 @@ export const Actions = props => {
   const {
     me,
     reaction,
-    toggleReaction,
-    shareable,
+    // toggleReaction,
+    // shareable,
     canModerate,
     deleteMessage,
     hideIndicator,

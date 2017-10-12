@@ -35,7 +35,7 @@ class SidebarChannels extends React.Component<Props> {
     } = this.props;
 
     if (community) {
-      const { isMember, isOwner } = community.communityPermissions;
+      const { isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel.node)
         .filter(channel => {

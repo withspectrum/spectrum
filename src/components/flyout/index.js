@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
 import { FlexRow, Transition, zIndex } from '../globals';
 

@@ -10,11 +10,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
 import { SectionCard, SectionTitle } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 type InvoiceType = {
   id: string,

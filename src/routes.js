@@ -26,7 +26,7 @@ import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
 import UserSettings from './views/userSettings';
 import CommunitySettings from './views/communitySettings';
-import CommunityAnalytics from './views/communityAnalytics';
+// import CommunityAnalytics from './views/communityAnalytics';
 import ChannelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 import Splash from './views/splash';

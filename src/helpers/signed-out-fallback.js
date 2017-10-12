@@ -1,3 +1,4 @@
+// @flow
 // Render a component depending on a users authentication status
 import React from 'react';
 // @FlowFixMe

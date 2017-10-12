@@ -8,10 +8,8 @@ import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
-import Icon from '../icons';
 
 import {
-  AvatarLabel,
   Byline,
   Name,
   Wrapper,
@@ -62,7 +60,6 @@ class Messages extends Component {
       messages,
       currentUser,
       toggleReaction,
-      dispatch,
       threadType,
       threadId,
       thread,
@@ -110,6 +107,7 @@ class Messages extends Component {
                       message={message}
                       link={`#${message.id}`}
                       reaction={'like'}
+                      hash={hash}
                       me={me}
                       canModerate={canModerate}
                       pending={message.id < 0}

@@ -14,14 +14,10 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import { getCommunityChannels } from '../queries';
 import {
-  StyledCard,
-  ListHeading,
   ListContainer,
-  ListHeader,
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-  SectionSubtitle,
 } from '../style';
 
 type Props = {

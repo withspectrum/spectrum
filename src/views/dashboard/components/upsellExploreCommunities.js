@@ -83,7 +83,7 @@ class UpsellExploreCommunities extends React.Component {
 
   render() {
     const {
-      communities, // already joined by the user
+      // communities, // already joined by the user
       activeCommunity,
     } = this.props;
     const { communitiesToJoin } = this.state;

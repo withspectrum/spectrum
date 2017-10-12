@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openGallery } from '../../actions/gallery';
-import { convertTimestampToTime, onlyContainsEmoji } from '../../helpers/utils';
+import { onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
-import { Timestamp, Body, Actions } from './view';
+import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { addToastWithTimeout } from '../../actions/toasts';
 
 class Message extends Component {
   componentDidMount() {
@@ -23,7 +22,6 @@ class Message extends Component {
   };
 
   toggleMessageFocus = messageId => {
-    const { threadId } = this.props;
     // TODO: make it so people can tap/click on messages to set focus and display the message's actions
   };
 
@@ -46,9 +44,8 @@ class Message extends Component {
       canModerate,
       currentUser,
       dispatch,
-      hash,
-      imgSrc,
-      link,
+      // hash,
+      // link,
       me,
       message,
       pending,
@@ -68,11 +65,11 @@ class Message extends Component {
         // tipText={convertTimestampToTime(message.timestamp)}
         // tipLocation={'bottom'}
       >
-        {shareable && <a name={`${message.id}`} />}
+        {/* {shareable && <a name={`${message.id}`} />} */}
         <Body
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
-          pending={message.id < 0}
+          pending={pending}
           openGallery={() => this.toggleOpenGallery(message.id)}
           focus={this.toggleMessageFocus}
           message={message.content}

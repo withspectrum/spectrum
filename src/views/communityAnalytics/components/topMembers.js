@@ -10,7 +10,6 @@ import ViewError from '../../../components/viewError';
 import { UserListItem } from '../../../components/listItems';
 import {
   SectionCard,
-  SectionSubtitle,
   SectionTitle,
   MessageIcon,
 } from '../../communitySettings/style';

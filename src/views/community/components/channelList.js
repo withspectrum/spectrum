@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
-import { TextButton, IconButton } from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -18,7 +18,6 @@ import {
   ListHeader,
   ListHeading,
   ListContainer,
-  ListFooter,
 } from '../../../components/listItems/style';
 
 type Props = {

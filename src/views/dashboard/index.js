@@ -19,7 +19,6 @@ import NewActivityIndicator from './components/newActivityIndicator';
 import DashboardThread from '../dashboardThread';
 import Header from './components/threadSelectorHeader';
 import CommunityList from './components/communityList';
-import UserProfile from './components/userProfile';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
   Wrapper,

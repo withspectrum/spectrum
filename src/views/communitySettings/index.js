@@ -20,10 +20,10 @@ class CommunitySettings extends React.Component<Props> {
   render() {
     const {
       match,
-      history,
+      // history,
       data: { community },
       location,
-      dispatch,
+      // dispatch,
       isLoading,
       hasError,
     } = this.props;

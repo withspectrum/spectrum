@@ -1,37 +1,23 @@
 import React from 'react';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import {
   parseActors,
   parseEvent,
   parseNotificationDate,
   parseContext,
 } from '../utils';
-import {
-  convertTimestampToTime,
-  onlyContainsEmoji,
-} from '../../../helpers/utils';
-
 import { ActorsRow } from './actorsRow';
 import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
-import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
 import Icon from '../../../components/icons';
-import {
-  Wrapper,
-  Sender,
-  MessageGroup,
-} from '../../../components/messageGroup/style';
+import { Sender, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
 import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
 import {
-  BubbleGroupContainer,
   NotificationCard,
   TextContent,
-  BubbleContainer,
   NotificationListRow,
   AttachmentsWash,
   SuccessContext,

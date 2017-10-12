@@ -14,7 +14,6 @@ import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  ButtonContainer,
   EmailInviteForm,
   EmailInviteInput,
   AddRow,
@@ -25,11 +24,6 @@ import {
   SectionTitle,
   SectionCardFooter,
 } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  Description,
-} from '../../../components/listItems/style';
 
 type Props = {
   community: Object,

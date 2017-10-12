@@ -9,7 +9,6 @@ import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
-  ExploreListItem,
   AllCommunityListItem,
   ExploreCommunityListItem,
   CommunityListItem,

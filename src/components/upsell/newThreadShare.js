@@ -32,7 +32,12 @@ class NewThreadShare extends React.Component<Props> {
 
     return (
       <NullCol bg={null}>
-        <Title>✨ The conversation is just getting started...</Title>
+        <Title>
+          <span role="img" aria-label="sparkle">
+            ✨
+          </span>{' '}
+          The conversation is just getting started...
+        </Title>
         <Subtitle>
           Share on Facebook and Twitter below, or send the direct link to your
           friends.
