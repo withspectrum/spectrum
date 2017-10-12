@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
-import { ReputationMiniCommunity } from '../../../components/reputation';
+import Reputation from '../../../components/reputation';
 import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
@@ -73,19 +73,18 @@ class CommunityList extends Component {
             <AllCommunityListItem active={!activeCommunity}>
               <Icon glyph={'everything'} />
             </AllCommunityListItem>
-            <CommunityListText>
+            <CommunityListText className={'communityListText'}>
               <CommunityListName active={!activeCommunity}>
                 Everything
               </CommunityListName>
               <CommunityListReputation>
-                <ReputationMiniCommunity
-                  tipLocation={'bottom-right'}
-                  tipText={'Your total reputation'}
+                <Reputation
+                  ignoreClick
+                  size={'mini'}
+                  tipLocation={'top-right'}
+                  tipText={'Your total rep'}
+                  reputation={user.totalReputation}
                 />
-                {user.totalReputation > 0
-                  ? truncateNumber(user.totalReputation)
-                  : '0'}{' '}
-                total rep
               </CommunityListReputation>
             </CommunityListText>
           </CommunityListPadding>
@@ -101,15 +100,19 @@ class CommunityList extends Component {
                 active={c.id === activeCommunity}
                 src={c.profilePhoto}
               />
-              <CommunityListText>
+              <CommunityListText className={'communityListText'}>
                 <CommunityListName
                   active={!activeChannel && c.id === activeCommunity}
                 >
                   {c.name}
                 </CommunityListName>
                 <CommunityListReputation active={c.id === activeCommunity}>
-                  <ReputationMiniCommunity />
-                  {truncateNumber(c.communityPermissions.reputation)}
+                  <Reputation
+                    ignoreClick
+                    size={'mini'}
+                    tipText={'Rep in this community'}
+                    reputation={c.communityPermissions.reputation}
+                  />
                 </CommunityListReputation>
               </CommunityListText>
             </CommunityListPadding>

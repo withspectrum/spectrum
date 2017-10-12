@@ -17,7 +17,7 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import ReputationIcon from '../reputation';
+import Reputation from '../reputation';
 import {
   ProfileAvatar,
   ProfileHeader,
@@ -35,7 +35,6 @@ import {
   ExtLink,
   ProUpgrade,
   ReputationContainer,
-  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -146,16 +145,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -194,16 +192,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -275,16 +272,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
