@@ -79,6 +79,7 @@ class CommunityList extends Component {
               </CommunityListName>
               <CommunityListReputation>
                 <Reputation
+                  ignoreClick
                   size={'mini'}
                   tipLocation={'top-right'}
                   tipText={'Your total rep'}
@@ -107,6 +108,7 @@ class CommunityList extends Component {
                 </CommunityListName>
                 <CommunityListReputation active={c.id === activeCommunity}>
                   <Reputation
+                    ignoreClick
                     size={'mini'}
                     tipText={'Rep in this community'}
                     reputation={c.communityPermissions.reputation}

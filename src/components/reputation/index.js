@@ -16,6 +16,7 @@ type Props = {
 class Reputation extends React.Component<Props> {
   open = e => {
     e.preventDefault();
+    if (this.props.ignoreClick) return;
     return this.props.dispatch(openModal('REP_EXPLAINER_MODAL'));
   };
 
