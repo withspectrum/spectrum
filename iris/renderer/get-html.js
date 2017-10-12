@@ -24,11 +24,11 @@ export const getHTML = ({ styleTags, metaTags, state, content }: Arguments) => {
         '<div id="root"></div>',
         `<script>window.__SERVER_STATE__=${serialize(
           state
-        )}</script><div id="root">${content}</div>`
+        )}</script><div id="root">${content}</div>${sentry}`
       )
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)
       // Inject the style tags at the end of the <head>
-      .replace('</head>', `${styleTags}${sentry}</head>`)
+      .replace('</head>', `${styleTags}</head>`)
   );
 };
