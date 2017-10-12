@@ -43,7 +43,8 @@ export const AuthorByline = props => {
       <Link to={`/users/${sender.username}`}>
         <Name>{me ? 'Me' : sender.name}</Name>
       </Link>
-      {sender.isAdmin && <Badge type="admin" />}
+      {sender.contextPermissions.isOwner && <Badge type="admin" />}
+      {sender.contextPermissions.isModerator && <Badge type="moderator" />}
       {sender.isPro && <Badge type="pro" />}
     </Byline>
   );

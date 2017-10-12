@@ -1,7 +1,7 @@
 // @flow
 import { track } from '../helpers/events';
 
-export const openModal = (name: string, props: Object) => {
+export const openModal = (name: string, props?: Object) => {
   track(`modal ${name}`, 'opened', null);
 
   return {

@@ -443,5 +443,32 @@ module.exports = {
           return !filtered || filtered.length === 0 ? false : true;
         });
       },
+    contextPermissions: (community: any, _: any, __: any, info: any) => {
+      // in some cases we fetch this upstream - e.g. in the case of querying for communitysThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
+      if (community.contextPermissions) return community.contextPermissions;
+
+      const queryName = info.operation.name.value;
+
+      const handleCheck = async () => {
+        switch (queryName) {
+          case 'getUser': {
+            const username = info.variableValues.username;
+            const user = await getUserByUsername(username);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await getUserPermissionsInCommunity(community.id, user.id);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+        }
+      };
+
+      return handleCheck();
+    },
   },
 };

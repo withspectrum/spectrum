@@ -124,7 +124,7 @@ module.exports = {
 
       // Delete message and remove participant from thread if it's the only message from that person
       debug(`permission checks pass, actually delete message#${id}`);
-      return deleteMessage(id).then(() => {
+      return deleteMessage(currentUser.id, id).then(() => {
         // We don't need to delete participants of direct message threads
         if (message.threadType === 'directMessageThread') return true;
 
