@@ -6,6 +6,7 @@ if (!IS_PROD) {
   env(path.resolve(__dirname, '../.env'), { raise: false });
 }
 import { Router } from 'express';
+// $FlowIssue
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
