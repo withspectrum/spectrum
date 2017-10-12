@@ -32,19 +32,18 @@ export default async (job: DigestJob) => {
   debug(`\nprocessing ${timeframe} digest`);
 
   // 1
-  const threads = await getThreadsForDigest(timeframe); // 1
-  if (!threads) {
+  const threads = await getThreadsForDigest(timeframe);
+  if (!threads || threads.length === 0) {
     debug('\n ❌ No threads found for this digest');
     return;
   }
   debug('\n ⚙️ Fetched threads for digest');
 
   const threadsWithData = await attachDataToThreads(threads);
-  if (!threadsWithData)
-    if (!threads) {
-      debug('\n ❌ No threads with data eligible for this digest');
-      return;
-    }
+  if (!threadsWithData || threadsWithData.length === 0) {
+    debug('\n ❌ No threads with data eligible for this digest');
+    return;
+  }
   debug('\n ⚙️ Processed threads with data');
 
   // 2

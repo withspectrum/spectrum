@@ -4,12 +4,9 @@ import {
   getReputationChangeInTimeframe,
   getTotalReputation,
 } from '../../models/reputationEvent';
+import type { User, Timeframe } from './types';
 
-type User = {
-  userId: string,
-};
-type Timeframes = 'daily' | 'weekly';
-export default async (user: User, timeframe: Timeframes) => {
+export default async (user: User, timeframe: Timeframe) => {
   const reputationGained = await getReputationChangeInTimeframe(
     user.userId,
     timeframe

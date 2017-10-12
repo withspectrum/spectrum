@@ -44,10 +44,6 @@ export const getThreadsForDigest = async (timeframe: Timeframe) => {
 };
 
 export const attachDataToThreads = async (threads: Threads) => {
-  if (!threads || threads.length === 0) {
-    return null;
-  }
-
   // create an empty object for the final output
   let obj = {};
 
@@ -96,14 +92,12 @@ export const attachDataToThreads = async (threads: Threads) => {
   );
 
   // for each of the active threads this week, determine if that that thread has been categorized yet into the new object. If so, push that thread into the array, otherwise create a new key/value pair in the object for the channel + thread
-  const finalThreads = threadsWithCommunityData.map(
+  threadsWithCommunityData.map(
     thread =>
       obj[thread.channelId]
         ? (obj[thread.channelId] = [...obj[thread.channelId], { ...thread }])
         : (obj[thread.channelId] = [{ ...thread }])
   );
-
-  const finishedTopThreads = await Promise.all(finalThreads);
 
   // return the final object containing keys for channelIds, and arrays of threads for values
   return obj;
