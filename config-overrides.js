@@ -10,6 +10,7 @@ const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+const ManifestPlugin = require('webpack-module-manifest-plugin');
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
@@ -32,10 +33,16 @@ const setCustomSwPrecacheOptions = config => {
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
   config.plugins.push(WriteFilePlugin());
+  config.plugins.push(
+    new ManifestPlugin({
+      filename: './build/client.manifest.json',
+    })
+  );
   config = injectBabelPlugin(
     [
       'import-inspector',
       {
+        currentModuleFileName: false,
         serverSideRequirePath: true,
         webpackRequireWeakId: true,
       },

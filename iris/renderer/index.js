@@ -1,4 +1,6 @@
 // Server-side renderer for our React code
+import fs from 'fs';
+const debug = require('debug')('iris:renderer');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
@@ -14,6 +16,7 @@ import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 import { inspect } from 'import-inspector';
+import manifestInspector from 'module-manifest-inspector';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import schema from '../schema';
@@ -25,10 +28,17 @@ import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
 
+// Load manigests generated at build time.
+const manifest = manifestInspector.multi(
+  JSON.parse(fs.readFileSync('build/client.manifest.json')),
+  JSON.parse(fs.readFileSync('build/server.manifest.json'))
+);
+
 const IN_MAINTENANCE_MODE =
   process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
 
 const renderer = (req, res) => {
+  debug(`server-side render ${req.url}`);
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
@@ -54,9 +64,15 @@ const renderer = (req, res) => {
       apollo: client.reducer(),
     },
   });
-  let imported = [];
-  const stopInspecting = inspect(metadata => {
-    imported.push(metadata);
+  let bundles = [];
+  const stopInspecting = inspect(data => {
+    const id = data.webpackRequireWeakId();
+    const bundle = manifest.getClientBundleForServerId(id);
+    if (!bundle) return;
+    debug(
+      `render requires code splitted module "${data.importedModulePath}"\nfound module in chunk "${bundle}"`
+    );
+    bundles.push(bundle);
   });
   const context = {};
   // The client-side app will instead use <BrowserRouter>
@@ -69,9 +85,12 @@ const renderer = (req, res) => {
   );
   // Initialise the styled-components stylesheet and wrap the app with it
   const sheet = new ServerStyleSheet();
+  debug(`render frontend`);
   renderToStringWithData(sheet.collectStyles(frontend))
     .then(content => {
+      stopInspecting();
       if (context.url) {
+        debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
         res.redirect(301, context.url);
         return;
@@ -80,12 +99,14 @@ const renderer = (req, res) => {
       const state = store.getState();
       const helmet = Helmet.renderStatic();
       if (IN_MAINTENANCE_MODE) {
+        debug('maintainance mode enabled, sending 503');
         res.status(503);
         res.set('Retry-After', 3600);
       } else {
         res.status(200);
       }
-      console.log(imported);
+      console.log(bundles);
+      debug('compile and send html');
       // Compile the HTML and send it down
       res.send(
         getHTML({

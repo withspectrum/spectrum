@@ -20,10 +20,11 @@
     "transform-flow-strip-types",
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
-    "replace-dynamic-import-runtime",
+    "syntax-dynamic-import",
     [
       "import-inspector",
       {
+        "currentModuleFileName": false,
         "serverSideRequirePath": true,
         "webpackRequireWeakId": true
       }

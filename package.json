@@ -14,6 +14,7 @@
     "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
+    "module-manifest-inspector": "^0.1.1",
     "newrelic": "^2.2.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.0.0",
@@ -22,6 +23,7 @@
     "rimraf": "^2.6.1",
     "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
+    "webpack-module-manifest-plugin": "^0.1.0",
     "write-file-webpack-plugin": "^4.1.0"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "apollo-upload-client": "^5.1.0",
     "apollo-upload-server": "^2.0.4",
     "axios": "^0.16.2",
+    "babel-plugin-replace-dynamic-import-runtime": "^1.0.2",
     "babel-plugin-styled-components": "^1.1.7",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
