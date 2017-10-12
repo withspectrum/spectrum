@@ -35,6 +35,8 @@ class Message extends Component {
         id: this.props.message.id,
         entity: 'message',
         message,
+        threadType: this.props.threadType,
+        threadId: this.props.threadId,
       })
     );
   };
