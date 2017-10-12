@@ -1,16 +1,20 @@
 import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
+import Reputation from '../../reputation';
+import Avatar from '../../avatar';
+import Icon from '../../icons';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
 import {
   modalStyles,
   Section,
-  SectionActions,
-  SectionError,
-  Subheading,
-  Padding,
+  Title,
+  Subtitle,
+  Rep,
+  IconContainer,
+  RepWrapper,
 } from './style';
 
 type Props = {};
@@ -20,7 +24,7 @@ class RepExplainerModal extends React.Component<Props> {
   };
 
   render() {
-    const { currentUser, isOpen } = this.props;
+    const { currentUser, isOpen, reputation } = this.props;
 
     return (
       <Modal
@@ -36,7 +40,40 @@ class RepExplainerModal extends React.Component<Props> {
           title={null}
           closeModal={this.closeModal}
         >
-          Howdy
+          <Section>
+            <IconContainer>
+              <Icon glyph={'rep'} size={64} />
+            </IconContainer>
+            <Title>Spectrum Rep</Title>
+            <Subtitle>
+              Rep provides context about a person's reputation in a community.
+              Rep is earned by starting and joining productive conversations.
+            </Subtitle>
+
+            {reputation <= 0 ? (
+              currentUser ? (
+                <Rep>
+                  You don't have any rep yet. Earn rep by starting a
+                  conversation or replying to other people in your communities.
+                </Rep>
+              ) : (
+                ''
+              )
+            ) : currentUser ? (
+              <Rep>
+                <Avatar src={currentUser.profilePhoto} size={24} />
+                <RepWrapper>
+                  <Reputation
+                    tipText={'Your total reputation'}
+                    reputation={reputation}
+                    ignoreClick
+                  />
+                </RepWrapper>
+              </Rep>
+            ) : (
+              ''
+            )}
+          </Section>
         </ModalContainer>
       </Modal>
     );

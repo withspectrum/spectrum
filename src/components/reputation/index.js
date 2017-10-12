@@ -12,12 +12,14 @@ type Props = {
   tipText?: string,
   tipLocation?: string,
   dispatch: Function,
+  ignoreClick: boolean,
 };
 class Reputation extends React.Component<Props> {
   open = e => {
+    const { reputation, ignoreClick, dispatch } = this.props;
     e.preventDefault();
-    if (this.props.ignoreClick) return;
-    return this.props.dispatch(openModal('REP_EXPLAINER_MODAL'));
+    if (ignoreClick) return;
+    return dispatch(openModal('REP_EXPLAINER_MODAL', { reputation }));
   };
 
   render() {
