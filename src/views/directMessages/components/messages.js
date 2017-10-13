@@ -81,7 +81,21 @@ class MessagesWithData extends Component {
     // TODO: FIXME and remove the networkStatus === 7
     if (messages && networkStatus === 7) {
       let unsortedMessages = messages.map(message => message.node);
-      let sortedMessages = sortAndGroupMessages(unsortedMessages);
+
+      const unique = array => {
+        const processed = [];
+        for (let i = array.length - 1; i >= 0; i--) {
+          if (processed.indexOf(array[i].id) < 0) {
+            processed.push(array[i].id);
+          } else {
+            array.splice(i, 1);
+          }
+        }
+        return array;
+      };
+
+      const uniqueMessages = unique(unsortedMessages);
+      const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
         <MessagesScrollWrapper>

@@ -43,7 +43,10 @@ export const AuthorByline = props => {
       <Link to={`/users/${sender.username}`}>
         <Name>{me ? 'Me' : sender.name}</Name>
       </Link>
-      {sender.isAdmin && <Badge type="admin" />}
+      {sender.contextPermissions &&
+        sender.contextPermissions.isOwner && <Badge type="admin" />}
+      {sender.contextPermissions &&
+        sender.contextPermissions.isModerator && <Badge type="moderator" />}
       {sender.isPro && <Badge type="pro" />}
     </Byline>
   );
@@ -90,7 +93,7 @@ class Messages extends Component {
 
           if (roboText) {
             return (
-              <Timestamp key={i}>
+              <Timestamp key={initialMessage.message.content}>
                 <hr />
                 <Time>{convertTimestampToDate(initialMessage.timestamp)}</Time>
                 <hr />
@@ -99,14 +102,14 @@ class Messages extends Component {
           }
 
           return (
-            <Sender key={i} me={me}>
+            <Sender key={initialMessage.id} me={me}>
               {!me && !roboText && <AuthorAvatar sender={sender} />}
               <MessageGroup me={me}>
                 <AuthorByline sender={sender} me={me} />
-                {group.map((message, i) => {
+                {group.map(message => {
                   return (
                     <Message
-                      key={i}
+                      key={message.id}
                       message={message}
                       link={`#${message.id}`}
                       reaction={'like'}

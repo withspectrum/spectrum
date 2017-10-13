@@ -6,6 +6,7 @@ import {
   NEW_MESSAGE_TEMPLATE,
   TYPE_NEW_MESSAGE_IN_THREAD,
   DEBUG_TEMPLATE,
+  TYPE_MUTE_THREAD,
 } from './constants';
 import capitalize from '../utils/capitalize';
 
@@ -90,6 +91,11 @@ export default async (job: SendNewMessageEmailJob) => {
             // Don't capitalize the one in the subject though because in a DM thread
             // that is "your conversation with X", so we don't want to capitalize it.
             title: capitalize(thread.content.title),
+            muteThreadToken: generateUnsubscribeToken(
+              job.data.user.userId,
+              TYPE_MUTE_THREAD,
+              thread.id
+            ),
           })),
           unsubscribeToken,
         },

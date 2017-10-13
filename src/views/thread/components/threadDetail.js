@@ -487,12 +487,12 @@ class ThreadDetailPure extends Component {
                   thread.creator.contextPermissions &&
                   thread.creator.contextPermissions.reputation > 0 && (
                     <span>
-                      <Reputation tipText={'Author rep in this community'} />
-                      {truncateNumber(
-                        thread.creator.contextPermissions.reputation,
-                        1
-                      )}{' '}
-                      rep
+                      <Reputation
+                        tipText={'Author rep in this community'}
+                        reputation={
+                          thread.creator.contextPermissions.reputation
+                        }
+                      />
                     </span>
                   )}
               </AuthorUsername>
