@@ -5,6 +5,8 @@ import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
   NEW_THREAD_CREATED_TEMPLATE,
   TYPE_NEW_THREAD_CREATED,
+  TYPE_MUTE_CHANNEL,
+  TYPE_MUTE_COMMUNITY,
   DEBUG_TEMPLATE,
 } from './constants';
 
@@ -60,6 +62,16 @@ export default async (job: SendNewThreadEmailJob) => {
           recipient: job.data.recipient,
           username: job.data.username,
           unsubscribeToken,
+          muteChannelToken: generateUnsubscribeToken(
+            job.data.userId,
+            TYPE_MUTE_CHANNEL,
+            job.data.channel.id
+          ),
+          muteCommunityToken: generateUnsubscribeToken(
+            job.data.userId,
+            TYPE_MUTE_COMMUNITY,
+            job.data.community.id
+          ),
         },
       });
     } catch (err) {

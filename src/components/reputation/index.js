@@ -1,43 +1,54 @@
+// @flow
 import React from 'react';
+import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
+import { truncateNumber } from '../../helpers/utils';
 import Icon from '../icons';
-import { ReputationIcon, ReputationIconMini } from './style';
+import { ReputationWrapper, ReputationLabel } from './style';
 
-export default ({ tipText }) => (
-  <ReputationIcon>
-    <Icon
-      glyph="rep"
-      size="24"
-      tipText={tipText && tipText}
-      tipLocation={'top-right'}
-    />
-  </ReputationIcon>
-);
-
-export const ReputationMini = ({ tipText }) => (
-  <ReputationIconMini>
-    <Icon
-      glyph="rep"
-      size="20"
-      tipText={tipText && tipText}
-      tipLocation={'top-right'}
-    />
-  </ReputationIconMini>
-);
-
-const customStyles = {
-  height: '16px',
-  position: 'relative',
-  top: '-2px',
-  marginRight: '0',
-  marginLeft: '-3px',
+type Props = {
+  size: 'mini' | 'default' | 'large',
+  reputation: number,
+  tipText?: string,
+  tipLocation?: string,
+  dispatch: Function,
+  ignoreClick: boolean,
 };
-export const ReputationMiniCommunity = ({ tipText, tipLocation }) => (
-  <ReputationIconMini style={customStyles}>
-    <Icon
-      glyph="rep"
-      size="20"
-      tipText={tipText && tipText}
-      tipLocation={tipLocation ? tipLocation : 'top-right'}
-    />
-  </ReputationIconMini>
-);
+class Reputation extends React.Component<Props> {
+  open = e => {
+    const { reputation, ignoreClick, dispatch } = this.props;
+    e.preventDefault();
+    if (ignoreClick) return;
+    return dispatch(openModal('REP_EXPLAINER_MODAL', { reputation }));
+  };
+
+  render() {
+    const {
+      size = 'default',
+      tipText = 'Reputation',
+      tipLocation = 'top-right',
+      reputation,
+    } = this.props;
+
+    if (!reputation) return null;
+
+    const renderedReputation = reputation > 0 ? reputation : '0';
+    const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';
+
+    return (
+      <ReputationWrapper
+        onClick={this.open}
+        tipText={`${tipText}`}
+        tipLocation={tipLocation}
+      >
+        <Icon glyph="rep" size={iconSize} />
+
+        <ReputationLabel size={size}>
+          {truncateNumber(renderedReputation, 1)} rep
+        </ReputationLabel>
+      </ReputationWrapper>
+    );
+  }
+}
+
+export default connect()(Reputation);

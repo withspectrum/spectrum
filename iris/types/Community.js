@@ -114,6 +114,7 @@ const Community = /* GraphQL */ `
 		conversationGrowth: GrowthData
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
+		contextPermissions: ContextPermissions
 	}
 
 	extend type Query {

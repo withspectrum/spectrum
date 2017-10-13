@@ -55,6 +55,7 @@ export const CommunityListWrapper = styled.div`
   width: 72px;
   min-width: 72px;
   overflow-y: hidden;
+  overflow-x: visible;
   position: relative;
   align-self: stretch;
   flex-direction: column;
@@ -81,6 +82,12 @@ export const CommunityListWrapper = styled.div`
       transition-delay: 1s;
       transition: ${Transition.hover.on};
     }
+  }
+
+  .communityListText {
+    opacity: 0;
+    transform: translateZ(0);
+    transition: ${Transition.hover.off};
   }
 
   img {
@@ -110,6 +117,13 @@ export const CommunityListWrapper = styled.div`
         transition-delay: 1s;
         transition: ${Transition.hover.on};
       }
+    }
+
+    .communityListText {
+      opacity: 1;
+      transform: translateZ(0);
+      transition: ${Transition.hover.on};
+      transition-delay: 1s;
     }
 
     img {
@@ -212,7 +226,8 @@ export const CommunityListText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  ${Truncate};
+  max-width: 100%;
+  white-space: nowrap;
 `;
 
 export const CommunityListName = styled.p`
@@ -220,6 +235,7 @@ export const CommunityListName = styled.p`
   font-weight: 500;
   margin-left: 12px;
   line-height: 1.28;
+  max-width: 164px;
 
   ${Truncate};
 `;
@@ -231,8 +247,6 @@ export const CommunityListReputation = styled.div`
   line-height: 1;
   color: ${props => props.theme.text.alt};
   width: 100%;
-
-  ${Truncate};
 `;
 
 export const AllCommunityListItem = styled.div`
@@ -659,55 +673,6 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
-`;
-
-export const UserProfileContainer = styled.div`
-  display: flex;
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  align-items: center;
-`;
-
-export const UserProfileText = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  flex: auto;
-  margin-left: 18px;
-  justify-content: center;
-`;
-
-export const UserProfileName = styled.p`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.default};
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileNameLink = styled(Link)`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.default};
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileReputation = styled.div`
-  display: flex;
-  color: ${props => props.theme.text.alt};
-  font-size: 13px;
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileSettingsLink = styled(Link)`
-  color: ${props => props.theme.text.alt};
-  cursor: pointer;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
 `;
 
 export const ChannelsContainer = styled.div`

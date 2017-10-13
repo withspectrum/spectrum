@@ -9,7 +9,7 @@ import Icon from '../icons';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { ReputationMini } from '../reputation';
+import Reputation from '../reputation';
 import {
   Wrapper,
   WrapperLi,
@@ -38,7 +38,15 @@ type CommunityProps = {
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const { community, showDescription, showMeta, meta, children } = this.props;
+    const {
+      community,
+      showDescription,
+      showMeta,
+      meta,
+      children,
+      reputation,
+    } = this.props;
+
     return (
       <Wrapper>
         <Row>
@@ -51,14 +59,11 @@ export class CommunityListItem extends React.Component<CommunityProps> {
           />
           <Col style={{ marginLeft: '12px' }}>
             <Heading>{community.name}</Heading>
-            {showMeta && (
+
+            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+            {reputation > -1 && (
               <Meta>
-                {meta && (
-                  <span>
-                    <ReputationMini tipText={'Your rep in this community'} />
-                    {meta}
-                  </span>
-                )}
+                <Reputation size={'default'} reputation={reputation} />
               </Meta>
             )}
           </Col>
@@ -151,6 +156,13 @@ export const UserListItem = ({
   user,
   children,
 }: Object): React$Element<any> => {
+  const reputation = user.contextPermissions
+    ? user.contextPermissions.reputation &&
+      user.contextPermissions.reputation > 0 &&
+      user.contextPermissions.reputation
+    : user.totalReputation && user.totalReputation > 0
+      ? user.totalReputation
+      : '0';
   return (
     <Wrapper border>
       <Row>
@@ -176,14 +188,10 @@ export const UserListItem = ({
             )}
             {(user.totalReputation || user.contextPermissions) && (
                 <span>
-                  <ReputationMini tipText={'Your rep in this community'} />
-                  {user.contextPermissions
-                    ? user.contextPermissions.reputation &&
-                      user.contextPermissions.reputation > 0 &&
-                      user.contextPermissions.reputation.toLocaleString()
-                    : user.totalReputation && user.totalReputation > 0
-                      ? user.totalReputation.toLocaleString()
-                      : '0'}
+                  <Reputation
+                    tipText={'Your rep in this community'}
+                    reputation={reputation}
+                  />
                 </span>
               )}
           </Meta>
