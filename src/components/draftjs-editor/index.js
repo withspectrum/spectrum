@@ -34,8 +34,8 @@ injectGlobal`${prismGlobalCSS}`;
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 
-import Image from './Image';
-import Embed from './Embed';
+import Image from './image';
+import Embed from './embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
