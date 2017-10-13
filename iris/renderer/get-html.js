@@ -6,7 +6,8 @@ import serialize from 'serialize-javascript';
 const html = fs
   .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
   .toString()
-  .replace(/<script.+?bootstrap\.js\".+?<\/script>/, '');
+  .replace(/<script.+?bootstrap\.js\".+?<\/script>/, '')
+  .replace(/(<script)(.+?bundle.+?<\/script>)/, '$1 defer="defer" $2');
 
 type Arguments = {
   styleTags: string,
@@ -16,7 +17,10 @@ type Arguments = {
   scriptTags: string,
 };
 
-const sentry = `<script defer src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script><script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', { whitelistUrls: [/spectrum.chat/, /www.spectrum.chat/] }).install();</script>`;
+export const createScriptTag = ({ src }: { src: string }) =>
+  `<script defer="defer" src="${src}"></script>`;
+
+const sentry = `<script defer="defer" src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script><script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', { whitelistUrls: [/spectrum.chat/, /www.spectrum.chat/] }).install();</script>`;
 
 export const getHTML = ({
   styleTags,

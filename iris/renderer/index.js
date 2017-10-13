@@ -22,7 +22,7 @@ import stats from '../../build/react-loadable.json';
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import schema from '../schema';
 import createLoaders from '../loaders';
-import { getHTML } from './get-html';
+import { getHTML, createScriptTag } from './get-html';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
@@ -96,8 +96,19 @@ const renderer = (req, res) => {
       } else {
         res.status(200);
       }
-      const bundles = getBundles(stats, modules);
+      const bundles = getBundles(stats, modules)
+        // Create <script defer> tags from bundle objects
+        .map(bundle =>
+          createScriptTag({ src: `/${bundle.file.replace(/\.map$/, '')}` })
+        )
+        // Make sure only unique bundles are included
+        .filter((value, index, self) => self.indexOf(value) === index);
       debug('compile and send html');
+      const scriptTags = [
+        createScriptTag({ src: '/static/js/bootstrap.js' }),
+        ...bundles,
+      ].join('\n');
+      debug(`script tags: ${scriptTags}`);
       // Compile the HTML and send it down
       res.send(
         getHTML({
@@ -108,18 +119,7 @@ const renderer = (req, res) => {
             helmet.title.toString() +
             helmet.meta.toString() +
             helmet.link.toString(),
-          scriptTags: [
-            '<script src="/static/js/bootstrap.js"></script>',
-            ...bundles
-              .map(
-                bundle =>
-                  `<script src="/${bundle.file.replace(
-                    /\.map$/,
-                    ''
-                  )}"></script>`
-              )
-              .filter((value, index, self) => self.indexOf(value) === index),
-          ].join('\n'),
+          scriptTags,
         })
       );
       res.end();
