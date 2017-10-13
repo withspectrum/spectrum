@@ -5,6 +5,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
+import './reset.css.js';
 import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
