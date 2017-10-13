@@ -11,13 +11,13 @@ import {
   ModActionWrapper,
   Time,
   Code,
+  Line,
 } from './style';
 
 const messageRenderer = {
   blocks: {
-    unstyled: (children, { key }) => <p key={key}>{children}</p>,
     'code-block': (children, { key }) => (
-      <Code key={key}>{children.map(child => [child, <br />])}</Code>
+      <Line key={key}>{children.map(child => [child, <br />])}</Line>
     ),
   },
 };
@@ -28,16 +28,11 @@ export const Body = props => {
   // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
 
   switch (type) {
-    case 'draftjs':
     case 'text':
     default:
-      const body =
-        type === 'draftjs'
-          ? redraft(JSON.parse(message.body), messageRenderer)
-          : message.body;
       return (
         <Text me={me} pending={pending}>
-          {body}
+          {message.body}
         </Text>
       );
     case 'emoji':
@@ -51,6 +46,12 @@ export const Body = props => {
             ? ''
             : `?max-w=${window.innerWidth * 0.6}`}`}
         />
+      );
+    case 'draftjs':
+      return (
+        <Code pending={pending}>
+          {redraft(JSON.parse(message.body), messageRenderer)}
+        </Code>
       );
   }
 };

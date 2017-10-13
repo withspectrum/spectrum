@@ -84,6 +84,10 @@ export const fontStack = css`
     sans-serif;
 `;
 
+export const monoStack = css`
+  font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
+`;
+
 const spin = keyframes`
   to {transform: rotate(360deg);}
 `;

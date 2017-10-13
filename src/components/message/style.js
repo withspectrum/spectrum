@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { Gradient, zIndex, Transition, Tooltip } from '../globals';
+import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
 
 export const Indicator = styled.div`
   position: absolute;
@@ -264,24 +264,12 @@ export const Image = styled.img`
       : ''};
 `;
 
-const Pre = styled.pre`
-  margin: 0;
-
-  code {
-    margin: 0;
-  }
+export const Code = styled(Bubble)`
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background-color: ${props => props.theme.bg.reverse};
+  color: ${props => props.theme.text.reverse};
 `;
 
-type CodeProps = {
-  children: any,
-};
-
-export const Code = ({ children, ...props }: CodeProps) => {
-  return (
-    <div className="markdown">
-      <Pre {...props}>
-        <code>{children}</code>
-      </Pre>
-    </div>
-  );
-};
+export const Line = styled.pre`${monoStack};`;
