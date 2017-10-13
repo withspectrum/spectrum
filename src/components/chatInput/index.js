@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
 import Icon from '../../components/icons';
+import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -260,7 +261,13 @@ class ChatInputWithMutation extends Component {
           </PhotoSizeError>
         )}
         <MediaInput onChange={this.sendMediaMessage} />
-        <button onClick={this.toggleCodeMessage}>Code</button>
+        <IconButton
+          glyph={'code'}
+          onClick={this.toggleCodeMessage}
+          tipText={'Write code'}
+          tipLocation={'top'}
+          style={{ marginRight: '4px' }}
+        />
         <Form focus={isFocused}>
           <EditorInput
             focus={isFocused}
