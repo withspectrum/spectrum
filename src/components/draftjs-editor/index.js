@@ -134,8 +134,8 @@ class Editor extends React.Component {
       inserting: false,
       embedding: false,
       embedUrl: '',
-    };
-  }
+    });
+  };
 
   onChange = editorState => {
     this.setState({
