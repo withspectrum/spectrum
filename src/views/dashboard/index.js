@@ -112,7 +112,6 @@ class Dashboard extends Component {
             onMouseLeave={this.removeHover}
           >
             <CommunityListScroller>
-              {/* <UserProfile user={user} /> */}
               <CommunityList
                 isHovered={isHovered}
                 communities={communities}

@@ -28,3 +28,6 @@ export const TYPE_DAILY_DIGEST = 'dailyDigest';
 export const TYPE_WEEKLY_DIGEST = 'weeklyDigest';
 export const TYPE_NEW_THREAD_CREATED = 'newThreadCreated';
 export const TYPE_NEW_MESSAGE_IN_THREAD = 'newMessageInThreads';
+export const TYPE_MUTE_CHANNEL = 'muteChannel';
+export const TYPE_MUTE_COMMUNITY = 'muteCommunity';
+export const TYPE_MUTE_THREAD = 'muteThread';

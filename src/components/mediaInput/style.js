@@ -16,11 +16,9 @@ export const MediaLabel = styled.label`
   display: inline-block;
   background: transparent;
   transition: all 0.3s ease-out;
-  border-radius: 4px;
-  padding: 4px;
-  position: relative;
-  top: 2px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${({ theme }) => theme.text.placeholder};
+  height: 32px;
+  width: 32px;
 
   &:hover {
     cursor: pointer;

@@ -101,14 +101,22 @@ export const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
-export const deleteMessage = (id: string) => {
+export const deleteMessage = (userId: string, id: string) => {
   return db
     .table('messages')
     .get(id)
     .update({
       deletedAt: new Date(),
     })
-    .run();
+    .run()
+    .then(res => {
+      addQueue('process reputation event', {
+        userId,
+        type: 'message deleted',
+        entityId: id,
+      });
+      return res;
+    });
 };
 
 export const userHasMessagesInThread = (threadId: string, userId: string) => {

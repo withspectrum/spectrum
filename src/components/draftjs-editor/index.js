@@ -31,11 +31,22 @@ import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
 injectGlobal`${draftGlobalCSS}`;
 import prismGlobalCSS from '!!raw-loader!./prism-theme.css';
 injectGlobal`${prismGlobalCSS}`;
+import Icon from '../icons';
+import { IconButton } from '../buttons';
 
-import Image from './image';
-import Embed from './embed';
-import { Wrapper, MediaRow, ComposerBase } from './style';
+import Image from './Image';
+import Embed from './Embed';
 import MediaInput from '../mediaInput';
+import SideToolbar from './toolbar';
+import {
+  Wrapper,
+  MediaRow,
+  ComposerBase,
+  SideToolbarWrapper,
+  Expander,
+  Action,
+  EmbedUI,
+} from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 type EditorProps = {
@@ -119,12 +130,38 @@ class Editor extends React.Component {
       singleLineBlockRenderMap: singleLine.blockRenderMap,
       addEmbed: embedPlugin.addEmbed,
       addImage: imagePlugin.addImage,
-    });
-  };
+      editorState: props.initialState || EditorState.createEmpty(),
+      inserting: false,
+      embedding: false,
+      embedUrl: '',
+    };
+  }
 
   onChange = editorState => {
     this.setState({
       editorState,
+    });
+  };
+
+  changeEmbedUrl = evt => {
+    this.setState({
+      embedUrl: evt.target.value,
+    });
+  };
+
+  addEmbed = evt => {
+    evt && evt.preventDefault();
+
+    const {
+      state = this.state.editorState,
+      onChange = this.onChange,
+    } = this.props;
+
+    onChange(this.state.addEmbed(state, this.state.embedUrl));
+    this.setState({
+      embedUrl: '',
+      embedding: false,
+      inserting: false,
     });
   };
 
@@ -149,8 +186,22 @@ class Editor extends React.Component {
     this.addImages(files);
   };
 
-  focus = () => {
-    this.editor.focus();
+  toggleToolbarDisplayState = () => {
+    const { inserting } = this.state;
+
+    this.setState({
+      inserting: !inserting,
+      embedding: false,
+    });
+  };
+
+  toggleEmbedInputState = () => {
+    const { embedding } = this.state;
+
+    this.setState({
+      embedding: !embedding,
+      inserting: false,
+    });
   };
 
   render() {
@@ -171,6 +222,9 @@ class Editor extends React.Component {
       readOnly,
       ...rest
     } = this.props;
+    const { embedding, inserting } = this.state;
+    const linkPreviewIsLoading = linkPreview && linkPreview.loading;
+    const linkPreviewIsReady = linkPreview && linkPreview.data;
 
     console.log(singleLine, this.state.plugins);
 
@@ -178,7 +232,6 @@ class Editor extends React.Component {
       return (
         <ComposerBase
           className={markdown !== false && 'markdown'}
-          onClick={this.focus}
           focus={focus}
         >
           <DraftEditor
@@ -203,9 +256,46 @@ class Editor extends React.Component {
             autoCorrect="off"
             {...rest}
           />
-          {showLinkPreview && linkPreview && linkPreview.loading ? (
+          {images !== false &&
+            !readOnly && (
+              <SideToolbar editorState={state} editorRef={this.editor}>
+                <Expander inserting={inserting}>
+                  <IconButton
+                    glyph={'inserter'}
+                    onClick={this.toggleToolbarDisplayState}
+                  />
+                  <Action>
+                    <MediaInput
+                      onChange={this.addImage}
+                      multiple
+                      tipLocation={'right'}
+                    />
+                  </Action>
+                  <Action embedding={embedding}>
+                    <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
+                      <label htmlFor="embed-input">
+                        <Icon
+                          glyph={'embed'}
+                          tipText={'Embed a URL'}
+                          onClick={this.toggleEmbedInputState}
+                        />
+                        <input
+                          id="embed-input"
+                          type="url"
+                          placeholder="Enter a URL to embed"
+                          value={this.state.embedUrl}
+                          onChange={this.changeEmbedUrl}
+                        />
+                      </label>
+                      <button onClick={this.addEmbed}>Embed</button>
+                    </EmbedUI>
+                  </Action>
+                </Expander>
+              </SideToolbar>
+            )}
+          {showLinkPreview && linkPreviewIsLoading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          ) : showLinkPreview && linkPreviewIsReady ? (
             <LinkPreview
               data={linkPreview.data}
               size={'large'}
@@ -215,12 +305,6 @@ class Editor extends React.Component {
               margin={'16px 0 24px 0'}
             />
           ) : null}
-          {images !== false &&
-            !this.props.readOnly && (
-              <MediaInput onChange={this.addImage} multiple>
-                Add
-              </MediaInput>
-            )}
         </ComposerBase>
       );
     } else {
@@ -229,11 +313,7 @@ class Editor extends React.Component {
           className={className}
           style={{ width: '100%', height: '100%', ...style }}
         >
-          <Wrapper
-            className={markdown !== false && 'markdown'}
-            onClick={this.focus}
-            focus={focus}
-          >
+          <Wrapper className={markdown !== false && 'markdown'} focus={focus}>
             <DraftEditor
               editorState={state}
               onChange={onChange}
@@ -257,9 +337,9 @@ class Editor extends React.Component {
               {...rest}
             />
           </Wrapper>
-          {showLinkPreview && linkPreview && linkPreview.loading ? (
+          {showLinkPreview && linkPreviewIsLoading ? (
             <LinkPreviewLoading margin={'16px 0 24px 0'} />
-          ) : showLinkPreview && linkPreview && linkPreview.data ? (
+          ) : showLinkPreview && linkPreviewIsReady ? (
             <LinkPreview
               data={linkPreview.data}
               size={'large'}

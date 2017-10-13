@@ -239,14 +239,5 @@ export const ReputationContainer = styled.div`
   padding: 12px 0;
   margin: 0 16px;
   display: flex;
-`;
-
-export const ReputationCount = styled.p`
-  font-size: 14px;
-  font-weight: 500;
   color: ${props => props.theme.text.default};
-
-  strong {
-    font-weight: 700;
-  }
 `;
