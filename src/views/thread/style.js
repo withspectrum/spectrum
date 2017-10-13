@@ -50,7 +50,6 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
-  align-self: stretch;
 `;
 
 export const ChatInputWrapper = styled(FlexCol)`
