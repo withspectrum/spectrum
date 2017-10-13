@@ -28,7 +28,7 @@ export const MessageGroup = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
-  margin-left: ${props => (props.me ? `0` : `16px`)};
+  margin-left: ${props => (props.me ? `0` : `8px`)};
   align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
 `;
 
@@ -37,7 +37,7 @@ export const Byline = styled.span`
   font-size: 11px;
   line-height: 16px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */

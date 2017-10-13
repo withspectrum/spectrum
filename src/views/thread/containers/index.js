@@ -232,7 +232,7 @@ class ThreadContainer extends React.Component<Props, State> {
             style={{ gridArea: 'header' }}
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-            <Detail type="only">
+            <Detail type={slider ? '' : 'only'}>
               <ThreadDetail thread={thread} slider={slider} />
 
               <Messages
