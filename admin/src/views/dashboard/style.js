@@ -53,6 +53,7 @@ export const Count = styled.h4`
   font-size: 24px;
   font-weight: 800;
   margin: 0 16px 24px;
+  display: block;
 `;
 
 export const HeaderZoneBoy = styled.div`
@@ -150,3 +151,21 @@ export const RangeLabel = styled.div`
 `;
 
 export const Row = styled.div`display: flex;`;
+
+export const CoreMetricsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: calc(100% - 8px);
+  background: ${props => props.theme.bg.default};
+  padding: 32px;
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.border.default};
+  margin: 16px 4px 4px;
+`;
+export const ChartContainer = styled.div`
+  display: flex;
+  margin: 8px 16px 24px;
+  justify-content: center;
+  align-items: center;
+`;

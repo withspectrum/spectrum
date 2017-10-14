@@ -5,6 +5,24 @@ import { userCommunitiesFragment } from './fragments/user/userCommunities';
 const META_INFORMATION_QUERY = gql`
   query {
     meta {
+      coreMetrics {
+        dau
+        wau
+        mau
+        dac
+        wac
+        mac
+        cpu
+        mpu
+        tpu
+        users
+        communities
+        threads
+        dmThreads
+        threadMessages
+        dmMessages
+        date
+      }
       usersGrowth {
         count
         dau
