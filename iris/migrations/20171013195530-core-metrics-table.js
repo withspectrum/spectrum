@@ -1,4 +1,3 @@
-// @flow
 'use strict';
 
 exports.up = function(r, conn) {
