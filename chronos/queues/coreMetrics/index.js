@@ -93,6 +93,6 @@ export default async () => {
     threadMessages,
     dmMessages,
   };
-  console.log(coreMetrics);
+
   return saveCoreMetrics(coreMetrics);
 };
