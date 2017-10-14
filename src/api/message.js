@@ -85,106 +85,104 @@ const SEND_MESSAGE_MUTATION = gql`
   ${messageInfoFragment}
 `;
 const SEND_MESSAGE_OPTIONS = {
-  props: ({ ownProps, mutate }) =>
-    console.log(ownProps) || {
-      sendMessage: message =>
-        mutate({
-          variables: {
-            message: {
-              ...message,
-              content: {
-                body:
-                  message.messageType === 'media' ? '' : message.content.body,
-              },
+  props: ({ ownProps, mutate }) => ({
+    sendMessage: message =>
+      mutate({
+        variables: {
+          message: {
+            ...message,
+            content: {
+              body: message.messageType === 'media' ? '' : message.content.body,
             },
           },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            addMessage: {
-              __typename: 'Message',
-              sender: {
-                ...ownProps.currentUser,
-                __typename: 'User',
-              },
-              timestamp: +new Date(),
-              content: {
-                ...message.content,
-                __typename: 'MessageContent',
-              },
-              id: Math.round(Math.random() * -1000000),
-              reactions: {
-                count: 0,
-                hasReacted: false,
-                __typename: 'ReactionData',
-              },
-              messageType: message.messageType,
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          addMessage: {
+            __typename: 'Message',
+            sender: {
+              ...ownProps.currentUser,
+              __typename: 'User',
             },
+            timestamp: +new Date(),
+            content: {
+              ...message.content,
+              __typename: 'MessageContent',
+            },
+            id: Math.round(Math.random() * -1000000),
+            reactions: {
+              count: 0,
+              hasReacted: false,
+              __typename: 'ReactionData',
+            },
+            messageType: message.messageType,
           },
-          update: (store, { data: { addMessage } }) => {
-            // we have to split out the optimistic update by thread type
-            // because DMs and story threads have different queries and response
-            // shapes
-            if (ownProps.threadType === 'story') {
-              // Read the data from our cache for this query.
-              const data = store.readQuery({
-                query: GET_THREAD_MESSAGES_QUERY,
-                variables: {
-                  id: ownProps.thread,
-                },
-              });
+        },
+        update: (store, { data: { addMessage } }) => {
+          // we have to split out the optimistic update by thread type
+          // because DMs and story threads have different queries and response
+          // shapes
+          if (ownProps.threadType === 'story') {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
 
-              // ignore the addMessage from the server, apollo will automatically
-              // override the optimistic object
-              if (!addMessage || typeof addMessage.id === 'string') {
-                return;
-              }
-
-              data.thread.messageConnection.edges.push({
-                cursor: addMessage.id,
-                node: addMessage,
-                __typename: 'ThreadMessageEdge',
-              });
-
-              // Write our data back to the cache.
-              store.writeQuery({
-                query: GET_THREAD_MESSAGES_QUERY,
-                data,
-                variables: {
-                  id: ownProps.thread,
-                },
-              });
-            } else if (ownProps.threadType === 'directMessageThread') {
-              // Read the data from our cache for this query.
-              const data = store.readQuery({
-                query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-                variables: {
-                  id: ownProps.thread,
-                },
-              });
-
-              // ignore the addMessage from the server, apollo will automatically
-              // override the optimistic object
-              if (!addMessage || typeof addMessage.id === 'string') {
-                return;
-              }
-
-              data.directMessageThread.messageConnection.edges.push({
-                cursor: addMessage.id,
-                node: addMessage,
-                __typename: 'DirectMessageEdge',
-              });
-              // Write our data back to the cache.
-              store.writeQuery({
-                query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-                data,
-                variables: {
-                  id: ownProps.thread,
-                },
-              });
+            // ignore the addMessage from the server, apollo will automatically
+            // override the optimistic object
+            if (!addMessage || typeof addMessage.id === 'string') {
+              return;
             }
-          },
-        }),
-    },
+
+            data.thread.messageConnection.edges.push({
+              cursor: addMessage.id,
+              node: addMessage,
+              __typename: 'ThreadMessageEdge',
+            });
+
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              data,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
+          } else if (ownProps.threadType === 'directMessageThread') {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
+
+            // ignore the addMessage from the server, apollo will automatically
+            // override the optimistic object
+            if (!addMessage || typeof addMessage.id === 'string') {
+              return;
+            }
+
+            data.directMessageThread.messageConnection.edges.push({
+              cursor: addMessage.id,
+              node: addMessage,
+              __typename: 'DirectMessageEdge',
+            });
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              data,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
+          }
+        },
+      }),
+  }),
 };
 export const sendMessageMutation = graphql(
   SEND_MESSAGE_MUTATION,
