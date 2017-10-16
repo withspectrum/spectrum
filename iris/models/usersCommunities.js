@@ -312,10 +312,8 @@ const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .between([userId, communityId], [userId, communityId], {
+    .getAll([userId, communityId], {
       index: 'userIdAndCommunityId',
-      rightBound: 'closed',
-      leftBound: 'closed',
     })
     .run()
     .then(data => {
@@ -333,6 +331,29 @@ const getUserPermissionsInCommunity = (
           receiveNotifications: false,
         };
       }
+    });
+};
+
+type UserIdAndCommunityId = [string, string];
+
+const getUsersPermissionsInCommunities = (
+  input: Array<UserIdAndCommunityId>
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...input, { index: 'userIdAndCommunityId' })
+    .run()
+    .then(data => {
+      if (!data)
+        return Array.from({ length: input.length }, () => ({
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          receiveNotifications: false,
+        }));
+
+      return data;
     });
 };
 
@@ -364,4 +385,5 @@ module.exports = {
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
   getReputationByUser,
+  getUsersPermissionsInCommunities,
 };

@@ -1,3 +1,4 @@
+// @flow
 // $FlowFixMe
 import ImgixClient from 'imgix-core-js';
 const {
@@ -28,10 +29,8 @@ import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
-import {
-  getReputationByUser,
-  getUserPermissionsInCommunity,
-} from '../models/usersCommunities';
+import type { DBUser } from '../models/user';
+import { getReputationByUser } from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -41,7 +40,7 @@ module.exports = {
   Query: {
     user: (
       _: any,
-      args: { id: string, username: string } = {},
+      args: { id?: string, username?: string } = {},
       { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.user.load(args.id);
@@ -53,7 +52,7 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    coverPhoto: ({ coverPhoto }) => {
+    coverPhoto: ({ coverPhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
         return imgix.buildURL(coverPhoto, { w: 640, h: 192 });
@@ -61,7 +60,7 @@ module.exports = {
       // if the image is being served from the S3 imgix source, return that url
       return coverPhoto;
     },
-    profilePhoto: ({ profilePhoto }) => {
+    profilePhoto: ({ profilePhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (profilePhoto && profilePhoto.indexOf('spectrum.imgix.net') < 0) {
         return imgix.buildURL(profilePhoto, { w: 128, h: 128 });
@@ -69,10 +68,10 @@ module.exports = {
       // if the image is being served from the S3 imgix source, return that url
       return profilePhoto;
     },
-    isAdmin: ({ id }: { id: string }) => {
+    isAdmin: ({ id }: DBUser) => {
       return isAdmin(id);
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
       return loaders.userRecurringPayments
         .load(id)
         .then(
@@ -80,9 +79,9 @@ module.exports = {
         );
     },
     everything: (
-      { id }: { id: string },
+      { id }: DBUser,
       { first, after }: PaginationOptions,
-      { user }
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
@@ -90,6 +89,7 @@ module.exports = {
       const lastThreadIndex =
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       // TODO: Make this more performant by doingan actual db query rather than this hacking around
+      // $FlowFixMe
       return getEverything(user.id, {
         first,
         after: lastThreadIndex,
@@ -105,7 +105,7 @@ module.exports = {
           : [],
       }));
     },
-    communityConnection: (user: Object) => ({
+    communityConnection: (user: DBUser) => ({
       // Don't paginate communities and channels of a user
       pageInfo: {
         hasNextPage: false,
@@ -118,7 +118,7 @@ module.exports = {
         }))
       ),
     }),
-    channelConnection: (user: Object) => ({
+    channelConnection: (user: DBUser) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -128,7 +128,7 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: ({ id }) => ({
+    directMessageThreadsConnection: ({ id }: DBUser) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -141,7 +141,7 @@ module.exports = {
     threadConnection: (
       { id }: { id: string },
       { first, after }: PaginationOptions,
-      { user }
+      { user }: GraphQLContext
     ) => {
       const currentUser = user;
       // if a logged in user is viewing the profile, handle logic to get viewable threads
@@ -177,12 +177,19 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
-    recurringPayments: (_, __, { user }) => {
+    recurringPayments: (
+      { id }: DBUser,
+      __: any,
+      { user, loaders }: GraphQLContext
+    ) => {
       if (!user) {
         return new UserError('You must be signed in to continue.');
       }
+      if (id !== user.id) {
+        throw new UserError('You can only see your own recurring payments.');
+      }
 
-      return getUserRecurringPayments(user.id).then(subs => {
+      return loaders.userRecurringPayments.load(user.id).then(subs => {
         const userProSubs =
           subs && subs.filter(obj => obj.planId === 'beta-pro');
         if (!userProSubs || userProSubs.length === 0) {
@@ -199,22 +206,27 @@ module.exports = {
         }
       });
     },
-    settings: (_: any, __: any, { user }: GraphQLContext) => {
+    settings: (_: DBUser, __: any, { user }: GraphQLContext) => {
       if (!user) return new UserError('You must be signed in to continue.');
       return getUsersSettings(user.id);
     },
-    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+    invoices: ({ id }: DBUser, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError('You must be logged in to view these settings.');
 
       return getInvoicesByUser(currentUser.id);
     },
-    totalReputation: async ({ id }: { id: string }, _: any, __: any) => {
+    totalReputation: async ({ id }: DBUser, _: any, __: any) => {
       if (!id) return 0;
       return getReputationByUser(id);
     },
-    contextPermissions: (user: any, _: any, __: any, info: any) => {
+    contextPermissions: (
+      user: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (user.contextPermissions) return user.contextPermissions;
 
@@ -230,7 +242,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -244,7 +259,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -260,7 +278,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(id, user.id);
+            } = await loaders.userPermissionsInCommunity.load([user.id, id]);
             return {
               reputation: reputation || 0,
               isModerator,

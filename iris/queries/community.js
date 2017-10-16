@@ -13,10 +13,7 @@ const {
   getCommunityGrowth,
 } = require('../models/community');
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
-const {
-  getUserPermissionsInCommunity,
-  getMembersInCommunity,
-} = require('../models/usersCommunities');
+const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
 const { getUserByUsername } = require('../models/user');
 const {
@@ -78,10 +75,10 @@ module.exports = {
     communityPermissions: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       if (!id || !user) return false;
-      return getUserPermissionsInCommunity(id, user.id);
+      return loaders.userPermissionsInCommunity.load([user.id, id]);
     },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
@@ -227,7 +224,7 @@ module.exports = {
     recurringPayments: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -236,10 +233,10 @@ module.exports = {
       }
 
       const queryRecurringPayments = async () => {
-        const userPermissions = await getUserPermissionsInCommunity(
+        const userPermissions = await loaders.userPermissionsInCommunity.load([
+          currentUser.id,
           id,
-          currentUser.id
-        );
+        ]);
         if (!userPermissions.isOwner) return;
 
         const rPayments = await getCommunityRecurringPayments(id);
@@ -262,7 +259,7 @@ module.exports = {
     memberGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -270,10 +267,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -315,7 +312,7 @@ module.exports = {
     conversationGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -323,10 +320,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -367,10 +364,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -394,10 +391,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       return getThreadsByCommunityInTimeframe(
         id,
@@ -443,7 +440,12 @@ module.exports = {
           return !filtered || filtered.length === 0 ? false : true;
         });
       },
-    contextPermissions: (community: any, _: any, __: any, info: any) => {
+    contextPermissions: (
+      community: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for communitysThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (community.contextPermissions) return community.contextPermissions;
 
@@ -458,7 +460,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(community.id, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              community.id,
+            ]);
             return {
               reputation,
               isModerator,

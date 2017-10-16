@@ -12,6 +12,7 @@ export type DBUser = {
   email?: string,
   createdAt: Date,
   name: string,
+  coverPhoto: string,
   profilePhoto: string,
   providerId?: string,
   githubProviderId?: string,
