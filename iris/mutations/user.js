@@ -7,7 +7,7 @@ import {
   setUserPendingEmail,
   updateUserEmail,
 } from '../models/user';
-import type { EditUserArguments } from '../models/user';
+import type { EditUserArguments, DBUser } from '../models/user';
 import {
   getUsersSettings,
   updateUsersNotificationSettings,
@@ -35,7 +35,7 @@ export type WebPushSubscription = {
 
 module.exports = {
   Mutation: {
-    editUser: (_, args: EditUserArguments, { user }) => {
+    editUser: (_: any, args: EditUserArguments, { user }: { user: DBUser }) => {
       const currentUser = user;
 
       // user must be authed to edit a channel
@@ -67,9 +67,9 @@ module.exports = {
       }
     },
     toggleNotificationSettings: (
-      _,
+      _: any,
       { input }: { input: ToggleNotificationsArguments },
-      { user }
+      { user }: { user: DBUser }
     ) => {
       const currentUser = user;
 
@@ -101,9 +101,9 @@ module.exports = {
       );
     },
     subscribeWebPush: (
-      _,
+      _: any,
       { subscription }: { subscription: WebPushSubscription },
-      { user }
+      { user }: { user: DBUser }
     ) => {
       if (!user || !user.id)
         throw new UserError(
@@ -131,7 +131,11 @@ module.exports = {
           throw new UserError(`Couldn't store web push subscription.`);
         });
     },
-    unsubscribeWebPush: (_, endpoint: string, { user }) => {
+    unsubscribeWebPush: (
+      _: any,
+      endpoint: string,
+      { user }: { user: DBUser }
+    ) => {
       if (!user || !user.id)
         throw new UserError(
           'Can only unsubscribe from web push notifications when logged in.'
@@ -142,7 +146,11 @@ module.exports = {
           throw new UserError(`Couldn't remove web push subscription.`);
         });
     },
-    updateUserEmail: (_, { email }, { user }) => {
+    updateUserEmail: (
+      _: any,
+      { email }: { email: string },
+      { user }: { user: DBUser }
+    ) => {
       const currentUser = user;
       if (!currentUser) {
         return new UserError(
