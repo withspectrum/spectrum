@@ -1,11 +1,9 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
@@ -27,7 +25,7 @@ import {
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
-  const { data: { attachments, participants } } = props;
+  const { location: { pathname }, data: { attachments, participants } } = props;
   const attachmentsExist = attachments && attachments.length > 0;
   const participantsExist = participants && participants.length > 0;
 
@@ -35,7 +33,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     <StyledThreadFeedCard>
       <CardLink
         to={{
-          pathname: window.location.pathname,
+          pathname: pathname,
           search: `?thread=${props.data.id}`,
         }}
       />
@@ -43,7 +41,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         <FormattedThreadLocation {...props} />
         <Link
           to={{
-            pathname: window.location.pathname,
+            pathname: pathname,
             search: `?thread=${props.data.id}`,
           }}
         >
@@ -94,5 +92,5 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   );
 };
 
-const ThreadFeedCard = compose(pure)(ThreadFeedCardPure);
+const ThreadFeedCard = compose(withRouter)(ThreadFeedCardPure);
 export default connect()(ThreadFeedCard);

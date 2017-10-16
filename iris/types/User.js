@@ -1,3 +1,4 @@
+// @flow
 const User = /* GraphQL */ `
 	type UserCommunitiesConnection {
 		pageInfo: PageInfo!
@@ -98,6 +99,7 @@ const User = /* GraphQL */ `
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
+		contextPermissions: ContextPermissions
 	}
 
 	extend type Query {

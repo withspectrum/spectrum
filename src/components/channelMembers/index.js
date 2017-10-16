@@ -1,15 +1,13 @@
 //@flow
 import React, { Component } from 'react';
 import { UserListItem } from '../listItems';
-import { Button } from '../buttons';
-// $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { LoadingCard } from '../loading';
-import { NullCard } from '../upsell';
 import { getChannelMembersQuery } from '../../api/channel';
 import { FetchMoreButton } from '../threadFeed/style';
+import ViewError from '../viewError';
+import viewNetworkHandler from '../viewNetworkHandler';
 import {
   StyledCard,
   ListHeader,
@@ -18,37 +16,34 @@ import {
   ListFooter,
 } from '../listItems/style';
 
-const ErrorState = () =>
-  <NullCard
-    bg="error"
-    heading={`Whoops!`}
-    copy={`Something went wrong on our end... Mind reloading?`}
-  >
-    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-      Reload
-    </Button>
-  </NullCard>;
+type Props = {
+  data: {
+    channel: Object,
+    fetchMore: Function,
+  },
+  isLoading: boolean,
+  isFetchingMore: boolean,
+};
 
-class ChannelMembers extends Component {
+class ChannelMembers extends Component<Props> {
   render() {
-    const { data: { error, channel, networkStatus, fetchMore } } = this.props;
-    const members =
-      channel &&
-      channel.memberConnection &&
-      channel.memberConnection.edges.map(member => member.node);
-    const totalCount = channel && channel.metaData && channel.metaData.members;
+    const {
+      data: { channel, fetchMore },
+      data,
+      isLoading,
+      isFetchingMore,
+    } = this.props;
 
-    if (networkStatus === 1) {
-      return <LoadingCard />;
-    } else if (error) {
-      return <ErrorState />;
-    } else {
+    if (data && data.channel) {
+      const members =
+        channel.memberConnection &&
+        channel.memberConnection.edges.map(member => member.node);
+      const totalCount = channel.metaData && channel.metaData.members;
+
       return (
         <StyledCard>
           <ListHeader>
-            <LargeListHeading>
-              {totalCount} Members
-            </LargeListHeading>
+            <LargeListHeading>{totalCount} Members</LargeListHeading>
           </ListHeader>
 
           <ListContainer>
@@ -62,20 +57,33 @@ class ChannelMembers extends Component {
               })}
           </ListContainer>
 
-          {channel.memberConnection.pageInfo.hasNextPage &&
+          {channel.memberConnection.pageInfo.hasNextPage && (
             <ListFooter>
               <FetchMoreButton
                 color={'brand.default'}
-                loading={networkStatus === 3}
+                loading={isFetchingMore}
                 onClick={() => fetchMore()}
               >
                 Load more
               </FetchMoreButton>
-            </ListFooter>}
+            </ListFooter>
+          )}
         </StyledCard>
       );
     }
+
+    if (isLoading) {
+      return <LoadingCard />;
+    }
+
+    return (
+      <StyledCard>
+        <ViewError />
+      </StyledCard>
+    );
   }
 }
 
-export default compose(getChannelMembersQuery, pure)(ChannelMembers);
+export default compose(getChannelMembersQuery, viewNetworkHandler)(
+  ChannelMembers
+);

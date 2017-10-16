@@ -11,10 +11,16 @@ export const threadInfoFragment = gql`
     messageCount
     createdAt
     modifiedAt
+    lastActive
     receiveNotifications
     creator {
       ...userInfo
       ...userMetaData
+      contextPermissions {
+        reputation
+        isOwner
+        isModerator
+      }
     }
     channel {
       ...channelInfo

@@ -1,7 +1,9 @@
+// @flow
 const Message = /* GraphQL */ `
 	enum MessageTypes {
 		text
 		media
+		draftjs
 	}
 
 	enum ThreadTypes {
@@ -52,6 +54,7 @@ const Message = /* GraphQL */ `
 
 	extend type Mutation {
 		addMessage(message: MessageInput!): Message
+        deleteMessage(id: ID!): Boolean
 	}
 
 	extend type Subscription {

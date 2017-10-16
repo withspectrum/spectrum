@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
@@ -35,6 +34,7 @@ const CREATE_DIRECT_MESSAGE_THREAD_OPTIONS = {
           input,
         },
         update: (store, { data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) return;
           const data = store.readQuery({
             query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY,
           });

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -60,13 +59,13 @@ export const StyledLabel = styled.label`
 
   &:hover > input {
     border-color: ${props =>
-      props.disabled ? props.theme.border.default : props.theme.text.alt};
+      props.disabled ? props.theme.bg.border : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
 
   &:hover > input:focus {
     border-color: ${props =>
-      props.disabled ? props.theme.inactive : props.theme.brand.alt};
+      props.disabled ? props.theme.bg.inactive : props.theme.brand.alt};
   }
 `;
 
@@ -79,7 +78,7 @@ export const StyledInput = styled.input`
   font-size: 18px;
   border: 2px solid
     ${props =>
-      props.disabled ? props.theme.border.default : props.theme.inactive};
+      props.disabled ? props.theme.bg.border : props.theme.bg.inactive};
   border-radius: 8px;
   padding: 12px 24px;
   margin-top: 2px;

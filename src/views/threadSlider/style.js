@@ -61,7 +61,7 @@ export const Close = styled(Link)`
   display: flex;
   align-items: center;
   flex: 1;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   padding: 8px 16px;
   flex: 1 0 auto;
   background: ${props => props.theme.bg.wash};

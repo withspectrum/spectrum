@@ -259,6 +259,7 @@ const getMembersInCommunity = (communityId: string): Promise<Array<string>> => {
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isMember: true })
+      .orderBy(db.desc('reputation'))
       .run()
       // return an array of the userIds to be loaded by gql
       .then(users => users.map(user => user.userId))
@@ -311,8 +312,9 @@ const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], {
+      index: 'userIdAndCommunityId',
+    })
     .run()
     .then(data => {
       // if a record exists
@@ -329,6 +331,29 @@ const getUserPermissionsInCommunity = (
           receiveNotifications: false,
         };
       }
+    });
+};
+
+type UserIdAndCommunityId = [string, string];
+
+const getUsersPermissionsInCommunities = (
+  input: Array<UserIdAndCommunityId>
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...input, { index: 'userIdAndCommunityId' })
+    .run()
+    .then(data => {
+      if (!data)
+        return Array.from({ length: input.length }, () => ({
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          receiveNotifications: false,
+        }));
+
+      return data;
     });
 };
 
@@ -360,4 +385,5 @@ module.exports = {
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
   getReputationByUser,
+  getUsersPermissionsInCommunities,
 };

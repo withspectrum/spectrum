@@ -1,20 +1,11 @@
-// @flow
 import React from 'react';
-// @Flow Fix Me
+// @FlowFixMe
 import styled from 'styled-components';
-// @Flow Fix Me
+// @FlowFixMe
 import { Link } from 'react-router-dom';
-import { SERVER_URL } from '../../api/constants';
-import { Button } from '../../components/buttons';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
-import {
-  Shadow,
-  hexa,
-  Gradient,
-  FlexCol,
-  FlexRow,
-} from '../../components/globals';
+import { hexa, Gradient, FlexCol, FlexRow } from '../../components/globals';
 import Search from '../explore/components/search';
 
 import Theme from './components/themes';
@@ -167,7 +158,7 @@ export const Centralized = props => {
   `;
 
   return (
-    <Section goop={6} color={'space.light'}>
+    <Section goop={6} color={'space.alt'}>
       <ThisContent>
         <Discover />
         <Text>
@@ -321,15 +312,6 @@ export const Sell = props => {
   const Actions = styled(Flexer)`
     margin-bottom: 48px;
     justify-content: center;
-  `;
-
-  const ThisSecondaryCTA = styled(SecondaryCTA)`
-    margin-left: 16px;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      margin-top: 16px;
-    }
   `;
 
   const ThisSection = styled(Section)`margin-bottom: 40px;`;

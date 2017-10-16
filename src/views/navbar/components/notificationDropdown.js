@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -10,12 +8,11 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import Dropdown from '../../../components/dropdown';
+import { Loading } from '../../../components/loading';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
 import { DropdownHeader, DropdownFooter } from '../style';
-import {
-  NotificationDropdownList,
-} from '../../../views/notifications/components/notificationDropdownList';
+import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
   <NullState
@@ -25,12 +22,33 @@ const NullNotifications = () => (
   />
 );
 
-const NotificationDropdownPure = ({
-  rawNotifications,
-  markAllRead,
-  currentUser,
-  history,
-}) => {
+const NotificationContainer = props => {
+  const { rawNotifications, currentUser, history, error, loading } = props;
+
+  const noNotifications = !rawNotifications || rawNotifications.length === 0;
+
+  if (loading) {
+    return (
+      <div style={{ margin: '32px 0' }}>
+        <Loading />
+      </div>
+    );
+  } else if (noNotifications || error) {
+    return <NullNotifications />;
+  } else {
+    return (
+      <NotificationDropdownList
+        rawNotifications={rawNotifications}
+        currentUser={currentUser}
+        history={history}
+      />
+    );
+  }
+};
+
+const NotificationDropdownPure = props => {
+  const { rawNotifications, currentUser, history } = props;
+
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
@@ -39,30 +57,24 @@ const NotificationDropdownPure = ({
           <Icon glyph="settings" />
         </Link>
       </DropdownHeader>
-      {!rawNotifications ||
-        (rawNotifications.length === 0 && <NullNotifications />)}
-      {rawNotifications &&
-        <NotificationDropdownList
-          rawNotifications={rawNotifications}
-          currentUser={currentUser}
-          history={history}
-        />}
+
+      <NotificationContainer {...props} />
 
       {rawNotifications &&
-        rawNotifications.length > 0 &&
-        <DropdownFooter>
-          <TextButton
-            color={'brand.default'}
-            onClick={() => history.push('/notifications')}
-          >
-            View all
-          </TextButton>
-        </DropdownFooter>}
-
+        rawNotifications.length > 0 && (
+          <DropdownFooter>
+            <TextButton
+              color={'brand.default'}
+              onClick={() => history.push('/notifications')}
+            >
+              View all
+            </TextButton>
+          </DropdownFooter>
+        )}
     </Dropdown>
   );
 };
 
-export const NotificationDropdown = compose(withRouter, pure)(
+export const NotificationDropdown = compose(withRouter)(
   NotificationDropdownPure
 );

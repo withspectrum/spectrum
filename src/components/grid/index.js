@@ -16,6 +16,10 @@ const StyledGrid = styled(FlexRow)`
     + span {
       margin-top: 0;
     }
+
+    @media (max-width: 768px) {
+      flex: none;
+    }
   }
 
   @media (max-width: 768px) {
@@ -37,9 +41,6 @@ const StyledGrid = styled(FlexRow)`
   }
 `;
 
-const Grid = props =>
-  <StyledGrid>
-    {props.children}
-  </StyledGrid>;
+const Grid = props => <StyledGrid>{props.children}</StyledGrid>;
 
 export default Grid;

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
@@ -9,8 +8,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
@@ -20,7 +17,7 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import ReputationIcon from '../reputation';
+import Reputation from '../reputation';
 import {
   ProfileAvatar,
   ProfileHeader,
@@ -38,7 +35,6 @@ import {
   ExtLink,
   ProUpgrade,
   ReputationContainer,
-  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -117,40 +113,47 @@ const UserWithData = ({
         </CoverSubtitle>
 
         {(user.description || user.website) && (
-          <CoverDescription>
-            {user.description && <p>{user.description}</p>}
-            {user.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={addProtocolToString(user.website)}
-                >
-                  {user.website}
-                </a>
-              </ExtLink>
-            )}
-          </CoverDescription>
-        )}
+            <CoverDescription>
+              {user.description && <p>{user.description}</p>}
+              {user.website && (
+                <ExtLink>
+                  <Icon glyph="link" size={24} />
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={addProtocolToString(user.website)}
+                  >
+                    {user.website}
+                  </a>
+                </ExtLink>
+              )}
+            </CoverDescription>
+          )}
 
         {!user.isPro &&
-        currentUser &&
-        user.id === currentUser.id && (
-          <ProUpgrade>
-            <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
-              Upgrade to Pro
-            </Button>
-          </ProUpgrade>
-        )}
+          currentUser &&
+          user.id === currentUser.id && (
+            <ProUpgrade>
+              <Button
+                onClick={() => triggerUpgrade()}
+                gradientTheme={'success'}
+              >
+                Upgrade to Pro
+              </Button>
+            </ProUpgrade>
+          )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
-
-            <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -187,13 +190,17 @@ const UserWithData = ({
           </CoverDescription>
         )}
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
-
-            <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -263,13 +270,17 @@ const UserWithData = ({
           )}
         </ProfileHeader>
 
-        {user.totalReputation && (
+        {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon />
-
-            <ReputationCount>
-              <strong>{user.totalReputation.toLocaleString()}</strong> rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -277,7 +288,7 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

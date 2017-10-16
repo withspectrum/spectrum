@@ -1,9 +1,15 @@
-// @flow
 // Redirect any route ?thread=<id> to /thread/<id>
 
 const threadParamRedirect = (req, res, next) => {
-  if (req.query.thread && typeof req.query.thread === 'string') {
-    res.redirect(`/thread/${req.query.thread}`);
+  const hasThreadParam =
+    req.query.thread && typeof req.query.thread === 'string';
+  const hasTParam = req.query.t && typeof req.query.t === 'string';
+  const threadId = hasThreadParam
+    ? req.query.thread
+    : hasTParam ? req.query.t : null;
+
+  if (hasThreadParam || (req.user && hasTParam)) {
+    res.redirect(`/thread/${threadId}`);
   } else {
     next();
   }

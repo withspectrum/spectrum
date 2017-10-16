@@ -1,7 +1,14 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-thread-email');
 import sendEmail from '../send-email';
-import { NEW_THREAD_CREATED_TEMPLATE } from './constants';
+import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import {
+  NEW_THREAD_CREATED_TEMPLATE,
+  TYPE_NEW_THREAD_CREATED,
+  TYPE_MUTE_CHANNEL,
+  TYPE_MUTE_COMMUNITY,
+  DEBUG_TEMPLATE,
+} from './constants';
 
 type SendNewThreadNotificationJobData = {
   to: string,
@@ -10,6 +17,8 @@ type SendNewThreadNotificationJobData = {
   channel: Object,
   thread: Object,
   recipient: Object,
+  userId: string,
+  username: string,
 };
 
 type SendNewThreadEmailJob = {
@@ -17,23 +26,56 @@ type SendNewThreadEmailJob = {
   id: string,
 };
 
-export default (job: SendNewThreadEmailJob) => {
+export default async (job: SendNewThreadEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending new thread email to: ${job.data.to}`);
 
-  try {
-    return sendEmail({
-      TemplateId: NEW_THREAD_CREATED_TEMPLATE,
-      To: job.data.to,
-      TemplateModel: {
-        author: job.data.author,
-        community: job.data.community,
-        channel: job.data.channel,
-        thread: job.data.thread,
-        recipient: job.data.recipient,
-      },
-    });
-  } catch (err) {
-    console.log(err);
+  const unsubscribeToken = await generateUnsubscribeToken(
+    job.data.userId,
+    TYPE_NEW_THREAD_CREATED
+  );
+
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: job.data.userId,
+          type: TYPE_NEW_THREAD_CREATED,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    try {
+      return sendEmail({
+        TemplateId: NEW_THREAD_CREATED_TEMPLATE,
+        To: job.data.to,
+        TemplateModel: {
+          author: job.data.author,
+          community: job.data.community,
+          channel: job.data.channel,
+          thread: job.data.thread,
+          recipient: job.data.recipient,
+          username: job.data.username,
+          unsubscribeToken,
+          muteChannelToken: generateUnsubscribeToken(
+            job.data.userId,
+            TYPE_MUTE_CHANNEL,
+            job.data.channel.id
+          ),
+          muteCommunityToken: generateUnsubscribeToken(
+            job.data.userId,
+            TYPE_MUTE_COMMUNITY,
+            job.data.community.id
+          ),
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };

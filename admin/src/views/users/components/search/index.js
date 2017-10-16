@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 // $FlowFixMe
@@ -68,9 +67,8 @@ class Search extends Component {
           this.setState({
             searchResults: searchUsers.length > 0 ? searchUsers : [],
             searchIsLoading: false,
-            focusedSearchResult: searchUsers.length > 0
-              ? searchUsers[0].id
-              : '',
+            focusedSearchResult:
+              searchUsers.length > 0 ? searchUsers[0].id : '',
           });
         } else {
           this.setState({
@@ -196,10 +194,11 @@ class Search extends Component {
 
     return (
       <ComposerInputWrapper>
-        {searchIsLoading &&
+        {searchIsLoading && (
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
-          </SearchSpinnerContainer>}
+          </SearchSpinnerContainer>
+        )}
 
         <ComposerInput
           ref="input"
@@ -211,11 +210,10 @@ class Search extends Component {
         />
 
         {// user has typed in a search string
-        searchString &&
+        searchString && (
           //if there are selected users already, we manually shift
           // the search results position down
           <SearchResultsDropdown>
-
             {searchResults.length > 0 &&
               searchResults.map(user => {
                 return (
@@ -234,24 +232,27 @@ class Search extends Component {
                       <SearchResultDisplayName>
                         {user.name}
                       </SearchResultDisplayName>
-                      {user.username &&
+                      {user.username && (
                         <SearchResultUsername>
                           @{user.username}
-                        </SearchResultUsername>}
+                        </SearchResultUsername>
+                      )}
                     </SearchResultTextContainer>
                   </SearchResult>
                 );
               })}
 
-            {searchResults.length === 0 &&
+            {searchResults.length === 0 && (
               <SearchResult>
                 <SearchResultTextContainer>
                   <SearchResultNull>
                     No users found matching "{searchString}"
                   </SearchResultNull>
                 </SearchResultTextContainer>
-              </SearchResult>}
-          </SearchResultsDropdown>}
+              </SearchResult>
+            )}
+          </SearchResultsDropdown>
+        )}
       </ComposerInputWrapper>
     );
   }

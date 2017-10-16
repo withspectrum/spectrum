@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import Trend from 'react-trend';
 import relativeToAbsolute from '../../utils/relative-to-absolute';

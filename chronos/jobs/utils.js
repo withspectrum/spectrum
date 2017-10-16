@@ -1,8 +1,8 @@
-// @flow
 const createQueue = require('../../shared/bull/create-queue');
 
 export const addQueue = (name: string, data: any, opts: any) => {
   const worker = createQueue(name);
+
   return worker.add({ ...data }, { ...opts });
 };
 
@@ -19,7 +19,7 @@ export const createJob = (
       {
         removeOnComplete: true,
         removeOnFail: true,
-        repeat: { cron: pattern },
+        repeat: { cron: pattern, tz: 'America/Los_Angeles' },
       }
     );
   } catch (err) {

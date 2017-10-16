@@ -1,30 +1,138 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
-import { communityInfoFragment } from './fragments/community/communityInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 const META_INFORMATION_QUERY = gql`
   query {
     meta {
-      userGrowth {
-        createdAt
+      usersGrowth {
+        count
+        dau
+        wau
+        mau
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
-      communityGrowth {
-        createdAt
+      communitiesGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
-      channelGrowth {
-        createdAt
+      channelsGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
-      threadGrowth {
-        createdAt
+      threadsGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
-      messageGrowth {
-        createdAt
+      directMessageThreadsGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
-      subscriptionGrowth {
-        amount
-        createdAt
-        plan
+      threadMessagesGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+      }
+      directMessagesGrowth {
+        count
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
     }
   }

@@ -1,17 +1,11 @@
 //@flow
-import React from 'react';
-//$FlowFixMe
+import * as React from 'react';
 import { Link } from 'react-router-dom';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import { withRouter } from 'react-router';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import { CommunityListItem } from '../../../components/listItems';
 import Icon from '../../../components/icons';
-import { NullCard } from '../../../components/upsell';
-import { LoadingList } from '../../../components/loading';
 
 import {
   StyledCard,
@@ -20,29 +14,29 @@ import {
   ListContainer,
 } from '../../../components/listItems/style';
 
-const CommunityList = props => {
-  const {
-    communities,
-    currentUser,
-    user,
-    withDescription,
-    withMeta,
-    networkStatus,
-  } = props;
+type Props = {
+  communities: Array<Object>,
+  currentUser: Object,
+  user: Object,
+};
 
-  const dataExists =
-    communities && communities.length !== 0 && communities !== null;
+class CommunityList extends React.Component<Props> {
+  render() {
+    const { communities, user, currentUser } = this.props;
 
-  if (networkStatus === 8) {
-    return (
-      <NullCard
-        heading={`Something went wrong loading ${user.username}'s communities...`}
-        bg={'error'}
-      />
-    );
-  }
+    if (!communities || communities.length === 0) {
+      return null;
+    }
 
-  if (dataExists) {
+    let sortedCommunities = communities;
+    if (sortedCommunities[0].contextPermissions) {
+      sortedCommunities = communities.slice().sort((a, b) => {
+        const bc = parseInt(b.contextPermissions.reputation, 10);
+        const ac = parseInt(a.contextPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
+    }
+
     return (
       <StyledCard largeOnly>
         <ListHeader>
@@ -53,17 +47,17 @@ const CommunityList = props => {
           )}
         </ListHeader>
         <ListContainer>
-          {communities.map(item => {
+          {sortedCommunities.map(community => {
             return (
-              <Link key={item.node.id} to={`/${item.node.slug}`}>
+              <Link key={community.id} to={`/${community.slug}`}>
                 <CommunityListItem
-                  contents={item.node}
-                  withDescription={withDescription}
-                  withMeta={withMeta}
-                  meta={
-                    item.node.communityPermissions.reputation &&
-                    `${item.node.communityPermissions.reputation.toLocaleString()} reputation`
+                  community={community}
+                  reputation={
+                    community.contextPermissions
+                      ? community.contextPermissions.reputation
+                      : null
                   }
+                  showDescription
                 >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>
@@ -74,17 +68,6 @@ const CommunityList = props => {
       </StyledCard>
     );
   }
-
-  if (networkStatus === 7) {
-    return (
-      <NullCard
-        heading={`${user.username} isn't a member of any communities yet.`}
-        bg={'community'}
-      />
-    );
-  } else {
-    return <LoadingList />;
-  }
-};
+}
 
 export default compose(withRouter, connect())(CommunityList);

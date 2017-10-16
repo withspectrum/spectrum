@@ -1,4 +1,3 @@
-//@flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -64,7 +63,7 @@ const parseNotificationTypes = notifications => {
         };
       default:
       case 'null':
-        return null;
+        return {};
     }
   });
 };
@@ -135,9 +134,9 @@ class EmailSettings extends Component {
       currentUser,
     } = this.props;
     const { emailError } = this.state;
-    const settings = parseNotificationTypes(notifications).filter(
-      notification => notification && notification.emailValue
-    );
+    const settings = parseNotificationTypes(
+      notifications
+    ).filter(notification => notification.hasOwnProperty('emailValue'));
 
     if (!currentUser.email) {
       return (

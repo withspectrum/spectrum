@@ -1,4 +1,3 @@
-// @flow
 import UserError from '../utils/UserError';
 const {
   markAllNotificationsSeen,

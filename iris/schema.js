@@ -3,7 +3,10 @@
  * The combined schema out of types and resolvers (queries, mutations and subscriptions)
  */
 //$FlowFixMe
-const { makeExecutableSchema } = require('graphql-tools');
+const {
+  makeExecutableSchema,
+  addSchemaLevelResolveFunction,
+} = require('graphql-tools');
 const debug = require('debug')('iris:resolvers');
 const logExecutions = require('graphql-log')({
   logger: debug,
@@ -11,6 +14,7 @@ const logExecutions = require('graphql-log')({
 //$FlowFixMe
 const { merge } = require('lodash');
 import OpticsAgent from 'optics-agent';
+import UserError from './utils/UserError';
 
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
@@ -50,6 +54,7 @@ const metaMutations = require('./mutations/meta');
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
+const threadSubscriptions = require('./subscriptions/thread');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -102,7 +107,8 @@ const resolvers = merge(
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
-  directMessageThreadSubscriptions
+  directMessageThreadSubscriptions,
+  threadSubscriptions
 );
 
 if (process.env.NODE_ENV === 'development' && debug.enabled) {
@@ -129,6 +135,15 @@ const schema = makeExecutableSchema({
   ],
   resolvers,
 });
+
+if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
+  console.log('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
+  addSchemaLevelResolveFunction(schema, () => {
+    throw new UserError(
+      "We're currently undergoing planned maintenance. We'll be back by 3pm UTC, please check https://twitter.com/withspectrum for ongoing updates!"
+    );
+  });
+}
 
 // Instrument the schema with Apollo Optics
 OpticsAgent.instrumentSchema(schema);

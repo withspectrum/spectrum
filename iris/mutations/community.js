@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import {
@@ -37,7 +36,7 @@ import type {
 import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
-import { slugIsBlacklisted } from '../utils/permissions';
+import { communitySlugIsBlacklisted } from '../utils/permissions';
 import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
@@ -51,7 +50,7 @@ module.exports = {
         );
       }
 
-      if (slugIsBlacklisted(args.input.slug)) {
+      if (communitySlugIsBlacklisted(args.input.slug)) {
         return new UserError(
           `This url is already taken - feel free to change it if
           you're set on the name ${args.input.name}!`

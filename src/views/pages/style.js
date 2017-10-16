@@ -11,11 +11,12 @@ export const PageContainer = styled.div`
 
 export const Section = styled.section`
   display: flex;
-  flex-direction: ${props => (props.container ? 'column' : 'row')} ;
+  flex-direction: ${props => (props.container ? 'column' : 'row')};
   padding: ${props => (props.container ? '32px' : '0')};
   width: 100%;
   flex: 0 0 auto;
-  border-bottom: 1px solid ${props => (props.container ? props.theme.border.default : 'transparent')};
+  border-bottom: 1px solid
+    ${props => (props.container ? props.theme.bg.border : 'transparent')};
   flex-wrap: wrap;
 `;
 
@@ -65,16 +66,16 @@ export const PropsList = styled.ul`
 
   code {
     display: inline;
-    background: #EEF1F5;
+    background: #eef1f5;
     border-radius: 4px;
     padding: 0 4px 2px;
     line-height: 1;
-    border: 1px solid ${props => props.theme.border.default};
+    border: 1px solid ${props => props.theme.bg.border};
   }
 
   pre {
     background: #fff;
-    border: 1px solid ${props => props.theme.border.default};
+    border: 1px solid ${props => props.theme.bg.border};
     display: inline-block;
     font-size: 14px;
     padding: 2px 8px;
@@ -83,20 +84,26 @@ export const PropsList = styled.ul`
 `;
 
 export const ComponentContainer = styled.div`
-  background: #f6f7f8;
+  background: ${props => props.theme.bg.wash};
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   flex-grow: 1;
   margin: 8px;
-  width: calc(${props => (props.width ? `${props.width} - 16px` : `50% - 16px`)});
+  width: calc(
+    ${props => (props.width ? `${props.width} - 16px` : `50% - 16px`)}
+  );
   max-width: calc(50% - 16px);
 `;
 
 export const Component = styled.div`
-  background: ${props => (props.reverse ? props.theme.text.default : props.transparent ? 'transparent' : '#fff')};
+  background: ${props =>
+    props.reverse
+      ? props.theme.text.default
+      : props.transparent ? 'transparent' : '#fff'};
   padding: 16px;
-  border-bottom: 1px solid ${props => (props.reverse ? 'none' : props.theme.border.default)};
+  border-bottom: 1px solid
+    ${props => (props.reverse ? 'none' : props.theme.bg.border)};
   display: flex;
   position: relative;
   align-items: center;
@@ -107,8 +114,8 @@ export const Code = styled.div`
   margin: 8px;
   border-radius: 4px;
   padding: 16px;
-  background: #282C34;
-  color: #ABB2BF;
+  background: #282c34;
+  color: #abb2bf;
   cursor: pointer;
   font-family: monospace;
   font-size: 14px;
@@ -116,13 +123,14 @@ export const Code = styled.div`
   font-weight: 500;
   width: calc(100% - 16px);
 
-  &::-moz-selection { /* Code for Firefox */
-    background: #2C323D;
+  &::-moz-selection {
+    /* Code for Firefox */
+    background: #2c323d;
     color: #ffffff;
   }
 
   &::selection {
-    background: #2C323D;
+    background: #2c323d;
     color: #ffffff;
   }
 `;
@@ -132,9 +140,10 @@ export const Swatch = styled.span`
   height: 48px;
   border-radius: 4px;
   background-color: ${props => eval(`props.theme.${props.color}`)};
-  ${props => (props.color === 'bg.default' || props.color === 'text.reverse' ? `border: 1px solid ${props.theme.border.default}` : '')};
+  ${props =>
+    props.color === 'bg.default' || props.color === 'text.reverse'
+      ? `border: 1px solid ${props.theme.bg.border}`
+      : ''};
 `;
 
-export const Spacer = styled.div`
-  height: ${props => props.height};
-`;
+export const Spacer = styled.div`height: ${props => props.height};`;

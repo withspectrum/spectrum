@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { getChannels } from '../models/channel';
@@ -32,6 +31,12 @@ module.exports = {
       // user must be authed to publish a thread
       if (!currentUser) {
         return new UserError('You must be signed in to publish a new thread.');
+      }
+
+      if (thread.type === 'SLATE') {
+        throw new UserError(
+          "You're on an old version of Spectrum, please refresh your browser."
+        );
       }
 
       // get the current user's permissions in the channel where the thread is being posted
@@ -134,34 +139,26 @@ module.exports = {
           }
         })
         .then(([newThread, urls]) => {
-          // if no files were uploaded, return the new thread object
-          if (!urls) return newThread;
+          if (!urls || urls.length === 0) return newThread;
 
-          // otherwise we need to update the slate object of the thread to replace the image nodes with markdown image text
-          const slateState = JSON.parse(newThread.content.body);
-          let fileIndex = 0;
-          const newSlateState = {
-            ...slateState,
-            nodes: slateState.nodes.map(node => {
-              if (node.type !== 'image') return node;
-              fileIndex++;
-              return {
-                kind: 'block',
-                type: 'paragraph',
-                nodes: [
-                  {
-                    kind: 'text',
-                    text: `![](${urls[fileIndex - 1]}?max-w=800)`,
-                  },
-                ],
-              };
-            }),
-          };
-
-          return updateThreadWithImages(
-            newThread.id,
-            JSON.stringify(newSlateState)
+          // Replace the local image srcs with the remote image src
+          const body = JSON.parse(newThread.content.body);
+          const imageKeys = Object.keys(body.entityMap).filter(
+            key => body.entityMap[key].type === 'image'
           );
+          urls.forEach((url, index) => {
+            if (!body.entityMap[imageKeys[index]]) return;
+            body.entityMap[imageKeys[index]].data.src = url;
+          });
+
+          // Update the thread with the new links
+          return editThread({
+            threadId: newThread.id,
+            content: {
+              ...newThread.content,
+              body: JSON.stringify(body),
+            },
+          });
         });
     },
     editThread: (_, { input }, { user }) => {
@@ -171,6 +168,12 @@ module.exports = {
       if (!currentUser) {
         return new UserError(
           'You must be signed in to make changes to this thread.'
+        );
+      }
+
+      if (input.type === 'SLATE') {
+        throw new UserError(
+          "You're on an old version of Spectrum, please refresh your browser."
         );
       }
 
@@ -226,34 +229,27 @@ module.exports = {
             ),
           ]);
         })
-        .then(([editedThread, urls]) => {
-          if (!urls) return editedThread;
+        .then(([newThread, urls]) => {
+          if (!urls || urls.length === 0) return newThread;
 
-          // update the slate body with markdown images instead of image nodes
-          const slateState = JSON.parse(editedThread.content.body);
-          let fileIndex = 0;
-          const newSlateState = {
-            ...slateState,
-            nodes: slateState.nodes.map(node => {
-              if (node.type !== 'image') return node;
-              fileIndex++;
-              return {
-                kind: 'block',
-                type: 'paragraph',
-                nodes: [
-                  {
-                    kind: 'text',
-                    text: `![](${urls[fileIndex - 1]})`,
-                  },
-                ],
-              };
-            }),
-          };
-
-          return updateThreadWithImages(
-            editedThread.id,
-            JSON.stringify(newSlateState)
+          // Replace the local image srcs with the remote image src
+          const body = JSON.parse(newThread.content.body);
+          const imageKeys = Object.keys(body.entityMap).filter(
+            key => body.entityMap[key].type === 'image'
           );
+          urls.forEach((url, index) => {
+            if (!body.entityMap[imageKeys[index]]) return;
+            body.entityMap[imageKeys[index]].data.src = url;
+          });
+
+          // Update the thread with the new links
+          return editThread({
+            threadId: newThread.id,
+            content: {
+              ...newThread.content,
+              body: JSON.stringify(body),
+            },
+          });
         });
     },
     deleteThread: (_, { threadId }, { user }) => {

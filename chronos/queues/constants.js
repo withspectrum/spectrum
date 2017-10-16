@@ -2,13 +2,13 @@
 
 // counts for processing
 // the thread must have at least # total messages
-export const MIN_TOTAL_MESSAGE_COUNT = 1;
+export const MIN_TOTAL_MESSAGE_COUNT = 5;
 // # of the total messages must have been sent in the past week
-export const MIN_NEW_MESSAGE_COUNT = 1;
+export const MIN_NEW_MESSAGE_COUNT = 5;
 // # only show the top # threads per channel
 export const MAX_THREAD_COUNT_PER_CHANNEL = 10;
 // don't send the digest if the email will have less than # total threads to show
-export const MIN_THREADS_REQUIRED_FOR_DIGEST = 1;
+export const MIN_THREADS_REQUIRED_FOR_DIGEST = 3;
 // cap the digest at # threads
 export const MAX_THREAD_COUNT_PER_DIGEST = 10;
 // upsell communities to join if the user has joined less than # communities
@@ -29,5 +29,6 @@ export const NEW_MESSAGE_COUNT_WEIGHT = 1.5;
 
 // queues
 export const SEND_DIGEST_EMAIL = 'send digest email';
+export const PROCESS_INDIVIDUAL_DIGEST = 'send individual digest email';
 export const PROCESS_WEEKLY_DIGEST_EMAIL = 'process weekly digest email';
 export const PROCESS_DAILY_DIGEST_EMAIL = 'process daily digest email';

@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
@@ -50,7 +49,7 @@ export class Login extends Component {
     const { redirectPath } = this.props;
 
     const viewTitle =
-      signinType === 'login' ? 'Welcome back!' : 'Welcome to Spectrum!';
+      signinType === 'login' ? 'Welcome back!' : 'Sign in to get started';
 
     const viewSubtitle =
       signinType === 'login'
@@ -158,3 +157,5 @@ export class Login extends Component {
     );
   }
 }
+
+export default Login;

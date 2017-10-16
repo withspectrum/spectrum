@@ -1,27 +1,20 @@
-// @flow
-import React from 'react';
-// $FlowFixMe
-import { func, node, number, object, shape, string } from 'prop-types';
+import * as React from 'react';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import debounceFn from 'lodash/debounce';
 
-class ScrollManager extends React.Component {
-  static propTypes = {
-    children: node.isRequired,
-    history: shape({
-      action: string.isRequired,
-      push: func.isRequired,
-      replace: func.isRequired,
-    }).isRequired,
-    location: object,
-    onLocationChange: func,
-    scrollCaptureDebounce: number,
-    scrollSyncDebounce: number,
-    scrollSyncAttemptLimit: number,
-  };
+type Props = {
+  scrollCaptureDebounce: number,
+  scrollSyncDebounce: number,
+  scrollSyncAttemptLimit: number,
+  children: React.Node,
+  history: Object,
+  location: Object,
+  onLocationChange: Function,
+};
 
+class ScrollManager extends React.Component<Props> {
   static defaultProps = {
     scrollCaptureDebounce: 50,
     scrollSyncDebounce: 100,

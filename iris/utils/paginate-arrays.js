@@ -1,5 +1,4 @@
 // @flow
-
 export type PaginationOptions = {
   first: number,
   after?: string,
@@ -9,7 +8,7 @@ type Input = any;
 
 type Output = {
   list: Array<Input>,
-  hasMoreItems: Boolean,
+  hasMoreItems: boolean,
 };
 
 /**

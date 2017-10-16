@@ -1,4 +1,3 @@
-// @flow
 // Create a worker with bull and start a small webserver which responds with
 // health information
 const http = require('http');

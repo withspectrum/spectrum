@@ -1,13 +1,12 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-// $FlowFixMe
-import update from 'immutability-helper';
-import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads($username: String, $after: String) {
@@ -21,7 +20,10 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, networkStatus, user } }) => ({
+  props: ({
+    ownProps,
+    data: { fetchMore, error, loading, networkStatus, user, subscribeToMore },
+  }) => ({
     data: {
       error,
       loading,
@@ -29,6 +31,41 @@ const threadsQueryOptions = {
       networkStatus,
       threads: user ? user.threadConnection.edges : '',
       hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const thisUserId = ownProps.userId;
+            const updatedThreadShouldAppearInContext =
+              thisUserId === updatedThread.creator.id;
+
+            const newThreads = updatedThreadShouldAppearInContext
+              ? parseRealtimeThreads(
+                  prev.user.threadConnection.edges,
+                  updatedThread,
+                  ownProps.dispatch
+                ).filter(thread => thread.node.creator.id === thisUserId)
+              : [...prev.user.threadConnection.edges];
+
+            return {
+              ...prev,
+              user: {
+                ...prev.user,
+                threadConnection: {
+                  ...prev.user.threadConnection,
+                  pageInfo: {
+                    ...prev.user.threadConnection.pageInfo,
+                  },
+                  edges: newThreads,
+                },
+              },
+            };
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
@@ -69,70 +106,6 @@ const threadsQueryOptions = {
       username: username,
     },
     fetchPolicy: 'cache-first',
-    reducer: (prev, action, variables) => {
-      /*
-        Every apollo action triggers internal store updates via reducers.
-        We can abuse this to listen for specific kinds of actions that happen
-        anywhere in the app in order to update any query.
-
-        Reference: http://dev.apollodata.com/react/cache-updates.html#resultReducers
-      */
-      if (
-        action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishThread'
-      ) {
-        /*
-          publishThread returns a thread object, as well as some metadata about
-          the channel and community it was published in
-        */
-        const newThread = action.result.data.publishThread;
-
-        /*
-          If the new thread was published by a user that is currently
-          being viewed, or by a user that has already been fetched
-          and cached by apollo, insert the new thread into the array of edges
-        */
-        if (newThread.creator.username === username) {
-          /*
-            Not sure if this is needed right now, but I'm encoding the thread id
-            and setting a new cursor so that we can always be sure that every
-            item in the Apollo store has the same shape
-          */
-          const cursor = encode(newThread.id);
-          const newEdge = {
-            cursor,
-            node: {
-              ...newThread,
-            },
-          };
-
-          /*
-            Uses immutability helpers to set the previous state and then overlay
-            only the modified data
-            $unshift moves the new edge to the top of the threads array
-
-            Reference: https://facebook.github.io/react/docs/update.html
-          */
-          return update(prev, {
-            user: {
-              threadConnection: {
-                edges: {
-                  $unshift: [newEdge],
-                },
-              },
-            },
-          });
-        }
-      }
-
-      /* More action reducers go here */
-
-      /*
-        If no actions trigger a change in this queries store, return the existing
-        store
-      */
-      return prev;
-    },
   }),
 };
 

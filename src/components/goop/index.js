@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { zIndex } from '../globals';
 
 /* eslint no-eval: 0 */
@@ -13,6 +13,7 @@ export const InlineSvg = styled.svg`
   width: 100%;
   color: inherit;
   fill: currentColor;
+  pointer-events: none;
 
   > g {
     position: absolute;
@@ -34,6 +35,7 @@ export const SvgWrapper = styled.div`
   right: -5%;
   display: ${props => (props.goop === 0 ? 'none' : 'inline-block')};
   color: ${props => eval(`props.theme.${props.color}`)};
+  pointer-events: none;
 
   @media (max-width: 768px) {
     width: 150%;

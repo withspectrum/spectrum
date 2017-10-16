@@ -1,4 +1,3 @@
-// @flow
 const { listenToNewMessages } = require('../../models/message');
 const { storeNotification } = require('../../models/notification');
 const pubsub = require('./pubsub');

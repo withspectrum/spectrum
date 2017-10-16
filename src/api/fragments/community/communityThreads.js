@@ -1,3 +1,5 @@
+// @flow
+// $FlowFixMe
 import { gql } from 'react-apollo';
 import { threadInfoFragment } from '../thread/threadInfo';
 

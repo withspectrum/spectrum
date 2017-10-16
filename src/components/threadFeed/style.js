@@ -16,7 +16,7 @@ export const FetchMoreButton = styled(OutlineButton)`
     color: ${props => props.theme.brand.default};
     border: none;
     box-shadow: none;
-    border-top: 2px solid ${props => props.theme.border.default};
+    border-top: 2px solid ${props => props.theme.bg.border};
 
     &:hover {
       background: ${props => props.theme.bg.wash};
@@ -27,7 +27,7 @@ export const FetchMoreButton = styled(OutlineButton)`
 `;
 
 export const Divider = styled.div`
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   width: 100%;
   display: block;
   padding-top: 24px;

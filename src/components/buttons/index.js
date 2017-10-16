@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 import {
   Label,
@@ -8,6 +7,7 @@ import {
   StyledOutlineButton,
   StyledFauxOutlineButton,
   SpinnerContainer,
+  StyledButtonRow,
 } from './style';
 import { Spinner } from '../globals';
 import Icon from '../icons';
@@ -15,10 +15,11 @@ import Icon from '../icons';
 type ButtonProps = {
   loading?: boolean,
   disabled?: boolean,
+  large?: boolean,
   color?: string,
   gradientTheme?: string,
   icon?: string,
-  children?: React$Element<any>,
+  children?: any,
 };
 
 type IconProps = {
@@ -38,72 +39,95 @@ type IconProps = {
     | 'right',
 };
 
-export const Button = (props: ButtonProps) =>
+export const Button = (props: ButtonProps) => (
   <StyledSolidButton disabled={props.loading} {...props}>
-    {props.icon
-      ? props.loading
-        ? <SpinnerContainer>
-            <Spinner color="text.reverse" size="16" />
-          </SpinnerContainer>
-        : <Icon glyph={props.icon} />
-      : ''}
+    {props.icon ? (
+      props.loading ? (
+        <SpinnerContainer>
+          <Spinner color="text.reverse" size="16" />
+        </SpinnerContainer>
+      ) : (
+        <Icon glyph={props.icon} />
+      )
+    ) : (
+      ''
+    )}
     {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
-  </StyledSolidButton>;
+  </StyledSolidButton>
+);
 
-export const OutlineButton = (props: ButtonProps) =>
+export const OutlineButton = (props: ButtonProps) => (
   <StyledOutlineButton {...props}>
-    {props.icon
-      ? props.loading
-        ? <SpinnerContainer>
-            <Spinner color="brand.alt" size="16" />
-          </SpinnerContainer>
-        : <Icon glyph={props.icon} />
-      : ''}
+    {props.icon ? (
+      props.loading ? (
+        <SpinnerContainer>
+          <Spinner color="brand.alt" size="16" />
+        </SpinnerContainer>
+      ) : (
+        <Icon glyph={props.icon} />
+      )
+    ) : (
+      ''
+    )}
     {props.loading && !props.icon && <Spinner color="brand.alt" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
-  </StyledOutlineButton>;
+  </StyledOutlineButton>
+);
 
 // looks like a button, but isn't a button so it won't submit forms
-export const FauxOutlineButton = (props: ButtonProps) =>
+export const FauxOutlineButton = (props: ButtonProps) => (
   <StyledFauxOutlineButton {...props}>
-    {props.icon
-      ? props.loading
-        ? <SpinnerContainer>
-            <Spinner color="brand.alt" size="16" />
-          </SpinnerContainer>
-        : <Icon glyph={props.icon} />
-      : ''}
+    {props.icon ? (
+      props.loading ? (
+        <SpinnerContainer>
+          <Spinner color="brand.alt" size="16" />
+        </SpinnerContainer>
+      ) : (
+        <Icon glyph={props.icon} />
+      )
+    ) : (
+      ''
+    )}
     {props.loading && !props.icon && <Spinner color="brand.alt" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
-  </StyledFauxOutlineButton>;
+  </StyledFauxOutlineButton>
+);
 
-export const TextButton = (props: ButtonProps) =>
+export const TextButton = (props: ButtonProps) => (
   <StyledTextButton {...props}>
-    {props.icon
-      ? props.loading
-        ? <SpinnerContainer>
-            <Spinner color="text.alt" size="16" />
-          </SpinnerContainer>
-        : <Icon glyph={props.icon} />
-      : ''}
+    {props.icon ? (
+      props.loading ? (
+        <SpinnerContainer>
+          <Spinner color="text.alt" size="16" />
+        </SpinnerContainer>
+      ) : (
+        <Icon glyph={props.icon} />
+      )
+    ) : (
+      ''
+    )}
     {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}
-    <Label loading={props.loading}>
-      {props.children}
-    </Label>
-  </StyledTextButton>;
+    <Label loading={props.loading}>{props.children}</Label>
+  </StyledTextButton>
+);
 
-export const IconButton = (props: IconProps) =>
+export const IconButton = (props: IconProps) => (
   <StyledIconButton {...props}>
     <Icon
       glyph={props.glyph}
       tipText={props.tipText}
       tipLocation={props.tipLocation}
     />
-  </StyledIconButton>;
+  </StyledIconButton>
+);
+
+export const ButtonRow = props => (
+  <StyledButtonRow>{props.children}</StyledButtonRow>
+);

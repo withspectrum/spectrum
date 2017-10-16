@@ -10,7 +10,7 @@ import {
 
 export const Row = styled.div`
   width: 100%;
-  flex: 1 0 100%;
+  flex: auto;
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
@@ -35,7 +35,7 @@ export const CoverPhoto = styled.div`
 
 export const Container = styled.div`
   background: #fff;
-  box-shadow: inset 0 0 0 2px ${props => props.theme.border.default};
+  box-shadow: inset 0 0 0 2px ${props => props.theme.bg.border};
   flex: 0 0 22%;
   display: flex;
   flex-direction: column;

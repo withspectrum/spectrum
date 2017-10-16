@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -27,12 +25,10 @@ const StyledRow = styled(FlexRow)`
   top: -8px;
 `;
 
-const FlyoutPure = (props: Object): React$Element<any> =>
+const Flyout = (props: Object): React$Element<any> => (
   <StyledFlyout className={'flyout'} {...props}>
-    <StyledRow>
-      {props.children}
-    </StyledRow>
-  </StyledFlyout>;
+    <StyledRow>{props.children}</StyledRow>
+  </StyledFlyout>
+);
 
-export const Flyout = compose(pure)(FlyoutPure);
 export default Flyout;

@@ -119,7 +119,7 @@ export const SegmentedControl = styled(FlexRow)`
 //   &:hover {
 //     transition: ${Transition.hover.on};
 //     border-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.01) : props.theme.text.alt};
-//     background-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.75) : props.theme.border.default};
+//     background-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.75) : props.theme.bg.border};
 //   }
 //
 //   &:first-of-type {
@@ -154,7 +154,7 @@ export const Segment = styled(FlexRow)`
   cursor: pointer;
 
   + div {
-    border-left: 2px solid ${props => props.theme.border.default};
+    border-left: 2px solid ${props => props.theme.bg.border};
   }
 
   &:hover {
@@ -203,4 +203,15 @@ export const SearchInput = styled.input`
   margin-left: 8px;
   width: 100%;
   border-radius: 12px;
+`;
+
+export const StyledButton = styled(Button)`
+  flex: none;
+
+  @media (max-width: 768px) {
+    margin: 2px 0;
+    padding: 16px 0;
+    width: 100%;
+    border-radius: 0;
+  }
 `;

@@ -1,7 +1,4 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -21,6 +18,8 @@ import {
   Cost,
   CostNumber,
   CostSubtext,
+  SectionCard,
+  SectionTitle,
 } from '../style';
 
 class UpsellUpgradeCommunityPure extends Component {
@@ -70,12 +69,12 @@ class UpsellUpgradeCommunityPure extends Component {
   };
 
   render() {
-    const { upgradeError, isLoading } = this.state;
+    const { isLoading } = this.state;
     const { community } = this.props;
 
     return (
-      <Card style={{ padding: '16px' }}>
-        <Title>Upgrade to Spectrum Standard</Title>
+      <div>
+        <SectionTitle>Upgrade to Spectrum Standard</SectionTitle>
         <Cost>
           <CostNumber per="month">
             {Math.ceil(community.metaData.members / 1000) * 100}
@@ -135,12 +134,7 @@ class UpsellUpgradeCommunityPure extends Component {
             Upgrade your community
           </Button>
         </StripeCheckout>
-
-        {/* {!upgradeError &&
-          <UpgradeError>
-            {upgradeError}
-          </UpgradeError>} */}
-      </Card>
+      </div>
     );
   }
 }
@@ -152,7 +146,7 @@ export const UpsellUpgradeCommunity = compose(
 
 class UpsellUpgradeCommunityPrivateChannelPure extends Component {
   openCommunityUpgradeModal = () => {
-    const { dispatch, currentUser, community } = this.props;
+    const { currentUser, community } = this.props;
 
     this.props.dispatch(
       openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })

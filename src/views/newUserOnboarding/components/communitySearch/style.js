@@ -8,14 +8,14 @@ import {
   hexa,
   zIndex,
 } from '../../../../components/globals';
-import { Avatar } from '../../../../components/avatar';
+import Avatar from '../../../../components/avatar';
 import Icon from '../../../../components/icons';
 
 export const SearchWrapper = styled.div`
   position: relative;
   margin: 32px 16px;
   padding: 12px 16px;
-  border: 2px solid ${props => props.theme.border.default};
+  border: 2px solid ${props => props.theme.bg.border};
   border-radius: 12px;
   width: 100%;
   max-width: 640px;
@@ -79,7 +79,7 @@ export const SearchResult = styled.li`
   flex: auto;
   background: ${props =>
     props.focused ? props.theme.bg.wash : props.theme.bg.default};
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   align-items: center;
   padding: 8px 16px 8px 8px;
 

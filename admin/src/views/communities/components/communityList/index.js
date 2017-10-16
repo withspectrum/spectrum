@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { CommunityProfile } from '../../../../components/profiles';
 import { ListCard, Label, CommunityItem } from './style';
@@ -17,9 +16,7 @@ class CommunityList extends Component {
 
     return (
       <ListCard>
-        <Label>
-          {label}
-        </Label>
+        <Label>{label}</Label>
         {sorted.map(community => {
           return (
             <CommunityItem key={community.id}>

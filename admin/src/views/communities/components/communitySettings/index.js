@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -122,16 +121,12 @@ class CommunitySettings extends Component {
         <Row>
           <Avatar size={32} radius={4} src={community.profilePhoto} />
           <Column>
-            <Name>
-              {community.name}
-            </Name>
-            <Username>
-              {role.substr(2)}
-            </Username>
+            <Name>{community.name}</Name>
+            <Username>{role.substr(2)}</Username>
           </Column>
         </Row>
 
-        {isEditing &&
+        {isEditing && (
           <EditForm>
             <List>
               {permissions.map(perm => {
@@ -142,9 +137,7 @@ class CommunitySettings extends Component {
                     onChange={this.changePermission}
                     key={perm}
                   >
-                    <span>
-                      {perm}
-                    </span>
+                    <span>{perm}</span>
                   </Checkbox>
                 );
               })}
@@ -154,7 +147,8 @@ class CommunitySettings extends Component {
                 Save
               </Button>
             </Save>
-          </EditForm>}
+          </EditForm>
+        )}
       </Container>
     );
   }

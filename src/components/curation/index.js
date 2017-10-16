@@ -1,9 +1,6 @@
-// @flow
 import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
@@ -89,12 +86,8 @@ export const FeaturedCommunityWithData = props => {
   } else if (error || !community) {
     return (
       <FeatureDescription>
-        <Title>
-          Explore Spectrum
-        </Title>
-        <NullDescription>
-          Discover and join new communities!
-        </NullDescription>
+        <Title>Explore Spectrum</Title>
+        <NullDescription>Discover and join new communities!</NullDescription>
       </FeatureDescription>
     );
   } else {
@@ -110,9 +103,10 @@ export const FeaturedCommunityWithData = props => {
           </FeaturePresentation>
           <FeatureDescription>
             <ProfileLink to={`/${community.slug}`}>
-              <Title>{community.name}</Title>
-              {' '}
-              <FlexRow>Visit <Icon glyph="view-forward" size={16} /></FlexRow>
+              <Title>{community.name}</Title>{' '}
+              <FlexRow>
+                Visit <Icon glyph="view-forward" size={16} />
+              </FlexRow>
             </ProfileLink>
             <Description>{community.description}</Description>
             <Tag>Editor's note</Tag>
@@ -129,6 +123,5 @@ const mapStateToProps = state => ({ currentUser: state.users.currentUser });
 
 export const FeaturedCommunity = compose(
   toggleCommunityMembershipMutation,
-  connect(mapStateToProps),
-  pure
+  connect(mapStateToProps)
 )(FeaturedCommunityWithData);

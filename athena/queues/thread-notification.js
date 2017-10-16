@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:community-notification');
 import createQueue from '../../shared/bull/create-queue';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -56,14 +55,22 @@ const createThreadNotificationEmail = thread => {
           ).then(shouldSendEmail => {
             if (!shouldSendEmail) return;
 
-            return sendThreadCreatedNotificationEmailQueue.add({
-              to: recipient.email,
-              recipient,
-              channel,
-              community,
-              author,
-              thread,
-            });
+            return sendThreadCreatedNotificationEmailQueue.add(
+              {
+                to: recipient.email,
+                recipient,
+                channel,
+                community,
+                author,
+                thread,
+                userId: recipient.id,
+                username: recipient.username,
+              },
+              {
+                removeOnComplete: true,
+                removeOnFail: true,
+              }
+            );
           });
         });
     });
@@ -183,6 +190,5 @@ export default job => {
           });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };

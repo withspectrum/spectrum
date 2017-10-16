@@ -1,4 +1,3 @@
-//@flow
 import React from 'react';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
@@ -14,7 +13,7 @@ const icons = {
 };
 
 const colors = {
-  NEW_THREAD: 'success.default',
+  NEW_THREAD: 'success.alt',
   NEW_MESSAGE: 'warn.alt',
 };
 

@@ -1,155 +1,206 @@
-//@flow
 import React, { Component } from 'react';
-//$FlowFixMe
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
+// $FlowFixMe
+import generateMetaInfo from 'shared/generate-meta-info';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
+import { getCommunityThreads } from '../../views/community/queries';
+import { getChannelThreads } from '../../views/channel/queries';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
-import {
-  UpsellSignIn,
-  UpsellToReload,
-  UpsellMiniCreateCommunity,
-  UpsellMiniUpgrade,
-} from '../../components/upsell';
-import {
-  LoadingProfile,
-  LoadingList,
-  LoadingFeed,
-  LoadingComposer,
-} from '../../components/loading';
-import { FlexCol } from '../../components/globals';
-import { withInfiniteScroll } from '../../components/infiniteScroll';
-import { Column } from '../../components/column';
-import { UserProfile } from '../../components/profile';
-import ThreadFeed from '../../components/threadFeed';
-import ThreadComposer from '../../components/threadComposer';
-import AppViewWrapper from '../../components/appViewWrapper';
+import DashboardThreadFeed from './components/threadFeed';
 import Head from '../../components/head';
-import CommunityList from '../user/components/communityList';
-//$FlowFixMe
-import generateMetaInfo from 'shared/generate-meta-info';
+import DashboardLoading from './components/dashboardLoading';
+import DashboardError from './components/dashboardError';
+import NewActivityIndicator from './components/newActivityIndicator';
+import DashboardThread from '../dashboardThread';
+import Header from './components/threadSelectorHeader';
+import CommunityList from './components/communityList';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
+import {
+  Wrapper,
+  InboxWrapper,
+  InboxScroller,
+  CommunityListWrapper,
+  CommunityListScroller,
+  FeedHeaderContainer,
+  ThreadWrapper,
+  ThreadScroller,
+} from './style';
 
-const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
+const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
+  DashboardThreadFeed
+);
 
-class DashboardPure extends Component {
+const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
+  DashboardThreadFeed
+);
+
+const ChannelThreadFeed = compose(connect(), getChannelThreads)(
+  DashboardThreadFeed
+);
+
+const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
+
+class Dashboard extends Component {
   state: {
-    isNewUser: boolean,
+    isHovered: boolean,
   };
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      isNewUser: false,
+      isHovered: false,
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.data.user && this.props.data.user) {
-      const user = this.props.data.user;
-      const communities =
-        this.props.data.user && this.props.data.user.communityConnection.edges;
-      const isNewUser =
-        (user && communities.length <= 0) || (user && !user.username);
-
+  setHover = () => {
+    setTimeout(() => {
       this.setState({
-        isNewUser,
+        isHovered: true,
       });
-    }
-  }
+    }, 1000);
+  };
 
-  graduate = () => {
-    window.location.href = '/';
+  removeHover = () => {
+    this.setState({
+      isHovered: false,
+    });
   };
 
   render() {
-    const { data: { user, networkStatus } } = this.props;
-    const { isNewUser } = this.state;
-    const isMobile = window.innerWidth < 768;
-    const dataExists = user && user.communityConnection;
+    const {
+      data: { user },
+      newActivityIndicator,
+      activeThread,
+      activeCommunity,
+      activeChannel,
+      isLoading,
+      hasError,
+    } = this.props;
+    const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 
-    // Error, prompt reload
-    if (networkStatus === 8) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
+    if (user) {
+      // if the user has set a username but hasn't joined any communities yet, we have nothing to show them on the dashboard. So instead just render the onboarding step to upsell popular communities to join
+      if (user.username && user.communityConnection.edges.length === 0) {
+        return (
+          <NewUserOnboarding
+            noCloseButton
+            close={() => {}}
+            currentUser={user}
+          />
+        );
+      }
 
-    if (dataExists) {
-      const currentUser = user;
-      const communities = user.communityConnection.edges;
+      // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
+      const communities = user.communityConnection.edges.map(c => c.node);
+      const activeCommunityObject = communities.filter(
+        c => c.id === activeCommunity
+      )[0];
 
       return (
-        <AppViewWrapper>
+        <DashboardWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-
-          {currentUser.username &&
-          communities.length === 0 && (
-            <NewUserOnboarding
-              noCloseButton
-              close={() => {}}
-              currentUser={currentUser}
-            />
-          )}
-
-          {!isMobile && (
-            <Column type="secondary">
-              <UserProfile profileSize="mini" data={{ user: user }} />
+          <CommunityListWrapper
+            onMouseEnter={this.setHover}
+            onMouseLeave={this.removeHover}
+          >
+            <CommunityListScroller>
               <CommunityList
-                withDescription={false}
-                currentUser={currentUser}
-                user={user}
+                isHovered={isHovered}
                 communities={communities}
-                networkStatus={networkStatus}
+                user={user}
+                activeCommunity={activeCommunity}
+                activeChannel={activeChannel}
               />
-              <UpsellMiniCreateCommunity largeOnly />
-              {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
-            </Column>
-          )}
+            </CommunityListScroller>
+          </CommunityListWrapper>
 
-          <Column type="primary">
-            <FlexCol>
-              <ThreadComposer />
-              <EverythingThreadFeed viewContext="dashboard" />
-            </FlexCol>
-          </Column>
-        </AppViewWrapper>
+          <InboxWrapper>
+            <FeedHeaderContainer>
+              <Header />
+            </FeedHeaderContainer>
+            {newActivityIndicator && (
+              <NewActivityIndicator elem="scroller-for-inbox" />
+            )}
+            <InboxScroller id="scroller-for-inbox">
+              {!activeCommunity ? (
+                <EverythingThreadFeed selectedId={activeThread} />
+              ) : activeChannel ? (
+                <ChannelThreadFeed
+                  id={activeChannel}
+                  selectedId={activeThread}
+                  hasActiveCommunity={activeCommunity}
+                  hasActiveChannel={activeChannel}
+                  community={activeCommunityObject}
+                  pinnedThreadId={
+                    activeCommunityObject &&
+                    activeCommunityObject.pinnedThreadId
+                  }
+                  channelId={activeChannel}
+                />
+              ) : (
+                <CommunityThreadFeed
+                  id={activeCommunity}
+                  selectedId={activeThread}
+                  hasActiveCommunity={activeCommunity}
+                  community={activeCommunityObject}
+                  pinnedThreadId={
+                    activeCommunityObject &&
+                    activeCommunityObject.pinnedThreadId
+                  }
+                />
+              )}
+            </InboxScroller>
+          </InboxWrapper>
+
+          <ThreadWrapper>
+            <ThreadScroller id="scroller-for-inbox-thread-view">
+              <DashboardThread
+                threadId={activeThread}
+                activeCommunity={
+                  activeCommunityObject && activeCommunityObject.slug
+                }
+                activeChannel={activeChannel}
+              />
+            </ThreadScroller>
+          </ThreadWrapper>
+        </DashboardWrapper>
       );
     }
 
-    // Got no data
-    if (networkStatus !== 7) {
+    // loading state
+    if (isLoading)
+      return <DashboardLoading title={title} description={description} />;
+
+    if (hasError)
       return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          {!isMobile && (
-            <Column type="secondary">
-              <LoadingProfile />
-              <LoadingList />
-            </Column>
-          )}
-          <Column type="primary">
-            {!isMobile && <LoadingComposer />}
-            <LoadingFeed />
-          </Column>
-        </AppViewWrapper>
+        <DashboardError
+          title={title}
+          description={description}
+          error={hasError}
+        />
       );
-    }
+
+    // if the user reached here it most likely that they have a user in localstorage but we weren't able to auth them - either because of a bad session token or otherwise. In this case we should clear local storage and load the home page to get them to log in again
+    removeItemFromStorage('spectrum');
+    window.location.href = '/';
+    return null;
   }
 }
 
-const Dashboard = compose(getCurrentUserProfile, withInfiniteScroll, pure)(
-  DashboardPure
+const map = state => ({
+  newActivityIndicator: state.newActivityIndicator.hasNew,
+  activeThread: state.dashboardFeed.activeThread,
+  activeCommunity: state.dashboardFeed.activeCommunity,
+  activeChannel: state.dashboardFeed.activeChannel,
+});
+export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
+  Dashboard
 );
-export default Dashboard;

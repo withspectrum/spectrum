@@ -141,7 +141,7 @@ export const Profile = styled.div`
   span {
     background-color: ${({ theme }) => theme.success.default};
     background-image: ${({ theme }) =>
-      Gradient(theme.space.light, theme.success.default)};
+      Gradient(theme.success.alt, theme.success.default)};
     position: absolute;
     left: 75%;
     top: 48px;

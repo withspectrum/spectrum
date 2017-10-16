@@ -1,7 +1,4 @@
-// @flow
 import React from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
@@ -43,7 +40,7 @@ const StyledAvatarStatus = styled.div`
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
     width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
-    background: ${props => props.theme.pro.alt};
+    background: ${props => props.theme.success.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
     bottom: ${props =>
@@ -76,7 +73,7 @@ const StyledAvatarLink = styled(Link)`
   pointer-events: auto;
 `;
 
-const AvatarWithFallback = ({ style, ...props }) =>
+const AvatarWithFallback = ({ style, ...props }) => (
   <StyledAvatarStatus size={props.size || 32} {...props}>
     <StyledAvatar
       data={optimize(props.src, { w: props.size, dpr: 2, format: 'png' })}
@@ -94,7 +91,8 @@ const AvatarWithFallback = ({ style, ...props }) =>
         }
       />
     </StyledAvatar>
-  </StyledAvatarStatus>;
+  </StyledAvatarStatus>
+);
 
 const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link && !props.noLink) {
@@ -108,4 +106,6 @@ const AvatarPure = (props: Object): React$Element<any> => {
   }
 };
 
-export const Avatar = compose(pure)(AvatarPure);
+const Avatar = compose()(AvatarPure);
+
+export default Avatar;

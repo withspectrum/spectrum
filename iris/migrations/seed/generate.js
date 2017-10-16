@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 const { v4: uuid } = require('uuid');
 // $FlowFixMe
@@ -7,6 +6,7 @@ const faker = require('faker');
 const slugify = require('slugg');
 // $FlowFixMe
 const casual = require('casual').functions();
+const { fromPlainText, toJSON } = require('shared/draft-utils');
 
 const randomAmount = ({ max, min }, cb) => {
   if (!max) throw new Error('randomAmount({ max }): max has to be defined!');
@@ -47,6 +47,12 @@ const generateUsersSettings = userId => {
           email: true,
         },
         newThreadCreated: {
+          email: true,
+        },
+        dailyDigest: {
+          email: true,
+        },
+        weeklyDigest: {
           email: true,
         },
       },
@@ -105,6 +111,7 @@ const generateUsersCommunities = (communityId, userId) => {
     isMember,
     isBlocked,
     receiveNotifications: true,
+    reputation: 1,
   };
 };
 
@@ -161,7 +168,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
 const generateThread = (communityId, channelId, creatorId) => {
   const content = {
     title: casual.title(),
-    body: casual.text(),
+    body: JSON.stringify(toJSON(fromPlainText(casual.text()))),
   };
 
   const createdAt = faker.date.past(2);
@@ -175,6 +182,7 @@ const generateThread = (communityId, channelId, creatorId) => {
     isPublished: faker.random.boolean(),
     content,
     attachments: [],
+    type: 'DRAFTJS',
     lastActive: faker.date.between(createdAt, new Date()),
     edits: [
       {

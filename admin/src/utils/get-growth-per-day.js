@@ -1,4 +1,3 @@
-// @flow
 import groupBy from 'lodash/groupBy';
 import moment from 'moment';
 
@@ -23,7 +22,9 @@ const getGrowthPerDay = (
 
   let growthData = [];
   for (var i = 0; i < amountOfDays; i++) {
-    const currentDate = moment(startDay).add(i, 'days').toString();
+    const currentDate = moment(startDay)
+      .add(i, 'days')
+      .toString();
     const currentDatesGrowth = growthByDay[currentDate];
     if (currentDatesGrowth) {
       const amount = amountGetter(currentDatesGrowth);

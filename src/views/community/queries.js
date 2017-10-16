@@ -1,18 +1,17 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-// $FlowFixMe
-import update from 'immutability-helper';
-import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query communityThreads($slug: String, $after: String) {
-    community(slug: $slug) {
+  query loadMoreCommunityThreads($slug: String, $after: String, $id: ID) {
+    community(slug: $slug, id: $id) {
       ...communityInfo
       ...communityThreads
     }
@@ -23,7 +22,15 @@ const LoadMoreThreads = gql`
 
 const threadsQueryOptions = {
   props: ({
-    data: { fetchMore, error, loading, community, networkStatus },
+    ownProps,
+    data: {
+      fetchMore,
+      error,
+      loading,
+      community,
+      networkStatus,
+      subscribeToMore,
+    },
   }) => ({
     data: {
       error,
@@ -34,6 +41,42 @@ const threadsQueryOptions = {
       hasNextPage: community
         ? community.threadConnection.pageInfo.hasNextPage
         : false,
+      feed: community && community.id,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const thisCommunityId = ownProps.community.id;
+            const updatedThreadShouldAppearInContext =
+              thisCommunityId === updatedThread.community.id;
+
+            const newThreads = updatedThreadShouldAppearInContext
+              ? parseRealtimeThreads(
+                  prev.community.threadConnection.edges,
+                  updatedThread,
+                  ownProps.dispatch
+                ).filter(thread => thread.node.community.id === thisCommunityId)
+              : [...prev.community.threadConnection.edges];
+
+            return {
+              ...prev,
+              community: {
+                ...prev.community,
+                threadConnection: {
+                  ...prev.community.threadConnection,
+                  pageInfo: {
+                    ...prev.community.threadConnection.pageInfo,
+                  },
+                  edges: newThreads,
+                },
+              },
+            };
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
@@ -69,82 +112,19 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ slug, params }) => ({
+  options: ({ slug, params, id }) => ({
     variables: {
-      slug: slug.toLowerCase(),
+      slug: slug && slug.toLowerCase(),
+      id,
     },
     fetchPolicy: 'cache-and-network',
-    reducer: (prev, action, variables) => {
-      /*
-        Every apollo action triggers internal store updates via reducers.
-        We can abuse this to listen for specific kinds of actions that happen
-        anywhere in the app in order to update any query.
-
-        Reference: http://dev.apollodata.com/react/cache-updates.html#resultReducers
-      */
-      if (
-        action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishThread'
-      ) {
-        /*
-          publishThread returns a thread object, as well as some metadata about
-          the channel and community it was published in
-        */
-        const newThread = action.result.data.publishThread;
-
-        /*
-          If the new thread was published in a community that is currently
-          being viewed, or in a community that has already been fetched
-          and cached by apollo, insert the new thread into the array of edges
-        */
-        if (newThread.channel.community.slug === slug) {
-          /*
-            Not sure if this is needed right now, but I'm encoding the thread id
-            and setting a new cursor so that we can always be sure that every
-            item in the Apollo store has the same shape
-          */
-          const cursor = encode(newThread.id);
-          const newEdge = {
-            cursor,
-            node: {
-              ...newThread,
-            },
-          };
-
-          /*
-            Uses immutability helpers to set the previous state and then overlay
-            only the modified data
-            $unshift moves the new edge to the top of the threads array
-
-            Reference: https://facebook.github.io/react/docs/update.html
-          */
-          return update(prev, {
-            community: {
-              threadConnection: {
-                edges: {
-                  $unshift: [newEdge],
-                },
-              },
-            },
-          });
-        }
-      }
-
-      /* More action reducers go here */
-
-      /*
-        If no actions trigger a change in this queries store, return the existing
-        store
-      */
-      return prev;
-    },
   }),
 };
 
 export const getCommunityThreads = graphql(
   gql`
-		query communityThreads($slug: String, $after: String) {
-			community(slug: $slug) {
+		query communityThreads($slug: String, $after: String, $id: ID) {
+			community(slug: $slug, id: $id) {
         ...communityInfo
         ...communityThreads
       }
@@ -178,4 +158,16 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   ${channelMetaDataFragment}
 `;
 
-export const getCommunityChannels = graphql(GET_COMMUNITY_CHANNELS_QUERY);
+export const GET_COMMUNITY_CHANNELS_OPTIONS = {
+  options: ({ communitySlug }: { communitySlug: string }) => ({
+    variables: {
+      slug: communitySlug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getCommunityChannels = graphql(
+  GET_COMMUNITY_CHANNELS_QUERY,
+  GET_COMMUNITY_CHANNELS_OPTIONS
+);

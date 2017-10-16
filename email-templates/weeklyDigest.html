@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{threads.0.replies.0.sender.name}} replied to your thread</title>
+    <title>Your Spectrum {{timeframe.subject}} digest</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
@@ -98,17 +98,42 @@
     }
 
     .email-footer {
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       margin: 0 auto;
-      padding: 0;
+      padding: 8px;
       -premailer-width: 560px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
+      background-color: #F2F5F9;
+      margin-top: 32px;
+      font-weight: 400;
     }
 
     .email-footer p {
-      color: #AEAEAE;
+      color: #747E8D;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .email-footer a {
+      color: #16171A;
+      font-weight: 500;
+    }
+
+    .email-footer ul {
+      list-style-type: none;
+      margin: 16px 0;
+      padding: 0;
+      font-size: 14px;
+      color: #747E8D;
+    }
+
+    .email-footer li {
+      margin-top: 8px;
+      display: block;
+      width: 100%;
     }
 
     .body-action {
@@ -135,7 +160,7 @@
     }
 
     .post {
-      padding: 8px 0 24px;
+      padding: 8px 0 16px;
     }
 
     .reply-container {
@@ -144,11 +169,15 @@
     }
 
     .header-cell {
-      padding: 32px 32px 0 32px
+      padding: 32px 16px 0 16px
+    }
+
+    .header-cell p {
+      margin-bottom: 8px;
     }
 
     .content-cell {
-      padding: 24px 32px;
+      padding: 24px 16px;
       display: block;
     }
 
@@ -221,6 +250,14 @@
       }
     }
 
+    .button.outline {
+      background-color: #fff;
+      border: 2px solid #7B16FF;
+      color: #7B16FF;
+      box-shadow: none;
+      margin-left: 8px;
+    }
+
     /* Type ------------------------------ */
 
     h1 {
@@ -288,24 +325,28 @@
       margin-bottom: 16px;
     }
 
+    h2.title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
     .button.feed {
       margin-top: 16px;
       font-size: 18px;
     }
 
     .community-icon {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 4px;
       display: inline-block;
       margin-right: 8px;
-      position: relative;
-      top: 2px;
     }
 
     .community-name {
       font-size: 14px;
       color: #747E8D;
+      font-weight: 400;
     }
 
     .thread-meta {
@@ -314,14 +355,15 @@
     }
 
     .community-name a {
-      color: #171A21;
-      font-weight: 500;
+      color: #747E8D;
+      font-weight: 400;
     }
 
     .community-description {
       font-size: 14px;
       color: #747E8D;
       max-width: 400px;
+      font-weight: 400;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -341,7 +383,7 @@
     }
 
     .section-divider {
-      margin: 32px 0;
+      margin: 24px 0;
       border-top: 2px solid #DFE7EF;
       display: block;
       width: 100%;
@@ -349,9 +391,9 @@
     }
 
     .suggest-communities-title {
-      margin-left: 32px;
-      font-size: 20px;
-      font-weight: 700;
+      margin-left: 16px;
+      font-size: 18px;
+      font-weight: 500;
       margin-top: 16px;
     }
 
@@ -362,9 +404,33 @@
       overflow: hidden;
       max-width: 480px;
     }
+
+    .newMessageCount {
+      color: #E2197A;
+    }
     </style>
   </head>
   <body>
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      View the top conversations in your communities in the past {{timeframe.time}}.
+    </div>
+
+    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+    <div style="display: none; max-height: 0px; overflow: hidden;">
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    </div>
+
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center">
@@ -376,10 +442,26 @@
                   <!-- Body content -->
                   <tr>
                     <td class="header-cell">
-                      <p><strong>{{greeting}}</strong></p>
-                      <p>Another {{timeframe.time}} down! Here are the top conversations from your communities on Spectrum.</p>
+                      <p>{{greeting}}</p>
+
+                      {{#reputationString}}
+                        <p>{{.}}</p>
+                      {{/reputationString}}
                     </td>
                   </tr>
+
+                  <tr>
+                    <td>
+                      <div class="section-divider"></div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <h2 class="suggest-communities-title">The most active conversations in your communities:</h2>
+                    </td>
+                  </tr>
+
                   <tr>
                     <td class="content-cell">
 
@@ -400,7 +482,15 @@
                                     <img class="community-icon" src="{{community.profilePhoto}}" width="20" height="20" />
                                   </td>
                                   <td class="community-name">
-                                    <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a> · {{messageCount}} messages
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                      <tr>
+                                        <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;/&nbsp;
+                                        <a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
+                                      </tr>
+                                      <tr>
+                                        <td>{{{messageCountString}}}</td>
+                                      </tr>
+                                    </table>
                                   </td>
                                 </tr>
                               </table>
@@ -418,7 +508,7 @@
 
                   <tr>
                     <td>
-                      <h2 class="suggest-communities-title">More communities for you</h2>
+                      <h2 class="suggest-communities-title">Discover more communities:</h2>
                     </td>
                   </tr>
                   {{/communities}}
@@ -457,7 +547,7 @@
                   <tr>
                     <td class="content-cell">
                       <a class="feed button" href="https://spectrum.chat/">Go to my feed</a>
-                      <a class="feed button" href="https://spectrum.chat/explore">Explore communities</a>
+                      <a class="feed button outline" href="https://spectrum.chat/explore">Explore communities</a>
                     </td>
                   </tr>
 
@@ -474,10 +564,23 @@
           <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
             <tr>
               <td class="content-cell">
-                <p class="sub">Easily <a href="https://spectrum.chat/users/{{user.username}}/settings">unsubscribe in your email settings</a>.</p>
-                <br />
-                <br />
-                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
+                <p class="sub">
+                  You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>. If you no longer want to receive emails like this, you can:
+                </p>
+
+                <ul>
+                  <li>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Turn off {{timeframe.subject}} digests</a>
+                  </li>
+
+                  {{#username}}
+                    <li>
+                      <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
+                    </li>
+                  {{/username}}
+                </ul>
+
+                <p class="sub">Spectrum is made by Space Program, Inc.<br/>542 Brannan St. 409, San Francisco, CA 94107</p>
               </td>
             </tr>
           </table>

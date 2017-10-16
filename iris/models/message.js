@@ -1,48 +1,57 @@
 //@flow
-import striptags from 'striptags';
 const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
-import markdownLinkify from '../utils/markdown-linkify';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
+// TODO: Fix this
+export type Message = Object;
 
-const getMessage = (messageId: string): Promise<Object> => {
+export const getMessage = (messageId: string): Promise<Message> => {
   return db
     .table('messages')
     .get(messageId)
-    .run();
+    .run()
+    .then(message => {
+      if (message.deletedAt) return null;
+      return message;
+    });
 };
 
-const getMessages = (threadId: String): Promise<Array<Object>> => {
+export const getMessages = (threadId: String): Promise<Array<Message>> => {
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
       index: 'threadIdAndTimestamp',
     })
     .orderBy({ index: 'threadIdAndTimestamp' })
+    .filter(db.row.hasFields('deletedAt').not())
     .run();
 };
 
-const getLastMessage = (threadId: string): Promise<Object> => {
+export const getLastMessage = (threadId: string): Promise<Message> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .max('timestamp')
     .run();
 };
 
-const getMediaMessagesForThread = (
+export const getMediaMessagesForThread = (
   threadId: String
-): Promise<Array<Object>> => {
+): Promise<Array<Message>> => {
   return getMessages(threadId).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };
 
-const storeMessage = (message: Object, userId: string): Promise<Object> => {
+export const storeMessage = (
+  message: Message,
+  userId: string
+): Promise<Message> => {
   // Insert a message
   return db
     .table('messages')
@@ -55,7 +64,7 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
             message.messageType === 'media'
               ? message.content.body
               : // For text messages linkify URLs and strip HTML tags
-                markdownLinkify(striptags(message.content.body)),
+                message.content.body,
         },
       }),
       { returnChanges: true }
@@ -79,24 +88,42 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     });
 };
 
-const listenToNewMessages = (cb: Function): Function => {
+export const listenToNewMessages = (cb: Function): Function => {
   return listenToNewDocumentsIn('messages', cb);
 };
 
-const getMessageCount = (threadId: string): Promise<number> => {
+export const getMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .count()
     .run();
 };
 
-module.exports = {
-  getMessage,
-  getMessages,
-  getLastMessage,
-  getMediaMessagesForThread,
-  storeMessage,
-  listenToNewMessages,
-  getMessageCount,
+export const deleteMessage = (userId: string, id: string) => {
+  return db
+    .table('messages')
+    .get(id)
+    .update({
+      deletedAt: new Date(),
+    })
+    .run()
+    .then(res => {
+      addQueue('process reputation event', {
+        userId,
+        type: 'message deleted',
+        entityId: id,
+      });
+      return res;
+    });
+};
+
+export const userHasMessagesInThread = (threadId: string, userId: string) => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())('senderId')
+    .contains(userId)
+    .run();
 };

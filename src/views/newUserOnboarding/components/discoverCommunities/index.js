@@ -1,21 +1,16 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { track } from '../../../../helpers/events';
 import { getTopCommunities } from '../../../../api/community';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { displayLoadingState } from '../../../../components/loading';
 import { Button, OutlineButton } from '../../../../components/buttons';
-import { ContinueButton } from '../../style';
 import {
   Row,
-  StickyRow,
   CoverPhoto,
   Container,
   CoverAvatar,
@@ -58,12 +53,6 @@ class TopCommunitiesPure extends Component {
           null
         );
 
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-
         this.props.joinedCommunity(isMember ? 1 : -1, false);
       })
       .catch(err => {
@@ -91,40 +80,37 @@ class TopCommunitiesPure extends Component {
                 <CoverPhoto url={community.coverPhoto}>
                   <CoverLink to={`/${community.slug}`}>
                     <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-                    <CoverTitle>
-                      {community.name}
-                    </CoverTitle>
+                    <CoverTitle>{community.name}</CoverTitle>
                   </CoverLink>
                 </CoverPhoto>
                 <CoverSubtitle>
                   {community.metaData.members} members
                 </CoverSubtitle>
 
-                <CoverDescription>
-                  {community.description}
-                </CoverDescription>
+                <CoverDescription>{community.description}</CoverDescription>
 
                 <ButtonContainer>
-                  {community.communityPermissions.isMember
-                    ? <OutlineButton
-                        onClick={() => this.toggleMembership(community.id)}
-                        gradientTheme="none"
-                        color={'pro.alt'}
-                        hoverColor={'pro.default'}
-                        style={{ fontSize: '16px' }}
-                        loading={loading === community.id}
-                      >
-                        Joined!
-                      </OutlineButton>
-                    : <Button
-                        onClick={() => this.toggleMembership(community.id)}
-                        loading={loading === community.id}
-                        gradientTheme={'success'}
-                        style={{ fontSize: '16px' }}
-                        icon={'plus'}
-                      >
-                        Join
-                      </Button>}
+                  {community.communityPermissions.isMember ? (
+                    <OutlineButton
+                      onClick={() => this.toggleMembership(community.id)}
+                      gradientTheme="none"
+                      color={'success.alt'}
+                      hoverColor={'success.default'}
+                      style={{ fontSize: '16px' }}
+                      loading={loading === community.id}
+                    >
+                      Joined!
+                    </OutlineButton>
+                  ) : (
+                    <Button
+                      onClick={() => this.toggleMembership(community.id)}
+                      loading={loading === community.id}
+                      gradientTheme={'success'}
+                      style={{ fontSize: '16px' }}
+                    >
+                      Join
+                    </Button>
+                  )}
                 </ButtonContainer>
               </Container>
             );
@@ -139,7 +125,6 @@ const TopCommunities = compose(
   getTopCommunities,
   toggleCommunityMembershipMutation,
   displayLoadingState,
-  connect(),
-  pure
+  connect()
 )(TopCommunitiesPure);
 export default TopCommunities;

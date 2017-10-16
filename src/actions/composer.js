@@ -1,4 +1,3 @@
-// @flow
 import { track } from '../helpers/events';
 
 export const openComposer = () => {

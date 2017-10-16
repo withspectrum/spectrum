@@ -1,8 +1,7 @@
+// @flow
 /**
  * Database setup is done here
  */
-const fs = require('fs');
-const path = require('path');
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 const DEFAULT_CONFIG = {
@@ -10,12 +9,9 @@ const DEFAULT_CONFIG = {
 };
 
 const PRODUCTION_CONFIG = {
-  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
-  host: process.env.COMPOSE_RETHINKDB_URL,
-  port: process.env.COMPOSE_RETHINKDB_PORT,
-  ssl: {
-    ca: fs.readFileSync(path.resolve(__dirname, '../../cacert')),
-  },
+  password: process.env.AWS_RETHINKDB_PASSWORD,
+  host: process.env.AWS_RETHINKDB_URL,
+  port: process.env.AWS_RETHINKDB_PORT,
 };
 
 const config = IS_PROD

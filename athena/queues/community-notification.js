@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:community-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -114,6 +113,5 @@ new job for ${incomingCommunityId} by ${currentUserId}`
           });
       }
     })
-    .then(() => job.remove())
     .catch(err => new Error(err));
 };

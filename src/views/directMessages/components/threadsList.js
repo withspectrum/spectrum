@@ -1,11 +1,15 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import ListCardItemDirectMessageThread from './messageThreadListItem';
 import { ThreadsListScrollContainer } from './style';
 
-const ThreadsList = ({ threads, currentUser, active }) => {
+type Input = {
+  threads: Array<Object>,
+  currentUser: Object,
+  active: string,
+};
+
+const ThreadsList = ({ threads, currentUser, active }: Input) => {
   if (!threads || threads.length === 0) {
     return null;
   }
@@ -26,4 +30,4 @@ const ThreadsList = ({ threads, currentUser, active }) => {
   );
 };
 
-export default pure(ThreadsList);
+export default ThreadsList;

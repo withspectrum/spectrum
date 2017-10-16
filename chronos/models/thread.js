@@ -1,16 +1,16 @@
 // @flow
 const { db } = require('./db');
 
-export const getActiveThreadsInTimeframe = (
-  timeframe: string
-): Promise<Array<Object>> => {
+export const getActiveThreadsInTimeframe = (timeframe: string) => {
   let range;
   switch (timeframe) {
     case 'daily': {
       range = 60 * 60 * 24;
+      break;
     }
     case 'weekly': {
       range = 60 * 60 * 24 * 7;
+      break;
     }
     default: {
       range = 60 * 60 * 24 * 7;

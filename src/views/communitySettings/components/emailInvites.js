@@ -1,19 +1,14 @@
-// @flow
-import React, { Component } from 'react';
-// $FlowFixMe
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
-import { IS_EMAIL } from '../../../helpers/regexps';
+import isEmail from 'validator/lib/isEmail';
 import { sendEmailInvitationsMutation } from '../../../api/community';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
   ButtonContainer,
   EmailInviteForm,
@@ -22,6 +17,9 @@ import {
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  SectionCard,
+  SectionTitle,
+  SectionCardFooter,
 } from '../style';
 import {
   StyledCard,
@@ -29,18 +27,34 @@ import {
   Description,
 } from '../../../components/listItems/style';
 
-class EmailInvites extends Component {
-  state: {
-    isLoading: boolean,
-    contacts: Array<any>,
-    hasCustomMessage: boolean,
-    customMessageString: string,
-    customMessageError: boolean,
-  };
+type Props = {
+  community: Object,
+  dispatch: Function,
+  currentUser: Object,
+  hasInvitedPeople?: Function,
+  sendEmailInvites: Function,
+};
 
+type ContactProps = {
+  email: string,
+  firstName: string,
+  lastName: string,
+  error: boolean,
+};
+
+type State = {
+  isLoading: boolean,
+  contacts: Array<ContactProps>,
+  hasCustomMessage: boolean,
+  customMessageString: string,
+  customMessageError: boolean,
+};
+
+class EmailInvites extends React.Component<Props, State> {
   constructor() {
     super();
 
+    // seed the default state with 3 empty email contacts
     this.state = {
       isLoading: false,
       contacts: [
@@ -78,6 +92,7 @@ class EmailInvites extends Component {
       }
       unique[array[i].email] = 0;
     }
+
     return distinct;
   };
 
@@ -88,8 +103,8 @@ class EmailInvites extends Component {
       customMessageError,
       customMessageString,
     } = this.state;
-    const { community, dispatch, currentUser } = this.props;
-    this.props.hasInvitedPeople && this.props.hasInvitedPeople();
+    const { community, dispatch, currentUser, hasInvitedPeople } = this.props;
+    hasInvitedPeople && hasInvitedPeople();
 
     this.setState({
       isLoading: true,
@@ -99,6 +114,7 @@ class EmailInvites extends Component {
       .filter(contact => contact.error === false)
       .filter(contact => contact.email.length > 0)
       .filter(contact => contact.email !== currentUser.email)
+      .filter(contact => isEmail(contact.email))
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
@@ -202,7 +218,7 @@ class EmailInvites extends Component {
 
   validate = (e, i) => {
     const { contacts } = this.state;
-    if (!e.target.value.match(IS_EMAIL)) {
+    if (!isEmail(e.target.value)) {
       contacts[i].error = true;
     } else {
       contacts[i].error = false;
@@ -237,6 +253,7 @@ class EmailInvites extends Component {
   };
 
   render() {
+    const isMobile = window.innerWidth < 768;
     const {
       contacts,
       isLoading,
@@ -246,11 +263,8 @@ class EmailInvites extends Component {
     } = this.state;
 
     return (
-      <div style={{ width: '100%' }}>
-        <LargeListHeading>Invite by Email</LargeListHeading>
-        <Description>
-          Invite people to your community directly by email.
-        </Description>
+      <div>
+        <SectionTitle>Invite members by email</SectionTitle>
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -267,6 +281,7 @@ class EmailInvites extends Component {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
+                hideOnMobile={isMobile}
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />
@@ -283,7 +298,7 @@ class EmailInvites extends Component {
             : 'Optional: Add a custom message to your invitation'}
         </CustomMessageToggle>
 
-        {hasCustomMessage &&
+        {hasCustomMessage && (
           <Textarea
             autoFocus
             value={customMessageString}
@@ -295,15 +310,17 @@ class EmailInvites extends Component {
                 : '2px solid #DFE7EF',
             }}
             onChange={this.handleCustomMessageChange}
-          />}
+          />
+        )}
 
         {hasCustomMessage &&
-          customMessageError &&
-          <Error>
-            Your custom invitation message can be up to 500 characters.
-          </Error>}
+          customMessageError && (
+            <Error>
+              Your custom invitation message can be up to 500 characters.
+            </Error>
+          )}
 
-        <ButtonContainer>
+        <SectionCardFooter>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
@@ -311,16 +328,17 @@ class EmailInvites extends Component {
           >
             Send Invitations
           </Button>
-        </ButtonContainer>
+        </SectionCardFooter>
       </div>
     );
   }
 }
 
-const EmailInvitesCard = props =>
-  <StyledCard>
+const EmailInvitesCard = props => (
+  <SectionCard>
     <EmailInvites {...props} />
-  </StyledCard>;
+  </SectionCard>
+);
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;
 
@@ -331,11 +349,11 @@ const map = state => ({
 export const EmailInvitesWithoutCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  pure
+  viewNetworkHandler
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  pure
+  viewNetworkHandler
 )(EmailInvitesCard);
 export default EmailInvitesWithCard;

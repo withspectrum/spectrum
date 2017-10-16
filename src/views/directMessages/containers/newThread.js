@@ -1,13 +1,10 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
+import Head from '../../../components/head';
 import { connect } from 'react-redux';
+import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import Titlebar from '../../titlebar';
@@ -541,9 +538,21 @@ class NewThread extends Component {
   */
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
+
+    const { initNewThreadWithUser } = this.props;
+
+    // focus the composer input if no users were already in the composer
+    if (initNewThreadWithUser.length === 0) {
+      const input = findDOMNode(this.refs.input);
+      return input.focus();
+    }
+
+    this.chatInput.triggerFocus();
+
     // clear the redux store of this inited user, in case the person
     // sends more messages later in the session
     this.props.dispatch(clearDirectMessagesComposer());
+
     if (this.state.selectedUsersForNewThread.length > 0) {
       // trigger a new search for an existing thread with these users
       this.getMessagesForExistingDirectMessageThread();
@@ -602,6 +611,15 @@ class NewThread extends Component {
       this.props
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) {
+            this.props.dispatch(
+              addToastWithTimeout(
+                'error',
+                'Failed to create direct message thread, please try again!'
+              )
+            );
+            return;
+          }
           track(
             'direct message thread',
             `${isPrivate ? 'private thread' : 'group thread'} created`,
@@ -651,10 +669,19 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser, initNewThreadWithUser } = this.props;
+    const { currentUser } = this.props;
+
+    const { title, description } = generateMetaInfo({
+      type: 'directMessage',
+      data: {
+        title: 'New message',
+        description: null,
+      },
+    });
 
     return (
       <MessagesContainer>
+        <Head title={title} description={description} />
         <Titlebar
           title={'New Message'}
           provideBack={true}
@@ -663,7 +690,7 @@ class NewThread extends Component {
         />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
-          selectedUsersForNewThread.length > 0 &&
+          selectedUsersForNewThread.length > 0 && (
             <SelectedUsersPills>
               {selectedUsersForNewThread.map(user => {
                 return (
@@ -676,12 +703,14 @@ class NewThread extends Component {
                   </Pill>
                 );
               })}
-            </SelectedUsersPills>}
+            </SelectedUsersPills>
+          )}
 
-          {searchIsLoading &&
+          {searchIsLoading && (
             <SearchSpinnerContainer>
               <Spinner size={16} color={'brand.default'} />
-            </SearchSpinnerContainer>}
+            </SearchSpinnerContainer>
+          )}
 
           <ComposerInput
             ref="input"
@@ -689,11 +718,10 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={!initNewThreadWithUser.length > 0}
           />
 
           {// user has typed in a search string
-          searchString &&
+          searchString && (
             //if there are selected users already, we manually shift
             // the search results position down
             <SearchResultsDropdown moved={selectedUsersForNewThread.length > 0}>
@@ -715,24 +743,27 @@ class NewThread extends Component {
                         <SearchResultDisplayName>
                           {user.name}
                         </SearchResultDisplayName>
-                        {user.username &&
+                        {user.username && (
                           <SearchResultUsername>
                             @{user.username}
-                          </SearchResultUsername>}
+                          </SearchResultUsername>
+                        )}
                       </SearchResultTextContainer>
                     </SearchResult>
                   );
                 })}
 
-              {searchResults.length === 0 &&
+              {searchResults.length === 0 && (
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
                       No users found matching "{searchString}"
                     </SearchResultNull>
                   </SearchResultTextContainer>
-                </SearchResult>}
-            </SearchResultsDropdown>}
+                </SearchResult>
+              )}
+            </SearchResultsDropdown>
+          )}
         </ComposerInputWrapper>
 
         <ViewContent
@@ -740,24 +771,28 @@ class NewThread extends Component {
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
-            existingThreadWithMessages.id &&
-            <Header
-              thread={existingThreadWithMessages}
-              currentUser={currentUser}
-            />}
+            existingThreadWithMessages.id && (
+              <Header
+                thread={existingThreadWithMessages}
+                currentUser={currentUser}
+              />
+            )}
 
-          {existingThreadBasedOnSelectedUsers &&
+          {existingThreadBasedOnSelectedUsers && (
             <Messages
               id={existingThreadBasedOnSelectedUsers}
               currentUser={currentUser}
               forceScrollToBottom={this.forceScrollToBottom}
-            />}
+            />
+          )}
 
-          {!existingThreadBasedOnSelectedUsers &&
+          {!existingThreadBasedOnSelectedUsers && (
             <Grow>
-              {loadingExistingThreadMessages &&
-                <Spinner size={16} color={'brand.default'} />}
-            </Grow>}
+              {loadingExistingThreadMessages && (
+                <Spinner size={16} color={'brand.default'} />
+              )}
+            </Grow>
+          )}
         </ViewContent>
         <ChatInput
           thread={
@@ -767,7 +802,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
-          autoFocus={initNewThreadWithUser.length > 0}
+          onRef={chatInput => (this.chatInput = chatInput)}
         />
       </MessagesContainer>
     );

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import {
   Truncate,
   FlexCol,
@@ -60,9 +60,7 @@ export const Wrapper = styled(FlexCol)`
   }
 `;
 
-export const Col = styled(FlexCol)`
-  flex: 1;
-`;
+export const Col = styled(FlexCol)`flex: 1;`;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
@@ -74,16 +72,14 @@ export const Row = styled(FlexRow)`
   }
 `;
 
-export const Heading = styled(H3)`
-  font-weight: 700;
-`;
+export const Heading = styled(H3)`font-weight: 700;`;
 
 export const Meta = styled(H4)`
   font-weight: ${props => (props.isUnread ? 600 : 400)};
   color: ${props =>
     props.isUnread ? props.theme.text.default : props.theme.text.alt};
 
-  ${props => (props.nowrap ? Truncate() : '')}
+  ${props => (props.nowrap ? Truncate() : '')};
 `;
 
 export const Description = styled(P)`
@@ -259,7 +255,7 @@ export const ComposerInput = styled.input`
   font-size: 16px;
   padding: 15px 16px;
   width: 100%;
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
 
@@ -300,7 +296,7 @@ export const SearchResultsDropdown = styled.ul`
 export const SearchResult = styled.li`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
   width: 100%;
   ${Truncate()} padding: 8px 16px 8px 8px;
@@ -319,9 +315,7 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled(Avatar)`
-  margin-right: 8px;
-`;
+export const SearchResultImage = styled(Avatar)`margin-right: 8px;`;
 
 export const SearchResultTextContainer = styled.div`
   display: flex;
@@ -399,9 +393,7 @@ export const PhotoWrapper = styled.span`
   display: inline-block;
 `;
 
-export const Photo = styled(Avatar)`
-  border: 1px solid #fff;
-`;
+export const Photo = styled(Avatar)`border: 1px solid #fff;`;
 
 export const Names = styled.h2`
   display: block;

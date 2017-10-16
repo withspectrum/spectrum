@@ -1,4 +1,3 @@
-// @flow
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
@@ -28,7 +27,9 @@ type Options = {
 const sendEmail = (options: Options) => {
   const { TemplateId, To, TemplateModel } = options;
   debug(
-    `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${TemplateModel.subject}\nTemplateModel: ${stringify(TemplateModel)}`
+    `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${TemplateModel.subject}\nTemplateModel: ${stringify(
+      TemplateModel
+    )}`
   );
   return new Promise((res, rej) => {
     client.sendEmailWithTemplate(

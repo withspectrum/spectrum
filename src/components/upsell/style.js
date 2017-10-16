@@ -161,9 +161,9 @@ export const Profile = styled.div`
   }
 
   span {
-    background-color: ${({ theme }) => theme.success.default};
+    background-color: ${({ theme }) => theme.special.default};
     background-image: ${({ theme }) =>
-      Gradient(theme.space.light, theme.success.default)};
+      Gradient(theme.special.alt, theme.special.default)};
     position: absolute;
     left: 75%;
     top: 48px;
@@ -389,4 +389,10 @@ export const ButtonGoogle = styled(SigninButton)`
     color: ${props =>
       props.whitebg ? props.theme.social.google.default : '#fff'};
   }
+`;
+
+export const ShareInputContainer = styled.div`
+  width: 100%;
+  max-width: 528px;
+  margin-top: 16px;
 `;

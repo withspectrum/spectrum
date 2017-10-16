@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -113,9 +112,8 @@ class UserCommunitySettings extends Component {
     const roles = Object.keys(community.communityPermissions).filter(
       key => community.communityPermissions[key] && key.indexOf('__') === -1
     );
-    const role = roles.indexOf('isOwner') > -1
-      ? 'isOwner'
-      : (roles && roles[0]) || '';
+    const role =
+      roles.indexOf('isOwner') > -1 ? 'isOwner' : (roles && roles[0]) || '';
     const permissions = Object.keys(this.state.permissions);
 
     return (
@@ -128,7 +126,7 @@ class UserCommunitySettings extends Component {
           </Column>
         </Row>
 
-        {isEditing &&
+        {isEditing && (
           <EditForm>
             <List>
               {permissions.map(perm => {
@@ -139,17 +137,18 @@ class UserCommunitySettings extends Component {
                     onChange={this.changePermission}
                     key={perm}
                   >
-                    <span>
-                      {perm}
-                    </span>
+                    <span>{perm}</span>
                   </Checkbox>
                 );
               })}
             </List>
             <Save>
-              <Button onClick={this.save} loading={isLoading}>Save</Button>
+              <Button onClick={this.save} loading={isLoading}>
+                Save
+              </Button>
             </Save>
-          </EditForm>}
+          </EditForm>
+        )}
       </Container>
     );
   }

@@ -1,4 +1,3 @@
-//@flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 const {
@@ -50,7 +49,10 @@ module.exports = {
       // create a direct message thread object in order to generate an id
       return createDirectMessageThread(isGroup)
         .then(thread => {
-          if (message.messageType === 'text') {
+          if (
+            message.messageType === 'text' ||
+            message.messageType === 'draftjs'
+          ) {
             // once we have an id we can generate a proper message object
             const messageWithThread = {
               ...message,

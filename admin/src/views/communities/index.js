@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -9,7 +8,7 @@ import {
   recentCommunitiesQuery,
   topCommunitiesQuery,
 } from '../../api/community';
-import { displayLoadingState, Loading } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import Search from './components/search';
 import CommunityList from './components/communityList';
 import CommunityContainer from './containers/community';
@@ -43,11 +42,12 @@ class CommunitiesViewIndex extends Component {
         <View>
           <Search />
 
-          {dataExists &&
+          {dataExists && (
             <ListWrapper>
               <CommunityList data={top.topCommunities} label="Popular" />
               <CommunityList data={recent.recentCommunities} label="Recent" />
-            </ListWrapper>}
+            </ListWrapper>
+          )}
         </View>
       );
     }

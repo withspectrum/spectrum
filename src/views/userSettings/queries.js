@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
@@ -17,9 +16,9 @@ export const GET_USER_PROFILE_QUERY = gql`
 `;
 
 export const GET_USER_PROFILE_OPTIONS = {
-  options: ({ match }) => ({
+  options: ({ match: { params: { username } } }) => ({
     variables: {
-      username: match.params.username,
+      username,
     },
     fetchPolicy: 'network-only',
   }),

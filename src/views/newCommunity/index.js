@@ -1,15 +1,14 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import { track } from '../../helpers/events';
+// $FlowFixMe
+import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
@@ -43,11 +42,11 @@ class NewCommunity extends Component {
   constructor() {
     super();
 
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    let step = params.get('s');
+    const parsed = queryString.parse(window.location.search);
+    let step = parsed.s;
+    const id = parsed.id;
+
     step = step ? parseInt(step, 10) : 1;
-    const id = params.get('id');
 
     this.state = {
       activeStep: step,
@@ -177,36 +176,38 @@ class NewCommunity extends Component {
 
               {// gather community meta info
               activeStep === 1 &&
-              !community && (
-                <CreateCommunityForm communityCreated={this.communityCreated} />
-              )}
+                !community && (
+                  <CreateCommunityForm
+                    communityCreated={this.communityCreated}
+                  />
+                )}
 
               {activeStep === 1 &&
-              community && (
-                <EditCommunityForm
-                  communityUpdated={this.communityCreated}
-                  community={community}
-                />
-              )}
+                community && (
+                  <EditCommunityForm
+                    communityUpdated={this.communityCreated}
+                    community={community}
+                  />
+                )}
 
               {activeStep === 2 &&
-              community &&
-              community.id && (
-                <ContentContainer>
-                  <Divider />
-                  <ImportSlackWithoutCard
-                    community={community}
-                    id={community.id || existingId}
-                    isOnboarding
-                    hasInvitedPeople={this.hasInvitedPeople}
-                  />
-                  <Divider />
-                  <EmailInvitesWithoutCard
-                    community={community}
-                    hasInvitedPeople={this.hasInvitedPeople}
-                  />
-                </ContentContainer>
-              )}
+                community &&
+                community.id && (
+                  <ContentContainer>
+                    <Divider />
+                    <ImportSlackWithoutCard
+                      community={community}
+                      id={community.id || existingId}
+                      isOnboarding
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                    <Divider />
+                    <EmailInvitesWithoutCard
+                      community={community}
+                      hasInvitedPeople={this.hasInvitedPeople}
+                    />
+                  </ContentContainer>
+                )}
 
               {// connect a slack team or invite via email
               activeStep === 2 && (
@@ -241,6 +242,4 @@ class NewCommunity extends Component {
   }
 }
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default compose(pure, withApollo, connect(mapStateToProps))(
-  NewCommunity
-);
+export default compose(withApollo, connect(mapStateToProps))(NewCommunity);

@@ -1,4 +1,3 @@
-// @flow
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import {
@@ -37,6 +36,7 @@ import type {
   EditChannelArguments,
 } from '../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../models/thread';
+import { channelSlugIsBlacklisted } from '../utils/permissions';
 
 type Context = {
   user: Object,
@@ -52,6 +52,10 @@ module.exports = {
         return new UserError(
           'You must be signed in to create a new community.'
         );
+      }
+
+      if (channelSlugIsBlacklisted(args.input.slug)) {
+        return new UserError(`This channel name is reserved.`);
       }
 
       // get the community parent where the channel is being created

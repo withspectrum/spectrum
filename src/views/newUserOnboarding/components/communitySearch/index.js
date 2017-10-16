@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
@@ -81,12 +80,6 @@ class Search extends Component {
           isMember ? 'community joined' : 'community unjoined',
           null
         );
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
 
         this.props.joinedCommunity(isMember ? 1 : -1, false);
 
@@ -314,8 +307,8 @@ class Search extends Component {
                         <OutlineButton
                           onClick={() => this.toggleMembership(community.id)}
                           gradientTheme="none"
-                          color={'pro.alt'}
-                          hoverColor={'pro.default'}
+                          color={'success.alt'}
+                          hoverColor={'success.default'}
                           loading={loading === community.id}
                         >
                           Joined!
@@ -337,16 +330,16 @@ class Search extends Component {
               })}
 
             {searchResults.length === 0 &&
-            isFocused && (
-              <SearchResult>
-                <SearchResultNull>
-                  <p>No communities found matching "{searchString}"</p>
-                  <Link to={'/new/community'}>
-                    <Button>Create a Community</Button>
-                  </Link>
-                </SearchResultNull>
-              </SearchResult>
-            )}
+              isFocused && (
+                <SearchResult>
+                  <SearchResultNull>
+                    <p>No communities found matching "{searchString}"</p>
+                    <Link to={'/new/community'}>
+                      <Button>Create a Community</Button>
+                    </Link>
+                  </SearchResultNull>
+                </SearchResult>
+              )}
           </SearchResultsDropdown>
         )}
       </SearchWrapper>

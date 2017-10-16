@@ -1,9 +1,6 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { getUserInvoices } from '../../../api/user';
@@ -14,7 +11,6 @@ import {
   StyledCard,
   LargeListHeading,
   ListContainer,
-  Description,
 } from '../../../components/listItems/style';
 
 class InvoicesPure extends Component {
@@ -43,7 +39,7 @@ class InvoicesPure extends Component {
   }
 }
 
-const Invoices = compose(getUserInvoices, displayLoadingCard, connect(), pure)(
+const Invoices = compose(getUserInvoices, displayLoadingCard, connect())(
   InvoicesPure
 );
 

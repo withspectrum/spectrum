@@ -1,3 +1,4 @@
+// @flow
 const Notification = /* GraphQL */ `
 	enum NotificationEventType {
 		REACTION_CREATED
@@ -58,9 +59,9 @@ const Notification = /* GraphQL */ `
 
 	extend type Mutation {
 		markAllNotificationsSeen: Boolean
-		markAllNotificationsRead: [ Notification ]
+		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
-		markSingleNotificationSeen(id: ID!): Notification
+		markSingleNotificationSeen(id: ID!): Boolean
 		toggleNotificationReadState(notificationId: ID!): Notification!
 	}
 

@@ -1,7 +1,14 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
-import { DIGEST_TEMPLATE } from './constants';
+import { DIGEST_TEMPLATE, DEBUG_TEMPLATE } from './constants';
+import { generateUnsubscribeToken } from '../utils/generate-jwt';
+import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
+
+type ChannelType = {
+  name: string,
+  slug: string,
+};
 
 type CommunityType = {
   name: string,
@@ -20,17 +27,22 @@ type TopCommunityType = {
 
 type ThreadType = {
   community: CommunityType,
+  channel: ChannelType,
   channelId: string,
   title: string,
   threadId: string,
+  messageCountString: string,
 };
 
 type SendWeeklyDigestJobData = {
   email: string,
   name?: string,
+  username: string,
+  userId: string,
   userId: string,
   threads: ThreadType,
-  communities?: Array<TopCommunityType>,
+  reputationString: string,
+  communities: ?Array<TopCommunityType>,
   timeframe: 'daily' | 'weekly',
 };
 
@@ -39,33 +51,68 @@ type SendWeeklyDigestJob = {
   id: string,
 };
 
-export default (job: SendWeeklyDigestJob) => {
+export default async (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
-  const { email, name, threads, communities, timeframe } = job.data;
-  if (!email) {
-    debug(`\nno email found for this weekly digest, returning`);
+  const {
+    email,
+    userId,
+    name,
+    username,
+    threads,
+    communities,
+    timeframe,
+    reputationString,
+  } = job.data;
+  if (!email || !userId) {
+    debug(`\nno email or userId found for this weekly digest, returning`);
     return;
   }
 
-  const greeting = name ? `Hey ${name},` : 'Hey there,';
+  const unsubscribeType =
+    timeframe === 'daily' ? TYPE_DAILY_DIGEST : TYPE_WEEKLY_DIGEST;
+  const unsubscribeToken = await generateUnsubscribeToken(
+    userId,
+    unsubscribeType
+  );
 
-  try {
-    return sendEmail({
-      TemplateId: DIGEST_TEMPLATE,
-      To: email,
-      TemplateModel: {
-        threads,
-        greeting,
-        communities,
-        timeframe: {
-          subject: timeframe,
-          time: timeframe === 'daily' ? 'day' : 'week',
+  if (!unsubscribeToken) {
+    try {
+      return sendEmail({
+        TemplateId: DEBUG_TEMPLATE,
+        To: 'briandlovin@gmail.com',
+        TemplateModel: {
+          unsubscribeToken,
+          userData: userId,
+          type: unsubscribeType,
         },
-      },
-    });
-  } catch (err) {
-    console.log(err);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    const greeting = name ? `Hey ${name},` : 'Hey there,';
+
+    try {
+      return sendEmail({
+        TemplateId: DIGEST_TEMPLATE,
+        To: email,
+        TemplateModel: {
+          threads,
+          greeting,
+          communities,
+          reputationString,
+          username,
+          unsubscribeToken,
+          timeframe: {
+            subject: timeframe,
+            time: timeframe === 'daily' ? 'day' : 'week',
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };

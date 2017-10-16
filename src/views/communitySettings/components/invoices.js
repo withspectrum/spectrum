@@ -1,53 +1,76 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { getCommunityInvoices } from '../../../api/community';
-import { displayLoadingCard } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
+import { SectionCard, SectionTitle } from '../style';
 import {
   StyledCard,
   LargeListHeading,
   ListContainer,
-  Description,
 } from '../../../components/listItems/style';
 
-class InvoicesPure extends Component {
-  render() {
-    const { data: { error, community } } = this.props;
+type InvoiceType = {
+  id: string,
+  paidAt: string,
+  amount: number,
+  sourceBrand: string,
+  sourceLast4: string,
+  planName: string,
+};
 
-    if (!community || community.invoices.length === 0 || error !== undefined) {
-      return null;
+type Props = {
+  data: {
+    community: {
+      invoices: Array<InvoiceType>,
+    },
+  },
+  isLoading: boolean,
+};
+
+class Invoices extends React.Component<Props> {
+  render() {
+    const { data: { community }, isLoading } = this.props;
+
+    if (community) {
+      const { invoices } = community;
+      const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
+      if (!sortedInvoices || sortedInvoices.length === 0) {
+        return null;
+      }
+
+      return (
+        <SectionCard>
+          <SectionTitle>Payment History</SectionTitle>
+
+          <ListContainer style={{ marginTop: '16px' }}>
+            {sortedInvoices &&
+              sortedInvoices.map(invoice => {
+                return <InvoiceListItem invoice={invoice} key={invoice.id} />;
+              })}
+          </ListContainer>
+        </SectionCard>
+      );
     }
 
-    const { invoices } = community;
-    const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
+    if (isLoading) {
+      return (
+        <SectionCard>
+          <Loading />
+        </SectionCard>
+      );
+    }
 
-    return (
-      <StyledCard>
-        <LargeListHeading>Payment History</LargeListHeading>
-
-        <ListContainer style={{ marginTop: '16px' }}>
-          {sortedInvoices &&
-            sortedInvoices.map(invoice => {
-              return <InvoiceListItem invoice={invoice} key={invoice.id} />;
-            })}
-        </ListContainer>
-      </StyledCard>
-    );
+    return null;
   }
 }
 
-const Invoices = compose(
-  getCommunityInvoices,
-  displayLoadingCard,
-  connect(),
-  pure
-)(InvoicesPure);
-
-export default Invoices;
+export default compose(getCommunityInvoices, viewNetworkHandler, connect())(
+  Invoices
+);

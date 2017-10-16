@@ -12,9 +12,19 @@ import Card from '../card';
 
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
-  padding: 8px 0;
+  padding: 12px 0;
   justify-content: center;
   max-width: 100%;
+  border-top: 1px solid
+    ${props => (props.border ? props.theme.bg.border : 'transparent')};
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  &:last-of-type:not(:first-of-type) {
+    padding-bottom: 0;
+  }
 
   &:hover > div > div h3,
   &:hover .action {
@@ -49,14 +59,15 @@ export const Row = styled(FlexRow)`
 `;
 
 export const Heading = styled(H3)`
-  font-weight: 700;
+  font-weight: 500;
   transition: ${Transition.hover.off};
   line-height: 1.2;
+  margin-top: 6px;
 `;
 
 export const Meta = styled(H4)`
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   color: ${({ theme }) => theme.text.alt};
 
   a {

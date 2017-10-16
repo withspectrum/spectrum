@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
@@ -94,7 +92,6 @@ const glyphList = [
 
 const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
   <PageContainer>
-
     {/* Colors */}
     <Section container>
       <Heading>Colors</Heading>
@@ -123,16 +120,16 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
         <ComponentContainer width={'25%'}>
           <Component>
-            <Swatch color={'space.light'} />
+            <Swatch color={'space.alt'} />
           </Component>
-          <Code onClick={highlightAndCopy}>{'props.theme.space.light'}</Code>
+          <Code onClick={highlightAndCopy}>{'props.theme.space.alt'}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
-            <Swatch color={'space.soft'} />
+            <Swatch color={'brand.wash'} />
           </Component>
-          <Code onClick={highlightAndCopy}>{'props.theme.space.soft'}</Code>
+          <Code onClick={highlightAndCopy}>{'props.theme.brand.wash'}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
@@ -234,16 +231,16 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
         <ComponentContainer width={'25%'}>
           <Component>
-            <Swatch color={'inactive'} />
+            <Swatch color={'bg.inactive'} />
           </Component>
-          <Code onClick={highlightAndCopy}>{'props.theme.inactive'}</Code>
+          <Code onClick={highlightAndCopy}>{'props.theme.bg.inactive'}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
-            <Swatch color={'border.default'} />
+            <Swatch color={'bg.border'} />
           </Component>
-          <Code onClick={highlightAndCopy}>{'props.theme.border.default'}</Code>
+          <Code onClick={highlightAndCopy}>{'props.theme.bg.border'}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
@@ -269,26 +266,23 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
     {/* Icons */}
     <Section container>
       <Heading>Icons</Heading>
-      <Subheading>
-        Props
-      </Subheading>
+      <Subheading>Props</Subheading>
 
       <PropsList>
         <li>
           <pre>glyph: String</pre>
           <p>
-            Gets passed into a switch statement which will return the proper svg path
-            .
+            Gets passed into a switch statement which will return the proper svg
+            path .
           </p>
         </li>
         <li>
           <pre>size: Int</pre>
           <p>
-            Describes the size (in px) that an icon should be rendered at. Use only with
-            {' '}
-            <pre>-fill</pre>
-            {' '}
-            variants - stroked icons are drawn at specific sizes to maintain consistent stroke width and level of detail.
+            Describes the size (in px) that an icon should be rendered at. Use
+            only with <pre>-fill</pre> variants - stroked icons are drawn at
+            specific sizes to maintain consistent stroke width and level of
+            detail.
           </p>
         </li>
       </PropsList>
@@ -313,15 +307,14 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
     {/* Buttons */}
     <Section container>
       <Heading>Buttons</Heading>
-      <Subheading>
-        Props
-      </Subheading>
+      <Subheading>Props</Subheading>
 
       <PropsList>
         <li>
           <pre>size: 'small' | 'large'</pre>
           <p>
-            Adjusts padding for different contexts. Defaults to a midway size between small and large.
+            Adjusts padding for different contexts. Defaults to a midway size
+            between small and large.
           </p>
         </li>
         <li>
@@ -474,7 +467,9 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
         <ComponentContainer>
           <Component>
-            <Button size={'small'} loading={true}>Button Small Loading</Button>
+            <Button size={'small'} loading={true}>
+              Button Small Loading
+            </Button>
           </Component>
           <Code
             onClick={highlightAndCopy}
@@ -514,17 +509,18 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
         <ComponentContainer>
           <Component>
-            <Button size={'large'} loading={true}>Button Large Loading</Button>
+            <Button size={'large'} loading={true}>
+              Button Large Loading
+            </Button>
           </Component>
           <Code
             onClick={highlightAndCopy}
           >{`<Button size={'large'} loading={true}>Button Large Loading</Button>`}</Code>
         </ComponentContainer>
-
       </Section>
     </Section>
   </PageContainer>
 ));
 
-const StyleGuide = compose(pure)(StyleGuidePure);
+const StyleGuide = compose()(StyleGuidePure);
 export default StyleGuide;

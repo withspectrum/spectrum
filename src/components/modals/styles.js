@@ -110,12 +110,13 @@ export const UpsellDescription = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 8px;
-  background: ${props => props.theme.space.dark};
-  color: ${props => props.theme.text.reverse};
+  border: 2px solid ${props => props.theme.success.border};
+  background: ${props => props.theme.success.wash};
+  color: ${props => props.theme.success.dark};
 
   a {
-    color: ${props => props.theme.text.reverse};
-    font-weight: 600;
+    color: ${props => props.theme.success.default};
+    font-weight: 700;
     display: block;
     margin-top: 4px;
   }
@@ -125,7 +126,7 @@ export const Notice = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 4px;
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 2px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
 `;

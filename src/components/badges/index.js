@@ -1,7 +1,4 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
@@ -27,9 +24,9 @@ const Span = styled.span`
 `;
 
 const ProBadge = styled(Span)`
-  background-color: ${props => props.theme.success.alt};
+  background-color: ${props => props.theme.special.default};
   background-image: ${props =>
-    Gradient(props.theme.space.light, props.theme.success.default)}
+    Gradient(props.theme.special.alt, props.theme.special.default)};
   cursor: pointer;
 
   &:hover {
@@ -79,4 +76,4 @@ class Badge extends Component {
 const map = state => ({
   currentUser: state.users.currentUser,
 });
-export default compose(connect(map), pure)(Badge);
+export default compose(connect(map))(Badge);

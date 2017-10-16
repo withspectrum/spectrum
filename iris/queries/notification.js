@@ -1,4 +1,3 @@
-// @flow
 const { getNotificationsByUser } = require('../models/notification');
 const { getMessage } = require('../models/message');
 const { getChannels } = require('../models/channel');

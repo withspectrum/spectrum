@@ -1,25 +1,19 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
-
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
+import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
+import Editor from '../draftjs-editor';
+import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import isURL from 'validator/lib/isURL';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
@@ -42,6 +36,8 @@ import {
   UpsellDot,
 } from './style';
 
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
+
 const Upsell = () => {
   return (
     <ComposerUpsell>
@@ -56,7 +52,7 @@ class ThreadComposerWithData extends Component {
   // prop types
   state: {
     title: string,
-    body: string,
+    body: Object,
     availableCommunities: Array<any>,
     availableChannels: Array<any>,
     activeCommunity: ?string,
@@ -102,7 +98,12 @@ class ThreadComposerWithData extends Component {
         community =>
           community.communityPermissions.isMember ||
           community.communityPermissions.isOwner
-      );
+      )
+      .sort((a, b) => {
+        const bc = parseInt(b.communityPermissions.reputation, 10);
+        const ac = parseInt(a.communityPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
+      });
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -251,9 +252,10 @@ class ThreadComposerWithData extends Component {
     });
   };
 
-  changeBody = state => {
+  changeBody = body => {
+    this.listenForUrl(body);
     this.setState({
-      body: state,
+      body,
     });
   };
 
@@ -402,10 +404,11 @@ class ThreadComposerWithData extends Component {
     } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
+    const jsonBody = toJSON(body);
 
     const content = {
       title,
-      body: JSON.stringify(toJSON(body)),
+      body: JSON.stringify(jsonBody),
     };
 
     const attachments = [];
@@ -421,10 +424,14 @@ class ThreadComposerWithData extends Component {
     }
 
     // Get the images
-    const filesToUpload = body.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    const filesToUpload = Object.keys(jsonBody.entityMap)
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
+      .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -434,7 +441,7 @@ class ThreadComposerWithData extends Component {
           thread: {
             channelId,
             communityId,
-            type: 'SLATE',
+            type: 'DRAFTJS',
             content,
             attachments,
             filesToUpload,
@@ -455,7 +462,11 @@ class ThreadComposerWithData extends Component {
         });
 
         // redirect the user to the thread
-        this.props.history.push(`/thread/${id}`);
+        // if they are in the inbox, select it
+        this.props.isInbox
+          ? this.props.dispatch(changeActiveThread(id))
+          : this.props.history.push(`?thread=${id}`);
+
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );
@@ -470,24 +481,21 @@ class ThreadComposerWithData extends Component {
       });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
@@ -497,29 +505,22 @@ class ThreadComposerWithData extends Component {
 
       let urlToCheck = toCheck[len - 1].trim();
 
-      this.setState({ fetchingLinkPreview: true });
-
       if (!/^https?:\/\//i.test(urlToCheck)) {
         urlToCheck = 'https://' + urlToCheck;
       }
 
+      if (!isURL(urlToCheck)) return;
+      this.setState({ fetchingLinkPreview: true });
+
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          // this.props.dispatch(stopLoading());
-
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
             error: null,
           }));
-
-          const linkPreview = {};
-          linkPreview['data'] = data;
-          linkPreview['trueUrl'] = urlToCheck;
-
-          // this.props.dispatch(addLinkPreview(linkPreview));
         })
         .catch(err => {
           this.setState({
@@ -551,7 +552,7 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus } } = this.props;
+    const { isOpen, data: { networkStatus }, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
     if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
@@ -570,9 +571,17 @@ class ThreadComposerWithData extends Component {
       );
     } else {
       return (
-        <Container isOpen={isOpen}>
-          <Overlay isOpen={isOpen} onClick={this.closeComposer} />
-          <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
+        <Container isOpen={isOpen} isInbox={isInbox}>
+          <Overlay
+            isOpen={isOpen}
+            onClick={this.closeComposer}
+            isInbox={isInbox}
+          />
+          <Composer
+            isOpen={isOpen}
+            onClick={this.handleOpenComposer}
+            isInbox={isInbox}
+          >
             {!isOpen && showCommunityOwnerUpsell && <Upsell />}
             <Placeholder isOpen={isOpen}>
               <Icon glyph="post" onboarding="foo" tipLocation="top" />
@@ -584,18 +593,18 @@ class ThreadComposerWithData extends Component {
                 onChange={this.changeTitle}
                 style={ThreadTitle}
                 value={this.state.title}
-                placeholder={'A title for your thread...'}
+                placeholder={'A title for your conversation...'}
                 ref="titleTextarea"
                 autoFocus
               />
 
               <Editor
                 onChange={this.changeBody}
-                onKeyDown={this.listenForUrl}
                 state={this.state.body}
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
-                placeholder="Write more thoughts here, add photos, and anything else!"
+                editorKey="thread-composer"
+                placeholder="Write more thoughts here..."
                 className={'threadComposer'}
                 showLinkPreview={true}
                 linkPreview={{
@@ -607,46 +616,38 @@ class ThreadComposerWithData extends Component {
               />
 
               <Actions>
-                <Dropdowns>
-                  <Icon
-                    glyph="community"
-                    tipText="Select a community"
-                    tipLocation="top-right"
-                  />
-                  <select
-                    onChange={this.setActiveCommunity}
-                    value={activeCommunity}
-                  >
-                    {availableCommunities.map(community => {
-                      return (
-                        <option key={community.id} value={community.id}>
-                          {community.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <Icon
-                    glyph="channel"
-                    tipText="Select a channel"
-                    tipLocation="top-right"
-                  />
-                  <select
-                    onChange={this.setActiveChannel}
-                    value={activeChannel}
-                  >
-                    {availableChannels
-                      .filter(
-                        channel => channel.community.id === activeCommunity
-                      )
-                      .map((channel, i) => {
+                <FlexRow>
+                  <Dropdowns>
+                    <select
+                      onChange={this.setActiveCommunity}
+                      value={activeCommunity}
+                    >
+                      {availableCommunities.map(community => {
                         return (
-                          <option key={channel.id} value={channel.id}>
-                            {channel.name}
+                          <option key={community.id} value={community.id}>
+                            {community.name}
                           </option>
                         );
                       })}
-                  </select>
-                </Dropdowns>
+                    </select>
+                    <select
+                      onChange={this.setActiveChannel}
+                      value={activeChannel}
+                    >
+                      {availableChannels
+                        .filter(
+                          channel => channel.community.id === activeCommunity
+                        )
+                        .map((channel, i) => {
+                          return (
+                            <option key={channel.id} value={channel.id}>
+                              {channel.name}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </Dropdowns>
+                </FlexRow>
                 <FlexRow>
                   <TextButton
                     hoverColor="warn.alt"
@@ -676,8 +677,7 @@ export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
   displayLoadingComposer, // handle loading state while query is fetching
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({

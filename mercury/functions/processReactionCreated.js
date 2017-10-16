@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('mercury:queue:process-reaction-created');
 import { updateReputation } from '../models/usersCommunities';
 import { getMessage } from '../models/message';
@@ -21,7 +20,10 @@ export default async data => {
   const { entityId } = data;
 
   // get the message that the reaction was left on
-  const { threadId, senderId } = await getMessage(entityId);
+  const { threadId, senderId, threadType } = await getMessage(entityId);
+
+  // ignore reactions left on messages in DMs
+  if (threadType === 'directMessageThread') return;
 
   // get the original thread creator and communityId
   const { communityId, creatorId } = await getThread(threadId);

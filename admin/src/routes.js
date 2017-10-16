@@ -1,11 +1,9 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { Router, Route, Switch } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
 import { history } from './helpers/history';
-import ScrollManager from './components/scrollManager';
 import ModalRoot from './components/modals/modalRoot';
 import Toasts from './components/toasts';
 import Users from './views/users';
@@ -31,28 +29,26 @@ class Routes extends Component {
   render() {
     return (
       <Router history={history}>
-        <ScrollManager>
-          <Body>
-            {/* Global navigation, notifications, message notifications, etc */}
-            <Route component={Navbar} />
-            <Route component={ModalRoot} />
-            <Route component={Toasts} />
+        <Body>
+          {/* Global navigation, notifications, message notifications, etc */}
+          <Route component={Navbar} />
+          <Route component={ModalRoot} />
+          <Route component={Toasts} />
 
-            {/*
-              Switch only renders the first match. Subrouting happens downstream
-              https://reacttraining.com/react-router/web/api/Switch
-            */}
-            <Switch>
-              <Route exact path="/" component={Dashboard} />
+          {/*
+            Switch only renders the first match. Subrouting happens downstream
+            https://reacttraining.com/react-router/web/api/Switch
+          */}
+          <Switch>
+            <Route exact path="/" component={Dashboard} />
 
-              {/* App Pages */}
-              <Route path="/users/:username" component={Users} />
-              <Route path="/users" component={Users} />
-              <Route path="/communities/:slug" component={Communities} />
-              <Route path="/communities" component={Communities} />
-            </Switch>
-          </Body>
-        </ScrollManager>
+            {/* App Pages */}
+            <Route path="/users/:username" component={Users} />
+            <Route path="/users" component={Users} />
+            <Route path="/communities/:slug" component={Communities} />
+            <Route path="/communities" component={Communities} />
+          </Switch>
+        </Body>
       </Router>
     );
   }

@@ -1,6 +1,5 @@
-import styled, { css } from 'styled-components';
-import { Avatar } from '../../components/avatar';
-import Markdown from '../../components/markdown';
+import styled from 'styled-components';
+import Avatar from '../../components/avatar';
 import Column from '../../components/column';
 import {
   FlexCol,
@@ -9,26 +8,19 @@ import {
   H3,
   H4,
   Transition,
-  hexa,
   zIndex,
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  ${props =>
-    !props.slider &&
-    css`
-      background-image: linear-gradient(to right, ${props.theme.bg
-        .wash}, ${props.theme.bg.default} 10%, ${props.theme.bg
-      .default} 90%, ${props.theme.bg.wash});
-    `}
+  background-color: ${({ theme }) => theme.bg.default};
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
   flex: auto;
-  align-items: stretch;
-  overflow-y: scroll;
-
-  @media (max-width: 1024px) {
-    background-color: ${({ theme }) => theme.bg.default};
-    background-image: none;
-  }
+  align-self: stretch;
+  grid-template-rows: 48px 1fr 64px;
+  grid-template-columns: 100%;
+  grid-template-areas: 'header' 'body' 'footer';
 `;
 
 export const Content = styled(FlexRow)`
@@ -37,6 +29,7 @@ export const Content = styled(FlexRow)`
   flex: auto;
   overflow-y: scroll;
   padding-top: 32px;
+  grid-area: body;
 
   @media (max-width: 768px) {
     padding-top: 16px;
@@ -47,6 +40,7 @@ export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
   z-index: ${zIndex.chatInput};
+  grid-area: footer;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
@@ -58,24 +52,12 @@ export const Detail = styled(Column)`
   margin: 0;
 `;
 
-export const ChatInputWrapper = styled(Column)`
+export const ChatInputWrapper = styled(FlexCol)`
   align-self: stretch;
   align-items: stretch;
   margin: 0;
   flex: auto;
   position: relative;
-
-  > div {
-    background-image: ${({ theme }) =>
-      `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(
-        theme.bg.wash,
-        0.25
-      )} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
-
-    > form > div {
-      background-color: ${({ theme }) => theme.bg.default};
-    }
-  }
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -101,7 +83,6 @@ export const Container = styled(FlexCol)`
   overflow-y: scroll;
 
   @media (max-width: 768px) {
-
     padding-top: 16px;
   }
 `;
@@ -109,7 +90,8 @@ export const Container = styled(FlexCol)`
 export const ThreadWrapper = styled(FlexCol)`
   padding: 16px 32px;
   font-size: 14px;
-  flex: 1 0 auto;
+  flex: none;
+  min-width: 320px;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -140,7 +122,7 @@ export const DropWrap = styled(FlexCol)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    color: ${({ theme }) => theme.border.default};
+    color: ${({ theme }) => theme.bg.border};
     transition: ${Transition.hover.on};
   }
 
@@ -160,9 +142,7 @@ export const DropWrap = styled(FlexCol)`
   }
 `;
 
-export const FlyoutRow = styled(FlexRow)`
-  padding: 8px;
-`;
+export const FlyoutRow = styled(FlexRow)`padding: 8px;`;
 
 export const Byline = styled.div`
   font-weight: 500;
@@ -185,9 +165,7 @@ export const BylineMeta = styled(FlexCol)`
   }
 `;
 
-export const AuthorAvatar = styled(Avatar)`
-  cursor: pointer;
-`;
+export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
 export const AuthorName = styled(H3)`
   font-weight: 700;
@@ -243,21 +221,21 @@ export const Location = styled(FlexRow)`
 `;
 
 export const Timestamp = styled.span`
-  font-weight: 500;
-  font-size: 12px;
+  font-weight: 400;
+  margin: 8px 0;
   color: ${({ theme }) => theme.text.alt};
+  display: inline-block;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;
 
-export const Edited = styled(Timestamp)`
-  margin-left: 4px;
-`;
+export const Edited = styled(Timestamp)`margin-left: 4px;`;
 
-export const ChatWrapper = styled.div`width: 100%;`;
-
-export const ThreadContent = styled(Markdown)`
-  margin-top: 1rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
+export const ChatWrapper = styled.div`
+  width: 100%;
+  flex: none;
 `;
 
 export const ThreadTitle = {
@@ -287,3 +265,93 @@ export const ThreadDescription = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
 };
+
+export const ShareLinks = styled.div`
+  display: flex;
+  margin-top: 24px;
+  margin-bottom: 8px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ShareButtons = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+`;
+
+export const ShareLink = styled.span`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  cursor: pointer;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    margin-right: 4px;
+  }
+
+  &:hover {
+    color: ${props =>
+      props.facebook
+        ? props.theme.social.facebook.default
+        : props.twitter
+          ? props.theme.social.twitter.default
+          : props.theme.text.default};
+  }
+`;
+
+export const ShareButton = styled.span`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  background: ${props => props.theme.bg.wash};
+  border: 1px solid ${props => props.theme.bg.border};
+  flex: 1;
+
+  a {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+  }
+
+  &:hover {
+    background: ${props =>
+      props.facebook
+        ? props.theme.social.facebook.default
+        : props.twitter
+          ? props.theme.social.twitter.default
+          : props.theme.text.default};
+    border: 1px solid
+      ${props =>
+        props.facebook
+          ? props.theme.social.facebook.default
+          : props.twitter
+            ? props.theme.social.twitter.default
+            : props.theme.text.default};
+    color: ${props => props.theme.text.reverse};
+  }
+
+  &:first-of-type {
+    border-radius: 4px 0 0 4px;
+    border-right: 0;
+  }
+
+  &:last-of-type {
+    border-radius: 0 4px 4px 0;
+    border-left: 0;
+  }
+`;

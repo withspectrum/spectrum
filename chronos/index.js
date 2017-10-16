@@ -1,11 +1,12 @@
 // @flow
-// $FlowFixMe
 const debug = require('debug')('chronos');
 const createWorker = require('../shared/bull/create-worker');
-import processDigestEmail from './queues/process-digest-email';
+import processDataForDigest from './queues/digests';
+import processSingleDigestEmail from './queues/digests/processDigestEmail';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
+  PROCESS_INDIVIDUAL_DIGEST,
 } from './queues/constants';
 import { weeklyDigest, dailyDigest } from './jobs';
 
@@ -16,18 +17,20 @@ debug('Logging with debug enabled!');
 console.log('');
 
 const server = createWorker({
-  [PROCESS_WEEKLY_DIGEST_EMAIL]: processDigestEmail,
-  [PROCESS_DAILY_DIGEST_EMAIL]: processDigestEmail,
+  [PROCESS_WEEKLY_DIGEST_EMAIL]: processDataForDigest,
+  [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
+  [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
 });
 
 // start the jobs
 weeklyDigest();
 dailyDigest();
 
+// $FlowIssue
 console.log(
-  `🗄 Crons open for business ${(process.env.NODE_ENV === 'production' &&
-    `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
-    'locally'}`
+  `🗄 Crons open for business ${process.env.NODE_ENV === 'production'
+    ? 'in production'
+    : 'locally'}`
 );
 
 server.listen(PORT, 'localhost', () => {

@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex, Gradient } from '../globals';
 
 export const Container = styled.div`
   position: fixed;
@@ -9,7 +9,8 @@ export const Container = styled.div`
   right: 0;
   padding: 16px;
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
   max-width: 256px;
   background: transparent;
   pointer-events: none;
@@ -56,13 +57,19 @@ const Toast = styled.div`
 `;
 
 export const ErrorToast = styled(Toast)`
-  background: ${props => props.theme.warn.default};
+  background-color: ${props => props.theme.warn.default};
+  background-image: ${props =>
+    Gradient(props.theme.warn.alt, props.theme.warn.default)};
 `;
 
 export const SuccessToast = styled(Toast)`
-  background: ${props => props.theme.success.default};
+  background-color: ${props => props.theme.success.default};
+  background-image: ${props =>
+    Gradient(props.theme.success.alt, props.theme.success.default)};
 `;
 
 export const NeutralToast = styled(Toast)`
-  background: ${props => props.theme.text.alt};
+  background-color: ${props => props.theme.text.alt};
+  background-image: ${props =>
+    Gradient(props.theme.text.placeholder, props.theme.text.alt)};
 `;

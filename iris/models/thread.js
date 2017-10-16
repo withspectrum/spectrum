@@ -2,10 +2,51 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { addQueue } from '../utils/workerQueue';
-const { listenToNewDocumentsIn } = require('./utils');
+const {
+  listenToNewDocumentsIn,
+  NEW_DOCUMENTS,
+  parseRange,
+} = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
+import type { PaginationOptions } from '../utils/paginate-arrays';
 
-export const getThread = (threadId: string): Promise<Object> => {
+type DBThreadAttachment = {
+  attachmentType: 'photoPreview',
+  data: {
+    name: string,
+    type: string,
+    url: string,
+  },
+};
+
+type DBThreadEdits = {
+  attachment?: {
+    photos: Array<DBThreadAttachment>,
+  },
+  content: {
+    body?: string,
+    title: string,
+  },
+  timestamp: Date,
+};
+
+export type DBThread = {
+  channelId: string,
+  communityId: string,
+  content: {
+    body?: string,
+    title: string,
+  },
+  createdAt: Date,
+  creatorId: string,
+  isPublished: boolean,
+  lastActive: Date,
+  modifiedAt?: Date,
+  attachments?: Array<DBThreadAttachment>,
+  edits?: Array<DBThreadEdits>,
+};
+
+export const getThread = (threadId: string): Promise<DBThread> => {
   return db
     .table('threads')
     .get(threadId)
@@ -14,7 +55,7 @@ export const getThread = (threadId: string): Promise<Object> => {
 
 export const getThreads = (
   threadIds: Array<string>
-): Promise<Array<Object>> => {
+): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .getAll(...threadIds)
@@ -23,7 +64,7 @@ export const getThreads = (
 };
 
 // this is used to get all threads that need to be marked as deleted whenever a channel is deleted
-export const getThreadsByChannelToDelete = channelId => {
+export const getThreadsByChannelToDelete = (channelId: string) => {
   return db
     .table('threads')
     .getAll(channelId, { index: 'channelId' })
@@ -33,8 +74,8 @@ export const getThreadsByChannelToDelete = channelId => {
 
 export const getThreadsByChannel = (
   channelId: string,
-  { first, after }
-): Promise<Array<Object>> => {
+  { first, after }: PaginationOptions
+): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .between(
@@ -54,7 +95,7 @@ export const getThreadsByChannel = (
 
 export const getThreadsByChannels = (
   channelIds: Array<string>
-): Promise<Array<Object>> => {
+): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
@@ -65,7 +106,7 @@ export const getThreadsByChannels = (
 
 export const getThreadsByCommunity = (
   communityId: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .between([communityId, db.minval], [communityId, db.maxval], {
@@ -74,6 +115,19 @@ export const getThreadsByCommunity = (
       rightBound: 'open',
     })
     .orderBy({ index: db.desc('communityIdAndLastActive') })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
+export const getThreadsByCommunityInTimeframe = (
+  communityId: string,
+  range: string
+): Promise<Array<Object>> => {
+  const { current } = parseRange(range);
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };
@@ -90,7 +144,7 @@ export const getThreadsByCommunity = (
 export const getViewableThreadsByUser = (
   evalUser: string,
   currentUser: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBThread>> => {
   return (
     db
       .table('threads')
@@ -141,7 +195,7 @@ export const getViewableThreadsByUser = (
 
 export const getPublicThreadsByUser = (
   evalUser: string
-): Promise<Array<Object>> => {
+): Promise<Array<DBThread>> => {
   return (
     db
       .table('threads')
@@ -182,7 +236,7 @@ export const getPublicThreadsByUser = (
 export const publishThread = (
   { filesToUpload, ...thread }: Object,
   userId: string
-): Promise<Object> => {
+): Promise<DBThread> => {
   return db
     .table('threads')
     .insert(
@@ -215,7 +269,7 @@ export const publishThread = (
 export const setThreadLock = (
   threadId: string,
   value: Boolean
-): Promise<Object> => {
+): Promise<DBThread> => {
   return (
     db
       .table('threads')
@@ -288,9 +342,9 @@ type EditThreadInput = {
     title: string,
     body: string,
   },
-  attachments: Array<Object>,
+  attachments: Array<DBThread>,
 };
-export const editThread = (input: EditThreadInput): Promise<Object> => {
+export const editThread = (input: EditThreadInput): Promise<DBThread> => {
   return db
     .table('threads')
     .get(input.threadId)
@@ -347,6 +401,25 @@ export const updateThreadWithImages = (id: string, body: string) => {
     });
 };
 
-export const listenToNewThreads = (cb: Function): Function => {
-  return listenToNewDocumentsIn('threads', cb);
+const hasChanged = (field: string) =>
+  db.row('old_val')(field).ne(db.row('new_val')(field));
+const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
+
+export const listenToUpdatedThreads = (cb: Function): Function => {
+  return db
+    .table('threads')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val').run(
+    { cursor: true },
+    (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    }
+  );
 };

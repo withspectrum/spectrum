@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
-import { Transition, hexa, Shadow, FlexRow, zIndex } from '../globals';
+import { Transition, hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
   align-self: stretch;
@@ -22,7 +22,7 @@ export const Container = styled(FlexRow)`
 export const Composer = styled(Card)`
   margin-bottom: 16px;
   position: relative;
-  z-index: ${zIndex.composer};
+  z-index: ${props => (props.isInbox ? '3001' : zIndex.composer)};
   width: 100%;
   display: block;
   min-height: 64px;
@@ -31,8 +31,8 @@ export const Composer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) =>
-  hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high}
+      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {
@@ -55,7 +55,7 @@ export const Overlay = styled.div`
       bottom: 0;
       width: 100%;
       height: 100%;
-      z-index: ${zIndex.composer - 1};
+      z-index: ${props.isInbox ? '3000' : zIndex.composer - 1};
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
@@ -102,15 +102,15 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const Actions = styled(FlexRow)`
-  background: #F8FBFE;
-  border-top: 2px solid ${props => props.theme.border.default};
+export const Actions = styled(FlexCol)`
+  background: #f8fbfe;
+  border-top: 2px solid ${props => props.theme.bg.border};
   padding: 8px 8px 8px 0;
   border-radius: 0 0 12px 12px;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 
   @media (max-width: 768px) {
     position: absolute;
@@ -124,13 +124,14 @@ export const Actions = styled(FlexRow)`
 export const Dropdowns = styled(FlexRow)`
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
 
   select {
     max-width: 224px;
     display: block;
     padding: 8px 12px;
     border: none;
-    border: 2px solid ${props => props.theme.border.default};
+    border: 2px solid ${props => props.theme.bg.border};
     border-radius: 8px;
     box-shadow: none;
     color: ${props => props.theme.text.default};
@@ -143,24 +144,13 @@ export const Dropdowns = styled(FlexRow)`
     -moz-appearance: none;
     appearance: none;
     cursor: pointer;
+    margin-left: 8px;
   }
 
-  > div {
-    color: ${props => props.theme.text.placeholder};
-    margin-left: 4px;
-
-    &:nth-of-type(2) {
-      margin-left: 8px;
-    }
-  }
   @media (max-width: 768px) {
     width: 100%;
     justify-content: flex-start;
     margin-bottom: 8px;
-
-    div {
-      display: none;
-    }
 
     select:nth-of-type(2) {
         flex: 1 0 auto;

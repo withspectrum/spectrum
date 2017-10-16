@@ -1,9 +1,12 @@
-// const { listenToNewThreads } = require('../../models/thread');
+// @flow
+const { listenToUpdatedThreads } = require('../../models/thread');
 const pubsub = require('./pubsub');
 const channels = require('./channels');
 
+const updatedThread = thread => {
+  pubsub.publish(channels.THREAD_UPDATED, thread);
+};
+
 module.exports = () => {
-  // listenToNewThreads(thread => {
-  //   pubsub.publish(channels.THREAD_ADDED, thread);
-  // });
+  listenToUpdatedThreads(updatedThread);
 };

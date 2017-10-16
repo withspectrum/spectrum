@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition, zIndex } from '../globals';
-import Editor from '../../components/editor';
+import Editor from '../../components/draftjs-editor';
 
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;
@@ -11,11 +11,11 @@ export const ChatInputWrapper = styled(FlexRow)`
   width: 100%;
   margin: 0;
   padding: 8px;
-  border-top: 2px solid ${({ theme }) => theme.border.default};
+  border-top: 2px solid ${({ theme }) => theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
-    position: ${props => (props.focus ? 'fixed' : 'relative')};
+    position: relative;
     background-color: ${props => props.theme.bg.default};
     z-index: ${zIndex.mobileInput};
   }
@@ -34,48 +34,53 @@ export const Form = styled.form`
 `;
 
 export const EditorInput = styled(Editor)`
-	flex: auto;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 20px;
-	max-height: 120px;
-	min-height: 40px;
+  flex: auto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  max-height: 120px;
+  min-height: 40px;
   max-width: 100%;
-	padding: 8px 40px 8px 16px;
-	border-radius: 24px;
-	border: 2px solid ${props => props.theme.text.placeholder};
-  border-color: ${props =>
-    props.focus ? props.theme.brand.default : props.theme.text.placeholder};
-	transition: border 0.3s ease-out;
-	color: ${props => props.theme.text.default};
+  padding: 8px 40px 8px 16px;
+  border-radius: 24px;
+  border: 2px solid ${props => props.theme.bg.border};
+  transition: border 0.3s ease-out;
+  color: ${props => props.theme.text.default};
   overflow-y: scroll;
 
-	@media (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: 16px;
-		padding-left: 16px;
-    ${/* width: calc(100% - 72px); */ ''}
+    padding-left: 16px;
+    ${/* width: calc(100% - 72px); */ ''};
   }
 
-	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) =>
-    theme.text.placeholder} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
 
-	&:hover {
-		border-color: ${props => props.theme.text.alt};
-		transition: border-color 0.2s ease-in;
-	}
+  &:hover {
+    border-color: ${props => props.theme.text.alt};
+    transition: border-color 0.2s ease-in;
+  }
 `;
 
 export const SendButton = styled(IconButton)`
-	position: absolute;
-	right: 12px;
+  position: absolute;
+  right: 12px;
   height: 32px;
   width: 32px;
-	background-color: transparent;
-	transition: ${Transition.hover.off};
-	top: calc(50% - 16px);
+  background-color: transparent;
+  transition: ${Transition.hover.off};
+  top: calc(50% - 16px);
 `;
 
 export const MediaInput = styled.input`
@@ -106,14 +111,14 @@ export const MediaLabel = styled.label`
 `;
 
 export const EmojiToggle = styled(IconButton)`
-	position: absolute;
-	left: 56px;
-	background-color: transparent;
-	top: calc(50% - 16px);
+  position: absolute;
+  left: 56px;
+  background-color: transparent;
+  top: calc(50% - 16px);
 
-	@media (max-width: 768px) {
-		display: none;
-	}
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const PhotoSizeError = styled.div`

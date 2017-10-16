@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -14,7 +13,7 @@ import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { COMMUNITY_SLUG_BLACKLIST } from '../../../../helpers/regexps';
+import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
@@ -353,10 +352,11 @@ class CreateCommunityForm extends Component {
             />
           </ImageInputWrapper>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '32px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
 
           <Spacer height={8} />
 
@@ -368,18 +368,20 @@ class CreateCommunityForm extends Component {
             What is your community called?
           </Input>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
           <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
             sp.chat/
           </UnderlineInput>
 
-          {slugTaken &&
+          {slugTaken && (
             <Error>
               This url is already taken - feel free to change it if you're set
               on the name {name}!
-            </Error>}
+            </Error>
+          )}
 
           {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
@@ -390,10 +392,11 @@ class CreateCommunityForm extends Component {
             Describe it in 140 characters or less
           </TextArea>
 
-          {descriptionError &&
+          {descriptionError && (
             <Error>
               Oop, that's more than 140 characters - try trimming that up.
-            </Error>}
+            </Error>
+          )}
 
           <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
@@ -413,10 +416,11 @@ class CreateCommunityForm extends Component {
             </span>
           </Checkbox>
 
-          {createError &&
+          {createError && (
             <Error>
               Please fix any errors above before creating this community.
-            </Error>}
+            </Error>
+          )}
         </Form>
 
         <Actions>

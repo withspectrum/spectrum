@@ -1,18 +1,11 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-// $FlowFixMe
 import slugg from 'slugg';
-// $FlowFixMe
+import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
@@ -100,11 +93,16 @@ class CreateChannelModal extends Component {
     slug = slugg(lowercaseSlug);
 
     if (slug.length >= 24) {
-      this.setState({
+      return this.setState({
         slugError: true,
       });
+    }
 
-      return;
+    if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
+      return this.setState({
+        slug,
+        slugTaken: true,
+      });
     }
 
     this.setState({
@@ -117,27 +115,40 @@ class CreateChannelModal extends Component {
 
   checkSlug = slug => {
     const communitySlug = this.props.modalProps.slug;
-    // check the db to see if this channel slug exists
-    this.props.client
-      .query({
-        query: CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
-        variables: {
-          channelSlug: slug,
-          communitySlug,
-        },
-      })
-      .then(({ data }) => {
-        // if the channel exists
-        if (!data.loading && data && data.channel && data.channel.id) {
-          this.setState({
-            slugTaken: true,
-          });
-        } else {
-          this.setState({
-            slugTaken: false,
-          });
-        }
+
+    if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
+      return this.setState({
+        slug,
+        slugTaken: true,
       });
+    } else {
+      // check the db to see if this channel slug exists
+      this.props.client
+        .query({
+          query: CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
+          variables: {
+            channelSlug: slug,
+            communitySlug,
+          },
+        })
+        .then(({ data }) => {
+          if (CHANNEL_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
+            return this.setState({
+              slugTaken: true,
+            });
+          }
+
+          if (!data.loading && data && data.channel && data.channel.id) {
+            this.setState({
+              slugTaken: true,
+            });
+          } else {
+            this.setState({
+              slugTaken: false,
+            });
+          }
+        });
+    }
   };
 
   changeDescription = e => {
@@ -307,8 +318,8 @@ class CreateChannelModal extends Component {
 
             {!modalProps.isPro && (
               <UpsellDescription>
-                Pro communities can create private channels to protect threads,
-                messages, and manually approve all new members.
+                Standard communities can create private channels to protect
+                threads, messages, and manually approve all new members.
                 <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
                   Learn more
                 </Link>
@@ -316,21 +327,21 @@ class CreateChannelModal extends Component {
             )}
 
             {modalProps.isPro &&
-            isPrivate && (
-              <Description>
-                Only approved people on Spectrum can see the threads, messages,
-                and members in this channel. You can manually approve users who
-                request to join this channel.
-              </Description>
-            )}
+              isPrivate && (
+                <Description>
+                  Only approved people on Spectrum can see the threads,
+                  messages, and members in this channel. You can manually
+                  approve users who request to join this channel.
+                </Description>
+              )}
 
             {modalProps.isPro &&
-            !isPrivate && (
-              <Description>
-                Anyone on Spectrum can join this channel, post threads and
-                messages, and will be able to see other members.
-              </Description>
-            )}
+              !isPrivate && (
+                <Description>
+                  Anyone on Spectrum can join this channel, post threads and
+                  messages, and will be able to see other members.
+                </Description>
+              )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>

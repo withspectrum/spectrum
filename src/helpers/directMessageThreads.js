@@ -1,5 +1,3 @@
-// @flow
-
 export const sortThreadsByLatestActivity = (
   threads: Array<Object>
 ): Array<Object> => {

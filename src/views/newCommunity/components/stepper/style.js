@@ -13,7 +13,7 @@ export const Container = styled.div`
 export const Line = styled.span`
   position: absolute;
   height: 2px;
-  background: ${props => props.theme.border.default};
+  background: ${props => props.theme.bg.border};
   top: 50%;
   left: 24px;
   right: 24px;
@@ -34,7 +34,7 @@ export const Step = styled.div`
   border-radius: 16px;
   border: 2px solid
     ${props =>
-      props.active ? props.theme.brand.default : props.theme.border.default};
+      props.active ? props.theme.brand.default : props.theme.bg.border};
   box-shadow: 0 0 0 4px #fff;
   font-weight: 700;
   z-index: ${zIndex.base + 1};

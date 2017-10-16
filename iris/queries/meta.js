@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getGrowth } from '../models/utils';
+import { getGrowth, getCount, getAu } from '../models/utils';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -8,40 +8,114 @@ module.exports = {
     meta: () => ({}),
   },
   Meta: {
-    userGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    usersGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('users');
+
+      return {
+        count: await getCount('users'),
+        dau: await getAu('daily'),
+        wau: await getAu('weekly'),
+        mau: await getAu('monthly'),
+        weeklyGrowth: await getGrowth('users', 'weekly', 'createdAt'),
+        monthlyGrowth: await getGrowth('users', 'monthly', 'createdAt'),
+        quarterlyGrowth: await getGrowth('users', 'quarterly', 'createdAt'),
+      };
     },
-    communityGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    communitiesGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('communities');
+
+      return {
+        count: await getCount('communities'),
+        weeklyGrowth: await getGrowth('communities', 'weekly', 'createdAt'),
+        monthlyGrowth: await getGrowth('communities', 'monthly', 'createdAt'),
+        quarterlyGrowth: await getGrowth(
+          'communities',
+          'quarterly',
+          'createdAt'
+        ),
+      };
     },
-    channelGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    channelsGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('channels');
+
+      return {
+        count: await getCount('channels'),
+        weeklyGrowth: await getGrowth('channels', 'weekly', 'createdAt'),
+        monthlyGrowth: await getGrowth('channels', 'monthly', 'createdAt'),
+        quarterlyGrowth: await getGrowth('channels', 'quarterly', 'createdAt'),
+      };
     },
-    threadGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    threadsGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('threads');
+
+      return {
+        count: await getCount('threads'),
+        weeklyGrowth: await getGrowth('threads', 'weekly', 'createdAt'),
+        monthlyGrowth: await getGrowth('threads', 'monthly', 'createdAt'),
+        quarterlyGrowth: await getGrowth('threads', 'quarterly', 'createdAt'),
+      };
     },
-    messageGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    directMessageThreadsGrowth: async (
+      _: any,
+      __: any,
+      { user }: GraphQLContext
+    ) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('messages', 'timestamp').then(messages =>
-        messages.map(({ timestamp }) => ({ createdAt: timestamp }))
-      );
+
+      return {
+        count: await getCount('directMessageThreads'),
+        weeklyGrowth: await getGrowth(
+          'directMessageThreads',
+          'weekly',
+          'createdAt'
+        ),
+        monthlyGrowth: await getGrowth(
+          'directMessageThreads',
+          'monthly',
+          'createdAt'
+        ),
+        quarterlyGrowth: await getGrowth(
+          'directMessageThreads',
+          'quarterly',
+          'createdAt'
+        ),
+      };
     },
-    subscriptionGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+    threadMessagesGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('recurringPayments', {
-        stripeData: { created: true, plan: ['amount'] },
-      }).then(subscriptions =>
-        subscriptions.map(({ stripeData }) => ({
-          // convert .created from seconds to ms
-          createdAt: new Date(stripeData.created * 1000),
-          amount: stripeData.plan.amount,
-          plan: stripeData.plan.name,
-        }))
-      );
+
+      return {
+        count: await getCount('messages', {
+          threadType: 'story',
+        }),
+        weeklyGrowth: await getGrowth('messages', 'weekly', 'timestamp', {
+          threadType: 'story',
+        }),
+        monthlyGrowth: await getGrowth('messages', 'monthly', 'timestamp', {
+          threadType: 'story',
+        }),
+        quarterlyGrowth: await getGrowth('messages', 'quarterly', 'timestamp', {
+          threadType: 'story',
+        }),
+      };
+    },
+    directMessagesGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+
+      return {
+        count: await getCount('messages', {
+          threadType: 'directMessageThread',
+        }),
+        weeklyGrowth: await getGrowth('messages', 'weekly', 'timestamp', {
+          threadType: 'directMessageThread',
+        }),
+        monthlyGrowth: await getGrowth('messages', 'monthly', 'timestamp', {
+          threadType: 'directMessageThread',
+        }),
+        quarterlyGrowth: await getGrowth('messages', 'quarterly', 'timestamp', {
+          threadType: 'directMessageThread',
+        }),
+      };
     },
   },
 };

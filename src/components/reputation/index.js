@@ -1,16 +1,54 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
+import { truncateNumber } from '../../helpers/utils';
 import Icon from '../icons';
-import { ReputationIcon, ReputationIconMini, Circle } from './style';
+import { ReputationWrapper, ReputationLabel } from './style';
 
-export default ({ color }) => (
-  <ReputationIcon color={color}>
-    <Icon glyph="rep" size="24" />
-  </ReputationIcon>
-);
+type Props = {
+  size: 'mini' | 'default' | 'large',
+  reputation: number,
+  tipText?: string,
+  tipLocation?: string,
+  dispatch: Function,
+  ignoreClick: boolean,
+};
+class Reputation extends React.Component<Props> {
+  open = e => {
+    const { reputation, ignoreClick, dispatch } = this.props;
+    e.preventDefault();
+    if (ignoreClick) return;
+    return dispatch(openModal('REP_EXPLAINER_MODAL', { reputation }));
+  };
 
-export const ReputationMini = ({ color }) => (
-  <ReputationIconMini color={color}>
-    <Icon glyph="rep" size="20" />
-  </ReputationIconMini>
-);
+  render() {
+    const {
+      size = 'default',
+      tipText = 'Reputation',
+      tipLocation = 'top-right',
+      reputation,
+    } = this.props;
+
+    if (!reputation) return null;
+
+    const renderedReputation = reputation > 0 ? reputation : '0';
+    const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';
+
+    return (
+      <ReputationWrapper
+        onClick={this.open}
+        tipText={`${tipText}`}
+        tipLocation={tipLocation}
+      >
+        <Icon glyph="rep" size={iconSize} />
+
+        <ReputationLabel size={size}>
+          {truncateNumber(renderedReputation, 1)} rep
+        </ReputationLabel>
+      </ReputationWrapper>
+    );
+  }
+}
+
+export default connect()(Reputation);

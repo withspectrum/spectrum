@@ -1,10 +1,5 @@
-// @flow
 // $FlowFixMe
-import {
-  ApolloClient,
-  IntrospectionFragmentMatcher,
-  toIdValue,
-} from 'react-apollo';
+import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
 // $FlowFixMe
 import { createBatchingNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe

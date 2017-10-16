@@ -41,10 +41,11 @@ export const ShimmerList = styled(Card)`
 
 export const ShimmerThreadDetail = styled(FlexCol)`
   padding: 40px 32px;
+  display: inline-block;
 
-	@media(max-width: 768px) {
-		padding: 16px;
-	}
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 
   section {
     min-height: 308px;
@@ -53,6 +54,16 @@ export const ShimmerThreadDetail = styled(FlexCol)`
 
 export const ShimmerThread = styled(Card)`
   padding: 16px;
+
+  section {
+    min-height: 96px;
+  }
+`;
+
+export const ShimmerInboxThread = styled.div`
+  background: ${props => props.theme.bg.default};
+  padding: 16px;
+  border-top: 1px solid ${props => props.theme.bg.border};
 
   section {
     min-height: 96px;
@@ -76,86 +87,92 @@ export const ShimmerListItem = styled(FlexCol)`
 `;
 
 export const ShimmerDM = styled(ShimmerProfile)`
-	padding: 16px;
-	margin: 0;
-	box-shadow: none;
-	border-radius: 0;
-	border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  padding: 16px;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
 
-	section {
-		min-height: 40px;
-	}
+  section {
+    min-height: 40px;
+  }
 
-	+ div {
-		margin: 0;
-	}
+  + div {
+    margin: 0;
+  }
 `;
 
 export const ShimmerBubble = styled(FlexCol)`
-	margin-top: 4px;
-	margin-left: 32px;
-	align-self: flex-start;
-	width: 60%;
+  margin-top: 4px;
+  margin-left: 32px;
+  align-self: flex-start;
+  width: 60%;
 
-	section {
-		min-height: 48px;
-		border-radius: 12px;
-	}
+  section {
+    min-height: 48px;
+    border-radius: 12px;
+  }
 `;
 
 export const ShimmerChat = styled(FlexCol)`
-	> div:nth-of-type(2n+2) {
-		width: 40%;
+  margin-top: 32px;
 
-		section {
-			min-height: 32px;
-		}
-	}
+  > div:nth-of-type(2n + 2) {
+    width: 40%;
 
-	> div:nth-of-type(3n+1) {
-		width: 25%;
+    section {
+      min-height: 32px;
+    }
+  }
 
-		section {
-			min-height: 32px;
-		}
-	}
+  > div:nth-of-type(3n + 1) {
+    width: 25%;
 
-	> div:nth-of-type(4n) {
-		align-self: flex-end;
-		margin-top: 16px;
-		margin-left: 0;
-		margin-right: 32px;
+    section {
+      min-height: 32px;
+    }
+  }
 
-		> section {
-			background: ${({ theme }) => theme.brand.alt};
+  > div:nth-of-type(4n) {
+    align-self: flex-end;
+    margin-top: 16px;
+    margin-left: 0;
+    margin-right: 32px;
 
-			> span {
-				background: linear-gradient(to right,
-					${({ theme }) => theme.brand.alt} 10%,
-					${({ theme }) => hexa(theme.brand.default, 0.35)} 20%,
-					${({ theme }) => theme.brand.alt} 30%);
-			}
-		}
-	}
+    > section {
+      background: ${({ theme }) => theme.brand.alt};
 
-	> div:nth-of-type(5n) {
-		align-self: flex-end;
-		margin-top: 4px;
-		margin-bottom: 16px;
-		margin-left: 0;
-		margin-right: 32px;
+      > span {
+        background: linear-gradient(
+          to right,
+          ${({ theme }) => theme.brand.alt} 10%,
+          ${({ theme }) => hexa(theme.brand.default, 0.35)} 20%,
+          ${({ theme }) => theme.brand.alt} 30%
+        );
+      }
+    }
+  }
 
-		> section {
-			background: ${({ theme }) => theme.brand.alt};
+  > div:nth-of-type(5n) {
+    align-self: flex-end;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    margin-left: 0;
+    margin-right: 32px;
 
-			> span {
-				background: linear-gradient(to right,
-					${({ theme }) => theme.brand.alt} 10%,
-					${({ theme }) => hexa(theme.brand.default, 0.25)} 20%,
-					${({ theme }) => theme.brand.alt} 30%);
-			}
-		}
-	}
+    > section {
+      background: ${({ theme }) => theme.brand.alt};
+
+      > span {
+        background: linear-gradient(
+          to right,
+          ${({ theme }) => theme.brand.alt} 10%,
+          ${({ theme }) => hexa(theme.brand.default, 0.25)} 20%,
+          ${({ theme }) => theme.brand.alt} 30%
+        );
+      }
+    }
+  }
 `;
 
 export const ShimmerComposer = styled(Card)`
@@ -165,9 +182,43 @@ export const ShimmerComposer = styled(Card)`
     min-height: 32px;
   }
 
-	@media (max-width: 768px) {
-		display: none;
-	}
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ShimmerInboxComposer = styled.div`
+  padding: 16px;
+  background: ${props => props.theme.bg.default};
+  margin: 8px 0;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+
+  section {
+    min-height: 32px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ShimmerSelect = styled.div`
+  padding: 10px 12px;
+  width: 196px;
+  margin-left: 8px;
+  border-radius: 8px;
+  background: ${props => props.theme.bg.default};
+  border: 2px solid ${props => props.theme.bg.border};
+
+  @media (max-width: 768px) {
+    width: calc(50% - 12px);
+  }
+
+  section {
+    min-height: 12px;
+    width: calc(100% - 16px);
+  }
 `;
 
 const placeHolderShimmer = keyframes`

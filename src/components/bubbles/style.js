@@ -91,7 +91,7 @@ export const ImageBubble = styled.img`
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
   opacity: ${props => (props.pending ? 0.5 : 1)};
   transition: opacity 0.2s ease-out;
-  border: 1px solid #f6f7f8;
+  border: 1px solid ${props => props.theme.bg.wash};
   margin-top: ${props => (props.hashed ? '4px' : '0')};
   margin-bottom: ${props => (props.hashed ? '4px' : '0')};
   box-shadow: ${props =>

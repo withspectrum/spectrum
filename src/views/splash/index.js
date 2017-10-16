@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { track } from '../../helpers/events';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
@@ -22,6 +21,7 @@ class Splash extends Component {
     super();
 
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+
     this.state = {
       preferredSigninMethod,
     };
@@ -37,8 +37,6 @@ class Splash extends Component {
   };
 
   render() {
-    const { preferredSigninMethod } = this.state;
-
     return (
       <Wrapper>
         <Overview />

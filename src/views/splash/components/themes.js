@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // @Flow Fix Me
 import styled from 'styled-components';
@@ -52,13 +51,13 @@ export const Space = styled(Default)`
   background-color: ${({ theme }) => theme.space.dark};
   background-image: linear-gradient(
     to bottom,
-    ${({ theme }) => `${theme.space.light}, ${theme.space.dark}`}
+    ${({ theme }) => `${theme.space.alt}, ${theme.space.dark}`}
   );
   color: ${({ theme }) => theme.text.reverse};
 `;
 
 export const Light = styled(Default)`
-  background-color: ${({ theme }) => theme.space.light};
+  background-color: ${({ theme }) => theme.space.alt};
   color: ${({ theme }) => theme.text.reverse};
 `;
 
@@ -66,7 +65,7 @@ export const Bright = styled(Default)`
   background-color: ${({ theme }) => theme.brand.default};
   background-image: linear-gradient(
     to bottom,
-    ${({ theme }) => `${theme.space.light}, ${theme.brand.default}`}
+    ${({ theme }) => `${theme.space.alt}, ${theme.brand.default}`}
   );
   color: ${({ theme }) => theme.text.reverse};
 `;

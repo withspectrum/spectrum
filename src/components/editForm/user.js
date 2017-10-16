@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 //$FlowFixMe
 import { withRouter } from 'react-router';
@@ -6,8 +5,6 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-//$FlowFixMe
-import pure from 'recompose/pure';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -494,7 +491,6 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  connect(map),
-  pure
+  connect(map)
 )(UserWithData);
 export default UserSettings;

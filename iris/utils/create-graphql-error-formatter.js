@@ -1,4 +1,3 @@
-// @flow
 import Raven from 'raven';
 import { IsUserError } from './UserError';
 
@@ -7,10 +6,12 @@ const createGraphQLErrorFormatter = req => error => {
     ? error.originalError[IsUserError]
     : false;
   let sentryId = 'ID only generated in production';
-  if (!isUserError && process.env.NODE_ENV === 'production') {
-    sentryId = Raven.captureException(error, Raven.parsers.parseRequest(req));
+  if (!isUserError) {
+    console.log(error);
+    if (process.env.NODE_ENV === 'production') {
+      sentryId = Raven.captureException(error, Raven.parsers.parseRequest(req));
+    }
   }
-  console.log(error);
   return {
     message: isUserError ? error.message : `Internal server error: ${sentryId}`,
     // Hide the stack trace in production mode

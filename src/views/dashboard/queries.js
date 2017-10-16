@@ -1,12 +1,11 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-// $FlowFixMe
-import update from 'immutability-helper';
-import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
@@ -19,14 +18,54 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, user, networkStatus } }) => ({
+  props: ({
+    ownProps,
+    data: {
+      fetchMore,
+      error,
+      loading,
+      user,
+      networkStatus,
+      subscribeToMore,
+      refetch,
+    },
+  }) => ({
     data: {
       error,
       loading,
       user,
       networkStatus,
+      refetch,
       threads: user ? user.everything.edges : '',
+      feed: 'everything',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
+      subscribeToUpdatedThreads: () => {
+        return subscribeToMore({
+          document: subscribeToUpdatedThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedThread = subscriptionData.data.threadUpdated;
+            if (!updatedThread) return prev;
+
+            const newThreads = parseRealtimeThreads(
+              prev.user.everything.edges,
+              updatedThread,
+              ownProps.dispatch
+            );
+
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
+              user: {
+                ...prev.user,
+                everything: {
+                  ...prev.user.everything,
+                  edges: newThreads,
+                },
+              },
+            });
+          },
+        });
+      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
@@ -57,33 +96,6 @@ const threadsQueryOptions = {
             };
           },
         }),
-    },
-  }),
-  options: ({ params }) => ({
-    reducer: (prev, action, variables) => {
-      if (
-        action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishThread'
-      ) {
-        const newThread = action.result.data.publishThread;
-        const cursor = encode(newThread.id);
-        const newEdge = {
-          cursor,
-          node: {
-            ...newThread,
-          },
-        };
-        return update(prev, {
-          user: {
-            everything: {
-              edges: {
-                $unshift: [newEdge],
-              },
-            },
-          },
-        });
-      }
-      return prev;
     },
   }),
 };

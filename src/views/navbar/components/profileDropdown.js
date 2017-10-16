@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // @FlowFixMe
 import styled from 'styled-components';
@@ -27,7 +26,7 @@ const UserProfileDropdownListItem = styled.li`
   font-size: 14px;
   font-weight: 600;
   color: ${props => props.theme.text.alt};
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   justify-content: center;
 

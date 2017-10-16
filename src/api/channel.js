@@ -100,6 +100,9 @@ const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
 `;
 
 const TOGGLE_CHANNEL_SUBSCRIPTION_OPTIONS = {
+  options: {
+    refetchQueries: ['getCurrentUserProfile', 'getEverythingThreads'],
+  },
   props: ({ channelId, mutate }) => ({
     toggleChannelSubscription: ({ channelId }) =>
       mutate({

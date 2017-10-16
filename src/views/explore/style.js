@@ -20,7 +20,7 @@ import {
 import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
 import Icon from '../../components/icons';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
@@ -217,7 +217,7 @@ export const ItemButton = styled(Button)`
   font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${props =>
-    props.joined ? props.theme.inactive : props.theme.brand.default};
+    props.joined ? props.theme.bg.inactive : props.theme.brand.default};
   background-image: ${props =>
     props.joined
       ? 'none'
@@ -333,7 +333,7 @@ export const SearchResult = styled.li`
   background: ${props =>
     props.focused ? props.theme.brand.alt : props.theme.bg.default};
   border-bottom: 2px solid
-    ${props => (props.focused ? 'transparent' : props.theme.border.default)};
+    ${props => (props.focused ? 'transparent' : props.theme.bg.border)};
 
   &:hover {
     background: ${props => props.theme.brand.alt};

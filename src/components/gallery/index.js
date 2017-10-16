@@ -1,9 +1,6 @@
-// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getMediaMessagesForThread } from '../../api/message';
@@ -38,4 +35,4 @@ const mapStateToProps = state => ({
   isOpen: state.gallery.isOpen,
 });
 
-export default compose(connect(mapStateToProps), pure)(Gallery);
+export default compose(connect(mapStateToProps))(Gallery);

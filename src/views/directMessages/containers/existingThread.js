@@ -1,8 +1,5 @@
-// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
@@ -17,6 +14,12 @@ class ExistingThread extends Component {
     this.props.setActiveThread(threadId);
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
+
+    // autofocus on desktop
+    if (window && window.innerWidth > 768) {
+      this.chatInput.triggerFocus();
+    }
+
     track('direct message thread', 'viewed', null);
   }
 
@@ -26,6 +29,10 @@ class ExistingThread extends Component {
       this.props.setActiveThread(threadId);
       this.props.setLastSeen(threadId);
       this.forceScrollToBottom();
+      // autofocus on desktop
+      if (window && window.innerWidth > 768) {
+        this.chatInput.triggerFocus();
+      }
     }
   }
 
@@ -68,6 +75,7 @@ class ExistingThread extends Component {
             currentUser={currentUser}
             threadType={'directMessageThread'}
             forceScrollToBottom={this.forceScrollToBottom}
+            onRef={chatInput => (this.chatInput = chatInput)}
           />
         </MessagesContainer>
       );

@@ -1,4 +1,3 @@
-// @flow
 const debug = require('debug')('athena:queue:pro-invoice-paid-notification');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_PRO_INVOICE_RECEIPT_EMAIL } from './constants';
@@ -36,18 +35,23 @@ export default async job => {
   debug('sending pro invoice receipt email');
 
   return sendProInvoiceReceiptQueue
-    .add({
-      to: email,
-      invoice: {
-        plan: invoice.planName,
-        amount,
-        paidAt,
-        brand,
-        last4,
-        planName: invoice.planName,
-        id: invoice.id,
+    .add(
+      {
+        to: email,
+        invoice: {
+          plan: invoice.planName,
+          amount,
+          paidAt,
+          brand,
+          last4,
+          planName: invoice.planName,
+          id: invoice.id,
+        },
       },
-    })
-    .then(() => job.remove())
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    )
     .catch(err => new Error(err));
 };
