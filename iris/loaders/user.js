@@ -1,7 +1,10 @@
 // @flow
 import { getUsers, getUsersThreadCount } from '../models/user';
 import { getUsersRecurringPayments } from '../models/recurringPayment';
-import { getUsersPermissionsInCommunities } from '../models/usersCommunities';
+import {
+  getUsersPermissionsInCommunities,
+  getUsersTotalReputation,
+} from '../models/usersCommunities';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
@@ -20,6 +23,9 @@ export const __createUserPermissionsInCommunityLoader = () =>
     input => `${input.userId}|${input.communityId}`,
     key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
   );
+
+export const __createUserTotalReputationLoader = () =>
+  createLoader(users => getUsersTotalReputation(users), 'userId');
 
 export default () => {
   throw new Error(
