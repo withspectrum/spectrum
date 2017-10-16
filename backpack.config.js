@@ -1,4 +1,5 @@
 const path = require('path');
+const ManifestPlugin = require('webpack-module-manifest-plugin');
 
 const dir = process.env.DIR;
 
@@ -23,6 +24,11 @@ module.exports = {
         new webpack.WatchIgnorePlugin([path.resolve(__dirname, './src')])
       );
     }
+    config.plugins.push(
+      new ManifestPlugin({
+        filename: './build/server.manifest.json',
+      })
+    );
     config.resolve.modules.push(nodePath);
     return config;
   },
