@@ -329,6 +329,7 @@ const getUserPermissionsInCommunity = (
           isModerator: false,
           isBlocked: false,
           receiveNotifications: false,
+          reputation: 0,
         };
       }
     });
@@ -351,6 +352,7 @@ const getUsersPermissionsInCommunities = (
           isModerator: false,
           isBlocked: false,
           receiveNotifications: false,
+          reputation: 0,
         }));
 
       return data;
@@ -366,6 +368,21 @@ const getReputationByUser = (userId: string): Promise<Number> => {
     .reduce((l, r) => l.add(r))
     .default(0)
     .run();
+};
+
+const getUsersTotalReputation = (
+  userIds: Array<string>
+): Promise<Array<number>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(...userIds, { index: 'userId' })
+    .filter({ isMember: true })
+    .group('userId')
+    .map(rec => rec('reputation'))
+    .reduce((l, r) => l.add(r))
+    .default(0)
+    .run()
+    .then(res => res.map(res => res && res.reduction));
 };
 
 module.exports = {
@@ -385,5 +402,6 @@ module.exports = {
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
   getReputationByUser,
+  getUsersTotalReputation,
   getUsersPermissionsInCommunities,
 };
