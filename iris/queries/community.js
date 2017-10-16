@@ -241,6 +241,7 @@ module.exports = {
         const rPayments = await loaders.communityRecurringPayments.load(id);
         const communitySubscriptions =
           rPayments &&
+          rPayments.length > 0 &&
           rPayments.filter(obj => obj.planId === 'community-standard');
 
         if (!communitySubscriptions || communitySubscriptions.length === 0)
