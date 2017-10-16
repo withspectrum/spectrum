@@ -225,7 +225,8 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (!id) return 0;
-      return loaders.userTotalReputation.load(id);
+      // return loaders.userTotalReputation.load(id).then(data => console.log('data', data) || data)
+      return getReputationByUser(id);
     },
     contextPermissions: (
       user: any,
