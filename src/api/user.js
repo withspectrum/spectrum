@@ -259,6 +259,7 @@ const UPDATE_USER_EMAIL_MUTATION = gql`
     updateUserEmail (email: $email) {
       ...userInfo
       email
+      pendingEmail
     }
   }
   ${userInfoFragment}

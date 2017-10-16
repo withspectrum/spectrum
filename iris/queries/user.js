@@ -191,7 +191,9 @@ module.exports = {
 
       return loaders.userRecurringPayments.load(user.id).then(subs => {
         const userProSubs =
-          subs && subs.filter(obj => obj.planId === 'beta-pro');
+          subs &&
+          subs.length > 0 &&
+          subs.filter(obj => obj.planId === 'beta-pro');
         if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {

@@ -86,6 +86,7 @@ const User = /* GraphQL */ `
 		isOnline: Boolean
 		timezone: Int
 		totalReputation: Int
+		pendingEmail: String
 
 		# non-schema fields
 		threadCount: Int

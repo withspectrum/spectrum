@@ -8,6 +8,7 @@ export const GET_USER_PROFILE_QUERY = gql`
     user(username: $username) {
       ...userInfo
       email
+      pendingEmail
       ...userSettings
     }
   }

@@ -11,7 +11,7 @@ import {
 import { Checkbox, Input, Error } from '../../../components/formElements';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
-import { IS_EMAIL } from '../../../helpers/regexps';
+import isEmail from 'validator/lib/isEmail';
 import {
   StyledCard,
   LargeListHeading,
@@ -19,6 +19,7 @@ import {
   ListContainer,
   Notice,
   InlineIcon,
+  Description,
 } from '../../../components/listItems/style';
 import { EmailListItem, CheckboxContent, EmailForm } from '../style';
 
@@ -95,7 +96,7 @@ class EmailSettings extends Component {
     const { email } = this.state;
     const { updateUserEmail } = this.props;
 
-    if (!email.match(IS_EMAIL)) {
+    if (!isEmail(email)) {
       return this.setState({
         emailError: 'Please enter a valid email address',
       });
@@ -103,7 +104,15 @@ class EmailSettings extends Component {
 
     return updateUserEmail(email)
       .then(({ data: { updateUserEmail } }) => {
-        this.props.dispatch(addToastWithTimeout('success', 'Email saved!'));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'success',
+            `A confirmation email has been sent to ${email}!`
+          )
+        );
+        return this.setState({
+          email: '',
+        });
       })
       .catch(err => {
         this.props.dispatch(addToastWithTimeout('error', err.message));
@@ -148,9 +157,25 @@ class EmailSettings extends Component {
             <LargeListHeading>Turn on email notifications</LargeListHeading>
           </ListHeader>
           <ListContainer>
-            <EmailForm onSubmit={this.saveEmail}>
+            <Description>
+              You can customize your email notifications to keep up to date on
+              what's important to you on Spectrum. Enter your email below and
+              we'll send you a confirmation link.
+            </Description>
+
+            {currentUser.pendingEmail && (
+              <Notice>
+                A confirmation link was sent to {currentUser.pendingEmail}. You
+                can resend the confirmation below, or enter a new email address.
+              </Notice>
+            )}
+
+            <EmailForm
+              onSubmit={this.saveEmail}
+              style={{ marginTop: '8px', marginBottom: '8px' }}
+            >
               <Input
-                type="text"
+                type="email"
                 defaultValue={null}
                 onChange={this.handleEmailChange}
                 placeholder={'Add your email address'}

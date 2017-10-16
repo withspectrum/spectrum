@@ -4,6 +4,7 @@ import {
   getUsers,
   getUser,
   getUserByEmail,
+  setUserPendingEmail,
   updateUserEmail,
 } from '../models/user';
 import type { EditUserArguments } from '../models/user';
@@ -15,9 +16,9 @@ import {
   storeSubscription,
   removeSubscription,
 } from '../models/web-push-subscription';
-// $FlowFixMe
 import UserError from '../utils/UserError';
 import { sendWebPushNotification } from '../utils/web-push';
+import { addQueue } from '../utils/workerQueue';
 
 type ToggleNotificationsArguments = {
   deliveryMethod: string,
@@ -156,7 +157,17 @@ module.exports = {
           );
         }
 
-        return updateUserEmail(currentUser.id, email);
+        return setUserPendingEmail(user.id, email)
+          .then(user => {
+            addQueue('send email validation email', { email, userId: user.id });
+            return user;
+          })
+          .catch(
+            err =>
+              new UserError(
+                "We weren't able to send a confirmation email. Please try again."
+              )
+          );
       });
     },
   },
