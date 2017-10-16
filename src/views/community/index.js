@@ -57,9 +57,9 @@ type Props = {
 };
 
 type State = {
-  isLoading: boolean,
   showComposerUpsell: boolean,
   selectedView: 'threads' | 'search' | 'members',
+  isLeavingCommunity: boolean,
 };
 
 class CommunityView extends React.Component<Props, State> {
@@ -67,7 +67,7 @@ class CommunityView extends React.Component<Props, State> {
     super();
 
     this.state = {
-      isLoading: false,
+      isLeavingCommunity: false,
       showComposerUpsell: false,
       selectedView: 'threads',
     };
@@ -81,7 +81,7 @@ class CommunityView extends React.Component<Props, State> {
     const { toggleCommunityMembership, dispatch } = this.props;
 
     this.setState({
-      isLoading: true,
+      isLeavingCommunity: true,
     });
 
     toggleCommunityMembership({ communityId })
@@ -99,12 +99,12 @@ class CommunityView extends React.Component<Props, State> {
         dispatch(addToastWithTimeout(type, str));
 
         this.setState({
-          isLoading: false,
+          isLeavingCommunity: false,
         });
       })
       .catch(err => {
         this.setState({
-          isLoading: false,
+          isLeavingCommunity: false,
         });
 
         dispatch(addToastWithTimeout('error', err.message));
@@ -148,7 +148,11 @@ class CommunityView extends React.Component<Props, State> {
           description: community.description,
         },
       });
-      const { showComposerUpsell, selectedView } = this.state;
+      const {
+        showComposerUpsell,
+        selectedView,
+        isLeavingCommunity,
+      } = this.state;
       const { isMember, isOwner, isModerator } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
@@ -187,6 +191,7 @@ class CommunityView extends React.Component<Props, State> {
                     community.communityPermissions.isMember) && (
                     <LogoutButton
                       onClick={() => this.toggleMembership(community.id)}
+                      loading={isLeavingCommunity}
                     >
                       Leave {community.name}
                     </LogoutButton>

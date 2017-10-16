@@ -250,3 +250,33 @@ export const getUserInvoices = graphql(
   GET_USER_INVOICES_QUERY,
   GET_USER_INVOICES_OPTIONS
 );
+
+/*
+  Upload a new profilePhoto for the given currentUser
+*/
+const UPDATE_USER_EMAIL_MUTATION = gql`
+  mutation updateUserEmail($email: String!) {
+    updateUserEmail (email: $email) {
+      ...userInfo
+      email
+      pendingEmail
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const UPDATE_USER_EMAIL_OPTIONS = {
+  props: ({ email, mutate }) => ({
+    updateUserEmail: email =>
+      mutate({
+        variables: {
+          email,
+        },
+      }),
+  }),
+};
+
+export const updateUserEmailMutation = graphql(
+  UPDATE_USER_EMAIL_MUTATION,
+  UPDATE_USER_EMAIL_OPTIONS
+);

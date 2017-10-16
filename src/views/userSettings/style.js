@@ -18,3 +18,13 @@ export const CheckboxContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const EmailForm = styled.form`
+  display: flex;
+  align-items: flex-end;
+
+  button {
+    align-self: flex-end;
+    margin-left: 16px;
+  }
+`;

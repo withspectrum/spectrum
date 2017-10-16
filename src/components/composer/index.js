@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { connect } from 'react-redux';
-
+import isURL from 'validator/lib/isURL';
+import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
@@ -17,7 +14,6 @@ import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
-import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
@@ -489,29 +485,23 @@ class ComposerWithData extends Component {
 
       let urlToCheck = toCheck[len - 1].trim();
 
-      this.setState({ fetchingLinkPreview: true });
-
       if (!/^https?:\/\//i.test(urlToCheck)) {
         urlToCheck = 'https://' + urlToCheck;
       }
 
+      if (!isURL(urlToCheck)) return;
+
+      this.setState({ fetchingLinkPreview: true });
+
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          // this.props.dispatch(stopLoading());
-
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
             error: null,
           }));
-
-          const linkPreview = {};
-          linkPreview['data'] = data;
-          linkPreview['trueUrl'] = urlToCheck;
-
-          // this.props.dispatch(addLinkPreview(linkPreview));
         })
         .catch(err => {
           this.setState({

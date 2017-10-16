@@ -65,7 +65,7 @@ class RepExplainerModal extends React.Component<Props> {
                 <RepWrapper>
                   <Reputation
                     tipText={'Your total reputation'}
-                    reputation={reputation}
+                    reputation={currentUser.totalReputation}
                     ignoreClick
                   />
                 </RepWrapper>

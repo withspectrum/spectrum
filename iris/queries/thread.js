@@ -4,7 +4,6 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
@@ -141,7 +140,10 @@ module.exports = {
         reputation,
         isModerator,
         isOwner,
-      } = await getUserPermissionsInCommunity(communityId, creatorId);
+      } = await loaders.userPermissionsInCommunity.load([
+        creatorId,
+        communityId,
+      ]);
 
       return {
         ...creator,
