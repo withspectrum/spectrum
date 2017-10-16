@@ -28,7 +28,6 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
-import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -239,7 +238,7 @@ module.exports = {
         ]);
         if (!userPermissions.isOwner) return;
 
-        const rPayments = await getCommunityRecurringPayments(id);
+        const rPayments = await loaders.communityRecurringPayments.load(id);
         const communitySubscriptions =
           rPayments &&
           rPayments.filter(obj => obj.planId === 'community-standard');
@@ -432,14 +431,14 @@ module.exports = {
         };
       });
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
-      // loaders.communityRecurringPayments.load(id),
-      {
-        return getCommunityRecurringPayments(id).then(subs => {
-          let filtered = subs && subs.filter(sub => sub.status === 'active');
-          return !filtered || filtered.length === 0 ? false : true;
-        });
-      },
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return loaders.communityRecurringPayments.load(id).then(subs => {
+        if (!subs) return false;
+        if (!Array.isArray(subs)) return subs.status === 'active';
+
+        return subs.some(sub => sub.status === 'active');
+      });
+    },
     contextPermissions: (
       community: any,
       _: any,
