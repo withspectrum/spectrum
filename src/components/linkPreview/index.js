@@ -30,7 +30,8 @@ export class LinkPreview extends Component {
   render() {
     let { data: { image, title, url, trueUrl }, editable, margin } = this.props;
     title = title ? truncate(title, 72) : '';
-
+    if (!title) return null;
+    if (!url && !trueUrl) return null;
     return (
       <LinkPreviewContainer
         size={this.props.size}
