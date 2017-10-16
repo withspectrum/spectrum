@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
-//$FlowFixMe
 import { Route, Switch, Redirect } from 'react-router';
-//$FlowFixMe
 import styled, { ThemeProvider } from 'styled-components';
+import Loadable from 'react-loadable';
 // $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
+import './reset.css.js';
 import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
 import ScrollManager from './components/scrollManager';
@@ -14,26 +14,103 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import Maintenance from './components/maintenance';
-import DirectMessages from './views/directMessages';
-import Explore from './views/explore';
-import Thread from './views/thread';
-import UserView from './views/user';
-import CommunityView from './views/community';
-import ChannelView from './views/channel';
-import Navbar from './views/navbar';
-import StyleGuide from './views/pages/styleGuide';
-import Dashboard from './views/dashboard';
-import Notifications from './views/notifications';
-import UserSettings from './views/userSettings';
+import { LoadingDMs } from './views/directMessages/components/loading';
+import LoadingThread from './views/thread/components/loading';
+import { Loading, LoadingScreen } from './components/loading';
+import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import CommunitySettings from './views/communitySettings';
 // import CommunityAnalytics from './views/communityAnalytics';
 import ChannelSettings from './views/channelSettings';
-import NewCommunity from './views/newCommunity';
-import Splash from './views/splash';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
-import { Login } from './views/login';
+
 import ThreadSlider from './views/threadSlider';
+import Navbar from './views/navbar';
+import Login from './views/login';
+
+/* prettier-ignore */
+const DirectMessages = Loadable({
+  loader: () => import('./views/directMessages'/* webpackChunkName: "DirectMessages" */),
+  loading: ({ isLoading }) => isLoading && <LoadingDMs />,
+});
+
+/* prettier-ignore */
+const Explore = Loadable({
+  loader: () => import('./views/explore'/* webpackChunkName: "Explore" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const Thread = Loadable({
+  loader: () => import('./views/thread'/* webpackChunkName: "Thread" */),
+  loading: ({ isLoading }) => isLoading && <LoadingThread />,
+});
+
+/* prettier-ignore */
+const UserView = Loadable({
+  loader: () => import('./views/user'/* webpackChunkName: "UserView" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
+const CommunityView = Loadable({
+  loader: () => import('./views/community'/* webpackChunkName: "CommunityView" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
+const ChannelView = Loadable({
+  loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
+const StyleGuide = Loadable({
+  loader: () => import('./views/pages/styleGuide'/* webpackChunkName: "StyleGuide" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const Dashboard = Loadable({
+  loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
+  loading: ({ isLoading }) => isLoading && <LoadingDashboard />,
+});
+
+/* prettier-ignore */
+const Notifications = Loadable({
+  loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
+const UserSettings = Loadable({
+  loader: () => import('./views/userSettings'/* webpackChunkName: "UserSettings" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const communitySettings = Loadable({
+  loader: () => import('./views/communitySettings'/* webpackChunkName: "communitySettings" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const channelSettings = Loadable({
+  loader: () => import('./views/channelSettings'/* webpackChunkName: "channelSettings" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
+const NewCommunity = Loadable({
+  loader: () => import('./views/newCommunity'/* webpackChunkName: "NewCommunity" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const Splash = Loadable({
+  loader: () => import('./views/splash'/* webpackChunkName: "Splash" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
 
 const About = () => (
   <div>

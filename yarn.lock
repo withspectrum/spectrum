@@ -774,6 +774,10 @@ babel-plugin-dynamic-import-node@1.0.2:
     babel-template "^6.24.1"
     babel-types "^6.24.1"
 
+babel-plugin-import-inspector@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-import-inspector/-/babel-plugin-import-inspector-2.0.0.tgz#6d422309f4f192313310cfde1556f7875cae5d07"
+
 babel-plugin-istanbul@^4.0.0:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.4.tgz#18dde84bf3ce329fddf3f4103fae921456d8e587"
@@ -789,6 +793,14 @@ babel-plugin-jest-hoist@^20.0.3:
 babel-plugin-jest-hoist@^21.0.2:
   version "21.0.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-21.0.2.tgz#cfdce5bca40d772a056cb8528ad159c7bb4bb03d"
+
+babel-plugin-replace-dynamic-import-runtime@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-replace-dynamic-import-runtime/-/babel-plugin-replace-dynamic-import-runtime-1.0.2.tgz#20ab1da8bac209524bf998d1cf48f3b9349492b3"
+  dependencies:
+    babel-plugin-syntax-dynamic-import "^6.18.0"
+    babel-template "^6.24.1"
+    babel-types "^6.24.1"
 
 babel-plugin-styled-components@^1.1.4, babel-plugin-styled-components@^1.1.7:
   version "1.2.0"
@@ -4433,6 +4445,10 @@ immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
 
+import-inspector@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/import-inspector/-/import-inspector-2.0.0.tgz#ce75fdb6a277d2800effe097e2295bc8690b2923"
+
 import-lazy@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
@@ -6299,6 +6315,10 @@ mkdirp@0.5, mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
+module-manifest-inspector@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/module-manifest-inspector/-/module-manifest-inspector-0.1.1.tgz#95b34d733df7790c5adba610ed5b84d64cccccb4"
+
 moment-timezone@^0.5.0:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.13.tgz#99ce5c7d827262eb0f1f702044177f60745d7b90"
@@ -7697,6 +7717,10 @@ react-helmet@5.x:
 react-infinite-scroller-with-scroll-element@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-1.0.4.tgz#b2b724b06fe27e46af62d23759a21237a7d156d9"
+
+react-loadable@5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.2.2.tgz#1a5ad75841cacb64be12b18a86ac0bc55ccb4dc7"
 
 react-modal@^1.6.5:
   version "1.9.7"
@@ -9620,6 +9644,10 @@ webpack-manifest-plugin@1.2.1:
   dependencies:
     fs-extra "^0.30.0"
     lodash ">=3.5 <5"
+
+webpack-module-manifest-plugin@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/webpack-module-manifest-plugin/-/webpack-module-manifest-plugin-0.1.0.tgz#e50dcd91dc044e9f8b9d88180ce939aede9dc089"
 
 webpack-node-externals@^1.6.0:
   version "1.6.0"

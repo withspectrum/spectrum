@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -19,7 +20,14 @@ import {
   MessageGroup,
 } from './style';
 
-export const AuthorAvatar = props => {
+type SenderType = {
+  isOnline: boolean,
+  profilePhoto: string,
+  username: string,
+  name: string,
+};
+
+export const AuthorAvatar = (props: { sender: SenderType }) => {
   const { sender } = props;
 
   return (
@@ -33,7 +41,7 @@ export const AuthorAvatar = props => {
   );
 };
 
-export const AuthorByline = props => {
+export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
   const { me, sender } = props;
 
   return (
@@ -49,6 +57,22 @@ export const AuthorByline = props => {
     </Byline>
   );
 };
+
+type MessageType = Object; // TODO: Refine type
+
+type MessageGroupType = Array<MessageType>;
+
+type MessageGroupProps = {
+  messages?: Array<MessageGroupType>,
+  currentUser: Object,
+  threadType: string,
+  threadId: string,
+  thread: Object, // TODO: Refine type
+  isModerator: boolean,
+  toggleReaction: Function,
+  dispatch: Function,
+};
+
 /*
   Messages expects to receive sorted and grouped messages.
   They will arrive as an array of arrays, where each top-level array is a group
@@ -57,7 +81,29 @@ export const AuthorByline = props => {
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-class Messages extends Component {
+class Messages extends Component<MessageGroupProps> {
+  shouldComponentUpdate(next) {
+    const current = this.props;
+
+    // If it's a different thread, let's re-render
+    const diffThread = next.threadId !== current.threadId;
+    if (diffThread) return diffThread;
+
+    // If we don't have any message groups in the next props, return if we have
+    // message groups in the current props
+    if (!next.messages) return !current.messages;
+
+    // Check if any message group has more or less messages than last time
+    const diffMessages = next.messages.some(
+      (group, index) =>
+        !current.messages ||
+        !current.messages[index] ||
+        group.length !== current.messages[index].length
+    );
+
+    return diffMessages;
+  }
+
   render() {
     const {
       messages,
@@ -70,11 +116,9 @@ class Messages extends Component {
     } = this.props;
 
     const hash = window.location.hash.substr(1);
-    const messagesExist = messages && messages.length !== 0;
 
-    if (!messagesExist) {
+    if (!messages || messages.length == 0)
       return <NewThreadShare thread={thread} />;
-    }
 
     return (
       <Wrapper>
@@ -132,6 +176,6 @@ class Messages extends Component {
 
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-const ChatMessages = connect(mapStateToProps)(Messages);
 
-export default ChatMessages;
+// $FlowIssue
+export default connect(mapStateToProps)(Messages);
