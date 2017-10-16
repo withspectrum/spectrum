@@ -334,6 +334,29 @@ const getUserPermissionsInCommunity = (
     });
 };
 
+type UserIdAndCommunityId = [string, string];
+
+const getUsersPermissionsInCommunities = (
+  input: Array<UserIdAndCommunityId>
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...input, { index: 'userIdAndCommunityId' })
+    .run()
+    .then(data => {
+      if (!data)
+        return Array.from({ length: input.length }, () => ({
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          receiveNotifications: false,
+        }));
+
+      return data;
+    });
+};
+
 const getReputationByUser = (userId: string): Promise<Number> => {
   return db
     .table('usersCommunities')
@@ -362,4 +385,5 @@ module.exports = {
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
   getReputationByUser,
+  getUsersPermissionsInCommunities,
 };

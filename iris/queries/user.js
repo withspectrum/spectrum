@@ -30,10 +30,7 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
-import {
-  getReputationByUser,
-  getUserPermissionsInCommunity,
-} from '../models/usersCommunities';
+import { getReputationByUser } from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -224,7 +221,12 @@ module.exports = {
       if (!id) return 0;
       return getReputationByUser(id);
     },
-    contextPermissions: (user: any, _: any, __: any, info: any) => {
+    contextPermissions: (
+      user: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (user.contextPermissions) return user.contextPermissions;
 
@@ -240,7 +242,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -254,7 +259,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -270,7 +278,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(id, user.id);
+            } = await loaders.userPermissionsInCommunity.load([user.id, id]);
             return {
               reputation: reputation || 0,
               isModerator,
