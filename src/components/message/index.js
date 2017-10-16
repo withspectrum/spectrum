@@ -7,6 +7,7 @@ import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
+import { toPlainText, toState, toJson } from 'shared/draft-utils';
 
 class Message extends Component {
   componentDidMount() {
@@ -53,7 +54,11 @@ class Message extends Component {
       toggleReaction,
       context,
     } = this.props;
-    const emojiOnly = onlyContainsEmoji(message.content.body);
+    const parsedMessage =
+      message.messageType &&
+      message.messageType === 'draftjs' &&
+      toPlainText(toState(JSON.parse(message.content.body)));
+    const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
     const reactable = !emojiOnly && typeof message.id === 'string';
@@ -72,7 +77,7 @@ class Message extends Component {
           pending={pending}
           openGallery={() => this.toggleOpenGallery(message.id)}
           focus={this.toggleMessageFocus}
-          message={message.content}
+          message={emojiOnly ? parsedMessage : message.content}
         />
         {actionable && (
           <Actions

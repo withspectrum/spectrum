@@ -13,6 +13,7 @@ import {
   Code,
   Line,
 } from './style';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 const messageRenderer = {
   blocks: {
@@ -25,8 +26,6 @@ const messageRenderer = {
 export const Body = props => {
   const { message, openGallery, pending, type, me } = props;
 
-  // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
-
   switch (type) {
     case 'text':
     default:
@@ -35,8 +34,6 @@ export const Body = props => {
           {message.body}
         </Text>
       );
-    case 'emoji':
-      return <Emoji pending={pending}>{message.body}</Emoji>;
     case 'media':
       return (
         <Image
@@ -47,12 +44,26 @@ export const Body = props => {
             : `?max-w=${window.innerWidth * 0.6}`}`}
         />
       );
+    case 'emoji':
+      return <Emoji pending={pending}>{message}</Emoji>;
     case 'draftjs':
-      return (
-        <Code pending={pending}>
-          {redraft(JSON.parse(message.body), messageRenderer)}
-        </Code>
-      );
+      const parsedMessage = JSON.parse(message.body);
+      const isCode = parsedMessage.blocks[0].type === 'code-block';
+      const plaintext = toPlainText(toState(parsedMessage));
+
+      if (isCode) {
+        return (
+          <Code pending={pending}>
+            {redraft(JSON.parse(message.body), messageRenderer)}
+          </Code>
+        );
+      } else {
+        return (
+          <Text me={me} pending={pending}>
+            {plaintext}
+          </Text>
+        );
+      }
   }
 };
 

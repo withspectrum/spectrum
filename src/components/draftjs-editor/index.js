@@ -90,7 +90,6 @@ class Editor extends React.Component {
   }
 
   setPlugins = () => {
-    console.log('SET PLUGINS');
     const props = this.props;
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
@@ -225,8 +224,6 @@ class Editor extends React.Component {
     const { embedding, inserting } = this.state;
     const linkPreviewIsLoading = linkPreview && linkPreview.loading;
     const linkPreviewIsReady = linkPreview && linkPreview.data;
-
-    console.log(singleLine, this.state.plugins);
 
     if (version === 2) {
       return (
