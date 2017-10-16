@@ -481,7 +481,7 @@ export const Tooltip = props => css`
   &:before {
     content: '';
     z-index: ${zIndex.tooltip + 1};
-    border: 5px solid transparent;
+    border: 6px solid transparent;
   }
 
   &:after {

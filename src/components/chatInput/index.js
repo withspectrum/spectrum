@@ -266,7 +266,9 @@ class ChatInput extends Component {
           onClick={this.toggleCodeMessage}
           tipText={'Write code'}
           tipLocation={'top'}
-          style={{ marginRight: '4px' }}
+          style={{ margin: '0 4px' }}
+          color={'text.placeholder'}
+          hoverColor={'brand.alt'}
         />
         <Form focus={isFocused}>
           <EditorInput
