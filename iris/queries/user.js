@@ -75,7 +75,12 @@ module.exports = {
       return loaders.userRecurringPayments
         .load(id)
         .then(
-          sub => (!(sub == null) && sub.status === 'active' ? true : false)
+          sub =>
+            !(sub == null) &&
+            sub.status === 'active' &&
+            sub.planId === 'beta-pro'
+              ? true
+              : false
         );
     },
     everything: (
