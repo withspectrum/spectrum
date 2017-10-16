@@ -56,7 +56,16 @@ export default class Toolbar extends React.Component<Props, State> {
       const top = node.getBoundingClientRect().top;
       const scrollY =
         window.scrollY == null ? window.pageYOffset : window.scrollY;
-      const editor = findDOMNode(editorRef);
+      let editor;
+      // NOTE(@mxstbr): For some reason this is called directly after you publish
+      // a thread, but then the editor doesn't exist anymore so findDOMNode throws
+      // an error "Cannot find unmounted DOM node".
+      // See https://github.com/withspectrum/spectrum/issues/1636
+      try {
+        editor = findDOMNode(editorRef);
+      } catch (err) {
+        return;
+      }
       if (!editor || typeof editor.getBoundingClientRect !== 'function') return;
       this.setState({
         position: {
