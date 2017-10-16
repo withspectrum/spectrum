@@ -41,7 +41,7 @@ exports.up = function(r, conn) {
             r
               .row('lastSeen')
               .during(
-                r.now().sub(60 * 60 * 24 * index + 30),
+                r.now().sub(60 * 60 * 24 * (index + 30)),
                 r.now().sub(60 * 60 * 24 * index)
               )
           )
@@ -57,7 +57,7 @@ exports.up = function(r, conn) {
             r
               .row('createdAt')
               .during(
-                r.now().sub(60 * 60 * 24 * index + 30),
+                r.now().sub(60 * 60 * 24 * (index + 30)),
                 r.now().sub(60 * 60 * 24 * index)
               )
           )
@@ -72,6 +72,16 @@ exports.up = function(r, conn) {
                   .table('usersCommunities')
                   .getAll(community, { index: 'communityId' })
                   .filter({ isMember: true })
+                  .eqJoin('userId', r.table('users'))
+                  .zip()
+                  .filter(
+                    r
+                      .row('lastActive')
+                      .during(
+                        r.now().sub(60 * 60 * 24 * (index + 30)),
+                        r.now().sub(60 * 60 * 24 * index)
+                      )
+                  )
                   .count()
                   .run(conn)
                   .then(cursor => cursor.toArray())
@@ -112,7 +122,7 @@ exports.up = function(r, conn) {
               r
                 .row('lastActive')
                 .during(
-                  r.now().sub(60 * 60 * 24 * index + 30),
+                  r.now().sub(60 * 60 * 24 * (index + 30)),
                   r.now().sub(60 * 60 * 24 * index)
                 )
             )

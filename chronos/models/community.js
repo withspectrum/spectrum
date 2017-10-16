@@ -48,7 +48,10 @@ export const getTopCommunities = (amount: number): Array<Object> => {
     });
 };
 
-export const getCommunitiesWithMinimumMembers = (min: number) => {
+export const getCommunitiesWithMinimumMembers = (
+  min: number,
+  range: number
+) => {
   return db
     .table('communities')
     .pluck('id')
@@ -61,6 +64,9 @@ export const getCommunitiesWithMinimumMembers = (min: number) => {
             .table('usersCommunities')
             .getAll(community, { index: 'communityId' })
             .filter({ isMember: true })
+            .eqJoin('userId', db.table('users'))
+            .zip()
+            .filter(db.row('lastActive').during(db.now().sub(range), db.now()))
             .count()
             .run()
             .then(count => {

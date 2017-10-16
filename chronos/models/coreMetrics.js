@@ -71,7 +71,8 @@ export const getAc = async (range: string) => {
 
   // communities that meet a minimum membership threshold
   let activeCommunitiesByMembership = await getCommunitiesWithMinimumMembers(
-    MIN_MEMBER_COUNT
+    MIN_MEMBER_COUNT,
+    RANGE
   );
   activeCommunitiesByMembership = activeCommunitiesByMembership.map(c => c.id);
 
