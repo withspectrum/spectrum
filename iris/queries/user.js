@@ -217,9 +217,13 @@ module.exports = {
 
       return getInvoicesByUser(currentUser.id);
     },
-    totalReputation: async ({ id }: DBUser, _: any, __: any) => {
+    totalReputation: async (
+      { id }: DBUser,
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
       if (!id) return 0;
-      return getReputationByUser(id);
+      return loaders.userTotalReputation.load(id);
     },
     contextPermissions: (
       user: any,
