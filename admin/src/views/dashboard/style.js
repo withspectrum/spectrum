@@ -169,3 +169,24 @@ export const ChartContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const Legend = styled.div`
+  display: flex;
+  margin: 32px 32px 32px 16px;
+  flex-wrap: wrap;
+`;
+
+export const LegendItem = styled.span`
+  opacity: ${props => (props.active ? '1' : '0.5')};
+  background: ${props => (props.color ? props.color : props.theme.bg.wash)};
+  color: ${props =>
+    props.color ? props.theme.text.reverse : props.theme.text.default};
+  margin: 4px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  line-height: 1;
+  font-weight: 600;
+  text-shadow: ${props =>
+    props.color ? '0 1px 1px rgba(0,0,0,0.08)' : 'none'};
+`;
