@@ -28,7 +28,7 @@ import {
 } from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
-class ChatInputWithMutation extends Component {
+class ChatInput extends Component {
   state: {
     isFocused: boolean,
     photoSizeError: string,
@@ -52,7 +52,7 @@ class ChatInputWithMutation extends Component {
   }
 
   triggerFocus = () => {
-    this.chatInput.focus();
+    this.chatInput.editor.focus();
   };
 
   submit = e => {
@@ -261,7 +261,7 @@ class ChatInputWithMutation extends Component {
 const map = state => ({
   currentUser: state.users.currentUser,
 });
-const ChatInput = compose(
+export default compose(
   sendMessageMutation,
   withState('state', 'changeState', fromPlainText('')),
   withHandlers({
@@ -269,6 +269,4 @@ const ChatInput = compose(
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
   connect(map)
-)(ChatInputWithMutation);
-
-export default ChatInput;
+)(ChatInput);
