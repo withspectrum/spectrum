@@ -458,9 +458,35 @@ const setUserOnline = (id: string, isOnline: boolean): DBUser => {
     });
 };
 
+const setUserPendingEmail = (
+  userId: string,
+  pendingEmail: string
+): Promise<Object> => {
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      pendingEmail,
+    })
+    .run()
+    .then(() => getUserById(userId));
+};
+const updateUserEmail = (userId: string, email: string): Promise<Object> => {
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      email,
+      pendingEmail: db.literal(),
+    })
+    .run()
+    .then(() => getUserById(userId));
+};
+
 module.exports = {
   getUser,
   getUserById,
+  getUserByEmail,
   getUserByUsername,
   getUsersThreadCount,
   getUsers,
@@ -470,4 +496,6 @@ module.exports = {
   editUser,
   getEverything,
   setUserOnline,
+  setUserPendingEmail,
+  updateUserEmail,
 };

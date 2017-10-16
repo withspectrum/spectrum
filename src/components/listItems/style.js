@@ -147,7 +147,7 @@ export const LargeListHeading = styled(H3)`
   font-size: 20px;
   color: ${({ theme }) => theme.text.default};
 `;
-export const Description = styled.p`
+export const Description = styled.div`
   margin-top: 8px;
   font-weight: 400;
   font-size: 14px;
