@@ -180,7 +180,11 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
-    recurringPayments: ({ id }: DBUser, __: any, { user }: GraphQLContext) => {
+    recurringPayments: (
+      { id }: DBUser,
+      __: any,
+      { user, loaders }: GraphQLContext
+    ) => {
       if (!user) {
         return new UserError('You must be signed in to continue.');
       }
@@ -188,7 +192,7 @@ module.exports = {
         throw new UserError('You can only see your own recurring payments.');
       }
 
-      return getUserRecurringPayments(user.id).then(subs => {
+      return loaders.userRecurringPayments.load(user.id).then(subs => {
         const userProSubs =
           subs && subs.filter(obj => obj.planId === 'beta-pro');
         if (!userProSubs || userProSubs.length === 0) {

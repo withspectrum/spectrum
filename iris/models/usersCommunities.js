@@ -312,10 +312,8 @@ const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .between([userId, communityId], [userId, communityId], {
+    .getAll([userId, communityId], {
       index: 'userIdAndCommunityId',
-      rightBound: 'closed',
-      leftBound: 'closed',
     })
     .run()
     .then(data => {
