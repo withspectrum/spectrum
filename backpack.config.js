@@ -21,7 +21,10 @@ module.exports = {
 
     if (process.env.NODE_ENV !== 'production' && !process.env.SSR) {
       config.plugins.push(
-        new webpack.WatchIgnorePlugin([path.resolve(__dirname, './src')])
+        new webpack.WatchIgnorePlugin([
+          path.resolve(__dirname, './src'),
+          path.resolve(__dirname, './build'),
+        ])
       );
     }
     config.plugins.push(
