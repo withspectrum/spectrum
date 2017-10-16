@@ -495,21 +495,13 @@ class ComposerWithData extends Component {
 
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          // this.props.dispatch(stopLoading());
-
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
             error: null,
           }));
-
-          const linkPreview = {};
-          linkPreview['data'] = data;
-          linkPreview['trueUrl'] = urlToCheck;
-
-          // this.props.dispatch(addLinkPreview(linkPreview));
         })
         .catch(err => {
           this.setState({

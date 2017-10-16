@@ -51,7 +51,7 @@ export class LinkPreview extends Component {
         <LinkPreviewTextContainer padding={image}>
           <FlexCol>{title && <MetaTitle>{title}</MetaTitle>}</FlexCol>
 
-          <MetaUrl>{url ? url : trueUrl}</MetaUrl>
+          {(url || trueUrl) && <MetaUrl>{url || trueUrl}</MetaUrl>}
         </LinkPreviewTextContainer>
       </LinkPreviewContainer>
     );
