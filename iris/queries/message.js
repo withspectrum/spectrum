@@ -32,10 +32,12 @@ module.exports = {
         return loaders.user.load(senderId);
       }
 
-      const [{ communityId }, sender] = await Promise.all([
+      const [thread, sender] = await Promise.all([
         loaders.thread.load(threadId),
         loaders.user.load(senderId),
       ]);
+
+      if (!thread || !sender) return null;
 
       const {
         reputation,
@@ -43,7 +45,7 @@ module.exports = {
         isOwner,
       } = await loaders.userPermissionsInCommunity.load([
         senderId,
-        communityId,
+        thread.communityId,
       ]);
 
       return {
