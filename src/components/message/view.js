@@ -17,8 +17,8 @@ import { toState, toPlainText } from 'shared/draft-utils';
 
 const messageRenderer = {
   blocks: {
-    'code-block': (children, { key }) => (
-      <Line key={key}>{children.map(child => [child, <br />])}</Line>
+    'code-block': (children, { keys }) => (
+      <Line key={keys[0]}>{children.map(child => [child, <br />])}</Line>
     ),
   },
 };
