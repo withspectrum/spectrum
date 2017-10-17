@@ -78,7 +78,7 @@ module.exports = {
     ) => {
       return loaders.threadParticipants
         .load(id)
-        .then(result => result.reduction);
+        .then(result => (result ? result.reduction : []));
     },
     isCreator: (
       { creatorId }: { creatorId: string },

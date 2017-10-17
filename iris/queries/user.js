@@ -180,7 +180,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return loaders.userThreadCount.load(id).then(data => data.count);
+      return loaders.userThreadCount
+        .load(id)
+        .then(data => (data ? data.count : 0));
     },
     recurringPayments: (
       { id }: DBUser,
@@ -230,7 +232,9 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (!id) return 0;
-      return loaders.userTotalReputation.load(id).then(data => data.reputation);
+      return loaders.userTotalReputation
+        .load(id)
+        .then(data => (data ? data.reputation : 0));
     },
     contextPermissions: (
       user: any,
