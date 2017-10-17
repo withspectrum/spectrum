@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:process-individual-digest');
-import createQueue from 'shared/bull/create-queue';
+import { addQueue } from '../../jobs/utils';
 import getReputationString from './processReputation';
 import {
   getUpsellCommunities,
@@ -10,7 +10,6 @@ import {
 import { getUsersChannelsEligibleForWeeklyDigest } from '../../models/usersChannels';
 import type { Timeframe, User, ThreadsWithData, Communities } from './types';
 import { SEND_DIGEST_EMAIL } from '../constants';
-const sendDigestEmailQueue = createQueue(SEND_DIGEST_EMAIL);
 
 type Job = {
   data: {
@@ -66,20 +65,21 @@ export default async (job: Job) => {
   }
   debug('\n ⚙️ Processed eligible threads for user');
 
-  return sendDigestEmailQueue
-    .add(
-      {
-        ...user,
-        name: user.firstName || null,
-        communities: recommendedCommunities,
-        reputationString,
-        timeframe,
-        threads: eligibleThreadsForUser,
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    )
-    .then(() => debug('\n ✅ Sent a daily digest'));
+  return addQueue(
+    SEND_DIGEST_EMAIL,
+    {
+      ...user,
+      name: user.firstName || null,
+      communities: recommendedCommunities,
+      reputationString,
+      timeframe,
+      threads: eligibleThreadsForUser,
+    },
+    {
+      removeOnComplete: true,
+      removeOnFail: true,
+    }
+  )
+    .then(() => debug('\n ✅ Sent a daily digest'))
+    .catch(err => console.log('Error sending an individual digest:', err));
 };
