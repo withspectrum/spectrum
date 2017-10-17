@@ -133,7 +133,7 @@ const OverviewNumbers = ({ data }) => {
 
   const singleChartWidth =
     window.innerWidth < 768
-      ? window.innerWidth - 32
+      ? window.innerWidth - 64
       : (window.innerWidth - 156) / 4;
 
   return (
