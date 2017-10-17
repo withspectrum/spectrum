@@ -13,10 +13,7 @@ const {
   getCommunityGrowth,
 } = require('../models/community');
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
-const {
-  getMembersInCommunity,
-  getUserPermissionsInCommunity,
-} = require('../models/usersCommunities');
+const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
 const { getUserByUsername } = require('../models/user');
 const {
@@ -80,7 +77,7 @@ module.exports = {
       { user, loaders }: GraphQLContext
     ) => {
       if (!id || !user) return false;
-      return getUserPermissionsInCommunity(id, user.id);
+      return loaders.userPermissionsInCommunity.load([user.id, id]);
     },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
@@ -235,10 +232,10 @@ module.exports = {
       }
 
       const queryRecurringPayments = async () => {
-        const userPermissions = await getUserPermissionsInCommunity(
+        const userPermissions = await loaders.userPermissionsInCommunity.load([
+          currentUser.id,
           id,
-          currentUser.id
-        );
+        ]);
         if (!userPermissions.isOwner) return;
 
         const rPayments = await loaders.communityRecurringPayments.load(id);
@@ -270,10 +267,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -323,10 +320,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -367,10 +364,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -394,10 +391,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       return getThreadsByCommunityInTimeframe(
         id,
@@ -463,7 +460,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(community.id, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              community.id,
+            ]);
             return {
               reputation,
               isModerator,
