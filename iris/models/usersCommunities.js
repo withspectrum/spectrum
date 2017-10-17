@@ -382,7 +382,15 @@ const getUsersTotalReputation = (
     .reduce((l, r) => l.add(r))
     .default(0)
     .run()
-    .then(res => res.map(res => res && res.reduction));
+    .then(res =>
+      res.map(
+        (res, index) =>
+          res && {
+            reputation: res.reduction,
+            userId: userIds[index],
+          }
+      )
+    );
 };
 
 module.exports = {
