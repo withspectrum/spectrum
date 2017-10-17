@@ -1,11 +1,10 @@
 // @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
-import createQueue from 'shared/bull/create-queue';
+import addQueue from '../../jobs/utils';
 import { PROCESS_INDIVIDUAL_DIGEST } from '../constants';
 import { getThreadsForDigest, attachDataToThreads } from './processThreads';
 import { getUsersForDigest } from '../../models/usersSettings';
 import { getTopCommunities } from '../../models/community';
-const digestEmailWorker = createQueue(PROCESS_INDIVIDUAL_DIGEST);
 
 /*
   1. Process threads
@@ -60,7 +59,8 @@ export default async (job: DigestJob) => {
 
   // 4
   const usersPromises = users.map(user =>
-    digestEmailWorker.add(
+    addQueue(
+      PROCESS_INDIVIDUAL_DIGEST,
       { user, threadsWithData, topCommunities, timeframe },
       {
         removeOnComplete: true,
