@@ -33,7 +33,7 @@ class NewThreadShare extends React.Component<Props> {
     return (
       <NullCol bg={null}>
         <Title>
-          <span role="img" aria-label="sparkle">
+          <span role="img" aria-label="twinkle emoji">
             ✨
           </span>{' '}
           The conversation is just getting started...

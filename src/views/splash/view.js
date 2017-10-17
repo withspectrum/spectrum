@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-// @FlowFixMe
 import styled from 'styled-components';
-// @FlowFixMe
 import { Link } from 'react-router-dom';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';

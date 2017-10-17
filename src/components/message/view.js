@@ -107,7 +107,7 @@ export const Actions = props => {
   return (
     <ActionUI me={me}>
       {props.children}
-      {/* {shareable && <Action me={me} action={'share'} /> } */}
+      {/* {props.shareable && <Action me={me} action={'share'} /> } */}
       {canModerate && (
         <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
       )}

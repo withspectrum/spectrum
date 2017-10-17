@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import Reputation from '../../../components/reputation';
-import { truncateNumber } from '../../../helpers/utils';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
 import {

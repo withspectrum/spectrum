@@ -105,6 +105,7 @@ class Search extends Component {
       this.setState({
         searchResults: [],
         searchIsLoading: false,
+        searchString: '',
       });
 
       input.focus();
@@ -125,7 +126,7 @@ class Search extends Component {
     // if person presses down
     if (e.keyCode === 40) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
-      if (searchResults.length === 1) return;
+      if (searchResults.length <= 1) return;
 
       return this.setState({
         focusedSearchResult: searchResults[indexOfFocusedSearchResult + 1].id,
@@ -135,7 +136,7 @@ class Search extends Component {
     // if person presses up
     if (e.keyCode === 38) {
       if (indexOfFocusedSearchResult === 0) return;
-      if (searchResults.length === 1) return;
+      if (searchResults.length <= 1) return;
 
       return this.setState({
         focusedSearchResult: searchResults[indexOfFocusedSearchResult - 1].id,

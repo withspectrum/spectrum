@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-// @FlowFixMe
 import styled from 'styled-components';
-// @FlowFixMe
 import { Link } from 'react-router-dom';
 import Dropdown from '../../../components/dropdown';
 

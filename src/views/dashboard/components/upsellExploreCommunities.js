@@ -82,10 +82,7 @@ class UpsellExploreCommunities extends React.Component {
   }
 
   render() {
-    const {
-      // communities, // already joined by the user
-      activeCommunity,
-    } = this.props;
+    const { activeCommunity } = this.props;
     const { communitiesToJoin } = this.state;
 
     if (communitiesToJoin) {
@@ -115,7 +112,7 @@ class UpsellExploreCommunities extends React.Component {
                     active={c.id === activeCommunity}
                     src={c.profilePhoto}
                   />
-                  <CommunityListText>
+                  <CommunityListText className={'communityListText'}>
                     <CommunityListName active={c.id === activeCommunity}>
                       {c.name}
                     </CommunityListName>

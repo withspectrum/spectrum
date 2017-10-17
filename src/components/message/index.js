@@ -23,6 +23,7 @@ class Message extends Component {
   };
 
   toggleMessageFocus = messageId => {
+    // const { threadId } = this.props;
     // TODO: make it so people can tap/click on messages to set focus and display the message's actions
   };
 
@@ -45,11 +46,8 @@ class Message extends Component {
       canModerate,
       currentUser,
       dispatch,
-      // hash,
-      // link,
       me,
       message,
-      pending,
       reaction,
       toggleReaction,
       context,
@@ -74,7 +72,7 @@ class Message extends Component {
         <Body
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
-          pending={pending}
+          pending={message.id < 0}
           openGallery={() => this.toggleOpenGallery(message.id)}
           focus={this.toggleMessageFocus}
           message={emojiOnly ? parsedMessage : message.content}

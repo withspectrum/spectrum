@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import styled from 'styled-components';
 import { FlexRow, Transition, zIndex } from '../globals';
 

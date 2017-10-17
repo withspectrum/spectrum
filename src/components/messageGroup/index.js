@@ -115,9 +115,7 @@ class Messages extends Component<MessageGroupProps> {
       isModerator,
     } = this.props;
 
-    const hash = window.location.hash.substr(1);
-
-    if (!messages || messages.length == 0)
+    if (!messages || messages.length === 0)
       return <NewThreadShare thread={thread} />;
 
     return (
@@ -154,7 +152,6 @@ class Messages extends Component<MessageGroupProps> {
                       message={message}
                       link={`#${message.id}`}
                       reaction={'like'}
-                      hash={hash}
                       me={me}
                       canModerate={canModerate}
                       pending={message.id < 0}

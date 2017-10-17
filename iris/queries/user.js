@@ -30,10 +30,7 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
-import {
-  getReputationByUser,
-  getUserPermissionsInCommunity,
-} from '../models/usersCommunities';
+import { getReputationByUser } from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -183,7 +180,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return loaders.userThreadCount.load(id).then(data => data.count);
+      return loaders.userThreadCount
+        .load(id)
+        .then(data => (data ? data.count : 0));
     },
     recurringPayments: (
       { id }: DBUser,
@@ -233,8 +232,9 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (!id) return 0;
-      // return loaders.userTotalReputation.load(id).then(data => console.log('data', data) || data)
-      return getReputationByUser(id);
+      return loaders.userTotalReputation
+        .load(id)
+        .then(data => (data ? data.reputation : 0));
     },
     contextPermissions: (
       user: any,
@@ -257,7 +257,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -271,7 +274,10 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
               reputation,
               isModerator,
@@ -287,7 +293,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(id, user.id);
+            } = await loaders.userPermissionsInCommunity.load([user.id, id]);
             return {
               reputation: reputation || 0,
               isModerator,

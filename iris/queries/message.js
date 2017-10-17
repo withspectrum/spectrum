@@ -1,7 +1,6 @@
 const { getMessage, getMediaMessagesForThread } = require('../models/message');
 import { getReactions } from '../models/reaction';
 import { getThread } from '../models/thread';
-import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import type { GraphQLContext } from '../';
 
 type GetMessageProps = {
@@ -33,16 +32,21 @@ module.exports = {
         return loaders.user.load(senderId);
       }
 
-      const [{ communityId }, sender] = await Promise.all([
+      const [thread, sender] = await Promise.all([
         loaders.thread.load(threadId),
         loaders.user.load(senderId),
       ]);
+
+      if (!thread || !sender) return null;
 
       const {
         reputation,
         isModerator,
         isOwner,
-      } = await getUserPermissionsInCommunity(communityId, senderId);
+      } = await loaders.userPermissionsInCommunity.load([
+        senderId,
+        thread.communityId,
+      ]);
 
       return {
         ...sender,

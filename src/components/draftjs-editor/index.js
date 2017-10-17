@@ -42,7 +42,6 @@ import {
   Wrapper,
   MediaRow,
   ComposerBase,
-  SideToolbarWrapper,
   Expander,
   Action,
   EmbedUI,

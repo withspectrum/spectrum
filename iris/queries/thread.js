@@ -5,7 +5,6 @@ const {
 } = require('../models/community');
 const { getUsers } = require('../models/user');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
@@ -77,7 +76,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return getParticipantsInThread(id);
+      return loaders.threadParticipants
+        .load(id)
+        .then(result => (result ? result.reduction : []));
     },
     isCreator: (
       { creatorId }: { creatorId: string },
@@ -141,7 +142,10 @@ module.exports = {
         reputation,
         isModerator,
         isOwner,
-      } = await getUserPermissionsInCommunity(communityId, creatorId);
+      } = await loaders.userPermissionsInCommunity.load([
+        creatorId,
+        communityId,
+      ]);
 
       return {
         ...creator,

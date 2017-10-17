@@ -39,6 +39,7 @@ class MessagesWithData extends Component {
       prevProps &&
       prevProps.data &&
       prevProps.data.thread &&
+      this.props.data.thread &&
       prevProps.data.thread.messageConnection !==
         this.props.data.thread.messageConnection;
 

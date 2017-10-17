@@ -1,5 +1,4 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
 

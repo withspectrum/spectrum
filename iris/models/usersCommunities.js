@@ -306,6 +306,15 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
+const DEFAULT_PERMISSIONS = {
+  isOwner: false,
+  isMember: false,
+  isModerator: false,
+  isBlocked: false,
+  receiveNotifications: false,
+  reputation: 0,
+};
+
 const getUserPermissionsInCommunity = (
   communityId: string,
   userId: string
@@ -324,12 +333,9 @@ const getUserPermissionsInCommunity = (
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
         return {
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          receiveNotifications: false,
-          reputation: 0,
+          ...DEFAULT_PERMISSIONS,
+          userId,
+          communityId,
         };
       }
     });
@@ -346,16 +352,22 @@ const getUsersPermissionsInCommunities = (
     .run()
     .then(data => {
       if (!data)
-        return Array.from({ length: input.length }, () => ({
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          receiveNotifications: false,
-          reputation: 0,
+        return Array.from({ length: input.length }, (_, index) => ({
+          ...DEFAULT_PERMISSIONS,
+          userId: input[index][0],
+          communityId: input[index][1],
         }));
 
-      return data;
+      return data.map(
+        (rec, index) =>
+          rec
+            ? rec
+            : {
+                ...DEFAULT_PERMISSIONS,
+                userId: input[index][0],
+                communityId: input[index][1],
+              }
+      );
     });
 };
 
@@ -382,7 +394,15 @@ const getUsersTotalReputation = (
     .reduce((l, r) => l.add(r))
     .default(0)
     .run()
-    .then(res => res.map(res => res && res.reduction));
+    .then(res =>
+      res.map(
+        (res, index) =>
+          res && {
+            reputation: res.reduction,
+            userId: userIds[index],
+          }
+      )
+    );
 };
 
 module.exports = {

@@ -80,8 +80,8 @@ export default class Toolbar extends React.Component<Props, State> {
     const { editorState } = this.props;
     const { position } = this.state;
     if (editorState) {
-      const selection = editorState.getSelection();
-      const content = editorState.getCurrentContent();
+      // const selection = editorState.getSelection();
+      // const content = editorState.getCurrentContent();
       // if (!selection.getHasFocus() && !content.hasText()) return null;
     }
     return (
