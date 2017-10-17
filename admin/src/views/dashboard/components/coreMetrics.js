@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// $FlowIssue
 import { LineChart, Line, XAxis, YAxis, Tooltip, Brush } from 'recharts';
 import { CoreMetricsContainer, Count, LegendItem, Legend } from '../style';
 import { cColors } from '../../../helpers/utils';
@@ -71,8 +70,10 @@ class CoreMetrics extends React.Component<Props, State> {
   toggleKey = (e: any) => {
     const { id } = e.target;
     const val = this.state[id];
+
     const obj = {};
     obj[id] = !val;
+
     const newState = Object.assign(
       {},
       { ...this.state },
@@ -80,7 +81,8 @@ class CoreMetrics extends React.Component<Props, State> {
         ...obj,
       }
     );
-    const newData = [...this.state.data];
+
+    const newData = this.state.data && [...this.state.data];
 
     this.setState({
       ...newState,
@@ -89,14 +91,14 @@ class CoreMetrics extends React.Component<Props, State> {
   };
 
   toggleAll = (val: boolean) => {
-    const stateKeys = Object.keys(this.state).filter(k => k !== 'data');
+    const stateKeys = Object.keys(this.state);
     const newState = Object.assign(
       {},
       {
         ...this.state,
       }
     );
-    stateKeys.map(k => (newState[k] = val));
+    stateKeys.map(k => k !== 'data' && (newState[k] = val));
     return this.setState({
       ...newState,
     });

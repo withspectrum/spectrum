@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "flow-bin": "^0.57.3",
     "react-scripts": "1.0.13",
     "recompose": "^0.23.4",
     "styled-components": "^2.1.2"
