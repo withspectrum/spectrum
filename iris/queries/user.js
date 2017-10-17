@@ -30,7 +30,10 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
-import { getReputationByUser } from '../models/usersCommunities';
+import {
+  getReputationByUser,
+  getUserPermissionsInCommunity,
+} from '../models/usersCommunities';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -254,10 +257,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await loaders.userPermissionsInCommunity.load([
-              user.id,
-              communityId,
-            ]);
+            } = await getUserPermissionsInCommunity(communityId, user.id);
             return {
               reputation,
               isModerator,
@@ -271,10 +271,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await loaders.userPermissionsInCommunity.load([
-              user.id,
-              communityId,
-            ]);
+            } = await getUserPermissionsInCommunity(communityId, user.id);
             return {
               reputation,
               isModerator,
@@ -290,7 +287,7 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await loaders.userPermissionsInCommunity.load([user.id, id]);
+            } = await getUserPermissionsInCommunity(id, user.id);
             return {
               reputation: reputation || 0,
               isModerator,
