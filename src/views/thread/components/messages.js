@@ -77,6 +77,7 @@ class MessagesWithData extends Component {
     // if the thread changes in the inbox we have to update the subscription
     if (
       prevProps.data.thread &&
+      this.props.data.thread &&
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
       this.unsubscribe().then(() => this.subscribe());
