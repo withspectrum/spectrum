@@ -78,6 +78,26 @@ export const getCommunitiesByUser = (
   );
 };
 
+export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
+  return db
+    .table('channels')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .group('communityId')
+    .count()
+    .run();
+};
+
+export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .group('communityId')
+    .count()
+    .run();
+};
+
 export const getCommunityMetaData = (
   communityId: string
 ): Promise<Array<number>> => {
