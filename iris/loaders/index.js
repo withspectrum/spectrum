@@ -13,6 +13,8 @@ import {
   __createCommunityLoader,
   __createCommunityBySlugLoader,
   __createCommunityRecurringPaymentsLoader,
+  __createCommunityMemberCountLoader,
+  __createCommunityChannelCountLoader,
 } from './community';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
@@ -28,6 +30,8 @@ const createLoaders = () => ({
   community: __createCommunityLoader(),
   communityBySlug: __createCommunityBySlugLoader(),
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(),
+  communityChannelCount: __createCommunityChannelCountLoader(),
+  communityMemberCount: __createCommunityMemberCountLoader(),
 });
 
 export default createLoaders;

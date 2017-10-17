@@ -191,13 +191,14 @@ module.exports = {
           };
         });
     },
-    metaData: ({ id }: { id: string }) => {
-      return getCommunityMetaData(id).then(data => {
-        return {
-          channels: data[0],
-          members: data[1],
-        };
-      });
+    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return Promise.all([
+        loaders.communityChannelCount.load(id),
+        loaders.communityMemberCount.load(id),
+      ]).then(([channelCount, memberCount]) => ({
+        channels: channelCount.reduction,
+        members: memberCount.reduction,
+      }));
     },
     slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
