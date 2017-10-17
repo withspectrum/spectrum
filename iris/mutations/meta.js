@@ -10,10 +10,10 @@ module.exports = {
       if (!isAdmin(currentUser.id)) {
         return new UserError('Failure');
       }
-      const { id, ...permissions } = input;
-      const userId = currentUser.id;
+
+      const { id, userId, ...permissions } = input;
       const communityId = id;
-      saveUserCommunityPermissions(permissions, userId, communityId);
+      return saveUserCommunityPermissions(permissions, userId, communityId);
     },
   },
 };

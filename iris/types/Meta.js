@@ -50,6 +50,7 @@ const Meta = /* GraphQL */ `
     isBlocked: Boolean
     isModerator: Boolean
     receiveNotifications: Boolean
+    userId: ID!
     id: ID!
   }
 
