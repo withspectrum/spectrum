@@ -77,7 +77,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return getParticipantsInThread(id);
+      return loaders.threadParticipants
+        .load(id)
+        .then(result => result.reduction);
     },
     isCreator: (
       { creatorId }: { creatorId: string },

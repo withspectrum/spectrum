@@ -76,6 +76,20 @@ export const getParticipantsInThread = (
     .run();
 };
 
+export const getParticipantsInThreads = (threadIds: Array<string>) => {
+  return db
+    .table('usersThreads')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter({ isParticipant: true })
+    .eqJoin('userId', db.table('users'))
+    .group(rec => rec('left')('threadId'))
+    .without({
+      left: ['createdAt', 'id', 'userId'],
+    })
+    .zip()
+    .run();
+};
+
 export const getThreadNotificationStatusForUser = (
   threadId: string,
   userId: string
