@@ -1,6 +1,5 @@
 // Render a component depending on a users authentication status
 import React from 'react';
-// @FlowFixMe
 import { connect } from 'react-redux';
 
 // This is the component that determines at render time what to do

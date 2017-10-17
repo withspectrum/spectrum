@@ -82,7 +82,7 @@ class JoinChannel extends React.Component<Props, State> {
 
   render() {
     const { isLoading } = this.state;
-    const { channel, community } = this.props;
+    const { community } = this.props;
     return (
       <NullState bg={null}>
         <Title>Join the {community.name} community</Title>

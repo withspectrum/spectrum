@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { convertTimestampToDate } from '../../../helpers/utils';
 import {
   StyledThreadListItem,
   ThreadListItemTitle,
@@ -31,7 +30,6 @@ class ThreadListItem extends React.Component<Props> {
         id,
         creator: { name, username },
         content: { title },
-        createdAt,
         messageCount,
       },
     } = this.props;

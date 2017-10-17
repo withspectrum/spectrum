@@ -38,14 +38,7 @@ type CommunityProps = {
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const {
-      community,
-      showDescription,
-      showMeta,
-      meta,
-      children,
-      reputation,
-    } = this.props;
+    const { community, showDescription, children, reputation } = this.props;
 
     return (
       <Wrapper>

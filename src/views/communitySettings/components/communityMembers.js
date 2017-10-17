@@ -5,13 +5,7 @@ import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import { getCommunityMembersQuery } from '../../../api/community';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
-import {
-  StyledCard,
-  ListHeader,
-  LargeListHeading,
-  ListContainer,
-  ListFooter,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 import { SectionCard, SectionCardFooter, SectionTitle } from '../style';
 
 type Props = {};

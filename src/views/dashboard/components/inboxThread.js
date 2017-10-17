@@ -11,7 +11,6 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
-  InboxClickWrapper,
   InboxThreadContent,
   ThreadTitle,
   AttachmentsContainer,

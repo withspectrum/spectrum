@@ -4,14 +4,7 @@ import Titlebar from '../../../views/titlebar';
 import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
 import { HorizontalRule } from '../../../components/globals';
 import Icon from '../../../components/icons';
-import {
-  View,
-  Content,
-  Input,
-  Detail,
-  ChatInputWrapper,
-  ChatWrapper,
-} from '../style';
+import { View, Content, Detail, ChatWrapper } from '../style';
 
 const LoadingView = () => (
   <View>

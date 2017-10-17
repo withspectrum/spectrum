@@ -18,9 +18,6 @@ import { LoadingDMs } from './views/directMessages/components/loading';
 import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
-import CommunitySettings from './views/communitySettings';
-import CommunityAnalytics from './views/communityAnalytics';
-import ChannelSettings from './views/channelSettings';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 
@@ -89,13 +86,13 @@ const UserSettings = Loadable({
 });
 
 /* prettier-ignore */
-const communitySettings = Loadable({
+const CommunitySettings = Loadable({
   loader: () => import('./views/communitySettings'/* webpackChunkName: "communitySettings" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
 /* prettier-ignore */
-const channelSettings = Loadable({
+const ChannelSettings = Loadable({
   loader: () => import('./views/channelSettings'/* webpackChunkName: "channelSettings" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
 });

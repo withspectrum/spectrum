@@ -430,6 +430,7 @@ const SEARCH_THREADS_IN_COMMUNITY_OPTIONS = {
       error,
       loading,
       networkStatus,
+      fetchMore: () => {},
       threads: searchCommunityThreads
         ? searchCommunityThreads.map(thread => ({ node: { ...thread } }))
         : [],

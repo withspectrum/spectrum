@@ -2,7 +2,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { track } from '../../../helpers/events';
 import {
   editCommunityMutation,
@@ -12,7 +11,6 @@ import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import { Notice } from '../../../components/listItems/style';
-import Icon from '../../../components/icons';
 import {
   Input,
   UnderlineInput,
@@ -22,16 +20,14 @@ import {
   CoverInput,
 } from '../../../components/formElements';
 import {
-  StyledCard,
   Form,
   FormTitle,
   Description,
   Actions,
   TertiaryActionContainer,
   ImageInputWrapper,
-  Location,
 } from '../../../components/editForm/style';
-import { SectionCard, SectionCardFooter, SectionTitle } from '../style';
+import { SectionCard, SectionTitle } from '../style';
 
 type Props = {};
 class EditForm extends React.Component<Props> {

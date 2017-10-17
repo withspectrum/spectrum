@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openGallery } from '../../actions/gallery';
-import { convertTimestampToTime, onlyContainsEmoji } from '../../helpers/utils';
+import { onlyContainsEmoji } from '../../helpers/utils';
 import Reaction from '../reaction';
-import { Timestamp, Body, Actions } from './view';
+import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { addToastWithTimeout } from '../../actions/toasts';
 
 class Message extends Component {
   componentDidMount() {
@@ -23,7 +22,7 @@ class Message extends Component {
   };
 
   toggleMessageFocus = messageId => {
-    const { threadId } = this.props;
+    // const { threadId } = this.props;
     // TODO: make it so people can tap/click on messages to set focus and display the message's actions
   };
 
@@ -46,12 +45,8 @@ class Message extends Component {
       canModerate,
       currentUser,
       dispatch,
-      hash,
-      imgSrc,
-      link,
       me,
       message,
-      pending,
       reaction,
       toggleReaction,
       context,

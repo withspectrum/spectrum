@@ -21,6 +21,7 @@ export default class Embed extends Component {
     const data = Entity.get(block.getEntityAt(0)).getData();
     return (
       <iframe
+        title={data.src}
         {...elementProps}
         {...data}
         src={data.src}

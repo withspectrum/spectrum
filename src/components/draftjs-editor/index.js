@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectGlobal } from 'styled-components';
-import { EditorState, Entity, convertToRaw } from 'draft-js';
+import { EditorState } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
@@ -42,7 +42,6 @@ import {
   Wrapper,
   MediaRow,
   ComposerBase,
-  SideToolbarWrapper,
   Expander,
   Action,
   EmbedUI,
