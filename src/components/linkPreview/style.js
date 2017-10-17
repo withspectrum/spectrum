@@ -20,6 +20,7 @@ export const LinkPreviewContainer = styled.a`
     transition: ${Transition.reaction.on};
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.1)};
     border: 1px solid ${({ theme }) => theme.bg.border};
+    text-decoration: none !important;
   }
 `;
 

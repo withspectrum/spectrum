@@ -201,6 +201,7 @@ class Navbar extends Component {
       if (!user.timezone) {
         this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
       }
+
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user doesn't have a username or they haven't joined any

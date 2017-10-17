@@ -16,7 +16,6 @@ import ViewError from '../../../components/viewError';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { HorizontalRule } from '../../../components/globals';
 import { getThread } from '../queries';
-import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import {
   View,
@@ -29,30 +28,7 @@ import {
 import { NullState, UpsellSignIn } from '../../../components/upsell';
 import JoinChannel from '../../../components/upsell/joinChannel';
 import RequestToJoinChannel from '../../../components/upsell/requestToJoinChannel';
-
-const LoadingView = () => (
-  <View>
-    <Titlebar
-      provideBack={true}
-      backRoute={`/`}
-      noComposer
-      style={{ gridArea: 'header' }}
-    />
-    <Content>
-      <Detail type="only">
-        <LoadingThreadDetail />
-        <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
-          <LoadingChat />
-        </ChatWrapper>
-      </Detail>
-    </Content>
-  </View>
-);
+import LoadingView from '../components/loading';
 
 type Props = {
   data: {
@@ -232,7 +208,7 @@ class ThreadContainer extends React.Component<Props, State> {
             style={{ gridArea: 'header' }}
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-            <Detail type="only">
+            <Detail type={slider ? '' : 'only'}>
               <ThreadDetail thread={thread} slider={slider} />
 
               <Messages
@@ -259,7 +235,6 @@ class ThreadContainer extends React.Component<Props, State> {
                     channel={thread.channel}
                   />
                 )}
-
               {!isLoggedIn && (
                 <UpsellSignIn
                   title={`Join the ${thread.community.name} community`}

@@ -14,8 +14,8 @@ const {
 } = require('../models/community');
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const {
-  getUserPermissionsInCommunity,
   getMembersInCommunity,
+  getUserPermissionsInCommunity,
 } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
 const { getUserByUsername } = require('../models/user');
@@ -31,7 +31,6 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
-import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -78,7 +77,7 @@ module.exports = {
     communityPermissions: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       if (!id || !user) return false;
       return getUserPermissionsInCommunity(id, user.id);
@@ -227,7 +226,7 @@ module.exports = {
     recurringPayments: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -242,9 +241,10 @@ module.exports = {
         );
         if (!userPermissions.isOwner) return;
 
-        const rPayments = await getCommunityRecurringPayments(id);
+        const rPayments = await loaders.communityRecurringPayments.load(id);
         const communitySubscriptions =
           rPayments &&
+          rPayments.length > 0 &&
           rPayments.filter(obj => obj.planId === 'community-standard');
 
         if (!communitySubscriptions || communitySubscriptions.length === 0)
@@ -262,7 +262,7 @@ module.exports = {
     memberGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -315,7 +315,7 @@ module.exports = {
     conversationGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -435,15 +435,20 @@ module.exports = {
         };
       });
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
-      // loaders.communityRecurringPayments.load(id),
-      {
-        return getCommunityRecurringPayments(id).then(subs => {
-          let filtered = subs && subs.filter(sub => sub.status === 'active');
-          return !filtered || filtered.length === 0 ? false : true;
-        });
-      },
-    contextPermissions: (community: any, _: any, __: any, info: any) => {
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return loaders.communityRecurringPayments.load(id).then(subs => {
+        if (!subs) return false;
+        if (!Array.isArray(subs)) return subs.status === 'active';
+
+        return subs.some(sub => sub.status === 'active');
+      });
+    },
+    contextPermissions: (
+      community: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for communitysThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (community.contextPermissions) return community.contextPermissions;
 

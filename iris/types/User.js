@@ -86,6 +86,7 @@ const User = /* GraphQL */ `
 		isOnline: Boolean
 		timezone: Int
 		totalReputation: Int
+		pendingEmail: String
 
 		# non-schema fields
 		threadCount: Int
@@ -145,6 +146,7 @@ const User = /* GraphQL */ `
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
+		updateUserEmail(email: String!): User
 	}
 `;
 

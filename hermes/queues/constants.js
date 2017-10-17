@@ -12,6 +12,7 @@ export const SEND_PRO_INVOICE_RECEIPT_EMAIL = 'send pro invoice receipt email';
 export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
 export const SEND_DIGEST_EMAIL = 'send digest email';
+export const SEND_EMAIL_VALIDATION_EMAIL = 'send email validation email';
 
 export const NEW_MESSAGE_TEMPLATE = 2266041;
 export const NEW_USER_WELCOME_TEMPLATE = 2462726;
@@ -22,6 +23,7 @@ export const PRO_INVOICE_RECEIPT_TEMPLATE = 3037461;
 export const NEW_THREAD_CREATED_TEMPLATE = 2713302;
 export const DIGEST_TEMPLATE = 3071361;
 export const DEBUG_TEMPLATE = 3374841;
+export const EMAIL_VALIDATION_TEMPLATE = 3578681;
 
 // types used to generate unsubscribe tokens
 export const TYPE_DAILY_DIGEST = 'dailyDigest';

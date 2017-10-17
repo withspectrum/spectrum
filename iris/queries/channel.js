@@ -11,7 +11,7 @@ const {
   getMembersInChannel,
   getOwnersInChannel,
 } = require('../models/usersChannels');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
+import { getUserPermissionsInCommuniyt } from '../models/usersCommunities';
 const { getThreadsByChannel } = require('../models/thread');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -57,7 +57,7 @@ module.exports = {
       if (!channelId || !user) return false;
       return getUserPermissionsInChannel(channelId, user.id);
     },
-    communityPermissions: (args, _: any, { user }: Context) => {
+    communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
       if (!communityId || !user) return false;
       return getUserPermissionsInCommunity(communityId, user.id);

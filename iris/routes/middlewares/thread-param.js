@@ -8,7 +8,7 @@ const threadParamRedirect = (req, res, next) => {
     ? req.query.thread
     : hasTParam ? req.query.t : null;
 
-  if (hasThreadParam || (req.user && hasTParam)) {
+  if (hasThreadParam || (!req.user && hasTParam)) {
     res.redirect(`/thread/${threadId}`);
   } else {
     next();

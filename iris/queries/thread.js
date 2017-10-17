@@ -4,8 +4,8 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
+const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
