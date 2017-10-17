@@ -94,5 +94,9 @@ export default async () => {
     dmMessages,
   };
 
-  return saveCoreMetrics(coreMetrics);
+  try {
+    return saveCoreMetrics(coreMetrics);
+  } catch (err) {
+    console.log(err);
+  }
 };

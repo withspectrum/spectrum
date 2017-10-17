@@ -41,7 +41,7 @@ exports.up = function(r, conn) {
             .filter(
               r.row(field).during(
                 // go back to all time, for some reason minval isn't working
-                r.now().sub(60 * 60 * 24 * 365),
+                r.now().sub(60 * 60 * 24 * 10000),
                 r.now().sub(60 * 60 * 24 * index)
               )
             )
@@ -55,7 +55,7 @@ exports.up = function(r, conn) {
           .filter(
             r.row(field).during(
               // go back to all time, for some reason minval isn't working
-              r.now().sub(60 * 60 * 24 * 365),
+              r.now().sub(60 * 60 * 24 * 10000),
               r.now().sub(60 * 60 * 24 * index)
             )
           )
@@ -75,7 +75,7 @@ exports.up = function(r, conn) {
               .filter(
                 r.row(field).during(
                   // go back to all time, for some reason minval isn't working
-                  r.now().sub(60 * 60 * 24 * 365),
+                  r.now().sub(60 * 60 * 24 * 10000),
                   r.now().sub(60 * 60 * 24 * index)
                 )
               )
@@ -91,7 +91,7 @@ exports.up = function(r, conn) {
       };
 
       // array of 30 things
-      const arr = Array.apply(null, { length: 30 }).map(() => 0);
+      const arr = Array.apply(null, { length: 60 }).map(() => 0);
       const backfill = arr.map((o, i) => {
         const cpu = getPu('usersCommunities', 'createdAt', i);
         const mpu = getPu('messages', 'timestamp', i);
