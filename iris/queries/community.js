@@ -76,8 +76,10 @@ module.exports = {
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
-      if (!id || !user) return null;
-      return loaders.userPermissionsInCommunity.load([user.id, id]);
+      if (!id || !user) return {};
+      return loaders.userPermissionsInCommunity
+        .load([user.id, id])
+        .then(result => (result ? result : {}));
     },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
