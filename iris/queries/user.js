@@ -230,8 +230,7 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (!id) return 0;
-      // return loaders.userTotalReputation.load(id).then(data => console.log('data', data) || data)
-      return getReputationByUser(id);
+      return loaders.userTotalReputation.load(id).then(data => data.reputation);
     },
     contextPermissions: (
       user: any,
