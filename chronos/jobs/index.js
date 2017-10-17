@@ -28,8 +28,8 @@ const dailyDigest = () =>
 const dailyCoreMetrics = () =>
   createJob(
     PROCESS_DAILY_CORE_METRICS,
-    // '0 0 * * *', // run at midnight every day
-    '* * * * *',
+    '0 0 * * *', // run at midnight every day
+    // '* * * * *',
     'daily'
   );
 

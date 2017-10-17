@@ -26,8 +26,8 @@ const server = createWorker({
 });
 
 // start the jobs
-// weeklyDigest();
-// dailyDigest();
+weeklyDigest();
+dailyDigest();
 dailyCoreMetrics();
 
 // $FlowIssue
