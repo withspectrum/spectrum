@@ -1,11 +1,9 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { overviewQuery } from '../../../api/queries';
 import { convertTimestampToDate, cColors } from '../../../helpers/utils';
 import { displayLoadingState } from '../../../components/loading';
-// $FlowIssue
 import { LineChart, Line, Tooltip } from 'recharts';
 import CoreMetrics from './coreMetrics';
 import {
