@@ -7,7 +7,6 @@ import {
   getLinkPreviewFromUrl,
   timeDifference,
   convertTimestampToDate,
-  truncateNumber,
 } from '../../../helpers/utils';
 import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';

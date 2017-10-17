@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Icon from '../icons';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { ReactionWrapper, Count } from '../message/style';
+import { ReactionWrapper } from '../message/style';
 
 class Reaction extends Component {
   state: {

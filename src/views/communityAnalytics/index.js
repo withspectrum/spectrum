@@ -4,17 +4,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
 import { openModal } from '../../actions/modals';
-import { Loading } from '../../components/loading';
-import AppViewWrapper from '../../components/appViewWrapper';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
-import Titlebar from '../titlebar';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import { View, SectionsContainer, Column } from '../communitySettings/style';
+import { SectionsContainer, Column } from '../communitySettings/style';
 
 type Props = {
   community: {

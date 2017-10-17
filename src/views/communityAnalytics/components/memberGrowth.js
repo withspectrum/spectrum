@@ -32,7 +32,7 @@ type Props = {
 
 class MemberGrowth extends React.Component<Props> {
   render() {
-    const { data, data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       const {

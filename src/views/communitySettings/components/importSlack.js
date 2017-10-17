@@ -16,18 +16,13 @@ import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  ButtonContainer,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
   SectionCard,
   SectionCardFooter,
   SectionTitle,
 } from '../style';
-import {
-  StyledCard,
-  Description,
-  Notice,
-} from '../../../components/listItems/style';
+import { Description, Notice } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 
 type Props = {

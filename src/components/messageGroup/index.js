@@ -9,7 +9,6 @@ import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
-import Icon from '../icons';
 
 import {
   Byline,
@@ -110,16 +109,13 @@ class Messages extends Component<MessageGroupProps> {
       messages,
       currentUser,
       toggleReaction,
-      dispatch,
       threadType,
       threadId,
       thread,
       isModerator,
     } = this.props;
 
-    const hash = window.location.hash.substr(1);
-
-    if (!messages || messages.length == 0)
+    if (!messages || messages.length === 0)
       return <NewThreadShare thread={thread} />;
 
     return (

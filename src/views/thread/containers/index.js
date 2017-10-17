@@ -1,10 +1,7 @@
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../../actions/newUserOnboarding';
 import Titlebar from '../../../views/titlebar';
@@ -14,17 +11,8 @@ import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
 import ViewError from '../../../components/viewError';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { HorizontalRule } from '../../../components/globals';
 import { getThread } from '../queries';
-import Icon from '../../../components/icons';
-import {
-  View,
-  Content,
-  Input,
-  Detail,
-  ChatInputWrapper,
-  ChatWrapper,
-} from '../style';
+import { View, Content, Input, Detail, ChatInputWrapper } from '../style';
 import { NullState, UpsellSignIn } from '../../../components/upsell';
 import JoinChannel from '../../../components/upsell/joinChannel';
 import RequestToJoinChannel from '../../../components/upsell/requestToJoinChannel';

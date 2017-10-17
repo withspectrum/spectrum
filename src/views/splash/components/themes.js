@@ -1,5 +1,4 @@
 import React from 'react';
-// @Flow Fix Me
 import styled from 'styled-components';
 import Goop from '../../../components/goop';
 import {

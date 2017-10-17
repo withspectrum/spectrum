@@ -4,11 +4,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import ThreadListItem from './threadListItem';
-import {
-  SectionCard,
-  SectionSubtitle,
-  SectionTitle,
-} from '../../communitySettings/style';
+import { SectionCard, SectionTitle } from '../../communitySettings/style';
 import { getCommunityTopAndNewThreads } from '../queries';
 
 type Thread = {

@@ -1,10 +1,5 @@
 import React from 'react';
-import replace from 'string-replace-to-array';
-import {
-  convertTimestampToTime,
-  onlyContainsEmoji,
-  renderLinks,
-} from '../../helpers/utils';
+import { renderLinks } from '../../helpers/utils';
 import { toPlainText, toState } from 'shared/draft-utils';
 import Icon from '../icons';
 import {
@@ -78,20 +73,12 @@ const Action = props => {
 };
 
 export const Actions = props => {
-  const {
-    me,
-    reaction,
-    toggleReaction,
-    shareable,
-    canModerate,
-    deleteMessage,
-    hideIndicator,
-  } = props;
+  const { me, reaction, canModerate, deleteMessage, hideIndicator } = props;
 
   return (
     <ActionUI me={me}>
       {props.children}
-      {/* {shareable && <Action me={me} action={'share'} /> } */}
+      {/* {props.shareable && <Action me={me} action={'share'} /> } */}
       {canModerate && (
         <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
       )}

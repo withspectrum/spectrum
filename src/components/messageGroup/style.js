@@ -1,8 +1,6 @@
 // @flow
-// $FlowFixMe
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
-import Avatar from '../avatar';
 
 export const Wrapper = styled.div`
   flex: 1 0 auto;
