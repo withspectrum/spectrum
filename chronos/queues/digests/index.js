@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
-import addQueue from '../../jobs/utils';
+import { addQueue } from '../../jobs/utils';
 import { PROCESS_INDIVIDUAL_DIGEST } from '../constants';
 import { getThreadsForDigest, attachDataToThreads } from './processThreads';
 import { getUsersForDigest } from '../../models/usersSettings';
