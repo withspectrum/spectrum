@@ -6,7 +6,10 @@ import {
   __createUserPermissionsInCommunityLoader,
   __createUserTotalReputationLoader,
 } from './user';
-import { __createThreadLoader } from './thread';
+import {
+  __createThreadLoader,
+  __createThreadParticipantsLoader,
+} from './thread';
 import { __createNotificationLoader } from './notification';
 import { __createChannelLoader } from './channel';
 import {
@@ -23,6 +26,7 @@ const createLoaders = () => ({
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
   userTotalReputation: __createUserTotalReputationLoader(),
   thread: __createThreadLoader(),
+  threadParticipants: __createThreadParticipantsLoader(),
   notification: __createNotificationLoader(),
   channel: __createChannelLoader(),
   community: __createCommunityLoader(),
