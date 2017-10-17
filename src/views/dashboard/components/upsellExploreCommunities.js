@@ -115,7 +115,7 @@ class UpsellExploreCommunities extends React.Component {
                     active={c.id === activeCommunity}
                     src={c.profilePhoto}
                   />
-                  <CommunityListText>
+                  <CommunityListText className={'communityListText'}>
                     <CommunityListName active={c.id === activeCommunity}>
                       {c.name}
                     </CommunityListName>
