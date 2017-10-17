@@ -60,9 +60,19 @@ export default async (job: DigestJob) => {
 
   // 4
   const usersPromises = users.map(user =>
-    digestEmailWorker.add({ user, threadsWithData, topCommunities, timeframe })
+    digestEmailWorker.add(
+      { user, threadsWithData, topCommunities, timeframe },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    )
   );
 
   debug('\n ⚙️ Created individual jobs for each users digest');
-  return Promise.all(usersPromises);
+  try {
+    return Promise.all(usersPromises);
+  } catch (err) {
+    console.log('Error processing digests:', err);
+  }
 };
