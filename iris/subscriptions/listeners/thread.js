@@ -1,12 +1,7 @@
 // @flow
 const { listenToUpdatedThreads } = require('../../models/thread');
-const pubsub = require('./pubsub');
-const channels = require('./channels');
+import asyncify from '../../utils/asyncify';
 
-const updatedThread = thread => {
-  pubsub.publish(channels.THREAD_UPDATED, thread);
-};
-
-module.exports = () => {
-  listenToUpdatedThreads(updatedThread);
-};
+module.exports = asyncify(listenToUpdatedThreads, err => {
+  throw new Error(err);
+});
