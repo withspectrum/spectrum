@@ -26,6 +26,7 @@ type DigestJob = {
 };
 
 export default async (job: DigestJob) => {
+  console.log('processing a digest');
   const { timeframe } = job.data;
   debug(`\nnew job: ${job.id}`);
   debug(`\nprocessing ${timeframe} digest`);
