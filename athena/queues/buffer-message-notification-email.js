@@ -9,6 +9,7 @@ import getEmailStatus from '../utils/get-email-status';
 const IS_PROD = process.env.NODE_ENV === 'production';
 // Change buffer in dev to 10 seconds vs 3 minutes in prod
 const BUFFER = IS_PROD ? 180000 : 10000;
+// wait at most 10 minutes before sending an email notification
 const MAX_WAIT = 600000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
@@ -104,7 +105,7 @@ const timeouts: Timeouts = {};
  * - No further message notification for the same recipient comes in so we send the email after one minute
  * - If another message notification comes in before one minute has passed we reset the timer to one minute and add the new notification to the list of threads to be batched into one email
  * - We repeat this process for each further message notification until we have a one minute break
- * - Because we do want people to get emails in a timely manner we force push them out after 5 minutes. Basically, if we get a message notification and no email has been sent but it's been more than five minutes since the very first notification we send the email with all current notifications batched into one email.
+ * - Because we do want people to get emails in a timely manner we force push them out after 10 minutes. Basically, if we get a message notification and no email has been sent but it's been more than 10 minutes since the very first notification we send the email with all current notifications batched into one email.
  */
 const bufferMessageNotificationEmail = (recipient, thread, notification) => {
   debug(
