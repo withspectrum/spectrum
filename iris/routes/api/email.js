@@ -53,10 +53,6 @@ emailRouter.get('/unsubscribe', async (req, res) => {
       );
   }
 
-  console.log('userId', userId);
-  console.log('type', type);
-  console.log('dataId', dataId);
-
   // and send a database request to unsubscribe from a particular email type
   try {
     switch (type) {
