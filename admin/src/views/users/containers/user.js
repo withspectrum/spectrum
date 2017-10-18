@@ -21,15 +21,7 @@ class UserContainer extends Component {
       <View inner>
         <ProfileHeader user={user} />
         <UserCommunitySettingsContainer>
-          <SectionHeader>Communities</SectionHeader>
-          {communities.map(community => {
-            return (
-              <UserCommunitySettings
-                community={community}
-                key={Math.random()}
-              />
-            );
-          })}
+          Coming soon
         </UserCommunitySettingsContainer>
       </View>
     );

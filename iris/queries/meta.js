@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getGrowth, getCount, getAu } from '../models/utils';
+import { getGrowth, getCount, getAu, getCoreMetrics } from '../models/utils';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -8,6 +8,10 @@ module.exports = {
     meta: () => ({}),
   },
   Meta: {
+    coreMetrics: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getCoreMetrics();
+    },
     usersGrowth: async (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
 

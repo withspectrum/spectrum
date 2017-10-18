@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "flow-bin": "^0.57.3",
     "react-scripts": "1.0.13",
     "recompose": "^0.23.4",
     "styled-components": "^2.1.2"
@@ -19,7 +20,8 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
-    "react-router": "^4.1.1"
+    "react-router": "^4.1.1",
+    "recharts": "^1.0.0-alpha.6"
   },
   "scripts": {
     "start": "react-scripts start",

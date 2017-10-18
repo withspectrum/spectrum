@@ -5,6 +5,24 @@ import { userCommunitiesFragment } from './fragments/user/userCommunities';
 const META_INFORMATION_QUERY = gql`
   query {
     meta {
+      coreMetrics {
+        dau
+        wau
+        mau
+        dac
+        wac
+        mac
+        cpu
+        mpu
+        tpu
+        users
+        communities
+        threads
+        dmThreads
+        threadMessages
+        dmMessages
+        date
+      }
       usersGrowth {
         count
         dau
@@ -143,8 +161,26 @@ export const overviewQuery = graphql(META_INFORMATION_QUERY);
 const USER_INFORMATION_QUERY = gql`
   query {
     meta {
-      userGrowth {
-        createdAt
+      usersGrowth {
+        count
+        dau
+        wau
+        mau
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
     }
   }

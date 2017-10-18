@@ -32,3 +32,4 @@ export const SEND_DIGEST_EMAIL = 'send digest email';
 export const PROCESS_INDIVIDUAL_DIGEST = 'send individual digest email';
 export const PROCESS_WEEKLY_DIGEST_EMAIL = 'process weekly digest email';
 export const PROCESS_DAILY_DIGEST_EMAIL = 'process daily digest email';
+export const PROCESS_DAILY_CORE_METRICS = 'process daily core metrics';

@@ -3,12 +3,14 @@ const debug = require('debug')('chronos');
 const createWorker = require('../shared/bull/create-worker');
 import processDataForDigest from './queues/digests';
 import processSingleDigestEmail from './queues/digests/processDigestEmail';
+import processDailyCoreMetrics from './queues/coreMetrics';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_INDIVIDUAL_DIGEST,
+  PROCESS_DAILY_CORE_METRICS,
 } from './queues/constants';
-import { weeklyDigest, dailyDigest } from './jobs';
+import { weeklyDigest, dailyDigest, dailyCoreMetrics } from './jobs';
 
 const PORT = process.env.PORT || 3004;
 
@@ -20,11 +22,13 @@ const server = createWorker({
   [PROCESS_WEEKLY_DIGEST_EMAIL]: processDataForDigest,
   [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
   [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
+  [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
 });
 
 // start the jobs
 weeklyDigest();
 dailyDigest();
+dailyCoreMetrics();
 
 // $FlowIssue
 console.log(
