@@ -64,3 +64,35 @@ export const ThreadListItemSubtitle = styled.h5`
     color: ${props => props.theme.text.default};
   }
 `;
+
+export const Filter = styled.ul`
+  margin: 16px 0;
+  padding: 0;
+  display: flex;
+  list-style-type: none;
+`;
+
+export const FilterOption = styled.li`
+  font-size: 16px;
+  font-weight: ${props => (props.active ? '500' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
+  background: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.bg.wash};
+  border: 1px solid
+    ${props =>
+      props.active ? props.theme.brand.alt : props.theme.border.default};
+  display: flex;
+  padding: 4px 16px;
+  cursor: pointer;
+
+  &:first-of-type {
+    border-radius: 4px 0 0 4px;
+    border-right: none;
+  }
+
+  &:last-of-type {
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+  }
+`;
