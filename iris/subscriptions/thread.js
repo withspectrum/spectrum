@@ -4,7 +4,8 @@
  */
 import { withFilter } from 'graphql-subscriptions';
 import { userIsMemberOfChannel } from './utils';
-import listenToUpdatedThreads from './listeners/thread';
+const { listenToUpdatedThreads } = require('../models/thread');
+import asyncify from '../utils/asyncify';
 import type { DBThread } from '../models/thread';
 
 module.exports = {
@@ -20,7 +21,9 @@ module.exports = {
         };
       },
       subscribe: withFilter(
-        listenToUpdatedThreads,
+        asyncify(listenToUpdatedThreads, err => {
+          throw new Error(err);
+        }),
         async (thread, _, { user }) =>
           await userIsMemberOfChannel(thread.channelId, user && user.id)
       ),

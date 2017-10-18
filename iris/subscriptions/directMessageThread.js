@@ -4,7 +4,10 @@
  */
 import { withFilter } from 'graphql-subscriptions';
 import { userCanViewDirectMessageThread } from './utils';
-import listenToUpdatedDirectMessageThreads from './listeners/directMessageThread';
+const {
+  listenToUpdatedDirectMessageThreads,
+} = require('../models/directMessageThread');
+import asyncify from '../utils/asyncify';
 import type { DBDirectMessageThread } from '../models/directMessageThread';
 
 module.exports = {
@@ -17,7 +20,9 @@ module.exports = {
           new Date(directMessageThread.threadLastActive),
       }),
       subscribe: withFilter(
-        listenToUpdatedDirectMessageThreads,
+        asyncify(listenToUpdatedDirectMessageThreads, err => {
+          throw new Error(err);
+        }),
         (directMessageThread, _, { user }) => {
           if (!user || !directMessageThread) return false;
           return userCanViewDirectMessageThread(
