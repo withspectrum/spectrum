@@ -161,8 +161,26 @@ export const overviewQuery = graphql(META_INFORMATION_QUERY);
 const USER_INFORMATION_QUERY = gql`
   query {
     meta {
-      userGrowth {
-        createdAt
+      usersGrowth {
+        count
+        dau
+        wau
+        mau
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
     }
   }
