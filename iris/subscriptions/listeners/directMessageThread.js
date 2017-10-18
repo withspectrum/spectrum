@@ -2,13 +2,8 @@
 const {
   listenToUpdatedDirectMessageThreads,
 } = require('../../models/directMessageThread');
-const pubsub = require('./pubsub');
-const channels = require('./channels');
+import asyncify from '../../utils/asyncify';
 
-const updatedDirectMessageThread = directMessageThread => {
-  pubsub.publish(channels.DIRECT_MESSAGE_THREAD_UPDATED, directMessageThread);
-};
-
-module.exports = () => {
-  listenToUpdatedDirectMessageThreads(updatedDirectMessageThread);
-};
+module.exports = asyncify(listenToUpdatedDirectMessageThreads, err => {
+  throw new Error(err);
+});
