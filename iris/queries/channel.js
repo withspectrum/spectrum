@@ -84,13 +84,14 @@ module.exports = {
           })),
         }));
     },
-    metaData: ({ id }: { id: string }) => {
-      return getChannelMetaData(id).then(data => {
-        return {
-          threads: data[0],
-          members: data[1],
-        };
-      });
+    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return Promise.all([
+        loaders.channelThreadCount.load(id),
+        loaders.channelMemberCount.load(id),
+      ]).then(([threadCount, memberCount]) => ({
+        threads: threadCount.reduction,
+        members: memberCount.reduction,
+      }));
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
       return getPendingUsersInChannel(id).then(users =>
