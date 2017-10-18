@@ -24,12 +24,16 @@ type Props = {
 class TopThreads extends React.Component<Props> {
   render() {
     const { threads } = this.props;
+    console.log(threads);
 
-    const sortedThreads = threads.slice().sort((a, b) => {
-      const bc = parseInt(b.messageCount, 10);
-      const ac = parseInt(a.messageCount, 10);
-      return bc <= ac ? -1 : 1;
-    });
+    const sortedThreads = threads
+      .slice()
+      .filter(t => !t.channel.isPrivate)
+      .sort((a, b) => {
+        const bc = parseInt(b.messageCount, 10);
+        const ac = parseInt(a.messageCount, 10);
+        return bc <= ac ? -1 : 1;
+      });
 
     return (
       <SectionCard>
