@@ -101,6 +101,17 @@ export const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
+export const getMessageCountInThreads = (
+  threadIds: Array<string>
+): Promise<number> => {
+  return db
+    .table('messages')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .group('threadId')
+    .run();
+};
+
 export const deleteMessage = (userId: string, id: string) => {
   return db
     .table('messages')
