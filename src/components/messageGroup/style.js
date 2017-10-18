@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
 
   @media (max-width: 768px) {
     padding-bottom: 16px;
@@ -26,6 +27,7 @@ export const MessageGroup = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
+  max-width: 100%;
   margin-left: ${props => (props.me ? `0` : `8px`)};
   align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
 `;

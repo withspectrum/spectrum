@@ -1,6 +1,5 @@
 import React from 'react';
-import { renderLinks } from '../../helpers/utils';
-import { toPlainText, toState } from 'shared/draft-utils';
+import redraft from 'redraft';
 import Icon from '../icons';
 import {
   Text,
@@ -11,28 +10,30 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
+  Code,
+  Line,
 } from './style';
+import { toState, toPlainText } from 'shared/draft-utils';
+
+const messageRenderer = {
+  blocks: {
+    'code-block': (children, { keys }) => (
+      <Line key={keys[0]}>{children.map(child => [child, <br />])}</Line>
+    ),
+  },
+};
 
 export const Body = props => {
   const { message, openGallery, pending, type, me } = props;
 
-  // probably needs handling in case message.messageType doesn't exist for some reason... although the switch's default case should handle most errors and just output the text contents of the message object.
-
   switch (type) {
-    case 'draftjs':
     case 'text':
     default:
-      const body =
-        type === 'draftjs'
-          ? toPlainText(toState(JSON.parse(message.body)))
-          : message.body;
       return (
         <Text me={me} pending={pending}>
-          {renderLinks(body)}
+          {message.body}
         </Text>
       );
-    case 'emoji':
-      return <Emoji pending={pending}>{message.body}</Emoji>;
     case 'media':
       return (
         <Image
@@ -43,6 +44,26 @@ export const Body = props => {
             : `?max-w=${window.innerWidth * 0.6}`}`}
         />
       );
+    case 'emoji':
+      return <Emoji pending={pending}>{message}</Emoji>;
+    case 'draftjs':
+      const parsedMessage = JSON.parse(message.body);
+      const isCode = parsedMessage.blocks[0].type === 'code-block';
+      const plaintext = toPlainText(toState(parsedMessage));
+
+      if (isCode) {
+        return (
+          <Code pending={pending}>
+            {redraft(JSON.parse(message.body), messageRenderer)}
+          </Code>
+        );
+      } else {
+        return (
+          <Text me={me} pending={pending}>
+            {plaintext}
+          </Text>
+        );
+      }
   }
 };
 
@@ -73,7 +94,15 @@ const Action = props => {
 };
 
 export const Actions = props => {
-  const { me, reaction, canModerate, deleteMessage, hideIndicator } = props;
+  const {
+    me,
+    reaction,
+    // toggleReaction,
+    // shareable,
+    canModerate,
+    deleteMessage,
+    hideIndicator,
+  } = props;
 
   return (
     <ActionUI me={me}>

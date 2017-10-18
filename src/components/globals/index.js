@@ -84,6 +84,10 @@ export const fontStack = css`
     sans-serif;
 `;
 
+export const monoStack = css`
+  font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
+`;
+
 const spin = keyframes`
   to {transform: rotate(360deg);}
 `;
@@ -477,7 +481,7 @@ export const Tooltip = props => css`
   &:before {
     content: '';
     z-index: ${zIndex.tooltip + 1};
-    border: 5px solid transparent;
+    border: 6px solid transparent;
   }
 
   &:after {
