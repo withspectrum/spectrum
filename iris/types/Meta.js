@@ -38,6 +38,7 @@ const Meta = /* GraphQL */ `
     threadMessagesGrowth: GrowthData
     directMessagesGrowth: GrowthData
     coreMetrics: [CoreMetrics]
+    topThreads: [Thread]
   }
 
   extend type Query {
