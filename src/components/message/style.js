@@ -270,6 +270,16 @@ export const Code = styled(Bubble)`
   font-weight: 500;
   background-color: ${props => props.theme.bg.reverse};
   color: ${props => props.theme.text.reverse};
+  max-width: 100%;
+  overflow-x: scroll;
+  list-style: none;
 `;
 
-export const Line = styled.pre`${monoStack};`;
+export const Line = styled.pre`
+  display: inline-block;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  ${monoStack};
+`;
