@@ -6,27 +6,27 @@ const asyncify = (
   listener: (...args: any[]) => any,
   onError?: Error => void
 ) => {
-  const queue = new Queue();
+  const queues = [];
+  listener((...args) => queues.map(q => q.push(...args)));
 
-  listener(
-    (...args) => console.log('push value onto queue') || queue.push(...args)
-  );
+  return () => {
+    const queue = new Queue();
+    queues.push(queue);
 
-  // I have no idea how to type generators...
-  // $FlowFixMe
-  async function* AsyncGenerator() {
-    try {
-      while (true) {
-        console.log('wait for queue to pop');
-        yield await queue.pop();
-        console.log('queue popped, value pulled');
+    // I have no idea how to type generators...
+    // $FlowFixMe
+    async function* AsyncGenerator() {
+      try {
+        while (true) {
+          yield await queue.pop();
+        }
+      } catch (err) {
+        onError && onError(err);
       }
-    } catch (err) {
-      onError && onError(err);
     }
-  }
 
-  return AsyncGenerator;
+    return AsyncGenerator();
+  };
 };
 
 export default asyncify;
