@@ -58,16 +58,20 @@ export default async (job: DigestJob) => {
   debug('\n ⚙️ Fetched top communities');
 
   // 4
-  const usersPromises = users.map(user =>
-    addQueue(
-      PROCESS_INDIVIDUAL_DIGEST,
-      { user, threadsWithData, topCommunities, timeframe },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    )
-  );
+  const usersPromises = users.map(user => {
+    try {
+      return addQueue(
+        PROCESS_INDIVIDUAL_DIGEST,
+        { user, threadsWithData, topCommunities, timeframe },
+        {
+          removeOnComplete: true,
+          removeOnFail: true,
+        }
+      );
+    } catch (err) {
+      console.log('Error adding to queue: ', err);
+    }
+  });
 
   debug('\n ⚙️ Created individual jobs for each users digest');
   try {
