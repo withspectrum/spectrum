@@ -11,7 +11,11 @@ import {
   __createThreadParticipantsLoader,
 } from './thread';
 import { __createNotificationLoader } from './notification';
-import { __createChannelLoader } from './channel';
+import {
+  __createChannelLoader,
+  __createChannelMemberCountLoader,
+  __createChannelThreadCountLoader,
+} from './channel';
 import {
   __createCommunityLoader,
   __createCommunityBySlugLoader,
@@ -31,6 +35,8 @@ const createLoaders = () => ({
   threadParticipants: __createThreadParticipantsLoader(),
   notification: __createNotificationLoader(),
   channel: __createChannelLoader(),
+  channelMemberCount: __createChannelMemberCountLoader(),
+  channelThreadCount: __createChannelThreadCountLoader(),
   community: __createCommunityLoader(),
   communityBySlug: __createCommunityBySlugLoader(),
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(),
