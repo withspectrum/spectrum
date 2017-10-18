@@ -1,12 +1,8 @@
+// @flow
 const { listenToNewMessages } = require('../../models/message');
-const { storeNotification } = require('../../models/notification');
-const pubsub = require('./pubsub');
-const channels = require('./channels');
+import asyncify from '../../utils/asyncify';
 
-const newMessage = message => {
-  pubsub.publish(channels.MESSAGE_ADDED, message);
-};
-
-module.exports = () => {
-  listenToNewMessages(newMessage);
-};
+module.exports = () =>
+  asyncify(listenToNewMessages, err => {
+    throw new Error(err);
+  })();
