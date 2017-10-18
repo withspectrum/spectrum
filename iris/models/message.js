@@ -72,9 +72,12 @@ export const storeMessage = (
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
-      addQueue('message notification', { message, userId });
+      if (message.threadType === 'directMessageThread') {
+        addQueue('direct message notification', { message, userId });
+      }
 
       if (message.threadType === 'story') {
+        addQueue('message notification', { message, userId });
         addQueue('process reputation event', {
           userId,
           type: 'message created',

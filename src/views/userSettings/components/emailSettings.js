@@ -38,6 +38,13 @@ const parseNotificationTypes = notifications => {
             "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
           display: 'flex-start',
         };
+      case 'newDirectMessage':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label: 'Email me when I receive new direct messages.',
+          display: 'center',
+        };
       case 'newThreadCreated':
         return {
           type,

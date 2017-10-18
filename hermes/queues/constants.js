@@ -15,6 +15,7 @@ export const SEND_DIGEST_EMAIL = 'send digest email';
 export const SEND_EMAIL_VALIDATION_EMAIL = 'send email validation email';
 
 export const NEW_MESSAGE_TEMPLATE = 2266041;
+export const NEW_DIRECT_MESSAGE_TEMPLATE = 2911541;
 export const NEW_USER_WELCOME_TEMPLATE = 2462726;
 export const COMMUNITY_INVITE_TEMPLATE = 2302401;
 export const NEW_COMMUNITY_WELCOME_TEMPLATE = 2600301;
@@ -30,6 +31,8 @@ export const TYPE_DAILY_DIGEST = 'dailyDigest';
 export const TYPE_WEEKLY_DIGEST = 'weeklyDigest';
 export const TYPE_NEW_THREAD_CREATED = 'newThreadCreated';
 export const TYPE_NEW_MESSAGE_IN_THREAD = 'newMessageInThreads';
+export const TYPE_NEW_DIRECT_MESSAGE = 'newDirectMessage';
 export const TYPE_MUTE_CHANNEL = 'muteChannel';
 export const TYPE_MUTE_COMMUNITY = 'muteCommunity';
 export const TYPE_MUTE_THREAD = 'muteThread';
+export const TYPE_MUTE_DIRECT_MESSAGE_THREAD = 'muteDirectMessageThread';
