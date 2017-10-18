@@ -1,6 +1,7 @@
 // @flow
+import React from 'react';
 import styled from 'styled-components';
-import { Gradient, zIndex, Transition, Tooltip } from '../globals';
+import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
 
 export const Indicator = styled.div`
   position: absolute;
@@ -261,4 +262,24 @@ export const Image = styled.img`
       ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
           .default}`
       : ''};
+`;
+
+export const Code = styled(Bubble)`
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background-color: ${props => props.theme.bg.reverse};
+  color: ${props => props.theme.text.reverse};
+  max-width: 100%;
+  overflow-x: scroll;
+  list-style: none;
+`;
+
+export const Line = styled.pre`
+  display: inline-block;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  ${monoStack};
 `;

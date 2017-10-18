@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import Goop from '../../../components/goop';
@@ -78,7 +79,9 @@ export const Grayscale = styled(Default)`
   color: ${({ theme }) => theme.text.reverse};
 `;
 
-const Theme = props => {
+type ThemeProps = Object;
+
+const Theme = (props: ThemeProps) => {
   switch (props.background) {
     default:
       return (

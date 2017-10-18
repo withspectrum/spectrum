@@ -50,6 +50,7 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
+  max-width: 100%;
 `;
 
 export const ChatInputWrapper = styled(FlexCol)`
@@ -235,6 +236,7 @@ export const Edited = styled(Timestamp)`margin-left: 4px;`;
 
 export const ChatWrapper = styled.div`
   width: 100%;
+  max-width: 100%;
   flex: none;
 `;
 
