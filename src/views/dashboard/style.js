@@ -27,8 +27,8 @@ export const Wrapper = styled.div`
 export const InboxWrapper = styled.div`
   display: flex;
   width: 100%;
-  max-width: 440px;
-  min-width: 320px;
+  max-width: 400px;
+  min-width: 400px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -38,6 +38,7 @@ export const InboxWrapper = styled.div`
 
   @media (max-width: 768px) {
     max-width: 100%;
+    min-width: 100%;
     flex: auto;
     border-right: none;
   }
