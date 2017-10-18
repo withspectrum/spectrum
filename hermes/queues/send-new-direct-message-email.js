@@ -20,7 +20,7 @@ type SendNewMessageEmailJobData = {
   user: {
     displayName: string,
     username: string,
-    userId: string,
+    id: string,
     name: string,
   },
   thread: {
@@ -48,12 +48,12 @@ export default async (job: SendNewMessageEmailJob) => {
   const subject = `New direct message from ${user.name} on Spectrum`;
 
   const unsubscribeToken = await generateUnsubscribeToken(
-    user.userId,
+    recipient.userId,
     TYPE_NEW_DIRECT_MESSAGE
   );
 
   const muteThreadToken = await generateUnsubscribeToken(
-    user.userId,
+    recipient.userId,
     TYPE_MUTE_DIRECT_MESSAGE_THREAD,
     thread.id
   );

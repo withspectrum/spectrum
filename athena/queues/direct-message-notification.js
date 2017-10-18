@@ -31,7 +31,7 @@ export default async (job: JobData) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
 
   debug(
-    `new job: message sent by ${currentUserId} in thread #${incomingMessage.threadId}`
+    `new job: direct message sent by ${currentUserId} in thread #${incomingMessage.threadId}`
   );
 
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
@@ -83,6 +83,11 @@ export default async (job: JobData) => {
     recipient => recipient.userId !== currentUserId
   );
 
+  if (!filteredRecipients || filteredRecipients.length === 0) {
+    debug('No recipients for this DM notification');
+    return;
+  }
+
   // get raw data for the email
   const thread = JSON.parse(context.payload);
   const message = JSON.parse(entity.payload);
@@ -100,7 +105,7 @@ export default async (job: JobData) => {
         thread: {
           content: {
             // Contruct title out of direct message thread users
-            title: `your conversation with ${sentencify(
+            title: `Conversation with ${sentencify(
               recipients
                 .filter(userThread => userThread.userId !== recipient.userId)
                 .map(user => user.name)

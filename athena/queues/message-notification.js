@@ -74,6 +74,11 @@ export default async (job: JobData) => {
     recipient => recipient.userId !== currentUserId
   );
 
+  if (!filteredRecipients || filteredRecipients.length === 0) {
+    debug('No recipients for this message notification');
+    return;
+  }
+
   // get raw data for the email
   const thread = JSON.parse(context.payload);
   const message = JSON.parse(entity.payload);
@@ -96,6 +101,7 @@ export default async (job: JobData) => {
     );
 
     // store or update the notification in the db to trigger a ui update in app
+    debug('Updating the notification record in the db');
     return dbMethod(notification.id, recipient.userId);
   });
 

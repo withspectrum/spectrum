@@ -12,6 +12,7 @@ const emailRouter = Router();
 import { updateUserEmail } from '../../models/user';
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
+import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
 import { toggleUserChannelNotifications } from '../../models/usersChannels';
 import { getChannelsByCommunity } from '../../models/channel';
 import { processInvoicePaid } from '../webhooks';
@@ -52,6 +53,10 @@ emailRouter.get('/unsubscribe', async (req, res) => {
       );
   }
 
+  console.log('userId', userId);
+  console.log('type', type);
+  console.log('dataId', dataId);
+
   // and send a database request to unsubscribe from a particular email type
   try {
     switch (type) {
@@ -59,6 +64,7 @@ emailRouter.get('/unsubscribe', async (req, res) => {
       case 'weeklyDigest':
       case 'newThreadCreated':
       case 'newMessageInThreads':
+      case 'newDirectMessage':
         return unsubscribeUserFromEmailNotification(userId, type).then(() =>
           res
             .status(200)
@@ -102,6 +108,18 @@ emailRouter.get('/unsubscribe', async (req, res) => {
             .status(200)
             .send(
               'You will no longer recieve emails about new messages in this thread.'
+            )
+        );
+      case 'muteDirectMessageThread':
+        return updateDirectMessageThreadNotificationStatusForUser(
+          dataId,
+          userId,
+          false
+        ).then(() =>
+          res
+            .status(200)
+            .send(
+              'You will no longer recieve emails about new messages in this direct message conversation.'
             )
         );
       default: {
