@@ -18,7 +18,7 @@ export default ({
     <Icon
       glyph="photo"
       tipLocation={tipLocation ? tipLocation : 'top-right'}
-      tipText="Upload Photo"
+      tipText="Upload photo"
     />
   </MediaLabel>
 );
