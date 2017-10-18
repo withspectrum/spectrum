@@ -55,14 +55,26 @@ class TopThreads extends React.Component<Props, State> {
     }
 
     if (sortedBy === 'communityId') {
+      const obj = {};
       sortedThreads = threads
         .slice()
         .filter(t => !t.channel.isPrivate)
-        .sort((a, b) => {
-          const bc = b.community.id;
-          const ac = b.community.id;
-          return bc <= ac ? -1 : 1;
+        .map(t => {
+          if (obj[t.community.id]) {
+            obj[t.community.id] = [...obj[t.community.id], t];
+          } else {
+            obj[t.community.id] = [t];
+          }
+          return t;
         });
+
+      const arr = [];
+      Object.keys(obj).map(k => {
+        const matches = sortedThreads.filter(t => t.community.id === k);
+        arr.push(...matches);
+      });
+
+      sortedThreads = arr;
     }
 
     return (
