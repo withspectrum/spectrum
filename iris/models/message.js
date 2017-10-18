@@ -103,7 +103,7 @@ export const getMessageCount = (threadId: string): Promise<number> => {
 
 export const getMessageCountInThreads = (
   threadIds: Array<string>
-): Promise<number> => {
+): Promise<Array<mixed>> => {
   return db
     .table('messages')
     .getAll(...threadIds, { index: 'threadId' })
