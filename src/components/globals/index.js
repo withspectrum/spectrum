@@ -56,7 +56,6 @@ export const zIndex = new function() {
   this.card = this.base + 1; // all cards should default to one layer above the base content
   this.loading = this.card + 1; // loading elements should never appear behind cards
   this.avatar = this.card + 1; // avatars should never appear behind cards
-  this.tooltip = this.card + 1; // tooltips should never appear behind cards
   this.form = this.card + 1; // form elements should never appear behind cards
   this.search = this.form; // search is a type of form and should appear at the same level
   this.dmInput = this.form;
@@ -77,6 +76,7 @@ export const zIndex = new function() {
   this.gallery = this.modal + 1; // gallery should never appear behind a modal
 
   this.toast = 6000; // toasts should be visible in every context
+  this.tooltip = this.toast + 1; // tooltips should always be on top
 }();
 
 export const fontStack = css`
