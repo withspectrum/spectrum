@@ -267,7 +267,7 @@ class ChatInput extends Component {
           tipText={'Write code'}
           tipLocation={'top'}
           style={{ margin: '0 4px' }}
-          color={'text.placeholder'}
+          color={code ? 'brand.alt' : 'text.placeholder'}
           hoverColor={'brand.alt'}
         />
         <Form focus={isFocused}>
