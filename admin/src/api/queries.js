@@ -1,5 +1,6 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { threadInfoFragment } from './fragments/thread/threadInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 const META_INFORMATION_QUERY = gql`
@@ -161,8 +162,26 @@ export const overviewQuery = graphql(META_INFORMATION_QUERY);
 const USER_INFORMATION_QUERY = gql`
   query {
     meta {
-      userGrowth {
-        createdAt
+      usersGrowth {
+        count
+        dau
+        wau
+        mau
+        weeklyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        monthlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
+        quarterlyGrowth {
+          growth
+          currentPeriodCount
+          prevPeriodCount
+        }
       }
     }
   }
@@ -202,4 +221,26 @@ export const GET_USER_BY_USERNAME_OPTIONS = {
 export const getUserByUsername = graphql(
   GET_USER_BY_USERNAME_QUERY,
   GET_USER_BY_USERNAME_OPTIONS
+);
+
+export const GET_TOP_THREADS_QUERY = gql`
+  query getTopThreads {
+    meta {
+      topThreads {
+        ...threadInfo
+      }
+    }
+  }
+  ${threadInfoFragment}
+`;
+
+export const GET_TOP_THREADS_OPTIONS = {
+  options: () => ({
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const topThreadsQuery = graphql(
+  GET_TOP_THREADS_QUERY,
+  GET_TOP_THREADS_OPTIONS
 );

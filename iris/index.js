@@ -17,7 +17,6 @@ import schema from './schema';
 import { init as initPassport } from './authentication.js';
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
-import listeners from './subscriptions/listeners';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -70,7 +69,6 @@ const boot = () => {
   server.listen(PORT);
 
   // Start database listeners
-  listeners.start();
   console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 };
 

@@ -67,6 +67,29 @@ class Editor extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      plugins: [],
+      editorState: props.initialState || EditorState.createEmpty(),
+    };
+  }
+
+  componentWillMount() {
+    this.setPlugins();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.editorState !== nextProps.editorState ||
+      this.props !== nextProps
+    );
+  }
+
+  componentDidUpdate() {
+    this.setPlugins();
+  }
+
+  setPlugins = () => {
+    const props = this.props;
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
     const linkifyPlugin = createLinkifyPlugin({
@@ -91,7 +114,7 @@ class Editor extends React.Component {
 
     const singleLine = createSingleLinePlugin();
 
-    this.state = {
+    this.setState({
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && prismPlugin,
@@ -109,8 +132,8 @@ class Editor extends React.Component {
       inserting: false,
       embedding: false,
       embedUrl: '',
-    };
-  }
+    });
+  };
 
   onChange = editorState => {
     this.setState({
@@ -213,7 +236,9 @@ class Editor extends React.Component {
             plugins={this.state.plugins}
             handleDroppedFiles={this.handleDroppedFiles}
             blockRenderMap={
-              singleLine === true && this.state.singleLineBlockRenderMap
+              singleLine === true
+                ? this.state.singleLineBlockRenderMap
+                : undefined
             }
             ref={editor => {
               this.editor = editor;
@@ -291,7 +316,9 @@ class Editor extends React.Component {
               plugins={this.state.plugins}
               handleDroppedFiles={this.handleDroppedFiles}
               blockRenderMap={
-                singleLine === true && this.state.singleLineBlockRenderMap
+                singleLine === true
+                  ? this.state.singleLineBlockRenderMap
+                  : undefined
               }
               ref={editor => {
                 this.editor = editor;

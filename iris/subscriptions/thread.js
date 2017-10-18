@@ -3,9 +3,9 @@
  * Define the thread subscription resolvers
  */
 import { withFilter } from 'graphql-subscriptions';
-import pubsub from './listeners/pubsub';
-import { THREAD_UPDATED } from './listeners/channels';
 import { userIsMemberOfChannel } from './utils';
+const { listenToUpdatedThreads } = require('../models/thread');
+import asyncify from '../utils/asyncify';
 import type { DBThread } from '../models/thread';
 
 module.exports = {
@@ -21,7 +21,9 @@ module.exports = {
         };
       },
       subscribe: withFilter(
-        () => pubsub.asyncIterator(THREAD_UPDATED),
+        asyncify(listenToUpdatedThreads, err => {
+          throw new Error(err);
+        }),
         async (thread, _, { user }) =>
           await userIsMemberOfChannel(thread.channelId, user && user.id)
       ),

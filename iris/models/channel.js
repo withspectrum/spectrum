@@ -152,6 +152,34 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
   return Promise.all([getThreadCount, getMemberCount]);
 };
 
+type GroupedCount = {
+  group: string,
+  reduction: number,
+};
+
+const getChannelsThreadCounts = (
+  channelIds: Array<string>
+): Promise<Array<GroupedCount>> => {
+  return db
+    .table('threads')
+    .getAll(...channelIds, { index: 'channelId' })
+    .group('channelId')
+    .count()
+    .run();
+};
+
+const getChannelsMemberCounts = (
+  channelIds: Array<string>
+): Promise<Array<GroupedCount>> => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .filter({ isBlocked: false, isPending: false })
+    .group('channelId')
+    .count()
+    .run();
+};
+
 export type CreateChannelArguments = {
   input: {
     communityId: string,
@@ -309,5 +337,7 @@ module.exports = {
   editChannel,
   deleteChannel,
   getChannelMemberCount,
+  getChannelsMemberCounts,
+  getChannelsThreadCounts,
   getChannels,
 };

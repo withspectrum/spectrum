@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -27,9 +28,11 @@ import {
 
 // const Link = styled.a``;
 
-const Section = props => <Theme {...props}>{props.children}</Theme>;
+type Props = Object;
 
-export const Overview = props => {
+const Section = (props: Props) => <Theme {...props}>{props.children}</Theme>;
+
+export const Overview = (props: Props) => {
   const Text = styled(FlexCol)`
     margin: 60px 16px 120px 16px;
     text-align: center;
@@ -112,7 +115,7 @@ export const Overview = props => {
   );
 };
 
-export const Centralized = props => {
+export const Centralized = (props: Props) => {
   const ThisContent = styled(Content)`
     img {
       margin: 24px 0;
@@ -183,7 +186,7 @@ export const Centralized = props => {
   );
 };
 
-export const CommunitySearch = props => {
+export const CommunitySearch = (props: Props) => {
   const ThisContent = styled(Content)`
     flex-direction: column;
     width: 640px;
@@ -227,7 +230,7 @@ export const CommunitySearch = props => {
   );
 };
 
-export const Chat = props => {
+export const Chat = (props: Props) => {
   const ThisContent = styled(Content)`
     overflow: hidden;
     margin: 40px 16px;
@@ -293,7 +296,7 @@ export const Chat = props => {
   );
 };
 
-export const Sell = props => {
+export const Sell = (props: Props) => {
   const Text = styled(FlexCol)`
     align-items: center;
     margin: 40px 0;
@@ -370,7 +373,7 @@ export const Sell = props => {
   );
 };
 
-export const Yours = props => {
+export const Yours = (props: Props) => {
   const ThisCopy = styled(Copy)`
     max-width: 640px;
     margin-top: 16px;
@@ -462,7 +465,7 @@ export const Yours = props => {
   );
 };
 
-export const PageFooter = props => {
+export const PageFooter = (props: Props) => {
   return (
     <Footer>
       <FlexRow>

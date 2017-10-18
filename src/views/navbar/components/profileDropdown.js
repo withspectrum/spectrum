@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,9 @@ const UserProfileDropdownListItem = styled.li`
   }
 `;
 
-export const ProfileDropdown = props => {
+type ProfileProps = Object;
+
+export const ProfileDropdown = (props: ProfileProps) => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
