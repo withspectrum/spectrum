@@ -23,15 +23,9 @@ export const threadInfoFragment = gql`
     }
     channel {
       ...channelInfo
-      ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
     community {
-      id
-      name
-      slug
+      ...communityInfo
     }
     isPublished
     isLocked
@@ -50,8 +44,6 @@ export const threadInfoFragment = gql`
     }
   }
   ${userInfoFragment}
-  ${userInfoFragment}
-  ${channelMetaDataFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
 `;

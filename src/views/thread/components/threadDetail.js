@@ -149,14 +149,13 @@ class ThreadDetailPure extends Component {
 
     const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner =
-      thread.channel.community.communityPermissions.isOwner;
+    const isCommunityOwner = thread.community.communityPermissions.isOwner;
 
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread
-        .channel.community
+        .community
         .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
@@ -364,8 +363,8 @@ class ThreadDetailPure extends Component {
 
   togglePinThread = () => {
     const { pinThread, thread, dispatch } = this.props;
-    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
-    const communityId = thread.channel.community.id;
+    const isPinned = thread.community.pinnedThreadId === thread.id;
+    const communityId = thread.community.id;
 
     if (thread.channel.isPrivate) {
       return dispatch(
@@ -422,9 +421,8 @@ class ThreadDetailPure extends Component {
 
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner =
-      thread.channel.community.communityPermissions.isOwner;
-    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
+    const isCommunityOwner = thread.community.communityPermissions.isOwner;
+    const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited
@@ -440,13 +438,11 @@ class ThreadDetailPure extends Component {
             ) : (
               <Icon glyph="view-back" size={16} />
             )}
-            <Link to={`/${thread.channel.community.slug}`}>
-              {thread.channel.community.name}
+            <Link to={`/${thread.community.slug}`}>
+              {thread.community.name}
             </Link>
             <span>/</span>
-            <Link
-              to={`/${thread.channel.community.slug}/${thread.channel.slug}`}
-            >
+            <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
               {thread.channel.name}
             </Link>
           </Location>
@@ -509,7 +505,7 @@ class ThreadDetailPure extends Component {
                           tipText={
                             isPinned
                               ? 'Un-pin thread'
-                              : `Pin in ${thread.channel.community.name}`
+                              : `Pin in ${thread.community.name}`
                           }
                           tipLocation="top-left"
                           onClick={this.togglePinThread}
