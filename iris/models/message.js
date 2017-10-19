@@ -109,6 +109,7 @@ export const getMessageCountInThreads = (
     .getAll(...threadIds, { index: 'threadId' })
     .filter(db.row.hasFields('deletedAt').not())
     .group('threadId')
+    .count()
     .run();
 };
 

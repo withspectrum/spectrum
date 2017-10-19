@@ -163,9 +163,7 @@ module.exports = {
     ) => {
       return loaders.threadMessageCount
         .load(id)
-        .then(
-          messageCount => (messageCount ? messageCount.reduction.length : 0)
-        );
+        .then(messageCount => (messageCount ? messageCount.reduction : 0));
     },
   },
 };
