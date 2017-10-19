@@ -142,6 +142,7 @@ export const getUser = graphql(
 		query getUser($username: String) {
 			user(username: $username) {
         ...userInfo
+        isPro
         totalReputation
         ...userCommunities
       }

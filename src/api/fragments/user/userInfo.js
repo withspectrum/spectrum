@@ -10,7 +10,6 @@ export const userInfoFragment = gql`
     description
     website
     username
-    isPro
     isOnline
   }
 `;

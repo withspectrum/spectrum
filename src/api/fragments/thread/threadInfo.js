@@ -14,6 +14,7 @@ export const threadInfoFragment = gql`
     receiveNotifications
     creator {
       ...userInfo
+      isPro
       contextPermissions {
         reputation
         isOwner

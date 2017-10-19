@@ -404,6 +404,7 @@ export const getChannelMembersQuery = graphql(
             cursor
             node {
               ...userInfo
+              isPro
             }
           }
         }
