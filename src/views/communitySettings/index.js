@@ -30,7 +30,7 @@ class CommunitySettings extends React.Component<Props> {
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');
     const activeRoute = pathname.substr(lastIndex + 1);
-    const communitySlug = match.params.communitySlug;
+    const communitySlug = community && community.slug;
 
     if (community) {
       if (!community.communityPermissions.isOwner) {

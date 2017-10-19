@@ -12,6 +12,7 @@ import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
 import { SectionsContainer, Column } from '../communitySettings/style';
+import { Loading } from '../../components/loading';
 
 type Props = {
   community: {
@@ -30,7 +31,7 @@ type State = {
   timeframe: 'weekly' | 'monthly',
 };
 
-class CommunitySettings extends React.Component<Props, State> {
+class CommunityAnalytics extends React.Component<Props, State> {
   upgrade = () => {
     const { dispatch, currentUser, data: { community } } = this.props;
     dispatch(
@@ -39,7 +40,7 @@ class CommunitySettings extends React.Component<Props, State> {
   };
 
   render() {
-    const { community, communitySlug } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       if (!community.isPro) {
@@ -61,15 +62,19 @@ class CommunitySettings extends React.Component<Props, State> {
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth communitySlug={communitySlug} />
-            <TopMembers communitySlug={communitySlug} />
+            <MemberGrowth communitySlug={community.slug} />
+            <TopMembers communitySlug={community.slug} />
           </Column>
           <Column>
-            <ConversationGrowth communitySlug={communitySlug} />
-            <TopAndNewThreads communitySlug={communitySlug} />
+            <ConversationGrowth communitySlug={community.slug} />
+            <TopAndNewThreads communitySlug={community.slug} />
           </Column>
         </SectionsContainer>
       );
+    }
+
+    if (isLoading) {
+      return <Loading />;
     }
 
     return (
@@ -93,5 +98,5 @@ class CommunitySettings extends React.Component<Props, State> {
 
 const map = state => ({ currentUser: state.users.currentUser });
 export default compose(connect(map), getThisCommunity, viewNetworkHandler)(
-  CommunitySettings
+  CommunityAnalytics
 );

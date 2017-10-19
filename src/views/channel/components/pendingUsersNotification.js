@@ -9,6 +9,7 @@ import { getPendingUsersQuery } from '../../../api/channel';
 import { PendingUserNotificationContainer, PendingUserCount } from './style';
 
 const PendingUsersNotificationPure = ({ data: { channel } }) => {
+  console.log(channel);
   if (!channel.pendingUsers || channel.pendingUsers.length === 0) return null;
 
   return (

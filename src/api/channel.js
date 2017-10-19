@@ -245,12 +245,16 @@ export const getPendingUsersQuery = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
+        community {
+          ...communityInfo
+        }
         pendingUsers {
           ...userInfo
         }
       }
 		}
     ${userInfoFragment}
+    ${communityInfoFragment}
     ${channelInfoFragment}
 	`,
   getPendingUsersOptions
