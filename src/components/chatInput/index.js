@@ -61,10 +61,13 @@ class ChatInput extends Component {
 
   toggleCodeMessage = () => {
     const { onChange, state } = this.props;
-    onChange(changeCurrentBlockType(state, 'code-block', ''));
-    this.setState(prevState => ({
-      code: !prevState.code,
-    }));
+    const { code } = this.state;
+    onChange(
+      changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+    );
+    this.setState({
+      code: !code,
+    });
   };
 
   submit = e => {
