@@ -6,11 +6,11 @@ export const userInfoFragment = gql`
     profilePhoto
     coverPhoto
     name
+    firstName
     description
     website
     username
     isPro
     isOnline
-    totalReputation
   }
 `;

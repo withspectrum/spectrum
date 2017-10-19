@@ -169,6 +169,7 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
+      totalReputation
       communityConnection {
         pageInfo {
           hasNextPage

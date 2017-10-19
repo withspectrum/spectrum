@@ -265,6 +265,7 @@ export const getCommunityMembersQuery = graphql(
             cursor
             node {
               ...userInfo
+              totalReputation
               contextPermissions {
                 reputation
                 isOwner

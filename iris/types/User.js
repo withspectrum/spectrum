@@ -47,7 +47,7 @@ const User = /* GraphQL */ `
 		cursor: String!
 		node: Thread!
 	}
-	
+
 	type NotificationKindSettings {
 		email: Boolean
 	}
@@ -71,6 +71,7 @@ const User = /* GraphQL */ `
 	type User {
 		id: ID!
 		name: String
+		firstName: String
 		description: String
 		website: String
 		username: String

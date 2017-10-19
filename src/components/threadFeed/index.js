@@ -190,6 +190,15 @@ class ThreadFeedPure extends Component {
     if (this.props.setThreadsStatus) {
       this.props.setThreadsStatus();
     }
+
+    if (this.props.hasThreads) {
+      this.props.hasThreads();
+    }
+
+    if (this.props.hasNoThreads) {
+      this.props.hasNoThreads();
+    }
+
     if (this.props.isNewAndOwned) {
       return <UpsellState community={this.props.community} />;
     } else if (isCommunityMember || this.props.viewContext === 'channel') {

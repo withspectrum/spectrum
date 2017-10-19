@@ -124,6 +124,7 @@ export const getCurrentUserProfile = graphql(
     query getCurrentUserProfile {
 			user: currentUser {
         ...userInfo
+        totalReputation
         ...userCommunities
       }
 		}
