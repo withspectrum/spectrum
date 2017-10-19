@@ -66,7 +66,7 @@ export const getCommunitiesWithMinimumMembers = (
             .filter({ isMember: true })
             .eqJoin('userId', db.table('users'))
             .zip()
-            .filter(db.row('lastActive').during(db.now().sub(range), db.now()))
+            .filter(db.row('lastSeen').during(db.now().sub(range), db.now()))
             .count()
             .run()
             .then(count => {
