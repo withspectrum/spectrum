@@ -3,7 +3,6 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
-import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
@@ -143,12 +142,10 @@ export const getUser = graphql(
 		query getUser($username: String) {
 			user(username: $username) {
         ...userInfo
-        ...userMetaData
         ...userCommunities
       }
 		}
     ${userInfoFragment}
-    ${userMetaDataFragment}
     ${userCommunitiesFragment}
 	`,
   profileQueryOptions

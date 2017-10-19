@@ -47,11 +47,7 @@ const User = /* GraphQL */ `
 		cursor: String!
 		node: Thread!
 	}
-
-	type UserMetaData {
-		threads: Int
-	}
-
+	
 	type NotificationKindSettings {
 		email: Boolean
 	}

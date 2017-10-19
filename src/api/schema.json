@@ -465,11 +465,6 @@
         "kind": "ENUM",
         "name": "__DirectiveLocation",
         "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UserMetaData",
-        "possibleTypes": null
       }
     ]
   }
