@@ -16,6 +16,15 @@ type ThreadProps = {
   },
   createdAt: Date,
   messageCount: number,
+  community: {
+    name: string,
+    slug: string,
+    profilePhoto: string,
+  },
+  channel: {
+    name: string,
+    slug: string,
+  },
 };
 
 type Props = {
@@ -30,6 +39,8 @@ class ThreadListItem extends React.Component<Props> {
         creator: { name, username },
         content: { title },
         messageCount,
+        community,
+        channel,
       },
     } = this.props;
 
@@ -47,6 +58,17 @@ class ThreadListItem extends React.Component<Props> {
           By{' '}
           <a href={`https://spectrum.chat/users/${username}`} target="_blank">
             {name}
+          </a>{' '}
+          ·{' '}
+          <a href={`https://spectrum.chat/${community.slug}`} target="_blank">
+            {community.name}
+          </a>{' '}
+          ·{' '}
+          <a
+            href={`https://spectrum.chat/${community.slug}/${channel.slug}`}
+            target="_blank"
+          >
+            {channel.name}
           </a>
         </ThreadListItemSubtitle>
       </StyledThreadListItem>

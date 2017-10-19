@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{threads.0.replies.0.sender.name}} replied to your thread</title>
+    <title>New direct message on Spectrum!</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
@@ -22,7 +22,7 @@
       height: 100%;
       margin: 0;
       line-height: 1.4;
-      background-color: #F2F5F9;
+      background-color: #FFF;
       color: #171a21;
       -webkit-text-size-adjust: none;
     }
@@ -61,7 +61,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #F2F5f9;
+      background-color: #FFF;
     }
 
     .email-content {
@@ -77,18 +77,18 @@
 
     .email-body {
       width: 100%;
+      max-width: 560px;
       margin: 0;
       padding: 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      border-top: 1px solid #DFE7EF;
-      border-bottom: 1px solid #DFE7EF;
       background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       margin: 0 auto;
       padding: 0;
       -premailer-width: 560px;
@@ -160,25 +160,25 @@
     }
 
     .post {
-      padding: 32px 0 24px;
+      padding: 24px 0 24px;
       border-bottom: 2px solid #DFE7EF;
     }
 
     .reply-container {
-      margin-top: 16px;
       display: block;
+      margin-top: 16px;
     }
 
     .header-cell {
-      padding: 32px 32px 0 32px
+      padding: 24px;
     }
 
     .content-cell {
-      padding: 32px;
+      padding: 8px 24px;
     }
 
     .footer-cell {
-      padding: 0 32px 32px 32px;
+      padding: 24px;
     }
 
     .preheader {
@@ -198,6 +198,7 @@
       width: 40px;
       border-radius: 20px;
       margin-right: 8px;
+      vertical-align: middle;
     }
 
     /* Utilities ------------------------------ */
@@ -228,6 +229,10 @@
 
     /* Buttons ------------------------------ */
 
+    .button-group {
+      margin: 32px 0;
+    }
+
     .button {
       background-color: #7B16FF;
       display: inline-block;
@@ -239,11 +244,25 @@
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
+      font-size: 16px;
 
       &:hover {
         text-decoration: none;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       }
+    }
+
+    .button.feed {
+      margin-top: 16px;
+    }
+
+    .button.button-twitter {
+      background-color: #00ACED;
+    }
+
+    .button.button-facebook {
+      background-color: #3B5998;
+      margin-left: 8px;
     }
 
     /* Type ------------------------------ */
@@ -277,15 +296,17 @@
 
     p {
       margin: 0;
+      margin-bottom: 16px;
       padding: 0;
       color: #171A21;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.5em;
       text-align: left;
     }
 
     p.sub {
       color: #747E8D;
+      font-size: 14px;
     }
 
     p.reply {
@@ -304,50 +325,81 @@
       line-height: 1.6;
     }
 
+    p.emoji.large {
+      font-size: 48px;
+    }
+
     span.name {
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 400;
+      line-height: 1;
       color: #747E8D;
+      font-style: normal;
+      vertical-align: bottom;
+    }
+
+    span.name-large {
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+      color: #222;
+      font-style: normal;
+      vertical-align: top;
+    }
+
+    .custom-message {
+      padding: 8px 16px;
+      margin: 16px 0 32px 0px;
+      border-left: 4px solid #7B16FF;
+      font-size: 18px;
+      display: inline-block;
+    }
+
+    .custom-message p {
+      color: #222;
+      margin-top: 8px;
+      margin-left: 8px;
     }
 
     h1.title {
-      margin-bottom: 16px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #171A21;
+      margin-bottom: 24px;
     }
 
-    .button.feed {
-      margin-top: 16px;
+    h2.section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #171A21;
+      margin-bottom: 8px;
     }
 
-    .button.feed.unsubscribe {
-      background: none;
-      color: #747E8D;
-      margin-left: 16px;
-      font-weight: 400;
-      box-shadow: none;
+    .section-divider {
+      margin: 32px 0;
+      border-top: 2px solid #DFE7EF;
+      display: block;
+      width: 100%;
+      height: 2px;
+    }
+
+    .small-link {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .thread-title-preview {
+      margin-bottom: 0;
+    }
+
+    .thread-title-preview a {
+      font-size: 16px;
+      font-weight: 800;
+      color: #171A21;
     }
     </style>
   </head>
   <body>
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      The conversation has continued while you were away - jump back in!
-    </div>
-
-    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-    </div>
-
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center">
@@ -360,63 +412,52 @@
                   <tr>
                     <td class="header-cell">
                       <p>Hey there!</p>
-                      <p>You've got new replies on Spectrum - check 'em out 👇</p>
+                      <p>You have a new direct messages on Spectrum.</p>
                     </td>
                   </tr>
                   <tr>
                     <td class="content-cell">
-                      <div class="divider"></div>
+                      <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+                            <a href="https://spectrum.chat/{{thread.path}}"><h2 class="title">{{thread.content.title}}</h2></a>
+                          </td>
+                        </tr>
 
-                      {{#each threads}}
-                        <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td>
-                              <a href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}"><h2 class="title">{{title}}</h2></a>
+                          <tr class="reply-container">
+                            <td class="attributes_item">
+                              <table>
+                                <tr>
+                                  <td valign="top">
+                                    <a href="https://spectrum.chat/{{thread.path}}">
+                                      <img class="avatar" src="{{user.profilePhoto}}" />
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <table>
+                                      <tr>
+                                        <td>
+                                          <a href="https://spectrum.chat/{{thread.path}}"><span class="name">{{user.name}}</span></a>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <a href="https://spectrum.chat/{{thread.path}}"><p class="reply">{{{message.content.body}}}</p></a>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                           </tr>
-                          {{#each replies}}
-                            <tr class="reply-container">
-                              <td class="attributes_item">
-                                <table>
-                                  <tr>
-                                    <td valign="top">
-                                      <a href="https://spectrum.chat/{{../../path}}{{^../../path}}thread/{{../id}}{{/../../path}}">
-                                        <img class="avatar" src="{{sender.profilePhoto}}" />
-                                      </a>
-                                    </td>
-                                    <td>
-                                      <table>
-                                        <tr>
-                                          <td>
-                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><span class="name">{{sender.name}}</span></a>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td>
-                                            <table width="100%">
-                                              <tr>
-                                                <td>
-                                                  <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><p class="reply">{{{content.body}}}</p></a>
-                                                </td>
-                                              </tr>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
-                          {{/each}}
-                            <tr>
-                              <td>
-                                <a class="feed button" href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}">Go to thread</a>
-                                <a class="feed button unsubscribe" href="https://spectrum.chat/api/email/unsubscribe?token={{muteThreadToken}}">Mute thread</a>
-                              </td>
-                            </tr>
-                        </table>
-                      {{/each}}
+
+                          <tr>
+                            <td>
+                              <a class="feed button" href="https://spectrum.chat/{{thread.path}}">Go to conversation</a>
+                            </td>
+                          </tr>
+                      </table>
                     </td>
                   </tr>
                   <tr>
@@ -437,8 +478,14 @@
                 </p>
 
                 <ul>
+                  {{#muteThreadToken}}
+                    <li>
+                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Mute this conversation</a>
+                    </li>
+                  {{/muteThreadToken}}
+
                   <li>
-                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Mute all new message notification emails</a>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Mute all new direct message notification emails</a>
                   </li>
 
                   {{#username}}
