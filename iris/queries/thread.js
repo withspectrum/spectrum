@@ -156,6 +156,14 @@ module.exports = {
         },
       };
     },
-    messageCount: ({ id }: { id: string }) => getMessageCount(id),
+    messageCount: (
+      { id }: { id: string },
+      __: any,
+      { loaders }: GraphQLContext
+    ) => {
+      return loaders.threadMessageCount
+        .load(id)
+        .then(messageCount => (messageCount ? messageCount.reduction : 0));
+    },
   },
 };
