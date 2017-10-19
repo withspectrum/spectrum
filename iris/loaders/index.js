@@ -9,6 +9,7 @@ import {
 import {
   __createThreadLoader,
   __createThreadParticipantsLoader,
+  __createThreadMessageCountLoader,
 } from './thread';
 import { __createNotificationLoader } from './notification';
 import {
@@ -33,6 +34,7 @@ const createLoaders = () => ({
   userTotalReputation: __createUserTotalReputationLoader(),
   thread: __createThreadLoader(),
   threadParticipants: __createThreadParticipantsLoader(),
+  threadMessageCount: __createThreadMessageCountLoader(),
   notification: __createNotificationLoader(),
   channel: __createChannelLoader(),
   channelMemberCount: __createChannelMemberCountLoader(),
