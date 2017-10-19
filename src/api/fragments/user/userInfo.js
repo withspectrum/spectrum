@@ -9,7 +9,6 @@ export const userInfoFragment = gql`
     description
     website
     username
-    isAdmin
     isPro
     isOnline
     totalReputation

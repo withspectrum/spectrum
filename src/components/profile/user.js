@@ -108,7 +108,6 @@ const UserWithData = ({
         </CoverPhoto>
         <CoverSubtitle center>
           @{user.username}
-          {user.isAdmin && <Badge type="admin" />}
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
@@ -180,7 +179,6 @@ const UserWithData = ({
         </CoverPhoto>
         <CoverSubtitle center>
           {user.username && `@${user.username}`}
-          {user.isAdmin && <Badge type="admin" />}
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
@@ -223,7 +221,6 @@ const UserWithData = ({
                 {user.username && (
                   <Subtitle>
                     @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
                     {user.isPro && <Badge type="pro" />}
                   </Subtitle>
                 )}
@@ -243,7 +240,6 @@ const UserWithData = ({
                 {user.username && (
                   <Subtitle>
                     @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
                     {user.isPro && <Badge type="pro" />}
                   </Subtitle>
                 )}
