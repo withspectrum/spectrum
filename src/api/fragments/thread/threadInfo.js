@@ -2,7 +2,6 @@ import { gql } from 'react-apollo';
 import { userInfoFragment } from '../user/userInfo';
 import { communityInfoFragment } from '../community/communityInfo';
 import { channelInfoFragment } from '../channel/channelInfo';
-import { channelMetaDataFragment } from '../channel/channelMetaData';
 
 export const threadInfoFragment = gql`
   fragment threadInfo on Thread {
