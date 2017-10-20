@@ -89,8 +89,8 @@ module.exports = {
         loaders.channelThreadCount.load(id),
         loaders.channelMemberCount.load(id),
       ]).then(([threadCount, memberCount]) => ({
-        threads: threadCount.reduction,
-        members: memberCount.reduction,
+        threads: threadCount ? threadCount.reduction : 0,
+        members: memberCount ? memberCount.reduction : 0,
       }));
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
