@@ -39,11 +39,7 @@ module.exports = {
 
       if (!thread || !sender) return null;
 
-      const {
-        reputation,
-        isModerator,
-        isOwner,
-      } = await loaders.userPermissionsInCommunity.load([
+      const permissions = await loaders.userPermissionsInCommunity.load([
         senderId,
         thread.communityId,
       ]);
@@ -51,9 +47,9 @@ module.exports = {
       return {
         ...sender,
         contextPermissions: {
-          reputation,
-          isModerator,
-          isOwner,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
         },
       };
     },
