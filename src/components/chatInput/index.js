@@ -15,13 +15,8 @@ import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import {
-  Form,
-  EditorInput,
-  ChatInputWrapper,
-  SendButton,
-  PhotoSizeError,
-} from './style';
+import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
+import Input from './input';
 import { sendMessageMutation } from '../../api/message';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
@@ -56,7 +51,7 @@ class ChatInput extends Component {
   }
 
   triggerFocus = () => {
-    this.chatInput.editor.focus();
+    this.editor.focus();
   };
 
   toggleCodeMessage = () => {
@@ -244,7 +239,7 @@ class ChatInput extends Component {
     const { isFocused, photoSizeError, code } = this.state;
 
     return (
-      <ChatInputWrapper focus={isFocused}>
+      <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
         {photoSizeError && (
           <PhotoSizeError>
             <p
@@ -274,21 +269,17 @@ class ChatInput extends Component {
           hoverColor={'brand.alt'}
         />
         <Form focus={isFocused}>
-          <EditorInput
+          <Input
             focus={isFocused}
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
-            state={state}
+            editorState={state}
             handleReturn={this.handleReturn}
             onChange={onChange}
-            markdown={false}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             singleLine={code ? false : true}
             code={code}
-            images={false}
             editorRef={editor => (this.editor = editor)}
-            innerRef={input => (this.chatInput = input)}
-            codeButton={true}
             editorKey="chat-input"
           />
           <SendButton glyph="send-fill" onClick={this.submit} />

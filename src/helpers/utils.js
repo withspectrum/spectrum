@@ -286,8 +286,13 @@ const URL = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(
 
 export const renderLinks = text => {
   if (typeof text !== 'string') return text;
-  return replace(text, URL, url => (
-    <a href={url} target="_blank" rel="noopener nofollower">
+  return replace(text, URL, (url, _, __, ____, _____, offset) => (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener nofollower"
+      key={`${offset}-${url}`}
+    >
       {url}
     </a>
   ));

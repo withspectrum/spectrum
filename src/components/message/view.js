@@ -14,6 +14,7 @@ import {
   Line,
 } from './style';
 import { toState, toPlainText } from 'shared/draft-utils';
+import { renderLinks } from 'src/helpers/utils';
 
 const messageRenderer = {
   blocks: {
@@ -60,7 +61,7 @@ export const Body = props => {
       } else {
         return (
           <Text me={me} pending={pending}>
-            {plaintext}
+            {renderLinks(plaintext)}
           </Text>
         );
       }

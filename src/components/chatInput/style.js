@@ -1,7 +1,9 @@
+// @flow
 import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition, zIndex, monoStack } from '../globals';
-import Editor from '../../components/draftjs-editor';
+import Input from './input';
+import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
 
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;
@@ -33,7 +35,7 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const EditorInput = styled(Editor)`
+export const InputWrapper = styled(EditorWrapper)`
   flex: auto;
   font-size: 14px;
   font-weight: 500;
