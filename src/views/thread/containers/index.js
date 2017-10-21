@@ -132,14 +132,11 @@ class ThreadContainer extends React.Component<Props, State> {
       // if the user is new and signed up through a thread view, push
       // the thread's community data into the store to hydrate the new user experience
       // with their first community they should join
-      dispatch(addCommunityToOnboarding(thread.channel.community));
+      dispatch(addCommunityToOnboarding(thread.community));
 
       // get the data we need to render the view
-      const {
-        channelPermissions,
-        isPrivate,
-        community: { communityPermissions },
-      } = thread.channel;
+      const { channelPermissions, isPrivate } = thread.channel;
+      const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
       const isRestricted = isPrivate && !channelPermissions.isMember;
       const canSendMessages = currentUser && channelPermissions.isMember;
@@ -173,7 +170,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 >
                   <RequestToJoinChannel
                     channel={thread.channel}
-                    community={thread.channel.community}
+                    community={thread.community}
                     isPending={thread.channel.channelPermissions.isPending}
                   />
                 </ViewError>
@@ -188,8 +185,7 @@ class ThreadContainer extends React.Component<Props, State> {
           <Head title={title} description={description} />
           <Titlebar
             title={thread.content.title}
-            subtitle={`${thread.channel.community.name} / ${thread.channel
-              .name}`}
+            subtitle={`${thread.community.name} / ${thread.channel.name}`}
             provideBack={true}
             backRoute={`/`}
             noComposer
@@ -219,7 +215,7 @@ class ThreadContainer extends React.Component<Props, State> {
               {isLoggedIn &&
                 !canSendMessages && (
                   <JoinChannel
-                    community={thread.channel.community}
+                    community={thread.community}
                     channel={thread.channel}
                   />
                 )}

@@ -80,6 +80,7 @@ const UPGRADE_TO_PRO_MUTATION = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
     upgradeToPro(input: $input) {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -114,6 +115,7 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
   mutation downgradeFromPro {
     downgradeFromPro {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -143,6 +145,7 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
   query getCurrentUserRecurringPayments {
     user: currentUser {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -169,6 +172,8 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
+      isPro
+      totalReputation
       communityConnection {
         pageInfo {
           hasNextPage

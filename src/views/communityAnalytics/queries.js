@@ -112,6 +112,7 @@ const COMMUNITY_TOP_MEMBERS_QUERY = gql`
       ...communityInfo
       topMembers {
         ...userInfo
+        isPro
         contextPermissions {
           reputation
           isOwner

@@ -11,6 +11,7 @@ export const channelMembersFragment = gql`
       edges {
         node {
           ...userInfo
+          isPro
         }
       }
     }

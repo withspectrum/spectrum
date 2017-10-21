@@ -48,10 +48,6 @@ const User = /* GraphQL */ `
 		node: Thread!
 	}
 
-	type UserMetaData {
-		threads: Int
-	}
-
 	type NotificationKindSettings {
 		email: Boolean
 	}
@@ -75,6 +71,7 @@ const User = /* GraphQL */ `
 	type User {
 		id: ID!
 		name: String
+		firstName: String
 		description: String
 		website: String
 		username: String
@@ -91,7 +88,6 @@ const User = /* GraphQL */ `
 
 		# non-schema fields
 		threadCount: Int
-		isAdmin: Boolean!
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!

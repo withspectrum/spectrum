@@ -24,8 +24,8 @@ export const markUsersNotificationsAsNew = (
 ): Promise<Object> => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
-    .filter({ notificationId })
+    .getAll(notificationId, { index: 'notificationId' })
+    .filter({ userId })
     .run()
     .then(result => {
       /*
@@ -36,8 +36,8 @@ export const markUsersNotificationsAsNew = (
       if (result && result.length > 0) {
         return db
           .table('usersNotifications')
-          .getAll(userId, { index: 'userId' })
-          .filter({ notificationId })
+          .getAll(notificationId, { index: 'notificationId' })
+          .filter({ userId })
           .update({
             isRead: false,
             isSeen: false,

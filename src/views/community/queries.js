@@ -144,6 +144,14 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
           node {
             ...channelInfo
             ...channelMetaData
+            community {
+              communityPermissions {
+                isOwner
+                isMember
+                isModerator
+                isBlocked
+              }
+            }
             pendingUsers {
               ...userInfo
             }

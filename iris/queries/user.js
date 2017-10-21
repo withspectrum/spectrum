@@ -25,7 +25,6 @@ const { getNotificationsByUser } = require('../models/notification');
 import { getInvoicesByUser } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
-import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
@@ -67,9 +66,6 @@ module.exports = {
       }
       // if the image is being served from the S3 imgix source, return that url
       return profilePhoto;
-    },
-    isAdmin: ({ id }: DBUser) => {
-      return isAdmin(id);
     },
     isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
       return loaders.userRecurringPayments
