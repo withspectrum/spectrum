@@ -2,6 +2,7 @@
 // This file was copy-and-pasted from the draft-js-side-toolbar-plugin and adapted
 // for our codebase.
 import React from 'react';
+import type { ChildrenArray, Node } from 'react';
 import { findDOMNode } from 'react-dom';
 // $FlowIssue
 import DraftOffsetKey from 'draft-js/lib/DraftOffsetKey';
@@ -12,7 +13,7 @@ type EditorRef = any; // A reference to the editor DOM node
 
 type Props = {
   editorState: EditorState,
-  children: Function,
+  children: ChildrenArray<Node>,
   editorRef: EditorRef,
 };
 
