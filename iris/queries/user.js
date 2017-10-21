@@ -23,6 +23,7 @@ const {
 } = require('../models/directMessageThread');
 const { getNotificationsByUser } = require('../models/notification');
 import { getInvoicesByUser } from '../models/invoice';
+import { isAdmin } from '../utils/permissions';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -232,6 +233,7 @@ module.exports = {
         .load(id)
         .then(data => (data ? data.reputation : 0));
     },
+    isAdmin: ({ id }: DBUser) => isAdmin(id),
     contextPermissions: (
       user: any,
       _: any,
