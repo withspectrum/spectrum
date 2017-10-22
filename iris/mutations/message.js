@@ -1,6 +1,7 @@
 // @flow
 import Raven from 'raven';
 const debug = require('debug')('iris:mutations:message');
+import detectLang from 'lang-detector';
 import UserError from '../utils/UserError';
 import {
   storeMessage,
@@ -19,6 +20,7 @@ import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';
+import { toState, toPlainText } from 'shared/draft-utils';
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
 
@@ -58,6 +60,19 @@ module.exports = {
 
       // all checks passed
       if (message.messageType === 'text' || message.messageType === 'draftjs') {
+        if (message.messageType === 'draftjs') {
+          const parsedMessage = JSON.parse(message.body);
+          const isCode = parsedMessage.blocks[0].type === 'code-block';
+          if (isCode) {
+            const lang = detectLang(toPlainText(toState(parsedMessage)));
+            if (lang) {
+              parsedMessage.blocks[0].data = {
+                syntax: lang,
+              };
+              message.body = JSON.stringify(parsedMessage);
+            }
+          }
+        }
         // send a normal text message
         return storeMessage(message, currentUser.id);
       } else if (message.messageType === 'media') {
