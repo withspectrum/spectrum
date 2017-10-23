@@ -1,5 +1,7 @@
 import React from 'react';
 import redraft from 'redraft';
+import PrismDecorator from 'draft-js-prism';
+import Prism from 'prismjs';
 import Icon from '../icons';
 import {
   Text,
@@ -22,6 +24,14 @@ const messageRenderer = {
       <Line key={keys[0]}>{children.map(child => [child, <br />])}</Line>
     ),
   },
+  decorators: [
+    new PrismDecorator({
+      prism: Prism,
+      render: ({ type, children }) => (
+        <span className={`prism prism-token ${type}`}>{children}</span>
+      ),
+    }),
+  ],
 };
 
 export const Body = props => {

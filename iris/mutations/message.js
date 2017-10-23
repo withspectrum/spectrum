@@ -58,24 +58,33 @@ module.exports = {
         createParticipantInThread(message.threadId, currentUser.id);
       }
 
-      // all checks passed
-      if (message.messageType === 'text' || message.messageType === 'draftjs') {
-        if (message.messageType === 'draftjs') {
-          const parsedMessage = JSON.parse(message.content.body);
-          const isCode = parsedMessage.blocks[0].type === 'code-block';
-          if (isCode) {
-            const lang = detectLang(toPlainText(toState(parsedMessage)));
-            if (lang) {
-              parsedMessage.blocks[0].data = {
-                syntax: lang,
-              };
-              message.content.body = JSON.stringify(parsedMessage);
-            }
+      if (message.messageType === 'text') {
+        return storeMessage(message, currentUser.id);
+      }
+
+      if (message.messageType === 'draftjs') {
+        const parsedMessage = JSON.parse(message.content.body);
+        const { blocks } = parsedMessage;
+        // Try guessing the language of a code message
+        if (blocks && blocks.length > 0 && blocks[0].type === 'code-block') {
+          let lang;
+          try {
+            lang = detectLang(toPlainText(toState(parsedMessage)));
+          } catch (err) {
+            console.error(err);
+          }
+          if (lang && lang !== 'Unknown') {
+            // Set data.syntax to the language and add that to the message
+            parsedMessage.blocks[0].data = {
+              syntax: lang.toLowerCase(),
+            };
+            message.content.body = JSON.stringify(parsedMessage);
           }
         }
-        // send a normal text message
         return storeMessage(message, currentUser.id);
-      } else if (message.messageType === 'media') {
+      }
+
+      if (message.messageType === 'media') {
         // upload the photo, return the photo url, then store the message
 
         return uploadImage(message.file, 'threads', message.threadId)
@@ -94,9 +103,9 @@ module.exports = {
             return newMessage;
           })
           .then(newMessage => storeMessage(newMessage, currentUser.id));
-      } else {
-        return new UserError('Unknown message type');
       }
+
+      return new UserError('Unknown message type');
     },
     deleteMessage: async (
       _: any,
