@@ -74,7 +74,16 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    track('community', 'viewed', null);
+    // if the user is new and signed up through a community page, push
+    // the community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (
+      (!prevProps.data.community && this.props.data.community) ||
+      (prevProps.data.community &&
+        prevProps.data.community.id !== this.props.data.community.id)
+    ) {
+      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+    }
   }
 
   toggleMembership = (communityId: string) => {
@@ -157,11 +166,6 @@ class CommunityView extends React.Component<Props, State> {
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
       const isMobile = window.innerWidth < 768;
-
-      // if the user is new and signed up through a community page, push
-      // the community data into the store to hydrate the new user experience
-      // with their first community they should join
-      this.props.dispatch(addCommunityToOnboarding(community));
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream

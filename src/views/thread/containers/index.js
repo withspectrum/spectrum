@@ -67,6 +67,19 @@ class ThreadContainer extends React.Component<Props, State> {
       }
     }
 
+    // if the user is new and signed up through a thread view, push
+    // the thread's community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (
+      (!prevProps.data.thread && this.props.data.thread) ||
+      (prevProps.data.thread &&
+        prevProps.data.thread.id !== this.props.data.thread.id)
+    ) {
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.thread.community)
+      );
+    }
+
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
@@ -129,11 +142,6 @@ class ThreadContainer extends React.Component<Props, State> {
         },
       });
 
-      // if the user is new and signed up through a thread view, push
-      // the thread's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      dispatch(addCommunityToOnboarding(thread.community));
-
       // get the data we need to render the view
       const { channelPermissions, isPrivate } = thread.channel;
       const { communityPermissions } = thread.community;
@@ -182,7 +190,11 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <View slider={slider}>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={thread.community.profilePhoto}
+          />
           <Titlebar
             title={thread.content.title}
             subtitle={`${thread.community.name} / ${thread.channel.name}`}
