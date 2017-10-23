@@ -92,7 +92,11 @@ class UserView extends React.Component<Props, State> {
 
       return (
         <AppViewWrapper>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={user.profilePhoto}
+          />
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}

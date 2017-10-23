@@ -146,7 +146,11 @@ class ChannelView extends React.Component<Props> {
 
       return (
         <AppViewWrapper>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={channel.community.profilePhoto}
+          />
           <Titlebar
             title={channel.name}
             subtitle={channel.community.name}

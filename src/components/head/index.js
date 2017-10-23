@@ -5,9 +5,10 @@ type Props = {
   title?: string,
   description?: string,
   showUnreadFavicon?: boolean,
+  image?: string,
 };
 
-export default ({ title, description, showUnreadFavicon }: Props) => {
+export default ({ title, description, showUnreadFavicon, image }: Props) => {
   return (
     <Helmet>
       <title>{title}</title>
@@ -16,6 +17,23 @@ export default ({ title, description, showUnreadFavicon }: Props) => {
       <meta name="og:description" content={description} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta
+        name="twitter:image"
+        content={
+          image
+            ? image
+            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
+        }
+      />
+      <meta
+        name="og:image"
+        content={
+          image
+            ? image
+            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
+        }
+      />
+
       {showUnreadFavicon ? (
         <link
           rel="shortcut icon"

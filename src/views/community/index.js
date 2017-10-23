@@ -178,7 +178,11 @@ class CommunityView extends React.Component<Props, State> {
             noComposer={!community.communityPermissions.isMember}
           />
 
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={community.profilePhoto}
+          />
 
           <CoverColumn>
             <CoverPhoto src={community.coverPhoto} />
