@@ -76,7 +76,7 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (user) {
-      const { title, description } = generateMetaInfo({
+      const { title, description, image } = generateMetaInfo({
         type: 'user',
         data: {
           name: user.name,
@@ -92,7 +92,11 @@ class UserView extends React.Component<Props, State> {
 
       return (
         <AppViewWrapper>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={user.profilePhoto}
+          />
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}
