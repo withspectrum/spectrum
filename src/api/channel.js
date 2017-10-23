@@ -221,9 +221,13 @@ export const getChannelById = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
+        community {
+          ...communityInfo
+        }
       }
 		}
     ${channelInfoFragment}
+    ${communityInfoFragment}
 	`,
   getChannelByIdOptions
 );
