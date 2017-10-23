@@ -3,6 +3,7 @@ import React from 'react';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
+import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
@@ -67,7 +68,8 @@ class Input extends React.Component<Props, State> {
       plugins.push(
         createPrismPlugin({
           prism: Prism,
-        })
+        }),
+        createCodeEditorPlugin()
       );
     } else {
       plugins.push(

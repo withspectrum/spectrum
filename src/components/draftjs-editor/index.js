@@ -22,6 +22,7 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
+import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 
@@ -79,6 +80,7 @@ class Editor extends React.Component<Props, State> {
     const prismPlugin = createPrismPlugin({
       prism: Prism,
     });
+    const codePlugin = createCodeEditorPlugin();
 
     const decorator = composeDecorators(
       focusPlugin.decorator,
@@ -96,6 +98,7 @@ class Editor extends React.Component<Props, State> {
         prismPlugin,
         embedPlugin,
         createMarkdownPlugin(),
+        codePlugin,
         linkifyPlugin,
         dndPlugin,
         focusPlugin,

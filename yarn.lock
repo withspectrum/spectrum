@@ -2574,6 +2574,10 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+detect-newline@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
+
 detect-node@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.3.tgz#a2033c09cc8e158d37748fbde7507832bd6ce127"
@@ -2721,6 +2725,23 @@ draft-js-checkable-list-item@^2.0.5:
   dependencies:
     draft-js-modifiers "^0.1.2"
 
+draft-js-code-editor-plugin@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-code-editor-plugin/-/draft-js-code-editor-plugin-0.2.1.tgz#86dda298fcc950427ee980f26b3c75fa25a0b86e"
+  dependencies:
+    babel-plugin-transform-react-jsx "^6.24.1"
+    draft-js "0.x"
+    draft-js-code "0.3.x"
+
+draft-js-code@0.3.x:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-code/-/draft-js-code-0.3.0.tgz#d955d134367baeee5844b57f897c8d848bc979c5"
+  dependencies:
+    detect-indent "^4.0.0"
+    detect-newline "^2.1.0"
+    ends-with "^0.2.0"
+    immutable "3.x"
+
 draft-js-drag-n-drop-plugin@2.0.0-rc2:
   version "2.0.0-rc2"
   resolved "https://registry.yarnpkg.com/draft-js-drag-n-drop-plugin/-/draft-js-drag-n-drop-plugin-2.0.0-rc2.tgz#81ffee2323f91daf0ba01312cb4ae3a46b9ba85b"
@@ -2835,6 +2856,15 @@ draft-js-utils@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
 
+draft-js@0.x:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.3.tgz#5f3c3025af9f494c62f00a9066006ccdc1b3c943"
+  dependencies:
+    enzyme "^2.9.1"
+    fbjs "^0.8.15"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
 draft-js@^0.10.2, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.2.tgz#b722613cb306cfee910f9de1789f2cc3023772e7"
@@ -2920,6 +2950,10 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
+ends-with@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-0.2.0.tgz#2f9da98d57a50cfda4571ce4339000500f4e6b8a"
+
 enhanced-resolve@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-3.4.1.tgz#0421e339fd71419b3da13d129b3979040230476e"
@@ -2932,6 +2966,21 @@ enhanced-resolve@^3.4.0:
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
+
+enzyme@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/enzyme/-/enzyme-2.9.1.tgz#07d5ce691241240fb817bf2c4b18d6e530240df6"
+  dependencies:
+    cheerio "^0.22.0"
+    function.prototype.name "^1.0.0"
+    is-subset "^0.1.1"
+    lodash "^4.17.4"
+    object-is "^1.0.1"
+    object.assign "^4.0.4"
+    object.entries "^1.0.4"
+    object.values "^1.0.4"
+    prop-types "^15.5.10"
+    uuid "^3.0.1"
 
 errno@^0.1.3, errno@^0.1.4:
   version "0.1.4"
@@ -2954,6 +3003,16 @@ error-stack-parser@^2.0.0:
 es-abstract@^1.5.0, es-abstract@^1.7.0:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.8.2.tgz#25103263dc4decbda60e0c737ca32313518027ee"
+  dependencies:
+    es-to-primitive "^1.1.1"
+    function-bind "^1.1.1"
+    has "^1.0.1"
+    is-callable "^1.1.3"
+    is-regex "^1.0.4"
+
+es-abstract@^1.6.1:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.9.0.tgz#690829a07cae36b222e7fd9b75c0d0573eb25227"
   dependencies:
     es-to-primitive "^1.1.1"
     function-bind "^1.1.1"
@@ -3492,6 +3551,18 @@ fbjs@^0.8.1, fbjs@^0.8.12, fbjs@^0.8.5, fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
+fbjs@^0.8.15:
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.9"
+
 fd-slicer@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/fd-slicer/-/fd-slicer-0.1.0.tgz#f597141dfe8a2841756fd54150a78fe0bec4bc03"
@@ -3795,9 +3866,17 @@ fstream@^1.0.0, fstream@^1.0.10, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
-function-bind@^1.0.2, function-bind@^1.1.1, function-bind@~1.1.0:
+function-bind@^1.0.2, function-bind@^1.1.0, function-bind@^1.1.1, function-bind@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
+
+function.prototype.name@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/function.prototype.name/-/function.prototype.name-1.0.3.tgz#0099ae5572e9dd6f03c97d023fd92bcc5e639eac"
+  dependencies:
+    define-properties "^1.1.2"
+    function-bind "^1.1.0"
+    is-callable "^1.1.3"
 
 functional-red-black-tree@^1.0.1:
   version "1.0.1"
@@ -4448,6 +4527,10 @@ immutable@*, immutable@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
+immutable@3.x:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+
 immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
@@ -4834,6 +4917,10 @@ is-root@1.0.0:
 is-stream@^1.0.0, is-stream@^1.0.1, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
+
+is-subset@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/is-subset/-/is-subset-0.1.1.tgz#8a59117d932de1de00f245fcdd39ce43f1e939a6"
 
 is-svg@^2.0.0:
   version "2.1.0"
@@ -6635,7 +6722,11 @@ object-inspect@~1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.3.0.tgz#5b1eb8e6742e2ee83342a637034d844928ba2f6d"
 
-object-keys@^1.0.8:
+object-is@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/object-is/-/object-is-1.0.1.tgz#0aa60ec9989a0b3ed795cf4d06f62cf1ad6539b6"
+
+object-keys@^1.0.10, object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
 
@@ -6649,6 +6740,23 @@ object-visit@^1.0.0:
   dependencies:
     isobject "^3.0.0"
 
+object.assign@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/object.assign/-/object.assign-4.0.4.tgz#b1c9cc044ef1b9fe63606fc141abbb32e14730cc"
+  dependencies:
+    define-properties "^1.1.2"
+    function-bind "^1.1.0"
+    object-keys "^1.0.10"
+
+object.entries@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.0.4.tgz#1bf9a4dd2288f5b33f3a993d257661f05d161a5f"
+  dependencies:
+    define-properties "^1.1.2"
+    es-abstract "^1.6.1"
+    function-bind "^1.1.0"
+    has "^1.0.1"
+
 object.omit@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/object.omit/-/object.omit-2.0.1.tgz#1a9c744829f39dbb858c76ca3579ae2a54ebd1fa"
@@ -6661,6 +6769,15 @@ object.pick@^1.3.0:
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.3.0.tgz#87a10ac4c1694bd2e1cbf53591a66141fb5dd747"
   dependencies:
     isobject "^3.0.1"
+
+object.values@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/object.values/-/object.values-1.0.4.tgz#e524da09b4f66ff05df457546ec72ac99f13069a"
+  dependencies:
+    define-properties "^1.1.2"
+    es-abstract "^1.6.1"
+    function-bind "^1.1.0"
+    has "^1.0.1"
 
 obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.1"
