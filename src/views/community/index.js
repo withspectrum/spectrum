@@ -73,10 +73,11 @@ class CommunityView extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     // if the user is new and signed up through a community page, push
     // the community data into the store to hydrate the new user experience
     // with their first community they should join
+    if (this.props.currentUser) return;
     if (
       (!prevProps.data.community && this.props.data.community) ||
       (prevProps.data.community &&

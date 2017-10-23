@@ -75,6 +75,7 @@ class ThreadContainer extends React.Component<Props, State> {
       (prevProps.data.thread &&
         prevProps.data.thread.id !== this.props.data.thread.id)
     ) {
+      if (this.props.currentUser) return;
       this.props.dispatch(
         addCommunityToOnboarding(this.props.data.thread.community)
       );
