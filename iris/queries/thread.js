@@ -138,11 +138,7 @@ module.exports = {
     ) => {
       const creator = await loaders.user.load(creatorId);
 
-      const {
-        reputation,
-        isModerator,
-        isOwner,
-      } = await loaders.userPermissionsInCommunity.load([
+      const permissions = await loaders.userPermissionsInCommunity.load([
         creatorId,
         communityId,
       ]);
@@ -150,9 +146,9 @@ module.exports = {
       return {
         ...creator,
         contextPermissions: {
-          reputation,
-          isModerator,
-          isOwner,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
         },
       };
     },
