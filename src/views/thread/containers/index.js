@@ -238,6 +238,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
+                  redirectPath={window.location}
                 />
               )}
             </Detail>

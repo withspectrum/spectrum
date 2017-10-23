@@ -189,6 +189,7 @@ class ChannelView extends React.Component<Props> {
               <UpsellSignIn
                 title={`Join the ${channel.community.name} community`}
                 view={{ data: channel, type: 'channel' }}
+                redirectPath={window.location}
               />
             )}
 
