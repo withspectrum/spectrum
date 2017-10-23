@@ -81,6 +81,8 @@ class Input extends React.Component<Props, State> {
       const singleLine = createSingleLinePlugin();
       plugins.push(singleLine);
       other.blockRenderMap = singleLine.blockRenderMap;
+    } else {
+      other.blockRenderMap = undefined;
     }
 
     this.setState({
@@ -103,14 +105,14 @@ class Input extends React.Component<Props, State> {
       singleLine,
       placeholder,
       readOnly,
-      className,
       editorRef,
+      code,
       ...rest
     } = this.props;
     const { plugins, blockRenderMap } = this.state;
 
     return (
-      <InputWrapper focus={focus}>
+      <InputWrapper code={code} focus={focus}>
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

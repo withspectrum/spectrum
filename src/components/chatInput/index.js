@@ -57,12 +57,16 @@ class ChatInput extends Component {
   toggleCodeMessage = () => {
     const { onChange, state } = this.props;
     const { code } = this.state;
-    onChange(
-      changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+    this.setState(
+      {
+        code: !code,
+      },
+      () => {
+        onChange(
+          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+        );
+      }
     );
-    this.setState({
-      code: !code,
-    });
   };
 
   submit = e => {
@@ -88,6 +92,10 @@ class ChatInput extends Component {
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return 'handled';
 
+    this.setState({
+      code: false,
+    });
+
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
@@ -98,10 +106,6 @@ class ChatInput extends Component {
       });
       return 'handled';
     }
-
-    this.setState({
-      code: false,
-    });
 
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
