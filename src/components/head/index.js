@@ -17,25 +17,22 @@ export default ({ title, description, showUnreadFavicon, image }: Props) => {
       <meta name="og:description" content={description} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      {image && <meta name="twitter:image" content={image} />}
-      {image && <meta name="og:image" content={image} />}
-
-      {!image && (
-        <meta
-          name="twitter:image"
-          content={
-            'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
-          }
-        />
-      )}
-      {!image && (
-        <meta
-          name="og:image"
-          content={
-            'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
-          }
-        />
-      )}
+      <meta
+        name="twitter:image"
+        content={
+          image
+            ? image
+            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
+        }
+      />
+      <meta
+        name="og:image"
+        content={
+          image
+            ? image
+            : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
+        }
+      />
 
       {showUnreadFavicon ? (
         <link
