@@ -61,7 +61,7 @@ module.exports = {
       // all checks passed
       if (message.messageType === 'text' || message.messageType === 'draftjs') {
         if (message.messageType === 'draftjs') {
-          const parsedMessage = JSON.parse(message.body);
+          const parsedMessage = JSON.parse(message.content.body);
           const isCode = parsedMessage.blocks[0].type === 'code-block';
           if (isCode) {
             const lang = detectLang(toPlainText(toState(parsedMessage)));
@@ -69,7 +69,7 @@ module.exports = {
               parsedMessage.blocks[0].data = {
                 syntax: lang,
               };
-              message.body = JSON.stringify(parsedMessage);
+              message.content.body = JSON.stringify(parsedMessage);
             }
           }
         }
