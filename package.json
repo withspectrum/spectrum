@@ -47,6 +47,7 @@
     "dataloader": "^1.3.0",
     "debug": "^2.6.8",
     "draft-js": "^0.10.2",
+    "draft-js-code-editor-plugin": "0.2.1",
     "draft-js-drag-n-drop-plugin": "2.0.0-rc2",
     "draft-js-embed-plugin": "^1.2.0",
     "draft-js-focus-plugin": "2.0.0-rc2",
