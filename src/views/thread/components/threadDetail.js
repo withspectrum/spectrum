@@ -422,6 +422,7 @@ class ThreadDetailPure extends Component {
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
+    const authorIsCommunityOwner = thread.creator.contextPermissions.isOwner;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
@@ -468,7 +469,7 @@ class ThreadDetailPure extends Component {
               </Link>
               <AuthorUsername>
                 {thread.creator.username && `@${thread.creator.username}`}
-                {(isChannelOwner || isCommunityOwner) && <Badge type="admin" />}
+                {authorIsCommunityOwner && <Badge type="admin" />}
                 {thread.creator.isPro && <Badge type="pro" />}
               </AuthorUsername>
               <AuthorUsername>
