@@ -5,6 +5,7 @@ type Props = {
   title?: string,
   description?: string,
   showUnreadFavicon?: boolean,
+  image?: string,
 };
 
 export default ({ title, description, showUnreadFavicon, image }: Props) => {
