@@ -76,7 +76,7 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (user) {
-      const { title, description, image } = generateMetaInfo({
+      const { title, description } = generateMetaInfo({
         type: 'user',
         data: {
           name: user.name,
