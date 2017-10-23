@@ -25,6 +25,10 @@ export const createScriptTag = ({ src }: { src: string }) =>
 
 const sentry = `<script defer="defer" src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script><script defer="defer" src="/install-raven.js"></script>`;
 
+const polyfill = createScriptTag({
+  src: 'https://cdn.polyfill.io/v2/polyfill.min.js',
+});
+
 export const getHTML = ({
   styleTags,
   metaTags,
@@ -39,7 +43,7 @@ export const getHTML = ({
         '<div id="root"></div>',
         `<script>window.__SERVER_STATE__=${serialize(
           state
-        )}</script><div id="root">${content}</div>${sentry}${scriptTags}`
+        )}</script><div id="root">${content}</div>${sentry}${polyfill}${scriptTags}`
       )
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)
