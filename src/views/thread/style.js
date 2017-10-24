@@ -99,8 +99,7 @@ export const Container = styled(FlexCol)`
 `;
 
 export const ThreadWrapper = styled(FlexCol)`
-  padding: 16px 32px;
-  font-size: 14px;
+  font-size: 16px;
   flex: none;
   min-width: 320px;
 
@@ -109,8 +108,11 @@ export const ThreadWrapper = styled(FlexCol)`
   }
 `;
 
+export const ThreadContent = styled.div`padding: 32px;`;
+
 export const ThreadHeading = styled(H1)`
-  font-size: 32px;
+  font-size: 24px;
+  font-weight: 500;
 
   @media (max-width: 768px) {
     margin-top: 8px;
@@ -162,29 +164,22 @@ export const Byline = styled.div`
   margin-bottom: 16px;
   align-items: center;
   flex: auto;
-
-  &:hover h3 {
-    color: ${({ theme }) => theme.brand.alt};
-  }
 `;
 
-export const BylineMeta = styled(FlexCol)`
-  margin-left: 12px;
-
-  @media (max-width: 768px) {
-    margin-left: 8px;
-  }
-`;
+export const BylineMeta = styled(FlexRow)`margin-left: 12px;`;
 
 export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
 export const AuthorName = styled(H3)`
-  font-weight: 700;
+  font-weight: 400;
   cursor: pointer;
   max-width: 100%;
+  color: ${props => props.theme.text.alt};
+  margin-right: 8px;
+  font-size: 14px;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
+  &:hover {
+    color: ${props => props.theme.text.default};
   }
 `;
 
@@ -463,4 +458,13 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+`;
+
+export const ActionBar = styled.div`
+  display: flex;
+  width: 100%;
+  background: ${props => props.theme.bg.wash};
+  padding: 16px 32px;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 `;

@@ -10,7 +10,7 @@ const baseButton = css`
   align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
   white-space: nowrap;
   word-break: keep-all;
@@ -108,7 +108,7 @@ export const StyledTextButton = styled(StyledSolidButton)`
 `;
 
 export const StyledOutlineButton = styled(StyledTextButton)`
-  box-shadow: inset 0 0 0 2px
+  box-shadow: inset 0 0 0 1px
     ${props =>
       props.disabled
         ? props.theme.bg.inactive
@@ -127,7 +127,7 @@ export const StyledOutlineButton = styled(StyledTextButton)`
         : eval(
             `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
           )};
-    box-shadow: inset 0 0 0 2px
+    box-shadow: inset 0 0 0 1px
       ${props =>
         props.disabled
           ? props.theme.bg.inactive
@@ -139,7 +139,7 @@ export const StyledOutlineButton = styled(StyledTextButton)`
 `;
 
 export const StyledFauxOutlineButton = styled.span`
-  ${baseButton} box-shadow: inset 0 0 0 2px ${props =>
+  ${baseButton} box-shadow: inset 0 0 0 1px ${props =>
       props.disabled
         ? props.theme.bg.inactive
         : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
@@ -157,7 +157,7 @@ export const StyledFauxOutlineButton = styled.span`
         : eval(
             `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
           )};
-    box-shadow: inset 0 0 0 2px
+    box-shadow: inset 0 0 0 1px
       ${props =>
         props.disabled
           ? props.theme.bg.inactive

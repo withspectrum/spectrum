@@ -31,7 +31,7 @@ export const Shadow = {
 export const Transition = {
   hover: {
     on: 'all 0.2s ease-in',
-    off: 'all 0.3s ease-out',
+    off: 'all 0.2s ease-out',
   },
   reaction: {
     on: 'all 0.15s ease-in',

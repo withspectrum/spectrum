@@ -16,6 +16,7 @@ import {
   setThreadLockMutation,
   toggleThreadNotificationsMutation,
 } from '../mutations';
+import ThreadByline from './threadByline';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import { pinThreadMutation } from '../../../api/community';
 import { FlexRow } from '../../../components/globals';
@@ -31,6 +32,7 @@ import Textarea from 'react-textarea-autosize';
 import {
   ThreadTitle,
   ThreadWrapper,
+  ThreadContent,
   ThreadHeading,
   Byline,
   ContextRow,
@@ -48,6 +50,7 @@ import {
   ShareLink,
   ShareButtons,
   ShareButton,
+  ActionBar,
 } from '../style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -432,141 +435,9 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        <ContextRow>
-          <Byline>
-            <AuthorAvatar
-              size={48}
-              radius={48}
-              onlineSize={'large'}
-              isOnline={thread.creator.isOnline}
-              src={thread.creator.profilePhoto}
-              link={
-                thread.creator.username
-                  ? `/users/${thread.creator.username}`
-                  : null
-              }
-            />
-            <BylineMeta>
-              <Link to={`/users/${thread.creator.username}`}>
-                <AuthorName>{thread.creator.name}</AuthorName>
-              </Link>
-              <AuthorUsername>
-                {thread.creator.username && `@${thread.creator.username}`}
-                {authorIsCommunityOwner && <Badge type="admin" />}
-                {thread.creator.isPro && <Badge type="pro" />}
-              </AuthorUsername>
-              <AuthorUsername>
-                {thread.creator &&
-                  thread.creator.contextPermissions &&
-                  thread.creator.contextPermissions.reputation > 0 && (
-                    <span>
-                      <Reputation
-                        tipText={'Author rep in this community'}
-                        reputation={
-                          thread.creator.contextPermissions.reputation
-                        }
-                      />
-                    </span>
-                  )}
-              </AuthorUsername>
-            </BylineMeta>
-          </Byline>
-          {currentUser &&
-            !isEditing &&
-            isChannelMember &&
-            (isChannelOwner || isCommunityOwner || thread.isCreator) && (
-              <DropWrap className={flyoutOpen ? 'open' : ''}>
-                <IconButton glyph="settings" onClick={this.toggleFlyout} />
-                <Flyout>
-                  {isCommunityOwner &&
-                    !thread.channel.isPrivate && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph={isPinned ? 'pin-fill' : 'pin'}
-                          hoverColor={
-                            isPinned ? 'warn.default' : 'special.default'
-                          }
-                          tipText={
-                            isPinned
-                              ? 'Un-pin thread'
-                              : `Pin in ${thread.community.name}`
-                          }
-                          tipLocation="top-left"
-                          onClick={this.togglePinThread}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {(isChannelOwner || isCommunityOwner) && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph="freeze"
-                          hoverColor="space.alt"
-                          tipText={
-                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                          }
-                          tipLocation="top-left"
-                          onClick={this.threadLock}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph="delete"
-                          hoverColor="warn.alt"
-                          tipText="Delete thread"
-                          tipLocation="top-left"
-                          onClick={this.triggerDelete}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {thread.isCreator && (
-                    <FlyoutRow>
-                      <IconButton
-                        glyph="edit"
-                        hoverColor="text.alt"
-                        tipText="Edit"
-                        tipLocation="top-left"
-                        onClick={this.toggleEdit}
-                      />
-                    </FlyoutRow>
-                  )}
-                </Flyout>
-              </DropWrap>
-            )}
+        <ThreadContent>
+          <ThreadByline creator={thread.creator} />
 
-          {isChannelMember &&
-            !isEditing &&
-            currentUser && (
-              <DropWrap>
-                <IconButton
-                  glyph={
-                    thread.receiveNotifications
-                      ? 'notification-fill'
-                      : 'notification'
-                  }
-                  hoverColor="text.alt"
-                  tipText={
-                    thread.receiveNotifications
-                      ? 'Turn off notifications'
-                      : 'Get notifications'
-                  }
-                  tipLocation="top-left"
-                  onClick={this.toggleNotification}
-                />
-              </DropWrap>
-            )}
-
-          {isEditing && (
-            <EditDone>
-              <Button loading={isSavingEdit} onClick={this.saveEdit}>
-                Save
-              </Button>
-            </EditDone>
-          )}
-        </ContextRow>
-
-        <span>
           {isEditing ? (
             <Textarea
               onChange={this.changeTitle}
@@ -579,17 +450,16 @@ class ThreadDetailPure extends Component {
           ) : (
             <ThreadHeading>{thread.content.title}</ThreadHeading>
           )}
-          <FlexRow>
-            <Link to={`/thread/${thread.id}`}>
-              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
-              {thread.modifiedAt && (
-                <Edited>
-                  (Edited{' '}
-                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-                </Edited>
-              )}
-            </Link>
-          </FlexRow>
+
+          <Link to={`/thread/${thread.id}`}>
+            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+            {thread.modifiedAt && (
+              <Edited>
+                (Edited{' '}
+                {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+              </Edited>
+            )}
+          </Link>
 
           <Editor
             readOnly={!this.state.isEditing}
@@ -606,74 +476,172 @@ class ThreadDetailPure extends Component {
               data: linkPreview,
             }}
           />
+        </ThreadContent>
 
-          {!isEditing && (
-            <ShareLinks>
-              <ShareLink facebook>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                    .content.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'facebook'} size={16} />
-                  Share on Facebook
-                </a>
-              </ShareLink>
+        {!isEditing && <ActionBar />}
 
-              <ShareLink twitter>
-                <a
-                  href={`https://twitter.com/share?text=${thread.content
-                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'twitter'} size={16} />
-                  Share on Twitter
-                </a>
-              </ShareLink>
+        {isEditing && <ActionBar />}
 
-              <ShareLink onClick={this.copyLink}>
-                <a>
-                  <Icon glyph={'link'} size={16} />
-                  Copy link
-                </a>
-              </ShareLink>
-            </ShareLinks>
+        {!isEditing && (
+          <ShareLinks>
+            <ShareLink facebook>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                  .content.title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'facebook'} size={16} />
+                Share on Facebook
+              </a>
+            </ShareLink>
+
+            <ShareLink twitter>
+              <a
+                href={`https://twitter.com/share?text=${thread.content
+                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'twitter'} size={16} />
+                Share on Twitter
+              </a>
+            </ShareLink>
+
+            <ShareLink onClick={this.copyLink}>
+              <a>
+                <Icon glyph={'link'} size={16} />
+                Copy link
+              </a>
+            </ShareLink>
+          </ShareLinks>
+        )}
+
+        {!isEditing && (
+          <ShareButtons>
+            <ShareButton facebook>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
+                  .content.title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'facebook'} size={24} />
+              </a>
+            </ShareButton>
+
+            <ShareButton twitter>
+              <a
+                href={`https://twitter.com/share?text=${thread.content
+                  .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon glyph={'twitter'} size={24} />
+              </a>
+            </ShareButton>
+
+            <ShareButton onClick={this.copyLink}>
+              <a>
+                <Icon glyph={'link'} size={24} />
+              </a>
+            </ShareButton>
+          </ShareButtons>
+        )}
+
+        {currentUser &&
+          !isEditing &&
+          isChannelMember &&
+          (isChannelOwner || isCommunityOwner || thread.isCreator) && (
+            <DropWrap className={flyoutOpen ? 'open' : ''}>
+              <IconButton glyph="settings" onClick={this.toggleFlyout} />
+              <Flyout>
+                {isCommunityOwner &&
+                  !thread.channel.isPrivate && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph={isPinned ? 'pin-fill' : 'pin'}
+                        hoverColor={
+                          isPinned ? 'warn.default' : 'special.default'
+                        }
+                        tipText={
+                          isPinned
+                            ? 'Un-pin thread'
+                            : `Pin in ${thread.community.name}`
+                        }
+                        tipLocation="top-left"
+                        onClick={this.togglePinThread}
+                      />
+                    </FlyoutRow>
+                  )}
+                {(isChannelOwner || isCommunityOwner) && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph="freeze"
+                        hoverColor="space.alt"
+                        tipText={
+                          thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                        }
+                        tipLocation="top-left"
+                        onClick={this.threadLock}
+                      />
+                    </FlyoutRow>
+                  )}
+                {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
+                    <FlyoutRow>
+                      <IconButton
+                        glyph="delete"
+                        hoverColor="warn.alt"
+                        tipText="Delete thread"
+                        tipLocation="top-left"
+                        onClick={this.triggerDelete}
+                      />
+                    </FlyoutRow>
+                  )}
+                {thread.isCreator && (
+                  <FlyoutRow>
+                    <IconButton
+                      glyph="edit"
+                      hoverColor="text.alt"
+                      tipText="Edit"
+                      tipLocation="top-left"
+                      onClick={this.toggleEdit}
+                    />
+                  </FlyoutRow>
+                )}
+              </Flyout>
+            </DropWrap>
           )}
 
-          {!isEditing && (
-            <ShareButtons>
-              <ShareButton facebook>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                    .content.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'facebook'} size={24} />
-                </a>
-              </ShareButton>
-
-              <ShareButton twitter>
-                <a
-                  href={`https://twitter.com/share?text=${thread.content
-                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'twitter'} size={24} />
-                </a>
-              </ShareButton>
-
-              <ShareButton onClick={this.copyLink}>
-                <a>
-                  <Icon glyph={'link'} size={24} />
-                </a>
-              </ShareButton>
-            </ShareButtons>
+        {isChannelMember &&
+          !isEditing &&
+          currentUser && (
+            <DropWrap>
+              <IconButton
+                glyph={
+                  thread.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+                hoverColor="text.alt"
+                tipText={
+                  thread.receiveNotifications
+                    ? 'Turn off notifications'
+                    : 'Get notifications'
+                }
+                tipLocation="top-left"
+                onClick={this.toggleNotification}
+              />
+            </DropWrap>
           )}
-        </span>
+
+        {isEditing && (
+          <EditDone>
+            <Button loading={isSavingEdit} onClick={this.saveEdit}>
+              Save
+            </Button>
+          </EditDone>
+        )}
       </ThreadWrapper>
     );
   }

@@ -146,7 +146,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
         {channel.channelPermissions.isMember ? (
           <Link to={`/${community.slug}`}>
-            <OutlineButton>View Community</OutlineButton>
+            <OutlineButton color={'text.alt'}>View Community</OutlineButton>
           </Link>
         ) : (
           <Button onClick={this.joinCommunity} loading={isLoading}>
@@ -158,6 +158,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   }
 }
 const map = state => ({ currentUser: state.users.currentUser });
+// $FlowIssue
 export default compose(connect(map), toggleChannelSubscriptionMutation)(
   ThreadCommunityBanner
 );
