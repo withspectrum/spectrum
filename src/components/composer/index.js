@@ -165,7 +165,9 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   componentWillUpdate(next) {
-    this.handleIncomingProps(next);
+    if (this.props.data !== next.data) {
+      this.handleIncomingProps(next);
+    }
   }
 
   closeComposer = () => {
