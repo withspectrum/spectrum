@@ -67,6 +67,20 @@ class ThreadContainer extends React.Component<Props, State> {
       }
     }
 
+    // if the user is new and signed up through a thread view, push
+    // the thread's community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (
+      (!prevProps.data.thread && this.props.data.thread) ||
+      (prevProps.data.thread &&
+        prevProps.data.thread.id !== this.props.data.thread.id)
+    ) {
+      if (this.props.currentUser) return;
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.thread.community)
+      );
+    }
+
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
@@ -128,11 +142,6 @@ class ThreadContainer extends React.Component<Props, State> {
           communityName: thread.community.name,
         },
       });
-
-      // if the user is new and signed up through a thread view, push
-      // the thread's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      dispatch(addCommunityToOnboarding(thread.community));
 
       // get the data we need to render the view
       const { channelPermissions, isPrivate } = thread.channel;
@@ -229,6 +238,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
+                  redirectPath={window.location}
                 />
               )}
             </Detail>
