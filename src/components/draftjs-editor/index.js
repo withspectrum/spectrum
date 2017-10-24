@@ -197,10 +197,10 @@ class Editor extends React.Component<Props, State> {
             }}
             readOnly={readOnly}
             placeholder={!readOnly && placeholder}
-            spellCheck="false"
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
+            spellCheck={true}
+            autoCapitalize="sentences"
+            autoComplete="on"
+            autoCorrect="on"
             {...rest}
           />
           {!readOnly && (
@@ -276,10 +276,10 @@ class Editor extends React.Component<Props, State> {
               }}
               readOnly={readOnly}
               placeholder={!readOnly && placeholder}
-              spellCheck="false"
-              autoCapitalize="off"
-              autoComplete="off"
-              autoCorrect="off"
+              spellCheck={true}
+              autoCapitalize="sentences"
+              autoComplete="on"
+              autoCorrect="on"
               {...rest}
             />
           </Wrapper>
