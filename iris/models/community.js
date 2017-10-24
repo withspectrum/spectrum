@@ -178,6 +178,8 @@ export const createCommunity = (
     .then(community => {
       // send a welcome email to the community creator
       addQueue('send new community welcome email', { user, community });
+      // email brian with info about the community and owner
+      addQueue('admin community created', { user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {

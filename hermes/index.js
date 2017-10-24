@@ -10,6 +10,7 @@ import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt
 import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
+import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
@@ -21,6 +22,7 @@ import {
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   SEND_DIGEST_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
+  SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -40,6 +42,7 @@ const server = createWorker({
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,
   [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,
+  [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
 });
 
 console.log(
