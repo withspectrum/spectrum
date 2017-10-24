@@ -244,7 +244,6 @@ module.exports = {
       if (user.contextPermissions) return user.contextPermissions;
 
       const queryName = info.operation.name.value;
-
       const handleCheck = async () => {
         switch (queryName) {
           case 'getThread':

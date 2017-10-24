@@ -12,13 +12,7 @@ import type { Message } from '../models/message';
 module.exports = {
   Subscription: {
     messageAdded: {
-      resolve: (message: Message) => {
-        // NOTE(@mxstbr): For some reason I have to wrap timestamp in new Date here. I have no idea why but otherwise message subscriptions don't work.
-        return {
-          ...message,
-          timestamp: new Date(message.timestamp),
-        };
-      },
+      resolve: (message: any) => message,
       subscribe: withFilter(
         asyncify(listenToNewMessages, err => {
           throw new Error(err);
