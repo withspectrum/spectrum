@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Composer from '../../components/composer';
-import ThreadContainer from '../thread/containers';
+import ThreadContainer from '../thread';
 import { Container, Thread } from './style';
 
 class DashboardThread extends Component {

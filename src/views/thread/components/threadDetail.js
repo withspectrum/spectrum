@@ -432,23 +432,6 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        {!isEditing && (
-          <Location>
-            {this.props.slider ? (
-              <div style={{ width: '16px' }} />
-            ) : (
-              <Icon glyph="view-back" size={16} />
-            )}
-            <Link to={`/${thread.community.slug}`}>
-              {thread.community.name}
-            </Link>
-            <span>/</span>
-            <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
-              {thread.channel.name}
-            </Link>
-          </Location>
-        )}
-
         <ContextRow>
           <Byline>
             <AuthorAvatar

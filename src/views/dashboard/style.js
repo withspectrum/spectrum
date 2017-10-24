@@ -290,7 +290,7 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 8px;
+  padding: 14px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: 10;

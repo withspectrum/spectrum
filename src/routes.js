@@ -214,6 +214,7 @@ class Routes extends React.Component<{}> {
               <Route path="/messages/new" component={MessagesFallback} />
               <Route path="/messages/:threadId" component={MessagesFallback} />
               <Route path="/messages" component={MessagesFallback} />
+              <Route path="/thread/:threadId" component={Thread} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />

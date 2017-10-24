@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import Avatar from '../../components/avatar';
 import Column from '../../components/column';
 import {
@@ -12,11 +13,13 @@ import {
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  background-color: ${({ theme }) => theme.bg.default};
+  background-color: ${({ theme }) => theme.bg.wash};
   overflow: hidden;
   max-width: 100%;
   max-height: 100%;
   flex: auto;
+  display: flex;
+  align-items: center;
   align-self: stretch;
   grid-template-rows: 48px 1fr 64px;
   grid-template-columns: 100%;
@@ -24,12 +27,17 @@ export const View = styled(FlexCol)`
 `;
 
 export const Content = styled(FlexRow)`
+  background-color: ${({ theme }) => theme.bg.default};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
   justify-content: center;
   align-items: flex-start;
   flex: auto;
   overflow-y: scroll;
-  padding-top: 32px;
   grid-area: body;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
 
   @media (max-width: 768px) {
     padding-top: 16px;
@@ -41,6 +49,8 @@ export const Input = styled(FlexRow)`
   justify-content: center;
   z-index: ${zIndex.chatInput};
   grid-area: footer;
+  width: 100%;
+  max-width: 1024px;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
@@ -356,4 +366,101 @@ export const ShareButton = styled.span`
     border-radius: 0 4px 4px 0;
     border-left: 0;
   }
+`;
+
+export const CommunityHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding: 11px 16px;
+  flex: auto;
+`;
+export const CommunityHeaderName = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
+  margin-left: 16px;
+  margin-right: 8px;
+`;
+export const CommunityHeaderChannelTag = styled.div`
+  color: ${props => props.theme.text.reverse};
+  background: ${props => props.theme.warn.alt};
+  border-radius: 20px;
+  padding: 0 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const CommunityHeaderMeta = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const CommunityHeaderLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  flex: auto;
+`;
+
+export const PillLink = styled(Link)`
+  font-size: 12px;
+  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.wash};
+  font-weight: ${props => '400'};
+  color: ${props => props.theme.text.alt};
+  display: inline-block;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 8px;
+  max-height: 24px;
+  line-height: 1;
+  pointer-events: auto;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const PillLinkPinned = styled.div`
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  max-height: 24px;
+  line-height: 1;
+
+  .icon {
+    top: -1px;
+  }
+`;
+
+export const PillLabel = styled.span`
+  ${props =>
+    props.isPrivate &&
+    css`
+      position: relative;
+      top: -2px;
+    `};
+`;
+
+export const Lock = styled.span`margin-right: 4px;`;
+export const PinIcon = styled.span`
+  margin-right: 4px;
+  margin-left: -2px;
 `;

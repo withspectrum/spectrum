@@ -13,7 +13,7 @@ import {
   CloseLabel,
 } from './style';
 import Icon from '../../components/icons';
-import ThreadContainer from '../thread/containers';
+import ThreadContainer from '../thread';
 
 const ANIMATION_DURATION = 50;
 
