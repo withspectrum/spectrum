@@ -11,7 +11,7 @@ export default job => {
   try {
     return sendEmail({
       TemplateId: ADMIN_COMMUNITY_CREATED_TEMPLATE,
-      To: 'briandlovin@gmail.com',
+      To: 'brian@spectrum.chat, max@spectrum.chat',
       TemplateModel: {
         user: {
           ...user,
