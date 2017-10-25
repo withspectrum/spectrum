@@ -69,16 +69,17 @@ module.exports = {
       return profilePhoto;
     },
     isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
-      return loaders.userRecurringPayments
-        .load(id)
-        .then(
-          sub =>
-            !(sub == null) &&
-            sub.status === 'active' &&
-            sub.planId === 'beta-pro'
-              ? true
-              : false
+      return loaders.userRecurringPayments.load(id).then(result => {
+        if (!result || result.length === 0) return false;
+        const subs = result.reduction;
+
+        return Boolean(
+          Array.isArray(subs) &&
+            subs.some(
+              sub => sub.status === 'active' && subs.planId === 'beta-pro'
+            )
         );
+      });
     },
     everything: (
       { id }: DBUser,
