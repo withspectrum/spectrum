@@ -109,6 +109,7 @@ export const getUsersRecurringPayments = (
   return db
     .table('recurringPayments')
     .getAll(...userIds, { index: 'userId' })
+    .group('userId')
     .run();
 };
 
