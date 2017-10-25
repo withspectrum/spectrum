@@ -70,7 +70,7 @@ module.exports = {
     },
     isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
       return loaders.userRecurringPayments.load(id).then(result => {
-        if (!result) return false;
+        if (!result || result.length === 0) return false;
         const subs = result.reduction;
 
         return Boolean(
