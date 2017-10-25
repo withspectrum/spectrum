@@ -58,7 +58,7 @@ const Channel = /* GraphQL */ `
 		userId: ID!
 	}
 
-	type Channel {
+	type Channel @cacheControl(maxAge: 86400) {
 		id: ID!
 		createdAt: Date!
 		modifiedAt: Date
@@ -67,10 +67,10 @@ const Channel = /* GraphQL */ `
 		slug: String!
 		isPrivate: Boolean
     isDefault: Boolean
-		channelPermissions: ChannelPermissions!
-		communityPermissions: CommunityPermissions!
+		channelPermissions: ChannelPermissions! @cacheControl(scope: PRIVATE)
+		communityPermissions: CommunityPermissions! @cacheControl(scope: PRIVATE)
 		community: Community!
-		threadConnection(first: Int = 20, after: String): ChannelThreadsConnection!
+		threadConnection(first: Int = 20, after: String): ChannelThreadsConnection! @cacheContrl(maxAge: 0)
 		memberConnection(first: Int = 20, after: String): ChannelMembersConnection!
 		memberCount: Int!
 		metaData: ChannelMetaData

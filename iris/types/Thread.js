@@ -32,7 +32,7 @@ const Thread = /* GraphQL */ `
 		data: String
 	}
 
-	type Thread {
+	type Thread @cacheControl(maxAge: 84600) {
 		id: ID!
 		createdAt: Date!
 		modifiedAt: Date
