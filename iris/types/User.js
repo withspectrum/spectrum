@@ -68,7 +68,7 @@ const User = /* GraphQL */ `
 		notifications: UserNotificationsSettings
 	}
 
-	type User {
+	type User @cacheControl(maxAge: 86400) {
 		id: ID!
 		name: String
 		firstName: String
@@ -92,12 +92,12 @@ const User = /* GraphQL */ `
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
+		directMessageThreadsConnection: UserDirectMessageThreadsConnection! @cacheControl(scope: PRIVATE)
 		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
 		everything(first: Int = 20, after: String): EverythingThreadsConnection!
-		recurringPayments: [RecurringPayment]
-		invoices: [Invoice]
-		settings: UserSettings
+		recurringPayments: [RecurringPayment] @cacheControl(scope: PRIVATE)
+		invoices: [Invoice] @cacheControl(scope: PRIVATE)
+		settings: UserSettings @cacheControl(scope: PRIVATE)
 		contextPermissions: ContextPermissions
 	}
 
