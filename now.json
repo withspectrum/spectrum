@@ -22,6 +22,7 @@
 		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
 		"SLACK_SECRET": "@slack-secret",
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
-		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature"
+		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
+        "APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key"
 	}
 }
