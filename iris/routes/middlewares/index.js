@@ -11,10 +11,11 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   // Raven (Sentry client) needs to come before everything else
   const raven = require('./raven').default;
   middlewares.use(raven);
-
-  const engine = require('./engine').default;
-  middlewares.use(engine);
 }
+
+// Apollo Optics middleware
+import OpticsAgent from 'optics-agent';
+middlewares.use(OpticsAgent.middleware());
 
 // Cross origin request support
 import cors from './cors';
@@ -40,8 +41,5 @@ middlewares.use(session);
 import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
-
-import compression from './compression';
-middlewares.use(compression);
 
 export default middlewares;

@@ -34,11 +34,15 @@ const createSubscriptionsServer = (server: any, path: string) => {
           .then(user => {
             return {
               user,
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
               loaders: createLoaders(),
             };
           })
           .catch(err => {
             return {
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
               loaders: createLoaders(),
             };
           }),
