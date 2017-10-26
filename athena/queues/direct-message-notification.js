@@ -98,45 +98,65 @@ export default async (job: JobData) => {
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
+  const addToQueue = recipient => {
+    return addQueue(
+      SEND_NEW_DIRECT_MESSAGE_EMAIL,
+      {
+        recipient,
+        thread: {
+          content: {
+            // Contruct title out of direct message thread users
+            title: `Conversation with ${sentencify(
+              recipients
+                .filter(userThread => userThread.userId !== recipient.userId)
+                .map(user => user.name)
+            )}`,
+          },
+          path: `messages/${thread.id}`,
+          id: thread.id,
+        },
+        user,
+        message: {
+          ...message,
+          content: {
+            body:
+              message.messageType === 'draftjs'
+                ? toPlainText(toState(JSON.parse(message.content.body)))
+                : message.content.body,
+          },
+        },
+      },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
+  };
+
   // send each recipient a notification
   const formatAndBufferPromises = filteredRecipients.map(async recipient => {
     // if a notification already exists, check to see if the
     if (existing) {
       const { lastSeen } = await getUserById(recipient.userId);
-      // if the user h
+      const { entities } = existing;
+
+      const entitiesCreatedSinceUserLastSeen = entities
+        .slice()
+        .filter(entity => {
+          const parsed = JSON.parse(entity.payload);
+          return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
+        });
+
+      if (entitiesCreatedSinceUserLastSeen.length >= 1) {
+        console.log('did not send a notif');
+        return;
+      } else {
+        console.log('sent a notif');
+        addToQueue(recipient);
+      }
     } else {
-      addQueue(
-        SEND_NEW_DIRECT_MESSAGE_EMAIL,
-        {
-          recipient,
-          thread: {
-            content: {
-              // Contruct title out of direct message thread users
-              title: `Conversation with ${sentencify(
-                recipients
-                  .filter(userThread => userThread.userId !== recipient.userId)
-                  .map(user => user.name)
-              )}`,
-            },
-            path: `messages/${thread.id}`,
-            id: thread.id,
-          },
-          user,
-          message: {
-            ...message,
-            content: {
-              body:
-                message.messageType === 'draftjs'
-                  ? toPlainText(toState(JSON.parse(message.content.body)))
-                  : message.content.body,
-            },
-          },
-        },
-        {
-          removeOnComplete: true,
-          removeOnFail: true,
-        }
-      );
+      console.log('sent a notif');
+      addToQueue(recipient);
     }
 
     // store or update the notification in the db to trigger a ui update in app
