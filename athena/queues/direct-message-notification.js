@@ -3,6 +3,8 @@ const debug = require('debug')('athena:queue:direct-message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
+import { getUserById } from '../models/user';
+import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
   updateNotification,
@@ -79,9 +81,9 @@ export default async (job: JobData) => {
   );
 
   // filter out the user who sent the message
-  const filteredRecipients = recipients.filter(
-    recipient => recipient.userId !== currentUserId
-  );
+  const filteredRecipients = recipients
+    .filter(recipient => recipient.userId !== currentUserId)
+    .filter(recipient => getEmailStatus(recipient.userId, 'newDirectMessage'));
 
   if (!filteredRecipients || filteredRecipients.length === 0) {
     debug('No recipients for this DM notification');
@@ -97,39 +99,45 @@ export default async (job: JobData) => {
     : storeUsersNotifications;
 
   // send each recipient a notification
-  const formatAndBufferPromises = filteredRecipients.map(recipient => {
-    addQueue(
-      SEND_NEW_DIRECT_MESSAGE_EMAIL,
-      {
-        recipient,
-        thread: {
-          content: {
-            // Contruct title out of direct message thread users
-            title: `Conversation with ${sentencify(
-              recipients
-                .filter(userThread => userThread.userId !== recipient.userId)
-                .map(user => user.name)
-            )}`,
+  const formatAndBufferPromises = filteredRecipients.map(async recipient => {
+    // if a notification already exists, check to see if the
+    if (existing) {
+      const { lastSeen } = await getUserById(recipient.userId);
+      // if the user h
+    } else {
+      addQueue(
+        SEND_NEW_DIRECT_MESSAGE_EMAIL,
+        {
+          recipient,
+          thread: {
+            content: {
+              // Contruct title out of direct message thread users
+              title: `Conversation with ${sentencify(
+                recipients
+                  .filter(userThread => userThread.userId !== recipient.userId)
+                  .map(user => user.name)
+              )}`,
+            },
+            path: `messages/${thread.id}`,
+            id: thread.id,
           },
-          path: `messages/${thread.id}`,
-          id: thread.id,
-        },
-        user,
-        message: {
-          ...message,
-          content: {
-            body:
-              message.messageType === 'draftjs'
-                ? toPlainText(toState(JSON.parse(message.content.body)))
-                : message.content.body,
+          user,
+          message: {
+            ...message,
+            content: {
+              body:
+                message.messageType === 'draftjs'
+                  ? toPlainText(toState(JSON.parse(message.content.body)))
+                  : message.content.body,
+            },
           },
         },
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
+        {
+          removeOnComplete: true,
+          removeOnFail: true,
+        }
+      );
+    }
 
     // store or update the notification in the db to trigger a ui update in app
     return dbMethod(notification.id, recipient.userId);
