@@ -147,15 +147,12 @@ export default async (job: JobData) => {
           return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
         });
 
-      if (entitiesCreatedSinceUserLastSeen.length >= 1) {
-        console.log('did not send a notif');
-        return;
-      } else {
-        console.log('sent a notif');
+      if (entitiesCreatedSinceUserLastSeen.length < 1) {
+        // if an existing notification was found, we only send an email if the user was last online more recently than the last message sent
         addToQueue(recipient);
       }
     } else {
-      console.log('sent a notif');
+      // a notification email gets sent if there was no prevoiusly existing notification
       addToQueue(recipient);
     }
 
