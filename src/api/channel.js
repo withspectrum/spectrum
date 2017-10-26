@@ -93,9 +93,13 @@ const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
   mutation toggleChannelSubscription($channelId: ID!) {
     toggleChannelSubscription (channelId: $channelId) {
       ...channelInfo
+      community {
+        ...communityInfo
+      }
     }
   }
   ${channelInfoFragment}
+  ${communityInfoFragment}
 `;
 
 const TOGGLE_CHANNEL_SUBSCRIPTION_OPTIONS = {
