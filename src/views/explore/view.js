@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';
 import { Button } from '../../components/buttons';
 import Search from './components/search';
@@ -38,14 +40,36 @@ export const CommunitySearch = (props: Props) => {
     }
   `;
 
+  const PrimaryCTA = styled(Button)`
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 12px;
+    background-color: ${props => props.theme.bg.default};
+    background-image: none;
+    color: ${props => props.theme.brand.alt};
+    transition: ${Transition.hover.off};
+    z-index: ${zIndex.card};
+
+    &:hover {
+      background-color: ${props => props.theme.bg.default};
+      color: ${props => props.theme.brand.default};
+      box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
+      transition: ${Transition.hover.on};
+    }
+  `;
+
   const SecondaryContent = styled(ThisContent)`margin-top: 0;`;
 
-  const ThisTagline = styled(Tagline)`margin-bottom: 16px;`;
+  const ThisTagline = styled(Tagline)`margin-bottom: 0;`;
 
-  const SecondaryTagline = styled(ThisTagline)`font-size: 24px;`;
+  const SecondaryTagline = styled(ThisTagline)`
+    font-size: 20px;
+    font-weight: 900;
+  `;
 
   const ThisCopy = styled(Copy)`
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 32px;
     font-weight: 500;
     text-align: center;
@@ -56,7 +80,7 @@ export const CommunitySearch = (props: Props) => {
     }
   `;
 
-  const SecondaryCopy = styled(ThisCopy)``;
+  const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
 
   return (
     <ViewSegment goop={3} background="constellations">
@@ -68,11 +92,13 @@ export const CommunitySearch = (props: Props) => {
         {props.children}
         {props.currentUser ? (
           <SecondaryContent>
-            <SecondaryTagline>Or create your own community</SecondaryTagline>
+            <SecondaryTagline>...or create your own community</SecondaryTagline>
             <SecondaryCopy>
               Building communities on Spectrum is easy and free forever
             </SecondaryCopy>
-            <Button>Button</Button>
+            <Link to={`/new/community`}>
+              <PrimaryCTA>Get Started</PrimaryCTA>
+            </Link>
           </SecondaryContent>
         ) : (
           <UpsellSignIn redirectPath={props.redirectPath} />
