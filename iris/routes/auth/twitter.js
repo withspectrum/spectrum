@@ -45,7 +45,7 @@ twitterAuthRouter.get(
       return new Promise(resolve => {
         req.session.save(err => {
           if (err) console.log(err);
-          resolve(res.redirect(redirectUrl));
+          resolve(res.redirect(`${redirectUrl}?authed=true`));
         });
       });
     }

@@ -48,7 +48,12 @@ export class Login extends Component {
     const { signinType } = this.state;
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
     const { redirectPath } = this.props;
-    const { r } = queryString.parse(this.props.location.search);
+
+    let r;
+    if (this.props.location) {
+      const searchObj = queryString.parse(this.props.location.search);
+      r = searchObj.r;
+    }
 
     const viewTitle =
       signinType === 'login' ? 'Welcome back!' : 'Sign in to get started';
