@@ -124,11 +124,10 @@ const SEND_MESSAGE_OPTIONS = {
             messageType: message.messageType,
           },
         },
-        update: (store, { data: { addMessage }, data }) => {
+        update: (store, { data: { addMessage } }) => {
           // we have to split out the optimistic update by thread type
           // because DMs and story threads have different queries and response
           // shapes
-          console.log(data);
           if (ownProps.threadType === 'story') {
             // Read the data from our cache for this query.
             const data = store.readQuery({
