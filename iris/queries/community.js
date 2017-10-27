@@ -30,7 +30,7 @@ import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { GetCommunityArgs } from '../models/community';
+import type { GetCommunityArgs, GetCommunitiesArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
 import type { GraphQLContext } from '../';
 
@@ -44,6 +44,15 @@ module.exports = {
       if (args.id) return loaders.community.load(args.id);
       if (args.slug) return loaders.communityBySlug.load(args.slug);
 
+      return null;
+    },
+    communities: (
+      _: any,
+      args: GetCommunitiesArgs,
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.ids) return loaders.community.loadMany(args.ids);
+      if (args.slugs) return loaders.communityBySlug.loadMany(args.slugs);
       return null;
     },
     topCommunities: (_: any, { amount = 20 }: { amount: number }) =>
