@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
@@ -36,7 +37,8 @@ twitterAuthRouter.get(
   (req, res) => {
     // req.session.redirectURL is set in the /auth/twitter route
     // if it's not set due to some error fallback to the default
-    const redirectUrl = req.session.redirectURL || FALLBACK_URL;
+    const redirectUrl = new URL(req.session.redirectURL || FALLBACK_URL);
+    redirectUrl.searchParams.append('authed', 'true');
 
     // Delete the redirectURL from the session again so we don't redirect
     // to the old URL the next time around
@@ -45,12 +47,12 @@ twitterAuthRouter.get(
       return new Promise(resolve => {
         req.session.save(err => {
           if (err) console.log(err);
-          resolve(res.redirect(`${redirectUrl}?authed=true`));
+          resolve(res.redirect(redirectUrl.href));
         });
       });
     }
 
-    res.redirect(redirectUrl);
+    res.redirect(redirectUrl.href);
   }
 );
 
