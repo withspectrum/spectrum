@@ -329,8 +329,8 @@ export const sendEmailInvitationsMutation = graphql(
 );
 
 export const SEARCH_COMMUNITIES_QUERY = gql`
-  query searchCommunities($string: String) {
-    searchCommunities(string: $string) {
+  query searchCommunities($string: String, $amount: Int) {
+    searchCommunities(string: $string, amount: $amount) {
       ...communityInfo
       ...communityMetaData
     }

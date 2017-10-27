@@ -129,7 +129,7 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString },
+        variables: { string: searchString, amount: 30 },
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;

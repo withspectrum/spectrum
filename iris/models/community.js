@@ -607,13 +607,14 @@ export const getRecentCommunities = (amount: number): Array<DBCommunity> => {
 };
 
 export const getCommunitiesBySearchString = (
-  string: string
+  string: string,
+  amount: number
 ): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .filter(community => community.coerceTo('string').match(`(?i)${string}`))
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(15)
+    .limit(amount)
     .run();
 };
 

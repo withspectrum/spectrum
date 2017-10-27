@@ -191,6 +191,7 @@ class CreateCommunityForm extends Component {
           query: SEARCH_COMMUNITIES_QUERY,
           variables: {
             string: slug,
+            amount: 10,
           },
         })
         .then(({ data: { searchCommunities: communitySuggestions } }) => {
