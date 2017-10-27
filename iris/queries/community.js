@@ -241,9 +241,8 @@ module.exports = {
         ]);
         if (!userPermissions.isOwner) return;
 
-        const {
-          reduction: rPayments,
-        } = await loaders.communityRecurringPayments.load(id);
+        const results = await loaders.communityRecurringPayments.load(id);
+        const rPayments = results && results.reduction;
 
         const communitySubscriptions =
           rPayments &&
