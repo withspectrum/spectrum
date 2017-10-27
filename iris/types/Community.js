@@ -121,7 +121,7 @@ const Community = /* GraphQL */ `
 		community(id: ID, slug: String): Community
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
-		searchCommunities(string: String): [Community]
+		searchCommunities(string: String, amount: Int = 30): [Community]
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
 	}
 

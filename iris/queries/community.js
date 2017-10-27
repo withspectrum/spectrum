@@ -50,8 +50,8 @@ module.exports = {
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
-    searchCommunities: (_: any, { string }: { string: string }) =>
-      getCommunitiesBySearchString(string),
+    searchCommunities: (_: any, { string, amount = 30 }: { string: string }) =>
+      getCommunitiesBySearchString(string, amount),
     searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
       const currentUser = user;
 
