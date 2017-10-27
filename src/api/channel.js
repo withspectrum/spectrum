@@ -285,12 +285,16 @@ export const getBlockedUsersQuery = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
+        community {
+          ...communityInfo
+        }
         blockedUsers {
           ...userInfo
         }
       }
 		}
     ${userInfoFragment}
+    ${communityInfoFragment}
     ${channelInfoFragment}
 	`,
   getBlockedUsersOptions
