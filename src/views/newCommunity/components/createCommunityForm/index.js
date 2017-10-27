@@ -185,7 +185,6 @@ class CreateCommunityForm extends Component {
   checkSuggestedCommunities = () => {
     const { name, slug, slugError } = this.state;
     if (name && name.length > 1 && slug && slug.length > 1 && !slugError) {
-      console.log('checking for suggested communities');
       // if the user has found a valid url, do a community search to see if they might be creating a duplicate community
       this.props.client
         .query({
