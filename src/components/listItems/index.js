@@ -148,6 +148,7 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
+  reputationTipText = 'Your rep in this community',
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
@@ -174,18 +175,11 @@ export const UserListItem = ({
             )}
           </Heading>
           <Meta>
-            {user.username && (
-              <span>
-                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
-              </span>
-            )}
             {(user.totalReputation || user.contextPermissions) && (
-                <span>
-                  <Reputation
-                    tipText={'Your rep in this community'}
-                    reputation={reputation}
-                  />
-                </span>
+                <Reputation
+                  tipText={reputationTipText}
+                  reputation={reputation}
+                />
               )}
           </Meta>
         </Col>

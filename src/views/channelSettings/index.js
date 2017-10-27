@@ -39,7 +39,6 @@ type Props = {
 class CommunitySettings extends React.Component<Props> {
   togglePending = (userId, action) => {
     const { data: { channel }, togglePendingUser, dispatch } = this.props;
-
     const input = {
       channelId: channel.id,
       userId,
@@ -147,6 +146,7 @@ class CommunitySettings extends React.Component<Props> {
           <Column type="primary">
             {channel.isPrivate && (
               <span>
+                <ChannelMembers channel={channel} id={channel.id} />
                 <PendingUsers
                   togglePending={this.togglePending}
                   channel={channel}
