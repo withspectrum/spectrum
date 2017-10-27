@@ -7,8 +7,8 @@ import Icon from '../../components/icons';
 import { hexa, Gradient, FlexCol, FlexRow } from '../../components/globals';
 import Search from '../explore/components/search';
 
-import Theme from './components/themes';
-import { Conversation, Discover } from './components/illustrations';
+import ViewSegment from '../../components/viewSegment';
+import { Conversation, Discover } from '../../components/illustrations';
 import {
   Header,
   Tagline,
@@ -30,7 +30,9 @@ import {
 
 type Props = Object;
 
-const Section = (props: Props) => <Theme {...props}>{props.children}</Theme>;
+const Section = (props: Props) => (
+  <ViewSegment {...props}>{props.children}</ViewSegment>
+);
 
 export const Overview = (props: Props) => {
   const Text = styled(FlexCol)`

@@ -25,20 +25,13 @@ import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
 
-export const ViewContainer = styled(FlexCol)`
-  flex: auto;
-  align-self: stretch;
-  overflow: hidden;
-  overflow-y: scroll;
-`;
-
-export const ScrollBody = styled(FlexCol)`
+export const Wrapper = styled(FlexCol)`
+  flex: 1 0 auto;
   width: 100%;
+  background-color: ${({ theme }) => theme.bg.default};
+  overflow: auto;
   overflow-x: hidden;
-  overflow-y: scroll;
-  position: relative;
   z-index: ${zIndex.base};
-  background-color: ${({ theme }) => theme.bg.wash};
 `;
 
 export const ViewTitle = styled(H1)`
@@ -264,7 +257,7 @@ export const ErrorState = styled(FlexCol)`
 
 export const SearchWrapper = styled(Card)`
   position: relative;
-  margin-bottom: 48px;
+  margin-bottom: 0;
   padding: 12px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexCol } from '../globals';
 import { Tagline, Copy } from '../../views/splash/style';
-import Theme from '../../views/splash/components/themes';
+import ViewSegment from '../../components/viewSegment';
 
 const Emoji = styled.div`
   font-size: 3em;
@@ -36,7 +36,7 @@ const Text = styled(Copy)`
 const MaintenanceDowntime = props => {
   const timeInUTC = 'September 25, 2017 15:00:00 UTC';
   return (
-    <Theme background="constellations">
+    <ViewSegment background="constellations">
       <Wrapper>
         <Emoji>🛠</Emoji>
         <Tagline>Spectrum is currently undergoing maintenance</Tagline>
@@ -52,7 +52,7 @@ const MaintenanceDowntime = props => {
           for updates.
         </Text>
       </Wrapper>
-    </Theme>
+    </ViewSegment>
   );
 };
 
