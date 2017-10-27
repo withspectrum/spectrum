@@ -89,17 +89,16 @@ export const getCommunityRecurringPayments = (
   return db
     .table('recurringPayments')
     .getAll(communityId, { index: 'communityId' })
-    .run()
-    .then(result => (result && result.length > 0 ? result : null));
+    .run();
 };
 
 export const getCommunitiesRecurringPayments = (
   communityIds: Array<string>
-): Promise<Object> => {
+): Promise<Array<Object>> => {
   return db
     .table('recurringPayments')
     .getAll(...communityIds, { index: 'communityId' })
-    .filter({ status: 'active' })
+    .group('communityId')
     .run();
 };
 

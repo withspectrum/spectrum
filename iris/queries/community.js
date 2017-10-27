@@ -241,7 +241,10 @@ module.exports = {
         ]);
         if (!userPermissions.isOwner) return;
 
-        const rPayments = await loaders.communityRecurringPayments.load(id);
+        const {
+          reduction: rPayments,
+        } = await loaders.communityRecurringPayments.load(id);
+
         const communitySubscriptions =
           rPayments &&
           rPayments.length > 0 &&
@@ -436,8 +439,9 @@ module.exports = {
       });
     },
     isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
-      return loaders.communityRecurringPayments.load(id).then(subs => {
-        if (!subs) return false;
+      return loaders.communityRecurringPayments.load(id).then(res => {
+        const subs = res.reduction;
+        if (!subs || subs.length === 0) return false;
         if (!Array.isArray(subs)) return subs.status === 'active';
 
         return subs.some(sub => sub.status === 'active');
