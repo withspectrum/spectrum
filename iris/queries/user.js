@@ -71,7 +71,7 @@ module.exports = {
     isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
       return loaders.userRecurringPayments.load(id).then(result => {
         if (!result || result.length === 0) return false;
-        const subs = result.reduction;
+        const subs = result && result.reduction;
 
         return Boolean(
           Array.isArray(subs) &&

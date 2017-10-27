@@ -440,7 +440,7 @@ module.exports = {
     },
     isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
       return loaders.communityRecurringPayments.load(id).then(res => {
-        const subs = res.reduction;
+        const subs = res && res.reduction;
         if (!subs || subs.length === 0) return false;
         if (!Array.isArray(subs)) return subs.status === 'active';
 
