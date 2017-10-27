@@ -1,9 +1,7 @@
 //@flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 
 export const getCommunity = graphql(
   gql`
@@ -72,4 +70,30 @@ export const getRecentCommunities = graphql(
       },
     }),
   }
+);
+
+const GET_COMMUNITIES_OPTIONS = {
+  options: ({ slugs }) => ({
+    variables: {
+      slugs,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+const GET_COMMUNITIES_QUERY = gql`
+  query getCommunitiesCollection($slugs: [String]) {
+    community(slugs: $slugs) {
+      ...communityInfo
+      metaData {
+        members
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+export const getCommunitiesCollectionQuery = graphql(
+  GET_COMMUNITIES_QUERY,
+  GET_COMMUNITIES_OPTIONS
 );

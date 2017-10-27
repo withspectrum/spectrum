@@ -119,6 +119,7 @@ const Community = /* GraphQL */ `
 
 	extend type Query {
 		community(id: ID, slug: String): Community
+		communities(slugs: [String], ids: [ID]): [Community]
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
 		searchCommunities(string: String): [Community]
