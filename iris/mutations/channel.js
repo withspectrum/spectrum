@@ -520,7 +520,7 @@ module.exports = {
           }
 
           // get the community parent of channel
-          const currentUserCommunityPermissions = getUserPermissionsInChannel(
+          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
             channelToEvaluate.communityId,
             currentUser.id
           );

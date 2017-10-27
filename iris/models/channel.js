@@ -116,6 +116,13 @@ const getChannelBySlug = (
     });
 };
 
+const getChannelById = (id: string) => {
+  return db
+    .table('channels')
+    .get(id)
+    .run();
+};
+
 type GetChannelByIdArgs = {
   id: string,
 };
@@ -327,6 +334,7 @@ const getChannelMemberCount = (channelId: string): number => {
 
 module.exports = {
   getChannelBySlug,
+  getChannelById,
   getChannelMetaData,
   getChannelsByUser,
   getChannelsByCommunity,
