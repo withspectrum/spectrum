@@ -415,10 +415,38 @@ export const SearchResultNull = styled.div`
   }
 `;
 
-export const TopCommunityItem = styled.div`
-  border-bottom: 2px solid ${props => props.theme.bg.wash};
+export const ListWithTitle = styled(FlexCol)`
+  margin-top: 32px;
+  flex: auto;
+`;
+export const ListTitle = styled(H2)`
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding-bottom: 8px;
+  padding-left: 16px;
+  font-weight: 500;
+  font-size: 18px;
 
-  &:last-of-type {
-    border-bottom: 0;
+  @media (max-width: 768px) {
+    padding-left: 32px;
+  }
+`;
+
+export const ListWrapper = styled(FlexRow)`
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: flex-start;
+  padding-top: 16px;
+`;
+
+export const ListItem = styled(FlexRow)`
+  flex: none;
+  flex-basis: 400px;
+  width: 400px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-basis: 100%;
+    padding: 0 16px;
   }
 `;

@@ -83,7 +83,7 @@ const GET_COMMUNITIES_OPTIONS = {
 
 const GET_COMMUNITIES_QUERY = gql`
   query getCommunitiesCollection($slugs: [String]) {
-    community(slugs: $slugs) {
+    communities(slugs: $slugs) {
       ...communityInfo
       metaData {
         members

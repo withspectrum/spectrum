@@ -11,7 +11,6 @@ import Head from '../../components/head';
 import { Column } from '../../components/column';
 import Goop from '../../components/goop';
 import { FeaturedCommunity } from '../../components/curation';
-import TopCommunityList from './components/topCommunities';
 import Search from './components/search';
 import { UpsellCreateCommunity, UpsellSignIn } from '../../components/upsell';
 import {
@@ -23,7 +22,7 @@ import {
   Constellations,
 } from './style';
 
-import { CommunitySearch } from './view';
+import { CommunitySearch, Charts } from './view';
 
 import { getCommunity } from './queries';
 
@@ -49,14 +48,7 @@ const ExplorePure = props => {
         >
           <Search />
         </CommunitySearch>
-        <Section>
-          <SectionWrapper>
-            <Column type="primary">
-              <SectionTitle>Most popular communities</SectionTitle>
-              <TopCommunityList withMeta={true} withDescription={false} />
-            </Column>
-          </SectionWrapper>
-        </Section>
+        <Charts />
       </Wrapper>
     </AppViewWrapper>
   );

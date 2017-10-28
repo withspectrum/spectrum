@@ -5,8 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getTopCommunities } from '../queries';
 import { displayLoadingState } from '../../../components/loading';
-import { ListContainer } from '../../../components/listItems/style';
-import { ListCard, TopCommunityItem } from '../style';
+import { ListItem, ListTitle, ListWithTitle, ListWrapper } from '../style';
 import { CommunityProfile } from '../../../components/profile';
 
 class CommunityList extends Component {
@@ -24,20 +23,21 @@ class CommunityList extends Component {
 
     if (!error && topCommunities.length > 0) {
       return (
-        <ListCard>
-          <ListContainer>
+        <ListWithTitle>
+          <h1>Most popular communities</h1>
+          <ListWrapper>
             {sorted.map(community => {
               return (
-                <TopCommunityItem key={community.id}>
+                <ListItem key={community.id}>
                   <CommunityProfile
                     profileSize={'listItemWithAction'}
                     data={{ community }}
                   />
-                </TopCommunityItem>
+                </ListItem>
               );
             })}
-          </ListContainer>
-        </ListCard>
+          </ListWrapper>
+        </ListWithTitle>
       );
     }
   }

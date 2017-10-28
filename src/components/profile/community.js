@@ -115,36 +115,7 @@ class CommunityWithData extends Component {
     if (loading) {
       return <LoadingProfile />;
     } else if (!community || error) {
-      if (
-        componentSize === 'miniWithAction' ||
-        componentSize === 'listItemWithAction'
-      ) {
-        return (
-          <ProfileCard>
-            <ProfileHeader>
-              <ProfileHeaderMeta>
-                <Subtitle>
-                  <Icon glyph="delete" size={20} /> This community was deleted
-                </Subtitle>
-              </ProfileHeaderMeta>
-            </ProfileHeader>
-          </ProfileCard>
-        );
-      } else {
-        return (
-          <Card>
-            <ProfileHeader>
-              <ProfileHeaderMeta>
-                <Title>This community doesn't exist yet.</Title>
-              </ProfileHeaderMeta>
-            </ProfileHeader>
-            <Description>Want to make it?</Description>
-            <Actions>
-              <ActionOutline>Create</ActionOutline>
-            </Actions>
-          </Card>
-        );
-      }
+      return null;
     }
 
     const member = community.communityPermissions.isMember;
