@@ -123,10 +123,10 @@ class Input extends React.Component<Props, State> {
           ref={this.setRef}
           readOnly={readOnly}
           placeholder={!readOnly && placeholder}
-          spellCheck="false"
-          autoCapitalize="off"
-          autoComplete="off"
-          autoCorrect="off"
+          spellCheck={true}
+          autoCapitalize="sentences"
+          autoComplete="on"
+          autoCorrect="on"
           {...rest}
         />
       </InputWrapper>
