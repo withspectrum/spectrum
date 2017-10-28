@@ -18,8 +18,9 @@ import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
-import { displayLoadingComposer } from '../loading';
+import { LoadingComposer } from '../loading';
 import { NullCard } from '../upsell';
+import viewNetworkHandler from '../viewNetworkHandler';
 import {
   Container,
   Composer,
@@ -552,15 +553,15 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus }, isInbox } = this.props;
+    const { isOpen, isLoading, hasError, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
-    if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
+    if (!isLoading && (!availableCommunities || !availableChannels)) {
       return (
         <NullCard
           bg="community"
           heading={`Once you join a community, you can start conversations there!`}
-          copy={`Let's find you something worth joining...`}
+          copy={`Let‘s find you something worth joining...`}
         >
           <Link to={`/explore`}>
             <Button icon="explore" color="text.alt">
@@ -569,7 +570,9 @@ class ThreadComposerWithData extends Component {
           </Link>
         </NullCard>
       );
-    } else {
+    }
+
+    if (!isLoading && availableCommunities && availableChannels) {
       return (
         <Container isOpen={isOpen} isInbox={isInbox}>
           <Overlay
@@ -670,14 +673,20 @@ class ThreadComposerWithData extends Component {
         </Container>
       );
     }
+
+    if (isLoading) {
+      return <LoadingComposer />;
+    }
+
+    return null;
   }
 }
 
 export const ThreadComposer = compose(
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  displayLoadingComposer, // handle loading state while query is fetching
-  withRouter // needed to use history.push() as a post-publish action
+  getComposerCommunitiesAndChannels,
+  publishThread,
+  viewNetworkHandler,
+  withRouter
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({

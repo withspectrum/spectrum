@@ -293,6 +293,7 @@ export const Heading = styled.h1`
   font-size: 32px;
   color: ${props => props.theme.text.default};
   font-weight: 600;
+  line-height: 1;
 `;
 
 export const Subheading = styled.h3`
@@ -301,7 +302,6 @@ export const Subheading = styled.h3`
   color: ${props => props.theme.text.alt};
   font-weight: 400;
   line-height: 1;
-  margin-bottom: 8px;
 `;
 
 export const StyledHeader = styled.div`

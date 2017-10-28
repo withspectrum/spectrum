@@ -15,7 +15,7 @@ export const __createUserThreadCountLoader = () =>
   createLoader(users => getUsersThreadCount(users), 'id');
 
 export const __createUserRecurringPaymentsLoader = () =>
-  createLoader(users => getUsersRecurringPayments(users), 'userId');
+  createLoader(users => getUsersRecurringPayments(users), 'group');
 
 export const __createUserPermissionsInCommunityLoader = () =>
   createLoader(

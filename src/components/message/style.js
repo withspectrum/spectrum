@@ -252,7 +252,7 @@ export const Image = styled.img`
   max-width: 100%;
   display: flex;
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
-  opacity: ${props => (props.pending ? 0.5 : 1)};
+  opacity: 1;
   transition: opacity 0.2s ease-out;
   border: 1px solid #f6f7f8;
   margin-top: ${props => (props.hashed ? '4px' : '0')};

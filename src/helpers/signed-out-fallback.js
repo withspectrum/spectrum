@@ -1,12 +1,14 @@
 // Render a component depending on a users authentication status
 import React from 'react';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 
 // This is the component that determines at render time what to do
 const Switch = props => {
   const { Component, FallbackComponent, currentUser, ...rest } = props;
+  const { authed } = queryString.parse(props.location.search);
 
-  if (!currentUser || !Component) {
+  if ((!currentUser && !authed) || !Component) {
     return <FallbackComponent {...rest} />;
   } else {
     return <Component {...rest} />;

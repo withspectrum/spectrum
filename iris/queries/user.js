@@ -11,7 +11,7 @@ const {
   getCommunitiesByUser,
   getCommunitiesBySlug,
 } = require('../models/community');
-const { getChannelsByUser } = require('../models/channel');
+const { getChannelById, getChannelsByUser } = require('../models/channel');
 const {
   getThread,
   getViewableThreadsByUser,
@@ -69,16 +69,14 @@ module.exports = {
       return profilePhoto;
     },
     isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
-      return loaders.userRecurringPayments
-        .load(id)
-        .then(
-          sub =>
-            !(sub == null) &&
-            sub.status === 'active' &&
-            sub.planId === 'beta-pro'
-              ? true
-              : false
+      return loaders.userRecurringPayments.load(id).then(result => {
+        if (!result || result.length === 0) return false;
+        const subs = result.reduction;
+
+        return subs.some(
+          sub => sub.status === 'active' && sub.planId === 'beta-pro'
         );
+      });
     },
     everything: (
       { id }: DBUser,
@@ -193,7 +191,8 @@ module.exports = {
         throw new UserError('You can only see your own recurring payments.');
       }
 
-      return loaders.userRecurringPayments.load(user.id).then(subs => {
+      return loaders.userRecurringPayments.load(user.id).then(result => {
+        const subs = result && result.reduction;
         const userProSubs =
           subs &&
           subs.length > 0 &&
@@ -242,9 +241,7 @@ module.exports = {
     ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (user.contextPermissions) return user.contextPermissions;
-
       const queryName = info.operation.name.value;
-
       const handleCheck = async () => {
         switch (queryName) {
           case 'getThread':
@@ -268,6 +265,24 @@ module.exports = {
           case 'loadMoreCommunityMembers':
           case 'getCommunityMembers': {
             const communityId = info.variableValues.id;
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          case 'loadMoreCommunityMembers':
+          case 'getChannelMembers': {
+            const channelId = info.variableValues.id;
+            const { communityId } = await getChannelById(channelId);
             const {
               reputation,
               isModerator,

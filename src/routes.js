@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-// $FlowFixMe
+import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
 import { theme } from './components/theme';
@@ -131,7 +131,7 @@ const Body = styled(FlexCol)`
 const DashboardFallback = signedOutFallback(Dashboard, Splash);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to="/login" />
+  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Redirect to="/login" />

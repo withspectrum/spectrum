@@ -3,6 +3,8 @@ const debug = require('debug')('athena:queue:direct-message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
+import { getUserById } from '../models/user';
+import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
   updateNotification,
@@ -79,9 +81,9 @@ export default async (job: JobData) => {
   );
 
   // filter out the user who sent the message
-  const filteredRecipients = recipients.filter(
-    recipient => recipient.userId !== currentUserId
-  );
+  const filteredRecipients = recipients
+    .filter(recipient => recipient.userId !== currentUserId)
+    .filter(recipient => getEmailStatus(recipient.userId, 'newDirectMessage'));
 
   if (!filteredRecipients || filteredRecipients.length === 0) {
     debug('No recipients for this DM notification');
@@ -96,9 +98,8 @@ export default async (job: JobData) => {
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
-  // send each recipient a notification
-  const formatAndBufferPromises = filteredRecipients.map(recipient => {
-    addQueue(
+  const addToQueue = recipient => {
+    return addQueue(
       SEND_NEW_DIRECT_MESSAGE_EMAIL,
       {
         recipient,
@@ -130,6 +131,32 @@ export default async (job: JobData) => {
         removeOnFail: true,
       }
     );
+  };
+
+  // send each recipient a notification
+  const formatAndBufferPromises = filteredRecipients.map(async recipient => {
+    // if a notification already exists, we check if the user who is recieving the email has logged on since the priod message on the existing notification
+    // if the user has logged on since they saw the last message, and is no longer online, they should get an updated email
+    // if the user has not logged on since the last notification message, we will skip this email until the next 30 minute window elapses in our `getExistingNotification` query.
+    if (existing) {
+      const { lastSeen } = await getUserById(recipient.userId);
+      const { entities } = existing;
+
+      const entitiesCreatedSinceUserLastSeen = entities
+        .slice()
+        .filter(entity => {
+          const parsed = JSON.parse(entity.payload);
+          return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
+        });
+
+      if (entitiesCreatedSinceUserLastSeen.length < 1) {
+        // if an existing notification was found, we only send an email if the user was last online more recently than the last message sent
+        addToQueue(recipient);
+      }
+    } else {
+      // a notification email gets sent if there was no prevoiusly existing notification
+      addToQueue(recipient);
+    }
 
     // store or update the notification in the db to trigger a ui update in app
     return dbMethod(notification.id, recipient.userId);
