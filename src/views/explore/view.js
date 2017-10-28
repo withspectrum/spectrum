@@ -204,7 +204,6 @@ class CategoryList extends Component {
       slugs,
       currentUser,
     } = this.props;
-    console.log(data);
 
     if (communities) {
       return (
