@@ -144,9 +144,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
           node {
             ...channelInfo
             ...channelMetaData
-            community {
-              ...communityInfo
-            }
             pendingUsers {
               ...userInfo
             }
