@@ -48,7 +48,7 @@
     "debug": "^2.6.8",
     "draft-js": "^0.10.2",
     "draft-js-code-editor-plugin": "0.2.1",
-    "draft-js-drag-n-drop-plugin": "2.0.0-rc2",
+    "draft-js-drag-n-drop-plugin": "2.0.0-rc9",
     "draft-js-embed-plugin": "^1.2.0",
     "draft-js-focus-plugin": "2.0.0-rc2",
     "draft-js-image-plugin": "2.0.0-rc8",

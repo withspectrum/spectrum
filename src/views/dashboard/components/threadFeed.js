@@ -67,7 +67,11 @@ class ThreadFeed extends React.Component<Props, State> {
       (!prevProps.data.threads && this.props.data.threads) ||
       (prevProps.data.loading && !this.props.data.loading);
 
-    if (isDesktop && (hasThreadsButNoneSelected || justLoadedThreads)) {
+    if (
+      isDesktop &&
+      (hasThreadsButNoneSelected || justLoadedThreads) &&
+      this.props.data.threads.length > 0
+    ) {
       const threadNodes = this.props.data.threads
         .slice()
         .map(thread => thread.node);

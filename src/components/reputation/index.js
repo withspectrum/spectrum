@@ -30,7 +30,7 @@ class Reputation extends React.Component<Props> {
       reputation,
     } = this.props;
 
-    if (!reputation) return null;
+    if (reputation === undefined || reputation === null) return null;
 
     const renderedReputation = reputation > 0 ? reputation : '0';
     const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';

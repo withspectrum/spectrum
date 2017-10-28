@@ -59,8 +59,8 @@ module.exports = {
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
-    searchCommunities: (_: any, { string }: { string: string }) =>
-      getCommunitiesBySearchString(string),
+    searchCommunities: (_: any, { string, amount = 30 }: { string: string }) =>
+      getCommunitiesBySearchString(string, amount),
     searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
       const currentUser = user;
 
@@ -204,8 +204,8 @@ module.exports = {
         loaders.communityChannelCount.load(id),
         loaders.communityMemberCount.load(id),
       ]).then(([channelCount, memberCount]) => ({
-        channels: channelCount.reduction,
-        members: memberCount.reduction,
+        channels: channelCount ? channelCount.reduction : 0,
+        members: memberCount ? memberCount.reduction : 0,
       }));
     },
     slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
@@ -250,9 +250,8 @@ module.exports = {
         ]);
         if (!userPermissions.isOwner) return;
 
-        const {
-          reduction: rPayments,
-        } = await loaders.communityRecurringPayments.load(id);
+        const results = await loaders.communityRecurringPayments.load(id);
+        const rPayments = results && results.reduction;
 
         const communitySubscriptions =
           rPayments &&

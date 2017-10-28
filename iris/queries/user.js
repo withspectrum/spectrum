@@ -11,7 +11,7 @@ const {
   getCommunitiesByUser,
   getCommunitiesBySlug,
 } = require('../models/community');
-const { getChannelsByUser } = require('../models/channel');
+const { getChannelById, getChannelsByUser } = require('../models/channel');
 const {
   getThread,
   getViewableThreadsByUser,
@@ -241,7 +241,6 @@ module.exports = {
     ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (user.contextPermissions) return user.contextPermissions;
-
       const queryName = info.operation.name.value;
       const handleCheck = async () => {
         switch (queryName) {
@@ -266,6 +265,24 @@ module.exports = {
           case 'loadMoreCommunityMembers':
           case 'getCommunityMembers': {
             const communityId = info.variableValues.id;
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          case 'loadMoreCommunityMembers':
+          case 'getChannelMembers': {
+            const channelId = info.variableValues.id;
+            const { communityId } = await getChannelById(channelId);
             const {
               reputation,
               isModerator,

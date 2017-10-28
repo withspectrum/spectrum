@@ -59,23 +59,25 @@ module.exports = {
       // all checks passed
       if (message.messageType === 'text' || message.messageType === 'draftjs') {
         // send a normal text message
-        return storeMessage(message, currentUser.id).then(async message => {
-          if (message.threadType === 'directMessageThread') return message;
-          const { communityId } = await loaders.thread.load(message.threadId);
-          const permissions = await loaders.userPermissionsInCommunity.load([
-            message.senderId,
-            communityId,
-          ]);
+        return storeMessage(message, currentUser.id)
+          .then(async message => {
+            if (message.threadType === 'directMessageThread') return message;
+            const { communityId } = await loaders.thread.load(message.threadId);
+            const permissions = await loaders.userPermissionsInCommunity.load([
+              message.senderId,
+              communityId,
+            ]);
 
-          return {
-            ...message,
-            contextPermissions: {
-              reputation: permissions ? permissions.reputation : 0,
-              isModerator: permissions ? permissions.isModerator : false,
-              isOwner: permissions ? permissions.isOwner : false,
-            },
-          };
-        });
+            return {
+              ...message,
+              contextPermissions: {
+                reputation: permissions ? permissions.reputation : 0,
+                isModerator: permissions ? permissions.isModerator : false,
+                isOwner: permissions ? permissions.isOwner : false,
+              },
+            };
+          })
+          .catch(err => new UserError(err.message));
       } else if (message.messageType === 'media') {
         // upload the photo, return the photo url, then store the message
 
@@ -111,7 +113,8 @@ module.exports = {
                 isOwner: permissions ? permissions.isOwner : false,
               },
             };
-          });
+          })
+          .catch(err => new UserError(err.message));
       } else {
         return new UserError('Unknown message type');
       }
