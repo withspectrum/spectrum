@@ -416,8 +416,8 @@ export const SearchResultNull = styled.div`
 `;
 
 export const ListWithTitle = styled(FlexCol)`
-  margin-top: 32px;
   flex: auto;
+  margin-top: 32px;
 `;
 export const ListTitle = styled(H2)`
   border-bottom: 1px solid ${props => props.theme.bg.border};
@@ -432,21 +432,9 @@ export const ListTitle = styled(H2)`
 `;
 
 export const ListWrapper = styled(FlexRow)`
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: flex-start;
-  padding-top: 16px;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 `;
 
-export const ListItem = styled(FlexRow)`
-  flex: none;
-  flex-basis: 400px;
-  width: 400px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    flex-basis: 100%;
-    padding: 0 16px;
-  }
-`;
+export const ListItem = styled(FlexRow)``;

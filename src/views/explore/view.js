@@ -128,9 +128,8 @@ export const Charts = props => {
   `;
 
   const Featured = styled.div`
-    grid-area: featured;
-    display: grid;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-direction: column;
     padding: 0 32px;
 
     @media (max-width: 768px) {
@@ -139,9 +138,8 @@ export const Charts = props => {
   `;
 
   const Collections = styled.div`
-    grid-area: collections;
-    display: grid;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction: column;
   `;
 
   const CollectionWrapper = styled.div`
@@ -161,8 +159,8 @@ export const Charts = props => {
 
   const CategoryWrapper = styled.div`
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
   `;
 
   return (
