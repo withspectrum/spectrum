@@ -93,9 +93,6 @@ const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
   mutation toggleChannelSubscription($channelId: ID!) {
     toggleChannelSubscription (channelId: $channelId) {
       ...channelInfo
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
@@ -135,9 +132,6 @@ const TOGGLE_PENDING_USER_MUTATION = gql`
         ...userInfo
       }
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
@@ -184,9 +178,6 @@ const UNBLOCK_USER_MUTATION = gql`
         ...userInfo
       }
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
@@ -233,9 +224,6 @@ export const getChannelById = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
-        community {
-          ...communityInfo
-        }
       }
 		}
     ${channelInfoFragment}
@@ -261,9 +249,6 @@ export const getPendingUsersQuery = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
-        community {
-          ...communityInfo
-        }
         pendingUsers {
           ...userInfo
         }
@@ -293,9 +278,6 @@ export const getBlockedUsersQuery = graphql(
 		query getChannel($id: ID) {
 			channel(id: $id) {
         ...channelInfo
-        community {
-          ...communityInfo
-        }
         blockedUsers {
           ...userInfo
         }
@@ -341,9 +323,6 @@ const LoadMoreMembers = gql`
     channel(id: $id) {
       ...channelInfo
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
       memberConnection(after: $after) {
         pageInfo {
           hasNextPage
@@ -427,9 +406,6 @@ const GET_CHANNEL_MEMBERS_QUERY = gql`
     channel(id: $id) {
       ...channelInfo
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
       memberConnection {
         pageInfo {
           hasNextPage

@@ -195,8 +195,8 @@ module.exports = {
         loaders.communityChannelCount.load(id),
         loaders.communityMemberCount.load(id),
       ]).then(([channelCount, memberCount]) => ({
-        channels: channelCount.reduction,
-        members: memberCount.reduction,
+        channels: channelCount ? channelCount.reduction : 0,
+        members: memberCount ? memberCount.reduction : 0,
       }));
     },
     slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {

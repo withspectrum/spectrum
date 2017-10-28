@@ -426,18 +426,18 @@ module.exports = {
                 ) => {
                   // if the user is a member of the parent community, we can return
                   if (currentUserCommunityPermissions.isMember) {
-                    return Promise.all([channelToEvaluate]);
+                    return Promise.all([joinedChannel]);
                   } else {
                     // if the user is not a member of the parent community,
                     // join the community and the community's default channels
                     return Promise.all([
-                      channelToEvaluate,
+                      joinedChannel,
                       createMemberInCommunity(
-                        channelToEvaluate.communityId,
+                        joinedChannel.communityId,
                         currentUser.id
                       ),
                       createMemberInDefaultChannels(
-                        channelToEvaluate.communityId,
+                        joinedChannel.communityId,
                         currentUser.id
                       ),
                     ]);

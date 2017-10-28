@@ -130,7 +130,6 @@ class ThreadContainer extends React.Component<Props, State> {
     } = this.props;
 
     const isLoggedIn = currentUser;
-
     if (data && data.thread) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
