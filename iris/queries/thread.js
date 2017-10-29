@@ -32,10 +32,10 @@ module.exports = {
         if (!user) {
           return Promise.all([
             thread,
-            getChannels([thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, channel]) => {
             // if the channel is private, don't return any thread data
-            if (channel[0].isPrivate) return null;
+            if (channel.isPrivate) return null;
             return thread;
           });
         } else {
@@ -43,10 +43,10 @@ module.exports = {
           return Promise.all([
             thread,
             getUserPermissionsInChannel(thread.channelId, user.id),
-            getChannels([thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, permissions, channel]) => {
             // if the thread is in a private channel where the user is not a member, don't return any thread data
-            if (channel[0].isPrivate && !permissions.isMember) return null;
+            if (channel.isPrivate && !permissions.isMember) return null;
             return thread;
           });
         }
