@@ -6,6 +6,7 @@ import {
   __createUserPermissionsInCommunityLoader,
   __createUserTotalReputationLoader,
   __createUserPermissionsInChannelLoader,
+  __createUserThreadNotificationStatusLoader,
 } from './user';
 import {
   __createThreadLoader,
@@ -34,6 +35,7 @@ const createLoaders = () => ({
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
   userPermissionsInChannel: __createUserPermissionsInChannelLoader(),
   userTotalReputation: __createUserTotalReputationLoader(),
+  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(),
   thread: __createThreadLoader(),
   threadParticipants: __createThreadParticipantsLoader(),
   threadMessageCount: __createThreadMessageCountLoader(),
