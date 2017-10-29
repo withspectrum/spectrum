@@ -547,7 +547,7 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
     .getAll(...input, { index: 'userIdAndChannelId' })
     .run()
     .then(data => {
-      if (!data)
+      if (!data || data.length === 0)
         return Array.from({ length: input.length }).map((_, index) => ({
           ...DEFAULT_USER_CHANNEL_PERMISSIONS,
           userId: input[index][0],
