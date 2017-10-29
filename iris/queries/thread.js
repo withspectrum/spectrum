@@ -4,7 +4,6 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
@@ -42,7 +41,7 @@ module.exports = {
           // if the user is signed in, we need to check if the channel is private as well as the user's permission in that channel
           return Promise.all([
             thread,
-            getUserPermissionsInChannel(thread.channelId, user.id),
+            loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
             loaders.channel.load(thread.channelId),
           ]).then(([thread, permissions, channel]) => {
             // if the thread is in a private channel where the user is not a member, don't return any thread data

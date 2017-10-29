@@ -539,6 +539,33 @@ const getUserPermissionsInChannel = (
     });
 };
 
+type UserIdAndChannelId = [string, string];
+
+const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...input, { index: 'userIdAndChannelId' })
+    .run()
+    .then(data => {
+      if (!data)
+        return Array.from({ length: input.length }).map((_, index) => ({
+          ...DEFAULT_USER_CHANNEL_PERMISSIONS,
+          userId: input[index][0],
+          channelId: input[index][1],
+        }));
+
+      return data.map((rec, index) => {
+        if (rec) return rec;
+
+        return {
+          ...DEFAULT_USER_CHANNEL_PERMISSIONS,
+          userId: input[index][0],
+          channelid: input[index][1],
+        };
+      });
+    });
+};
+
 module.exports = {
   // modify and create
   createOwnerInChannel,
@@ -564,4 +591,5 @@ module.exports = {
   getModeratorsInChannel,
   getOwnersInChannel,
   getUserPermissionsInChannel,
+  getUsersPermissionsInChannels,
 };

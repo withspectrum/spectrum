@@ -4,7 +4,6 @@ const {
   getChannelMemberCount,
 } = require('../models/channel');
 const {
-  getUserPermissionsInChannel,
   getPendingUsersInChannel,
   getBlockedUsersInChannel,
   getModeratorsInChannel,
@@ -51,10 +50,10 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    channelPermissions: (args, _: any, { user }: Context) => {
+    channelPermissions: (args, _: any, { user, loaders }: GraphQLContext) => {
       const channelId = args.id || args.channelId;
       if (!channelId || !user) return false;
-      return getUserPermissionsInChannel(channelId, user.id);
+      return loaders.userPermissionsInChannel.load([user.id, channelId]);
     },
     communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
