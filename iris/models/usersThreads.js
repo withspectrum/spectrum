@@ -98,6 +98,22 @@ export const getThreadNotificationStatusForUser = (
     .run();
 };
 
+type UserIdAndThreadId = [string, string];
+
+export const getThreadsNotificationStatusForUsers = (
+  input: Array<UserIdAndThreadId>
+) => {
+  return db
+    .table('usersThreads')
+    .getAll(...input, { index: 'userIdAndThreadId' })
+    .run()
+    .then(result => {
+      if (!result) return Array.from({ length: input.length }).map(() => null);
+
+      return result;
+    });
+};
+
 export const updateThreadNotificationStatusForUser = (
   threadId: string,
   userId: string,

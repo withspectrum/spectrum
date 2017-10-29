@@ -5,6 +5,7 @@ import {
   __createUserRecurringPaymentsLoader,
   __createUserPermissionsInCommunityLoader,
   __createUserTotalReputationLoader,
+  __createUserThreadNotificationStatusLoader,
 } from './user';
 import {
   __createThreadLoader,
@@ -32,6 +33,7 @@ const createLoaders = () => ({
   userRecurringPayments: __createUserRecurringPaymentsLoader(),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
   userTotalReputation: __createUserTotalReputationLoader(),
+  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(),
   thread: __createThreadLoader(),
   threadParticipants: __createThreadParticipantsLoader(),
   threadMessageCount: __createThreadMessageCountLoader(),
