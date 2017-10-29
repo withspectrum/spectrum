@@ -112,25 +112,3 @@ export const getEverythingThreads = graphql(
 `,
   threadsQueryOptions
 );
-
-/*
-  Loads the sidebar profile component widget independent of the thread feed.
-  In the future we can compose these queries together since they are fetching
-  such similar data, but for now we're making a decision to keep the data
-  queries specific to each component.
-*/
-export const getCurrentUserProfile = graphql(
-  gql`
-    query getCurrentUserProfile {
-			user: currentUser {
-        ...userInfo
-        isPro
-        totalReputation
-        ...userCommunities
-      }
-		}
-    ${userInfoFragment}
-    ${userCommunitiesFragment}
-	`,
-  { options: { fetchPolicy: 'cache-and-network' } }
-);
