@@ -510,14 +510,22 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
   );
 };
 
+const DEFAULT_USER_CHANNEL_PERMISSIONS = {
+  isOwner: false,
+  isMember: false,
+  isModerator: false,
+  isBlocked: false,
+  isPending: false,
+  receiveNotifications: false,
+};
+
 const getUserPermissionsInChannel = (
   channelId: string,
   userId: string
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run()
     .then(data => {
       // if a record exists
@@ -526,14 +534,7 @@ const getUserPermissionsInChannel = (
       } else {
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
-        return {
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          isPending: false,
-          receiveNotifications: false,
-        };
+        return DEFAULT_USER_CHANNEL_PERMISSIONS;
       }
     });
 };
