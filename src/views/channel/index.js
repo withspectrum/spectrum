@@ -43,6 +43,22 @@ type Props = {
 };
 
 class ChannelView extends React.Component<Props> {
+  componentDidUpdate(prevProps) {
+    // if the user is new and signed up through a channel page, push
+    // the channel's community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (this.props.currentUser) return;
+    if (
+      (!prevProps.data.channel && this.props.data.channel) ||
+      (prevProps.data.channel &&
+        prevProps.data.channel.id !== this.props.data.channel.id)
+    ) {
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.channel.community)
+      );
+    }
+  }
+
   render() {
     const {
       match,
@@ -139,11 +155,6 @@ class ChannelView extends React.Component<Props> {
         },
       });
 
-      // if the user is new and signed up through a channel page, push
-      // the channel's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      this.props.dispatch(addCommunityToOnboarding(channel.community));
-
       return (
         <AppViewWrapper>
           <Head
@@ -182,6 +193,7 @@ class ChannelView extends React.Component<Props> {
               <UpsellSignIn
                 title={`Join the ${channel.community.name} community`}
                 view={{ data: channel, type: 'channel' }}
+                redirectPath={window.location}
               />
             )}
 

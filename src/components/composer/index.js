@@ -165,7 +165,24 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   componentWillUpdate(next) {
-    this.handleIncomingProps(next);
+    const currChannelLength =
+      this.props.data.user &&
+      this.props.data.user.channelConnection.edges.length;
+    const nextChannelLength =
+      next.data.user && next.data.user.channelConnection.edges.length;
+    const currCommunityLength =
+      this.props.data.user &&
+      this.props.data.user.communityConnection.edges.length;
+    const nextCommunityLength =
+      next.data.user && next.data.user.communityConnection.edges.length;
+
+    if (
+      (this.props.data.loading && !next.data.loading) ||
+      currChannelLength !== nextChannelLength ||
+      currCommunityLength !== nextCommunityLength
+    ) {
+      this.handleIncomingProps(next);
+    }
   }
 
   closeComposer = () => {

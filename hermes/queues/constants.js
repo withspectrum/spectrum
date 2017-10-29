@@ -13,6 +13,7 @@ export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
 export const SEND_DIGEST_EMAIL = 'send digest email';
 export const SEND_EMAIL_VALIDATION_EMAIL = 'send email validation email';
+export const SEND_ADMIN_COMMUNITY_CREATED_EMAIL = 'admin community created';
 
 export const NEW_MESSAGE_TEMPLATE = 2266041;
 export const NEW_DIRECT_MESSAGE_TEMPLATE = 2911541;
@@ -25,6 +26,7 @@ export const NEW_THREAD_CREATED_TEMPLATE = 2713302;
 export const DIGEST_TEMPLATE = 3071361;
 export const DEBUG_TEMPLATE = 3374841;
 export const EMAIL_VALIDATION_TEMPLATE = 3578681;
+export const ADMIN_COMMUNITY_CREATED_TEMPLATE = 3037441;
 
 // types used to generate unsubscribe tokens
 export const TYPE_DAILY_DIGEST = 'dailyDigest';

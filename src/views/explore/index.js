@@ -54,7 +54,11 @@ const ExplorePure = props => {
               <SectionTitle>Most popular communities</SectionTitle>
               <TopCommunityList withMeta={true} withDescription={false} />
 
-              {props.currentUser ? <UpsellCreateCommunity /> : <UpsellSignIn />}
+              {props.currentUser ? (
+                <UpsellCreateCommunity />
+              ) : (
+                <UpsellSignIn redirectPath={window.location} />
+              )}
             </Column>
           </SectionWrapper>
         </Section>

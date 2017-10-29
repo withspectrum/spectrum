@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
-// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import slugg from 'slugg';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
+import Avatar from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
+  SEARCH_COMMUNITIES_QUERY,
 } from '../../../../api/community';
 import { Button } from '../../../../components/buttons';
 import {
@@ -28,7 +26,13 @@ import {
   Error,
   Checkbox,
 } from '../../../../components/formElements';
-import { ImageInputWrapper, Spacer } from './style';
+import {
+  ImageInputWrapper,
+  Spacer,
+  CommunitySuggestionsWrapper,
+  CommunitySuggestion,
+  CommunitySuggestionsText,
+} from './style';
 import { FormContainer, Form, Actions } from '../../style';
 
 class CreateCommunityForm extends Component {
@@ -49,6 +53,7 @@ class CreateCommunityForm extends Component {
     isLoading: boolean,
     agreeCoC: boolean,
     photoSizeError: boolean,
+    communitySuggestions: ?Array<Object>,
   };
 
   constructor(props) {
@@ -71,6 +76,7 @@ class CreateCommunityForm extends Component {
       isLoading: false,
       agreeCoC: false,
       photoSizeError: false,
+      communitySuggestions: null,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -81,6 +87,13 @@ class CreateCommunityForm extends Component {
   }
 
   changeName = e => {
+    const { communitySuggestions } = this.state;
+    if (communitySuggestions) {
+      this.setState({
+        communitySuggestions: null,
+      });
+    }
+
     const name = e.target.value;
     let lowercaseName = name.toLowerCase().trim();
     let slug = slugg(lowercaseName);
@@ -162,11 +175,44 @@ class CreateCommunityForm extends Component {
             slugTaken: true,
           });
         } else {
-          return this.setState({
+          this.setState({
             slugTaken: false,
           });
         }
       });
+  };
+
+  checkSuggestedCommunities = () => {
+    const { name, slug, slugError } = this.state;
+    if (name && name.length > 1 && slug && slug.length > 1 && !slugError) {
+      // if the user has found a valid url, do a community search to see if they might be creating a duplicate community
+      this.props.client
+        .query({
+          query: SEARCH_COMMUNITIES_QUERY,
+          variables: {
+            string: slug,
+            amount: 10,
+          },
+        })
+        .then(({ data: { searchCommunities: communitySuggestions } }) => {
+          const filtered =
+            communitySuggestions &&
+            communitySuggestions
+              .slice()
+              .sort((a, b) => b.metaData.members - a.metaData.members)
+              .slice(0, 5);
+
+          if (filtered && filtered.length > 0) {
+            this.setState({
+              communitySuggestions: filtered,
+            });
+          } else {
+            this.setState({
+              communitySuggestions: null,
+            });
+          }
+        });
+    }
   };
 
   changeDescription = e => {
@@ -328,7 +374,14 @@ class CreateCommunityForm extends Component {
       isLoading,
       agreeCoC,
       photoSizeError,
+      communitySuggestions,
     } = this.state;
+
+    const suggestionString = slugTaken
+      ? communitySuggestions && communitySuggestions.length > 0
+        ? `Were you looking for one of these communities?`
+        : null
+      : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
 
     const isMobile = window.innerWidth < 768;
 
@@ -364,6 +417,7 @@ class CreateCommunityForm extends Component {
             defaultValue={name}
             onChange={this.changeName}
             autoFocus={!isMobile}
+            onBlur={this.checkSuggestedCommunities}
           >
             What is your community called?
           </Input>
@@ -372,7 +426,11 @@ class CreateCommunityForm extends Component {
             <Error>Community names can be up to 20 characters long.</Error>
           )}
 
-          <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
+          <UnderlineInput
+            defaultValue={slug}
+            onChange={this.changeSlug}
+            onBlur={this.checkSuggestedCommunities}
+          >
             sp.chat/
           </UnderlineInput>
 
@@ -384,6 +442,39 @@ class CreateCommunityForm extends Component {
           )}
 
           {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
+
+          {suggestionString &&
+            !nameError &&
+            !slugError &&
+            communitySuggestions &&
+            communitySuggestions.length > 0 && (
+              <CommunitySuggestionsText>
+                {suggestionString}
+              </CommunitySuggestionsText>
+            )}
+
+          <CommunitySuggestionsWrapper>
+            {!nameError &&
+              !slugError &&
+              communitySuggestions &&
+              communitySuggestions.length > 0 &&
+              communitySuggestions.map(suggestion => {
+                return (
+                  <Link to={`/${suggestion.slug}`} key={suggestion.id}>
+                    <CommunitySuggestion>
+                      <Avatar
+                        size={20}
+                        radius={4}
+                        community
+                        src={suggestion.profilePhoto}
+                      />
+                      <strong>{suggestion.name}</strong>{' '}
+                      {suggestion.metaData.members.toLocaleString()} members
+                    </CommunitySuggestion>
+                  </Link>
+                );
+              })}
+          </CommunitySuggestionsWrapper>
 
           <TextArea
             defaultValue={description}

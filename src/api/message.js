@@ -102,6 +102,12 @@ const SEND_MESSAGE_OPTIONS = {
             __typename: 'Message',
             sender: {
               ...ownProps.currentUser,
+              contextPermissions: {
+                reputation: 0,
+                isOwner: false,
+                isModerator: false,
+                __typename: 'ContextPermissions',
+              },
               __typename: 'User',
             },
             timestamp: +new Date(),

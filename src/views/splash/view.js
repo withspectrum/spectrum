@@ -48,6 +48,7 @@ export const Overview = (props: Props) => {
     line-height: 1.3;
     font-weight: 500;
     opacity: 0.95;
+    max-width: 580px;
 
     @media (max-width: 768px) {
       font-size: 20px;

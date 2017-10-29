@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
-const FALLBACK_URL = IS_PROD ? '/home' : 'http://localhost:3000/home';
+const FALLBACK_URL = IS_PROD
+  ? 'https://spectrum.chat/home'
+  : 'http://localhost:3000/home';
 
 const githubAuthRouter = Router();
 
@@ -35,22 +38,21 @@ githubAuthRouter.get(
   }),
   (req, res) => {
     // req.session.redirectURL is set in the /auth/twitter route
-    // if it's not set due to some error fallback to the default
-    const redirectUrl = req.session.redirectURL || FALLBACK_URL;
+    if (!req.session.redirectURL) return res.redirect(FALLBACK_URL);
+
+    const redirectUrl = new URL(req.session.redirectURL);
+    redirectUrl.searchParams.append('authed', 'true');
 
     // Delete the redirectURL from the session again so we don't redirect
     // to the old URL the next time around
-    if (req.session.redirectURL) {
-      req.session.redirectURL = undefined;
-      return new Promise(resolve => {
-        req.session.save(err => {
-          if (err) console.log(err);
-          resolve(res.redirect(redirectUrl));
-        });
-      });
-    }
+    req.session.redirectURL = undefined;
 
-    res.redirect(redirectUrl);
+    return new Promise(resolve => {
+      req.session.save(err => {
+        if (err) console.log(err);
+        resolve(res.redirect(redirectUrl.href));
+      });
+    });
   }
 );
 

@@ -51,7 +51,10 @@ class ChannelMembers extends Component<Props> {
               members.map(user => {
                 return (
                   <section key={user.id}>
-                    <UserListItem user={user} />
+                    <UserListItem
+                      user={user}
+                      reputationTipText={'Rep in this community'}
+                    />
                   </section>
                 );
               })}

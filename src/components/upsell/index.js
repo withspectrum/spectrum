@@ -142,7 +142,13 @@ export class UpsellSignIn extends Component {
     const { isSigningIn, signinType } = this.state;
 
     if (isSigningIn) {
-      return <Login close={this.toggleSigningIn} signinType={signinType} />;
+      return (
+        <Login
+          close={this.toggleSigningIn}
+          signinType={signinType}
+          redirectPath={window.location}
+        />
+      );
     } else {
       const subtitle = view
         ? view.type === 'community'

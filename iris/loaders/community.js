@@ -12,7 +12,7 @@ import type { Loader } from './types';
 export const __createCommunityRecurringPaymentsLoader = () =>
   createLoader(
     communities => getCommunitiesRecurringPayments(communities),
-    'communityId'
+    'group'
   );
 
 export const __createCommunityLoader = () =>

@@ -108,7 +108,11 @@ class ThreadDetailPure extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.thread.id !== this.props.thread.id) {
+    if (
+      prevProps.thread &&
+      this.props.thread &&
+      prevProps.thread.id !== this.props.thread.id
+    ) {
       this.setThreadState();
     }
   }
@@ -425,7 +429,9 @@ class ThreadDetailPure extends Component {
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const authorIsCommunityOwner = thread.creator.contextPermissions.isOwner;
+    const authorIsCommunityOwner =
+      thread.creator.contextPermissions &&
+      thread.creator.contextPermissions.isOwner;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;

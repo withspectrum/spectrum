@@ -288,7 +288,7 @@ export const renderLinks = text => {
   if (typeof text !== 'string') return text;
   return replace(text, URL, (url, _, __, ____, _____, offset) => (
     <a
-      href={url}
+      href={addProtocolToString(url)}
       target="_blank"
       rel="noopener nofollower"
       key={`${offset}-${url}`}

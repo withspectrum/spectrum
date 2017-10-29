@@ -154,9 +154,6 @@ export const getChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
-        community {
-          ...communityInfo
-        }
       }
 		}
     ${channelInfoFragment}
