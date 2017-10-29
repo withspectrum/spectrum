@@ -6,9 +6,10 @@ import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
-import { getEverythingThreads, getCurrentUserProfile } from './queries';
+import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
 import { getChannelThreads } from '../../views/channel/queries';
+import { getCurrentUserProfile } from '../../api/user';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
