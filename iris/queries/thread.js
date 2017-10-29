@@ -91,18 +91,15 @@ module.exports = {
     receiveNotifications: (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
       } else {
-        return getThreadNotificationStatusForUser(
-          id,
-          currentUser.id
-        ).then(threads => {
-          return threads.length > 0 ? threads[0].receiveNotifications : false;
-        });
+        return loaders.userThreadNotificationStatus
+          .load([currentUser.id, id])
+          .then(result => (result ? result.receiveNotifications : false));
       }
     },
     messageConnection: (
