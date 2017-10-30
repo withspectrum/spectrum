@@ -24,10 +24,6 @@ const GET_COMMUNITY_QUERY = gql`
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
-      metaData {
-        members
-        channels
-      }
     }
   }
   ${communityInfoFragment}
