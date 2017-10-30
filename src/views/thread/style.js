@@ -20,7 +20,6 @@ export const ThreadViewContainer = styled.div`
   height: 100%;
   max-height: 100%;
   max-width: 1024px;
-  margin: 0 auto;
   background-color: ${({ theme }) => theme.bg.wash};
 `;
 
@@ -52,7 +51,7 @@ export const ThreadSidebarView = styled(FlexCol)`
   align-items: center;
   align-self: stretch;
   position: relative;
-  left: 1px;
+  right: 1px;
   overflow-y: scroll;
 
   @media (max-width: 1032px) {

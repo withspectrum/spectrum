@@ -172,6 +172,15 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <ThreadViewContainer>
+          {shouldRenderThreadSidebar && (
+            <Sidebar
+              thread={thread}
+              currentUser={currentUser}
+              slug={thread.community.slug}
+              id={thread.community.id}
+            />
+          )}
+
           <ThreadContentView slider={slider}>
             <Head
               title={title}
@@ -245,15 +254,6 @@ class ThreadContainer extends React.Component<Props, State> {
                 </Input>
               )}
           </ThreadContentView>
-
-          {shouldRenderThreadSidebar && (
-            <Sidebar
-              thread={thread}
-              currentUser={currentUser}
-              slug={thread.community.slug}
-              id={thread.community.id}
-            />
-          )}
         </ThreadViewContainer>
       );
     }
