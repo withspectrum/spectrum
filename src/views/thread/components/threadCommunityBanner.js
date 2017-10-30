@@ -106,7 +106,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread: { channel, community, id } } = this.props;
+    const { thread: { channel, community, id }, currentUser } = this.props;
     const { isLoading } = this.state;
 
     return (
@@ -135,10 +135,18 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           <Link to={`/${community.slug}`}>
             <OutlineButton color={'text.alt'}>View Community</OutlineButton>
           </Link>
-        ) : (
-          <Button onClick={this.joinCommunity} loading={isLoading}>
+        ) : currentUser ? (
+          <Button
+            gradientTheme={'success'}
+            onClick={this.joinCommunity}
+            loading={isLoading}
+          >
             Join Community
           </Button>
+        ) : (
+          <Link to={`/login?r=${window.location}`}>
+            <Button gradientTheme={'success'}>Join Community</Button>
+          </Link>
         )}
       </CommunityHeader>
     );

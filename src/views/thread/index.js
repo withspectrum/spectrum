@@ -285,7 +285,7 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadViewContainer>
+      <ThreadViewContainer threadViewContext={threadViewContext}>
         <ThreadContentView
           threadViewContext={threadViewContext}
           slider={slider}
