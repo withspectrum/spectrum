@@ -1,25 +1,26 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { FlexRow, Transition, zIndex } from '../globals';
+import { FlexCol, FlexRow, Transition, zIndex } from '../globals';
 
 const StyledFlyout = styled(FlexRow)`
-  background-color: transparent;
+  background-color: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: absolute;
   flex: 0 0 auto;
-  right: 100%;
-  top: 0;
+  right: -25%;
+  top: 36px;
   z-index: ${zIndex.flyout};
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.dropdown.off};
 `;
 
-const StyledRow = styled(FlexRow)`
+const StyledRow = styled(FlexCol)`
   display: flex;
-  flex-direction: row;
   align-items: stretch;
   position: relative;
-  top: -8px;
 `;
 
 const Flyout = (props: Object): React$Element<any> => (

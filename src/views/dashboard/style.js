@@ -18,6 +18,10 @@ export const Wrapper = styled.div`
   justify-content: flex-start;
   overflow-y: hidden;
   flex: auto;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-shadow: 1px 0 0 ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -290,7 +294,7 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 8px;
+  padding: 14px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: 10;

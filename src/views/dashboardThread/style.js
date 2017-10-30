@@ -15,7 +15,7 @@ export const Container = styled.div`
 
 export const Thread = styled.div`
   display: flex;
-  background: #fff;
+  background: ${props => props.theme.bg.wash};
   flex: auto;
   z-index: ${zIndex.chrome - 1};
   flex-direction: column;

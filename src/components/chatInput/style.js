@@ -11,14 +11,17 @@ export const ChatInputWrapper = styled(FlexRow)`
   z-index: inherit;
   position: relative;
   width: 100%;
+  max-width: 1024px;
   margin: 0;
   padding: 8px;
-  border-top: 2px solid ${({ theme }) => theme.bg.border};
+  background-color: ${props => props.theme.bg.default};
+  border-top: 1px solid ${({ theme }) => theme.bg.border};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
-    background-color: ${props => props.theme.bg.default};
     z-index: ${zIndex.mobileInput};
   }
 `;
@@ -45,7 +48,7 @@ export const InputWrapper = styled(EditorWrapper)`
   max-width: 100%;
   padding: 8px 40px 8px 16px;
   border-radius: 24px;
-  border: 2px solid ${props => props.theme.bg.border};
+  border: 1px solid ${props => props.theme.bg.border};
   transition: border 0.3s ease-out;
   color: ${props => props.theme.text.default};
   overflow-y: scroll;
