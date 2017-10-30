@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
+import Icon from '../../../components/icons';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
 import { Link } from 'react-router-dom';
@@ -22,6 +23,12 @@ import {
   SidebarRelatedThread,
   RelatedTitle,
   RelatedCount,
+  SidebarCommunityChannels,
+  PillLink,
+  PillLinkPinned,
+  PillLabel,
+  PinIcon,
+  Lock,
 } from '../style';
 
 type RecommendedThread = {
@@ -48,6 +55,7 @@ type Props = {
       profilePhoto: string,
       description: string,
       slug: string,
+      pinnedThreadId: string,
       communityPermissions: {
         isOwner: boolean,
         isModerator: boolean,
@@ -55,6 +63,9 @@ type Props = {
       },
     },
     channel: {
+      name: string,
+      slug: string,
+      isPrivate: boolean,
       channelPermissions: {
         isOwner: boolean,
         isModerator: boolean,
@@ -112,6 +123,7 @@ class Sidebar extends React.Component<Props, State> {
 
   render() {
     const { thread, currentUser, data: { threads } } = this.props;
+    const isPinned = thread.id === thread.community.pinnedThreadId;
     const threadsToRender =
       threads &&
       threads.length > 0 &&
@@ -129,6 +141,27 @@ class Sidebar extends React.Component<Props, State> {
             <SidebarCommunityProfile src={thread.community.profilePhoto} />
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
           </Link>
+          <SidebarCommunityChannels>
+            <PillLink to={`/${thread.community.slug}/${thread.channel.slug}`}>
+              {thread.channel.isPrivate && (
+                <Lock>
+                  <Icon glyph="private" size={12} />
+                </Lock>
+              )}
+              <PillLabel isPrivate={thread.channel.isPrivate}>
+                {thread.channel.name}
+              </PillLabel>
+            </PillLink>
+
+            {isPinned && (
+              <PillLinkPinned>
+                <PinIcon>
+                  <Icon glyph="pin-fill" size={12} />
+                </PinIcon>
+                <PillLabel>Pinned</PillLabel>
+              </PillLinkPinned>
+            )}
+          </SidebarCommunityChannels>
           <SidebarCommunityDescription>
             {thread.community.description}
           </SidebarCommunityDescription>
@@ -136,7 +169,7 @@ class Sidebar extends React.Component<Props, State> {
           <SidebarSectionActions>
             {thread.community.communityPermissions.isMember ? (
               <Link to={`/${thread.community.slug}`}>
-                <TextButton>View profile</TextButton>
+                <TextButton>View community</TextButton>
               </Link>
             ) : currentUser ? (
               <Button
