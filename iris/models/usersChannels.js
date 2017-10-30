@@ -472,6 +472,15 @@ const getPendingUsersInChannel = (
   );
 };
 
+const getPendingUsersInChannels = (channelIds: Array<string>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .group('channelId')
+    .filter({ isPending: true })
+    .run();
+};
+
 const getBlockedUsersInChannel = (
   channelId: string
 ): Promise<Array<string>> => {
@@ -560,7 +569,7 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
         return {
           ...DEFAULT_USER_CHANNEL_PERMISSIONS,
           userId: input[index][0],
-          channelid: input[index][1],
+          channelId: input[index][1],
         };
       });
     });
@@ -592,4 +601,5 @@ module.exports = {
   getOwnersInChannel,
   getUserPermissionsInChannel,
   getUsersPermissionsInChannels,
+  getPendingUsersInChannels,
 };
