@@ -132,7 +132,11 @@ class Sidebar extends React.Component<Props, State> {
         <SidebarSection>
           <Link to={`/${thread.community.slug}`}>
             <SidebarCommunityCover src={thread.community.coverPhoto} />
-            <SidebarCommunityProfile src={thread.community.profilePhoto} />
+            <SidebarCommunityProfile
+              community
+              size={48}
+              src={thread.community.profilePhoto}
+            />
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
           </Link>
 

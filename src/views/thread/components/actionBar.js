@@ -72,11 +72,15 @@ class ActionBar extends React.Component<Props, State> {
     flyoutOpen: false,
   };
 
-  toggleFlyout = () => {
+  toggleFlyout = val => {
+    if (val) {
+      return this.setState({ flyoutOpen: val });
+    }
+
     if (this.state.flyoutOpen === false) {
-      this.setState({ flyoutOpen: true });
+      return this.setState({ flyoutOpen: true });
     } else {
-      this.setState({ flyoutOpen: false });
+      return this.setState({ flyoutOpen: false });
     }
   };
 
@@ -236,6 +240,7 @@ class ActionBar extends React.Component<Props, State> {
               </ShareButton>
             </ShareButtons>
           </div>
+
           <div style={{ display: 'flex' }}>
             {currentUser &&
               isChannelMember &&
@@ -246,12 +251,26 @@ class ActionBar extends React.Component<Props, State> {
                     tipText={'Thread settings'}
                     tipLocation={'top-left'}
                     onClick={this.toggleFlyout}
-                    onMouseEnter={() =>
-                      setTimeout(() => this.toggleFlyout, 100)}
-                    onMouseLeave={() =>
-                      setTimeout(() => this.toggleFlyout, 300)}
                   />
                   <Flyout>
+                    {window.innerWidth < 1024 && (
+                      <FlyoutRow>
+                        <TextButton
+                          icon={
+                            thread.receiveNotifications
+                              ? 'notification-fill'
+                              : 'notification'
+                          }
+                          hoverColor={'text.default'}
+                          onClick={this.toggleNotification}
+                        >
+                          {thread.receiveNotifications
+                            ? 'Unfollow conversation'
+                            : 'Follow conversation'}
+                        </TextButton>
+                      </FlyoutRow>
+                    )}
+
                     {thread.isCreator && (
                       <FlyoutRow>
                         <TextButton
@@ -325,6 +344,23 @@ class ActionBar extends React.Component<Props, State> {
                 </DropWrap>
               )}
           </div>
+          {flyoutOpen && (
+            <div
+              style={{
+                position: 'fixed',
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                background: 'transparent',
+                zIndex: 3002,
+              }}
+              onClick={() =>
+                setTimeout(() => {
+                  this.toggleFlyout(false);
+                })}
+            />
+          )}
         </ActionBarContainer>
       );
     }

@@ -25,7 +25,7 @@ export const ThreadViewContainer = styled.div`
   margin: ${props =>
     props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
 
-  @media (max-width: 728px) {
+  @media (max-width: 1024px) {
     flex-direction: column;
   }
 `;
@@ -183,7 +183,7 @@ export const DropWrap = styled(FlexCol)`
     pointer-events: none;
     position: relative;
     top: 0;
-    right: 223px;
+    right: 215px;
     min-width: 256px;
     transition: ${Transition.hover.off};
   }
@@ -571,6 +571,7 @@ export const SidebarCommunityProfile = styled.img`
   left: 50%;
   transform: translateX(-50%);
   top: 48px;
+  background: ${props => props.theme.bg.default};
   border: 2px solid ${props => props.theme.bg.default};
 `;
 export const SidebarCommunityName = styled(SidebarSectionTitle)`

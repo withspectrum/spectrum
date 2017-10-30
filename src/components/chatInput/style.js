@@ -11,7 +11,6 @@ export const ChatInputWrapper = styled(FlexRow)`
   z-index: inherit;
   position: relative;
   width: 100%;
-  max-width: 1024px;
   margin: 0;
   padding: 8px;
   background-color: ${props => props.theme.bg.default};
