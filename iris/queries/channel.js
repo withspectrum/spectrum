@@ -104,8 +104,14 @@ module.exports = {
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
       return loaders.channelPendingUsers
         .load(id)
-        .then(res => res.reduction.map(rec => rec.userId))
-        .then(users => loaders.user.loadMany(users));
+        .then(res => {
+          if (!res || res.length === 0) return [];
+          return res.reduction.map(rec => rec.userId);
+        })
+        .then(users => {
+          if (!users || users.length === 0) return [];
+          return loaders.user.loadMany(users);
+        });
     },
     blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
       return getBlockedUsersInChannel(id).then(users =>
