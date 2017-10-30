@@ -171,8 +171,22 @@ class Navbar extends Component {
     } else return false;
   };
 
-  shouldComponentUpdate(next) {
+  shouldComponentUpdate(next, nextState) {
     const curr = this.props;
+    const currState = this.state;
+
+    // if notifications should be cleared
+    if (
+      currState.allUnseenCount !== nextState.allUnseenCount ||
+      currState.dmUnseenCount !== nextState.dmUnseenCount
+    ) {
+      return true;
+    }
+
+    // if route changes
+    if (curr.match !== next.match) {
+      return true;
+    }
 
     // Had no notifications before, have notifications now
     if (
