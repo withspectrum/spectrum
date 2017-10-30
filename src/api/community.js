@@ -23,9 +23,11 @@ const GET_COMMUNITY_QUERY = gql`
   query getCommunity($slug: String) {
     community(slug: $slug) {
       ...communityInfo
+      ...communityMetaData
     }
   }
   ${communityInfoFragment}
+  ${communityMetaDataFragment}
 `;
 
 export const getCommunity = graphql(GET_COMMUNITY_QUERY, profileQueryOptions);
@@ -118,6 +120,7 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
   mutation toggleCommunityMembership($communityId: ID!) {
     toggleCommunityMembership (communityId: $communityId) {
       ...communityInfo
+      ...communityMetaData
       channelConnection {
         edges {
           node {
@@ -132,6 +135,7 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
     }
   }
   ${communityInfoFragment}
+  ${communityMetaDataFragment}
   ${channelInfoFragment}
   ${userInfoFragment}
   ${channelMetaDataFragment}
@@ -289,9 +293,11 @@ export const getCommunityByIdQuery = gql`
   query getCommunity($id: ID) {
     community(id: $id) {
       ...communityInfo
+      ...communityMetaData
     }
   }
   ${communityInfoFragment}
+  ${communityMetaDataFragment}
 `;
 
 const getCommunityByIdOptions = {
@@ -462,12 +468,11 @@ export const getTopCommunities = graphql(
 		{
 		  topCommunities {
         ...communityInfo
-        metaData {
-          members
-        }
+        ...communityMetaData
       }
     }
     ${communityInfoFragment}
+    ${communityMetaDataFragment}
 	`,
   {
     props: ({ data: { error, loading, topCommunities } }) => ({
