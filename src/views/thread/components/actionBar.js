@@ -154,6 +154,9 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }} />
           <div style={{ display: 'flex' }}>
             <EditDone>
+              <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
+            </EditDone>
+            <EditDone>
               <Button loading={isSavingEdit} onClick={this.props.saveEdit}>
                 Save
               </Button>
@@ -245,6 +248,21 @@ class ActionBar extends React.Component<Props, State> {
                       setTimeout(() => this.toggleFlyout, 300)}
                   />
                   <Flyout>
+                    {thread.isCreator && (
+                      <FlyoutRow>
+                        <TextButton
+                          icon="edit"
+                          hoverColor="text.alt"
+                          tipText="Edit"
+                          tipLocation="top-left"
+                          onClick={this.props.toggleEdit}
+                          hoverColor={'text.default'}
+                        >
+                          <Label>Edit</Label>
+                        </TextButton>
+                      </FlyoutRow>
+                    )}
+
                     {isCommunityOwner &&
                       !thread.channel.isPrivate && (
                         <FlyoutRow>
@@ -265,6 +283,7 @@ class ActionBar extends React.Component<Props, State> {
                           </TextButton>
                         </FlyoutRow>
                       )}
+
                     {(isChannelOwner || isCommunityOwner) && (
                         <FlyoutRow>
                           <TextButton
@@ -276,10 +295,13 @@ class ActionBar extends React.Component<Props, State> {
                             tipLocation="top-left"
                             onClick={this.props.threadLock}
                           >
-                            <Label>{isPinned ? 'Unfreeze' : 'Freeze'}</Label>
+                            <Label>
+                              {thread.isLocked ? 'Unfreeze' : 'Freeze'}
+                            </Label>
                           </TextButton>
                         </FlyoutRow>
                       )}
+
                     {(thread.isCreator ||
                       isChannelOwner ||
                       isCommunityOwner) && (
@@ -295,19 +317,6 @@ class ActionBar extends React.Component<Props, State> {
                           </TextButton>
                         </FlyoutRow>
                       )}
-                    {thread.isCreator && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon="edit"
-                          hoverColor="text.alt"
-                          tipText="Edit"
-                          tipLocation="top-left"
-                          onClick={this.props.toggleEdit}
-                        >
-                          <Label>Edit</Label>
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
                   </Flyout>
                 </DropWrap>
               )}

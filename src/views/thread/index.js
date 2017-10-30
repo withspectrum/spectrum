@@ -41,6 +41,7 @@ type Props = {
 
 type State = {
   scrollElement: any,
+  isEditing: boolean,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -49,8 +50,16 @@ class ThreadContainer extends React.Component<Props, State> {
 
     this.state = {
       scrollElement: null,
+      isEditing: false,
     };
   }
+
+  toggleEdit = () => {
+    const { isEditing } = this.state;
+    this.setState({
+      isEditing: !isEditing,
+    });
+  };
 
   componentDidMount() {
     const elem = document.getElementById('scroller-for-inbox-thread-view');
@@ -130,6 +139,7 @@ class ThreadContainer extends React.Component<Props, State> {
       slider,
       threadViewContext = 'fullscreen',
     } = this.props;
+    const { isEditing } = this.state;
     const isLoggedIn = currentUser;
 
     if (thread) {
@@ -171,7 +181,7 @@ class ThreadContainer extends React.Component<Props, State> {
         (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
 
       return (
-        <ThreadViewContainer>
+        <ThreadViewContainer threadViewContext={threadViewContext}>
           {shouldRenderThreadSidebar && (
             <Sidebar
               thread={thread}
@@ -201,26 +211,36 @@ class ThreadContainer extends React.Component<Props, State> {
                   <ThreadCommunityBanner thread={thread} />
                 )}
 
-                <ThreadDetail thread={thread} slider={slider} />
-
-                <Messages
-                  threadType={thread.threadType}
-                  id={thread.id}
-                  currentUser={currentUser}
-                  forceScrollToBottom={this.forceScrollToBottom}
-                  forceScrollToTop={this.forceScrollToTop}
-                  contextualScrollToBottom={this.contextualScrollToBottom}
-                  shouldForceScrollOnMessageLoad={isParticipantOrCreator}
-                  shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
-                  hasMessagesToLoad={thread.messageCount > 0}
-                  isModerator={isModerator}
+                <ThreadDetail
+                  toggleEdit={this.toggleEdit}
+                  thread={thread}
+                  slider={slider}
                 />
 
-                {isLocked && (
-                  <NullState copy="This conversation has been frozen by a moderator." />
+                {!isEditing && (
+                  <Messages
+                    threadType={thread.threadType}
+                    id={thread.id}
+                    currentUser={currentUser}
+                    forceScrollToBottom={this.forceScrollToBottom}
+                    forceScrollToTop={this.forceScrollToTop}
+                    contextualScrollToBottom={this.contextualScrollToBottom}
+                    shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                    shouldForceScrollToTopOnMessageLoad={
+                      !isParticipantOrCreator
+                    }
+                    hasMessagesToLoad={thread.messageCount > 0}
+                    isModerator={isModerator}
+                  />
                 )}
 
-                {isLoggedIn &&
+                {!isEditing &&
+                  isLocked && (
+                    <NullState copy="This conversation has been frozen by a moderator." />
+                  )}
+
+                {!isEditing &&
+                  isLoggedIn &&
                   !canSendMessages && (
                     <JoinChannel
                       community={thread.community}
@@ -228,18 +248,20 @@ class ThreadContainer extends React.Component<Props, State> {
                     />
                   )}
 
-                {!isLoggedIn && (
-                  <UpsellSignIn
-                    title={`Join the ${thread.community.name} community`}
-                    glyph={'message-new'}
-                    view={{ data: thread.community, type: 'community' }}
-                    noShadow
-                  />
-                )}
+                {!isEditing &&
+                  !isLoggedIn && (
+                    <UpsellSignIn
+                      title={`Join the ${thread.community.name} community`}
+                      glyph={'message-new'}
+                      view={{ data: thread.community, type: 'community' }}
+                      noShadow
+                    />
+                  )}
               </Detail>
             </Content>
 
-            {canSendMessages &&
+            {!isEditing &&
+              canSendMessages &&
               !isLocked && (
                 <Input>
                   <ChatInputWrapper type="only">
@@ -259,12 +281,15 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingView />;
+      return <LoadingView threadViewContext={threadViewContext} />;
     }
 
     return (
       <ThreadViewContainer>
-        <ThreadContentView slider={slider}>
+        <ThreadContentView
+          threadViewContext={threadViewContext}
+          slider={slider}
+        >
           <ViewError
             heading={`We had trouble loading this thread.`}
             subheading={

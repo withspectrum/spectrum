@@ -6,7 +6,7 @@ import { FlexCol, FlexRow, Transition, zIndex } from '../globals';
 const StyledFlyout = styled(FlexRow)`
   background-color: ${props => props.theme.bg.default};
   border: 1px solid ${props => props.theme.bg.border};
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: absolute;
   flex: 0 0 auto;
@@ -21,6 +21,7 @@ const StyledRow = styled(FlexCol)`
   display: flex;
   align-items: stretch;
   position: relative;
+  flex: 1;
 `;
 
 const Flyout = (props: Object): React$Element<any> => (

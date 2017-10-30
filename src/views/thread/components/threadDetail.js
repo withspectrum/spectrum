@@ -175,6 +175,7 @@ class ThreadDetailPure extends Component {
     this.setState({
       isEditing: !isEditing,
     });
+    this.props.toggleEdit();
   };
 
   saveEdit = () => {

@@ -21,6 +21,8 @@ export const ThreadViewContainer = styled.div`
   max-height: 100%;
   max-width: 1024px;
   background-color: ${({ theme }) => theme.bg.wash};
+  margin: ${props =>
+    props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
 `;
 
 export const ThreadContentView = styled(FlexCol)`
@@ -68,6 +70,9 @@ export const Content = styled(FlexRow)`
   width: 100%;
   max-width: 1024px;
   margin: 0 auto;
+  background: ${props => props.theme.bg.default};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
 `;
 
 export const Input = styled(FlexRow)`
@@ -171,6 +176,10 @@ export const DropWrap = styled(FlexCol)`
   .flyout {
     opacity: 0;
     pointer-events: none;
+    position: relative;
+    top: 0;
+    right: 223px;
+    min-width: 256px;
     transition: ${Transition.hover.off};
   }
 
@@ -178,11 +187,41 @@ export const DropWrap = styled(FlexCol)`
   &.open > .flyout {
     opacity: 1;
     pointer-events: auto;
+    position: relative;
+    top: 8px;
     transition: ${Transition.hover.on};
   }
 `;
 
-export const FlyoutRow = styled(FlexRow)``;
+export const FlyoutRow = styled(FlexRow)`
+  width: 100%;
+
+  button {
+    width: 100%;
+    justify-content: flex-start;
+    border-top: 1px solid ${props => props.theme.bg.wash};
+    border-radius: 0;
+    transition: none;
+  }
+
+  button:hover {
+    background: ${props => props.theme.bg.wash};
+    transition: none;
+  }
+
+  &:first-of-type {
+    button {
+      border-top: 0;
+      border-radius: 4px 4px 0 0;
+    }
+  }
+
+  &:last-of-type {
+    button {
+      border-radius: 0 0 4px 4px;
+    }
+  }
+`;
 
 export const Byline = styled.div`
   font-weight: 500;

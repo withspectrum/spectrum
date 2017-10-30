@@ -6,8 +6,8 @@ import { HorizontalRule } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { ThreadViewContainer, Content, Detail, ChatWrapper } from '../style';
 
-const LoadingView = () => (
-  <ThreadViewContainer>
+const LoadingView = props => (
+  <ThreadViewContainer threadViewContext={props.threadViewContext}>
     <Titlebar
       provideBack={true}
       backRoute={`/`}
