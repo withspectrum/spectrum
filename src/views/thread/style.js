@@ -27,6 +27,7 @@ export const ThreadViewContainer = styled.div`
 
   @media (max-width: 1024px) {
     flex-direction: column;
+    overflow: hidden;
   }
 `;
 
@@ -493,8 +494,9 @@ export const ActionBarContainer = styled.div`
   border: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 1024px) {
-    width: calc(100% - 32px);
-    margin: 0 16px;
+    width: calc(100%);
+    border-radius: 0;
+    margin: 0;
   }
 `;
 
@@ -510,7 +512,7 @@ export const FollowButton = styled(Button)`
   }
 
   @media (max-width: 768px) {
-    display: none;
+    display: ${props => (props.currentUser ? 'none' : 'flex')};
   }
 
   ${Tooltip};

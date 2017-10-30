@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
@@ -176,8 +177,9 @@ class ActionBar extends React.Component<Props, State> {
       return (
         <ActionBarContainer>
           <div style={{ display: 'flex' }}>
-            {currentUser && (
+            {currentUser ? (
               <FollowButton
+                currentUser={currentUser}
                 icon={
                   thread.receiveNotifications
                     ? 'notification-fill'
@@ -196,6 +198,17 @@ class ActionBar extends React.Component<Props, State> {
                   ? 'Following conversation'
                   : 'Follow conversation'}
               </FollowButton>
+            ) : (
+              <Link to={`/login?r=${window.location}`}>
+                <FollowButton
+                  currentUser={currentUser}
+                  icon={'notification'}
+                  tipText={'Get notified about replies'}
+                  tipLocation={'top-right'}
+                >
+                  Follow conversation
+                </FollowButton>
+              </Link>
             )}
 
             <ShareButtons>
