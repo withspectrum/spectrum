@@ -17,6 +17,8 @@ export const createJob = (
       name,
       { timeframe },
       {
+        removeOnComplete: true,
+        removeOnFail: true,
         repeat: { cron: pattern, tz: 'America/Los_Angeles' },
       }
     );

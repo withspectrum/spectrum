@@ -57,7 +57,6 @@
     "draft-js-markdown-plugin": "^1.0.0",
     "draft-js-plugins-editor": "2.0.0-rc2",
     "draft-js-prism-plugin": "0.1.1",
-    "draft-js-single-line-plugin": "^2.0.1",
     "draftjs-to-markdown": "^0.4.2",
     "emoji-regex": "^6.1.1",
     "express": "^4.15.2",
