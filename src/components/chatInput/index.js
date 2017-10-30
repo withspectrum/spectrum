@@ -141,10 +141,7 @@ class ChatInput extends Component {
       return this.submit(e);
     }
 
-    if (
-      !this.state.code &&
-      !(e.shiftKey || KeyBindingUtil.hasCommandModifier(e))
-    ) {
+    if (!this.state.code && !e.shiftKey) {
       return this.submit(e);
     }
 
