@@ -65,6 +65,7 @@ class ChatInput extends Component {
         onChange(
           changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
         );
+        setTimeout(() => this.triggerFocus());
       }
     );
   };
