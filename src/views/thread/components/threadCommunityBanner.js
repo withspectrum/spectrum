@@ -17,9 +17,7 @@ import {
   CommunityHeaderMeta,
   PillLink,
   PillLabel,
-  PinIcon,
   Lock,
-  PillLinkPinned,
 } from '../style';
 
 type Props = {
@@ -31,7 +29,6 @@ type Props = {
       name: string,
       slug: string,
       profilePhoto: string,
-      pinnedThreadId: string,
       id: string,
     },
     channel: {
@@ -111,7 +108,6 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   render() {
     const { thread: { channel, community, id } } = this.props;
     const { isLoading } = this.state;
-    const isPinned = id === community.pinnedThreadId;
 
     return (
       <CommunityHeader>
@@ -132,15 +128,6 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
                 {channel.name}
               </PillLabel>
             </PillLink>
-          )}
-
-          {isPinned && (
-            <PillLinkPinned>
-              <PinIcon>
-                <Icon glyph="pin-fill" size={12} />
-              </PinIcon>
-              <PillLabel>Pinned</PillLabel>
-            </PillLinkPinned>
           )}
         </CommunityHeaderMeta>
 

@@ -130,7 +130,7 @@ class Sidebar extends React.Component<Props, State> {
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
           </Link>
           <SidebarCommunityDescription>
-            {thread.community.name}
+            {thread.community.description}
           </SidebarCommunityDescription>
 
           <SidebarSectionActions>

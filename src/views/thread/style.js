@@ -6,6 +6,7 @@ import Column from '../../components/column';
 import {
   FlexCol,
   FlexRow,
+  Truncate,
   H1,
   H3,
   H4,
@@ -23,6 +24,10 @@ export const ThreadViewContainer = styled.div`
   background-color: ${({ theme }) => theme.bg.wash};
   margin: ${props =>
     props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
+
+  @media (max-width: 728px) {
+    flex-direction: column;
+  }
 `;
 
 export const ThreadContentView = styled(FlexCol)`
@@ -311,6 +316,7 @@ export const ChatWrapper = styled.div`
   width: 100%;
   max-width: 100%;
   flex: none;
+  margin-top: 16px;
 `;
 
 export const ThreadTitle = {
@@ -384,6 +390,10 @@ export const CommunityHeaderName = styled.h3`
   color: ${props => props.theme.text.default};
   margin-left: 16px;
   margin-right: 8px;
+
+  @media (max-width: 728px) {
+    display: none;
+  }
 `;
 export const CommunityHeaderChannelTag = styled.div`
   color: ${props => props.theme.text.reverse};
@@ -399,6 +409,10 @@ export const CommunityHeaderChannelTag = styled.div`
   &:hover {
     color: ${props => props.theme.text.default};
   }
+
+  @media (max-width: 728px) {
+    display: none;
+  }
 `;
 
 export const CommunityHeaderMeta = styled.div`
@@ -410,10 +424,6 @@ export const CommunityHeaderLink = styled(Link)`
   display: flex;
   align-items: center;
   flex: auto;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const PillLink = styled(Link)`
@@ -546,9 +556,11 @@ export const SidebarSectionActions = styled.div`
     margin: 4px 0;
   }
 `;
-export const SidebarCommunityCover = styled.img`
+export const SidebarCommunityCover = styled.div`
   border-radius: 4px 4px 0 0;
-  width: 100%;
+  height: 72px;
+  background: url("${props => props.src}") no-repeat;
+  background-size: cover;
   display: block;
 `;
 export const SidebarCommunityProfile = styled.img`

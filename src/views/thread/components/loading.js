@@ -6,7 +6,10 @@ import { HorizontalRule } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { ThreadViewContainer, Content, Detail, ChatWrapper } from '../style';
 
-const LoadingView = props => (
+type Props = {
+  threadViewContext: 'fullscreen' | 'inbox' | 'slider',
+};
+const LoadingView = (props: Props) => (
   <ThreadViewContainer threadViewContext={props.threadViewContext}>
     <Titlebar
       provideBack={true}

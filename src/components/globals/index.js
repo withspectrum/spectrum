@@ -568,13 +568,12 @@ export const HorizontalRule = styled(FlexRow)`
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  margin: 0 32px;
   color: ${props => props.theme.bg.border};
 
   hr {
     display: inline-block;
     flex: 1 0 auto;
-    border-top: 2px solid ${props => props.theme.bg.wash};
+    border-top: 1px solid ${props => props.theme.bg.border};
   }
 
   div {
