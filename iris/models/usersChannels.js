@@ -569,7 +569,7 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
         return {
           ...DEFAULT_USER_CHANNEL_PERMISSIONS,
           userId: input[index][0],
-          channelid: input[index][1],
+          channelId: input[index][1],
         };
       });
     });
