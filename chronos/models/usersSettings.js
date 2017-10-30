@@ -20,15 +20,7 @@ export const getUsersForDigest = (
       .filter(row => row('notifications')('types')(range)('email').eq(true))
       .eqJoin('userId', db.table('users'))
       .zip()
-      .pluck([
-        'userId',
-        'email',
-        'firstName',
-        'name',
-        'username',
-        'lastSeen',
-        'notifications',
-      ])
+      .pluck(['userId', 'email', 'firstName', 'name', 'username', 'lastSeen'])
       // save some processing time by making sure the user has an email address
       .filter(row => row('email').ne(null))
       // save some processing time by making sure the user has a username
@@ -37,14 +29,7 @@ export const getUsersForDigest = (
       .filter(
         db.row('lastSeen').during(db.now().sub(60 * 60 * 24 * 30), db.now())
       )
-      .pluck([
-        'userId',
-        'email',
-        'firstName',
-        'name',
-        'username',
-        'notifications',
-      ])
+      .pluck(['userId', 'email', 'firstName', 'name', 'username'])
       .distinct()
       .run()
   );
