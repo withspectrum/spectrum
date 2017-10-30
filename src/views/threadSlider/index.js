@@ -63,7 +63,11 @@ class ThreadSlider extends Component {
                       </CloseButton>
                     </Close>
 
-                    <ThreadContainer threadId={threadId} slider />
+                    <ThreadContainer
+                      threadId={threadId}
+                      threadViewContext={'slider'}
+                      slider
+                    />
                   </Thread>
                 </Container>
               )}

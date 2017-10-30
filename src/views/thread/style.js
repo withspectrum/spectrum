@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Avatar from '../../components/avatar';
+import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
   FlexCol,
@@ -10,11 +11,25 @@ import {
   H4,
   Transition,
   zIndex,
+  Tooltip,
 } from '../../components/globals';
 
-export const View = styled(FlexCol)`
+export const ThreadViewContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
   background-color: ${({ theme }) => theme.bg.wash};
-  overflow: hidden;
+`;
+
+export const ThreadContentView = styled(FlexCol)`
+  background-color: ${({ theme }) => theme.bg.default};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
+  overflow-y: scroll;
+  overflow-x: visible;
   max-width: 100%;
   max-height: 100%;
   flex: auto;
@@ -26,10 +41,26 @@ export const View = styled(FlexCol)`
   grid-template-areas: 'header' 'body' 'footer';
 `;
 
+export const ThreadSidebarView = styled(FlexCol)`
+  background-color: ${({ theme }) => theme.bg.wash};
+  overflow: hidden;
+  min-width: 256px;
+  max-width: 256px;
+  max-height: 100%;
+  flex: auto;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  position: relative;
+  right: 1px;
+  overflow-y: scroll;
+
+  @media (max-width: 1032px) {
+    display: none;
+  }
+`;
+
 export const Content = styled(FlexRow)`
-  background-color: ${({ theme }) => theme.bg.default};
-  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
-    1px 0 0 ${props => props.theme.bg.border};
   justify-content: center;
   align-items: flex-start;
   flex: auto;
@@ -38,10 +69,6 @@ export const Content = styled(FlexRow)`
   width: 100%;
   max-width: 1024px;
   margin: 0 auto;
-
-  @media (max-width: 768px) {
-    padding-top: 16px;
-  }
 `;
 
 export const Input = styled(FlexRow)`
@@ -108,7 +135,13 @@ export const ThreadWrapper = styled(FlexCol)`
   }
 `;
 
-export const ThreadContent = styled.div`padding: 32px;`;
+export const ThreadContent = styled.div`
+  padding: 32px;
+
+  @media (max-width: 1024px) {
+    padding: 16px;
+  }
+`;
 
 export const ThreadHeading = styled(H1)`
   font-size: 24px;
@@ -133,6 +166,7 @@ export const DropWrap = styled(FlexCol)`
   position: relative;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
+  align-self: flex-end;
 
   &:hover {
     color: ${({ theme }) => theme.bg.border};
@@ -229,6 +263,7 @@ export const Location = styled(FlexRow)`
 export const Timestamp = styled.span`
   font-weight: 400;
   margin: 8px 0;
+  font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
 
@@ -273,59 +308,14 @@ export const ThreadDescription = {
   whiteSpace: 'pre-wrap',
 };
 
-export const ShareLinks = styled.div`
-  display: flex;
-  margin-top: 24px;
-  margin-bottom: 8px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const ShareButtons = styled.div`
-  display: none;
-
-  @media (max-width: 768px) {
-    display: flex;
-    margin-top: 24px;
-    margin-bottom: 8px;
-  }
-`;
-
-export const ShareLink = styled.span`
-  color: ${props => props.theme.text.alt};
-  display: flex;
-  align-items: center;
-  margin-right: 12px;
-  cursor: pointer;
-
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .icon {
-    margin-right: 4px;
-  }
-
-  &:hover {
-    color: ${props =>
-      props.facebook
-        ? props.theme.social.facebook.default
-        : props.twitter
-          ? props.theme.social.twitter.default
-          : props.theme.text.default};
-  }
-`;
+export const ShareButtons = styled.div`display: flex;`;
 
 export const ShareButton = styled.span`
   display: flex;
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
-  border: 1px solid ${props => props.theme.bg.border};
   flex: 1;
+  margin: 0 4px;
 
   a {
     display: flex;
@@ -336,31 +326,15 @@ export const ShareButton = styled.span`
   }
 
   &:hover {
-    background: ${props =>
+    color: ${props =>
       props.facebook
         ? props.theme.social.facebook.default
         : props.twitter
           ? props.theme.social.twitter.default
           : props.theme.text.default};
-    border: 1px solid
-      ${props =>
-        props.facebook
-          ? props.theme.social.facebook.default
-          : props.twitter
-            ? props.theme.social.twitter.default
-            : props.theme.text.default};
-    color: ${props => props.theme.text.reverse};
   }
 
-  &:first-of-type {
-    border-radius: 4px 0 0 4px;
-    border-right: 0;
-  }
-
-  &:last-of-type {
-    border-radius: 0 4px 4px 0;
-    border-left: 0;
-  }
+  ${Tooltip};
 `;
 
 export const CommunityHeader = styled.div`
@@ -460,11 +434,135 @@ export const PinIcon = styled.span`
   margin-left: -2px;
 `;
 
-export const ActionBar = styled.div`
+export const ActionBarContainer = styled.div`
   display: flex;
-  width: 100%;
+  justify-content: space-between;
+  width: calc(100% - 64px);
+  align-items: center;
+  margin: 0 32px;
+  border-radius: 4px;
   background: ${props => props.theme.bg.wash};
-  padding: 16px 32px;
-  border-top: 1px solid ${props => props.theme.bg.border};
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding: 8px;
+  border: 1px solid ${props => props.theme.bg.border};
+
+  @media (max-width: 1024px) {
+    margin: 0 16px;
+  }
+`;
+
+export const FollowButton = styled(Button)`
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.text.alt};
+  margin-right: 16px;
+
+  &:hover {
+    background: ${props => props.theme.bg.default};
+    color: ${props => props.theme.text.default};
+  }
+
+  ${Tooltip};
+`;
+
+export const SidebarSection = styled.div`
+  margin: 8px 16px;
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  align-self: stretch;
+  position: relative;
+
+  &:first-of-type {
+    margin-top: 16px;
+  }
+`;
+
+export const SidebarSectionTitle = styled.h3`
+  margin: 16px 16px 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+`;
+
+export const SidebarSectionBody = styled.p`
+  margin: 0 16px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+`;
+
+export const SidebarSectionActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px 8px;
+
+  button {
+    width: 100%;
+    margin: 4px 0;
+  }
+`;
+export const SidebarCommunityCover = styled.img`
+  border-radius: 4px 4px 0 0;
+  width: 100%;
+  display: block;
+`;
+export const SidebarCommunityProfile = styled.img`
+  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 48px;
+  border: 2px solid ${props => props.theme.bg.default};
+`;
+export const SidebarCommunityName = styled(SidebarSectionTitle)`
+  text-align: center;
+  align-self: center;
+  margin-top: 32px;
+  text-align: center;
+`;
+export const SidebarCommunityDescription = styled(SidebarSectionBody)`
+  text-align: center;
+  align-self: center;
+`;
+export const SidebarRelatedThreadList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const SidebarRelatedThread = styled.li`
+  font-size: 14px;
+  border-top: 1px solid ${props => props.theme.bg.wash};
+
+  &:hover {
+    a {
+      background-color: ${props => props.theme.bg.wash};
+    }
+  }
+
+  a {
+    padding: 8px 16px;
+    display: block;
+  }
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  &:last-of-type {
+    a {
+      padding-bottom: 12px;
+      border-radius: 0 0 4px 4px;
+    }
+  }
+`;
+export const RelatedTitle = styled.p``;
+export const RelatedCount = styled.p`
+  font-size: 13px;
+  color: ${props => props.theme.text.alt};
 `;

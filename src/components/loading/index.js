@@ -10,7 +10,7 @@ import { Spinner, FlexCol } from '../globals';
 import Grid from '../grid';
 import { Card } from '../card';
 import { Column } from '../column';
-import { View, Detail, Content } from '../../views/thread/style';
+import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
 import {
   LoadingScreenContainer,
   ShimmerList,
@@ -857,14 +857,14 @@ export const LoadingScreen = (): React$Element<any> => (
 );
 
 export const LoadingThreadView = (): React$Element<any> => (
-  <View>
+  <ThreadViewContainer>
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
         <LoadingChat />
       </Detail>
     </Content>
-  </View>
+  </ThreadViewContainer>
 );
 
 export const LoadingNotifications = (): React$Element<any> => (

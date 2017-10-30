@@ -24,7 +24,11 @@ class DashboardThread extends Component {
     return (
       <Container>
         <Thread>
-          <ThreadContainer threadId={threadId} slider />
+          <ThreadContainer
+            threadViewContext={'inbox'}
+            threadId={threadId}
+            slider
+          />
         </Thread>
       </Container>
     );

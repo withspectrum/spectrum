@@ -12,12 +12,20 @@ import ChatInput from '../../components/chatInput';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { getThread } from './queries';
-import { View, Content, Input, Detail, ChatInputWrapper } from './style';
 import { NullState, UpsellSignIn } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
+import Sidebar from './components/sidebar';
+import {
+  ThreadViewContainer,
+  ThreadContentView,
+  Content,
+  Input,
+  Detail,
+  ChatInputWrapper,
+} from './style';
 
 type Props = {
   data: {
@@ -28,6 +36,7 @@ type Props = {
   currentUser: Object,
   dispatch: Function,
   slider: boolean,
+  threadViewContext: 'slider' | 'fullscreen' | 'inbox',
 };
 
 type State = {
@@ -61,6 +70,13 @@ class ThreadContainer extends React.Component<Props, State> {
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
       track('thread', 'viewed', null);
+
+      // if the user is new and signed up through a thread view, push
+      // the thread's community data into the store to hydrate the new user experience
+      // with their first community they should join
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.thread.community)
+      );
 
       if (scrollElement) {
         scrollElement.scrollTop = 0;
@@ -112,12 +128,11 @@ class ThreadContainer extends React.Component<Props, State> {
       isLoading,
       hasError,
       slider,
-      dispatch,
+      threadViewContext = 'fullscreen',
     } = this.props;
-
     const isLoggedIn = currentUser;
 
-    if (data && data.thread) {
+    if (thread) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
         type: 'thread',
@@ -129,17 +144,11 @@ class ThreadContainer extends React.Component<Props, State> {
         },
       });
 
-      // if the user is new and signed up through a thread view, push
-      // the thread's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      dispatch(addCommunityToOnboarding(thread.community));
-
       // get the data we need to render the view
       const { channelPermissions, isPrivate } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
-      const isRestricted = isPrivate && !channelPermissions.isMember;
-      const canSendMessages = currentUser && channelPermissions.isMember;
+      const canSendMessages = isLoggedIn && channelPermissions.isMember;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
       const isModerator = isChannelOwner || isCommunityOwner;
@@ -152,105 +161,100 @@ class ThreadContainer extends React.Component<Props, State> {
               participant => participant.id === currentUser.id
             )));
 
-      // if the thread is in a private channel where the user isn't a member the user can request to join the channel
-      if (isRestricted) {
-        return (
-          <View>
+      const shouldRenderThreadSidebar =
+        threadViewContext === 'fullscreen' && window.innerWidth > 1024;
+
+      // only show the community header in inbox, sliders, and narrow screen thread views
+      const shouldRenderCommunityContextHeader =
+        threadViewContext === 'inbox' ||
+        threadViewContext === 'slider' ||
+        (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
+
+      return (
+        <ThreadViewContainer>
+          <ThreadContentView slider={slider}>
+            <Head
+              title={title}
+              description={description}
+              image={thread.community.profilePhoto}
+            />
             <Titlebar
-              title={'Private thread'}
+              title={thread.content.title}
+              subtitle={`${thread.community.name} / ${thread.channel.name}`}
               provideBack={true}
               backRoute={`/`}
               noComposer
+              style={{ gridArea: 'header' }}
             />
-            <Content>
-              <Detail type="primary">
-                <ViewError
-                  heading={`This thread is private.`}
-                  subheading={`Request to join this channel and the admins will be notified.`}
-                >
-                  <RequestToJoinChannel
-                    channel={thread.channel}
-                    community={thread.community}
-                    isPending={thread.channel.channelPermissions.isPending}
-                  />
-                </ViewError>
-              </Detail>
-            </Content>
-          </View>
-        );
-      }
+            <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+              <Detail type={slider ? '' : 'only'}>
+                {shouldRenderCommunityContextHeader && (
+                  <ThreadCommunityBanner thread={thread} />
+                )}
 
-      return (
-        <View slider={slider}>
-          <Head
-            title={title}
-            description={description}
-            image={thread.community.profilePhoto}
-          />
-          <Titlebar
-            title={thread.content.title}
-            subtitle={`${thread.community.name} / ${thread.channel.name}`}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-            style={{ gridArea: 'header' }}
-          />
-          <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-            <Detail type={slider ? '' : 'only'}>
-              <ThreadCommunityBanner thread={thread} />
-              <ThreadDetail thread={thread} slider={slider} />
+                <ThreadDetail thread={thread} slider={slider} />
 
-              <Messages
-                threadType={thread.threadType}
-                id={thread.id}
-                currentUser={currentUser}
-                forceScrollToBottom={this.forceScrollToBottom}
-                forceScrollToTop={this.forceScrollToTop}
-                contextualScrollToBottom={this.contextualScrollToBottom}
-                shouldForceScrollOnMessageLoad={isParticipantOrCreator}
-                shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
-                hasMessagesToLoad={thread.messageCount > 0}
-                isModerator={isModerator}
-              />
+                <Messages
+                  threadType={thread.threadType}
+                  id={thread.id}
+                  currentUser={currentUser}
+                  forceScrollToBottom={this.forceScrollToBottom}
+                  forceScrollToTop={this.forceScrollToTop}
+                  contextualScrollToBottom={this.contextualScrollToBottom}
+                  shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                  shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
+                  hasMessagesToLoad={thread.messageCount > 0}
+                  isModerator={isModerator}
+                />
 
-              {isLocked && (
-                <NullState copy="This conversation has been frozen by a moderator." />
-              )}
+                {isLocked && (
+                  <NullState copy="This conversation has been frozen by a moderator." />
+                )}
 
-              {isLoggedIn &&
-                !canSendMessages && (
-                  <JoinChannel
-                    community={thread.community}
-                    channel={thread.channel}
+                {isLoggedIn &&
+                  !canSendMessages && (
+                    <JoinChannel
+                      community={thread.community}
+                      channel={thread.channel}
+                    />
+                  )}
+
+                {!isLoggedIn && (
+                  <UpsellSignIn
+                    title={`Join the ${thread.community.name} community`}
+                    glyph={'message-new'}
+                    view={{ data: thread.community, type: 'community' }}
+                    noShadow
                   />
                 )}
-              {!isLoggedIn && (
-                <UpsellSignIn
-                  title={`Join the ${thread.community.name} community`}
-                  glyph={'message-new'}
-                  view={{ data: thread.community, type: 'community' }}
-                  noShadow
-                />
-              )}
-            </Detail>
-          </Content>
+              </Detail>
+            </Content>
 
-          {isLoggedIn &&
-            canSendMessages &&
-            !isLocked && (
-              <Input>
-                <ChatInputWrapper type="only">
-                  <ChatInput
-                    threadType="story"
-                    thread={thread.id}
-                    currentUser={isLoggedIn}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    onRef={chatInput => (this.chatInput = chatInput)}
-                  />
-                </ChatInputWrapper>
-              </Input>
-            )}
-        </View>
+            {canSendMessages &&
+              !isLocked && (
+                <Input>
+                  <ChatInputWrapper type="only">
+                    <ChatInput
+                      threadType="story"
+                      thread={thread.id}
+                      currentUser={isLoggedIn}
+                      forceScrollToBottom={this.forceScrollToBottom}
+                      onRef={chatInput => (this.chatInput = chatInput)}
+                    />
+                  </ChatInputWrapper>
+                </Input>
+              )}
+          </ThreadContentView>
+
+          {shouldRenderThreadSidebar && (
+            <Sidebar
+              thread={thread}
+              currentUser={currentUser}
+              slug={thread.community.slug}
+              id={thread.community.id}
+            />
+          )}
+        </ThreadViewContainer>
       );
     }
 
@@ -259,17 +263,19 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <View slider={slider}>
-        <ViewError
-          heading={`We had trouble loading this thread.`}
-          subheading={
-            !hasError
-              ? `It may be private, or may have been deleted by an author or moderator.`
-              : ''
-          }
-          refresh={hasError}
-        />
-      </View>
+      <ThreadViewContainer>
+        <ThreadContentView slider={slider}>
+          <ViewError
+            heading={`We had trouble loading this thread.`}
+            subheading={
+              !hasError
+                ? `It may be private, or may have been deleted by an author or moderator.`
+                : ''
+            }
+            refresh={hasError}
+          />
+        </ThreadContentView>
+      </ThreadViewContainer>
     );
   }
 }

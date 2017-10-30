@@ -4,10 +4,10 @@ import Titlebar from '../../../views/titlebar';
 import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
 import { HorizontalRule } from '../../../components/globals';
 import Icon from '../../../components/icons';
-import { View, Content, Detail, ChatWrapper } from '../style';
+import { ThreadViewContainer, Content, Detail, ChatWrapper } from '../style';
 
 const LoadingView = () => (
-  <View>
+  <ThreadViewContainer>
     <Titlebar
       provideBack={true}
       backRoute={`/`}
@@ -27,7 +27,7 @@ const LoadingView = () => (
         </ChatWrapper>
       </Detail>
     </Content>
-  </View>
+  </ThreadViewContainer>
 );
 
 export default LoadingView;
