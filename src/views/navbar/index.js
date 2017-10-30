@@ -184,7 +184,7 @@ class Navbar extends Component {
     }
 
     // if route changes
-    if (curr.match !== next.match) {
+    if (curr.location.pathname !== next.location.pathname) {
       return true;
     }
 
