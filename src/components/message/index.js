@@ -17,6 +17,10 @@ class Message extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.message.id !== this.props.message.id;
+  }
+
   toggleOpenGallery = messageId => {
     const { threadId } = this.props;
     this.props.dispatch(openGallery(threadId, messageId));
