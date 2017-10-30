@@ -442,10 +442,6 @@ export const PillLink = styled(Link)`
   line-height: 1;
   pointer-events: auto;
 
-  &:only-child {
-    margin: 0;
-  }
-
   &:hover {
     color: ${props => props.theme.text.default};
   }
@@ -586,11 +582,6 @@ export const SidebarCommunityName = styled(SidebarSectionTitle)`
 export const SidebarCommunityDescription = styled(SidebarSectionBody)`
   text-align: center;
   align-self: center;
-`;
-export const SidebarCommunityChannels = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
 `;
 export const SidebarRelatedThreadList = styled.ul`
   list-style-type: none;

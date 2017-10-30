@@ -86,16 +86,20 @@ class ActionBar extends React.Component<Props, State> {
       let t = document.createElement('input');
       t.id = 't';
       // Optional step to make less noise in the page, if any!
+      // $FlowIssue
       t.style.height = 0;
       // You have to append it to your page somewhere, I chose <body>
+      // $FlowIssue
       document.body.appendChild(t);
       // Copy whatever is in your div to our new textarea
       t.value = `https://spectrum.chat/thread/${this.props.thread.id}`;
       // Now copy whatever inside the textarea to clipboard
       let selector = document.querySelector('#t');
+      // $FlowIssue
       selector.select();
       document.execCommand('copy');
       // Remove the textarea
+      // $FlowIssue
       document.body.removeChild(t);
       this.props.dispatch(
         addToastWithTimeout('success', 'Copied to clipboard')

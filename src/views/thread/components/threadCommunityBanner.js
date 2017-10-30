@@ -23,6 +23,7 @@ import {
 type Props = {
   dispatch: Function,
   toggleChannelSubscription: Function,
+  currentUser: Object,
   thread: {
     id: string,
     community: {

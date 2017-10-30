@@ -6,11 +6,11 @@ import { HorizontalRule } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { ThreadViewContainer, Content, Detail, ChatWrapper } from '../style';
 
-type Props = {
-  threadViewContext: 'fullscreen' | 'inbox' | 'slider',
+type PropTypes = {
+  threadViewContext?: 'fullscreen' | 'inbox' | 'slider',
 };
-const LoadingView = (props: Props) => (
-  <ThreadViewContainer threadViewContext={props.threadViewContext}>
+const LoadingView = ({ threadViewContext = 'fullscreen' }: PropTypes) => (
+  <ThreadViewContainer threadViewContext={threadViewContext}>
     <Titlebar
       provideBack={true}
       backRoute={`/`}

@@ -23,12 +23,6 @@ import {
   SidebarRelatedThread,
   RelatedTitle,
   RelatedCount,
-  SidebarCommunityChannels,
-  PillLink,
-  PillLinkPinned,
-  PillLabel,
-  PinIcon,
-  Lock,
 } from '../style';
 
 type RecommendedThread = {
@@ -141,27 +135,7 @@ class Sidebar extends React.Component<Props, State> {
             <SidebarCommunityProfile src={thread.community.profilePhoto} />
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
           </Link>
-          <SidebarCommunityChannels>
-            <PillLink to={`/${thread.community.slug}/${thread.channel.slug}`}>
-              {thread.channel.isPrivate && (
-                <Lock>
-                  <Icon glyph="private" size={12} />
-                </Lock>
-              )}
-              <PillLabel isPrivate={thread.channel.isPrivate}>
-                {thread.channel.name}
-              </PillLabel>
-            </PillLink>
 
-            {isPinned && (
-              <PillLinkPinned>
-                <PinIcon>
-                  <Icon glyph="pin-fill" size={12} />
-                </PinIcon>
-                <PillLabel>Pinned</PillLabel>
-              </PillLinkPinned>
-            )}
-          </SidebarCommunityChannels>
           <SidebarCommunityDescription>
             {thread.community.description}
           </SidebarCommunityDescription>
