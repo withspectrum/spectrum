@@ -22,10 +22,5 @@ export const communityInfoFragment = gql`
       isModerator
       reputation
     }
-    # counts
-    metaData {
-      members
-      channels
-    }
   }
 `;
