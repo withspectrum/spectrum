@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
@@ -126,6 +127,14 @@ class Sidebar extends React.Component<Props, State> {
         .filter(t => t.id !== thread.id)
         .sort((a, b) => b.messageCount - a.messageCount)
         .slice(0, 5);
+    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+    const renderDescriptionWithLinks = text => {
+      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
+          {text}
+        </a>
+      ));
+    };
 
     return (
       <ThreadSidebarView>
@@ -141,7 +150,7 @@ class Sidebar extends React.Component<Props, State> {
           </Link>
 
           <SidebarCommunityDescription>
-            {thread.community.description}
+            {renderDescriptionWithLinks(thread.community.description)}
           </SidebarCommunityDescription>
 
           <SidebarSectionActions>

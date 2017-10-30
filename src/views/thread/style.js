@@ -544,6 +544,15 @@ export const SidebarSectionBody = styled.p`
   font-size: 14px;
   font-weight: 400;
   color: ${props => props.theme.text.alt};
+  white-space: pre-wrap;
+
+  a {
+    color: ${props => props.theme.text.default};
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const SidebarSectionActions = styled.div`
