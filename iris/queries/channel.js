@@ -57,7 +57,16 @@ module.exports = {
     },
     communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
-      if (!communityId || !user) return false;
+      if (!communityId || !user) {
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        };
+      }
       return loaders.userPermissionsInCommunity.load([user.id, communityId]);
     },
     memberConnection: (
