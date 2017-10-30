@@ -171,6 +171,35 @@ class Navbar extends Component {
     } else return false;
   };
 
+  shouldComponentUpdate(next) {
+    const curr = this.props;
+
+    // Had no notifications before, have notifications now
+    if (
+      !curr.notificationsQuery.notifications &&
+      next.notificationsQuery.notifications
+    )
+      return true;
+
+    // Have more notifications now
+    if (
+      next.notificationsQuery.notifications &&
+      curr.notificationsQuery.notifications.edges.length !==
+        next.notificationsQuery.notifications.edges.length
+    )
+      return true;
+
+    // Had no user, now have user or user changed
+    if (
+      (!next.data.user && curr.data.user) ||
+      next.data.user !== curr.data.user
+    )
+      return true;
+
+    // Fuck updating
+    return false;
+  }
+
   componentDidUpdate(prevProps) {
     // if the query returned notifications
     if (

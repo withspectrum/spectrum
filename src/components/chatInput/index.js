@@ -46,6 +46,18 @@ class ChatInput extends Component {
     this.props.onRef(this);
   }
 
+  shouldComponentUpdate(next) {
+    const curr = this.props;
+
+    // User changed
+    if (curr.currentUser !== next.currentUser) return true;
+
+    // State changed
+    if (curr.state !== next.state) return true;
+
+    return false;
+  }
+
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
