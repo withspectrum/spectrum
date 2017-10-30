@@ -52,8 +52,31 @@ module.exports = {
     ) => loaders.community.load(communityId),
     channelPermissions: (args, _: any, { user, loaders }: GraphQLContext) => {
       const channelId = args.id || args.channelId;
-      if (!channelId || !user) return false;
-      return loaders.userPermissionsInChannel.load([user.id, channelId]);
+      if (!channelId || !user) {
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        };
+      }
+      return loaders.userPermissionsInChannel
+        .load([user.id, channelId])
+        .then(res => {
+          if (!res) {
+            return {
+              isOwner: false,
+              isMember: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: false,
+              receiveNotifications: false,
+            };
+          }
+          return res;
+        });
     },
     communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
