@@ -129,10 +129,6 @@ export const ThreadWrapper = styled(FlexCol)`
   font-size: 16px;
   flex: none;
   min-width: 320px;
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
 `;
 
 export const ThreadContent = styled.div`
@@ -196,6 +192,7 @@ export const Byline = styled.div`
   margin-bottom: 16px;
   align-items: center;
   flex: auto;
+  font-size: 14px;
 `;
 
 export const BylineMeta = styled(FlexRow)`margin-left: 12px;`;
@@ -375,6 +372,10 @@ export const CommunityHeaderLink = styled(Link)`
   display: flex;
   align-items: center;
   flex: auto;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const PillLink = styled(Link)`
