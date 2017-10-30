@@ -54,7 +54,7 @@ export const collections = [
     ],
   },
   {
-    title: 'For Developers',
+    title: 'For Web Developers',
     categories: [
       {
         title: 'Web Frameworks',
@@ -71,10 +71,10 @@ export const collections = [
           'css-in-js',
         ],
       },
-      {
-        title: 'Native',
-        communities: ['compileswift', 'swiftdev'],
-      },
+      // {
+      //   title: 'Native',
+      //   communities: ['compileswift', 'swiftdev'],
+      // },
       {
         title: 'Resources',
         communities: ['frontend', 'specfm', 'dx'],
@@ -93,19 +93,19 @@ export const collections = [
       },
     ],
   },
-  {
-    title: 'For Product Managers',
-    categories: [
-      {
-        title: 'Product Talk',
-        communities: ['product-management', 'user-research'],
-      },
-      {
-        title: 'Tools',
-        communities: ['superhuman', 'deckset'],
-      },
-    ],
-  },
+  // {
+  //   title: 'For Product Managers',
+  //   categories: [
+  //     {
+  //       title: 'Product Talk',
+  //       communities: ['product-management', 'user-research'],
+  //     },
+  //     {
+  //       title: 'Tools',
+  //       communities: ['superhuman', 'deckset'],
+  //     },
+  //   ],
+  // },
   {
     title: 'Get on the blockchain',
     categories: [

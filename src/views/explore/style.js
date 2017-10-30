@@ -435,6 +435,7 @@ export const ListWrapper = styled(FlexRow)`
   display: grid;
   grid-gap: 16px;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  align-items: stretch;
 `;
 
 export const ListItem = styled(FlexRow)``;

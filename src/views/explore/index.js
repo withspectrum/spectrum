@@ -8,19 +8,9 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import { Column } from '../../components/column';
-import Goop from '../../components/goop';
 import { FeaturedCommunity } from '../../components/curation';
 import Search from './components/search';
-import { UpsellCreateCommunity, UpsellSignIn } from '../../components/upsell';
-import {
-  Wrapper,
-  ViewHeader,
-  Section,
-  SectionWrapper,
-  SectionTitle,
-  Constellations,
-} from './style';
+import { Wrapper } from './style';
 
 import { CommunitySearch, Charts } from './view';
 

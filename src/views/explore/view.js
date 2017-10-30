@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';
 import { Button } from '../../components/buttons';
-import Search from './components/search';
 import { UpsellSignIn } from '../../components/upsell';
 import TopCommunityList from './components/topCommunities';
 import { CommunityProfile } from '../../components/profile';
@@ -14,22 +13,7 @@ import { collections } from './collections';
 import { ListWithTitle, ListTitle, ListWrapper, ListItem } from './style';
 import { getCommunitiesCollectionQuery } from './queries';
 import { displayLoadingState } from '../../components/loading';
-import {
-  Header,
-  Tagline,
-  Copy,
-  Bullets,
-  Bullet,
-  BulletHeading,
-  BulletTitle,
-  BulletCopy,
-  LinkBlock,
-  Footer,
-  Flexer,
-  PrimaryCTA,
-  SecondaryCTA,
-  Content,
-} from '../splash/style';
+import { Tagline, Copy, Content } from '../splash/style';
 
 export const CommunitySearch = (props: Props) => {
   const ThisContent = styled(Content)`
@@ -77,12 +61,13 @@ export const CommunitySearch = (props: Props) => {
   const SecondaryTagline = styled(ThisTagline)`
     font-size: 20px;
     font-weight: 900;
+    margin-top: 0;
     margin-bottom: 2px;
   `;
 
   const ThisCopy = styled(Copy)`
     font-size: 16px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     font-weight: 500;
     text-align: center;
     max-width: 640px;
@@ -91,6 +76,8 @@ export const CommunitySearch = (props: Props) => {
       text-align: left;
     }
   `;
+
+  const isMobile = window.innerWidth < 768;
 
   const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
 
@@ -103,7 +90,9 @@ export const CommunitySearch = (props: Props) => {
         </ThisCopy>
         {props.children}
         {!props.currentUser ? (
-          <UpsellSignIn redirectPath={props.redirectPath} />
+          isMobile ? null : (
+            <UpsellSignIn redirectPath={props.redirectPath} />
+          )
         ) : (
           <SecondaryContent>
             <SecondaryTagline>...or create your own community</SecondaryTagline>
@@ -198,10 +187,8 @@ export const Charts = props => {
 class CategoryList extends Component {
   render() {
     const {
-      data: { communities },
-      data,
+      data: { communities, loading, error },
       title,
-      slugs,
       currentUser,
     } = this.props;
 
@@ -211,13 +198,11 @@ class CategoryList extends Component {
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
             {communities.map(community => (
-              <ListItem>
-                <CommunityProfile
-                  profileSize={'listItemWithAction'}
-                  data={{ community }}
-                  currentUser={currentUser}
-                />
-              </ListItem>
+              <CommunityProfile
+                profileSize={'upsell'}
+                data={{ community }}
+                currentUser={currentUser}
+              />
             ))}
           </ListWrapper>
         </ListWithTitle>

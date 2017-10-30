@@ -14,7 +14,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
-import { Button } from '../buttons';
+import { Button, OutlineButton } from '../buttons';
 import {
   ProfileHeader,
   CommunityAvatar,
@@ -24,10 +24,16 @@ import {
   Title,
   Subtitle,
   Description,
-  Actions,
-  ActionOutline,
   ExtLink,
   ProfileCard,
+  Container,
+  CoverPhoto,
+  CoverAvatar,
+  CoverLink,
+  CoverTitle,
+  CoverSubtitle,
+  CoverDescription,
+  ButtonContainer,
 } from './style';
 
 // type CommunityProps = {
@@ -101,7 +107,6 @@ class CommunityWithData extends Component {
       currentUser,
     } = this.props;
     const { isLoading } = this.state;
-    const componentSize = profileSize || 'mini';
     const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
     const renderDescriptionWithLinks = text => {
@@ -120,51 +125,99 @@ class CommunityWithData extends Component {
 
     const member = community.communityPermissions.isMember;
 
-    if (componentSize === 'full') {
-      return (
-        <Card>
-          <ProfileHeader>
-            <CommunityAvatar community size={40} src={community.profilePhoto} />
-            <ProfileHeaderLink to={`/${community.slug}`}>
-              <ProfileHeaderMeta>
-                <Title>{community.name}</Title>
-              </ProfileHeaderMeta>
-            </ProfileHeaderLink>
-            {currentUser &&
-              community.communityPermissions.isOwner && (
-                <Link to={`/${community.slug}/settings`}>
-                  <ProfileHeaderAction
-                    glyph="settings"
-                    tipText="Edit community"
-                    tipLocation="top-left"
-                  />
-                </Link>
-              )}
-          </ProfileHeader>
-          <Description>
-            {renderDescriptionWithLinks(community.description)}
+    switch (profileSize) {
+      case 'upsell':
+        return (
+          <Container>
+            <CoverPhoto url={community.coverPhoto}>
+              <CoverLink to={`/${community.slug}`}>
+                <CoverAvatar src={community.profilePhoto} community size={64} />
+                <CoverTitle>{community.name}</CoverTitle>
+              </CoverLink>
+            </CoverPhoto>
+            <CoverSubtitle>
+              {community.metaData.members.toLocaleString()} members
+            </CoverSubtitle>
 
-            {community.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a href={addProtocolToString(community.website)}>
-                  {community.website}
-                </a>
-              </ExtLink>
-            )}
-          </Description>
-        </Card>
-      );
-    } else if (componentSize === 'miniWithAction') {
-      return (
-        <ProfileCard>
+            <CoverDescription>{community.description}</CoverDescription>
+
+            <ButtonContainer>
+              {currentUser ? (
+                community.communityPermissions.isMember ? (
+                  <OutlineButton
+                    onClick={() => this.toggleMembership(community.id)}
+                    gradientTheme="none"
+                    color={'success.alt'}
+                    hoverColor={'success.default'}
+                    style={{ fontSize: '16px' }}
+                    loading={loading === community.id}
+                  >
+                    Joined!
+                  </OutlineButton>
+                ) : (
+                  <Button
+                    onClick={() => this.toggleMembership(community.id)}
+                    loading={loading === community.id}
+                    gradientTheme={'success'}
+                    style={{ fontSize: '16px' }}
+                  >
+                    Join
+                  </Button>
+                )
+              ) : null}
+            </ButtonContainer>
+          </Container>
+        );
+      case 'full':
+        return (
+          <Card>
+            <ProfileHeader>
+              <CommunityAvatar
+                community
+                size={40}
+                src={community.profilePhoto}
+              />
+              <ProfileHeaderLink to={`/${community.slug}`}>
+                <ProfileHeaderMeta>
+                  <Title>{community.name}</Title>
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
+              {currentUser &&
+                community.communityPermissions.isOwner && (
+                  <Link to={`/${community.slug}/settings`}>
+                    <ProfileHeaderAction
+                      glyph="settings"
+                      tipText="Edit community"
+                      tipLocation="top-left"
+                    />
+                  </Link>
+                )}
+            </ProfileHeader>
+            <Description>
+              {renderDescriptionWithLinks(community.description)}
+
+              {community.website && (
+                <ExtLink>
+                  <Icon glyph="link" size={24} />
+                  <a href={addProtocolToString(community.website)}>
+                    {community.website}
+                  </a>
+                </ExtLink>
+              )}
+            </Description>
+          </Card>
+        );
+      case 'listItemWithAction':
+        return (
           <ProfileHeader>
             <CommunityAvatar community src={community.profilePhoto} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
                 <Title>{community.name}</Title>
                 {community.metaData && (
-                  <Subtitle>{community.metaData.members}</Subtitle>
+                  <Subtitle>
+                    {community.metaData.members.toLocaleString()} members
+                  </Subtitle>
                 )}
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
@@ -193,100 +246,100 @@ class CommunityWithData extends Component {
                 </Button>
               )}
           </ProfileHeader>
-        </ProfileCard>
-      );
-    } else if (componentSize === 'listItemWithAction') {
-      return (
-        <ProfileHeader>
-          <CommunityAvatar community src={community.profilePhoto} />
-          <ProfileHeaderLink to={`/${community.slug}`}>
-            <ProfileHeaderMeta>
-              <Title>{community.name}</Title>
-              {community.metaData && (
-                <Subtitle>
-                  {community.metaData.members.toLocaleString()} members
-                </Subtitle>
-              )}
-            </ProfileHeaderMeta>
-          </ProfileHeaderLink>
-          {currentUser &&
-            member && (
-              <Button
-                loading={isLoading}
-                icon="checkmark"
-                gradientTheme="none"
-                color="text.placeholder"
-                hoverColor="text.placeholder"
-                onClick={() => this.toggleMembership(community.id)}
-              >
-                Joined
-              </Button>
-            )}
-          {currentUser &&
-            !member && (
-              <Button
-                loading={isLoading}
-                icon="plus-fill"
-                gradientTheme="success"
-                onClick={() => this.toggleMembership(community.id)}
-              >
-                Join
-              </Button>
-            )}
-        </ProfileHeader>
-      );
-    } else {
-      return (
-        <Card>
-          <ProfileHeader>
-            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-            <ProfileHeaderLink to={`/${community.slug}`}>
-              <ProfileHeaderMeta>
-                <Title>{community.name}</Title>
-              </ProfileHeaderMeta>
-            </ProfileHeaderLink>
+        );
+      case 'miniWithAction':
+        return (
+          <ProfileCard>
+            <ProfileHeader>
+              <CommunityAvatar community src={community.profilePhoto} />
+              <ProfileHeaderLink to={`/${community.slug}`}>
+                <ProfileHeaderMeta>
+                  <Title>{community.name}</Title>
+                  {community.metaData && (
+                    <Subtitle>{community.metaData.members}</Subtitle>
+                  )}
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
+              {currentUser &&
+                member && (
+                  <Button
+                    loading={isLoading}
+                    icon="checkmark"
+                    gradientTheme="none"
+                    color="text.placeholder"
+                    hoverColor="text.placeholder"
+                    onClick={() => this.toggleMembership(community.id)}
+                  >
+                    Joined
+                  </Button>
+                )}
+              {currentUser &&
+                !member && (
+                  <Button
+                    loading={isLoading}
+                    icon="plus-fill"
+                    gradientTheme="success"
+                    onClick={() => this.toggleMembership(community.id)}
+                  >
+                    Join
+                  </Button>
+                )}
+            </ProfileHeader>
+          </ProfileCard>
+        );
+      case 'default':
+      default:
+        return (
+          <Card>
+            <ProfileHeader>
+              <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+              <ProfileHeaderLink to={`/${community.slug}`}>
+                <ProfileHeaderMeta>
+                  <Title>{community.name}</Title>
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
 
-            {currentUser &&
-              !community.communityPermissions.isOwner && (
-                <ProfileHeaderAction
-                  glyph={
-                    community.communityPermissions.isMember
-                      ? 'minus'
-                      : 'plus-fill'
-                  }
-                  color={
-                    community.communityPermissions.isMember
-                      ? 'text.placeholder'
-                      : 'brand.alt'
-                  }
-                  hoverColor={
-                    community.communityPermissions.isMember
-                      ? 'warn.default'
-                      : 'brand.alt'
-                  }
-                  tipText={
-                    community.communityPermissions.isMember
-                      ? `Leave community`
-                      : 'Join community'
-                  }
-                  tipLocation="top-left"
-                  onClick={() => this.toggleMembership(community.id)}
-                />
-              )}
-
-            {currentUser &&
-              community.communityPermissions.isOwner && (
-                <Link to={`/${community.slug}/settings`}>
+              {currentUser &&
+                !community.communityPermissions.isOwner && (
                   <ProfileHeaderAction
-                    glyph="settings"
-                    tipText="Edit community"
+                    glyph={
+                      community.communityPermissions.isMember
+                        ? 'minus'
+                        : 'plus-fill'
+                    }
+                    color={
+                      community.communityPermissions.isMember
+                        ? 'text.placeholder'
+                        : 'brand.alt'
+                    }
+                    hoverColor={
+                      community.communityPermissions.isMember
+                        ? 'warn.default'
+                        : 'brand.alt'
+                    }
+                    tipText={
+                      community.communityPermissions.isMember
+                        ? `Leave community`
+                        : 'Join community'
+                    }
                     tipLocation="top-left"
+                    onClick={() => this.toggleMembership(community.id)}
                   />
-                </Link>
-              )}
-          </ProfileHeader>
-        </Card>
-      );
+                )}
+
+              {currentUser &&
+                community.communityPermissions.isOwner && (
+                  <Link to={`/${community.slug}/settings`}>
+                    <ProfileHeaderAction
+                      glyph="settings"
+                      tipText="Edit community"
+                      tipLocation="top-left"
+                    />
+                  </Link>
+                )}
+            </ProfileHeader>
+          </Card>
+        );
     }
   }
 }

@@ -9,16 +9,8 @@ import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { displayLoadingState } from '../../../../components/loading';
 import { Button, OutlineButton } from '../../../../components/buttons';
-import {
-  Row,
-  CoverPhoto,
-  Container,
-  CoverAvatar,
-  CoverTitle,
-  CoverDescription,
-  ButtonContainer,
-} from './style';
-import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
+import { Row } from './style';
+import { CommunityProfile } from '../../../../components/profile';
 
 class TopCommunitiesPure extends Component {
   state: {
@@ -76,43 +68,11 @@ class TopCommunitiesPure extends Component {
         <Row hasJoined={hasJoined > 0}>
           {filteredCommunities.map(community => {
             return (
-              <Container key={community.id}>
-                <CoverPhoto url={community.coverPhoto}>
-                  <CoverLink to={`/${community.slug}`}>
-                    <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-                    <CoverTitle>{community.name}</CoverTitle>
-                  </CoverLink>
-                </CoverPhoto>
-                <CoverSubtitle>
-                  {community.metaData.members} members
-                </CoverSubtitle>
-
-                <CoverDescription>{community.description}</CoverDescription>
-
-                <ButtonContainer>
-                  {community.communityPermissions.isMember ? (
-                    <OutlineButton
-                      onClick={() => this.toggleMembership(community.id)}
-                      gradientTheme="none"
-                      color={'success.alt'}
-                      hoverColor={'success.default'}
-                      style={{ fontSize: '16px' }}
-                      loading={loading === community.id}
-                    >
-                      Joined!
-                    </OutlineButton>
-                  ) : (
-                    <Button
-                      onClick={() => this.toggleMembership(community.id)}
-                      loading={loading === community.id}
-                      gradientTheme={'success'}
-                      style={{ fontSize: '16px' }}
-                    >
-                      Join
-                    </Button>
-                  )}
-                </ButtonContainer>
-              </Container>
+              <CommunityProfile
+                profileSize={'upsell'}
+                data={{ community }}
+                key={community.id}
+              />
             );
           })}
         </Row>
