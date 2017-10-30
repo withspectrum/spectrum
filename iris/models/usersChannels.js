@@ -472,6 +472,15 @@ const getPendingUsersInChannel = (
   );
 };
 
+const getPendingUsersInChannels = (channelIds: Array<string>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .group('channelId')
+    .filter({ isPending: true })
+    .run();
+};
+
 const getBlockedUsersInChannel = (
   channelId: string
 ): Promise<Array<string>> => {
@@ -592,4 +601,5 @@ module.exports = {
   getOwnersInChannel,
   getUserPermissionsInChannel,
   getUsersPermissionsInChannels,
+  getPendingUsersInChannels,
 };
