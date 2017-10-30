@@ -19,8 +19,8 @@ const weeklyDigest = () =>
 const dailyDigest = () =>
   createJob(
     PROCESS_DAILY_DIGEST_EMAIL,
-    '0 18 * * *', // run at 6pm every day
-    // '* * * * *',
+    // '0 18 * * *', // run at 6pm every day
+    '* * * * *',
     'daily'
   );
 

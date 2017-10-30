@@ -51,6 +51,7 @@ export default async (job: DigestJob) => {
     debug('\n ❌ No users who want this digest');
     return;
   }
+  console.log('users', users);
   debug('\n ⚙️ Fetched users who want this digest');
 
   //3

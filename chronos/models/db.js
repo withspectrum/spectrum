@@ -15,7 +15,7 @@ const PRODUCTION_CONFIG = {
   port: process.env.AWS_RETHINKDB_PORT,
 };
 
-const config = IS_PROD
+const config = !IS_PROD
   ? {
       ...DEFAULT_CONFIG,
       ...PRODUCTION_CONFIG,
