@@ -52,7 +52,7 @@ export const ThreadSidebarView = styled(FlexCol)`
   align-items: center;
   align-self: stretch;
   position: relative;
-  right: 1px;
+  left: 1px;
   overflow-y: scroll;
 
   @media (max-width: 1032px) {
@@ -179,8 +179,6 @@ export const DropWrap = styled(FlexCol)`
     transition: ${Transition.hover.off};
   }
 
-  &:hover .flyout,
-  .flyout:hover,
   &:active .flyout,
   &.open > .flyout {
     opacity: 1;
@@ -189,7 +187,7 @@ export const DropWrap = styled(FlexCol)`
   }
 `;
 
-export const FlyoutRow = styled(FlexRow)`padding: 8px;`;
+export const FlyoutRow = styled(FlexRow)``;
 
 export const Byline = styled.div`
   font-weight: 500;
@@ -308,21 +306,21 @@ export const ThreadDescription = {
   whiteSpace: 'pre-wrap',
 };
 
-export const ShareButtons = styled.div`display: flex;`;
+export const ShareButtons = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export const ShareButton = styled.span`
-  display: flex;
   color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
-  flex: 1;
-  margin: 0 4px;
+  display: flex;
 
   a {
     display: flex;
     flex: 1;
     align-items: center;
     justify-content: center;
-    padding: 4px 0;
+    padding: 0 6px;
   }
 
   &:hover {
@@ -446,6 +444,7 @@ export const ActionBarContainer = styled.div`
   border: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 1024px) {
+    width: calc(100% - 32px);
     margin: 0 16px;
   }
 `;
@@ -459,6 +458,10 @@ export const FollowButton = styled(Button)`
   &:hover {
     background: ${props => props.theme.bg.default};
     color: ${props => props.theme.text.default};
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 
   ${Tooltip};
@@ -566,3 +569,5 @@ export const RelatedCount = styled.p`
   font-size: 13px;
   color: ${props => props.theme.text.alt};
 `;
+
+export const Label = styled.p`font-size: 14px;`;

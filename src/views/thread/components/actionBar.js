@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
-import { Button, IconButton } from '../../../components/buttons';
+import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
 import { track } from '../../../helpers/events';
 import { toggleThreadNotificationsMutation } from '../mutations';
@@ -17,11 +17,13 @@ import {
   FlyoutRow,
   DropWrap,
   EditDone,
+  Label,
 } from '../style';
 
 type Props = {
   thread: {
     id: string,
+    isCreator: boolean,
     content: {
       title: string,
     },
@@ -149,6 +151,7 @@ class ActionBar extends React.Component<Props, State> {
     if (isEditing) {
       return (
         <ActionBarContainer>
+          <div style={{ display: 'flex' }} />
           <div style={{ display: 'flex' }}>
             <EditDone>
               <Button loading={isSavingEdit} onClick={this.props.saveEdit}>
@@ -231,13 +234,22 @@ class ActionBar extends React.Component<Props, State> {
               isChannelMember &&
               (isChannelOwner || isCommunityOwner || thread.isCreator) && (
                 <DropWrap className={flyoutOpen ? 'open' : ''}>
-                  <IconButton glyph="settings" onClick={this.toggleFlyout} />
+                  <IconButton
+                    glyph="settings"
+                    tipText={'Thread settings'}
+                    tipLocation={'top-left'}
+                    onClick={this.toggleFlyout}
+                    onMouseEnter={() =>
+                      setTimeout(() => this.toggleFlyout, 100)}
+                    onMouseLeave={() =>
+                      setTimeout(() => this.toggleFlyout, 300)}
+                  />
                   <Flyout>
                     {isCommunityOwner &&
                       !thread.channel.isPrivate && (
                         <FlyoutRow>
-                          <IconButton
-                            glyph={isPinned ? 'pin-fill' : 'pin'}
+                          <TextButton
+                            icon={isPinned ? 'pin-fill' : 'pin'}
                             hoverColor={
                               isPinned ? 'warn.default' : 'special.default'
                             }
@@ -248,44 +260,52 @@ class ActionBar extends React.Component<Props, State> {
                             }
                             tipLocation="top-left"
                             onClick={this.props.togglePinThread}
-                          />
+                          >
+                            <Label>{isPinned ? 'Unpin' : 'Pin'}</Label>
+                          </TextButton>
                         </FlyoutRow>
                       )}
                     {(isChannelOwner || isCommunityOwner) && (
                         <FlyoutRow>
-                          <IconButton
-                            glyph="freeze"
+                          <TextButton
+                            icon="freeze"
                             hoverColor="space.alt"
                             tipText={
                               thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
                             }
                             tipLocation="top-left"
                             onClick={this.props.threadLock}
-                          />
+                          >
+                            <Label>{isPinned ? 'Unfreeze' : 'Freeze'}</Label>
+                          </TextButton>
                         </FlyoutRow>
                       )}
                     {(thread.isCreator ||
                       isChannelOwner ||
                       isCommunityOwner) && (
                         <FlyoutRow>
-                          <IconButton
-                            glyph="delete"
+                          <TextButton
+                            icon="delete"
                             hoverColor="warn.alt"
                             tipText="Delete thread"
                             tipLocation="top-left"
                             onClick={this.props.triggerDelete}
-                          />
+                          >
+                            <Label>Delete</Label>
+                          </TextButton>
                         </FlyoutRow>
                       )}
                     {thread.isCreator && (
                       <FlyoutRow>
-                        <IconButton
-                          glyph="edit"
+                        <TextButton
+                          icon="edit"
                           hoverColor="text.alt"
                           tipText="Edit"
                           tipLocation="top-left"
                           onClick={this.props.toggleEdit}
-                        />
+                        >
+                          <Label>Edit</Label>
+                        </TextButton>
                       </FlyoutRow>
                     )}
                   </Flyout>
