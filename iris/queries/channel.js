@@ -4,7 +4,6 @@ const {
   getChannelMemberCount,
 } = require('../models/channel');
 const {
-  getUserPermissionsInChannel,
   getPendingUsersInChannel,
   getBlockedUsersInChannel,
   getModeratorsInChannel,
@@ -51,14 +50,23 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    channelPermissions: (args, _: any, { user }: Context) => {
+    channelPermissions: (args, _: any, { user, loaders }: GraphQLContext) => {
       const channelId = args.id || args.channelId;
       if (!channelId || !user) return false;
-      return getUserPermissionsInChannel(channelId, user.id);
+      return loaders.userPermissionsInChannel.load([user.id, channelId]);
     },
     communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
-      if (!communityId || !user) return false;
+      if (!communityId || !user) {
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        };
+      }
       return loaders.userPermissionsInCommunity.load([user.id, communityId]);
     },
     memberConnection: (
@@ -94,9 +102,16 @@ module.exports = {
       }));
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getPendingUsersInChannel(id).then(users =>
-        loaders.user.loadMany(users)
-      );
+      return loaders.channelPendingUsers
+        .load(id)
+        .then(res => {
+          if (!res || res.length === 0) return [];
+          return res.reduction.map(rec => rec.userId);
+        })
+        .then(users => {
+          if (!users || users.length === 0) return [];
+          return loaders.user.loadMany(users);
+        });
     },
     blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
       return getBlockedUsersInChannel(id).then(users =>

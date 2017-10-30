@@ -46,6 +46,18 @@ class ChatInput extends Component {
     this.props.onRef(this);
   }
 
+  shouldComponentUpdate(next) {
+    const curr = this.props;
+
+    // User changed
+    if (curr.currentUser !== next.currentUser) return true;
+
+    // State changed
+    if (curr.state !== next.state) return true;
+
+    return false;
+  }
+
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
@@ -65,6 +77,7 @@ class ChatInput extends Component {
         onChange(
           changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
         );
+        setTimeout(() => this.triggerFocus());
       }
     );
   };
@@ -134,8 +147,15 @@ class ChatInput extends Component {
   };
 
   handleReturn = e => {
-    if (!this.state.code || e.shiftKey || KeyBindingUtil.hasCommandModifier(e))
+    // Always submit on CMD+Enter
+    if (KeyBindingUtil.hasCommandModifier(e)) {
       return this.submit(e);
+    }
+
+    // Also submit non-code messages on ENTER
+    if (!this.state.code && !e.shiftKey) {
+      return this.submit(e);
+    }
 
     return 'not-handled';
   };
@@ -281,7 +301,6 @@ class ChatInput extends Component {
             onChange={onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            singleLine={code ? false : true}
             code={code}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"

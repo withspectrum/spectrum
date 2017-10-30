@@ -4,6 +4,7 @@ import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { userSettingsFragment } from './fragments/user/userSettings';
+import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 /*
   Upload a new profilePhoto for the given currentUser
@@ -174,20 +175,11 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
       ...userInfo
       isPro
       totalReputation
-      communityConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            id
-          }
-        }
-      }
+      ...userCommunities
     }
   }
   ${userInfoFragment}
+  ${userCommunitiesFragment}
 `;
 
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {

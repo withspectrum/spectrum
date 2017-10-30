@@ -5,6 +5,8 @@ import {
   __createUserRecurringPaymentsLoader,
   __createUserPermissionsInCommunityLoader,
   __createUserTotalReputationLoader,
+  __createUserPermissionsInChannelLoader,
+  __createUserThreadNotificationStatusLoader,
 } from './user';
 import {
   __createThreadLoader,
@@ -16,6 +18,7 @@ import {
   __createChannelLoader,
   __createChannelMemberCountLoader,
   __createChannelThreadCountLoader,
+  __createChannelPendingMembersLoader,
 } from './channel';
 import {
   __createCommunityLoader,
@@ -31,7 +34,9 @@ const createLoaders = () => ({
   userThreadCount: __createUserThreadCountLoader(),
   userRecurringPayments: __createUserRecurringPaymentsLoader(),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
+  userPermissionsInChannel: __createUserPermissionsInChannelLoader(),
   userTotalReputation: __createUserTotalReputationLoader(),
+  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(),
   thread: __createThreadLoader(),
   threadParticipants: __createThreadParticipantsLoader(),
   threadMessageCount: __createThreadMessageCountLoader(),
@@ -39,6 +44,7 @@ const createLoaders = () => ({
   channel: __createChannelLoader(),
   channelMemberCount: __createChannelMemberCountLoader(),
   channelThreadCount: __createChannelThreadCountLoader(),
+  channelPendingUsers: __createChannelPendingMembersLoader(),
   community: __createCommunityLoader(),
   communityBySlug: __createCommunityBySlugLoader(),
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(),

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
-import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Prism from 'prismjs';
@@ -26,7 +25,6 @@ type Props = {
   placeholder: string,
   className?: string,
   focus?: boolean,
-  singleLine?: boolean,
   code?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
@@ -34,7 +32,6 @@ type Props = {
 
 type State = {
   plugins: Array<mixed>,
-  blockRenderMap?: Object,
 };
 
 class Input extends React.Component<Props, State> {
@@ -54,7 +51,7 @@ class Input extends React.Component<Props, State> {
 
   componentWillReceiveProps(next: Props) {
     const curr = this.props;
-    if (next.code !== curr.code || next.singleLine !== curr.singleLine) {
+    if (next.code !== curr.code) {
       this.setPlugins(next);
     }
   }
@@ -62,7 +59,6 @@ class Input extends React.Component<Props, State> {
   setPlugins = (next?: Props) => {
     const props = next || this.props;
     const plugins = [];
-    const other = {};
 
     if (props.code) {
       plugins.push(
@@ -79,16 +75,7 @@ class Input extends React.Component<Props, State> {
       );
     }
 
-    if (props.singleLine) {
-      const singleLine = createSingleLinePlugin();
-      plugins.push(singleLine);
-      other.blockRenderMap = singleLine.blockRenderMap;
-    } else {
-      other.blockRenderMap = undefined;
-    }
-
     this.setState({
-      ...other,
       plugins: plugins,
     });
   };
@@ -104,14 +91,13 @@ class Input extends React.Component<Props, State> {
       editorState,
       onChange,
       focus,
-      singleLine,
       placeholder,
       readOnly,
       editorRef,
       code,
       ...rest
     } = this.props;
-    const { plugins, blockRenderMap } = this.state;
+    const { plugins } = this.state;
 
     return (
       <InputWrapper code={code} focus={focus}>
@@ -119,14 +105,13 @@ class Input extends React.Component<Props, State> {
           editorState={editorState}
           onChange={onChange}
           plugins={plugins}
-          blockRenderMap={blockRenderMap}
           ref={this.setRef}
           readOnly={readOnly}
           placeholder={!readOnly && placeholder}
-          spellCheck="false"
-          autoCapitalize="off"
-          autoComplete="off"
-          autoCorrect="off"
+          spellCheck={true}
+          autoCapitalize="sentences"
+          autoComplete="on"
+          autoCorrect="on"
           {...rest}
         />
       </InputWrapper>
