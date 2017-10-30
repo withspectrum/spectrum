@@ -147,13 +147,12 @@ class ChatInput extends Component {
   };
 
   handleReturn = e => {
-    if (
-      this.state.code &&
-      (e.shiftKey || KeyBindingUtil.hasCommandModifier(e))
-    ) {
+    // Always submit on CMD+Enter
+    if (KeyBindingUtil.hasCommandModifier(e)) {
       return this.submit(e);
     }
 
+    // Also submit non-code messages on ENTER
     if (!this.state.code && !e.shiftKey) {
       return this.submit(e);
     }
