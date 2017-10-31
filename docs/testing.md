@@ -36,6 +36,31 @@ E2E=true yarn run test
 
 This automatically happens in CI, so you can't introduce a failing tests and expect builds to go through.
 
+#### End-to-end test ids
+
+To verify that certain elements are or aren't on the page we use custom `data-e2e-id` attributes. You render them from React like so:
+
+```JS
+class SplashPage extends Component {
+  render() {
+    return (
+      <Wrapper data-e2e-id="splash-page">
+        {/*...*/}
+      </Wrapper>
+    )
+  }
+}
+```
+
+Then from puppeteer (which we use for e2e tests) you can make sure the splash page rendered correctly by waiting for that selector to appear on the page:
+
+```JS
+it('should render', async () => {
+  await page.goto('http://localhost:3000/');
+  await page.waitForSelector('[data-e2e-id="splash-page"]');
+})
+```
+
 ## CI
 
 On CI we run `yarn run test:ci`, which forces Jest to exit after running the tests. You can also run this command locally in case you're in the mood to do a full test run rather than going into watch mode.
