@@ -6,7 +6,7 @@ const faker = require('faker');
 const slugify = require('slugg');
 // $FlowFixMe
 const casual = require('casual').functions();
-const { fromPlainText, toJSON } = require('shared/draft-utils');
+const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
 const randomAmount = ({ max, min }, cb) => {
   if (!max) throw new Error('randomAmount({ max }): max has to be defined!');

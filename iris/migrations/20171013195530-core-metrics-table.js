@@ -145,15 +145,15 @@ exports.up = function(r, conn) {
             ]
           ) => {
             const coreMetrics = {
-              cpu,
-              mpu,
-              tpu,
-              users,
-              communities,
-              threads,
-              dmThreads,
-              threadMessages,
-              dmMessages,
+              cpu: cpu || 0,
+              mpu: mpu || 0,
+              tpu: tpu || 0,
+              users: users || 0,
+              communities: communities || 0,
+              threads: threads || 0,
+              dmThreads: dmThreads || 0,
+              threadMessages: threadMessages || 0,
+              dmMessages: dmMessages || 0,
             };
             return saveCoreMetrics(coreMetrics, i);
           }
