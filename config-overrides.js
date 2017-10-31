@@ -32,6 +32,19 @@ const setCustomSwPrecacheOptions = config => {
   swPlugin.options.importScripts = [...importScripts, matchingFiles[0]];
 };
 
+const removeEslint = config => {
+  config.module.rules = config.module.rules.filter(rule => {
+    // Filter the eslint loader based on its options
+    if (rule.use) {
+      return rule.use.every(use => {
+        if (!use.options) return true;
+        return !use.options.eslintPath;
+      });
+    }
+    return true;
+  });
+};
+
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
   config.plugins.push(WriteFilePlugin());
@@ -45,6 +58,10 @@ module.exports = function override(config, env) {
       filename: './build/react-loadable.json',
     })
   );
+  if (process.env.NODE_ENV === 'production') {
+    console.log(config.module.rules);
+    removeEslint(config);
+  }
   config = injectBabelPlugin('react-loadable/babel', config);
   config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
