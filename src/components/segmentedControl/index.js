@@ -4,6 +4,7 @@ import { FlexRow } from '../globals';
 
 export const SegmentedControl = styled(FlexRow)`
   align-self: stretch;
+  margin: 0 32px;
   margin-top: 16px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   align-items: stretch;
@@ -18,12 +19,12 @@ export const SegmentedControl = styled(FlexRow)`
 `;
 
 export const Segment = styled(FlexRow)`
-  padding: 8px 16px;
+  padding: 8px 24px;
   justify-content: center;
   align-items: center;
   text-align: center;
   line-height: 1;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: ${props => (props.selected ? '700' : '500')};
   color: ${props =>
     props.selected ? props.theme.text.default : props.theme.text.alt};
@@ -44,5 +45,13 @@ export const Segment = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: space-around;
+    margin-top: 32px;
+    text-align: left;
+    justify-content: flex-start;
+    border-bottom: 0;
+
+    &:not(:first-of-type) {
+      display: none;
+    }
   }
 `;

@@ -1,6 +1,6 @@
 export const collections = [
   {
-    title: 'For Designers',
+    title: 'Design',
     categories: [
       {
         title: 'Shop Talk',
@@ -15,22 +15,22 @@ export const collections = [
       {
         title: 'Resources',
         communities: [
-          'up-coming',
           'specfm',
-          'inspectfm',
+          'up-coming',
+          // 'inspectfm',
           'sketchcasts',
-          'cosmos',
+          // 'cosmos',
           'google-design',
-          'breadtime',
-          'afterclass',
-          'learnux',
-          'level-up-tutorials',
+          // 'breadtime',
+          // 'afterclass',
+          // 'learnux',
+          // 'level-up-tutorials',
           'design-code',
-          'playbook',
+          // 'playbook',
           'vectors',
-          'smashingmag',
+          // 'smashingmag',
           'designhunt',
-          'dribbble',
+          // 'dribbble',
         ],
       },
       {
@@ -42,19 +42,19 @@ export const collections = [
           'abstract',
           'invision',
           'principle',
-          'xd',
+          // 'xd',
           'origami-studio',
           'webflow',
           'fuse',
-          'extensible',
-          'modulz',
-          'digital-awesome',
+          // 'extensible',
+          // 'modulz',
+          // 'digital-awesome',
         ],
       },
     ],
   },
   {
-    title: 'For Web Developers',
+    title: 'Web development',
     categories: [
       {
         title: 'Web Frameworks',
@@ -77,14 +77,18 @@ export const collections = [
       // },
       {
         title: 'Resources',
-        communities: ['frontend', 'specfm', 'dx'],
+        communities: [
+          'frontend',
+          'specfm',
+          // 'dx'
+        ],
       },
       {
         title: 'Tools',
         communities: [
           'zeit',
-          'realm',
-          'expo',
+          // 'realm',
+          // 'expo',
           'codepen',
           'bootstrap',
           'tachyons',
@@ -107,53 +111,47 @@ export const collections = [
   //   ],
   // },
   {
-    title: 'Get on the blockchain',
+    title: 'Tech',
     categories: [
       {
-        communities: ['balancemymoney', 'crypto', 'bitcoin', 'ethereum'],
+        title: 'Get the latest news',
+        communities: ['tech-tea'],
+      },
+      {
+        title: 'Get on the blockchain',
+        communities: ['balancemymoney', 'crypto', 'btc', 'ethereum'],
+      },
+      {
+        title: 'Explore the future of interfaces',
+        communities: ['augmented-reality', 'voice-interfaces'],
       },
     ],
   },
   {
-    title: 'Explore the Future',
+    title: 'Life',
     categories: [
       {
-        communities: ['tech-tea', 'augmented-reality', 'voice-interfaces'],
+        title: 'Do good, feel good',
+        communities: [
+          'for-good',
+          'mental-health',
+          'dev-fit',
+          // '5calls'
+        ],
       },
-    ],
-  },
-  {
-    title: 'Do good, feel good',
-    categories: [
       {
-        communities: ['for-good', 'mental-health', 'dev-fit', '5calls'],
-      },
-    ],
-  },
-  {
-    title: 'Share your hobbies',
-    categories: [
-      {
+        title: 'Share your hobbies',
         communities: [
           'music',
-          'photography',
-          'movies-tv',
+          // 'photography',
+          // 'movies-tv',
           'tabletop-rpg',
           'gaming',
         ],
       },
-    ],
-  },
-  {
-    title: 'Hire or get hired.',
-    categories: [
       {
-        communities: [
-          'careers',
-          'job-opportunities',
-          'need-some-work',
-          'junior-design-jobs',
-        ],
+        title: 'Find a new gig',
+        communities: ['careers', 'job-opportunities', 'need-some-work', ,],
       },
     ],
   },
