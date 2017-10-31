@@ -4,7 +4,6 @@ import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getMessageById } from '../models/message';
 import { getUserNotificationPermissionsInThread } from '../models/usersThreads';
-import { getUserNotificationPermissionsInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import {
   storeNotification,
   updateNotification,

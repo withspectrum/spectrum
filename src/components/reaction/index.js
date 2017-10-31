@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Icon from '../icons';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { ReactionWrapper, Count } from './style';
+import { ReactionWrapper } from '../message/style';
 
 class Reaction extends Component {
   state: {
@@ -72,14 +72,20 @@ class Reaction extends Component {
     return (
       <ReactionWrapper
         hasCount={count}
-        active={hasReacted}
+        hasReacted={hasReacted}
         me={me}
         hide={(me || !currentUser) && count === 0}
         onClick={me ? this.doNothing : this.triggerMutation}
         dummy={false}
       >
-        <Icon glyph="like-fill" size={16} color={'text.reverse'} />
-        <Count>{count}</Count>
+        <Icon
+          glyph="like-fill"
+          size={16}
+          color={'text.reverse'}
+          tipText={me ? null : 'Like'}
+          tipLocation={me ? null : 'top-right'}
+        />
+        <span>{count}</span>
       </ReactionWrapper>
     );
   }

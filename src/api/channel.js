@@ -1,5 +1,4 @@
 // @flow
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
@@ -97,9 +96,13 @@ const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
     }
   }
   ${channelInfoFragment}
+  ${communityInfoFragment}
 `;
 
 const TOGGLE_CHANNEL_SUBSCRIPTION_OPTIONS = {
+  options: {
+    refetchQueries: ['getCurrentUserProfile', 'getEverythingThreads'],
+  },
   props: ({ channelId, mutate }) => ({
     toggleChannelSubscription: ({ channelId }) =>
       mutate({
@@ -129,9 +132,6 @@ const TOGGLE_PENDING_USER_MUTATION = gql`
         ...userInfo
       }
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
@@ -147,6 +147,14 @@ const TOGGLE_PENDING_USER_OPTIONS = {
         variables: {
           input,
         },
+        refetchQueries: [
+          {
+            query: GET_CHANNEL_MEMBERS_QUERY,
+            variables: {
+              id: input.channelId,
+            },
+          },
+        ],
       }),
   }),
 };
@@ -170,9 +178,6 @@ const UNBLOCK_USER_MUTATION = gql`
         ...userInfo
       }
       ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
@@ -222,6 +227,7 @@ export const getChannelById = graphql(
       }
 		}
     ${channelInfoFragment}
+    ${communityInfoFragment}
 	`,
   getChannelByIdOptions
 );
@@ -249,6 +255,7 @@ export const getPendingUsersQuery = graphql(
       }
 		}
     ${userInfoFragment}
+    ${communityInfoFragment}
     ${channelInfoFragment}
 	`,
   getPendingUsersOptions
@@ -277,6 +284,7 @@ export const getBlockedUsersQuery = graphql(
       }
 		}
     ${userInfoFragment}
+    ${communityInfoFragment}
     ${channelInfoFragment}
 	`,
   getBlockedUsersOptions
@@ -313,7 +321,7 @@ export const toggleChannelNotificationsMutation = graphql(
 const LoadMoreMembers = gql`
   query loadMoreChannelMembers($id: ID, $after: String) {
     channel(id: $id) {
-      id
+      ...channelInfo
       ...channelMetaData
       memberConnection(after: $after) {
         pageInfo {
@@ -324,16 +332,22 @@ const LoadMoreMembers = gql`
           cursor
           node {
             ...userInfo
+            isPro
+            contextPermissions {
+              reputation
+            }
           }
         }
       }
     }
   }
   ${userInfoFragment}
+  ${channelInfoFragment}
+  ${communityInfoFragment}
   ${channelMetaDataFragment}
 `;
 
-const getChannelMembersOptions = {
+const GET_CHANNEL_MEMBERS_OPTIONS = {
   props: ({ data: { fetchMore, error, loading, channel, networkStatus } }) => ({
     data: {
       error,
@@ -387,28 +401,35 @@ const getChannelMembersOptions = {
   }),
 };
 
-export const getChannelMembersQuery = graphql(
-  gql`
-		query getChannel($id: ID) {
-      channel(id: $id) {
-        id
-        ...channelMetaData
-        memberConnection {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            cursor
-            node {
-              ...userInfo
+const GET_CHANNEL_MEMBERS_QUERY = gql`
+  query getChannelMembers($id: ID) {
+    channel(id: $id) {
+      ...channelInfo
+      ...channelMetaData
+      memberConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...userInfo
+            isPro
+            contextPermissions {
+              reputation
             }
           }
         }
       }
-		}
-    ${userInfoFragment}
-    ${channelMetaDataFragment}
-	`,
-  getChannelMembersOptions
+    }
+  }
+  ${userInfoFragment}
+  ${channelInfoFragment}
+  ${communityInfoFragment}
+  ${channelMetaDataFragment}
+`;
+export const getChannelMembersQuery = graphql(
+  GET_CHANNEL_MEMBERS_QUERY,
+  GET_CHANNEL_MEMBERS_OPTIONS
 );

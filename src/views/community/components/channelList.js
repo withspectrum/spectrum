@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
-import { TextButton, IconButton } from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -18,7 +18,6 @@ import {
   ListHeader,
   ListHeading,
   ListContainer,
-  ListFooter,
 } from '../../../components/listItems/style';
 
 type Props = {
@@ -128,15 +127,9 @@ class ChannelList extends React.Component<Props> {
                         withDescription={false}
                         channelIcon
                         meta={
-                          channel.metaData.members > 1
-                            ? `${channel.metaData.members.toLocaleString()} members ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
-                            : `${channel.metaData.members} member ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
+                          channel.metaData.members === 1
+                            ? `${channel.metaData.members} member`
+                            : `${channel.metaData.members.toLocaleString()} members`
                         }
                       >
                         <Icon glyph="view-forward" />

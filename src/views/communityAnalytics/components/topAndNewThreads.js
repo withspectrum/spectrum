@@ -1,15 +1,10 @@
 import * as React from 'react';
-import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import ThreadListItem from './threadListItem';
-import {
-  SectionCard,
-  SectionSubtitle,
-  SectionTitle,
-} from '../../communitySettings/style';
+import { SectionCard, SectionTitle } from '../../communitySettings/style';
 import { getCommunityTopAndNewThreads } from '../queries';
 
 type Thread = {
@@ -100,6 +95,6 @@ class TopAndNewThreads extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityTopAndNewThreads, viewNetworkHandler, pure)(
+export default compose(getCommunityTopAndNewThreads, viewNetworkHandler)(
   TopAndNewThreads
 );

@@ -13,6 +13,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
 import { deleteChannelMutation } from '../../../api/channel';
 import { deleteThreadMutation } from '../../../api/thread';
+import { deleteMessage } from '../../../api/message';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -53,6 +54,7 @@ class DeleteDoubleCheckModal extends Component {
   triggerDelete = () => {
     const {
       modalProps: { id, entity, redirect },
+      deleteMessage,
       deleteCommunity,
       deleteThread,
       deleteChannel,
@@ -65,6 +67,26 @@ class DeleteDoubleCheckModal extends Component {
     });
 
     switch (entity) {
+      case 'message':
+        return deleteMessage(id)
+          .then(({ data: { deleteMessage } }) => {
+            if (deleteMessage) {
+              track('message', 'deleted', null);
+              dispatch(addToastWithTimeout('neutral', 'Message deleted.'));
+              this.setState({
+                isLoading: false,
+              });
+              this.close();
+            }
+          })
+          .catch(err => {
+            dispatch(
+              addToastWithTimeout(
+                'error',
+                `Sorry, we weren't able to delete this message. ${err.message}`
+              )
+            );
+          });
       case 'thread': {
         return deleteThread(id)
           .then(({ data: { deleteThread } }) => {
@@ -85,7 +107,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this thread. ${err.message}`
+                `Sorry, we weren't able to delete this thread. ${err.message}`
               )
             );
           });
@@ -108,7 +130,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this channel. ${err.message}`
+                `Sorry, we weren't able to delete this channel. ${err.message}`
               )
             );
           });
@@ -133,7 +155,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this community. ${err.message}`
+                `Sorry, we weren't able to delete this community. ${err.message}`
               )
             );
             this.setState({
@@ -198,6 +220,7 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteCommunityMutation,
   deleteChannelMutation,
   deleteThreadMutation,
+  deleteMessage,
   withRouter
 )(DeleteDoubleCheckModal);
 

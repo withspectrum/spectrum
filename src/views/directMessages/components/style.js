@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import {
   Truncate,
   FlexCol,

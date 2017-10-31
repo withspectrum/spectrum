@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -109,7 +107,6 @@ const map = state => ({
 
 const JoinFirstCommunity = compose(
   toggleCommunityMembershipMutation,
-  connect(map),
-  pure
+  connect(map)
 )(JoinFirstCommunityPure);
 export default JoinFirstCommunity;

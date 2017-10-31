@@ -2,15 +2,14 @@
  * Define the notification subscription resolvers
  */
 import { withFilter } from 'graphql-subscriptions';
-import pubsub from './listeners/pubsub';
-import { NOTIFICATION_ADDED } from './listeners/channels';
+import listenToNewNotifications from './listeners/notification';
 
 module.exports = {
   Subscription: {
     notificationAdded: {
-      resolve: notification => notification,
+      resolve: (notification: any) => notification,
       subscribe: withFilter(
-        () => pubsub.asyncIterator(NOTIFICATION_ADDED),
+        listenToNewNotifications,
         (notification, _, { user }) => user.id === notification.userId
       ),
     },

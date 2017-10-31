@@ -98,17 +98,42 @@
     }
 
     .email-footer {
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       margin: 0 auto;
-      padding: 0;
+      padding: 8px;
       -premailer-width: 560px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
+      background-color: #F2F5F9;
+      margin-top: 32px;
+      font-weight: 400;
     }
 
     .email-footer p {
-      color: #AEAEAE;
+      color: #747E8D;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .email-footer a {
+      color: #16171A;
+      font-weight: 500;
+    }
+
+    .email-footer ul {
+      list-style-type: none;
+      margin: 16px 0;
+      padding: 0;
+      font-size: 14px;
+      color: #747E8D;
+    }
+
+    .email-footer li {
+      margin-top: 8px;
+      display: block;
+      width: 100%;
     }
 
     .body-action {
@@ -270,6 +295,7 @@
       margin-bottom: 2px;
       padding: 8px 12px;
       border-radius: 12px;
+      display: block;
     }
 
     p.emoji, span.emoji {
@@ -290,6 +316,14 @@
 
     .button.feed {
       margin-top: 16px;
+    }
+
+    .button.feed.unsubscribe {
+      background: none;
+      color: #747E8D;
+      margin-left: 16px;
+      font-weight: 400;
+      box-shadow: none;
     }
     </style>
   </head>
@@ -359,7 +393,13 @@
                                         </tr>
                                         <tr>
                                           <td>
-                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><p class="reply">{{{content.body}}}</p></a>
+                                            <table width="100%">
+                                              <tr>
+                                                <td>
+                                                  <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><p class="reply">{{{content.body}}}</p></a>
+                                                </td>
+                                              </tr>
+                                            </table>
                                           </td>
                                         </tr>
                                       </table>
@@ -372,6 +412,7 @@
                             <tr>
                               <td>
                                 <a class="feed button" href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}">Go to thread</a>
+                                <a class="feed button unsubscribe" href="https://spectrum.chat/api/email/unsubscribe?token={{muteThreadToken}}">Mute thread</a>
                               </td>
                             </tr>
                         </table>
@@ -391,12 +432,23 @@
           <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
             <tr>
               <td class="content-cell">
-                <p class="sub">Easily
-                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">unsubscribe in one click</a>
-                  {{#username}}or <a href="https://spectrum.chat/users/{{.}}/settings">manage your preferences in your settings</a>{{/username}}.</p>
-                <br />
-                <br />
-                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
+                <p class="sub">
+                  You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>. If you no longer want to receive emails like this, you can:
+                </p>
+
+                <ul>
+                  <li>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Mute all new message notification emails</a>
+                  </li>
+
+                  {{#username}}
+                    <li>
+                      <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
+                    </li>
+                  {{/username}}
+                </ul>
+
+                <p class="sub">Spectrum is made by Space Program, Inc.<br/>542 Brannan St. 409, San Francisco, CA 94107</p>
               </td>
             </tr>
           </table>

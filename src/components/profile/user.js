@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
@@ -19,7 +17,7 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import ReputationIcon from '../reputation';
+import Reputation from '../reputation';
 import {
   ProfileAvatar,
   ProfileHeader,
@@ -37,7 +35,6 @@ import {
   ExtLink,
   ProUpgrade,
   ReputationContainer,
-  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -111,7 +108,6 @@ const UserWithData = ({
         </CoverPhoto>
         <CoverSubtitle center>
           @{user.username}
-          {user.isAdmin && <Badge type="admin" />}
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
@@ -148,16 +144,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -184,7 +179,6 @@ const UserWithData = ({
         </CoverPhoto>
         <CoverSubtitle center>
           {user.username && `@${user.username}`}
-          {user.isAdmin && <Badge type="admin" />}
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
@@ -196,16 +190,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -228,7 +221,6 @@ const UserWithData = ({
                 {user.username && (
                   <Subtitle>
                     @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
                     {user.isPro && <Badge type="pro" />}
                   </Subtitle>
                 )}
@@ -248,7 +240,6 @@ const UserWithData = ({
                 {user.username && (
                   <Subtitle>
                     @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
                     {user.isPro && <Badge type="pro" />}
                   </Subtitle>
                 )}
@@ -277,16 +268,15 @@ const UserWithData = ({
 
         {user.totalReputation > 0 && (
           <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions
-                  ? user.contextPermissions.reputation.toLocaleString()
-                  : user.totalReputation.toLocaleString()}
-              </strong>{' '}
-              rep
-            </ReputationCount>
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </ReputationContainer>
         )}
       </Card>
@@ -294,7 +284,7 @@ const UserWithData = ({
   }
 };
 
-const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

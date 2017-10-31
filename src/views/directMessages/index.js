@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -253,8 +251,7 @@ class DirectMessages extends Component {
 const DirectMessagesWithQuery = compose(
   getCurrentUserDirectMessageThreads,
   displayLoadingState,
-  markDirectMessageNotificationsSeenMutation,
-  pure
+  markDirectMessageNotificationsSeenMutation
 )(DirectMessages);
 
 const mapStateToProps = state => ({

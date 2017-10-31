@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import queryString from 'query-string';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
@@ -48,8 +49,14 @@ export class Login extends Component {
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
     const { redirectPath } = this.props;
 
+    let r;
+    if (this.props.location) {
+      const searchObj = queryString.parse(this.props.location.search);
+      r = searchObj.r;
+    }
+
     const viewTitle =
-      signinType === 'login' ? 'Welcome back!' : 'Welcome to Spectrum!';
+      signinType === 'login' ? 'Welcome back!' : 'Sign in to get started';
 
     const viewSubtitle =
       signinType === 'login'
@@ -58,9 +65,10 @@ export class Login extends Component {
 
     const verb = signinType === 'login' ? 'Log in ' : 'Sign in ';
 
-    const postAuthRedirectPath = redirectPath
-      ? `?r=${redirectPath}`
-      : `?r=${CLIENT_URL}/home`;
+    const postAuthRedirectPath =
+      redirectPath !== undefined || r !== undefined
+        ? `?r=${redirectPath || r}`
+        : `?r=${CLIENT_URL}/home`;
 
     return (
       <FullscreenView

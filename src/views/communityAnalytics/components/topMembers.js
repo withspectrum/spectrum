@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import pure from 'recompose/pure';
 import Icon from '../../../components/icons';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import compose from 'recompose/compose';
@@ -11,7 +10,6 @@ import ViewError from '../../../components/viewError';
 import { UserListItem } from '../../../components/listItems';
 import {
   SectionCard,
-  SectionSubtitle,
   SectionTitle,
   MessageIcon,
 } from '../../communitySettings/style';
@@ -94,6 +92,5 @@ export default compose(
   connect(),
   withRouter,
   getCommunityTopMembers,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(ConversationGrowth);

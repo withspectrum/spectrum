@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
 
@@ -239,14 +239,5 @@ export const ReputationContainer = styled.div`
   padding: 12px 0;
   margin: 0 16px;
   display: flex;
-`;
-
-export const ReputationCount = styled.p`
-  font-size: 14px;
-  font-weight: 500;
   color: ${props => props.theme.text.default};
-
-  strong {
-    font-weight: 700;
-  }
 `;

@@ -23,6 +23,11 @@ class Navbar extends Component {
             <Label>Home</Label>
           </IconLink>
 
+          <IconLink data-active={url.includes('/threads')} to="/threads">
+            <Icon glyph={'post'} />
+            <Label>Threads</Label>
+          </IconLink>
+
           <IconLink data-active={url.includes('/users')} to="/users">
             <Icon glyph={'profile'} />
             <Label>Users</Label>

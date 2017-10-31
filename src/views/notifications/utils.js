@@ -3,13 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { timeDifferenceShort } from '../../helpers/utils';
 import { Timestamp } from './style';
-import {
-  AvatarLabel,
-  UserAvatar,
-  Byline,
-  Name,
-} from '../../components/chatMessages/style';
-import Badge from '../../components/badges';
 
 export const getDistinctNotifications = array => {
   let unique = {};
@@ -46,24 +39,6 @@ export const parseNotification = notification => {
     }),
   });
 };
-
-export const renderBubbleHeader = actor => (
-  <Byline>
-    <Link to={`/users/${actor.username}`}>
-      <Name>{actor.name}</Name>
-      {actor.isAdmin && <Badge type="admin" />}
-      {actor.isPro && <Badge type="pro" />}
-    </Link>
-  </Byline>
-);
-
-export const renderAvatar = actor => (
-  <Link to={`/users/${actor.username}`} style={{ alignSelf: 'flex-end' }}>
-    <AvatarLabel tipText={actor.name} tipLocation="right">
-      <UserAvatar isOnline={actor.isOnline} src={actor.profilePhoto} />
-    </AvatarLabel>
-  </Link>
-);
 
 const actorsToString = actors => {
   // reverse to show the most recent first

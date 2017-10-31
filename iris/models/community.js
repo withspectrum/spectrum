@@ -78,6 +78,26 @@ export const getCommunitiesByUser = (
   );
 };
 
+export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
+  return db
+    .table('channels')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .group('communityId')
+    .count()
+    .run();
+};
+
+export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .group('communityId')
+    .count()
+    .run();
+};
+
 export const getCommunityMetaData = (
   communityId: string
 ): Promise<Array<number>> => {
@@ -158,6 +178,8 @@ export const createCommunity = (
     .then(community => {
       // send a welcome email to the community creator
       addQueue('send new community welcome email', { user, community });
+      // email brian with info about the community and owner
+      addQueue('admin community created', { user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
@@ -585,13 +607,14 @@ export const getRecentCommunities = (amount: number): Array<DBCommunity> => {
 };
 
 export const getCommunitiesBySearchString = (
-  string: string
+  string: string,
+  amount: number
 ): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .filter(community => community.coerceTo('string').match(`(?i)${string}`))
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(15)
+    .limit(amount)
     .run();
 };
 

@@ -20,6 +20,9 @@
     "transform-flow-strip-types",
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
-    "syntax-dynamic-import"
+    "syntax-dynamic-import",
+    "syntax-async-generators",
+    "transform-async-generator-functions",
+    "react-loadable/babel"
   ]
 }

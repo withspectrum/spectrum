@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -12,10 +10,15 @@ import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
   render() {
-    const { data: { thread, error } } = this.props;
+    const { data: { thread, error }, setName } = this.props;
     if (error || !thread) {
       return null;
     }
+
+    if (setName && thread) {
+      this.props.setName(thread.community.name);
+    }
+
     return (
       <ProfileCard>
         <Link
@@ -37,5 +40,5 @@ class ThreadWithData extends Component {
   }
 }
 
-const Thread = compose(pure, connect())(ThreadWithData);
+const Thread = compose(connect())(ThreadWithData);
 export default Thread;

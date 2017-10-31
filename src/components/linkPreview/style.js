@@ -20,6 +20,7 @@ export const LinkPreviewContainer = styled.a`
     transition: ${Transition.reaction.on};
     box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.1)};
     border: 1px solid ${({ theme }) => theme.bg.border};
+    text-decoration: none !important;
   }
 `;
 
@@ -48,7 +49,7 @@ export const LinkPreviewTextContainer = styled.div`
   align-self: stretch;
 `;
 
-export const BaseMeta = styled.p`
+export const BaseMeta = styled.span`
   display: flex;
   flex: none;
   line-height: 1.2;

@@ -41,6 +41,9 @@ export default (
               name
               isPrivate
             }
+            community {
+              profilePhoto
+            }
           }
         }
       `).then(res => {
@@ -53,6 +56,7 @@ export default (
             body: content.body,
             channelName: channel.name,
             privateChannel: channel.isPrivate,
+            image: community.profilePhoto,
           },
         });
       });
@@ -68,6 +72,7 @@ export default (
             name
             username
             description
+            profilePhoto
             # coverPhoto
           }
         }
@@ -79,6 +84,7 @@ export default (
             username: user.username,
             description: user.description,
             name: user.name,
+            image: user.profilePhoto,
           },
         });
       });
@@ -98,6 +104,7 @@ export default (
               isPrivate
               community {
                 name
+                profilePhoto
               }
             }
           }
@@ -110,6 +117,7 @@ export default (
               description: channel.description,
               communityName: community.name,
               private: channel.isPrivate,
+              image: community.profilePhoto,
             },
           });
         });
@@ -122,6 +130,7 @@ export default (
             community(slug: "${first}") {
               name
               description
+              profilePhoto
             }
           }
         `).then(res => {
@@ -131,6 +140,7 @@ export default (
             data: {
               name: community.name,
               description: community.description,
+              image: community.profilePhoto,
             },
           });
         });

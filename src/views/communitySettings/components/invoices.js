@@ -1,10 +1,6 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { getCommunityInvoices } from '../../../api/community';
 import { Loading } from '../../../components/loading';
@@ -12,11 +8,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
 import { SectionCard, SectionTitle } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 type InvoiceType = {
   id: string,
@@ -73,9 +65,6 @@ class Invoices extends React.Component<Props> {
   }
 }
 
-export default compose(
-  getCommunityInvoices,
-  viewNetworkHandler,
-  connect(),
-  pure
-)(Invoices);
+export default compose(getCommunityInvoices, viewNetworkHandler, connect())(
+  Invoices
+);

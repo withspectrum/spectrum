@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -304,7 +302,6 @@ const Community = compose(
   deleteCommunityMutation,
   editCommunityMutation,
   withRouter,
-  pure,
   connect()
 )(CommunityWithData);
 export default Community;

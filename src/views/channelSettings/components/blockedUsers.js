@@ -1,8 +1,6 @@
 //@flow
 import * as React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
@@ -78,6 +76,4 @@ class BlockedUsers extends React.Component<Props> {
   }
 }
 
-export default compose(getBlockedUsersQuery, displayLoadingCard, pure)(
-  BlockedUsers
-);
+export default compose(getBlockedUsersQuery, displayLoadingCard)(BlockedUsers);

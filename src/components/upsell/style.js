@@ -390,3 +390,9 @@ export const ButtonGoogle = styled(SigninButton)`
       props.whitebg ? props.theme.social.google.default : '#fff'};
   }
 `;
+
+export const ShareInputContainer = styled.div`
+  width: 100%;
+  max-width: 528px;
+  margin-top: 16px;
+`;

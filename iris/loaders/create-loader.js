@@ -11,7 +11,7 @@ import type { Loader } from './types';
  */
 const createLoader = (
   batchFn: Function,
-  indexField: string = 'id',
+  indexField: string | Function = 'id',
   cacheKeyFn: Function = key => key
 ): Loader => {
   return new DataLoader(keys => {
@@ -26,7 +26,9 @@ const createLoader = (
 function indexResults(results, indexField, cacheKeyFn) {
   var indexedResults = new Map();
   results.forEach(res => {
-    indexedResults.set(cacheKeyFn(res[indexField]), res);
+    const key =
+      typeof indexField === 'function' ? indexField(res) : res[indexField];
+    indexedResults.set(cacheKeyFn(key), res);
   });
   return indexedResults;
 }

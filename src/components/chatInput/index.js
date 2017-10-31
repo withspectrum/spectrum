@@ -2,25 +2,21 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import withState from 'recompose/withState';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
+import { KeyBindingUtil } from 'draft-js';
 import Icon from '../../components/icons';
+import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import {
-  Form,
-  EditorInput,
-  ChatInputWrapper,
-  SendButton,
-  PhotoSizeError,
-} from './style';
+import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
+import Input from './input';
 import { sendMessageMutation } from '../../api/message';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
@@ -30,7 +26,7 @@ import {
 } from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
-class ChatInputWithMutation extends Component {
+class ChatInput extends Component {
   state: {
     isFocused: boolean,
     photoSizeError: string,
@@ -42,6 +38,7 @@ class ChatInputWithMutation extends Component {
     this.state = {
       isFocused: false,
       photoSizeError: '',
+      code: false,
     };
   }
 
@@ -49,12 +46,40 @@ class ChatInputWithMutation extends Component {
     this.props.onRef(this);
   }
 
+  shouldComponentUpdate(next) {
+    const curr = this.props;
+
+    // User changed
+    if (curr.currentUser !== next.currentUser) return true;
+
+    // State changed
+    if (curr.state !== next.state) return true;
+
+    return false;
+  }
+
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
 
   triggerFocus = () => {
-    this.chatInput.focus();
+    this.editor.focus();
+  };
+
+  toggleCodeMessage = () => {
+    const { onChange, state } = this.props;
+    const { code } = this.state;
+    this.setState(
+      {
+        code: !code,
+      },
+      () => {
+        onChange(
+          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+        );
+        setTimeout(() => this.triggerFocus());
+      }
+    );
   };
 
   submit = e => {
@@ -78,16 +103,21 @@ class ChatInputWithMutation extends Component {
     }
 
     // If the input is empty don't do anything
-    if (toPlainText(state).trim() === '') return;
+    if (toPlainText(state).trim() === '') return 'handled';
+
+    this.setState({
+      code: false,
+    });
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
-      return createThread({
+      createThread({
         messageBody: JSON.stringify(toJSON(state)),
         messageType: 'draftjs',
       });
+      return 'handled';
     }
 
     // user is sending a message to an existing thread id - either a thread
@@ -112,6 +142,22 @@ class ChatInputWithMutation extends Component {
       clear();
       this.editor.focus();
     });
+
+    return 'handled';
+  };
+
+  handleReturn = e => {
+    // Always submit on CMD+Enter
+    if (KeyBindingUtil.hasCommandModifier(e)) {
+      return this.submit(e);
+    }
+
+    // Also submit non-code messages on ENTER
+    if (!this.state.code && !e.shiftKey) {
+      return this.submit(e);
+    }
+
+    return 'not-handled';
   };
 
   sendMediaMessage = e => {
@@ -214,10 +260,10 @@ class ChatInputWithMutation extends Component {
 
   render() {
     const { state, onChange, currentUser } = this.props;
-    const { isFocused, photoSizeError } = this.state;
+    const { isFocused, photoSizeError, code } = this.state;
 
     return (
-      <ChatInputWrapper focus={isFocused}>
+      <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
         {photoSizeError && (
           <PhotoSizeError>
             <p
@@ -237,20 +283,26 @@ class ChatInputWithMutation extends Component {
           </PhotoSizeError>
         )}
         <MediaInput onChange={this.sendMediaMessage} />
+        <IconButton
+          glyph={'code'}
+          onClick={this.toggleCodeMessage}
+          tipText={'Write code'}
+          tipLocation={'top'}
+          style={{ margin: '0 4px' }}
+          color={code ? 'brand.alt' : 'text.placeholder'}
+          hoverColor={'brand.alt'}
+        />
         <Form focus={isFocused}>
-          <EditorInput
+          <Input
             focus={isFocused}
-            placeholder="Your message here..."
-            state={state}
-            handleReturn={this.submit}
+            placeholder={`Your ${code ? 'code' : 'message'} here...`}
+            editorState={state}
+            handleReturn={this.handleReturn}
             onChange={onChange}
-            markdown={false}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            singleLine
-            images={false}
+            code={code}
             editorRef={editor => (this.editor = editor)}
-            innerRef={input => (this.chatInput = input)}
             editorKey="chat-input"
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
@@ -263,15 +315,12 @@ class ChatInputWithMutation extends Component {
 const map = state => ({
   currentUser: state.users.currentUser,
 });
-const ChatInput = compose(
+export default compose(
   sendMessageMutation,
   withState('state', 'changeState', fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
-  connect(map),
-  pure
-)(ChatInputWithMutation);
-
-export default ChatInput;
+  connect(map)
+)(ChatInput);

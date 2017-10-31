@@ -56,7 +56,6 @@ export const zIndex = new function() {
   this.card = this.base + 1; // all cards should default to one layer above the base content
   this.loading = this.card + 1; // loading elements should never appear behind cards
   this.avatar = this.card + 1; // avatars should never appear behind cards
-  this.tooltip = this.card + 1; // tooltips should never appear behind cards
   this.form = this.card + 1; // form elements should never appear behind cards
   this.search = this.form; // search is a type of form and should appear at the same level
   this.dmInput = this.form;
@@ -77,11 +76,16 @@ export const zIndex = new function() {
   this.gallery = this.modal + 1; // gallery should never appear behind a modal
 
   this.toast = 6000; // toasts should be visible in every context
+  this.tooltip = this.toast + 1; // tooltips should always be on top
 }();
 
 export const fontStack = css`
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe',
     sans-serif;
+`;
+
+export const monoStack = css`
+  font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
 `;
 
 const spin = keyframes`
@@ -329,12 +333,13 @@ const returnTooltip = props => {
     case 'top-left':
       return `
           &:after {
-            bottom: calc(100% + 5px);
+            bottom: calc(100% + 4px);
             right: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             bottom: 100%;
+            right: 0;
+            transform: translateX(-100%);
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -344,14 +349,32 @@ const returnTooltip = props => {
     case 'top-right':
       return `
           &:after {
-            bottom: calc(100% + 5px);
+            bottom: calc(100% + 4px);
             left: 0;
           }
           &:before {
-            left: calc(50% - 5px);
             bottom: 100%;
+            left: 0;
+            transform: translateX(100%);
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
+              ? props.theme.brand.alt
+              : props.theme.bg.reverse};
+          }
+      `;
+    case 'top':
+      return `
+          &:after {
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          &:before {
+            bottom: calc(100% + 3px);
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-width: 0;
+            border-top-color: ${props.onboarding
               ? props.theme.brand.alt
               : props.theme.bg.reverse};
           }
@@ -360,13 +383,13 @@ const returnTooltip = props => {
     default:
       return `
           &:after {
-            left: calc(100% + 5px);
             top: 50%;
+            left: calc(100% + 4px);
             transform: translateY(-50%);
           }
           &:before{
-            left: 100%;
             top: calc(50% - 5px);
+            left: 100%;
             border-left-width: 0;
             border-right-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -376,12 +399,13 @@ const returnTooltip = props => {
     case 'bottom-left':
       return `
           &:after {
-            top: calc(100% + 5px);
+            top: calc(100% + 4px);
             right: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             top: 100%;
+            right: 0;
+            transform: translateX(-100%);
       	    border-top-width: 0;
       	    border-bottom-color: ${props.onboarding
               ? props.theme.brand.alt
@@ -391,22 +415,40 @@ const returnTooltip = props => {
     case 'bottom-right':
       return `
           &:after {
-            top: calc(100% + 5px);
+            top: calc(100% + 4px);
             left: 0;
           }
           &:before {
-            right: calc(50% - 5px);
             top: 100%;
+            left: 0;
+            transform: translateX(100%);
       	    border-top-width: 0;
       	    border-bottom-color: ${props.onboarding
               ? props.theme.brand.alt
               : props.theme.bg.reverse};
           }
       `;
+    case 'bottom':
+      return `
+        &:after {
+          top: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:before {
+          top: calc(100% + 3px);
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom-width: 0;
+          border-top-color: ${props.onboarding
+            ? props.theme.brand.alt
+            : props.theme.bg.reverse};
+        }
+      `;
     case 'left':
       return `
           &:after {
-            right: calc(100% + 5px);
+            right: calc(100% + 4px);
             top: 50%;
             transform: translateY(-50%);
           }
@@ -439,7 +481,7 @@ export const Tooltip = props => css`
   &:before {
     content: '';
     z-index: ${zIndex.tooltip + 1};
-    border: 5px solid transparent;
+    border: 6px solid transparent;
   }
 
   &:after {
@@ -450,7 +492,7 @@ export const Tooltip = props => css`
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
-    min-width: 3em;
+    min-width: 8px;
     max-width: 21em;
     white-space: nowrap;
     overflow: hidden;
@@ -532,9 +574,7 @@ export const HorizontalRule = styled(FlexRow)`
   hr {
     display: inline-block;
     flex: 1 0 auto;
-    border-top: ${props => (props.border ? props.border : `2px solid`)};
-    border-color: ${props =>
-      props.color ? eval(`props.theme.${props.color}`) : 'currentColor'};
+    border-top: 2px solid ${props => props.theme.bg.wash};
   }
 
   div {

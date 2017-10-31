@@ -10,6 +10,25 @@ const Meta = /* GraphQL */ `
     quarterlyGrowth: GrowthDataCounts
   }
 
+  type CoreMetrics {
+    dau: Int
+    wau: Int
+    mau: Int
+    dac: Int
+    wac: Int
+    mac: Int
+    cpu: Float
+    mpu: Float
+    tpu: Float
+    users: Int
+    communities: Int
+    threads: Int
+    dmThreads: Int
+    threadMessages: Int
+    dmMessages: Int
+    date: Date
+  }
+
   type Meta {
     usersGrowth: UsersGrowthData
     communitiesGrowth: GrowthData
@@ -18,6 +37,8 @@ const Meta = /* GraphQL */ `
     directMessageThreadsGrowth: GrowthData
     threadMessagesGrowth: GrowthData
     directMessagesGrowth: GrowthData
+    coreMetrics: [CoreMetrics]
+    topThreads: [Thread]
   }
 
   extend type Query {

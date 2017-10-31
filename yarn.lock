@@ -382,6 +382,10 @@ arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
+asap@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/asap/-/asap-1.0.0.tgz#b2a45da5fdfa20b0496fc3768cc27c12fa916a7d"
+
 asap@~2.0.3:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
@@ -774,6 +778,10 @@ babel-plugin-dynamic-import-node@1.0.2:
     babel-template "^6.24.1"
     babel-types "^6.24.1"
 
+babel-plugin-import-inspector@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-import-inspector/-/babel-plugin-import-inspector-2.0.0.tgz#6d422309f4f192313310cfde1556f7875cae5d07"
+
 babel-plugin-istanbul@^4.0.0:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.4.tgz#18dde84bf3ce329fddf3f4103fae921456d8e587"
@@ -790,6 +798,14 @@ babel-plugin-jest-hoist@^21.0.2:
   version "21.0.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-21.0.2.tgz#cfdce5bca40d772a056cb8528ad159c7bb4bb03d"
 
+babel-plugin-replace-dynamic-import-runtime@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-replace-dynamic-import-runtime/-/babel-plugin-replace-dynamic-import-runtime-1.0.2.tgz#20ab1da8bac209524bf998d1cf48f3b9349492b3"
+  dependencies:
+    babel-plugin-syntax-dynamic-import "^6.18.0"
+    babel-template "^6.24.1"
+    babel-types "^6.24.1"
+
 babel-plugin-styled-components@^1.1.4, babel-plugin-styled-components@^1.1.7:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.2.0.tgz#8bb8f9e69119bb8dee408c8d36a0dfef5191f3c7"
@@ -799,6 +815,10 @@ babel-plugin-styled-components@^1.1.4, babel-plugin-styled-components@^1.1.7:
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-6.13.0.tgz#cad9cad1191b5ad634bf30ae0872391e0647be95"
+
+babel-plugin-syntax-async-generators@^6.13.0, babel-plugin-syntax-async-generators@^6.5.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-generators/-/babel-plugin-syntax-async-generators-6.13.0.tgz#6bc963ebb16eccbae6b92b596eb7f35c342a8b9a"
 
 babel-plugin-syntax-class-properties@^6.8.0:
   version "6.13.0"
@@ -827,6 +847,14 @@ babel-plugin-syntax-object-rest-spread@^6.8.0:
 babel-plugin-syntax-trailing-function-commas@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-trailing-function-commas/-/babel-plugin-syntax-trailing-function-commas-6.22.0.tgz#ba0360937f8d06e40180a43fe0d5616fff532cf3"
+
+babel-plugin-transform-async-generator-functions@^6.24.1:
+  version "6.24.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-async-generator-functions/-/babel-plugin-transform-async-generator-functions-6.24.1.tgz#f058900145fd3e9907a6ddf28da59f215258a5db"
+  dependencies:
+    babel-helper-remap-async-to-generator "^6.24.1"
+    babel-plugin-syntax-async-generators "^6.5.0"
+    babel-runtime "^6.22.0"
 
 babel-plugin-transform-async-to-generator@^6.22.0:
   version "6.24.1"
@@ -1604,9 +1632,9 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bull@3.0.0-rc.8:
-  version "3.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.0.0-rc.8.tgz#886e03b93b13e6a61d38070d243e7e824d29103d"
+bull@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.1.tgz#6a15daf08ccfd5bf0e543eeb4544323157c0e1db"
   dependencies:
     bluebird "^3.5.0"
     cron-parser "^2.4.1"
@@ -2546,6 +2574,10 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
+detect-newline@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
+
 detect-node@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.3.tgz#a2033c09cc8e158d37748fbde7507832bd6ce127"
@@ -2693,9 +2725,26 @@ draft-js-checkable-list-item@^2.0.5:
   dependencies:
     draft-js-modifiers "^0.1.2"
 
-draft-js-drag-n-drop-plugin@2.0.0-rc2:
-  version "2.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/draft-js-drag-n-drop-plugin/-/draft-js-drag-n-drop-plugin-2.0.0-rc2.tgz#81ffee2323f91daf0ba01312cb4ae3a46b9ba85b"
+draft-js-code-editor-plugin@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-code-editor-plugin/-/draft-js-code-editor-plugin-0.2.1.tgz#86dda298fcc950427ee980f26b3c75fa25a0b86e"
+  dependencies:
+    babel-plugin-transform-react-jsx "^6.24.1"
+    draft-js "0.x"
+    draft-js-code "0.3.x"
+
+draft-js-code@0.3.x:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-code/-/draft-js-code-0.3.0.tgz#d955d134367baeee5844b57f897c8d848bc979c5"
+  dependencies:
+    detect-indent "^4.0.0"
+    detect-newline "^2.1.0"
+    ends-with "^0.2.0"
+    immutable "3.x"
+
+draft-js-drag-n-drop-plugin@2.0.0-rc9:
+  version "2.0.0-rc9"
+  resolved "https://registry.yarnpkg.com/draft-js-drag-n-drop-plugin/-/draft-js-drag-n-drop-plugin-2.0.0-rc9.tgz#679975d05ce9444bea6a585c560b68c235f0c85f"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.0.2"
@@ -2797,15 +2846,18 @@ draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
     immutable "*"
     prismjs "^1.5.0"
 
-draft-js-single-line-plugin@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/draft-js-single-line-plugin/-/draft-js-single-line-plugin-2.0.1.tgz#3aea1b100b1562d7ef3d5d02e73190da12953857"
-  dependencies:
-    immutable "^3.8.1"
-
 draft-js-utils@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.2.0.tgz#f5cb23eb167325ffed3d79882fdc317721d2fd12"
+
+draft-js@0.x:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.3.tgz#5f3c3025af9f494c62f00a9066006ccdc1b3c943"
+  dependencies:
+    enzyme "^2.9.1"
+    fbjs "^0.8.15"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
 
 draft-js@^0.10.2, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.2"
@@ -2892,6 +2944,10 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
+ends-with@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-0.2.0.tgz#2f9da98d57a50cfda4571ce4339000500f4e6b8a"
+
 enhanced-resolve@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-3.4.1.tgz#0421e339fd71419b3da13d129b3979040230476e"
@@ -2904,6 +2960,21 @@ enhanced-resolve@^3.4.0:
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
+
+enzyme@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/enzyme/-/enzyme-2.9.1.tgz#07d5ce691241240fb817bf2c4b18d6e530240df6"
+  dependencies:
+    cheerio "^0.22.0"
+    function.prototype.name "^1.0.0"
+    is-subset "^0.1.1"
+    lodash "^4.17.4"
+    object-is "^1.0.1"
+    object.assign "^4.0.4"
+    object.entries "^1.0.4"
+    object.values "^1.0.4"
+    prop-types "^15.5.10"
+    uuid "^3.0.1"
 
 errno@^0.1.3, errno@^0.1.4:
   version "0.1.4"
@@ -2926,6 +2997,16 @@ error-stack-parser@^2.0.0:
 es-abstract@^1.5.0, es-abstract@^1.7.0:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.8.2.tgz#25103263dc4decbda60e0c737ca32313518027ee"
+  dependencies:
+    es-to-primitive "^1.1.1"
+    function-bind "^1.1.1"
+    has "^1.0.1"
+    is-callable "^1.1.3"
+    is-regex "^1.0.4"
+
+es-abstract@^1.6.1:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.9.0.tgz#690829a07cae36b222e7fd9b75c0d0573eb25227"
   dependencies:
     es-to-primitive "^1.1.1"
     function-bind "^1.1.1"
@@ -3464,6 +3545,18 @@ fbjs@^0.8.1, fbjs@^0.8.12, fbjs@^0.8.5, fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
+fbjs@^0.8.15:
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.9"
+
 fd-slicer@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/fd-slicer/-/fd-slicer-0.1.0.tgz#f597141dfe8a2841756fd54150a78fe0bec4bc03"
@@ -3767,9 +3860,17 @@ fstream@^1.0.0, fstream@^1.0.10, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
-function-bind@^1.0.2, function-bind@^1.1.1, function-bind@~1.1.0:
+function-bind@^1.0.2, function-bind@^1.1.0, function-bind@^1.1.1, function-bind@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
+
+function.prototype.name@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/function.prototype.name/-/function.prototype.name-1.0.3.tgz#0099ae5572e9dd6f03c97d023fd92bcc5e639eac"
+  dependencies:
+    define-properties "^1.1.2"
+    function-bind "^1.1.0"
+    is-callable "^1.1.3"
 
 functional-red-black-tree@^1.0.1:
   version "1.0.1"
@@ -3994,15 +4095,6 @@ graphql-log@0.1.2:
     deep-for-each "^1.0.6"
     is-function "^1.0.1"
 
-graphql-redis-subscriptions@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-1.3.1.tgz#a8790fbb1bd22103713befdcf1f27d5a14306509"
-  dependencies:
-    graphql-subscriptions "^0.4.2"
-    iterall "^1.1.1"
-  optionalDependencies:
-    ioredis "^3.1.2"
-
 graphql-server-core@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-core/-/graphql-server-core-0.8.5.tgz#6d03e9d7d0ceebdbcfbad57c9f8a61eb0d3fb6da"
@@ -4023,7 +4115,7 @@ graphql-server-module-graphiql@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.8.5.tgz#bf43caa20e7e7f912003a67bb31710c6ebc7ab18"
 
-graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.2, graphql-subscriptions@^0.4.3:
+graphql-subscriptions@0.4.x, graphql-subscriptions@^0.4.3:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.4.tgz#39cff32d08dd3c990113864bab77154403727e9b"
   dependencies:
@@ -4429,9 +4521,17 @@ immutable@*, immutable@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
+immutable@3.x:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+
 immutable@~3.7.4:
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
+
+import-inspector@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/import-inspector/-/import-inspector-2.0.0.tgz#ce75fdb6a277d2800effe097e2295bc8690b2923"
 
 import-lazy@^2.1.0:
   version "2.1.0"
@@ -4536,7 +4636,7 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-ioredis@^3.1.2, ioredis@^3.1.4:
+ioredis@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.1.4.tgz#8688293f5f2f1757e1c812ad17cce49f46d811bc"
   dependencies:
@@ -4811,6 +4911,10 @@ is-root@1.0.0:
 is-stream@^1.0.0, is-stream@^1.0.1, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
+
+is-subset@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/is-subset/-/is-subset-0.1.1.tgz#8a59117d932de1de00f245fcdd39ce43f1e939a6"
 
 is-svg@^2.0.0:
   version "2.1.0"
@@ -6299,6 +6403,10 @@ mkdirp@0.5, mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
+module-manifest-inspector@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/module-manifest-inspector/-/module-manifest-inspector-0.1.1.tgz#95b34d733df7790c5adba610ed5b84d64cccccb4"
+
 moment-timezone@^0.5.0:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.13.tgz#99ce5c7d827262eb0f1f702044177f60745d7b90"
@@ -6608,7 +6716,11 @@ object-inspect@~1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.3.0.tgz#5b1eb8e6742e2ee83342a637034d844928ba2f6d"
 
-object-keys@^1.0.8:
+object-is@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/object-is/-/object-is-1.0.1.tgz#0aa60ec9989a0b3ed795cf4d06f62cf1ad6539b6"
+
+object-keys@^1.0.10, object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
 
@@ -6622,6 +6734,23 @@ object-visit@^1.0.0:
   dependencies:
     isobject "^3.0.0"
 
+object.assign@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/object.assign/-/object.assign-4.0.4.tgz#b1c9cc044ef1b9fe63606fc141abbb32e14730cc"
+  dependencies:
+    define-properties "^1.1.2"
+    function-bind "^1.1.0"
+    object-keys "^1.0.10"
+
+object.entries@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.0.4.tgz#1bf9a4dd2288f5b33f3a993d257661f05d161a5f"
+  dependencies:
+    define-properties "^1.1.2"
+    es-abstract "^1.6.1"
+    function-bind "^1.1.0"
+    has "^1.0.1"
+
 object.omit@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/object.omit/-/object.omit-2.0.1.tgz#1a9c744829f39dbb858c76ca3579ae2a54ebd1fa"
@@ -6634,6 +6763,15 @@ object.pick@^1.3.0:
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.3.0.tgz#87a10ac4c1694bd2e1cbf53591a66141fb5dd747"
   dependencies:
     isobject "^3.0.1"
+
+object.values@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/object.values/-/object.values-1.0.4.tgz#e524da09b4f66ff05df457546ec72ac99f13069a"
+  dependencies:
+    define-properties "^1.1.2"
+    es-abstract "^1.6.1"
+    function-bind "^1.1.0"
+    has "^1.0.1"
 
 obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.1"
@@ -7430,6 +7568,12 @@ promise@8.0.1:
   dependencies:
     asap "~2.0.3"
 
+promise@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/promise/-/promise-6.1.0.tgz#2ce729f6b94b45c26891ad0602c5c90e04c6eef6"
+  dependencies:
+    asap "~1.0.0"
+
 promise@^7.1.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
@@ -7573,9 +7717,9 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raven-js@^3.14.0:
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.17.0.tgz#779457ac7910512c3c2cc9bb6d0a9eeb59a969ec"
+raven-js@^3.18.1:
+  version "3.18.1"
+  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.18.1.tgz#746339c08fca75c3f402d7e6b633687c3ffc6ee8"
 
 raven@^2.0.2:
   version "2.1.2"
@@ -7697,6 +7841,10 @@ react-helmet@5.x:
 react-infinite-scroller-with-scroll-element@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-1.0.4.tgz#b2b724b06fe27e46af62d23759a21237a7d156d9"
+
+react-loadable@5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.2.2.tgz#1a5ad75841cacb64be12b18a86ac0bc55ccb4dc7"
 
 react-modal@^1.6.5:
   version "1.9.7"
@@ -9068,6 +9216,12 @@ text-table@0.2.0, text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
+then-queue@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/then-queue/-/then-queue-1.3.0.tgz#19f63c2a93335ba54ea942f7eca3d6b8899015fb"
+  dependencies:
+    promise "^6.0.0"
+
 throat@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-3.2.0.tgz#50cb0670edbc40237b9e347d7e1f88e4620af836"
@@ -9502,6 +9656,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
+validator@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.0.0.tgz#6c1ef955e007af704adea86ae8a76da84a6c172e"
+
 value-equal@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.4.0.tgz#c5bdd2f54ee093c04839d71ce2e4758a6890abc7"
@@ -9620,6 +9778,10 @@ webpack-manifest-plugin@1.2.1:
   dependencies:
     fs-extra "^0.30.0"
     lodash ">=3.5 <5"
+
+webpack-module-manifest-plugin@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/webpack-module-manifest-plugin/-/webpack-module-manifest-plugin-0.1.0.tgz#e50dcd91dc044e9f8b9d88180ce939aede9dc089"
 
 webpack-node-externals@^1.6.0:
   version "1.6.0"

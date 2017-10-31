@@ -1,21 +1,18 @@
 import React from 'react';
 import compose from 'recompose/compose';
-import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getThisCommunity } from './queries';
 import { openModal } from '../../actions/modals';
-import { Loading } from '../../components/loading';
-import AppViewWrapper from '../../components/appViewWrapper';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
-import Titlebar from '../titlebar';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import { View, SectionsContainer, Column } from '../communitySettings/style';
+import { SectionsContainer, Column } from '../communitySettings/style';
+import { Loading } from '../../components/loading';
 
 type Props = {
   community: {
@@ -34,7 +31,7 @@ type State = {
   timeframe: 'weekly' | 'monthly',
 };
 
-class CommunitySettings extends React.Component<Props, State> {
+class CommunityAnalytics extends React.Component<Props, State> {
   upgrade = () => {
     const { dispatch, currentUser, data: { community } } = this.props;
     dispatch(
@@ -43,7 +40,7 @@ class CommunitySettings extends React.Component<Props, State> {
   };
 
   render() {
-    const { community, communitySlug } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       if (!community.isPro) {
@@ -65,15 +62,19 @@ class CommunitySettings extends React.Component<Props, State> {
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth communitySlug={communitySlug} />
-            <TopMembers communitySlug={communitySlug} />
+            <MemberGrowth communitySlug={community.slug} />
+            <TopMembers communitySlug={community.slug} />
           </Column>
           <Column>
-            <ConversationGrowth communitySlug={communitySlug} />
-            <TopAndNewThreads communitySlug={communitySlug} />
+            <ConversationGrowth communitySlug={community.slug} />
+            <TopAndNewThreads communitySlug={community.slug} />
           </Column>
         </SectionsContainer>
       );
+    }
+
+    if (isLoading) {
+      return <Loading />;
     }
 
     return (
@@ -96,9 +97,6 @@ class CommunitySettings extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  connect(map),
-  getThisCommunity,
-  viewNetworkHandler,
-  pure
-)(CommunitySettings);
+export default compose(connect(map), getThisCommunity, viewNetworkHandler)(
+  CommunityAnalytics
+);

@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -45,6 +43,22 @@ type Props = {
 };
 
 class ChannelView extends React.Component<Props> {
+  componentDidUpdate(prevProps) {
+    // if the user is new and signed up through a channel page, push
+    // the channel's community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (this.props.currentUser) return;
+    if (
+      (!prevProps.data.channel && this.props.data.channel) ||
+      (prevProps.data.channel &&
+        prevProps.data.channel.id !== this.props.data.channel.id)
+    ) {
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.channel.community)
+      );
+    }
+  }
+
   render() {
     const {
       match,
@@ -141,14 +155,13 @@ class ChannelView extends React.Component<Props> {
         },
       });
 
-      // if the user is new and signed up through a channel page, push
-      // the channel's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      this.props.dispatch(addCommunityToOnboarding(channel.community));
-
       return (
         <AppViewWrapper>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={channel.community.profilePhoto}
+          />
           <Titlebar
             title={channel.name}
             subtitle={channel.community.name}
@@ -177,7 +190,11 @@ class ChannelView extends React.Component<Props> {
 
           <Column type="primary" alignItems="center">
             {!isLoggedIn && (
-              <UpsellSignIn view={{ data: channel, type: 'channel' }} />
+              <UpsellSignIn
+                title={`Join the ${channel.community.name} community`}
+                view={{ data: channel, type: 'channel' }}
+                redirectPath={window.location}
+              />
             )}
 
             {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
@@ -256,6 +273,6 @@ const map = state => ({
   currentUser: state.users.currentUser,
 });
 
-export default compose(connect(map), getChannel, viewNetworkHandler, pure)(
+export default compose(connect(map), getChannel, viewNetworkHandler)(
   ChannelView
 );

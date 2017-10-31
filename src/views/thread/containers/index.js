@@ -1,12 +1,7 @@
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../helpers/events';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../../actions/newUserOnboarding';
 import Titlebar from '../../../views/titlebar';
@@ -16,45 +11,12 @@ import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
 import ViewError from '../../../components/viewError';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { HorizontalRule } from '../../../components/globals';
 import { getThread } from '../queries';
-import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
-import Icon from '../../../components/icons';
-import {
-  View,
-  Content,
-  Input,
-  Detail,
-  ChatInputWrapper,
-  ChatWrapper,
-} from '../style';
+import { View, Content, Input, Detail, ChatInputWrapper } from '../style';
 import { NullState, UpsellSignIn } from '../../../components/upsell';
 import JoinChannel from '../../../components/upsell/joinChannel';
 import RequestToJoinChannel from '../../../components/upsell/requestToJoinChannel';
-
-const LoadingView = () => (
-  <View>
-    <Titlebar
-      provideBack={true}
-      backRoute={`/`}
-      noComposer
-      style={{ gridArea: 'header' }}
-    />
-    <Content>
-      <Detail type="only">
-        <LoadingThreadDetail />
-        <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
-          <LoadingChat />
-        </ChatWrapper>
-      </Detail>
-    </Content>
-  </View>
-);
+import LoadingView from '../components/loading';
 
 type Props = {
   data: {
@@ -105,6 +67,20 @@ class ThreadContainer extends React.Component<Props, State> {
       }
     }
 
+    // if the user is new and signed up through a thread view, push
+    // the thread's community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (
+      (!prevProps.data.thread && this.props.data.thread) ||
+      (prevProps.data.thread &&
+        prevProps.data.thread.id !== this.props.data.thread.id)
+    ) {
+      if (this.props.currentUser) return;
+      this.props.dispatch(
+        addCommunityToOnboarding(this.props.data.thread.community)
+      );
+    }
+
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
@@ -121,6 +97,12 @@ class ThreadContainer extends React.Component<Props, State> {
       this.chatInput.triggerFocus();
     }
   }
+
+  forceScrollToTop = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    node.scrollTop = 0;
+  };
 
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
@@ -148,7 +130,6 @@ class ThreadContainer extends React.Component<Props, State> {
     } = this.props;
 
     const isLoggedIn = currentUser;
-
     if (data && data.thread) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
@@ -157,20 +138,19 @@ class ThreadContainer extends React.Component<Props, State> {
           title: thread.content.title,
           body: thread.content.body,
           type: thread.type,
-          channelName: thread.channel.name,
+          communityName: thread.community.name,
         },
       });
 
-      // if the user is new and signed up through a thread view, push
-      // the thread's community data into the store to hydrate the new user experience
-      // with their first community they should join
-      dispatch(addCommunityToOnboarding(thread.channel.community));
-
       // get the data we need to render the view
       const { channelPermissions, isPrivate } = thread.channel;
+      const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
       const isRestricted = isPrivate && !channelPermissions.isMember;
       const canSendMessages = currentUser && channelPermissions.isMember;
+      const isChannelOwner = currentUser && channelPermissions.isOwner;
+      const isCommunityOwner = currentUser && communityPermissions.isOwner;
+      const isModerator = isChannelOwner || isCommunityOwner;
       const isParticipantOrCreator =
         currentUser &&
         (isCreator ||
@@ -198,7 +178,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 >
                   <RequestToJoinChannel
                     channel={thread.channel}
-                    community={thread.channel.community}
+                    community={thread.community}
                     isPending={thread.channel.channelPermissions.isPending}
                   />
                 </ViewError>
@@ -210,18 +190,21 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <View slider={slider}>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={thread.community.profilePhoto}
+          />
           <Titlebar
             title={thread.content.title}
-            subtitle={`${thread.channel.community.name} / ${thread.channel
-              .name}`}
+            subtitle={`${thread.community.name} / ${thread.channel.name}`}
             provideBack={true}
             backRoute={`/`}
             noComposer
             style={{ gridArea: 'header' }}
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-            <Detail type="only">
+            <Detail type={slider ? '' : 'only'}>
               <ThreadDetail thread={thread} slider={slider} />
 
               <Messages
@@ -229,9 +212,12 @@ class ThreadContainer extends React.Component<Props, State> {
                 id={thread.id}
                 currentUser={currentUser}
                 forceScrollToBottom={this.forceScrollToBottom}
+                forceScrollToTop={this.forceScrollToTop}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                shouldForceScrollToTopOnMessageLoad={!isParticipantOrCreator}
                 hasMessagesToLoad={thread.messageCount > 0}
+                isModerator={isModerator}
               />
 
               {isLocked && (
@@ -239,14 +225,19 @@ class ThreadContainer extends React.Component<Props, State> {
               )}
 
               {isLoggedIn &&
-                !canSendMessages && <JoinChannel channel={thread.channel} />}
-
+                !canSendMessages && (
+                  <JoinChannel
+                    community={thread.community}
+                    channel={thread.channel}
+                  />
+                )}
               {!isLoggedIn && (
                 <UpsellSignIn
-                  title={'Join the conversation'}
+                  title={`Join the ${thread.community.name} community`}
                   glyph={'message-new'}
                   view={{ data: thread.community, type: 'community' }}
                   noShadow
+                  redirectPath={window.location}
                 />
               )}
             </Detail>
@@ -292,6 +283,6 @@ class ThreadContainer extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getThread, viewNetworkHandler, pure)(
+export default compose(connect(map), getThread, viewNetworkHandler)(
   ThreadContainer
 );

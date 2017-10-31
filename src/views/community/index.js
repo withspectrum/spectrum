@@ -1,8 +1,6 @@
 import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -59,9 +57,9 @@ type Props = {
 };
 
 type State = {
-  isLoading: boolean,
   showComposerUpsell: boolean,
   selectedView: 'threads' | 'search' | 'members',
+  isLeavingCommunity: boolean,
 };
 
 class CommunityView extends React.Component<Props, State> {
@@ -69,21 +67,31 @@ class CommunityView extends React.Component<Props, State> {
     super();
 
     this.state = {
-      isLoading: false,
+      isLeavingCommunity: false,
       showComposerUpsell: false,
       selectedView: 'threads',
     };
   }
 
-  componentDidMount() {
-    track('community', 'viewed', null);
+  componentDidUpdate(prevProps) {
+    // if the user is new and signed up through a community page, push
+    // the community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (this.props.currentUser) return;
+    if (
+      (!prevProps.data.community && this.props.data.community) ||
+      (prevProps.data.community &&
+        prevProps.data.community.id !== this.props.data.community.id)
+    ) {
+      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+    }
   }
 
   toggleMembership = (communityId: string) => {
     const { toggleCommunityMembership, dispatch } = this.props;
 
     this.setState({
-      isLoading: true,
+      isLeavingCommunity: true,
     });
 
     toggleCommunityMembership({ communityId })
@@ -101,12 +109,12 @@ class CommunityView extends React.Component<Props, State> {
         dispatch(addToastWithTimeout(type, str));
 
         this.setState({
-          isLoading: false,
+          isLeavingCommunity: false,
         });
       })
       .catch(err => {
         this.setState({
-          isLoading: false,
+          isLeavingCommunity: false,
         });
 
         dispatch(addToastWithTimeout('error', err.message));
@@ -150,16 +158,15 @@ class CommunityView extends React.Component<Props, State> {
           description: community.description,
         },
       });
-      const { showComposerUpsell, selectedView } = this.state;
+      const {
+        showComposerUpsell,
+        selectedView,
+        isLeavingCommunity,
+      } = this.state;
       const { isMember, isOwner, isModerator } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
       const isMobile = window.innerWidth < 768;
-
-      // if the user is new and signed up through a community page, push
-      // the community data into the store to hydrate the new user experience
-      // with their first community they should join
-      this.props.dispatch(addCommunityToOnboarding(community));
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
@@ -176,7 +183,11 @@ class CommunityView extends React.Component<Props, State> {
             noComposer={!community.communityPermissions.isMember}
           />
 
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={community.profilePhoto}
+          />
 
           <CoverColumn>
             <CoverPhoto src={community.coverPhoto} />
@@ -189,6 +200,7 @@ class CommunityView extends React.Component<Props, State> {
                     community.communityPermissions.isMember) && (
                     <LogoutButton
                       onClick={() => this.toggleMembership(community.id)}
+                      loading={isLeavingCommunity}
                     >
                       Leave {community.name}
                     </LogoutButton>
@@ -254,6 +266,7 @@ class CommunityView extends React.Component<Props, State> {
                 !isLoggedIn &&
                   selectedView === 'threads' && (
                     <UpsellSignIn
+                      title={`Join the ${community.name} community`}
                       view={{ data: community, type: 'community' }}
                     />
                   )}
@@ -335,6 +348,5 @@ export default compose(
   connect(map),
   toggleCommunityMembershipMutation,
   getCommunity,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(CommunityView);

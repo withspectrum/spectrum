@@ -4,15 +4,18 @@ import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
+import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
 
 export const getThisCommunity = graphql(
   gql`
     query community($slug: String) {
       community(slug: $slug) {
         ...communityInfo
+        ...communityMetaData
       }
     }
     ${communityInfoFragment}
+    ${communityMetaDataFragment}
   `,
   {
     options: props => ({
@@ -112,6 +115,7 @@ const COMMUNITY_TOP_MEMBERS_QUERY = gql`
       ...communityInfo
       topMembers {
         ...userInfo
+        isPro
         contextPermissions {
           reputation
           isOwner

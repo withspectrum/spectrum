@@ -1,13 +1,7 @@
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -41,7 +35,16 @@ type Props = {
   queryVarIsChanging: boolean,
 };
 
-class UserView extends React.Component<Props> {
+type State = {
+  hasNoThreads: boolean,
+};
+
+class UserView extends React.Component<Props, State> {
+  constructor() {
+    super();
+    this.state = { hasThreads: true };
+  }
+
   componentDidMount() {
     track('user', 'profile viewed', null);
   }
@@ -54,6 +57,9 @@ class UserView extends React.Component<Props> {
     }
   }
 
+  hasNoThreads = () => this.setState({ hasThreads: false });
+  hasThreads = () => this.setState({ hasThreads: true });
+
   render() {
     const {
       data: { user },
@@ -63,6 +69,7 @@ class UserView extends React.Component<Props> {
       match: { params: { username } },
       currentUser,
     } = this.props;
+    const { hasThreads } = this.state;
 
     if (queryVarIsChanging) {
       return <LoadingScreen />;
@@ -85,7 +92,11 @@ class UserView extends React.Component<Props> {
 
       return (
         <AppViewWrapper>
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={user.profilePhoto}
+          />
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}
@@ -107,17 +118,20 @@ class UserView extends React.Component<Props> {
           </Column>
 
           <Column type="primary" alignItems="center">
-            {user.threadCount === 0 && (
-              <NullState
-                bg="message"
-                heading={`${user.name} hasn’t posted anything yet.`}
-              />
-            )}
-            {user.threadCount > 0 && (
+            {hasThreads ? (
               <ThreadFeedWithData
                 userId={user.id}
                 username={username}
                 viewContext="profile"
+                hasNoThreads={this.hasNoThreads}
+                hasThreads={this.hasThreads}
+              />
+            ) : (
+              <NullState
+                bg="message"
+                heading={`${user.firstName
+                  ? user.firstName
+                  : user.name} hasn’t posted anything yet.`}
               />
             )}
           </Column>
@@ -169,6 +183,4 @@ class UserView extends React.Component<Props> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getUser, viewNetworkHandler, pure)(
-  UserView
-);
+export default compose(connect(map), getUser, viewNetworkHandler)(UserView);

@@ -4,8 +4,6 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
-import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
@@ -33,21 +31,21 @@ module.exports = {
         if (!user) {
           return Promise.all([
             thread,
-            getChannels([thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, channel]) => {
             // if the channel is private, don't return any thread data
-            if (channel[0].isPrivate) return null;
+            if (channel.isPrivate) return null;
             return thread;
           });
         } else {
           // if the user is signed in, we need to check if the channel is private as well as the user's permission in that channel
           return Promise.all([
             thread,
-            getUserPermissionsInChannel(thread.channelId, user.id),
-            getChannels([thread.channelId]),
+            loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, permissions, channel]) => {
             // if the thread is in a private channel where the user is not a member, don't return any thread data
-            if (channel[0].isPrivate && !permissions.isMember) return null;
+            if (channel.isPrivate && !permissions.isMember) return null;
             return thread;
           });
         }
@@ -77,7 +75,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return getParticipantsInThread(id);
+      return loaders.threadParticipants
+        .load(id)
+        .then(result => (result ? result.reduction : []));
     },
     isCreator: (
       { creatorId }: { creatorId: string },
@@ -90,18 +90,15 @@ module.exports = {
     receiveNotifications: (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
       } else {
-        return getThreadNotificationStatusForUser(
-          id,
-          currentUser.id
-        ).then(threads => {
-          return threads.length > 0 ? threads[0].receiveNotifications : false;
-        });
+        return loaders.userThreadNotificationStatus
+          .load([currentUser.id, id])
+          .then(result => (result ? result.receiveNotifications : false));
       }
     },
     messageConnection: (
@@ -137,21 +134,28 @@ module.exports = {
     ) => {
       const creator = await loaders.user.load(creatorId);
 
-      const {
-        reputation,
-        isModerator,
-        isOwner,
-      } = await getUserPermissionsInCommunity(communityId, creatorId);
+      const permissions = await loaders.userPermissionsInCommunity.load([
+        creatorId,
+        communityId,
+      ]);
 
       return {
         ...creator,
         contextPermissions: {
-          reputation,
-          isModerator,
-          isOwner,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
         },
       };
     },
-    messageCount: ({ id }: { id: string }) => getMessageCount(id),
+    messageCount: (
+      { id }: { id: string },
+      __: any,
+      { loaders }: GraphQLContext
+    ) => {
+      return loaders.threadMessageCount
+        .load(id)
+        .then(messageCount => (messageCount ? messageCount.reduction : 0));
+    },
   },
 };

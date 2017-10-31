@@ -1,5 +1,4 @@
 import * as React from 'react';
-import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { Loading } from '../../../components/loading';
@@ -33,7 +32,7 @@ type Props = {
 
 class MemberGrowth extends React.Component<Props> {
   render() {
-    const { data, data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       const {
@@ -65,6 +64,6 @@ class MemberGrowth extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMemberGrowth, viewNetworkHandler, pure)(
+export default compose(getCommunityMemberGrowth, viewNetworkHandler)(
   MemberGrowth
 );

@@ -4,9 +4,14 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { toggleNotificationSettingsMutation } from '../../../api/user';
-import { Checkbox } from '../../../components/formElements';
+import {
+  toggleNotificationSettingsMutation,
+  updateUserEmailMutation,
+} from '../../../api/user';
+import { Checkbox, Input, Error } from '../../../components/formElements';
 import Icon from '../../../components/icons';
+import { Button } from '../../../components/buttons';
+import isEmail from 'validator/lib/isEmail';
 import {
   StyledCard,
   LargeListHeading,
@@ -14,8 +19,9 @@ import {
   ListContainer,
   Notice,
   InlineIcon,
+  Description,
 } from '../../../components/listItems/style';
-import { EmailListItem, CheckboxContent } from '../style';
+import { EmailListItem, CheckboxContent, EmailForm } from '../style';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -31,6 +37,13 @@ const parseNotificationTypes = notifications => {
           label:
             "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
           display: 'flex-start',
+        };
+      case 'newDirectMessage':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label: 'Email me when I receive new direct messages.',
+          display: 'center',
         };
       case 'newThreadCreated':
         return {
@@ -64,6 +77,55 @@ const parseNotificationTypes = notifications => {
 };
 
 class EmailSettings extends Component {
+  state: {
+    email: string,
+    emailError: string,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      email: '',
+      emailError: '',
+    };
+  }
+
+  handleEmailChange = e => {
+    this.setState({
+      email: e.target.value,
+      emailError: '',
+    });
+  };
+
+  saveEmail = e => {
+    e.preventDefault();
+    const { email } = this.state;
+    const { updateUserEmail } = this.props;
+
+    if (!isEmail(email)) {
+      return this.setState({
+        emailError: 'Please enter a valid email address',
+      });
+    }
+
+    return updateUserEmail(email)
+      .then(({ data: { updateUserEmail } }) => {
+        this.props.dispatch(
+          addToastWithTimeout(
+            'success',
+            `A confirmation email has been sent to ${email}!`
+          )
+        );
+        return this.setState({
+          email: '',
+        });
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
   handleChange = e => {
     let notificationType = e.target.id;
     let deliveryMethod = 'email';
@@ -83,10 +145,58 @@ class EmailSettings extends Component {
   };
 
   render() {
-    const { currentUser: { settings: { notifications } } } = this.props;
+    const {
+      currentUser: { settings: { notifications } },
+      currentUser,
+    } = this.props;
+    const { emailError } = this.state;
     const settings = parseNotificationTypes(
       notifications
     ).filter(notification => notification.hasOwnProperty('emailValue'));
+
+    if (!currentUser.email) {
+      return (
+        <StyledCard
+          smallOnly={this.props.smallOnly}
+          largeOnly={this.props.largeOnly}
+        >
+          <ListHeader>
+            <LargeListHeading>Turn on email notifications</LargeListHeading>
+          </ListHeader>
+          <ListContainer>
+            <Description>
+              You can customize your email notifications to keep up to date on
+              what's important to you on Spectrum. Enter your email below and
+              we'll send you a confirmation link.
+            </Description>
+
+            {currentUser.pendingEmail && (
+              <Notice>
+                A confirmation link was sent to {currentUser.pendingEmail}. You
+                can resend the confirmation below, or enter a new email address.
+              </Notice>
+            )}
+
+            <EmailForm
+              onSubmit={this.saveEmail}
+              style={{ marginTop: '8px', marginBottom: '8px' }}
+            >
+              <Input
+                type="email"
+                defaultValue={null}
+                onChange={this.handleEmailChange}
+                placeholder={'Add your email address'}
+              >
+                Email Address
+              </Input>
+
+              <Button onClick={this.saveEmail}>Save</Button>
+            </EmailForm>
+            {emailError && <Error>{emailError}</Error>}
+          </ListContainer>
+        </StyledCard>
+      );
+    }
 
     return (
       <StyledCard
@@ -140,6 +250,8 @@ class EmailSettings extends Component {
   }
 }
 
-export default compose(toggleNotificationSettingsMutation, connect())(
-  EmailSettings
-);
+export default compose(
+  toggleNotificationSettingsMutation,
+  updateUserEmailMutation,
+  connect()
+)(EmailSettings);

@@ -1,8 +1,6 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getCommunityById } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
@@ -21,7 +19,7 @@ const CommunityInviteComponent = ({ data }) => {
   return <CommunityProfile profileSize={'miniWithAction'} data={data} />;
 };
 
-const CommunityInvite = compose(getCommunityById, displayLoadingCard, pure)(
+const CommunityInvite = compose(getCommunityById, displayLoadingCard)(
   CommunityInviteComponent
 );
 

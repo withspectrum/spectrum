@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StyledHeader, Heading, Subheading, HeaderText } from '../style';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 
 type Props = {
   community: {

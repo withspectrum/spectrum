@@ -9,7 +9,6 @@ class Overview extends Component {
         <HeaderZoneBoy>
           <SectionTitle>Overview</SectionTitle>
         </HeaderZoneBoy>
-
         <OverviewNumbers />
       </Section>
     );

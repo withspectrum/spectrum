@@ -1,14 +1,14 @@
 // @flow
 const { listenToNewNotifications } = require('../../models/notification');
-const pubsub = require('./pubsub');
-const channels = require('./channels');
 import { sendNotificationAsWebPush } from '../../utils/web-push';
+import asyncify from '../../utils/asyncify';
 
+// TODO(@mxstbr): This should live somewhere else.
 const newNotification = notification => {
-  pubsub.publish(channels.NOTIFICATION_ADDED, notification);
   sendNotificationAsWebPush(notification);
 };
+listenToNewNotifications(newNotification);
 
-module.exports = () => {
-  listenToNewNotifications(newNotification);
-};
+module.exports = asyncify(listenToNewNotifications, err => {
+  throw new Error(err);
+});

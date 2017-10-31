@@ -27,8 +27,8 @@ export const Wrapper = styled.div`
 export const InboxWrapper = styled.div`
   display: flex;
   width: 100%;
-  max-width: 440px;
-  min-width: 320px;
+  max-width: 400px;
+  min-width: 400px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
@@ -38,6 +38,7 @@ export const InboxWrapper = styled.div`
 
   @media (max-width: 768px) {
     max-width: 100%;
+    min-width: 100%;
     flex: auto;
     border-right: none;
   }
@@ -52,9 +53,10 @@ export const InboxScroller = styled.div`
 
 export const CommunityListWrapper = styled.div`
   display: flex;
-  width: 256px;
-  min-width: 256px;
+  width: 72px;
+  min-width: 72px;
   overflow-y: hidden;
+  overflow-x: visible;
   position: relative;
   align-self: stretch;
   flex-direction: column;
@@ -64,6 +66,31 @@ export const CommunityListWrapper = styled.div`
   transition: ${Transition.hover.off};
   padding-bottom: 48px;
 
+  .channelsContainer {
+    max-height: 0;
+    padding: 0;
+    transition-delay: 1s;
+    transform: translateZ(0);
+    transition: ${Transition.hover.off};
+
+    .divider {
+      max-width: 0;
+      border-top: 1px solid ${props => props.theme.bg.wash};
+      height: 0;
+      margin: 12px 0 8px -28px;
+      position: relative;
+      right: -20px;
+      transition-delay: 1s;
+      transition: ${Transition.hover.on};
+    }
+  }
+
+  .communityListText {
+    opacity: 0;
+    transform: translateZ(0);
+    transition: ${Transition.hover.off};
+  }
+
   img {
     opacity: 0.4;
     filter: grayscale(60%);
@@ -72,8 +99,33 @@ export const CommunityListWrapper = styled.div`
 
   &:hover {
     transform: translateZ(0);
-    // width: 256px;
+    width: 256px;
+    min-width: 256px;
     transition: ${Transition.hover.on};
+    transition-delay: 1s;
+
+    .channelsContainer {
+      max-height: 1000px;
+      padding: 8px 8px 12px;
+      transform: translateZ(0);
+      transition: ${Transition.hover.on};
+      transition-delay: 1s;
+
+      .divider {
+        max-width: 230px;
+        border-top: 1px solid ${props => props.theme.bg.border};
+        height: 1px;
+        transition-delay: 1s;
+        transition: ${Transition.hover.on};
+      }
+    }
+
+    .communityListText {
+      opacity: 1;
+      transform: translateZ(0);
+      transition: ${Transition.hover.on};
+      transition-delay: 1s;
+    }
 
     img {
       filter: grayscale(0%);
@@ -82,13 +134,12 @@ export const CommunityListWrapper = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 956px) {
     display: none;
   }
 `;
 
 export const CommunityListItem = styled.div`
-  padding: 6px;
   margin: 4px 12px;
   border-radius: 5px;
   display: flex;
@@ -130,21 +181,41 @@ export const CommunityListItem = styled.div`
   }
 `;
 
-export const ExploreCommunityListItem = styled(CommunityListItem)`
+export const CommunityListPadding = styled.div`
+  display: flex;
+  padding: 6px;
+`;
+
+export const Fixed = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 255px;
-  color: ${props => props.theme.text.alt};
+  width: 100%;
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
-  margin: 0;
-  padding: 8px 16px;
-  border-radius: 0;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
     background: ${props => props.theme.bg.default};
-    border: 1px solid transparent;
+
+    div {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.default};
+    }
+  }
+`;
+
+export const ExploreCommunityListItem = styled(CommunityListItem)`
+  color: ${props => props.theme.text.alt};
+  margin: 1px 12px;
+  margin-top: 0 !important; //need to override the first child selector above
+  padding: 6px;
+  border-radius: ${props => (props.upsell ? '4px' : '0')};
+
+  ${Truncate} &:hover {
+    color: ${props =>
+      props.upsell ? props.theme.text.default : props.theme.brand.alt};
+    border: 1px solid
+      ${props => (props.upsell ? props.theme.bg.border : 'transparent')};
 
     div {
       color: ${props => props.theme.brand.alt};
@@ -156,7 +227,8 @@ export const CommunityListText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  ${Truncate};
+  max-width: 100%;
+  white-space: nowrap;
 `;
 
 export const CommunityListName = styled.p`
@@ -164,6 +236,7 @@ export const CommunityListName = styled.p`
   font-weight: 500;
   margin-left: 12px;
   line-height: 1.28;
+  max-width: 164px;
 
   ${Truncate};
 `;
@@ -174,8 +247,7 @@ export const CommunityListReputation = styled.div`
   margin-left: 12px;
   line-height: 1;
   color: ${props => props.theme.text.alt};
-
-  ${Truncate};
+  width: 100%;
 `;
 
 export const AllCommunityListItem = styled.div`
@@ -197,6 +269,7 @@ export const ExploreListItem = styled(AllCommunityListItem)`
   background: none;
   margin-right: 3px;
   border-radius: 0;
+  ${Truncate};
 `;
 
 export const CommunityListAvatar = styled.img`
@@ -531,9 +604,9 @@ export const PillLink = styled(Link)`
 `;
 
 export const PillLinkPinned = styled.div`
-  background: #fff1cc;
-  border: 1px solid #ffd566;
-  color: #715818;
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
   display: flex;
   height: 20px;
   border-radius: 4px;
@@ -603,59 +676,9 @@ export const PinIcon = styled.span`
   margin-left: -2px;
 `;
 
-export const UserProfileContainer = styled.div`
-  display: flex;
-  padding: 16px 16px 12px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  align-items: center;
-`;
-
-export const UserProfileText = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  flex: auto;
-  margin-left: 14px;
-  justify-content: center;
-`;
-
-export const UserProfileName = styled.p`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.default};
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileNameLink = styled(Link)`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.default};
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileReputation = styled.div`
-  display: flex;
-  color: ${props => props.theme.text.alt};
-  font-size: 13px;
-  line-height: 1.28;
-  ${Truncate};
-`;
-
-export const UserProfileSettingsLink = styled(Link)`
-  color: ${props => props.theme.text.alt};
-  cursor: pointer;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
 export const ChannelsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px 8px 4px;
 `;
 
 export const ChannelListItem = styled.div`
@@ -665,8 +688,7 @@ export const ChannelListItem = styled.div`
   font-weight: ${props => (props.active ? '500' : '400')};
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
-
-  .icon {
+  ${Truncate} .icon {
     position: relative;
     top: 4px;
     left: -2px;
@@ -677,12 +699,7 @@ export const ChannelListItem = styled.div`
   }
 `;
 
-export const ChannelListDivider = styled.div`
-  width: calc(100% + 28px);
-  border-top: 1px solid ${props => props.theme.bg.border};
-  height: 1px;
-  margin: 12px 0 4px -14px;
-`;
+export const ChannelListDivider = styled.div``;
 
 const placeHolderShimmer = keyframes`
 	0%{
@@ -721,4 +738,11 @@ export const LoadingBar = styled.div`
     ${({ theme }) => theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
+`;
+
+export const UpsellExploreDivider = styled.div`
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  display: block;
+  width: 100%;
+  margin: 16px 0 16px;
 `;

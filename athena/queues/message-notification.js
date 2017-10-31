@@ -1,6 +1,8 @@
+// @flow
 const debug = require('debug')('athena:queue:message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
+import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
 import {
   storeNotification,
   updateNotification,
@@ -11,180 +13,99 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 import { getThreadNotificationUsers } from '../models/usersThreads';
-import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
-import sentencify from '../utils/sentencify';
-import bufferNotificationEmail from './buffer-message-notification-email';
-import { toPlainText, toState } from 'shared/draft-utils';
 
-const formatAndBufferNotificationEmail = (
-  recipient,
-  thread,
-  user,
-  message,
-  notification
-) => {
-  if (!recipient || !recipient.email || !thread || !user || !message) {
-    debug(
-      '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
-      recipient,
-      thread,
-      user,
-      message
-    );
-    return Promise.resolve();
-  }
-
-  return bufferNotificationEmail(
-    recipient,
-    {
-      ...thread,
-      replies: [
-        {
-          sender: {
-            id: user.id,
-            profilePhoto: user.profilePhoto,
-            name: user.name,
-          },
-          content: {
-            body:
-              message.messageType === 'draftjs'
-                ? toPlainText(toState(JSON.parse(message.content.body)))
-                : message.content.body,
-          },
-        },
-      ],
+type JobData = {
+  data: {
+    message: {
+      senderId: string,
+      threadId: string,
     },
-    notification
-  );
+    userId: string,
+  },
 };
-
-const processMessageNotificationQueue = job => {
-  const incomingMessage = job.data.message;
-  const currentUserId = job.data.userId;
-
-  // Determine what the context type should be based on the message that was sent
-  const contextType =
-    incomingMessage.threadType === 'directMessageThread'
-      ? 'DIRECT_MESSAGE_THREAD'
-      : 'THREAD';
+export default async (job: JobData) => {
+  const { message: incomingMessage, userId: currentUserId } = job.data;
 
   debug(
-    `new job: message sent by ${currentUserId} in ${contextType.toLowerCase()}#${incomingMessage.threadId}`
+    `new job: message sent by ${currentUserId} in thread #${incomingMessage.threadId}`
   );
 
-  /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
-    - entity
-  */
-  const getPayloads = [
-    // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
-    checkForExistingNotification('MESSAGE_CREATED', incomingMessage.threadId),
-    //get the user who left the message
-    fetchPayload('USER', incomingMessage.senderId),
-    // get the thread the message was left in - could be a dm or story depending on the contextType
-    fetchPayload(contextType, incomingMessage.threadId),
-    // create an entity payload with the message that was sent
-    createPayload('MESSAGE', incomingMessage),
-  ];
+  // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
+  const existing = await checkForExistingNotification(
+    'MESSAGE_CREATED',
+    incomingMessage.threadId
+  );
 
-  return Promise.all(getPayloads)
-    .then(([existing, actor, context, entity]) => {
-      debug(`payloads loaded, generating notification data`);
-      // Calculate actors
-      const previousActors = existing ? existing.actors : [];
-      const actors = getDistinctActors([...previousActors, actor]);
+  //get the user who left the message
+  const actor = await fetchPayload('USER', incomingMessage.senderId);
 
-      // Calculate entities
-      const previousEntities = existing ? existing.entities : [];
-      const entities = [...previousEntities, entity];
+  // get the thread the message was left in
+  const context = await fetchPayload('THREAD', incomingMessage.threadId);
 
-      // Create notification
-      const newNotification = Object.assign({}, existing || {}, {
-        actors: actors,
-        event: 'MESSAGE_CREATED',
-        context,
-        entities: entities,
-      });
+  // create an entity payload with the message that was sent
+  const entity = await createPayload('MESSAGE', incomingMessage);
 
-      debug(
-        existing
-          ? 'updating exisiting notification'
-          : 'creating new notification'
-      );
-      const notificationPromise = existing
-        ? updateNotification(newNotification)
-        : storeNotification(newNotification);
+  // Calculate actors
+  // determine if there are previous actors we need to process separately
+  const previousActors = existing ? existing.actors : [];
+  const actors = await getDistinctActors([...previousActors, actor]);
 
-      return (
-        notificationPromise
-          // Do the .then here so we keep the loaded data in scope
-          .then(notification => {
-            const getRecipients =
-              contextType === 'DIRECT_MESSAGE_THREAD'
-                ? getDirectMessageThreadMembers(notification.context.id)
-                : getThreadNotificationUsers(notification.context.id);
+  // Calculate entities
+  const previousEntities = existing ? existing.entities : [];
+  const entities = [...previousEntities, entity];
 
-            debug('get recipients for notification');
-            return Promise.all([notification, getRecipients]);
-          })
-          .then(([notification, recipients]) => {
-            // filter out the user who sent the message, as they should not recieve a notification for their own messages
-            const filteredRecipients = recipients.filter(
-              recipient => recipient.userId !== currentUserId
-            );
+  // Create notification
+  const newNotification = Object.assign({}, existing || {}, {
+    actors: actors,
+    event: 'MESSAGE_CREATED',
+    context,
+    entities: entities,
+  });
 
-            debug(
-              (existing
-                ? 'mark existing usersnotifications as new'
-                : 'store new usersnotifications records') +
-                ' and add notification emails to queue for all recipients'
-            );
-            const thread = JSON.parse(context.payload);
-            const message = JSON.parse(entity.payload);
-            const user = JSON.parse(actor.payload);
-            const dbMethod = existing
-              ? markUsersNotificationsAsNew
-              : storeUsersNotifications;
-            return Promise.all(
-              filteredRecipients.map(recipient => {
-                formatAndBufferNotificationEmail(
-                  recipient,
-                  // Return direct message thread data in the same format as normal threads
-                  contextType === 'DIRECT_MESSAGE_THREAD'
-                    ? {
-                        content: {
-                          // Contruct title out of direct message thread users
-                          title: `your conversation with ${sentencify(
-                            recipients
-                              .filter(
-                                userThread =>
-                                  userThread.userId !== recipient.userId
-                              )
-                              .map(user => user.name)
-                          )}`,
-                        },
-                        path: `messages/${thread.id}`,
-                        id: thread.id,
-                      }
-                    : {
-                        ...thread,
-                        path: `thread/${thread.id}`,
-                      },
-                  user,
-                  message,
-                  notification
-                );
-                return dbMethod(notification.id, recipient.userId);
-              })
-            );
-          })
-      );
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  const notification = existing
+    ? await updateNotification(newNotification)
+    : await storeNotification(newNotification);
+
+  // determine who should get notified
+  const recipients = await getThreadNotificationUsers(notification.context.id);
+
+  // filter out the user who sent the message
+  const filteredRecipients = recipients.filter(
+    recipient => recipient.userId !== currentUserId
+  );
+
+  if (!filteredRecipients || filteredRecipients.length === 0) {
+    debug('No recipients for this message notification');
+    return;
+  }
+
+  // get raw data for the email
+  const thread = JSON.parse(context.payload);
+  const message = JSON.parse(entity.payload);
+  const user = JSON.parse(actor.payload);
+  const dbMethod = existing
+    ? markUsersNotificationsAsNew
+    : storeUsersNotifications;
+
+  // send each recipient a notification
+  const formatAndBufferPromises = filteredRecipients.map(recipient => {
+    formatAndBufferNotificationEmail(
+      recipient,
+      {
+        ...thread,
+        path: `thread/${thread.id}`,
+      },
+      user,
+      message,
+      notification
+    );
+
+    // store or update the notification in the db to trigger a ui update in app
+    debug('Updating the notification record in the db');
+    return dbMethod(notification.id, recipient.userId);
+  });
+
+  return Promise.all(formatAndBufferPromises).catch(err => {
+    console.log(err);
+  });
 };
-
-export default processMessageNotificationQueue;

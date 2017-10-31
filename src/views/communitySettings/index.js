@@ -1,6 +1,5 @@
 import React from 'react';
 import compose from 'recompose/compose';
-import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { getThisCommunity } from './queries';
 import { Loading } from '../../components/loading';
@@ -21,10 +20,8 @@ class CommunitySettings extends React.Component<Props> {
   render() {
     const {
       match,
-      history,
       data: { community },
       location,
-      dispatch,
       isLoading,
       hasError,
     } = this.props;
@@ -33,7 +30,7 @@ class CommunitySettings extends React.Component<Props> {
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');
     const activeRoute = pathname.substr(lastIndex + 1);
-    const communitySlug = match.params.communitySlug;
+    const communitySlug = community && community.slug;
 
     if (community) {
       if (!community.communityPermissions.isOwner) {
@@ -132,6 +129,6 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getThisCommunity, viewNetworkHandler, pure)(
+export default compose(connect(), getThisCommunity, viewNetworkHandler)(
   CommunitySettings
 );

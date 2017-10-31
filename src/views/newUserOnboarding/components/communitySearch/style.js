@@ -8,7 +8,7 @@ import {
   hexa,
   zIndex,
 } from '../../../../components/globals';
-import { Avatar } from '../../../../components/avatar';
+import Avatar from '../../../../components/avatar';
 import Icon from '../../../../components/icons';
 
 export const SearchWrapper = styled.div`

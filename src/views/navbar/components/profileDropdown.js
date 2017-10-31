@@ -1,7 +1,6 @@
+// @flow
 import React from 'react';
-// @FlowFixMe
 import styled from 'styled-components';
-// @FlowFixMe
 import { Link } from 'react-router-dom';
 import Dropdown from '../../../components/dropdown';
 
@@ -37,7 +36,9 @@ const UserProfileDropdownListItem = styled.li`
   }
 `;
 
-export const ProfileDropdown = props => {
+type ProfileProps = Object;
+
+export const ProfileDropdown = (props: ProfileProps) => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>

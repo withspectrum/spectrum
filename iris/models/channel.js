@@ -116,6 +116,13 @@ const getChannelBySlug = (
     });
 };
 
+const getChannelById = (id: string) => {
+  return db
+    .table('channels')
+    .get(id)
+    .run();
+};
+
 type GetChannelByIdArgs = {
   id: string,
 };
@@ -150,6 +157,34 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
     .run();
 
   return Promise.all([getThreadCount, getMemberCount]);
+};
+
+type GroupedCount = {
+  group: string,
+  reduction: number,
+};
+
+const getChannelsThreadCounts = (
+  channelIds: Array<string>
+): Promise<Array<GroupedCount>> => {
+  return db
+    .table('threads')
+    .getAll(...channelIds, { index: 'channelId' })
+    .group('channelId')
+    .count()
+    .run();
+};
+
+const getChannelsMemberCounts = (
+  channelIds: Array<string>
+): Promise<Array<GroupedCount>> => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .filter({ isBlocked: false, isPending: false })
+    .group('channelId')
+    .count()
+    .run();
 };
 
 export type CreateChannelArguments = {
@@ -299,6 +334,7 @@ const getChannelMemberCount = (channelId: string): number => {
 
 module.exports = {
   getChannelBySlug,
+  getChannelById,
   getChannelMetaData,
   getChannelsByUser,
   getChannelsByCommunity,
@@ -309,5 +345,7 @@ module.exports = {
   editChannel,
   deleteChannel,
   getChannelMemberCount,
+  getChannelsMemberCounts,
+  getChannelsThreadCounts,
   getChannels,
 };

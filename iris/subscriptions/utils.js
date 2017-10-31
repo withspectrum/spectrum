@@ -11,9 +11,15 @@ export const userCanViewChannel = async (channelId: string, userId: string) => {
   // Everybody can view public channels
   if (!channel.isPrivate) return true;
 
-  // If you're not signed in you can't subscribe to private channels
   if (!userId) return false;
+  return await userIsMemberOfChannel(channelId, userId);
+};
 
+export const userIsMemberOfChannel = async (
+  channelId: string,
+  userId: string
+) => {
+  if (!userId) return false;
   const { isMember } = await getUserPermissionsInChannel(channelId, userId);
   return isMember;
 };

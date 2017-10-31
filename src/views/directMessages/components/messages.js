@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
-import ChatMessages from '../../../components/chatMessages';
+import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import { Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
@@ -70,6 +68,7 @@ class MessagesWithData extends Component {
   render() {
     const {
       data: { error, messages, hasNextPage, fetchMore, networkStatus },
+      toggleReaction,
     } = this.props;
 
     if (error) {
@@ -82,7 +81,21 @@ class MessagesWithData extends Component {
     // TODO: FIXME and remove the networkStatus === 7
     if (messages && networkStatus === 7) {
       let unsortedMessages = messages.map(message => message.node);
-      let sortedMessages = sortAndGroupMessages(unsortedMessages);
+
+      const unique = array => {
+        const processed = [];
+        for (let i = array.length - 1; i >= 0; i--) {
+          if (processed.indexOf(array[i].id) < 0) {
+            processed.push(array[i].id);
+          } else {
+            array.splice(i, 1);
+          }
+        }
+        return array;
+      };
+
+      const uniqueMessages = unique(unsortedMessages);
+      const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
         <MessagesScrollWrapper>
@@ -101,7 +114,7 @@ class MessagesWithData extends Component {
             </HasNextPage>
           )}
           <ChatMessages
-            toggleReaction={this.props.toggleReaction}
+            toggleReaction={toggleReaction}
             messages={sortedMessages}
             forceScrollToBottom={this.props.forceScrollToBottom}
             contextualScrollToBottom={this.props.contextualScrollToBottom}
@@ -123,8 +136,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   setLastSeenMutation,
-  getDirectMessageThreadMessages,
-  pure
+  getDirectMessageThreadMessages
 )(MessagesWithData);
 
 export default Messages;

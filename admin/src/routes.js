@@ -7,6 +7,7 @@ import { history } from './helpers/history';
 import ModalRoot from './components/modals/modalRoot';
 import Toasts from './components/toasts';
 import Users from './views/users';
+import Threads from './views/threads';
 import Communities from './views/communities';
 import Navbar from './views/navbar';
 import Dashboard from './views/dashboard';
@@ -47,6 +48,7 @@ class Routes extends Component {
             <Route path="/users" component={Users} />
             <Route path="/communities/:slug" component={Communities} />
             <Route path="/communities" component={Communities} />
+            <Route path="/threads" component={Threads} />
           </Switch>
         </Body>
       </Router>

@@ -2,7 +2,7 @@ import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 import {
   ThreadContext,
   ThreadContextAvatar,
@@ -28,7 +28,7 @@ const FormattedThreadLocation = props => {
             community
             size={20}
             radius={8}
-            src={props.data.channel.community.profilePhoto}
+            src={props.data.community.profilePhoto}
           />
         </ThreadContextAvatar>
       )}
@@ -36,16 +36,16 @@ const FormattedThreadLocation = props => {
         {(needsCommunityDetails || needsChannelDetails) && (
             <Location>
               {needsCommunityDetails && (
-                <Link to={`/${props.data.channel.community.slug}`}>
-                  {props.data.channel.community.name}
+                <Link to={`/${props.data.community.slug}`}>
+                  {props.data.community.name}
                 </Link>
               )}
               {needsCommunityDetails &&
                 needsChannelDetails && <span>{' / '}</span>}
               {needsChannelDetails && (
                 <Link
-                  to={`/${props.data.channel.community.slug}/${props.data
-                    .channel.slug}`}
+                  to={`/${props.data.community.slug}/${props.data.channel
+                    .slug}`}
                 >
                   {props.data.channel.isPrivate && (
                     <Lock>

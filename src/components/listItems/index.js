@@ -5,13 +5,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { ReputationMini } from '../reputation';
+import Reputation from '../reputation';
 import {
   Wrapper,
   WrapperLi,
@@ -40,7 +38,8 @@ type CommunityProps = {
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const { community, showDescription, showMeta, meta, children } = this.props;
+    const { community, showDescription, children, reputation } = this.props;
+
     return (
       <Wrapper>
         <Row>
@@ -53,14 +52,11 @@ export class CommunityListItem extends React.Component<CommunityProps> {
           />
           <Col style={{ marginLeft: '12px' }}>
             <Heading>{community.name}</Heading>
-            {showMeta && (
+
+            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+            {reputation > -1 && (
               <Meta>
-                {meta && (
-                  <span>
-                    <ReputationMini tipText={'Your rep in this community'} />
-                    {meta}
-                  </span>
-                )}
+                <Reputation size={'default'} reputation={reputation} />
               </Meta>
             )}
           </Col>
@@ -152,7 +148,15 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
+  reputationTipText = 'Your rep in this community',
 }: Object): React$Element<any> => {
+  const reputation = user.contextPermissions
+    ? user.contextPermissions.reputation &&
+      user.contextPermissions.reputation > 0 &&
+      user.contextPermissions.reputation
+    : user.totalReputation && user.totalReputation > 0
+      ? user.totalReputation
+      : '0';
   return (
     <Wrapper border>
       <Row>
@@ -171,22 +175,11 @@ export const UserListItem = ({
             )}
           </Heading>
           <Meta>
-            {user.username && (
-              <span>
-                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
-              </span>
-            )}
             {(user.totalReputation || user.contextPermissions) && (
-                <span>
-                  <ReputationMini tipText={'Rep in this community'} />
-                  {user.contextPermissions
-                    ? user.contextPermissions.reputation &&
-                      user.contextPermissions.reputation > 0 &&
-                      user.contextPermissions.reputation.toLocaleString()
-                    : user.totalReputation && user.totalReputation > 0
-                      ? user.totalReputation.toLocaleString()
-                      : '0'}
-                </span>
+                <Reputation
+                  tipText={reputationTipText}
+                  reputation={reputation}
+                />
               )}
           </Meta>
         </Col>
@@ -250,4 +243,4 @@ class InvoiceListItemPure extends React.Component {
   }
 }
 
-export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);
+export const InvoiceListItem = compose(connect())(InvoiceListItemPure);

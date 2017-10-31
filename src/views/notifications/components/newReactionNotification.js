@@ -9,8 +9,6 @@ import { ActorsRow } from './actorsRow';
 import {
   NotificationCard,
   TextContent,
-  BubbleGroupContainer,
-  BubbleContainer,
   NotificationListRow,
   AttachmentsWash,
   ReactionContext,
@@ -18,13 +16,9 @@ import {
   HzRule,
 } from '../style';
 import Icon from '../../../components/icons';
-import { ReactionWrapper } from '../../../components/reaction/style';
-import { convertTimestampToTime, truncate } from '../../../helpers/utils';
-import {
-  MessagesWrapper,
-  MessageWrapper,
-} from '../../../components/chatMessages/style';
-import { Bubble, ImgBubble } from '../../../components/bubbles';
+import { truncate } from '../../../helpers/utils';
+import { MessageGroup } from '../../../components/messageGroup/style';
+import Message from '../../../components/message';
 import {
   CardLink,
   CardContent,
@@ -61,64 +55,18 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
               <Icon glyph="message" />
               <hr />
             </HzRule>
-            <BubbleContainer me={true}>
-              <BubbleGroupContainer me={true}>
-                <MessagesWrapper>
-                  {message.messageType === 'text' && (
-                    <MessageWrapper
-                      me={false}
-                      timestamp={convertTimestampToTime(message.timestamp)}
-                    >
-                      <Bubble
-                        me={true}
-                        pending={false}
-                        type={'thread'}
-                        message={message.content}
-                      />
-                      <ReactionWrapper
-                        hasCount={true}
-                        active={true}
-                        me={true}
-                        hide={false}
-                        dummy={true}
-                      >
-                        <Icon
-                          glyph="like-fill"
-                          size={16}
-                          color={'text.reverse'}
-                        />
-                      </ReactionWrapper>
-                    </MessageWrapper>
-                  )}
-                  {message.messageType === 'media' && (
-                    <MessageWrapper
-                      me={false}
-                      timestamp={convertTimestampToTime(message.timestamp)}
-                    >
-                      <ImgBubble
-                        me={false}
-                        pending={false}
-                        imgSrc={message.content.body}
-                        message={message.content}
-                      />
-                      <ReactionWrapper
-                        hasCount={true}
-                        active={true}
-                        me={true}
-                        hide={false}
-                        dummy={true}
-                      >
-                        <Icon
-                          glyph="like-fill"
-                          size={16}
-                          color={'text.reverse'}
-                        />
-                      </ReactionWrapper>
-                    </MessageWrapper>
-                  )}
-                </MessagesWrapper>
-              </BubbleGroupContainer>
-            </BubbleContainer>
+
+            <MessageGroup me={true}>
+              <Message
+                message={message}
+                link={`#${message.id}`}
+                me={true}
+                canModerate={false}
+                pending={message.id < 0}
+                currentUser={currentUser}
+                context={'notification'}
+              />
+            </MessageGroup>
           </AttachmentsWash>
         </Content>
       </CardContent>

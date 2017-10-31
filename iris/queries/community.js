@@ -13,10 +13,7 @@ const {
   getCommunityGrowth,
 } = require('../models/community');
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
-const {
-  getUserPermissionsInCommunity,
-  getMembersInCommunity,
-} = require('../models/usersCommunities');
+const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
 const { getUserByUsername } = require('../models/user');
 const {
@@ -31,7 +28,6 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
-import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -54,8 +50,8 @@ module.exports = {
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
-    searchCommunities: (_: any, { string }: { string: string }) =>
-      getCommunitiesBySearchString(string),
+    searchCommunities: (_: any, { string, amount = 30 }: { string: string }) =>
+      getCommunitiesBySearchString(string, amount),
     searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
       const currentUser = user;
 
@@ -78,10 +74,12 @@ module.exports = {
     communityPermissions: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
-      if (!id || !user) return false;
-      return getUserPermissionsInCommunity(id, user.id);
+      if (!id || !user) return {};
+      return loaders.userPermissionsInCommunity
+        .load([user.id, id])
+        .then(result => (result ? result : {}));
     },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
@@ -192,13 +190,14 @@ module.exports = {
           };
         });
     },
-    metaData: ({ id }: { id: string }) => {
-      return getCommunityMetaData(id).then(data => {
-        return {
-          channels: data[0],
-          members: data[1],
-        };
-      });
+    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return Promise.all([
+        loaders.communityChannelCount.load(id),
+        loaders.communityMemberCount.load(id),
+      ]).then(([channelCount, memberCount]) => ({
+        channels: channelCount ? channelCount.reduction : 0,
+        members: memberCount ? memberCount.reduction : 0,
+      }));
     },
     slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
@@ -227,7 +226,7 @@ module.exports = {
     recurringPayments: (
       { id }: { id: string },
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -236,15 +235,18 @@ module.exports = {
       }
 
       const queryRecurringPayments = async () => {
-        const userPermissions = await getUserPermissionsInCommunity(
+        const userPermissions = await loaders.userPermissionsInCommunity.load([
+          currentUser.id,
           id,
-          currentUser.id
-        );
+        ]);
         if (!userPermissions.isOwner) return;
 
-        const rPayments = await getCommunityRecurringPayments(id);
+        const results = await loaders.communityRecurringPayments.load(id);
+        const rPayments = results && results.reduction;
+
         const communitySubscriptions =
           rPayments &&
+          rPayments.length > 0 &&
           rPayments.filter(obj => obj.planId === 'community-standard');
 
         if (!communitySubscriptions || communitySubscriptions.length === 0)
@@ -262,7 +264,7 @@ module.exports = {
     memberGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -270,10 +272,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -315,7 +317,7 @@ module.exports = {
     conversationGrowth: async (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -323,10 +325,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -367,10 +369,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       if (!isOwner) {
         return new UserError(
@@ -394,10 +396,10 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await getUserPermissionsInCommunity(
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
         id,
-        currentUser.id
-      );
+      ]);
 
       return getThreadsByCommunityInTimeframe(
         id,
@@ -435,13 +437,49 @@ module.exports = {
         };
       });
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) =>
-      // loaders.communityRecurringPayments.load(id),
-      {
-        return getCommunityRecurringPayments(id).then(subs => {
-          let filtered = subs && subs.filter(sub => sub.status === 'active');
-          return !filtered || filtered.length === 0 ? false : true;
-        });
-      },
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return loaders.communityRecurringPayments.load(id).then(res => {
+        const subs = res && res.reduction;
+        if (!subs || subs.length === 0) return false;
+        if (!Array.isArray(subs)) return subs.status === 'active';
+
+        return subs.some(sub => sub.status === 'active');
+      });
+    },
+    contextPermissions: (
+      community: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
+      // in some cases we fetch this upstream - e.g. in the case of querying for communitysThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
+      if (community.contextPermissions) return community.contextPermissions;
+
+      const queryName = info.operation.name.value;
+
+      const handleCheck = async () => {
+        switch (queryName) {
+          case 'getUser': {
+            const username = info.variableValues.username;
+            const user = await getUserByUsername(username);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              community.id,
+            ]);
+            return {
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+        }
+      };
+
+      return handleCheck();
+    },
   },
 };

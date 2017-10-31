@@ -1,21 +1,15 @@
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
-import { IS_EMAIL } from '../../../helpers/regexps';
+import isEmail from 'validator/lib/isEmail';
 import { sendEmailInvitationsMutation } from '../../../api/community';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  ButtonContainer,
   EmailInviteForm,
   EmailInviteInput,
   AddRow,
@@ -26,11 +20,6 @@ import {
   SectionTitle,
   SectionCardFooter,
 } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  Description,
-} from '../../../components/listItems/style';
 
 type Props = {
   community: Object,
@@ -119,6 +108,7 @@ class EmailInvites extends React.Component<Props, State> {
       .filter(contact => contact.error === false)
       .filter(contact => contact.email.length > 0)
       .filter(contact => contact.email !== currentUser.email)
+      .filter(contact => isEmail(contact.email))
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
@@ -222,7 +212,7 @@ class EmailInvites extends React.Component<Props, State> {
 
   validate = (e, i) => {
     const { contacts } = this.state;
-    if (!e.target.value.match(IS_EMAIL)) {
+    if (!isEmail(e.target.value)) {
       contacts[i].error = true;
     } else {
       contacts[i].error = false;
@@ -353,13 +343,11 @@ const map = state => ({
 export const EmailInvitesWithoutCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesCard);
 export default EmailInvitesWithCard;

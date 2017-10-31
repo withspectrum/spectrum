@@ -1,5 +1,5 @@
 // @flow
-export const changeActiveThread = (threadId: string) => {
+export const changeActiveThread = (threadId: ?string) => {
   return {
     type: 'SELECT_FEED_THREAD',
     threadId,

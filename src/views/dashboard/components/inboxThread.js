@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -13,7 +11,6 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
-  InboxClickWrapper,
   InboxThreadContent,
   ThreadTitle,
   AttachmentsContainer,
@@ -40,9 +37,18 @@ class InboxThread extends Component {
     return (
       <InboxThreadItem active={active}>
         {isMobile ? (
-          <InboxLinkWrapper to={`?thread=${data.id}`} />
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?thread=${data.id}`,
+            }}
+          />
         ) : (
-          <InboxClickWrapper
+          <InboxLinkWrapper
+            to={{
+              pathname: window.location.pathname,
+              search: `?t=${data.id}`,
+            }}
             onClick={() => this.props.dispatch(changeActiveThread(data.id))}
           />
         )}
@@ -102,4 +108,4 @@ class InboxThread extends Component {
   }
 }
 
-export default compose(connect(), withRouter, pure)(InboxThread);
+export default compose(connect(), withRouter)(InboxThread);

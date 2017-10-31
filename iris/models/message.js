@@ -6,41 +6,52 @@ const { setThreadLastActive } = require('./thread');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
+// TODO: Fix this
+export type Message = Object;
 
-const getMessage = (messageId: string): Promise<Object> => {
+export const getMessage = (messageId: string): Promise<Message> => {
   return db
     .table('messages')
     .get(messageId)
-    .run();
+    .run()
+    .then(message => {
+      if (message.deletedAt) return null;
+      return message;
+    });
 };
 
-const getMessages = (threadId: String): Promise<Array<Object>> => {
+export const getMessages = (threadId: String): Promise<Array<Message>> => {
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
       index: 'threadIdAndTimestamp',
     })
     .orderBy({ index: 'threadIdAndTimestamp' })
+    .filter(db.row.hasFields('deletedAt').not())
     .run();
 };
 
-const getLastMessage = (threadId: string): Promise<Object> => {
+export const getLastMessage = (threadId: string): Promise<Message> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .max('timestamp')
     .run();
 };
 
-const getMediaMessagesForThread = (
+export const getMediaMessagesForThread = (
   threadId: String
-): Promise<Array<Object>> => {
+): Promise<Array<Message>> => {
   return getMessages(threadId).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };
 
-const storeMessage = (message: Object, userId: string): Promise<Object> => {
+export const storeMessage = (
+  message: Message,
+  userId: string
+): Promise<Message> => {
   // Insert a message
   return db
     .table('messages')
@@ -61,9 +72,12 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
-      addQueue('message notification', { message, userId });
+      if (message.threadType === 'directMessageThread') {
+        addQueue('direct message notification', { message, userId });
+      }
 
       if (message.threadType === 'story') {
+        addQueue('message notification', { message, userId });
         addQueue('process reputation event', {
           userId,
           type: 'message created',
@@ -77,24 +91,54 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     });
 };
 
-const listenToNewMessages = (cb: Function): Function => {
+export const listenToNewMessages = (cb: Function): Function => {
   return listenToNewDocumentsIn('messages', cb);
 };
 
-const getMessageCount = (threadId: string): Promise<number> => {
+export const getMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .count()
     .run();
 };
 
-module.exports = {
-  getMessage,
-  getMessages,
-  getLastMessage,
-  getMediaMessagesForThread,
-  storeMessage,
-  listenToNewMessages,
-  getMessageCount,
+export const getMessageCountInThreads = (
+  threadIds: Array<string>
+): Promise<Array<mixed>> => {
+  return db
+    .table('messages')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .group('threadId')
+    .count()
+    .run();
+};
+
+export const deleteMessage = (userId: string, id: string) => {
+  return db
+    .table('messages')
+    .get(id)
+    .update({
+      deletedAt: new Date(),
+    })
+    .run()
+    .then(res => {
+      addQueue('process reputation event', {
+        userId,
+        type: 'message deleted',
+        entityId: id,
+      });
+      return res;
+    });
+};
+
+export const userHasMessagesInThread = (threadId: string, userId: string) => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())('senderId')
+    .contains(userId)
+    .run();
 };

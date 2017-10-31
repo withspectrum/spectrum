@@ -3,8 +3,6 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
@@ -18,18 +16,13 @@ import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  ButtonContainer,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
   SectionCard,
   SectionCardFooter,
   SectionTitle,
 } from '../style';
-import {
-  StyledCard,
-  Description,
-  Notice,
-} from '../../../components/listItems/style';
+import { Description, Notice } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 
 type Props = {
@@ -289,14 +282,12 @@ export const ImportSlackWithoutCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
   connect(),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(ImportSlackNoCard);
 export const ImportSlackWithCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
   connect(),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(ImportSlackCard);
 export default ImportSlackWithCard;

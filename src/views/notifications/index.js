@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
@@ -299,6 +297,5 @@ export default compose(
   displayLoadingNotifications,
   markNotificationsSeenMutation,
   connect(mapStateToProps),
-  withInfiniteScroll,
-  pure
+  withInfiniteScroll
 )(NotificationsPure);

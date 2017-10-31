@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
@@ -524,5 +522,5 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
   </PageContainer>
 ));
 
-const StyleGuide = compose(pure)(StyleGuidePure);
+const StyleGuide = compose()(StyleGuidePure);
 export default StyleGuide;

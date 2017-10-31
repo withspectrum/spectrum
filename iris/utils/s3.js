@@ -64,6 +64,7 @@ const uploadImage = (file: Object, entity: EntityTypes, id: string) =>
       },
       (errMsg, errObject) => {
         // TODO: Figure out error handling in the backend if image upload fails
+        return new Error(errMsg);
         console.error('unable to upload: ' + errMsg + ':', errObject);
       }
     );

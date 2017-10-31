@@ -1,7 +1,7 @@
 import React from 'react';
 // $FlowFixMe
 import { ActorPhotosContainer, ActorPhotoItem } from '../style';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 
 export const ActorsRow = ({ actors }) => {
   return (

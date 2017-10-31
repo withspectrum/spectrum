@@ -132,6 +132,17 @@ export const getThreadsByCommunityInTimeframe = (
     .run();
 };
 
+export const getThreadsInTimeframe = (
+  range: string
+): Promise<Array<Object>> => {
+  const { current } = parseRange(range);
+  return db
+    .table('threads')
+    .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
 /*
   When viewing a user profile we have to take two arguments into account:
   1. The user who is being viewed

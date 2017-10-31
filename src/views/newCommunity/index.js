@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -244,6 +242,4 @@ class NewCommunity extends Component {
   }
 }
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default compose(pure, withApollo, connect(mapStateToProps))(
-  NewCommunity
-);
+export default compose(withApollo, connect(mapStateToProps))(NewCommunity);

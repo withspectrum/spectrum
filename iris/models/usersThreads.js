@@ -13,8 +13,7 @@ export const createParticipantInThread = (
 ): Promise<Object> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .run()
     .then(result => {
       if (result && result.length > 0) {
@@ -31,6 +30,17 @@ export const createParticipantInThread = (
         });
       }
     });
+};
+
+export const deleteParticipantInThread = (
+  threadId: string,
+  userId: string
+): Promise<boolean> => {
+  return db
+    .table('usersThreads')
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
+    .delete()
+    .run();
 };
 
 /*
@@ -64,15 +74,44 @@ export const getParticipantsInThread = (
     .run();
 };
 
+export const getParticipantsInThreads = (threadIds: Array<string>) => {
+  return db
+    .table('usersThreads')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter({ isParticipant: true })
+    .eqJoin('userId', db.table('users'))
+    .group(rec => rec('left')('threadId'))
+    .without({
+      left: ['createdAt', 'id', 'userId'],
+    })
+    .zip()
+    .run();
+};
+
 export const getThreadNotificationStatusForUser = (
   threadId: string,
   userId: string
 ): Promise<Array<Object>> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .run();
+};
+
+type UserIdAndThreadId = [string, string];
+
+export const getThreadsNotificationStatusForUsers = (
+  input: Array<UserIdAndThreadId>
+) => {
+  return db
+    .table('usersThreads')
+    .getAll(...input, { index: 'userIdAndThreadId' })
+    .run()
+    .then(result => {
+      if (!result) return Array.from({ length: input.length }).map(() => null);
+
+      return result;
+    });
 };
 
 export const updateThreadNotificationStatusForUser = (
@@ -82,8 +121,7 @@ export const updateThreadNotificationStatusForUser = (
 ): Promise<Object> => {
   return db
     .table('usersThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
+    .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .update({
       receiveNotifications: value,
     })

@@ -4,6 +4,7 @@ import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { userSettingsFragment } from './fragments/user/userSettings';
+import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 /*
   Upload a new profilePhoto for the given currentUser
@@ -80,6 +81,7 @@ const UPGRADE_TO_PRO_MUTATION = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
     upgradeToPro(input: $input) {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -114,6 +116,7 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
   mutation downgradeFromPro {
     downgradeFromPro {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -143,6 +146,7 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
   query getCurrentUserRecurringPayments {
     user: currentUser {
       ...userInfo
+      isPro
       recurringPayments {
         plan
         amount
@@ -169,20 +173,13 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
-      communityConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            id
-          }
-        }
-      }
+      isPro
+      totalReputation
+      ...userCommunities
     }
   }
   ${userInfoFragment}
+  ${userCommunitiesFragment}
 `;
 
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
@@ -249,4 +246,34 @@ const GET_USER_INVOICES_QUERY = gql`
 export const getUserInvoices = graphql(
   GET_USER_INVOICES_QUERY,
   GET_USER_INVOICES_OPTIONS
+);
+
+/*
+  Upload a new profilePhoto for the given currentUser
+*/
+const UPDATE_USER_EMAIL_MUTATION = gql`
+  mutation updateUserEmail($email: String!) {
+    updateUserEmail (email: $email) {
+      ...userInfo
+      email
+      pendingEmail
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const UPDATE_USER_EMAIL_OPTIONS = {
+  props: ({ email, mutate }) => ({
+    updateUserEmail: email =>
+      mutate({
+        variables: {
+          email,
+        },
+      }),
+  }),
+};
+
+export const updateUserEmailMutation = graphql(
+  UPDATE_USER_EMAIL_MUTATION,
+  UPDATE_USER_EMAIL_OPTIONS
 );

@@ -8,17 +8,14 @@ import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
 import { upgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
-import Card from '../../../components/card';
 import { NullCard } from '../../../components/upsell';
 import { Button } from '../../../components/buttons';
 import {
-  Title,
   Pitch,
   PitchItem,
   Cost,
   CostNumber,
   CostSubtext,
-  SectionCard,
   SectionTitle,
 } from '../style';
 

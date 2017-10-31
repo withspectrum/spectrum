@@ -20,7 +20,7 @@ import {
 import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
 import Icon from '../../components/icons';
-import { Avatar } from '../../components/avatar';
+import Avatar from '../../components/avatar';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';

@@ -10,7 +10,7 @@ export type DBDirectMessageThread = {
 };
 
 const getDirectMessageThread = (
-  directMessageThreadId: String
+  directMessageThreadId: string
 ): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
@@ -19,7 +19,7 @@ const getDirectMessageThread = (
 };
 
 const getDirectMessageThreadsByUser = (
-  userId: String
+  userId: string
 ): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')

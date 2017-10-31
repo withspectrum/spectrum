@@ -101,7 +101,7 @@ const Community = /* GraphQL */ `
 		coverPhoto: String
 		reputation: Int
 		pinnedThreadId: String
-		communityPermissions: CommunityPermissions!
+		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
@@ -114,13 +114,14 @@ const Community = /* GraphQL */ `
 		conversationGrowth: GrowthData
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
+		contextPermissions: ContextPermissions
 	}
 
 	extend type Query {
 		community(id: ID, slug: String): Community
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
-		searchCommunities(string: String): [Community]
+		searchCommunities(string: String, amount: Int = 30): [Community]
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
 	}
 

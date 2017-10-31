@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { UserListItem } from '../listItems';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { LoadingCard } from '../loading';
 import { getChannelMembersQuery } from '../../api/channel';
@@ -53,7 +51,10 @@ class ChannelMembers extends Component<Props> {
               members.map(user => {
                 return (
                   <section key={user.id}>
-                    <UserListItem user={user} />
+                    <UserListItem
+                      user={user}
+                      reputationTipText={'Rep in this community'}
+                    />
                   </section>
                 );
               })}
@@ -86,6 +87,6 @@ class ChannelMembers extends Component<Props> {
   }
 }
 
-export default compose(getChannelMembersQuery, viewNetworkHandler, pure)(
+export default compose(getChannelMembersQuery, viewNetworkHandler)(
   ChannelMembers
 );

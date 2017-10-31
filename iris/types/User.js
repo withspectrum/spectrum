@@ -48,16 +48,13 @@ const User = /* GraphQL */ `
 		node: Thread!
 	}
 
-	type UserMetaData {
-		threads: Int
-	}
-
 	type NotificationKindSettings {
 		email: Boolean
 	}
 
 	type NotificationSettingsType {
 		newMessageInThreads: NotificationKindSettings
+		newDirectMessage: NotificationKindSettings
 		newThreadCreated: NotificationKindSettings
 		weeklyDigest: NotificationKindSettings
 		dailyDigest: NotificationKindSettings
@@ -74,6 +71,7 @@ const User = /* GraphQL */ `
 	type User {
 		id: ID!
 		name: String
+		firstName: String
 		description: String
 		website: String
 		username: String
@@ -86,10 +84,11 @@ const User = /* GraphQL */ `
 		isOnline: Boolean
 		timezone: Int
 		totalReputation: Int
+		pendingEmail: String
 
 		# non-schema fields
 		threadCount: Int
-		isAdmin: Boolean!
+        isAdmin: Boolean
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
@@ -145,6 +144,7 @@ const User = /* GraphQL */ `
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
+		updateUserEmail(email: String!): User
 	}
 `;
 

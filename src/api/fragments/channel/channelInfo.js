@@ -1,5 +1,5 @@
 import { gql } from 'react-apollo';
-import { communityInfoFragment } from '../community/communityInfo';
+import { communityInfoFragment } from '../community/communityInfo.js';
 
 export const channelInfoFragment = gql`
   fragment channelInfo on Channel {

@@ -1,15 +1,11 @@
+// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { connect } from 'react-redux';
-
+import isURL from 'validator/lib/isURL';
+import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
@@ -19,7 +15,6 @@ import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
-import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import { LoadingSelect } from '../loading';
@@ -33,24 +28,41 @@ import {
   Dropdowns,
   RequiredSelector,
 } from './style';
+import {
+  sortCommunities,
+  sortChannels,
+  getDefaultActiveChannel,
+} from './utils';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
-class ComposerWithData extends Component {
-  // prop types
-  state: {
-    title: string,
-    body: Object,
-    availableCommunities: Array<any>,
-    availableChannels: Array<any>,
-    activeCommunity: ?string,
-    activeChannel: ?string,
-    isPublishing: boolean,
-    linkPreview: ?Object,
-    linkPreviewTrueUrl: ?string,
-    linkPreviewLength: number,
-    fetchingLinkPreview: boolean,
-  };
+type State = {
+  title: string,
+  body: Object,
+  availableCommunities: Array<any>,
+  availableChannels: Array<any>,
+  activeCommunity: ?string,
+  activeChannel: ?string,
+  isPublishing: boolean,
+  linkPreview: ?Object,
+  linkPreviewTrueUrl: ?string,
+  linkPreviewLength: number,
+  fetchingLinkPreview: boolean,
+};
+
+type Props = {
+  data: Object, // TODO(@mxstbr): Maybe Apollo Client exports flow types?
+  isOpen: boolean,
+  dispatch: Function,
+  mutate: Function,
+  history: Object,
+  location: Object,
+  activeCommunity?: string,
+  activeChannel?: string,
+};
+
+class ComposerWithData extends Component<Props, State> {
+  bodyEditor: any;
 
   constructor(props) {
     super(props);
@@ -71,150 +83,59 @@ class ComposerWithData extends Component {
   }
 
   handleIncomingProps = props => {
-    /*
-      Create a new array of communities only containing the `node` data from
-      graphQL. Then filter the resulting channel to remove any communities
-      that don't have any channels yet
-    */
-
+    const { user } = props.data;
     // if the user doesn't exist, bust outta here
-    if (!props.data.user || props.data.user === undefined) return;
-    const availableCommunities = props.data.user.communityConnection.edges
-      .map(edge => edge.node)
-      .filter(
-        community =>
-          community.communityPermissions.isMember ||
-          community.communityPermissions.isOwner
-      )
-      .sort((a, b) => {
-        const bc = parseInt(b.communityPermissions.reputation, 10);
-        const ac = parseInt(a.communityPermissions.reputation, 10);
-        return bc <= ac ? -1 : 1;
-      });
+    if (!user || !user.id) return;
 
-    /*
-      Iterate through each of our community nodes to construct a new array
-      of possible channels
-
-      returns an array of array, where each parent array represents a community
-      and each child array represents the channels within that parent
-      community
-    */
-    const availableChannels = props.data.user.channelConnection.edges
-      .map(edge => edge.node)
-      .filter(
-        channel =>
-          channel.channelPermissions.isMember ||
-          channel.channelPermissions.isOwner
-      )
-      .filter(channel => {
-        if (!channel.isPrivate) return channel;
-        if (!channel.community.isPro) return null;
-        return channel;
-      });
-
-    /*
-      If a user is viewing a communit or channel, we use the url as a prop
-      to set a default activeCommunity and activeChannel
-
-      If no defaults are set, we use the first available community, and then
-      find the first available channel within that available community
-    */
-    const activeCommunityFromPropsOrState =
-      props.activeCommunity || this.state.activeCommunity;
-
-    let activeCommunity =
-      availableCommunities &&
-      (activeCommunityFromPropsOrState
-        ? availableCommunities.filter(community => {
-            return (
-              community.slug.toLowerCase() ===
-              activeCommunityFromPropsOrState.toLowerCase()
-            );
-          })
-        : availableCommunities);
-
-    activeCommunity =
-      activeCommunity && activeCommunity.length > 0
-        ? activeCommunity[0].id
-        : null;
-
-    if (!activeCommunity) {
-      return props.data.refetch();
-    } else {
-      this.setActiveStuff(
-        availableCommunities,
-        availableChannels,
-        activeCommunity
-      );
-    }
-  };
-
-  setActiveStuff = (
-    availableCommunities,
-    availableChannels,
-    activeCommunity
-  ) => {
-    const props = this.props;
-    // get the channels for the proper community
-    const activeCommunityChannels = availableChannels.filter(
-      channel => channel.community.id === activeCommunity
+    const communities = sortCommunities(
+      user.communityConnection.edges.map(edge => edge.node)
     );
-    let activeChannel = [];
-    // Get the active channel if there is one
-    if (props.activeChannel) {
-      activeChannel = activeCommunityChannels.filter(
-        channel => channel.id === props.activeChannel
+
+    const channels = sortChannels(
+      user.channelConnection.edges.map(edge => edge.node)
+    );
+
+    const activeSlug = props.activeCommunity || this.state.activeCommunity;
+    let community;
+
+    // User is viewing a community/channel? Use the community from the URL
+    if (activeSlug) {
+      community = communities.find(
+        community => community.slug.toLowerCase() === activeSlug.toLowerCase()
       );
     } else {
-      // Try and get the default channel for the active community
-      activeChannel = activeCommunityChannels.filter(
-        channel => channel.isDefault
-      );
-      // If there is no default channel capitulate and take the first one
-      if (activeChannel.length === 0) {
-        activeChannel = activeCommunityChannels;
-      } else if (activeChannel.length > 1) {
-        const generalChannel = activeChannel.filter(
-          channel => channel.slug === 'general'
-        );
-        if (generalChannel.length > 0) activeChannel = generalChannel;
-      }
+      community = communities && communities.length > 0 ? communities[0] : null;
     }
 
-    // ensure that if no items were found for some reason, we don't crash the app
-    // and instead just set null values on the composer
-    activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
+    if (!community || !community.id) return props.data.refetch();
+
+    // get the channels for the active community
+    const communityChannels = channels.filter(
+      // $FlowIssue
+      channel => channel.community.id === community.id
+    );
+
+    const activeChannel = getDefaultActiveChannel(
+      communityChannels,
+      props.activeChannel
+    );
 
     this.setState({
-      title: props.title || '',
-      body: props.body || fromPlainText(''),
-      availableCommunities,
-      availableChannels,
-      activeCommunity,
-      activeChannel,
-      isPublishing: false,
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
-      linkPreviewLength: 0,
-      fetchingLinkPreview: false,
+      availableCommunities: communities,
+      availableChannels: channels,
+      activeCommunity: community ? community.id : null,
+      activeChannel: activeChannel ? activeChannel.id : null,
     });
   };
 
   componentDidMount() {
     this.handleIncomingProps(this.props);
-  }
-
-  componentWillUpdate(nextProps) {
-    const { isOpen } = nextProps;
-    if (isOpen) {
-      document.addEventListener('keydown', this.handleKeyPress, false);
-    } else {
-      document.removeEventListener('keydown', this.handleKeyPress, false);
-    }
+    // $FlowIssue
+    document.addEventListener('keydown', this.handleKeyPress, false);
   }
 
   componentWillUnmount() {
+    // $FlowIssue
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
@@ -243,89 +164,26 @@ class ComposerWithData extends Component {
     });
   };
 
-  componentDidUpdate(prevProps) {
-    const { availableCommunities, availableChannels } = this.state;
-    let activeCommunity;
+  componentWillUpdate(next) {
+    const currChannelLength =
+      this.props.data.user &&
+      this.props.data.user.channelConnection.edges.length;
+    const nextChannelLength =
+      next.data.user && next.data.user.channelConnection.edges.length;
+    const currCommunityLength =
+      this.props.data.user &&
+      this.props.data.user.communityConnection.edges.length;
+    const nextCommunityLength =
+      next.data.user && next.data.user.communityConnection.edges.length;
 
-    if (!prevProps.data.user && this.props.data.user) {
-      this.handleIncomingProps(this.props);
-    }
-
-    if (prevProps.activeCommunity !== this.props.activeCommunity) {
-      activeCommunity = this.props.activeCommunity
-        ? availableCommunities.filter(community => {
-            return community.slug === this.props.activeCommunity;
-          })[0].id
-        : availableCommunities[0].id;
-
-      this.setState({
-        activeCommunity,
-      });
-    }
-
-    if (prevProps.activeChannel !== this.props.activeChannel) {
-      const activeCommunityChannels = availableChannels.filter(
-        channel => channel.community.id === activeCommunity
-      );
-      let activeChannel = [];
-
-      // Get the active channel if there is one
-      if (this.props.activeChannel) {
-        activeChannel = activeCommunityChannels.filter(
-          channel => channel.id === this.props.activeChannel
-        );
-      } else {
-        // Try and get the default channel for the active community
-        activeChannel = activeCommunityChannels.filter(
-          channel => channel.isDefault
-        );
-        // If there is no default channel capitulate and take the first one
-        if (activeChannel.length === 0) {
-          activeChannel = activeCommunityChannels;
-          // If there are more than one default ones, try and choose the "General" one if it exists
-        } else if (activeChannel.length > 1) {
-          const generalChannel = activeChannel.filter(
-            channel => channel.slug === 'general'
-          );
-          if (generalChannel.length > 0) activeChannel = generalChannel;
-        }
-      }
-
-      // ensure that if no items were found for some reason, we don't crash the app
-      // and instead just set null values on the composer
-      activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
-
-      this.setState({
-        activeChannel,
-      });
+    if (
+      (this.props.data.loading && !next.data.loading) ||
+      currChannelLength !== nextChannelLength ||
+      currCommunityLength !== nextCommunityLength
+    ) {
+      this.handleIncomingProps(next);
     }
   }
-
-  handleOpenComposer = () => {
-    // strange construction here in order to guarantee that we focus the title
-    // input whenever the composer is opened
-    const isOpen = this.props.isOpen;
-    if (!isOpen) {
-      this.props.dispatch(openComposer());
-      this.props.data.refetch().then(result => {
-        // we have to rebuild a new props object to pass to `this.handleIncomingProps`
-        // in order to retain all the previous props passed in from the parent
-        // component and the initial data functions provided by apollo
-        const newProps = Object.assign({}, this.props, {
-          ...this.props,
-          data: {
-            ...this.props.data,
-            user: {
-              ...this.props.data.user,
-              ...result.data.user,
-            },
-          },
-        });
-        this.handleIncomingProps(newProps);
-      });
-      this.refs.titleTextarea.focus();
-    }
-  };
 
   closeComposer = () => {
     const { title, body } = this.state;
@@ -340,24 +198,17 @@ class ComposerWithData extends Component {
     const newActiveCommunityData = this.state.availableCommunities.find(
       community => community.id === newActiveCommunity
     );
-    const newActiveChannel =
-      activeCommunityChannels.find(channel => {
-        // If there is an active channel and we're switching back to the currently open community
-        // select that channel
-        if (
-          this.props.activeChannel &&
-          this.props.activeCommunity === newActiveCommunityData.slug
-        ) {
-          return channel.slug === this.props.activeChannel;
-        }
-        // Otherwise select the default one
-        return channel.isDefault;
-        // Default to the first channel if no default one can be found
-      }) || activeCommunityChannels[0];
+    const isActiveCommunity =
+      newActiveCommunityData &&
+      this.props.activeCommunity === newActiveCommunityData.slug;
+    const newActiveChannel = getDefaultActiveChannel(
+      activeCommunityChannels,
+      isActiveCommunity ? this.props.activeChannel : ''
+    );
 
     this.setState({
       activeCommunity: newActiveCommunity,
-      activeChannel: newActiveChannel.id,
+      activeChannel: newActiveChannel && newActiveChannel.id,
     });
   };
 
@@ -446,19 +297,18 @@ class ComposerWithData extends Component {
 
         // redirect the user to the thread
         // if they are in the inbox, select it
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Thread published!')
+        );
         if (this.props.isInbox) {
+          this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);
         } else {
           this.props.history.push(`?thread=${id}`);
+          this.props.dispatch(changeActiveThread(null));
         }
-
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Thread published!')
-        );
-
-        this.props.dispatch(changeActiveThread(null));
       })
       .catch(err => {
         this.setState({
@@ -492,36 +342,33 @@ class ComposerWithData extends Component {
 
       let urlToCheck = toCheck[len - 1].trim();
 
-      this.setState({ fetchingLinkPreview: true });
-
       if (!/^https?:\/\//i.test(urlToCheck)) {
         urlToCheck = 'https://' + urlToCheck;
       }
 
+      if (!isURL(urlToCheck)) return;
+
+      this.setState({ fetchingLinkPreview: true });
+
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          // this.props.dispatch(stopLoading());
-
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
-            error: null,
           }));
-
-          const linkPreview = {};
-          linkPreview['data'] = data;
-          linkPreview['trueUrl'] = urlToCheck;
-
-          // this.props.dispatch(addLinkPreview(linkPreview));
         })
         .catch(err => {
           this.setState({
-            error:
-              "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
             fetchingLinkPreview: false,
           });
+          this.props.dispatch(
+            addToastWithTimeout(
+              'error',
+              `Oops, we couldn't fetch a preview for ${urlToCheck}. You can publish your story anyways though! 👍`
+            )
+          );
         });
     }
   };
@@ -606,7 +453,7 @@ class ComposerWithData extends Component {
             style={ThreadDescription}
             editorRef={editor => (this.bodyEditor = editor)}
             editorKey="thread-composer"
-            placeholder={`Write more thoughts here, add photos, and anything else!`}
+            placeholder={`Write more thoughts here...`}
             className={'threadComposer'}
             showLinkPreview={true}
             linkPreview={{
@@ -643,8 +490,7 @@ class ComposerWithData extends Component {
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  withRouter // needed to use history.push() as a post-publish action
 )(ComposerWithData);
 
 const mapStateToProps = state => ({
@@ -653,5 +499,6 @@ const mapStateToProps = state => ({
   body: state.composer.body,
 });
 
+// $FlowIssue
 const Composer = connect(mapStateToProps)(ThreadComposer);
 export default Composer;

@@ -83,6 +83,21 @@ const setUserLastSeenInDirectMessageThread = (
     );
 };
 
+const updateDirectMessageThreadNotificationStatusForUser = (
+  threadId: string,
+  userId: string,
+  val: boolean
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .update({
+      receiveNotifications: val,
+    })
+    .run();
+};
+
 /*
 ===========================================================
 
@@ -103,11 +118,21 @@ const getMembersInDirectMessageThread = (
     .run();
 };
 
+const isMemberOfDirectMessageThread = (threadId: string, userId: string) => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(threadId, { index: 'threadId' })('userId')
+    .contains(userId)
+    .run();
+};
+
 module.exports = {
   createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
   setUserLastSeenInDirectMessageThread,
+  updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,
+  isMemberOfDirectMessageThread,
 };

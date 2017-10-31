@@ -36,6 +36,7 @@ import type {
   EditChannelArguments,
 } from '../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../models/thread';
+import { channelSlugIsBlacklisted } from '../utils/permissions';
 
 type Context = {
   user: Object,
@@ -51,6 +52,10 @@ module.exports = {
         return new UserError(
           'You must be signed in to create a new community.'
         );
+      }
+
+      if (channelSlugIsBlacklisted(args.input.slug)) {
+        return new UserError(`This channel name is reserved.`);
       }
 
       // get the community parent where the channel is being created
@@ -421,18 +426,18 @@ module.exports = {
                 ) => {
                   // if the user is a member of the parent community, we can return
                   if (currentUserCommunityPermissions.isMember) {
-                    return Promise.all([channelToEvaluate]);
+                    return Promise.all([joinedChannel]);
                   } else {
                     // if the user is not a member of the parent community,
                     // join the community and the community's default channels
                     return Promise.all([
-                      channelToEvaluate,
+                      joinedChannel,
                       createMemberInCommunity(
-                        channelToEvaluate.communityId,
+                        joinedChannel.communityId,
                         currentUser.id
                       ),
                       createMemberInDefaultChannels(
-                        channelToEvaluate.communityId,
+                        joinedChannel.communityId,
                         currentUser.id
                       ),
                     ]);
@@ -515,7 +520,7 @@ module.exports = {
           }
 
           // get the community parent of channel
-          const currentUserCommunityPermissions = getUserPermissionsInChannel(
+          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
             channelToEvaluate.communityId,
             currentUser.id
           );

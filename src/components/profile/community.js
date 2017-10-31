@@ -5,8 +5,6 @@ import Card from '../card';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -322,9 +320,7 @@ class CommunityWithData extends Component {
   }
 }
 
-const Community = compose(toggleCommunityMembershipMutation, pure)(
-  CommunityWithData
-);
+const Community = compose(toggleCommunityMembershipMutation)(CommunityWithData);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

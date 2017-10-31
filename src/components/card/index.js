@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -26,21 +24,20 @@ const StyledCard = styled(FlexCol)`
   + span {
     margin-top: 16px;
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
       margin-top: 2px;
     }
   }
 
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     border-radius: 0;
     box-shadow: none;
   }
 `;
 
-const CardPure = (props: Object): React$Element<any> =>
-  <StyledCard {...props}>
-    {props.children}
-  </StyledCard>;
+const CardPure = (props: Object): React$Element<any> => (
+  <StyledCard {...props}>{props.children}</StyledCard>
+);
 
-export const Card = compose(pure)(CardPure);
+export const Card = compose()(CardPure);
 export default Card;

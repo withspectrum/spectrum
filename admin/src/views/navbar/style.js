@@ -23,6 +23,7 @@ export const Nav = styled(FlexRow)`
     order: 3;
     position: relative;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
+    display: none;
   }
 `;
 
@@ -46,12 +47,12 @@ export const LogoLink = styled(Link)`
   ${() =>
     process.env.NODE_ENV !== 'production' &&
     css`
-    &:after {
-      content: "Dev";
-      margin-top: 4px;
-      font-size: 0.75em;
-    }
-  `}
+      &:after {
+        content: 'Dev';
+        margin-top: 4px;
+        font-size: 0.75em;
+      }
+    `};
 `;
 
 export const Logo = styled.img`
@@ -80,32 +81,30 @@ export const IconLink = styled(Link)`
     opacity: 1;
   }
 
-${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${props =>
-    props.withCount &&
-    css`
-    > .icon:after {
-      content: ${props.withCount ? `'${props.withCount}'` : `''`};
-      position: absolute;
-      left: calc(100% - 12px);
-      top: -2px;
-      font-size: 14px;
-      font-weight: 600;
-      background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};;
-      border-radius: 8px;
-      padding: 2px 4px;
-      border: 2px solid ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};
-    }
-  `}
-
-  &[data-active~="true"] {
+  ${/* handles unseen notification counts for both DMs and Notifications */ ''} ${props =>
+      props.withCount &&
+      css`
+        > .icon:after {
+          content: ${props.withCount ? `'${props.withCount}'` : `''`};
+          position: absolute;
+          left: calc(100% - 12px);
+          top: -2px;
+          font-size: 14px;
+          font-weight: 600;
+          background: ${({ theme }) => theme.bg.default};
+          color: ${({ theme }) =>
+            process.env.NODE_ENV === 'production'
+              ? theme.text.default
+              : theme.warn.alt};
+          border-radius: 8px;
+          padding: 2px 4px;
+          border: 2px solid
+            ${({ theme }) =>
+              process.env.NODE_ENV === 'production'
+                ? theme.text.default
+                : theme.warn.alt};
+        }
+      `} &[data-active~='true'] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
     opacity: 1;
   }
@@ -115,7 +114,7 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
     opacity: 0.7;
     margin: 0;
 
-    &[data-active~="true"] {
+    &[data-active~='true'] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
     }

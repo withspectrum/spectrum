@@ -9,12 +9,7 @@ import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
 import { SectionCard, SectionTitle } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
   const openCommunityProModal = () => {

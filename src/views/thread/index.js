@@ -4,8 +4,6 @@ import React from 'react';
 import { Route } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import ThreadContainer from './containers';
 
 const ThreadPure = ({ match, location }) => (
@@ -17,6 +15,6 @@ const ThreadPure = ({ match, location }) => (
   />
 );
 
-const Thread = compose(pure)(ThreadPure);
+const Thread = compose()(ThreadPure);
 
 export default Thread;

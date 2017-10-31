@@ -171,6 +171,49 @@ class Navbar extends Component {
     } else return false;
   };
 
+  shouldComponentUpdate(next, nextState) {
+    const curr = this.props;
+    const currState = this.state;
+
+    // if notifications should be cleared
+    if (
+      currState.allUnseenCount !== nextState.allUnseenCount ||
+      currState.dmUnseenCount !== nextState.dmUnseenCount
+    ) {
+      return true;
+    }
+
+    // if route changes
+    if (curr.location.pathname !== next.location.pathname) {
+      return true;
+    }
+
+    // Had no notifications before, have notifications now
+    if (
+      !curr.notificationsQuery.notifications &&
+      next.notificationsQuery.notifications
+    )
+      return true;
+
+    // Have more notifications now
+    if (
+      next.notificationsQuery.notifications &&
+      curr.notificationsQuery.notifications.edges.length !==
+        next.notificationsQuery.notifications.edges.length
+    )
+      return true;
+
+    // Had no user, now have user or user changed
+    if (
+      (!next.data.user && curr.data.user) ||
+      next.data.user !== curr.data.user
+    )
+      return true;
+
+    // Fuck updating
+    return false;
+  }
+
   componentDidUpdate(prevProps) {
     // if the query returned notifications
     if (
@@ -201,6 +244,7 @@ class Navbar extends Component {
       if (!user.timezone) {
         this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
       }
+
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user doesn't have a username or they haven't joined any

@@ -1,7 +1,7 @@
 // @flow
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
@@ -36,6 +36,7 @@ const threadsQueryOptions = {
       networkStatus,
       channel,
       threads: channel ? channel.threadConnection.edges : '',
+      feed: channel && channel.id,
       hasNextPage: channel
         ? channel.threadConnection.pageInfo.hasNextPage
         : false,
@@ -156,6 +157,7 @@ export const getChannel = graphql(
       }
 		}
     ${channelInfoFragment}
+    ${communityInfoFragment}
     ${channelMetaDataFragment}
 	`,
   profileQueryOptions

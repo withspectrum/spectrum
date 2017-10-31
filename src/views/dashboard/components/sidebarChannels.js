@@ -31,10 +31,11 @@ class SidebarChannels extends React.Component<Props> {
       isLoading,
       queryVarIsChanging,
       activeChannel,
+      isHovered,
     } = this.props;
 
     if (community) {
-      const { isMember, isOwner } = community.communityPermissions;
+      const { isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel.node)
         .filter(channel => {
@@ -56,7 +57,7 @@ class SidebarChannels extends React.Component<Props> {
       const sortedChannels = sortByDate(channels, 'createdAt', 'desc');
 
       return (
-        <ChannelsContainer>
+        <ChannelsContainer className={'channelsContainer'}>
           {sortedChannels.map(channel => {
             return (
               <ChannelListItem
@@ -73,20 +74,33 @@ class SidebarChannels extends React.Component<Props> {
             );
           })}
 
-          <ChannelListDivider />
-          <Link to={`/${community.slug}`}>
+          <ChannelListDivider className={'divider'} />
+
+          <Link
+            to={`/${community.slug}`}
+            target="_blank"
+            rel="nofollower noopener"
+          >
             <ChannelListItem>View community</ChannelListItem>
           </Link>
 
           {isOwner && (
-            <Link to={`/${community.slug}/settings`}>
+            <Link
+              to={`/${community.slug}/settings`}
+              target="_blank"
+              rel="nofollower noopener"
+            >
               <ChannelListItem>Settings</ChannelListItem>
             </Link>
           )}
 
           {isOwner &&
             community.isPro && (
-              <Link to={`/${community.slug}/settings/settings`}>
+              <Link
+                to={`/${community.slug}/settings/analytics`}
+                target="_blank"
+                rel="nofollower noopener"
+              >
                 <ChannelListItem>Analytics</ChannelListItem>
               </Link>
             )}
@@ -94,9 +108,9 @@ class SidebarChannels extends React.Component<Props> {
       );
     }
 
-    if (isLoading || queryVarIsChanging) {
+    if (isHovered && (isLoading || queryVarIsChanging)) {
       return (
-        <ChannelsContainer>
+        <ChannelsContainer className={'channelsContainer'}>
           <LoadingContainer>
             <LoadingBar width={56} />
             <LoadingBar width={128} />

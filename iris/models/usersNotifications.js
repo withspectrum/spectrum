@@ -39,9 +39,9 @@ export const markNotificationRead = (
 ): Promise<Object> => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
+    .getAll(notificationId, { index: 'notificationId' })
     .filter({
-      notificationId,
+      userId,
     })
     .update(
       {
@@ -65,9 +65,9 @@ export const markSingleNotificationSeen = (
 ): Promise<Object> => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
+    .getAll(notificationId, { index: 'notificationId' })
     .filter({
-      notificationId,
+      userId,
     })
     .update(
       {

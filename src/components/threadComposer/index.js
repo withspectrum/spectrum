@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
-
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
@@ -21,12 +13,14 @@ import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import isURL from 'validator/lib/isURL';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
-import { displayLoadingComposer } from '../loading';
+import { LoadingComposer } from '../loading';
 import { NullCard } from '../upsell';
+import viewNetworkHandler from '../viewNetworkHandler';
 import {
   Container,
   Composer,
@@ -432,7 +426,12 @@ class ThreadComposerWithData extends Component {
 
     // Get the images
     const filesToUpload = Object.keys(jsonBody.entityMap)
-      .filter(key => jsonBody.entityMap[key].type === 'image')
+      .filter(
+        key =>
+          jsonBody.entityMap[key].type === 'image' &&
+          jsonBody.entityMap[key].data.file &&
+          jsonBody.entityMap[key].data.file.constructor === File
+      )
       .map(key => jsonBody.entityMap[key].data.file);
 
     // this.props.mutate comes from a higher order component defined at the
@@ -507,29 +506,22 @@ class ThreadComposerWithData extends Component {
 
       let urlToCheck = toCheck[len - 1].trim();
 
-      this.setState({ fetchingLinkPreview: true });
-
       if (!/^https?:\/\//i.test(urlToCheck)) {
         urlToCheck = 'https://' + urlToCheck;
       }
 
+      if (!isURL(urlToCheck)) return;
+      this.setState({ fetchingLinkPreview: true });
+
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          // this.props.dispatch(stopLoading());
-
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
             error: null,
           }));
-
-          const linkPreview = {};
-          linkPreview['data'] = data;
-          linkPreview['trueUrl'] = urlToCheck;
-
-          // this.props.dispatch(addLinkPreview(linkPreview));
         })
         .catch(err => {
           this.setState({
@@ -561,15 +553,15 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus }, isInbox } = this.props;
+    const { isOpen, isLoading, hasError, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
-    if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
+    if (!isLoading && (!availableCommunities || !availableChannels)) {
       return (
         <NullCard
           bg="community"
           heading={`Once you join a community, you can start conversations there!`}
-          copy={`Let's find you something worth joining...`}
+          copy={`Let‘s find you something worth joining...`}
         >
           <Link to={`/explore`}>
             <Button icon="explore" color="text.alt">
@@ -578,7 +570,9 @@ class ThreadComposerWithData extends Component {
           </Link>
         </NullCard>
       );
-    } else {
+    }
+
+    if (!isLoading && availableCommunities && availableChannels) {
       return (
         <Container isOpen={isOpen} isInbox={isInbox}>
           <Overlay
@@ -613,7 +607,7 @@ class ThreadComposerWithData extends Component {
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
                 editorKey="thread-composer"
-                placeholder="Write more thoughts here, add photos, and anything else!"
+                placeholder="Write more thoughts here..."
                 className={'threadComposer'}
                 showLinkPreview={true}
                 linkPreview={{
@@ -679,15 +673,20 @@ class ThreadComposerWithData extends Component {
         </Container>
       );
     }
+
+    if (isLoading) {
+      return <LoadingComposer />;
+    }
+
+    return null;
   }
 }
 
 export const ThreadComposer = compose(
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  displayLoadingComposer, // handle loading state while query is fetching
-  withRouter, // needed to use history.push() as a post-publish action
-  pure
+  getComposerCommunitiesAndChannels,
+  publishThread,
+  viewNetworkHandler,
+  withRouter
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({
