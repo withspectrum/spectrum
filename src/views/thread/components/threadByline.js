@@ -34,8 +34,8 @@ class ThreadByline extends React.Component<Props> {
     return (
       <Byline>
         <AuthorAvatar
-          size={24}
-          radius={24}
+          size={40}
+          radius={40}
           isOnline={creator.isOnline}
           src={creator.profilePhoto}
           link={creator.username ? `/users/${creator.username}` : null}
@@ -49,9 +49,7 @@ class ThreadByline extends React.Component<Props> {
             {creator &&
               creator.contextPermissions &&
               creator.contextPermissions.reputation > 0 && (
-                <span>
-                  <Reputation reputation={reputation} />
-                </span>
+                <Reputation reputation={reputation} />
               )}
           </AuthorUsername>
         </BylineMeta>

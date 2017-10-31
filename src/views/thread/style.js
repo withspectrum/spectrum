@@ -150,8 +150,8 @@ export const ThreadContent = styled.div`
 `;
 
 export const ThreadHeading = styled(H1)`
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: 600;
 
   @media (max-width: 768px) {
     margin-top: 8px;
@@ -239,15 +239,15 @@ export const Byline = styled.div`
   font-size: 14px;
 `;
 
-export const BylineMeta = styled(FlexRow)`margin-left: 12px;`;
+export const BylineMeta = styled(FlexCol)`margin-left: 12px;`;
 
 export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
 export const AuthorName = styled(H3)`
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
   max-width: 100%;
-  color: ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.default};
   margin-right: 8px;
   font-size: 14px;
 
