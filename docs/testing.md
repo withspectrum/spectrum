@@ -20,6 +20,16 @@ When you exit the testing process with `CTRL+C` it will clean the database from 
 
 In edge cases it could happen that you end up with bad data locally and that tests fail/pass even though they shouldn't. To get rid of the stale data just stop the testing process and optionally run `yarn run posttest` to make extra sure there's nothing in the database anymore, before restarting the testing process to start from a clean slate.
 
+### e2e tests
+
+To run e2e tests locally run the following command:
+
+```sh
+E2E=true yarn run test
+```
+
+e2e tests are automatically run in CI.
+
 ## CI
 
 On CI we run `yarn run test:ci`, which forces Jest to exit after running the tests. You can also run this command locally in case you're in the mood to do a full test run rather than going into watch mode.
