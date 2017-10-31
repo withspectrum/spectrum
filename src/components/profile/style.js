@@ -86,7 +86,7 @@ export const Subtitle = styled.div`
 export const Description = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px 16px;
+  padding: 0 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
@@ -187,12 +187,11 @@ export const Label = styled.span`
 export const Count = styled.span`font-weight: 700;`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
-  position: absolute;
-  bottom: -64px;
-  left: 16px;
+  flex: none;
+  margin-top: -32px;
   flex-direction: column;
   align-items: center;
-  width: calc(100% - 32px);
+  padding: 0 16px;
 `;
 
 export const CoverAvatar = styled(Avatar)`
@@ -209,8 +208,7 @@ export const CoverTitle = styled(Title)`
 
 export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
-  margin-top: 64px;
-  margin-bottom: 16px;
+  ${'' /* margin-top: 64px; */} margin-bottom: 16px;
   justify-content: center;
 `;
 
@@ -250,7 +248,7 @@ export const ReputationContainer = styled.div`
   padding: 12px 0;
   margin: 0 16px;
   display: flex;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
 `;
 
 export const CoverPhoto = styled.div`

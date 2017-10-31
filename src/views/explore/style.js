@@ -432,7 +432,7 @@ export const ListTitle = styled(H2)`
 
 export const ListWrapper = styled(FlexRow)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   align-items: stretch;
 `;
 

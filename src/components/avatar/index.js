@@ -14,7 +14,7 @@ const StyledAvatarFallback = styled.img`
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: ${props => (props.community ? `8px` : '100%')};
+  border-radius: ${props => (props.community ? `25%` : '100%')};
   width: 100%;
   height: 100%;
   margin: 0;
@@ -29,7 +29,7 @@ const StyledAvatarStatus = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `8px` : '100%')};
+  border-radius: ${props => (props.community ? `25%` : '100%')};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
 
@@ -59,7 +59,7 @@ const StyledAvatar = styled.object`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `8px` : '100%')};
+  border-radius: ${props => (props.community ? `25%` : '100%')};
   object-fit: cover;
 `;
 

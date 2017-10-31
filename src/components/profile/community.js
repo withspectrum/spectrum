@@ -129,12 +129,11 @@ class CommunityWithData extends Component {
       case 'upsell':
         return (
           <Container>
-            <CoverPhoto url={community.coverPhoto}>
-              <CoverLink to={`/${community.slug}`}>
-                <CoverAvatar src={community.profilePhoto} community size={64} />
-                <CoverTitle>{community.name}</CoverTitle>
-              </CoverLink>
-            </CoverPhoto>
+            <CoverPhoto url={community.coverPhoto} />
+            <CoverLink to={`/${community.slug}`}>
+              <CoverAvatar src={community.profilePhoto} community size={64} />
+              <CoverTitle>{community.name}</CoverTitle>
+            </CoverLink>
             <CoverSubtitle>
               {community.metaData.members.toLocaleString()} members
             </CoverSubtitle>
