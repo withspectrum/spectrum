@@ -27,3 +27,18 @@ it('should render the splash page', async () => {
   await page.goto('http://localhost:3000/');
   await page.waitForSelector('[data-e2e-id="splash-page"]');
 });
+
+it('should have a login button', async () => {
+  const button = await page.$('[href*="/login"]');
+  expect(button).toBeTruthy();
+});
+
+it('should have a button to explore', async () => {
+  const button = await page.$('[href*="/explore"]');
+  expect(button).toBeTruthy();
+});
+
+it('should have a button to /new/community', async () => {
+  const button = await page.$('[href*="/new/community"]');
+  expect(button).toBeTruthy();
+});
