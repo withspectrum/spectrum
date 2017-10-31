@@ -1,5 +1,6 @@
 // @flow
 const Queue = require('bull');
+// $FlowIssue
 const Redis = require('ioredis');
 const Raven = require('raven');
 

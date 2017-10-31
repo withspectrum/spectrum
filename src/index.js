@@ -1,11 +1,7 @@
-// @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-//$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
-//$FlowFixMe
 import { Router } from 'react-router';
-// $FlowFixMe
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import { history } from './helpers/history';
