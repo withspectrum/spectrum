@@ -38,7 +38,7 @@ class Splash extends Component {
 
   render() {
     return (
-      <Wrapper>
+      <Wrapper data-e2e-id="splash-page">
         <Overview />
         <Centralized />
         <CommunitySearch />

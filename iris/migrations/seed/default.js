@@ -1,5 +1,4 @@
-const faker = require('faker');
-const { fromPlainText, toJSON } = require('shared/draft-utils');
+const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
 // 2017/01/01
 const DATE = 1483225200000;
@@ -62,8 +61,10 @@ const DEFAULT_COMMUNITIES = [
     name: 'Spectrum',
     description: 'The future of communities',
     website: 'https://spectrum.chat',
-    profilePhoto: faker.image.business(),
-    coverPhoto: faker.image.image(),
+    profilePhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693',
+    coverPhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'spectrum',
   },
 ];
