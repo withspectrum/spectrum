@@ -25,20 +25,14 @@ import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
 
-export const ViewContainer = styled(FlexCol)`
-  flex: auto;
-  align-self: stretch;
-  overflow: hidden;
-  overflow-y: scroll;
-`;
-
-export const ScrollBody = styled(FlexCol)`
+export const Wrapper = styled(FlexCol)`
+  flex: 1 0 auto;
   width: 100%;
+  background-color: ${({ theme }) => theme.bg.default};
+  overflow: auto;
   overflow-x: hidden;
-  overflow-y: scroll;
-  position: relative;
   z-index: ${zIndex.base};
-  background-color: ${({ theme }) => theme.bg.wash};
+  align-self: stretch;
 `;
 
 export const ViewTitle = styled(H1)`
@@ -264,7 +258,7 @@ export const ErrorState = styled(FlexCol)`
 
 export const SearchWrapper = styled(Card)`
   position: relative;
-  margin-bottom: 48px;
+  margin-bottom: 0;
   padding: 12px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};
@@ -374,7 +368,7 @@ export const SearchLink = styled(Link)`
   ${Truncate()} padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled(Avatar)`margin: 4px 6px 8px 4px;`;
+export const SearchResultImage = styled(Avatar)``;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
 
@@ -422,10 +416,49 @@ export const SearchResultNull = styled.div`
   }
 `;
 
-export const TopCommunityItem = styled.div`
-  border-bottom: 2px solid ${props => props.theme.bg.wash};
+export const ListWithTitle = styled(FlexCol)`flex: auto;`;
 
-  &:last-of-type {
-    border-bottom: 0;
+export const ListTitle = styled(H2)`
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding-bottom: 8px;
+  padding-left: 16px;
+  font-weight: 500;
+  font-size: 18px;
+  margin-top: 32px;
+
+  @media (max-width: 768px) {
+    padding-left: 32px;
   }
+`;
+
+export const ListWrapper = styled(FlexRow)`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  align-items: stretch;
+`;
+
+export const ListItem = styled(FlexRow)``;
+
+export const Collections = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+`;
+
+export const CollectionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+  flex: auto;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+export const CategoryWrapper = styled.div`
+  display: ${props => (props.selected ? 'flex' : 'none')};
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: none;
 `;

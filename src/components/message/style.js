@@ -1,5 +1,4 @@
 // @flow
-import React from 'react';
 import styled from 'styled-components';
 import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
 

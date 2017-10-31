@@ -1,20 +1,20 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import Goop from '../../../components/goop';
+import Goop from '../goop';
 import {
   ClusterOne,
   ClusterTwo,
   ClusterThree,
   ClusterFour,
   Constellations,
-} from './illustrations';
-import { FlexCol, hexa } from '../../../components/globals';
+} from '../illustrations';
+import { FlexCol, hexa } from '../globals';
 
 export const Default = styled(FlexCol)`
   display: flex;
   position: relative;
-  flex: auto;
+  flex: none;
   justify-content: center;
   background-color: ${({ theme }) => theme.bg.default};
   color: ${({ theme }) => theme.text.default};
