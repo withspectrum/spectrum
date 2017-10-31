@@ -18,6 +18,7 @@ import {
   Collections,
   CollectionWrapper,
 } from './style';
+import { CLIENT_URL } from '../../api/constants';
 import { getCommunitiesCollectionQuery } from './queries';
 import { displayLoadingState } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
@@ -97,21 +98,21 @@ export const CommunitySearch = (props: Props) => {
           Try searching for topics like "crypto" or for products like "React"
         </ThisCopy>
         {props.children}
-        {!props.currentUser ? (
-          isMobile ? null : (
-            <UpsellSignIn redirectPath={props.redirectPath} />
-          )
-        ) : (
-          <SecondaryContent>
-            <SecondaryTagline>...or create your own community</SecondaryTagline>
-            <SecondaryCopy>
-              Building communities on Spectrum is easy and free!
-            </SecondaryCopy>
+        <SecondaryContent>
+          <SecondaryTagline>...or create your own community</SecondaryTagline>
+          <SecondaryCopy>
+            Building communities on Spectrum is easy and free!
+          </SecondaryCopy>
+          {props.currentUser ? (
             <Link to={`/new/community`}>
               <PrimaryCTA>Get Started</PrimaryCTA>
             </Link>
-          </SecondaryContent>
-        )}
+          ) : (
+            <Link to={`/login?r=${CLIENT_URL}/new/community`}>
+              <PrimaryCTA>Get Started</PrimaryCTA>
+            </Link>
+          )}
+        </SecondaryContent>
       </ThisContent>
     </ViewSegment>
   );

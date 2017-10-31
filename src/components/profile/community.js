@@ -12,6 +12,7 @@ import { track } from '../../helpers/events';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
+import { CLIENT_URL } from '../../api/constants';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
 import { Button, OutlineButton } from '../buttons';
@@ -163,7 +164,16 @@ class CommunityWithData extends Component {
                     Join
                   </Button>
                 )
-              ) : null}
+              ) : (
+                <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
+                  <Button
+                    gradientTheme={'success'}
+                    style={{ fontSize: '16px' }}
+                  >
+                    Join
+                  </Button>
+                </Link>
+              )}
             </ButtonContainer>
           </Container>
         );
