@@ -460,5 +460,5 @@ export const CategoryWrapper = styled.div`
   display: ${props => (props.selected ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
-  flex: auto;
+  flex: none;
 `;
