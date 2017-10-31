@@ -20,15 +20,21 @@ When you exit the testing process with `CTRL+C` it will clean the database from 
 
 In edge cases it could happen that you end up with bad data locally and that tests fail/pass even though they shouldn't. To get rid of the stale data just stop the testing process and optionally run `yarn run posttest` to make extra sure there's nothing in the database anymore, before restarting the testing process to start from a clean slate.
 
-### e2e tests
+### End-to-end tests
 
-To run e2e tests locally run the following command:
+To run e2e tests locally you have to have both iris and the client running. You also need Iris to be connected to the test database, which you do by setting `TEST_DB`:
+
+```sh
+TEST_DB=true yarn run dev:iris
+```
+
+Then, with both client and iris connected to the test database running, to run the full test suite including e2e tests:
 
 ```sh
 E2E=true yarn run test
 ```
 
-e2e tests are automatically run in CI.
+This automatically happens in CI, so you can't introduce a failing tests and expect builds to go through.
 
 ## CI
 
