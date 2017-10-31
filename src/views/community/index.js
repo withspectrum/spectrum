@@ -175,7 +175,7 @@ class CommunityView extends React.Component<Props, State> {
       const isNewAndOwned = isOwner && community.metaData.members < 5;
 
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-e2e-id="community-view">
           <Titlebar
             title={community.name}
             provideBack={true}
