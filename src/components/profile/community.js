@@ -150,14 +150,15 @@ class CommunityWithData extends Component {
                     color={'success.alt'}
                     hoverColor={'success.default'}
                     style={{ fontSize: '16px' }}
-                    loading={loading === community.id}
+                    loading={isLoading}
                   >
                     Joined!
                   </OutlineButton>
                 ) : (
                   <Button
                     onClick={() => this.toggleMembership(community.id)}
-                    loading={loading === community.id}
+                    loading={isLoading}
+                    color={'success.alt'}
                     gradientTheme={'success'}
                     style={{ fontSize: '16px' }}
                   >

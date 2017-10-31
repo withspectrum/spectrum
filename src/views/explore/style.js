@@ -368,7 +368,7 @@ export const SearchLink = styled(Link)`
   ${Truncate()} padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled(Avatar)`margin: 4px 6px 8px 4px;`;
+export const SearchResultImage = styled(Avatar)``;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
 
