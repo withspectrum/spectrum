@@ -1,4 +1,4 @@
-const { fromPlainText, toJSON } = require('shared/draft-utils');
+const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
 // 2017/01/01
 const DATE = 1483225200000;
