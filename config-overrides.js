@@ -59,7 +59,6 @@ module.exports = function override(config, env) {
     })
   );
   if (process.env.NODE_ENV === 'production') {
-    console.log(config.module.rules);
     removeEslint(config);
   }
   config = injectBabelPlugin('react-loadable/babel', config);
