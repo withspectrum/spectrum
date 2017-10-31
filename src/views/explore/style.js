@@ -416,12 +416,14 @@ export const SearchResultNull = styled.div`
 `;
 
 export const ListWithTitle = styled(FlexCol)`flex: auto;`;
+
 export const ListTitle = styled(H2)`
   border-bottom: 1px solid ${props => props.theme.bg.border};
   padding-bottom: 8px;
   padding-left: 16px;
   font-weight: 500;
   font-size: 18px;
+  margin-top: 32px;
 
   @media (max-width: 768px) {
     padding-left: 32px;
@@ -430,7 +432,7 @@ export const ListTitle = styled(H2)`
 
 export const ListWrapper = styled(FlexRow)`
   display: grid;
-  ${'' /* grid-gap: 16px; */} grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   align-items: stretch;
 `;
 
@@ -444,7 +446,7 @@ export const Collections = styled.div`
 export const CollectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px;
+  padding: 0 32px;
 
   @media (max-width: 768px) {
     padding: 0;
