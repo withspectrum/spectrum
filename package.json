@@ -11,7 +11,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cheerio": "^1.0.0-rc.2",
     "cross-env": "^5.0.5",
-    "flow-bin": "^0.55.0",
+    "flow-bin": "^0.57.3",
     "import-inspector": "^2.0.0",
     "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",

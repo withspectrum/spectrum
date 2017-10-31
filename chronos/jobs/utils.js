@@ -1,4 +1,4 @@
-const createQueue = require('../../shared/bull/create-queue');
+const createQueue = require('./create-queue');
 
 export const addQueue = (name: string, data: any, opts: any) => {
   const worker = createQueue(name);
