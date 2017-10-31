@@ -32,6 +32,7 @@ export const Wrapper = styled(FlexCol)`
   overflow: auto;
   overflow-x: hidden;
   z-index: ${zIndex.base};
+  align-self: stretch;
 `;
 
 export const ViewTitle = styled(H1)`
@@ -441,12 +442,14 @@ export const ListItem = styled(FlexRow)``;
 export const Collections = styled.div`
   display: flex;
   flex-direction: column;
+  flex: auto;
 `;
 
 export const CollectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 32px;
+  flex: auto;
 
   @media (max-width: 768px) {
     padding: 0;
@@ -457,4 +460,5 @@ export const CategoryWrapper = styled.div`
   display: ${props => (props.selected ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
+  flex: auto;
 `;

@@ -8,7 +8,6 @@ import { getTopCommunities } from '../../../../api/community';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { displayLoadingState } from '../../../../components/loading';
-import { Button, OutlineButton } from '../../../../components/buttons';
 import { Row } from './style';
 import { CommunityProfile } from '../../../../components/profile';
 

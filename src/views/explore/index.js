@@ -24,8 +24,8 @@ const ExplorePure = props => {
   });
 
   // previous features include: Vectors, Frontend Cafe, Abstract, Work in Progress, Mental Health
-  const featureSlug = 'crypto';
-  const featureNotes = `Crypto is a place to discuss crypto-currencies and tokens. As blockchain technology becomes more and more mainstream, communities like Crypto allow more people to get involved, learn, and share what they know. We're all for that, so if you're an existing investor, a newcomer to crypto-currencies, or just interested in learning about blockchain, check out Crypto!`;
+  // const featureSlug = 'crypto';
+  // const featureNotes = `Crypto is a place to discuss crypto-currencies and tokens. As blockchain technology becomes more and more mainstream, communities like Crypto allow more people to get involved, learn, and share what they know. We're all for that, so if you're an existing investor, a newcomer to crypto-currencies, or just interested in learning about blockchain, check out Crypto!`;
 
   return (
     <AppViewWrapper>

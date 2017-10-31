@@ -1,4 +1,4 @@
-import React from 'react';
+// @flow
 import styled, { css } from 'styled-components';
 import { FlexRow } from '../globals';
 

@@ -14,7 +14,6 @@ import {
   ListWithTitle,
   ListTitle,
   ListWrapper,
-  ListItem,
   CategoryWrapper,
   Collections,
   CollectionWrapper,
@@ -150,6 +149,7 @@ class CollectionSwitcher extends Component {
     selectorItems.push('Top Communities');
     collections.map(collection => {
       selectorItems.push(collection.title);
+      return null;
     });
 
     return (
@@ -193,11 +193,7 @@ class CollectionSwitcher extends Component {
 
 class CategoryList extends Component {
   render() {
-    const {
-      data: { communities, loading, error },
-      title,
-      currentUser,
-    } = this.props;
+    const { data: { communities }, title, currentUser } = this.props;
 
     if (communities) {
       return (

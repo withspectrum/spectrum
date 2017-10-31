@@ -14,7 +14,7 @@ import { FlexCol, hexa } from '../globals';
 export const Default = styled(FlexCol)`
   display: flex;
   position: relative;
-  flex: auto;
+  flex: none;
   justify-content: center;
   background-color: ${({ theme }) => theme.bg.default};
   color: ${({ theme }) => theme.text.default};

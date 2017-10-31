@@ -151,7 +151,7 @@ export const collections = [
       },
       {
         title: 'Find a new gig',
-        communities: ['careers', 'job-opportunities', 'need-some-work', ,],
+        communities: ['careers', 'job-opportunities', 'need-some-work'],
       },
     ],
   },
