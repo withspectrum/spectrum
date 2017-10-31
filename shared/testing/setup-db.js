@@ -2,7 +2,7 @@ import data from './data';
 const tables = Object.keys(data);
 
 /**
- * This is run before all tests in src/setupTests.js
+ * This is run before all tests
  */
 export const setup = db => {
   // Create the tables
