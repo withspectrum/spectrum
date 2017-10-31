@@ -439,3 +439,24 @@ export const ListWrapper = styled(FlexRow)`
 `;
 
 export const ListItem = styled(FlexRow)``;
+
+export const Collections = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const CollectionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+export const CategoryWrapper = styled.div`
+  display: ${props => (props.selected ? 'flex' : 'none')};
+  flex-direction: column;
+  justify-content: flex-start;
+`;

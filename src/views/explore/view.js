@@ -10,9 +10,18 @@ import { UpsellSignIn } from '../../components/upsell';
 import TopCommunityList from './components/topCommunities';
 import { CommunityProfile } from '../../components/profile';
 import { collections } from './collections';
-import { ListWithTitle, ListTitle, ListWrapper, ListItem } from './style';
+import {
+  ListWithTitle,
+  ListTitle,
+  ListWrapper,
+  ListItem,
+  CategoryWrapper,
+  Collections,
+  CollectionWrapper,
+} from './style';
 import { getCommunitiesCollectionQuery } from './queries';
 import { displayLoadingState } from '../../components/loading';
+import { SegmentedControl, Segment } from '../../components/segmentedControl';
 import { Tagline, Copy, Content } from '../splash/style';
 
 export const CommunitySearch = (props: Props) => {
@@ -116,73 +125,71 @@ export const Charts = props => {
     flex: auto;
   `;
 
-  const Featured = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 0 32px;
+  return <ChartGrid>{collections && <CollectionSwitcher />}</ChartGrid>;
+};
 
-    @media (max-width: 768px) {
-      padding: 0;
-    }
-  `;
+class CollectionSwitcher extends Component {
+  constructor() {
+    super();
 
-  const Collections = styled.div`
-    display: flex;
-    flex-direction: column;
-  `;
+    this.state = {
+      selectedView: 'Top Communities',
+    };
+  }
 
-  const CollectionWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 32px;
+  handleSegmentClick(title) {
+    if (this.state === title) return;
 
-    @media (max-width: 768px) {
-      padding: 0;
+    return this.setState({
+      selectedView: title,
+    });
+  }
 
-      h1 {
-        margin-top: 32px;
-        margin-left: 16px;
-      }
-    }
-  `;
+  render() {
+    let selectorItems = [];
+    selectorItems.push('Top Communities');
+    collections.map(collection => {
+      selectorItems.push(collection.title);
+    });
 
-  const CategoryWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  `;
-
-  return (
-    <ChartGrid>
-      <Featured>
-        <TopCommunityList withMeta={true} withDescription={false} />
-      </Featured>
-      {collections && (
-        <Collections>
+    return (
+      <Collections>
+        <SegmentedControl>
+          {selectorItems.map((title, i) => (
+            <Segment
+              key={i}
+              onClick={() => this.handleSegmentClick(title)}
+              selected={title === this.state.selectedView}
+            >
+              {title}
+            </Segment>
+          ))}
+        </SegmentedControl>
+        <CollectionWrapper>
+          <TopCommunityList
+            selected={this.state.selectedView === 'Top Communities'}
+          />
           {collections.map(collection => {
             const { title, categories } = collection;
             return (
-              <CollectionWrapper>
-                <h1>{title}</h1>
-                <CategoryWrapper>
-                  {categories.map((category, i) => {
-                    return (
-                      <Category
-                        key={i}
-                        title={category.title}
-                        slugs={category.communities}
-                      />
-                    );
-                  })}
-                </CategoryWrapper>
-              </CollectionWrapper>
+              <CategoryWrapper selected={this.state.selectedView === title}>
+                {categories.map((category, i) => {
+                  return (
+                    <Category
+                      key={i}
+                      title={category.title}
+                      slugs={category.communities}
+                    />
+                  );
+                })}
+              </CategoryWrapper>
             );
           })}
-        </Collections>
-      )}
-    </ChartGrid>
-  );
-};
+        </CollectionWrapper>
+      </Collections>
+    );
+  }
+}
 
 class CategoryList extends Component {
   render() {
@@ -197,8 +204,9 @@ class CategoryList extends Component {
         <ListWithTitle>
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
-            {communities.map(community => (
+            {communities.map((community, i) => (
               <CommunityProfile
+                key={i}
                 profileSize={'upsell'}
                 data={{ community }}
                 currentUser={currentUser}
