@@ -164,7 +164,7 @@
     "build:mercury": "cross-env NODE_PATH=./ cross-env DIR=mercury backpack build",
     "postbuild:mercury": "cp mercury/package.json build-mercury/package.json && cp now.json build-mercury/now.json",
     "build:client": "cross-env NODE_PATH=./ react-app-rewired build",
-    "jest": "cross-env NODE_PATH=./ jest --setupTestFrameworkScriptFile='./src/setupTests.js'",
+    "jest": "cross-env NODE_PATH=./ jest",
     "pretest": "cross-env NODE_PATH=./ NODE_ENV=test npm run db:migrate && babel-node shared/testing/setup-db.js",
     "test": "npm run jest -- --watch",
     "posttest": "cross-env NODE_PATH=./ NODE_ENV=test babel-node shared/testing/empty-db.js",
