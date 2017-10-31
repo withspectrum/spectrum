@@ -68,7 +68,7 @@ export const zIndex = new function() {
   this.slider = window.innerWidth < 768 ? this.chrome + 1 : this.chrome; // slider should appear significantly above the base to leave room for other elements
   this.composer = this.slider - 2; // composer should never appear above the slider
   this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
-  this.flyout = this.chatInput + 1; // flyout may overlap with chatInput and should take precedence
+  this.flyout = this.chatInput + 3; // flyout may overlap with chatInput and should take precedence
 
   this.fullscreen = 4000; // fullscreen elements should cover all screen content except toasts
 
