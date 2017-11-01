@@ -6,7 +6,7 @@ export const SegmentedControl = styled(FlexRow)`
   align-self: stretch;
   margin: 0 32px;
   margin-top: 16px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   align-items: stretch;
   min-height: 48px;
 
@@ -25,20 +25,20 @@ export const Segment = styled(FlexRow)`
   text-align: center;
   line-height: 1;
   font-size: 18px;
-  font-weight: ${props => (props.selected ? '700' : '500')};
+  font-weight: 500;
   color: ${props =>
     props.selected ? props.theme.text.default : props.theme.text.alt};
   cursor: pointer;
+  position: relative;
+  top: 2px;
+  border-bottom: 2px solid
+    ${props => (props.selected ? props.theme.text.default : 'transparent')};
 
-  ${props =>
+  ${'' /* ${props =>
     props.selected &&
     css`
-      position: relative;
-      top: 1px;
       border-bottom: 2px solid ${props => props.theme.bg.reverse};
-    `};
-
-  &:hover {
+    `}; */} &:hover {
     color: ${props => props.theme.text.default};
   }
 

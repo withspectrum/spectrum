@@ -180,7 +180,7 @@ class CommunityWithData extends Component {
         );
       case 'full':
         return (
-          <Card>
+          <Card style={{ paddingBottom: '16px' }}>
             <ProfileHeader>
               <CommunityAvatar
                 community

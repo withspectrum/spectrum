@@ -33,7 +33,6 @@ class Reputation extends React.Component<Props> {
     if (reputation === undefined || reputation === null) return null;
 
     const renderedReputation = reputation > 0 ? reputation : '0';
-    const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';
 
     return (
       <ReputationWrapper
@@ -41,7 +40,7 @@ class Reputation extends React.Component<Props> {
         tipText={`${tipText}`}
         tipLocation={tipLocation}
       >
-        <Icon glyph="rep" size={iconSize} />
+        <Icon glyph="rep" size={24} />
 
         <ReputationLabel size={size}>
           {truncateNumber(renderedReputation, 1)} rep

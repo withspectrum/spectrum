@@ -6,7 +6,7 @@ export const ReputationWrapper = styled.div`
   display: flex;
   align-items: center;
   flex: none;
-  color: inherit;
+  color: ${props => props.theme.text.alt};
   cursor: pointer;
   position: relative;
   z-index: ${zIndex.fullScreen};
@@ -15,5 +15,6 @@ export const ReputationWrapper = styled.div`
 
 export const ReputationLabel = styled.span`
   font-size: 14px;
-  font-weight: ${props => (props.size === 'large' ? '600' : '400')};
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
 `;
