@@ -5,12 +5,10 @@ export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
   display: grid;
   grid-template-rows: ${props =>
-    props.hideDropdowns ? '1fr 64px' : '48px 48px 1fr 64px'};
+    props.hideDropdowns ? '1fr 64px' : '48px 1fr 64px'};
   grid-template-columns: 100%;
   grid-template-areas: ${props =>
-    props.hideDropdowns
-      ? `'body' 'footer'`
-      : `'titlebar' 'header' 'body' 'footer'`};
+    props.hideDropdowns ? `'body' 'footer'` : `'header' 'body' 'footer'`};
   align-self: stretch;
   flex: auto;
   overflow: hidden;
@@ -18,6 +16,9 @@ export const Container = styled(FlexCol)`
 
   @media (max-width: 768px) {
     max-width: 100vw;
+    grid-template-rows: 48px 64px 1fr 64px;
+    grid-template-areas: 'title' 'header' 'body' 'footer';
+    height: 100vh;
   }
 `;
 
