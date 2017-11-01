@@ -28,13 +28,8 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import {
-  CoverRow,
-  CoverColumn,
-  SegmentedControl,
-  Segment,
-  LogoutButton,
-} from './style';
+import { SegmentedControl, Segment } from '../../components/segmentedControl';
+import { CoverRow, CoverColumn, LogoutButton } from './style';
 import { getCommunityThreads } from './queries';
 import { getCommunity } from '../../api/community';
 import ChannelList from './components/channelList';
@@ -175,7 +170,7 @@ class CommunityView extends React.Component<Props, State> {
       const isNewAndOwned = isOwner && community.metaData.members < 5;
 
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-e2e-id="community-view">
           <Titlebar
             title={community.name}
             provideBack={true}
@@ -211,7 +206,7 @@ class CommunityView extends React.Component<Props, State> {
               </Column>
 
               <Column type="primary">
-                <SegmentedControl>
+                <SegmentedControl style={{ margin: '-16px 0 16px' }}>
                   <Segment
                     segmentLabel="search"
                     onClick={() => this.handleSegmentClick('search')}

@@ -30,6 +30,7 @@ type GetCommunityBySlugArgs = {
 };
 
 export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
+export type GetCommunitiesArgs = Array<string>;
 
 export const getCommunities = (
   communityIds: Array<string>

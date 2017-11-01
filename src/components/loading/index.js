@@ -42,7 +42,7 @@ import {
 */
 const LoadingContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
+  flex: auto;
   align-self: stretch;
   align-items: center;
   justify-content: center;

@@ -235,7 +235,7 @@ module.exports = {
 
       // user must be authed to join a community
       if (!currentUser) {
-        return new UserError('You must be signed in to follow this community.');
+        return new UserError('You must be signed in to join this community.');
       }
 
       // get the current user's permissions in the community
