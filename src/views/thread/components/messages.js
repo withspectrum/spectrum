@@ -166,12 +166,16 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (dataExists) {
-      if (currentUser) {
-        return <EmptyChat thread={data.thread} />;
-      } else {
-        return null;
-      }
+    if (!messagesExist) {
+      return (
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
+          </HorizontalRule>
+        </ChatWrapper>
+      );
     }
 
     if (isLoading) {
