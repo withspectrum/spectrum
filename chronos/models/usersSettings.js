@@ -8,9 +8,11 @@ export const getUsersForDigest = (
   switch (timeframe) {
     case 'daily': {
       range = 'dailyDigest';
+      break;
     }
     case 'weekly': {
       range = 'weeklyDigest';
+      break;
     }
   }
 

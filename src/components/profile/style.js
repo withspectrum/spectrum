@@ -1,6 +1,14 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
+import {
+  FlexRow,
+  FlexCol,
+  Truncate,
+  Transition,
+  zIndex,
+  Shadow,
+  hexa,
+} from '../globals';
 import Avatar from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
@@ -179,12 +187,11 @@ export const Label = styled.span`
 export const Count = styled.span`font-weight: 700;`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
-  position: absolute;
-  bottom: -64px;
-  left: 16px;
+  flex: none;
+  margin-top: -32px;
   flex-direction: column;
   align-items: center;
-  width: calc(100% - 32px);
+  padding: 0 16px;
 `;
 
 export const CoverAvatar = styled(Avatar)`
@@ -201,12 +208,14 @@ export const CoverTitle = styled(Title)`
 
 export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
-  margin-top: 64px;
   margin-bottom: 16px;
   justify-content: center;
 `;
 
-export const CoverDescription = styled(Description)`text-align: center;`;
+export const CoverDescription = styled(Description)`
+  text-align: center;
+  flex: auto;
+`;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
 export const ProfileCard = styled(Card)`
@@ -223,6 +232,7 @@ export const ProfileCard = styled(Card)`
 
 export const ProUpgrade = styled.div`
   margin: 16px;
+  margin-top: 0;
   display: flex;
   align-items: stretch;
   align-content: stretch;
@@ -239,5 +249,45 @@ export const ReputationContainer = styled.div`
   padding: 12px 0;
   margin: 0 16px;
   display: flex;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
+`;
+
+export const CoverPhoto = styled.div`
+  position: relative;
+  width: 100%;
+  height: ${props => (props.large ? '320px' : '96px')};
+  background-color: ${({ theme }) => theme.brand.default};
+  background-image: url('${props => props.url}');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+`;
+
+export const Container = styled.div`
+  background: ${props => props.theme.bg.default};
+  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  flex: 0 0 22%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  position: relative;
+  z-index: ${zIndex.card};
+  margin: 16px;
+
+  @media (max-width: 1168px) {
+    flex-basis: 44%;
+  }
+
+  @media (max-width: 540px) {
+    flex-basis: 100%;
+  }
+`;
+
+export const ButtonContainer = styled.div`
+  padding: 8px 16px 16px;
+
+  button {
+    width: 100%;
+  }
 `;

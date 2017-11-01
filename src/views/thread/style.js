@@ -51,8 +51,8 @@ export const ThreadContentView = styled(FlexCol)`
 export const ThreadSidebarView = styled(FlexCol)`
   background-color: ${({ theme }) => theme.bg.wash};
   overflow: hidden;
-  min-width: 256px;
-  max-width: 256px;
+  min-width: 320px;
+  max-width: 320px;
   max-height: 100%;
   flex: auto;
   display: flex;

@@ -2,7 +2,6 @@
 import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition, zIndex, monoStack } from '../globals';
-import Input from './input';
 import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
 
 export const ChatInputWrapper = styled(FlexRow)`

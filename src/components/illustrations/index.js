@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { zIndex } from '../../../components/globals';
+import { zIndex } from '../globals';
 
 export const Cluster = styled.img`
   position: absolute;
