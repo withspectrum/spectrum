@@ -7,7 +7,7 @@ const Stepper = ({ activeStep }) => {
       <Line />
       <Step
         tipText={'Create your community'}
-        tipLocation={'top'}
+        tipLocation={'top-right'}
         active={activeStep === 1}
       >
         1
@@ -19,15 +19,21 @@ const Stepper = ({ activeStep }) => {
       >
         2
       </Step>
+      {window.innerWidth > 768 && (
+        <Step
+          tipText={'Start a conversation'}
+          tipLocation={'top-left'}
+          active={activeStep === 3}
+        >
+          3
+        </Step>
+      )}
       <Step
-        tipText={'Start a conversation'}
-        tipLocation={'top'}
-        active={activeStep === 3}
+        tipText={'Share'}
+        tipLocation={'top-left'}
+        active={activeStep === 4}
       >
-        3
-      </Step>
-      <Step tipText={'Share'} tipLocation={'top'} active={activeStep === 4}>
-        4
+        {window.innerWidth > 768 ? '4' : '3'}
       </Step>
     </Container>
   );

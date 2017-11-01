@@ -392,6 +392,7 @@ class Navbar extends Component {
       parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
     const isComposingDm = history.location.pathname === '/messages/new';
     const isComposingThread = history.location.pathname === '/new/thread';
+    const isCreatingCommunity = history.location.pathname === '/new/community';
     const isViewingThreadSlider = threadParam !== undefined;
     if (
       isMobile &&
@@ -399,7 +400,8 @@ class Navbar extends Component {
         isComposingDm ||
         isViewingThread ||
         isViewingDm ||
-        isComposingThread)
+        isComposingThread ||
+        isCreatingCommunity)
     ) {
       return null;
     }

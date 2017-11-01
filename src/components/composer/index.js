@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import queryString from 'query-string';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -60,6 +61,8 @@ type Props = {
   location: Object,
   activeCommunity?: string,
   activeChannel?: string,
+  step?: Function,
+  isOnboarding?: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
@@ -108,6 +111,12 @@ class ComposerWithData extends Component<Props, State> {
       community = communities && communities.length > 0 ? communities[0] : null;
     }
 
+    // user is onboarding, get the communityID from the query string
+    if (props.isOnboarding) {
+      const { id } = queryString.parse(props.location.search);
+      community = { id };
+    }
+
     if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
@@ -120,6 +129,8 @@ class ComposerWithData extends Component<Props, State> {
       communityChannels,
       props.activeChannel
     );
+
+    if (!activeChannel || !activeChannel.id) return props.data.refetch();
 
     this.setState({
       availableCommunities: communities,
@@ -315,7 +326,7 @@ class ComposerWithData extends Component<Props, State> {
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);
         } else if (this.props.isOnboarding) {
-          this.props.history.replace(`/new/community?s=4&id=${communityId}`);
+          this.props.step && this.props.step('next');
         } else {
           this.props.history.push(`?thread=${id}`);
           this.props.dispatch(changeActiveThread(null));
@@ -404,50 +415,55 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { data: { user } } = this.props;
+    const { isOnboarding, data: { user } } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
     return (
-      <Container>
-        <Titlebar provideBack title={`New conversation`} noComposer />
-        <Dropdowns>
-          <span>To:</span>
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              onChange={this.setActiveCommunity}
-              value={activeCommunity}
-            >
-              {availableCommunities.map(community => {
-                return (
-                  <option key={community.id} value={community.id}>
-                    {community.name}
-                  </option>
-                );
-              })}
-            </RequiredSelector>
-          )}
-          {!dataExists ? (
-            <LoadingSelect />
-          ) : (
-            <RequiredSelector
-              onChange={this.setActiveChannel}
-              value={activeChannel}
-            >
-              {availableChannels
-                .filter(channel => channel.community.id === activeCommunity)
-                .map((channel, i) => {
+      <Container isOnboarding={isOnboarding}>
+        {!isOnboarding && (
+          <Titlebar provideBack title={`New conversation`} noComposer />
+        )}
+        {// only show the community and channel picker if the user isn't onboarding a new community
+        !isOnboarding && (
+          <Dropdowns>
+            <span>To:</span>
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                onChange={this.setActiveCommunity}
+                value={activeCommunity}
+              >
+                {availableCommunities.map(community => {
                   return (
-                    <option key={channel.id} value={channel.id}>
-                      {channel.name}
+                    <option key={community.id} value={community.id}>
+                      {community.name}
                     </option>
                   );
                 })}
-            </RequiredSelector>
-          )}
-        </Dropdowns>
-        <ThreadInputs>
+              </RequiredSelector>
+            )}
+            {!dataExists ? (
+              <LoadingSelect />
+            ) : (
+              <RequiredSelector
+                onChange={this.setActiveChannel}
+                value={activeChannel}
+              >
+                {availableChannels
+                  .filter(channel => channel.community.id === activeCommunity)
+                  .map((channel, i) => {
+                    return (
+                      <option key={channel.id} value={channel.id}>
+                        {channel.name}
+                      </option>
+                    );
+                  })}
+              </RequiredSelector>
+            )}
+          </Dropdowns>
+        )}
+        <ThreadInputs isOnboarding={isOnboarding}>
           <Textarea
             onChange={this.changeTitle}
             style={ThreadTitle}
@@ -479,9 +495,12 @@ class ComposerWithData extends Component<Props, State> {
           <FlexRow>
             <TextButton
               hoverColor="warn.alt"
-              onClick={() => this.props.dispatch(changeActiveThread(null))}
+              onClick={() =>
+                isOnboarding
+                  ? this.props.step('next')
+                  : this.props.dispatch(changeActiveThread(null))}
             >
-              Cancel
+              {isOnboarding ? 'Skip' : 'Cancel'}
             </TextButton>
             <Button
               onClick={this.publishThread}

@@ -10,13 +10,10 @@ export const Container = styled(FlexCol)`
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 48px);
+  height: ${props => (props.isOnboarding ? '100%' : 'calc(100vh - 48px)')};
 
   @media (max-width: 768px) {
-    grid-template-rows: 48px 64px 1fr 64px;
-    grid-template-areas: 'title' 'header' 'body' 'footer';
     max-width: 100vw;
-    height: 100vh;
   }
 `;
 
@@ -123,7 +120,7 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   grid-area: body;
   overflow-y: scroll;
-  padding: 64px;
+  padding: ${props => (props.isOnboarding ? '0 32px 64px' : '64px')};
   padding-left: 80px;
   background-color: ${props => props.theme.bg.default};
 

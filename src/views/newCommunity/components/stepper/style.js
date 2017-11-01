@@ -8,6 +8,7 @@ export const Container = styled.div`
   justify-content: space-between;
   position: relative;
   padding: 24px;
+  flex: none;
 `;
 
 export const Line = styled.span`

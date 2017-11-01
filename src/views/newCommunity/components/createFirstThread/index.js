@@ -6,12 +6,12 @@ import Composer from '../../../../components/composer';
 import { Loading } from '../../../../components/loading';
 import { ComposerWrapper } from '../../style';
 
-const CreateFirstThread = ({ community, history, onboarding }) => {
+const CreateFirstThread = ({ community, history, onboarding, step }) => {
   if (!community) return <Loading />;
 
   return (
     <ComposerWrapper>
-      <Composer isOnboarding isInbox={false} />
+      <Composer step={step} isOnboarding isInbox={false} />
     </ComposerWrapper>
   );
 };

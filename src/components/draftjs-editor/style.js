@@ -47,6 +47,7 @@ export const ComposerBase = styled.div`
 export const SideToolbarWrapper = styled.div`
   position: fixed;
   margin-top: -8px;
+  z-index: 1;
 `;
 
 export const Action = styled.div`

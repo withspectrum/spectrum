@@ -71,7 +71,8 @@ export const Input = styled.div`
     right: 0;
     bottom: 0;
     background: #fff;
-    padding: 4px 12px;
+    padding: 10px 12px;
+    line-height: 1;
     border-left: 2px solid ${props => props.theme.bg.border};
     border-radius: 0 8px 8px 0;
     z-index: ${zIndex.form + 1};
