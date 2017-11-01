@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition, Shadow, hexa, zIndex } from '../globals';
+import { Transition, Shadow, hexa, zIndex, Truncate } from '../globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;
@@ -66,6 +66,7 @@ export const MetaTitle = styled(BaseMeta)`
   font-weight: 800;
   white-space: normal;
   color: ${({ theme }) => theme.text.default};
+  ${Truncate};
 `;
 
 export const MetaDescription = styled(BaseMeta)`

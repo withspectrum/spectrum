@@ -86,7 +86,7 @@ export const Subtitle = styled.div`
 export const Description = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px;
+  padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
@@ -208,7 +208,7 @@ export const CoverTitle = styled(Title)`
 
 export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
-  ${'' /* margin-top: 64px; */} margin-bottom: 16px;
+  margin-bottom: 16px;
   justify-content: center;
 `;
 
@@ -232,6 +232,7 @@ export const ProfileCard = styled(Card)`
 
 export const ProUpgrade = styled.div`
   margin: 16px;
+  margin-top: 0;
   display: flex;
   align-items: stretch;
   align-content: stretch;
