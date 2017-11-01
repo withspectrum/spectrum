@@ -64,3 +64,8 @@ export const Form = styled.form`
   max-width: 100%;
   margin: 16px;
 `;
+
+export const ComposerWrapper = styled.div`
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+`;

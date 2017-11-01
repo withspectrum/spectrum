@@ -314,6 +314,8 @@ class ComposerWithData extends Component<Props, State> {
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(`/?thread=${id}`);
+        } else if (this.props.isOnboarding) {
+          this.props.history.replace(`/new/community?s=4&id=${communityId}`);
         } else {
           this.props.history.push(`?thread=${id}`);
           this.props.dispatch(changeActiveThread(null));
