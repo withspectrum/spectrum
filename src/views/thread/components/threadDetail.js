@@ -3,6 +3,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { EditorState } from 'draft-js';
 import {
   getLinkPreviewFromUrl,
   timeDifference,
@@ -71,6 +72,7 @@ class ThreadDetailPure extends Component {
   }
 
   setThreadState() {
+    const { body } = this.state;
     const { thread } = this.props;
 
     let rawLinkPreview =
@@ -85,9 +87,15 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
+    const state = toState(JSON.parse(thread.content.body));
+
     this.setState({
       isEditing: false,
-      body: toState(JSON.parse(thread.content.body)),
+      // When the thread changes we have to keep the previous editor state
+      // this is because in DraftJS the decorators are bound to the state, not the editor component,
+      // so when we just render the new state all the decorators go missing, leading to links etc.
+      // not working at all
+      body: body ? EditorState.push(body, state.getCurrentContent()) : state,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:

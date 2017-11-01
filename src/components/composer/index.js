@@ -5,6 +5,7 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
+import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
@@ -140,10 +141,18 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   handleKeyPress = e => {
-    // if person taps esc, close the dialog
-    if (e.keyCode === 27) {
+    const esc = e.keyCode === 27;
+    const cmdEnter = e.keyCode === 13 && KeyBindingUtil.hasCommandModifier(e);
+
+    if (esc) {
+      // Community/channel view
       this.closeComposer();
+      // Dashboard
+      this.props.dispatch(changeActiveThread(null));
+      return;
     }
+
+    if (cmdEnter) return this.publishThread();
   };
 
   changeTitle = e => {

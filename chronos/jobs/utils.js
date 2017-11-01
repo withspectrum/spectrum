@@ -1,4 +1,4 @@
-const createQueue = require('./create-queue');
+const createQueue = require('./bull/create-queue');
 
 export const addQueue = (name: string, data: any, opts: any) => {
   const worker = createQueue(name);
