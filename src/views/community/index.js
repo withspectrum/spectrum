@@ -206,7 +206,7 @@ class CommunityView extends React.Component<Props, State> {
               </Column>
 
               <Column type="primary">
-                <SegmentedControl>
+                <SegmentedControl style={{ margin: '-16px 0 16px' }}>
                   <Segment
                     segmentLabel="search"
                     onClick={() => this.handleSegmentClick('search')}
