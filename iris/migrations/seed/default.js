@@ -3,9 +3,13 @@ const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 // 2017/01/01
 const DATE = 1483225200000;
 
+const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
+const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
+const BRYN_ID = 'VToKcde16dREgDkXcDl3hhcrFN33';
+
 const DEFAULT_USERS = [
   {
-    id: 'gVk5mYwccUOEKiN5vtOouqroGKo1',
+    id: MAX_ID,
     name: 'Max Stoiber',
     description:
       'Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕',
@@ -21,7 +25,7 @@ const DEFAULT_USERS = [
     lastSeen: new Date(DATE),
   },
   {
-    id: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+    id: BRIAN_ID,
     name: 'Brian Lovin',
     description: 'Chief Nice Boy™',
     website: 'https://brianlovin.com',
@@ -37,7 +41,7 @@ const DEFAULT_USERS = [
     lastSeen: new Date(DATE),
   },
   {
-    id: 'VToKcde16dREgDkXcDl3hhcrFN33',
+    id: BRYN_ID,
     name: 'Bryn Jackson',
     description: 'full-stack flapjack',
     website: 'https://bryn.io',
@@ -86,7 +90,7 @@ const DEFAULT_THREADS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     createdAt: new Date(DATE),
-    creatorId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+    creatorId: BRIAN_ID,
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isPublished: true,
@@ -104,11 +108,74 @@ const DEFAULT_THREADS = [
         timestamp: new Date(DATE),
         content: {
           title: 'The first thread! 🎉',
-          body: 'This is it, we got a thread here',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is it, we got a thread here'))
+          ),
         },
       },
     ],
     modifiedAt: new Date(DATE),
+    lastActive: new Date(DATE),
+  },
+  {
+    id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
+    createdAt: new Date(DATE + 1),
+    creatorId: MAX_ID,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 1),
+        content: {
+          title: 'Another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 1),
+    lastActive: new Date(DATE + 1),
+  },
+  {
+    id: 'f2eb9d3d-ed05-49ae-8fc9-91d02314d5a9',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
   },
 ];
 
