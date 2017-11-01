@@ -111,12 +111,6 @@ class ComposerWithData extends Component<Props, State> {
       community = communities && communities.length > 0 ? communities[0] : null;
     }
 
-    // user is onboarding, get the communityID from the query string
-    if (props.isOnboarding) {
-      const { id } = queryString.parse(props.location.search);
-      community = { id };
-    }
-
     if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
@@ -324,7 +318,9 @@ class ComposerWithData extends Component<Props, State> {
           this.props.history.replace(`/?t=${id}`);
           this.props.dispatch(changeActiveThread(id));
         } else if (this.props.location.pathname === '/new/thread') {
-          this.props.history.replace(`/?thread=${id}`);
+          this.props.isOnboarding
+            ? this.props.history.push(`/new/community?s=4&id=${communityId}`)
+            : this.props.history.replace(`/?thread=${id}`);
         } else if (this.props.isOnboarding) {
           this.props.step && this.props.step('next');
         } else {
@@ -415,16 +411,21 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOnboarding, data: { user } } = this.props;
+    const { isOnboarding, hideDropdowns, data: { user } } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
     return (
-      <Container isOnboarding={isOnboarding}>
-        {!isOnboarding && (
-          <Titlebar provideBack title={`New conversation`} noComposer />
-        )}
+      <Container hideDropdowns={hideDropdowns}>
+        <Titlebar
+          provideBack
+          backRoute={
+            isOnboarding ? `/new/community?s=3&id=${activeCommunity}` : null
+          }
+          title={`New conversation`}
+          noComposer
+        />
         {// only show the community and channel picker if the user isn't onboarding a new community
-        !isOnboarding && (
+        !hideDropdowns && (
           <Dropdowns>
             <span>To:</span>
             {!dataExists ? (

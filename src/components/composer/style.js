@@ -4,13 +4,17 @@ import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
   display: grid;
-  grid-template-rows: 48px 1fr 64px;
+  grid-template-rows: ${props =>
+    props.hideDropdowns ? '1fr 64px' : '48px 48px 1fr 64px'};
   grid-template-columns: 100%;
-  grid-template-areas: 'header' 'body' 'footer';
+  grid-template-areas: ${props =>
+    props.hideDropdowns
+      ? `'body' 'footer'`
+      : `'titlebar' 'header' 'body' 'footer'`};
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: ${props => (props.isOnboarding ? '100%' : 'calc(100vh - 48px)')};
+  height: ${props => (props.hideDropdowns ? '100%' : 'calc(100vh - 48px)')};
 
   @media (max-width: 768px) {
     max-width: 100vw;

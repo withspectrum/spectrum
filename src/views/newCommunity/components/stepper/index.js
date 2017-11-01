@@ -19,21 +19,19 @@ const Stepper = ({ activeStep }) => {
       >
         2
       </Step>
-      {window.innerWidth > 768 && (
-        <Step
-          tipText={'Start a conversation'}
-          tipLocation={'top-left'}
-          active={activeStep === 3}
-        >
-          3
-        </Step>
-      )}
+      <Step
+        tipText={'Start a conversation'}
+        tipLocation={'top-left'}
+        active={activeStep === 3}
+      >
+        3
+      </Step>
       <Step
         tipText={'Share'}
         tipLocation={'top-left'}
         active={activeStep === 4}
       >
-        {window.innerWidth > 768 ? '4' : '3'}
+        4
       </Step>
     </Container>
   );

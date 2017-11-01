@@ -70,4 +70,8 @@ export const ComposerWrapper = styled.div`
   overflow: hidden;
   display: flex;
   flex: auto;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 16px;
+  flex-direction: column;
 `;

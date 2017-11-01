@@ -86,12 +86,6 @@ class NewCommunity extends Component {
     const { activeStep, community } = this.state;
     let newStep = direction === 'next' ? activeStep + 1 : activeStep - 1;
 
-    console.log('stepping');
-    // skip the composer step on mobile
-    if (newStep === 3 && window.innerWidth < 768) {
-      newStep = 4;
-    }
-
     this.props.history.replace(
       `/new/community?s=${newStep}${community &&
         community.id &&
@@ -243,10 +237,9 @@ class NewCommunity extends Component {
               )}
 
               {// create the first thread
-              activeStep === 3 &&
-                window.innerWidth > 768 && (
-                  <CreateFirstThread step={this.step} community={community} />
-                )}
+              activeStep === 3 && (
+                <CreateFirstThread step={this.step} community={community} />
+              )}
 
               {// share the community
               activeStep === 4 && (
