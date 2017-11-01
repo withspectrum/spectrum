@@ -189,7 +189,7 @@ class ThreadContainer extends React.Component<Props, State> {
       }
 
       return (
-        <View slider={slider}>
+        <View data-e2e-id="thread-view" slider={slider}>
           <Head
             title={title}
             description={description}
