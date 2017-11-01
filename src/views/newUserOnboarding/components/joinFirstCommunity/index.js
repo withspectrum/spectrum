@@ -81,7 +81,13 @@ class JoinFirstCommunityPure extends Component {
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
           </CoverPhoto>
-          <CoverSubtitle>{community.metaData.members} members</CoverSubtitle>
+
+          {community.metaData &&
+            community.metaData.members && (
+              <CoverSubtitle>
+                {community.metaData.members} members
+              </CoverSubtitle>
+            )}
 
           <CoverDescription style={{ paddingBottom: '16px' }}>
             {community.description}

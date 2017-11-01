@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('chronos');
-const createWorker = require('../shared/bull/create-worker');
+const createWorker = require('./jobs/bull/create-worker');
 import processDataForDigest from './queues/digests';
 import processSingleDigestEmail from './queues/digests/processDigestEmail';
 import processDailyCoreMetrics from './queues/coreMetrics';
