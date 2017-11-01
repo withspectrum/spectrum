@@ -115,6 +115,7 @@ const DEFAULT_THREADS = [
       },
     ],
     modifiedAt: new Date(DATE),
+    lastActive: new Date(DATE),
   },
   {
     id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
@@ -144,6 +145,7 @@ const DEFAULT_THREADS = [
       },
     ],
     modifiedAt: new Date(DATE + 1),
+    lastActive: new Date(DATE + 1),
   },
   {
     id: 'f2eb9d3d-ed05-49ae-8fc9-91d02314d5a9',
@@ -173,6 +175,7 @@ const DEFAULT_THREADS = [
       },
     ],
     modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
   },
 ];
 
