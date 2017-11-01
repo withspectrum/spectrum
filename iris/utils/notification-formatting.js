@@ -2,6 +2,7 @@ import onlyContainsEmoji from '../../shared/only-contains-emoji';
 import sentencify from '../../shared/sentencify';
 import { short as timeDifferenceShort } from '../../shared/time-difference';
 import sortByDate from '../../shared/sort-by-date';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
@@ -103,7 +104,12 @@ const formatNotification = (incomingNotification, currentUserId) => {
 
       href = `/thread/${notification.context.id}`;
       body = sentencify(
-        entities.map(({ payload }) => `"${payload.content.body}"`)
+        entities.map(
+          ({ payload }) =>
+            `"${payload.messageType === 'draftjs'
+              ? toPlainText(toState(payload.content.body))
+              : payload.content.body}"`
+        )
       );
       break;
     }
@@ -111,7 +117,10 @@ const formatNotification = (incomingNotification, currentUserId) => {
       const message = notification.context.payload;
 
       href = `/thread/${message.threadId}`;
-      body = message.content.body;
+      body =
+        message.messageType === 'draftjs'
+          ? toPlainText(toState(message.content.body))
+          : message.content.body;
       break;
     }
     case 'CHANNEL_CREATED': {
