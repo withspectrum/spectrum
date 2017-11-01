@@ -126,7 +126,7 @@ class ThreadFeedPure extends Component {
 
     if (dataExists) {
       return (
-        <Threads>
+        <Threads data-e2e-id="thread-feed">
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
           )}
