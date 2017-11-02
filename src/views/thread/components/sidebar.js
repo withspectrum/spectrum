@@ -15,6 +15,7 @@ import {
   SidebarSectionTitle,
   SidebarSectionBody,
   SidebarSectionActions,
+  SidebarSectionAuth,
   ThreadSidebarView,
   SidebarCommunityCover,
   SidebarCommunityProfile,
@@ -138,6 +139,28 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <ThreadSidebarView>
+        {!currentUser && (
+          <SidebarSection>
+            <SidebarSectionTitle>Join the conversation</SidebarSectionTitle>
+            <SidebarSectionBody>
+              Sign in to join this conversation, and others like it, in the
+              communities you care about.
+            </SidebarSectionBody>
+            <SidebarSectionAuth>
+              <Link to={`/login?r=${window.location}`}>
+                <Button gradientTheme={'brand'} color={'brand.default'}>
+                  Sign up
+                </Button>
+              </Link>
+              <Link to={`/login?r=${window.location}`}>
+                <TextButton gradientTheme={'text'} color={'text.alt'}>
+                  Log in
+                </TextButton>
+              </Link>
+            </SidebarSectionAuth>
+          </SidebarSection>
+        )}
+
         <SidebarSection>
           <Link to={`/${thread.community.slug}`}>
             <SidebarCommunityCover src={thread.community.coverPhoto} />
