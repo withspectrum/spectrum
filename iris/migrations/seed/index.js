@@ -12,6 +12,7 @@ const {
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
+  DEFAULT_MESSAGES,
 } = require('./default');
 
 const {
@@ -124,7 +125,7 @@ directMessageThreads.forEach(thread => {
 });
 
 console.log('Generating messages...');
-let messages = [];
+let messages = DEFAULT_MESSAGES;
 threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
   const threadMessages = [];
