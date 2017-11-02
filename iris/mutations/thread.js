@@ -25,7 +25,7 @@ import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
   Mutation: {
-    publishThread: (_, { thread }, { user }) => {
+    publishThread: async (_, { thread }, { user }) => {
       const currentUser = user;
 
       // user must be authed to publish a thread
@@ -40,126 +40,111 @@ module.exports = {
       }
 
       // get the current user's permissions in the channel where the thread is being posted
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
+      const getCurrentUserChannelPermissions = getUserPermissionsInChannel(
         thread.channelId,
         currentUser.id
       );
 
-      const parentCommunityIsPro = getCommunityRecurringPayments(
+      const getParentCommunityIsPro = getCommunityRecurringPayments(
         thread.communityId
       ).then(subs => {
         let filtered = subs && subs.filter(sub => sub.status === 'active');
         return !filtered || filtered.length === 0 ? false : true;
       });
 
-      // get the channel object where the thread is being posted
-      const channels = getChannels([thread.channelId]);
-
-      return Promise.all([
+      const [
         currentUserChannelPermissions,
         parentCommunityIsPro,
         channels,
-      ])
-        .then(
-          ([currentUserChannelPermissions, parentCommunityIsPro, channels]) => {
-            // select the channel to evaluate
-            const channelToEvaluate = channels[0];
+      ] = await Promise.all([
+        getCurrentUserChannelPermissions,
+        getParentCommunityIsPro,
+        getChannels([thread.channelId]),
+      ]);
 
-            // if channel wasn't found or is deleted
-            if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-              return new UserError("This channel doesn't exist");
-            }
+      // select the channel to evaluate
+      const channelToEvaluate = channels[0];
 
-            // if user isn't a channel member
-            if (!currentUserChannelPermissions.isMember) {
-              return new UserError(
-                "You don't have permission to create threads in this channel."
-              );
-            }
+      // if channel wasn't found or is deleted
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("This channel doesn't exist");
+      }
 
-            if (!parentCommunityIsPro && channelToEvaluate.isPrivate) {
-              return new UserError(
-                'Communities must be on the Pro plan to publish new threads in private channels'
-              );
-            }
+      // if user isn't a channel member
+      if (!currentUserChannelPermissions.isMember) {
+        return new UserError(
+          "You don't have permission to create threads in this channel."
+        );
+      }
 
-            /*
-            If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
+      if (!parentCommunityIsPro && channelToEvaluate.isPrivate) {
+        return new UserError(
+          'Communities must be on the Pro plan to publish new threads in private channels'
+        );
+      }
 
-            {
-              attachmentType: enum String
-              data: String
-            }
+      /*
+      If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
 
-            But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
-          */
-            let attachments = [];
-            // if the thread has attachments
-            if (thread.attachments) {
-              // iterate through them and construct a new attachment object
-              thread.attachments.map(attachment => {
-                attachments.push({
-                  attachmentType: attachment.attachmentType,
-                  data: JSON.parse(attachment.data),
-                });
-              });
+      {
+        attachmentType: enum String
+        data: String
+      }
 
-              // create a new thread object, overriding the attachments field with our new array
-              const newThread = Object.assign({}, thread, {
-                attachments,
-              });
-
-              // publish the thread
-              return publishThread(newThread, currentUser.id);
-            } else {
-              // if there are no attachments, publish the thread
-              return publishThread(thread, currentUser.id);
-            }
-          }
-        )
-        .then(newThread => {
-          // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain
-          createParticipantInThread(newThread.id, currentUser.id);
-          return newThread;
-        })
-        .then(newThread => {
-          // if the original mutation input contained files to upload
-          if (thread.filesToUpload) {
-            return Promise.all([
-              newThread,
-              Promise.all(
-                // upload each of the files to s3
-                thread.filesToUpload.map(file =>
-                  uploadImage(file, 'threads', newThread.id)
-                )
-              ),
-            ]);
-          } else {
-            return Promise.all([newThread]);
-          }
-        })
-        .then(([newThread, urls]) => {
-          if (!urls || urls.length === 0) return newThread;
-
-          // Replace the local image srcs with the remote image src
-          const body = JSON.parse(newThread.content.body);
-          const imageKeys = Object.keys(body.entityMap).filter(
-            key => body.entityMap[key].type === 'image'
-          );
-          urls.forEach((url, index) => {
-            if (!body.entityMap[imageKeys[index]]) return;
-            body.entityMap[imageKeys[index]].data.src = url;
-          });
-
-          // Update the thread with the new links
-          return editThread({
-            threadId: newThread.id,
-            content: {
-              ...newThread.content,
-              body: JSON.stringify(body),
-            },
+      But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
+    */
+      let attachments = [];
+      let threadObject = thread;
+      // if the thread has attachments
+      if (thread.attachments) {
+        // iterate through them and construct a new attachment object
+        thread.attachments.map(attachment => {
+          attachments.push({
+            attachmentType: attachment.attachmentType,
+            data: JSON.parse(attachment.data),
           });
         });
+
+        // create a new thread object, overriding the attachments field with our new array
+        threadObject = Object.assign({}, threadObject, {
+          attachments,
+        });
+      }
+
+      const dbThread = await publishThread(threadObject, currentUser.id);
+
+      // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain
+      await createParticipantInThread(dbThread.id, currentUser.id);
+
+      if (!thread.filesToUpload || thread.filesToUpload.length === 0)
+        return dbThread;
+
+      // if the original mutation input contained files to upload
+      const urls = await Promise.all(
+        // upload each of the files to s3
+        thread.filesToUpload.map(file =>
+          uploadImage(file, 'threads', dbThread.id)
+        )
+      );
+
+      // Replace the local image srcs with the remote image src
+      const body = JSON.parse(dbThread.content.body);
+      const imageKeys = Object.keys(body.entityMap).filter(
+        key => body.entityMap[key].type === 'image'
+      );
+      urls.forEach((url, index) => {
+        if (!body.entityMap[imageKeys[index]]) return;
+        body.entityMap[imageKeys[index]].data.src = url;
+      });
+
+      // Update the thread with the new links
+      return editThread({
+        threadId: dbThread.id,
+        content: {
+          ...dbThread.content,
+          body: JSON.stringify(body),
+        },
+      });
     },
     editThread: (_, { input }, { user }) => {
       const currentUser = user;
