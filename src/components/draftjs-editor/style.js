@@ -1,4 +1,6 @@
+import React from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import { Transition, zIndex } from '../globals';
 
 export const Wrapper = styled.div`
@@ -168,6 +170,8 @@ export const EmbedUI = styled.form`
     `};
 `;
 
-export const Mention = styled.span`
-  color: ${props => props.theme.brand.default};
-`;
+export const Mention = props => {
+  return (
+    <Link to={`/users/${props.decoratedText.substr(1)}`}>{props.children}</Link>
+  );
+};
