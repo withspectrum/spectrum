@@ -19,6 +19,9 @@ import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';
+import { toState, toPlainText } from 'shared/draft-utils';
+import { addQueue } from '../utils/workerQueue';
+import getMentions from '../utils/get-mentions';
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
 
@@ -67,6 +70,21 @@ module.exports = {
               message.senderId,
               communityId,
             ]);
+
+            const body =
+              message.messageType === 'draftjs'
+                ? toPlainText(toState(JSON.parse(message.content.body)))
+                : message.content.body;
+
+            // Handle mentions after the message was safely stored
+            const mentions = getMentions(body);
+
+            mentions.forEach(mention => {
+              addQueue('mention notification', {
+                messageId: message.id,
+                username: mention.substr(1), // "@mxstbr" -> "mxstbr"
+              });
+            });
 
             return {
               ...message,
