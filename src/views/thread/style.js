@@ -180,21 +180,16 @@ export const DropWrap = styled(FlexCol)`
   }
 
   .flyout {
-    opacity: 0;
-    pointer-events: none;
-    position: relative;
-    top: 0;
-    right: 215px;
-    min-width: 256px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
     transition: ${Transition.hover.off};
   }
 
-  &:active .flyout,
+  &:hover .flyout,
   &.open > .flyout {
-    opacity: 1;
-    pointer-events: auto;
-    position: relative;
-    top: 8px;
+    display: inline-block;
     transition: ${Transition.hover.on};
   }
 `;

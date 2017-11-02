@@ -244,12 +244,24 @@ export const CommunityListName = styled.p`
 `;
 
 export const CommunityListReputation = styled.div`
-  font-size: 13px;
-  font-weight: 400;
   margin-left: 12px;
   line-height: 1;
   color: ${props => props.theme.text.alt};
   width: 100%;
+
+  > div {
+    > div {
+      flex-basis: 16px;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+    }
+
+    > span {
+      font-size: 12px;
+    }
+  }
 `;
 
 export const AllCommunityListItem = styled.div`
