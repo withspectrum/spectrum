@@ -8,6 +8,7 @@ export const Wrapper = styled(FlexRow)`
   overflow: hidden;
   overflow-y: scroll;
   flex: auto;
+  width: 100%;
 
   @media (max-width: 768px) {
     padding: 0;

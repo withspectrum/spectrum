@@ -78,7 +78,6 @@ class CommunityList extends Component {
               <CommunityListReputation>
                 <Reputation
                   ignoreClick
-                  size={'mini'}
                   tipLocation={'top-right'}
                   tipText={'Your total rep'}
                   reputation={user.totalReputation}

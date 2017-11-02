@@ -62,9 +62,12 @@ it('should have a link to the community', async () => {
   await page.waitForSelector(`[href*="/${community.slug}"]`);
 });
 
-it('should have a link to the channel', async () => {
-  await page.waitForSelector(`[href*="/${community.slug}/${channel.slug}"]`);
-});
+// We don't show links to general channels
+if (channel.slug !== 'general') {
+  it('should have a link to the channel', async () => {
+    await page.waitForSelector(`[href*="/${community.slug}/${channel.slug}"]`);
+  });
+}
 
 it('should show all its messages', async () => {
   await page.waitForSelector('[data-e2e-id="message-group"]');

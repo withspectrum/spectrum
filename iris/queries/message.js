@@ -53,6 +53,8 @@ module.exports = {
         },
       };
     },
+    thread: ({ threadId }: { threadId: string }, _: any, __: any) =>
+      getThread(threadId),
     reactions: ({ id }: Root, _, { user }) =>
       getReactions(id).then(reactions => {
         return {

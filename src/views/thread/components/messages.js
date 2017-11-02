@@ -14,17 +14,6 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = ({ thread }) => (
-  <ChatWrapper>
-    <HorizontalRule>
-      <hr />
-      <Icon glyph={'message'} />
-      <hr />
-    </HorizontalRule>
-    <NewThreadShare thread={thread} />
-  </ChatWrapper>
-);
-
 class MessagesWithData extends Component {
   state: {
     subscription: ?Object,
@@ -148,11 +137,6 @@ class MessagesWithData extends Component {
 
       return (
         <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
           <ChatMessages
             threadId={data.thread.id}
             thread={data.thread}
@@ -166,25 +150,12 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (dataExists) {
-      if (currentUser) {
-        return <EmptyChat thread={data.thread} />;
-      } else {
-        return null;
-      }
+    if (!messagesExist) {
+      return <ChatWrapper />;
     }
 
     if (isLoading) {
-      return (
-        <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
-          {hasMessagesToLoad && <LoadingChat />}
-        </ChatWrapper>
-      );
+      return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
     }
 
     return (

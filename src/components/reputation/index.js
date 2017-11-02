@@ -7,12 +7,12 @@ import Icon from '../icons';
 import { ReputationWrapper, ReputationLabel } from './style';
 
 type Props = {
-  size: 'mini' | 'default' | 'large',
+  size?: 'mini' | 'default' | 'large',
   reputation: number,
   tipText?: string,
   tipLocation?: string,
   dispatch: Function,
-  ignoreClick: boolean,
+  ignoreClick?: boolean,
 };
 class Reputation extends React.Component<Props> {
   open = e => {

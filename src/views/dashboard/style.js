@@ -18,6 +18,8 @@ export const Wrapper = styled.div`
   justify-content: flex-start;
   overflow-y: hidden;
   flex: auto;
+  width: 100%;
+  box-shadow: 1px 0 0 ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -242,12 +244,24 @@ export const CommunityListName = styled.p`
 `;
 
 export const CommunityListReputation = styled.div`
-  font-size: 13px;
-  font-weight: 400;
   margin-left: 12px;
   line-height: 1;
   color: ${props => props.theme.text.alt};
   width: 100%;
+
+  > div {
+    > div {
+      flex-basis: 16px;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+    }
+
+    > span {
+      font-size: 12px;
+    }
+  }
 `;
 
 export const AllCommunityListItem = styled.div`
@@ -290,7 +304,7 @@ export const CommunityListScroller = styled.div`
 
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
-  padding: 8px;
+  padding: 14px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
   z-index: 10;
