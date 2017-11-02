@@ -14,10 +14,12 @@ import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
 import {
   LoadingScreenContainer,
   ShimmerList,
+  ShimmerListLite,
   ShimmerInboxThread,
   ShimmerThread,
   ShimmerThreadDetail,
   ShimmerProfile,
+  ShimmerProfileLite,
   ShimmerListItem,
   ShimmerDM,
   ShimmerBubble,
@@ -522,6 +524,62 @@ export const LoadingListItem = () => (
   </ShimmerListItem>
 );
 
+export const LoadingListItemLite = () => (
+  <ShimmerListItem>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '10px',
+          left: '0px',
+          height: '14px',
+          width: 'calc(100% - 72px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '32px',
+          height: '20px',
+          width: '96px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '26px',
+          height: '32px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '32px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerListItem>
+);
+
 export const LoadingList = () => (
   <ShimmerList>
     <LoadingListItem />
@@ -535,6 +593,16 @@ export const LoadingList = () => (
     <LoadingListItem />
     <LoadingListItem />
   </ShimmerList>
+);
+
+export const LoadingListThreadDetail = () => (
+  <ShimmerListLite>
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+  </ShimmerListLite>
 );
 
 export const LoadingDM = () => (
@@ -815,6 +883,86 @@ export const LoadingProfile = () => (
       />
     </ShimmerBase>
   </ShimmerProfile>
+);
+
+export const LoadingProfileThreadDetail = () => (
+  <ShimmerProfileLite>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '0',
+          left: '0',
+          height: '48px',
+          width: 'calc(50% - 20px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '48px',
+          width: 'calc(50% - 20px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '40px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '64px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '88px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '48px',
+          right: '0',
+          height: '16px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '48px',
+          left: '0',
+          height: '16px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          right: '0',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          left: '0',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerProfileLite>
 );
 
 export const LoadingProfileGrid = () => (

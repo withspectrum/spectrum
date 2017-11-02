@@ -4,6 +4,11 @@ import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import {
+  LoadingList,
+  LoadingProfileThreadDetail,
+  LoadingListThreadDetail,
+} from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
 import { Link } from 'react-router-dom';
@@ -15,6 +20,7 @@ import {
   SidebarSectionTitle,
   SidebarSectionBody,
   SidebarSectionActions,
+  SidebarSectionAuth,
   ThreadSidebarView,
   SidebarCommunityCover,
   SidebarCommunityProfile,
@@ -74,6 +80,7 @@ type Props = {
   },
   toggleCommunityMembership: Function,
   dispatch: Function,
+  threadViewLoading?: boolean,
 };
 type State = {
   isJoining: boolean,
@@ -117,7 +124,26 @@ class Sidebar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, data: { threads } } = this.props;
+    const {
+      threadViewLoading,
+      thread,
+      currentUser,
+      data: { threads },
+    } = this.props;
+
+    if (threadViewLoading) {
+      return (
+        <ThreadSidebarView>
+          <SidebarSection>
+            <LoadingProfileThreadDetail />
+          </SidebarSection>
+          <SidebarSection>
+            <LoadingListThreadDetail />
+          </SidebarSection>
+        </ThreadSidebarView>
+      );
+    }
+
     const isPinned = thread.id === thread.community.pinnedThreadId;
     const threadsToRender =
       threads &&
@@ -138,6 +164,28 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <ThreadSidebarView>
+        {!currentUser && (
+          <SidebarSection>
+            <SidebarSectionTitle>Join the conversation</SidebarSectionTitle>
+            <SidebarSectionBody>
+              Sign in to join this conversation, and others like it, in the
+              communities you care about.
+            </SidebarSectionBody>
+            <SidebarSectionAuth>
+              <Link to={`/login?r=${window.location}`}>
+                <Button gradientTheme={'brand'} color={'brand.default'}>
+                  Sign up
+                </Button>
+              </Link>
+              <Link to={`/login?r=${window.location}`}>
+                <TextButton gradientTheme={'text'} color={'text.alt'}>
+                  Log in
+                </TextButton>
+              </Link>
+            </SidebarSectionAuth>
+          </SidebarSection>
+        )}
+
         <SidebarSection>
           <Link to={`/${thread.community.slug}`}>
             <SidebarCommunityCover src={thread.community.coverPhoto} />

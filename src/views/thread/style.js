@@ -571,6 +571,21 @@ export const SidebarSectionActions = styled.div`
     margin: 4px 0;
   }
 `;
+
+export const SidebarSectionAuth = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 8px 16px 16px;
+  button {
+    width: 100%;
+  }
+  a {
+    flex: auto;
+  }
+  a:first-child {
+    margin-bottom: 8px;
+  }
+`;
 export const SidebarCommunityCover = styled.div`
   border-radius: 4px 4px 0 0;
   height: 72px;
