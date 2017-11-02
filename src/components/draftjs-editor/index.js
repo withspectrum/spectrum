@@ -25,6 +25,12 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
+import {
+  FIGMA_URLS,
+  IFRAME_TAG,
+  YOUTUBE_URLS,
+  VIMEO_URLS,
+} from '../../helpers/regexps';
 
 import Image from './Image';
 import Embed from './Embed';
@@ -111,6 +117,25 @@ class Editor extends React.Component<Props, State> {
     };
   }
 
+  parseEmbedUrl = (url: string) => {
+    const isFigmaUrl = url.match(FIGMA_URLS);
+    if (isFigmaUrl)
+      return `https://www.figma.com/embed?embed_host=spectrum&url=${url}`;
+
+    const isIframeTag = url.match(IFRAME_TAG);
+    if (isIframeTag) return IFRAME_TAG.exec(url)[2];
+
+    const isYouTubeUrl = url.match(YOUTUBE_URLS);
+    if (isYouTubeUrl)
+      return `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`;
+
+    const isVimeoUrl = url.match(VIMEO_URLS);
+    if (isVimeoUrl)
+      return `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`;
+
+    return url;
+  };
+
   changeEmbedUrl = (evt: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({
       embedUrl: evt.target.value,
@@ -122,7 +147,9 @@ class Editor extends React.Component<Props, State> {
 
     const { state, onChange } = this.props;
 
-    onChange(this.state.addEmbed(state, this.state.embedUrl));
+    onChange(
+      this.state.addEmbed(state, this.parseEmbedUrl(this.state.embedUrl))
+    );
     this.setState({
       embedUrl: '',
       embedding: false,
