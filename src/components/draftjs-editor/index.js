@@ -118,9 +118,7 @@ class Editor extends React.Component<Props, State> {
   }
 
   parseEmbedUrl = (url: string) => {
-    console.log('incoming url', url);
     const isIframeTag = url.match(IFRAME_TAG);
-    console.log(isIframeTag);
     if (isIframeTag) return IFRAME_TAG.exec(url)[2];
 
     const isFigmaUrl = url.match(FIGMA_URLS);
