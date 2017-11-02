@@ -76,7 +76,10 @@ export class Login extends Component {
         noCloseButton={!this.props.close}
         close={this.props.close}
       >
-        <FullscreenContent style={{ justifyContent: 'center' }}>
+        <FullscreenContent
+          data-e2e-id="login-page"
+          style={{ justifyContent: 'center' }}
+        >
           <UpsellIconContainer>
             <Icon glyph={'emoji'} size={64} />
           </UpsellIconContainer>

@@ -16,6 +16,8 @@ const config = process.env.DEBUG_E2E
 beforeAll(async () => {
   browser = await puppeteer.launch(config);
   page = await browser.newPage();
+  // Navigate the page to the splash page for all tests
+  await page.goto('http://localhost:3000/');
 });
 
 // Afterwards close the browser
@@ -24,21 +26,17 @@ afterAll(async () => {
 });
 
 it('should render the splash page', async () => {
-  await page.goto('http://localhost:3000/');
   await page.waitForSelector('[data-e2e-id="splash-page"]');
 });
 
 it('should have a login button', async () => {
-  const button = await page.$('[href*="/login"]');
-  expect(button).toBeTruthy();
+  await page.waitForSelector('[href*="/login"]');
 });
 
 it('should have a button to explore', async () => {
-  const button = await page.$('[href*="/explore"]');
-  expect(button).toBeTruthy();
+  await page.waitForSelector('[href*="/explore"]');
 });
 
 it('should have a button to /new/community', async () => {
-  const button = await page.$('[href*="/new/community"]');
-  expect(button).toBeTruthy();
+  await page.waitForSelector('[href*="/new/community"]');
 });
