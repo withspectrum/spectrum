@@ -12,6 +12,7 @@ import {
   Time,
   Code,
   Line,
+  Paragraph,
 } from './style';
 import { toState, toPlainText } from 'shared/draft-utils';
 import { renderLinks } from 'src/helpers/utils';
@@ -27,6 +28,12 @@ const codeRenderer = {
 };
 
 const messageRenderer = {
+  blocks: {
+    unstyled: (children, { keys }) =>
+      children.map((child, index) => (
+        <Paragraph key={keys[index] || index}>{child}</Paragraph>
+      )),
+  },
   decorators: [mentionsDecorator, linksDecorator],
 };
 

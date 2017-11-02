@@ -170,8 +170,12 @@ export const EmbedUI = styled.form`
     `};
 `;
 
+/* NOTE(@mxstbr): This is super hacky, but I couldn't find a way to give two mentions in the same message a different key. (i.e. "Yo @mxstbr, where is @brianlovin at? I can't find @brianlovin" would only show the mention once) */
+let i = 0;
 export const Mention = props => {
   return (
-    <Link to={`/users/${props.decoratedText.substr(1)}`}>{props.children}</Link>
+    <Link key={`mention-${i++}`} to={`/users/${props.decoratedText.substr(1)}`}>
+      {props.children}
+    </Link>
   );
 };

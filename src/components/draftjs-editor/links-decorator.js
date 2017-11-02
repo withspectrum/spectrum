@@ -5,6 +5,7 @@ import type { ContentBlock } from 'draft-js/lib/ContentBlock';
 import { URL } from 'shared/regexps';
 import { addProtocolToString } from '../../helpers/utils';
 
+let i = 0;
 const linksDecorator = {
   strategy: (
     contentBlock: ContentBlock,
@@ -15,8 +16,10 @@ const linksDecorator = {
       href={addProtocolToString(props.decoratedText)}
       target="_blank"
       rel="noopener nofollower"
+      /* NOTE(@mxstbr): This is super hacky, but I couldn't find a way to give two URLs in the same message a different key. (i.e. "I am on https://github.com, https://github.com is great" would only show the link once) */
+      key={`link-${i++}`}
     >
-      {props.children[0]}
+      {props.children}
     </a>
   ),
 };

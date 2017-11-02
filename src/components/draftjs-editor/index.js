@@ -26,7 +26,6 @@ import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 import mentionsDecorator from './mentions-decorator';
-import { toJSON } from 'shared/draft-utils';
 
 import Image from './Image';
 import Embed from './Embed';
@@ -184,8 +183,6 @@ class Editor extends React.Component<Props, State> {
       ...rest
     } = this.props;
     const { embedding, inserting } = this.state;
-
-    console.log(toJSON(state));
 
     if (version === 2) {
       return (

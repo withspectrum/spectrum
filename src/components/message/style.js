@@ -282,3 +282,5 @@ export const Line = styled.pre`
   word-wrap: break-word;
   ${monoStack};
 `;
+
+export const Paragraph = styled.p`line-height: 1.5;`;
