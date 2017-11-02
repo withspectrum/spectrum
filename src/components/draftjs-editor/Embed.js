@@ -1,7 +1,27 @@
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/1a913e15ef5225b8a4e2253b282af3a5c382e7b0/draft-js-embed-plugin/src/embed/index.js
 // slightly adapted to work with arbitrary data passed from the entity
-import { Entity } from 'draft-js';
+import { Entity, EditorState, AtomicBlockUtils } from 'draft-js';
 import React, { Component } from 'react';
+import { AspectRatio, EmbedComponent } from './style';
+
+// Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
+// adapted to pass additional attrs onto the iframe
+export const addEmbed = (editorState, attrs) => {
+  const urlType = 'embed';
+  const entityKey = Entity.create(urlType, 'IMMUTABLE', {
+    src: attrs.url,
+    aspectRatio: attrs.aspectRatio,
+  });
+  const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+    editorState,
+    entityKey,
+    ' '
+  );
+  return EditorState.forceSelection(
+    newEditorState,
+    editorState.getCurrentContent().getSelectionAfter()
+  );
+};
 
 export default class Embed extends Component {
   render() {
@@ -16,48 +36,21 @@ export default class Embed extends Component {
       offsetKey, // eslint-disable-line no-unused-vars
       selection, // eslint-disable-line no-unused-vars
       tree, // eslint-disable-line no-unused-vars
+      contentState,
       ...elementProps
     } = otherProps;
     const data = Entity.get(block.getEntityAt(0)).getData();
-
-    // const match = optimizeEmbed(submittedURL);
-    //
-    // switch(match) {
-    //   case 'figma':
-    //     return(
-    //       <AspectRatio ratio={'56.25%'}>
-    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
-    //       </AspectRatio>
-    //     )
-    //   case 'youtube':
-    //     return(
-    //       <AspectRatio ratio={'56.25%'}>
-    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
-    //       </AspectRatio>
-    //     )
-    //   case 'simplecast':
-    //     return(
-    //       <AspectRatio>
-    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
-    //       </AspectRatio>
-    //     )
-    //   case 'nope':
-    //   default:
-    //     return(
-    //       <AspectRatio>
-    //         <Embed src={submittedURL} />
-    //       </AspectRatio>
-    //     )
-    // }
-
+    const { aspectRatio, src } = data;
     return (
-      <iframe
-        title={`iframe-${data.src}`}
-        {...elementProps}
-        {...data}
-        src={data.src}
-        className={theme.embedStyles.embed}
-      />
+      <AspectRatio ratio={aspectRatio}>
+        <EmbedComponent
+          title={`iframe-${src}`}
+          {...elementProps}
+          {...data}
+          src={src}
+          className={theme.embedStyles.embed}
+        />
+      </AspectRatio>
     );
   }
 }

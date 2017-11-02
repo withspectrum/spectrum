@@ -33,7 +33,7 @@ import {
 } from '../../helpers/regexps';
 
 import Image from './Image';
-import Embed from './Embed';
+import Embed, { addEmbed } from './Embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
@@ -109,7 +109,7 @@ class Editor extends React.Component<Props, State> {
         dndPlugin,
         focusPlugin,
       ],
-      addEmbed: embedPlugin.addEmbed,
+      addEmbed: addEmbed,
       addImage: imagePlugin.addImage,
       inserting: false,
       embedding: false,
@@ -123,15 +123,24 @@ class Editor extends React.Component<Props, State> {
 
     const isFigmaUrl = url.match(FIGMA_URLS);
     if (isFigmaUrl)
-      return `https://www.figma.com/embed?embed_host=spectrum&url=${url}`;
+      return {
+        url: `https://www.figma.com/embed?embed_host=spectrum&url=${url}`,
+        aspectRatio: '56.25%',
+      };
 
     const isYouTubeUrl = url.match(YOUTUBE_URLS);
     if (isYouTubeUrl)
-      return `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`;
+      return {
+        url: `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`,
+        aspectRatio: '56.25%',
+      };
 
     const isVimeoUrl = url.match(VIMEO_URLS);
     if (isVimeoUrl)
-      return `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`;
+      return {
+        url: `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`,
+        aspectRatio: '56.25%',
+      };
 
     return url;
   };
@@ -146,7 +155,7 @@ class Editor extends React.Component<Props, State> {
     evt && evt.preventDefault();
 
     const { state, onChange } = this.props;
-
+    console.log('state', state);
     onChange(
       this.state.addEmbed(state, this.parseEmbedUrl(this.state.embedUrl))
     );

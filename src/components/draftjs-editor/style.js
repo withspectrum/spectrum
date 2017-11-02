@@ -169,14 +169,14 @@ export const EmbedUI = styled.form`
     `};
 `;
 
-const AspectRatio = styled.div`
+export const AspectRatio = styled.div`
   position: relative;
   height: 0;
-  padding-bottom: ${props => props.ratio};
+  padding-bottom: ${props => (props.ratio ? props.ratio : '0')};
   width: 100%;
 `;
 
-const Embed = styled.iframe`
+export const EmbedComponent = styled.iframe`
   position: absolute;
   height: 100%;
   width: 100%;
