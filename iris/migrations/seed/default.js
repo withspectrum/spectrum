@@ -229,6 +229,28 @@ const DEFAULT_USERS_CHANNELS = [
 
 const DEFAULT_NOTIFICATIONS = [];
 
+const DEFAULT_SESSIONS = [
+  {
+    expires: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // A year from now
+    // NOTE(@mxstbr): I logged in locally and copy and pasted this value so it works in conjunction with the cookie value in tests. Don't change it.
+    id: '18-Czh8IkWuq6o8LJ0OnDRXCYt7iBsQ_',
+    session: {
+      cookie: {
+        _expires: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        ), // A year from now
+        httpOnly: true,
+        originalMaxAge: 31556952000, // No idea what this is, taken from our db
+        path: '/',
+        secure: false,
+      },
+      passport: {
+        user: MAX_ID,
+      },
+    },
+  },
+];
+
 module.exports = {
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
@@ -239,4 +261,5 @@ module.exports = {
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
+  DEFAULT_SESSIONS,
 };
