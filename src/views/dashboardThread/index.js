@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Composer from '../../components/composer';
-import ThreadContainer from '../thread/containers';
+import ThreadContainer from '../thread';
 import { Container, Thread } from './style';
 
 class DashboardThread extends Component {
@@ -24,7 +24,7 @@ class DashboardThread extends Component {
     return (
       <Container>
         <Thread>
-          <ThreadContainer threadId={threadId} slider />
+          <ThreadContainer threadViewContext={'inbox'} threadId={threadId} />
         </Thread>
       </Container>
     );
