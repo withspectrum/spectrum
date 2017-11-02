@@ -25,15 +25,9 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
-import {
-  FIGMA_URLS,
-  IFRAME_TAG,
-  YOUTUBE_URLS,
-  VIMEO_URLS,
-} from '../../helpers/regexps';
 
 import Image from './Image';
-import Embed, { addEmbed } from './Embed';
+import Embed, { addEmbed, parseEmbedUrl } from './Embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
@@ -117,34 +111,6 @@ class Editor extends React.Component<Props, State> {
     };
   }
 
-  parseEmbedUrl = (url: string) => {
-    const isIframeTag = url.match(IFRAME_TAG);
-    if (isIframeTag) return IFRAME_TAG.exec(url)[2];
-
-    const isFigmaUrl = url.match(FIGMA_URLS);
-    if (isFigmaUrl)
-      return {
-        url: `https://www.figma.com/embed?embed_host=spectrum&url=${url}`,
-        aspectRatio: '56.25%', // 16:9 aspect ratio
-      };
-
-    const isYouTubeUrl = url.match(YOUTUBE_URLS);
-    if (isYouTubeUrl)
-      return {
-        url: `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`,
-        aspectRatio: '56.25%', // 16:9 aspect ratio
-      };
-
-    const isVimeoUrl = url.match(VIMEO_URLS);
-    if (isVimeoUrl)
-      return {
-        url: `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`,
-        aspectRatio: '56.25%', // 16:9 aspect ratio
-      };
-
-    return url;
-  };
-
   changeEmbedUrl = (evt: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({
       embedUrl: evt.target.value,
@@ -155,10 +121,7 @@ class Editor extends React.Component<Props, State> {
     evt && evt.preventDefault();
 
     const { state, onChange } = this.props;
-    console.log('state', state);
-    onChange(
-      this.state.addEmbed(state, this.parseEmbedUrl(this.state.embedUrl))
-    );
+    onChange(this.state.addEmbed(state, parseEmbedUrl(this.state.embedUrl)));
     this.setState({
       embedUrl: '',
       embedding: false,

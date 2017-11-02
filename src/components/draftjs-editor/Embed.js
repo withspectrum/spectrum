@@ -3,6 +3,12 @@
 import { Entity, EditorState, AtomicBlockUtils } from 'draft-js';
 import React, { Component } from 'react';
 import { AspectRatio, EmbedComponent } from './style';
+import {
+  FIGMA_URLS,
+  IFRAME_TAG,
+  YOUTUBE_URLS,
+  VIMEO_URLS,
+} from '../../helpers/regexps';
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe
@@ -21,6 +27,34 @@ export const addEmbed = (editorState, attrs) => {
     newEditorState,
     editorState.getCurrentContent().getSelectionAfter()
   );
+};
+
+export const parseEmbedUrl = url => {
+  const isIframeTag = url.match(IFRAME_TAG);
+  if (isIframeTag) return IFRAME_TAG.exec(url)[2];
+
+  const isFigmaUrl = url.match(FIGMA_URLS);
+  if (isFigmaUrl)
+    return {
+      url: `https://www.figma.com/embed?embed_host=spectrum&url=${url}`,
+      aspectRatio: '56.25%', // 16:9 aspect ratio
+    };
+
+  const isYouTubeUrl = url.match(YOUTUBE_URLS);
+  if (isYouTubeUrl)
+    return {
+      url: `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`,
+      aspectRatio: '56.25%', // 16:9 aspect ratio
+    };
+
+  const isVimeoUrl = url.match(VIMEO_URLS);
+  if (isVimeoUrl)
+    return {
+      url: `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`,
+      aspectRatio: '56.25%', // 16:9 aspect ratio
+    };
+
+  return url;
 };
 
 export default class Embed extends Component {
