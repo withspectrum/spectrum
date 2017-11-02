@@ -91,7 +91,7 @@ class UserView extends React.Component<Props, State> {
           : [];
 
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-e2e-id="user-view">
           <Head
             title={title}
             description={description}
