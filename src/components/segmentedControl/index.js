@@ -34,11 +34,13 @@ export const Segment = styled(FlexRow)`
   border-bottom: 2px solid
     ${props => (props.selected ? props.theme.text.default : 'transparent')};
 
-  ${'' /* ${props =>
+  ${props =>
     props.selected &&
     css`
       border-bottom: 2px solid ${props => props.theme.bg.reverse};
-    `}; */} &:hover {
+    `};
+
+  &:hover {
     color: ${props => props.theme.text.default};
   }
 
@@ -49,9 +51,17 @@ export const Segment = styled(FlexRow)`
     text-align: left;
     justify-content: flex-start;
     border-bottom: 0;
+  }
+`;
 
-    &:not(:first-of-type) {
-      display: none;
-    }
+export const DesktopSegment = styled(Segment)`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MobileSegment = styled(Segment)`
+  @media (min-width: 768px) {
+    display: none;
   }
 `;
