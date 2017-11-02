@@ -181,7 +181,10 @@ class ThreadContainer extends React.Component<Props, State> {
         (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
 
       return (
-        <ThreadViewContainer threadViewContext={threadViewContext}>
+        <ThreadViewContainer
+          data-e2e-id="thread-view"
+          threadViewContext={threadViewContext}
+        >
           {shouldRenderThreadSidebar && (
             <Sidebar
               thread={thread}

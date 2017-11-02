@@ -28,7 +28,12 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import { SegmentedControl, Segment } from '../../components/segmentedControl';
+import {
+  SegmentedControl,
+  Segment,
+  DesktopSegment,
+  MobileSegment,
+} from '../../components/segmentedControl';
 import { CoverRow, CoverColumn, LogoutButton } from './style';
 import { getCommunityThreads } from './queries';
 import { getCommunity } from '../../api/community';
@@ -207,14 +212,14 @@ class CommunityView extends React.Component<Props, State> {
 
               <Column type="primary">
                 <SegmentedControl style={{ margin: '-16px 0 16px' }}>
-                  <Segment
+                  <DesktopSegment
                     segmentLabel="search"
                     onClick={() => this.handleSegmentClick('search')}
                     selected={selectedView === 'search'}
                   >
                     <Icon glyph={'search'} />
                     Search
-                  </Segment>
+                  </DesktopSegment>
 
                   <Segment
                     segmentLabel="threads"
@@ -224,13 +229,27 @@ class CommunityView extends React.Component<Props, State> {
                     Threads
                   </Segment>
 
-                  <Segment
+                  <DesktopSegment
                     segmentLabel="members"
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
                     Members ({community.metaData.members.toLocaleString()})
-                  </Segment>
+                  </DesktopSegment>
+                  <MobileSegment
+                    segmentLabel="members"
+                    onClick={() => this.handleSegmentClick('members')}
+                    selected={selectedView === 'members'}
+                  >
+                    Members
+                  </MobileSegment>
+                  <MobileSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
+                  >
+                    <Icon glyph={'search'} />
+                  </MobileSegment>
                 </SegmentedControl>
 
                 {// if the user is logged in, is viewing the threads,
