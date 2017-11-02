@@ -153,17 +153,25 @@ class CollectionSwitcher extends Component {
       return null;
     });
 
+    const ThisSegment = styled(Segment)`
+      @media (max-width: 768px) {
+        &:not(:first-of-type) {
+          display: none;
+        }
+      }
+    `;
+
     return (
       <Collections>
         <SegmentedControl>
           {selectorItems.map((title, i) => (
-            <Segment
+            <ThisSegment
               key={i}
               onClick={() => this.handleSegmentClick(title)}
               selected={title === this.state.selectedView}
             >
               {title}
-            </Segment>
+            </ThisSegment>
           ))}
         </SegmentedControl>
         <CollectionWrapper>
