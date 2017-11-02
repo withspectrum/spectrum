@@ -125,21 +125,21 @@ class Editor extends React.Component<Props, State> {
     if (isFigmaUrl)
       return {
         url: `https://www.figma.com/embed?embed_host=spectrum&url=${url}`,
-        aspectRatio: '56.25%',
+        aspectRatio: '56.25%', // 16:9 aspect ratio
       };
 
     const isYouTubeUrl = url.match(YOUTUBE_URLS);
     if (isYouTubeUrl)
       return {
         url: `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`,
-        aspectRatio: '56.25%',
+        aspectRatio: '56.25%', // 16:9 aspect ratio
       };
 
     const isVimeoUrl = url.match(VIMEO_URLS);
     if (isVimeoUrl)
       return {
         url: `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`,
-        aspectRatio: '56.25%',
+        aspectRatio: '56.25%', // 16:9 aspect ratio
       };
 
     return url;
