@@ -25,6 +25,8 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
+import mentionsDecorator from './mentions-decorator';
+import { toJSON } from 'shared/draft-utils';
 
 import Image from './Image';
 import Embed from './Embed';
@@ -183,6 +185,8 @@ class Editor extends React.Component<Props, State> {
     } = this.props;
     const { embedding, inserting } = this.state;
 
+    console.log(toJSON(state));
+
     if (version === 2) {
       return (
         <ComposerBase className={`markdown ${className || ''}`} focus={focus}>
@@ -201,6 +205,7 @@ class Editor extends React.Component<Props, State> {
             autoCapitalize="sentences"
             autoComplete="on"
             autoCorrect="on"
+            decorators={[mentionsDecorator]}
             {...rest}
           />
           {!readOnly && (
@@ -280,6 +285,7 @@ class Editor extends React.Component<Props, State> {
               autoCapitalize="sentences"
               autoComplete="on"
               autoCorrect="on"
+              decorators={[mentionsDecorator]}
               {...rest}
             />
           </Wrapper>

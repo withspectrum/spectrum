@@ -167,3 +167,7 @@ export const EmbedUI = styled.form`
       }
     `};
 `;
+
+export const Mention = styled.span`
+  color: ${props => props.theme.brand.default};
+`;
