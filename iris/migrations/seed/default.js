@@ -202,14 +202,36 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
 const DEFAULT_USERS_COMMUNITIES = [
   {
     createdAt: new Date(DATE),
-    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+    userId: MAX_ID,
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,
     isMember: true,
     isBlocked: false,
     receiveNotifications: true,
-    reputation: 1,
+    reputation: 100,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: true,
+    isMember: true,
+    isBlocked: false,
+    receiveNotifications: true,
+    reputation: 101,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    receiveNotifications: true,
+    reputation: 102,
   },
 ];
 

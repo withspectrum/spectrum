@@ -47,6 +47,7 @@ export const ComposerBase = styled.div`
 export const SideToolbarWrapper = styled.div`
   position: fixed;
   margin-top: -8px;
+  z-index: ${zIndex.chrome};
 `;
 
 export const Action = styled.div`
@@ -166,4 +167,17 @@ export const EmbedUI = styled.form`
         }
       }
     `};
+`;
+
+export const AspectRatio = styled.div`
+  position: relative;
+  height: 0;
+  padding-bottom: ${props => (props.ratio ? props.ratio : '0')};
+  width: 100%;
+`;
+
+export const EmbedComponent = styled.iframe`
+  position: absolute;
+  height: 100%;
+  width: 100%;
 `;
