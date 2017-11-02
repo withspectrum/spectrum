@@ -239,6 +239,7 @@ export const BylineMeta = styled(FlexCol)`margin-left: 12px;`;
 
 export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
+export const AuthorNameLink = styled(Link)`display: flex;`;
 export const AuthorName = styled(H3)`
   font-weight: 500;
   cursor: pointer;
