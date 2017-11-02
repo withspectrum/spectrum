@@ -21,11 +21,6 @@ const LoadingView = ({ threadViewContext = 'fullscreen' }: PropTypes) => (
       <Detail type="only">
         <LoadingThreadDetail />
         <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
           <LoadingChat />
         </ChatWrapper>
       </Detail>

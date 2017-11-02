@@ -15,6 +15,7 @@ import {
   CommunityHeaderChannelTag,
   CommunityHeaderLink,
   CommunityHeaderMeta,
+  CommunityHeaderMetaCol,
   PillLink,
   PillLabel,
   Lock,
@@ -115,27 +116,27 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
             <Avatar src={community.profilePhoto} community size={32} />
-            <CommunityHeaderName>{community.name}</CommunityHeaderName>
-          </CommunityHeaderLink>
+            <CommunityHeaderMetaCol>
+              <CommunityHeaderName>{community.name}</CommunityHeaderName>
 
-          {channel.slug !== 'general' && (
-            <PillLink to={`/${community.slug}/${channel.slug}`}>
-              {channel.isPrivate && (
-                <Lock>
-                  <Icon glyph="private" size={12} />
-                </Lock>
+              {channel.slug !== 'general' && (
+                <PillLink to={`/${community.slug}/${channel.slug}`}>
+                  {channel.isPrivate && (
+                    <Lock>
+                      <Icon glyph="private" size={12} />
+                    </Lock>
+                  )}
+                  <PillLabel isPrivate={channel.isPrivate}>
+                    {channel.name}
+                  </PillLabel>
+                </PillLink>
               )}
-              <PillLabel isPrivate={channel.isPrivate}>
-                {channel.name}
-              </PillLabel>
-            </PillLink>
-          )}
+            </CommunityHeaderMetaCol>
+          </CommunityHeaderLink>
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (
-          <Link to={`/${community.slug}`}>
-            <OutlineButton color={'text.alt'}>View Community</OutlineButton>
-          </Link>
+          <span />
         ) : currentUser ? (
           <Button
             gradientTheme={'success'}
