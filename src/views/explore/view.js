@@ -105,11 +105,11 @@ export const CommunitySearch = (props: Props) => {
           </SecondaryCopy>
           {props.currentUser ? (
             <Link to={`/new/community`}>
-              <PrimaryCTA>Get Started</PrimaryCTA>
+              <PrimaryCTA>Create a community</PrimaryCTA>
             </Link>
           ) : (
             <Link to={`/login?r=${CLIENT_URL}/new/community`}>
-              <PrimaryCTA>Get Started</PrimaryCTA>
+              <PrimaryCTA>Create a community</PrimaryCTA>
             </Link>
           )}
         </SecondaryContent>

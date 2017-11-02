@@ -1,13 +1,14 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { zIndex } from '../../../../components/globals';
+import { Tooltip, zIndex } from '../../../../components/globals';
 
 export const Container = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
   padding: 24px;
+  flex: none;
 `;
 
 export const Line = styled.span`
@@ -39,4 +40,6 @@ export const Step = styled.div`
   font-weight: 700;
   z-index: ${zIndex.base + 1};
   position: relative;
+
+  ${Tooltip};
 `;

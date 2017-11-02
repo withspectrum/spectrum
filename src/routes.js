@@ -19,7 +19,7 @@ import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import CommunityAnalytics from './views/communityAnalytics';
-import Composer from './components/composer';
+import Compose from './views/compose';
 import signedOutFallback from './helpers/signed-out-fallback';
 
 import ThreadSlider from './views/threadSlider';
@@ -204,7 +204,7 @@ class Routes extends React.Component<{}> {
 
               {/* App Pages */}
               <Route path="/new/community" component={NewCommunityFallback} />
-              <Route path="/new/thread" component={Composer} />
+              <Route path="/new/thread" component={Compose} />
               <Route
                 path="/new"
                 render={() => <Redirect to="/new/community" />}

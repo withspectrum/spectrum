@@ -5,9 +5,34 @@ const Stepper = ({ activeStep }) => {
   return (
     <Container>
       <Line />
-      <Step active={activeStep === 1}>1</Step>
-      <Step active={activeStep === 2}>2</Step>
-      <Step active={activeStep === 3}>3</Step>
+      <Step
+        tipText={'Create your community'}
+        tipLocation={'top-right'}
+        active={activeStep === 1}
+      >
+        1
+      </Step>
+      <Step
+        tipText={'Invite others'}
+        tipLocation={'top'}
+        active={activeStep === 2}
+      >
+        2
+      </Step>
+      <Step
+        tipText={'Start a conversation'}
+        tipLocation={'top-left'}
+        active={activeStep === 3}
+      >
+        3
+      </Step>
+      <Step
+        tipText={'Share'}
+        tipLocation={'top-left'}
+        active={activeStep === 4}
+      >
+        4
+      </Step>
     </Container>
   );
 };

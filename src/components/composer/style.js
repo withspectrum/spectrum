@@ -4,18 +4,20 @@ import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
   display: grid;
-  grid-template-rows: 48px 1fr 64px;
+  grid-template-rows: ${props =>
+    props.hideDropdowns ? '1fr 64px' : '48px 1fr 64px'};
   grid-template-columns: 100%;
-  grid-template-areas: 'header' 'body' 'footer';
+  grid-template-areas: ${props =>
+    props.hideDropdowns ? `'body' 'footer'` : `'header' 'body' 'footer'`};
   align-self: stretch;
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 48px);
+  height: ${props => (props.hideDropdowns ? '100%' : 'calc(100vh - 48px)')};
 
   @media (max-width: 768px) {
+    max-width: 100vw;
     grid-template-rows: 48px 64px 1fr 64px;
     grid-template-areas: 'title' 'header' 'body' 'footer';
-    max-width: 100vw;
     height: 100vh;
   }
 `;
@@ -123,7 +125,7 @@ export const OptionalSelector = styled(Selector)`
 export const ThreadInputs = styled(FlexCol)`
   grid-area: body;
   overflow-y: scroll;
-  padding: 64px;
+  padding: ${props => (props.isOnboarding ? '0 32px 64px' : '64px')};
   padding-left: 80px;
   background-color: ${props => props.theme.bg.default};
 

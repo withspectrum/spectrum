@@ -12,7 +12,7 @@ export const Container = styled(Card)`
   background-position: ${props =>
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
-  height: auto;
+  flex: auto;
   min-height: 160px;
   display: flex;
 `;
@@ -63,4 +63,15 @@ export const Form = styled.form`
   flex: 1 0 100%;
   max-width: 100%;
   margin: 16px;
+`;
+
+export const ComposerWrapper = styled.div`
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  display: flex;
+  flex: auto;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 16px;
+  flex-direction: column;
 `;

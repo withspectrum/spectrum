@@ -19,6 +19,7 @@ import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
+import CreateFirstThread from './components/createFirstThread';
 import { Login } from '../../views/login';
 import { getCommunityByIdQuery } from '../../api/community';
 import {
@@ -84,6 +85,7 @@ class NewCommunity extends Component {
   step = direction => {
     const { activeStep, community } = this.state;
     let newStep = direction === 'next' ? activeStep + 1 : activeStep - 1;
+
     this.props.history.replace(
       `/new/community?s=${newStep}${community &&
         community.id &&
@@ -106,6 +108,9 @@ class NewCommunity extends Component {
           : ' to your community'}`;
       }
       case 3: {
+        return 'Start a conversation';
+      }
+      case 4: {
         return 'Done!';
       }
       default: {
@@ -126,6 +131,9 @@ class NewCommunity extends Component {
           : 'your community'} by inviting an existing Slack team or by inviting a handful of folks directly by email. You'll be able to invite more people at any point in the future, too, if you're not quite ready.`;
       }
       case 3: {
+        return 'Kick things off for your community by starting a conversation - try introducing yourself, or maybe share something interesting for the community to talk about!';
+      }
+      case 4: {
         return "You're all set! Your community is live - go check it out, start posting threads, and get the conversations started!";
       }
       default: {
@@ -166,7 +174,7 @@ class NewCommunity extends Component {
             noComposer
           />
 
-          <Column type="primary">
+          <Column type="primary" style={{ flex: 'auto' }}>
             <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
               <Stepper activeStep={activeStep} />
               <Title centered={activeStep === 3}>{title}</Title>
@@ -228,8 +236,13 @@ class NewCommunity extends Component {
                 </Actions>
               )}
 
-              {// share the community
+              {// create the first thread
               activeStep === 3 && (
+                <CreateFirstThread step={this.step} community={community} />
+              )}
+
+              {// share the community
+              activeStep === 4 && (
                 <ContentContainer>
                   <Share community={community} onboarding={true} />
                 </ContentContainer>
