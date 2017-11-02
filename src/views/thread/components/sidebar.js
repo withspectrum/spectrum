@@ -4,6 +4,11 @@ import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import {
+  LoadingList,
+  LoadingProfileThreadDetail,
+  LoadingListThreadDetail,
+} from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
 import { Link } from 'react-router-dom';
@@ -75,6 +80,7 @@ type Props = {
   },
   toggleCommunityMembership: Function,
   dispatch: Function,
+  threadViewLoading?: boolean,
 };
 type State = {
   isJoining: boolean,
@@ -118,7 +124,26 @@ class Sidebar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, data: { threads } } = this.props;
+    const {
+      threadViewLoading,
+      thread,
+      currentUser,
+      data: { threads },
+    } = this.props;
+
+    if (threadViewLoading) {
+      return (
+        <ThreadSidebarView>
+          <SidebarSection>
+            <LoadingProfileThreadDetail />
+          </SidebarSection>
+          <SidebarSection>
+            <LoadingListThreadDetail />
+          </SidebarSection>
+        </ThreadSidebarView>
+      );
+    }
+
     const isPinned = thread.id === thread.community.pinnedThreadId;
     const threadsToRender =
       threads &&
