@@ -168,3 +168,16 @@ export const EmbedUI = styled.form`
       }
     `};
 `;
+
+const AspectRatio = styled.div`
+  position: relative;
+  height: 0;
+  padding-bottom: ${props => props.ratio};
+  width: 100%;
+`;
+
+const Embed = styled.iframe`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+`;

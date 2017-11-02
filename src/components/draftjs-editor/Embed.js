@@ -19,6 +19,37 @@ export default class Embed extends Component {
       ...elementProps
     } = otherProps;
     const data = Entity.get(block.getEntityAt(0)).getData();
+
+    // const match = optimizeEmbed(submittedURL);
+    //
+    // switch(match) {
+    //   case 'figma':
+    //     return(
+    //       <AspectRatio ratio={'56.25%'}>
+    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
+    //       </AspectRatio>
+    //     )
+    //   case 'youtube':
+    //     return(
+    //       <AspectRatio ratio={'56.25%'}>
+    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
+    //       </AspectRatio>
+    //     )
+    //   case 'simplecast':
+    //     return(
+    //       <AspectRatio>
+    //         <Embed src={`https://www.figma.com/embed?embed_host=spectrum&url=${submittedURL}`} />
+    //       </AspectRatio>
+    //     )
+    //   case 'nope':
+    //   default:
+    //     return(
+    //       <AspectRatio>
+    //         <Embed src={submittedURL} />
+    //       </AspectRatio>
+    //     )
+    // }
+
     return (
       <iframe
         title={`iframe-${data.src}`}
