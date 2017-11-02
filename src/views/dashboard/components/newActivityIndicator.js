@@ -23,6 +23,14 @@ const NewActivityBar = styled.div`
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   width: 100%;
+  text-align: center;
+  line-height: 1;
+  display: block;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+    height: 56px;
+  }
 
   &:hover {
     background: ${props => props.theme.brand.alt};
