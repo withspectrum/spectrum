@@ -24,7 +24,7 @@ const LoadingView = ({ threadViewContext = 'fullscreen' }: PropTypes) => (
       noComposer
       style={{ gridArea: 'header' }}
     />
-    <Sidebar threadViewLoading />
+    {threadViewContext === 'fullscreen' && <Sidebar threadViewLoading />}
     <ThreadContentView>
       <Content>
         <Detail type="only">
