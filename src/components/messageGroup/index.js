@@ -150,7 +150,6 @@ class Messages extends Component<MessageGroupProps> {
                     <Message
                       key={message.id}
                       message={message}
-                      link={`#${message.id}`}
                       reaction={'like'}
                       me={me}
                       canModerate={canModerate}
