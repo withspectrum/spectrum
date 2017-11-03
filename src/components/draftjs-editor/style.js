@@ -47,7 +47,7 @@ export const ComposerBase = styled.div`
 export const SideToolbarWrapper = styled.div`
   position: fixed;
   margin-top: -8px;
-  z-index: ${zIndex.chrome};
+  z-index: ${zIndex.composerToolbar};
 `;
 
 export const Action = styled.div`
