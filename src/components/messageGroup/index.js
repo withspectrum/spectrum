@@ -13,6 +13,7 @@ import Message from '../message';
 import {
   Byline,
   Name,
+  Username,
   Wrapper,
   Timestamp,
   Time,
@@ -47,7 +48,8 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
   return (
     <Byline>
       <Link to={`/users/${sender.username}`}>
-        <Name>{me ? 'Me' : sender.name}</Name>
+        <Name>{me ? 'Me' : sender.name}</Name>{' '}
+        <Username>({sender.username && `@${sender.username}`})</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}

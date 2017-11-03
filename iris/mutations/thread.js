@@ -123,12 +123,15 @@ module.exports = {
         toPlainText(toState(JSON.parse(threadObject.content.body)))
       );
 
-      mentions.forEach(mention => {
-        addQueue('mention notification', {
-          threadId: dbThread.id,
-          username: mention.substr(1), // "@mxstbr" -> "mxstbr"
+      if (mentions && mentions.length > 0) {
+        mentions.forEach(mention => {
+          addQueue('mention notification', {
+            threadId: dbThread.id, // thread where the mention happened
+            senderId: dbThread.creatorId, // user who created the mention
+            username: mention.substr(1), // "@mxstbr" -> "mxstbr"
+          });
         });
-      });
+      }
 
       if (!thread.filesToUpload || thread.filesToUpload.length === 0)
         return dbThread;
@@ -210,18 +213,6 @@ module.exports = {
       });
 
       const editedThread = await editThread(newInput);
-
-      // Handle mentions
-      const mentions = getMentions(
-        toPlainText(toState(JSON.parse(threadObject.content.body)))
-      );
-
-      mentions.forEach(mention => {
-        addQueue('mention notification', {
-          threadId: dbThread.id,
-          username: mention.substr(1), // "@mxstbr" -> "mxstbr"
-        });
-      });
 
       if (!input.filesToUpload) return editedThread;
 

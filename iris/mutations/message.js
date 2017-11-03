@@ -79,12 +79,16 @@ module.exports = {
             // Handle mentions after the message was safely stored
             const mentions = getMentions(body);
 
-            mentions.forEach(mention => {
-              addQueue('mention notification', {
-                messageId: message.id,
-                username: mention.substr(1), // "@mxstbr" -> "mxstbr"
+            if (mentions && mentions.length > 0) {
+              mentions.forEach(mention => {
+                addQueue('mention notification', {
+                  messageId: message.id,
+                  threadId: message.threadId,
+                  senderId: message.senderId,
+                  username: mention.substr(1), // "@mxstbr" -> "mxstbr"
+                });
               });
-            });
+            }
 
             return {
               ...message,

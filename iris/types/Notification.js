@@ -12,6 +12,7 @@ const Notification = /* GraphQL */ `
 	  THREAD_LOCKED_BY_OWNER
 	  THREAD_DELETED_BY_OWNER
 		COMMUNITY_INVITE
+		MENTION
 	}
 
 	enum EntityType {
