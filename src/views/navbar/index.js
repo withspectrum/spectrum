@@ -383,8 +383,6 @@ class Navbar extends Component {
       showNewUserOnboarding,
     } = this.state;
 
-    console.log('showing onboarding', showNewUserOnboarding);
-
     // Bail out if the splash page is showing
     if (!currentUserExists && isHome) return null;
 
