@@ -8,6 +8,7 @@ type Props = {
   image?: string,
 };
 
+let renderCount = 0;
 export default ({ title, description, showUnreadFavicon, image }: Props) => {
   return (
     <Helmet>
@@ -38,13 +39,14 @@ export default ({ title, description, showUnreadFavicon, image }: Props) => {
         <link
           rel="shortcut icon"
           id="dynamic-favicon"
-          href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
+          href={`${process.env
+            .PUBLIC_URL}/img/favicon_unread.ico?v=${renderCount++}`}
         />
       ) : (
         <link
           rel="shortcut icon"
           id="dynamic-favicon"
-          href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+          href={`${process.env.PUBLIC_URL}/img/favicon.ico?v=${renderCount++}`}
         />
       )}
     </Helmet>
