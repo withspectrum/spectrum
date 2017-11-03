@@ -71,6 +71,12 @@ type MessageGroupProps = {
   isModerator: boolean,
   toggleReaction: Function,
   dispatch: Function,
+  selectedId: string,
+  changeSelection: Function,
+};
+
+type State = {
+  selectedMessage: ?string,
 };
 
 /*
@@ -81,7 +87,7 @@ type MessageGroupProps = {
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-class Messages extends Component<MessageGroupProps> {
+class Messages extends Component<MessageGroupProps, State> {
   constructor() {
     super();
 
