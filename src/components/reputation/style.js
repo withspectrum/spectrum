@@ -15,6 +15,6 @@ export const ReputationWrapper = styled.div`
 
 export const ReputationLabel = styled.span`
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: ${props => props.theme.text.alt};
 `;

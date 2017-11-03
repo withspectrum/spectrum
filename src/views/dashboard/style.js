@@ -643,6 +643,12 @@ export const PillLabel = styled.span`
       position: relative;
       top: -2px;
     `};
+
+  overflow: hidden;
+  max-width: 128px;
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
 `;
 
 export const MiniLinkPreview = styled(Link)`

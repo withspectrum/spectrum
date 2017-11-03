@@ -140,7 +140,7 @@ class ThreadFeed extends React.Component<Props, State> {
     const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 
     return (
-      <div>
+      <div data-e2e-id="inbox-thread-feed">
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
