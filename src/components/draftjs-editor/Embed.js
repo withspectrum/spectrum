@@ -37,8 +37,6 @@ export const parseEmbedUrl = url => {
   const isIframeTag = url.match(IFRAME_TAG);
   if (isIframeTag) return IFRAME_TAG.exec(url)[2];
 
-  if (!isURL(url) || !isIframeTag) return null;
-
   const isFigmaUrl = url.match(FIGMA_URLS);
   if (isFigmaUrl)
     return {
@@ -68,6 +66,8 @@ export const parseEmbedUrl = url => {
       height: 800,
     };
   }
+
+  if (!isURL(url)) return null;
 
   return {
     url,
