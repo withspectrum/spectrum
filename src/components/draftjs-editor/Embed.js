@@ -54,7 +54,9 @@ export const parseEmbedUrl = url => {
       aspectRatio: '56.25%', // 16:9 aspect ratio
     };
 
-  return url;
+  return {
+    url,
+  };
 };
 
 export default class Embed extends Component {
