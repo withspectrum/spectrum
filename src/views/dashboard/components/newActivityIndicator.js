@@ -9,18 +9,16 @@ const NewActivityBar = styled.div`
   background: ${props => props.theme.bg.wash};
   font-size: 14px;
   font-weight: 600;
-  display: flex;
+  display: ${props => (props.active ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
   align-self: center;
   padding: 12px 16px;
-  height: ${props => (props.active ? '40px' : '0')};
-  pointer-events: ${props => (props.active ? 'auto' : 'none')};
-  box-shadow: 0 1px 0px ${props => props.theme.bg.border},
-    0 -1px 0px ${props => props.theme.bg.border};
+  height: 40px;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   z-index: 10;
   position: relative;
-  transition: all 0.2s ease-in-out;
   cursor: pointer;
   width: 100%;
   text-align: center;
