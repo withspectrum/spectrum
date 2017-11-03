@@ -239,9 +239,10 @@ export const BylineMeta = styled(FlexCol)`margin-left: 12px;`;
 
 export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
+export const AuthorNameLink = styled(Link)`display: flex;`;
+export const AuthorNameNoLink = styled.div`display: flex;`;
 export const AuthorName = styled(H3)`
   font-weight: 500;
-  cursor: pointer;
   max-width: 100%;
   color: ${props => props.theme.text.default};
   margin-right: 8px;
@@ -569,6 +570,21 @@ export const SidebarSectionActions = styled.div`
   button {
     width: 100%;
     margin: 4px 0;
+  }
+`;
+
+export const SidebarSectionAuth = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 8px 16px 16px;
+  button {
+    width: 100%;
+  }
+  a {
+    flex: auto;
+  }
+  a:first-child {
+    margin-bottom: 8px;
   }
 `;
 export const SidebarCommunityCover = styled.div`

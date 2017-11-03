@@ -39,6 +39,16 @@ export const ShimmerList = styled(Card)`
   }
 `;
 
+export const ShimmerListLite = styled(Card)`
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: none;
+
+  section {
+    min-height: 164px;
+  }
+`;
+
 export const ShimmerThreadDetail = styled(FlexCol)`
   padding: 40px 32px;
   display: inline-block;
@@ -72,6 +82,16 @@ export const ShimmerInboxThread = styled.div`
 
 export const ShimmerProfile = styled(Card)`
   padding: 16px;
+
+  section {
+    min-height: 96px;
+  }
+`;
+
+export const ShimmerProfileLite = styled(Card)`
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: none;
 
   section {
     min-height: 96px;

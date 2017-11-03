@@ -150,12 +150,12 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (!messagesExist) {
-      return <ChatWrapper />;
-    }
-
     if (isLoading) {
       return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
+    }
+
+    if (!messagesExist) {
+      return <ChatWrapper />;
     }
 
     return (

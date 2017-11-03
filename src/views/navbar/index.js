@@ -183,6 +183,10 @@ class Navbar extends Component {
       return true;
     }
 
+    if (currState.showNewUserOnboarding !== nextState.showNewUserOnboarding) {
+      return true;
+    }
+
     // if route changes
     if (curr.location.pathname !== next.location.pathname) {
       return true;
