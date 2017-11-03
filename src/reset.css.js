@@ -239,9 +239,7 @@ injectGlobal`
   }
 
   .markdown iframe {
-    width: 100%;
     min-height: 400px;
-    max-height: 60vh;
     margin: 1rem 0;
   }
 

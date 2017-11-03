@@ -2,8 +2,10 @@
 // slightly adapted to work with arbitrary data passed from the entity
 import { Entity, EditorState, AtomicBlockUtils } from 'draft-js';
 import React, { Component } from 'react';
-import { AspectRatio, EmbedComponent } from './style';
+import isURL from 'validator/lib/isURL';
+import { AspectRatio, EmbedContainer, EmbedComponent } from './style';
 import {
+  FRAMER_URLS,
   FIGMA_URLS,
   IFRAME_TAG,
   YOUTUBE_URLS,
@@ -15,8 +17,10 @@ import {
 export const addEmbed = (editorState, attrs) => {
   const urlType = 'embed';
   const entityKey = Entity.create(urlType, 'IMMUTABLE', {
-    src: attrs.url,
-    aspectRatio: attrs.aspectRatio,
+    src: (attrs && attrs.url) || null,
+    aspectRatio: attrs && attrs.aspectRatio,
+    width: attrs && attrs.width,
+    height: attrs && attrs.height,
   });
   const newEditorState = AtomicBlockUtils.insertAtomicBlock(
     editorState,
@@ -54,6 +58,17 @@ export const parseEmbedUrl = url => {
       aspectRatio: '56.25%', // 16:9 aspect ratio
     };
 
+  const isFramerUrl = url.match(FRAMER_URLS);
+  if (isFramerUrl) {
+    return {
+      url,
+      width: 600,
+      height: 800,
+    };
+  }
+
+  if (!isURL(url)) return null;
+
   return {
     url,
   };
@@ -76,17 +91,39 @@ export default class Embed extends Component {
       ...elementProps
     } = otherProps;
     const data = Entity.get(block.getEntityAt(0)).getData();
-    const { aspectRatio, src } = data;
-    return (
-      <AspectRatio ratio={aspectRatio}>
-        <EmbedComponent
-          title={`iframe-${src}`}
-          {...elementProps}
-          {...data}
-          src={src}
-          className={theme.embedStyles.embed}
-        />
-      </AspectRatio>
-    );
+    const { aspectRatio, src, width = '100%', height = 400, ...rest } = data;
+
+    if (!src) return null;
+
+    // if an aspect ratio is passed in, we need to use the EmbedComponent which does some trickery with padding to force an aspect ratio. Otherwise we should just use a regular iFrame
+    if (aspectRatio && aspectRatio !== undefined) {
+      return (
+        <AspectRatio ratio={aspectRatio}>
+          <EmbedComponent
+            title={`iframe-${src}`}
+            {...elementProps}
+            width={width}
+            height={height}
+            {...rest}
+            src={src}
+            className={theme.embedStyles.embed}
+          />
+        </AspectRatio>
+      );
+    } else {
+      return (
+        <EmbedContainer>
+          <iframe
+            title={`iframe-${src}`}
+            {...elementProps}
+            width={width}
+            height={height}
+            {...rest}
+            src={src}
+            className={theme.embedStyles.embed}
+          />
+        </EmbedContainer>
+      );
+    }
   }
 }
