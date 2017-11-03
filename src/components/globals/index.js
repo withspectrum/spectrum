@@ -60,6 +60,8 @@ export const zIndex = new function() {
   this.search = this.form; // search is a type of form and should appear at the same level
   this.dmInput = this.form;
 
+  this.composerToolbar = 2000; // composer toolbar - should sit in between most elements
+
   this.chrome = 3000; // chrome should be visible in modal contexts
   this.navBar = this.chrome; // navBar is chrome and should appear at the same level
   this.mobileInput = this.chrome + 1; // the chatInput on mobile should appear above the navBar
