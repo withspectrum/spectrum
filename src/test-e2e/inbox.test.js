@@ -9,6 +9,12 @@ const session = data.sessions.find(
   session =>
     session.session.passport && session.session.passport.user === user.id
 );
+const channelIds = data.usersChannels
+  .filter(({ userId }) => userId === user.id)
+  .map(({ channelId }) => channelId);
+const dashboardThreads = data.threads.filter(({ channelId }) =>
+  channelIds.includes(channelId)
+);
 
 // If DEBUG_E2E is set show a browser and run test in slow mo
 const config = process.env.DEBUG_E2E
@@ -45,6 +51,30 @@ afterAll(async () => {
 });
 
 it('should render the inbox view', async () => {
-  console.log(await page.content());
   await page.waitForSelector('[data-e2e-id="inbox-view"]');
+});
+
+it('should render a list of threads in the channels the user is a member of', async () => {
+  await page.waitForSelector('[data-e2e-id="inbox-thread-feed"]');
+  const content = await page.content();
+  dashboardThreads.forEach(thread => {
+    expect(content).toContain(thread.content.title);
+  });
+});
+
+it('should render a list of communities the user is a member of', async () => {
+  await page.waitForSelector('[data-e2e-id="inbox-community-list"]');
+  const usersCommunities = data.usersCommunities
+    .filter(({ userId }) => user.id === userId)
+    .map(({ communityId }) =>
+      data.communities.find(({ id }) => id === communityId)
+    );
+  const content = await page.content();
+  usersCommunities.forEach(community => {
+    expect(content).toContain(community.profilePhoto);
+  });
+});
+
+it('should render a thread view', async () => {
+  await page.waitForSelector('[data-e2e-id="thread-view"]');
 });
