@@ -32,7 +32,6 @@ export const Body = props => {
     default:
       return (
         <Text me={me} pending={pending}>
-          {console.log(props)}
           {message.body}
         </Text>
       );
