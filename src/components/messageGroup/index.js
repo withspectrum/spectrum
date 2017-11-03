@@ -119,7 +119,7 @@ class Messages extends Component<MessageGroupProps> {
       return <NewThreadShare thread={thread} />;
 
     return (
-      <Wrapper>
+      <Wrapper data-e2e-id="message-group">
         {messages.map((group, i) => {
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
           const initialMessage = group[0];

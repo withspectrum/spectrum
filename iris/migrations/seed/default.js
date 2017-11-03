@@ -202,14 +202,36 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
 const DEFAULT_USERS_COMMUNITIES = [
   {
     createdAt: new Date(DATE),
-    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+    userId: MAX_ID,
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,
     isMember: true,
     isBlocked: false,
     receiveNotifications: true,
-    reputation: 1,
+    reputation: 100,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: true,
+    isMember: true,
+    isBlocked: false,
+    receiveNotifications: true,
+    reputation: 101,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    receiveNotifications: true,
+    reputation: 102,
   },
 ];
 
@@ -224,6 +246,61 @@ const DEFAULT_USERS_CHANNELS = [
     isBlocked: false,
     isPending: false,
     receiveNotifications: true,
+  },
+];
+
+const DEFAULT_MESSAGES = [
+  {
+    id: '0063e9e6-8960-4dd4-96ab-f18bca4cf75f',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('This is the first message!'))),
+    },
+    messageType: 'draftjs',
+    threadType: 'story',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE),
+  },
+  {
+    id: '46814c43-9011-4f88-8ba0-94d52c316e71',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    attachments: [],
+    content: {
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is the second message!'))
+      ),
+    },
+    messageType: 'draftjs',
+    threadType: 'story',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 1),
+  },
+  {
+    id: 'e0392713-adbb-461a-bcb6-f81d0e6c21f8',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    attachments: [],
+    content: {
+      body: JSON.stringify(
+        toJSON(fromPlainText('The next one is an emoji-only one :scream:'))
+      ),
+    },
+    messageType: 'draftjs',
+    threadType: 'story',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE + 2),
+  },
+  {
+    id: '78ce5bb4-3015-4eb9-ad4e-3e921883ceb3',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('🎉'))),
+    },
+    messageType: 'draftjs',
+    threadType: 'story',
+    senderId: BRIAN_ID,
+    timestamp: new Date(DATE + 3),
   },
 ];
 
@@ -262,4 +339,5 @@ module.exports = {
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
   DEFAULT_SESSIONS,
+  DEFAULT_MESSAGES,
 };
