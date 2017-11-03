@@ -10,6 +10,7 @@ import {
   BylineMeta,
   AuthorName,
   AuthorNameLink,
+  AuthorNameNoLink,
   AuthorUsername,
 } from '../style';
 
@@ -38,15 +39,24 @@ class ThreadByline extends React.Component<Props> {
           radius={40}
           isOnline={creator.isOnline}
           src={creator.profilePhoto}
-          link={creator.username ? `/users/${creator.username}` : null}
+          link={creator.username ? `/users/${creator.username}` : false}
         />
         <BylineMeta>
-          <AuthorNameLink to={`/users/${creator.username}`}>
-            <AuthorName>{creator.name}</AuthorName>
-            {creator &&
-              creator.contextPermissions &&
-              creator.contextPermissions.isOwner && <Badge type="admin" />}
-          </AuthorNameLink>
+          {creator.username ? (
+            <AuthorNameLink to={`/users/${creator.username}`}>
+              <AuthorName>{creator.name}</AuthorName>
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isOwner && <Badge type="admin" />}
+            </AuthorNameLink>
+          ) : (
+            <AuthorNameNoLink>
+              <AuthorName>{creator.name}</AuthorName>
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isOwner && <Badge type="admin" />}
+            </AuthorNameNoLink>
+          )}
 
           <AuthorUsername>
             {creator &&
