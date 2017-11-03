@@ -174,6 +174,7 @@ export const AspectRatio = styled.div`
   height: 0;
   padding-bottom: ${props => (props.ratio ? props.ratio : '0')};
   width: 100%;
+  margin-bottom: 32px;
 `;
 
 export const EmbedComponent = styled.iframe`
