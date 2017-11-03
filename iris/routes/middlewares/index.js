@@ -21,11 +21,6 @@ middlewares.use(OpticsAgent.middleware());
 import cors from './cors';
 middlewares.use(cors);
 
-// This needs to come before the other middlewares since it doesn't make any
-// sense to run code if we're redirecting anyway and it'll just run again
-import threadParamRedirect from './thread-param';
-middlewares.use(threadParamRedirect);
-
 import cookieParser from 'cookie-parser';
 middlewares.use(cookieParser());
 
@@ -41,5 +36,9 @@ middlewares.use(session);
 import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
+
+// This needs to come after passport otherwise we'll always redirect logged-in users
+import threadParamRedirect from './thread-param';
+middlewares.use(threadParamRedirect);
 
 export default middlewares;
