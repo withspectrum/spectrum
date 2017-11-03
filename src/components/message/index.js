@@ -10,38 +10,9 @@ import { openModal } from '../../actions/modals';
 import { toPlainText, toState, toJson } from 'shared/draft-utils';
 
 class Message extends Component {
-  constructor() {
-    super();
-
-    const hash = window.location.hash.substr(1);
-
-    let initialSelection = null;
-
-    if (hash && hash.length > 1) {
-      initialSelection = hash;
-    }
-
-    this.state = {
-      selectedMessage: initialSelection,
-    };
-  }
-
-  toggleSelectedMessage = messageId => {
-    if (this.state.selectedMessage === messageId) {
-      this.setState({
-        selectedMessage: null,
-      });
-    } else {
-      this.setState({
-        selectedMessage: messageId,
-      });
-    }
-  };
-
   shouldComponentUpdate(nextProps, nextState) {
     const newMessage = nextProps.message.id !== this.props.message.id;
-    const newSelection =
-      nextState.selectedMessage !== this.state.selectedMessage;
+    const newSelection = nextProps.selectedId !== this.props.selectedId;
 
     if (newMessage || newSelection) {
       return true;
@@ -80,9 +51,10 @@ class Message extends Component {
       toggleReaction,
       context,
       selected,
+      selectedId,
+      changeSelection,
     } = this.props;
 
-    const { selectedMessage } = this.state;
     const parsedMessage =
       message.messageType &&
       message.messageType === 'draftjs' &&
@@ -96,8 +68,8 @@ class Message extends Component {
     return (
       <Wrapper
         me={me}
-        selected={selectedMessage === message.id}
-        onClick={() => this.toggleSelectedMessage(message.id)}
+        selected={selectedId === message.id}
+        onClick={() => changeSelection(message.id)}
       >
         <Body
           id={message.id}

@@ -146,12 +146,10 @@ export const Wrapper = styled.div`
   ${props =>
     props.selected &&
     css`
-      ${Bubble} {
+      ${'' /* ${Bubble} {
         box-shadow: 0 0 0 2px ${props => props.theme.brand.alt},
           inset 0 0 0 2px ${props => props.theme.bg.default};
-      }
-
-      ${ActionUI} {
+      } */} ${ActionUI} {
         transition: ${Transition.hover.on};
 
         ${ActionWrapper} {
