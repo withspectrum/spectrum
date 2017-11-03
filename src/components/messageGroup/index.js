@@ -71,6 +71,12 @@ type MessageGroupProps = {
   isModerator: boolean,
   toggleReaction: Function,
   dispatch: Function,
+  selectedId: string,
+  changeSelection: Function,
+};
+
+type State = {
+  selectedMessage: ?string,
 };
 
 /*
@@ -81,9 +87,29 @@ type MessageGroupProps = {
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-class Messages extends Component<MessageGroupProps> {
-  shouldComponentUpdate(next) {
+class Messages extends Component<MessageGroupProps, State> {
+  constructor() {
+    super();
+
+    const hash = window.location.hash.substr(1);
+
+    let initialSelection = null;
+
+    if (hash && hash.length > 1) {
+      initialSelection = hash;
+    }
+
+    this.state = {
+      selectedMessage: initialSelection,
+    };
+  }
+
+  shouldComponentUpdate(next, nextState) {
     const current = this.props;
+    const newSelection =
+      nextState.selectedMessage !== this.state.selectedMessage;
+
+    if (newSelection) return newSelection;
 
     // If it's a different thread, let's re-render
     const diffThread = next.threadId !== current.threadId;
@@ -103,6 +129,18 @@ class Messages extends Component<MessageGroupProps> {
 
     return diffMessages;
   }
+
+  toggleSelectedMessage = messageId => {
+    if (this.state.selectedMessage === messageId) {
+      this.setState({
+        selectedMessage: null,
+      });
+    } else {
+      this.setState({
+        selectedMessage: messageId,
+      });
+    }
+  };
 
   render() {
     const {
@@ -150,7 +188,6 @@ class Messages extends Component<MessageGroupProps> {
                     <Message
                       key={message.id}
                       message={message}
-                      link={`#${message.id}`}
                       reaction={'like'}
                       me={me}
                       canModerate={canModerate}
@@ -159,6 +196,8 @@ class Messages extends Component<MessageGroupProps> {
                       threadType={threadType}
                       threadId={threadId}
                       toggleReaction={toggleReaction}
+                      selectedId={this.state.selectedMessage}
+                      changeSelection={this.toggleSelectedMessage}
                     />
                   );
                 })}
