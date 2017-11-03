@@ -15,7 +15,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
     .get(messageId)
     .run()
     .then(message => {
-      if (message.deletedAt) return null;
+      if (!message || message.deletedAt) return null;
       return message;
     });
 };
