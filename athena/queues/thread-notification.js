@@ -45,7 +45,6 @@ const createThreadNotificationEmail = async thread => {
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body;
     const body = rawBody.length > 10 ? truncate(rawBody, 280) : null;
-    console.log(body && body.length);
     const primaryActionLabel =
       body && body.length >= 272 ? 'Continue reading' : 'Join the conversation';
 
