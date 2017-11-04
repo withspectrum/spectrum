@@ -64,20 +64,10 @@ export const Section = styled(FlexRow)`
 
 export const LogoLink = styled(Link)`
   margin-left: 8px;
-  margin-right: 18px;
+  margin-right: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  ${() =>
-    process.env.NODE_ENV !== 'production' &&
-    css`
-      &:after {
-        content: 'Dev';
-        margin-top: 4px;
-        font-size: 0.75em;
-      }
-    `};
 `;
 
 export const SigninLink = styled.button`
