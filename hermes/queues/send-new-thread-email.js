@@ -54,7 +54,7 @@ export default async (job: SendNewThreadEmailJob) => {
   debug(`\nsending new thread email to: ${recipient.email}`);
 
   const unsubscribeToken = await generateUnsubscribeToken(
-    job.data.recipient.id,
+    recipient.id,
     TYPE_NEW_THREAD_CREATED
   );
 
