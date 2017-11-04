@@ -25,7 +25,7 @@ const FormattedThreadLocation = props => {
       {needsCommunityDetails && (
         <ThreadContextAvatar>
           <Avatar
-            community
+            community={props.data.community}
             size={20}
             radius={8}
             src={props.data.community.profilePhoto}

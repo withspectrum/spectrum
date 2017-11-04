@@ -15,10 +15,10 @@ import { addProtocolToString } from '../../helpers/utils';
 import { CLIENT_URL } from '../../api/constants';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
+import Avatar from '../avatar';
 import { Button, OutlineButton } from '../buttons';
 import {
   ProfileHeader,
-  CommunityAvatar,
   ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
@@ -29,7 +29,6 @@ import {
   ProfileCard,
   Container,
   CoverPhoto,
-  CoverAvatar,
   CoverLink,
   CoverTitle,
   CoverSubtitle,
@@ -132,7 +131,16 @@ class CommunityWithData extends Component {
           <Container>
             <CoverPhoto url={community.coverPhoto} />
             <CoverLink to={`/${community.slug}`}>
-              <CoverAvatar src={community.profilePhoto} community size={64} />
+              <Avatar
+                src={community.profilePhoto}
+                community={community}
+                size={64}
+                style={{
+                  boxShadow: '0 0 0 2px #fff',
+                  flex: '0 0 64px',
+                  marginRight: '0',
+                }}
+              />
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
             <CoverSubtitle>
@@ -182,10 +190,11 @@ class CommunityWithData extends Component {
         return (
           <Card style={{ paddingBottom: '16px' }}>
             <ProfileHeader>
-              <CommunityAvatar
-                community
+              <Avatar
+                community={community}
                 size={40}
                 src={community.profilePhoto}
+                style={{ marginRight: '16px' }}
               />
               <ProfileHeaderLink to={`/${community.slug}`}>
                 <ProfileHeaderMeta>
@@ -220,7 +229,11 @@ class CommunityWithData extends Component {
       case 'listItemWithAction':
         return (
           <ProfileHeader>
-            <CommunityAvatar community src={community.profilePhoto} />
+            <Avatar
+              community={community}
+              src={community.profilePhoto}
+              style={{ marginRight: '16px' }}
+            />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
                 <Title>{community.name}</Title>
@@ -261,7 +274,11 @@ class CommunityWithData extends Component {
         return (
           <ProfileCard>
             <ProfileHeader>
-              <CommunityAvatar community src={community.profilePhoto} />
+              <Avatar
+                community={community}
+                src={community.profilePhoto}
+                style={{ marginRight: '16px' }}
+              />
               <ProfileHeaderLink to={`/${community.slug}`}>
                 <ProfileHeaderMeta>
                   <Title>{community.name}</Title>
@@ -302,7 +319,11 @@ class CommunityWithData extends Component {
         return (
           <Card>
             <ProfileHeader>
-              <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+              <Avatar
+                community={community}
+                src={`${community.profilePhoto}?w=40&dpr=2`}
+                style={{ marginRight: '16px' }}
+              />
               <ProfileHeaderLink to={`/${community.slug}`}>
                 <ProfileHeaderMeta>
                   <Title>{community.name}</Title>

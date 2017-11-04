@@ -734,6 +734,7 @@ class NewThread extends Component {
                       onClick={() => this.addUserToSelectedUsersList(user)}
                     >
                       <SearchResultImage
+                        user={user}
                         isOnline={user.isOnline}
                         size={32}
                         radius={32}

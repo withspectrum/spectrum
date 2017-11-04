@@ -19,6 +19,7 @@ const messageAvatars = (list, active) => {
       tipLocation={'top-right'}
     >
       <Avatar
+        user={participant}
         size={24}
         isOnline={false}
         link={participant.username ? `/users/${participant.username}` : null}
@@ -42,6 +43,7 @@ const Facepile = ({ participants, creator, active }) => {
           tipLocation={'top-right'}
         >
           <Avatar
+            user={creator}
             size={24}
             isOnline={false}
             link={creator.username ? `/users/${creator.username}` : null}
@@ -75,6 +77,7 @@ const Facepile = ({ participants, creator, active }) => {
         tipLocation={'top-right'}
       >
         <Avatar
+          user={creator}
           size={24}
           isOnline={false}
           link={creator.username ? `/users/${creator.username}` : null}

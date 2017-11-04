@@ -506,6 +506,7 @@ class Navbar extends Component {
                 }
               >
                 <UserProfileAvatar
+                  user={loggedInUser}
                   src={`${loggedInUser.profilePhoto}`}
                   isPro={loggedInUser.isPro}
                 />
