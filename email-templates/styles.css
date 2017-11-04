@@ -1,0 +1,282 @@
+/*
+
+Note:
+This css file should be used in *every* email template to maintain consistency.
+Do not make changes to an individual emails styles. Update the styles here and 
+update *every* template with the new css.
+
+Eventually we should automate this as a build process.
+
+*/
+
+
+*:not(br):not(tr):not(html) {
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100% !important;
+  height: 100%;
+  margin: 0;
+  line-height: 1.4;
+  background-color: #F5F8FC;
+  color: #16171A;
+  -webkit-text-size-adjust: none;
+}
+
+p,
+ul,
+ol,
+blockquote {
+  line-height: 1.4;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #7B16FF;
+  text-decoration: none;
+}
+
+a.black {
+  color: #16171A;
+}
+
+a.block {
+  display: block;
+  width: 100%;
+}
+
+a img {
+  border: none;
+}
+
+td {
+  word-break: break-word;
+}
+/* Layout ------------------------------ */
+
+.email-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -premailer-width: 100%;
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+  background-color: #F5F8FC;
+}
+
+.email-content {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -premailer-width: 100%;
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #DAE4F2;
+}
+
+/* Body ------------------------------ */
+
+.email-body {
+  width: 100%;
+  margin: 0;
+  padding: 32px 0;
+  -premailer-width: 100%;
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+}
+
+.email-body_inner {
+  width: 570px;
+  margin: 0 auto;
+  padding: 16px;
+  -premailer-width: 570px;
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+  background-color: #FFFFFF;
+}
+
+.email-footer {
+  width: 570px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+  -premailer-width: 570px;
+  -premailer-cellpadding: 0;
+  -premailer-cellspacing: 0;
+  text-align: center;
+}
+
+.email-footer p {
+  color: #828C99;
+  font-size: 14px;
+}
+
+.email-footer a {
+  color: #1D2129;
+}
+
+.email-footer ul {
+  list-style-type: none;
+  margin: 24px 0;
+}
+
+.email-footer li {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.preheader {
+  display: none !important;
+  visibility: hidden;
+  mso-hide: all;
+  font-size: 1px;
+  line-height: 1px;
+  max-height: 0;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.signoff {
+  padding-top: 32px;
+}
+/* Utilities ------------------------------ */
+
+.align-right {
+  text-align: right;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.divider {
+  height: 1px;
+  background-color: #DAE4F2;
+  display: block;
+  width: 100%;
+  margin: 16px 0;
+}
+
+/*Media Queries ------------------------------ */
+
+@media only screen and (max-width: 600px) {
+  .email-body_inner,
+  .email-footer {
+    width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .button {
+    width: 100% !important;
+  }
+}
+/* Buttons ------------------------------ */
+
+.button-row {
+  display: block;
+  margin: 16px 0;
+}
+
+.button {
+  background-color: #7B16FF;
+  display: inline-block;
+  color: #FFF;
+  padding: 12px 16px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  -webkit-text-size-adjust: none;
+  word-break: keep-all;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.button.outline {
+  background-color: #FFFFFF;
+  color: #828C99;
+  border: 1px solid #828C99;
+  box-shadow: none;
+}
+
+.button.textonly {
+  background-color: #FFFFFF;
+  color: #828C99;
+  border: 0;
+  box-shadow: none;
+}
+
+.button:hover {
+  text-decoration: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.button.black {
+  background-color: #16171A;
+}
+
+.button.twitter {
+ background-color: #00ACED; 
+}
+
+.button.facebook {
+  background-color: #3B5998;
+}
+
+.button.success {
+  background-color: #00B88B;
+}
+/* Type ------------------------------ */
+
+h1 {
+  margin-top: 0;
+  color: #16171A;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+}
+
+h2 {
+  margin-top: 0;
+  color: #16171A;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+}
+
+h3 {
+  margin-top: 0;
+  color: #16171A;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+}
+
+p {
+  margin-top: 12px;
+  color: #828C99;
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+p.center {
+  text-align: center;
+}
+
+p.emoji, span.emoji {
+  font-size: 32px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
