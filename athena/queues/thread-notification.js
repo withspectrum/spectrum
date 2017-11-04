@@ -38,7 +38,10 @@ const createThreadNotificationEmail = async thread => {
   const emailPromises = recipients.map(async recipient => {
     if (!recipient.email) return;
 
-    const shouldSendEmail = getEmailStatus(recipient.id, 'newThreadCreated');
+    const shouldSendEmail = await getEmailStatus(
+      recipient.id,
+      'newThreadCreated'
+    );
     if (!shouldSendEmail) return;
     const rawBody =
       thread.type === 'DRAFTJS'
