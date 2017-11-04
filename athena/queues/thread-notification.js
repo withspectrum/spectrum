@@ -74,9 +74,17 @@ const createThreadNotificationEmail = async thread => {
   return Promise.all([emailPromises]);
 };
 
-export default job => {
-  const incomingThread = job.data.thread;
-  const currentUserId = job.data.userId;
+type JobData = {
+  data: {
+    thread: {
+      channelId: string,
+      creatorId: string,
+    },
+    userId: string,
+  },
+};
+export default async (job: JobData) => {
+  const { thread: incomingThread, userId: currentUserId } = job.data;
 
   debug(`new job for a thread by ${currentUserId}`);
 
@@ -86,106 +94,78 @@ export default job => {
     - context
     - entity
   */
-  const promises = [
-    // actor and entity
-    fetchPayload('USER', currentUserId),
-    // get the channel where the thread was posted
-    fetchPayload('CHANNEL', incomingThread.channelId),
-    // create a payload for the thread that was posted
-    createPayload('THREAD', incomingThread),
-  ];
 
-  return checkForExistingNotification(
+  const actor = await fetchPayload('USER', currentUserId);
+  const context = await fetchPayload('CHANNEL', incomingThread.channelId);
+  const entity = await createPayload('THREAD', incomingThread);
+  const existingNotification = await checkForExistingNotification(
     'THREAD_CREATED',
     incomingThread.channelId
-  )
-    .then(notification => {
-      if (notification) {
-        debug('found existing notification');
-        return Promise.all([notification, ...promises])
-          .then(([notification, actor, context, entity]) => {
-            // actors should always be distinct to make client side rendering easier
-            const distinctActors = getDistinctActors([
-              ...notification.actors,
-              actor,
-            ]);
+  );
 
-            // create a new notification
-            const newNotification = Object.assign({}, notification, {
-              actors: [...distinctActors],
-              context,
-              entities: [...notification.entities, entity],
-            });
+  if (existingNotification) {
+    debug('found existing notification');
+    const notification = existingNotification;
+    // actors should always be distinct to make client side rendering easier
+    const distinctActors = getDistinctActors([...notification.actors, actor]);
 
-            debug('update existing notification in database with new data');
-            return updateNotification(newNotification);
-          })
-          .then(notification => {
-            // get the owners of the community
-            const recipients = getMembersInChannelWithNotifications(
-              incomingThread.channelId
-            );
+    // create a new notification
+    const newNotification = Object.assign({}, notification, {
+      actors: [...distinctActors],
+      context,
+      entities: [...notification.entities, entity],
+    });
 
-            debug('find recipients of notification');
+    const updatedNotification = await updateNotification(newNotification);
 
-            return Promise.all([notification, recipients]);
-          })
-          .then(([notification, recipients]) => {
-            debug('mark notification as new for all recipients');
-            // for each user trigger a notification
-            return Promise.all([
-              createThreadNotificationEmail(incomingThread),
-              recipients
-                // don't trigger a notification for the person who just posted the thread
-                .filter(recipient => recipient !== incomingThread.creatorId)
-                .map(recipient => {
-                  return Promise.all([
-                    markUsersNotificationsAsNew(notification.id, recipient),
-                  ]);
-                }),
-            ]);
-          });
-      } else {
-        // if no notification was found that matches our bundling criteria, create a new notification
-        return Promise.all([...promises])
-          .then(([actor, context, entity]) => {
-            // create the notification record
-            const notification = {
-              actors: [actor],
-              event: 'THREAD_CREATED',
-              context,
-              entities: [entity],
-            };
+    // get the owners of the community
+    const recipients = await getMembersInChannelWithNotifications(
+      incomingThread.channelId
+    );
 
-            debug('create notification in db');
+    debug('find recipients of notification');
 
-            return storeNotification(notification);
-          })
-          .then(notification => {
-            // get the owners of the community
-            const recipients = getMembersInChannelWithNotifications(
-              incomingThread.channelId
-            );
+    const notificationPromises = recipients
+      // don't trigger a notification for the person who just posted the thread
+      .filter(recipient => recipient !== incomingThread.creatorId)
+      .map(recipient => {
+        return Promise.all([
+          markUsersNotificationsAsNew(updatedNotification.id, recipient),
+        ]);
+      });
 
-            debug('find recipients of notification');
+    debug('mark notification as new for all recipients');
 
-            return Promise.all([notification, recipients]);
-          })
-          .then(([notification, recipients]) => {
-            debug('create a notification for every recipient');
-            return Promise.all([
-              createThreadNotificationEmail(incomingThread),
-              recipients
-                // don't trigger a notification for the person who just posted the thread
-                .filter(recipient => recipient !== incomingThread.creatorId)
-                .map(recipient => {
-                  return Promise.all([
-                    storeUsersNotifications(notification.id, recipient),
-                  ]);
-                }),
-            ]);
-          });
-      }
-    })
-    .catch(err => new Error(err));
+    return Promise.all([
+      createThreadNotificationEmail(incomingThread),
+      notificationPromises,
+    ]);
+  } else {
+    // create the notification record
+    const notification = {
+      actors: [actor],
+      event: 'THREAD_CREATED',
+      context,
+      entities: [entity],
+    };
+
+    const newNotification = await storeNotification(notification);
+
+    // get the owners of the community
+    const recipients = await getMembersInChannelWithNotifications(
+      incomingThread.channelId
+    );
+
+    debug('create a notification for every recipient');
+
+    const notificationPromises = recipients
+      // don't trigger a notification for the person who just posted the thread
+      .filter(recipient => recipient !== incomingThread.creatorId)
+      .map(recipient => storeUsersNotifications(newNotification.id, recipient));
+
+    return Promise.all([
+      createThreadNotificationEmail(incomingThread),
+      notificationPromises,
+    ]);
+  }
 };
