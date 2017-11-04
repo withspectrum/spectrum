@@ -52,11 +52,7 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    email: (
-      { id, email }: { id: string, email: string },
-      _: any,
-      { user }: GraphQLContext
-    ) => {
+    email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
       // user should only be able to view their own email
       if (id !== user.id) return null;
       // admin can view email
