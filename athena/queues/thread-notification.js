@@ -44,7 +44,7 @@ const createThreadNotificationEmail = async thread => {
       thread.type === 'DRAFTJS'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body;
-    const body = rawBody.length > 10 ? truncate(rawBody, 280) : null;
+    const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
     const primaryActionLabel =
       body && body.length >= 272 ? 'Continue reading' : 'Join the conversation';
 
@@ -79,6 +79,11 @@ type JobData = {
     thread: {
       channelId: string,
       creatorId: string,
+      communityId: string,
+      content: {
+        title: string,
+        body: any,
+      },
     },
     userId: string,
   },
