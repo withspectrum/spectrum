@@ -52,6 +52,17 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
+    email: (
+      { id, email }: { id: string, email: string },
+      _: any,
+      { user }: GraphQLContext
+    ) => {
+      // user should only be able to view their own email
+      if (id !== user.id) return null;
+      // admin can view email
+      if (!isAdmin(user.id)) return null;
+      return email;
+    },
     coverPhoto: ({ coverPhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
