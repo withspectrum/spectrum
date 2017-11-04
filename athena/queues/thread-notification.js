@@ -36,20 +36,23 @@ const createThreadNotificationEmail = async thread => {
   );
 
   const emailPromises = recipients.map(async recipient => {
+    // no way to send the user an email
     if (!recipient.email) return;
 
+    // user is either online or has this notif type turned off
     const shouldSendEmail = await getEmailStatus(
       recipient.id,
       'newThreadCreated'
     );
     if (!shouldSendEmail) return;
+
+    // at this point the email is safe to send, construct data for Hermes
     const rawBody =
       thread.type === 'DRAFTJS'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body;
     const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
-    const primaryActionLabel =
-      body && body.length >= 272 ? 'Continue reading' : 'Join the conversation';
+    const primaryActionLabel = 'View conversation';
 
     return addQueue(
       SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
