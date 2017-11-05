@@ -65,89 +65,88 @@ type JobData = {
     customMessage: string,
   },
 };
-const processMessageNotificationQueue = (job: JobData) => {
-  const { recipient, communityId, senderId, customMessage } = job.data;
-
-  const inboundRecipient = recipient;
+export default async (job: JobData) => {
+  const {
+    recipient: inboundRecipient,
+    communityId,
+    senderId,
+    customMessage,
+  } = job.data;
 
   /*
 		These promises are used to create or modify a notification. The order is:
+		- existingUser
 		- actor
 		- context
-		- entity
 		In this case the context and entity are the same
-	*/
-  const getPayloads = [
-    // see if the user being invited is already a member of spectrum
-    getUserByEmail(inboundRecipient.email),
-    //get the user who sent the invitation
-    fetchPayload('USER', senderId),
-    // get the community that the user is being invited to - this will be reused for the notification entity
-    fetchPayload('COMMUNITY', communityId),
-  ];
+  */
 
-  return Promise.all(getPayloads)
-    .then(([existingUser, actor, context]) => {
-      const communityToInvite = JSON.parse(context.payload);
-      const sender = JSON.parse(actor.payload);
+  const existingUser = await getUserByEmail(inboundRecipient.email);
+  const actor = await fetchPayload('USER', senderId);
+  const context = await fetchPayload('COMMUNITY', communityId);
 
-      // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
-      if (!existingUser) {
-        debug('recipient does not exist on spectrum, sending an email');
-        return addToSendCommunityInviteEmailQueue(
-          inboundRecipient,
-          communityToInvite,
-          sender,
-          customMessage
-        );
-      } else {
-        return getUserPermissionsInCommunity(
-          communityId,
-          existingUser.id
-        ).then(permissions => {
-          // if user is blocked, is already a member, owns the community, don't send a notification
-          if (
-            permissions.isBlocked ||
-            permissions.isModerator ||
-            permissions.isOwner ||
-            permissions.isMember
-          )
-            return;
+  const communityToInvite = JSON.parse(context.payload);
+  const sender = JSON.parse(actor.payload);
 
-          // Create notification if user is not a member
-          const newNotification = Object.assign(
-            {},
-            {},
-            {
-              actors: [actor],
-              event: 'COMMUNITY_INVITE',
-              context,
-              entities: [context], // entity and context are the same for this type of notification
-            }
-          );
-
-          debug('creating new notification');
-
-          return storeNotification(newNotification).then(notification => {
-            debug('store new usersnotifications records');
-
-            return Promise.all([
-              addToSendCommunityInviteEmailQueue(
-                inboundRecipient,
-                communityToInvite,
-                sender,
-                customMessage
-              ),
-              storeUsersNotifications(notification.id, existingUser.id),
-            ]);
-          });
-        });
-      }
-    })
-    .catch(err => {
+  // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
+  if (!existingUser) {
+    debug('recipient does not exist on spectrum, sending an email');
+    return addToSendCommunityInviteEmailQueue(
+      inboundRecipient,
+      communityToInvite,
+      sender,
+      customMessage
+    ).catch(err => {
       Raven.captureException(err);
       console.log(err);
     });
-};
+  } else {
+    // the user exists on spectrum
+    // check to see if they have any role in this community already
+    const permissions = await getUserPermissionsInCommunity(
+      communityId,
+      existingUser.id
+    );
+    // if user is blocked, is already a member, owns the community, don't send a notification
+    if (
+      permissions.isBlocked ||
+      permissions.isModerator ||
+      permissions.isOwner ||
+      permissions.isMember
+    )
+      return;
 
-export default processMessageNotificationQueue;
+    // Create notification if user is not a member
+    const newNotification = Object.assign(
+      {},
+      {
+        actors: [actor],
+        event: 'COMMUNITY_INVITE',
+        context,
+        entities: [context], // entity and context are the same for this type of notification
+      }
+    );
+    debug('creating new notification');
+
+    const updatedNotification = await storeNotification(newNotification);
+    const sendInvite = await addToSendCommunityInviteEmailQueue(
+      inboundRecipient,
+      communityToInvite,
+      sender,
+      customMessage
+    );
+    const usersNotification = await storeUsersNotifications(
+      updatedNotification.id,
+      existingUser.id
+    );
+    debug('store new usersnotifications records');
+    return Promise.all([
+      updatedNotification,
+      sendInvite,
+      usersNotification,
+    ]).catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
+  }
+};
