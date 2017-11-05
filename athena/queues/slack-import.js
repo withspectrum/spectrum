@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('athena:queue:slack-import');
 import Raven from '../../shared/raven';
 import {
@@ -10,9 +11,14 @@ import {
 	That list will then get filtered to remove bots, banned users, etc. and result in writing
 	a members array back to the slackInvite record in the db
 */
-export default job => {
-  const token = job.data.token;
-  const importId = job.data.importId;
+type JobData = {
+  data: {
+    token: string,
+    importId: string,
+  },
+};
+export default (job: JobData) => {
+  const { token, importId } = job.data;
 
   debug('new job for a slack import');
 
@@ -20,6 +26,7 @@ export default job => {
   return getSlackUserListData(token)
     .then(results => {
       debug('got data from Slack');
+      if (!results) return;
 
       const members = results
         // filter out any restricted members

@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('athena:queue:community-invitation');
 import Raven from '../../shared/raven';
 import { fetchPayload } from '../utils/payloads';
@@ -54,7 +55,17 @@ const addToSendCommunityInviteEmailQueue = (
 			3b. send an email
 */
 
-const processMessageNotificationQueue = job => {
+type JobData = {
+  data: {
+    recipient: {
+      email: string,
+    },
+    communityId: string,
+    senderId: string,
+    customMessage: string,
+  },
+};
+const processMessageNotificationQueue = (job: JobData) => {
   const { recipient, communityId, senderId, customMessage } = job.data;
 
   const inboundRecipient = recipient;

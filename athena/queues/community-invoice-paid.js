@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')(
   'athena:queue:community-invoice-paid-notification'
 );
@@ -13,7 +14,22 @@ const sendCommunityInvoiceReceiptQueue = createQueue(
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL
 );
 
-export default async job => {
+type JobData = {
+  data: {
+    invoice: {
+      id: string,
+      amount: number,
+      paidAt: number,
+      sourceBrand: string,
+      sourceLast4: string,
+      planName: string,
+      communityId: string,
+      quantity: number,
+    },
+  },
+};
+
+export default async (job: JobData) => {
   const { invoice } = job.data;
 
   debug('processing community invoice');

@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('athena:queue:channel-notification');
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -13,7 +14,17 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 
-export default job => {
+type JobData = {
+  data: {
+    channel: {
+      id: string,
+      communityId: string,
+      slug: string,
+    },
+    userId: string,
+  },
+};
+export default (job: JobData) => {
   const incomingChannel = job.data.channel;
   const currentUserId = job.data.userId;
 

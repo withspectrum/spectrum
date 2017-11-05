@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('athena:queue:reaction-notification');
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -14,7 +15,17 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 
-export default job => {
+type JobData = {
+  data: {
+    reaction: {
+      id: string,
+      userId: string,
+      messageId: string,
+    },
+    userId: string,
+  },
+};
+export default (job: JobData) => {
   const incomingReaction = job.data.reaction;
   const currentUserId = job.data.userId;
 

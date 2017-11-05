@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('athena:queue:community-notification');
 import Raven from '../../shared/raven';
 import { fetchPayload } from '../utils/payloads';
@@ -13,7 +14,13 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 
-export default job => {
+type JobData = {
+  data: {
+    communityId: string,
+    userId: string,
+  },
+};
+export default (job: JobData) => {
   const incomingCommunityId = job.data.communityId;
   const currentUserId = job.data.userId;
 
