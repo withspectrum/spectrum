@@ -105,7 +105,5 @@ export default async (job: JobData) => {
     return dbMethod(notification.id, recipient.userId);
   });
 
-  return Promise.all(formatAndBufferPromises).catch(err => {
-    console.log(err);
-  });
+  return Promise.all(formatAndBufferPromises).catch(err => console.log(err));
 };

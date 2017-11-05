@@ -53,5 +53,5 @@ export default async job => {
         removeOnFail: true,
       }
     )
-    .catch(err => new Error(err));
+    .catch(err => console.log(err));
 };

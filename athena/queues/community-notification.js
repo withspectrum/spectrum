@@ -1,7 +1,6 @@
 const debug = require('debug')('athena:queue:community-notification');
-import { fetchPayload, createPayload } from '../utils/payloads';
+import { fetchPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getCommunityById } from '../models/community';
 import { getOwnersInCommunity } from '../models/usersCommunities';
 import {
   storeNotification,
@@ -23,12 +22,12 @@ new job for ${incomingCommunityId} by ${currentUserId}`
   );
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
+		These promises are used to create or modify a notification. The order is:
+		- actor
+		- context
 
-    In this case the actor and entity (user who is joing the community) will be the same
-  */
+		In this case the actor and entity (user who is joing the community) will be the same
+	*/
   const promises = [
     // actor and entity
     fetchPayload('USER', currentUserId),
@@ -113,5 +112,5 @@ new job for ${incomingCommunityId} by ${currentUserId}`
           });
       }
     })
-    .catch(err => new Error(err));
+    .catch(err => console.log(err));
 };

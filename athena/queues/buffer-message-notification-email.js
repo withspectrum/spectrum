@@ -1,7 +1,6 @@
 const debug = require('debug')('athena:send-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
-import { getUsersSettings } from '../models/usersSettings';
 import { getNotifications } from '../models/notification';
 import groupReplies from '../utils/group-replies';
 import getEmailStatus from '../utils/get-email-status';
@@ -46,7 +45,7 @@ const timedOut = recipient => {
           debug('aborting, no unseen threads');
           return;
         }
-        debug(`filter unseen threads, merge replies`);
+        debug('filter unseen threads, merge replies');
         // Convert threads to object, merge replies to same thread
         const threads = threadsInScope
           .filter(thread => unseenThreadIds.includes(thread.id))
@@ -61,7 +60,7 @@ const timedOut = recipient => {
             };
             return map;
           }, {});
-        debug(`group replies`);
+        debug('group replies');
         // Group replies by sender, turn it back into an array
         const threadsWithGroupedReplies = Object.keys(
           threads

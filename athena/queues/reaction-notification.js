@@ -1,5 +1,4 @@
 const debug = require('debug')('athena:queue:reaction-notification');
-import { TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getMessageById } from '../models/message';
@@ -24,11 +23,11 @@ new job for ${incomingReaction.id} by ${currentUserId}`
   );
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
-    - entity
-  */
+		These promises are used to create or modify a notification. The order is:
+		- actor
+		- context
+		- entity
+	*/
   const promises = [
     // get the user who left the reaction
     fetchPayload('USER', incomingReaction.userId),
@@ -148,5 +147,5 @@ new job for ${incomingReaction.id} by ${currentUserId}`
         });
       }
     })
-    .catch(err => new Error(err));
+    .catch(err => console.log(err));
 };

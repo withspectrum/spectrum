@@ -1,7 +1,6 @@
 const debug = require('debug')('athena:queue:channel-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getCommunityById } from '../models/community';
 import { getMembersInCommunity } from '../models/usersCommunities';
 import {
   storeNotification,
@@ -29,11 +28,11 @@ new job for ${incomingChannel.id} by ${currentUserId}`
   }
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
-    - entity
-  */
+		These promises are used to create or modify a notification. The order is:
+		- actor
+		- context
+		- entity
+	*/
   const promises = [
     //get the user who created the channel (probably won't be used in the UI)
     fetchPayload('USER', currentUserId),
@@ -131,5 +130,5 @@ new job for ${incomingChannel.id} by ${currentUserId}`
           });
       }
     })
-    .catch(err => new Error(err));
+    .catch(err => console.log(err));
 };

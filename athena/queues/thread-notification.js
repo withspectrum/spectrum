@@ -100,11 +100,11 @@ export default async (job: JobData) => {
   debug(`new job for a thread by ${currentUserId}`);
 
   /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
-    - entity
-  */
+		These promises are used to create or modify a notification. The order is:
+		- actor
+		- context
+		- entity
+	*/
 
   const actor = await fetchPayload('USER', currentUserId);
   const context = await fetchPayload('CHANNEL', incomingThread.channelId);
@@ -177,6 +177,6 @@ export default async (job: JobData) => {
     return Promise.all([
       createThreadNotificationEmail(incomingThread),
       notificationPromises,
-    ]);
+    ]).catch(err => console.log(err));
   }
 };

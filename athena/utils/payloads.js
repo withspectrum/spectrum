@@ -8,9 +8,9 @@ import { getDirectMessageThreadById } from '../models/directMessageThread';
 const debug = require('debug')('athena:payloads');
 
 /*
-  Fetch a payload from the database when we only have access to an id.
-  For example, when a message is sent we need to generate a payload for the
-  entire thread object where the message was posted!
+	Fetch a payload from the database when we only have access to an id.
+	For example, when a message is sent we need to generate a payload for the
+	entire thread object where the message was posted!
 */
 export const fetchPayload = (
   type: EntityTypes,

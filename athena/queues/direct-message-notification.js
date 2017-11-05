@@ -2,7 +2,6 @@
 const debug = require('debug')('athena:queue:direct-message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
 import { getUserById } from '../models/user';
 import getEmailStatus from '../utils/get-email-status';
 import {
@@ -162,7 +161,5 @@ export default async (job: JobData) => {
     return dbMethod(notification.id, recipient.userId);
   });
 
-  return Promise.all(formatAndBufferPromises).catch(err => {
-    console.log(err);
-  });
+  return Promise.all(formatAndBufferPromises).catch(err => console.log(err));
 };

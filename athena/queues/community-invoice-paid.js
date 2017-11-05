@@ -39,8 +39,8 @@ export default async job => {
     const { id } = invoice;
 
     const memberCountString = quantity => {
-      return `${quantity <= 1 ? `1` : (quantity - 1) * 1000} - ${quantity <= 1
-        ? ``
+      return `${quantity <= 1 ? '1' : (quantity - 1) * 1000} - ${quantity <= 1
+        ? ''
         : `${quantity - 1},`}999 members`;
     };
 
