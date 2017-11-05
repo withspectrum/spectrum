@@ -1,3 +1,4 @@
+// @flow
 import type { EntityTypes } from './types';
 import { getMessageById } from '../models/message';
 import { getThreadById } from '../models/thread';
@@ -14,7 +15,7 @@ const debug = require('debug')('athena:payloads');
 */
 export const fetchPayload = (
   type: EntityTypes,
-  id: Object
+  id: string
 ): Promise<Object> => {
   debug(`fetch payload for ${type.toLowerCase()}#${id}`);
   switch (type) {
@@ -39,7 +40,8 @@ export const fetchPayload = (
       );
     }
     default: {
-      return new Error(`Couldn't match the type '${type}' with EntityTypes`);
+      console.log(`Couldn't match the type '${type}' with EntityTypes`);
+      return Promise.resolve({});
     }
   }
 };

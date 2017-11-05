@@ -1,3 +1,4 @@
+// @flow
 export const convertTimestampToDate = (timestamp: Date) => {
   let monthNames = [
     'January',

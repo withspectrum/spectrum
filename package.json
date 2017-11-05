@@ -14,6 +14,7 @@
     "cross-env": "^5.0.5",
     "eslint": "^4.10.0",
     "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-react": "^7.4.0",
     "flow-bin": "^0.57.3",
     "import-inspector": "^2.0.0",

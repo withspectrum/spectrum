@@ -6,8 +6,9 @@
         "node": true
     },
     "parser": "babel-eslint",
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:promise/recommended", "plugin:flowtype/recommended"],
     "parserOptions": {
+        "ecmaVersion": 2017,
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
@@ -16,7 +17,8 @@
     },
     "plugins": [
         "react",
-        "flowtype"
+        "flowtype",
+        "promise"
     ],
     "rules": {
         "no-console": 0,
