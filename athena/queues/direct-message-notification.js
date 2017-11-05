@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:direct-message-notification');
+import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getUserById } from '../models/user';
@@ -161,5 +162,8 @@ export default async (job: JobData) => {
     return dbMethod(notification.id, recipient.userId);
   });
 
-  return Promise.all(formatAndBufferPromises).catch(err => console.log(err));
+  return Promise.all(formatAndBufferPromises).catch(err => {
+    Raven.captureException(err);
+    console.log(err);
+  });
 };

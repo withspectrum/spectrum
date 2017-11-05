@@ -1,4 +1,5 @@
 const debug = require('debug')('athena:queue:channel-notification');
+import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getMembersInCommunity } from '../models/usersCommunities';
@@ -130,5 +131,8 @@ new job for ${incomingChannel.id} by ${currentUserId}`
           });
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
 };

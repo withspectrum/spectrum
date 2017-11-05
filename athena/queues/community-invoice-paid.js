@@ -67,5 +67,8 @@ export default async job => {
     );
   });
 
-  return Promise.all(sendOwnerEmails).catch(err => Raven.captureException(err));
+  return Promise.all(sendOwnerEmails).catch(err => {
+    Raven.captureException(err);
+    console.log(err);
+  });
 };

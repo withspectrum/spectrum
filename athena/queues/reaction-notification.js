@@ -1,4 +1,5 @@
 const debug = require('debug')('athena:queue:reaction-notification');
+import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getMessageById } from '../models/message';
@@ -147,5 +148,8 @@ new job for ${incomingReaction.id} by ${currentUserId}`
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
 };

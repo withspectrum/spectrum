@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:community-notification');
+import Raven from '../../shared/raven';
 import addQueue from '../utils/addQueue';
 import { toPlainText, toState } from 'shared/draft-utils';
 import truncate from 'shared/truncate';
@@ -177,6 +178,9 @@ export default async (job: JobData) => {
     return Promise.all([
       createThreadNotificationEmail(incomingThread),
       notificationPromises,
-    ]).catch(err => console.log(err));
+    ]).catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
   }
 };

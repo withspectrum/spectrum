@@ -1,4 +1,5 @@
 const debug = require('debug')('athena:queue:pro-invoice-paid-notification');
+import Raven from '../../shared/raven';
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_PRO_INVOICE_RECEIPT_EMAIL } from './constants';
 import { convertTimestampToDate } from '../utils/timestamp-to-date';
@@ -53,5 +54,8 @@ export default async job => {
         removeOnFail: true,
       }
     )
-    .catch(err => console.log(err));
+    .catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
 };

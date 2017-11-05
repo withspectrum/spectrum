@@ -1,4 +1,5 @@
 const debug = require('debug')('athena:queue:community-invitation');
+import Raven from '../../shared/raven';
 import { fetchPayload } from '../utils/payloads';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
@@ -132,7 +133,10 @@ const processMessageNotificationQueue = job => {
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
 };
 
 export default processMessageNotificationQueue;

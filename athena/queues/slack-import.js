@@ -1,4 +1,5 @@
 const debug = require('debug')('athena:queue:slack-import');
+import Raven from '../../shared/raven';
 import {
   getSlackUserListData,
   saveSlackImportData,
@@ -38,5 +39,8 @@ export default job => {
       // save the members back to the slackImport record in the db
       return saveSlackImportData(importId, members);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      Raven.captureException(err);
+      console.log(err);
+    });
 };
