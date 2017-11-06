@@ -122,7 +122,20 @@ const CoverAction = styled(ProfileHeaderAction)`
   z-index: ${zIndex.tooltip + 1};
 `;
 
-class HoverProfile extends Component {
+type ProfileProps = {
+  user: ?Object,
+  community: ?Object,
+  showProfile: ?boolean,
+  dispatch: Function,
+  source: ?string,
+  currentUser: ?Object,
+  top: ?Boolean,
+  left: ?Boolean,
+  bottom: ?Boolean,
+  right: ?Boolean,
+};
+
+class HoverProfile extends Component<ProfileProps> {
   initMessage = (dispatch, user) => {
     dispatch(initNewThreadWithUser(user));
   };
@@ -150,7 +163,7 @@ class HoverProfile extends Component {
               <CoverPhoto url={community.coverPhoto} />
               <CoverLink to={`/${community.slug}`}>
                 <StyledAvatar
-                  data={optimize(source, { w: 64, dpr: 2, format: 'png' })}
+                  data={optimize(source, { w: '64', dpr: '2', format: 'png' })}
                   type="image/png"
                   size={64}
                   {...this.props}
@@ -191,7 +204,6 @@ class HoverProfile extends Component {
           >
             <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
               <CoverPhoto url={user.coverPhoto}>
-                {console.log('cU', currentUser, 'u', user)}
                 {currentUser &&
                   user &&
                   currentUser.id !== user.id && (
@@ -211,9 +223,9 @@ class HoverProfile extends Component {
               </CoverPhoto>
               <CoverLink to={`/users/${user.username}`}>
                 <StyledAvatar
-                  data={optimize(this.props.source, {
-                    w: 64,
-                    dpr: 2,
+                  data={optimize(source, {
+                    w: '64',
+                    dpr: '2',
                     format: 'png',
                   })}
                   type="image/png"
@@ -287,7 +299,7 @@ class HoverProfile extends Component {
 const AvatarWithFallback = ({ style, ...props }) => (
   <StyledAvatarStatus size={props.size || 32} {...props}>
     <StyledAvatar
-      data={optimize(props.source, { w: props.size, dpr: 2, format: 'png' })}
+      data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
       type="image/png"
       size={props.size || 32}
       style={style}
@@ -309,9 +321,6 @@ const AvatarWithFallback = ({ style, ...props }) => (
 const Avatar = (props: Object): React$Element<any> => {
   const { src, community, user, size, link, noLink } = props;
   const source = src || community.profilePhoto || user.profilePhoto;
-  {
-    console.log('user', user, 'community', community);
-  }
   if (link && !noLink) {
     return (
       <StyledAvatarLink to={link}>
