@@ -208,12 +208,24 @@ module.exports = {
         members: memberCount ? memberCount.reduction : 0,
       }));
     },
-    slackImport: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+    slackImport: async (
+      { id }: { id: string },
+      _: any,
+      { user, loaders }: GraphQLContext
+    ) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
           'You must be logged in to view community settings.'
         );
+
+      // only community owners should be able to query for their slack team
+      const { isOwner } = await loaders.userPermissionsInCommunity.load([
+        currentUser.id,
+        id,
+      ]);
+      if (!isOwner) return null;
+
       return getSlackImport(id).then(data => {
         if (!data) return null;
         return {
