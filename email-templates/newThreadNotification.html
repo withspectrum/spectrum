@@ -331,7 +331,7 @@
     }
 
     .thread-title {
-      padding: 0 16px;
+      padding: 0 16px 8px;
     }
 
     .thread-title h3 {
@@ -341,17 +341,23 @@
     }
 
     .thread-body {
-      padding: 16px;
+      padding: 8px 16px;
     }
 
     .thread-body p {
       font-size: 16px;
       color: #828C99;
       line-height: 1.4;
+      margin-top: 0!important;
+      white-space: pre-wrap;
+    }
+
+    .thread-body p a {
+      color: #16171A;
     }
 
     .thread-actions {
-      padding: 24px 16px 16px;
+      padding: 16px;
     }
     </style>
   </head>
@@ -398,7 +404,7 @@
 
                           <td valign="middle">
                             <a href="https://spectrum.chat/{{data.thread.community.slug}}" class="block">
-                              <p>Posted in {{data.thread.community.name}}</p>
+                              <p>Posted in {{data.thread.community.name}} ({{data.thread.channel.name}})</p>
                             </a>
                           </td>
                         </tr>
@@ -407,7 +413,7 @@
                       <table width="100%" cellpadding="0" cellspacing="0" class="thread-byline">
                         <tr width="100%" cellpadding="0" cellspacing="0">
                           <td valign="middle" width="32">
-                            <a href="https://spectrum.chat/users/{data.thread.creator.username}}" class="block">
+                            <a href="https://spectrum.chat/users/{{data.thread.creator.username}}" class="block">
                               <img src={{data.thread.creator.profilePhoto}} width="32" height="32" />
                             </a>
                           </td>

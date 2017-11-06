@@ -1,7 +1,8 @@
+// @flow
 const debug = require('debug')('athena:queue:community-notification');
-import { fetchPayload, createPayload } from '../utils/payloads';
+import Raven from '../../shared/raven';
+import { fetchPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getCommunityById } from '../models/community';
 import { getOwnersInCommunity } from '../models/usersCommunities';
 import {
   storeNotification,
@@ -13,105 +14,76 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 
-export default job => {
-  const incomingCommunityId = job.data.communityId;
-  const currentUserId = job.data.userId;
+type JobData = {
+  data: {
+    communityId: string,
+    userId: string,
+  },
+};
+export default async (job: JobData) => {
+  const { communityId: incomingCommunityId, userId: currentUserId } = job.data;
+  debug(`new job for ${incomingCommunityId} by ${currentUserId}`);
 
-  debug(
-    `
-new job for ${incomingCommunityId} by ${currentUserId}`
+  // in this case the actor and entity are the same
+  const actor = await fetchPayload('USER', currentUserId);
+  const context = await fetchPayload('COMMUNITY', incomingCommunityId);
+  const eventType = 'USER_JOINED_COMMUNITY';
+
+  // determine if a notificaiton already exists of this type, and in this community
+  const existing = await checkForExistingNotification(
+    eventType,
+    incomingCommunityId
   );
 
-  /*
-    These promises are used to create or modify a notification. The order is:
-    - actor
-    - context
+  // determine whether we will be updating existing records or storing new ones
+  const handleNotificationRecord = existing
+    ? updateNotification
+    : storeNotification;
+  const handleUsersNotificationRecord = existing
+    ? markUsersNotificationsAsNew
+    : storeUsersNotifications;
 
-    In this case the actor and entity (user who is joing the community) will be the same
-  */
-  const promises = [
-    // actor and entity
-    fetchPayload('USER', currentUserId),
-    // get the community the user just joined
-    fetchPayload('COMMUNITY', incomingCommunityId),
-  ];
+  // actors should always be distinct to make client side rendering easier
+  const distinctActors = existing
+    ? getDistinctActors([...existing.actors, actor])
+    : [actor];
 
-  return checkForExistingNotification(
-    'USER_JOINED_COMMUNITY',
-    incomingCommunityId
-  )
-    .then(notification => {
-      if (notification) {
-        debug('found existing notification');
-        return Promise.all([notification, ...promises])
-          .then(([notification, actor, context]) => {
-            // actors should always be distinct to make client side rendering easier
-            const distinctActors = getDistinctActors([
-              ...notification.actors,
-              actor,
-            ]);
+  // for this notification type, actors and entities are the same
+  const entities = distinctActors;
 
-            // create a new notification
-            // in this case we always want the actors and entities to be in sync because the notification should only ever reflect who has actually joined the community
-            const newNotification = Object.assign({}, notification, {
-              actors: [...distinctActors],
-              context,
-              entities: [...distinctActors],
-            });
+  // construct a new notification record to either be updated or stored in the db
+  const nextNotificationRecord = Object.assign(
+    {},
+    {
+      ...existing,
+      event: eventType,
+      actors: distinctActors,
+      context,
+      entities,
+    }
+  );
 
-            debug('update existing notification in database with new data');
-            return updateNotification(newNotification);
-          })
-          .then(notification => {
-            // get the owners of the community
-            const recipients = getOwnersInCommunity(incomingCommunityId);
+  // store or update a notificaiton in the db, returns the db record
+  const updatedNotification = await handleNotificationRecord(
+    nextNotificationRecord
+  );
 
-            debug('find recipients of notification');
+  // get the owners of the community
+  const recipients = await getOwnersInCommunity(incomingCommunityId);
 
-            return Promise.all([notification, recipients]);
-          })
-          .then(([notification, recipients]) => {
-            debug('mark notification as new for all recipients');
-            // for each owner, trigger a notification
-            return Promise.all(
-              recipients.map(recipient =>
-                markUsersNotificationsAsNew(notification.id, recipient)
-              )
-            );
-          });
-      } else {
-        // if no notification was found that matches our bundling criteria, create a new notification
-        return Promise.all([...promises])
-          .then(([actor, context]) => {
-            // create the notification record
-            const notification = {
-              actors: [actor],
-              event: 'USER_JOINED_COMMUNITY',
-              context,
-              entities: [actor],
-            };
+  // either create a new usersNotification record, or update an existing one for aggregation
+  const notificationPromises = recipients.map(
+    async recipient =>
+      await handleUsersNotificationRecord(updatedNotification.id, recipient)
+  );
 
-            debug('create notification in db');
-
-            return storeNotification(notification);
-          })
-          .then(notification => {
-            // get the owners of the community
-            const recipients = getOwnersInCommunity(incomingCommunityId);
-
-            debug('find recipients of notification');
-
-            return Promise.all([notification, recipients]);
-          })
-          .then(([notification, recipients]) => {
-            debug('create a notification for every recipient');
-            return Promise.all(
-              recipients.map(recipient =>
-                storeUsersNotifications(notification.id, recipient)
-              )
-            );
-          });
-      }
-    })
-    .catch(err => new Error(err));
+  // return all the updates
+  try {
+    return Promise.all([notificationPromises]);
+  } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+    console.log(err);
+  }
 };
