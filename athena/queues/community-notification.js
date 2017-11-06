@@ -30,26 +30,22 @@ export default async (job: JobData) => {
   const eventType = 'USER_JOINED_COMMUNITY';
 
   // determine if a notificaiton already exists of this type, and in this community
-  const notification = await checkForExistingNotification(
+  const existing = await checkForExistingNotification(
     eventType,
     incomingCommunityId
   );
 
-  debug(
-    notification ? 'Found an existing notification' : 'No notification found'
-  );
-
   // determine whether we will be updating existing records or storing new ones
-  const handleNotificationRecord = notification
+  const handleNotificationRecord = existing
     ? updateNotification
     : storeNotification;
-  const handleUsersNotificationRecord = notification
+  const handleUsersNotificationRecord = existing
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
   // actors should always be distinct to make client side rendering easier
-  const distinctActors = notification
-    ? getDistinctActors([...notification.actors, actor])
+  const distinctActors = existing
+    ? getDistinctActors([...existing.actors, actor])
     : [actor];
 
   // for this notification type, actors and entities are the same
@@ -59,7 +55,7 @@ export default async (job: JobData) => {
   const nextNotificationRecord = Object.assign(
     {},
     {
-      ...notification,
+      ...existing,
       event: eventType,
       actors: distinctActors,
       context,

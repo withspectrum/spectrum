@@ -84,6 +84,8 @@ export default async (job: JobData) => {
   });
 
   return Promise.all(sendOwnerEmails).catch(err => {
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
     console.log(err);
   });

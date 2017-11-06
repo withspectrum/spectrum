@@ -110,36 +110,34 @@ export default async (job: JobData) => {
   const eventType = 'THREAD_CREATED';
 
   // determine if a notification already exists
-  const existingNotification = await checkForExistingNotification(
+  const existing = await checkForExistingNotification(
     eventType,
     incomingThread.channelId
   );
 
   // handle the notification record in the db
-  const handleNotificationRecord = existingNotification
+  const handleNotificationRecord = existing
     ? updateNotification
     : storeNotification;
 
   // handle the usersNotification record in the db
-  const handleUsersNotificationRecord = existingNotification
+  const handleUsersNotificationRecord = existing
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
   // actors should always be distinct to make client side rendering easier
-  const distinctActors = existingNotification
-    ? getDistinctActors([...existingNotification.actors, actor])
+  const distinctActors = existing
+    ? getDistinctActors([...existing.actors, actor])
     : [actor];
 
   // append the new thread to the list of entities
-  const entities = existingNotification
-    ? [...existingNotification.entities, entity]
-    : [entity];
+  const entities = existing ? [...existing.entities, entity] : [entity];
 
   // construct a new notification record to either be updated or stored in the db
   const nextNotificationRecord = Object.assign(
     {},
     {
-      ...existingNotification,
+      ...existing,
       event: eventType,
       actors: distinctActors,
       context,
