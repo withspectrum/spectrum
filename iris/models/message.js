@@ -45,7 +45,6 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
     .table('messages')
     .getAll(...threadIds, { index: 'threadId' })
     .filter(db.row.hasFields('deletedAt').not())
-    .filter(db.row.hasFields('deletedAt').not())
     .group('threadId')
     .max(row => row('timestamp'))
     .run();
