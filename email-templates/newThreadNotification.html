@@ -348,7 +348,12 @@
       font-size: 16px;
       color: #828C99;
       line-height: 1.4;
-      margin-top: 0;
+      margin-top: 0!important;
+      white-space: pre-wrap;
+    }
+
+    .thread-body p a {
+      color: #16171A;
     }
 
     .thread-actions {
@@ -399,7 +404,7 @@
 
                           <td valign="middle">
                             <a href="https://spectrum.chat/{{data.thread.community.slug}}" class="block">
-                              <p>Posted in {{data.thread.community.name}}</p>
+                              <p>Posted in {{data.thread.community.name}} ({{data.thread.channel.name}})</p>
                             </a>
                           </td>
                         </tr>

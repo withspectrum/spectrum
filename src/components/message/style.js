@@ -143,6 +143,10 @@ export const Wrapper = styled.div`
   max-width: 65%;
   transition: ${Transition.hover.off};
 
+  @media (max-width: 768px) {
+    max-width: 85%;
+  }
+
   ${props =>
     props.selected &&
     css`
