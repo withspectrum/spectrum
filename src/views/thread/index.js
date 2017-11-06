@@ -95,17 +95,18 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread } } = this.props;
+    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
-
     if (!thread) return;
-    // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
 
+    // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
     const threadAndUser = currentUser && thread;
 
     if (threadAndUser && this.chatInput) {
-      this.chatInput.triggerFocus();
+      // if the thread slider is open while in the inbox, don't focus in the inbox
+      if (threadSliderIsOpen) return;
+      return this.chatInput.triggerFocus();
     }
   }
 
