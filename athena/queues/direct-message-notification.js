@@ -135,11 +135,13 @@ export default async (job: JobData) => {
 
   // send each recipient a notification
   const formatAndBufferPromises = filteredRecipients.map(async recipient => {
+    // make sure this user should receive emails for dms
     const shouldReceiveEmail = await getEmailStatus(
       recipient.userId,
       'newDirectMessage'
     );
     if (!shouldReceiveEmail) return;
+
     // if a notification already exists, we check if the user who is recieving the email has logged on since the priod message on the existing notification
     // if the user has logged on since they saw the last message, and is no longer online, they should get an updated email
     // if the user has not logged on since the last notification message, we will skip this email until the next 30 minute window elapses in our `getExistingNotification` query.
