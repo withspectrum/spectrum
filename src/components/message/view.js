@@ -25,7 +25,7 @@ const messageRenderer = {
 };
 
 export const Body = props => {
-  const { message, openGallery, pending, type, me } = props;
+  const { message, openGallery, pending, type, me, selected } = props;
 
   switch (type) {
     case 'text':
