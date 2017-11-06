@@ -37,6 +37,7 @@ export const checkForExistingNotification = (
 };
 
 export const storeNotification = (notification: Object): Promise<Object> => {
+  console.log('storing a notification');
   return db
     .table('notifications')
     .insert(
@@ -52,6 +53,7 @@ export const storeNotification = (notification: Object): Promise<Object> => {
 };
 
 export const updateNotification = (notification: Object): Promise<Object> => {
+  console.log('updating a notification');
   return db
     .table('notifications')
     .get(notification.id)

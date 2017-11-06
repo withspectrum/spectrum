@@ -35,6 +35,10 @@ export default async (job: JobData) => {
     incomingCommunityId
   );
 
+  debug(
+    notification ? 'Found an existing notification' : 'No notification found'
+  );
+
   // determine whether we will be updating existing records or storing new ones
   const handleNotificationRecord = notification
     ? updateNotification
@@ -47,6 +51,7 @@ export default async (job: JobData) => {
   const distinctActors = notification
     ? getDistinctActors([...notification.actors, actor])
     : [actor];
+
   // for this notification type, actors and entities are the same
   const entities = distinctActors;
 
