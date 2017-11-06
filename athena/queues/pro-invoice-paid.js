@@ -68,6 +68,8 @@ export default async (job: JobData) => {
       }
     )
     .catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

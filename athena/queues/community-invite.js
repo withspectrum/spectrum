@@ -145,6 +145,8 @@ export default async (job: JobData) => {
       sendInvite,
       usersNotification,
     ]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

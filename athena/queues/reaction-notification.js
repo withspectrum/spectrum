@@ -90,6 +90,8 @@ export default async (job: JobData) => {
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, message.senderId),
     ]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });
@@ -128,6 +130,8 @@ export default async (job: JobData) => {
     return Promise.all([
       storeUsersNotifications(updatedNotification.id, message.senderId),
     ]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

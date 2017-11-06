@@ -179,6 +179,8 @@ export default async (job: JobData) => {
       createThreadNotificationEmail(incomingThread),
       notificationPromises,
     ]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

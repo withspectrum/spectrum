@@ -47,6 +47,8 @@ export default (job: JobData) => {
       return saveSlackImportData(importId, members);
     })
     .catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

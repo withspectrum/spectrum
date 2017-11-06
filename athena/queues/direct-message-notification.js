@@ -170,6 +170,8 @@ export default async (job: JobData) => {
   });
 
   return Promise.all(formatAndBufferPromises).catch(err => {
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
     console.log(err);
   });
