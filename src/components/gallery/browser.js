@@ -117,6 +117,9 @@ class Browser extends Component {
 
     if (!messages || messages.length === 0) return null;
 
+    // when a user uploads an image, sometimes the resulting image doesn't get updated in the Apollo cache
+    // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
+    // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
     let filteredIndex;
     if (!index) {
       filteredIndex = messages.length - 1;
