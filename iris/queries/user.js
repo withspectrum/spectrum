@@ -52,6 +52,13 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
+    email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
+      // admin can view email
+      if (isAdmin(user.id)) return email;
+      // user should only be able to view their own email
+      if (id !== user.id) return null;
+      return email;
+    },
     coverPhoto: ({ coverPhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
@@ -128,11 +135,15 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: ({ id }: DBUser) => ({
+    directMessageThreadsConnection: (
+      _: any,
+      __: any,
+      { user }: GraphQLContext
+    ) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getDirectMessageThreadsByUser(id).then(threads =>
+      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
         threads.map(thread => ({
           node: thread,
         }))
