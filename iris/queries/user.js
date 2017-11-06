@@ -135,11 +135,15 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: ({ id }: DBUser) => ({
+    directMessageThreadsConnection: (
+      _: any,
+      __: any,
+      { user }: GraphQLContext
+    ) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getDirectMessageThreadsByUser(id).then(threads =>
+      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
         threads.map(thread => ({
           node: thread,
         }))
