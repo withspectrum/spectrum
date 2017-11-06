@@ -84,6 +84,8 @@ export default async (job: JobData) => {
 
     // for each person who should receie an updated notification, mark their notification as unseen and unread
     return Promise.all([notificationPromises]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });
@@ -118,6 +120,8 @@ export default async (job: JobData) => {
     );
 
     return Promise.all([notificationPromises]).catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
       Raven.captureException(err);
       console.log(err);
     });

@@ -82,10 +82,12 @@ export default async (job: JobData) => {
   );
 
   // return all the updates
-  return Promise.all([notificationPromises]).catch(err => {
-    debug('Error in job:\n');
+  try {
+    return Promise.all([notificationPromises]);
+  } catch (err) {
+    debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
     console.log(err);
-  });
+  }
 };
