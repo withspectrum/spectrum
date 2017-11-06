@@ -7,7 +7,7 @@ Object {
       "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F2451223458%2F1479507323%2F1500x500?w=640&h=192&ixlib=js-1.1.0&s=b860478fd198543b582046f1a55d0fab",
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
-      "email": "contact@mxstbr.com",
+      "email": null,
       "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
       "lastSeen": "2016-12-31T23:00:00.000Z",
       "name": "Max Stoiber",
@@ -17,6 +17,9 @@ Object {
       "website": "https://mxstbr.com",
     },
   },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'id' of undefined],
+  ],
 }
 `;
 

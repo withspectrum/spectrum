@@ -27,6 +27,11 @@ import {
   __createCommunityMemberCountLoader,
   __createCommunityChannelCountLoader,
 } from './community';
+import {
+  __createDirectMessageThreadLoader,
+  __createDirectMessageParticipantsLoader,
+  __createDirectMessageSnippetLoader,
+} from './directMessageThread';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
 const createLoaders = () => ({
@@ -50,6 +55,9 @@ const createLoaders = () => ({
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(),
   communityChannelCount: __createCommunityChannelCountLoader(),
   communityMemberCount: __createCommunityMemberCountLoader(),
+  directMessageThread: __createDirectMessageThreadLoader(),
+  directMessageParticipants: __createDirectMessageParticipantsLoader(),
+  directMessageSnippet: __createDirectMessageSnippetLoader(),
 });
 
 export default createLoaders;
