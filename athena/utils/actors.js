@@ -1,15 +1,13 @@
-const debug = require('debug')('athena:actors');
-
+// @flow
 // takes an array of objects containing user data and returns an array with unique objects
-export const getDistinctActors = array => {
-  debug('get distinct actors');
+export const getDistinctActors = (array: Array<any>): Array<any> => {
   let unique = {};
   let distinct = [];
-  for (let i in array) {
-    if (typeof unique[array[i].id] == 'undefined') {
-      distinct.push(array[i]);
+  for (let actor of array) {
+    if (typeof unique[actor.id] == 'undefined') {
+      distinct.push(actor);
     }
-    unique[array[i].id] = 0;
+    unique[actor.id] = 0;
   }
   return distinct;
 };
