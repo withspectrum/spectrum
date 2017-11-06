@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
+import truncate from 'shared/truncate';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { Link, withRouter } from 'react-router-dom';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
@@ -45,7 +43,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             search: `?thread=${props.data.id}`,
           }}
         >
-          <Title>{props.data.content.title}</Title>
+          <Title>{truncate(props.data.content.title, 80)}</Title>
           {props.isPinned && (
             <Pinned>
               <PinnedBanner />
