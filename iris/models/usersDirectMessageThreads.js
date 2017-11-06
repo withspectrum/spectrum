@@ -118,6 +118,20 @@ const getMembersInDirectMessageThread = (
     .run();
 };
 
+// for loader
+const getMembersInDirectMessageThreads = (
+  threadIds: Array<string>
+): Promise<Array<Object>> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(...threadIds, { index: 'threadId' })
+    .eqJoin('userId', db.table('users'))
+    .without({ left: ['createdAt'], right: ['id', 'lastSeen'] })
+    .group(rec => rec('left')('threadId'))
+    .zip()
+    .run();
+};
+
 const isMemberOfDirectMessageThread = (threadId: string, userId: string) => {
   return db
     .table('usersDirectMessageThreads')
@@ -134,5 +148,6 @@ module.exports = {
   updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,
+  getMembersInDirectMessageThreads,
   isMemberOfDirectMessageThread,
 };
