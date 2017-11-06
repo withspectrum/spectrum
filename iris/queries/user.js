@@ -257,6 +257,7 @@ module.exports = {
               communityId,
             ]);
             return {
+              communityId,
               reputation,
               isModerator,
               isOwner,
@@ -274,6 +275,7 @@ module.exports = {
               communityId,
             ]);
             return {
+              communityId,
               reputation,
               isModerator,
               isOwner,
@@ -292,6 +294,7 @@ module.exports = {
               communityId,
             ]);
             return {
+              communityId,
               reputation,
               isModerator,
               isOwner,
@@ -308,6 +311,7 @@ module.exports = {
               isOwner,
             } = await loaders.userPermissionsInCommunity.load([user.id, id]);
             return {
+              communityId: id,
               reputation: reputation || 0,
               isModerator,
               isOwner,
