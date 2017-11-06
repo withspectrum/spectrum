@@ -117,13 +117,21 @@ class Browser extends Component {
 
     if (!messages || messages.length === 0) return null;
 
+    let filteredIndex;
+    if (!index) {
+      filteredIndex = messages.length - 1;
+    } else {
+      filteredIndex = index;
+    }
+
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={`${images[index].content.body}?max-w=${window.innerWidth}`}
+          src={`${images[filteredIndex].content
+            .body}?max-w=${window.innerWidth}`}
         />
         <Minigallery>
           <MiniContainer>
@@ -133,7 +141,7 @@ class Browser extends Component {
                   src={`${image.content.body}?max-w=64`}
                   key={i}
                   onClick={() => this.setCount(i)}
-                  active={i === index}
+                  active={i === filteredIndex}
                 />
               );
             })}

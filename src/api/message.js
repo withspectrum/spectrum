@@ -104,6 +104,11 @@ const SEND_MESSAGE_OPTIONS = {
           __typename: 'Mutation',
           addMessage: {
             __typename: 'Message',
+            thread: {
+              id: ownProps.thread,
+              receiveNotifications: true,
+              __typename: 'Thread',
+            },
             sender: {
               ...ownProps.currentUser,
               contextPermissions: {
@@ -143,7 +148,11 @@ const SEND_MESSAGE_OPTIONS = {
 
             // ignore the addMessage from the server, apollo will automatically
             // override the optimistic object
-            if (!addMessage || typeof addMessage.id === 'string') {
+            if (
+              !addMessage ||
+              (typeof addMessage.id === 'string' &&
+                addMessage.messageType === 'text')
+            ) {
               return;
             }
 
