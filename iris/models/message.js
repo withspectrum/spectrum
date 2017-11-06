@@ -40,6 +40,16 @@ export const getLastMessage = (threadId: string): Promise<Message> => {
     .run();
 };
 
+export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
+  return db
+    .table('messages')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .group('threadId')
+    .max(row => row('timestamp'))
+    .run();
+};
+
 export const getMediaMessagesForThread = (
   threadId: String
 ): Promise<Array<Message>> => {
