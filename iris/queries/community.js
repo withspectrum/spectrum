@@ -492,6 +492,7 @@ module.exports = {
               community.id,
             ]);
             return {
+              communityId: community.id,
               reputation,
               isModerator,
               isOwner,
