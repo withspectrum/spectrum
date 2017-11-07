@@ -8,10 +8,15 @@ import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
 } from '../models/usersThreads';
-const { getMessages, getMessageCount } = require('../models/message');
+const {
+  getMessages,
+  getMessageCount,
+  getMediaMessagesForThread,
+} = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
+import { toJSON } from 'shared/draft-utils';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
@@ -156,6 +161,25 @@ module.exports = {
       return loaders.threadMessageCount
         .load(id)
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
+    },
+    gallery: async ({ id, content }: { id: string, content: any }) => {
+      const messages = await getMediaMessagesForThread(id);
+      const body = JSON.parse(content.body);
+      const imageKeys = Object.keys(body.entityMap).filter(
+        key => body.entityMap[key].type === 'image'
+      );
+      const messageImages = messages.map(m => ({
+        id: m.content.body,
+        src: m.content.body,
+      }));
+      const threadImages = imageKeys
+        .map(k => body.entityMap[k].data.src)
+        .map(i => ({
+          id: i,
+          src: i,
+        }));
+      const allImages = [...threadImages, ...messageImages];
+      return allImages;
     },
   },
 };

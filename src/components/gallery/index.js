@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
-import { getMediaMessagesForThread } from '../../api/message';
+import { getGalleryForThread } from '../../api/thread';
 import { displayLoadingGallery } from '../../components/loading';
 import Browser from './browser';
 
-const GalleryWithMedia = compose(
-  getMediaMessagesForThread,
-  displayLoadingGallery
-)(Browser);
+const GalleryWithMedia = compose(getGalleryForThread, displayLoadingGallery)(
+  Browser
+);
 
 class Gallery extends Component {
   render() {
@@ -18,10 +15,7 @@ class Gallery extends Component {
 
     if (isOpen) {
       return (
-        <GalleryWithMedia
-          threadId={threadId}
-          activeMessageId={activeMessageId}
-        />
+        <GalleryWithMedia id={threadId} activeMessageId={activeMessageId} />
       );
     } else {
       return <span />;

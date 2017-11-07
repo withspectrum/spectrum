@@ -71,3 +71,39 @@ export const getThreadById = graphql(
 	`,
   getThreadByIdOptions
 );
+
+/*
+  Get all media messages for a threadId to populate the gallery
+*/
+const GET_GALLERY_QUERY = gql`
+  query getThreadGallery($id: ID!) {
+    thread(id: $id) {
+      id
+      gallery {
+        id
+        src
+      }
+    }
+  }
+`;
+
+const GET_GALLERY_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'network-only',
+  }),
+  props: ({ data: { error, loading, thread } }) => ({
+    data: {
+      error,
+      loading,
+      images: thread ? thread.gallery : [],
+    },
+  }),
+};
+
+export const getGalleryForThread = graphql(
+  GET_GALLERY_QUERY,
+  GET_GALLERY_OPTIONS
+);

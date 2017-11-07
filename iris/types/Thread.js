@@ -32,6 +32,11 @@ const Thread = /* GraphQL */ `
 		data: String
 	}
 
+	type GalleryImage {
+		id: String
+		src: String
+	}
+
 	type Thread {
 		id: ID!
 		createdAt: Date!
@@ -51,6 +56,7 @@ const Thread = /* GraphQL */ `
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
+		gallery: [GalleryImage]
 	}
 
 	extend type Query {

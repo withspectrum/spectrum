@@ -22,10 +22,10 @@ class Browser extends Component {
   constructor(props) {
     super(props);
     // if there are no messages found
-    if (!props.data.messages || props.data.messages.length === 0) return;
+    if (!props.data.images || props.data.images.length === 0) return;
 
     let index;
-    props.data.messages.map((message, i) => {
+    props.data.images.map((message, i) => {
       if (message.id === props.activeMessageId) {
         index = i;
         return message;
@@ -35,7 +35,7 @@ class Browser extends Component {
     });
 
     this.state = {
-      images: props.data.messages,
+      images: props.data.images,
       activeMessageId: props.activeMessageId,
       index,
     };
@@ -113,9 +113,8 @@ class Browser extends Component {
 
   render() {
     const { images, index } = this.state;
-    const { data: { messages } } = this.props;
 
-    if (!messages || messages.length === 0) return null;
+    if (!images || images.length === 0) return null;
 
     return (
       <GalleryWrapper>
@@ -123,14 +122,14 @@ class Browser extends Component {
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={`${images[index].content.body}?max-w=${window.innerWidth}`}
+          src={`${images[index].src}?max-w=${window.innerWidth}`}
         />
         <Minigallery>
           <MiniContainer>
             {images.map((image, i) => {
               return (
                 <MiniImg
-                  src={`${image.content.body}?max-w=64`}
+                  src={`${image.src}?max-w=64`}
                   key={i}
                   onClick={() => this.setCount(i)}
                   active={i === index}

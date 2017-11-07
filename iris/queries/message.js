@@ -1,4 +1,4 @@
-const { getMessage, getMediaMessagesForThread } = require('../models/message');
+const { getMessage } = require('../models/message');
 import { getReactions } from '../models/reaction';
 import { getThread } from '../models/thread';
 import type { GraphQLContext } from '../';
@@ -17,8 +17,6 @@ type Root = {
 module.exports = {
   Query: {
     message: (_: Root, { id }: GetMessageProps) => getMessage(id),
-    getMediaMessagesForThread: (_, { threadId }) =>
-      getMediaMessagesForThread(threadId),
   },
   Message: {
     sender: async (

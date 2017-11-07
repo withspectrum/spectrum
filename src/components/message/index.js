@@ -21,9 +21,9 @@ class Message extends Component {
     }
   }
 
-  toggleOpenGallery = messageId => {
+  toggleOpenGallery = id => {
     const { threadId } = this.props;
-    this.props.dispatch(openGallery(threadId, messageId));
+    this.props.dispatch(openGallery(threadId, id));
   };
 
   deleteMessage = () => {
@@ -76,7 +76,7 @@ class Message extends Component {
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
           pending={message.id < 0}
-          openGallery={() => this.toggleOpenGallery(message.id)}
+          openGallery={() => this.toggleOpenGallery(message.content.body)}
           message={emojiOnly ? parsedMessage : message.content}
         />
         {actionable && (
