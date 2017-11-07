@@ -637,12 +637,7 @@ export const PillLinkPinned = styled.div`
 `;
 
 export const PillLabel = styled.span`
-  ${props =>
-    props.isPrivate &&
-    css`
-      position: relative;
-      top: -2px;
-    `};
+  ${props => props.isPrivate && css`position: relative;`};
 
   overflow: hidden;
   max-width: 128px;
