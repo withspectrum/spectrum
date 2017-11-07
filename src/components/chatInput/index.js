@@ -17,7 +17,10 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
-import { sendMessageMutation } from '../../api/message';
+import {
+  sendMessageMutation,
+  sendDirectMessageMutation,
+} from '../../api/message';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -92,6 +95,7 @@ class ChatInput extends Component {
       createThread,
       dispatch,
       sendMessage,
+      sendDirectMessage,
       clear,
       forceScrollToBottom,
     } = this.props;
@@ -122,20 +126,37 @@ class ChatInput extends Component {
 
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
-    sendMessage({
-      threadId: thread,
-      messageType: 'draftjs',
-      threadType,
-      content: {
-        body: JSON.stringify(toJSON(state)),
-      },
-    })
-      .then(({ data: { addMessage } }) => {
-        track(`${threadType} message`, 'text message created', null);
+    if (threadType === 'directMessageThread') {
+      sendDirectMessage({
+        threadId: thread,
+        messageType: 'draftjs',
+        threadType,
+        content: {
+          body: JSON.stringify(toJSON(state)),
+        },
       })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
+        .then(({ data: { addMessage } }) => {
+          track(`${threadType} message`, 'text message created', null);
+        })
+        .catch(err => {
+          dispatch(addToastWithTimeout('error', err.message));
+        });
+    } else {
+      sendMessage({
+        threadId: thread,
+        messageType: 'draftjs',
+        threadType,
+        content: {
+          body: JSON.stringify(toJSON(state)),
+        },
+      })
+        .then(({ data: { addMessage } }) => {
+          track(`${threadType} message`, 'text message created', null);
+        })
+        .catch(err => {
+          dispatch(addToastWithTimeout('error', err.message));
+        });
+    }
 
     // refocus the input
     setTimeout(() => {
@@ -169,6 +190,8 @@ class ChatInput extends Component {
       createThread,
       dispatch,
       forceScrollToBottom,
+      sendDirectMessage,
+      sendMessage,
     } = this.props;
 
     if (!file) return;
@@ -211,8 +234,8 @@ class ChatInput extends Component {
         });
       }
 
-      this.props
-        .sendMessage({
+      if (threadType === 'directMessageThread') {
+        sendDirectMessage({
           threadId: thread,
           messageType: 'media',
           threadType,
@@ -221,12 +244,29 @@ class ChatInput extends Component {
           },
           file,
         })
-        .then(({ addMessage }) => {
-          track(`${threadType} message`, 'media message created', null);
+          .then(({ addMessage }) => {
+            track(`${threadType} message`, 'media message created', null);
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+          });
+      } else {
+        sendMessage({
+          threadId: thread,
+          messageType: 'media',
+          threadType,
+          content: {
+            body: reader.result,
+          },
+          file,
         })
-        .catch(err => {
-          dispatch(addToastWithTimeout('error', err.message));
-        });
+          .then(({ addMessage }) => {
+            track(`${threadType} message`, 'media message created', null);
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+          });
+      }
     };
   };
 
@@ -317,6 +357,7 @@ const map = state => ({
 });
 export default compose(
   sendMessageMutation,
+  sendDirectMessageMutation,
   withState('state', 'changeState', fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
