@@ -22,7 +22,6 @@ const {
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
 import { addQueue } from '../utils/workerQueue';
-import getMentions from '../utils/get-mentions';
 import { toState, toPlainText } from 'shared/draft-utils';
 
 module.exports = {
@@ -117,21 +116,6 @@ module.exports = {
 
       // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain
       await createParticipantInThread(dbThread.id, currentUser.id);
-
-      // Handle mentions
-      const mentions = getMentions(
-        toPlainText(toState(JSON.parse(threadObject.content.body)))
-      );
-
-      if (mentions && mentions.length > 0) {
-        mentions.forEach(mention => {
-          addQueue('mention notification', {
-            threadId: dbThread.id, // thread where the mention happened
-            senderId: dbThread.creatorId, // user who created the mention
-            username: mention.substr(1), // "@mxstbr" -> "mxstbr"
-          });
-        });
-      }
 
       if (!thread.filesToUpload || thread.filesToUpload.length === 0)
         return dbThread;
