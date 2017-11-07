@@ -41,7 +41,6 @@ export const InputWrapper = styled(EditorWrapper)`
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  max-height: 120px;
   min-height: 40px;
   max-width: 100%;
   padding: 8px 40px 8px 16px;
@@ -49,7 +48,6 @@ export const InputWrapper = styled(EditorWrapper)`
   border: 1px solid ${props => props.theme.bg.border};
   transition: border 0.3s ease-out;
   color: ${props => props.theme.text.default};
-  overflow-y: scroll;
 
   @media (max-width: 768px) {
     font-size: 16px;

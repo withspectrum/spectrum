@@ -308,7 +308,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 100%;
   flex: auto;
   max-height: 400px;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {

@@ -48,7 +48,7 @@ export const InboxWrapper = styled.div`
 
 export const InboxScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
   flex: 1;
 `;
@@ -297,7 +297,8 @@ export const CommunityListAvatar = styled.img`
 
 export const CommunityListScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   padding-bottom: 16px;
 `;
@@ -328,7 +329,7 @@ export const ThreadWrapper = styled.div`
 
 export const ThreadScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
 `;
 
