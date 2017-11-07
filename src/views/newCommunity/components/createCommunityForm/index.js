@@ -95,7 +95,14 @@ class CreateCommunityForm extends Component {
     }
 
     const name = e.target.value;
-    let lowercaseName = name.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseName = name
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
     if (name.length >= 20) {
@@ -126,7 +133,14 @@ class CreateCommunityForm extends Component {
 
   changeSlug = e => {
     let slug = e.target.value;
-    let lowercaseSlug = slug.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseSlug = slug
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     slug = slugg(lowercaseSlug);
 
     if (slug.length >= 24) {

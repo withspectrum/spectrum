@@ -5,6 +5,7 @@ export const getTotalMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .count()
     .run();
 };
@@ -31,6 +32,7 @@ export const getNewMessageCount = (
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
     .filter(
       db.row('timestamp').during(
         // only count messages sent in the past week

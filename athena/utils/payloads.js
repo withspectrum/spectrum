@@ -1,3 +1,4 @@
+// @flow
 import type { EntityTypes } from './types';
 import { getMessageById } from '../models/message';
 import { getThreadById } from '../models/thread';
@@ -8,13 +9,13 @@ import { getDirectMessageThreadById } from '../models/directMessageThread';
 const debug = require('debug')('athena:payloads');
 
 /*
-  Fetch a payload from the database when we only have access to an id.
-  For example, when a message is sent we need to generate a payload for the
-  entire thread object where the message was posted!
+	Fetch a payload from the database when we only have access to an id.
+	For example, when a message is sent we need to generate a payload for the
+	entire thread object where the message was posted!
 */
 export const fetchPayload = (
   type: EntityTypes,
-  id: Object
+  id: string
 ): Promise<Object> => {
   debug(`fetch payload for ${type.toLowerCase()}#${id}`);
   switch (type) {
@@ -39,7 +40,8 @@ export const fetchPayload = (
       );
     }
     default: {
-      return new Error(`Couldn't match the type '${type}' with EntityTypes`);
+      console.log(`Couldn't match the type '${type}' with EntityTypes`);
+      return Promise.resolve({});
     }
   }
 };
