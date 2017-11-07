@@ -315,6 +315,7 @@ export const ChatWrapper = styled.div`
   max-width: 100%;
   flex: none;
   margin-top: 16px;
+  overflow-x: hidden;
 `;
 
 export const ThreadTitle = {
