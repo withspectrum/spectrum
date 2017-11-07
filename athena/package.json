@@ -1,4 +1,6 @@
 {
+  "name": "athena",
+  "version": "1.0.0",
   "scripts": {
     "start": "NODE_ENV=production node main.js"
   },

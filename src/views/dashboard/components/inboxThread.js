@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
 import Facepile from './facepile';
+import truncate from 'shared/truncate';
 import ThreadCommunityInfo from './threadCommunityInfo';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
@@ -61,7 +62,9 @@ class InboxThread extends Component {
             isPinned={isPinned}
           />
 
-          <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
+          <ThreadTitle active={active}>
+            {truncate(data.content.title, 80)}
+          </ThreadTitle>
 
           {attachmentsExist &&
             attachments

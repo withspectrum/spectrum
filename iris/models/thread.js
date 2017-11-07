@@ -355,7 +355,11 @@ type EditThreadInput = {
   },
   attachments: Array<DBThread>,
 };
-export const editThread = (input: EditThreadInput): Promise<DBThread> => {
+// shouldUpdate arguemnt is used to prevent a thread from being marked as edited when the images are uploaded at publish time
+export const editThread = (
+  input: EditThreadInput,
+  shouldUpdate: boolean = true
+): Promise<DBThread> => {
   return db
     .table('threads')
     .get(input.threadId)
@@ -363,7 +367,7 @@ export const editThread = (input: EditThreadInput): Promise<DBThread> => {
       {
         content: input.content,
         attachments: input.attachments,
-        modifiedAt: new Date(),
+        modifiedAt: shouldUpdate ? new Date() : null,
         edits: db.row('edits').append({
           content: db.row('content'),
           attachments: db.row('attachments'),

@@ -42,6 +42,7 @@ const general = /* GraphQL */ `
 	}
 
 	type ContextPermissions {
+		communityId: String
 		reputation: Int
 		isModerator: Boolean
 		isOwner: Boolean

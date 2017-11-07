@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')(
   'athena:queue:community-invoice-paid-notification'
 );
@@ -13,7 +14,22 @@ const sendCommunityInvoiceReceiptQueue = createQueue(
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL
 );
 
-export default async job => {
+type JobData = {
+  data: {
+    invoice: {
+      id: string,
+      amount: number,
+      paidAt: number,
+      sourceBrand: string,
+      sourceLast4: string,
+      planName: string,
+      communityId: string,
+      quantity: number,
+    },
+  },
+};
+
+export default async (job: JobData) => {
   const { invoice } = job.data;
 
   debug('processing community invoice');
@@ -39,8 +55,8 @@ export default async job => {
     const { id } = invoice;
 
     const memberCountString = quantity => {
-      return `${quantity <= 1 ? `1` : (quantity - 1) * 1000} - ${quantity <= 1
-        ? ``
+      return `${quantity <= 1 ? '1' : (quantity - 1) * 1000} - ${quantity <= 1
+        ? ''
         : `${quantity - 1},`}999 members`;
     };
 
@@ -67,5 +83,10 @@ export default async job => {
     );
   });
 
-  return Promise.all(sendOwnerEmails).catch(err => Raven.captureException(err));
+  return Promise.all(sendOwnerEmails).catch(err => {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+    console.log(err);
+  });
 };

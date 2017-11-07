@@ -432,11 +432,11 @@ export const InboxThreadContent = styled.div`
 `;
 
 export const ThreadTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px 8px;
+  margin: 12px 16px;
   max-width: 100%;
   line-height: 1.4;
 `;
