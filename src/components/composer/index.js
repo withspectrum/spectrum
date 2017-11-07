@@ -60,6 +60,7 @@ type Props = {
   location: Object,
   activeCommunity?: string,
   activeChannel?: string,
+  threadSliderIsOpen?: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
