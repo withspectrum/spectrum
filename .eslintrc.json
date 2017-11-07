@@ -1,0 +1,47 @@
+{
+    "env": {
+        "browser": false,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "parser": "babel-eslint",
+    "extends": ["eslint:recommended", "plugin:promise/recommended", "plugin:flowtype/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "flowtype",
+        "promise"
+    ],
+    "rules": {
+        "no-console": 0,
+        "require-await": [
+            "error"
+        ],
+        "indent":  0,
+        "linebreak-style": [
+            0,
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    },
+    "settings": {
+        "flowtype": {
+          "onlyFilesWithFlowAnnotation": false
+        }
+      }
+}

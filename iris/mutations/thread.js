@@ -138,13 +138,16 @@ module.exports = {
       });
 
       // Update the thread with the new links
-      return editThread({
-        threadId: dbThread.id,
-        content: {
-          ...dbThread.content,
-          body: JSON.stringify(body),
+      return editThread(
+        {
+          threadId: dbThread.id,
+          content: {
+            ...dbThread.content,
+            body: JSON.stringify(body),
+          },
         },
-      });
+        false
+      );
     },
     editThread: async (_, { input }, { user }) => {
       const currentUser = user;

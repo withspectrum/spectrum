@@ -421,6 +421,7 @@ class ThreadDetailPure extends Component {
             editorKey="thread-detail"
             placeholder="Write more thoughts here..."
             showLinkPreview={true}
+            editorRef={editor => (this.bodyEditor = editor)}
             version={2}
             linkPreview={{
               loading: fetchingLinkPreview,
