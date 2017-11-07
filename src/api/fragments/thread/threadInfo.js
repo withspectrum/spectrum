@@ -15,6 +15,7 @@ export const threadInfoFragment = gql`
       ...userInfo
       isPro
       contextPermissions {
+        communityId
         reputation
         isOwner
         isModerator
