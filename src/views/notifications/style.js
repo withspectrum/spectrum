@@ -67,7 +67,7 @@ export const ContentWash = styled(Content)`
 export const NotificationListContainer = styled(FlexCol)`
   align-self: stretch;
   max-height: 480px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 `;
 
@@ -144,7 +144,6 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
-  overflow-x: hidden;
 `;
 
 export const ActorPhotoItem = styled.div`margin-right: 4px;`;
@@ -159,6 +158,8 @@ export const ContextRow = styled(FlexRow)`
     margin-left: 8px;
   }
   margin-bottom: 8px;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 export const SuccessContext = styled(ContextRow)`
