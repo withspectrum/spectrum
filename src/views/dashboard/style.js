@@ -606,7 +606,8 @@ export const CommunityLink = styled(Link)`
 
 export const PillLink = styled(Link)`
   display: inline-block;
-  height: 20px;
+  display: flex;
+  align-items: center;
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
@@ -617,33 +618,13 @@ export const PillLink = styled(Link)`
   pointer-events: auto;
 `;
 
-export const PillLinkPinned = styled.div`
+export const PillLinkPinned = styled(PillLink)`
   background: ${props => props.theme.special.wash};
   border: 1px solid ${props => props.theme.special.border};
   color: ${props => props.theme.special.dark};
-  display: flex;
-  height: 20px;
-  border-radius: 4px;
-  overflow: hidden;
-  padding: 4px 8px;
-  margin-right: 8px;
-  font-size: 12px;
-  max-height: 24px;
-  line-height: 1;
-
-  .icon {
-    top: -1px;
-  }
 `;
 
 export const PillLabel = styled.span`
-  ${props =>
-    props.isPrivate &&
-    css`
-      position: relative;
-      top: -2px;
-    `};
-
   overflow: hidden;
   max-width: 128px;
   text-overflow: ellipsis;
@@ -653,17 +634,19 @@ export const PillLabel = styled.span`
 
 export const MiniLinkPreview = styled(Link)`
   display: inline-block;
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.active ? '500' : '400')};
-  margin: 0 0 8px;
+  margin-bottom: 8px;
   pointer-events: auto;
-  max-width: calc(100%);
-  ${Truncate} .icon {
+  max-width: 100%;
+  ${Truncate};
+
+  .icon {
     margin-right: 4px;
-    position: relative;
-    top: 4px;
   }
 
   &:hover {
