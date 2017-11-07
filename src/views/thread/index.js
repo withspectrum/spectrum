@@ -177,14 +177,7 @@ class ThreadContainer extends React.Component<Props, State> {
               participant => participant.id === currentUser.id
             )));
 
-      const shouldRenderThreadSidebar =
-        threadViewContext === 'fullscreen' && window.innerWidth > 1024;
-
-      // only show the community header in inbox, sliders, and narrow screen thread views
-      const shouldRenderCommunityContextHeader =
-        threadViewContext === 'inbox' ||
-        threadViewContext === 'slider' ||
-        (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
+      const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
       return (
         <ThreadViewContainer
@@ -216,9 +209,10 @@ class ThreadContainer extends React.Component<Props, State> {
             />
             <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
               <Detail type={slider ? '' : 'only'}>
-                {shouldRenderCommunityContextHeader && (
-                  <ThreadCommunityBanner thread={thread} />
-                )}
+                <ThreadCommunityBanner
+                  hide={threadViewContext === 'fullscreen'}
+                  thread={thread}
+                />
 
                 <ThreadDetail
                   toggleEdit={this.toggleEdit}

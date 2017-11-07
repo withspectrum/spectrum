@@ -375,7 +375,7 @@ export const ShareButton = styled.span`
 `;
 
 export const CommunityHeader = styled.div`
-  display: flex;
+  display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
   padding: 14px 32px;
@@ -384,6 +384,7 @@ export const CommunityHeader = styled.div`
 
   @media (max-width: 728px) {
     padding: 16px;
+    display: flex;
   }
 `;
 export const CommunityHeaderName = styled.h3`

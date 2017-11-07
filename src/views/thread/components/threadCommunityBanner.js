@@ -25,6 +25,7 @@ type Props = {
   dispatch: Function,
   toggleChannelSubscription: Function,
   currentUser: Object,
+  hide: boolean,
   thread: {
     id: string,
     community: {
@@ -108,11 +109,15 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread: { channel, community, id }, currentUser } = this.props;
+    const {
+      thread: { channel, community, id },
+      currentUser,
+      hide,
+    } = this.props;
     const { isLoading } = this.state;
 
     return (
-      <CommunityHeader>
+      <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
             <Avatar src={community.profilePhoto} community size={32} />
