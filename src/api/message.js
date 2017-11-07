@@ -88,6 +88,7 @@ const SEND_MESSAGE_MUTATION = gql`
         creator {
           ...userInfo
           contextPermissions {
+            communityId
             reputation
             isOwner
             isModerator
@@ -124,13 +125,13 @@ const SEND_MESSAGE_OPTIONS = {
           addMessage: {
             __typename: 'Message',
             thread: {
-              id: ownProps.thread,
-              receiveNotifications: true,
+              ...ownProps.threadData,
               __typename: 'Thread',
             },
             sender: {
               ...ownProps.currentUser,
               contextPermissions: {
+                communityId: ownProps.threadData.community.id,
                 reputation: 0,
                 isOwner: false,
                 isModerator: false,

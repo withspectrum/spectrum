@@ -276,6 +276,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   <ChatInputWrapper type="only">
                     <ChatInput
                       threadType="story"
+                      threadData={thread}
                       thread={thread.id}
                       currentUser={isLoggedIn}
                       forceScrollToBottom={this.forceScrollToBottom}
