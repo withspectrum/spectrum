@@ -17,8 +17,26 @@ type DirectMessageUser = {
 
 module.exports = {
   Query: {
-    directMessageThread: (_: any, { id }: { id: String }) =>
-      getDirectMessageThread(id),
+    directMessageThread: async (
+      _: any,
+      { id }: { id: String },
+      { user, loaders }: GraphQLContext
+    ) => {
+      // signed out users should never be able to request a dm thread
+      if (!user || !user.id) return null;
+
+      // get the members of this thread
+      const members = await loaders.directMessageParticipants.load(id);
+
+      // if there are no members, abort
+      if (!members || members.length === 0) return null;
+
+      // if user viewing the dm thread is not a member of the thread, abort!
+      const memberIds = members.reduction.map(u => u.userId);
+      if (memberIds.indexOf(user.id) < 0) return null;
+
+      return loaders.directMessageThread.load(id);
+    },
   },
   DirectMessageThread: {
     messageConnection: (
@@ -49,11 +67,15 @@ module.exports = {
         }));
     },
     participants: ({ id }, _, { loaders, user }) => {
-      return getMembersInDirectMessageThread(id);
+      return loaders.directMessageParticipants.load(id).then(results => {
+        if (!results || results.length === 0) return null;
+        return results.reduction;
+      });
     },
-    snippet: ({ id }) => {
-      return getLastMessage(id).then(message => {
-        if (!message) return 'No messages yet...';
+    snippet: ({ id }, _: any, { loaders }: GraphQLContext) => {
+      return loaders.directMessageSnippet.load(id).then(results => {
+        if (!results) return 'No messages yet...';
+        const message = results.reduction;
         return message.messageType === 'draftjs'
           ? toPlainText(toState(JSON.parse(message.content.body)))
           : message.content.body;

@@ -181,7 +181,7 @@ const getChannelsMemberCounts = (
   return db
     .table('usersChannels')
     .getAll(...channelIds, { index: 'channelId' })
-    .filter({ isBlocked: false, isPending: false })
+    .filter({ isBlocked: false, isPending: false, isMember: true })
     .group('channelId')
     .count()
     .run();

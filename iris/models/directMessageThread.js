@@ -18,6 +18,15 @@ const getDirectMessageThread = (
     .run();
 };
 
+const getDirectMessageThreads = (
+  ids: Array<string>
+): Promise<Array<DBDirectMessageThread>> => {
+  return db
+    .table('directMessageThreads')
+    .getAll(...ids)
+    .run();
+};
+
 const getDirectMessageThreadsByUser = (
   userId: string
 ): Promise<Array<DBDirectMessageThread>> => {
@@ -89,6 +98,7 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
+  getDirectMessageThreads,
   getDirectMessageThreadsByUser,
   setDirectMessageThreadLastActive,
   listenToUpdatedDirectMessageThreads,

@@ -108,6 +108,7 @@ module.exports = {
             return {
               ...message,
               contextPermissions: {
+                communityId,
                 reputation: permissions ? permissions.reputation : 0,
                 isModerator: permissions ? permissions.isModerator : false,
                 isOwner: permissions ? permissions.isOwner : false,

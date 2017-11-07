@@ -1,9 +1,9 @@
+// @flow
 const { db } = require('./db');
-// $FlowFixMe
 import axios from 'axios';
 const querystring = require('querystring');
 
-export const getSlackUserListData = token => {
+export const getSlackUserListData = (token: string) => {
   return axios
     .post(
       'https://slack.com/api/users.list',
@@ -17,6 +17,8 @@ export const getSlackUserListData = token => {
       if (response.data && response.data.ok) {
         return response.data.members;
       }
+
+      return;
     })
     .catch(error => {
       console.log('\n\nerror', error);

@@ -62,7 +62,7 @@ class Message extends Component {
     const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
-    const reactable = !emojiOnly && typeof message.id === 'string';
+    const reactable = typeof message.id === 'string';
     const hideIndicator = !reactable && !shareable && !canModerate;
 
     return (
