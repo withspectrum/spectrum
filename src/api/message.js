@@ -228,6 +228,93 @@ export const sendMessageMutation = graphql(
   SEND_MESSAGE_OPTIONS
 );
 
+const SEND_DIRECT_MESSAGE_MUTATION = gql`
+mutation sendDirectMessage($message: MessageInput!) {
+  addMessage(message: $message) {
+    ...messageInfo
+  }
+}
+${messageInfoFragment}
+${userInfoFragment}
+`;
+const SEND_DIRECT_MESSAGE_OPTIONS = {
+  props: ({ ownProps, mutate }) => ({
+    sendDirectMessage: message =>
+      mutate({
+        variables: {
+          message: {
+            ...message,
+            content: {
+              body: message.messageType === 'media' ? '' : message.content.body,
+            },
+          },
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          addMessage: {
+            __typename: 'Message',
+            sender: {
+              ...ownProps.currentUser,
+              contextPermissions: {
+                communityId: null,
+                reputation: 0,
+                isOwner: false,
+                isModerator: false,
+                __typename: 'ContextPermissions',
+              },
+              __typename: 'User',
+            },
+            timestamp: +new Date(),
+            content: {
+              ...message.content,
+              __typename: 'MessageContent',
+            },
+            id: Math.round(Math.random() * -1000000),
+            reactions: {
+              count: 0,
+              hasReacted: false,
+              __typename: 'ReactionData',
+            },
+            messageType: message.messageType,
+          },
+        },
+        update: (store, { data: { addMessage } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            variables: {
+              id: ownProps.thread,
+            },
+          });
+
+          // ignore the addMessage from the server, apollo will automatically
+          // override the optimistic object
+          if (!addMessage || typeof addMessage.id === 'string') {
+            return;
+          }
+
+          data.directMessageThread.messageConnection.edges.push({
+            cursor: addMessage.id,
+            node: addMessage,
+            __typename: 'DirectMessageEdge',
+          });
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            data,
+            variables: {
+              id: ownProps.thread,
+            },
+          });
+        },
+      }),
+  }),
+};
+export const sendDirectMessageMutation = graphql(
+  SEND_DIRECT_MESSAGE_MUTATION,
+  SEND_DIRECT_MESSAGE_OPTIONS
+);
+
 /*
   Get all media messages for a threadId to populate the gallery
 */
