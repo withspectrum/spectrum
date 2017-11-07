@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
+import { userInfoFragment } from './fragments/user/userInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
@@ -83,10 +84,28 @@ const SEND_MESSAGE_MUTATION = gql`
       thread {
         id
         receiveNotifications
+        messageCount
+        creator {
+          ...userInfo
+          contextPermissions {
+            reputation
+            isOwner
+            isModerator
+          }
+        }
+        participants {
+          ...userInfo
+        }
+        isLocked
+        content {
+          title
+          body
+        }
       }
     }
   }
   ${messageInfoFragment}
+  ${userInfoFragment}
 `;
 const SEND_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({

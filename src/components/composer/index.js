@@ -60,6 +60,7 @@ type Props = {
   location: Object,
   activeCommunity?: string,
   activeChannel?: string,
+  threadSliderIsOpen?: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
@@ -402,7 +403,7 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { data: { user } } = this.props;
+    const { data: { user }, threadSliderIsOpen } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
     return (
@@ -452,7 +453,7 @@ class ComposerWithData extends Component<Props, State> {
             value={this.state.title}
             placeholder={`What's up?`}
             ref="titleTextarea"
-            autoFocus
+            autoFocus={!threadSliderIsOpen}
           />
 
           <Editor
@@ -506,6 +507,7 @@ const mapStateToProps = state => ({
   isOpen: state.composer.isOpen,
   title: state.composer.title,
   body: state.composer.body,
+  threadSliderIsOpen: state.threadSlider.isOpen,
 });
 
 // $FlowIssue

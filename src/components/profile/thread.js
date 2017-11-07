@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-//$FlowFixMe
+import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
 import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
   render() {
-    const { data: { thread, error }, setName } = this.props;
+    const { data: { thread, error }, setName, location } = this.props;
     if (error || !thread) {
       return null;
     }
@@ -23,7 +21,6 @@ class ThreadWithData extends Component {
       <ProfileCard>
         <Link
           to={{
-            pathname: window.location.pathname,
             search: `?thread=${thread.id}`,
           }}
         >
@@ -40,5 +37,4 @@ class ThreadWithData extends Component {
   }
 }
 
-const Thread = compose(connect())(ThreadWithData);
-export default Thread;
+export default compose(connect(), withRouter)(ThreadWithData);
