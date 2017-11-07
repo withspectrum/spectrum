@@ -50,7 +50,30 @@ module.exports = {
         );
       }
 
-      if (communitySlugIsBlacklisted(args.input.slug)) {
+      if (!args.input.slug || args.input.slug.length === 0) {
+        return new UserError(
+          'Communities must have a valid url so people can find it!'
+        );
+      }
+
+      // replace any non alpha-num characters to prevent bad community slugs
+      // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+      // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+      const sanitizedSlug = args.input.slug
+        .replace(/[\W_]/g, '-')
+        .replace(/-{2,}/g, '-');
+      const sanitizedArgs = Object.assign(
+        {},
+        {
+          ...args,
+          input: {
+            ...args.input,
+            slug: sanitizedSlug,
+          },
+        }
+      );
+
+      if (communitySlugIsBlacklisted(sanitizedSlug)) {
         return new UserError(
           `This url is already taken - feel free to change it if
           you're set on the name ${args.input.name}!`
@@ -59,7 +82,7 @@ module.exports = {
 
       // get communities with the input slug to check for duplicates
       return (
-        getCommunitiesBySlug([args.input.slug])
+        getCommunitiesBySlug([sanitizedSlug])
           .then(communities => {
             // if a community with this slug already exists
             if (communities.length > 0) {
@@ -68,7 +91,7 @@ module.exports = {
               );
             }
             // all checks passed
-            return createCommunity(args, currentUser);
+            return createCommunity(sanitizedArgs, currentUser);
           })
           .then(community => {
             // create a new relationship with the community

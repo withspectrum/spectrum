@@ -3,6 +3,7 @@ const debug = require('debug')('athena:queue:message-notification');
 import { toState, toPlainText } from 'shared/draft-utils';
 import { getMentions } from '../utils/getMentions';
 import addQueue from '../utils/addQueue';
+import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
@@ -140,6 +141,9 @@ export default async (job: JobData) => {
   });
 
   return Promise.all(formatAndBufferPromises).catch(err => {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
     console.log(err);
   });
 };

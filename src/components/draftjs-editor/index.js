@@ -28,7 +28,7 @@ import { IconButton } from '../buttons';
 import mentionsDecorator from './mentions-decorator';
 
 import Image from './Image';
-import Embed from './Embed';
+import Embed, { addEmbed, parseEmbedUrl } from './Embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
@@ -104,7 +104,7 @@ class Editor extends React.Component<Props, State> {
         dndPlugin,
         focusPlugin,
       ],
-      addEmbed: embedPlugin.addEmbed,
+      addEmbed: addEmbed,
       addImage: imagePlugin.addImage,
       inserting: false,
       embedding: false,
@@ -122,8 +122,7 @@ class Editor extends React.Component<Props, State> {
     evt && evt.preventDefault();
 
     const { state, onChange } = this.props;
-
-    onChange(this.state.addEmbed(state, this.state.embedUrl));
+    onChange(this.state.addEmbed(state, parseEmbedUrl(this.state.embedUrl)));
     this.setState({
       embedUrl: '',
       embedding: false,

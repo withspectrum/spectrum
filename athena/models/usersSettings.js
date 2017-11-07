@@ -8,5 +8,6 @@ export const getUsersSettings = (userId: string): Promise<Object> => {
     .run()
     .then(results => {
       if (results && results.length > 0) return results[0];
+      return null;
     });
 };

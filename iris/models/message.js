@@ -15,7 +15,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
     .get(messageId)
     .run()
     .then(message => {
-      if (message.deletedAt) return null;
+      if (!message || message.deletedAt) return null;
       return message;
     });
 };
@@ -37,6 +37,16 @@ export const getLastMessage = (threadId: string): Promise<Message> => {
     .getAll(threadId, { index: 'threadId' })
     .filter(db.row.hasFields('deletedAt').not())
     .max('timestamp')
+    .run();
+};
+
+export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
+  return db
+    .table('messages')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .group('threadId')
+    .max(row => row('timestamp'))
     .run();
 };
 

@@ -12,6 +12,7 @@ export const userCommunitiesFragment = gql`
         node {
           ...communityInfo
           contextPermissions {
+            communityId
             isOwner
             isModerator
             reputation

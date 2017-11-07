@@ -44,7 +44,7 @@ const ChannelThreadFeed = compose(connect(), getChannelThreads)(
   DashboardThreadFeed
 );
 
-const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
+const DashboardWrapper = props => <Wrapper {...props} />;
 
 class Dashboard extends Component {
   state: {
@@ -105,10 +105,11 @@ class Dashboard extends Component {
       )[0];
 
       return (
-        <DashboardWrapper>
+        <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
           <Titlebar />
           <CommunityListWrapper
+            data-e2e-id="inbox-community-list"
             onMouseEnter={this.setHover}
             onMouseLeave={this.removeHover}
           >

@@ -61,6 +61,9 @@ class ThreadFeed extends React.Component<Props, State> {
       return;
     }
 
+    // don't select a thread if the composer is open
+    if (prevProps.selectedId === 'new') return;
+
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
@@ -140,7 +143,7 @@ class ThreadFeed extends React.Component<Props, State> {
     const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 
     return (
-      <div>
+      <div data-e2e-id="inbox-thread-feed">
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}

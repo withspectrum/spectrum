@@ -1,4 +1,5 @@
 // @flow
+const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
 export const SEND_NEW_MESSAGE_EMAIL = 'send new message email';
 export const SEND_NEW_DIRECT_MESSAGE_EMAIL = 'send new direct message email';
@@ -24,7 +25,7 @@ export const COMMUNITY_INVITE_TEMPLATE = 2302401;
 export const NEW_COMMUNITY_WELCOME_TEMPLATE = 2600301;
 export const COMMUNITY_INVOICE_RECEIPT_TEMPLATE = 2647483;
 export const PRO_INVOICE_RECEIPT_TEMPLATE = 3037461;
-export const NEW_THREAD_CREATED_TEMPLATE = 2713302;
+export const NEW_THREAD_CREATED_TEMPLATE = IS_PROD ? 2713302 : 3786781;
 export const DIGEST_TEMPLATE = 3071361;
 export const DEBUG_TEMPLATE = 3374841;
 export const EMAIL_VALIDATION_TEMPLATE = 3578681;

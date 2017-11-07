@@ -95,17 +95,23 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread } } = this.props;
+    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
-
     if (!thread) return;
+
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
-
     const threadAndUser = currentUser && thread;
-
     if (threadAndUser && this.chatInput) {
-      this.chatInput.triggerFocus();
+      // if the user is viewing the inbox, opens the thread slider, and then closes it again, refocus the inbox inpu
+      if (prevProps.threadSliderIsOpen && !threadSliderIsOpen) {
+        return this.chatInput.triggerFocus();
+      }
+
+      // if the thread slider is open while in the inbox, don't focus in the inbox
+      if (threadSliderIsOpen) return;
+
+      return this.chatInput.triggerFocus();
     }
   }
 
@@ -181,7 +187,10 @@ class ThreadContainer extends React.Component<Props, State> {
         (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
 
       return (
-        <ThreadViewContainer threadViewContext={threadViewContext}>
+        <ThreadViewContainer
+          data-e2e-id="thread-view"
+          threadViewContext={threadViewContext}
+        >
           {shouldRenderThreadSidebar && (
             <Sidebar
               thread={thread}
@@ -267,6 +276,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   <ChatInputWrapper type="only">
                     <ChatInput
                       threadType="story"
+                      threadData={thread}
                       thread={thread.id}
                       currentUser={isLoggedIn}
                       forceScrollToBottom={this.forceScrollToBottom}

@@ -9,6 +9,8 @@ import {
   AuthorAvatar,
   BylineMeta,
   AuthorName,
+  AuthorNameLink,
+  AuthorNameNoLink,
   AuthorUsername,
 } from '../style';
 
@@ -29,7 +31,6 @@ type Props = {
 class ThreadByline extends React.Component<Props> {
   render() {
     const { creator } = this.props;
-    const { isOwner, reputation } = creator.contextPermissions;
 
     return (
       <Byline>
@@ -38,18 +39,32 @@ class ThreadByline extends React.Component<Props> {
           radius={40}
           isOnline={creator.isOnline}
           src={creator.profilePhoto}
-          link={creator.username ? `/users/${creator.username}` : null}
+          link={creator.username ? `/users/${creator.username}` : false}
         />
         <BylineMeta>
-          <Link to={`/users/${creator.username}`}>
-            <AuthorName>{creator.name}</AuthorName>
-          </Link>
+          {creator.username ? (
+            <AuthorNameLink to={`/users/${creator.username}`}>
+              <AuthorName>{creator.name}</AuthorName>
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isOwner && <Badge type="admin" />}
+            </AuthorNameLink>
+          ) : (
+            <AuthorNameNoLink>
+              <AuthorName>{creator.name}</AuthorName>
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isOwner && <Badge type="admin" />}
+            </AuthorNameNoLink>
+          )}
 
           <AuthorUsername>
             {creator &&
               creator.contextPermissions &&
               creator.contextPermissions.reputation > 0 && (
-                <Reputation reputation={reputation} />
+                <Reputation
+                  reputation={creator.contextPermissions.reputation}
+                />
               )}
           </AuthorUsername>
         </BylineMeta>

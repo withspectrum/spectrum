@@ -8,6 +8,8 @@ const {
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
+  DEFAULT_SESSIONS,
+  DEFAULT_MESSAGES,
 } = require('../../iris/migrations/seed/default');
 
 const data = {
@@ -20,6 +22,8 @@ const data = {
   usersDirectMessageThreads: DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   usersCommunities: DEFAULT_USERS_COMMUNITIES,
   usersChannels: DEFAULT_USERS_CHANNELS,
+  sessions: DEFAULT_SESSIONS,
+  messages: DEFAULT_MESSAGES,
 };
 
 export default data;
