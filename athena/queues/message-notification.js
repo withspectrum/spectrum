@@ -98,7 +98,8 @@ export default async (job: JobData) => {
         messageId: incomingMessage.id,
         threadId: incomingMessage.threadId,
         senderId: incomingMessage.senderId,
-        username: username, // "@mxstbr" -> "mxstbr"
+        username: username,
+        type: 'message',
       });
     });
   }

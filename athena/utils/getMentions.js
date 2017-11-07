@@ -18,3 +18,5 @@ export const getDistinctMentions = (
 ): Array<string> => {
   return usernames.filter((v, i, a) => a.indexOf(v) === i);
 };
+
+export default getMentions;

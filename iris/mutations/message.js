@@ -1,5 +1,4 @@
 // @flow
-import Raven from 'raven';
 const debug = require('debug')('iris:mutations:message');
 import UserError from '../utils/UserError';
 import {
@@ -15,12 +14,9 @@ import {
 } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
-import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';
-import { toState, toPlainText } from 'shared/draft-utils';
-import { addQueue } from '../utils/workerQueue';
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
 
@@ -69,11 +65,6 @@ module.exports = {
               message.senderId,
               communityId,
             ]);
-
-            const body =
-              message.messageType === 'draftjs'
-                ? toPlainText(toState(JSON.parse(message.content.body)))
-                : message.content.body;
 
             return {
               ...message,
@@ -162,7 +153,7 @@ module.exports = {
           communityPermissions.isModerator;
         if (!canModerate)
           throw new UserError(
-            `You don't have permission to delete this message.`
+            "You don't have permission to delete this message."
           );
       }
 
@@ -172,7 +163,7 @@ module.exports = {
         // We don't need to delete participants of direct message threads
         if (message.threadType === 'directMessageThread') return true;
 
-        debug(`thread message, check if user has more messages in thread`);
+        debug('thread message, check if user has more messages in thread');
         return userHasMessagesInThread(
           message.threadId,
           message.senderId
