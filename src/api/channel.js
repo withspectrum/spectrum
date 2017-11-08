@@ -334,6 +334,7 @@ const LoadMoreMembers = gql`
             ...userInfo
             isPro
             contextPermissions {
+              communityId
               reputation
             }
           }
@@ -417,6 +418,7 @@ const GET_CHANNEL_MEMBERS_QUERY = gql`
             ...userInfo
             isPro
             contextPermissions {
+              communityId
               reputation
             }
           }

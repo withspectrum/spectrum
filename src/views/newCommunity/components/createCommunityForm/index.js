@@ -95,7 +95,14 @@ class CreateCommunityForm extends Component {
     }
 
     const name = e.target.value;
-    let lowercaseName = name.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseName = name
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
     if (name.length >= 20) {
@@ -126,7 +133,14 @@ class CreateCommunityForm extends Component {
 
   changeSlug = e => {
     let slug = e.target.value;
-    let lowercaseSlug = slug.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseSlug = slug
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     slug = slugg(lowercaseSlug);
 
     if (slug.length >= 24) {
@@ -383,8 +397,6 @@ class CreateCommunityForm extends Component {
         : null
       : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <FormContainer>
         <Form>
@@ -416,7 +428,7 @@ class CreateCommunityForm extends Component {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!isMobile}
+            autoFocus={!window.innerWidth < 768}
             onBlur={this.checkSuggestedCommunities}
           >
             What is your community called?
@@ -431,7 +443,7 @@ class CreateCommunityForm extends Component {
             onChange={this.changeSlug}
             onBlur={this.checkSuggestedCommunities}
           >
-            sp.chat/
+            spectrum.chat/
           </UnderlineInput>
 
           {slugTaken && (

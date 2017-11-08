@@ -31,7 +31,13 @@ class FullscreenView extends Component {
   };
 
   render() {
-    const { close, hasBackground, children, noCloseButton } = this.props;
+    const {
+      close,
+      hasBackground,
+      children,
+      noCloseButton,
+      showBackgroundOnMobile = true,
+    } = this.props;
 
     return (
       <FullscreenViewContainer>
@@ -42,7 +48,7 @@ class FullscreenView extends Component {
         )}
 
         {hasBackground && (
-          <Illustrations>
+          <Illustrations showBackgroundOnMobile={showBackgroundOnMobile}>
             <ClusterOne src="/img/cluster-2.svg" role="presentation" />
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />

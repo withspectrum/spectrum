@@ -94,7 +94,16 @@ module.exports = {
       But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
     */
       let attachments = [];
-      let threadObject = thread;
+      let threadObject = Object.assign(
+        {},
+        {
+          ...thread,
+          content: {
+            ...thread.content,
+            title: thread.content.title.trim(),
+          },
+        }
+      );
       // if the thread has attachments
       if (thread.attachments) {
         // iterate through them and construct a new attachment object
@@ -138,13 +147,16 @@ module.exports = {
       });
 
       // Update the thread with the new links
-      return editThread({
-        threadId: dbThread.id,
-        content: {
-          ...dbThread.content,
-          body: JSON.stringify(body),
+      return editThread(
+        {
+          threadId: dbThread.id,
+          content: {
+            ...dbThread.content,
+            body: JSON.stringify(body),
+          },
         },
-      });
+        false
+      );
     },
     editThread: async (_, { input }, { user }) => {
       const currentUser = user;
@@ -192,6 +204,11 @@ module.exports = {
       }
 
       const newInput = Object.assign({}, input, {
+        ...input,
+        content: {
+          ...input.content,
+          title: input.content.title.trim(),
+        },
         attachments,
       });
 

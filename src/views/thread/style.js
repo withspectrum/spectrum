@@ -38,7 +38,7 @@ export const ThreadContentView = styled(FlexCol)`
     css`
       box-shadow: -1px 0 0 ${props => props.theme.bg.border},
         1px 0 0 ${props => props.theme.bg.border};
-    `} overflow-y: scroll;
+    `} overflow-y: auto;
   overflow-x: visible;
   max-width: 100%;
   max-height: 100%;
@@ -63,7 +63,7 @@ export const ThreadSidebarView = styled(FlexCol)`
   align-self: stretch;
   position: relative;
   right: 1px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: 1032px) {
     display: none;
@@ -74,7 +74,7 @@ export const Content = styled(FlexRow)`
   justify-content: center;
   align-items: flex-start;
   flex: auto;
-  overflow-y: scroll;
+  overflow-y: auto;
   grid-area: body;
   width: 100%;
   max-width: 1024px;
@@ -143,10 +143,10 @@ export const ThreadWrapper = styled(FlexCol)`
 `;
 
 export const ThreadContent = styled.div`
-  padding: 32px;
+  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
 
   @media (max-width: 1024px) {
-    padding: 16px;
+    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
   }
 `;
 
@@ -223,6 +223,14 @@ export const FlyoutRow = styled(FlexRow)`
       border-radius: 0 0 4px 4px;
     }
   }
+
+  ${p =>
+    p.hideBelow &&
+    css`
+      @media screen and (max-width: ${p.hideBelow}px) {
+        display: none;
+      }
+    `};
 `;
 
 export const Byline = styled.div`
@@ -315,6 +323,7 @@ export const ChatWrapper = styled.div`
   max-width: 100%;
   flex: none;
   margin-top: 16px;
+  overflow-x: hidden;
 `;
 
 export const ThreadTitle = {
@@ -375,7 +384,7 @@ export const ShareButton = styled.span`
 `;
 
 export const CommunityHeader = styled.div`
-  display: flex;
+  display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
   padding: 14px 32px;
@@ -384,6 +393,7 @@ export const CommunityHeader = styled.div`
 
   @media (max-width: 728px) {
     padding: 16px;
+    display: flex;
   }
 `;
 export const CommunityHeaderName = styled.h3`

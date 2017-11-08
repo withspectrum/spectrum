@@ -183,6 +183,7 @@ class Navbar extends Component {
       return true;
     }
 
+    // if the user doesn't have a username
     if (currState.showNewUserOnboarding !== nextState.showNewUserOnboarding) {
       return true;
     }
@@ -213,6 +214,14 @@ class Navbar extends Component {
       next.data.user !== curr.data.user
     )
       return true;
+
+    // if the user is mobile and is viewing a thread or DM thread, re-render
+    // the navbar when they exit the thread
+    const thisParams = queryString.parse(curr.history.location.search);
+    const nextParams = queryString.parse(next.history.location.search);
+    const thisThreadParam = thisParams.thread;
+    const nextThreadParam = nextParams.thread;
+    if (thisThreadParam !== nextThreadParam) return true;
 
     // Fuck updating
     return false;
@@ -370,7 +379,6 @@ class Navbar extends Component {
       currentUser,
     } = this.props;
     const loggedInUser = user || currentUser;
-    const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
     const isHome =
@@ -397,16 +405,12 @@ class Navbar extends Component {
     const isComposingDm = history.location.pathname === '/messages/new';
     const isComposingThread = history.location.pathname === '/new/thread';
     const isViewingThreadSlider = threadParam !== undefined;
-    if (
-      isMobile &&
-      (isViewingThreadSlider ||
-        isComposingDm ||
-        isViewingThread ||
-        isViewingDm ||
-        isComposingThread)
-    ) {
-      return null;
-    }
+    const hideNavOnMobile =
+      isViewingThreadSlider ||
+      isComposingDm ||
+      isViewingThread ||
+      isViewingDm ||
+      isComposingThread;
 
     // this only shows if the user does not have a username
     if (
@@ -431,7 +435,7 @@ class Navbar extends Component {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
 
       return (
-        <Nav>
+        <Nav hideOnMobile={hideNavOnMobile}>
           <Head showUnreadFavicon={showUnreadFavicon} />
 
           <Section left hideOnMobile>
@@ -572,7 +576,7 @@ class Navbar extends Component {
       );
     } else if (networkStatus >= 7) {
       return (
-        <Nav>
+        <Nav hideOnMobile={hideNavOnMobile}>
           <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
@@ -588,12 +592,10 @@ class Navbar extends Component {
       );
     } else {
       return (
-        <Nav>
-          {isMobile || (
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          )}
+        <Nav hideOnMobile={hideNavOnMobile}>
+          <LogoLink to="/">
+            <Logo src="/img/mark-white.png" role="presentation" />
+          </LogoLink>
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

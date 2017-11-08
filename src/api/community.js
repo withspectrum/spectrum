@@ -187,6 +187,7 @@ const LoadMoreMembers = gql`
             isPro
             totalReputation
             contextPermissions {
+              communityId
               reputation
               isOwner
               isModerator
@@ -274,6 +275,7 @@ export const getCommunityMembersQuery = graphql(
               isPro
               totalReputation
               contextPermissions {
+                communityId
                 reputation
                 isOwner
                 isModerator

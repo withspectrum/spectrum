@@ -62,6 +62,7 @@ type Props = {
   triggerDelete: Function,
   threadLock: Function,
   isSavingEdit: boolean,
+  title: string,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -147,7 +148,7 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, isEditing, isSavingEdit } = this.props;
+    const { thread, currentUser, isEditing, isSavingEdit, title } = this.props;
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
@@ -166,7 +167,11 @@ class ActionBar extends React.Component<Props, State> {
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
-              <Button loading={isSavingEdit} onClick={this.props.saveEdit}>
+              <Button
+                loading={isSavingEdit}
+                disabled={title.trim().length === 0}
+                onClick={this.props.saveEdit}
+              >
                 Save
               </Button>
             </EditDone>
@@ -266,23 +271,21 @@ class ActionBar extends React.Component<Props, State> {
                     onClick={this.toggleFlyout}
                   />
                   <Flyout>
-                    {window.innerWidth < 1024 && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon={
-                            thread.receiveNotifications
-                              ? 'notification-fill'
-                              : 'notification'
-                          }
-                          hoverColor={'text.default'}
-                          onClick={this.toggleNotification}
-                        >
-                          {thread.receiveNotifications
-                            ? 'Unfollow conversation'
-                            : 'Follow conversation'}
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
+                    <FlyoutRow hideBelow={1024}>
+                      <TextButton
+                        icon={
+                          thread.receiveNotifications
+                            ? 'notification-fill'
+                            : 'notification'
+                        }
+                        hoverColor={'text.default'}
+                        onClick={this.toggleNotification}
+                      >
+                        {thread.receiveNotifications
+                          ? 'Unfollow conversation'
+                          : 'Follow conversation'}
+                      </TextButton>
+                    </FlyoutRow>
 
                     {thread.isCreator && (
                       <FlyoutRow>

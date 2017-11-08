@@ -173,6 +173,9 @@ class NewThread extends Component {
   };
 
   handleKeyPress = (e: any) => {
+    // if the thread slider is open, we shouldn't be doing anything in DMs
+    if (this.props.threadSliderIsOpen) return;
+
     // destructure the whole state object
     const {
       searchString,
@@ -539,7 +542,10 @@ class NewThread extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
 
-    const { initNewThreadWithUser } = this.props;
+    const { initNewThreadWithUser, threadSliderIsOpen } = this.props;
+
+    // if someone is viewing a thread, don't focus here
+    if (threadSliderIsOpen) return;
 
     // focus the composer input if no users were already in the composer
     if (initNewThreadWithUser.length === 0) {
@@ -812,6 +818,7 @@ class NewThread extends Component {
 
 const mapStateToProps = state => ({
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
+  threadSliderIsOpen: state.threadSlider.isOpen,
 });
 
 export default compose(
