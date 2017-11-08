@@ -17,14 +17,7 @@ export type ReactionInput = {
   type: ReactionType,
 };
 
-export const getReactions = (messageId: string): Promise<Array<DBReaction>> => {
-  return db
-    .table('reactions')
-    .getAll(messageId, { index: 'messageId' })
-    .run();
-};
-
-export const getReactionsForMessages = (
+export const getReactions = (
   messageIds: Array<string>
 ): Promise<Array<DBReaction>> => {
   return db
