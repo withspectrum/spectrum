@@ -139,6 +139,7 @@ class ComposerWithData extends Component<Props, State> {
   componentWillUnmount() {
     // $FlowIssue
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    this.closeComposer();
   }
 
   handleKeyPress = e => {
