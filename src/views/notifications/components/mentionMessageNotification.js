@@ -10,12 +10,14 @@ import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
 import { ThreadProfile } from '../../../components/profile';
 import {
-  SegmentedNotificationCard,
   TextContent,
   SegmentedNotificationListRow,
   AttachmentsWash,
-  ThreadContext,
-  ContentWash,
+  Content,
+  NotificationCard,
+  NotificationListRow,
+  SuccessContext,
+  HzRule,
 } from '../style';
 import { Sender, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
@@ -25,13 +27,6 @@ import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
-import {
-  NotificationCard,
-  NotificationListRow,
-  SuccessContext,
-  HzRule,
-  Content,
-} from '../style';
 
 type Props = {
   notification: Object,
@@ -82,31 +77,25 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         : null;
     const thread = context;
 
-    console.log('message', message);
-
     return (
-      <SegmentedNotificationCard>
-        <ThreadContext>
+      <NotificationCard>
+        <SuccessContext>
           <Icon glyph="post-fill" />
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </ThreadContext>
-        <ContentWash>
+        </SuccessContext>
+        <Content>
           <AttachmentsWash>
-            {// if the mention was a message, show the message itself, otherwise fall back to showing the thread context
-            message && (
-              <HzRule>
-                <hr />
-                <Icon glyph="message" />
-                <hr />
-              </HzRule>
-            )}
-
+            <HzRule>
+              <hr />
+              <Icon glyph="message" />
+              <hr />
+            </HzRule>
             {message && (
-              <Sender>
-                <AuthorAvatar sender={sender} />}
+              <Sender style={{ marginTop: '0' }}>
+                <AuthorAvatar sender={sender} />
                 <MessageGroup me={false}>
                   <AuthorByline sender={sender} me={false} />
 
@@ -128,8 +117,8 @@ export class MentionMessageNotification extends React.Component<Props, State> {
               <ThreadCreated setName={this.setCommunityName} id={thread.id} />
             )}
           </AttachmentsWash>
-        </ContentWash>
-      </SegmentedNotificationCard>
+        </Content>
+      </NotificationCard>
     );
   }
 }

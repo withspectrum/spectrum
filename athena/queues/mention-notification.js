@@ -8,6 +8,7 @@ import getEmailStatus from '../utils/get-email-status';
 import { storeNotification } from '../models/notification';
 import { getChannelById } from '../models/channel';
 import { getMessageById } from '../models/message';
+import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getCommunityById } from '../models/community';
 import { getUsersThread } from '../models/usersThreads';
 import { storeUsersNotifications } from '../models/usersNotifications';
@@ -52,11 +53,16 @@ export default async ({ data }: { data: JobData }) => {
   // mentioned in public channels where they are not a member
   const thread = await getThreadById(threadId);
   const { isPrivate } = await getChannelById(thread.channelId);
-  const { isMember } = await getUserPermissionsInChannel(
-    recipient.id,
-    thread.channelId
-  );
-  if (isPrivate && !isMember) return;
+  const {
+    isBlocked: isBlockedInCommunity,
+  } = await getUserPermissionsInCommunity(thread.communityId, recipient.id);
+  const {
+    isMember,
+    isBlocked: isBlockedInChannel,
+  } = await getUserPermissionsInChannel(recipient.id, thread.channelId);
+  // don't notify people where they are blocked, or where the channel is private and they aren't a member
+  if (isBlockedInCommunity || isBlockedInChannel || (isPrivate && !isMember))
+    return;
 
   // see if a usersThreads record exists. If it does, and notifications are muted, we
   // should send an email. If the record doesn't exist, it means the person being
@@ -71,7 +77,7 @@ export default async ({ data }: { data: JobData }) => {
   // get the thread where the mention occured
   const context = await fetchPayload('THREAD', threadId);
   // create a payload for the message if the mention was in a message
-  const entity = messageId ? await fetchPayload('MESSAGE', messageId) : null;
+  const entity = messageId ? await fetchPayload('MESSAGE', messageId) : context;
   // we handle mentions in threads vs messages differently in the client, so assign different event types
   const event = mentionType === 'thread' ? 'MENTION_THREAD' : 'MENTION_MESSAGE';
 
@@ -97,8 +103,8 @@ export default async ({ data }: { data: JobData }) => {
   const message = messageId ? await getMessageById(messageId) : null;
   // get the user data for the message sender or thread creator
   const sender = messageId
-    ? getUserById(senderId)
-    : getUserById(thread.creatorId);
+    ? await getUserById(senderId)
+    : await getUserById(thread.creatorId);
   // get info about the community where the mention happened
   const community = await getCommunityById(thread.communityId);
   // get info about the channel where the mention happened

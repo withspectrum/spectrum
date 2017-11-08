@@ -82,7 +82,7 @@ export class MentionThreadNotification extends React.Component<Props, State> {
         : null;
     const thread = context;
 
-    console.log('message', message);
+    console.log('thread', thread);
 
     return (
       <SegmentedNotificationCard>
@@ -95,38 +95,10 @@ export class MentionThreadNotification extends React.Component<Props, State> {
         </ThreadContext>
         <ContentWash>
           <AttachmentsWash>
-            {// if the mention was a message, show the message itself, otherwise fall back to showing the thread context
-            message && (
-              <HzRule>
-                <hr />
-                <Icon glyph="message" />
-                <hr />
-              </HzRule>
-            )}
-
-            {message && (
-              <Sender>
-                <AuthorAvatar sender={sender} />}
-                <MessageGroup me={false}>
-                  <AuthorByline sender={sender} me={false} />
-
-                  <Message
-                    message={message}
-                    link={`#${message.id}`}
-                    me={false}
-                    canModerate={false}
-                    pending={message.id < 0}
-                    currentUser={currentUser}
-                    context={'notification'}
-                  />
-                </MessageGroup>
-              </Sender>
-            )}
-
-            {// if the mention wasn't in a message, show the thread card
-            !message && (
-              <ThreadCreated setName={this.setCommunityName} id={thread.id} />
-            )}
+            <ThreadCreated
+              setName={this.setCommunityName}
+              id={notification.context.id}
+            />
           </AttachmentsWash>
         </ContentWash>
       </SegmentedNotificationCard>
