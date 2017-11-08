@@ -49,7 +49,6 @@ class MessagesWithData extends Component {
     if (
       (!newMessageSent &&
         this.props.data.thread &&
-        this.props.data.thread.messageConnection &&
         this.props.shouldForceScrollToTopOnMessageLoad) ||
       (!newMessageSent &&
         this.props.data.networkStatus === 7 &&

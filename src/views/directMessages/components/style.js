@@ -15,7 +15,7 @@ export const ThreadsListScrollContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100%;
 `;
 
@@ -255,7 +255,7 @@ export const ComposerInput = styled.input`
   font-size: 16px;
   padding: 15px 16px;
   width: 100%;
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
 

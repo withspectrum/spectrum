@@ -256,7 +256,7 @@ class ComposerWithData extends Component<Props, State> {
     const jsonBody = toJSON(body);
 
     const content = {
-      title,
+      title: title.trim(),
       body: JSON.stringify(jsonBody),
     };
 
@@ -485,7 +485,7 @@ class ComposerWithData extends Component<Props, State> {
             <Button
               onClick={this.publishThread}
               loading={isPublishing}
-              disabled={!title || isPublishing}
+              disabled={!title || title.trim().length === 0 || isPublishing}
               color={'brand'}
             >
               Publish

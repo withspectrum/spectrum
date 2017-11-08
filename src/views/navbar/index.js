@@ -183,6 +183,7 @@ class Navbar extends Component {
       return true;
     }
 
+    // if the user doesn't have a username
     if (currState.showNewUserOnboarding !== nextState.showNewUserOnboarding) {
       return true;
     }
@@ -213,6 +214,14 @@ class Navbar extends Component {
       next.data.user !== curr.data.user
     )
       return true;
+
+    // if the user is mobile and is viewing a thread or DM thread, re-render
+    // the navbar when they exit the thread
+    const thisParams = queryString.parse(curr.history.location.search);
+    const nextParams = queryString.parse(next.history.location.search);
+    const thisThreadParam = thisParams.thread;
+    const nextThreadParam = nextParams.thread;
+    if (thisThreadParam !== nextThreadParam) return true;
 
     // Fuck updating
     return false;

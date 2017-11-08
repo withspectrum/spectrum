@@ -445,7 +445,7 @@ class CreateCommunityForm extends Component {
             onChange={this.changeSlug}
             onBlur={this.checkSuggestedCommunities}
           >
-            sp.chat/
+            spectrum.chat/
           </UnderlineInput>
 
           {slugTaken && (

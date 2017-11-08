@@ -281,7 +281,7 @@ class CreateChannelModal extends Component {
             )}
 
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-              {`sp.chat/${modalProps.slug}/`}
+              {`/${modalProps.slug}/`}
             </UnderlineInput>
 
             {slugTaken && (
