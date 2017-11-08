@@ -597,11 +597,9 @@ class Navbar extends Component {
     } else {
       return (
         <Nav>
-          {isMobile || (
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          )}
+          <LogoLink to="/">
+            <Logo src="/img/mark-white.png" role="presentation" />
+          </LogoLink>
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

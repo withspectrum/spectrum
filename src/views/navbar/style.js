@@ -68,6 +68,10 @@ export const LogoLink = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const SigninLink = styled.button`
