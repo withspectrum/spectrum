@@ -1,13 +1,11 @@
 // @flow
-const debug = require('debug')('athena:queue:community-notification');
+const debug = require('debug')('athena:queue:new-thread-notification');
 import Raven from '../../shared/raven';
 import addQueue from '../utils/addQueue';
 import getMentions from '../utils/getMentions';
 import { toPlainText, toState } from 'shared/draft-utils';
-import truncate from 'shared/truncate';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
   updateNotification,
@@ -17,66 +15,9 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
-import { getUserById, getUsers } from '../models/user';
-import { getCommunityById } from '../models/community';
-import { getChannelById } from '../models/channel';
+import { getUsers } from '../models/user';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
-import { SEND_THREAD_CREATED_NOTIFICATION_EMAIL } from './constants';
-
-const createThreadNotificationEmail = async (thread, recipients) => {
-  const creator = await getUserById(thread.creatorId);
-  const community = await getCommunityById(thread.communityId);
-  const channel = await getChannelById(thread.channelId);
-
-  const emailPromises = recipients.map(async recipient => {
-    // no way to send the user an email
-    if (!recipient.email) return;
-
-    // user is either online or has this notif type turned off
-    const shouldSendEmail = await getEmailStatus(
-      recipient.id,
-      'newThreadCreated'
-    );
-    if (!shouldSendEmail) return;
-
-    // at this point the email is safe to send, construct data for Hermes
-    const rawBody =
-      thread.type === 'DRAFTJS'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
-    const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
-    const primaryActionLabel = 'View conversation';
-
-    return addQueue(
-      SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-      {
-        recipient,
-        primaryActionLabel,
-        thread: {
-          ...thread,
-          creator,
-          community,
-          channel,
-          content: {
-            title: thread.content.title,
-            body,
-          },
-        },
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
-  });
-
-  return Promise.all([emailPromises]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
-    console.log(err);
-  });
-};
+import createThreadNotificationEmail from './create-thread-notification-email';
 
 type JobData = {
   data: {
