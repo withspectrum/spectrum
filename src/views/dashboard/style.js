@@ -143,6 +143,7 @@ export const CommunityListWrapper = styled.div`
 
 export const CommunityListItem = styled.div`
   margin: 4px 12px;
+  min-width: 48px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -186,6 +187,7 @@ export const CommunityListItem = styled.div`
 export const CommunityListPadding = styled.div`
   display: flex;
   padding: 6px;
+  min-width: 48px;
 `;
 
 export const Fixed = styled.div`
