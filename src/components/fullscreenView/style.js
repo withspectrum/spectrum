@@ -21,7 +21,17 @@ export const FullscreenViewContainer = styled.div`
   -webkit-transform: translate3d(0, 0, 0);
 `;
 
-export const Illustrations = styled.span`z-index: ${zIndex.background};`;
+export const Illustrations = styled.span`
+  z-index: ${zIndex.background};
+
+  ${p =>
+    !p.showBackgroundOnMobile &&
+    css`
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    `};
+`;
 
 export const Close = styled.div`
   color: ${props => props.theme.text.default};
