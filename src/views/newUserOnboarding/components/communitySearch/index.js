@@ -256,8 +256,6 @@ class Search extends Component {
       loading,
     } = this.state;
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <SearchWrapper>
         {searchIsLoading && (
@@ -274,7 +272,7 @@ class Search extends Component {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
-            autoFocus={!isMobile}
+            autoFocus={window.innerWidth < 768}
           />
         </SearchInputWrapper>
 

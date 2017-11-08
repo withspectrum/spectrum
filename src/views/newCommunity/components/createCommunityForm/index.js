@@ -397,8 +397,6 @@ class CreateCommunityForm extends Component {
         : null
       : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <FormContainer>
         <Form>
@@ -430,7 +428,7 @@ class CreateCommunityForm extends Component {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!isMobile}
+            autoFocus={!window.innerWidth < 768}
             onBlur={this.checkSuggestedCommunities}
           >
             What is your community called?
