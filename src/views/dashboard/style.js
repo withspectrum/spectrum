@@ -488,7 +488,7 @@ export const ParticipantHead = styled.span`
   }
 `;
 
-export const EmptyParticipantHead = styled(ParticipantHead)`
+export const EmptyParticipantHead = styled.span`
   background: ${props =>
     props.active ? props.theme.bg.default : props.theme.bg.wash};
   display: flex;
@@ -501,6 +501,19 @@ export const EmptyParticipantHead = styled(ParticipantHead)`
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
   width: 24px;
   height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  pointer-events: auto;
+  position: relative;
+  margin-left: -8px;
+  border-radius: 24px;
+  transform: translateY(0);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    transition: transform 0.2s ease-in-out;
+  }
 `;
 
 export const MetaText = styled.span`
