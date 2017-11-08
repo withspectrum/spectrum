@@ -245,9 +245,10 @@ export const CommunityListName = styled.p`
 
 export const CommunityListReputation = styled.div`
   margin-left: 12px;
-  line-height: 1;
+  line-height: 1.2;
   color: ${props => props.theme.text.alt};
   width: 100%;
+  font-size: 12px;
 
   > div {
     > div {
