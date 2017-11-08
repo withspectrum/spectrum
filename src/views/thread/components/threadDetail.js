@@ -191,7 +191,7 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
-    if (!title || title.length === 0) {
+    if (!title || title.trim().length === 0) {
       dispatch(
         addToastWithTimeout('error', 'Be sure to save a title for your thread!')
       );
@@ -205,7 +205,7 @@ class ThreadDetailPure extends Component {
     const jsonBody = toJSON(body);
 
     const content = {
-      title,
+      title: title.trim(),
       body: JSON.stringify(jsonBody),
     };
 
@@ -388,7 +388,7 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        <ThreadContent>
+        <ThreadContent isEditing={isEditing}>
           <ThreadByline creator={thread.creator} />
 
           {isEditing ? (
@@ -442,6 +442,7 @@ class ThreadDetailPure extends Component {
           threadLock={this.threadLock}
           triggerDelete={this.triggerDelete}
           isEditing={isEditing}
+          title={this.state.title}
         />
       </ThreadWrapper>
     );

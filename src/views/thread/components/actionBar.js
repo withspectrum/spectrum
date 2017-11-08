@@ -62,6 +62,7 @@ type Props = {
   triggerDelete: Function,
   threadLock: Function,
   isSavingEdit: boolean,
+  title: string,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -147,7 +148,7 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, isEditing, isSavingEdit } = this.props;
+    const { thread, currentUser, isEditing, isSavingEdit, title } = this.props;
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
@@ -166,7 +167,11 @@ class ActionBar extends React.Component<Props, State> {
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
-              <Button loading={isSavingEdit} onClick={this.props.saveEdit}>
+              <Button
+                loading={isSavingEdit}
+                disabled={title.trim().length === 0}
+                onClick={this.props.saveEdit}
+              >
                 Save
               </Button>
             </EditDone>
