@@ -173,6 +173,9 @@ class NewThread extends Component {
   };
 
   handleKeyPress = (e: any) => {
+    // if the thread slider is open, we shouldn't be doing anything in DMs
+    if (this.props.threadSliderIsOpen) return;
+
     // destructure the whole state object
     const {
       searchString,
