@@ -223,6 +223,14 @@ export const FlyoutRow = styled(FlexRow)`
       border-radius: 0 0 4px 4px;
     }
   }
+
+  ${p =>
+    p.hideBelow &&
+    css`
+      @media screen and (max-width: ${p.hideBelow}px) {
+        display: none;
+      }
+    `};
 `;
 
 export const Byline = styled.div`
