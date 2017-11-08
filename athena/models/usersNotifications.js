@@ -1,10 +1,11 @@
 // @flow
 const { db } = require('./db');
+import type { DBUsersNotifications } from 'shared/types';
 
 export const storeUsersNotifications = (
   notificationId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersNotifications> => {
   return db
     .table('usersNotifications')
     .insert({

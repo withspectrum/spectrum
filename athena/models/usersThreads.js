@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+import type { DBUsersThreads } from 'shared/types';
 
 export const getThreadNotificationUsers = (
   id: string
@@ -17,7 +18,7 @@ export const getThreadNotificationUsers = (
 export const getUsersThread = (
   userId: string,
   threadId: string
-): Promise<Object> => {
+): Promise<?DBUsersThreads> => {
   return db
     .table('usersThreads')
     .getAll('userId', { index: 'userId' })

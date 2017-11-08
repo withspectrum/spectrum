@@ -1,21 +1,22 @@
 // @flow
 const { db } = require('./db');
+import type { DBUser } from 'shared/types';
 
-export const getUsers = (ids: Array<string>): Promise<Array<Object>> => {
+export const getUsers = (ids: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
     .getAll(...ids)
     .run();
 };
 
-export const getUserById = (id: string): Promise<Object> => {
+export const getUserById = (id: string): Promise<DBUser> => {
   return db
     .table('users')
     .get(id)
     .run();
 };
 
-export const getUserByEmail = (email: string): Promise<any> => {
+export const getUserByEmail = (email: string): Promise<?DBUser> => {
   return db
     .table('users')
     .getAll(email, { index: 'email' })
@@ -25,7 +26,7 @@ export const getUserByEmail = (email: string): Promise<any> => {
     });
 };
 
-export const getUserByUsername = (username: string): Promise<any> => {
+export const getUserByUsername = (username: string): Promise<?DBUser> => {
   return db
     .table('users')
     .getAll(username, { index: 'username' })
