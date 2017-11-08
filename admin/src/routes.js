@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-//$FlowFixMe
-import { Router, Route, Switch } from 'react-router';
-//$FlowFixMe
+import * as React from 'react';
+import { Router, Route, Switch, Redirect } from 'react-router';
 import styled from 'styled-components';
 import { history } from './helpers/history';
 import ModalRoot from './components/modals/modalRoot';
@@ -11,6 +9,7 @@ import Threads from './views/threads';
 import Communities from './views/communities';
 import Navbar from './views/navbar';
 import Dashboard from './views/dashboard';
+import PrivateRoute from './utils/routeAuth';
 
 const Body = styled.div`
   display: flex;
@@ -26,29 +25,21 @@ const Body = styled.div`
   }
 `;
 
-class Routes extends Component {
+class Routes extends React.Component<Props, State> {
   render() {
     return (
       <Router history={history}>
         <Body>
-          {/* Global navigation, notifications, message notifications, etc */}
           <Route component={Navbar} />
           <Route component={ModalRoot} />
           <Route component={Toasts} />
-
-          {/*
-            Switch only renders the first match. Subrouting happens downstream
-            https://reacttraining.com/react-router/web/api/Switch
-          */}
           <Switch>
-            <Route exact path="/" component={Dashboard} />
-
-            {/* App Pages */}
-            <Route path="/users/:username" component={Users} />
-            <Route path="/users" component={Users} />
-            <Route path="/communities/:slug" component={Communities} />
-            <Route path="/communities" component={Communities} />
-            <Route path="/threads" component={Threads} />
+            <PrivateRoute exact path="/" component={Dashboard} />
+            <PrivateRoute path="/users/:username" component={Users} />
+            <PrivateRoute path="/users" component={Users} />
+            <PrivateRoute path="/communities/:slug" component={Communities} />
+            <PrivateRoute path="/communities" component={Communities} />
+            <PrivateRoute path="/threads" component={Threads} />
           </Switch>
         </Body>
       </Router>
