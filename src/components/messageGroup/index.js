@@ -27,9 +27,13 @@ type SenderType = {
   name: string,
 };
 
-export const AuthorAvatar = (props: { sender: SenderType }) => {
-  const { sender } = props;
-
+export const AuthorAvatar = ({
+  sender,
+  showProfile,
+}: {
+  sender: SenderType,
+  showProfile: boolean,
+}) => {
   return (
     <Avatar
       user={sender}
@@ -38,7 +42,7 @@ export const AuthorAvatar = (props: { sender: SenderType }) => {
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
       size={24}
-      showProfile={props.showProfile}
+      showProfile={showProfile}
     />
   );
 };
