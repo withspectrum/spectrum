@@ -178,8 +178,6 @@ export default async (job: JobData) => {
   if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0)
     return;
 
-  console.log(recipientsWithoutMentions);
-
   // for each recipient that *wasn't* mentioned, create a notification in the db
   const notificationPromises = recipientsWithoutMentions.map(
     async recipient =>

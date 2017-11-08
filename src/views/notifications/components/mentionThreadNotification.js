@@ -82,8 +82,6 @@ export class MentionThreadNotification extends React.Component<Props, State> {
         : null;
     const thread = context;
 
-    console.log('thread', thread);
-
     return (
       <SegmentedNotificationCard>
         <ThreadContext>
