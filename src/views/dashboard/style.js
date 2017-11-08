@@ -143,6 +143,7 @@ export const CommunityListWrapper = styled.div`
 
 export const CommunityListItem = styled.div`
   margin: 4px 12px;
+  min-width: 48px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -186,6 +187,7 @@ export const CommunityListItem = styled.div`
 export const CommunityListPadding = styled.div`
   display: flex;
   padding: 6px;
+  min-width: 48px;
 `;
 
 export const Fixed = styled.div`
@@ -633,10 +635,22 @@ export const PillLink = styled(Link)`
   pointer-events: auto;
 `;
 
-export const PillLinkPinned = styled(PillLink)`
+export const PillLinkPinned = styled.div`
   background: ${props => props.theme.special.wash};
   border: 1px solid ${props => props.theme.special.border};
   color: ${props => props.theme.special.dark};
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  max-height: 24px;
+  line-height: 1;
+  .icon {
+    top: -1px;
+  }
 `;
 
 export const PillLabel = styled.span`
