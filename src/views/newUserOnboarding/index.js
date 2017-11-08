@@ -118,11 +118,10 @@ class NewUserOnboarding extends Component {
       },
     };
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <FullscreenView
-        hasBackground={!isMobile}
+        hasBackground
+        showBackgroundOnMobile={false}
         close={this.props.close}
         noCloseButton={this.props.noCloseButton}
       >

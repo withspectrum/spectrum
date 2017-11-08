@@ -23,8 +23,7 @@ export const LogoutButton = styled(Button)`
   }
 
   @media (max-width: 768px) {
-    border-radius: 0;
-    margin: 0;
+    display: none;
   }
 `;
 

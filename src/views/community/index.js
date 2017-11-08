@@ -166,7 +166,6 @@ class CommunityView extends React.Component<Props, State> {
       const { isMember, isOwner, isModerator } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
-      const isMobile = window.innerWidth < 768;
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
@@ -195,8 +194,7 @@ class CommunityView extends React.Component<Props, State> {
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
                 {isLoggedIn &&
-                  (!isMobile &&
-                    !community.communityPermissions.isOwner &&
+                  (!community.communityPermissions.isOwner &&
                     community.communityPermissions.isMember) && (
                     <LogoutButton
                       onClick={() => this.toggleMembership(community.id)}
@@ -205,9 +203,7 @@ class CommunityView extends React.Component<Props, State> {
                       Leave {community.name}
                     </LogoutButton>
                   )}
-                {!isMobile && (
-                  <ChannelList communitySlug={communitySlug.toLowerCase()} />
-                )}
+                <ChannelList communitySlug={communitySlug.toLowerCase()} />
               </Column>
 
               <Column type="primary">

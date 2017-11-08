@@ -986,16 +986,12 @@ export const LoadingSelect = () => (
   </ShimmerSelect>
 );
 
-const isMobile = window.innerWidth < 768;
-
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
-    {!isMobile && (
-      <Column type="secondary">
-        <LoadingProfile />
-        <LoadingList />
-      </Column>
-    )}
+    <Column hideOnMobile type="secondary">
+      <LoadingProfile />
+      <LoadingList />
+    </Column>
 
     <Column type="primary" alignItems="center">
       <LoadingComposer />

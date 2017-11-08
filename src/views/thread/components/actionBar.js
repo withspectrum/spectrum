@@ -271,23 +271,21 @@ class ActionBar extends React.Component<Props, State> {
                     onClick={this.toggleFlyout}
                   />
                   <Flyout>
-                    {window.innerWidth < 1024 && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon={
-                            thread.receiveNotifications
-                              ? 'notification-fill'
-                              : 'notification'
-                          }
-                          hoverColor={'text.default'}
-                          onClick={this.toggleNotification}
-                        >
-                          {thread.receiveNotifications
-                            ? 'Unfollow conversation'
-                            : 'Follow conversation'}
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
+                    <FlyoutRow hideBelow={1024}>
+                      <TextButton
+                        icon={
+                          thread.receiveNotifications
+                            ? 'notification-fill'
+                            : 'notification'
+                        }
+                        hoverColor={'text.default'}
+                        onClick={this.toggleNotification}
+                      >
+                        {thread.receiveNotifications
+                          ? 'Unfollow conversation'
+                          : 'Follow conversation'}
+                      </TextButton>
+                    </FlyoutRow>
 
                     {thread.isCreator && (
                       <FlyoutRow>

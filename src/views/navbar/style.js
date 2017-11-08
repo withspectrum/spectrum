@@ -49,6 +49,8 @@ export const Nav = styled(FlexRow)`
     position: relative;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   }
+
+  ${p => p.hideOnMobile && css`@media (max-width: 768px) {display: none;}`};
 `;
 
 export const Section = styled(FlexRow)`
@@ -68,6 +70,10 @@ export const LogoLink = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const SigninLink = styled.button`
