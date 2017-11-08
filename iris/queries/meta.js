@@ -10,6 +10,10 @@ module.exports = {
     meta: () => ({}),
   },
   Meta: {
+    isAdmin: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return false;
+      return true;
+    },
     coreMetrics: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
       return getCoreMetrics();

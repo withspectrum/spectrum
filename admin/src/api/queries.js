@@ -244,3 +244,12 @@ export const topThreadsQuery = graphql(
   GET_TOP_THREADS_QUERY,
   GET_TOP_THREADS_OPTIONS
 );
+
+export const IS_ADMIN_QUERY = gql`
+  query isAdmin {
+    meta {
+      isAdmin
+    }
+  }
+`;
+export const isAdmin = graphql(IS_ADMIN_QUERY);
