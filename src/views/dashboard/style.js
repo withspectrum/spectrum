@@ -643,11 +643,11 @@ export const PillLinkPinned = styled.div`
   height: 20px;
   border-radius: 4px;
   overflow: hidden;
-  padding: 4px 8px;
+  padding: 0 8px;
   margin-right: 8px;
   font-size: 12px;
   max-height: 24px;
-  line-height: 1;
+  line-height: 1.5;
   .icon {
     top: -1px;
   }
@@ -706,6 +706,8 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+  display: flex;
+  align-items: center;
 `;
 
 export const ChannelsContainer = styled.div`

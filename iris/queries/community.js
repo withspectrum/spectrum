@@ -503,5 +503,10 @@ module.exports = {
 
       return handleCheck();
     },
+    watercooler: async ({ watercoolerId }: { watercoolerId: string }) => {
+      return await getThreads([watercoolerId]).then(
+        res => (res && res.length > 0 ? res[0] : null)
+      );
+    },
   },
 };

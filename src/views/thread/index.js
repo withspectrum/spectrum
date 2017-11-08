@@ -179,6 +179,67 @@ class ThreadContainer extends React.Component<Props, State> {
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
+      if (thread.type === 'WATERCOOLER')
+        return (
+          <ThreadViewContainer
+            data-e2e-id="thread-view"
+            threadViewContext={threadViewContext}
+          >
+            <ThreadContentView slider={slider}>
+              <Head
+                title={title}
+                description={description}
+                image={thread.community.profilePhoto}
+              />
+              <Titlebar
+                title={thread.content.title}
+                subtitle={`${thread.community.name} / ${thread.channel.name}`}
+                provideBack={true}
+                backRoute={`/`}
+                noComposer
+                style={{ gridArea: 'header' }}
+              />
+              <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+                <Detail type={slider ? '' : 'only'}>
+                  {!isEditing && (
+                    <Messages
+                      threadType={thread.threadType}
+                      id={thread.id}
+                      currentUser={currentUser}
+                      forceScrollToBottom={this.forceScrollToBottom}
+                      forceScrollToTop={this.forceScrollToTop}
+                      contextualScrollToBottom={this.contextualScrollToBottom}
+                      shouldForceScrollOnMessageLoad={isParticipantOrCreator}
+                      shouldForceScrollToTopOnMessageLoad={
+                        !isParticipantOrCreator
+                      }
+                      hasMessagesToLoad={thread.messageCount > 0}
+                      isModerator={isModerator}
+                    />
+                  )}
+                </Detail>
+              </Content>
+
+              {!isEditing &&
+                canSendMessages &&
+                !isLocked && (
+                  <Input>
+                    <ChatInputWrapper type="only">
+                      <ChatInput
+                        threadType="story"
+                        threadData={thread}
+                        thread={thread.id}
+                        currentUser={isLoggedIn}
+                        forceScrollToBottom={this.forceScrollToBottom}
+                        onRef={chatInput => (this.chatInput = chatInput)}
+                      />
+                    </ChatInputWrapper>
+                  </Input>
+                )}
+            </ThreadContentView>
+          </ThreadViewContainer>
+        );
+
       return (
         <ThreadViewContainer
           data-e2e-id="thread-view"
