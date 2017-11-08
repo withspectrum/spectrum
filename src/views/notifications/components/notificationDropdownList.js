@@ -8,7 +8,8 @@ import { MiniNewChannelNotification } from './newChannelNotification';
 import { MiniNewThreadNotification } from './newThreadNotification';
 import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
 import { MiniCommunityInviteNotification } from './communityInviteNotification';
-import { MiniMentionNotification } from './mentionNotification';
+import { MiniMentionMessageNotification } from './mentionMessageNotification';
+import { MiniMentionThreadNotification } from './mentionThreadNotification';
 
 export const NotificationDropdownList = ({
   rawNotifications,
@@ -91,9 +92,19 @@ export const NotificationDropdownList = ({
               />
             );
           }
-          case 'MENTION': {
+          case 'MENTION_THREAD': {
             return (
-              <MiniMentionNotification
+              <MiniMentionThreadNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+              />
+            );
+          }
+          case 'MENTION_MESSAGE': {
+            return (
+              <MiniMentionMessageNotification
                 key={notification.id}
                 notification={notification}
                 currentUser={currentUser}

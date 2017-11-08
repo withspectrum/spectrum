@@ -14,6 +14,23 @@ export const getThreadNotificationUsers = (
     .run();
 };
 
+export const getUsersThread = (
+  userId: string,
+  threadId: string
+): Promise<Object> => {
+  return db
+    .table('usersThreads')
+    .getAll('userId', { index: 'userId' })
+    .filter({ threadId })
+    .run()
+    .then(data => {
+      // if no record exists
+      if (!data || data.length === 0) return null;
+      // otherwise only return the first record (in case of duplicates)
+      return data[0];
+    });
+};
+
 export const getUserNotificationPermissionsInThread = (
   userId: string,
   threadId: string
