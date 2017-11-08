@@ -232,6 +232,7 @@ class ThreadComposerWithData extends Component {
   }
 
   componentWillUnmount() {
+    this.closeComposer();
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
