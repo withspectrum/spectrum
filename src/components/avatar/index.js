@@ -212,39 +212,40 @@ class HoverProfile extends Component<ProfileProps> {
 }
 
 const AvatarWithFallback = ({ style, ...props }) => (
-  <StyledAvatarStatus size={props.size || 32} {...props}>
-    <StyledAvatar
-      data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
-      type="image/png"
-      size={props.size || 32}
-      style={style}
+  <StyledAvatar
+    data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
+    type="image/png"
+    size={props.size || 32}
+    style={style}
+    {...props}
+  >
+    <StyledAvatarFallback
       {...props}
-    >
-      <StyledAvatarFallback
-        {...props}
-        src={
-          props.community
-            ? `/img/default_community.svg`
-            : `/img/default_avatar.svg`
-        }
-      />
-    </StyledAvatar>
-    <HoverProfile {...props} />
-  </StyledAvatarStatus>
+      src={
+        props.community
+          ? `/img/default_community.svg`
+          : `/img/default_avatar.svg`
+      }
+    />
+  </StyledAvatar>
 );
 
 const Avatar = (props: Object): React$Element<any> => {
-  const { src, community, user, size, link, noLink } = props;
+  const { src, community, user, size, link, noLink, showProfile } = props;
   const source = src || community.profilePhoto || user.profilePhoto;
-  if (link && !noLink) {
-    return (
-      <StyledAvatarLink to={link}>
+
+  return (
+    <StyledAvatarStatus size={props.size || 32} {...props}>
+      {link && !noLink ? (
+        <StyledAvatarLink to={link}>
+          <AvatarWithFallback source={source} {...props} />
+        </StyledAvatarLink>
+      ) : (
         <AvatarWithFallback source={source} {...props} />
-      </StyledAvatarLink>
-    );
-  } else {
-    return <AvatarWithFallback source={source} {...props} />;
-  }
+      )}
+      {showProfile && <HoverProfile source={source} {...props} />}
+    </StyledAvatarStatus>
+  );
 };
 
 const map = state => ({ currentUser: state.users.currentUser });
