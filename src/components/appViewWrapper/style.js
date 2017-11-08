@@ -6,7 +6,7 @@ export const Wrapper = styled(FlexRow)`
   align-items: flex-start;
   justify-content: center;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: auto;
   width: 100%;
 

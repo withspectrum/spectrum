@@ -38,7 +38,7 @@ export const ThreadContentView = styled(FlexCol)`
     css`
       box-shadow: -1px 0 0 ${props => props.theme.bg.border},
         1px 0 0 ${props => props.theme.bg.border};
-    `} overflow-y: scroll;
+    `} overflow-y: auto;
   overflow-x: visible;
   max-width: 100%;
   max-height: 100%;
@@ -63,7 +63,7 @@ export const ThreadSidebarView = styled(FlexCol)`
   align-self: stretch;
   position: relative;
   right: 1px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: 1032px) {
     display: none;
@@ -74,7 +74,7 @@ export const Content = styled(FlexRow)`
   justify-content: center;
   align-items: flex-start;
   flex: auto;
-  overflow-y: scroll;
+  overflow-y: auto;
   grid-area: body;
   width: 100%;
   max-width: 1024px;
@@ -143,10 +143,10 @@ export const ThreadWrapper = styled(FlexCol)`
 `;
 
 export const ThreadContent = styled.div`
-  padding: 32px;
+  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
 
   @media (max-width: 1024px) {
-    padding: 16px;
+    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
   }
 `;
 
