@@ -143,10 +143,10 @@ export const ThreadWrapper = styled(FlexCol)`
 `;
 
 export const ThreadContent = styled.div`
-  padding: 32px;
+  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
 
   @media (max-width: 1024px) {
-    padding: 16px;
+    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
   }
 `;
 
