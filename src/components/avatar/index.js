@@ -248,4 +248,6 @@ const Avatar = (props: Object): React$Element<any> => {
 };
 
 const map = state => ({ currentUser: state.users.currentUser });
+
+//$FlowFixMe
 export default compose(connect(map), withRouter)(Avatar);
