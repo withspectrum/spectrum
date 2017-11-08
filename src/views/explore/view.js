@@ -86,8 +86,6 @@ export const CommunitySearch = (props: Props) => {
     }
   `;
 
-  const isMobile = window.innerWidth < 768;
-
   const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
 
   return (
