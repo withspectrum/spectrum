@@ -24,6 +24,16 @@ export const getReactions = (messageId: string): Promise<Array<DBReaction>> => {
     .run();
 };
 
+export const getReactionsForMessages = (
+  messageIds: Array<string>
+): Promise<Array<DBReaction>> => {
+  return db
+    .table('reactions')
+    .getAll(...messageIds, { index: 'messageId' })
+    .group('messageId')
+    .run();
+};
+
 export const getReaction = (reactionId: string): Promise<DBReaction> => {
   return db
     .table('reactions')

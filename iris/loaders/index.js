@@ -32,6 +32,7 @@ import {
   __createDirectMessageParticipantsLoader,
   __createDirectMessageSnippetLoader,
 } from './directMessageThread';
+import { __createReactionLoader } from './reaction';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
 const createLoaders = () => ({
@@ -58,6 +59,7 @@ const createLoaders = () => ({
   directMessageThread: __createDirectMessageThreadLoader(),
   directMessageParticipants: __createDirectMessageParticipantsLoader(),
   directMessageSnippet: __createDirectMessageSnippetLoader(),
+  messageReaction: __createReactionLoader(),
 });
 
 export default createLoaders;
