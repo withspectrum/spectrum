@@ -35,7 +35,10 @@ export const addEmbed = (editorState, attrs) => {
 
 export const parseEmbedUrl = url => {
   const isIframeTag = url.match(IFRAME_TAG);
-  if (isIframeTag) return IFRAME_TAG.exec(url)[2];
+  if (isIframeTag)
+    return {
+      url: IFRAME_TAG.exec(url)[2],
+    };
 
   const isFigmaUrl = url.match(FIGMA_URLS);
   if (isFigmaUrl)
