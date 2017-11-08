@@ -107,6 +107,8 @@ export default class Embed extends Component {
             {...elementProps}
             width={width}
             height={height}
+            allowFullScreen={true}
+            frameBorder="0"
             {...rest}
             src={src}
             className={theme.embedStyles.embed}
@@ -121,6 +123,8 @@ export default class Embed extends Component {
             {...elementProps}
             width={width}
             height={height}
+            allowFullScreen={true}
+            frameBorder="0"
             {...rest}
             src={src}
             className={theme.embedStyles.embed}
