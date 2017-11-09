@@ -1,6 +1,7 @@
 // Create a worker with bull and start a small webserver which responds with
 // health information
 const http = require('http');
+const EventEmitter = require('events');
 const createQueue = require('./create-queue');
 
 /*::
@@ -13,12 +14,16 @@ type QueueMap = {
 // e.g. [{ completed: 6 }, { completed: 2 }] => 8
 const sumArr = (
   input /*: Array<Object> */,
-  prop /*: string */ /*: number */
+  prop /*: number */ /*: string */
 ) => {
   return input.reduce((sum, item) => sum + item[prop], 0);
 };
 
 const createWorker = (queueMap /*: QueueMap */) => {
+  // We add one error listener per queue, so we have to set the max listeners
+  // to whatever it is set to + the amount of queues passed in
+  EventEmitter.defaultMaxListeners =
+    Object.keys(queueMap).length + EventEmitter.defaultMaxListeners;
   // Start processing the queues
   const queues = Object.keys(queueMap).map(name => {
     const queue = createQueue(name);
