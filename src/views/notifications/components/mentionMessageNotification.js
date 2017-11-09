@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { ActorsRow } from './actorsRow';
 import { getThreadById } from '../../../api/thread';
@@ -8,7 +7,6 @@ import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
-import { ThreadProfile } from '../../../components/profile';
 import {
   TextContent,
   SegmentedNotificationListRow,
@@ -36,15 +34,6 @@ type Props = {
 type State = {
   communityName: string,
 };
-
-const ThreadComponent = ({ data, ...rest }) => {
-  return <ThreadProfile profileSize="mini" data={data} {...rest} />;
-};
-
-const ThreadCreated = compose(getThreadById, displayLoadingCard)(
-  ThreadComponent
-);
-
 /*
   NOTE: @brianlovin
   These new thread notifications are handled with a contextId that matches a *thread*. This means that we can't easily access community information within the notification.
@@ -79,6 +68,12 @@ export class MentionMessageNotification extends React.Component<Props, State> {
 
     return (
       <NotificationCard>
+        <CardLink
+          to={{
+            pathname: window.location.pathname,
+            search: `?thread=${notification.context.id}`,
+          }}
+        />
         <SpecialContext>
           <Icon glyph="mention" />
           <TextContent pointer={true}>
@@ -88,11 +83,6 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         </SpecialContext>
         <Content>
           <AttachmentsWash>
-            <HzRule>
-              <hr />
-              <Icon glyph="message" />
-              <hr />
-            </HzRule>
             {message && (
               <Sender style={{ marginTop: '0' }}>
                 <AuthorAvatar sender={sender} />
@@ -110,11 +100,6 @@ export class MentionMessageNotification extends React.Component<Props, State> {
                   />
                 </MessageGroup>
               </Sender>
-            )}
-
-            {// if the mention wasn't in a message, show the thread card
-            !message && (
-              <ThreadCreated setName={this.setCommunityName} id={thread.id} />
             )}
           </AttachmentsWash>
         </Content>

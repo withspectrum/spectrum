@@ -69,7 +69,7 @@ class Message extends Component {
       <Wrapper
         me={me}
         selected={selectedId === message.id}
-        onClick={() => changeSelection(message.id)}
+        onClick={() => changeSelection && changeSelection(message.id)}
       >
         <Body
           id={message.id}

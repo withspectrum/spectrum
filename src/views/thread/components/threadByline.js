@@ -12,6 +12,7 @@ import {
   AuthorNameLink,
   AuthorNameNoLink,
   AuthorUsername,
+  ReputationRow,
 } from '../style';
 
 type Props = {
@@ -45,6 +46,7 @@ class ThreadByline extends React.Component<Props> {
           {creator.username ? (
             <AuthorNameLink to={`/users/${creator.username}`}>
               <AuthorName>{creator.name}</AuthorName>
+              <AuthorUsername>· @{creator.username}</AuthorUsername>
               {creator &&
                 creator.contextPermissions &&
                 creator.contextPermissions.isOwner && <Badge type="admin" />}
@@ -58,7 +60,7 @@ class ThreadByline extends React.Component<Props> {
             </AuthorNameNoLink>
           )}
 
-          <AuthorUsername>
+          <ReputationRow>
             {creator &&
               creator.contextPermissions &&
               creator.contextPermissions.reputation > 0 && (
@@ -66,7 +68,7 @@ class ThreadByline extends React.Component<Props> {
                   reputation={creator.contextPermissions.reputation}
                 />
               )}
-          </AuthorUsername>
+          </ReputationRow>
         </BylineMeta>
       </Byline>
     );
