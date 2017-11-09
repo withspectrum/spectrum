@@ -554,7 +554,7 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, isLoading, hasError, isInbox } = this.props;
+    const { isOpen, isLoading, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
     if (!isLoading && (!availableCommunities || !availableChannels)) {

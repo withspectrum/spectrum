@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import { injectGlobal } from 'styled-components';
-import { EditorState } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';

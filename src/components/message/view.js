@@ -14,8 +14,6 @@ import {
   Line,
   Paragraph,
 } from './style';
-import { toState, toPlainText } from 'shared/draft-utils';
-import { renderLinks } from 'src/helpers/utils';
 import mentionsDecorator from 'src/components/draftjs-editor/mentions-decorator';
 import linksDecorator from 'src/components/draftjs-editor/links-decorator';
 
@@ -38,7 +36,7 @@ const messageRenderer = {
 };
 
 export const Body = props => {
-  const { message, openGallery, pending, type, me, selected } = props;
+  const { message, openGallery, pending, type, me } = props;
 
   switch (type) {
     case 'text':

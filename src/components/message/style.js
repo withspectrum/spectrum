@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
+import { Gradient, zIndex, Transition, monoStack } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;

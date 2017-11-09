@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Avatar from '../../../components/avatar';
 import Badge from '../../../components/badges';
 import Reputation from '../../../components/reputation';
 import {

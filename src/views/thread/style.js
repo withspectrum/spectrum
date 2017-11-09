@@ -6,10 +6,8 @@ import Column from '../../components/column';
 import {
   FlexCol,
   FlexRow,
-  Truncate,
   H1,
   H3,
-  H4,
   Transition,
   zIndex,
   Tooltip,

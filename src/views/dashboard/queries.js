@@ -1,9 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
-import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 

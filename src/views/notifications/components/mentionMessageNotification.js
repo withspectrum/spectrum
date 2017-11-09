@@ -1,26 +1,19 @@
 // @flow
 import * as React from 'react';
-import compose from 'recompose/compose';
 import { ActorsRow } from './actorsRow';
-import { getThreadById } from '../../../api/thread';
-import { sortByDate } from '../../../helpers/utils';
-import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
 import {
   TextContent,
-  SegmentedNotificationListRow,
   AttachmentsWash,
   Content,
   NotificationCard,
   NotificationListRow,
   SpecialContext,
-  HzRule,
 } from '../style';
 import { Sender, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
-import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
 import {
   CardLink,
   CardContent,
@@ -42,19 +35,8 @@ type State = {
 */
 
 export class MentionMessageNotification extends React.Component<Props, State> {
-  constructor() {
-    super();
-
-    this.state = {
-      communityName: '',
-    };
-  }
-
-  setCommunityName = (name: string) => this.setState({ communityName: name });
-
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
 
     const actors = parseActors(notification.actors, currentUser, false);
     const sender = actors.asObjects[0];
@@ -64,7 +46,6 @@ export class MentionMessageNotification extends React.Component<Props, State> {
       notification.entities.length > 0
         ? notification.entities[0].payload
         : null;
-    const thread = context;
 
     return (
       <NotificationCard>
@@ -112,27 +93,12 @@ export class MiniMentionMessageNotification extends React.Component<
   Props,
   State
 > {
-  constructor() {
-    super();
-
-    this.state = {
-      communityName: '',
-    };
-  }
-
-  setCommunityName = (name: string) => this.setState({ communityName: name });
-
   render() {
     const { notification, currentUser } = this.props;
-    const { communityName } = this.state;
 
     const actors = parseActors(notification.actors, currentUser, false);
-    const sender = actors.asObjects[0];
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
-    const message =
-      notification.entities.length > 0 ? notification.entities[0] : null;
-    const thread = context;
 
     return (
       <NotificationListRow>

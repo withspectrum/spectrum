@@ -8,7 +8,7 @@ import isURL from 'validator/lib/isURL';
 import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
-import { openComposer, closeComposer } from '../../actions/composer';
+import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
