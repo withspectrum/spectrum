@@ -77,16 +77,21 @@ export default async ({ data }: { data: JobData }) => {
   if (usersThread && !usersThread.receiveNotifications) return;
 
   // prepare data for the in-app notification
-  // get the thread author info
-  const actor = await fetchPayload('USER', senderId);
-  // get the thread where the mention occured
-  const context = await fetchPayload('THREAD', threadId);
+
+  const [actor, context] = await Promise.all([
+    // get the thread author info
+    fetchPayload('USER', senderId),
+    // get the thread where the mention occured
+    fetchPayload('THREAD', threadId),
+  ]);
+
   // create a payload for the message if the mention was in a message
   // if there is no message id, return the thread info as the entity
   const entity =
     mentionType === 'message' && messageId
       ? await fetchPayload('MESSAGE', messageId)
       : context;
+
   // we handle mentions in threads vs messages differently in the client, so assign different event types
   const event = mentionType === 'thread' ? 'MENTION_THREAD' : 'MENTION_MESSAGE';
 
@@ -101,40 +106,51 @@ export default async ({ data }: { data: JobData }) => {
     }
   );
 
-  // create a new notification record to be displayed in-app
-  const storedNotification = await storeNotification(newNotification);
+  const [storedNotification, shouldEmail] = await Promise.all([
+    // create a new notification record to be displayed in-app
+    storeNotification(newNotification),
+    getEmailStatus(recipient.id, 'newMention'),
+  ]);
 
-  const shouldEmail = await getEmailStatus(recipient.id, 'newMention');
   // if the user shouldn't get an email, just add an in-app notif
   if (!shouldEmail)
     return storeUsersNotifications(storedNotification.id, recipient.id);
 
   // if the mention was in a message, get the data about the message
-  const message = messageId ? await getMessageById(messageId) : null;
-  // get the user data for the message sender or thread creator
-  const sender = await getUserById(senderId);
-  // get info about the community where the mention happened
-  const community = await getCommunityById(thread.communityId);
-  // get info about the channel where the mention happened
-  const channel = await getChannelById(thread.channelId);
+  const messagePromise = messageId ? await getMessageById(messageId) : null;
+
+  const [message, sender, community, channel] = await Promise.all([
+    messagePromise,
+    // get the user data for the message sender or thread creator
+    getUserById(senderId),
+    // get info about the community where the mention happened
+    getCommunityById(thread.communityId),
+    // get info about the channel where the mention happened
+    getChannelById(thread.channelId),
+  ]);
 
   // compose preview text for the email
   const rawThreadBody =
     thread.type === 'DRAFTJS'
-      ? toPlainText(toState(JSON.parse(thread.content.body || '')))
+      ? thread.content.body
+        ? toPlainText(toState(JSON.parse(thread.content.body)))
+        : ''
       : thread.content.body || '';
+
   const threadBody =
     rawThreadBody && rawThreadBody.length > 10
       ? truncate(rawThreadBody.trim(), 280)
       : rawThreadBody.trim();
   const primaryActionLabel = 'View conversation';
 
-  const rawMessageBody =
-    message && toPlainText(toState(JSON.parse(message.content.body || '')));
-  // if the message was super long, truncate it
-  const messageBody = rawMessageBody
-    ? truncate(rawMessageBody.trim(), 280)
+  const rawMessageBody = message
+    ? message.content.body
+      ? toPlainText(toState(JSON.parse(message.content.body)))
+      : ''
     : null;
+
+  // if the message was super long, truncate it
+  const messageBody = rawMessageBody && truncate(rawMessageBody.trim(), 280);
 
   // otherwise send an email and add the in-app notification
   const QUEUE_NAME =

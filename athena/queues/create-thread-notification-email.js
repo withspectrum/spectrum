@@ -15,9 +15,11 @@ const createThreadNotificationEmail = async (
   thread: DBThread,
   recipients: Array<DBUser>
 ) => {
-  const creator = await getUserById(thread.creatorId);
-  const community = await getCommunityById(thread.communityId);
-  const channel = await getChannelById(thread.channelId);
+  const [creator, community, channel] = await Promise.all([
+    getUserById(thread.creatorId),
+    getCommunityById(thread.communityId),
+    getChannelById(thread.channelId),
+  ]);
 
   const emailPromises = recipients.map(async recipient => {
     // no way to send the user an email
@@ -35,14 +37,14 @@ const createThreadNotificationEmail = async (
     // at this point the email is safe to send, construct data for Hermes
     const rawBody =
       thread.type === 'DRAFTJS'
-        ? toPlainText(toState(JSON.parse(thread.content.body || '')))
+        ? thread.content.body
+          ? toPlainText(toState(JSON.parse(thread.content.body)))
+          : ''
         : thread.content.body || '';
 
     // if the body is long, truncate it at 280 characters for the email preview
-    const body =
-      rawBody && rawBody.length > 10
-        ? truncate(rawBody.trim(), 280)
-        : rawBody.trim();
+    const body = rawBody && truncate(rawBody.trim(), 280);
+
     const primaryActionLabel = 'View conversation';
 
     return addQueue(

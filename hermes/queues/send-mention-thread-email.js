@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-direct-message-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
@@ -27,16 +28,10 @@ export default async (job: SendNewMentionEmailJob) => {
   const subject = `${sender.name} mentioned you in "${thread.content.title}"`;
   const preheader = thread.content.body;
 
-  const unsubscribeToken = await generateUnsubscribeToken(
-    recipient.id,
-    TYPE_NEW_MENTION
-  );
-
-  const muteThreadToken = await generateUnsubscribeToken(
-    recipient.id,
-    TYPE_MUTE_THREAD,
-    thread.id
-  );
+  const [unsubscribeToken, muteThreadToken] = await Promise.all([
+    generateUnsubscribeToken(recipient.id, TYPE_NEW_MENTION),
+    generateUnsubscribeToken(recipient.id, TYPE_MUTE_THREAD, thread.id),
+  ]);
 
   if (!recipient.email || !unsubscribeToken) return;
 
@@ -57,6 +52,9 @@ export default async (job: SendNewMentionEmailJob) => {
       },
     });
   } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
     console.log(err);
   }
 };

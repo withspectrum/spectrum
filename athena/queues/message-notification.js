@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('athena:queue:message-notification');
 import { toState, toPlainText } from 'shared/draft-utils';
-import { getMentions } from '../utils/getMentions';
+import getMentions from 'shared/get-mentions';
 import addQueue from '../utils/addQueue';
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';

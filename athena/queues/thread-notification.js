@@ -1,8 +1,8 @@
 // @flow
 const debug = require('debug')('athena:queue:new-thread-notification');
-import Raven from '../../shared/raven';
+import Raven from 'shared/raven';
 import addQueue from '../utils/addQueue';
-import getMentions from '../utils/getMentions';
+import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -30,9 +30,11 @@ export default async (job: JobData) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const actor = await fetchPayload('USER', incomingThread.creatorId);
-  const context = await fetchPayload('CHANNEL', incomingThread.channelId);
-  const entity = await createPayload('THREAD', incomingThread);
+  const [actor, context, entity] = await Promise.all([
+    fetchPayload('USER', incomingThread.creatorId),
+    fetchPayload('CHANNEL', incomingThread.channelId),
+    createPayload('THREAD', incomingThread),
+  ]);
   const eventType = 'THREAD_CREATED';
 
   // determine if a notification already exists
@@ -93,7 +95,9 @@ export default async (job: JobData) => {
 
   // see if anyone was mentioned in the thread
   const mentions = getMentions(
-    toPlainText(toState(JSON.parse(incomingThread.content.body || '')))
+    incomingThread.content.body
+      ? toPlainText(toState(JSON.parse(incomingThread.content.body)))
+      : ''
   );
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {

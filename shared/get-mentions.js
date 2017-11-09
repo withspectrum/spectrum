@@ -1,5 +1,5 @@
 // @flow
-import { MENTIONS } from 'shared/regexps';
+import { MENTIONS } from './regexps';
 
 export const getMentions = (text: string): Array<string> => {
   const mentions = text.match(MENTIONS) || [];

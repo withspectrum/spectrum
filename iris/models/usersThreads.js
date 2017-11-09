@@ -126,9 +126,6 @@ export const updateThreadNotificationStatusForUser = (
       // aren't a member of - e.g. someone mentioned them in a thread
       // so create a record
       if (!results || results.length === 0) {
-        console.log(
-          'this user is trying to unsub from a thread they dont have a record for'
-        );
         return db.table('usersThreads').insert({
           createdAt: new Date(),
           userId,
@@ -139,7 +136,6 @@ export const updateThreadNotificationStatusForUser = (
       }
 
       const record = results[0];
-      console.log('existing record', record);
       return db
         .table('usersThreads')
         .get(record.id)
