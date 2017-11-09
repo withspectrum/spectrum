@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 
 // invoked only when a thread is created or a user leaves a message on a thread.
 // Because a user could leave multiple messages on a thread, we first check
@@ -122,10 +120,34 @@ export const updateThreadNotificationStatusForUser = (
   return db
     .table('usersThreads')
     .getAll([userId, threadId], { index: 'userIdAndThreadId' })
-    .update({
-      receiveNotifications: value,
-    })
-    .run();
+    .run()
+    .then(results => {
+      // if no record exists, the user is trying to mute a thread they
+      // aren't a member of - e.g. someone mentioned them in a thread
+      // so create a record
+      if (!results || results.length === 0) {
+        console.log(
+          'this user is trying to unsub from a thread they dont have a record for'
+        );
+        return db.table('usersThreads').insert({
+          createdAt: new Date(),
+          userId,
+          threadId,
+          isParticipant: false,
+          receiveNotifications: value,
+        });
+      }
+
+      const record = results[0];
+      console.log('existing record', record);
+      return db
+        .table('usersThreads')
+        .get(record.id)
+        .update({
+          receiveNotifications: value,
+        })
+        .run();
+    });
 };
 
 // when a thread is deleted, we make sure all relationships to that thread have notifications turned off

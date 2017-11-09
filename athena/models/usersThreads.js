@@ -21,7 +21,7 @@ export const getUsersThread = (
 ): Promise<?DBUsersThreads> => {
   return db
     .table('usersThreads')
-    .getAll('userId', { index: 'userId' })
+    .getAll(userId, { index: 'userId' })
     .filter({ threadId })
     .run()
     .then(data => {
