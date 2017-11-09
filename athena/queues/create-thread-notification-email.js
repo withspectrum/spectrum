@@ -9,24 +9,11 @@ import { getChannelById } from '../models/channel';
 import { SEND_THREAD_CREATED_NOTIFICATION_EMAIL } from './constants';
 import { toPlainText, toState } from 'shared/draft-utils';
 import addQueue from '../utils/addQueue';
-
-type Thread = {
-  channelId: string,
-  communityId: string,
-  content: {
-    title: string,
-    body: string,
-  },
-  creatorId: string,
-};
-
-type Recipient = {
-  id: string,
-};
+import type { DBThread, DBUser } from 'shared/types';
 
 const createThreadNotificationEmail = async (
-  thread: Thread,
-  recipients: Array<Recipient>
+  thread: DBThread,
+  recipients: Array<DBUser>
 ) => {
   console.log('thread', thread);
   console.log('recipients', recipients);
@@ -48,8 +35,8 @@ const createThreadNotificationEmail = async (
     // at this point the email is safe to send, construct data for Hermes
     const rawBody =
       thread.type === 'DRAFTJS'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
+        ? toPlainText(toState(JSON.parse(thread.content.body || '')))
+        : thread.content.body || '';
     const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
     const primaryActionLabel = 'View conversation';
 

@@ -51,6 +51,7 @@ export default async ({ data }: { data: JobData }) => {
   // NOTE: this will only block notifications from going to people mentioned
   // in a private channel where the user is not a member. Users can still be
   // mentioned in public channels where they are not a member
+  // $FlowFixMe
   const thread = await getThreadById(threadId);
   const { isPrivate } = await getChannelById(thread.channelId);
   const {
@@ -113,8 +114,8 @@ export default async ({ data }: { data: JobData }) => {
   // compose preview text for the email
   const rawThreadBody =
     thread.type === 'DRAFTJS'
-      ? toPlainText(toState(JSON.parse(thread.content.body)))
-      : thread.content.body;
+      ? toPlainText(toState(JSON.parse(thread.content.body || '')))
+      : thread.content.body || '';
   const threadBody =
     rawThreadBody && rawThreadBody.length > 10
       ? truncate(rawThreadBody, 280)

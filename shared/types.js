@@ -180,6 +180,7 @@ type DBThreadEdits = {
 };
 
 export type DBThread = {
+  id: string,
   channelId: string,
   communityId: string,
   content: {

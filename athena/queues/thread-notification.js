@@ -18,19 +18,11 @@ import {
 import { getUsers } from '../models/user';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
+import type { DBThread } from 'shared/types';
 
 type JobData = {
   data: {
-    thread: {
-      id: string,
-      channelId: string,
-      creatorId: string,
-      communityId: string,
-      content: {
-        title: string,
-        body: any,
-      },
-    },
+    thread: DBThread,
     userId: string,
   },
 };
@@ -96,7 +88,7 @@ export default async (job: JobData) => {
   );
   // see if anyone was mentioned in the thread
   const mentions = getMentions(
-    toPlainText(toState(JSON.parse(incomingThread.content.body)))
+    toPlainText(toState(JSON.parse(incomingThread.content.body || '')))
   );
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {
@@ -113,7 +105,7 @@ export default async (job: JobData) => {
   // if a user was mentioned, they should only get the mention email
   // and not get a new thread email, so remove them here
   const recipientsWithoutMentions = filteredRecipients.filter(r => {
-    return mentions.indexOf(r.username) < 0;
+    return r.username && mentions.indexOf(r.username) < 0;
   });
 
   if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0)
