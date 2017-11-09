@@ -20,7 +20,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
-export const getMessages = (threadId: String): Promise<Array<Message>> => {
+export const getMessages = (threadId: string): Promise<Array<Message>> => {
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
@@ -51,7 +51,7 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
 };
 
 export const getMediaMessagesForThread = (
-  threadId: String
+  threadId: string
 ): Promise<Array<Message>> => {
   return getMessages(threadId).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
