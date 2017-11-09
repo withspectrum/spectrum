@@ -84,6 +84,11 @@ class CommunityWithData extends Component {
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
 
+        // onboarding
+        if (this.props.joinedCommunity) {
+          this.props.joinedCommunity(isMember ? 1 : -1, false);
+        }
+
         track('community', isMember ? 'joined' : 'unjoined', null);
 
         const str = isMember

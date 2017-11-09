@@ -10,7 +10,11 @@ import { CommunityProfile } from '../../../../components/profile';
 
 class TopCommunitiesPure extends Component {
   render() {
-    const { data: { topCommunities, error }, hasJoined } = this.props;
+    const {
+      data: { topCommunities, error },
+      hasJoined,
+      joinedCommunity,
+    } = this.props;
     // don't display communities where the user is blocked
     const filteredCommunities = topCommunities.filter(
       community => !community.communityPermissions.isBlocked
@@ -25,6 +29,7 @@ class TopCommunitiesPure extends Component {
                 profileSize={'upsell'}
                 data={{ community }}
                 key={community.id}
+                joinedCommunity={joinedCommunity}
               />
             );
           })}
