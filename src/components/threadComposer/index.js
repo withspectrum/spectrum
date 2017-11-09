@@ -475,6 +475,7 @@ class ThreadComposerWithData extends Component {
 
         // stop the loading spinner on the publish button
         this.setState({
+          postWasPublished: true,
           isPublishing: false,
         });
 
