@@ -32,7 +32,6 @@ class InboxThread extends Component {
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
-    const isMobile = window && window.innerWidth < 768;
     const isPinned = data.id === this.props.pinnedThreadId;
 
     if (type === 'WATERCOOLER' && !hasActiveCommunity) return null;
@@ -86,22 +85,16 @@ class InboxThread extends Component {
 
     return (
       <InboxThreadItem active={active}>
-        {isMobile ? (
-          <InboxLinkWrapper
-            to={{
-              pathname: window.location.pathname,
-              search: `?thread=${data.id}`,
-            }}
-          />
-        ) : (
-          <InboxLinkWrapper
-            to={{
-              pathname: window.location.pathname,
-              search: `?t=${data.id}`,
-            }}
-            onClick={() => this.props.dispatch(changeActiveThread(data.id))}
-          />
-        )}
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search:
+              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+          }}
+          onClick={() =>
+            window.innerWidth > 768 &&
+            this.props.dispatch(changeActiveThread(data.id))}
+        />
         <InboxThreadContent>
           <ThreadCommunityInfo
             thread={data}
