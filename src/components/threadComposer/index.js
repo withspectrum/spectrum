@@ -63,6 +63,7 @@ class ThreadComposerWithData extends Component {
     linkPreviewTrueUrl: ?string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    postWasPublished: boolean,
   };
 
   constructor(props) {
@@ -80,6 +81,7 @@ class ThreadComposerWithData extends Component {
       linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      postWasPublished: false,
     };
   }
 
@@ -232,8 +234,15 @@ class ThreadComposerWithData extends Component {
   }
 
   componentWillUnmount() {
-    this.closeComposer();
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    const { postWasPublished } = this.state;
+
+    // if a post was published, in this session, clear redux so that the next
+    // composer open will start fresh
+    if (postWasPublished) return this.closeComposer('clear');
+
+    // otherwise, clear the composer normally and save the state
+    return this.closeComposer();
   }
 
   handleKeyPress = e => {
@@ -341,7 +350,13 @@ class ThreadComposerWithData extends Component {
     }
   };
 
-  closeComposer = () => {
+  closeComposer = (clear?: string) => {
+    // we will clear the composer if it unmounts as a result of a post
+    // being published, that way the next composer open will start fresh
+    if (clear) return this.props.dispatch(closeComposer('', ''));
+
+    // otherwise, we will save the editor state to rehydrate the title and
+    // body if the user reopens the composer in the same session
     const { title, body } = this.state;
     this.props.dispatch(closeComposer(title, body));
   };
