@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import withState from 'recompose/withState';
-// $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
@@ -14,6 +10,7 @@ import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
@@ -62,7 +59,10 @@ class ChatInput extends Component {
   }
 
   componentWillUnmount() {
+    const { state } = this.props;
     this.props.onRef(undefined);
+    if (toPlainText(state).trim() === '') return;
+    this.props.dispatch(closeChatInput(state));
   }
 
   triggerFocus = () => {
@@ -151,6 +151,7 @@ class ChatInput extends Component {
         },
       })
         .then(({ data: { addMessage } }) => {
+          dispatch(clearChatInput());
           track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -245,6 +246,7 @@ class ChatInput extends Component {
           file,
         })
           .then(({ addMessage }) => {
+            dispatch(clearChatInput());
             track(`${threadType} message`, 'media message created', null);
           })
           .catch(err => {
@@ -354,14 +356,20 @@ class ChatInput extends Component {
 
 const map = state => ({
   currentUser: state.users.currentUser,
+  chatInputRedux: state.composer.chatInput,
 });
 export default compose(
   sendMessageMutation,
   sendDirectMessageMutation,
-  withState('state', 'changeState', fromPlainText('')),
+  connect(map),
+  withState(
+    'state',
+    'changeState',
+    ({ chatInputRedux }) =>
+      chatInputRedux ? chatInputRedux : fromPlainText('')
+  ),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
-  }),
-  connect(map)
+  })
 )(ChatInput);
