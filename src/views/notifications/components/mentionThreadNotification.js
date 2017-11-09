@@ -14,8 +14,12 @@ import {
   TextContent,
   SegmentedNotificationListRow,
   AttachmentsWash,
-  ThreadContext,
   ContentWash,
+  NotificationCard,
+  NotificationListRow,
+  SpecialContext,
+  HzRule,
+  Content,
 } from '../style';
 import { Sender, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
@@ -25,13 +29,6 @@ import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
-import {
-  NotificationCard,
-  NotificationListRow,
-  SpecialContext,
-  HzRule,
-  Content,
-} from '../style';
 
 type Props = {
   notification: Object,
@@ -84,13 +81,13 @@ export class MentionThreadNotification extends React.Component<Props, State> {
 
     return (
       <SegmentedNotificationCard>
-        <ThreadContext>
+        <SpecialContext>
           <Icon glyph="mention" />
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </ThreadContext>
+        </SpecialContext>
         <ContentWash>
           <AttachmentsWash>
             <ThreadCreated
