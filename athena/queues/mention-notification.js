@@ -125,14 +125,16 @@ export default async ({ data }: { data: JobData }) => {
       : thread.content.body || '';
   const threadBody =
     rawThreadBody && rawThreadBody.length > 10
-      ? truncate(rawThreadBody, 280)
-      : rawThreadBody;
+      ? truncate(rawThreadBody.trim(), 280)
+      : rawThreadBody.trim();
   const primaryActionLabel = 'View conversation';
 
   const rawMessageBody =
-    message && toPlainText(toState(JSON.parse(thread.content.body || '')));
+    message && toPlainText(toState(JSON.parse(message.content.body || '')));
   // if the message was super long, truncate it
-  const messageBody = rawMessageBody ? truncate(rawMessageBody, 280) : null;
+  const messageBody = rawMessageBody
+    ? truncate(rawMessageBody.trim(), 280)
+    : null;
 
   // otherwise send an email and add the in-app notification
   const QUEUE_NAME =
@@ -159,10 +161,10 @@ export default async ({ data }: { data: JobData }) => {
         },
         message: {
           ...message,
-          content: {
-            messageBody,
-          },
           sender,
+          content: {
+            body: messageBody,
+          },
         },
       },
       {

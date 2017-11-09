@@ -40,7 +40,9 @@ const createThreadNotificationEmail = async (
 
     // if the body is long, truncate it at 280 characters for the email preview
     const body =
-      rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : rawBody;
+      rawBody && rawBody.length > 10
+        ? truncate(rawBody.trim(), 280)
+        : rawBody.trim();
     const primaryActionLabel = 'View conversation';
 
     return addQueue(

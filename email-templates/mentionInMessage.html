@@ -292,8 +292,7 @@
     }
 
     .thread-community-header {
-      padding: 16px;
-      border-bottom: 1px solid #DAE4F2;
+      padding: 16px 16px 0;
     }
 
     .thread-community-header img {
@@ -312,7 +311,7 @@
     }
 
     .thread-byline {
-      padding: 24px 16px 16px;
+      padding: 16px 16px 8px;
     }
 
     .thread-byline img {
@@ -331,12 +330,13 @@
     }
 
     .thread-title {
-      padding: 0 16px 8px;
+      padding: 8px 16px 16px;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     .thread-title h3 {
       font-weight: 500;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.4;
       margin-bottom: 0!important;
     }
@@ -358,6 +358,27 @@
 
     .thread-actions {
       padding: 16px;
+    }
+
+    .message-group-container {
+      padding: 8px 16px 16px;
+    }
+
+    .reply-body {
+      margin-bottom: 16px;
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      padding: 12px 16px; 
+      border-radius: 12px;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .reply-body p {
+      max-width: 100%;
+      font-weight: 400;
+      margin-top: 0!important;
+      color: #16171A;
     }
     </style>
   </head>
@@ -410,22 +431,6 @@
                         </tr>
                       </table>
 
-                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-byline">
-                        <tr width="100%" cellpadding="0" cellspacing="0">
-                          <td valign="middle" width="32">
-                            <a href="https://spectrum.chat/users/{{data.thread.creator.username}}" class="block">
-                              <img src={{data.thread.creator.profilePhoto}} width="32" height="32" />
-                            </a>
-                          </td>
-                          
-                          <td valign="middle">
-                            <a href="https://spectrum.chat/users/{{data.thread.creator.username}}" class="block">
-                              <p>Mentioned by {{data.thread.creator.name}} in</p>
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-
                       <table width="100%" cellpadding="0" cellspacing="0" class="thread-title">
                         <tr width="100%" cellpadding="0" cellspacing="0">
                           <td valign="middle">
@@ -436,18 +441,39 @@
                         </tr>
                       </table>
 
-
-                      {{#data.thread.content.body}}
-                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-body">
+                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-byline">
                         <tr width="100%" cellpadding="0" cellspacing="0">
+                          <td valign="middle" width="32">
+                            <a href="https://spectrum.chat/users/{{data.thread.creator.username}}" class="block">
+                              <img src={{data.thread.creator.profilePhoto}} width="32" height="32" />
+                            </a>
+                          </td>
+                          
                           <td valign="middle">
-                            <a href="https://spectrum.chat/thread/{{../id}}" class="block">
-                              <p>{{.}}</p>
+                            <a href="https://spectrum.chat/users/{{data.thread.creator.username}}" class="block">
+                              <p>{{data.message.sender.name}}</p>
                             </a>
                           </td>
                         </tr>
                       </table>
-                      {{/data.thread.content.body}}
+
+                      <table width="100%" cellpadding="0" cellspacing="0" class="message-group-container">
+                        <tr width="100%" cellpadding="0" cellspacing="0">
+                          <td valign="top">
+                            
+                            <table cellpadding="0" cellspacing="0" class="reply-body">
+                              <tr width="100%" cellpadding="0" cellspacing="0">
+                                <td valign="middle">
+                                  <a href="https://spectrum.chat/thread/{{data.thread.id}}" class="block">
+                                    <p>{{data.message.content.body}}</p>
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+
+                          </td>
+                        </tr>
+                      </table>
 
                       <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions">
                         <tr width="100%" cellpadding="0" cellspacing="0">
