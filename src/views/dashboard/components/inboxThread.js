@@ -43,7 +43,7 @@ class InboxThread extends Component {
               window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
           }}
           onClick={() =>
-            window.innerWidth < 768 &&
+            window.innerWidth > 768 &&
             this.props.dispatch(changeActiveThread(data.id))}
         />
         <InboxThreadContent>
