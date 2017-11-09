@@ -16,7 +16,7 @@ import {
   Content,
   NotificationCard,
   NotificationListRow,
-  SuccessContext,
+  SpecialContext,
   HzRule,
 } from '../style';
 import { Sender, MessageGroup } from '../../../components/messageGroup/style';
@@ -79,13 +79,13 @@ export class MentionMessageNotification extends React.Component<Props, State> {
 
     return (
       <NotificationCard>
-        <SuccessContext>
-          <Icon glyph="post-fill" />
+        <SpecialContext>
+          <Icon glyph="mention" />
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </SuccessContext>
+        </SpecialContext>
         <Content>
           <AttachmentsWash>
             <HzRule>
@@ -158,10 +158,10 @@ export class MiniMentionMessageNotification extends React.Component<
           }}
         />
         <CardContent>
-          <SuccessContext>
-            <Icon glyph="message-fill" />
+          <SpecialContext>
+            <Icon glyph="mention" />
             <ActorsRow actors={actors.asObjects} />
-          </SuccessContext>
+          </SpecialContext>
           <Content>
             <TextContent pointer={false}>
               {actors.asString} mentioned you in {context.asString} {date}

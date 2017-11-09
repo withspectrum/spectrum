@@ -28,7 +28,7 @@ import {
 import {
   NotificationCard,
   NotificationListRow,
-  SuccessContext,
+  SpecialContext,
   HzRule,
   Content,
 } from '../style';
@@ -85,7 +85,7 @@ export class MentionThreadNotification extends React.Component<Props, State> {
     return (
       <SegmentedNotificationCard>
         <ThreadContext>
-          <Icon glyph="post-fill" />
+          <Icon glyph="mention" />
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
@@ -139,10 +139,10 @@ export class MiniMentionThreadNotification extends React.Component<
           }}
         />
         <CardContent>
-          <SuccessContext>
-            <Icon glyph="message-fill" />
+          <SpecialContext>
+            <Icon glyph="mention" />
             <ActorsRow actors={actors.asObjects} />
-          </SuccessContext>
+          </SpecialContext>
           <Content>
             <TextContent pointer={false}>
               {actors.asString} mentioned you in {context.asString} {date}

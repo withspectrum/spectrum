@@ -166,6 +166,10 @@ export const SuccessContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
 `;
 
+export const SpecialContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.default};
+`;
+
 export const ReactionContext = styled(ContextRow)`
   color: ${({ theme }) => theme.warn.alt};
 `;
