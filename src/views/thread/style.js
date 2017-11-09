@@ -433,7 +433,7 @@ export const CommunityHeaderMetaCol = styled.div`
   flex-wrap: wrap;
   align-items: center;
   align-self: center;
-  margin-left: 16px;
+  margin-left: 12px;
   margin-right: 16px;
 `;
 
