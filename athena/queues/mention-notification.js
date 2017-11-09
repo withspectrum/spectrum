@@ -19,14 +19,9 @@ import {
   SEND_MENTION_THREAD_NOTIFICATION_EMAIL,
   SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL,
 } from './constants';
+import type { Mention } from 'shared/types';
 
-type JobData = {
-  threadId: string,
-  messageId?: string,
-  senderId: string,
-  username: string,
-  type: 'thread' | 'message',
-};
+type JobData = Mention;
 export default async ({ data }: { data: JobData }) => {
   debug('mention job created');
   const { threadId, messageId, senderId, username, type: mentionType } = data;
@@ -51,22 +46,30 @@ export default async ({ data }: { data: JobData }) => {
   // NOTE: this will only block notifications from going to people mentioned
   // in a private channel where the user is not a member. Users can still be
   // mentioned in public channels where they are not a member
-  // $FlowFixMe
   const thread = await getThreadById(threadId);
+
+  // if for some reason no thread was found, or the thread was deleted
+  // dont send any notification about the mention
+  if (!thread || thread.deletedAt) return;
+
   const { isPrivate } = await getChannelById(thread.channelId);
   const {
     isBlocked: isBlockedInCommunity,
   } = await getUserPermissionsInCommunity(thread.communityId, recipient.id);
   const {
-    isMember,
+    isMember: isMemberInChannel,
     isBlocked: isBlockedInChannel,
   } = await getUserPermissionsInChannel(recipient.id, thread.channelId);
   // don't notify people where they are blocked, or where the channel is private and they aren't a member
-  if (isBlockedInCommunity || isBlockedInChannel || (isPrivate && !isMember))
+  if (
+    isBlockedInCommunity ||
+    isBlockedInChannel ||
+    (isPrivate && !isMemberInChannel)
+  )
     return;
 
   // see if a usersThreads record exists. If it does, and notifications are muted, we
-  // should send an email. If the record doesn't exist, it means the person being
+  // should not send an email. If the record doesn't exist, it means the person being
   // mentioned either didn't create the thread or hasn't interacted with the thread yet,
   // in which case they should receive a notification
   const usersThread = await getUsersThread(recipient.id, threadId);
@@ -74,11 +77,16 @@ export default async ({ data }: { data: JobData }) => {
   if (usersThread && !usersThread.receiveNotifications) return;
 
   // prepare data for the in-app notification
+  // get the thread author info
   const actor = await fetchPayload('USER', senderId);
   // get the thread where the mention occured
   const context = await fetchPayload('THREAD', threadId);
   // create a payload for the message if the mention was in a message
-  const entity = messageId ? await fetchPayload('MESSAGE', messageId) : context;
+  // if there is no message id, return the thread info as the entity
+  const entity =
+    mentionType === 'message' && messageId
+      ? await fetchPayload('MESSAGE', messageId)
+      : context;
   // we handle mentions in threads vs messages differently in the client, so assign different event types
   const event = mentionType === 'thread' ? 'MENTION_THREAD' : 'MENTION_MESSAGE';
 
@@ -93,6 +101,7 @@ export default async ({ data }: { data: JobData }) => {
     }
   );
 
+  // create a new notification record to be displayed in-app
   const storedNotification = await storeNotification(newNotification);
 
   const shouldEmail = await getEmailStatus(recipient.id, 'newMention');
@@ -100,12 +109,10 @@ export default async ({ data }: { data: JobData }) => {
   if (!shouldEmail)
     return storeUsersNotifications(storedNotification.id, recipient.id);
 
-  // if the mention was in a notification, get the data about the message
+  // if the mention was in a message, get the data about the message
   const message = messageId ? await getMessageById(messageId) : null;
   // get the user data for the message sender or thread creator
-  const sender = messageId
-    ? await getUserById(senderId)
-    : await getUserById(thread.creatorId);
+  const sender = await getUserById(senderId);
   // get info about the community where the mention happened
   const community = await getCommunityById(thread.communityId);
   // get info about the channel where the mention happened
@@ -119,11 +126,12 @@ export default async ({ data }: { data: JobData }) => {
   const threadBody =
     rawThreadBody && rawThreadBody.length > 10
       ? truncate(rawThreadBody, 280)
-      : null;
+      : rawThreadBody;
   const primaryActionLabel = 'View conversation';
 
   const rawMessageBody =
-    message && toPlainText(toState(JSON.parse(thread.content.body)));
+    message && toPlainText(toState(JSON.parse(thread.content.body || '')));
+  // if the message was super long, truncate it
   const messageBody = rawMessageBody ? truncate(rawMessageBody, 280) : null;
 
   // otherwise send an email and add the in-app notification
@@ -131,12 +139,13 @@ export default async ({ data }: { data: JobData }) => {
     mentionType === 'thread'
       ? SEND_MENTION_THREAD_NOTIFICATION_EMAIL
       : SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL;
+
   return Promise.all([
     addQueue(
       QUEUE_NAME,
       {
         recipient,
-        sender: actor,
+        sender,
         primaryActionLabel,
         thread: {
           ...thread,

@@ -27,10 +27,10 @@ type JobData = {
   },
 };
 export default async (job: JobData) => {
-  const { thread: incomingThread, userId: currentUserId } = job.data;
-  debug(`new job for a thread by ${currentUserId}`);
+  const { thread: incomingThread } = job.data;
+  debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const actor = await fetchPayload('USER', currentUserId);
+  const actor = await fetchPayload('USER', incomingThread.creatorId);
   const context = await fetchPayload('CHANNEL', incomingThread.channelId);
   const entity = await createPayload('THREAD', incomingThread);
   const eventType = 'THREAD_CREATED';
@@ -42,11 +42,13 @@ export default async (job: JobData) => {
   );
 
   // handle the notification record in the db
+  // if it exists, we'll be updating it with new actors and entities
   const handleNotificationRecord = existing
     ? updateNotification
     : storeNotification;
 
   // handle the usersNotification record in the db
+  // if it exists, we'll mark it as new to trigger a badge in the app
   const handleUsersNotificationRecord = existing
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
@@ -76,16 +78,19 @@ export default async (job: JobData) => {
     nextNotificationRecord
   );
 
-  // get the members in the channel
+  // get the members in the channel who should receive notifications
   const recipients = await getMembersInChannelWithNotifications(
     incomingThread.channelId
   );
+
   // get all the user data for the members
   const recipientsWithUserData = await getUsers([...recipients]);
+
   // filter out the post author
   const filteredRecipients = recipientsWithUserData.filter(
     r => r.id !== incomingThread.creatorId
   );
+
   // see if anyone was mentioned in the thread
   const mentions = getMentions(
     toPlainText(toState(JSON.parse(incomingThread.content.body || '')))
@@ -112,14 +117,14 @@ export default async (job: JobData) => {
     return;
 
   // for each recipient that *wasn't* mentioned, create a notification in the db
-  const notificationPromises = recipientsWithoutMentions.map(
+  const usersNotificationPromises = recipientsWithoutMentions.map(
     async recipient =>
       await handleUsersNotificationRecord(updatedNotification.id, recipient.id)
   );
 
   return Promise.all([
     createThreadNotificationEmail(incomingThread, recipientsWithoutMentions), // handle emails separately
-    notificationPromises, // update or store notifications in-app
+    usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);

@@ -15,21 +15,21 @@ const createThreadNotificationEmail = async (
   thread: DBThread,
   recipients: Array<DBUser>
 ) => {
-  console.log('thread', thread);
-  console.log('recipients', recipients);
   const creator = await getUserById(thread.creatorId);
   const community = await getCommunityById(thread.communityId);
   const channel = await getChannelById(thread.channelId);
 
   const emailPromises = recipients.map(async recipient => {
     // no way to send the user an email
-    if (!recipient.email) return;
+    // if the user doesn't have a username, they have no way to access
+    // user settings from the frontend, so an email will be worthless
+    if (!recipient.email || !recipient.username) return;
 
-    // user is either online or has this notif type turned off
     const shouldSendEmail = await getEmailStatus(
       recipient.id,
       'newThreadCreated'
     );
+    // user is either online or has this notif type turned off
     if (!shouldSendEmail) return;
 
     // at this point the email is safe to send, construct data for Hermes
@@ -37,7 +37,10 @@ const createThreadNotificationEmail = async (
       thread.type === 'DRAFTJS'
         ? toPlainText(toState(JSON.parse(thread.content.body || '')))
         : thread.content.body || '';
-    const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
+
+    // if the body is long, truncate it at 280 characters for the email preview
+    const body =
+      rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : rawBody;
     const primaryActionLabel = 'View conversation';
 
     return addQueue(
@@ -63,6 +66,7 @@ const createThreadNotificationEmail = async (
     );
   });
 
+  // send all the emails
   return Promise.all([emailPromises]).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);

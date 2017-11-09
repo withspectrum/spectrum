@@ -2,8 +2,7 @@
 const debug = require('debug')('hermes:queue:send-new-direct-message-email');
 import sendEmail from '../send-email';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
-import { NEW_MENTION_TEMPLATE, TYPE_NEW_MENTION } from './constants';
-import capitalize from '../utils/capitalize';
+import { NEW_MENTION_THREAD_TEMPLATE, TYPE_NEW_MENTION } from './constants';
 
 type SendNewMentionEmailJobData = {
   recipient: {
@@ -56,7 +55,7 @@ export default async (job: SendNewMentionEmailJob) => {
 
   try {
     return sendEmail({
-      TemplateId: NEW_MENTION_TEMPLATE,
+      TemplateId: NEW_MENTION_THREAD_TEMPLATE,
       To: recipient.email,
       TemplateModel: {
         subject,

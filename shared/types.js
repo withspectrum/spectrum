@@ -270,6 +270,7 @@ export type DBUsersSettings = {
       newMessageInThreads: NotificationSetting,
       newThreadCreated: NotificationSetting,
       weeklyDigest: NotificationSetting,
+      newMention: NotificationSetting,
     },
   },
 };
@@ -281,4 +282,12 @@ export type DBUsersThreads = {
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
+};
+
+export type Mention = {
+  threadId: string,
+  messageId?: string,
+  senderId: string,
+  username: string,
+  type: 'thread' | 'message',
 };
