@@ -9,18 +9,21 @@ const SUBSCRIBE_TO_WEB_PUSH_MUTATION = gql`
 
 const SUBSCRIBE_TO_WEB_PUSH_OPTIONS = {
   props: ({ mutate }) => ({
-    subscribeToWebPush: subscription =>
-      mutate({
+    subscribeToWebPush: subscription => {
+      if (!subscription) return;
+      const json = subscription.toJSON();
+      return mutate({
         variables: {
           subscription: {
-            endpoint: subscription.endpoint,
+            endpoint: json.endpoint,
             keys: {
-              p256dh: subscription.getKey('p256dh'),
-              auth: subscription.getKey('auth'),
+              p256dh: json.keys.p256dh,
+              auth: json.keys.auth,
             },
           },
         },
-      }),
+      });
+    },
   }),
 };
 

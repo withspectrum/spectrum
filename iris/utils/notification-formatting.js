@@ -104,12 +104,16 @@ const formatNotification = (incomingNotification, currentUserId) => {
 
       href = `/thread/${notification.context.id}`;
       body = sentencify(
-        entities.map(
-          ({ payload }) =>
-            `"${payload.messageType === 'draftjs'
-              ? toPlainText(toState(payload.content.body))
-              : payload.content.body}"`
-        )
+        entities.map(({ payload }) => {
+          if (payload.messageType === 'draftjs') {
+            let body = payload.content.body;
+            if (typeof body === 'string')
+              body = JSON.parse(payload.content.body);
+            return `"${toPlainText(toState(body))}"`;
+          }
+
+          return `"${payload.content.body}"`;
+        })
       );
       break;
     }
