@@ -51,7 +51,7 @@ export default async ({ data }: { data: JobData }) => {
   // dont send any notification about the mention
   if (!thread || thread.deletedAt) return;
 
-  const { isPrivate, ...rest } = await getChannelById(thread.channelId);
+  const { isPrivate } = await getChannelById(thread.channelId);
   const {
     isBlocked: isBlockedInCommunity,
   } = await getUserPermissionsInCommunity(thread.communityId, recipient.id);
