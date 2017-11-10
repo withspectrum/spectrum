@@ -30,10 +30,10 @@ type SenderType = {
 
 export const AuthorAvatar = ({
   sender,
-  showProfile,
+  showProfile = false,
 }: {
   sender: SenderType,
-  showProfile: boolean,
+  showProfile?: boolean,
 }) => {
   return (
     <Avatar
