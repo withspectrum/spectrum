@@ -61,7 +61,11 @@ class RepExplainerModal extends React.Component<Props> {
               )
             ) : currentUser ? (
               <Rep>
-                <Avatar src={currentUser.profilePhoto} size={24} />
+                <Avatar
+                  src={currentUser.profilePhoto}
+                  user={currentUser}
+                  size={24}
+                />
                 <RepWrapper>
                   <Reputation
                     tipText={'Your total reputation'}

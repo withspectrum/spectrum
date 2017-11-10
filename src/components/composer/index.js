@@ -49,6 +49,7 @@ type State = {
   linkPreviewTrueUrl: ?string,
   linkPreviewLength: number,
   fetchingLinkPreview: boolean,
+  postWasPublished: boolean,
 };
 
 type Props = {
@@ -81,6 +82,7 @@ class ComposerWithData extends Component<Props, State> {
       linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      postWasPublished: false,
     };
   }
 
@@ -139,7 +141,14 @@ class ComposerWithData extends Component<Props, State> {
   componentWillUnmount() {
     // $FlowIssue
     document.removeEventListener('keydown', this.handleKeyPress, false);
-    this.closeComposer();
+    const { postWasPublished } = this.state;
+
+    // if a post was published, in this session, clear redux so that the next
+    // composer open will start fresh
+    if (postWasPublished) return this.closeComposer('clear');
+
+    // otherwise, clear the composer normally and save the state
+    return this.closeComposer();
   }
 
   handleKeyPress = e => {
@@ -196,7 +205,13 @@ class ComposerWithData extends Component<Props, State> {
     }
   }
 
-  closeComposer = () => {
+  closeComposer = (clear?: string) => {
+    // we will clear the composer if it unmounts as a result of a post
+    // being published, that way the next composer open will start fresh
+    if (clear) return this.props.dispatch(closeComposer('', ''));
+
+    // otherwise, we will save the editor state to rehydrate the title and
+    // body if the user reopens the composer in the same session
     const { title, body } = this.state;
     this.props.dispatch(closeComposer(title, body));
   };
@@ -304,6 +319,7 @@ class ComposerWithData extends Component<Props, State> {
         // stop the loading spinner on the publish button
         this.setState({
           isPublishing: false,
+          postWasPublished: true,
         });
 
         // redirect the user to the thread

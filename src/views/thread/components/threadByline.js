@@ -34,6 +34,7 @@ class ThreadByline extends React.Component<Props> {
     return (
       <Byline>
         <AuthorAvatar
+          user={creator}
           size={40}
           radius={40}
           isOnline={creator.isOnline}

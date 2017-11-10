@@ -15,18 +15,17 @@ import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
 import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
+import Avatar from '../avatar';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
 import Reputation from '../reputation';
 import {
-  ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderNoLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
-  CoverAvatar,
   CoverTitle,
   CoverSubtitle,
   CoverDescription,
@@ -96,13 +95,19 @@ const UserWithData = ({
             currentUser={currentUser}
           />
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar
+            <Avatar
+              user={user}
               size={64}
               radius={64}
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
               noLink
+              style={{
+                boxShadow: '0 0 0 2px #fff',
+                flex: '0 0 64px',
+                marginRight: '0',
+              }}
             />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
@@ -166,13 +171,19 @@ const UserWithData = ({
             currentUser={currentUser}
           />
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar
+            <Avatar
+              user={user}
               size={64}
               radius={64}
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
               noLink
+              style={{
+                boxShadow: '0 0 0 2px #fff',
+                flex: '0 0 64px',
+                marginRight: '0',
+              }}
             />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
@@ -209,12 +220,14 @@ const UserWithData = ({
           <ProfileHeader>
             {user.username ? (
               <ProfileHeaderLink to={`/users/${user.username}`}>
-                <ProfileAvatar
+                <Avatar
+                  user={user}
                   size={32}
                   radius={32}
                   isOnline={user.isOnline}
                   src={`${user.profilePhoto}`}
                   noLink
+                  style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
                   <Title>{user.name}</Title>
@@ -228,12 +241,14 @@ const UserWithData = ({
               </ProfileHeaderLink>
             ) : (
               <ProfileHeaderNoLink>
-                <ProfileAvatar
+                <Avatar
+                  user={user}
                   size={32}
                   radius={32}
                   isOnline={user.isOnline}
                   src={`${user.profilePhoto}`}
                   noLink
+                  style={{ marginRight: '16px' }}
                 />
                 <ProfileHeaderMeta>
                   <Title>{user.name}</Title>
