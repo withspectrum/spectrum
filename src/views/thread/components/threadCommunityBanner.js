@@ -115,28 +115,26 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar
-              src={community.profilePhoto}
-              community={community}
-              size={32}
-            />
-            <CommunityHeaderMetaCol>
-              <CommunityHeaderName>{community.name}</CommunityHeaderName>
-
-              {channel.slug !== 'general' && (
-                <PillLink to={`/${community.slug}/${channel.slug}`}>
-                  {channel.isPrivate && (
-                    <Lock>
-                      <Icon glyph="private" size={12} />
-                    </Lock>
-                  )}
-                  <PillLabel isPrivate={channel.isPrivate}>
-                    {channel.name}
-                  </PillLabel>
-                </PillLink>
-              )}
-            </CommunityHeaderMetaCol>
+            <Avatar src={community.profilePhoto} community size={32} />
           </CommunityHeaderLink>
+          <CommunityHeaderMetaCol>
+            <CommunityHeaderLink to={`/${community.slug}`}>
+              <CommunityHeaderName>{community.name}</CommunityHeaderName>
+            </CommunityHeaderLink>
+
+            {channel.slug !== 'general' && (
+              <PillLink to={`/${community.slug}/${channel.slug}`}>
+                {channel.isPrivate && (
+                  <Lock>
+                    <Icon glyph="private" size={12} />
+                  </Lock>
+                )}
+                <PillLabel isPrivate={channel.isPrivate}>
+                  {channel.name}
+                </PillLabel>
+              </PillLink>
+            )}
+          </CommunityHeaderMetaCol>
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (
