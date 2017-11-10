@@ -286,7 +286,10 @@ class Search extends Component {
                     focused={focusedSearchResult === community.id}
                     key={community.id}
                   >
-                    <SearchResultImage community src={community.profilePhoto} />
+                    <SearchResultImage
+                      community={community}
+                      src={community.profilePhoto}
+                    />
 
                     <SearchResultMetaWrapper>
                       <SearchResultName>{community.name}</SearchResultName>

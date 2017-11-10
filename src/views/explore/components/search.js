@@ -216,7 +216,7 @@ class Search extends Component {
                   >
                     <SearchLink to={`/${community.slug}`}>
                       <SearchResultImage
-                        community
+                        community={community}
                         src={community.profilePhoto}
                       />
                       <SearchResultTextContainer>
