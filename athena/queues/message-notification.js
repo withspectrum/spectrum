@@ -1,5 +1,8 @@
 // @flow
 const debug = require('debug')('athena:queue:message-notification');
+import { toState, toPlainText } from 'shared/draft-utils';
+import getMentions from 'shared/get-mentions';
+import addQueue from '../utils/addQueue';
 import Raven from '../../shared/raven';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -18,12 +21,18 @@ import { getThreadNotificationUsers } from '../models/usersThreads';
 type JobData = {
   data: {
     message: {
+      id: string,
+      messageType: string,
       senderId: string,
       threadId: string,
+      content: {
+        body: string,
+      },
     },
     userId: string,
   },
 };
+
 export default async (job: JobData) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
 
@@ -75,7 +84,33 @@ export default async (job: JobData) => {
     recipient => recipient.userId !== currentUserId
   );
 
-  if (!filteredRecipients || filteredRecipients.length === 0) {
+  // convert the message body to be checked for mentions
+  const body =
+    incomingMessage.messageType === 'draftjs'
+      ? toPlainText(toState(JSON.parse(incomingMessage.content.body)))
+      : incomingMessage.content.body;
+
+  // get mentions in the message
+  const mentions = getMentions(body);
+  if (mentions && mentions.length > 0) {
+    mentions.forEach(username => {
+      addQueue('mention notification', {
+        messageId: incomingMessage.id,
+        threadId: incomingMessage.threadId,
+        senderId: incomingMessage.senderId,
+        username: username,
+        type: 'message',
+      });
+    });
+  }
+
+  // if a user was mentioned, they should only get the mention notification
+  // and not get a new message notification, so remove them here
+  const recipientsWithoutMentions = filteredRecipients.filter(r => {
+    return mentions.indexOf(r.username) < 0;
+  });
+
+  if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0) {
     debug('No recipients for this message notification');
     return;
   }
@@ -89,7 +124,7 @@ export default async (job: JobData) => {
     : storeUsersNotifications;
 
   // send each recipient a notification
-  const formatAndBufferPromises = filteredRecipients.map(recipient => {
+  const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
     formatAndBufferNotificationEmail(
       recipient,
       {

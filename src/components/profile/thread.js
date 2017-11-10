@@ -8,7 +8,7 @@ import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
   render() {
-    const { data: { thread, error }, setName, location } = this.props;
+    const { data: { thread, error }, setName } = this.props;
     if (error || !thread) {
       return null;
     }

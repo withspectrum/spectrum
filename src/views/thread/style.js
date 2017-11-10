@@ -6,10 +6,8 @@ import Column from '../../components/column';
 import {
   FlexCol,
   FlexRow,
-  Truncate,
   H1,
   H3,
-  H4,
   Transition,
   zIndex,
   Tooltip,
@@ -234,7 +232,7 @@ export const FlyoutRow = styled(FlexRow)`
 `;
 
 export const Byline = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   color: ${({ theme }) => theme.brand.alt};
   display: flex;
   margin-bottom: 24px;
@@ -253,7 +251,7 @@ export const AuthorName = styled(H3)`
   font-weight: 500;
   max-width: 100%;
   color: ${props => props.theme.text.default};
-  margin-right: 8px;
+  margin-right: 6px;
   font-size: 14px;
 
   &:hover {
@@ -261,16 +259,20 @@ export const AuthorName = styled(H3)`
   }
 `;
 
-export const AuthorUsername = styled(H4)`
+export const AuthorUsername = styled.span`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-weight: 400;
+  margin-right: 6px;
 
   @media (max-width: 768px) {
     font-size: 12px;
   }
 `;
+
+export const ReputationRow = styled.div``;
 
 export const Location = styled(FlexRow)`
   font-weight: 500;

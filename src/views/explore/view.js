@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';
 import { Button } from '../../components/buttons';
-import { UpsellSignIn } from '../../components/upsell';
 import TopCommunityList from './components/topCommunities';
 import { CommunityProfile } from '../../components/profile';
 import { collections } from './collections';

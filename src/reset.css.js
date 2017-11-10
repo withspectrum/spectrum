@@ -232,6 +232,14 @@ injectGlobal`
     white-space: pre-wrap;
   }
 
+  .markdown div[data-block='true'] {
+    margin-top: 12px;
+  }
+
+  .markdown span[data-text='true'] {
+    line-height: 1.4;
+  }
+
   .markdown code span {
     max-width: 100%;
     white-space: pre-wrap;
