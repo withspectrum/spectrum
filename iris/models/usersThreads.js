@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 
 // invoked only when a thread is created or a user leaves a message on a thread.
 // Because a user could leave multiple messages on a thread, we first check
@@ -16,9 +14,21 @@ export const createParticipantInThread = (
     .getAll([userId, threadId], { index: 'userIdAndThreadId' })
     .run()
     .then(result => {
+      // if a result already exists, the user has an existing relationship
+      // with this thread
       if (result && result.length > 0) {
-        // if the user already has a relationship with the thread we don't need to do anything, return
-        return;
+        // if they are already a participant, we can return
+        const { id, isParticipant } = result[0];
+        if (isParticipant) return;
+
+        // otherwise, mark them as a participant
+        return db
+          .table('usersThreads')
+          .get(id)
+          .update({
+            isParticipant: true,
+          })
+          .run();
       } else {
         // if there is no relationship with the thread, create one
         return db.table('usersThreads').insert({
