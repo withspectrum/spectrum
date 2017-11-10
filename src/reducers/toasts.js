@@ -14,7 +14,6 @@ export default function toasts(state = initialState, action) {
   switch (action.type) {
     case 'ADD_TOAST': {
       return Object.assign({}, state, {
-        ...state,
         toasts: [...state.toasts, action.payload],
       });
     }
@@ -23,7 +22,6 @@ export default function toasts(state = initialState, action) {
         return toast.id !== action.id;
       });
       return Object.assign({}, state, {
-        ...state,
         toasts,
       });
     }
