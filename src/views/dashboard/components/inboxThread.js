@@ -24,7 +24,7 @@ import {
 class InboxThread extends Component {
   render() {
     const {
-      data: { attachments, participants, creator, type },
+      data: { attachments, participants, creator },
       data,
       active,
       hasActiveCommunity,
@@ -33,55 +33,6 @@ class InboxThread extends Component {
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
-
-    if (type === 'WATERCOOLER' && !hasActiveCommunity) return null;
-    if (type === 'WATERCOOLER' && hasActiveCommunity)
-      return (
-        <InboxThreadItem active={active} style={{ marginBottom: '16px' }}>
-          {isMobile ? (
-            <InboxLinkWrapper
-              to={{
-                pathname: window.location.pathname,
-                search: `?thread=${data.id}`,
-              }}
-            />
-          ) : (
-            <InboxLinkWrapper
-              to={{
-                pathname: window.location.pathname,
-                search: `?t=${data.id}`,
-              }}
-              onClick={() => this.props.dispatch(changeActiveThread(data.id))}
-            />
-          )}
-          <InboxThreadContent>
-            <WaterCoolerPill active={active} />
-            <ThreadTitle active={active}>The Spectrum Watercooler</ThreadTitle>
-
-            <ThreadMeta>
-              {(participantsExist || creator) && (
-                  <Facepile
-                    active={active}
-                    participants={participants}
-                    creator={data.creator}
-                  />
-                )}
-
-              {data.messageCount > 0 ? (
-                <MetaText offset={participants.length} active={active}>
-                  {data.messageCount > 1
-                    ? `${data.messageCount} messages`
-                    : `${data.messageCount} message`}
-                </MetaText>
-              ) : (
-                <MetaTextPill offset={participants.length} active={active} new>
-                  New thread!
-                </MetaTextPill>
-              )}
-            </ThreadMeta>
-          </InboxThreadContent>
-        </InboxThreadItem>
-      );
 
     return (
       <InboxThreadItem active={active}>
@@ -154,3 +105,58 @@ class InboxThread extends Component {
 }
 
 export default compose(connect(), withRouter)(InboxThread);
+
+class WatercoolerThreadPure extends React.Component {
+  render() {
+    const {
+      data: { attachments, participants, creator, community, messageCount, id },
+      active,
+    } = this.props;
+    const participantsExist = participants && participants.length > 0;
+
+    return (
+      <InboxThreadItem
+        active={active}
+        style={{ marginBottom: '16px', borderBottom: '1px solid #DFE7EF' }}
+      >
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search: window.innerWidth < 768 ? `?thread=${id}` : `?t=${id}`,
+          }}
+          onClick={() =>
+            window.innerWidth > 768 &&
+            this.props.dispatch(changeActiveThread(id))}
+        />
+        <InboxThreadContent>
+          <WaterCoolerPill active={active} />
+          <ThreadTitle active={active}>
+            The {community.name} Watercooler
+          </ThreadTitle>
+
+          <ThreadMeta>
+            {(participantsExist || creator) && (
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={creator}
+                />
+              )}
+
+            {messageCount > 0 && (
+              <MetaText offset={participants.length} active={active}>
+                {messageCount > 1
+                  ? `${messageCount} messages`
+                  : `${messageCount} message`}
+              </MetaText>
+            )}
+          </ThreadMeta>
+        </InboxThreadContent>
+      </InboxThreadItem>
+    );
+  }
+}
+
+export const WatercoolerThread = compose(connect(), withRouter)(
+  WatercoolerThreadPure
+);

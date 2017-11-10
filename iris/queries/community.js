@@ -504,6 +504,7 @@ module.exports = {
       return handleCheck();
     },
     watercooler: async ({ watercoolerId }: { watercoolerId: string }) => {
+      if (!watercoolerId) return null;
       return await getThreads([watercoolerId]).then(
         res => (res && res.length > 0 ? res[0] : null)
       );

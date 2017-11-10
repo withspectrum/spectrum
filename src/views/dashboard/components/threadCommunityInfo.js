@@ -67,7 +67,7 @@ export const WaterCoolerPill = ({ active }) => (
       <PinIcon>
         <Icon glyph="message" size={12} />
       </PinIcon>
-      <PillLabel>Community chat</PillLabel>
+      <PillLabel>Open chat</PillLabel>
     </PillLinkPinned>
   </CommunityInfoContainer>
 );

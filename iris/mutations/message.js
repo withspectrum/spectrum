@@ -12,6 +12,7 @@ import { setDirectMessageThreadLastActive } from '../models/directMessageThread'
 import {
   createParticipantInThread,
   deleteParticipantInThread,
+  createParticipantWithoutNotificationsInThread,
 } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
@@ -43,6 +44,8 @@ module.exports = {
         return new UserError('You must be signed in to send a message.');
       }
 
+      const thread = await getThread(message.threadId);
+
       // if the message was a dm thread, set the last seen and last active times
       if (message.threadType === 'directMessageThread') {
         setDirectMessageThreadLastActive(message.threadId);
@@ -52,8 +55,15 @@ module.exports = {
       // if the message was sent in a story thread, create a new participant
       // relationship to the thread - this will enable us to query against
       // thread.participants as well as have per-thread notifications for a user
-      if (message.threadType === 'story') {
+      if (message.threadType === 'story' && !thread.watercooler) {
         createParticipantInThread(message.threadId, currentUser.id);
+      }
+
+      if (thread.watercooler) {
+        createParticipantWithoutNotificationsInThread(
+          message.threadId,
+          currentUser.id
+        );
       }
 
       // all checks passed
@@ -155,7 +165,7 @@ module.exports = {
           communityPermissions.isModerator;
         if (!canModerate)
           throw new UserError(
-            `You don't have permission to delete this message.`
+            "You don't have permission to delete this message."
           );
       }
 
@@ -165,7 +175,7 @@ module.exports = {
         // We don't need to delete participants of direct message threads
         if (message.threadType === 'directMessageThread') return true;
 
-        debug(`thread message, check if user has more messages in thread`);
+        debug('thread message, check if user has more messages in thread');
         return userHasMessagesInThread(
           message.threadId,
           message.senderId

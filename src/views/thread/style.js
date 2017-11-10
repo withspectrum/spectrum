@@ -390,6 +390,7 @@ export const CommunityHeader = styled.div`
   padding: 14px 32px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   flex: auto;
+  background: ${props => props.theme.bg.default};
 
   @media (max-width: 728px) {
     padding: 16px;

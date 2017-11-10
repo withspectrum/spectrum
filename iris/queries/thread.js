@@ -102,7 +102,7 @@ module.exports = {
       }
     },
     messageConnection: (
-      { id }: { id: String },
+      { id, watercooler }: { id: String },
       { first = Infinity, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
@@ -117,15 +117,29 @@ module.exports = {
             message => message.id === cursor
           )
         )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
-            node: message,
-          })),
-        }));
+        .then(result => {
+          if (watercooler) {
+            return {
+              pageInfo: {
+                hasNextPage: result.hasMoreItems,
+              },
+              edges: result.list.slice(0, 200).map(message => ({
+                cursor: encode(message.id),
+                node: message,
+              })),
+            };
+          }
+
+          return {
+            pageInfo: {
+              hasNextPage: result.hasMoreItems,
+            },
+            edges: result.list.map(message => ({
+              cursor: encode(message.id),
+              node: message,
+            })),
+          };
+        });
     },
     creator: async (
       { creatorId, communityId }: { creatorId: string, communityId: string },

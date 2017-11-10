@@ -25,7 +25,6 @@ const Thread = /* GraphQL */ `
 	enum ThreadType {
 		SLATE
 		DRAFTJS
-		WATERCOOLER
 	}
 
 	type Attachment {
@@ -52,6 +51,7 @@ const Thread = /* GraphQL */ `
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
+		watercooler: Boolean
 	}
 
 	extend type Query {

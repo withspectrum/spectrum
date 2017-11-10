@@ -26,6 +26,7 @@ type Props = {
   toggleChannelSubscription: Function,
   currentUser: Object,
   hide: boolean,
+  watercooler: boolean,
   thread: {
     id: string,
     community: {
@@ -110,7 +111,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, id },
+      thread: { channel, community, id, watercooler },
       currentUser,
       hide,
     } = this.props;
@@ -122,7 +123,11 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           <CommunityHeaderLink to={`/${community.slug}`}>
             <Avatar src={community.profilePhoto} community size={32} />
             <CommunityHeaderMetaCol>
-              <CommunityHeaderName>{community.name}</CommunityHeaderName>
+              <CommunityHeaderName>
+                {watercooler
+                  ? `The ${community.name} community watercooler`
+                  : community.name}
+              </CommunityHeaderName>
 
               {channel.slug !== 'general' && (
                 <PillLink to={`/${community.slug}/${channel.slug}`}>
