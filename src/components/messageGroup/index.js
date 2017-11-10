@@ -27,16 +27,22 @@ type SenderType = {
   name: string,
 };
 
-export const AuthorAvatar = (props: { sender: SenderType }) => {
-  const { sender } = props;
-
+export const AuthorAvatar = ({
+  sender,
+  showProfile,
+}: {
+  sender: SenderType,
+  showProfile: boolean,
+}) => {
   return (
     <Avatar
+      user={sender}
       isOnline={sender.isOnline}
       src={sender.profilePhoto}
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
       size={24}
+      showProfile={showProfile}
     />
   );
 };
@@ -180,7 +186,7 @@ class Messages extends Component<MessageGroupProps, State> {
 
           return (
             <Sender key={initialMessage.id} me={me}>
-              {!me && !roboText && <AuthorAvatar sender={sender} />}
+              {!me && !roboText && <AuthorAvatar sender={sender} showProfile />}
               <MessageGroup me={me}>
                 <AuthorByline sender={sender} me={me} />
                 {group.map(message => {

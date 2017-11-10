@@ -348,7 +348,7 @@ class UpsellUpgradeToProPure extends Component {
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <Avatar src={`${currentUser.profilePhoto}`} />
+          <Avatar src={`${currentUser.profilePhoto}`} user={currentUser} />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>

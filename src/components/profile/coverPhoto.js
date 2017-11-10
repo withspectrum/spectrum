@@ -36,6 +36,7 @@ const CoverAction = styled(ProfileHeaderAction)`
 `;
 
 export const CoverPhoto = (props: Object) => {
+  console.log('USER', props.user);
   if (props.user) {
     return (
       <PhotoContainer coverURL={props.user.coverPhoto}>

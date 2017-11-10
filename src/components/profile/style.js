@@ -20,10 +20,6 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const ProfileAvatar = styled(Avatar)`margin-right: 16px;`;
-
-export const CommunityAvatar = styled(ProfileAvatar)`margin-right: 16px;`;
-
 export const ProfileHeaderLink = styled(Link)`
   display: flex;
   align-items: center;
@@ -192,12 +188,6 @@ export const CoverLink = styled(ProfileHeaderLink)`
   flex-direction: column;
   align-items: center;
   padding: 0 16px;
-`;
-
-export const CoverAvatar = styled(Avatar)`
-  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
-  flex: 0 0 64px;
-  margin-right: 0;
 `;
 
 export const CoverTitle = styled(Title)`
