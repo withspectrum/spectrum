@@ -13,6 +13,7 @@ import Message from '../message';
 import {
   Byline,
   Name,
+  Username,
   Wrapper,
   Timestamp,
   Time,
@@ -27,16 +28,22 @@ type SenderType = {
   name: string,
 };
 
-export const AuthorAvatar = (props: { sender: SenderType }) => {
-  const { sender } = props;
-
+export const AuthorAvatar = ({
+  sender,
+  showProfile = false,
+}: {
+  sender: SenderType,
+  showProfile?: boolean,
+}) => {
   return (
     <Avatar
+      user={sender}
       isOnline={sender.isOnline}
       src={sender.profilePhoto}
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
       size={24}
+      showProfile={showProfile}
     />
   );
 };
@@ -47,7 +54,8 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
   return (
     <Byline>
       <Link to={`/users/${sender.username}`}>
-        <Name>{me ? 'Me' : sender.name}</Name>
+        <Name>{me ? 'Me' : sender.name}</Name>{' '}
+        <Username>{sender.username && ` · @${sender.username}`}</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}
@@ -180,7 +188,7 @@ class Messages extends Component<MessageGroupProps, State> {
 
           return (
             <Sender key={initialMessage.id} me={me}>
-              {!me && !roboText && <AuthorAvatar sender={sender} />}
+              {!me && !roboText && <AuthorAvatar sender={sender} showProfile />}
               <MessageGroup me={me}>
                 <AuthorByline sender={sender} me={me} />
                 {group.map(message => {

@@ -2,8 +2,6 @@
 import React from 'react';
 import Titlebar from '../../../views/titlebar';
 import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
-import { HorizontalRule } from '../../../components/globals';
-import Icon from '../../../components/icons';
 import Sidebar from './sidebar';
 import {
   ThreadViewContainer,

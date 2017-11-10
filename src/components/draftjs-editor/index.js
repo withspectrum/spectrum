@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import { injectGlobal } from 'styled-components';
-import { EditorState } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
@@ -25,6 +23,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
+import mentionsDecorator from './mentions-decorator';
 
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
@@ -200,6 +199,7 @@ class Editor extends React.Component<Props, State> {
             autoCapitalize="sentences"
             autoComplete="on"
             autoCorrect="on"
+            decorators={[mentionsDecorator]}
             {...rest}
           />
           {!readOnly && (
@@ -279,6 +279,7 @@ class Editor extends React.Component<Props, State> {
               autoCapitalize="sentences"
               autoComplete="on"
               autoCorrect="on"
+              decorators={[mentionsDecorator]}
               {...rest}
             />
           </Wrapper>

@@ -7,7 +7,7 @@ import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { toPlainText, toState, toJson } from 'shared/draft-utils';
+import { toPlainText, toState } from 'shared/draft-utils';
 
 class Message extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -50,7 +50,6 @@ class Message extends Component {
       reaction,
       toggleReaction,
       context,
-      selected,
       selectedId,
       changeSelection,
     } = this.props;
@@ -69,7 +68,7 @@ class Message extends Component {
       <Wrapper
         me={me}
         selected={selectedId === message.id}
-        onClick={() => changeSelection(message.id)}
+        onClick={() => changeSelection && changeSelection(message.id)}
       >
         <Body
           id={message.id}

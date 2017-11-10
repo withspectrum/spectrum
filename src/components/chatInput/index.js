@@ -9,6 +9,8 @@ import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
+import mentionsDecorator from '../draftjs-editor/mentions-decorator';
+import linksDecorator from '../draftjs-editor/links-decorator';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
@@ -346,6 +348,7 @@ class ChatInput extends Component {
             code={code}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
+            decorators={[mentionsDecorator, linksDecorator]}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>

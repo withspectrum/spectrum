@@ -17,15 +17,9 @@ import { setThreadLockMutation } from '../mutations';
 import ThreadByline from './threadByline';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import { pinThreadMutation } from '../../../api/community';
-import { FlexRow } from '../../../components/globals';
-import Icon from '../../../components/icons';
-import Flyout from '../../../components/flyout';
-import Badge from '../../../components/badges';
-import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
-import Reputation from '../../../components/reputation';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import {
@@ -33,22 +27,8 @@ import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
-  Byline,
-  ContextRow,
-  DropWrap,
-  FlyoutRow,
-  EditDone,
   Timestamp,
   Edited,
-  BylineMeta,
-  AuthorAvatar,
-  AuthorName,
-  AuthorUsername,
-  Location,
-  ShareLinks,
-  ShareLink,
-  ShareButtons,
-  ShareButton,
 } from '../style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -369,17 +349,8 @@ class ThreadDetailPure extends Component {
       linkPreview,
       body,
       fetchingLinkPreview,
-      flyoutOpen,
       isSavingEdit,
     } = this.state;
-
-    const isChannelMember = thread.channel.channelPermissions.isMember;
-    const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const authorIsCommunityOwner =
-      thread.creator.contextPermissions &&
-      thread.creator.contextPermissions.isOwner;
-    const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited

@@ -13,6 +13,8 @@ import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
 import { CommunityInviteNotification } from './components/communityInviteNotification';
+import { MentionMessageNotification } from './components/mentionMessageNotification';
+import { MentionThreadNotification } from './components/mentionThreadNotification';
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -150,7 +152,6 @@ class NotificationsPure extends Component {
 
   render() {
     const { currentUser, data } = this.props;
-
     if (!currentUser) {
       return (
         <AppViewWrapper>
@@ -268,6 +269,24 @@ class NotificationsPure extends Component {
                   case 'COMMUNITY_INVITE': {
                     return (
                       <CommunityInviteNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'MENTION_MESSAGE': {
+                    return (
+                      <MentionMessageNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'MENTION_THREAD': {
+                    return (
+                      <MentionThreadNotification
                         key={notification.id}
                         notification={notification}
                         currentUser={currentUser}

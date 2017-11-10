@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/icons';
-import { Button, OutlineButton } from '../../../components/buttons';
+import { Button } from '../../../components/buttons';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
@@ -12,7 +12,6 @@ import { track } from '../../../helpers/events';
 import {
   CommunityHeader,
   CommunityHeaderName,
-  CommunityHeaderChannelTag,
   CommunityHeaderLink,
   CommunityHeaderMeta,
   CommunityHeaderMetaCol,
@@ -109,11 +108,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      thread: { channel, community, id },
-      currentUser,
-      hide,
-    } = this.props;
+    const { thread: { channel, community }, currentUser, hide } = this.props;
     const { isLoading } = this.state;
 
     return (
