@@ -27,7 +27,6 @@ export default async (job: SendNewMentionEmailJob) => {
   const { recipient, sender, thread, message } = job.data;
   const subject = `${sender.name} mentioned you in "${thread.content.title}"`;
   const preheader = message.content.body;
-  console.log('preheader', preheader);
 
   const unsubscribeToken = await generateUnsubscribeToken(
     recipient.id,

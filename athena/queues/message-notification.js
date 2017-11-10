@@ -92,6 +92,7 @@ export default async (job: JobData) => {
 
   // get mentions in the message
   const mentions = getMentions(body);
+  console.log('message-notification.js', mentions);
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
       addQueue('mention notification', {

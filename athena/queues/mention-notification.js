@@ -25,13 +25,14 @@ type JobData = Mention;
 export default async ({ data }: { data: JobData }) => {
   debug('mention job created');
   const { threadId, messageId, senderId, username, type: mentionType } = data;
-
+  console.log('mention-notification.js job data ', data);
   // if we have incomplete data
   if (!threadId || !senderId || !username) return;
   debug('all data required to process mention');
 
   // get the user who was mentioned
   const recipient = await getUserByUsername(username);
+  console.log('recipient', recipient);
 
   // escape this whole notification quickly if the username doesn't exist
   if (!recipient) return;
@@ -47,6 +48,7 @@ export default async ({ data }: { data: JobData }) => {
   // in a private channel where the user is not a member. Users can still be
   // mentioned in public channels where they are not a member
   const thread = await getThreadById(threadId);
+  console.log('thread', thread);
 
   // if for some reason no thread was found, or the thread was deleted
   // dont send any notification about the mention
@@ -73,6 +75,7 @@ export default async ({ data }: { data: JobData }) => {
   // mentioned either didn't create the thread or hasn't interacted with the thread yet,
   // in which case they should receive a notification
   const usersThread = await getUsersThread(recipient.id, threadId);
+  console.log('usersThread', usersThread);
   // if a record exists and the user doesn't want notifications for this thread, escape
   if (usersThread && !usersThread.receiveNotifications) return;
 
@@ -105,6 +108,8 @@ export default async ({ data }: { data: JobData }) => {
       entities: [entity],
     }
   );
+
+  console.log('newNotification', newNotification);
 
   const [storedNotification, shouldEmail] = await Promise.all([
     // create a new notification record to be displayed in-app
