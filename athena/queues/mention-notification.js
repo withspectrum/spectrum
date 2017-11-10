@@ -25,7 +25,6 @@ type JobData = Mention;
 export default async ({ data }: { data: JobData }) => {
   debug('mention job created');
   const { threadId, messageId, senderId, username, type: mentionType } = data;
-
   // if we have incomplete data
   if (!threadId || !senderId || !username) return;
   debug('all data required to process mention');

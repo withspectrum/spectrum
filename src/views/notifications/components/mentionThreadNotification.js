@@ -15,6 +15,7 @@ import {
   ContentWash,
   NotificationListRow,
   SpecialContext,
+  ThreadContext,
   Content,
 } from '../style';
 import {
@@ -64,13 +65,15 @@ export class MentionThreadNotification extends React.Component<Props, State> {
 
     return (
       <SegmentedNotificationCard>
-        <SpecialContext>
-          <Icon glyph="mention" />
-          <TextContent pointer={true}>
-            {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
-            {date}
-          </TextContent>
-        </SpecialContext>
+        <ThreadContext>
+          <SpecialContext>
+            <Icon glyph="mention" />
+            <TextContent pointer={true}>
+              {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
+              {date}
+            </TextContent>
+          </SpecialContext>
+        </ThreadContext>
         <ContentWash>
           <AttachmentsWash>
             <ThreadCreated id={notification.context.id} />

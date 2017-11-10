@@ -5,8 +5,13 @@ export const getMentions = (text: string): Array<string> => {
   const mentions = text.match(MENTIONS) || [];
   if (!mentions || mentions.length === 0) return [];
   const cleaned = removeAtSymbol(mentions);
-  const distinct = getDistinctMentions(cleaned);
+  const lowercase = makeLowercase(cleaned);
+  const distinct = getDistinctMentions(lowercase);
   return distinct;
+};
+
+const makeLowercase = (usernames: Array<string>): Array<string> => {
+  return usernames.map(u => u.toLowerCase());
 };
 
 const removeAtSymbol = (usernames: Array<string>): Array<string> => {
