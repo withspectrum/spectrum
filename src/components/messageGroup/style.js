@@ -18,8 +18,8 @@ export const Sender = styled.div`
   display: flex;
   flex: none;
   margin: 16px 16px 0;
-  align-items: flex-end;
-  justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  align-items: flex-start;
+  justify-content: flex-start;
   position: relative;
 `;
 
@@ -28,8 +28,8 @@ export const MessageGroup = styled.div`
   flex: auto;
   flex-direction: column;
   max-width: 100%;
-  margin-left: ${props => (props.me ? `0` : `8px`)};
-  align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
+  margin-left: 8px;
+  align-items: flex-start;
 `;
 
 export const Byline = styled.span`
