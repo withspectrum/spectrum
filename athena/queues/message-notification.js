@@ -92,17 +92,22 @@ export default async (job: JobData) => {
 
   // get mentions in the message
   const mentions = getMentions(body);
-  console.log('message-notification.js', mentions);
   if (mentions && mentions.length > 0) {
-    mentions.forEach(username => {
-      addQueue('mention notification', {
-        messageId: incomingMessage.id,
-        threadId: incomingMessage.threadId,
-        senderId: incomingMessage.senderId,
-        username: username,
-        type: 'message',
-      });
-    });
+    mentions.forEach(
+      username => {
+        addQueue('mention notification', {
+          messageId: incomingMessage.id,
+          threadId: incomingMessage.threadId,
+          senderId: incomingMessage.senderId,
+          username: username,
+          type: 'message',
+        });
+      },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
   }
 
   // if a user was mentioned, they should only get the mention notification

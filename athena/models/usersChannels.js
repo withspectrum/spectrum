@@ -28,9 +28,11 @@ export const getUserPermissionsInChannel = (
       if (!groups || groups.length === 0) {
         return {
           isMember: false,
+          isBlocked: false,
+          isPending: false,
         };
       }
 
-      return groups[0].reduction; // returns the usersChannel record
+      return groups[0].reduction[0]; // returns the usersChannel record
     });
 };
