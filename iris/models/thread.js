@@ -2,6 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { addQueue } from '../utils/workerQueue';
+import checkThreadToxicity from '../utils/moderationEvents/thread';
 const {
   listenToNewDocumentsIn,
   NEW_DOCUMENTS,
@@ -272,6 +273,7 @@ export const publishThread = (
         type: 'thread created',
         entityId: thread.id,
       });
+      checkThreadToxicity(thread);
 
       return thread;
     });

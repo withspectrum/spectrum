@@ -1,36 +1,18 @@
 // @flow
 const { db } = require('./db');
-import UserError from '../utils/UserError';
-import { createChannel, deleteChannel } from './channel';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import { addQueue } from '../utils/workerQueue';
 import { removeMemberInChannel } from './usersChannels';
+import type { DBCommunity } from 'shared/types';
 
-type DBCommunity = {
-  coverPhoto: string,
-  createdAt: Date,
-  description: string,
-  id: string,
-  name: string,
-  profilePhoto: string,
-  slug: string,
-  website?: string,
-  deletedAt?: Date,
-  pinnedThreadId?: string,
+export const getCommunityById = (id: string): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(id)
+    .run();
 };
-
-type GetCommunityByIdArgs = {
-  id: string,
-};
-
-type GetCommunityBySlugArgs = {
-  slug: string,
-};
-
-export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
-export type GetCommunitiesArgs = Array<string>;
 
 export const getCommunities = (
   communityIds: Array<string>
@@ -598,7 +580,7 @@ export const getTopCommunities = (amount: number): Array<DBCommunity> => {
     });
 };
 
-export const getRecentCommunities = (amount: number): Array<DBCommunity> => {
+export const getRecentCommunities = (): Array<DBCommunity> => {
   return db
     .table('communities')
     .orderBy({ index: db.desc('createdAt') })
