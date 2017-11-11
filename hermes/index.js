@@ -14,6 +14,7 @@ import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
+import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
@@ -28,6 +29,7 @@ import {
   SEND_DIGEST_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
+  SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -50,6 +52,7 @@ const server = createWorker({
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,
   [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,
   [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
+  [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
 });
 
 console.log(
