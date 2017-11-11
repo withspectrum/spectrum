@@ -20,7 +20,7 @@ const Bubble = styled.div`
           .theme.brand.default}`
       : ''};
   margin-top: 4px;
-  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
+  margin-bottom: 4px;
 
   clear: both;
 
