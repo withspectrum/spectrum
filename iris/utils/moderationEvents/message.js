@@ -14,8 +14,6 @@ export default (message: DBMessage) => {
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 
-  console.log('sending event to spectrum');
-
   return axios({
     method: 'post',
     url: 'https://api.prod.getspectrum.io/api/v1/classification',
@@ -33,7 +31,6 @@ export default (message: DBMessage) => {
     },
   })
     .then(async ({ data }) => {
-      console.log(data);
       if (!data || !data.result) return;
       const { toxic, toxicityConfidence } = data.result;
 
