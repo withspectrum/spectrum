@@ -20,7 +20,7 @@ export default job => {
   try {
     return sendEmail({
       TemplateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
-      To: 'briandlovin@gmail.com',
+      To: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
       TemplateModel: {
         subject,
         preheader: text,
