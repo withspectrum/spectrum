@@ -1,14 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { zIndex } from '../globals';
 import { Card } from '../card';
@@ -65,7 +60,7 @@ class HoverProfile extends Component<ProfileProps> {
       currentUser,
     } = this.props;
 
-    if (showProfile && (community || user)) {
+    if (showProfile && community) {
       if (community) {
         return (
           <HoverWrapper
@@ -109,7 +104,7 @@ class HoverProfile extends Component<ProfileProps> {
             </Container>
           </HoverWrapper>
         );
-      } else {
+      } else if (showProfile && user) {
         return (
           <HoverWrapper
             top={this.props.top ? true : this.props.bottom ? false : true}
@@ -232,7 +227,10 @@ const AvatarWithFallback = ({ style, ...props }) => (
 
 const Avatar = (props: Object): React$Element<any> => {
   const { src, community, user, size, link, noLink, showProfile } = props;
-  const source = src || community.profilePhoto || user.profilePhoto;
+  const source = src;
+
+  // $FlowFixMe
+  if (!source) return null;
 
   return (
     <StyledAvatarStatus size={props.size || 32} {...props}>

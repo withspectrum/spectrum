@@ -175,10 +175,13 @@ class CollectionSwitcher extends Component {
           <TopCommunityList
             selected={this.state.selectedView === 'Top Communities'}
           />
-          {collections.map(collection => {
+          {collections.map((collection, index) => {
             const { title, categories } = collection;
             return (
-              <CategoryWrapper selected={this.state.selectedView === title}>
+              <CategoryWrapper
+                key={index}
+                selected={this.state.selectedView === title}
+              >
                 {categories.map((category, i) => {
                   return (
                     <Category
