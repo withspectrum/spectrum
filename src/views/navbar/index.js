@@ -23,11 +23,6 @@ import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
 import { throttle } from '../../helpers/utils';
-import {
-  saveUserDataToLocalStorage,
-  logout,
-} from '../../actions/authentication';
-import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   Section,
@@ -46,7 +41,6 @@ class Navbar extends Component {
     dmUnseenCount: number,
     notifications: Array<Object>,
     subscription: ?Function,
-    showNewUserOnboarding: boolean,
   };
 
   constructor(props) {
@@ -56,7 +50,6 @@ class Navbar extends Component {
       dmUnseenCount: 0,
       notifications: [],
       subscription: null,
-      showNewUserOnboarding: false,
     };
 
     this.markAllNotificationsSeen = throttle(
@@ -247,34 +240,8 @@ class Navbar extends Component {
 
     const { data: { user }, dispatch, history, match } = this.props;
 
-    // if no user was found, escape
-    if (!user) {
-      // clear localstorage first
-      return removeItemFromStorage('spectrum');
-    }
-
+    // once we have a valid user, subscribe to notification count changes
     if (prevProps.data.user !== user && user !== null) {
-      if (!user.timezone) {
-        this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
-      }
-
-      dispatch(saveUserDataToLocalStorage(user));
-
-      // if the user doesn't have a username or they haven't joined any
-      // communities, we hide the nav to make room for the fullscreen onboarding
-      // flow
-      if (!user.username) {
-        this.setState({
-          showNewUserOnboarding: true,
-        });
-      }
-
-      // if the user lands on /home, it means they just logged in. If this code
-      // runs, we know a user was returned successfully and set to localStorage,
-      // so we can redirect to the root url
-      if (match.url === '/home') {
-        history.push('/');
-      }
       this.subscribe();
     }
   }
@@ -352,23 +319,6 @@ class Navbar extends Component {
     if (this.interval) {
       clearInterval(this.interval);
     }
-  };
-
-  logout = () => {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-    logout();
-  };
-
-  login = () => {
-    this.props.dispatch(openModal('LOGIN'));
-  };
-
-  closeNewUserOnboarding = () => {
-    return this.setState({
-      showNewUserOnboarding: false,
-    });
   };
 
   render() {
@@ -515,7 +465,7 @@ class Navbar extends Component {
                   isPro={loggedInUser.isPro}
                 />
               </IconLink>
-              <ProfileDropdown logout={this.logout} user={loggedInUser} />
+              <ProfileDropdown user={loggedInUser} />
             </IconDrop>
           </Section>
           <Section hideOnDesktop>

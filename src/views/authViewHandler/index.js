@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { getCurrentUserProfile, editUserMutation } from '../../api/user';
+import { userAuthQuery, editUserMutation } from '../../api/user';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -88,6 +88,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  getCurrentUserProfile,
+  userAuthQuery,
   editUserMutation
 )(AuthViewHandler);
