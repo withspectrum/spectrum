@@ -22,6 +22,10 @@ export const ChatInputWrapper = styled(FlexRow)`
     position: relative;
     z-index: ${zIndex.mobileInput};
   }
+
+  a {
+    text-decoration: underline;
+  }
 `;
 
 export const Form = styled.form`

@@ -3,11 +3,8 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
-import Icon from '../../../components/icons';
-import { HorizontalRule } from '../../../components/globals';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
-import NewThreadShare from '../../../components/upsell/newThreadShare';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { ChatWrapper } from '../style';
@@ -98,7 +95,6 @@ class MessagesWithData extends Component {
     const {
       data,
       isLoading,
-      currentUser,
       toggleReaction,
       forceScrollToBottom,
       hasMessagesToLoad,

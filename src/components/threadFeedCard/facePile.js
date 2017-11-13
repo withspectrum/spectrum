@@ -13,6 +13,7 @@ const messageAvatars = list => {
       src={participant.profilePhoto}
       role="presentation"
       key={participant.id}
+      user={participant}
     />
   ));
 };
@@ -29,6 +30,7 @@ const FacePile = props => {
       <Creator role="presentation">
         <Avatar
           size={32}
+          user={creator}
           isOnline={creator.isOnline}
           link={creator.username ? `/users/${creator.username}` : null}
           src={creator.profilePhoto}

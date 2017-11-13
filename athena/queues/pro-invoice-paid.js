@@ -27,6 +27,7 @@ export default async (job: JobData) => {
   debug(`new job for pro invoice id ${invoice.id}`);
 
   debug('processing pro invoice');
+  // $FlowFixMe
   const recurringPayment = await getRecurringPaymentFromInvoice(invoice);
   const userToEvaluate = await getUsers([recurringPayment.userId]);
 

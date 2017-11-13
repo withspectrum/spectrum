@@ -97,7 +97,10 @@ export const FeaturedCommunityWithData = props => {
         <Feature>
           <FeaturePresentation>
             <Link to={`/${community.slug}`}>
-              <FeaturePhoto src={`${community.profilePhoto}?w=120&dpr=2`} />
+              <FeaturePhoto
+                community={community}
+                src={`${community.profilePhoto}?w=120&dpr=2`}
+              />
             </Link>
             {returnButton()}
           </FeaturePresentation>

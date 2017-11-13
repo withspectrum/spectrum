@@ -1,12 +1,11 @@
 // @flow
-const debug = require('debug')('athena:queue:community-notification');
-import Raven from '../../shared/raven';
+const debug = require('debug')('athena:queue:new-thread-notification');
+import Raven from 'shared/raven';
 import addQueue from '../utils/addQueue';
+import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
-import truncate from 'shared/truncate';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import getEmailStatus from '../utils/get-email-status';
 import {
   storeNotification,
   updateNotification,
@@ -16,97 +15,26 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
-import { getUserById, getUsers } from '../models/user';
-import { getCommunityById } from '../models/community';
-import { getChannelById } from '../models/channel';
+import { getUsers } from '../models/user';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
-import { SEND_THREAD_CREATED_NOTIFICATION_EMAIL } from './constants';
-
-const createThreadNotificationEmail = async thread => {
-  const creator = await getUserById(thread.creatorId);
-  const community = await getCommunityById(thread.communityId);
-  const channel = await getChannelById(thread.channelId);
-  const potentialRecipients = await getMembersInChannelWithNotifications(
-    thread.channelId
-  );
-  const potentialRecipientsWithUserData = await getUsers([
-    ...potentialRecipients,
-  ]);
-  const recipients = potentialRecipientsWithUserData.filter(
-    r => r.id !== thread.creatorId
-  );
-
-  const emailPromises = recipients.map(async recipient => {
-    // no way to send the user an email
-    if (!recipient.email) return;
-
-    // user is either online or has this notif type turned off
-    const shouldSendEmail = await getEmailStatus(
-      recipient.id,
-      'newThreadCreated'
-    );
-    if (!shouldSendEmail) return;
-
-    // at this point the email is safe to send, construct data for Hermes
-    const rawBody =
-      thread.type === 'DRAFTJS'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
-    const body = rawBody && rawBody.length > 10 ? truncate(rawBody, 280) : null;
-    const primaryActionLabel = 'View conversation';
-
-    return addQueue(
-      SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-      {
-        recipient,
-        primaryActionLabel,
-        thread: {
-          ...thread,
-          creator,
-          community,
-          channel,
-          content: {
-            title: thread.content.title,
-            body,
-          },
-        },
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
-  });
-
-  return Promise.all([emailPromises]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
-    console.log(err);
-  });
-};
+import createThreadNotificationEmail from './create-thread-notification-email';
+import type { DBThread } from 'shared/types';
 
 type JobData = {
   data: {
-    thread: {
-      channelId: string,
-      creatorId: string,
-      communityId: string,
-      content: {
-        title: string,
-        body: any,
-      },
-    },
+    thread: DBThread,
     userId: string,
   },
 };
 export default async (job: JobData) => {
-  const { thread: incomingThread, userId: currentUserId } = job.data;
-  debug(`new job for a thread by ${currentUserId}`);
+  const { thread: incomingThread } = job.data;
+  debug(`new job for a thread by ${incomingThread.creatorId}`);
 
-  const actor = await fetchPayload('USER', currentUserId);
-  const context = await fetchPayload('CHANNEL', incomingThread.channelId);
-  const entity = await createPayload('THREAD', incomingThread);
+  const [actor, context, entity] = await Promise.all([
+    fetchPayload('USER', incomingThread.creatorId),
+    fetchPayload('CHANNEL', incomingThread.channelId),
+    createPayload('THREAD', incomingThread),
+  ]);
   const eventType = 'THREAD_CREATED';
 
   // determine if a notification already exists
@@ -116,11 +44,13 @@ export default async (job: JobData) => {
   );
 
   // handle the notification record in the db
+  // if it exists, we'll be updating it with new actors and entities
   const handleNotificationRecord = existing
     ? updateNotification
     : storeNotification;
 
   // handle the usersNotification record in the db
+  // if it exists, we'll mark it as new to trigger a badge in the app
   const handleUsersNotificationRecord = existing
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
@@ -150,22 +80,61 @@ export default async (job: JobData) => {
     nextNotificationRecord
   );
 
-  // get the owners of the community
+  // get the members in the channel who should receive notifications
   const recipients = await getMembersInChannelWithNotifications(
     incomingThread.channelId
   );
 
-  // don't trigger a notification for the person who just posted the thread
-  const notificationPromises = recipients
-    .filter(recipient => recipient !== incomingThread.creatorId)
-    .map(
-      async recipient =>
-        await handleUsersNotificationRecord(updatedNotification.id, recipient)
+  // get all the user data for the members
+  const recipientsWithUserData = await getUsers([...recipients]);
+
+  // filter out the post author
+  const filteredRecipients = recipientsWithUserData.filter(
+    r => r.id !== incomingThread.creatorId
+  );
+
+  // see if anyone was mentioned in the thread
+  const mentions = getMentions(
+    incomingThread.content.body
+      ? toPlainText(toState(JSON.parse(incomingThread.content.body)))
+      : ''
+  );
+  // if people were mentioned in the thread, let em know
+  if (mentions && mentions.length > 0) {
+    mentions.forEach(
+      username => {
+        addQueue('mention notification', {
+          threadId: incomingThread.id, // thread where the mention happened
+          senderId: incomingThread.creatorId, // user who created the mention
+          username: username,
+          type: 'thread',
+        });
+      },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
     );
+  }
+
+  // if a user was mentioned, they should only get the mention email
+  // and not get a new thread email, so remove them here
+  const recipientsWithoutMentions = filteredRecipients.filter(r => {
+    return r.username && mentions.indexOf(r.username) < 0;
+  });
+
+  if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0)
+    return;
+
+  // for each recipient that *wasn't* mentioned, create a notification in the db
+  const usersNotificationPromises = recipientsWithoutMentions.map(
+    async recipient =>
+      await handleUsersNotificationRecord(updatedNotification.id, recipient.id)
+  );
 
   return Promise.all([
-    createThreadNotificationEmail(incomingThread), // handle emails separately
-    notificationPromises, // update or store notifications in-app
+    createThreadNotificationEmail(incomingThread, recipientsWithoutMentions), // handle emails separately
+    usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);

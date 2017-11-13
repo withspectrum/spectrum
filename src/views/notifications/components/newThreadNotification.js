@@ -122,7 +122,7 @@ export class MiniNewThreadNotification extends React.Component<Props, State> {
   setCommunityName = (name: string) => this.setState({ communityName: name });
 
   render() {
-    const { notification, currentUser, history } = this.props;
+    const { notification, currentUser } = this.props;
     const { communityName } = this.state;
 
     const date = parseNotificationDate(notification.modifiedAt);

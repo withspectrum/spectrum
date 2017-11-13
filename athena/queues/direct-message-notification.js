@@ -146,6 +146,7 @@ export default async (job: JobData) => {
     // if the user has logged on since they saw the last message, and is no longer online, they should get an updated email
     // if the user has not logged on since the last notification message, we will skip this email until the next 30 minute window elapses in our `getExistingNotification` query.
     if (existing) {
+      // $FlowFixMe
       const { lastSeen } = await getUserById(recipient.userId);
       const { entities } = existing;
 

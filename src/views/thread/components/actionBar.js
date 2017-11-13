@@ -9,7 +9,6 @@ import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
 import { track } from '../../../helpers/events';
 import { toggleThreadNotificationsMutation } from '../mutations';
-import { toJSON } from 'shared/draft-utils';
 import {
   FollowButton,
   ShareButtons,
@@ -153,9 +152,6 @@ class ActionBar extends React.Component<Props, State> {
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const authorIsCommunityOwner =
-      thread.creator.contextPermissions &&
-      thread.creator.contextPermissions.isOwner;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     if (isEditing) {
@@ -291,7 +287,6 @@ class ActionBar extends React.Component<Props, State> {
                       <FlyoutRow>
                         <TextButton
                           icon="edit"
-                          hoverColor="text.alt"
                           tipText="Edit"
                           tipLocation="top-left"
                           onClick={this.props.toggleEdit}

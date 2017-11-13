@@ -13,6 +13,7 @@ import Message from '../message';
 import {
   Byline,
   Name,
+  Username,
   Wrapper,
   Timestamp,
   Time,
@@ -27,16 +28,22 @@ type SenderType = {
   name: string,
 };
 
-export const AuthorAvatar = (props: { sender: SenderType }) => {
-  const { sender } = props;
-
+export const AuthorAvatar = ({
+  sender,
+  showProfile = false,
+}: {
+  sender: SenderType,
+  showProfile?: boolean,
+}) => {
   return (
     <Avatar
+      user={sender}
       isOnline={sender.isOnline}
       src={sender.profilePhoto}
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
       size={24}
+      showProfile={showProfile}
     />
   );
 };
@@ -48,6 +55,7 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
     <Byline>
       <Link to={`/users/${sender.username}`}>
         <Name>{sender.name}</Name>
+        <Username>{sender.username && ` @${sender.username}`}</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}

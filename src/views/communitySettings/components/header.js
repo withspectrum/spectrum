@@ -13,10 +13,10 @@ type Props = {
 
 class Header extends React.Component<Props> {
   render() {
-    const { community: { name, profilePhoto, slug } } = this.props;
+    const { community: { name, profilePhoto, slug }, community } = this.props;
     return (
       <StyledHeader>
-        <Avatar community src={profilePhoto} size={48} radius={8} />
+        <Avatar community={community} src={profilePhoto} size={48} radius={8} />
         <HeaderText>
           <Link to={`/${slug}`}>
             <Subheading>{name}</Subheading>

@@ -22,6 +22,7 @@ const {
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
 import { addQueue } from '../utils/workerQueue';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 module.exports = {
   Mutation: {
@@ -213,6 +214,7 @@ module.exports = {
       });
 
       const editedThread = await editThread(newInput);
+
       if (!input.filesToUpload) return editedThread;
 
       const urls = await Promise.all(

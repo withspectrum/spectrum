@@ -44,7 +44,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
       <Wrapper>
         <Row>
           <Avatar
-            community
+            community={community}
             radius={4}
             src={`${community.profilePhoto}`}
             size={32}
@@ -162,6 +162,7 @@ export const UserListItem = ({
       <Row>
         <Avatar
           radius={20}
+          user={user}
           src={`${user.profilePhoto}`}
           size={40}
           link={user.username ? `/users/${user.username}` : null}

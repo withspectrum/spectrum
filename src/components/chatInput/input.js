@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
+import DraftEditor from 'draft-js-plugins-editor';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Prism from 'prismjs';

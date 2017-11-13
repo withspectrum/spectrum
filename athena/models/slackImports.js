@@ -2,6 +2,7 @@
 const { db } = require('./db');
 import axios from 'axios';
 const querystring = require('querystring');
+import type { DBSlackUser, DBSlackImport } from 'shared/types';
 
 export const getSlackUserListData = (token: string) => {
   return axios
@@ -28,8 +29,8 @@ export const getSlackUserListData = (token: string) => {
 
 export const saveSlackImportData = (
   importId: string,
-  members: Array<Object>
-): Promise<Array<string>> => {
+  members: Array<DBSlackUser>
+): Promise<DBSlackImport> => {
   return db
     .table('slackImports')
     .get(importId)

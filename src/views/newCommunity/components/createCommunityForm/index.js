@@ -477,7 +477,7 @@ class CreateCommunityForm extends Component {
                       <Avatar
                         size={20}
                         radius={4}
-                        community
+                        community={suggestion}
                         src={suggestion.profilePhoto}
                       />
                       <strong>{suggestion.name}</strong>{' '}

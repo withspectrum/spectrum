@@ -2,6 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { addQueue } from '../utils/workerQueue';
+import checkThreadToxicity from '../utils/moderationEvents/thread';
 const {
   listenToNewDocumentsIn,
   NEW_DOCUMENTS,
@@ -266,12 +267,13 @@ export const publishThread = (
     .then(result => {
       const thread = result.changes[0].new_val;
 
-      addQueue('thread notification', { thread, userId });
+      addQueue('thread notification', { thread });
       addQueue('process reputation event', {
         userId,
         type: 'thread created',
         entityId: thread.id,
       });
+      checkThreadToxicity(thread);
 
       return thread;
     });
