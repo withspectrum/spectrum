@@ -67,15 +67,9 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const state = toState(JSON.parse(thread.content.body));
-
     this.setState({
       isEditing: false,
-      // When the thread changes we have to keep the previous editor state
-      // this is because in DraftJS the decorators are bound to the state, not the editor component,
-      // so when we just render the new state all the decorators go missing, leading to links etc.
-      // not working at all
-      body: body ? EditorState.push(body, state.getCurrentContent()) : state,
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
