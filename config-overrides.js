@@ -67,12 +67,16 @@ module.exports = function override(config, env) {
         autoUpdate: true, // Automatically check for updates every hour
         cacheMaps: [
           {
-            match: requestUrl => new URL('/', requestUrl), // This is necessary since we're an SPA. Return /index.html for everything
-            requestType: ['navigate'], // Don't cache API requests
+            match: url => {
+              // Don't return the cached index.html for API requests or /auth pages
+              if (url.pathname.indexOf('/api') === 0) return;
+              if (url.pathname.indexOf('/auth') === 0) return;
+              return new URL(url);
+            },
+            requestType: ['navigate'],
           },
         ],
         ServiceWorker: {
-          navigateFallbackURL: '/', // When /x is cached but /y isn't yet, and a user visit /y, return the cache from the sw
           entry: './public/push-sw.js', // Add the push notification ServiceWorker
           events: true, // Emit events from the ServiceWorker
           prefetchRequest: {
