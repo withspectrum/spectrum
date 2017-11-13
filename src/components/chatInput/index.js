@@ -68,7 +68,12 @@ class ChatInput extends Component {
   }
 
   triggerFocus = () => {
-    this.editor.focus();
+    // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
+    // decorators that are passed to the editor are removed from the editor
+    // state
+    setTimeout(() => {
+      this.editor && this.editor.focus();
+    }, 0);
   };
 
   toggleCodeMessage = () => {
