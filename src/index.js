@@ -4,14 +4,14 @@ import { ApolloProvider } from 'react-apollo';
 import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { addToastWithTimeout } from './actions/toasts';
-import registerServiceWorker from './registerServiceWorker';
-import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
 const { thread, t } = queryString.parse(history.location.search);
@@ -71,18 +71,28 @@ function render() {
 
 Loadable.preloadReady().then(render);
 
-registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
-  if (newContent) {
-    store.dispatch(
-      addToastWithTimeout(
-        'success',
-        'A new version of Spectrum is available, refresh the page to see it! 🚀'
-      )
-    );
-  }
-  // We don't show a message on first cache, simply because the API isn't cached offline
-  // so the app isn't offline usable, it's just cached so the first pageload is much faster
+let appUpdateAvailable = false;
+OfflinePluginRuntime.install({
+  // Apply new updates immediately
+  onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
+  // Set a global variable when an update was installed so that we can reload the page when users
+  // go to a new page, leading to no interruption in the workflow.
+  // Idea from https://zach.codes/handling-client-side-app-updates-with-service-workers/
+  onUpdated: () => (appUpdateAvailable = true),
 });
+
+history.listen((location, action) => {
+  // If we switch pages and it's not just a query param change do a quick refresh if an update is available
+  if (action === 'PUSH' && location.search === '' && appUpdateAvailable) {
+    window.location.reload();
+  }
+});
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  navigator.serviceWorker.ready.then(registration => {
+    webPushManager.set(registration.pushManager);
+  });
+}
 
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics

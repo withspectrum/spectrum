@@ -104,10 +104,7 @@ const renderer = (req, res) => {
         // Make sure only unique bundles are included
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('compile and send html');
-      const scriptTags = [
-        createScriptTag({ src: '/static/js/bootstrap.js' }),
-        ...bundles,
-      ].join('\n');
+      const scriptTags = [...bundles].join('\n');
       debug(`script tags: ${scriptTags}`);
       // Compile the HTML and send it down
       res.send(

@@ -13,24 +13,9 @@ const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const ManifestPlugin = require('webpack-module-manifest-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
+const OfflinePlugin = require('offline-plugin');
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
-const whitelist = path => new RegExp(`^(?!\/${path}).*`);
-// Don't cache server routes with the ServiceWorker
-const setCustomSwPrecacheOptions = config => {
-  if (process.env.NODE_ENV !== 'production') return;
-  const swPlugin = config.plugins.find(isServiceWorkerPlugin);
-  // Add all /api and /auth routes to the whitelist to not be cached by the ServiceWorker
-  swPlugin.options.navigateFallbackWhitelist = [whitelist('(api|auth|__)')];
-  const { importScripts = [] } = swPlugin.options;
-  // Get the push-sw filename
-  const publicFiles = fs.readdirSync('./public');
-  const matchingFiles = match(publicFiles, ['push-sw-*.js']);
-  if (!matchingFiles || matchingFiles.length < 1)
-    throw new Error('push-sw.js file not found in public folder.');
-  // Import our push ServiceWorker
-  swPlugin.options.importScripts = [...importScripts, matchingFiles[0]];
-};
 
 const removeEslint = config => {
   config.module.rules = config.module.rules.filter(rule => {
@@ -46,7 +31,6 @@ const removeEslint = config => {
 };
 
 module.exports = function override(config, env) {
-  setCustomSwPrecacheOptions(config);
   config.plugins.push(WriteFilePlugin());
   config.plugins.push(
     new ManifestPlugin({
@@ -69,5 +53,35 @@ module.exports = function override(config, env) {
       minChunks: Infinity,
     })
   );
+  // Filter the default serviceworker plugin, add offline plugin instead
+  config.plugins = config.plugins.filter(
+    plugin => !isServiceWorkerPlugin(plugin)
+  );
+  if (process.env.NODE_ENV === 'production') {
+    config.plugins.push(
+      new OfflinePlugin({
+        caches: 'all',
+        updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
+        externals: ['install-raven.js'], // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em. TODO: Figure out if we need to include images etc here
+        excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
+        autoUpdate: true, // Automatically check for updates every hour
+        cacheMaps: [
+          {
+            match: requestUrl => new URL('/', requestUrl), // This is necessary since we're an SPA. Return /index.html for everything
+            requestType: ['navigate'], // Don't cache API requests
+          },
+        ],
+        ServiceWorker: {
+          navigateFallbackURL: '/', // When /x is cached but /y isn't yet, and a user visit /y, return the cache from the sw
+          entry: './public/push-sw.js', // Add the push notification ServiceWorker
+          events: true, // Emit events from the ServiceWorker
+          prefetchRequest: {
+            credentials: 'include', // Include credentials when fetching files, just to make sure we don't get into any issues
+          },
+        },
+        AppCache: false, // Don't cache using AppCache, too buggy that thing
+      })
+    );
+  }
   return rewireStyledComponents(config, env, { ssr: true });
 };
