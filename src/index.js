@@ -81,13 +81,6 @@ OfflinePluginRuntime.install({
   onUpdated: () => (appUpdateAvailable = true),
 });
 
-history.listen((location, action) => {
-  // If we switch pages and it's not just a query param change do a quick refresh if an update is available
-  if (action === 'PUSH' && location.search === '' && appUpdateAvailable) {
-    window.location.reload();
-  }
-});
-
 if ('serviceWorker' in navigator && 'PushManager' in window) {
   navigator.serviceWorker.ready.then(registration => {
     webPushManager.set(registration.pushManager);
