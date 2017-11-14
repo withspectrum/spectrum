@@ -67,9 +67,6 @@ export default ({
 export const WaterCoolerPill = ({ active }) => (
   <CommunityInfoContainer active={active}>
     <PillLinkPinned>
-      <PinIcon>
-        <Icon glyph="message" size={12} />
-      </PinIcon>
       <PillLabel>Open chat</PillLabel>
     </PillLinkPinned>
   </CommunityInfoContainer>

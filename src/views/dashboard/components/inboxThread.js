@@ -132,7 +132,7 @@ class WatercoolerThreadPure extends React.Component {
         <InboxThreadContent>
           <WaterCoolerPill active={active} />
           <ThreadTitle active={active}>
-            The {community.name} Watercooler
+            {community.name} Watercooler
           </ThreadTitle>
 
           <ThreadMeta>
