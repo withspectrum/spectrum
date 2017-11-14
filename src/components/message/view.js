@@ -12,11 +12,12 @@ import {
   Time,
   Code,
   Line,
+  Paragraph,
 } from './style';
-import { toState, toPlainText } from 'shared/draft-utils';
-import { renderLinks } from 'src/helpers/utils';
+import mentionsDecorator from 'src/components/draftjs-editor/mentions-decorator';
+import linksDecorator from 'src/components/draftjs-editor/links-decorator';
 
-const messageRenderer = {
+const codeRenderer = {
   blocks: {
     'code-block': (children, { keys }) => (
       <Line key={keys[0]}>{children.map(child => [child, <br />])}</Line>
@@ -24,8 +25,18 @@ const messageRenderer = {
   },
 };
 
+const messageRenderer = {
+  blocks: {
+    unstyled: (children, { keys }) =>
+      children.map((child, index) => (
+        <Paragraph key={keys[index] || index}>{child}</Paragraph>
+      )),
+  },
+  decorators: [mentionsDecorator, linksDecorator],
+};
+
 export const Body = props => {
-  const { message, openGallery, pending, type, me, selected } = props;
+  const { message, openGallery, pending, type, me } = props;
 
   switch (type) {
     case 'text':
@@ -48,20 +59,15 @@ export const Body = props => {
     case 'emoji':
       return <Emoji pending={pending}>{message}</Emoji>;
     case 'draftjs':
-      const parsedMessage = JSON.parse(message.body);
-      const isCode = parsedMessage.blocks[0].type === 'code-block';
-      const plaintext = toPlainText(toState(parsedMessage));
+      const body = JSON.parse(message.body);
+      const isCode = body.blocks[0].type === 'code-block';
 
       if (isCode) {
-        return (
-          <Code pending={pending}>
-            {redraft(JSON.parse(message.body), messageRenderer)}
-          </Code>
-        );
+        return <Code pending={pending}>{redraft(body, codeRenderer)}</Code>;
       } else {
         return (
           <Text me={me} pending={pending}>
-            {renderLinks(plaintext)}
+            {redraft(body, messageRenderer)}
           </Text>
         );
       }

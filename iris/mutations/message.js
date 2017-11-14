@@ -1,5 +1,4 @@
 // @flow
-import Raven from 'raven';
 const debug = require('debug')('iris:mutations:message');
 import UserError from '../utils/UserError';
 import {
@@ -16,7 +15,6 @@ import {
 } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
-import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';

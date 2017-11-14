@@ -3,9 +3,7 @@ import * as React from 'react';
 import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
 import {
-  LoadingList,
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
 } from '../../../components/loading';
@@ -144,7 +142,6 @@ class Sidebar extends React.Component<Props, State> {
       );
     }
 
-    const isPinned = thread.id === thread.community.pinnedThreadId;
     const threadsToRender =
       threads &&
       threads.length > 0 &&

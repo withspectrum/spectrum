@@ -1,22 +1,13 @@
 import React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import { FeaturedCommunity } from '../../components/curation';
 import Search from './components/search';
 import { Wrapper } from './style';
-
 import { CommunitySearch, Charts } from './view';
-
-import { getCommunity } from './queries';
-
-const Feature = compose(getCommunity)(FeaturedCommunity);
 
 const ExplorePure = props => {
   const { title, description } = generateMetaInfo({

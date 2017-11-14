@@ -77,7 +77,10 @@ class JoinFirstCommunityPure extends Component {
         <Container key={community.id} style={{ alignSelf: 'flex-start' }}>
           <CoverPhoto url={community.coverPhoto}>
             <CoverLink to={`/${community.slug}`}>
-              <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+              <CoverAvatar
+                community={community}
+                src={`${community.profilePhoto}?w=40&dpr=2`}
+              />
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
           </CoverPhoto>

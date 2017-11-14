@@ -14,7 +14,6 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { getThread } from './queries';
 import { NullState, UpsellSignIn } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
-import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
@@ -138,7 +137,6 @@ class ThreadContainer extends React.Component<Props, State> {
   render() {
     const {
       data: { thread },
-      data,
       currentUser,
       isLoading,
       hasError,
@@ -161,7 +159,7 @@ class ThreadContainer extends React.Component<Props, State> {
       });
 
       // get the data we need to render the view
-      const { channelPermissions, isPrivate } = thread.channel;
+      const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
       const canSendMessages = isLoggedIn && channelPermissions.isMember;

@@ -51,7 +51,7 @@ export const NotificationListContentHeading = styled(ContentHeading)`
 `;
 
 export const Content = styled(FlexCol)`
-  margin-left: 32px;
+  margin-left: 8px;
   align-self: stretch;
 `;
 
@@ -166,6 +166,10 @@ export const SuccessContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
 `;
 
+export const SpecialContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.default};
+`;
+
 export const ReactionContext = styled(ContextRow)`
   color: ${({ theme }) => theme.warn.alt};
 `;
@@ -192,6 +196,7 @@ export const TextContent = styled.p`
   color: ${props => props.theme.text.alt};
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
+  padding-right: 16px;
 
   a {
     font-weight: 600;
