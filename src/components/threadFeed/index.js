@@ -121,7 +121,10 @@ class ThreadFeedPure extends Component {
       !this.props.community.communityPermissions.isBlocked;
 
     const threadNodes = dataExists
-      ? threads.slice().map(thread => thread.node)
+      ? threads
+          .slice()
+          .map(thread => thread.node)
+          .filter(thread => !thread.watercooler)
       : [];
 
     if (dataExists) {
