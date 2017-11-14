@@ -9,11 +9,29 @@ const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
+const path = require('path');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const ManifestPlugin = require('webpack-module-manifest-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
+
+// Recursively walk a folder and get all file paths
+function walkFolder(currentDirPath, callback) {
+  fs.readdirSync(currentDirPath).forEach(name => {
+    // Skip dot files
+    if (name.indexOf('.') === 0) return;
+
+    var filePath = path.join(currentDirPath, name);
+    var stat = fs.statSync(filePath);
+
+    if (stat.isFile()) {
+      callback(filePath, stat);
+    } else if (stat.isDirectory()) {
+      walkFolder(filePath, callback);
+    }
+  });
+}
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 
@@ -58,11 +76,16 @@ module.exports = function override(config, env) {
     plugin => !isServiceWorkerPlugin(plugin)
   );
   if (process.env.NODE_ENV === 'production') {
+    // Get all public files so they're cached by the SW
+    let externals = ['./public/install-raven.js'];
+    walkFolder('./public/img/', file => {
+      externals.push(file.replace(/public/, ''));
+    });
     config.plugins.push(
       new OfflinePlugin({
         caches: 'all',
         updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
-        externals: ['install-raven.js'], // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em. TODO: Figure out if we need to include images etc here
+        externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
         excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
         autoUpdate: true, // Automatically check for updates every hour
         cacheMaps: [
