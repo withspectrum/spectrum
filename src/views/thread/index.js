@@ -194,8 +194,9 @@ class ThreadContainer extends React.Component<Props, State> {
 
             <ThreadContentView slider={slider}>
               <Head
-                title={title}
-                description={description}
+                title={`The Watercooler · ${thread.community.name}`}
+                description={`Watercooler chat for the ${thread.community
+                  .name} community`}
                 image={thread.community.profilePhoto}
               />
               <Titlebar

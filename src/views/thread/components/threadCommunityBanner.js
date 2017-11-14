@@ -125,9 +125,11 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
             <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityHeaderName>{watercooler
-                  ? `The ${community.name} community watercooler`
-                  : community.name}</CommunityHeaderName>
+              <CommunityHeaderName>
+                {watercooler
+                  ? `The ${community.name} watercooler`
+                  : community.name}
+              </CommunityHeaderName>
             </CommunityHeaderLink>
 
             {channel.slug !== 'general' && (
