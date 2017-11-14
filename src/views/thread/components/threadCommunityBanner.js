@@ -25,8 +25,10 @@ type Props = {
   toggleChannelSubscription: Function,
   currentUser: Object,
   hide: boolean,
+  watercooler: boolean,
   thread: {
     id: string,
+    watercooler?: boolean,
     community: {
       name: string,
       slug: string,
@@ -108,7 +110,11 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread: { channel, community }, currentUser, hide } = this.props;
+    const {
+      thread: { channel, community, id, watercooler },
+      currentUser,
+      hide,
+    } = this.props;
     const { isLoading } = this.state;
 
     return (
@@ -119,7 +125,9 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
             <CommunityHeaderLink to={`/${community.slug}`}>
-              <CommunityHeaderName>{community.name}</CommunityHeaderName>
+              <CommunityHeaderName>
+                {watercooler ? `${community.name} watercooler` : community.name}
+              </CommunityHeaderName>
             </CommunityHeaderLink>
 
             {channel.slug !== 'general' && (

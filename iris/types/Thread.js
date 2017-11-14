@@ -12,7 +12,7 @@ const Thread = /* GraphQL */ `
 
 	# The contents of a thread
 	type ThreadContent {
-		title: String!
+		title: String
 		body: String
 		media: String
 	}
@@ -51,6 +51,7 @@ const Thread = /* GraphQL */ `
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
+		watercooler: Boolean
 	}
 
 	extend type Query {

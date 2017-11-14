@@ -177,6 +177,103 @@ class ThreadContainer extends React.Component<Props, State> {
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
+      if (thread.watercooler)
+        return (
+          <ThreadViewContainer
+            data-e2e-id="thread-view"
+            threadViewContext={threadViewContext}
+          >
+            {shouldRenderThreadSidebar && (
+              <Sidebar
+                thread={thread}
+                currentUser={currentUser}
+                slug={thread.community.slug}
+                id={thread.community.id}
+              />
+            )}
+
+            <ThreadContentView slider={slider}>
+              <Head
+                title={`The Watercooler · ${thread.community.name}`}
+                description={`Watercooler chat for the ${thread.community
+                  .name} community`}
+                image={thread.community.profilePhoto}
+              />
+              <Titlebar
+                title={thread.content.title}
+                subtitle={`${thread.community.name} / ${thread.channel.name}`}
+                provideBack={true}
+                backRoute={`/`}
+                noComposer
+                style={{ gridArea: 'header' }}
+              />
+              <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+                <Detail type={slider ? '' : 'only'}>
+                  <ThreadCommunityBanner
+                    hide={threadViewContext === 'fullscreen'}
+                    thread={thread}
+                  />
+                  {!isEditing && (
+                    <Messages
+                      threadType={thread.threadType}
+                      id={thread.id}
+                      currentUser={currentUser}
+                      forceScrollToBottom={this.forceScrollToBottom}
+                      forceScrollToTop={this.forceScrollToTop}
+                      contextualScrollToBottom={this.contextualScrollToBottom}
+                      shouldForceScrollOnMessageLoad={true}
+                      shouldForceScrollToTopOnMessageLoad={false}
+                      hasMessagesToLoad={thread.messageCount > 0}
+                      isModerator={isModerator}
+                    />
+                  )}
+
+                  {!isEditing &&
+                    isLocked && (
+                      <NullState copy="This conversation has been frozen by a moderator." />
+                    )}
+
+                  {!isEditing &&
+                    isLoggedIn &&
+                    !canSendMessages && (
+                      <JoinChannel
+                        community={thread.community}
+                        channel={thread.channel}
+                      />
+                    )}
+
+                  {!isEditing &&
+                    !isLoggedIn && (
+                      <UpsellSignIn
+                        title={`Join the ${thread.community.name} community`}
+                        glyph={'message-new'}
+                        view={{ data: thread.community, type: 'community' }}
+                        noShadow
+                      />
+                    )}
+                </Detail>
+              </Content>
+
+              {!isEditing &&
+                canSendMessages &&
+                !isLocked && (
+                  <Input>
+                    <ChatInputWrapper type="only">
+                      <ChatInput
+                        threadType="story"
+                        threadData={thread}
+                        thread={thread.id}
+                        currentUser={isLoggedIn}
+                        forceScrollToBottom={this.forceScrollToBottom}
+                        onRef={chatInput => (this.chatInput = chatInput)}
+                      />
+                    </ChatInputWrapper>
+                  </Input>
+                )}
+            </ThreadContentView>
+          </ThreadViewContainer>
+        );
+
       return (
         <ThreadViewContainer
           data-e2e-id="thread-view"

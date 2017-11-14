@@ -115,6 +115,7 @@ const Community = /* GraphQL */ `
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
 		contextPermissions: ContextPermissions
+		watercooler: Thread
 	}
 
 	extend type Query {
