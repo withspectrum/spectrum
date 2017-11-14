@@ -358,7 +358,21 @@ class Navbar extends Component {
 
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
-          <Head showUnreadFavicon={showUnreadFavicon} />
+          <Head>
+            {showUnreadFavicon ? (
+              <link
+                rel="shortcut icon"
+                id="dynamic-favicon"
+                href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
+              />
+            ) : (
+              <link
+                rel="shortcut icon"
+                id="dynamic-favicon"
+                href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+              />
+            )}
+          </Head>
 
           {dmUnseenCount && <div>{dmUnseenCount}</div>}
           {allUnseenCount && <div>{allUnseenCount}</div>}
