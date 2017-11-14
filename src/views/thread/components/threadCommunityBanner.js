@@ -29,6 +29,7 @@ type Props = {
   watercooler: boolean,
   thread: {
     id: string,
+    watercooler?: boolean,
     community: {
       name: string,
       slug: string,
