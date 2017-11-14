@@ -100,6 +100,7 @@ class MessagesTab extends React.Component<Props, State> {
     // don't perform a mutation is there are no unread notifs
     if (count === 0) return;
 
+    // otherwise
     this.props
       .markDirectMessageNotificationsSeen()
       .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
@@ -113,9 +114,6 @@ class MessagesTab extends React.Component<Props, State> {
   render() {
     const { active } = this.props;
     const { count } = this.state;
-
-    console.log(this.props);
-    console.log(this.state);
 
     return (
       <IconLink
