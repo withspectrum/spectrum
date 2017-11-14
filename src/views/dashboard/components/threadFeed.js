@@ -11,7 +11,7 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
-import InboxThread from './inboxThread';
+import InboxThread, { WatercoolerThread } from './inboxThread';
 
 type Props = {
   mountedWithActiveThread: ?string,
@@ -75,6 +75,20 @@ class ThreadFeed extends React.Component<Props, State> {
       (hasThreadsButNoneSelected || justLoadedThreads) &&
       this.props.data.threads.length > 0
     ) {
+      if (
+        this.props.data.community &&
+        this.props.data.community.watercooler &&
+        this.props.data.community.watercooler.id
+      ) {
+        this.props.history.replace(
+          `/?t=${this.props.data.community.watercooler.id}`
+        );
+        this.props.dispatch(
+          changeActiveThread(this.props.data.community.watercooler.id)
+        );
+        return;
+      }
+
       const threadNodes = this.props.data.threads
         .slice()
         .map(thread => thread.node);
@@ -138,12 +152,23 @@ class ThreadFeed extends React.Component<Props, State> {
     // no threads yet
     if (threads.length === 0) return <EmptyThreadFeed />;
 
-    const threadNodes = threads.slice().map(thread => thread.node);
+    const threadNodes = threads
+      .slice()
+      .map(thread => thread.node)
+      .filter(thread => !thread.watercooler);
 
     const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 
     return (
       <div data-e2e-id="inbox-thread-feed">
+        {this.props.data.community &&
+          this.props.data.community.watercooler &&
+          this.props.data.community.watercooler.id && (
+            <WatercoolerThread
+              data={this.props.data.community.watercooler}
+              active={selectedId === this.props.data.community.watercooler.id}
+            />
+          )}
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}

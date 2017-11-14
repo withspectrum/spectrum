@@ -63,3 +63,11 @@ export default ({
     </CommunityInfoContainer>
   );
 };
+
+export const WaterCoolerPill = ({ active }) => (
+  <CommunityInfoContainer active={active}>
+    <PillLinkPinned>
+      <PillLabel>Open chat</PillLabel>
+    </PillLinkPinned>
+  </CommunityInfoContainer>
+);

@@ -11,6 +11,7 @@ import { setDirectMessageThreadLastActive } from '../models/directMessageThread'
 import {
   createParticipantInThread,
   deleteParticipantInThread,
+  createParticipantWithoutNotificationsInThread,
 } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
@@ -41,6 +42,8 @@ module.exports = {
         return new UserError('You must be signed in to send a message.');
       }
 
+      const thread = await getThread(message.threadId);
+
       // if the message was a dm thread, set the last seen and last active times
       if (message.threadType === 'directMessageThread') {
         setDirectMessageThreadLastActive(message.threadId);
@@ -50,8 +53,15 @@ module.exports = {
       // if the message was sent in a story thread, create a new participant
       // relationship to the thread - this will enable us to query against
       // thread.participants as well as have per-thread notifications for a user
-      if (message.threadType === 'story') {
+      if (message.threadType === 'story' && (thread && !thread.watercooler)) {
         createParticipantInThread(message.threadId, currentUser.id);
+      }
+
+      if (thread && thread.watercooler) {
+        createParticipantWithoutNotificationsInThread(
+          message.threadId,
+          currentUser.id
+        );
       }
 
       // all checks passed

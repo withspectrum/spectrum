@@ -17,20 +17,14 @@ export const collections = [
         communities: [
           'specfm',
           'up-coming',
-          // 'inspectfm',
           'sketchcasts',
-          // 'cosmos',
           'google-design',
           // 'breadtime',
-          // 'afterclass',
-          // 'learnux',
-          // 'level-up-tutorials',
           'design-code',
           // 'playbook',
           'vectors',
           // 'smashingmag',
           'designhunt',
-          // 'dribbble',
         ],
       },
       {
@@ -46,9 +40,6 @@ export const collections = [
           'origami-studio',
           'webflow',
           'fuse',
-          // 'extensible',
-          // 'modulz',
-          // 'digital-awesome',
         ],
       },
     ],
@@ -77,18 +68,14 @@ export const collections = [
       // },
       {
         title: 'Resources',
-        communities: [
-          'frontend',
-          'specfm',
-          // 'dx'
-        ],
+        communities: ['frontend', 'specfm'],
       },
       {
         title: 'Tools',
         communities: [
           'zeit',
           // 'realm',
-          // 'expo',
+          'expo',
           'codepen',
           'bootstrap',
           'tachyons',

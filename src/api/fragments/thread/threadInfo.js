@@ -42,6 +42,7 @@ export const threadInfoFragment = gql`
       attachmentType
       data
     }
+    watercooler
   }
   ${userInfoFragment}
   ${channelInfoFragment}
