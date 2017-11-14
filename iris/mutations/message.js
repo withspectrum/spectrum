@@ -53,11 +53,11 @@ module.exports = {
       // if the message was sent in a story thread, create a new participant
       // relationship to the thread - this will enable us to query against
       // thread.participants as well as have per-thread notifications for a user
-      if (message.threadType === 'story' && !thread.watercooler) {
+      if (message.threadType === 'story' && (thread && !thread.watercooler)) {
         createParticipantInThread(message.threadId, currentUser.id);
       }
 
-      if (thread.watercooler) {
+      if (thread && thread.watercooler) {
         createParticipantWithoutNotificationsInThread(
           message.threadId,
           currentUser.id
