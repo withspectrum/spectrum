@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { zIndex } from '../globals';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
 
 export const StyledAvatarFallback = styled.img`

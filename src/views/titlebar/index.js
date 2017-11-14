@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';

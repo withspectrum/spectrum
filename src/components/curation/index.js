@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../api/community';

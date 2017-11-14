@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { convertTimestampToDate } from '../../helpers/utils';
 import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';

@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import Dropdown from '../../../components/dropdown';
 import { Loading } from '../../../components/loading';

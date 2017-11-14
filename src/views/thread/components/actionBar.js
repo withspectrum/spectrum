@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';

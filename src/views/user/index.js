@@ -2,7 +2,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Column from '../../components/column';

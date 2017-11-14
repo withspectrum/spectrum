@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';

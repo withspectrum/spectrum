@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';

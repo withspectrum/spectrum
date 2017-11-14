@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
 import { ProfileCard } from './style';
