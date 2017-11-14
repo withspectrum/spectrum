@@ -23,6 +23,7 @@ export const markUsersNotificationsAsNew = (
   notificationId: string,
   userId: string
 ): Promise<Object> => {
+  console.log('marking as new');
   return db
     .table('usersNotifications')
     .getAll(notificationId, { index: 'notificationId' })

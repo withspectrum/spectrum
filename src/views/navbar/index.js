@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import queryString from 'query-string';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { getCurrentUserProfile, editUserMutation } from '../../api/user';
 import { openModal } from '../../actions/modals';
@@ -24,6 +20,7 @@ import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
 import { throttle } from '../../helpers/utils';
 import NewUserOnboarding from '../../views/newUserOnboarding';
+import MessagesTab from './components/messagesTab';
 import {
   Section,
   Nav,
@@ -38,7 +35,6 @@ import {
 class Navbar extends Component {
   state: {
     allUnseenCount: number,
-    dmUnseenCount: number,
     notifications: Array<Object>,
     subscription: ?Function,
   };
@@ -47,7 +43,6 @@ class Navbar extends Component {
     super(props);
     this.state = {
       allUnseenCount: 0,
-      dmUnseenCount: 0,
       notifications: [],
       subscription: null,
     };
@@ -298,29 +293,6 @@ class Navbar extends Component {
       });
   };
 
-  markDmNotificationsAsSeen = () => {
-    const { dmUnseenCount } = this.state;
-
-    if (dmUnseenCount === 0) {
-      return null;
-    } else {
-      this.setState({
-        dmUnseenCount: 0,
-      });
-      this.props
-        .markDirectMessageNotificationsSeen()
-        .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
-          // notifs were marked as seen
-        })
-        .catch(err => {
-          // err
-        });
-    }
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  };
-
   render() {
     const {
       history,
@@ -388,6 +360,9 @@ class Navbar extends Component {
         <Nav hideOnMobile={hideNavOnMobile}>
           <Head showUnreadFavicon={showUnreadFavicon} />
 
+          {dmUnseenCount && <div>{dmUnseenCount}</div>}
+          {allUnseenCount && <div>{allUnseenCount}</div>}
+
           <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
@@ -398,18 +373,9 @@ class Navbar extends Component {
               <Label>Home</Label>
             </IconLink>
 
-            <IconLink
-              data-active={history.location.pathname.includes('/messages')}
-              to="/messages"
-              rel="nofollow"
-              onClick={this.markDmNotificationsAsSeen}
-            >
-              <Icon
-                glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'}
-                withCount={this.formattedCount(dmUnseenCount)}
-              />
-              <Label>Messages</Label>
-            </IconLink>
+            <MessagesTab
+              active={history.location.pathname.includes('/messages')}
+            />
 
             <IconLink
               data-active={history.location.pathname === '/explore'}
@@ -474,19 +440,10 @@ class Navbar extends Component {
               <Label>Home</Label>
             </IconLink>
 
-            <IconLink
-              data-active={history.location.pathname.includes('/messages')}
-              to="/messages"
-              rel="nofollow"
-              onClick={this.markDmNotificationsAsSeen}
-            >
-              <Icon
-                glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'}
-                withCount={this.formattedCount(dmUnseenCount)}
-              />
+            <MessagesTab
+              active={history.location.pathname.includes('/messages')}
+            />
 
-              <Label>Messages</Label>
-            </IconLink>
             <IconLink
               data-active={history.location.pathname === '/notifications'}
               to="/notifications"
@@ -563,7 +520,6 @@ export default compose(
   editUserMutation,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
-  markDirectMessageNotificationsSeenMutation,
   withApollo,
   connect(mapStateToProps)
 )(Navbar);

@@ -57,6 +57,7 @@ const Notification = /* GraphQL */ `
 	extend type Query {
 		notification(id: ID!): Notification
 		notifications(first: Int = 10, after: String): NotificationsConnection
+		directMessageNotifications: [Notification]
 	}
 
 	extend type Mutation {

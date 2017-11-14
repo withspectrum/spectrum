@@ -1,4 +1,7 @@
-const { getNotificationsByUser } = require('../models/notification');
+const {
+  getNotificationsByUser,
+  getUnreadDirectMessageNotifications,
+} = require('../models/notification');
 const { getMessage } = require('../models/message');
 const { getChannels } = require('../models/channel');
 import type { GraphQLContext } from '../';
@@ -31,6 +34,17 @@ module.exports = {
           node: notification,
         })),
       }));
+    },
+    directMessageNotifications: async (
+      _: any,
+      __: any,
+      { user }: GraphQLContext
+    ) => {
+      if (!user) return [];
+      // return an array of unread direct message notifications
+      return getUnreadDirectMessageNotifications(user.id).then(
+        res => console.log(res) || res
+      );
     },
   },
 };

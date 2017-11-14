@@ -240,3 +240,25 @@ export const markSingleNotificationSeenMutation = graphql(
   MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
   MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS
 );
+
+export const GET_UNREAD_DMS_QUERY = gql`
+  query getDMNotifications {
+    directMessageNotifications {
+      id
+      context {
+        id
+      }
+    }
+  }
+`;
+
+export const GET_UNREAD_DMS_OPTIONS = {
+  options: {
+    fetchPolicy: 'network-only',
+  },
+};
+
+export const getUnreadDMQuery = graphql(
+  GET_UNREAD_DMS_QUERY,
+  GET_UNREAD_DMS_OPTIONS
+);

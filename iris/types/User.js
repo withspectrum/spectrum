@@ -89,7 +89,7 @@ const User = /* GraphQL */ `
 
 		# non-schema fields
 		threadCount: Int
-        isAdmin: Boolean
+		isAdmin: Boolean
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
