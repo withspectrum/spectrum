@@ -68,6 +68,32 @@ export const listenToNewNotifications = (cb: Function): Function => {
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
     })
     .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
+};
+
+export const listenToNewDirectMessageNotifications = (
+  cb: Function
+): Function => {
+  return db
+    .table('usersNotifications')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({
+      left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
+    })
+    .zip()
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {

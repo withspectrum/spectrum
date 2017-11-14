@@ -70,6 +70,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Subscription {
 		notificationAdded: Notification
+		dmNotificationAdded: Notification
 	}
 `;
 

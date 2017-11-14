@@ -15,15 +15,19 @@ type Props = {
   data: {
     directMessageNotifications: Array<any>,
   },
+  subscribeToDMs: Function,
+  refetch: Function,
 };
 
 type State = {
   count: number,
+  subscription: ?Function,
 };
 
 class MessagesTab extends React.Component<Props, State> {
   state = {
     count: 0,
+    subscription: null,
   };
 
   setCount(props) {
@@ -41,7 +45,7 @@ class MessagesTab extends React.Component<Props, State> {
 
     // bundle dm notifications
     const obj = {};
-    directMessageNotifications.map(o => {
+    directMessageNotifications.filter(n => !n.isSeen).map(o => {
       if (obj[o.context.id]) return;
       obj[o.context.id] = o;
     });
@@ -55,13 +59,30 @@ class MessagesTab extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log('scu nextprops', nextProps);
     const prevProps = this.props;
     const prevState = this.state;
+
+    // if a refetch completes
+    if (
+      prevProps.data.networkStatus === 4 &&
+      nextProps.data.networkStatus === 7
+    )
+      return true;
 
     // once the initial query finishes loading
     if (
       !prevProps.data.directMessageNotifications &&
       nextProps.data.directMessageNotifications
+    )
+      return true;
+
+    // if a subscription updates the number of records returned
+    if (
+      prevProps.data &&
+      prevProps.data.directMessageNotifications &&
+      prevProps.data.directMessageNotifications.length !==
+        nextProps.data.directMessageNotifications.length
     )
       return true;
 
@@ -76,6 +97,7 @@ class MessagesTab extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const { data: prevData } = prevProps;
     const { data: thisData, active } = this.props;
+    const { subscription } = this.state;
 
     // never update the badge if the user is viewing the messages tab
     // set the count to 0 if the tab is active so that if a user loads
@@ -86,9 +108,28 @@ class MessagesTab extends React.Component<Props, State> {
       });
     }
 
+    // if you load /messages directly, then navigate away, start
+    // a subscription
+    if (prevProps.active && !active && !subscription) {
+      return this.subscribe();
+    }
+
+    // if the component updates for the first time
     if (
       !prevData.directMessageNotifications &&
-      thisData.directMessageNotifications
+      thisData.directMessageNotifications &&
+      !subscription
+    ) {
+      this.subscribe();
+      return this.setCount(this.props);
+    }
+
+    // if the component updates with changed or new dm notifications
+    // if any are unseen, set the counts
+    if (
+      thisData.directMessageNotifications &&
+      thisData.directMessageNotifications.length > 0 &&
+      thisData.directMessageNotifications.some(n => !n.isSeen)
     ) {
       return this.setCount(this.props);
     }
@@ -105,15 +146,38 @@ class MessagesTab extends React.Component<Props, State> {
       .markDirectMessageNotificationsSeen()
       .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
         // notifs were marked as seen
+        this.props.refetch();
       })
       .catch(err => {
         // err
       });
   };
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  subscribe = () => {
+    console.log('SUBSCRIBED TO NEW DMs');
+    this.setState({
+      subscription: this.props.subscribeToDMs(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
+
   render() {
     const { active } = this.props;
     const { count } = this.state;
+
+    console.log('PROPS: ', this.props);
+    console.log('STATE: ', this.state);
 
     return (
       <IconLink

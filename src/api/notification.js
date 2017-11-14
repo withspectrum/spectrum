@@ -1,7 +1,10 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { notificationInfoFragment } from './fragments/notification/notificationInfo';
-import { subscribeToNewNotifications } from './subscriptions';
+import {
+  subscribeToNewNotifications,
+  subscribeToDirectMessageNotifications,
+} from './subscriptions';
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {
@@ -244,18 +247,55 @@ export const markSingleNotificationSeenMutation = graphql(
 export const GET_UNREAD_DMS_QUERY = gql`
   query getDMNotifications {
     directMessageNotifications {
-      id
-      context {
-        id
-      }
+      ...notificationInfo
     }
   }
+  ${notificationInfoFragment}
 `;
 
 export const GET_UNREAD_DMS_OPTIONS = {
   options: {
     fetchPolicy: 'network-only',
   },
+  props: props => ({
+    ...props,
+    refetch: () => props.data.refetch(),
+    subscribeToDMs: () => {
+      return props.data.subscribeToMore({
+        document: subscribeToDirectMessageNotifications,
+        updateQuery: (prev, { subscriptionData }) => {
+          console.log('prev', prev);
+          console.log('subscriptionData', subscriptionData);
+          const newNotification = subscriptionData.data.dmNotificationAdded;
+          if (!newNotification) return prev;
+          console.log('newNotification', newNotification);
+          const notificationNode = {
+            ...newNotification,
+            __typename: 'Notification',
+          };
+
+          if (
+            !prev.directMessageNotifications ||
+            prev.directMessageNotifications.length === 0
+          ) {
+            return {
+              ...prev,
+              directMessageNotifications: [newNotification],
+            };
+          }
+
+          // Add the new notification to the data
+          return Object.assign({}, prev, {
+            ...prev,
+            directMessageNotifications: [
+              ...prev.directMessageNotifications,
+              newNotification,
+            ],
+          });
+        },
+      });
+    },
+  }),
 };
 
 export const getUnreadDMQuery = graphql(

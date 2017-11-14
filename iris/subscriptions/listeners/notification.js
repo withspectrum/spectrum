@@ -1,5 +1,8 @@
 // @flow
-const { listenToNewNotifications } = require('../../models/notification');
+const {
+  listenToNewNotifications,
+  listenToNewDirectMessageNotifications,
+} = require('../../models/notification');
 import { sendNotificationAsWebPush } from '../../utils/web-push';
 import asyncify from '../../utils/asyncify';
 
@@ -9,6 +12,14 @@ const newNotification = notification => {
 };
 listenToNewNotifications(newNotification);
 
-module.exports = asyncify(listenToNewNotifications, err => {
-  throw new Error(err);
-});
+module.exports = {
+  listenToNewNotifications: asyncify(listenToNewNotifications, err => {
+    throw new Error(err);
+  }),
+  listenToNewDirectMessageNotifications: asyncify(
+    listenToNewDirectMessageNotifications,
+    err => {
+      throw new Error(err);
+    }
+  ),
+};
