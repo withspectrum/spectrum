@@ -163,11 +163,13 @@ module.exports = {
       // if a logged in user is viewing the profile, handle logic to get viewable threads
       const getThreads =
         currentUser && currentUser !== null
-          ? getViewableThreadsByUser(id, currentUser.id, {
+          ? // $FlowFixMe
+            getViewableThreadsByUser(id, currentUser.id, {
               first,
               after: lastThreadIndex,
             })
           : // if the viewing user is logged out, only return publicly viewable threads
+            // $FlowFixMe
             getPublicThreadsByUser(id, { first, after: lastThreadIndex });
 
       return getThreads.then(result => ({
