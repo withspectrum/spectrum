@@ -20,14 +20,26 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
-export const getMessages = (threadId: string): Promise<Array<Message>> => {
+export const getMessages = (
+  threadId: string,
+  {
+    first = Infinity,
+    after,
+    reverse = false,
+  }: { first?: number, after?: number, reverse?: boolean }
+): Promise<Array<Message>> => {
+  const order = reverse
+    ? db.desc('threadIdAndTimestamp')
+    : 'threadIdAndTimestamp';
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
       index: 'threadIdAndTimestamp',
     })
-    .orderBy({ index: 'threadIdAndTimestamp' })
+    .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
+    .skip(after || 0)
+    .limit(first)
     .run();
 };
 
