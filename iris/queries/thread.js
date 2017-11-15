@@ -103,7 +103,7 @@ module.exports = {
     },
     messageConnection: (
       { id, watercooler }: { id: String },
-      { first = Infinity, after }: PaginationOptions
+      { first = 999999, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       return getMessages(id, {

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
 import Avatar from '../../components/avatar';
 

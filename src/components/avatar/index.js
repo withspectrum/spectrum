@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { withRouter } from 'react-router';
 import { zIndex } from '../globals';
 import { Card } from '../card';

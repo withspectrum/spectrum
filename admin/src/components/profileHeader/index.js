@@ -1,6 +1,6 @@
 import React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Avatar } from '../avatar';
 import { Container, Row, Column, Name, Username } from './style';
 import { OutlineButton } from '../buttons';

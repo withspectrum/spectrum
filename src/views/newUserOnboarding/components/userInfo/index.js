@@ -10,7 +10,7 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { track } from '../../../../helpers/events';
 import { throttle } from '../../../../helpers/utils';
 import { Button, TextButton } from '../../../../components/buttons';

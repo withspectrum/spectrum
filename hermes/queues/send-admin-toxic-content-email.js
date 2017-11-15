@@ -1,7 +1,9 @@
+// @flow
 const debug = require('debug')('hermes:queue:send-admin-toxic-content-email');
 import sendEmail from '../send-email';
 import { ADMIN_TOXIC_MESSAGE_TEMPLATE } from './constants';
 
+// $FlowFixMe
 export default job => {
   debug(`\nnew job: ${job.id}`);
   const {
@@ -11,11 +13,22 @@ export default job => {
     thread,
     community,
     channel,
-    toxicityConfidence,
+    toxicityConfidence: { spectrumScore, perspectiveScore },
   } = job.data;
 
-  const percent = Math.round(toxicityConfidence * 100);
-  const subject = `Toxic alert (${percent}%): ${text}`;
+  const toPercent = (num: number) => Math.round(num * 100);
+  const spectrumPercent = spectrumScore ? toPercent(spectrumScore) : null;
+  const perspectivePercent = perspectiveScore
+    ? toPercent(perspectiveScore)
+    : null;
+  let avgPercent;
+  if (spectrumPercent && perspectivePercent) {
+    avgPercent = (spectrumPercent + perspectivePercent) / 2;
+  } else {
+    avgPercent = spectrumPercent || perspectivePercent || 0;
+  }
+
+  const subject = `Toxic alert (${avgPercent.toString()}%): ${text}`;
 
   try {
     return sendEmail({
@@ -31,7 +44,10 @@ export default job => {
           thread,
           community,
           channel,
-          toxicityConfidence: percent,
+          toxicityConfidence: {
+            spectrumPercent,
+            perspectivePercent,
+          },
         },
       },
     });

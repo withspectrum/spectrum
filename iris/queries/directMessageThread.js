@@ -60,28 +60,26 @@ module.exports = {
       if (!user || !user.id) return null;
 
       const canViewThread = await canViewDMThread(id, user.id, { loaders });
-
       if (!canViewThread) return null;
 
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       // $FlowFixMe
       const messages = await getMessages(id, {
         first,
-        after: cursor,
+        after: lastMessageIndex,
+        reverse: true,
       });
-
-      const paginated = paginate(
-        messages.reverse(),
-        { first, after: cursor },
-        message => message.id === cursor
-      );
 
       return {
         pageInfo: {
-          hasNextPage: paginated.hasMoreItems,
+          hasNextPage: messages && messages.length >= first,
         },
-        edges: paginated.list.map(message => ({
-          cursor: encode(message.id),
+        edges: messages.map((message, index) => ({
+          cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
           node: message,
         })),
       };

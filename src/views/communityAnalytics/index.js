@@ -1,7 +1,7 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { getThisCommunity } from './queries';
 import { openModal } from '../../actions/modals';
 import ViewError from '../../components/viewError';

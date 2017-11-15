@@ -20,14 +20,26 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
-export const getMessages = (threadId: string): Promise<Array<Message>> => {
+export const getMessages = (
+  threadId: string,
+  {
+    first = 999999,
+    after,
+    reverse = false,
+  }: { first?: number, after?: number, reverse?: boolean }
+): Promise<Array<Message>> => {
+  const order = reverse
+    ? db.desc('threadIdAndTimestamp')
+    : 'threadIdAndTimestamp';
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
       index: 'threadIdAndTimestamp',
     })
-    .orderBy({ index: 'threadIdAndTimestamp' })
+    .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
+    .skip(after || 0)
+    .limit(first)
     .run();
 };
 
@@ -53,7 +65,7 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
 export const getMediaMessagesForThread = (
   threadId: string
 ): Promise<Array<Message>> => {
-  return getMessages(threadId).then(messages =>
+  return getMessages(threadId, {}).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };

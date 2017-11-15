@@ -3,7 +3,7 @@ import { getTopCommunities } from '../../explore/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import {
   ExploreCommunityListItem,

@@ -1,7 +1,7 @@
 //$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Button } from '../buttons';
 import {
   FlexCol,

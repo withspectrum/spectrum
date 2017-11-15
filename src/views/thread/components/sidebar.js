@@ -9,7 +9,7 @@ import {
 } from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { getCommunityThreads } from '../../community/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';

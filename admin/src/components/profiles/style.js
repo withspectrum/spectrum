@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
 import { Avatar } from '../avatar';
 
@@ -11,9 +11,7 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const CommunityAvatar = styled(Avatar)`
-  margin-right: 8px;
-`;
+export const CommunityAvatar = styled(Avatar)`margin-right: 8px;`;
 
 export const ProfileHeaderLink = styled(Link)`
   display: flex;
@@ -23,7 +21,7 @@ export const ProfileHeaderLink = styled(Link)`
   flex: auto;
   min-width: 0;
 
-  &:hover h3{
+  &:hover h3 {
     transition: ${Transition.hover.on};
     color: ${props => props.theme.brand.alt};
   }
