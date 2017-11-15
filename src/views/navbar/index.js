@@ -46,6 +46,9 @@ class Navbar extends React.Component<Props> {
     if (currProps.location.pathname !== nextProps.location.pathname)
       return true;
 
+    // if route query params change
+    if (currProps.location.search !== nextProps.location.search) return true;
+
     // Had no user, now have user or user changed
     if (
       (!nextProps.data.user && currProps.data.user) ||
@@ -130,6 +133,7 @@ class Navbar extends React.Component<Props> {
             <SectionFlex />
 
             <NotificationsTab
+              location={history.location}
               currentUser={loggedInUser}
               active={history.location.pathname.includes('/notifications')}
             />

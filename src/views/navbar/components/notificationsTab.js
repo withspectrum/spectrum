@@ -25,7 +25,7 @@ type Props = {
   isRefetching: boolean,
   markAllNotificationsSeen: Function,
   activeInboxThread: ?string,
-  history: Object,
+  location: Object,
   data: {
     notifications?: {
       edges: Array<any>,
@@ -57,14 +57,14 @@ class NotificationsTab extends React.Component<Props, State> {
     const prevProps = this.props;
     const prevState = this.state;
 
-    const prevHistory = prevProps.history;
-    const nextHistory = nextProps.history;
-    const { thread: prevThreadParam } = prevHistory.location.search;
-    const { thread: nextThreadParam } = nextHistory.location.search;
+    const prevLocation = prevProps.location;
+    const nextLocation = nextProps.location;
+    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
+    const { thread: nextThreadParam } = queryString.parse(nextLocation.search);
     const prevActiveInboxThread = prevProps.activeInboxThread;
     const nextActiveInboxThread = nextProps.activeInboxThread;
-    const prevParts = prevHistory.location.pathname.split('/');
-    const nextParts = prevHistory.location.pathname.split('/');
+    const prevParts = prevLocation.pathname.split('/');
+    const nextParts = nextLocation.pathname.split('/');
 
     // changing slider
     if (prevThreadParam !== nextThreadParam) return true;
@@ -111,13 +111,13 @@ class NotificationsTab extends React.Component<Props, State> {
     const {
       data: prevData,
       active: prevActive,
-      history: prevHistory,
+      location: prevLocation,
       activeInboxThread: prevActiveInboxThread,
     } = prevProps;
     const {
       data: thisData,
       active: thisActive,
-      history: thisHistory,
+      location: thisLocation,
       client,
       activeInboxThread: thisActiveInboxThread,
     } = this.props;
@@ -134,10 +134,10 @@ class NotificationsTab extends React.Component<Props, State> {
       });
     }
 
-    const { thread: prevThreadParam } = prevHistory.location.search;
-    const { thread: thisThreadParam } = thisHistory.location.search;
-    const prevParts = prevHistory.location.pathname.split('/');
-    const thisParts = prevHistory.location.pathname.split('/');
+    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
+    const { thread: thisThreadParam } = queryString.parse(thisLocation.search);
+    const prevParts = prevLocation.pathname.split('/');
+    const thisParts = prevLocation.pathname.split('/');
 
     // changing slider
     if (prevThreadParam !== thisThreadParam)
@@ -221,7 +221,7 @@ class NotificationsTab extends React.Component<Props, State> {
   processAndMarkSeenNotifications = stateNotifications => {
     const {
       data: { notifications },
-      history,
+      location,
       client,
       activeInboxThread,
     } = this.props;
@@ -253,16 +253,14 @@ class NotificationsTab extends React.Component<Props, State> {
 
     const filteredByContext = distinct.map(n => {
       const contextId = n.context.id;
-      const { thread: threadParam } = queryString.parse(
-        history.location.search
-      );
+      const { thread: threadParam } = queryString.parse(location.search);
       // 1
       const isViewingSlider = threadParam === contextId && !n.isSeen;
       // 2
       const isViewingInbox = activeInboxThread
         ? activeInboxThread === contextId && !n.isSeen
         : false;
-      const parts = history.location.pathname.split('/');
+      const parts = location.pathname.split('/');
       const isViewingThread = parts[1] === 'thread';
       // 3
       const isViewingThreadDetail = isViewingThread
@@ -374,7 +372,6 @@ const map = state => ({ activeInboxThread: state.dashboardFeed.activeThread });
 export default compose(
   // $FlowIssue
   connect(map),
-  withRouter,
   withApollo,
   getNotifications,
   markNotificationsSeenMutation,
