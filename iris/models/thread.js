@@ -95,13 +95,16 @@ export const getThreadsByChannel = (
 };
 
 export const getThreadsByChannels = (
-  channelIds: Array<string>
+  channelIds: Array<string>,
+  { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .skip(after || 0)
+    .limit(first || 999999)
     .run();
 };
 
