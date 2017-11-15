@@ -76,15 +76,14 @@ class Navbar extends React.Component<Props> {
       hasError,
       currentUser,
     } = this.props;
+
     const loggedInUser = user || currentUser;
-    const currentUserExists =
-      loggedInUser !== null && loggedInUser !== undefined;
     const isHome =
       history.location.pathname === '/' ||
       history.location.pathname === '/home';
 
     // Bail out if the splash page is showing
-    if (!currentUserExists && isHome) return null;
+    if (!loggedInUser && isHome) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
@@ -103,7 +102,7 @@ class Navbar extends React.Component<Props> {
       isViewingDm ||
       isComposingThread;
 
-    if (currentUserExists) {
+    if (loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
           <Section>
@@ -198,6 +197,7 @@ class Navbar extends React.Component<Props> {
           <LogoLink to="/">
             <Logo src="/img/mark-white.png" role="presentation" />
           </LogoLink>
+          {/* $FlowIssue */}
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

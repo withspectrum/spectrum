@@ -68,8 +68,8 @@ export const Loading = ({
   size,
   color,
 }: {
-  size?: Number,
-  color?: String,
+  size?: number,
+  color?: string,
 }): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />

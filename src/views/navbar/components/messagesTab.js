@@ -14,7 +14,6 @@ type Props = {
   active: boolean,
   isLoading: boolean,
   hasError: boolean,
-  isFetchingMore: boolean,
   isRefetching: boolean,
   markDirectMessageNotificationsSeen: Function,
   data: {
@@ -33,6 +32,96 @@ class MessagesTab extends React.Component<Props, State> {
   state = {
     count: 0,
     subscription: null,
+  };
+
+  componentDidMount() {
+    return this.subscribe();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const prevProps = this.props;
+    const prevState = this.state;
+
+    // if a refetch completes
+    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
+
+    // once the initial query finishes loading
+    if (
+      !prevProps.data.directMessageNotifications &&
+      nextProps.data.directMessageNotifications
+    )
+      return true;
+
+    // if a subscription updates the number of records returned
+    if (
+      prevProps.data &&
+      prevProps.data.directMessageNotifications &&
+      nextProps.data.directMessageNotifications &&
+      prevProps.data.directMessageNotifications.length !==
+        nextProps.data.directMessageNotifications.length
+    )
+      return true;
+
+    // if the user clicks on the messages tab
+    if (prevProps.active !== nextProps.active) return true;
+
+    // any time the count changes
+    if (prevState.count !== nextState.count) return true;
+    return false;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { data: prevData } = prevProps;
+    const { data: thisData, active } = this.props;
+    const { subscription } = this.state;
+
+    // never update the badge if the user is viewing the messages tab
+    // set the count to 0 if the tab is active so that if a user loads
+    // /messages view directly, the badge won't update
+    if (active) {
+      // if the user is viewing /messages, mark any incoming notifications
+      // as seen, so that when they navigate away the message count won't shoot up
+      this.markAllAsSeen();
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    // if the component updates for the first time
+    if (
+      !prevData.directMessageNotifications &&
+      thisData.directMessageNotifications
+    ) {
+      return this.setCount(this.props);
+    }
+
+    // if the component updates with changed or new dm notifications
+    // if any are unseen, set the counts
+    if (
+      thisData.directMessageNotifications &&
+      thisData.directMessageNotifications.length > 0 &&
+      thisData.directMessageNotifications.some(n => !n.isSeen)
+    ) {
+      return this.setCount(this.props);
+    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.subscribeToDMs(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
   };
 
   setCount(props) {
@@ -64,119 +153,26 @@ class MessagesTab extends React.Component<Props, State> {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const prevProps = this.props;
-    const prevState = this.state;
-
-    // if a refetch completes
-    if (
-      prevProps.data.networkStatus === 4 &&
-      nextProps.data.networkStatus === 7
-    )
-      return true;
-
-    // once the initial query finishes loading
-    if (
-      !prevProps.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications
-    )
-      return true;
-
-    // if a subscription updates the number of records returned
-    if (
-      prevProps.data &&
-      prevProps.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications &&
-      prevProps.data.directMessageNotifications.length !==
-        nextProps.data.directMessageNotifications.length
-    )
-      return true;
-
-    // if the user clicks on the messages tab
-    if (prevProps.active !== nextProps.active) return true;
-
-    // any time the count changes
-    if (prevState.count !== nextState.count) return true;
-    return false;
-  }
-
-  componentDidMount() {
-    return this.subscribe();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { data: prevData } = prevProps;
-    const { data: thisData, active } = this.props;
-    const { subscription } = this.state;
-
-    // never update the badge if the user is viewing the messages tab
-    // set the count to 0 if the tab is active so that if a user loads
-    // /messages view directly, the badge won't update
-    if (active) {
-      // if the user is viewing /messages, mark any incoming notifications
-      // as seen, so that when they navigate away the message count won't shoot up
-      this.markAllAsSeen();
-      return this.setState({
-        count: 0,
-      });
-    }
-
-    // if the component updates for the first time
-    if (
-      !prevData.directMessageNotifications &&
-      thisData.directMessageNotifications &&
-      !subscription
-    ) {
-      return this.setCount(this.props);
-    }
-
-    // if the component updates with changed or new dm notifications
-    // if any are unseen, set the counts
-    if (
-      thisData.directMessageNotifications &&
-      thisData.directMessageNotifications.length > 0 &&
-      thisData.directMessageNotifications.some(n => !n.isSeen)
-    ) {
-      return this.setCount(this.props);
-    }
-  }
-
   markAllAsSeen = () => {
-    const { data: { directMessageNotifications } } = this.props;
+    const {
+      data: { directMessageNotifications },
+      markDirectMessageNotificationsSeen,
+    } = this.props;
 
     // if there are no unread, escape
     if (directMessageNotifications && directMessageNotifications.length === 0)
       return;
 
     // otherwise
-    this.props
-      .markDirectMessageNotificationsSeen()
+    return markDirectMessageNotificationsSeen()
       .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
         // notifs were marked as seen
-        console.log('REFETCHING');
-        this.props.refetch();
+        // refetch to make sure we're keeping up with the server's state
+        return this.props.refetch();
       })
       .catch(err => {
         // err
       });
-  };
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  subscribe = () => {
-    this.setState({
-      subscription: this.props.subscribeToDMs(),
-    });
-  };
-
-  unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
   };
 
   render() {
