@@ -32,6 +32,7 @@ type DBThreadEdits = {
 };
 
 export type DBThread = {
+  id: string,
   channelId: string,
   communityId: string,
   content: {
@@ -155,7 +156,8 @@ export const getThreadsInTimeframe = (
 */
 export const getViewableThreadsByUser = (
   evalUser: string,
-  currentUser: string
+  currentUser: string,
+  { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   return (
     db
@@ -201,12 +203,15 @@ export const getViewableThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       .run()
   );
 };
 
 export const getPublicThreadsByUser = (
-  evalUser: string
+  evalUser: string,
+  { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   return (
     db
@@ -236,6 +241,8 @@ export const getPublicThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       .run()
   );
 };
