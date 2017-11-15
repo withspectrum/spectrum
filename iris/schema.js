@@ -13,7 +13,6 @@ const logExecutions = require('graphql-log')({
 });
 //$FlowFixMe
 const { merge } = require('lodash');
-import OpticsAgent from 'optics-agent';
 import UserError from './utils/UserError';
 
 const scalars = require('./types/scalars');
@@ -144,8 +143,5 @@ if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
     );
   });
 }
-
-// Instrument the schema with Apollo Optics
-OpticsAgent.instrumentSchema(schema);
 
 module.exports = schema;
