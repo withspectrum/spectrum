@@ -1,26 +1,18 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import { withApollo } from 'react-apollo';
-import { getCurrentUserProfile, editUserMutation } from '../../api/user';
+import { getCurrentUserProfile } from '../../api/user';
 import { openModal } from '../../actions/modals';
-import {
-  getNotificationsForNavbar,
-  markNotificationsSeenMutation,
-  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
-  markNotificationsReadMutation,
-  markDirectMessageNotificationsSeenMutation,
-} from '../../api/notification';
 import Icon from '../../components/icons';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Loading } from '../../components/loading';
-import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
-import Head from '../../components/head';
-import { getDistinctNotifications } from '../../views/notifications/utils';
-import { throttle } from '../../helpers/utils';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import MessagesTab from './components/messagesTab';
+import NotificationsTab from './components/notificationsTab';
 import {
   Section,
   Nav,
@@ -32,272 +24,55 @@ import {
   UserProfileAvatar,
 } from './style';
 
-class Navbar extends Component {
-  state: {
-    allUnseenCount: number,
-    notifications: Array<Object>,
-    subscription: ?Function,
-  };
+type Props = {
+  isLoading: boolean,
+  hasError: boolean,
+  location: Object,
+  history: Object,
+  match: Object,
+  data: {
+    user?: Object,
+  },
+  currentUser?: Object,
+  activeInboxThread: ?string,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      allUnseenCount: 0,
-      notifications: [],
-      subscription: null,
-    };
-
-    this.markAllNotificationsSeen = throttle(
-      this.markAllNotificationsSeen,
-      5000
-    );
-  }
-
-  calculateUnseenCounts = () => {
-    const {
-      data: { user },
-      notificationsQuery: { networkStatus },
-      notificationsQuery,
-      currentUser,
-      history,
-      activeInboxThread,
-    } = this.props;
-    const loggedInUser = user || currentUser;
-
-    if (networkStatus === 7) {
-      let notifications =
-        loggedInUser &&
-        notificationsQuery.notifications.edges.map(
-          notification => notification.node
-        );
-      notifications = getDistinctNotifications(notifications);
-
-      /*
-        NOTE:
-        This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
-      */
-      const pathname = window.location.pathname;
-      const lastIndex = pathname.lastIndexOf('/');
-      const firstIndex = pathname.indexOf('/');
-      const route = pathname.substr(firstIndex + 1, lastIndex - 1);
-      const isMessages = route && route === 'messages';
-      const id = pathname.substr(lastIndex + 1);
-      const params = queryString.parse(history.location.search);
-      const threadParam = params.thread;
-
-      const dmUnseenCount =
-        notifications &&
-        notifications.length > 0 &&
-        notifications
-          .filter(notification => notification.isSeen === false)
-          .filter(notification => {
-            // SEE NOTE ABOVE
-            if (notification.context.id === id || isMessages) {
-              // if the notification context matches the current route, go ahead and mark it as seen
-              this.props.client.mutate({
-                mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
-                variables: {
-                  id: notification.id,
-                },
-              });
-
-              return null;
-            }
-
-            return notification;
-          })
-          .filter(
-            notification =>
-              notification.context.type === 'DIRECT_MESSAGE_THREAD'
-          ).length;
-
-      const allUnseenCount =
-        notifications &&
-        notifications.length > 0 &&
-        notifications
-          .filter(notification => notification.isSeen === false)
-          .filter(notification => {
-            // SEE NOTE ABOVE
-            if (
-              notification.context.id === activeInboxThread ||
-              notification.context.id === threadParam ||
-              notification.context.id === id
-            ) {
-              // if the notification context matches the current route, go ahead and mark it as seen
-              this.props.client.mutate({
-                mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
-                variables: {
-                  id: notification.id,
-                },
-              });
-
-              return null;
-            }
-
-            return notification;
-          })
-          .filter(
-            notification =>
-              notification.context.type !== 'DIRECT_MESSAGE_THREAD'
-          ).length;
-
-      return {
-        allUnseenCount,
-        dmUnseenCount,
-        notifications,
-      };
-    } else {
-      return;
-    }
-  };
-
-  formattedCount = count => {
-    if (count > 10) {
-      return '10+';
-    } else if (count > 0) {
-      return count;
-    } else return false;
-  };
-
-  shouldComponentUpdate(next, nextState) {
-    const curr = this.props;
-    const currState = this.state;
-
-    // if notifications should be cleared
-    if (
-      currState.allUnseenCount !== nextState.allUnseenCount ||
-      currState.dmUnseenCount !== nextState.dmUnseenCount
-    ) {
-      return true;
-    }
-
-    // if the user doesn't have a username
-    if (currState.showNewUserOnboarding !== nextState.showNewUserOnboarding) {
-      return true;
-    }
+class Navbar extends React.Component<Props> {
+  shouldComponentUpdate(nextProps) {
+    const currProps = this.props;
 
     // if route changes
-    if (curr.location.pathname !== next.location.pathname) {
-      return true;
-    }
-
-    // Had no notifications before, have notifications now
-    if (
-      !curr.notificationsQuery.notifications &&
-      next.notificationsQuery.notifications
-    )
-      return true;
-
-    // Have more notifications now
-    if (
-      next.notificationsQuery.notifications &&
-      curr.notificationsQuery.notifications.edges.length !==
-        next.notificationsQuery.notifications.edges.length
-    )
+    if (currProps.location.pathname !== nextProps.location.pathname)
       return true;
 
     // Had no user, now have user or user changed
     if (
-      (!next.data.user && curr.data.user) ||
-      next.data.user !== curr.data.user
+      (!nextProps.data.user && currProps.data.user) ||
+      nextProps.data.user !== currProps.data.user
     )
       return true;
 
     // if the user is mobile and is viewing a thread or DM thread, re-render
     // the navbar when they exit the thread
-    const thisParams = queryString.parse(curr.history.location.search);
-    const nextParams = queryString.parse(next.history.location.search);
-    const thisThreadParam = thisParams.thread;
-    const nextThreadParam = nextParams.thread;
+    const { thread: thisThreadParam } = queryString.parse(
+      currProps.history.location.search
+    );
+    const { thread: nextThreadParam } = queryString.parse(
+      nextProps.history.location.search
+    );
     if (thisThreadParam !== nextThreadParam) return true;
 
     // Fuck updating
     return false;
   }
 
-  componentDidUpdate(prevProps) {
-    // if the query returned notifications
-    if (
-      this.props.notificationsQuery.notifications &&
-      !prevProps.notificationsQuery.notifications
-    ) {
-      this.setState(this.calculateUnseenCounts());
-    }
-
-    // listen for incoming changes and recalculate notifications count
-    if (
-      prevProps.notificationsQuery.notifications &&
-      prevProps.notificationsQuery.notifications.edges.length !==
-        this.props.notificationsQuery.notifications.edges.length
-    ) {
-      this.setState(this.calculateUnseenCounts());
-    }
-
-    const { data: { user }, dispatch, history, match } = this.props;
-
-    // once we have a valid user, subscribe to notification count changes
-    if (prevProps.data.user !== user && user !== null) {
-      this.subscribe();
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  subscribe = () => {
-    this.setState({
-      subscription: this.props.subscribeToNewNotifications(),
-    });
-  };
-
-  unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
-  };
-
-  markAllNotificationsSeen = () => {
-    const { allUnseenCount } = this.state;
-
-    if (allUnseenCount === 0) {
-      return null;
-    } else {
-      this.setState({
-        allUnseenCount: 0,
-      });
-      this.props
-        .markAllNotificationsSeen()
-        .then(({ data: { markAllNotificationsSeen } }) => {
-          // notifs were marked as seen
-          this.setState({
-            allUnseenCount: 0,
-          });
-        })
-        .catch(err => {
-          // error
-        });
-    }
-  };
-
-  markAllNotificationsRead = () => {
-    this.props
-      .markAllNotificationsRead()
-      .then(({ data: { markAllNotificationsRead } }) => {
-        // notifs were marked as read
-      })
-      .catch(err => {
-        // error
-      });
-  };
-
   render() {
     const {
       history,
       match,
-      data: { user, networkStatus },
+      data: { user },
+      isLoading,
+      hasError,
       currentUser,
     } = this.props;
     const loggedInUser = user || currentUser;
@@ -306,20 +81,13 @@ class Navbar extends Component {
     const isHome =
       history.location.pathname === '/' ||
       history.location.pathname === '/home';
-    const {
-      allUnseenCount,
-      dmUnseenCount,
-      notifications,
-      showNewUserOnboarding,
-    } = this.state;
 
     // Bail out if the splash page is showing
     if (!currentUserExists && isHome) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
-    const params = queryString.parse(history.location.search);
-    const threadParam = params.thread;
+    const { thread: threadParam } = queryString.parse(history.location.search);
     const parts = history.location.pathname.split('/');
     const isViewingThread = parts[1] === 'thread';
     const isViewingDm =
@@ -334,50 +102,10 @@ class Navbar extends Component {
       isViewingDm ||
       isComposingThread;
 
-    // this only shows if the user does not have a username
-    if (
-      (user && showNewUserOnboarding) ||
-      ((history.location.pathname === '/' ||
-        history.location.pathname === '/home') &&
-        user &&
-        user.communityConnection.edges.length === 0)
-    ) {
-      return (
-        <NewUserOnboarding
-          close={this.closeNewUserOnboarding}
-          currentUser={user}
-          // if the user doesn't have a username, they can't close
-          // the onboarding
-          noCloseButton
-        />
-      );
-    }
-
-    if (networkStatus < 8 && currentUserExists) {
-      const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
-
+    if (currentUserExists) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
-          <Head>
-            {showUnreadFavicon ? (
-              <link
-                rel="shortcut icon"
-                id="dynamic-favicon"
-                href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
-              />
-            ) : (
-              <link
-                rel="shortcut icon"
-                id="dynamic-favicon"
-                href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
-              />
-            )}
-          </Head>
-
-          {dmUnseenCount && <div>{dmUnseenCount}</div>}
-          {allUnseenCount && <div>{allUnseenCount}</div>}
-
-          <Section left hideOnMobile>
+          <Section>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
@@ -398,37 +126,15 @@ class Navbar extends Component {
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
-          </Section>
 
-          <Section right hideOnMobile>
-            <IconDrop
-              onMouseEnter={this.markAllNotificationsSeen}
-              onClick={this.markAllNotificationsSeen}
-            >
-              <IconLink
-                data-active={history.location.pathname === '/notifications'}
-                to="/notifications"
-                rel="nofollow"
-              >
-                <Icon
-                  glyph={
-                    allUnseenCount > 0 ? 'notification-fill' : 'notification'
-                  }
-                  withCount={this.formattedCount(allUnseenCount)}
-                />
-              </IconLink>
-              <NotificationDropdown
-                rawNotifications={notifications}
-                markAllRead={this.markAllNotificationsRead}
-                currentUser={loggedInUser}
-                width={'480px'}
-                loading={networkStatus < 7}
-                error={networkStatus === 8}
-              />
-            </IconDrop>
+            <NotificationsTab
+              currentUser={loggedInUser}
+              active={history.location.pathname.includes('/notifications')}
+            />
 
             <IconDrop>
               <IconLink
+                hideOnMobile
                 data-active={
                   history.location.pathname ===
                   `/users/${loggedInUser.username}`
@@ -442,46 +148,14 @@ class Navbar extends Component {
                 <UserProfileAvatar
                   user={loggedInUser}
                   src={`${loggedInUser.profilePhoto}`}
-                  isPro={loggedInUser.isPro}
                 />
               </IconLink>
               <ProfileDropdown user={loggedInUser} />
             </IconDrop>
-          </Section>
-          <Section hideOnDesktop>
-            <IconLink data-active={match.url === '/' && match.isExact} to="/">
-              <Icon glyph="home" />
-              <Label>Home</Label>
-            </IconLink>
-
-            <MessagesTab
-              active={history.location.pathname.includes('/messages')}
-            />
 
             <IconLink
-              data-active={history.location.pathname === '/notifications'}
-              to="/notifications"
-              rel="nofollow"
-              onClick={this.markAllNotificationsSeen}
-            >
-              <Icon
-                glyph={
-                  allUnseenCount > 0 ? 'notification-fill' : 'notification'
-                }
-                withCount={this.formattedCount(allUnseenCount)}
-              />
-              <Label>Notifications</Label>
-            </IconLink>
-
-            <IconLink
-              data-active={history.location.pathname === '/explore'}
-              to="/explore"
-            >
-              <Icon glyph="explore" />
-              <Label>Explore</Label>
-            </IconLink>
-
-            <IconLink
+              hideOnDesktop
+              style={{ alignSelf: 'flex-end' }}
               data-active={
                 history.location.pathname === `/users/${loggedInUser.username}`
               }
@@ -495,7 +169,9 @@ class Navbar extends Component {
           </Section>
         </Nav>
       );
-    } else if (networkStatus >= 7) {
+    }
+
+    if (isLoading) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
           <Section left hideOnMobile>
@@ -511,7 +187,9 @@ class Navbar extends Component {
           </Section>
         </Nav>
       );
-    } else {
+    }
+
+    if (hasError) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
           <LogoLink to="/">
@@ -529,11 +207,9 @@ const mapStateToProps = state => ({
   activeInboxThread: state.dashboardFeed.activeThread,
 });
 export default compose(
+  // $FlowIssue
+  connect(mapStateToProps),
   getCurrentUserProfile,
-  getNotificationsForNavbar,
-  editUserMutation,
-  markNotificationsSeenMutation,
-  markNotificationsReadMutation,
   withApollo,
-  connect(mapStateToProps)
+  viewNetworkHandler
 )(Navbar);

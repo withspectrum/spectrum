@@ -20,10 +20,7 @@ module.exports = {
       resolve: (notification: any) => notification,
       subscribe: withFilter(
         listenToNewDirectMessageNotifications,
-        (notification, _, { user }) =>
-          console.log('in sub', user.id) ||
-          console.log('in sub n', notification) ||
-          user.id === notification.userId
+        (notification, _, { user }) => user.id === notification.userId
       ),
     },
   },

@@ -55,12 +55,12 @@ export const Nav = styled(FlexRow)`
 
 export const Section = styled(FlexRow)`
   align-items: stretch;
-  display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
+  display: flex;
 
   @media (max-width: 768px) {
     flex: auto;
     justify-content: space-around;
-    display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
+    display: flex;
   }
 `;
 
@@ -139,7 +139,7 @@ export const IconDrop = styled(FlexRow)`
 `;
 
 export const IconLink = styled(Link)`
-  display: flex;
+  display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
   flex: auto;
   flex-direction: row;
   justify-content: center;
@@ -162,6 +162,7 @@ export const IconLink = styled(Link)`
   }
 
   @media (max-width: 768px) {
+    display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
     flex-direction: column;
     opacity: 0.7;
     margin: 0;
@@ -182,8 +183,9 @@ export const Label = styled.span`
   font-size: 14px;
   font-weight: 700;
   margin-left: 12px;
-
-  @media (max-width: 768px) {
+  ${props =>
+    props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    display: flex;
     font-size: 9px;
     text-transform: uppercase;
     font-weight: 700;

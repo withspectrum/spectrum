@@ -2,25 +2,30 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
-import Head from '../../../components/head';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import Head from '../../../components/head';
+import { NotificationDropdown } from './notificationDropdown';
 import {
-  getUnreadDMQuery,
-  markDirectMessageNotificationsSeenMutation,
+  getNotifications,
+  markNotificationsSeenMutation,
+  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
 } from '../../../api/notification';
-import { IconLink, Label } from '../style';
+import { IconLink, IconDrop, Label } from '../style';
+import { getDistinctNotifications } from '../../notifications/utils';
 
 type Props = {
   active: boolean,
+  currentUser: Object,
   isLoading: boolean,
   hasError: boolean,
   isFetchingMore: boolean,
   isRefetching: boolean,
-  markDirectMessageNotificationsSeen: Function,
   data: {
-    directMessageNotifications?: Array<any>,
+    notifications?: {
+      edges: Array<any>,
+    },
+    subscribeToNewNotifications: Function,
   },
-  subscribeToDMs: Function,
   refetch: Function,
 };
 
@@ -29,20 +34,19 @@ type State = {
   subscription: ?Function,
 };
 
-class MessagesTab extends React.Component<Props, State> {
+class NotificationsTab extends React.Component<Props, State> {
   state = {
     count: 0,
     subscription: null,
   };
 
   setCount(props) {
-    const { data: { directMessageNotifications } } = props;
+    const { data: { notifications } } = props;
+    const rawNotifications = this.processNotifications(notifications);
+    console.log(rawNotifications);
 
     // set to 0 if no notifications exist yet
-    if (
-      !directMessageNotifications ||
-      directMessageNotifications.length === 0
-    ) {
+    if (!rawNotifications || rawNotifications.length === 0) {
       return this.setState({
         count: 0,
       });
@@ -50,10 +54,9 @@ class MessagesTab extends React.Component<Props, State> {
 
     // bundle dm notifications
     const obj = {};
-    directMessageNotifications.filter(n => !n.isSeen).map(o => {
+    rawNotifications.filter(n => !n.isSeen).map(o => {
       if (obj[o.context.id]) return;
       obj[o.context.id] = o;
-      return;
     });
 
     // count of unique notifications determined by the thread id
@@ -76,19 +79,18 @@ class MessagesTab extends React.Component<Props, State> {
       return true;
 
     // once the initial query finishes loading
-    if (
-      !prevProps.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications
-    )
+    if (!prevProps.data.notifications && nextProps.data.notifications)
       return true;
 
     // if a subscription updates the number of records returned
     if (
       prevProps.data &&
-      prevProps.data.directMessageNotifications &&
-      nextProps.data.directMessageNotifications &&
-      prevProps.data.directMessageNotifications.length !==
-        nextProps.data.directMessageNotifications.length
+      prevProps.data.notifications &&
+      prevProps.data.notifications.edges &&
+      nextProps.data.notifications &&
+      nextProps.data.notifications.edges &&
+      prevProps.data.notifications.edges.length !==
+        nextProps.data.notifications.edges.length
     )
       return true;
 
@@ -100,10 +102,6 @@ class MessagesTab extends React.Component<Props, State> {
     return false;
   }
 
-  componentDidMount() {
-    return this.subscribe();
-  }
-
   componentDidUpdate(prevProps) {
     const { data: prevData } = prevProps;
     const { data: thisData, active } = this.props;
@@ -113,47 +111,39 @@ class MessagesTab extends React.Component<Props, State> {
     // set the count to 0 if the tab is active so that if a user loads
     // /messages view directly, the badge won't update
     if (active) {
-      // if the user is viewing /messages, mark any incoming notifications
-      // as seen, so that when they navigate away the message count won't shoot up
-      this.markAllAsSeen();
       return this.setState({
         count: 0,
       });
     }
 
     // if the component updates for the first time
-    if (
-      !prevData.directMessageNotifications &&
-      thisData.directMessageNotifications &&
-      !subscription
-    ) {
+    if (!prevData.notifications && thisData.notifications && !subscription) {
       return this.setCount(this.props);
     }
 
     // if the component updates with changed or new dm notifications
     // if any are unseen, set the counts
     if (
-      thisData.directMessageNotifications &&
-      thisData.directMessageNotifications.length > 0 &&
-      thisData.directMessageNotifications.some(n => !n.isSeen)
+      thisData.notifications &&
+      thisData.notifications.edges &&
+      thisData.notifications.edges.length > 0 &&
+      thisData.notifications.edges.some(n => !n.isSeen)
     ) {
       return this.setCount(this.props);
     }
   }
 
   markAllAsSeen = () => {
-    const { data: { directMessageNotifications } } = this.props;
+    const { count } = this.state;
 
-    // if there are no unread, escape
-    if (directMessageNotifications && directMessageNotifications.length === 0)
-      return;
+    // don't perform a mutation is there are no unread notifs
+    if (count === 0) return;
 
     // otherwise
     this.props
       .markDirectMessageNotificationsSeen()
       .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
         // notifs were marked as seen
-        console.log('REFETCHING');
         this.props.refetch();
       })
       .catch(err => {
@@ -161,13 +151,18 @@ class MessagesTab extends React.Component<Props, State> {
       });
   };
 
+  componentDidMount() {
+    console.log('SUBSCRIBING');
+    return this.subscribe();
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
 
   subscribe = () => {
     this.setState({
-      subscription: this.props.subscribeToDMs(),
+      subscription: this.props.data.subscribeToNewNotifications(),
     });
   };
 
@@ -179,47 +174,68 @@ class MessagesTab extends React.Component<Props, State> {
     }
   };
 
+  processNotifications = notifications => {
+    if (
+      !notifications ||
+      !notifications.edges ||
+      notifications.edges.length === 0
+    )
+      return [];
+    return getDistinctNotifications(notifications.edges.map(n => n.node));
+  };
+
   render() {
-    const { active } = this.props;
+    const { active, currentUser, data: { notifications } } = this.props;
     const { count } = this.state;
+    const rawNotifications = this.processNotifications(notifications);
+
+    console.log('NOTIFICATIONS TAB PROPS', this.props);
+    console.log('NOTIFICATIONS TAB STATE', this.state);
 
     return (
-      <IconLink
-        data-active={active}
-        to="/messages"
-        rel="nofollow"
-        onClick={this.markAllAsSeen}
+      <IconDrop
+        onMouseEnter={this.markAllNotificationsSeen}
+        onClick={this.markAllNotificationsSeen}
       >
         <Head>
           {count > 0 ? (
             <link
               rel="shortcut icon"
               id="dynamic-favicon"
-              // $FlowIssue
               href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
             />
           ) : (
             <link
               rel="shortcut icon"
               id="dynamic-favicon"
-              // $FlowIssue
               href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
             />
           )}
         </Head>
 
-        <Icon
-          glyph={count > 0 ? 'message-fill' : 'message'}
-          withCount={count > 10 ? '10+' : count > 0 ? count : false}
+        <IconLink data-active={active} to="/notifications" rel="nofollow">
+          <Icon
+            glyph={count > 0 ? 'notification-fill' : 'notification'}
+            withCount={count > 10 ? '10+' : count > 0 ? count : false}
+          />
+          <Label hideOnDesktop>Notifications</Label>
+        </IconLink>
+
+        <NotificationDropdown
+          rawNotifications={rawNotifications}
+          markAllRead={this.markAllNotificationsRead}
+          currentUser={currentUser}
+          width={'480px'}
+          loading={false}
+          error={false}
         />
-        <Label>Messages</Label>
-      </IconLink>
+      </IconDrop>
     );
   }
 }
 
 export default compose(
-  getUnreadDMQuery,
-  markDirectMessageNotificationsSeenMutation,
+  getNotifications,
+  markNotificationsSeenMutation,
   viewNetworkHandler
-)(MessagesTab);
+)(NotificationsTab);

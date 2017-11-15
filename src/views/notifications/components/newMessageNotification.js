@@ -65,7 +65,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
               const me = currentUser ? sender.id === currentUser.id : false;
 
               return (
-                <Sender>
+                <Sender key={i}>
                   {!me && <AuthorAvatar sender={sender} />}
 
                   <MessageGroup me={me}>

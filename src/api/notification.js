@@ -46,7 +46,9 @@ export const GET_NOTIFICATIONS_QUERY = gql`
 `;
 
 export const GET_NOTIFICATIONS_OPTIONS = {
-  props: ({ data: { fetchMore, error, loading, notifications } }) => ({
+  props: ({
+    data: { fetchMore, error, loading, notifications, subscribeToMore },
+  }) => ({
     data: {
       error,
       loading,
@@ -79,66 +81,55 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             });
           },
         }),
-    },
-  }),
-};
+      subscribeToNewNotifications: () =>
+        subscribeToMore({
+          document: subscribeToNewNotifications,
+          updateQuery: (prev, { subscriptionData }) => {
+            const newNotification = subscriptionData.data.notificationAdded;
+            if (!newNotification) return prev;
 
-export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
-  name: 'notificationsQuery',
-  options: {
-    fetchPolicy: 'network-only',
-  },
-  props: props => ({
-    ...props,
-    subscribeToNewNotifications: () => {
-      return props.notificationsQuery.subscribeToMore({
-        document: subscribeToNewNotifications,
-        updateQuery: (prev, { subscriptionData }) => {
-          const newNotification = subscriptionData.data.notificationAdded;
-          if (!newNotification) return prev;
+            const notificationNode = {
+              ...newNotification,
+              __typename: 'Notification',
+            };
 
-          const notificationNode = {
-            ...newNotification,
-            __typename: 'Notification',
-          };
+            if (!prev.notifications) {
+              return {
+                __typename: 'NotificationsConnection',
+                pageInfo: {
+                  hasNextPage: true,
+                  __typename: 'PageInfo',
+                },
+                notifications: {
+                  edges: [
+                    {
+                      node: notificationNode,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'NotificationEdge',
+                    },
+                  ],
+                },
+                ...prev,
+              };
+            }
 
-          if (!prev.notifications) {
-            return {
-              __typename: 'NotificationsConnection',
-              pageInfo: {
-                hasNextPage: true,
-                __typename: 'PageInfo',
-              },
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
               notifications: {
+                ...prev.notifications,
                 edges: [
                   {
                     node: notificationNode,
                     cursor: '__this-is-a-cursor__',
                     __typename: 'NotificationEdge',
                   },
+                  ...prev.notifications.edges,
                 ],
               },
-              ...prev,
-            };
-          }
-
-          // Add the new notification to the data
-          return Object.assign({}, prev, {
-            ...prev,
-            notifications: {
-              ...prev.notifications,
-              edges: [
-                {
-                  node: notificationNode,
-                  cursor: '__this-is-a-cursor__',
-                  __typename: 'NotificationEdge',
-                },
-                ...prev.notifications.edges,
-              ],
-            },
-          });
-        },
-      });
+            });
+          },
+        }),
     },
   }),
 };
@@ -146,11 +137,6 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
 export const getNotifications = graphql(
   GET_NOTIFICATIONS_QUERY,
   GET_NOTIFICATIONS_OPTIONS
-);
-
-export const getNotificationsForNavbar = graphql(
-  GET_NOTIFICATIONS_QUERY,
-  GET_NOTIFICATIONS_NAVBAR_OPTIONS
 );
 
 export const MARK_NOTIFICATIONS_READ_MUTATION = gql`
@@ -264,11 +250,8 @@ export const GET_UNREAD_DMS_OPTIONS = {
       return props.data.subscribeToMore({
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
-          console.log('prev', prev);
-          console.log('subscriptionData', subscriptionData);
           const newNotification = subscriptionData.data.dmNotificationAdded;
           if (!newNotification) return prev;
-          console.log('newNotification', newNotification);
           const notificationNode = {
             ...newNotification,
             __typename: 'Notification',
