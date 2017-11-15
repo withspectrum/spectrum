@@ -170,9 +170,7 @@ module.exports = {
         // if a pinnedThread was found, filter it out of the list of fetched threads
         // to avoid duplication in the feed, and then add the pinned thread to the
         // Front of the array
-        let arr = threads.list.filter(
-          thread => thread.id !== pinnedThread[0].id
-        );
+        let arr = threads.filter(thread => thread.id !== pinnedThread[0].id);
         arr.unshift(pinnedThread[0]);
         result = arr;
       }
