@@ -157,6 +157,7 @@ class MessagesTab extends React.Component<Props, State> {
     const {
       data: { directMessageNotifications },
       markDirectMessageNotificationsSeen,
+      refetch,
     } = this.props;
 
     // if there are no unread, escape
@@ -165,10 +166,10 @@ class MessagesTab extends React.Component<Props, State> {
 
     // otherwise
     return markDirectMessageNotificationsSeen()
-      .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
+      .then(() => {
         // notifs were marked as seen
         // refetch to make sure we're keeping up with the server's state
-        return this.props.refetch();
+        return refetch();
       })
       .catch(err => {
         // err

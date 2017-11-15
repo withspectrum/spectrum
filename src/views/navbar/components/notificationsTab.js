@@ -1,5 +1,9 @@
 // @flow
 import * as React from 'react';
+import { withApollo } from 'react-apollo';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -18,8 +22,10 @@ type Props = {
   currentUser: Object,
   isLoading: boolean,
   hasError: boolean,
-  isFetchingMore: boolean,
   isRefetching: boolean,
+  markAllNotificationsSeen: Function,
+  activeInboxThread: ?string,
+  history: Object,
   data: {
     notifications?: {
       edges: Array<any>,
@@ -27,6 +33,7 @@ type Props = {
     subscribeToNewNotifications: Function,
   },
   refetch: Function,
+  client: Function,
 };
 
 type State = {
@@ -40,43 +47,34 @@ class NotificationsTab extends React.Component<Props, State> {
     subscription: null,
   };
 
-  setCount(props) {
-    const { data: { notifications } } = props;
-    const rawNotifications = this.processNotifications(notifications);
-    console.log(rawNotifications);
-
-    // set to 0 if no notifications exist yet
-    if (!rawNotifications || rawNotifications.length === 0) {
-      return this.setState({
-        count: 0,
-      });
-    }
-
-    // bundle dm notifications
-    const obj = {};
-    rawNotifications.filter(n => !n.isSeen).map(o => {
-      if (obj[o.context.id]) return;
-      obj[o.context.id] = o;
-    });
-
-    // count of unique notifications determined by the thread id
-    const count = Object.keys(obj).length;
-
-    return this.setState({
-      count,
-    });
+  componentDidMount() {
+    return this.subscribe();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     const prevProps = this.props;
     const prevState = this.state;
 
+    const prevHistory = prevProps.history;
+    const nextHistory = nextProps.history;
+    const { thread: prevThreadParam } = prevHistory.location.search;
+    const { thread: nextThreadParam } = nextHistory.location.search;
+    const prevActiveInboxThread = prevProps.activeInboxThread;
+    const nextActiveInboxThread = nextProps.activeInboxThread;
+    const prevParts = prevHistory.location.pathname.split('/');
+    const nextParts = prevHistory.location.pathname.split('/');
+
+    // changing slider
+    if (prevThreadParam !== nextThreadParam) return true;
+
+    // changing inbox thread
+    if (prevActiveInboxThread !== nextActiveInboxThread) return true;
+
+    // changing thread detail view
+    if (prevParts[2] !== nextParts[2]) return true;
+
     // if a refetch completes
-    if (
-      prevProps.data.networkStatus === 4 &&
-      nextProps.data.networkStatus === 7
-    )
-      return true;
+    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
 
     // once the initial query finishes loading
     if (!prevProps.data.notifications && nextProps.data.notifications)
@@ -103,57 +101,68 @@ class NotificationsTab extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    const { data: prevData } = prevProps;
-    const { data: thisData, active } = this.props;
+    const {
+      data: prevData,
+      active: prevActive,
+      history: prevHistory,
+      activeInboxThread: prevActiveInboxThread,
+    } = prevProps;
+    const {
+      data: thisData,
+      active: thisActive,
+      history: thisHistory,
+      client,
+      activeInboxThread: thisActiveInboxThread,
+    } = this.props;
+
     const { subscription } = this.state;
 
-    // never update the badge if the user is viewing the messages tab
+    // never update the badge if the user is viewing the notifications tab
     // set the count to 0 if the tab is active so that if a user loads
-    // /messages view directly, the badge won't update
-    if (active) {
+    // /notifications view directly, the badge won't update
+    if (thisActive) {
       return this.setState({
         count: 0,
       });
     }
 
+    const { thread: prevThreadParam } = prevHistory.location.search;
+    const { thread: thisThreadParam } = thisHistory.location.search;
+    const prevParts = prevHistory.location.pathname.split('/');
+    const thisParts = prevHistory.location.pathname.split('/');
+
+    // changing slider
+    if (prevThreadParam !== thisThreadParam)
+      return this.processAndMarkSeenNotifications(thisData.notifications);
+
+    // changing inbox thread
+    if (prevActiveInboxThread !== thisActiveInboxThread)
+      return (
+        console.log('CHANGED INBOX') ||
+        this.processAndMarkSeenNotifications(thisData.notifications)
+      );
+
+    // changing thread detail view
+    if (prevParts[2] !== thisParts[2])
+      return this.processAndMarkSeenNotifications(thisData.notifications);
+
     // if the component updates for the first time
-    if (!prevData.notifications && thisData.notifications && !subscription) {
-      return this.setCount(this.props);
+    if (!prevData.notifications && thisData.notifications) {
+      return this.processAndMarkSeenNotifications(thisData.notifications);
     }
 
-    // if the component updates with changed or new dm notifications
+    // if the component updates with changed or new notifications
     // if any are unseen, set the counts
     if (
       thisData.notifications &&
       thisData.notifications.edges &&
+      prevData.notifications &&
+      prevData.notifications.edges &&
       thisData.notifications.edges.length > 0 &&
-      thisData.notifications.edges.some(n => !n.isSeen)
+      thisData.notifications.edges.length > prevData.notifications.edges.length
     ) {
-      return this.setCount(this.props);
+      return this.processAndMarkSeenNotifications(thisData.notifications);
     }
-  }
-
-  markAllAsSeen = () => {
-    const { count } = this.state;
-
-    // don't perform a mutation is there are no unread notifs
-    if (count === 0) return;
-
-    // otherwise
-    this.props
-      .markDirectMessageNotificationsSeen()
-      .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
-        // notifs were marked as seen
-        this.props.refetch();
-      })
-      .catch(err => {
-        // err
-      });
-  };
-
-  componentDidMount() {
-    console.log('SUBSCRIBING');
-    return this.subscribe();
   }
 
   componentWillUnmount() {
@@ -174,40 +183,161 @@ class NotificationsTab extends React.Component<Props, State> {
     }
   };
 
-  processNotifications = notifications => {
+  convertEdgesToNodes = notifications => {
     if (
       !notifications ||
       !notifications.edges ||
       notifications.edges.length === 0
     )
       return [];
-    return getDistinctNotifications(notifications.edges.map(n => n.node));
+
+    return notifications.edges.map(n => n.node);
+  };
+
+  setCount = notifications => {
+    console.log('set count incoming', notifications, notifications.length);
+    if (!notifications || notifications.length == 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    const distinct = getDistinctNotifications(notifications);
+    console.log('set count distinct', distinct, distinct.length);
+    // set to 0 if no notifications exist yet
+    if (!distinct || distinct.length === 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    // set to 0 if no notifications are unseen
+    const unseen = distinct.filter(n => !n.isSeen);
+    console.log('set count unseen', unseen, unseen.length);
+    if (!unseen || unseen.length === 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    // count of unique unseen notifications
+    const count = unseen.length;
+
+    return this.setState({
+      count,
+    });
+  };
+
+  markAllAsSeen = () => {
+    const { markAllNotificationsSeen, refetch } = this.props;
+    const { count } = this.state;
+
+    // don't perform a mutation is there are no unread notifs
+    if (count === 0) return;
+
+    // otherwise
+    return markAllNotificationsSeen()
+      .then(() => {
+        // notifs were marked as seen
+        return refetch();
+      })
+      .catch(err => {
+        // err
+      });
+  };
+
+  processAndMarkSeenNotifications = notifications => {
+    const { history, client, activeInboxThread } = this.props;
+
+    const nodes = this.convertEdgesToNodes(notifications);
+
+    // if no notifications exist
+    if (!nodes || nodes.length === 0) return;
+
+    const distinct = getDistinctNotifications(nodes);
+
+    /*
+      1. If the user is viewing a ?thread= url, don't display a notification
+        badge for that thread, and mark any incoming notifications for that
+        thread as seen
+      2. If the user is viewing a ?t= url in the inbox, same logic
+      3. If the user is viewing the thread view, same logic
+    */
+
+    const filteredByContext = distinct.map(n => {
+      const contextId = n.context.id;
+      const { thread: threadParam } = queryString.parse(
+        history.location.search
+      );
+      // 1
+      const isViewingSlider = threadParam === contextId;
+      console.log('IS VIEWING SLIDER', isViewingSlider);
+      // 2
+      const isViewingInbox = activeInboxThread
+        ? activeInboxThread === contextId
+        : false;
+      console.log('IS VIEWING INBOX', isViewingInbox);
+      const parts = history.location.pathname.split('/');
+      const isViewingThread = parts[1] === 'thread';
+      // 3
+      const isViewingThreadDetail = isViewingThread
+        ? parts[2] === contextId
+        : false;
+      console.log('IS VIEWING THREAD VIEW', isViewingThreadDetail);
+
+      if (isViewingSlider || isViewingInbox || isViewingThreadDetail) {
+        console.log('MARKING A THING AS SEEN');
+        // if the user shouldn't see a new notification badge,
+        // mark it as seen before it ever hits the component
+        const newNotification = Object.assign({}, n, {
+          isSeen: true,
+        });
+
+        // and then mark it as seen on the server
+        client.mutate({
+          mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+          variables: {
+            id: n.id,
+          },
+        });
+
+        return newNotification;
+      } else {
+        return n;
+      }
+    });
+
+    console.log('filteredByContext', filteredByContext);
+    return this.setCount(filteredByContext);
   };
 
   render() {
-    const { active, currentUser, data: { notifications } } = this.props;
+    const {
+      active,
+      currentUser,
+      data: { notifications },
+      isLoading,
+    } = this.props;
     const { count } = this.state;
-    const rawNotifications = this.processNotifications(notifications);
 
-    console.log('NOTIFICATIONS TAB PROPS', this.props);
-    console.log('NOTIFICATIONS TAB STATE', this.state);
+    const nodes = this.convertEdgesToNodes(notifications);
+    const rawNotifications = getDistinctNotifications(nodes);
 
     return (
-      <IconDrop
-        onMouseEnter={this.markAllNotificationsSeen}
-        onClick={this.markAllNotificationsSeen}
-      >
+      <IconDrop onClick={this.markAllAsSeen}>
         <Head>
           {count > 0 ? (
             <link
               rel="shortcut icon"
               id="dynamic-favicon"
+              // $FlowIssue
               href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
             />
           ) : (
             <link
               rel="shortcut icon"
               id="dynamic-favicon"
+              // $FlowIssue
               href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
             />
           )}
@@ -223,10 +353,10 @@ class NotificationsTab extends React.Component<Props, State> {
 
         <NotificationDropdown
           rawNotifications={rawNotifications}
-          markAllRead={this.markAllNotificationsRead}
+          markAllAsSeen={this.markAllAsSeen}
           currentUser={currentUser}
           width={'480px'}
-          loading={false}
+          loading={isLoading}
           error={false}
         />
       </IconDrop>
@@ -234,7 +364,12 @@ class NotificationsTab extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({ activeInboxThread: state.dashboardFeed.activeThread });
 export default compose(
+  // $FlowIssue
+  connect(map),
+  withRouter,
+  withApollo,
   getNotifications,
   markNotificationsSeenMutation,
   viewNetworkHandler

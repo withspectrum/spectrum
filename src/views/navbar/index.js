@@ -205,10 +205,7 @@ class Navbar extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-  activeInboxThread: state.dashboardFeed.activeThread,
-});
+const mapStateToProps = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(mapStateToProps),

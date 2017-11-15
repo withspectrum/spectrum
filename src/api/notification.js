@@ -1,4 +1,3 @@
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { notificationInfoFragment } from './fragments/notification/notificationInfo';
 import {
@@ -85,7 +84,7 @@ export const GET_NOTIFICATIONS_OPTIONS = {
         subscribeToMore({
           document: subscribeToNewNotifications,
           updateQuery: (prev, { subscriptionData }) => {
-            const newNotification = subscriptionData.data.notificationAdded;
+            let newNotification = subscriptionData.data.notificationAdded;
             if (!newNotification) return prev;
 
             const notificationNode = {
@@ -218,7 +217,7 @@ export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
   props: ({ mutate }) => ({
     markSingleNotificationSeen: () => mutate(),
   }),
-  options: id => ({
+  options: (id: string) => ({
     variables: {
       id,
     },
