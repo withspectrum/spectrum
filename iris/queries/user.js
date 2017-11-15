@@ -24,7 +24,6 @@ const {
 const { getNotificationsByUser } = require('../models/notification');
 import { getInvoicesByUser } from '../models/invoice';
 import { isAdmin } from '../utils/permissions';
-import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
@@ -95,7 +94,6 @@ module.exports = {
       const lastDigits = cursor.match(/-(\d+)$/);
       const lastThreadIndex =
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-      // TODO: Make this more performant by doingan actual db query rather than this hacking around
       // $FlowFixMe
       return getEverything(user.id, {
         first,
@@ -157,31 +155,32 @@ module.exports = {
       { user }: GraphQLContext
     ) => {
       const currentUser = user;
+      const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       // if a logged in user is viewing the profile, handle logic to get viewable threads
       const getThreads =
         currentUser && currentUser !== null
-          ? getViewableThreadsByUser(id, currentUser.id)
+          ? // $FlowFixMe
+            getViewableThreadsByUser(id, currentUser.id, {
+              first,
+              after: lastThreadIndex,
+            })
           : // if the viewing user is logged out, only return publicly viewable threads
-            getPublicThreadsByUser(id);
+            // $FlowFixMe
+            getPublicThreadsByUser(id, { first, after: lastThreadIndex });
 
-      const cursor = decode(after);
-      return getThreads
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+      return getThreads.then(result => ({
+        pageInfo: {
+          hasNextPage: result && result.length >= first,
+        },
+        edges: result.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
+          node: thread,
+        })),
+      }));
     },
     threadCount: (
       { id }: { id: string },
