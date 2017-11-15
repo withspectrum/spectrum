@@ -65,7 +65,7 @@ export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
 export const getMediaMessagesForThread = (
   threadId: string
 ): Promise<Array<Message>> => {
-  return getMessages(threadId).then(messages =>
+  return getMessages(threadId, {}).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };
