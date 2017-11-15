@@ -24,12 +24,8 @@ export default job => {
   let avgPercent;
   if (spectrumPercent && perspectivePercent) {
     avgPercent = (spectrumPercent + perspectivePercent) / 2;
-  } else if (spectrumPercent && !perspectivePercent) {
-    avgPercent = spectrumPercent;
-  } else if (!spectrumPercent && perspectivePercent) {
-    avgPercent = perspectivePercent;
   } else {
-    avgPercent = 0;
+    avgPercent = spectrumPercent || perspectivePercent || 0;
   }
 
   const subject = `Toxic alert (${avgPercent.toString()}%): ${text}`;
