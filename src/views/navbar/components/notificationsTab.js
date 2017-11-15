@@ -38,12 +38,14 @@ type Props = {
 
 type State = {
   count: number,
+  notifications: Array<any>,
   subscription: ?Function,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
     count: 0,
+    notifications: [],
     subscription: null,
   };
 
@@ -92,15 +94,20 @@ class NotificationsTab extends React.Component<Props, State> {
     )
       return true;
 
-    // if the user clicks on the messages tab
+    // if the user clicks on the notifications tab
     if (prevProps.active !== nextProps.active) return true;
 
     // any time the count changes
     if (prevState.count !== nextState.count) return true;
+
+    // any time the count changes
+    if (prevState.notifications.length !== nextState.notifications.length)
+      return true;
+
     return false;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       data: prevData,
       active: prevActive,
@@ -115,12 +122,13 @@ class NotificationsTab extends React.Component<Props, State> {
       activeInboxThread: thisActiveInboxThread,
     } = this.props;
 
-    const { subscription } = this.state;
+    const { subscription, notifications } = this.state;
 
     // never update the badge if the user is viewing the notifications tab
     // set the count to 0 if the tab is active so that if a user loads
     // /notifications view directly, the badge won't update
     if (thisActive) {
+      this.processAndMarkSeenNotifications(notifications);
       return this.setState({
         count: 0,
       });
@@ -133,22 +141,19 @@ class NotificationsTab extends React.Component<Props, State> {
 
     // changing slider
     if (prevThreadParam !== thisThreadParam)
-      return this.processAndMarkSeenNotifications(thisData.notifications);
+      return this.processAndMarkSeenNotifications(notifications);
 
     // changing inbox thread
     if (prevActiveInboxThread !== thisActiveInboxThread)
-      return (
-        console.log('CHANGED INBOX') ||
-        this.processAndMarkSeenNotifications(thisData.notifications)
-      );
+      return this.processAndMarkSeenNotifications(notifications);
 
     // changing thread detail view
     if (prevParts[2] !== thisParts[2])
-      return this.processAndMarkSeenNotifications(thisData.notifications);
+      return this.processAndMarkSeenNotifications();
 
     // if the component updates for the first time
     if (!prevData.notifications && thisData.notifications) {
-      return this.processAndMarkSeenNotifications(thisData.notifications);
+      return this.processAndMarkSeenNotifications();
     }
 
     // if the component updates with changed or new notifications
@@ -159,9 +164,10 @@ class NotificationsTab extends React.Component<Props, State> {
       prevData.notifications &&
       prevData.notifications.edges &&
       thisData.notifications.edges.length > 0 &&
-      thisData.notifications.edges.length > prevData.notifications.edges.length
+      thisData.notifications.edges.length !==
+        prevData.notifications.edges.length
     ) {
-      return this.processAndMarkSeenNotifications(thisData.notifications);
+      return this.processAndMarkSeenNotifications();
     }
   }
 
@@ -194,40 +200,6 @@ class NotificationsTab extends React.Component<Props, State> {
     return notifications.edges.map(n => n.node);
   };
 
-  setCount = notifications => {
-    console.log('set count incoming', notifications, notifications.length);
-    if (!notifications || notifications.length == 0) {
-      return this.setState({
-        count: 0,
-      });
-    }
-
-    const distinct = getDistinctNotifications(notifications);
-    console.log('set count distinct', distinct, distinct.length);
-    // set to 0 if no notifications exist yet
-    if (!distinct || distinct.length === 0) {
-      return this.setState({
-        count: 0,
-      });
-    }
-
-    // set to 0 if no notifications are unseen
-    const unseen = distinct.filter(n => !n.isSeen);
-    console.log('set count unseen', unseen, unseen.length);
-    if (!unseen || unseen.length === 0) {
-      return this.setState({
-        count: 0,
-      });
-    }
-
-    // count of unique unseen notifications
-    const count = unseen.length;
-
-    return this.setState({
-      count,
-    });
-  };
-
   markAllAsSeen = () => {
     const { markAllNotificationsSeen, refetch } = this.props;
     const { count } = this.state;
@@ -246,14 +218,29 @@ class NotificationsTab extends React.Component<Props, State> {
       });
   };
 
-  processAndMarkSeenNotifications = notifications => {
-    const { history, client, activeInboxThread } = this.props;
+  processAndMarkSeenNotifications = stateNotifications => {
+    const {
+      data: { notifications },
+      history,
+      client,
+      activeInboxThread,
+    } = this.props;
 
-    const nodes = this.convertEdgesToNodes(notifications);
+    // in componentDidUpdate, we can optionally pass in the notifications
+    // from state. this is useful for when a user is navigating around the site
+    // and we want to mark notifications as read as they view threads
+    // if we do not pass in notifications from the state when this method is
+    // invoked, it is because the incoming props have changed from the server
+    // i.e. a new notification was recieved, so we should therefore run
+    // the rest of this method on the incoming notifications data
+    const nodes = stateNotifications
+      ? stateNotifications
+      : this.convertEdgesToNodes(notifications);
 
     // if no notifications exist
-    if (!nodes || nodes.length === 0) return;
+    if (!nodes || nodes.length === 0) return this.setCount();
 
+    // get distinct notifications by id
     const distinct = getDistinctNotifications(nodes);
 
     /*
@@ -270,23 +257,19 @@ class NotificationsTab extends React.Component<Props, State> {
         history.location.search
       );
       // 1
-      const isViewingSlider = threadParam === contextId;
-      console.log('IS VIEWING SLIDER', isViewingSlider);
+      const isViewingSlider = threadParam === contextId && !n.isSeen;
       // 2
       const isViewingInbox = activeInboxThread
-        ? activeInboxThread === contextId
+        ? activeInboxThread === contextId && !n.isSeen
         : false;
-      console.log('IS VIEWING INBOX', isViewingInbox);
       const parts = history.location.pathname.split('/');
       const isViewingThread = parts[1] === 'thread';
       // 3
       const isViewingThreadDetail = isViewingThread
-        ? parts[2] === contextId
+        ? parts[2] === contextId && !n.isSeen
         : false;
-      console.log('IS VIEWING THREAD VIEW', isViewingThreadDetail);
 
       if (isViewingSlider || isViewingInbox || isViewingThreadDetail) {
-        console.log('MARKING A THING AS SEEN');
         // if the user shouldn't see a new notification badge,
         // mark it as seen before it ever hits the component
         const newNotification = Object.assign({}, n, {
@@ -307,21 +290,44 @@ class NotificationsTab extends React.Component<Props, State> {
       }
     });
 
-    console.log('filteredByContext', filteredByContext);
+    this.setState({ notifications: filteredByContext });
     return this.setCount(filteredByContext);
   };
 
-  render() {
-    const {
-      active,
-      currentUser,
-      data: { notifications },
-      isLoading,
-    } = this.props;
-    const { count } = this.state;
+  setCount = notifications => {
+    if (!notifications || notifications.length == 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
 
-    const nodes = this.convertEdgesToNodes(notifications);
-    const rawNotifications = getDistinctNotifications(nodes);
+    const distinct = getDistinctNotifications(notifications);
+    // set to 0 if no notifications exist yet
+    if (!distinct || distinct.length === 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    // set to 0 if no notifications are unseen
+    const unseen = distinct.filter(n => !n.isSeen);
+    if (!unseen || unseen.length === 0) {
+      return this.setState({
+        count: 0,
+      });
+    }
+
+    // count of unique unseen notifications
+    const count = unseen.length;
+
+    return this.setState({
+      count,
+    });
+  };
+
+  render() {
+    const { active, currentUser, data, isLoading } = this.props;
+    const { count, notifications } = this.state;
 
     return (
       <IconDrop onClick={this.markAllAsSeen}>
@@ -352,7 +358,7 @@ class NotificationsTab extends React.Component<Props, State> {
         </IconLink>
 
         <NotificationDropdown
-          rawNotifications={rawNotifications}
+          rawNotifications={notifications}
           markAllAsSeen={this.markAllAsSeen}
           currentUser={currentUser}
           width={'480px'}
