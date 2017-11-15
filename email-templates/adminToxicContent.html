@@ -26,12 +26,21 @@
     &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
-  <p><strong>Toxic {{data.type}} report:</strong></p>
+  <p><strong>{{data.type}} text:</strong></p>
   <p>{{data.text}}</p>
 
   <p><strong>Info:</strong></p>
   <ul>
-    <li>{{data.toxicityConfidence}}% confident</li>
+    {{#data.toxicityConfidence.spectrumPercent}}
+      <li><strong>Spectrum:</strong> {{.}}% confident</li>
+    {{/data.toxicityConfidence.spectrumPercent}}
+
+    {{#data.toxicityConfidence.perspectivePercent}}
+      <li><strong>Perspective:</strong> {{.}}% confident</li>
+    {{/data.toxicityConfidence.perspectivePercent}}
+  </ul>
+
+  <ul>
     <li>Sender/creator: <a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a></li>
     <li>Thread: <a href="https://spectrum.chat/thread/{{data.thread.id}}">{{data.thread.content.title}}</a></li>
     <li>Community: <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}}</a></li>
