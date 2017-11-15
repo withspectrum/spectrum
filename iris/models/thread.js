@@ -104,7 +104,7 @@ export const getThreadsByChannels = (
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
-    .limit(first || Infinity)
+    .limit(first || 999999)
     .run();
 };
 
