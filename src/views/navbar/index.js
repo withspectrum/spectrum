@@ -15,6 +15,7 @@ import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import {
   Section,
+  SectionFlex,
   Nav,
   LogoLink,
   Logo,
@@ -127,12 +128,14 @@ class Navbar extends React.Component<Props> {
               <Label>Explore</Label>
             </IconLink>
 
+            <SectionFlex />
+
             <NotificationsTab
               currentUser={loggedInUser}
               active={history.location.pathname.includes('/notifications')}
             />
 
-            <IconDrop>
+            <IconDrop hideOnMobile>
               <IconLink
                 hideOnMobile
                 data-active={
@@ -174,12 +177,12 @@ class Navbar extends React.Component<Props> {
     if (isLoading) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
-          <Section left hideOnMobile>
+          <Section hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
           </Section>
-          <Section right>
+          <Section>
             <IconLink data-active={match.url === '/explore'} to="/explore">
               <Icon glyph="explore" />
               <Label>Explore Communities on Spectrum</Label>

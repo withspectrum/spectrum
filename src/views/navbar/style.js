@@ -56,11 +56,21 @@ export const Nav = styled(FlexRow)`
 export const Section = styled(FlexRow)`
   align-items: stretch;
   display: flex;
+  flex: auto;
 
   @media (max-width: 768px) {
     flex: auto;
     justify-content: space-around;
     display: flex;
+  }
+`;
+
+export const SectionFlex = styled.div`
+  display: flex;
+  flex: 1 1 100%;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -108,9 +118,15 @@ export const IconDrop = styled(FlexRow)`
   align-self: stretch;
   position: relative;
   flex: auto;
+  flex: 0 1;
 
   &:hover {
     opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    flex: 1 1;
+    ${props => props.hideOnMobile && css`display: none;`};
   }
 
   .dropdown {
@@ -140,7 +156,7 @@ export const IconDrop = styled(FlexRow)`
 
 export const IconLink = styled(Link)`
   display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
-  flex: auto;
+  flex: 1 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
