@@ -2,8 +2,9 @@
 import React from 'react';
 import truncate from 'shared/truncate';
 import compose from 'recompose/compose';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Link from 'src/components/link';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
 import FacePile from './facePile';

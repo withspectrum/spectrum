@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { FlexRow, hexa } from '../../components/globals';
 
 export const Nav = styled(FlexRow)`

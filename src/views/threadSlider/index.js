@@ -5,7 +5,7 @@ import {
   closeThreadSlider,
 } from '../../actions/threadSlider';
 import queryString from 'query-string';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Transition from 'react-transition-group/Transition';
 import {
   Container,

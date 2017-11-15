@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled, { css, keyframes } from 'styled-components';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import {
   zIndex,
   Truncate,

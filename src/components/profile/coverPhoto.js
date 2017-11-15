@@ -2,7 +2,7 @@ import React from 'react';
 // $FlowFixMe
 import styled from 'styled-components';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { ProfileHeaderAction } from './style';
 import { optimize } from '../../helpers/images';
 

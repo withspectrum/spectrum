@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe

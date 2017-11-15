@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
