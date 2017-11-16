@@ -17,3 +17,5 @@ package-lock.json
 .vscode
 dump.rdb
 *.swp
+queries-by-response-size.js
+queries-by-time.js
