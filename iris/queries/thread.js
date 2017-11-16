@@ -106,40 +106,25 @@ module.exports = {
       { first = 999999, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
-        first,
-        after: cursor,
-      })
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => {
-          if (watercooler) {
-            return {
-              pageInfo: {
-                hasNextPage: result.hasMoreItems,
-              },
-              edges: result.list.slice(0, 200).map(message => ({
-                cursor: encode(message.id),
-                node: message,
-              })),
-            };
-          }
-
-          return {
-            pageInfo: {
-              hasNextPage: result.hasMoreItems,
-            },
-            edges: result.list.map(message => ({
-              cursor: encode(message.id),
-              node: message,
-            })),
-          };
-        });
+        // Only send down 200 messages for the watercooler?
+        first: watercooler ? 200 : first,
+        after: lastMessageIndex,
+      }).then(result => {
+        return {
+          pageInfo: {
+            hasNextPage: result && result.length >= first,
+          },
+          edges: result.map((message, index) => ({
+            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+            node: message,
+          })),
+        };
+      });
     },
     creator: async (
       { creatorId, communityId }: { creatorId: string, communityId: string },
