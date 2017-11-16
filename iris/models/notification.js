@@ -24,6 +24,7 @@ export const getNotificationsByUser = (
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
     .run();
 };
 

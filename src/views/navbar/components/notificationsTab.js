@@ -31,6 +31,7 @@ type Props = {
       edges: Array<any>,
     },
     subscribeToNewNotifications: Function,
+    refetch: Function,
   },
   refetch: Function,
   client: Function,
@@ -220,7 +221,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
   processAndMarkSeenNotifications = stateNotifications => {
     const {
-      data: { notifications },
+      data: { notifications, refetch },
       location,
       client,
       activeInboxThread,
@@ -289,6 +290,10 @@ class NotificationsTab extends React.Component<Props, State> {
     });
 
     this.setState({ notifications: filteredByContext });
+
+    // if we are performing a local state update, go ahead and refetch data
+    // from the server to update our props
+    stateNotifications && refetch();
     return this.setCount(filteredByContext);
   };
 

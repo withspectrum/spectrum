@@ -34,7 +34,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const messages = sortAndGroupNotificationMessages(unsortedMessages);
 
   return (
-    <NotificationCard>
+    <NotificationCard isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,
@@ -106,7 +106,7 @@ export const MiniNewMessageNotification = ({
   const context = parseContext(notification.context, currentUser);
 
   return (
-    <NotificationListRow>
+    <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,

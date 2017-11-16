@@ -46,7 +46,14 @@ export const GET_NOTIFICATIONS_QUERY = gql`
 
 export const GET_NOTIFICATIONS_OPTIONS = {
   props: ({
-    data: { fetchMore, error, loading, notifications, subscribeToMore },
+    data: {
+      fetchMore,
+      error,
+      loading,
+      notifications,
+      subscribeToMore,
+      refetch,
+    },
   }) => ({
     data: {
       error,
@@ -80,6 +87,7 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             });
           },
         }),
+      refetch: () => refetch(),
       subscribeToNewNotifications: () =>
         subscribeToMore({
           document: subscribeToNewNotifications,
@@ -250,6 +258,7 @@ export const GET_UNREAD_DMS_OPTIONS = {
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
           const newNotification = subscriptionData.data.dmNotificationAdded;
+          console.log('inbound dm', newNotification);
           if (!newNotification) return prev;
           const notificationNode = {
             ...newNotification,
