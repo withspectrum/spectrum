@@ -670,3 +670,34 @@ export const RelatedCount = styled.p`
 `;
 
 export const Label = styled.p`font-size: 14px;`;
+
+export const WatercoolerDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 600px;
+`;
+
+export const WatercoolerIntroContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 32px 36px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.default};
+  flex: auto;
+  flex-direction: column;
+`;
+
+export const WatercoolerTitle = styled.h3`
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 8px;
+`;
+
+export const WatercoolerAvatar = styled(Avatar)`margin-bottom: 16px;`;
