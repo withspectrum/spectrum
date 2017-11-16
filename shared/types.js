@@ -30,6 +30,7 @@ export type DBCommunity = {
   website?: string,
   deletedAt?: Date,
   pinnedThreadId?: string,
+  watercoolerId?: string,
 };
 
 export type DBDirectMessageThread = {

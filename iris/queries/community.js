@@ -1,3 +1,4 @@
+// @flow
 /**
  * Community query resolvers
  */
@@ -30,9 +31,37 @@ import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { GetCommunityArgs, GetCommunitiesArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
 import type { GraphQLContext } from '../';
+import type { DBCommunity } from 'shared/types';
+
+type GetCommunityById = {
+  id: string,
+  slug: void,
+};
+
+type GetCommunityBySlug = {
+  id: void,
+  slug: string,
+};
+
+type GetCommunityArgs = GetCommunityById | GetCommunityBySlug;
+
+type GetCommunitiesByIds = {
+  ids: Array<string>,
+  slugs: void,
+};
+
+type GetCommunitiesBySlugs = {
+  ids: void,
+  slugs: Array<string>,
+};
+
+type GetCommunitiesArgs = GetCommunitiesByIds | GetCommunitiesBySlugs;
+
+type MemberOrChannelCount = {
+  reduction?: number,
+};
 
 module.exports = {
   Query: {
@@ -59,9 +88,18 @@ module.exports = {
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
-    searchCommunities: (_: any, { string, amount = 30 }: { string: string }) =>
-      getCommunitiesBySearchString(string, amount),
-    searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
+    searchCommunities: (
+      _: any,
+      { string, amount = 30 }: { string: string, amount: number }
+    ) => getCommunitiesBySearchString(string, amount),
+    searchCommunityThreads: (
+      _: any,
+      {
+        communityId,
+        searchString,
+      }: { communityId: string, searchString: string },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       let channelsToGetThreadsFor;
@@ -81,7 +119,7 @@ module.exports = {
   },
   Community: {
     communityPermissions: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -90,7 +128,7 @@ module.exports = {
         .load([user.id, id])
         .then(result => (result ? result : {}));
     },
-    channelConnection: ({ id }: { id: string }) => ({
+    channelConnection: ({ id }: DBCommunity) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -101,7 +139,7 @@ module.exports = {
       ),
     }),
     memberConnection: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
@@ -128,7 +166,7 @@ module.exports = {
         }));
     },
     threadConnection: async (
-      { id, ...community }: { id: string, community: Object },
+      { id, ...community }: DBCommunity,
       { first = 10, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
@@ -152,6 +190,7 @@ module.exports = {
       }
 
       const [threads, pinnedThread] = await Promise.all([
+        // $FlowFixMe
         getThreadsByChannels(channels.map(c => c.id), {
           first,
           after: lastThreadIndex,
@@ -185,17 +224,25 @@ module.exports = {
         })),
       };
     },
-    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    metaData: ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
+      // $FlowIssue
       return Promise.all([
         loaders.communityChannelCount.load(id),
         loaders.communityMemberCount.load(id),
-      ]).then(([channelCount, memberCount]) => ({
-        channels: channelCount ? channelCount.reduction : 0,
-        members: memberCount ? memberCount.reduction : 0,
-      }));
+      ]).then(
+        (
+          [channelCount, memberCount]: [
+            MemberOrChannelCount,
+            MemberOrChannelCount,
+          ]
+        ) => ({
+          channels: channelCount ? channelCount.reduction : 0,
+          members: memberCount ? memberCount.reduction : 0,
+        })
+      );
     },
     slackImport: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -221,7 +268,7 @@ module.exports = {
         };
       });
     },
-    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+    invoices: ({ id }: DBCommunity, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -231,7 +278,7 @@ module.exports = {
       return getInvoicesByCommunity(id);
     },
     recurringPayments: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -269,8 +316,8 @@ module.exports = {
       return queryRecurringPayments();
     },
     memberGrowth: async (
-      { id }: { id: string },
-      __: any,
+      { id }: DBCommunity,
+      _: any,
       { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
@@ -322,7 +369,7 @@ module.exports = {
       };
     },
     conversationGrowth: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -366,7 +413,7 @@ module.exports = {
       };
     },
     topMembers: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -393,7 +440,7 @@ module.exports = {
       });
     },
     topAndNewThreads: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -444,7 +491,7 @@ module.exports = {
         };
       });
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    isPro: ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
       return loaders.communityRecurringPayments.load(id).then(res => {
         const subs = res && res.reduction;
         if (!subs || subs.length === 0) return false;
@@ -454,7 +501,7 @@ module.exports = {
       });
     },
     contextPermissions: (
-      community: any,
+      community: DBCommunity,
       _: any,
       { loaders }: GraphQLContext,
       info: any
@@ -489,7 +536,7 @@ module.exports = {
 
       return handleCheck();
     },
-    watercooler: async ({ watercoolerId }: { watercoolerId: string }) => {
+    watercooler: async ({ watercoolerId }: DBCommunity) => {
       if (!watercoolerId) return null;
       return await getThreads([watercoolerId]).then(
         res => (res && res.length > 0 ? res[0] : null)

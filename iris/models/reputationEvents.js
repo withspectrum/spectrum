@@ -4,7 +4,7 @@ import { parseRange } from './utils';
 
 export const getTopMembersInCommunity = (
   communityId: string
-): Promise<Array<String>> => {
+): Promise<Array<string>> => {
   const { current } = parseRange('weekly');
 
   return db
