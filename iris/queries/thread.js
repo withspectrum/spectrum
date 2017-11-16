@@ -10,6 +10,8 @@ import {
 } from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
+import { addQueue } from '../utils/workerQueue';
+import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
@@ -103,7 +105,8 @@ module.exports = {
     },
     messageConnection: (
       { id, watercooler }: { id: String },
-      { first = 999999, after }: PaginationOptions
+      { first = 999999, after }: PaginationOptions,
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
@@ -115,6 +118,13 @@ module.exports = {
         first: watercooler ? 200 : first,
         after: lastMessageIndex,
       }).then(result => {
+        if (user && user.id) {
+          addQueue(TRACK_USER_THREAD_LAST_SEEN, {
+            threadId: id,
+            userId: user.id,
+            timestamp: Date.now(),
+          });
+        }
         return {
           pageInfo: {
             hasNextPage: result && result.length >= first,
