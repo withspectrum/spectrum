@@ -258,7 +258,6 @@ export const GET_UNREAD_DMS_OPTIONS = {
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
           const newNotification = subscriptionData.data.dmNotificationAdded;
-          console.log('inbound dm', newNotification);
           if (!newNotification) return prev;
           const notificationNode = {
             ...newNotification,
