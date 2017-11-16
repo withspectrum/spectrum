@@ -2963,9 +2963,9 @@ draft-js-modifiers@^0.1.2:
     draft-js "~0.10.0"
     immutable "~3.7.4"
 
-draft-js-plugins-editor@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/draft-js-plugins-editor/-/draft-js-plugins-editor-2.0.2.tgz#a3c1da8a9f10dd27b323829fcac0b11a4bb4968d"
+draft-js-plugins-editor@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/draft-js-plugins-editor/-/draft-js-plugins-editor-2.0.3.tgz#48a68068ea26fa32eb5c3783fed2decce4a1bd8e"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.0.2"
