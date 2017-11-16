@@ -34,6 +34,10 @@ class InboxThread extends Component {
     const participantsExist = participants && participants.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
 
+    if (data.watercooler) {
+      return <WatercoolerThread data={data} active={active} />;
+    }
+
     return (
       <InboxThreadItem active={active}>
         <InboxLinkWrapper
@@ -116,10 +120,7 @@ class WatercoolerThreadPure extends React.Component {
     const participantsExist = participants && participants.length > 0;
 
     return (
-      <InboxThreadItem
-        active={active}
-        style={{ marginBottom: '16px', borderBottom: '1px solid #DFE7EF' }}
-      >
+      <InboxThreadItem active={active}>
         <InboxLinkWrapper
           to={{
             pathname: window.location.pathname,
