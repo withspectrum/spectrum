@@ -12,6 +12,8 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   const raven = require('./raven').default;
   middlewares.use(raven);
 }
+const engine = require('./engine').default;
+middlewares.use(engine);
 
 // Cross origin request support
 import cors from './cors';
@@ -36,5 +38,8 @@ middlewares.use(passport.session());
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from './thread-param';
 middlewares.use(threadParamRedirect);
+
+import compression from './compression';
+middlewares.use(compression);
 
 export default middlewares;
