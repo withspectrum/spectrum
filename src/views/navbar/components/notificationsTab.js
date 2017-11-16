@@ -83,6 +83,9 @@ class NotificationsTab extends React.Component<Props, State> {
     if (!prevProps.data.notifications && nextProps.data.notifications)
       return true;
 
+    // after refetch
+    if (prevProps.isRefetching !== nextProps.isRefetching) return true;
+
     // if a subscription updates the number of records returned
     if (
       prevProps.data &&
@@ -157,6 +160,11 @@ class NotificationsTab extends React.Component<Props, State> {
       return this.processAndMarkSeenNotifications();
     }
 
+    // when the component finishes a refetch
+    if (prevProps.isRefetching && !this.props.isRefetching) {
+      return this.processAndMarkSeenNotifications();
+    }
+
     // if the component updates with changed or new notifications
     // if any are unseen, set the counts
     if (
@@ -202,6 +210,7 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   markAllAsSeen = () => {
+    console.log('marking all as seen');
     const { markAllNotificationsSeen, refetch } = this.props;
     const { count } = this.state;
 
@@ -212,7 +221,7 @@ class NotificationsTab extends React.Component<Props, State> {
     return markAllNotificationsSeen()
       .then(() => {
         // notifs were marked as seen
-        return refetch();
+        return refetch().then(() => this.processAndMarkSeenNotifications());
       })
       .catch(err => {
         // err
@@ -331,9 +340,10 @@ class NotificationsTab extends React.Component<Props, State> {
   render() {
     const { active, currentUser, data, isLoading } = this.props;
     const { count, notifications } = this.state;
+    console.log('this props', this.props);
 
     return (
-      <IconDrop onClick={this.markAllAsSeen}>
+      <IconDrop>
         <Head>
           {count > 0 ? (
             <link
@@ -352,7 +362,12 @@ class NotificationsTab extends React.Component<Props, State> {
           )}
         </Head>
 
-        <IconLink data-active={active} to="/notifications" rel="nofollow">
+        <IconLink
+          data-active={active}
+          to="/notifications"
+          rel="nofollow"
+          onClick={this.markAllAsSeen}
+        >
           <Icon
             glyph={count > 0 ? 'notification-fill' : 'notification'}
             withCount={count > 10 ? '10+' : count > 0 ? count : false}

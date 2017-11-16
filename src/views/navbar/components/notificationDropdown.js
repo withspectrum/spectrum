@@ -47,12 +47,12 @@ const NotificationContainer = props => {
 };
 
 const NotificationDropdownPure = props => {
-  const { rawNotifications, currentUser, history } = props;
+  const { rawNotifications, currentUser, history, markAllAsSeen } = props;
 
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
-        My Notifications
+        <span onClick={markAllAsSeen}>Mark all as seen</span>
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
         </Link>

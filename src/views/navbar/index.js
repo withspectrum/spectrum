@@ -206,6 +206,8 @@ class Navbar extends React.Component<Props> {
         </Nav>
       );
     }
+
+    return null;
   }
 }
 
