@@ -11,7 +11,7 @@ import Dropdown from '../../../components/dropdown';
 import { Loading } from '../../../components/loading';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
-import { DropdownHeader, DropdownFooter } from '../style';
+import { DropdownHeader, DropdownFooter, MarkAllSeen } from '../style';
 import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
@@ -47,12 +47,20 @@ const NotificationContainer = props => {
 };
 
 const NotificationDropdownPure = props => {
-  const { rawNotifications, currentUser, history, markAllAsSeen } = props;
+  const {
+    rawNotifications,
+    currentUser,
+    history,
+    markAllAsSeen,
+    count,
+  } = props;
 
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
-        <span onClick={markAllAsSeen}>Mark all as seen</span>
+        <MarkAllSeen isActive={count > 0} onClick={markAllAsSeen}>
+          Mark all as seen
+        </MarkAllSeen>
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
         </Link>

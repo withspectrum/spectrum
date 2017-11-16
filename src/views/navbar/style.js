@@ -250,3 +250,14 @@ export const Notification = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.border};
   overflow-x: hidden;
 `;
+
+export const MarkAllSeen = styled.span`
+  color: ${props =>
+    props.isActive ? props.theme.brand.alt : props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props =>
+      props.isActive ? props.theme.brand.default : props.theme.text.alt};
+  }
+`;

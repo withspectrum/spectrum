@@ -210,9 +210,8 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   markAllAsSeen = () => {
-    console.log('marking all as seen');
     const { markAllNotificationsSeen, refetch } = this.props;
-    const { count } = this.state;
+    const { count, notifications } = this.state;
 
     // don't perform a mutation is there are no unread notifs
     if (count === 0) return;
@@ -221,7 +220,11 @@ class NotificationsTab extends React.Component<Props, State> {
     return markAllNotificationsSeen()
       .then(() => {
         // notifs were marked as seen
-        return refetch().then(() => this.processAndMarkSeenNotifications());
+        const newNotifications = notifications.map(n =>
+          Object.assign({}, n, { isSeen: true })
+        );
+        this.processAndMarkSeenNotifications(newNotifications);
+        return refetch();
       })
       .catch(err => {
         // err
@@ -340,7 +343,6 @@ class NotificationsTab extends React.Component<Props, State> {
   render() {
     const { active, currentUser, data, isLoading } = this.props;
     const { count, notifications } = this.state;
-    console.log('this props', this.props);
 
     return (
       <IconDrop>
@@ -377,6 +379,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
         <NotificationDropdown
           rawNotifications={notifications}
+          count={count}
           markAllAsSeen={this.markAllAsSeen}
           currentUser={currentUser}
           width={'480px'}
