@@ -88,6 +88,7 @@ module.exports = function override(config, env) {
         externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
         excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
         autoUpdate: true, // Automatically check for updates every hour
+        rewrites: () => null,
         cacheMaps: [
           {
             match: url => {
