@@ -26,6 +26,9 @@ import {
 } from '../../components/segmentedControl';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
+  ThreadFeed
+);
 
 type Props = {
   match: {
@@ -73,6 +76,7 @@ class UserView extends React.Component<Props, State> {
 
     return this.setState({
       selectedView: label,
+      hasThreads: true,
     });
   };
 
@@ -105,6 +109,17 @@ class UserView extends React.Component<Props, State> {
         user.communityConnection.edges.length > 0
           ? user.communityConnection.edges.map(c => c.node)
           : [];
+
+      const nullHeading = `${user.firstName
+        ? user.firstName
+        : user.name} hasn’t ${selectedView === 'creator'
+        ? 'created'
+        : 'joined'} any conversations yet.`;
+
+      const Feed =
+        selectedView === 'creator'
+          ? ThreadFeedWithData
+          : ThreadParticipantFeedWithData;
 
       return (
         <AppViewWrapper data-e2e-id="user-view">
@@ -168,7 +183,7 @@ class UserView extends React.Component<Props, State> {
               </MobileSegment>
             </SegmentedControl>
             {hasThreads && (
-              <ThreadFeedWithData
+              <Feed
                 userId={user.id}
                 username={username}
                 viewContext="profile"
@@ -177,6 +192,8 @@ class UserView extends React.Component<Props, State> {
                 kind={selectedView}
               />
             )}
+
+            {!hasThreads && <NullState bg="null" heading={nullHeading} />}
           </Column>
         </AppViewWrapper>
       );
