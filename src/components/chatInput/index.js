@@ -171,7 +171,7 @@ class ChatInput extends Component {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor.focus();
+      this.editor && this.editor.focus();
     });
 
     return 'handled';
