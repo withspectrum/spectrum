@@ -167,5 +167,20 @@ module.exports = {
         .load(id)
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
     },
+    currentUserLastSeen: (
+      { id }: DBThread,
+      _: any,
+      { user }: GraphQLContext
+    ) => {
+      if (!user || !user.id) return null;
+
+      return getThreadNotificationStatusForUser(id, user.id).then(result => {
+        if (!result || result.length === 0) return;
+        const data = result[0];
+        if (!data || !data.lastSeen) return null;
+
+        return data.lastSeen;
+      });
+    },
   },
 };
