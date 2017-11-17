@@ -74,7 +74,7 @@ class InboxThread extends Component {
 
                 return (
                   <AttachmentsContainer active={active} key={url}>
-                    <MiniLinkPreview to={url} target="_blank">
+                    <MiniLinkPreview href={url} target="_blank">
                       <Icon glyph="link" size={18} />
                       {url}
                     </MiniLinkPreview>
