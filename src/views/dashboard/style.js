@@ -657,7 +657,7 @@ export const PillLabel = styled.span`
   white-space: nowrap;
 `;
 
-export const MiniLinkPreview = styled(Link)`
+export const MiniLinkPreview = styled.a`
   display: inline-block;
   display: flex;
   align-items: center;
