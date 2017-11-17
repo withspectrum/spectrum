@@ -66,12 +66,16 @@ export default async (job: SendWeeklyDigestJob) => {
     reputationString,
   } = job.data;
   if (!email || !userId) {
-    debug(`\nno email or userId found for this weekly digest, returning`);
+    debug('\nno email or userId found for this weekly digest, returning');
     return;
   }
 
   const unsubscribeType =
     timeframe === 'daily' ? TYPE_DAILY_DIGEST : TYPE_WEEKLY_DIGEST;
+  const tag =
+    timeframe === 'daily'
+      ? 'send daily digest email'
+      : 'send weekly digest email';
   const unsubscribeToken = await generateUnsubscribeToken(
     userId,
     unsubscribeType
@@ -98,6 +102,7 @@ export default async (job: SendWeeklyDigestJob) => {
       return sendEmail({
         TemplateId: DIGEST_TEMPLATE,
         To: email,
+        Tag: tag,
         TemplateModel: {
           threads,
           greeting,

@@ -1,6 +1,9 @@
 const debug = require('debug')('hermes:queue:send-new-community-welcome-email');
 import sendEmail from '../send-email';
-import { NEW_COMMUNITY_WELCOME_TEMPLATE } from './constants';
+import {
+  NEW_COMMUNITY_WELCOME_TEMPLATE,
+  SEND_NEW_COMMUNITY_WELCOME_EMAIL,
+} from './constants';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
@@ -14,6 +17,7 @@ export default job => {
   try {
     return sendEmail({
       TemplateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
+      Tag: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
       To: user.email,
       TemplateModel: {
         user,

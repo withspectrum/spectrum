@@ -7,6 +7,7 @@ import {
   TYPE_NEW_MESSAGE_IN_THREAD,
   DEBUG_TEMPLATE,
   TYPE_MUTE_THREAD,
+  SEND_NEW_MESSAGE_EMAIL,
 } from './constants';
 import capitalize from '../utils/capitalize';
 
@@ -81,6 +82,7 @@ export default async (job: SendNewMessageEmailJob) => {
       return sendEmail({
         TemplateId: NEW_MESSAGE_TEMPLATE,
         To: job.data.to,
+        Tag: SEND_NEW_MESSAGE_EMAIL,
         TemplateModel: {
           subject,
           user: job.data.user,

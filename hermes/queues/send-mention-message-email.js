@@ -6,6 +6,7 @@ import {
   NEW_MENTION_MESSAGE_TEMPLATE,
   TYPE_NEW_MENTION,
   TYPE_MUTE_THREAD,
+  SEND_NEW_MENTION_MESSAGE_EMAIL,
 } from './constants';
 import type { DBThread, DBUser, DBMessage } from 'shared/types';
 
@@ -45,6 +46,7 @@ export default async (job: SendNewMentionEmailJob) => {
     return sendEmail({
       TemplateId: NEW_MENTION_MESSAGE_TEMPLATE,
       To: recipient.email,
+      Tag: SEND_NEW_MENTION_MESSAGE_EMAIL,
       TemplateModel: {
         subject,
         preheader,
