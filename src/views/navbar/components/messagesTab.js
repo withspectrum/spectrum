@@ -78,9 +78,6 @@ class MessagesTab extends React.Component<Props, State> {
       // if the user is viewing /messages, mark any incoming notifications
       // as seen, so that when they navigate away the message count won't shoot up
       this.markAllAsSeen();
-      return this.setState({
-        count: 0,
-      });
     }
 
     // if the component updates for the first time
@@ -156,6 +153,9 @@ class MessagesTab extends React.Component<Props, State> {
       markDirectMessageNotificationsSeen,
       refetch,
     } = this.props;
+
+    // force the count to 0
+    this.setState({ count: 0 });
 
     // if there are no unread, escape
     if (directMessageNotifications && directMessageNotifications.length === 0)
