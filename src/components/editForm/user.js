@@ -471,7 +471,6 @@ class UserWithData extends Component {
             >
               Save
             </Button>
-            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
           </Actions>
 
           {createError && (

@@ -197,7 +197,7 @@ class NotificationsPure extends Component {
     const { scrollElement } = this.state;
 
     return (
-      <FlexCol style={{ flex: '1 1 auto' }}>
+      <FlexCol style={{ flex: '1 1 auto', maxHeight: 'calc(100% - 48px)' }}>
         <Head title={title} description={description} />
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
