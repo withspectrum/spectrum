@@ -8,6 +8,7 @@ const {
   DEFAULT_USERS,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
+  DEFAULT_USERS_THREADS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
@@ -100,7 +101,7 @@ channels.forEach(channel => {
   });
 });
 
-let usersThreads = [];
+let usersThreads = DEFAULT_USERS_THREADS;
 threads.forEach(thread => {
   const usersThread = generateUsersThreads(thread.id, thread.creatorId);
   usersThreads.push(usersThread);

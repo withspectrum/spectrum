@@ -139,7 +139,11 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { threads, networkStatus }, selectedId } = this.props;
+    const {
+      data: { threads, networkStatus },
+      selectedId,
+      activeCommunity,
+    } = this.props;
     const { scrollElement } = this.state;
 
     // loading state
@@ -152,12 +156,12 @@ class ThreadFeed extends React.Component<Props, State> {
     // no threads yet
     if (threads.length === 0) return <EmptyThreadFeed />;
 
-    const threadNodes = threads
-      .slice()
-      .map(thread => thread.node)
-      .filter(thread => !thread.watercooler);
+    const threadNodes = threads.slice().map(thread => thread.node);
 
-    const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    if (activeCommunity) {
+      sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
+    }
 
     return (
       <div data-e2e-id="inbox-thread-feed">
@@ -198,5 +202,6 @@ class ThreadFeed extends React.Component<Props, State> {
 }
 const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
+  activeCommunity: state.dashboardFeed.activeCommunity,
 });
 export default compose(withRouter, connect(map))(ThreadFeed);

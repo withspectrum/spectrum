@@ -111,6 +111,7 @@ class ThreadFeedPure extends Component {
       viewContext,
       newActivityIndicator,
     } = this.props;
+
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
@@ -121,10 +122,7 @@ class ThreadFeedPure extends Component {
       !this.props.community.communityPermissions.isBlocked;
 
     const threadNodes = dataExists
-      ? threads
-          .slice()
-          .map(thread => thread.node)
-          .filter(thread => !thread.watercooler)
+      ? threads.slice().map(thread => thread.node)
       : [];
 
     if (dataExists) {

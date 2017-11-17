@@ -2963,9 +2963,9 @@ draft-js-modifiers@^0.1.2:
     draft-js "~0.10.0"
     immutable "~3.7.4"
 
-draft-js-plugins-editor@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/draft-js-plugins-editor/-/draft-js-plugins-editor-2.0.2.tgz#a3c1da8a9f10dd27b323829fcac0b11a4bb4968d"
+draft-js-plugins-editor@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/draft-js-plugins-editor/-/draft-js-plugins-editor-2.0.3.tgz#48a68068ea26fa32eb5c3783fed2decce4a1bd8e"
   dependencies:
     decorate-component-with-props "^1.0.2"
     find-with-regex "^1.0.2"
@@ -3001,7 +3001,15 @@ draft-js@0.x:
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
-draft-js@^0.10.2, draft-js@~0.10.0, draft-js@~0.10.1:
+"draft-js@npm:draft-js-fork-mxstbr":
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/draft-js-fork-mxstbr/-/draft-js-fork-mxstbr-0.10.4.tgz#4c8258799280f7cf66a2aa54fb094965389348ab"
+  dependencies:
+    fbjs "^0.8.15"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
+draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.2.tgz#b722613cb306cfee910f9de1789f2cc3023772e7"
   dependencies:
@@ -8889,6 +8897,10 @@ resumer@~0.0.0:
   resolved "https://registry.yarnpkg.com/resumer/-/resumer-0.0.0.tgz#f1e8f461e4064ba39e82af3cdc2a8c893d076759"
   dependencies:
     through "~2.3.4"
+
+rethinkdb-inspector@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
 
 rethinkdb-migrate@^1.1.0:
   version "1.2.2"

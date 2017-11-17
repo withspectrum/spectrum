@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { fontStack, hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
@@ -154,6 +154,8 @@ export const ThreadTitle = {
   minHeight: '34px',
   flex: 'none',
   display: 'inline-block',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif",
 };
 
 export const ThreadDescription = {

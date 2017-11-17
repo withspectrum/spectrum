@@ -63,8 +63,9 @@ class ChatInput extends Component {
   componentWillUnmount() {
     const { state } = this.props;
     this.props.onRef(undefined);
-    if (toPlainText(state).trim() === '') return;
-    this.props.dispatch(closeChatInput(state));
+    if (toPlainText(state).trim() === '')
+      return this.props.dispatch(closeChatInput(''));
+    return this.props.dispatch(closeChatInput(state));
   }
 
   triggerFocus = () => {
@@ -128,6 +129,7 @@ class ChatInput extends Component {
         messageBody: JSON.stringify(toJSON(state)),
         messageType: 'draftjs',
       });
+      clear();
       return 'handled';
     }
 
@@ -169,7 +171,7 @@ class ChatInput extends Component {
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor.focus();
+      this.editor && this.editor.focus();
     });
 
     return 'handled';

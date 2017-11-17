@@ -372,7 +372,7 @@ export const ComposeIconContainer = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid
+  border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.default};
@@ -381,10 +381,6 @@ export const InboxThreadItem = styled.div`
   &:hover {
     background: ${props =>
       props.active ? props.theme.brand.alt : props.theme.bg.wash};
-  }
-
-  &:first-of-type {
-    border-top: none;
   }
 
   &:last-of-type {
@@ -661,7 +657,7 @@ export const PillLabel = styled.span`
   white-space: nowrap;
 `;
 
-export const MiniLinkPreview = styled(Link)`
+export const MiniLinkPreview = styled.a`
   display: inline-block;
   display: flex;
   align-items: center;

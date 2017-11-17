@@ -11,6 +11,7 @@ import {
   YOUTUBE_URLS,
   VIMEO_URLS,
 } from '../../helpers/regexps';
+import { addProtocolToString } from '../../helpers/utils';
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe
@@ -33,12 +34,14 @@ export const addEmbed = (editorState, attrs) => {
   );
 };
 
-export const parseEmbedUrl = url => {
-  const isIframeTag = url.match(IFRAME_TAG);
+export const parseEmbedUrl = incomingUrl => {
+  const isIframeTag = incomingUrl.match(IFRAME_TAG);
   if (isIframeTag)
     return {
-      url: IFRAME_TAG.exec(url)[2],
+      url: IFRAME_TAG.exec(incomingUrl)[2],
     };
+
+  const url = addProtocolToString(incomingUrl);
 
   const isFigmaUrl = url.match(FIGMA_URLS);
   if (isFigmaUrl)
@@ -94,7 +97,7 @@ export default class Embed extends Component {
       ...elementProps
     } = otherProps;
     const data = Entity.get(block.getEntityAt(0)).getData();
-    const { aspectRatio, src, width = '100%', height = 400, ...rest } = data;
+    const { aspectRatio, src, width = '100%', height = 200, ...rest } = data;
 
     if (!src) return null;
 

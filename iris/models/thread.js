@@ -251,6 +251,140 @@ export const getPublicThreadsByUser = (
 };
 
 /*
+  When viewing a user profile we have to take two arguments into account:
+  1. The user who is being viewed
+  2. The user who is doing the viewing
+
+  We need to return only threads that meet the following criteria:
+  1. The thread was posted to a public channel
+  2. The thread was posted to a private channel and the viewing user is a member
+*/
+export const getViewableParticipantThreadsByUser = (
+  evalUser: string,
+  currentUser: string,
+  { first, after }: PaginationOptions
+): Promise<Array<DBThread>> => {
+  return (
+    db
+      .table('usersThreads')
+      // get the evaluting users threads
+      .getAll(evalUser, { index: 'userId' })
+      // get the threads where the user is a participant
+      .filter({ isParticipant: true })
+      // get the thread records
+      .eqJoin('threadId', db.table('threads'))
+      // get rid of everything on the left
+      .without({
+        left: [
+          'createdAt',
+          'id',
+          'isParticipant',
+          'receiveNotifications',
+          'threadId',
+          'userId',
+        ],
+      })
+      .zip()
+      // hide any that are deleted
+      .filter(thread => db.not(thread.hasFields('deletedAt')))
+      // join them with the channels table
+      .eqJoin('channelId', db.table('channels'))
+      // remove all the info about the community except its privacy
+      .without({
+        right: [
+          'communityId',
+          'id',
+          'slug',
+          'isDefault',
+          'createdAt',
+          'description',
+          'name',
+        ],
+      })
+      // zip the two together - result is a thread object with a channel `isPrivate` field
+      .zip()
+      // join these threads with the usersChannels to get the permissions of the channel
+      .eqJoin('channelId', db.table('usersChannels'), { index: 'channelId' })
+      // return only objects where the thread is not in a private channel or is in a channel where the current user is a member
+      .filter(row =>
+        row('left')('isPrivate')
+          .eq(false)
+          .or(row('right')('isMember').eq(true))
+      )
+      // filter down to only threads where the currentUser matches the criteria above
+      .filter({
+        right: {
+          userId: currentUser,
+        },
+      })
+      // get rid of the right side of the eqjoin
+      .without('right')
+      // combine the tables
+      .zip()
+      // return the thread object as pure without the isPrivate field from the community join earlier
+      .without('isPrivate')
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
+      .run()
+  );
+};
+
+export const getPublicParticipantThreadsByUser = (
+  evalUser: string,
+  { first, after }: PaginationOptions
+): Promise<Array<DBThread>> => {
+  return (
+    db
+      .table('usersThreads')
+      // get the evaluting users threads
+      .getAll(evalUser, { index: 'userId' })
+      // get the threads where the user is a participant
+      .filter({ isParticipant: true })
+      // get the thread records
+      .eqJoin('threadId', db.table('threads'))
+      // get rid of everything on the left
+      .without({
+        left: [
+          'createdAt',
+          'id',
+          'isParticipant',
+          'receiveNotifications',
+          'threadId',
+          'userId',
+        ],
+      })
+      .zip()
+      // hide any that are deleted
+      .filter(thread => db.not(thread.hasFields('deletedAt')))
+      // join them with the channels table
+      .eqJoin('channelId', db.table('channels'))
+      // remove all the info about the community except its privacy
+      .without({
+        right: [
+          'communityId',
+          'id',
+          'slug',
+          'isDefault',
+          'createdAt',
+          'description',
+          'name',
+        ],
+      })
+      // zip the two together - result is a thread object with a channel `isPrivate` field
+      .zip()
+      // return only objects where the thread is not in a private channel
+      .filter({ isPrivate: false })
+      // return the thread object as pure without the isPrivate field from the community join earlier
+      .without('isPrivate')
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
+      .run()
+  );
+};
+
+/*
   A thread may receive a field 'filesToUpload' if it contains images. We destructure
   the incoming argument in order to ignore that field and only return the rest
   of the thread fields

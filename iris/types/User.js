@@ -69,6 +69,11 @@ const User = /* GraphQL */ `
 		notifications: UserNotificationsSettings
 	}
 
+	enum ThreadConnectionType {
+		participant
+		creator
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -94,7 +99,7 @@ const User = /* GraphQL */ `
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
+		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
 		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
