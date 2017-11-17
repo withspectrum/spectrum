@@ -177,13 +177,24 @@ class Messages extends Component<MessageGroupProps, State> {
             threadType !== 'directMessageThread' && (me || isModerator);
 
           if (roboText) {
-            return (
-              <Timestamp key={initialMessage.message.content}>
-                <hr />
-                <Time>{convertTimestampToDate(initialMessage.timestamp)}</Time>
-                <hr />
-              </Timestamp>
-            );
+            if (initialMessage.message.type === 'timestamp') {
+              return (
+                <Timestamp key={initialMessage.timestamp}>
+                  <hr />
+                  <Time>
+                    {convertTimestampToDate(initialMessage.timestamp)}
+                  </Time>
+                  <hr />
+                </Timestamp>
+              );
+            } else if (
+              initialMessage.message.type === 'unseen-messages-below'
+            ) {
+              return <p key={`unseen-${initialMessage.timestamp}`}>UNSEEN</p>;
+              // Ignore any unknown robo type messages
+            } else {
+              return null;
+            }
           }
 
           return (

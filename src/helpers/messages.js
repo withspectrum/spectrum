@@ -1,6 +1,6 @@
 import { sortByDate } from './utils';
 
-export const sortAndGroupMessages = messagesToSort => {
+export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
   if (!messagesToSort.length > 0) return [];
   let messages = messagesToSort;
   messages = sortByDate(messages, 'timestamp', 'asc');
@@ -22,7 +22,7 @@ export const sortAndGroupMessages = messagesToSort => {
           timestamp: messages[0].timestamp,
           message: {
             content: messages[0].timestamp,
-            type: 'robo',
+            type: 'timestamp',
           },
         },
       ]);
@@ -36,7 +36,7 @@ export const sortAndGroupMessages = messagesToSort => {
         timestamp: messages[i].timestamp,
         message: {
           content: messages[i].timestamp,
-          type: 'robo',
+          type: 'timestamp',
         },
       },
     ];
@@ -72,6 +72,20 @@ export const sortAndGroupMessages = messagesToSort => {
         // push the message to the array
         newArray.push(messages[i]);
       } else {
+        if (messages[i].timestamp > lastSeen) {
+          masterArray.push([
+            {
+              sender: {
+                id: 'robo',
+              },
+              timestamp: lastSeen,
+              message: {
+                content: '',
+                type: 'unseen-messages-below',
+              },
+            },
+          ]);
+        }
         // if we're on to the second message, we need to evaulate the timestamp
         // if the second message is older than the first message by our variance
         if (oldMessage(messages[i], messages[i - 1])) {
@@ -95,6 +109,20 @@ export const sortAndGroupMessages = messagesToSort => {
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
+      if (messages[i].timestamp > lastSeen) {
+        masterArray.push([
+          {
+            sender: {
+              id: 'robo',
+            },
+            timestamp: lastSeen,
+            message: {
+              content: '',
+              type: 'unseen-messages-below',
+            },
+          },
+        ]);
+      }
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
         // push a robo timestamp
