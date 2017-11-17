@@ -50,10 +50,6 @@ class NotificationsTab extends React.Component<Props, State> {
     subscription: null,
   };
 
-  componentDidMount() {
-    return this.subscribe();
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     const prevProps = this.props;
     const prevState = this.state;
@@ -157,6 +153,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
     // if the component updates for the first time
     if (!prevData.notifications && thisData.notifications) {
+      this.subscribe();
       return this.processAndMarkSeenNotifications();
     }
 

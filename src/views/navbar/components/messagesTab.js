@@ -34,10 +34,6 @@ class MessagesTab extends React.Component<Props, State> {
     subscription: null,
   };
 
-  componentDidMount() {
-    return this.subscribe();
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     const prevProps = this.props;
     const prevState = this.state;
@@ -92,6 +88,7 @@ class MessagesTab extends React.Component<Props, State> {
       !prevData.directMessageNotifications &&
       thisData.directMessageNotifications
     ) {
+      this.subscribe();
       return this.setCount(this.props);
     }
 
