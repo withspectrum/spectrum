@@ -34,6 +34,10 @@ export const Segment = styled(FlexRow)`
   border-bottom: 2px solid
     ${props => (props.selected ? props.theme.text.default : 'transparent')};
 
+  .icon {
+    margin-right: 8px;
+  }
+
   ${props =>
     props.selected &&
     css`
@@ -46,11 +50,13 @@ export const Segment = styled(FlexRow)`
 
   @media (max-width: 768px) {
     flex: auto;
-    justify-content: space-around;
+    justify-content: center;
     margin-top: 32px;
-    text-align: left;
-    justify-content: flex-start;
-    border-bottom: 0;
+    text-align: center;
+
+    .icon {
+      margin-right: 0;
+    }
   }
 `;
 

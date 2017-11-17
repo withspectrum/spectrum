@@ -111,6 +111,7 @@ class ThreadFeedPure extends Component {
       viewContext,
       newActivityIndicator,
     } = this.props;
+
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =

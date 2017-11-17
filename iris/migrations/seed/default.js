@@ -179,6 +179,33 @@ const DEFAULT_THREADS = [
   },
 ];
 
+const DEFAULT_USERS_THREADS = [
+  {
+    id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    receiveNotifications: true,
+    isParticipant: true,
+  },
+  {
+    id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
+    createdAt: new Date(DATE + 1),
+    userId: MAX_ID,
+    threadId: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
+    receiveNotifications: true,
+    isParticipant: true,
+  },
+  {
+    id: 'f2eb9d3d-ed05-49ae-8fc9-91d02314d5a9',
+    createdAt: new Date(DATE + 2),
+    userId: MAX_ID,
+    threadId: 'f2eb9d3d-ed05-49ae-8fc9-91d02314d5a9',
+    receiveNotifications: true,
+    isParticipant: true,
+  },
+];
+
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
@@ -353,6 +380,7 @@ module.exports = {
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
+  DEFAULT_USERS_THREADS,
   DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
