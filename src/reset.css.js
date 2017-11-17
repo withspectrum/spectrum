@@ -251,7 +251,6 @@ injectGlobal`
   }
 
   .markdown iframe {
-    min-height: 400px;
     margin: 1rem 0;
   }
 
