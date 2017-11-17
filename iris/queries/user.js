@@ -182,7 +182,7 @@ module.exports = {
         getThreads =
           kind === 'creator'
             ? getPublicThreadsByUser(id, { first, after: lastThreadIndex })
-            : getPublicParticipantThreadsByUser(id, currentUser.id, {
+            : getPublicParticipantThreadsByUser(id, {
                 first,
                 after: lastThreadIndex,
               });
