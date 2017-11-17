@@ -2,7 +2,10 @@ const debug = require('debug')(
   'hermes:queue:send-admin-slack-import-processed-email'
 );
 import sendEmail from '../send-email';
-import { ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE } from './constants';
+import {
+  ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
+  SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+} from './constants';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
@@ -13,6 +16,7 @@ export default job => {
     return sendEmail({
       TemplateId: ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
       To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      Tag: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
       TemplateModel: {
         subject,
         preheader,

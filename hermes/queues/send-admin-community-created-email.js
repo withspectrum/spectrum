@@ -2,7 +2,10 @@ const debug = require('debug')(
   'hermes:queue:send-admin-community-created-email'
 );
 import sendEmail from '../send-email';
-import { ADMIN_COMMUNITY_CREATED_TEMPLATE } from './constants';
+import {
+  ADMIN_COMMUNITY_CREATED_TEMPLATE,
+  SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
+} from './constants';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
@@ -12,6 +15,7 @@ export default job => {
     return sendEmail({
       TemplateId: ADMIN_COMMUNITY_CREATED_TEMPLATE,
       To: 'brian@spectrum.chat, max@spectrum.chat, bryn@spectrum.chat',
+      Tag: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
       TemplateModel: {
         user: {
           ...user,

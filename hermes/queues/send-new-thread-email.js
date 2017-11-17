@@ -8,7 +8,7 @@ import {
   TYPE_NEW_THREAD_CREATED,
   TYPE_MUTE_CHANNEL,
   TYPE_MUTE_COMMUNITY,
-  DEBUG_TEMPLATE,
+  SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
 } from './constants';
 
 type SendNewThreadNotificationJobData = {
@@ -64,12 +64,13 @@ export default async (job: SendNewThreadEmailJob) => {
     .name} · ${thread.community.name} (${thread.channel.name})`;
   const preheader = thread.content.body
     ? truncate(thread.content.body, 80)
-    : `Published just now`;
+    : 'Published just now';
 
   try {
     return sendEmail({
       TemplateId: NEW_THREAD_CREATED_TEMPLATE,
       To: recipient.email,
+      Tag: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
       TemplateModel: {
         subject,
         preheader,

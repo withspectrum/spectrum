@@ -1,7 +1,10 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-admin-toxic-content-email');
 import sendEmail from '../send-email';
-import { ADMIN_TOXIC_MESSAGE_TEMPLATE } from './constants';
+import {
+  ADMIN_TOXIC_MESSAGE_TEMPLATE,
+  SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
+} from './constants';
 
 // $FlowFixMe
 export default job => {
@@ -34,6 +37,7 @@ export default job => {
     return sendEmail({
       TemplateId: ADMIN_TOXIC_MESSAGE_TEMPLATE,
       To: 'brian@spectrum.chat, bryn@spectrum.chat, max@spectrum.chat',
+      Tag: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
       TemplateModel: {
         subject,
         preheader: text,
