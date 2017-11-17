@@ -129,6 +129,7 @@ class ChatInput extends Component {
         messageBody: JSON.stringify(toJSON(state)),
         messageType: 'draftjs',
       });
+      clear();
       return 'handled';
     }
 

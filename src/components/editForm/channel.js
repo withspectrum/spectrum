@@ -118,12 +118,6 @@ class ChannelWithData extends Component {
       });
   };
 
-  cancelForm = e => {
-    e.preventDefault();
-    return (window.location.href = `/${this.props.channel.community.slug}/${this
-      .props.channel.slug}`);
-  };
-
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
     track('channel', 'delete inited', null);
@@ -242,9 +236,6 @@ class ChannelWithData extends Component {
               <Button onClick={this.save} loading={isLoading}>
                 Save
               </Button>
-              <TextButton color={'text.alt'} onClick={this.cancelForm}>
-                Cancel
-              </TextButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
                   <IconButton
