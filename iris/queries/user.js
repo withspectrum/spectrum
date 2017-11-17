@@ -16,6 +16,8 @@ const {
   getThread,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
+  getPublicParticipantThreadsByUser,
+  getViewableParticipantThreadsByUser,
 } = require('../models/thread');
 const { getUserRecurringPayments } = require('../models/recurringPayment');
 const {
@@ -149,7 +151,11 @@ module.exports = {
     }),
     threadConnection: (
       { id }: { id: string },
-      { first, after }: PaginationOptions,
+      {
+        first,
+        after,
+        kind,
+      }: { ...PaginationOptions, kind: 'creator' | 'participant' },
       { user }: GraphQLContext
     ) => {
       const currentUser = user;
@@ -159,16 +165,28 @@ module.exports = {
       const lastThreadIndex =
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       // if a logged in user is viewing the profile, handle logic to get viewable threads
-      const getThreads =
-        currentUser && currentUser !== null
-          ? // $FlowFixMe
-            getViewableThreadsByUser(id, currentUser.id, {
-              first,
-              after: lastThreadIndex,
-            })
-          : // if the viewing user is logged out, only return publicly viewable threads
-            // $FlowFixMe
-            getPublicThreadsByUser(id, { first, after: lastThreadIndex });
+
+      let getThreads;
+      if (currentUser) {
+        getThreads =
+          kind === 'creator'
+            ? getViewableThreadsByUser(id, currentUser.id, {
+                first,
+                after: lastThreadIndex,
+              })
+            : getViewableParticipantThreadsByUser(id, currentUser.id, {
+                first,
+                after: lastThreadIndex,
+              });
+      } else {
+        getThreads =
+          kind === 'creator'
+            ? getPublicThreadsByUser(id, { first, after: lastThreadIndex })
+            : getPublicParticipantThreadsByUser(id, currentUser.id, {
+                first,
+                after: lastThreadIndex,
+              });
+      }
 
       return getThreads.then(result => ({
         pageInfo: {
