@@ -18,10 +18,10 @@ export default job => {
     return sendEmail({
       TemplateId: NEW_USER_WELCOME_TEMPLATE,
       To: user.email,
+      Tag: SEND_NEW_USER_WELCOME_EMAIL,
       TemplateModel: {
         user,
       },
-      Tag: SEND_NEW_USER_WELCOME_EMAIL,
     });
   } catch (err) {
     console.log(err);

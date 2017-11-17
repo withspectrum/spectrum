@@ -18,10 +18,10 @@ export default job => {
     return sendEmail({
       TemplateId: PRO_INVOICE_RECEIPT_TEMPLATE,
       To: to,
+      Tag: SEND_PRO_INVOICE_RECEIPT_EMAIL,
       TemplateModel: {
         invoice,
       },
-      Tag: SEND_PRO_INVOICE_RECEIPT_EMAIL,
     });
   } catch (err) {
     console.log(err);

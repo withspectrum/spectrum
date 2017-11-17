@@ -17,8 +17,8 @@ export default job => {
   try {
     return sendEmail({
       TemplateId: NEW_COMMUNITY_WELCOME_TEMPLATE,
-      Tag: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
       To: user.email,
+      Tag: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
       TemplateModel: {
         user,
         community,
