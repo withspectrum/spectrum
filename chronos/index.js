@@ -12,7 +12,12 @@ import {
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
 } from './queues/constants';
-import { weeklyDigest, dailyDigest, dailyCoreMetrics } from './jobs';
+import {
+  weeklyDigest,
+  dailyDigest,
+  dailyCoreMetrics,
+  activeCommunityReport,
+} from './jobs';
 
 const PORT = process.env.PORT || 3004;
 
@@ -32,6 +37,7 @@ const server = createWorker({
 weeklyDigest();
 dailyDigest();
 dailyCoreMetrics();
+activeCommunityReport();
 
 // $FlowIssue
 console.log(

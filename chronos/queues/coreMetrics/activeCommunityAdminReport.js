@@ -2,7 +2,7 @@
 const debug = require('debug')('chronos:queue:process-core-metrics');
 import { intersection, difference } from 'lodash';
 import { getLastTwoCoreMetrics } from '../../models/coreMetrics';
-import addQueue from '../../jobs/bull/add-queue';
+import { addQueue } from '../../jobs/utils';
 import { SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL } from '../constants';
 
 export default async () => {
@@ -43,20 +43,27 @@ export default async () => {
   const lostMac = difference(prevMacSlugs, thisMacSlugs);
 
   try {
-    addQueue(SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL, {
-      allDac: thisDacSlugs,
-      allWac: thisWacSlugs,
-      allMac: thisMacSlugs,
-      overlappingDac,
-      overlappingWac,
-      overlappingMac,
-      newDac,
-      newWac,
-      newMac,
-      lostDac,
-      lostWac,
-      lostMac,
-    });
+    addQueue(
+      SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
+      {
+        allDac: thisDacSlugs,
+        allWac: thisWacSlugs,
+        allMac: thisMacSlugs,
+        overlappingDac,
+        overlappingWac,
+        overlappingMac,
+        newDac,
+        newWac,
+        newMac,
+        lostDac,
+        lostWac,
+        lostMac,
+      },
+      {
+        removeOnComplete: true,
+        removeOnFail: true,
+      }
+    );
   } catch (err) {
     console.log(err);
   }

@@ -1,8 +1,6 @@
 // @flow
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
-import addQueue from '../jobs/bull/add-queue';
-import { PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT } from '../queues/constants';
 import { getActiveThreadsInTimeframe } from './thread';
 import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
 
@@ -13,12 +11,7 @@ export const saveCoreMetrics = (data: Object): Promise<Object> => {
       date: new Date(),
       ...data,
     })
-    .run()
-    .then(() => {
-      // after the record is inserted, start a new job that will
-      // calcluate the active community deltas
-      return addQueue(PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT, {});
-    });
+    .run();
 };
 
 export const parseRange = (timeframe: string) => {

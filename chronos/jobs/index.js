@@ -4,6 +4,7 @@ import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_DAILY_CORE_METRICS,
+  PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
 } from '../queues/constants';
 
 // weekly digest
@@ -28,8 +29,17 @@ const dailyDigest = () =>
 const dailyCoreMetrics = () =>
   createJob(
     PROCESS_DAILY_CORE_METRICS,
-    // '0 0 * * *', // run at midnight every day
-    '* * * * *',
+    '0 0 * * *', // run at midnight every day
+    // '* * * * *',
+    'daily'
+  );
+
+// daily coreMetrics collection
+const activeCommunityReport = () =>
+  createJob(
+    PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
+    '0 1 * * *', // run at 1am every day
+    // '* * * * *',
     'daily'
   );
 
@@ -37,4 +47,5 @@ module.exports = {
   weeklyDigest,
   dailyDigest,
   dailyCoreMetrics,
+  activeCommunityReport,
 };
