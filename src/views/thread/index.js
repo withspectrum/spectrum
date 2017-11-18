@@ -181,13 +181,16 @@ class ThreadContainer extends React.Component<Props, State> {
             )));
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
-
+      console.log('threadViewContext', threadViewContext);
       if (thread.watercooler)
         return (
           <ThreadViewContainer
             data-e2e-id="thread-view"
             threadViewContext={threadViewContext}
-            slider={slider}
+            constrain={
+              threadViewContext === 'slider' ||
+              threadViewContext === 'fullscreen'
+            }
           >
             {shouldRenderThreadSidebar && (
               <Sidebar
@@ -296,7 +299,9 @@ class ThreadContainer extends React.Component<Props, State> {
         <ThreadViewContainer
           data-e2e-id="thread-view"
           threadViewContext={threadViewContext}
-          slider={slider}
+          constrain={
+            threadViewContext === 'slider' || threadViewContext === 'fullscreen'
+          }
         >
           {shouldRenderThreadSidebar && (
             <Sidebar
