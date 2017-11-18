@@ -33,3 +33,7 @@ export const PROCESS_INDIVIDUAL_DIGEST = 'send individual digest email';
 export const PROCESS_WEEKLY_DIGEST_EMAIL = 'process weekly digest email';
 export const PROCESS_DAILY_DIGEST_EMAIL = 'process daily digest email';
 export const PROCESS_DAILY_CORE_METRICS = 'process daily core metrics';
+export const PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT =
+  'process active community admin report';
+export const SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL =
+  'send active community admin report email';
