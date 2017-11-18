@@ -181,7 +181,7 @@ class ThreadContainer extends React.Component<Props, State> {
             )));
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
-      console.log('threadViewContext', threadViewContext);
+
       if (thread.watercooler)
         return (
           <ThreadViewContainer
