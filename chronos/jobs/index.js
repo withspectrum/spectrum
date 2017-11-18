@@ -34,7 +34,7 @@ const dailyCoreMetrics = () =>
     'daily'
   );
 
-// daily coreMetrics collection
+// active community report
 const activeCommunityReport = () =>
   createJob(
     PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
