@@ -1,8 +1,10 @@
 // @flow
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
+import addQueue from '../jobs/bull/add-queue';
+import { PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT } from '../queues/constants';
 import { getActiveThreadsInTimeframe } from './thread';
-import { getCommunitiesWithMinimumMembers } from './community';
+import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
 
 export const saveCoreMetrics = (data: Object): Promise<Object> => {
   return db
@@ -11,7 +13,12 @@ export const saveCoreMetrics = (data: Object): Promise<Object> => {
       date: new Date(),
       ...data,
     })
-    .run();
+    .run()
+    .then(() => {
+      // after the record is inserted, start a new job that will
+      // calcluate the active community deltas
+      return addQueue(PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT, {});
+    });
 };
 
 export const parseRange = (timeframe: string) => {
@@ -58,6 +65,7 @@ export const getAc = async (range: string) => {
   // we will iterate through each thread and accumulate the counts of threads posted in each community
   const threadCountPerCommunity = {};
   // accumulate threads posted in the last month keyed by communityid
+  // returns an object where keys === communityIds and values === number of threads posted in this time frame
   threadsPostedInRange.map(c => {
     threadCountPerCommunity[c.communityId] = threadCountPerCommunity[
       c.communityId
@@ -65,6 +73,8 @@ export const getAc = async (range: string) => {
       ? threadCountPerCommunity[c.communityId] + 1
       : 1;
   });
+
+  // filters out all communities who have less than the minimum number of required active threads
   const activeCommunitiesByThreads = Object.keys(
     threadCountPerCommunity
   ).filter(o => threadCountPerCommunity[o] >= MIN_THREAD_COUNT);
@@ -76,13 +86,19 @@ export const getAc = async (range: string) => {
   );
   activeCommunitiesByMembership = activeCommunitiesByMembership.map(c => c.id);
 
-  // find communities that met both thread and membership criteria
+  // find communities that met both thread and membership criteria based on
+  // overlapping ids
   const activeCommunities = intersection(
     activeCommunitiesByThreads,
     activeCommunitiesByMembership
   );
 
-  return activeCommunities.length;
+  //
+
+  return {
+    count: activeCommunities.length,
+    communities: await getCommunities(activeCommunities),
+  };
 };
 
 export const getCount = (table: string, filter: mixed) => {
@@ -112,4 +128,15 @@ export const getPu = async (table: string) => {
     .run();
 
   return parseFloat((tableCount / userCount).toFixed(3));
+};
+
+export const getLastTwoCoreMetrics = () => {
+  return (
+    db
+      .table('coreMetrics')
+      .orderBy(db.desc('date'))
+      .run()
+      // send back the most recent 2 records
+      .then(results => results.slice(0, 2))
+  );
 };

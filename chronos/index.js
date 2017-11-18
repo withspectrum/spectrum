@@ -4,11 +4,13 @@ const createWorker = require('./jobs/bull/create-worker');
 import processDataForDigest from './queues/digests';
 import processSingleDigestEmail from './queues/digests/processDigestEmail';
 import processDailyCoreMetrics from './queues/coreMetrics';
+import processActiveCommunityAdminReport from './queues/coreMetrics/activeCommunityAdminReport';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
   PROCESS_INDIVIDUAL_DIGEST,
   PROCESS_DAILY_CORE_METRICS,
+  PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
 } from './queues/constants';
 import { weeklyDigest, dailyDigest, dailyCoreMetrics } from './jobs';
 
@@ -23,6 +25,7 @@ const server = createWorker({
   [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
   [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
   [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
+  [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
 });
 
 // start the jobs
