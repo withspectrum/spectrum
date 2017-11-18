@@ -20,6 +20,8 @@ export const SEND_NEW_MENTION_MESSAGE_EMAIL = 'send message mention email';
 export const SEND_ADMIN_TOXIC_MESSAGE_EMAIL = 'admin toxic content email';
 export const SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL =
   'admin slack import processed email';
+export const SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL =
+  'send active community admin report email';
 
 export const NEW_MESSAGE_TEMPLATE = 2266041;
 export const NEW_MENTION_THREAD_TEMPLATE = IS_PROD ? 3776541 : 3844623;
@@ -37,6 +39,7 @@ export const EMAIL_VALIDATION_TEMPLATE = 3578681;
 export const ADMIN_COMMUNITY_CREATED_TEMPLATE = 3037441;
 export const ADMIN_TOXIC_MESSAGE_TEMPLATE = 3867921;
 export const ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE = 3934361;
+export const ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE = 3947362;
 
 // types used to generate unsubscribe tokens
 export const TYPE_DAILY_DIGEST = 'dailyDigest';

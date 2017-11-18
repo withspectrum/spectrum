@@ -16,6 +16,7 @@ import processSendEmailValidationEmail from './queues/send-email-validation-emai
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
 import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import processSendAdminSlackImportProcessedEmail from './queues/send-admin-slack-import-email';
+import processSendAdminActiveCommunityReportEmail from './queues/send-admin-active-community-report-email';
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
@@ -32,6 +33,7 @@ import {
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+  SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -56,6 +58,7 @@ const server = createWorker({
   [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
   [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,
+  [SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL]: processSendAdminActiveCommunityReportEmail,
 });
 
 console.log(
