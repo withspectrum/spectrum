@@ -43,9 +43,18 @@ class UpsellExploreCommunities extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const joinedCommunityIds = this.props.communities.map(c => c.id);
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextState.communitiesToJoin.length !== this.state.communitiesToJoin.length
+    )
+      return true;
+    if (!this.props.data.topCommunities && nextProps.data.topCommunities)
+      return true;
+    if (this.props.activeCommunity !== nextProps.activeCommunity) return true;
+    return false;
+  }
 
+  componentDidUpdate(prevProps) {
     if (
       (!prevProps.data.topCommunities &&
         this.props.data.topCommunities &&
@@ -53,6 +62,8 @@ class UpsellExploreCommunities extends React.Component {
       (this.props.data.topCommunities &&
         this.state.communitiesToJoin.length === 0)
     ) {
+      const joinedCommunityIds = this.props.communities.map(c => c.id);
+
       // don't upsell communities the user has already joined
       const filteredTopCommunities = this.props.data.topCommunities.filter(
         c => joinedCommunityIds.indexOf(c.id) < 0
@@ -66,6 +77,7 @@ class UpsellExploreCommunities extends React.Component {
     }
 
     if (prevProps.communities.length !== this.props.communities.length) {
+      const joinedCommunityIds = this.props.communities.map(c => c.id);
       const filteredStateCommunities = this.state.communitiesToJoin.filter(
         c => joinedCommunityIds.indexOf(c.id) < 0
       );
@@ -84,7 +96,7 @@ class UpsellExploreCommunities extends React.Component {
     const { activeCommunity } = this.props;
     const { communitiesToJoin } = this.state;
 
-    if (communitiesToJoin) {
+    if (communitiesToJoin && communitiesToJoin.length > 0) {
       return (
         <div>
           <UpsellExploreDivider />
