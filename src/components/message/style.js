@@ -12,7 +12,7 @@ const Bubble = styled.div`
   word-wrap: break-word;
   word-break: break-word;
 
-  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
+  align-self: flex-start;
 
   box-shadow: ${props =>
     props.hashed
@@ -20,13 +20,12 @@ const Bubble = styled.div`
           .theme.brand.default}`
       : ''};
   margin-top: 4px;
-  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
+  margin-bottom: 4px;
 
   clear: both;
 
   &::selection {
-    background-color: ${props =>
-      props.me ? props.theme.text.default : props.theme.brand.alt};
+    background-color: ${props => props.theme.brand.alt};
   }
 `;
 
@@ -38,11 +37,10 @@ export const Indicator = styled.div`
   width: 8px;
   align-self: flex-end;
   border-radius: 8px;
-  background-color: ${props =>
-    props.me ? props.theme.brand.alt : props.theme.bg.border};
+  background-color: ${props => props.theme.bg.border};
   z-index: ${zIndex.card + 1};
   box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
-  ${props => (props.me ? 'margin-right: 4px' : 'margin-left: 4px')};
+  margin-left: 4px;
 `;
 
 export const ActionWrapper = styled.div`
@@ -55,7 +53,7 @@ export const ActionWrapper = styled.div`
   background-color: transparent;
   height: 24px;
   padding: 0 4px;
-  ${props => (props.me ? 'margin-right: 4px' : 'margin-left: 4px')};
+  margin-left: 4px;
   cursor: pointer;
 
   color: ${props => props.theme.text.placeholder};
@@ -68,10 +66,7 @@ export const ActionWrapper = styled.div`
 
 export const ModActionWrapper = styled(ActionWrapper)`
   padding: 0 8px;
-  ${props =>
-    props.me
-      ? `border-right: 2px solid ${props.theme.bg.wash}`
-      : `border-left: 2px solid ${props.theme.bg.wash}`};
+  border-left: 2px solid ${props => props.theme.bg.wash};
 `;
 
 export const ReactionWrapper = styled(ActionWrapper)`
@@ -97,10 +92,9 @@ export const ActionUI = styled.div`
   display: flex;
   flex: none;
   position: absolute;
-  right: ${props => (props.me ? '100%' : 'auto')};
-  left: ${props => (props.me ? 'auto' : '100%')};
+  left: 100%;
   bottom: 0;
-  flex-direction: ${props => (props.me ? 'row-reverse' : 'row')};
+  flex-direction: row;
   align-items: stretch;
   transition: ${Transition.hover.off};
 
@@ -117,7 +111,7 @@ export const ActionUI = styled.div`
       transition: ${Transition.hover.on};
       visibility: hidden;
       opacity: 0;
-      ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+      left: 100%;
     }
   }
 
@@ -131,7 +125,7 @@ export const ActionUI = styled.div`
     transition: ${Transition.hover.off};
     visibility: visible;
     opacity: 1;
-    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
+    left: 0;
   }
 `;
 
@@ -140,12 +134,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   flex: none;
   position: relative;
-  max-width: 65%;
   transition: ${Transition.hover.off};
-
-  @media (max-width: 768px) {
-    max-width: 75%;
-  }
 
   ${props =>
     props.selected &&
@@ -166,7 +155,7 @@ export const Wrapper = styled.div`
           transition: ${Transition.hover.on};
           visibility: hidden;
           opacity: 0;
-          ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+          left: 100%;
         }
       }
     `} &:hover {
@@ -183,7 +172,7 @@ export const Wrapper = styled.div`
         transition: ${Transition.hover.on};
         visibility: hidden;
         opacity: 0;
-        ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+        left: 100%;
       }
     }
   }
@@ -198,7 +187,7 @@ export const Wrapper = styled.div`
     transition: ${Transition.hover.off};
     visibility: visible;
     opacity: 1;
-    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
+    left: 0;
   }
 `;
 
@@ -206,23 +195,20 @@ export const Time = styled.div`
   font-size: 11px;
   color: ${props => props.theme.text.alt};
   position: absolute;
-  ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
+  left: calc(100% + 8px);
   top: 4px;
 `;
 
 export const Text = styled(Bubble)`
-  padding: 8px 16px;
   font-size: 14px;
   line-height: 1.4;
-  background-color: ${props =>
-    props.me ? props.theme.brand.default : props.theme.generic.default};
-  background-image: ${props =>
+  ${'' /* background-color: ${props =>
+    props.me ? props.theme.brand.default : props.theme.generic.default}; */} ${'' /* background-image: ${props =>
     props.me
       ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-      : Gradient(props.theme.generic.alt, props.theme.generic.default)};
-  color: ${props =>
-    props.me ? props.theme.text.reverse : props.theme.text.default};
-  font-weight: ${props => (props.me ? `500` : `400`)};
+      : Gradient(props.theme.generic.alt, props.theme.generic.default)}; */} color: ${props =>
+      props.theme.text.default};
+  font-weight: 400;
 
   & + & {
     margin-top: 2px;

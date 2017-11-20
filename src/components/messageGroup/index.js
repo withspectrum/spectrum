@@ -54,8 +54,8 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
   return (
     <Byline>
       <Link to={`/users/${sender.username}`}>
-        <Name>{me ? 'Me' : sender.name}</Name>{' '}
-        <Username>{sender.username && ` · @${sender.username}`}</Username>
+        <Name>{sender.name}</Name>
+        <Username>{sender.username && ` @${sender.username}`}</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}
@@ -188,7 +188,7 @@ class Messages extends Component<MessageGroupProps, State> {
 
           return (
             <Sender key={initialMessage.id} me={me}>
-              {!me && !roboText && <AuthorAvatar sender={sender} showProfile />}
+              {!roboText && <AuthorAvatar sender={sender} />}
               <MessageGroup me={me}>
                 <AuthorByline sender={sender} me={me} />
                 {group.map(message => {

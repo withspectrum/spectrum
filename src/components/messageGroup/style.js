@@ -18,8 +18,8 @@ export const Sender = styled.div`
   display: flex;
   flex: none;
   margin: 16px 16px 0;
-  align-items: flex-end;
-  justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  align-items: flex-start;
+  justify-content: flex-start;
   position: relative;
 `;
 
@@ -28,33 +28,38 @@ export const MessageGroup = styled.div`
   flex: auto;
   flex-direction: column;
   max-width: 100%;
-  margin-left: ${props => (props.me ? `0` : `8px`)};
-  align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
+  margin-left: 8px;
+  align-items: flex-start;
 `;
 
 export const Byline = styled.span`
   display: flex;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 16px;
   font-weight: 700;
+  flex-direction: row;
+  align-items: center;
   margin-bottom: 0;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
   color: ${props =>
-    props.op ? props.theme.brand.default : props.theme.text.alt};
+    props.op ? props.theme.brand.default : props.theme.text.default};
   max-width: 100%;
 `;
 
 export const Name = styled.span`
-  margin-right: 4px;
+  margin-right: 2px;
   &:hover {
     color: ${({ theme }) => theme.brand.default};
     cursor: pointer;
   }
 `;
 
-export const Username = styled(Name)`font-weight: 400;`;
+export const Username = styled(Name)`
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+`;
 
 export const Timestamp = styled(HorizontalRule)`
   margin: 16px 0 8px;
