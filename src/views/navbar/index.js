@@ -140,7 +140,7 @@ class Navbar extends React.Component<Props> {
 
             <IconDrop hideOnMobile>
               <IconLink
-                hideOnMobile
+                className={'hideOnMobile'}
                 data-active={
                   history.location.pathname ===
                   `/users/${loggedInUser.username}`
@@ -160,7 +160,7 @@ class Navbar extends React.Component<Props> {
             </IconDrop>
 
             <IconLink
-              hideOnDesktop
+              className={'hideOnDesktop'}
               style={{ alignSelf: 'flex-end' }}
               data-active={
                 history.location.pathname === `/users/${loggedInUser.username}`

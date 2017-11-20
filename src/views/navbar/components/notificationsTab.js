@@ -342,7 +342,7 @@ class NotificationsTab extends React.Component<Props, State> {
     const { count, notifications } = this.state;
 
     return (
-      <IconDrop>
+      <IconDrop padOnHover>
         <Head>
           {count > 0 ? (
             <link

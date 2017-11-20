@@ -74,10 +74,11 @@ class MessagesTab extends React.Component<Props, State> {
     // never update the badge if the user is viewing the messages tab
     // set the count to 0 if the tab is active so that if a user loads
     // /messages view directly, the badge won't update
-    if (active) {
-      // if the user is viewing /messages, mark any incoming notifications
-      // as seen, so that when they navigate away the message count won't shoot up
-      this.markAllAsSeen();
+
+    // if the user is viewing /messages, mark any incoming notifications
+    // as seen, so that when they navigate away the message count won't shoot up
+    if (!prevProps.active && this.props.active) {
+      return this.markAllAsSeen();
     }
 
     // if the component updates for the first time
@@ -141,7 +142,6 @@ class MessagesTab extends React.Component<Props, State> {
 
     // count of unique notifications determined by the thread id
     const count = Object.keys(obj).length;
-
     return this.setState({
       count,
     });
@@ -166,7 +166,7 @@ class MessagesTab extends React.Component<Props, State> {
       .then(() => {
         // notifs were marked as seen
         // refetch to make sure we're keeping up with the server's state
-        return refetch();
+        return refetch().then(() => this.setCount(this.props));
       })
       .catch(err => {
         // err

@@ -93,6 +93,7 @@ export const GET_NOTIFICATIONS_OPTIONS = {
           document: subscribeToNewNotifications,
           updateQuery: (prev, { subscriptionData }) => {
             let newNotification = subscriptionData.data.notificationAdded;
+            console.log('got a new notification', newNotification);
             if (!newNotification) return prev;
 
             const notificationNode = {

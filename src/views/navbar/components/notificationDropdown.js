@@ -58,11 +58,9 @@ const NotificationDropdownPure = props => {
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
-        <MarkAllSeen isActive={count > 0} onClick={markAllAsSeen}>
-          Mark all as seen
-        </MarkAllSeen>
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
+          Notification settings
         </Link>
       </DropdownHeader>
 
@@ -72,10 +70,17 @@ const NotificationDropdownPure = props => {
         rawNotifications.length > 0 && (
           <DropdownFooter>
             <TextButton
-              color={'brand.default'}
+              color={'text.alt'}
               onClick={() => history.push('/notifications')}
             >
               View all
+            </TextButton>
+
+            <TextButton
+              color={count > 0 ? 'brand.alt' : 'text.alt'}
+              onClick={markAllAsSeen}
+            >
+              Mark all as seen
             </TextButton>
           </DropdownFooter>
         )}

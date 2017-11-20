@@ -13,7 +13,9 @@ module.exports = {
       resolve: (notification: any) => notification,
       subscribe: withFilter(
         listenToNewNotifications,
-        (notification, _, { user }) => user.id === notification.userId
+        (notification, _, { user }) =>
+          console.log('new notification', user.id, notification.userId) ||
+          user.id === notification.userId
       ),
     },
     dmNotificationAdded: {

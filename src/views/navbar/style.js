@@ -122,6 +122,11 @@ export const IconDrop = styled(FlexRow)`
 
   &:hover {
     opacity: 1;
+    /* 
+      this padding left makes it so that there is a left zone on the
+      icon that the user can mouseover without un-hovering the dropdown
+     */
+    ${props => props.padOnHover && css`padding-left: 120px;`};
   }
 
   @media (max-width: 768px) {
@@ -155,7 +160,7 @@ export const IconDrop = styled(FlexRow)`
 `;
 
 export const IconLink = styled(Link)`
-  display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
+  display: flex;
   flex: 1 1;
   flex-direction: row;
   justify-content: center;
@@ -168,6 +173,10 @@ export const IconLink = styled(Link)`
   position: relative;
   width: 100%;
 
+  &.hideOnDesktop {
+    display: none;
+  }
+
   &:hover {
     opacity: 1;
   }
@@ -178,7 +187,6 @@ export const IconLink = styled(Link)`
   }
 
   @media (max-width: 768px) {
-    display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
     flex-direction: column;
     opacity: 0.7;
     margin: 0;
@@ -186,6 +194,10 @@ export const IconLink = styled(Link)`
     &[data-active~='true'] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
+    }
+
+    &.hideOnMobile {
+      display: none;
     }
 
     div {
@@ -221,9 +233,20 @@ export const DropdownHeader = styled(FlexRow)`
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  font-weight: 800;
+  font-weight: 500;
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
+
+  &:hover {
+    a {
+      color: ${props => props.theme.brand.alt};
+    }
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const DropdownFooter = styled(FlexRow)`
@@ -240,6 +263,11 @@ export const DropdownFooter = styled(FlexRow)`
 
     &:first-of-type:not(:last-of-type) {
       margin-right: 8px;
+    }
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.wash};
     }
   }
 `;
