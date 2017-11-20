@@ -54,4 +54,14 @@ describe('strategy', () => {
     expect(mentions[0]).toEqual('@mxstbr');
     expect(mentions[1]).toEqual('@brian');
   });
+
+  describe('edge cases', () => {
+    it('should handle sentences with compound emojis (withspectrum/spectrum#2077)', () => {
+      const text =
+        "Hey @grdp 👋🏻, I'm sure the @rauchg should be more than willing to answer that question. 😀";
+      const mentions = getMentions(text);
+      expect(mentions[0]).toEqual('@grdp');
+      expect(mentions[1]).toEqual('@rauchg');
+    });
+  });
 });
