@@ -1,9 +1,9 @@
-import React from 'react';
-// $FlowFixMe
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { getCommunityById } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
+import { markSingleNotificationSeenMutation } from '../../../api/notification';
 import Icon from '../../../components/icons';
 import {
   SegmentedNotificationCard,
@@ -46,29 +46,54 @@ export const CommunityInviteNotification = ({ notification, currentUser }) => {
   );
 };
 
-export const MiniCommunityInviteNotification = ({
-  notification,
-  currentUser,
-  history,
-}) => {
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
-  const actors = parseActors(notification.actors, currentUser, true);
-
-  return (
-    <SegmentedNotificationListRow>
-      <CreatedContext>
-        <Icon glyph="community" />
-        <TextContent pointer={false}>
-          {actors.asObjects[0].name} invited you to join their community,{' '}
-          {context.asString} {date}
-        </TextContent>
-      </CreatedContext>
-      <ContentWash mini>
-        <AttachmentsWash>
-          <CommunityInvite id={notification.context.payload.id} />
-        </AttachmentsWash>
-      </ContentWash>
-    </SegmentedNotificationListRow>
-  );
+type Props = {
+  notification: Object,
+  currentUsre: Object,
+  history: Object,
+  markSingleNotificationSeen: Function,
+  markSingleNotificationAsSeenInState: Function,
 };
+
+class MiniCommunityInviteNotificationWithMutation extends React.Component<
+  Props
+> {
+  markAsSeen = () => {
+    const {
+      markSingleNotificationSeen,
+      notification,
+      markSingleNotificationAsSeenInState,
+    } = this.props;
+    if (notification.isSeen) return;
+    markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen(notification.id);
+  };
+
+  render() {
+    const { notification, currentUser, history } = this.props;
+
+    const date = parseNotificationDate(notification.modifiedAt);
+    const context = parseContext(notification.context);
+    const actors = parseActors(notification.actors, currentUser, true);
+
+    return (
+      <SegmentedNotificationListRow onClick={this.markAsSeen}>
+        <CreatedContext>
+          <Icon glyph="community" />
+          <TextContent pointer={false}>
+            {actors.asObjects[0].name} invited you to join their community,{' '}
+            {context.asString} {date}
+          </TextContent>
+        </CreatedContext>
+        <ContentWash mini>
+          <AttachmentsWash>
+            <CommunityInvite id={notification.context.payload.id} />
+          </AttachmentsWash>
+        </ContentWash>
+      </SegmentedNotificationListRow>
+    );
+  }
+}
+
+export const MiniCommunityInviteNotification = compose(
+  markSingleNotificationSeenMutation
+)(MiniCommunityInviteNotificationWithMutation);

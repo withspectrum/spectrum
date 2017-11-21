@@ -337,6 +337,26 @@ class NotificationsTab extends React.Component<Props, State> {
     });
   };
 
+  // this function gets triggered from downstream child notification components.
+  // in certain cases, clicking on a notification should mark it as seen
+  // and update the state in this parent container
+  // as a result, we pass this function down a few levels of children
+  markSingleNotificationAsSeenInState = (notificationId: string) => {
+    const { notifications } = this.state;
+    const newNotifications = notifications.map(n => {
+      if (n.id !== notificationId) return n;
+      return Object.assign({}, n, {
+        isSeen: true,
+      });
+    });
+
+    this.setState({
+      notifications: newNotifications,
+    });
+
+    return this.setCount(newNotifications);
+  };
+
   render() {
     const { active, currentUser, data, isLoading } = this.props;
     const { count, notifications } = this.state;
@@ -382,6 +402,9 @@ class NotificationsTab extends React.Component<Props, State> {
           width={'480px'}
           loading={isLoading}
           error={false}
+          markSingleNotificationAsSeenInState={
+            this.markSingleNotificationAsSeenInState
+          }
         />
       </IconDrop>
     );

@@ -27,6 +27,7 @@ const StyledCard = styled(Card)`
   overflow: hidden;
   align-items: stretch;
   display: inline-block;
+  border-radius: 8px;
 `;
 
 const DropdownPure = (props: Object): React$Element<any> => (

@@ -23,7 +23,14 @@ const NullNotifications = () => (
 );
 
 const NotificationContainer = props => {
-  const { rawNotifications, currentUser, history, error, loading } = props;
+  const {
+    rawNotifications,
+    currentUser,
+    history,
+    error,
+    loading,
+    markSingleNotificationAsSeenInState,
+  } = props;
 
   const noNotifications = !rawNotifications || rawNotifications.length === 0;
 
@@ -41,6 +48,9 @@ const NotificationContainer = props => {
         rawNotifications={rawNotifications}
         currentUser={currentUser}
         history={history}
+        markSingleNotificationAsSeenInState={
+          markSingleNotificationAsSeenInState
+        }
       />
     );
   }
@@ -53,6 +63,7 @@ const NotificationDropdownPure = props => {
     history,
     markAllAsSeen,
     count,
+    markSingleNotificationAsSeenInState,
   } = props;
 
   return (
@@ -60,11 +71,21 @@ const NotificationDropdownPure = props => {
       <DropdownHeader>
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
-          Notification settings
         </Link>
+        <TextButton
+          color={count > 0 ? 'brand.alt' : 'text.alt'}
+          onClick={markAllAsSeen}
+        >
+          Mark all as seen
+        </TextButton>
       </DropdownHeader>
 
-      <NotificationContainer {...props} />
+      <NotificationContainer
+        {...props}
+        markSingleNotificationAsSeenInState={
+          markSingleNotificationAsSeenInState
+        }
+      />
 
       {rawNotifications &&
         rawNotifications.length > 0 && (
@@ -74,13 +95,6 @@ const NotificationDropdownPure = props => {
               onClick={() => history.push('/notifications')}
             >
               View all
-            </TextButton>
-
-            <TextButton
-              color={count > 0 ? 'brand.alt' : 'text.alt'}
-              onClick={markAllAsSeen}
-            >
-              Mark all as seen
             </TextButton>
           </DropdownFooter>
         )}

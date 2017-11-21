@@ -237,15 +237,13 @@ export const DropdownHeader = styled(FlexRow)`
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
 
-  &:hover {
-    a {
-      color: ${props => props.theme.brand.alt};
-    }
-  }
-
   a {
     display: flex;
     align-items: center;
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+    }
   }
 `;
 

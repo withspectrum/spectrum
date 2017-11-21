@@ -93,7 +93,6 @@ export const GET_NOTIFICATIONS_OPTIONS = {
           document: subscribeToNewNotifications,
           updateQuery: (prev, { subscriptionData }) => {
             let newNotification = subscriptionData.data.notificationAdded;
-            console.log('got a new notification', newNotification);
             if (!newNotification) return prev;
 
             const notificationNode = {
@@ -226,7 +225,7 @@ export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
   props: ({ mutate }) => ({
     markSingleNotificationSeen: () => mutate(),
   }),
-  options: (id: string) => ({
+  options: ({ notification: { id } }) => ({
     variables: {
       id,
     },
