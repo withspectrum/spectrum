@@ -35,6 +35,8 @@ const EVENT_VERB = {
   REACTION_CREATED: 'liked',
   CHANNEL_CREATED: 'created in',
   USER_JOINED_COMMUNITY: 'joined',
+  MENTION_MESSAGE: 'mentioned you in',
+  MENTION_THREAD: 'mentioned you in',
 };
 
 const contextToString = (context, currentUser) => {
