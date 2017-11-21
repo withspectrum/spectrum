@@ -1,5 +1,4 @@
 // @flow
-import Raven from 'raven';
 const debug = require('debug')('iris:mutations:message');
 import detectLang from 'lang-detector';
 import UserError from '../utils/UserError';
@@ -13,10 +12,10 @@ import { setDirectMessageThreadLastActive } from '../models/directMessageThread'
 import {
   createParticipantInThread,
   deleteParticipantInThread,
+  createParticipantWithoutNotificationsInThread,
 } from '../models/usersThreads';
 import { setUserLastSeenInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getThread } from '../models/thread';
-import { getDirectMessageThread } from '../models/directMessageThread';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { uploadImage } from '../utils/s3';
@@ -34,16 +33,18 @@ type DeleteMessageInput = {
 
 module.exports = {
   Mutation: {
-    addMessage: (
+    addMessage: async (
       _: any,
       { message }: AddMessageProps,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       // user must be authed to send a message
       if (!currentUser) {
         return new UserError('You must be signed in to send a message.');
       }
+
+      const thread = await getThread(message.threadId);
 
       // if the message was a dm thread, set the last seen and last active times
       if (message.threadType === 'directMessageThread') {
@@ -54,37 +55,60 @@ module.exports = {
       // if the message was sent in a story thread, create a new participant
       // relationship to the thread - this will enable us to query against
       // thread.participants as well as have per-thread notifications for a user
-      if (message.threadType === 'story') {
+      if (message.threadType === 'story' && (thread && !thread.watercooler)) {
         createParticipantInThread(message.threadId, currentUser.id);
       }
 
-      if (message.messageType === 'text') {
-        return storeMessage(message, currentUser.id);
+      if (thread && thread.watercooler) {
+        createParticipantWithoutNotificationsInThread(
+          message.threadId,
+          currentUser.id
+        );
       }
 
-      if (message.messageType === 'draftjs') {
-        const parsedMessage = JSON.parse(message.content.body);
-        const { blocks } = parsedMessage;
-        // Try guessing the language of a code message
-        if (blocks && blocks.length > 0 && blocks[0].type === 'code-block') {
-          let lang;
-          try {
-            lang = detectLang(toPlainText(toState(parsedMessage)));
-          } catch (err) {
-            console.error(err);
-          }
-          if (lang && lang !== 'Unknown') {
-            // Set data.syntax to the language and add that to the message
-            parsedMessage.blocks[0].data = {
-              syntax: lang.toLowerCase(),
-            };
-            message.content.body = JSON.stringify(parsedMessage);
+      // all checks passed
+      if (message.messageType === 'text' || message.messageType === 'draftjs') {
+        if (message.messageType === 'draftjs') {
+          const parsedMessage = JSON.parse(message.content.body);
+          const { blocks } = parsedMessage;
+          // Try guessing the language of a code message
+          if (blocks && blocks.length > 0 && blocks[0].type === 'code-block') {
+            let lang;
+            try {
+              lang = detectLang(toPlainText(toState(parsedMessage)));
+            } catch (err) {
+              console.error(err);
+            }
+            if (lang && lang !== 'Unknown') {
+              // Set data.syntax to the language and add that to the message
+              parsedMessage.blocks[0].data = {
+                syntax: lang.toLowerCase(),
+              };
+              message.content.body = JSON.stringify(parsedMessage);
+            }
           }
         }
-        return storeMessage(message, currentUser.id);
-      }
+        // send a normal text message
+        return storeMessage(message, currentUser.id)
+          .then(async message => {
+            if (message.threadType === 'directMessageThread') return message;
+            const { communityId } = await loaders.thread.load(message.threadId);
+            const permissions = await loaders.userPermissionsInCommunity.load([
+              message.senderId,
+              communityId,
+            ]);
 
-      if (message.messageType === 'media') {
+            return {
+              ...message,
+              contextPermissions: {
+                reputation: permissions ? permissions.reputation : 0,
+                isModerator: permissions ? permissions.isModerator : false,
+                isOwner: permissions ? permissions.isOwner : false,
+              },
+            };
+          })
+          .catch(err => new UserError(err.message));
+      } else if (message.messageType === 'media') {
         // upload the photo, return the photo url, then store the message
 
         return uploadImage(message.file, 'threads', message.threadId)
@@ -102,10 +126,29 @@ module.exports = {
             });
             return newMessage;
           })
-          .then(newMessage => storeMessage(newMessage, currentUser.id));
-      }
+          .then(newMessage => storeMessage(newMessage, currentUser.id))
+          .then(async message => {
+            if (message.threadType === 'directMessageThread') return message;
+            const { communityId } = await loaders.thread.load(message.threadId);
+            const permissions = await loaders.userPermissionsInCommunity.load([
+              message.senderId,
+              communityId,
+            ]);
 
-      return new UserError('Unknown message type');
+            return {
+              ...message,
+              contextPermissions: {
+                communityId,
+                reputation: permissions ? permissions.reputation : 0,
+                isModerator: permissions ? permissions.isModerator : false,
+                isOwner: permissions ? permissions.isOwner : false,
+              },
+            };
+          })
+          .catch(err => new UserError(err.message));
+      } else {
+        return new UserError('Unknown message type');
+      }
     },
     deleteMessage: async (
       _: any,
@@ -142,7 +185,7 @@ module.exports = {
           communityPermissions.isModerator;
         if (!canModerate)
           throw new UserError(
-            `You don't have permission to delete this message.`
+            "You don't have permission to delete this message."
           );
       }
 
@@ -152,7 +195,7 @@ module.exports = {
         // We don't need to delete participants of direct message threads
         if (message.threadType === 'directMessageThread') return true;
 
-        debug(`thread message, check if user has more messages in thread`);
+        debug('thread message, check if user has more messages in thread');
         return userHasMessagesInThread(
           message.threadId,
           message.senderId

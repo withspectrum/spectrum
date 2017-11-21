@@ -27,7 +27,7 @@ import {
 */
 
 export default async () => {
-  debug(`\nprocessing daily core metrics`);
+  debug('\nprocessing daily core metrics');
 
   // 1
   const dau = await getAu('daily');
@@ -39,13 +39,16 @@ export default async () => {
   const mau = await getAu('monthly');
 
   // 4
-  const dac = await getAc('daily');
+  const { count: dac, communities: dacData } = await getAc('daily');
+  const dacSlugs = dacData.map(c => c.slug);
 
   // 5
-  const wac = await getAc('weekly');
+  const { count: wac, communities: wacData } = await getAc('weekly');
+  const wacSlugs = wacData.map(c => c.slug);
 
   // 6
-  const mac = await getAc('monthly');
+  const { count: mac, communities: macData } = await getAc('monthly');
+  const macSlugs = macData.map(c => c.slug);
 
   // 7
   const cpu = await getPu('usersCommunities');
@@ -81,8 +84,11 @@ export default async () => {
     wau,
     mau,
     dac,
+    dacSlugs,
     wac,
+    wacSlugs,
     mac,
+    macSlugs,
     cpu,
     mpu,
     tpu,

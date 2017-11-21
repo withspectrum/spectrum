@@ -30,6 +30,7 @@ const Meta = /* GraphQL */ `
   }
 
   type Meta {
+    isAdmin: Boolean
     usersGrowth: UsersGrowthData
     communitiesGrowth: GrowthData
     channelsGrowth: GrowthData

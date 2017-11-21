@@ -54,8 +54,10 @@ export const Name = styled.span`
   }
 `;
 
+export const Username = styled(Name)`font-weight: 400;`;
+
 export const Timestamp = styled(HorizontalRule)`
-  margin: 16px 32px 8px 32px;
+  margin: 16px 0 8px;
   text-align: center;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */

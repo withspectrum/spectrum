@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
@@ -126,11 +127,15 @@ export const getCommunityThreads = graphql(
 		query communityThreads($slug: String, $after: String, $id: ID) {
 			community(slug: $slug, id: $id) {
         ...communityInfo
+        watercooler {
+          ...threadInfo
+        }
         ...communityThreads
       }
 		}
     ${communityThreadsFragment}
     ${communityInfoFragment}
+    ${threadInfoFragment}
 	`,
   threadsQueryOptions
 );
@@ -144,23 +149,11 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
           node {
             ...channelInfo
             ...channelMetaData
-            community {
-              communityPermissions {
-                isOwner
-                isMember
-                isModerator
-                isBlocked
-              }
-            }
-            pendingUsers {
-              ...userInfo
-            }
           }
         }
       }
     }
   }
-  ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
   ${channelMetaDataFragment}

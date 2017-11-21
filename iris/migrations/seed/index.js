@@ -8,10 +8,12 @@ const {
   DEFAULT_USERS,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
+  DEFAULT_USERS_THREADS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
+  DEFAULT_MESSAGES,
 } = require('./default');
 
 const {
@@ -99,7 +101,7 @@ channels.forEach(channel => {
   });
 });
 
-let usersThreads = [];
+let usersThreads = DEFAULT_USERS_THREADS;
 threads.forEach(thread => {
   const usersThread = generateUsersThreads(thread.id, thread.creatorId);
   usersThreads.push(usersThread);
@@ -124,7 +126,7 @@ directMessageThreads.forEach(thread => {
 });
 
 console.log('Generating messages...');
-let messages = [];
+let messages = DEFAULT_MESSAGES;
 threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
   const threadMessages = [];

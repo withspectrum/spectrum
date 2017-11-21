@@ -7,24 +7,23 @@ import Reaction from '../reaction';
 import { Body, Actions } from './view';
 import { Wrapper } from './style';
 import { openModal } from '../../actions/modals';
-import { toPlainText, toState, toJson } from 'shared/draft-utils';
+import { toPlainText, toState } from 'shared/draft-utils';
 
 class Message extends Component {
-  componentDidMount() {
-    const hash = window.location.hash.substr(1);
-    if (hash && hash.length > 1) {
-      window.location.href = `#${hash}`;
+  shouldComponentUpdate(nextProps, nextState) {
+    const newMessage = nextProps.message.id !== this.props.message.id;
+    const newSelection = nextProps.selectedId !== this.props.selectedId;
+
+    if (newMessage || newSelection) {
+      return true;
+    } else {
+      return false;
     }
   }
 
   toggleOpenGallery = messageId => {
     const { threadId } = this.props;
     this.props.dispatch(openGallery(threadId, messageId));
-  };
-
-  toggleMessageFocus = messageId => {
-    // const { threadId } = this.props;
-    // TODO: make it so people can tap/click on messages to set focus and display the message's actions
   };
 
   deleteMessage = () => {
@@ -51,7 +50,10 @@ class Message extends Component {
       reaction,
       toggleReaction,
       context,
+      selectedId,
+      changeSelection,
     } = this.props;
+
     const parsedMessage =
       message.messageType &&
       message.messageType === 'draftjs' &&
@@ -59,22 +61,21 @@ class Message extends Component {
     const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
-    const reactable = !emojiOnly && typeof message.id === 'string';
+    const reactable = typeof message.id === 'string';
     const hideIndicator = !reactable && !shareable && !canModerate;
 
     return (
       <Wrapper
         me={me}
-        // tipText={convertTimestampToTime(message.timestamp)}
-        // tipLocation={'bottom'}
+        selected={selectedId === message.id}
+        onClick={() => changeSelection && changeSelection(message.id)}
       >
-        {/* {shareable && <a name={`${message.id}`} />} */}
         <Body
+          id={message.id}
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
           pending={message.id < 0}
           openGallery={() => this.toggleOpenGallery(message.id)}
-          focus={this.toggleMessageFocus}
           message={emojiOnly ? parsedMessage : message.content}
         />
         {actionable && (

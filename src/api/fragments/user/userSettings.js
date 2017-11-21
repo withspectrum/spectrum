@@ -20,6 +20,9 @@ export const userSettingsFragment = gql`
           dailyDigest {
             email
           }
+          newMention {
+            email
+          }
         }
       }
     }

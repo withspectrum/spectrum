@@ -25,7 +25,6 @@ type Props = {
 class PendingUsers extends React.Component<Props> {
   render() {
     const { data: { channel: { pendingUsers } }, togglePending } = this.props;
-
     return (
       <StyledCard>
         <LargeListHeading>Pending Users</LargeListHeading>

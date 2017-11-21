@@ -1,6 +1,6 @@
 import * as React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -44,7 +44,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
       <Wrapper>
         <Row>
           <Avatar
-            community
+            community={community}
             radius={4}
             src={`${community.profilePhoto}`}
             size={32}
@@ -148,6 +148,7 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
+  reputationTipText = 'Your rep in this community',
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
@@ -161,6 +162,7 @@ export const UserListItem = ({
       <Row>
         <Avatar
           radius={20}
+          user={user}
           src={`${user.profilePhoto}`}
           size={40}
           link={user.username ? `/users/${user.username}` : null}
@@ -174,18 +176,11 @@ export const UserListItem = ({
             )}
           </Heading>
           <Meta>
-            {user.username && (
-              <span>
-                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
-              </span>
-            )}
             {(user.totalReputation || user.contextPermissions) && (
-                <span>
-                  <Reputation
-                    tipText={'Your rep in this community'}
-                    reputation={reputation}
-                  />
-                </span>
+                <Reputation
+                  tipText={reputationTipText}
+                  reputation={reputation}
+                />
               )}
           </Meta>
         </Col>

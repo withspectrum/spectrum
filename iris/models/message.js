@@ -3,7 +3,7 @@ const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
-import type { PaginationOptions } from '../utils/paginate-arrays';
+import checkMessageToxicity from '../utils/moderationEvents/message';
 
 export type MessageTypes = 'text' | 'media';
 // TODO: Fix this
@@ -15,19 +15,31 @@ export const getMessage = (messageId: string): Promise<Message> => {
     .get(messageId)
     .run()
     .then(message => {
-      if (message.deletedAt) return null;
+      if (!message || message.deletedAt) return null;
       return message;
     });
 };
 
-export const getMessages = (threadId: String): Promise<Array<Message>> => {
+export const getMessages = (
+  threadId: string,
+  {
+    first = 999999,
+    after,
+    reverse = false,
+  }: { first?: number, after?: number, reverse?: boolean }
+): Promise<Array<Message>> => {
+  const order = reverse
+    ? db.desc('threadIdAndTimestamp')
+    : 'threadIdAndTimestamp';
   return db
     .table('messages')
     .between([threadId, db.minval], [threadId, db.maxval], {
       index: 'threadIdAndTimestamp',
     })
-    .orderBy({ index: 'threadIdAndTimestamp' })
+    .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
+    .skip(after || 0)
+    .limit(first)
     .run();
 };
 
@@ -40,10 +52,20 @@ export const getLastMessage = (threadId: string): Promise<Message> => {
     .run();
 };
 
+export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
+  return db
+    .table('messages')
+    .getAll(...threadIds, { index: 'threadId' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .group('threadId')
+    .max(row => row('timestamp'))
+    .run();
+};
+
 export const getMediaMessagesForThread = (
-  threadId: String
+  threadId: string
 ): Promise<Array<Message>> => {
-  return getMessages(threadId).then(messages =>
+  return getMessages(threadId, {}).then(messages =>
     messages.filter(({ messageType }) => messageType === 'media')
   );
 };
@@ -77,6 +99,7 @@ export const storeMessage = (
       }
 
       if (message.threadType === 'story') {
+        checkMessageToxicity(message);
         addQueue('message notification', { message, userId });
         addQueue('process reputation event', {
           userId,

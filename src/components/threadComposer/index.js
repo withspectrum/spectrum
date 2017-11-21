@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
@@ -18,8 +18,9 @@ import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
-import { displayLoadingComposer } from '../loading';
+import { LoadingComposer } from '../loading';
 import { NullCard } from '../upsell';
+import viewNetworkHandler from '../viewNetworkHandler';
 import {
   Container,
   Composer,
@@ -62,6 +63,7 @@ class ThreadComposerWithData extends Component {
     linkPreviewTrueUrl: ?string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    postWasPublished: boolean,
   };
 
   constructor(props) {
@@ -79,6 +81,7 @@ class ThreadComposerWithData extends Component {
       linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      postWasPublished: false,
     };
   }
 
@@ -232,6 +235,14 @@ class ThreadComposerWithData extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    const { postWasPublished } = this.state;
+
+    // if a post was published, in this session, clear redux so that the next
+    // composer open will start fresh
+    if (postWasPublished) return this.closeComposer('clear');
+
+    // otherwise, clear the composer normally and save the state
+    return this.closeComposer();
   }
 
   handleKeyPress = e => {
@@ -339,7 +350,13 @@ class ThreadComposerWithData extends Component {
     }
   };
 
-  closeComposer = () => {
+  closeComposer = (clear?: string) => {
+    // we will clear the composer if it unmounts as a result of a post
+    // being published, that way the next composer open will start fresh
+    if (clear) return this.props.dispatch(closeComposer('', ''));
+
+    // otherwise, we will save the editor state to rehydrate the title and
+    // body if the user reopens the composer in the same session
     const { title, body } = this.state;
     this.props.dispatch(closeComposer(title, body));
   };
@@ -458,6 +475,7 @@ class ThreadComposerWithData extends Component {
 
         // stop the loading spinner on the publish button
         this.setState({
+          postWasPublished: true,
           isPublishing: false,
         });
 
@@ -552,15 +570,15 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, data: { networkStatus }, isInbox } = this.props;
+    const { isOpen, isLoading, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
-    if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
+    if (!isLoading && (!availableCommunities || !availableChannels)) {
       return (
         <NullCard
           bg="community"
           heading={`Once you join a community, you can start conversations there!`}
-          copy={`Let's find you something worth joining...`}
+          copy={`Let‘s find you something worth joining...`}
         >
           <Link to={`/explore`}>
             <Button icon="explore" color="text.alt">
@@ -569,7 +587,9 @@ class ThreadComposerWithData extends Component {
           </Link>
         </NullCard>
       );
-    } else {
+    }
+
+    if (!isLoading && availableCommunities && availableChannels) {
       return (
         <Container isOpen={isOpen} isInbox={isInbox}>
           <Overlay
@@ -670,14 +690,20 @@ class ThreadComposerWithData extends Component {
         </Container>
       );
     }
+
+    if (isLoading) {
+      return <LoadingComposer />;
+    }
+
+    return null;
   }
 }
 
 export const ThreadComposer = compose(
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  displayLoadingComposer, // handle loading state while query is fetching
-  withRouter // needed to use history.push() as a post-publish action
+  getComposerCommunitiesAndChannels,
+  publishThread,
+  viewNetworkHandler,
+  withRouter
 )(ThreadComposerWithData);
 
 const mapStateToProps = state => ({

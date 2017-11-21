@@ -18,13 +18,7 @@ type Props = {};
 
 class CommunitySettings extends React.Component<Props> {
   render() {
-    const {
-      match,
-      data: { community },
-      location,
-      isLoading,
-      hasError,
-    } = this.props;
+    const { data: { community }, location, isLoading, hasError } = this.props;
 
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;

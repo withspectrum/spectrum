@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
@@ -65,7 +65,7 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString },
+        variables: { string: searchString, amount: 30 },
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
@@ -216,7 +216,7 @@ class Search extends Component {
                   >
                     <SearchLink to={`/${community.slug}`}>
                       <SearchResultImage
-                        community
+                        community={community}
                         src={community.profilePhoto}
                       />
                       <SearchResultTextContainer>

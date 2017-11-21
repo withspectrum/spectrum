@@ -3,27 +3,13 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
-import Icon from '../../../components/icons';
-import { HorizontalRule } from '../../../components/globals';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
-import NewThreadShare from '../../../components/upsell/newThreadShare';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
-
-export const EmptyChat = ({ thread }) => (
-  <ChatWrapper>
-    <HorizontalRule>
-      <hr />
-      <Icon glyph={'message'} />
-      <hr />
-    </HorizontalRule>
-    <NewThreadShare thread={thread} />
-  </ChatWrapper>
-);
 
 class MessagesWithData extends Component {
   state: {
@@ -60,7 +46,6 @@ class MessagesWithData extends Component {
     if (
       (!newMessageSent &&
         this.props.data.thread &&
-        this.props.data.thread.messageConnection &&
         this.props.shouldForceScrollToTopOnMessageLoad) ||
       (!newMessageSent &&
         this.props.data.networkStatus === 7 &&
@@ -110,7 +95,6 @@ class MessagesWithData extends Component {
     const {
       data,
       isLoading,
-      currentUser,
       toggleReaction,
       forceScrollToBottom,
       hasMessagesToLoad,
@@ -148,11 +132,6 @@ class MessagesWithData extends Component {
 
       return (
         <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
           <ChatMessages
             threadId={data.thread.id}
             thread={data.thread}
@@ -166,25 +145,12 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (dataExists) {
-      if (currentUser) {
-        return <EmptyChat thread={data.thread} />;
-      } else {
-        return null;
-      }
+    if (isLoading) {
+      return <ChatWrapper>{hasMessagesToLoad && <LoadingChat />}</ChatWrapper>;
     }
 
-    if (isLoading) {
-      return (
-        <ChatWrapper>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph={'message'} />
-            <hr />
-          </HorizontalRule>
-          {hasMessagesToLoad && <LoadingChat />}
-        </ChatWrapper>
-      );
+    if (!messagesExist) {
+      return <ChatWrapper />;
     }
 
     return (

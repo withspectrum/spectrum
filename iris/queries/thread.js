@@ -4,7 +4,6 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
@@ -32,21 +31,21 @@ module.exports = {
         if (!user) {
           return Promise.all([
             thread,
-            getChannels([thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, channel]) => {
             // if the channel is private, don't return any thread data
-            if (channel[0].isPrivate) return null;
+            if (channel.isPrivate) return null;
             return thread;
           });
         } else {
           // if the user is signed in, we need to check if the channel is private as well as the user's permission in that channel
           return Promise.all([
             thread,
-            getUserPermissionsInChannel(thread.channelId, user.id),
-            getChannels([thread.channelId]),
+            loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, permissions, channel]) => {
             // if the thread is in a private channel where the user is not a member, don't return any thread data
-            if (channel[0].isPrivate && !permissions.isMember) return null;
+            if (channel.isPrivate && !permissions.isMember) return null;
             return thread;
           });
         }
@@ -91,45 +90,41 @@ module.exports = {
     receiveNotifications: (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
       } else {
-        return getThreadNotificationStatusForUser(
-          id,
-          currentUser.id
-        ).then(threads => {
-          return threads.length > 0 ? threads[0].receiveNotifications : false;
-        });
+        return loaders.userThreadNotificationStatus
+          .load([currentUser.id, id])
+          .then(result => (result ? result.receiveNotifications : false));
       }
     },
     messageConnection: (
-      { id }: { id: String },
-      { first = Infinity, after }: PaginationOptions
+      { id, watercooler }: { id: String },
+      { first = 999999, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
-        first,
-        after: cursor,
-      })
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => ({
+        // Only send down 200 messages for the watercooler?
+        first: watercooler ? 200 : first,
+        after: lastMessageIndex,
+      }).then(result => {
+        return {
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: result && result.length >= first,
           },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
+          edges: result.map((message, index) => ({
+            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
             node: message,
           })),
-        }));
+        };
+      });
     },
     creator: async (
       { creatorId, communityId }: { creatorId: string, communityId: string },
@@ -138,11 +133,7 @@ module.exports = {
     ) => {
       const creator = await loaders.user.load(creatorId);
 
-      const {
-        reputation,
-        isModerator,
-        isOwner,
-      } = await loaders.userPermissionsInCommunity.load([
+      const permissions = await loaders.userPermissionsInCommunity.load([
         creatorId,
         communityId,
       ]);
@@ -150,9 +141,10 @@ module.exports = {
       return {
         ...creator,
         contextPermissions: {
-          reputation,
-          isModerator,
-          isOwner,
+          communityId,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
         },
       };
     },

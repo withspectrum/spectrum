@@ -4,7 +4,7 @@ import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { hexa, FlexCol, zIndex } from '../globals';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 
 const containerFadeIn = keyframes`
 	0%{
@@ -33,6 +33,16 @@ export const LoadingScreenContainer = styled.div`
 
 export const ShimmerList = styled(Card)`
   padding: 16px;
+
+  section {
+    min-height: 164px;
+  }
+`;
+
+export const ShimmerListLite = styled(Card)`
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: none;
 
   section {
     min-height: 164px;
@@ -72,6 +82,16 @@ export const ShimmerInboxThread = styled.div`
 
 export const ShimmerProfile = styled(Card)`
   padding: 16px;
+
+  section {
+    min-height: 96px;
+  }
+`;
+
+export const ShimmerProfileLite = styled(Card)`
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: none;
 
   section {
     min-height: 96px;

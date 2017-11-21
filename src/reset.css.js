@@ -131,10 +131,6 @@ injectGlobal`
     margin-top: 16px;
   }
 
-  .markdown > *: last-of-type {
-    margin-bottom: 32px;
-  }
-
   .markdown img {
     margin-top: 16px;
     max-width: 100%;
@@ -236,6 +232,18 @@ injectGlobal`
     white-space: pre-wrap;
   }
 
+  .markdown div[data-block='true'] {
+    margin-top: 12px;
+  }
+
+  .markdown div[data-block='true']:first-of-type {
+    margin-top: 0;
+  }
+
+  .markdown span[data-text='true'] {
+    line-height: 1.4;
+  }
+
   .markdown code span {
     max-width: 100%;
     white-space: pre-wrap;
@@ -243,8 +251,6 @@ injectGlobal`
   }
 
   .markdown iframe {
-    width: 100%;
-    max-height: 60vh;
     margin: 1rem 0;
   }
 

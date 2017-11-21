@@ -1,6 +1,6 @@
 import React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
 import {
@@ -25,7 +25,7 @@ const FormattedThreadLocation = props => {
       {needsCommunityDetails && (
         <ThreadContextAvatar>
           <Avatar
-            community
+            community={props.data.community}
             size={20}
             radius={8}
             src={props.data.community.profilePhoto}

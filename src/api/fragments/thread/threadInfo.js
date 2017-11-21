@@ -15,6 +15,7 @@ export const threadInfoFragment = gql`
       ...userInfo
       isPro
       contextPermissions {
+        communityId
         reputation
         isOwner
         isModerator
@@ -41,6 +42,7 @@ export const threadInfoFragment = gql`
       attachmentType
       data
     }
+    watercooler
   }
   ${userInfoFragment}
   ${channelInfoFragment}

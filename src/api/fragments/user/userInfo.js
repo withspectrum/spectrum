@@ -11,5 +11,6 @@ export const userInfoFragment = gql`
     website
     username
     isOnline
+    timezone
   }
 `;

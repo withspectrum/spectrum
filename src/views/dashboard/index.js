@@ -6,9 +6,10 @@ import generateMetaInfo from 'shared/generate-meta-info';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
-import { getEverythingThreads, getCurrentUserProfile } from './queries';
+import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
 import { getChannelThreads } from '../../views/channel/queries';
+import { getCurrentUserProfile } from '../../api/user';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -43,7 +44,7 @@ const ChannelThreadFeed = compose(connect(), getChannelThreads)(
   DashboardThreadFeed
 );
 
-const DashboardWrapper = props => <Wrapper>{props.children}</Wrapper>;
+const DashboardWrapper = props => <Wrapper {...props} />;
 
 class Dashboard extends Component {
   state: {
@@ -82,6 +83,7 @@ class Dashboard extends Component {
       isLoading,
       hasError,
     } = this.props;
+
     const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 
@@ -104,10 +106,11 @@ class Dashboard extends Component {
       )[0];
 
       return (
-        <DashboardWrapper>
+        <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
           <Titlebar />
           <CommunityListWrapper
+            data-e2e-id="inbox-community-list"
             onMouseEnter={this.setHover}
             onMouseLeave={this.removeHover}
           >

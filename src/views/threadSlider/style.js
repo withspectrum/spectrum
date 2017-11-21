@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { zIndex } from '../../components/globals';
 
 const animation = css`

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-// $FlowFixMe
+import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
 import { theme } from './components/theme';
@@ -18,7 +18,6 @@ import { LoadingDMs } from './views/directMessages/components/loading';
 import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
-import CommunityAnalytics from './views/communityAnalytics';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 
@@ -131,7 +130,7 @@ const Body = styled(FlexCol)`
 const DashboardFallback = signedOutFallback(Dashboard, Splash);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to="/login" />
+  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Redirect to="/login" />
@@ -214,6 +213,7 @@ class Routes extends React.Component<{}> {
               <Route path="/messages/new" component={MessagesFallback} />
               <Route path="/messages/:threadId" component={MessagesFallback} />
               <Route path="/messages" component={MessagesFallback} />
+              <Route path="/thread/:threadId" component={Thread} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />

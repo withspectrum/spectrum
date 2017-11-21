@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
 
 export const ListHeader = styled.div`
@@ -51,7 +51,7 @@ export const EmailInviteForm = styled.div`
 `;
 
 export const EmailInviteInput = styled.input`
-  display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
+  display: flex;
   flex: 1 1 50%;
   padding: 8px 12px;
   font-size: 14px;
@@ -74,6 +74,10 @@ export const EmailInviteInput = styled.input`
 
   &:focus {
     border: 2px solid ${props => props.theme.brand.default};
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -293,6 +297,7 @@ export const Heading = styled.h1`
   font-size: 32px;
   color: ${props => props.theme.text.default};
   font-weight: 600;
+  line-height: 1;
 `;
 
 export const Subheading = styled.h3`
@@ -301,7 +306,6 @@ export const Subheading = styled.h3`
   color: ${props => props.theme.text.alt};
   font-weight: 400;
   line-height: 1;
-  margin-bottom: 8px;
 `;
 
 export const StyledHeader = styled.div`

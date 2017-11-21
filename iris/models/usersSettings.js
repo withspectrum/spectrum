@@ -10,6 +10,9 @@ export const createNewUsersSettings = (userId: string): Promise<Object> => {
         newMessageInThreads: {
           email: true,
         },
+        newMention: {
+          email: true,
+        },
         newDirectMessage: {
           email: true,
         },

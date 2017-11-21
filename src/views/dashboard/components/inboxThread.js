@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
 import Facepile from './facepile';
-import ThreadCommunityInfo from './threadCommunityInfo';
+import truncate from 'shared/truncate';
+import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
@@ -31,27 +32,25 @@ class InboxThread extends Component {
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
-    const isMobile = window && window.innerWidth < 768;
     const isPinned = data.id === this.props.pinnedThreadId;
+
+    if (data.watercooler) {
+      return <WatercoolerThread data={data} active={active} />;
+    }
 
     return (
       <InboxThreadItem active={active}>
-        {isMobile ? (
-          <InboxLinkWrapper
-            to={{
-              pathname: window.location.pathname,
-              search: `?thread=${data.id}`,
-            }}
-          />
-        ) : (
-          <InboxLinkWrapper
-            to={{
-              pathname: window.location.pathname,
-              search: `?t=${data.id}`,
-            }}
-            onClick={() => this.props.dispatch(changeActiveThread(data.id))}
-          />
-        )}
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search:
+              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+          }}
+          onClick={e =>
+            window.innerWidth > 768 &&
+            !e.metaKey &&
+            this.props.dispatch(changeActiveThread(data.id))}
+        />
         <InboxThreadContent>
           <ThreadCommunityInfo
             thread={data}
@@ -61,7 +60,9 @@ class InboxThread extends Component {
             isPinned={isPinned}
           />
 
-          <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
+          <ThreadTitle active={active}>
+            {truncate(data.content.title, 80)}
+          </ThreadTitle>
 
           {attachmentsExist &&
             attachments
@@ -73,7 +74,7 @@ class InboxThread extends Component {
 
                 return (
                   <AttachmentsContainer active={active} key={url}>
-                    <MiniLinkPreview to={url} target="_blank">
+                    <MiniLinkPreview href={url} target="_blank">
                       <Icon glyph="link" size={18} />
                       {url}
                     </MiniLinkPreview>
@@ -109,3 +110,55 @@ class InboxThread extends Component {
 }
 
 export default compose(connect(), withRouter)(InboxThread);
+
+class WatercoolerThreadPure extends React.Component {
+  render() {
+    const {
+      data: { attachments, participants, creator, community, messageCount, id },
+      active,
+    } = this.props;
+    const participantsExist = participants && participants.length > 0;
+
+    return (
+      <InboxThreadItem active={active}>
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search: window.innerWidth < 768 ? `?thread=${id}` : `?t=${id}`,
+          }}
+          onClick={() =>
+            window.innerWidth > 768 &&
+            this.props.dispatch(changeActiveThread(id))}
+        />
+        <InboxThreadContent>
+          <WaterCoolerPill active={active} />
+          <ThreadTitle active={active}>
+            {community.name} Watercooler
+          </ThreadTitle>
+
+          <ThreadMeta>
+            {(participantsExist || creator) && (
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={creator}
+                />
+              )}
+
+            {messageCount > 0 && (
+              <MetaText offset={participants.length} active={active}>
+                {messageCount > 1
+                  ? `${messageCount} messages`
+                  : `${messageCount} message`}
+              </MetaText>
+            )}
+          </ThreadMeta>
+        </InboxThreadContent>
+      </InboxThreadItem>
+    );
+  }
+}
+
+export const WatercoolerThread = compose(connect(), withRouter)(
+  WatercoolerThreadPure
+);

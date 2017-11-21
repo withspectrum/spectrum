@@ -3,7 +3,7 @@ import { threadInfoFragment } from '../thread/threadInfo';
 
 export const userThreadsFragment = gql`
   fragment userThreads on User {
-    threadConnection(first: 10, after: $after) {
+    threadConnection(first: 10, after: $after, kind: $kind) {
       pageInfo {
         hasNextPage
         hasPreviousPage

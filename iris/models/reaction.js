@@ -17,10 +17,13 @@ export type ReactionInput = {
   type: ReactionType,
 };
 
-export const getReactions = (messageId: string): Promise<Array<DBReaction>> => {
+export const getReactions = (
+  messageIds: Array<string>
+): Promise<Array<DBReaction>> => {
   return db
     .table('reactions')
-    .getAll(messageId, { index: 'messageId' })
+    .getAll(...messageIds, { index: 'messageId' })
+    .group('messageId')
     .run();
 };
 

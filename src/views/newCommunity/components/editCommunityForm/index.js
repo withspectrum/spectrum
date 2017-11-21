@@ -254,7 +254,7 @@ class CommunityWithData extends Component {
             Name
           </Input>
           <UnderlineInput defaultValue={slug} disabled>
-            sp.chat/
+            spectrum.chat/
           </UnderlineInput>
 
           {nameError && (

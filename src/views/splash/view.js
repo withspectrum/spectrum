@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
 import { hexa, Gradient, FlexCol, FlexRow } from '../../components/globals';
 import Search from '../explore/components/search';
 
-import Theme from './components/themes';
-import { Conversation, Discover } from './components/illustrations';
+import ViewSegment from '../../components/viewSegment';
+import { Conversation, Discover } from '../../components/illustrations';
 import {
   Header,
   Tagline,
@@ -30,7 +30,9 @@ import {
 
 type Props = Object;
 
-const Section = (props: Props) => <Theme {...props}>{props.children}</Theme>;
+const Section = (props: Props) => (
+  <ViewSegment {...props}>{props.children}</ViewSegment>
+);
 
 export const Overview = (props: Props) => {
   const Text = styled(FlexCol)`
@@ -48,6 +50,7 @@ export const Overview = (props: Props) => {
     line-height: 1.3;
     font-weight: 500;
     opacity: 0.95;
+    max-width: 580px;
 
     @media (max-width: 768px) {
       font-size: 20px;

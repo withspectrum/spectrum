@@ -228,11 +228,6 @@ class EditForm extends React.Component<Props> {
       });
   };
 
-  cancelForm = e => {
-    e.preventDefault();
-    return (window.location.href = `/${this.props.community.slug}`);
-  };
-
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
     track('community', 'delete inited', null);
@@ -316,7 +311,7 @@ class EditForm extends React.Component<Props> {
             Name
           </Input>
           <UnderlineInput defaultValue={slug} disabled>
-            sp.chat/
+            spectrum.chat/
           </UnderlineInput>
 
           {nameError && (
@@ -343,9 +338,6 @@ class EditForm extends React.Component<Props> {
             >
               Save
             </Button>
-            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
-              Cancel
-            </TextButton>
             <TertiaryActionContainer>
               <IconButton
                 glyph="delete"

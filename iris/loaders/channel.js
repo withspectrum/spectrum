@@ -5,6 +5,7 @@ import {
   getChannelsMemberCounts,
 } from '../models/channel';
 import createLoader from './create-loader';
+import { getPendingUsersInChannels } from '../models/usersChannels';
 import type { Loader } from './types';
 
 export const __createChannelLoader = () =>
@@ -15,6 +16,9 @@ export const __createChannelThreadCountLoader = () =>
 
 export const __createChannelMemberCountLoader = () =>
   createLoader(channels => getChannelsMemberCounts(channels), 'group');
+
+export const __createChannelPendingMembersLoader = () =>
+  createLoader(channels => getPendingUsersInChannels(channels), 'group');
 
 export default () => {
   throw new Error(

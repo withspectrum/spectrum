@@ -17,6 +17,9 @@ type MessageType = {
 };
 type RecipientType = {
   email: string,
+  username: string,
+  userId: string,
+  name: string,
 };
 type NotificationType = {};
 type ThreadType = {};

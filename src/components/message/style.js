@@ -1,7 +1,34 @@
 // @flow
-import React from 'react';
-import styled from 'styled-components';
-import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
+import styled, { css } from 'styled-components';
+import { Gradient, zIndex, Transition, monoStack } from '../globals';
+
+const Bubble = styled.div`
+  display: inline-block;
+  border-radius: 16px;
+  z-index: ${zIndex.card};
+
+  vertical-align: middle;
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-word;
+
+  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
+
+  box-shadow: ${props =>
+    props.hashed
+      ? `inset 0 0 0 2px ${props.theme.bg.default}, inset 0 0 0 4px ${props
+          .theme.brand.default}`
+      : ''};
+  margin-top: 4px;
+  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
+
+  clear: both;
+
+  &::selection {
+    background-color: ${props =>
+      props.me ? props.theme.text.default : props.theme.brand.alt};
+  }
+`;
 
 export const Indicator = styled.div`
   position: absolute;
@@ -115,9 +142,34 @@ export const Wrapper = styled.div`
   position: relative;
   max-width: 65%;
   transition: ${Transition.hover.off};
-  ${props => (props.tipText ? Tooltip(props) : '')};
 
-  &:hover {
+  @media (max-width: 768px) {
+    max-width: 75%;
+  }
+
+  ${props =>
+    props.selected &&
+    css`
+      ${'' /* ${Bubble} {
+        box-shadow: 0 0 0 2px ${props => props.theme.brand.alt},
+          inset 0 0 0 2px ${props => props.theme.bg.default};
+      } */} ${ActionUI} {
+        transition: ${Transition.hover.on};
+
+        ${ActionWrapper} {
+          visibility: visible;
+          opacity: 1;
+          transition: ${Transition.hover.on};
+        }
+
+        ${Indicator} {
+          transition: ${Transition.hover.on};
+          visibility: hidden;
+          opacity: 0;
+          ${props => (props.me ? 'right: 100%' : 'left: 100%')};
+        }
+      }
+    `} &:hover {
     ${ActionUI} {
       transition: ${Transition.hover.on};
 
@@ -156,34 +208,6 @@ export const Time = styled.div`
   position: absolute;
   ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
   top: 4px;
-`;
-
-const Bubble = styled.div`
-  display: inline-block;
-  border-radius: 16px;
-  z-index: ${zIndex.card};
-
-  vertical-align: middle;
-  white-space: pre-line;
-  word-wrap: break-word;
-  word-break: break-word;
-
-  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
-
-  box-shadow: ${props =>
-    props.hashed
-      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
-          .default}`
-      : ''};
-  margin-top: 4px;
-  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
-
-  clear: both;
-
-  &::selection {
-    background-color: ${props =>
-      props.me ? props.theme.text.default : props.theme.brand.alt};
-  }
 `;
 
 export const Text = styled(Bubble)`
@@ -252,7 +276,7 @@ export const Image = styled.img`
   max-width: 100%;
   display: flex;
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
-  opacity: ${props => (props.pending ? 0.5 : 1)};
+  opacity: 1;
   transition: opacity 0.2s ease-out;
   border: 1px solid #f6f7f8;
   margin-top: ${props => (props.hashed ? '4px' : '0')};
@@ -283,3 +307,5 @@ export const Line = styled.pre`
   word-wrap: break-word;
   ${monoStack};
 `;
+
+export const Paragraph = styled.p`line-height: 1.5;`;

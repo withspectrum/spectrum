@@ -52,20 +52,17 @@ class JoinChannel extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -76,18 +73,21 @@ class JoinChannel extends React.Component<Props, State> {
           isLoading: false,
         });
 
+        console.log(err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
     const { isLoading } = this.state;
-    const { community } = this.props;
+    const { channel, community } = this.props;
     return (
       <NullState bg={null}>
-        <Title>Join the {community.name} community</Title>
+        <Title>
+          Join the {channel.name} channel in the {community.name} community
+        </Title>
         <Subtitle>
-          Once you join this community you'll be able to post your replies here!
+          Once you join this channel you'll be able to post your replies here!
         </Subtitle>
         <Button
           loading={isLoading}
@@ -95,7 +95,7 @@ class JoinChannel extends React.Component<Props, State> {
           icon="plus"
           label
         >
-          Join {community.name}
+          Join {channel.name}
         </Button>
       </NullState>
     );

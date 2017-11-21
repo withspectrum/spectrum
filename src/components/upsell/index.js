@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
@@ -142,7 +142,13 @@ export class UpsellSignIn extends Component {
     const { isSigningIn, signinType } = this.state;
 
     if (isSigningIn) {
-      return <Login close={this.toggleSigningIn} signinType={signinType} />;
+      return (
+        <Login
+          close={this.toggleSigningIn}
+          signinType={signinType}
+          redirectPath={window.location}
+        />
+      );
     } else {
       const subtitle = view
         ? view.type === 'community'
@@ -342,7 +348,7 @@ class UpsellUpgradeToProPure extends Component {
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <Avatar src={`${currentUser.profilePhoto}`} />
+          <Avatar src={`${currentUser.profilePhoto}`} user={currentUser} />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>

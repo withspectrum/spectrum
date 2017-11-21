@@ -28,7 +28,10 @@ export default ({
     <CommunityInfoContainer active={active}>
       {!activeCommunity && (
         <AvatarLink to={`/${community.slug}`}>
-          <CommunityAvatar src={`${community.profilePhoto}?w=20&dpr=2`} />
+          <CommunityAvatar
+            community={community}
+            src={`${community.profilePhoto}?w=20&dpr=2`}
+          />
         </AvatarLink>
       )}
 
@@ -60,3 +63,11 @@ export default ({
     </CommunityInfoContainer>
   );
 };
+
+export const WaterCoolerPill = ({ active }) => (
+  <CommunityInfoContainer active={active}>
+    <PillLinkPinned>
+      <PillLabel>Open chat</PillLabel>
+    </PillLinkPinned>
+  </CommunityInfoContainer>
+);

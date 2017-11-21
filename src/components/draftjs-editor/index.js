@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import { injectGlobal } from 'styled-components';
-import { EditorState } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
 import createFocusPlugin from 'draft-js-focus-plugin';
@@ -22,11 +20,13 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
+import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
+import mentionsDecorator from './mentions-decorator';
 
 import Image from './Image';
-import Embed from './Embed';
+import Embed, { addEmbed, parseEmbedUrl } from './Embed';
 import MediaInput from '../mediaInput';
 import SideToolbar from './toolbar';
 import {
@@ -79,6 +79,7 @@ class Editor extends React.Component<Props, State> {
     const prismPlugin = createPrismPlugin({
       prism: Prism,
     });
+    const codePlugin = createCodeEditorPlugin();
 
     const decorator = composeDecorators(
       focusPlugin.decorator,
@@ -96,11 +97,12 @@ class Editor extends React.Component<Props, State> {
         prismPlugin,
         embedPlugin,
         createMarkdownPlugin(),
+        codePlugin,
         linkifyPlugin,
         dndPlugin,
         focusPlugin,
       ],
-      addEmbed: embedPlugin.addEmbed,
+      addEmbed: addEmbed,
       addImage: imagePlugin.addImage,
       inserting: false,
       embedding: false,
@@ -118,8 +120,7 @@ class Editor extends React.Component<Props, State> {
     evt && evt.preventDefault();
 
     const { state, onChange } = this.props;
-
-    onChange(this.state.addEmbed(state, this.state.embedUrl));
+    onChange(this.state.addEmbed(state, parseEmbedUrl(this.state.embedUrl)));
     this.setState({
       embedUrl: '',
       embedding: false,
@@ -194,10 +195,11 @@ class Editor extends React.Component<Props, State> {
             }}
             readOnly={readOnly}
             placeholder={!readOnly && placeholder}
-            spellCheck="false"
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
+            spellCheck={true}
+            autoCapitalize="sentences"
+            autoComplete="on"
+            autoCorrect="on"
+            decorators={[mentionsDecorator]}
             {...rest}
           />
           {!readOnly && (
@@ -273,10 +275,11 @@ class Editor extends React.Component<Props, State> {
               }}
               readOnly={readOnly}
               placeholder={!readOnly && placeholder}
-              spellCheck="false"
-              autoCapitalize="off"
-              autoComplete="off"
-              autoCorrect="off"
+              spellCheck={true}
+              autoCapitalize="sentences"
+              autoComplete="on"
+              autoCorrect="on"
+              decorators={[mentionsDecorator]}
               {...rest}
             />
           </Wrapper>

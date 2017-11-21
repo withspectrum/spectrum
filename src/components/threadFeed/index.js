@@ -105,12 +105,34 @@ class ThreadFeedPure extends Component {
     this.subscribe();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      !prevProps.data.thread &&
+      this.props.data.threads &&
+      this.props.data.threads.length === 0
+    ) {
+      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
+      if (this.props.setThreadsStatus) {
+        this.props.setThreadsStatus();
+      }
+
+      if (this.props.hasThreads) {
+        this.props.hasThreads();
+      }
+
+      if (this.props.hasNoThreads) {
+        this.props.hasNoThreads();
+      }
+    }
+  }
+
   render() {
     const {
       data: { threads, networkStatus, error },
       viewContext,
       newActivityIndicator,
     } = this.props;
+
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
@@ -126,7 +148,7 @@ class ThreadFeedPure extends Component {
 
     if (dataExists) {
       return (
-        <Threads>
+        <Threads data-e2e-id="thread-feed">
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
           )}
@@ -184,19 +206,6 @@ class ThreadFeedPure extends Component {
           />
         </Card>
       );
-    }
-
-    // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-    if (this.props.setThreadsStatus) {
-      this.props.setThreadsStatus();
-    }
-
-    if (this.props.hasThreads) {
-      this.props.hasThreads();
-    }
-
-    if (this.props.hasNoThreads) {
-      this.props.hasNoThreads();
     }
 
     if (this.props.isNewAndOwned) {

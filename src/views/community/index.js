@@ -29,12 +29,12 @@ import {
   Upsell404Community,
 } from '../../components/upsell';
 import {
-  CoverRow,
-  CoverColumn,
   SegmentedControl,
   Segment,
-  LogoutButton,
-} from './style';
+  DesktopSegment,
+  MobileSegment,
+} from '../../components/segmentedControl';
+import { CoverRow, CoverColumn, LogoutButton } from './style';
 import { getCommunityThreads } from './queries';
 import { getCommunity } from '../../api/community';
 import ChannelList from './components/channelList';
@@ -73,8 +73,18 @@ class CommunityView extends React.Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    track('community', 'viewed', null);
+  componentDidUpdate(prevProps) {
+    // if the user is new and signed up through a community page, push
+    // the community data into the store to hydrate the new user experience
+    // with their first community they should join
+    if (this.props.currentUser) return;
+    if (
+      (!prevProps.data.community && this.props.data.community) ||
+      (prevProps.data.community &&
+        prevProps.data.community.id !== this.props.data.community.id)
+    ) {
+      this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
+    }
   }
 
   toggleMembership = (communityId: string) => {
@@ -156,12 +166,6 @@ class CommunityView extends React.Component<Props, State> {
       const { isMember, isOwner, isModerator } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
-      const isMobile = window.innerWidth < 768;
-
-      // if the user is new and signed up through a community page, push
-      // the community data into the store to hydrate the new user experience
-      // with their first community they should join
-      this.props.dispatch(addCommunityToOnboarding(community));
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
@@ -170,7 +174,7 @@ class CommunityView extends React.Component<Props, State> {
       const isNewAndOwned = isOwner && community.metaData.members < 5;
 
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-e2e-id="community-view">
           <Titlebar
             title={community.name}
             provideBack={true}
@@ -178,7 +182,11 @@ class CommunityView extends React.Component<Props, State> {
             noComposer={!community.communityPermissions.isMember}
           />
 
-          <Head title={title} description={description} />
+          <Head
+            title={title}
+            description={description}
+            image={community.profilePhoto}
+          />
 
           <CoverColumn>
             <CoverPhoto src={community.coverPhoto} />
@@ -186,8 +194,7 @@ class CommunityView extends React.Component<Props, State> {
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
                 {isLoggedIn &&
-                  (!isMobile &&
-                    !community.communityPermissions.isOwner &&
+                  (!community.communityPermissions.isOwner &&
                     community.communityPermissions.isMember) && (
                     <LogoutButton
                       onClick={() => this.toggleMembership(community.id)}
@@ -196,21 +203,19 @@ class CommunityView extends React.Component<Props, State> {
                       Leave {community.name}
                     </LogoutButton>
                   )}
-                {!isMobile && (
-                  <ChannelList communitySlug={communitySlug.toLowerCase()} />
-                )}
+                <ChannelList communitySlug={communitySlug.toLowerCase()} />
               </Column>
 
               <Column type="primary">
-                <SegmentedControl>
-                  <Segment
+                <SegmentedControl style={{ margin: '-16px 0 16px' }}>
+                  <DesktopSegment
                     segmentLabel="search"
                     onClick={() => this.handleSegmentClick('search')}
                     selected={selectedView === 'search'}
                   >
                     <Icon glyph={'search'} />
                     Search
-                  </Segment>
+                  </DesktopSegment>
 
                   <Segment
                     segmentLabel="threads"
@@ -220,13 +225,27 @@ class CommunityView extends React.Component<Props, State> {
                     Threads
                   </Segment>
 
-                  <Segment
+                  <DesktopSegment
                     segmentLabel="members"
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
                     Members ({community.metaData.members.toLocaleString()})
-                  </Segment>
+                  </DesktopSegment>
+                  <MobileSegment
+                    segmentLabel="members"
+                    onClick={() => this.handleSegmentClick('members')}
+                    selected={selectedView === 'members'}
+                  >
+                    Members
+                  </MobileSegment>
+                  <MobileSegment
+                    segmentLabel="search"
+                    onClick={() => this.handleSegmentClick('search')}
+                    selected={selectedView === 'search'}
+                  >
+                    <Icon glyph={'search'} />
+                  </MobileSegment>
                 </SegmentedControl>
 
                 {// if the user is logged in, is viewing the threads,

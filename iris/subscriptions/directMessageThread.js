@@ -13,12 +13,7 @@ import type { DBDirectMessageThread } from '../models/directMessageThread';
 module.exports = {
   Subscription: {
     directMessageThreadUpdated: {
-      resolve: (directMessageThread: DBDirectMessageThread) => ({
-        ...directMessageThread,
-        threadLastActive:
-          directMessageThread.threadLastActive &&
-          new Date(directMessageThread.threadLastActive),
-      }),
+      resolve: (thread: any) => thread,
       subscribe: withFilter(
         asyncify(listenToUpdatedDirectMessageThreads, err => {
           throw new Error(err);

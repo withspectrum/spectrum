@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
+import { EditorState } from 'draft-js';
 import {
   getLinkPreviewFromUrl,
   timeDifference,
@@ -12,42 +13,22 @@ import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  setThreadLockMutation,
-  toggleThreadNotificationsMutation,
-} from '../mutations';
+import { setThreadLockMutation } from '../mutations';
+import ThreadByline from './threadByline';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import { pinThreadMutation } from '../../../api/community';
-import { FlexRow } from '../../../components/globals';
-import Icon from '../../../components/icons';
-import Flyout from '../../../components/flyout';
-import Badge from '../../../components/badges';
-import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
-import Reputation from '../../../components/reputation';
 import Textarea from 'react-textarea-autosize';
+import ActionBar from './actionBar';
 import {
   ThreadTitle,
   ThreadWrapper,
+  ThreadContent,
   ThreadHeading,
-  Byline,
-  ContextRow,
-  DropWrap,
-  FlyoutRow,
-  EditDone,
   Timestamp,
   Edited,
-  BylineMeta,
-  AuthorAvatar,
-  AuthorName,
-  AuthorUsername,
-  Location,
-  ShareLinks,
-  ShareLink,
-  ShareButtons,
-  ShareButton,
 } from '../style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -71,6 +52,7 @@ class ThreadDetailPure extends Component {
   }
 
   setThreadState() {
+    const { body } = this.state;
     const { thread } = this.props;
 
     let rawLinkPreview =
@@ -105,18 +87,14 @@ class ThreadDetailPure extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.thread.id !== this.props.thread.id) {
+    if (
+      prevProps.thread &&
+      this.props.thread &&
+      prevProps.thread.id !== this.props.thread.id
+    ) {
       this.setThreadState();
     }
   }
-
-  toggleFlyout = () => {
-    if (this.state.flyoutOpen === false) {
-      this.setState({ flyoutOpen: true });
-    } else {
-      this.setState({ flyoutOpen: false });
-    }
-  };
 
   threadLock = () => {
     const { setThreadLock, dispatch, thread } = this.props;
@@ -174,37 +152,12 @@ class ThreadDetailPure extends Component {
     );
   };
 
-  toggleNotification = () => {
-    const { receiveNotifications } = this.state;
-    const { thread, dispatch, toggleThreadNotifications } = this.props;
-    const threadId = thread.id;
-
-    this.setState({
-      receiveNotifications: !receiveNotifications,
-    });
-
-    toggleThreadNotifications({
-      threadId,
-    })
-      .then(({ data: { toggleThreadNotifications } }) => {
-        if (toggleThreadNotifications.receiveNotifications) {
-          track('thread', 'notifications turned on', null);
-          dispatch(addToastWithTimeout('success', 'Notifications activated!'));
-        } else {
-          track('thread', 'notifications turned off', null);
-          dispatch(addToastWithTimeout('neutral', 'Notifications turned off'));
-        }
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   toggleEdit = () => {
     const { isEditing } = this.state;
     this.setState({
       isEditing: !isEditing,
     });
+    this.props.toggleEdit();
   };
 
   saveEdit = () => {
@@ -212,7 +165,7 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
-    if (!title || title.length === 0) {
+    if (!title || title.trim().length === 0) {
       dispatch(
         addToastWithTimeout('error', 'Be sure to save a title for your thread!')
       );
@@ -226,7 +179,7 @@ class ThreadDetailPure extends Component {
     const jsonBody = toJSON(body);
 
     const content = {
-      title,
+      title: title.trim(),
       body: JSON.stringify(jsonBody),
     };
 
@@ -382,31 +335,6 @@ class ThreadDetailPure extends Component {
     }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
   };
 
-  copyLink = () => {
-    try {
-      // creating new textarea element and giveing it id 't'
-      let t = document.createElement('input');
-      t.id = 't';
-      // Optional step to make less noise in the page, if any!
-      t.style.height = 0;
-      // You have to append it to your page somewhere, I chose <body>
-      document.body.appendChild(t);
-      // Copy whatever is in your div to our new textarea
-      t.value = `https://spectrum.chat/thread/${this.props.thread.id}`;
-      // Now copy whatever inside the textarea to clipboard
-      let selector = document.querySelector('#t');
-      selector.select();
-      document.execCommand('copy');
-      // Remove the textarea
-      document.body.removeChild(t);
-      this.props.dispatch(
-        addToastWithTimeout('success', 'Copied to clipboard')
-      );
-    } catch (err) {
-      return;
-    }
-  };
-
   render() {
     const { currentUser, thread } = this.props;
 
@@ -415,14 +343,8 @@ class ThreadDetailPure extends Component {
       linkPreview,
       body,
       fetchingLinkPreview,
-      flyoutOpen,
       isSavingEdit,
     } = this.state;
-
-    const isChannelMember = thread.channel.channelPermissions.isMember;
-    const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited
@@ -431,158 +353,9 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        {!isEditing && (
-          <Location>
-            {this.props.slider ? (
-              <div style={{ width: '16px' }} />
-            ) : (
-              <Icon glyph="view-back" size={16} />
-            )}
-            <Link to={`/${thread.community.slug}`}>
-              {thread.community.name}
-            </Link>
-            <span>/</span>
-            <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
-              {thread.channel.name}
-            </Link>
-          </Location>
-        )}
+        <ThreadContent isEditing={isEditing}>
+          <ThreadByline creator={thread.creator} />
 
-        <ContextRow>
-          <Byline>
-            <AuthorAvatar
-              size={48}
-              radius={48}
-              onlineSize={'large'}
-              isOnline={thread.creator.isOnline}
-              src={thread.creator.profilePhoto}
-              link={
-                thread.creator.username
-                  ? `/users/${thread.creator.username}`
-                  : null
-              }
-            />
-            <BylineMeta>
-              <Link to={`/users/${thread.creator.username}`}>
-                <AuthorName>{thread.creator.name}</AuthorName>
-              </Link>
-              <AuthorUsername>
-                {thread.creator.username && `@${thread.creator.username}`}
-                {(isChannelOwner || isCommunityOwner) && <Badge type="admin" />}
-                {thread.creator.isPro && <Badge type="pro" />}
-              </AuthorUsername>
-              <AuthorUsername>
-                {thread.creator &&
-                  thread.creator.contextPermissions &&
-                  thread.creator.contextPermissions.reputation > 0 && (
-                    <span>
-                      <Reputation
-                        tipText={'Author rep in this community'}
-                        reputation={
-                          thread.creator.contextPermissions.reputation
-                        }
-                      />
-                    </span>
-                  )}
-              </AuthorUsername>
-            </BylineMeta>
-          </Byline>
-          {currentUser &&
-            !isEditing &&
-            isChannelMember &&
-            (isChannelOwner || isCommunityOwner || thread.isCreator) && (
-              <DropWrap className={flyoutOpen ? 'open' : ''}>
-                <IconButton glyph="settings" onClick={this.toggleFlyout} />
-                <Flyout>
-                  {isCommunityOwner &&
-                    !thread.channel.isPrivate && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph={isPinned ? 'pin-fill' : 'pin'}
-                          hoverColor={
-                            isPinned ? 'warn.default' : 'special.default'
-                          }
-                          tipText={
-                            isPinned
-                              ? 'Un-pin thread'
-                              : `Pin in ${thread.community.name}`
-                          }
-                          tipLocation="top-left"
-                          onClick={this.togglePinThread}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {(isChannelOwner || isCommunityOwner) && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph="freeze"
-                          hoverColor="space.alt"
-                          tipText={
-                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                          }
-                          tipLocation="top-left"
-                          onClick={this.threadLock}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {(thread.isCreator || isChannelOwner || isCommunityOwner) && (
-                      <FlyoutRow>
-                        <IconButton
-                          glyph="delete"
-                          hoverColor="warn.alt"
-                          tipText="Delete thread"
-                          tipLocation="top-left"
-                          onClick={this.triggerDelete}
-                        />
-                      </FlyoutRow>
-                    )}
-                  {thread.isCreator && (
-                    <FlyoutRow>
-                      <IconButton
-                        glyph="edit"
-                        hoverColor="text.alt"
-                        tipText="Edit"
-                        tipLocation="top-left"
-                        onClick={this.toggleEdit}
-                      />
-                    </FlyoutRow>
-                  )}
-                </Flyout>
-              </DropWrap>
-            )}
-
-          {isChannelMember &&
-            !isEditing &&
-            currentUser && (
-              <DropWrap>
-                <IconButton
-                  glyph={
-                    thread.receiveNotifications
-                      ? 'notification-fill'
-                      : 'notification'
-                  }
-                  hoverColor="text.alt"
-                  tipText={
-                    thread.receiveNotifications
-                      ? 'Turn off notifications'
-                      : 'Get notifications'
-                  }
-                  tipLocation="top-left"
-                  onClick={this.toggleNotification}
-                />
-              </DropWrap>
-            )}
-
-          {isEditing && (
-            <EditDone>
-              <Button loading={isSavingEdit} onClick={this.saveEdit}>
-                Save
-              </Button>
-            </EditDone>
-          )}
-        </ContextRow>
-
-        <span>
           {isEditing ? (
             <Textarea
               onChange={this.changeTitle}
@@ -595,17 +368,16 @@ class ThreadDetailPure extends Component {
           ) : (
             <ThreadHeading>{thread.content.title}</ThreadHeading>
           )}
-          <FlexRow>
-            <Link to={`/thread/${thread.id}`}>
-              <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
-              {thread.modifiedAt && (
-                <Edited>
-                  (Edited{' '}
-                  {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
-                </Edited>
-              )}
-            </Link>
-          </FlexRow>
+
+          <Link to={`/thread/${thread.id}`}>
+            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+            {thread.modifiedAt && (
+              <Edited>
+                (Edited{' '}
+                {timeDifference(Date.now(), editedTimestamp).toLowerCase()})
+              </Edited>
+            )}
+          </Link>
 
           <Editor
             readOnly={!this.state.isEditing}
@@ -614,6 +386,7 @@ class ThreadDetailPure extends Component {
             editorKey="thread-detail"
             placeholder="Write more thoughts here..."
             showLinkPreview={true}
+            editorRef={editor => (this.bodyEditor = editor)}
             version={2}
             linkPreview={{
               loading: fetchingLinkPreview,
@@ -622,74 +395,20 @@ class ThreadDetailPure extends Component {
               data: linkPreview,
             }}
           />
+        </ThreadContent>
 
-          {!isEditing && (
-            <ShareLinks>
-              <ShareLink facebook>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                    .content.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'facebook'} size={16} />
-                  Share on Facebook
-                </a>
-              </ShareLink>
-
-              <ShareLink twitter>
-                <a
-                  href={`https://twitter.com/share?text=${thread.content
-                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'twitter'} size={16} />
-                  Share on Twitter
-                </a>
-              </ShareLink>
-
-              <ShareLink onClick={this.copyLink}>
-                <a>
-                  <Icon glyph={'link'} size={16} />
-                  Copy link
-                </a>
-              </ShareLink>
-            </ShareLinks>
-          )}
-
-          {!isEditing && (
-            <ShareButtons>
-              <ShareButton facebook>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                    .content.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'facebook'} size={24} />
-                </a>
-              </ShareButton>
-
-              <ShareButton twitter>
-                <a
-                  href={`https://twitter.com/share?text=${thread.content
-                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'twitter'} size={24} />
-                </a>
-              </ShareButton>
-
-              <ShareButton onClick={this.copyLink}>
-                <a>
-                  <Icon glyph={'link'} size={24} />
-                </a>
-              </ShareButton>
-            </ShareButtons>
-          )}
-        </span>
+        <ActionBar
+          toggleEdit={this.toggleEdit}
+          currentUser={currentUser}
+          thread={thread}
+          saveEdit={this.saveEdit}
+          togglePinThread={this.togglePinThread}
+          isSavingEdit={isSavingEdit}
+          threadLock={this.threadLock}
+          triggerDelete={this.triggerDelete}
+          isEditing={isEditing}
+          title={this.state.title}
+        />
       </ThreadWrapper>
     );
   }
@@ -700,7 +419,6 @@ const ThreadDetail = compose(
   deleteThreadMutation,
   editThreadMutation,
   pinThreadMutation,
-  toggleThreadNotificationsMutation,
   withRouter
 )(ThreadDetailPure);
 const mapStateToProps = state => ({

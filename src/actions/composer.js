@@ -13,3 +13,12 @@ export const closeComposer = (title, body) => ({
   title: title,
   body: body,
 });
+
+export const closeChatInput = payload => ({
+  type: 'CLOSE_CHAT_INPUT',
+  payload,
+});
+
+export const clearChatInput = () => ({
+  type: 'CLEAR_CHAT_INPUT',
+});

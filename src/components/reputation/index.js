@@ -7,12 +7,12 @@ import Icon from '../icons';
 import { ReputationWrapper, ReputationLabel } from './style';
 
 type Props = {
-  size: 'mini' | 'default' | 'large',
+  size?: 'mini' | 'default' | 'large',
   reputation: number,
   tipText?: string,
   tipLocation?: string,
   dispatch: Function,
-  ignoreClick: boolean,
+  ignoreClick?: boolean,
 };
 class Reputation extends React.Component<Props> {
   open = e => {
@@ -30,10 +30,9 @@ class Reputation extends React.Component<Props> {
       reputation,
     } = this.props;
 
-    if (!reputation) return null;
+    if (reputation === undefined || reputation === null) return null;
 
     const renderedReputation = reputation > 0 ? reputation : '0';
-    const iconSize = size === 'mini' ? '16' : size === 'default' ? '24' : '32';
 
     return (
       <ReputationWrapper
@@ -41,7 +40,7 @@ class Reputation extends React.Component<Props> {
         tipText={`${tipText}`}
         tipLocation={tipLocation}
       >
-        <Icon glyph="rep" size={iconSize} />
+        <Icon glyph="rep" size={24} />
 
         <ReputationLabel size={size}>
           {truncateNumber(renderedReputation, 1)} rep

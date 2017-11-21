@@ -1,5 +1,6 @@
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 export const getThisChannel = graphql(
@@ -8,13 +9,13 @@ export const getThisChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         community {
-          id
-          slug
+          ...communityInfo
         }
         ...channelMetaData
       }
 		}
     ${channelInfoFragment}
+    ${communityInfoFragment}
     ${channelMetaDataFragment}
 	`,
   {
