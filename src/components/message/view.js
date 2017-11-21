@@ -29,7 +29,7 @@ const codeRenderer = {
     new PrismDecorator({
       prism: Prism,
       render: ({ type, children }) => (
-        <span className={`prism prism-token ${type}`}>{children}</span>
+        <span className={`prism-token token ${type}`}>{children}</span>
       ),
     }),
   ],

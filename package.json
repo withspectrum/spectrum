@@ -126,7 +126,7 @@
     "react-transition-group": "^2.2.0",
     "react-trend": "^1.2.4",
     "recompose": "^0.23.1",
-    "redraft": "^0.8.0",
+    "redraft": "^0.9.1-beta2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "rethinkdb-inspector": "^0.3.3",
