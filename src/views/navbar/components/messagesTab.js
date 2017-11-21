@@ -81,6 +81,15 @@ class MessagesTab extends React.Component<Props, State> {
       return this.markAllAsSeen();
     }
 
+    if (
+      active &&
+      thisData.directMessageNotifications &&
+      prevData.directMessageNotifications &&
+      thisData.directMessageNotifications.length >
+        prevData.directMessageNotifications.length
+    )
+      return this.markAllAsSeen();
+
     // if the component updates for the first time
     if (
       !prevData.directMessageNotifications &&

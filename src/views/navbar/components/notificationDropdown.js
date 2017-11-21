@@ -32,17 +32,7 @@ const NotificationContainer = props => {
     markSingleNotificationAsSeenInState,
   } = props;
 
-  const noNotifications = !rawNotifications || rawNotifications.length === 0;
-
-  if (loading) {
-    return (
-      <div style={{ margin: '32px 0' }}>
-        <Loading />
-      </div>
-    );
-  } else if (noNotifications || error) {
-    return <NullNotifications />;
-  } else {
+  if (rawNotifications && rawNotifications.length > 0) {
     return (
       <NotificationDropdownList
         rawNotifications={rawNotifications}
@@ -54,6 +44,16 @@ const NotificationContainer = props => {
       />
     );
   }
+
+  if (loading) {
+    return (
+      <div style={{ margin: '32px 0' }}>
+        <Loading />
+      </div>
+    );
+  }
+
+  return <NullNotifications />;
 };
 
 const NotificationDropdownPure = props => {
@@ -64,6 +64,7 @@ const NotificationDropdownPure = props => {
     markAllAsSeen,
     count,
     markSingleNotificationAsSeenInState,
+    loading,
   } = props;
 
   return (
@@ -82,6 +83,7 @@ const NotificationDropdownPure = props => {
 
       <NotificationContainer
         {...props}
+        loading={loading}
         markSingleNotificationAsSeenInState={
           markSingleNotificationAsSeenInState
         }

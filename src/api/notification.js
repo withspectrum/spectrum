@@ -53,9 +53,11 @@ export const GET_NOTIFICATIONS_OPTIONS = {
       notifications,
       subscribeToMore,
       refetch,
+      networkStatus,
     },
   }) => ({
     data: {
+      networkStatus,
       error,
       loading,
       notifications,
