@@ -69,10 +69,12 @@ module.exports = {
       // all checks passed
       if (message.messageType === 'text' || message.messageType === 'draftjs') {
         if (message.messageType === 'draftjs') {
+          debug('draftjs message');
           const parsedMessage = JSON.parse(message.content.body);
           const { blocks } = parsedMessage;
           // Try guessing the language of a code message
           if (blocks && blocks.length > 0 && blocks[0].type === 'code-block') {
+            debug('code message found, trying to detect language');
             let lang;
             try {
               lang = detectLang(toPlainText(toState(parsedMessage)));
@@ -80,6 +82,7 @@ module.exports = {
               console.error(err);
             }
             if (lang && lang !== 'Unknown') {
+              debug('code message language is', lang.toLowerCase());
               // Set data.syntax to the language and add that to the message
               parsedMessage.blocks[0].data = {
                 syntax: lang.toLowerCase(),
