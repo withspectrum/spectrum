@@ -161,7 +161,6 @@ class Navbar extends React.Component<Props> {
 
             <IconLink
               className={'hideOnDesktop'}
-              style={{ alignSelf: 'flex-end' }}
               data-active={
                 history.location.pathname === `/users/${loggedInUser.username}`
               }

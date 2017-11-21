@@ -126,7 +126,13 @@ export const IconDrop = styled(FlexRow)`
       this padding left makes it so that there is a left zone on the
       icon that the user can mouseover without un-hovering the dropdown
      */
-    ${props => props.padOnHover && css`padding-left: 120px;`};
+    ${props =>
+      props.padOnHover &&
+      css`
+        @media (min-width: 768px) {
+          padding-left: 120px;
+        }
+      `};
   }
 
   @media (max-width: 768px) {
@@ -194,6 +200,10 @@ export const IconLink = styled(Link)`
     &[data-active~='true'] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
+    }
+
+    &.hideOnDesktop {
+      display: flex;
     }
 
     &.hideOnMobile {
