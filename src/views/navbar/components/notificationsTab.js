@@ -39,14 +39,14 @@ type Props = {
 
 type State = {
   count: number,
-  notifications: Array<any>,
+  notifications: ?Array<any>,
   subscription: ?Function,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
     count: 0,
-    notifications: [],
+    notifications: null,
     subscription: null,
   };
 
@@ -101,7 +101,11 @@ class NotificationsTab extends React.Component<Props, State> {
     if (prevState.count !== nextState.count) return true;
 
     // any time the count changes
-    if (prevState.notifications.length !== nextState.notifications.length)
+    if (
+      prevState.notifications &&
+      nextState.notifications &&
+      prevState.notifications.length !== nextState.notifications.length
+    )
       return true;
 
     return false;
@@ -122,7 +126,15 @@ class NotificationsTab extends React.Component<Props, State> {
       activeInboxThread: thisActiveInboxThread,
     } = this.props;
 
+    console.log('notifications tab prevProps', prevProps);
+    console.log('notifications tab this props', this.props);
+
     const { subscription, notifications } = this.state;
+
+    if (!notifications && thisData.notifications) {
+      this.subscribe();
+      return this.processAndMarkSeenNotifications();
+    }
 
     // never update the badge if the user is viewing the notifications tab
     // set the count to 0 if the tab is active so that if a user loads
@@ -134,33 +146,14 @@ class NotificationsTab extends React.Component<Props, State> {
       });
     }
 
-    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
-    const { thread: thisThreadParam } = queryString.parse(thisLocation.search);
-    const prevParts = prevLocation.pathname.split('/');
-    const thisParts = prevLocation.pathname.split('/');
-
-    // changing slider
-    if (prevThreadParam !== thisThreadParam)
-      return this.processAndMarkSeenNotifications(notifications);
-
-    // changing inbox thread
-    if (prevActiveInboxThread !== thisActiveInboxThread)
-      return this.processAndMarkSeenNotifications(notifications);
-
-    // changing thread detail view
-    if (prevParts[2] !== thisParts[2])
-      return this.processAndMarkSeenNotifications();
+    console.log('1', notifications);
 
     // if the component updates for the first time
     if (!prevData.notifications && thisData.notifications) {
-      this.subscribe();
       return this.processAndMarkSeenNotifications();
     }
 
-    // when the component finishes a refetch
-    if (prevProps.isRefetching && !this.props.isRefetching) {
-      return this.processAndMarkSeenNotifications();
-    }
+    console.log('5', notifications);
 
     // if the component updates with changed or new notifications
     // if any are unseen, set the counts
@@ -173,8 +166,43 @@ class NotificationsTab extends React.Component<Props, State> {
       thisData.notifications.edges.length !==
         prevData.notifications.edges.length
     ) {
+      console.log('7', notifications);
       return this.processAndMarkSeenNotifications();
     }
+
+    console.log('8', notifications);
+
+    const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
+    const { thread: thisThreadParam } = queryString.parse(thisLocation.search);
+    const prevParts = prevLocation.pathname.split('/');
+    const thisParts = prevLocation.pathname.split('/');
+
+    // changing slider
+    if (prevThreadParam !== thisThreadParam)
+      return this.processAndMarkSeenNotifications(notifications);
+
+    console.log('2', notifications);
+
+    // changing inbox thread
+    if (prevActiveInboxThread !== thisActiveInboxThread)
+      return this.processAndMarkSeenNotifications(notifications);
+
+    console.log('3', notifications);
+
+    // changing thread detail view
+    if (prevParts[2] !== thisParts[2])
+      return this.processAndMarkSeenNotifications();
+
+    console.log('4', notifications);
+
+    // when the component finishes a refetch
+    if (prevProps.isRefetching && !this.props.isRefetching) {
+      return this.processAndMarkSeenNotifications();
+    }
+
+    console.log('6', notifications);
+
+    console.log('got to end of cDU without doing anything');
   }
 
   componentWillUnmount() {
@@ -182,6 +210,7 @@ class NotificationsTab extends React.Component<Props, State> {
   }
 
   subscribe = () => {
+    console.log('subscribing');
     this.setState({
       subscription: this.props.data.subscribeToNewNotifications(),
     });
@@ -360,6 +389,9 @@ class NotificationsTab extends React.Component<Props, State> {
   render() {
     const { active, currentUser, data, isLoading } = this.props;
     const { count, notifications } = this.state;
+
+    console.log('this state', this.state);
+    console.log('this props', this.props);
 
     return (
       <IconDrop padOnHover>
