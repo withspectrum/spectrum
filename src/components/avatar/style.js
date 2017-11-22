@@ -70,7 +70,7 @@ export const StyledAvatarStatus = styled.div`
   }
 `;
 
-export const StyledAvatar = styled.object`
+export const StyledAvatar = styled.img`
   position: relative;
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};

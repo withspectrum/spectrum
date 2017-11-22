@@ -206,24 +206,80 @@ class HoverProfile extends Component<ProfileProps> {
   }
 }
 
-const AvatarWithFallback = ({ style, ...props }) => (
-  <StyledAvatar
-    data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
-    type="image/png"
-    size={props.size || 32}
-    style={style}
-    {...props}
-  >
-    <StyledAvatarFallback
-      {...props}
-      src={
-        props.community
-          ? `/img/default_community.svg`
-          : `/img/default_avatar.svg`
-      }
-    />
-  </StyledAvatar>
-);
+type AvatarProps = {
+  source: string,
+  size: number,
+};
+
+class AvatarWithFallback extends Component<AvatarProps> {
+  state: {
+    img: string,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      img: optimize(this.props.source, {
+        w: this.props.size,
+        dpr: '2',
+        format: 'png',
+      }),
+    };
+  }
+
+  onError() {
+    if (this.props.community) {
+      this.setState({
+        img: `/img/default_community.svg`,
+      });
+    } else {
+      this.setState({
+        img: `/img/default_avatar.svg`,
+      });
+    }
+  }
+
+  render() {
+    return (
+      <StyledAvatar
+        src={this.state.img}
+        onError={this.onError.bind(this)}
+        {...this.props}
+      />
+    );
+  }
+}
+
+// const AvatarWithFallback = ({ style, ...props }) => {
+//
+//   return(
+//     <StyledAvatarFallback
+//       src={ optimize(this.state.img, { w: this.props.size, dpr: '2', format: 'png' }) }
+//       ref={a => avatar = a}
+//       onError={ () => fallback(fallbackSrc) }
+//       {...props}
+//     />
+//   )
+// }
+// <StyledAvatar
+//   data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
+//   type="image/png"
+//   size={props.size || 32}
+//   style={style}
+//   {...props}
+// >
+//   <StyledAvatarFallback
+//     src={
+//       props.community
+//         ? `/img/default_community.svg`
+//         : `/img/default_avatar.svg`
+//     }
+//     onError={}
+//     {...props}
+//   />
+// </StyledAvatar>
+// );
 
 const Avatar = (props: Object): React$Element<any> => {
   const { src, community, user, size, link, noLink, showProfile } = props;
