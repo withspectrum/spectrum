@@ -3,6 +3,7 @@
 // See https://zach.codes/handling-client-side-app-updates-with-service-workers/ for more info
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { createLocation } from 'history';
 
 type Props = {
   onClick?: Function,
@@ -20,8 +21,15 @@ export default withRouter(
         if (rest.onClick) rest.onClick(evt);
         if (evt.metaKey || evt.ctrlKey) return;
         evt.preventDefault();
-        if (window.appUpdateAvailable === true)
-          return (window.location = rest.to);
+        if (window.appUpdateAvailable === true) {
+          // This is copied from react-router's <Link /> component and is basically what it does internally
+          const location =
+            typeof rest.to === 'string'
+              ? createLocation(rest.to, null, null, history.location)
+              : rest.to;
+          alert(history.createHref(location));
+          return (window.location = history.createHref(location));
+        }
         return history.push(rest.to);
       }}
     />

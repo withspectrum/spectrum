@@ -15,7 +15,6 @@ describe('queries', () => {
           email
           providerId
           createdAt
-          lastSeen
 				}
 			}
 		`;
