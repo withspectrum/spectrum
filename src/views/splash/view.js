@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
@@ -86,17 +86,36 @@ export const Overview = (props: Props) => {
     border: 2px solid ${props => props.theme.text.reverse};
   `;
 
+  const Links = styled(FlexRow)`
+    > a {
+      font-weight: 700;
+      margin-left: 32px;
+
+      &:not(:last-of-type) {
+        @media (max-width: 640px) {
+          display: none;
+        }
+      }
+    }
+  `;
+
   return (
     <Section background="constellations" goop={2}>
       <Header>
         <Logo />
-        <Link to="/login">
-          <ThisButton>Log in</ThisButton>
-        </Link>
+        <Links>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="https://github.com/withspectrum/code-of-conduct">
+            Code of Conduct
+          </Link>
+          <Link to="/login">
+            <ThisButton>Log in</ThisButton>
+          </Link>
+        </Links>
       </Header>
       <Content>
         <Text>
-          <ThisTagline>Build better communities</ThisTagline>
+          <ThisTagline>Build better communities.</ThisTagline>
           <ThisCopy>
             Spectrum makes it easy to create and grow your online community.
           </ThisCopy>
@@ -134,7 +153,10 @@ export const Centralized = (props: Props) => {
     }
   `;
 
-  const ThisCopy = styled(Copy)`margin-top: 16px;`;
+  const ThisCopy = styled(Copy)`
+    font-weight: 400;
+    margin-top: 16px;
+  `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     margin-top: 32px;
@@ -172,7 +194,7 @@ export const Centralized = (props: Props) => {
             a help center to find your community.
           </ThisCopy>
           <ThisCopy>
-            When it's built on Spectrum, people can find your community
+            When you build on Spectrum, people can find your community
             organically with search, curation, and through other community
             members.
           </ThisCopy>
@@ -243,7 +265,10 @@ export const Chat = (props: Props) => {
     }
   `;
 
-  const ThisCopy = styled(Copy)`margin-top: 16px;`;
+  const ThisCopy = styled(Copy)`
+    font-weight: 400;
+    margin-top: 16px;
+  `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
     background-color: ${props => props.theme.brand.alt};
@@ -378,6 +403,7 @@ export const Sell = (props: Props) => {
 
 export const Yours = (props: Props) => {
   const ThisCopy = styled(Copy)`
+    font-weight: 400;
     max-width: 640px;
     margin-top: 16px;
   `;

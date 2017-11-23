@@ -39,9 +39,6 @@ class Pricing extends Component {
   render() {
     return (
       <Wrapper data-e2e-id="pricing-page">
-        <Overview />
-        <Centralized />
-        <CommunitySearch />
         <Chat />
         <Sell />
         <Yours />

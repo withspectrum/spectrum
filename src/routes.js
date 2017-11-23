@@ -109,11 +109,11 @@ const Splash = Loadable({
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
-const About = () => (
-  <div>
-    <h3>About</h3>
-  </div>
-);
+/* prettier-ignore */
+const Pricing = Loadable({
+  loader: () => import('./views/splash/pricing'/* webpackChunkName: "Splash" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -195,10 +195,11 @@ class Routes extends React.Component<{}> {
               <Route exact path="/home" component={HomeFallback} />
 
               {/* Public Business Pages */}
-              <Route path="/about" component={About} />
-              <Route path="/contact" component={About} />
-              <Route path="/terms" component={About} />
-              <Route path="/code-of-conduct" component={About} />
+              <Route path="/about" component={Splash} />
+              <Route path="/contact" component={Splash} />
+              <Route path="/terms" component={Splash} />
+              <Route path="/code-of-conduct" component={Splash} />
+              <Route path="/pricing" component={Pricing} />
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
