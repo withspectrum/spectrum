@@ -86,12 +86,20 @@ class Navbar extends React.Component<Props> {
     console.log('navbar state', this.state);
 
     const loggedInUser = user || currentUser;
-    const isHome =
-      history.location.pathname === '/' ||
-      history.location.pathname === '/home';
+
+    const viewing = history.location.pathname;
+
+    const isHome = viewing === '/' || viewing === '/home';
+
+    const isSplash =
+      viewing === '/pricing' ||
+      viewing === '/about' ||
+      viewing === '/contact' ||
+      viewing === '/terms' ||
+      viewing === '/code-of-conduct';
 
     // Bail out if the splash page is showing
-    if (!loggedInUser && isHome) return null;
+    if ((!loggedInUser && isHome) || isSplash) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
