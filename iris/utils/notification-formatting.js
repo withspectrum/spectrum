@@ -102,7 +102,11 @@ const formatNotification = (incomingNotification, currentUserId) => {
         ({ payload }) => payload.senderId !== currentUserId
       );
 
-      href = `/thread/${notification.context.id}`;
+      if (notification.context.type === 'DIRECT_MESSAGE_THREAD') {
+        href = `/messages/${notification.context.id}`;
+      } else {
+        href = `/thread/${notification.context.id}`;
+      }
       body = sentencify(
         entities.map(({ payload }) => {
           if (payload.messageType === 'draftjs') {
