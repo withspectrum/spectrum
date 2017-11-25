@@ -5,9 +5,9 @@ import {
   Overview,
   Centralized,
   CommunitySearch,
-  Chat,
-  Sell,
-  Yours,
+  Free,
+  Standard,
+  Pro,
   PageFooter,
 } from './view';
 import { Wrapper } from './style';
@@ -39,9 +39,9 @@ class Pricing extends Component {
   render() {
     return (
       <Wrapper data-e2e-id="pricing-page">
-        <Chat />
-        <Sell />
-        <Yours />
+        <Free />
+        <Standard />
+        <Pro />
         <PageFooter />
       </Wrapper>
     );

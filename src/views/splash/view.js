@@ -516,3 +516,91 @@ export const PageFooter = (props: Props) => {
     </Footer>
   );
 };
+
+export const Free = (props: Props) => {
+  const Text = styled(FlexCol)`
+    align-items: center;
+    margin: 40px 0;
+  `;
+
+  const ThisContent = styled(Content)``;
+
+  const ThisTagline = styled(Tagline)`
+    margin-bottom: 0;
+    margin-left: 16px;
+    margin-right: 16px;
+  `;
+
+  const BulletList = styled.ul``;
+
+  const BulletItem = styled.li`
+    margin-left: 24px;
+    margin-top: 16px;
+  `;
+
+  return (
+    <Section>
+      <ThisContent>
+        <Text>
+          <ThisTagline>
+            Spectrum is free for both users and communities.
+          </ThisTagline>
+          <Bullets>
+            <Bullet>
+              <BulletHeading>
+                <BulletTitle>For users...</BulletTitle>
+              </BulletHeading>
+              <BulletList>
+                <BulletItem>
+                  One account and one profile across all of your communities
+                </BulletItem>
+                <BulletItem>
+                  A single, personal inbox means no more whack-a-mole with
+                  notifications and direct messages
+                </BulletItem>
+                <BulletItem>
+                  Easily discover and search for new communities to join
+                </BulletItem>
+                <BulletItem>
+                  Build up a strong reputation to earn special roles in your
+                  communities
+                </BulletItem>
+                <BulletItem>Create free, public communities</BulletItem>
+              </BulletList>
+            </Bullet>
+            <Bullet>
+              <BulletHeading>
+                <BulletTitle>For communities...</BulletTitle>
+              </BulletHeading>
+              <BulletList>
+                <BulletItem>
+                  Real-time chat with no message or upload limits
+                </BulletItem>
+                <BulletItem>
+                  Focused conversations in permalinked, search-indexable threads
+                </BulletItem>
+                <BulletItem>
+                  Unlimited, private direct messages for any size of group
+                </BulletItem>
+                <BulletItem>
+                  Easy for users to find communities through search and curation
+                </BulletItem>
+                <BulletItem>
+                  Cross-community reputation system for easy moderation
+                </BulletItem>
+              </BulletList>
+            </Bullet>
+          </Bullets>
+        </Text>
+      </ThisContent>
+    </Section>
+  );
+};
+
+export const Standard = (props: Props) => {
+  return <Section />;
+};
+
+export const Pro = (props: Props) => {
+  return <Section />;
+};
