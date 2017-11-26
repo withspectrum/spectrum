@@ -109,3 +109,14 @@ const DiscoverImage = styled.img`
 `;
 
 export const Discover = () => <DiscoverImage src="/img/discover.png" />;
+
+const EmptyImage = styled.img`
+  position: absolute;
+  right: -10%;
+  top: -10%;
+  bottom: -10%;
+  height: 120%;
+  z-index: ${zIndex.background};
+`;
+
+export const Empty = () => <EmptyImage src="/img/empty.svg" />;

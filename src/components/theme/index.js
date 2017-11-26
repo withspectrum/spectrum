@@ -16,6 +16,7 @@ export const theme = {
     alt: '#7B16FF',
     wash: '#E8E5FF',
     border: '#DDD9FF',
+    dark: '#2A0080',
   },
   generic: {
     default: '#E6ECF7',

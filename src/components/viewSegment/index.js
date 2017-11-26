@@ -8,8 +8,9 @@ import {
   ClusterThree,
   ClusterFour,
   Constellations,
+  Empty,
 } from '../illustrations';
-import { FlexCol, hexa } from '../globals';
+import { FlexCol, hexa, zIndex } from '../globals';
 
 export const Default = styled(FlexCol)`
   display: flex;
@@ -77,6 +78,16 @@ export const Grayscale = styled(Default)`
     ${({ theme }) => `${theme.text.alt}, ${theme.bg.reverse}`}
   );
   color: ${({ theme }) => theme.text.reverse};
+`;
+
+export const Illustrated = styled(Default)`
+  img {
+    opacity: 0.15;
+
+    @media (max-width: 768px) {
+      opacity: 0.025;
+    }
+  }
 `;
 
 type ThemeProps = Object;
@@ -150,6 +161,14 @@ const Theme = (props: ThemeProps) => {
           {props.children}
           <Goop {...props} />
         </Grayscale>
+      );
+    case 'illustrated':
+      return (
+        <Illustrated>
+          <Empty />
+          {props.children}
+          <Goop {...props} />
+        </Illustrated>
       );
   }
 };
