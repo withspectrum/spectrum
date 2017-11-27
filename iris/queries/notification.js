@@ -43,6 +43,7 @@ module.exports = {
     ) => {
       if (!user) return [];
       // return an array of unread direct message notifications
+      // $FlowFixMe
       return getUnreadDirectMessageNotifications(user.id, {
         first,
         after: after && parseInt(decode(after), 10),

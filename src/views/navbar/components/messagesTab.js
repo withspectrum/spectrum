@@ -222,6 +222,7 @@ const map = state => ({
   count: state.notifications.directMessageNotifications,
 });
 export default compose(
+  // $FlowIssue
   connect(map),
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
