@@ -1,6 +1,6 @@
 // @flow
 import session from 'express-session';
-import sessionStore, { SESSION_COOKIE_SECRET } from '../../utils/session-store';
+import sessionStore, { SESSION_COOKIE_SECRET } from 'iris/utils/session-store';
 
 const ONE_YEAR = 31556952000;
 

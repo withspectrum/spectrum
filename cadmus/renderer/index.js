@@ -1,6 +1,6 @@
 // Server-side renderer for our React code
 import fs from 'fs';
-const debug = require('debug')('iris:renderer');
+const debug = require('debug')('cadmus:renderer');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
@@ -12,7 +12,6 @@ import {
 } from 'react-apollo';
 import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
-import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
@@ -20,8 +19,6 @@ import { getBundles } from 'react-loadable/webpack';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import schema from '../schema';
-import createLoaders from '../loaders';
 import { getHTML, createScriptTag } from './get-html';
 
 // Browser shim has to come before any client imports
@@ -31,16 +28,19 @@ import { initStore } from '../../src/store';
 
 const IN_MAINTENANCE_MODE =
   process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 const renderer = (req, res) => {
   debug(`server-side render ${req.url}`);
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
-    networkInterface: createLocalInterface(graphql, schema, {
-      context: {
-        loaders: createLoaders(),
-        user: req.user,
+    networkInterface: createNetworkInterface({
+      uri: IS_PROD
+        ? `https://${req.hostname}/api`
+        : 'http://localhost:3001/api',
+      opts: {
+        credentials: 'include',
       },
     }),
     ...getSharedApolloClientOptions(),

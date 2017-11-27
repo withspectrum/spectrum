@@ -11,12 +11,10 @@ import { createServer } from 'http';
 //$FlowFixMe
 import express from 'express';
 import * as graphql from 'graphql';
-import Loadable from 'react-loadable';
 
 import schema from './schema';
 import { init as initPassport } from './authentication.js';
 import createLoaders from './loaders';
-import getMeta from './utils/get-page-meta';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -36,20 +34,6 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-// Use express to server-side render the React app
-if (IS_PROD || process.env.SSR) {
-  const renderer = require('./renderer').default;
-  app.use(
-    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-  );
-  app.get('*', renderer);
-  console.log(
-    `Web server running at http://localhost:${PORT} (server-side rendering enabled)`
-  );
-} else {
-  console.log(`Server-side rendering disabled for development`);
-}
-
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: Object,
@@ -64,16 +48,8 @@ const server = createServer(app);
 import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
-const boot = () => {
-  // Start webserver
-  server.listen(PORT);
+// Start webserver
+server.listen(PORT);
 
-  // Start database listeners
-  console.log(`GraphQL server running at http://localhost:${PORT}/api`);
-};
-
-if (IS_PROD || process.env.SSR) {
-  Loadable.preloadAll().then(boot);
-} else {
-  boot();
-}
+// Start database listeners
+console.log(`GraphQL server running at http://localhost:${PORT}/api`);

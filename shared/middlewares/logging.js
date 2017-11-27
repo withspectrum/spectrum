@@ -1,6 +1,6 @@
 // @flow
 // Log requests with debug
-const debug = require('debug')('iris:web');
+const debug = require('debug')('request');
 
 module.exports = (req: Request, res: Response, next: Function) => {
   debug(`requesting ${req.url}`);
