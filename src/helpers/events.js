@@ -20,7 +20,7 @@ export const set = id => {
   try {
     ga('set', 'userId', id); // Set the user ID using signed-in user_id.
   } catch (err) {
-    console.log(err);
+    console.log('error logging user event', err);
   }
 };
 
@@ -55,7 +55,7 @@ export const track = (category, action, label) => {
     try {
       ga('send', 'event', category, action, label);
     } catch (err) {
-      console.log(err);
+      console.log('error logging event', err);
     }
   }
 };
