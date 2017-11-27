@@ -17,7 +17,9 @@ type Props = {
   isRefetching: boolean,
   markDirectMessageNotificationsSeen: Function,
   data: {
-    directMessageNotifications?: Array<any>,
+    directMessageNotifications?: {
+      edges: Array<any>,
+    },
   },
   subscribeToDMs: Function,
   refetch: Function,
@@ -53,8 +55,8 @@ class MessagesTab extends React.Component<Props, State> {
       prevProps.data &&
       prevProps.data.directMessageNotifications &&
       nextProps.data.directMessageNotifications &&
-      prevProps.data.directMessageNotifications.length !==
-        nextProps.data.directMessageNotifications.length
+      prevProps.data.directMessageNotifications.edges.length !==
+        nextProps.data.directMessageNotifications.edges.length
     )
       return true;
 
@@ -63,6 +65,7 @@ class MessagesTab extends React.Component<Props, State> {
 
     // any time the count changes
     if (prevState.count !== nextState.count) return true;
+
     return false;
   }
 
@@ -85,8 +88,8 @@ class MessagesTab extends React.Component<Props, State> {
       active &&
       thisData.directMessageNotifications &&
       prevData.directMessageNotifications &&
-      thisData.directMessageNotifications.length >
-        prevData.directMessageNotifications.length
+      thisData.directMessageNotifications.edges.length >
+        prevData.directMessageNotifications.edges.length
     )
       return this.markAllAsSeen();
 
@@ -103,8 +106,8 @@ class MessagesTab extends React.Component<Props, State> {
     // if any are unseen, set the counts
     if (
       thisData.directMessageNotifications &&
-      thisData.directMessageNotifications.length > 0 &&
-      thisData.directMessageNotifications.some(n => !n.isSeen)
+      thisData.directMessageNotifications.edges.length > 0 &&
+      thisData.directMessageNotifications.edges.some(n => !n.isSeen)
     ) {
       return this.setCount(this.props);
     }
@@ -128,14 +131,23 @@ class MessagesTab extends React.Component<Props, State> {
     }
   };
 
+  convertEdgesToNodes = notifications => {
+    if (
+      !notifications ||
+      !notifications.edges ||
+      notifications.edges.length === 0
+    )
+      return [];
+
+    return notifications.edges.map(n => n.node);
+  };
+
   setCount(props) {
     const { data: { directMessageNotifications } } = props;
+    const nodes = this.convertEdgesToNodes(directMessageNotifications);
 
     // set to 0 if no notifications exist yet
-    if (
-      !directMessageNotifications ||
-      directMessageNotifications.length === 0
-    ) {
+    if (!nodes || nodes.length === 0) {
       return this.setState({
         count: 0,
       });
@@ -143,7 +155,7 @@ class MessagesTab extends React.Component<Props, State> {
 
     // bundle dm notifications
     const obj = {};
-    directMessageNotifications.filter(n => !n.isSeen).map(o => {
+    nodes.filter(n => !n.isSeen).map(o => {
       if (obj[o.context.id]) return;
       obj[o.context.id] = o;
       return;
@@ -163,12 +175,13 @@ class MessagesTab extends React.Component<Props, State> {
       refetch,
     } = this.props;
 
+    const nodes = this.convertEdgesToNodes(directMessageNotifications);
+
     // force the count to 0
     this.setState({ count: 0 });
 
     // if there are no unread, escape
-    if (directMessageNotifications && directMessageNotifications.length === 0)
-      return;
+    if (nodes && nodes.length === 0) return;
 
     // otherwise
     return markDirectMessageNotificationsSeen()

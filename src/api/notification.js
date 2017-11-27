@@ -240,9 +240,18 @@ export const markSingleNotificationSeenMutation = graphql(
 );
 
 export const GET_UNREAD_DMS_QUERY = gql`
-  query getDMNotifications {
-    directMessageNotifications {
-      ...notificationInfo
+  query getDMNotifications($after: String) {
+    directMessageNotifications(after: $after) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          ...notificationInfo
+        }
+      }
     }
   }
   ${notificationInfoFragment}
@@ -260,29 +269,47 @@ export const GET_UNREAD_DMS_OPTIONS = {
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
           const newNotification = subscriptionData.data.dmNotificationAdded;
+
           if (!newNotification) return prev;
           const notificationNode = {
             ...newNotification,
             __typename: 'Notification',
           };
 
-          if (
-            !prev.directMessageNotifications ||
-            prev.directMessageNotifications.length === 0
-          ) {
+          if (!prev.directMessageNotifications) {
             return {
+              __typename: 'NotificationsConnection',
+              pageInfo: {
+                hasNextPage: false,
+                __typename: 'PageInfo',
+              },
+              directMessageNotifications: {
+                edges: [
+                  {
+                    node: notificationNode,
+                    cursor: '__this-is-a-cursor__',
+                    __typename: 'NotificationEdge',
+                  },
+                ],
+              },
               ...prev,
-              directMessageNotifications: [newNotification],
             };
           }
 
           // Add the new notification to the data
           return Object.assign({}, prev, {
             ...prev,
-            directMessageNotifications: [
+            directMessageNotifications: {
               ...prev.directMessageNotifications,
-              newNotification,
-            ],
+              edges: [
+                {
+                  node: notificationNode,
+                  cursor: '__this-is-a-cursor__',
+                  __typename: 'NotificationEdge',
+                },
+                ...prev.directMessageNotifications.edges,
+              ],
+            },
           });
         },
       });

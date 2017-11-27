@@ -4,7 +4,7 @@ import { NEW_DOCUMENTS } from './utils';
 
 export const getNotificationsByUser = (
   userId: string,
-  { after }: { after: Date }
+  { first, after }: { first: number, after: Date }
 ) => {
   return db
     .table('usersNotifications')
@@ -18,7 +18,7 @@ export const getNotificationsByUser = (
       }
     )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
-    .limit(10)
+    .limit(first)
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
@@ -29,15 +29,20 @@ export const getNotificationsByUser = (
 };
 
 export const getUnreadDirectMessageNotifications = (
-  userId: string
+  userId: string,
+  { first, after }: { first: number, after: Date }
 ): Promise<Array<Object>> => {
   return db
     .table('usersNotifications')
-    .between([userId, db.minval], [userId, db.maxval], {
-      index: 'userIdAndEntityAddedAt',
-      leftBound: 'open',
-      rightBound: 'open',
-    })
+    .between(
+      [userId, db.minval],
+      [userId, after ? new Date(after) : db.maxval],
+      {
+        index: 'userIdAndEntityAddedAt',
+        leftBound: 'open',
+        rightBound: 'open',
+      }
+    )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
@@ -49,6 +54,7 @@ export const getUnreadDirectMessageNotifications = (
         .eq(false)
         .and(row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
     )
+    .limit(first)
     .run();
 };
 

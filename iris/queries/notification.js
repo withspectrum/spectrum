@@ -36,10 +36,25 @@ module.exports = {
         })),
       }));
     },
-    directMessageNotifications: (_: any, __: any, { user }: GraphQLContext) => {
+    directMessageNotifications: (
+      _: any,
+      { first = 10, after }: PaginationOptions,
+      { user }: GraphQLContext
+    ) => {
       if (!user) return [];
       // return an array of unread direct message notifications
-      return getUnreadDirectMessageNotifications(user.id);
+      return getUnreadDirectMessageNotifications(user.id, {
+        first,
+        after: after && parseInt(decode(after), 10),
+      }).then(result => ({
+        pageInfo: {
+          hasNextPage: result.length >= first,
+        },
+        edges: result.map(notification => ({
+          cursor: encode(String(notification.entityAddedAt.getTime())),
+          node: notification,
+        })),
+      }));
     },
   },
 };
