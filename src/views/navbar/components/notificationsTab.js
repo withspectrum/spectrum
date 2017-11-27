@@ -121,17 +121,11 @@ class NotificationsTab extends React.Component<Props, State> {
       location: prevLocation,
       activeInboxThread: prevActiveInboxThread,
     } = prevProps;
-    const {
-      data: thisData,
-      active: thisActive,
-      location: thisLocation,
-      client,
-      activeInboxThread: thisActiveInboxThread,
-    } = this.props;
+    const curr = this.props;
 
     const { subscription, notifications } = this.state;
 
-    if (!notifications && thisData.notifications) {
+    if (!notifications && curr.data.notifications) {
       this.subscribe();
       return this.processAndMarkSeenNotifications();
     }
@@ -139,7 +133,7 @@ class NotificationsTab extends React.Component<Props, State> {
     // never update the badge if the user is viewing the notifications tab
     // set the count to 0 if the tab is active so that if a user loads
     // /notifications view directly, the badge won't update
-    if (thisActive) {
+    if (curr.active) {
       this.processAndMarkSeenNotifications(notifications);
       return this.setState({
         count: 0,
@@ -147,26 +141,26 @@ class NotificationsTab extends React.Component<Props, State> {
     }
 
     // if the component updates for the first time
-    if (!prevData.notifications && thisData.notifications) {
+    if (!prevData.notifications && curr.data.notifications) {
       return this.processAndMarkSeenNotifications();
     }
 
     // if the component updates with changed or new notifications
     // if any are unseen, set the counts
     if (
-      thisData.notifications &&
-      thisData.notifications.edges &&
+      curr.data.notifications &&
+      curr.data.notifications.edges &&
       prevData.notifications &&
       prevData.notifications.edges &&
-      thisData.notifications.edges.length > 0 &&
-      thisData.notifications.edges.length !==
+      curr.data.notifications.edges.length > 0 &&
+      curr.data.notifications.edges.length !==
         prevData.notifications.edges.length
     ) {
       return this.processAndMarkSeenNotifications();
     }
 
     const { thread: prevThreadParam } = queryString.parse(prevLocation.search);
-    const { thread: thisThreadParam } = queryString.parse(thisLocation.search);
+    const { thread: thisThreadParam } = queryString.parse(curr.location.search);
     const prevParts = prevLocation.pathname.split('/');
     const thisParts = prevLocation.pathname.split('/');
 
@@ -175,7 +169,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return this.processAndMarkSeenNotifications(notifications);
 
     // changing inbox thread
-    if (prevActiveInboxThread !== thisActiveInboxThread)
+    if (prevActiveInboxThread !== curr.activeInboxThread)
       return this.processAndMarkSeenNotifications(notifications);
 
     // changing thread detail view
@@ -183,7 +177,7 @@ class NotificationsTab extends React.Component<Props, State> {
       return this.processAndMarkSeenNotifications();
 
     // when the component finishes a refetch
-    if (prevProps.isRefetching && !this.props.isRefetching) {
+    if (prevProps.isRefetching && !curr.isRefetching) {
       return this.processAndMarkSeenNotifications();
     }
   }

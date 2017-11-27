@@ -71,7 +71,7 @@ class MessagesTab extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { data: prevData } = prevProps;
-    const { data: thisData, active } = this.props;
+    const curr = this.props;
     const { subscription } = this.state;
 
     // never update the badge if the user is viewing the messages tab
@@ -85,10 +85,10 @@ class MessagesTab extends React.Component<Props, State> {
     }
 
     if (
-      active &&
-      thisData.directMessageNotifications &&
+      curr.active &&
+      curr.data.directMessageNotifications &&
       prevData.directMessageNotifications &&
-      thisData.directMessageNotifications.edges.length >
+      curr.data.directMessageNotifications.edges.length >
         prevData.directMessageNotifications.edges.length
     )
       return this.markAllAsSeen();
@@ -96,7 +96,7 @@ class MessagesTab extends React.Component<Props, State> {
     // if the component updates for the first time
     if (
       !prevData.directMessageNotifications &&
-      thisData.directMessageNotifications
+      curr.data.directMessageNotifications
     ) {
       this.subscribe();
       return this.setCount(this.props);
@@ -105,9 +105,9 @@ class MessagesTab extends React.Component<Props, State> {
     // if the component updates with changed or new dm notifications
     // if any are unseen, set the counts
     if (
-      thisData.directMessageNotifications &&
-      thisData.directMessageNotifications.edges.length > 0 &&
-      thisData.directMessageNotifications.edges.some(n => !n.isSeen)
+      curr.data.directMessageNotifications &&
+      curr.data.directMessageNotifications.edges.length > 0 &&
+      curr.data.directMessageNotifications.edges.some(n => !n.isSeen)
     ) {
       return this.setCount(this.props);
     }
