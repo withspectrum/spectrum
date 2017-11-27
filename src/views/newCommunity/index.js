@@ -77,7 +77,7 @@ class NewCommunity extends Component {
         });
       })
       .catch(err => {
-        console.log('err', err);
+        console.log('error creating community', err);
       });
   }
 

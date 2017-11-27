@@ -129,7 +129,7 @@ class NotificationsPure extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
-        console.log('err', err);
+        console.log('error managing push notifications', err);
         this.setState({
           webPushPromptLoading: false,
         });
