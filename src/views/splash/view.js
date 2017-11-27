@@ -557,6 +557,10 @@ export const Plans = (props: Props) => {
     transform: rotateX(-10deg) rotateY(15deg);
     margin-right: 64px;
 
+    > div > * {
+      transform: rotateX(10deg) rotateY(15deg);
+    }
+
     @media (max-width: 768px) {
       grid-template-columns: 100%;
       grid-template-rows: auto auto auto;
@@ -570,6 +574,7 @@ export const Plans = (props: Props) => {
   const ThisTagline = styled(Tagline)`
     grid-area: view-title;
     text-align: center;
+    transform: rotateX(10deg) rotateY(15deg);
   `;
 
   const Plan = styled.div`padding: 40px 32px 32px;`;
@@ -751,6 +756,7 @@ export const Plans = (props: Props) => {
 
   const PaidPrimaryCTA = styled(PrimaryCTA)`
     margin-top: 32px;
+    margin-bottom: 16px;
 
     &:hover {
       color: ${props => props.theme.brand.alt};
