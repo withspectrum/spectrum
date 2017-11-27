@@ -13,6 +13,7 @@ import { ProfileDropdown } from './components/profileDropdown';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
+import Head from '../../components/head';
 import {
   Section,
   SectionFlex,
@@ -31,6 +32,10 @@ type Props = {
   location: Object,
   history: Object,
   match: Object,
+  notificationCounts: {
+    notifications: number,
+    directMessageNotifications: number,
+  },
   data: {
     user?: Object,
   },
@@ -56,6 +61,15 @@ class Navbar extends React.Component<Props> {
     )
       return true;
 
+    // if the badge counts change
+    const thisBadgeSum =
+      currProps.notificationCounts.notifications +
+      currProps.notificationCounts.directMessageNotifications;
+    const prevBadgeSum =
+      nextProps.notificationCounts.notifications +
+      nextProps.notificationCounts.directMessageNotifications;
+    if (thisBadgeSum !== prevBadgeSum) return true;
+
     // if the user is mobile and is viewing a thread or DM thread, re-render
     // the navbar when they exit the thread
     const { thread: thisThreadParam } = queryString.parse(
@@ -77,6 +91,7 @@ class Navbar extends React.Component<Props> {
       isLoading,
       hasError,
       currentUser,
+      notificationCounts,
     } = this.props;
 
     const loggedInUser = user || currentUser;
@@ -107,6 +122,25 @@ class Navbar extends React.Component<Props> {
     if (loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
+          <Head>
+            {notificationCounts.directMessageNotifications > 0 ||
+            notificationCounts.notifications > 0 ? (
+              <link
+                rel="shortcut icon"
+                id="dynamic-favicon"
+                // $FlowIssue
+                href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
+              />
+            ) : (
+              <link
+                rel="shortcut icon"
+                id="dynamic-favicon"
+                // $FlowIssue
+                href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+              />
+            )}
+          </Head>
+
           <Section>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
@@ -209,7 +243,10 @@ class Navbar extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+  notificationCounts: state.notifications,
+});
 export default compose(
   // $FlowIssue
   connect(mapStateToProps),

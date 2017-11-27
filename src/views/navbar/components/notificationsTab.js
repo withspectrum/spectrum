@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Head from '../../../components/head';
+import { updateNotificationsCount } from '../../../actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';
 import {
   getNotifications,
@@ -35,17 +35,17 @@ type Props = {
   },
   refetch: Function,
   client: Function,
+  dispatch: Function,
+  count: number,
 };
 
 type State = {
-  count: number,
   notifications: ?Array<any>,
   subscription: ?Function,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
-    count: 0,
     notifications: null,
     subscription: null,
   };
@@ -101,7 +101,7 @@ class NotificationsTab extends React.Component<Props, State> {
     if (!prevState.notifications && nextState.notifications) return true;
 
     // any time the count changes
-    if (prevState.count !== nextState.count) return true;
+    if (prevProps.count !== nextProps.count) return true;
 
     // any time the count changes
     if (
@@ -135,9 +135,7 @@ class NotificationsTab extends React.Component<Props, State> {
     // /notifications view directly, the badge won't update
     if (curr.active) {
       this.processAndMarkSeenNotifications(notifications);
-      return this.setState({
-        count: 0,
-      });
+      return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
     // if the component updates for the first time
@@ -212,8 +210,8 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   markAllAsSeen = () => {
-    const { markAllNotificationsSeen, refetch } = this.props;
-    const { count, notifications } = this.state;
+    const { markAllNotificationsSeen, refetch, count } = this.props;
+    const { notifications } = this.state;
 
     // don't perform a mutation is there are no unread notifs
     if (count === 0) return;
@@ -313,34 +311,27 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   setCount = notifications => {
+    const curr = this.props;
+
     if (!notifications || notifications.length == 0) {
-      return this.setState({
-        count: 0,
-      });
+      return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
     const distinct = getDistinctNotifications(notifications);
     // set to 0 if no notifications exist yet
     if (!distinct || distinct.length === 0) {
-      return this.setState({
-        count: 0,
-      });
+      return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
     // set to 0 if no notifications are unseen
     const unseen = distinct.filter(n => !n.isSeen);
     if (!unseen || unseen.length === 0) {
-      return this.setState({
-        count: 0,
-      });
+      return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
     // count of unique unseen notifications
     const count = unseen.length;
-
-    return this.setState({
-      count,
-    });
+    return curr.dispatch(updateNotificationsCount('notifications', count));
   };
 
   // this function gets triggered from downstream child notification components.
@@ -365,29 +356,11 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { active, currentUser, data, isLoading } = this.props;
-    const { count, notifications } = this.state;
+    const { active, currentUser, data, isLoading, count } = this.props;
+    const { notifications } = this.state;
 
     return (
       <IconDrop padOnHover>
-        <Head>
-          {count > 0 ? (
-            <link
-              rel="shortcut icon"
-              id="dynamic-favicon"
-              // $FlowIssue
-              href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
-            />
-          ) : (
-            <link
-              rel="shortcut icon"
-              id="dynamic-favicon"
-              // $FlowIssue
-              href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
-            />
-          )}
-        </Head>
-
         <IconLink
           data-active={active}
           to="/notifications"
@@ -418,7 +391,10 @@ class NotificationsTab extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ activeInboxThread: state.dashboardFeed.activeThread });
+const map = state => ({
+  activeInboxThread: state.dashboardFeed.activeThread,
+  count: state.notifications.notifications,
+});
 export default compose(
   // $FlowIssue
   connect(map),

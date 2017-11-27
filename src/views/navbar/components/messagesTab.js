@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
-import Head from '../../../components/head';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import { updateNotificationsCount } from '../../../actions/notifications';
 import {
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
@@ -23,16 +24,16 @@ type Props = {
   },
   subscribeToDMs: Function,
   refetch: Function,
+  count: number,
+  dispatch: Function,
 };
 
 type State = {
-  count: number,
   subscription: ?Function,
 };
 
 class MessagesTab extends React.Component<Props, State> {
   state = {
-    count: 0,
     subscription: null,
   };
 
@@ -64,7 +65,7 @@ class MessagesTab extends React.Component<Props, State> {
     if (prevProps.active !== nextProps.active) return true;
 
     // any time the count changes
-    if (prevState.count !== nextState.count) return true;
+    if (prevProps.count !== nextProps.count) return true;
 
     return false;
   }
@@ -144,13 +145,14 @@ class MessagesTab extends React.Component<Props, State> {
 
   setCount(props) {
     const { data: { directMessageNotifications } } = props;
+    const { dispatch } = this.props;
     const nodes = this.convertEdgesToNodes(directMessageNotifications);
 
     // set to 0 if no notifications exist yet
     if (!nodes || nodes.length === 0) {
-      return this.setState({
-        count: 0,
-      });
+      return dispatch(
+        updateNotificationsCount('directMessageNotifications', 0)
+      );
     }
 
     // bundle dm notifications
@@ -163,9 +165,9 @@ class MessagesTab extends React.Component<Props, State> {
 
     // count of unique notifications determined by the thread id
     const count = Object.keys(obj).length;
-    return this.setState({
-      count,
-    });
+    return dispatch(
+      updateNotificationsCount('directMessageNotifications', count)
+    );
   }
 
   markAllAsSeen = () => {
@@ -173,12 +175,13 @@ class MessagesTab extends React.Component<Props, State> {
       data: { directMessageNotifications },
       markDirectMessageNotificationsSeen,
       refetch,
+      dispatch,
     } = this.props;
 
     const nodes = this.convertEdgesToNodes(directMessageNotifications);
 
     // force the count to 0
-    this.setState({ count: 0 });
+    dispatch(updateNotificationsCount('directMessageNotifications', 0));
 
     // if there are no unread, escape
     if (nodes && nodes.length === 0) return;
@@ -196,8 +199,7 @@ class MessagesTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { active } = this.props;
-    const { count } = this.state;
+    const { active, count } = this.props;
 
     return (
       <IconLink
@@ -206,24 +208,6 @@ class MessagesTab extends React.Component<Props, State> {
         rel="nofollow"
         onClick={this.markAllAsSeen}
       >
-        <Head>
-          {count > 0 ? (
-            <link
-              rel="shortcut icon"
-              id="dynamic-favicon"
-              // $FlowIssue
-              href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
-            />
-          ) : (
-            <link
-              rel="shortcut icon"
-              id="dynamic-favicon"
-              // $FlowIssue
-              href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
-            />
-          )}
-        </Head>
-
         <Icon
           glyph={count > 0 ? 'message-fill' : 'message'}
           withCount={count > 10 ? '10+' : count > 0 ? count : false}
@@ -234,7 +218,11 @@ class MessagesTab extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({
+  count: state.notifications.directMessageNotifications,
+});
 export default compose(
+  connect(map),
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
   viewNetworkHandler
