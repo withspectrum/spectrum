@@ -66,9 +66,6 @@ class Navbar extends React.Component<Props> {
     );
     if (thisThreadParam !== nextThreadParam) return true;
 
-    // Fuck updating
-    console.log('scu falsing thisprops', this.props);
-    console.log('scu falsing nextprops', nextProps);
     return false;
   }
 
@@ -81,9 +78,6 @@ class Navbar extends React.Component<Props> {
       hasError,
       currentUser,
     } = this.props;
-
-    console.log('navbar props', this.props);
-    console.log('navbar state', this.state);
 
     const loggedInUser = user || currentUser;
     const isHome =
