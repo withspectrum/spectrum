@@ -199,6 +199,7 @@ class Editor extends React.Component<Props, State> {
             autoCapitalize="sentences"
             autoComplete="on"
             autoCorrect="on"
+            stripPastedStyles={true}
             decorators={[mentionsDecorator]}
             {...rest}
           />
@@ -279,6 +280,7 @@ class Editor extends React.Component<Props, State> {
               autoCapitalize="sentences"
               autoComplete="on"
               autoCorrect="on"
+              stripPastedStyles={true}
               decorators={[mentionsDecorator]}
               {...rest}
             />
