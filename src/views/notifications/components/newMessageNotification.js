@@ -34,7 +34,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const messages = sortAndGroupNotificationMessages(unsortedMessages);
 
   return (
-    <NotificationCard>
+    <NotificationCard isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,
@@ -65,7 +65,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
               const me = currentUser ? sender.id === currentUser.id : false;
 
               return (
-                <Sender>
+                <Sender key={i}>
                   {!me && <AuthorAvatar sender={sender} />}
 
                   <MessageGroup me={me}>
@@ -106,7 +106,7 @@ export const MiniNewMessageNotification = ({
   const context = parseContext(notification.context, currentUser);
 
   return (
-    <NotificationListRow>
+    <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,

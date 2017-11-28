@@ -1,11 +1,11 @@
+// @flow
 const { db } = require('./db');
-import paginate from '../utils/paginate-arrays';
-const { listenToNewDocumentsIn } = require('./utils');
-import type { PaginationOptions } from '../utils/paginate-arrays';
-import { encode, decode } from '../utils/base64';
 import { NEW_DOCUMENTS } from './utils';
 
-const getNotificationsByUser = (userId: string, { first, after }) => {
+export const getNotificationsByUser = (
+  userId: string,
+  { first, after }: { first: number, after: Date }
+) => {
   return db
     .table('usersNotifications')
     .between(
@@ -18,12 +18,43 @@ const getNotificationsByUser = (userId: string, { first, after }) => {
       }
     )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
-    .limit(10)
+    .limit(first)
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .run();
+};
+
+export const getUnreadDirectMessageNotifications = (
+  userId: string,
+  { first, after }: { first: number, after: Date }
+): Promise<Array<Object>> => {
+  return db
+    .table('usersNotifications')
+    .between(
+      [userId, db.minval],
+      [userId, after ? new Date(after) : db.maxval],
+      {
+        index: 'userIdAndEntityAddedAt',
+        leftBound: 'open',
+        rightBound: 'open',
+      }
+    )
+    .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({
+      left: ['notificationId', 'userId', 'createdAt', 'id'],
+    })
+    .zip()
+    .filter(row =>
+      row('isSeen')
+        .eq(false)
+        .and(row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+    )
+    .limit(first)
     .run();
 };
 
@@ -32,7 +63,7 @@ const hasChanged = (field: string) =>
 
 const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
-const listenToNewNotifications = (cb: Function): Function => {
+export const listenToNewNotifications = (cb: Function): Function => {
   return db
     .table('usersNotifications')
     .changes({
@@ -44,6 +75,7 @@ const listenToNewNotifications = (cb: Function): Function => {
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
     })
     .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
@@ -54,7 +86,27 @@ const listenToNewNotifications = (cb: Function): Function => {
     });
 };
 
-module.exports = {
-  getNotificationsByUser,
-  listenToNewNotifications,
+export const listenToNewDirectMessageNotifications = (
+  cb: Function
+): Function => {
+  return db
+    .table('usersNotifications')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({
+      left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
+    })
+    .zip()
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
 };

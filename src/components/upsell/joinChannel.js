@@ -73,7 +73,7 @@ class JoinChannel extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        console.log(err);
+        console.log('error toggling subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };

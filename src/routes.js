@@ -14,12 +14,13 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import Maintenance from './components/maintenance';
-import { LoadingDMs } from './views/directMessages/components/loading';
+import LoadingDMs from './views/directMessages/components/loading';
 import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
+import AuthViewHandler from './views/authViewHandler';
 
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
@@ -178,7 +179,12 @@ class Routes extends React.Component<{}> {
             {/* Default meta tags, get overriden by anything further down the tree */}
             <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
-
+            {/* 
+              AuthViewHandler often returns null, but is responsible for triggering
+              things like the 'set username' prompt when a user auths and doesn't
+              have a username set.
+            */}
+            <Route component={AuthViewHandler} />
             <Route component={Navbar} />
 
             <Route component={ModalRoot} />
