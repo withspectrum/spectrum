@@ -1,25 +1,15 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { OutlineButton, Button } from '../../../../components/buttons';
 import { ButtonRow, InputRow, Input } from './style';
 import { Description } from '../../style';
 import { Loading } from '../../../../components/loading';
+import Clipboard from 'react-clipboard.js';
 
 const Share = ({ community, history, onboarding }) => {
   if (!community) return <Loading />;
-
-  const highlightAndCopy = e => {
-    let selection = window.getSelection();
-    let range = document.createRange();
-    range.selectNode(e.target);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand('copy');
-  };
 
   return (
     <div>
@@ -54,13 +44,16 @@ const Share = ({ community, history, onboarding }) => {
         </a>
       </ButtonRow>
 
-      <InputRow>
-        <Input onClick={highlightAndCopy}>
-          {`https://spectrum.chat/${community.slug}`}
-        </Input>
-      </InputRow>
+      <Clipboard
+        component="div"
+        data-clipboard-text={`https://spectrum.chat/${community.slug}`}
+      >
+        <InputRow>
+          <Input>{`https://spectrum.chat/${community.slug}`}</Input>
+        </InputRow>
+      </Clipboard>
 
-      {onboarding &&
+      {onboarding && (
         <ButtonRow>
           <Description centered>
             You're ready to start building your community - you can view it now,
@@ -72,7 +65,8 @@ const Share = ({ community, history, onboarding }) => {
           <a href={`/${community.slug}`}>
             <Button>Go to my community</Button>
           </a>
-        </ButtonRow>}
+        </ButtonRow>
+      )}
     </div>
   );
 };

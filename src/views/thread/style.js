@@ -368,6 +368,7 @@ export const ShareButtons = styled.div`
 export const ShareButton = styled.span`
   color: ${props => props.theme.text.alt};
   display: flex;
+  background: none;
 
   a {
     display: flex;
