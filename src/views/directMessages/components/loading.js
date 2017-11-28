@@ -6,9 +6,9 @@ import { LoadingDM } from '../../../components/loading';
 import Titlebar from '../../titlebar';
 import { View, MessagesList, ComposeHeader } from '../style';
 
-export default ({ noComposer }) => (
+export default ({ children }) => (
   <View>
-    <Titlebar title={'Messages'} provideBack={false} noComposer={noComposer} />
+    {children}
     <MessagesList>
       <Link to="/messages/new">
         <ComposeHeader>

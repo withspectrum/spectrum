@@ -96,17 +96,20 @@ class DirectMessages extends React.Component<Props, State> {
             })
         : null;
 
+    const titlebar = (
+      <Titlebar
+        title={isComposing ? 'New Message' : 'Messages'}
+        provideBack={isComposing || isViewingThread}
+        backRoute={`/messages`}
+        noComposer={isComposing || isViewingThread}
+        messageComposer={!isComposing && !isViewingThread}
+      />
+    );
+
     if (currentUser && data.user && data.user.directMessageThreadsConnection) {
       return (
         <View>
-          <Titlebar
-            title={isComposing ? 'New Message' : 'Messages'}
-            provideBack={isComposing || isViewingThread}
-            backRoute={`/messages`}
-            noComposer={isComposing || isViewingThread}
-            messageComposer={!isComposing && !isViewingThread}
-          />
-
+          {titlebar}
           <MessagesList isViewingThread={isViewingThread}>
             <Link
               to="/messages/new"
@@ -134,8 +137,7 @@ class DirectMessages extends React.Component<Props, State> {
       );
     }
 
-    if (isLoading)
-      return <Loading noComposer={isComposing || isViewingThread} />;
+    if (isLoading) return <Loading>{titlebar}</Loading>;
     if (hasError) return <ViewError />;
 
     return null;
