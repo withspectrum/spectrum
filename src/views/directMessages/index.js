@@ -142,13 +142,15 @@ class DirectMessages extends React.Component<Props, State> {
           )}
         </MessagesList>
 
-        <ThreadDetail
-          match={match}
-          threads={threads}
-          currentUser={currentUser}
-          setActiveThread={this.setActiveThread}
-          hideOnMobile={!(isComposing || isViewingThread)}
-        />
+        {dataExists && (
+          <ThreadDetail
+            match={match}
+            threads={threads}
+            currentUser={currentUser}
+            setActiveThread={this.setActiveThread}
+            hideOnMobile={!(isComposing || isViewingThread)}
+          />
+        )}
       </View>
     );
   }
