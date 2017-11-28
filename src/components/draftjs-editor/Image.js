@@ -72,6 +72,7 @@ const Image = (props: ImageProps) => {
   } = props;
   const active = props.blockProps.isFocused;
   const { src } = contentState.getEntity(block.getEntityAt(0)).getData();
+
   return (
     <ImageContainer active={active}>
       <ActiveOverlay active={active} />

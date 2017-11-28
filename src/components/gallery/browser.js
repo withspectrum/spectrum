@@ -91,6 +91,7 @@ class Browser extends Component {
 
   nextImage = () => {
     let { index, images } = this.state;
+
     if (index === images.length - 1) {
       index = 0;
       this.setState({
@@ -120,8 +121,8 @@ class Browser extends Component {
     // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
     // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
     let filteredIndex;
-    if (!index) {
-      filteredIndex = messages.length - 1;
+    if (index === null || index === undefined) {
+      filteredIndex = images.length - 1;
     } else {
       filteredIndex = index;
     }
@@ -132,8 +133,7 @@ class Browser extends Component {
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={`${images[filteredIndex].content
-            .body}?max-w=${window.innerWidth}`}
+          src={`${images[filteredIndex].src}?max-w=${window.innerWidth}`}
         />
         <Minigallery>
           <MiniContainer>

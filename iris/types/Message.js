@@ -46,6 +46,7 @@ const Message = /* GraphQL */ `
 
 	extend type Query {
 		message(id: ID!): Message
+		getMediaMessagesForThread(threadId: ID!): [Message]
 	}
 
 
