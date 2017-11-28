@@ -155,7 +155,6 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                <Icon glyph={'message'} />
                 Active in
               </DesktopSegment>
 
@@ -164,7 +163,6 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('creator')}
                 selected={selectedView === 'creator'}
               >
-                <Icon glyph={'post'} />
                 Created
               </DesktopSegment>
               <MobileSegment
