@@ -62,7 +62,9 @@ class ExistingThread extends Component {
     const { threads, currentUser } = this.props;
 
     if (id !== 'new') {
-      const thread = threads.filter(thread => thread.id === id)[0];
+      const thread = threads && threads.filter(thread => thread.id === id)[0];
+
+      if (!thread) return null;
 
       return (
         <MessagesContainer>
