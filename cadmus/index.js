@@ -2,6 +2,7 @@
 console.log('Cadmus starting...');
 const debug = require('debug')('cadmus');
 debug('logging with debug enabled');
+// $FlowFixMe
 require('isomorphic-fetch');
 import express from 'express';
 import Loadable from 'react-loadable';
