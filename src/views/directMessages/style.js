@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
@@ -37,10 +37,17 @@ export const MessagesList = styled(FlexCol)`
     min-width: 320px;
     border-right: none;
     max-width: 100%;
+    display: ${props => (props.isViewingThread ? 'none' : 'flex')};
   }
 `;
 
-export const MessagesContainer = styled(FlexCol)`flex: auto;`;
+export const MessagesContainer = styled(FlexCol)`
+  flex: auto;
+
+  @media (max-width: 768px) {
+    ${props => props.hideOnMobile && css`display: none;`};
+  }
+`;
 
 export const ComposeHeader = styled(FlexRow)`
   justify-content: flex-end;

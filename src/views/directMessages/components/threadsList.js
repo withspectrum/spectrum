@@ -4,8 +4,8 @@ import ListCardItemDirectMessageThread from './messageThreadListItem';
 import { ThreadsListScrollContainer } from './style';
 
 type Input = {
-  threads: Array<Object>,
-  currentUser: Object,
+  threads: ?Array<Object>,
+  currentUser: ?Object,
   active: string,
 };
 

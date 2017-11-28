@@ -112,7 +112,7 @@ module.exports = {
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
         // Only send down 200 messages for the watercooler?
-        first: watercooler ? 200 : first,
+        first,
         after: lastMessageIndex,
       }).then(result => {
         return {

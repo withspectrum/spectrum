@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import Titlebar from '../../titlebar';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
@@ -675,7 +674,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, hideOnMobile } = this.props;
 
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
@@ -686,14 +685,8 @@ class NewThread extends Component {
     });
 
     return (
-      <MessagesContainer>
+      <MessagesContainer hideOnMobile={hideOnMobile}>
         <Head title={title} description={description} />
-        <Titlebar
-          title={'New Message'}
-          provideBack={true}
-          backRoute={`/messages`}
-          noComposer
-        />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 && (

@@ -15,6 +15,7 @@ export const NotificationDropdownList = ({
   rawNotifications,
   currentUser,
   history,
+  markSingleNotificationAsSeenInState,
 }) => {
   /*
     parse the notifications and cut it down to the latest 5
@@ -59,6 +60,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }
@@ -69,6 +73,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }
@@ -89,6 +96,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }

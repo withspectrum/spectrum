@@ -104,7 +104,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         this.setState({
           isLoading: false,
         });
-        console.log(err);
+        console.log('error toggling channel subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
