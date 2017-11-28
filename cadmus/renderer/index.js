@@ -29,6 +29,9 @@ import { initStore } from '../../src/store';
 const IN_MAINTENANCE_MODE =
   process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
 const IS_PROD = process.env.NODE_ENV === 'production';
+const FORCE_DEV = process.env.FORCE_DEV;
+
+if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 
 const renderer = (req, res) => {
   debug(`server-side render ${req.url}`);
@@ -36,9 +39,10 @@ const renderer = (req, res) => {
   const client = new ApolloClient({
     ssrMode: true,
     networkInterface: createNetworkInterface({
-      uri: IS_PROD
-        ? `https://${req.hostname}/api`
-        : 'http://localhost:3001/api',
+      uri:
+        IS_PROD && !FORCE_DEV
+          ? `https://alpha.spectrum.chat/api`
+          : 'http://localhost:3001/api',
       opts: {
         credentials: 'include',
       },

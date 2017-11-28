@@ -7,6 +7,7 @@ require('isomorphic-fetch');
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
+import { getUser } from 'iris/models/user';
 
 const PORT = process.env.PORT || 3006;
 
@@ -37,6 +38,19 @@ import session from 'shared/middlewares/session';
 app.use(session);
 
 import passport from 'passport';
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  getUser({ id })
+    .then(user => {
+      done(null, user);
+    })
+    .catch(err => {
+      done(err);
+    });
+});
 app.use(passport.initialize());
 app.use(passport.session());
 

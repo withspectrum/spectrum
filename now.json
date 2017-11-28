@@ -1,7 +1,4 @@
 {
-  "files": [
-    "build"
-  ],
 	"env": {
 		"S3_TOKEN": "@s3-token",
 		"S3_SECRET": "@s3-secret",
