@@ -14,7 +14,7 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import Maintenance from './components/maintenance';
-import { LoadingDMs } from './views/directMessages/components/loading';
+import LoadingDMs from './views/directMessages/components/loading';
 import LoadingThread from './views/thread/components/loading';
 import { Loading, LoadingScreen } from './components/loading';
 import LoadingDashboard from './views/dashboard/components/dashboardLoading';

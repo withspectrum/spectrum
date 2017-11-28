@@ -37,6 +37,7 @@ export const MessagesList = styled(FlexCol)`
     min-width: 320px;
     border-right: none;
     max-width: 100%;
+    display: ${props => (props.isViewingThread ? 'none' : 'flex')};
   }
 `;
 
