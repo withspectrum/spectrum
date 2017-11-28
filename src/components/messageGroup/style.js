@@ -95,6 +95,11 @@ export const Time = styled.span`
 
 export const UnseenTime = styled(Time)`
   color: ${({ theme }) => theme.warn.alt};
+
+  &:hover {
+    color: ${({ theme }) => theme.warn.alt};
+    transiton: ${Transition.hover.on};
+  }
 `;
 
 export const MessageLink = styled.a`

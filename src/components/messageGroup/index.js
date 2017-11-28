@@ -193,7 +193,6 @@ class Messages extends Component<MessageGroupProps, State> {
               initialMessage.message.type === 'unseen-messages-below' &&
               messages[i + 1][0].sender.id !== currentUser.id
             ) {
-              console.log('group', group);
               return (
                 <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
                   <hr />
