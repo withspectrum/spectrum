@@ -107,30 +107,29 @@ module.exports = {
       }
     },
     messageConnection: (
-      { id }: { id: String },
-      { first = Infinity, after }: PaginationOptions
+      { id, watercooler }: { id: String },
+      { first = 999999, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
+        // Only send down 200 messages for the watercooler?
         first,
-        after: cursor,
-      })
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => ({
+        after: lastMessageIndex,
+      }).then(result => {
+        return {
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: result && result.length >= first,
           },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
+          edges: result.map((message, index) => ({
+            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
             node: message,
           })),
-        }));
+        };
+      });
     },
     creator: async (
       { creatorId, communityId }: { creatorId: string, communityId: string },
@@ -147,6 +146,7 @@ module.exports = {
       return {
         ...creator,
         contextPermissions: {
+          communityId,
           reputation: permissions ? permissions.reputation : 0,
           isModerator: permissions ? permissions.isModerator : false,
           isOwner: permissions ? permissions.isOwner : false,

@@ -5,7 +5,7 @@ import branch from 'recompose/branch';
 // $FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 
 import Icon from '../../../components/icons';
 import { LoadingDM } from '../../../components/loading';

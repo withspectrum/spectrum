@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
@@ -24,6 +25,12 @@ class ExistingThread extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // if the thread slider is open, dont be focusing shit up in heyuhr
+    if (this.props.threadSliderIsOpen) return;
+    // if the thread slider is closed and we're viewing DMs, refocus the chat input
+    if (prevProps.threadSliderIsOpen && !this.props.threadSliderIsOpen) {
+      this.chatInput.triggerFocus();
+    }
     if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
       const threadId = this.props.match.params.threadId;
       this.props.setActiveThread(threadId);
@@ -89,4 +96,7 @@ class ExistingThread extends Component {
   }
 }
 
-export default compose(setLastSeenMutation, withApollo)(ExistingThread);
+const map = state => ({ threadSliderIsOpen: state.threadSlider.isOpen });
+export default compose(connect(map), setLastSeenMutation, withApollo)(
+  ExistingThread
+);

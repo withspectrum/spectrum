@@ -35,6 +35,8 @@ const EVENT_VERB = {
   REACTION_CREATED: 'liked',
   CHANNEL_CREATED: 'created in',
   USER_JOINED_COMMUNITY: 'joined',
+  MENTION_MESSAGE: 'mentioned you in',
+  MENTION_THREAD: 'mentioned you in',
 };
 
 const contextToString = (context, currentUser) => {
@@ -102,14 +104,22 @@ const formatNotification = (incomingNotification, currentUserId) => {
         ({ payload }) => payload.senderId !== currentUserId
       );
 
-      href = `/thread/${notification.context.id}`;
+      if (notification.context.type === 'DIRECT_MESSAGE_THREAD') {
+        href = `/messages/${notification.context.id}`;
+      } else {
+        href = `/thread/${notification.context.id}`;
+      }
       body = sentencify(
-        entities.map(
-          ({ payload }) =>
-            `"${payload.messageType === 'draftjs'
-              ? toPlainText(toState(payload.content.body))
-              : payload.content.body}"`
-        )
+        entities.map(({ payload }) => {
+          if (payload.messageType === 'draftjs') {
+            let body = payload.content.body;
+            if (typeof body === 'string')
+              body = JSON.parse(payload.content.body);
+            return `"${toPlainText(toState(body))}"`;
+          }
+
+          return `"${payload.content.body}"`;
+        })
       );
       break;
     }

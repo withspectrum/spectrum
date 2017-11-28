@@ -5,6 +5,7 @@ import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from '../../views/titlebar';
+import { Button } from '../../components/buttons';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
 import Head from '../../components/head';
@@ -14,7 +15,6 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { getThread } from './queries';
 import { NullState, UpsellSignIn } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
-import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
@@ -25,6 +25,10 @@ import {
   Input,
   Detail,
   ChatInputWrapper,
+  WatercoolerDescription,
+  WatercoolerIntroContainer,
+  WatercoolerTitle,
+  WatercoolerAvatar,
 } from './style';
 
 type Props = {
@@ -95,17 +99,23 @@ class ThreadContainer extends React.Component<Props, State> {
     // we never autofocus on mobile
     if (window && window.innerWidth < 768) return;
 
-    const { currentUser, data: { thread } } = this.props;
+    const { currentUser, data: { thread }, threadSliderIsOpen } = this.props;
 
     // if no thread has been returned yet from the query, we don't know whether or not to focus yet
-
     if (!thread) return;
+
     // only when the thread has been returned for the first time should evaluate whether or not to focus the chat input
-
     const threadAndUser = currentUser && thread;
-
     if (threadAndUser && this.chatInput) {
-      this.chatInput.triggerFocus();
+      // if the user is viewing the inbox, opens the thread slider, and then closes it again, refocus the inbox inpu
+      if (prevProps.threadSliderIsOpen && !threadSliderIsOpen) {
+        return this.chatInput.triggerFocus();
+      }
+
+      // if the thread slider is open while in the inbox, don't focus in the inbox
+      if (threadSliderIsOpen) return;
+
+      return this.chatInput.triggerFocus();
     }
   }
 
@@ -132,7 +142,6 @@ class ThreadContainer extends React.Component<Props, State> {
   render() {
     const {
       data: { thread },
-      data,
       currentUser,
       isLoading,
       hasError,
@@ -155,7 +164,7 @@ class ThreadContainer extends React.Component<Props, State> {
       });
 
       // get the data we need to render the view
-      const { channelPermissions, isPrivate } = thread.channel;
+      const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
       const canSendMessages = isLoggedIn && channelPermissions.isMember;
@@ -171,19 +180,128 @@ class ThreadContainer extends React.Component<Props, State> {
               participant => participant.id === currentUser.id
             )));
 
-      const shouldRenderThreadSidebar =
-        threadViewContext === 'fullscreen' && window.innerWidth > 1024;
+      const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
-      // only show the community header in inbox, sliders, and narrow screen thread views
-      const shouldRenderCommunityContextHeader =
-        threadViewContext === 'inbox' ||
-        threadViewContext === 'slider' ||
-        (threadViewContext === 'fullscreen' && window.innerWidth < 1024);
+      if (thread.watercooler)
+        return (
+          <ThreadViewContainer
+            data-e2e-id="thread-view"
+            threadViewContext={threadViewContext}
+            constrain={
+              threadViewContext === 'slider' ||
+              threadViewContext === 'fullscreen'
+            }
+          >
+            {shouldRenderThreadSidebar && (
+              <Sidebar
+                thread={thread}
+                currentUser={currentUser}
+                slug={thread.community.slug}
+                id={thread.community.id}
+              />
+            )}
+
+            <ThreadContentView slider={slider}>
+              <Head
+                title={`The Watercooler · ${thread.community.name}`}
+                description={`Watercooler chat for the ${thread.community
+                  .name} community`}
+                image={thread.community.profilePhoto}
+              />
+              <Titlebar
+                title={thread.content.title}
+                subtitle={`${thread.community.name} / ${thread.channel.name}`}
+                provideBack={true}
+                backRoute={`/`}
+                noComposer
+                style={{ gridArea: 'header' }}
+              />
+              <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+                <Detail type={slider ? '' : 'only'}>
+                  <WatercoolerIntroContainer>
+                    <WatercoolerAvatar
+                      src={thread.community.profilePhoto}
+                      community
+                      size={44}
+                      radius={8}
+                    />
+                    <WatercoolerTitle>
+                      The {thread.community.name} watercooler
+                    </WatercoolerTitle>
+                    <WatercoolerDescription>
+                      Welcome to the {thread.community.name} watercooler, a new
+                      space for general chat with everyone in the community.
+                      Jump in to the conversation below or introduce yourself!
+                    </WatercoolerDescription>
+                  </WatercoolerIntroContainer>
+                  {!isEditing && (
+                    <Messages
+                      threadType={thread.threadType}
+                      id={thread.id}
+                      currentUser={currentUser}
+                      forceScrollToBottom={this.forceScrollToBottom}
+                      forceScrollToTop={this.forceScrollToTop}
+                      contextualScrollToBottom={this.contextualScrollToBottom}
+                      shouldForceScrollOnMessageLoad={true}
+                      shouldForceScrollToTopOnMessageLoad={false}
+                      hasMessagesToLoad={thread.messageCount > 0}
+                      isModerator={isModerator}
+                    />
+                  )}
+
+                  {!isEditing &&
+                    isLocked && (
+                      <NullState copy="This conversation has been frozen by a moderator." />
+                    )}
+
+                  {!isEditing &&
+                    isLoggedIn &&
+                    !canSendMessages && (
+                      <JoinChannel
+                        community={thread.community}
+                        channel={thread.channel}
+                      />
+                    )}
+
+                  {!isEditing &&
+                    !isLoggedIn && (
+                      <UpsellSignIn
+                        title={`Join the ${thread.community.name} community`}
+                        glyph={'message-new'}
+                        view={{ data: thread.community, type: 'community' }}
+                        noShadow
+                      />
+                    )}
+                </Detail>
+              </Content>
+
+              {!isEditing &&
+                canSendMessages &&
+                !isLocked && (
+                  <Input>
+                    <ChatInputWrapper type="only">
+                      <ChatInput
+                        threadType="story"
+                        threadData={thread}
+                        thread={thread.id}
+                        currentUser={isLoggedIn}
+                        forceScrollToBottom={this.forceScrollToBottom}
+                        onRef={chatInput => (this.chatInput = chatInput)}
+                      />
+                    </ChatInputWrapper>
+                  </Input>
+                )}
+            </ThreadContentView>
+          </ThreadViewContainer>
+        );
 
       return (
         <ThreadViewContainer
           data-e2e-id="thread-view"
           threadViewContext={threadViewContext}
+          constrain={
+            threadViewContext === 'slider' || threadViewContext === 'fullscreen'
+          }
         >
           {shouldRenderThreadSidebar && (
             <Sidebar
@@ -210,9 +328,10 @@ class ThreadContainer extends React.Component<Props, State> {
             />
             <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
               <Detail type={slider ? '' : 'only'}>
-                {shouldRenderCommunityContextHeader && (
-                  <ThreadCommunityBanner thread={thread} />
-                )}
+                <ThreadCommunityBanner
+                  hide={threadViewContext === 'fullscreen'}
+                  thread={thread}
+                />
 
                 <ThreadDetail
                   toggleEdit={this.toggleEdit}
@@ -270,6 +389,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   <ChatInputWrapper type="only">
                     <ChatInput
                       threadType="story"
+                      threadData={thread}
                       thread={thread.id}
                       currentUser={isLoggedIn}
                       forceScrollToBottom={this.forceScrollToBottom}

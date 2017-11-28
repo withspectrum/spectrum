@@ -10,6 +10,7 @@ export const ActorsRow = ({ actors }) => {
         return (
           <ActorPhotoItem key={actor.id}>
             <Avatar
+              user={actor}
               size={32}
               radius={32}
               isOnline={actor.isOnline}

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';
 import { Button } from '../../components/buttons';
-import { UpsellSignIn } from '../../components/upsell';
 import TopCommunityList from './components/topCommunities';
 import { CommunityProfile } from '../../components/profile';
 import { collections } from './collections';
@@ -85,8 +84,6 @@ export const CommunitySearch = (props: Props) => {
       text-align: left;
     }
   `;
-
-  const isMobile = window.innerWidth < 768;
 
   const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
 
@@ -178,10 +175,13 @@ class CollectionSwitcher extends Component {
           <TopCommunityList
             selected={this.state.selectedView === 'Top Communities'}
           />
-          {collections.map(collection => {
+          {collections.map((collection, index) => {
             const { title, categories } = collection;
             return (
-              <CategoryWrapper selected={this.state.selectedView === title}>
+              <CategoryWrapper
+                key={index}
+                selected={this.state.selectedView === title}
+              >
                 {categories.map((category, i) => {
                   return (
                     <Category

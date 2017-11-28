@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled, { css, keyframes } from 'styled-components';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import {
   zIndex,
   Truncate,
@@ -48,7 +48,7 @@ export const InboxWrapper = styled.div`
 
 export const InboxScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
   flex: 1;
 `;
@@ -143,6 +143,7 @@ export const CommunityListWrapper = styled.div`
 
 export const CommunityListItem = styled.div`
   margin: 4px 12px;
+  min-width: 48px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -186,6 +187,7 @@ export const CommunityListItem = styled.div`
 export const CommunityListPadding = styled.div`
   display: flex;
   padding: 6px;
+  min-width: 48px;
 `;
 
 export const Fixed = styled.div`
@@ -245,9 +247,10 @@ export const CommunityListName = styled.p`
 
 export const CommunityListReputation = styled.div`
   margin-left: 12px;
-  line-height: 1;
+  line-height: 1.2;
   color: ${props => props.theme.text.alt};
   width: 100%;
+  font-size: 12px;
 
   > div {
     > div {
@@ -297,7 +300,8 @@ export const CommunityListAvatar = styled.img`
 
 export const CommunityListScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   padding-bottom: 16px;
 `;
@@ -328,7 +332,7 @@ export const ThreadWrapper = styled.div`
 
 export const ThreadScroller = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
 `;
 
@@ -368,7 +372,7 @@ export const ComposeIconContainer = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid
+  border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.default};
@@ -377,10 +381,6 @@ export const InboxThreadItem = styled.div`
   &:hover {
     background: ${props =>
       props.active ? props.theme.brand.alt : props.theme.bg.wash};
-  }
-
-  &:first-of-type {
-    border-top: none;
   }
 
   &:last-of-type {
@@ -432,11 +432,11 @@ export const InboxThreadContent = styled.div`
 `;
 
 export const ThreadTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px 8px;
+  margin: 12px 16px;
   max-width: 100%;
   line-height: 1.4;
 `;
@@ -486,7 +486,7 @@ export const ParticipantHead = styled.span`
   }
 `;
 
-export const EmptyParticipantHead = styled(ParticipantHead)`
+export const EmptyParticipantHead = styled.span`
   background: ${props =>
     props.active ? props.theme.bg.default : props.theme.bg.wash};
   display: flex;
@@ -499,6 +499,19 @@ export const EmptyParticipantHead = styled(ParticipantHead)`
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.default)};
   width: 24px;
   height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  pointer-events: auto;
+  position: relative;
+  margin-left: -8px;
+  border-radius: 24px;
+  transform: translateY(0);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    transition: transform 0.2s ease-in-out;
+  }
 `;
 
 export const MetaText = styled.span`
@@ -606,7 +619,8 @@ export const CommunityLink = styled(Link)`
 
 export const PillLink = styled(Link)`
   display: inline-block;
-  height: 20px;
+  display: flex;
+  align-items: center;
   border-radius: 4px;
   overflow: hidden;
   padding: 4px 8px;
@@ -625,25 +639,17 @@ export const PillLinkPinned = styled.div`
   height: 20px;
   border-radius: 4px;
   overflow: hidden;
-  padding: 4px 8px;
+  padding: 0 8px;
   margin-right: 8px;
   font-size: 12px;
   max-height: 24px;
-  line-height: 1;
-
+  line-height: 1.5;
   .icon {
     top: -1px;
   }
 `;
 
 export const PillLabel = styled.span`
-  ${props =>
-    props.isPrivate &&
-    css`
-      position: relative;
-      top: -2px;
-    `};
-
   overflow: hidden;
   max-width: 128px;
   text-overflow: ellipsis;
@@ -651,19 +657,21 @@ export const PillLabel = styled.span`
   white-space: nowrap;
 `;
 
-export const MiniLinkPreview = styled(Link)`
+export const MiniLinkPreview = styled.a`
   display: inline-block;
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.active ? '500' : '400')};
-  margin: 0 0 8px;
+  margin-bottom: 8px;
   pointer-events: auto;
-  max-width: calc(100%);
-  ${Truncate} .icon {
+  max-width: 100%;
+  ${Truncate};
+
+  .icon {
     margin-right: 4px;
-    position: relative;
-    top: 4px;
   }
 
   &:hover {
@@ -694,6 +702,8 @@ export const Lock = styled.span`margin-right: 4px;`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
+  display: flex;
+  align-items: center;
 `;
 
 export const ChannelsContainer = styled.div`

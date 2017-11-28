@@ -13,10 +13,6 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   middlewares.use(raven);
 }
 
-// Apollo Optics middleware
-import OpticsAgent from 'optics-agent';
-middlewares.use(OpticsAgent.middleware());
-
 // Cross origin request support
 import cors from './cors';
 middlewares.use(cors);

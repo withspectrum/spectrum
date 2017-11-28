@@ -1,15 +1,15 @@
 // @flow
 const { db } = require('./db');
-import type { EventTypes } from '../utils/types';
+import type { NotificationEventType, DBNotification } from 'shared/types';
 import { TIME_BUFFER } from '../queues/constants';
 
 /*
 	Given an event type, the context of that event, and a time range, see if an existing notification exists. If it does, we will bundle the new incoming notification on the server. If no existing notification is found, we create a new one
 */
 export const checkForExistingNotification = (
-  event: EventTypes,
+  event: NotificationEventType,
   contextId: string
-) => {
+): Promise<?DBNotification> => {
   const now = new Date();
   const then = new Date(now.getTime() - TIME_BUFFER);
   return db
@@ -36,7 +36,9 @@ export const checkForExistingNotification = (
     });
 };
 
-export const storeNotification = (notification: Object): Promise<Object> => {
+export const storeNotification = (
+  notification: Object
+): Promise<DBNotification> => {
   return db
     .table('notifications')
     .insert(
@@ -51,7 +53,9 @@ export const storeNotification = (notification: Object): Promise<Object> => {
     .then(result => result.changes[0].new_val);
 };
 
-export const updateNotification = (notification: Object): Promise<Object> => {
+export const updateNotification = (
+  notification: Object
+): Promise<DBNotification> => {
   return db
     .table('notifications')
     .get(notification.id)

@@ -51,7 +51,7 @@ export const NotificationListContentHeading = styled(ContentHeading)`
 `;
 
 export const Content = styled(FlexCol)`
-  margin-left: 32px;
+  margin-left: 8px;
   align-self: stretch;
 `;
 
@@ -67,7 +67,7 @@ export const ContentWash = styled(Content)`
 export const NotificationListContainer = styled(FlexCol)`
   align-self: stretch;
   max-height: 480px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 `;
 
@@ -144,7 +144,6 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
-  overflow-x: hidden;
 `;
 
 export const ActorPhotoItem = styled.div`margin-right: 4px;`;
@@ -159,10 +158,16 @@ export const ContextRow = styled(FlexRow)`
     margin-left: 8px;
   }
   margin-bottom: 8px;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 export const SuccessContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
+`;
+
+export const SpecialContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.default};
 `;
 
 export const ReactionContext = styled(ContextRow)`
@@ -191,6 +196,7 @@ export const TextContent = styled.p`
   color: ${props => props.theme.text.alt};
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
+  padding-right: 16px;
 
   a {
     font-weight: 600;

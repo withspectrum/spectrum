@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { getCommunityChannels } from '../../community/queries';
 import { connect } from 'react-redux';
 import Icon from '../../../components/icons';

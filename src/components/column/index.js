@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { FlexCol } from '../globals';
 
 const BaseColumn = styled(FlexCol)`
@@ -12,6 +12,14 @@ const BaseColumn = styled(FlexCol)`
     margin: 0;
     max-width: 100%;
   }
+
+  ${p =>
+    p.hideOnMobile &&
+    css`
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    `};
 `;
 
 const PrimaryColumn = styled(BaseColumn)`

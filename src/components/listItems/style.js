@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import {
   Truncate,
   FlexCol,

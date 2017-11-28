@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { EditorState } from 'draft-js';
 import {
   getLinkPreviewFromUrl,
@@ -17,15 +17,9 @@ import { setThreadLockMutation } from '../mutations';
 import ThreadByline from './threadByline';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import { pinThreadMutation } from '../../../api/community';
-import { FlexRow } from '../../../components/globals';
-import Icon from '../../../components/icons';
-import Flyout from '../../../components/flyout';
-import Badge from '../../../components/badges';
-import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
-import Reputation from '../../../components/reputation';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
 import {
@@ -33,22 +27,8 @@ import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
-  Byline,
-  ContextRow,
-  DropWrap,
-  FlyoutRow,
-  EditDone,
   Timestamp,
   Edited,
-  BylineMeta,
-  AuthorAvatar,
-  AuthorName,
-  AuthorUsername,
-  Location,
-  ShareLinks,
-  ShareLink,
-  ShareButtons,
-  ShareButton,
 } from '../style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
@@ -87,15 +67,9 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const state = toState(JSON.parse(thread.content.body));
-
     this.setState({
       isEditing: false,
-      // When the thread changes we have to keep the previous editor state
-      // this is because in DraftJS the decorators are bound to the state, not the editor component,
-      // so when we just render the new state all the decorators go missing, leading to links etc.
-      // not working at all
-      body: body ? EditorState.push(body, state.getCurrentContent()) : state,
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
@@ -191,7 +165,7 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
-    if (!title || title.length === 0) {
+    if (!title || title.trim().length === 0) {
       dispatch(
         addToastWithTimeout('error', 'Be sure to save a title for your thread!')
       );
@@ -205,7 +179,7 @@ class ThreadDetailPure extends Component {
     const jsonBody = toJSON(body);
 
     const content = {
-      title,
+      title: title.trim(),
       body: JSON.stringify(jsonBody),
     };
 
@@ -369,17 +343,8 @@ class ThreadDetailPure extends Component {
       linkPreview,
       body,
       fetchingLinkPreview,
-      flyoutOpen,
       isSavingEdit,
     } = this.state;
-
-    const isChannelMember = thread.channel.channelPermissions.isMember;
-    const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const authorIsCommunityOwner =
-      thread.creator.contextPermissions &&
-      thread.creator.contextPermissions.isOwner;
-    const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited
@@ -388,7 +353,7 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        <ThreadContent>
+        <ThreadContent isEditing={isEditing}>
           <ThreadByline creator={thread.creator} />
 
           {isEditing ? (
@@ -442,6 +407,7 @@ class ThreadDetailPure extends Component {
           threadLock={this.threadLock}
           triggerDelete={this.triggerDelete}
           isEditing={isEditing}
+          title={this.state.title}
         />
       </ThreadWrapper>
     );

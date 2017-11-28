@@ -1,3 +1,4 @@
+// @flow
 /**
  * Community query resolvers
  */
@@ -30,9 +31,37 @@ import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { GetCommunityArgs, GetCommunitiesArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
 import type { GraphQLContext } from '../';
+import type { DBCommunity } from 'shared/types';
+
+type GetCommunityById = {
+  id: string,
+  slug: void,
+};
+
+type GetCommunityBySlug = {
+  id: void,
+  slug: string,
+};
+
+type GetCommunityArgs = GetCommunityById | GetCommunityBySlug;
+
+type GetCommunitiesByIds = {
+  ids: Array<string>,
+  slugs: void,
+};
+
+type GetCommunitiesBySlugs = {
+  ids: void,
+  slugs: Array<string>,
+};
+
+type GetCommunitiesArgs = GetCommunitiesByIds | GetCommunitiesBySlugs;
+
+type MemberOrChannelCount = {
+  reduction?: number,
+};
 
 module.exports = {
   Query: {
@@ -59,9 +88,18 @@ module.exports = {
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
-    searchCommunities: (_: any, { string, amount = 30 }: { string: string }) =>
-      getCommunitiesBySearchString(string, amount),
-    searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
+    searchCommunities: (
+      _: any,
+      { string, amount = 30 }: { string: string, amount: number }
+    ) => getCommunitiesBySearchString(string, amount),
+    searchCommunityThreads: (
+      _: any,
+      {
+        communityId,
+        searchString,
+      }: { communityId: string, searchString: string },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       let channelsToGetThreadsFor;
@@ -81,7 +119,7 @@ module.exports = {
   },
   Community: {
     communityPermissions: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -90,7 +128,7 @@ module.exports = {
         .load([user.id, id])
         .then(result => (result ? result : {}));
     },
-    channelConnection: ({ id }: { id: string }) => ({
+    channelConnection: ({ id }: DBCommunity) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -101,7 +139,7 @@ module.exports = {
       ),
     }),
     memberConnection: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
@@ -127,89 +165,84 @@ module.exports = {
           })),
         }));
     },
-    threadConnection: (
-      { id, ...community }: { id: string, community: Object },
+    threadConnection: async (
+      { id, ...community }: DBCommunity,
       { first = 10, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       const currentUser = user;
-      const hasPinnedThread =
-        community.pinnedThreadId && community.pinnedThreadId !== null;
 
       // if the user is signed in, only return stories for the channels
       // the user is a member of -> this will ensure that they don't see
       // stories in private channels that they aren't a member of.
       // if the user is *not* signed in, only get threads from public channels
       // within the community
-      let channelsToGetThreadsFor;
+      let channels;
       if (user) {
-        channelsToGetThreadsFor = getChannelsByUserAndCommunity(
-          id,
-          currentUser.id
-        );
+        channels = await getChannelsByUserAndCommunity(id, currentUser.id);
       } else {
-        channelsToGetThreadsFor = getPublicChannelsByCommunity(id);
+        channels = await getPublicChannelsByCommunity(id);
       }
 
-      // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return channelsToGetThreadsFor
-        .then(channels => channels.map(channel => channel.id))
-        .then(channels => getThreadsByChannels(channels))
-        .then(threads => {
-          const paginatedThreads = paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          );
+      const [threads, pinnedThread] = await Promise.all([
+        // $FlowFixMe
+        getThreadsByChannels(channels.map(c => c.id), {
+          first,
+          after: lastThreadIndex,
+        }),
+        community.pinnedThreadId && getThreads([community.pinnedThreadId]),
+      ]);
 
-          // if the community has a pinnedThreadId, fetch it
-          const getPinnedThread = hasPinnedThread
-            ? getThreads([community.pinnedThreadId])
-            : null;
+      // result will be used to return the graphQL pagination data
+      let result = threads;
 
-          return Promise.all([paginatedThreads, getPinnedThread]);
-        })
-        .then(([paginatedThreads, pinnedThread]) => {
-          // result will be used to return the graphQL pagination data
-          let result;
+      if (
+        pinnedThread &&
+        Array.isArray(pinnedThread) &&
+        pinnedThread.length > 0
+      ) {
+        // if a pinnedThread was found, filter it out of the list of fetched threads
+        // to avoid duplication in the feed, and then add the pinned thread to the
+        // Front of the array
+        let arr = threads.filter(thread => thread.id !== pinnedThread[0].id);
+        arr.unshift(pinnedThread[0]);
+        result = arr;
+      }
 
-          if (pinnedThread !== null && pinnedThread.length > 0) {
-            // if a pinnedThread was found, filter it out of the list of fetched threads
-            // to avoid duplication in the feed, and then add the pinned thread to the
-            // Front of the array
-            let arr = paginatedThreads.list.filter(
-              thread => thread.id !== pinnedThread[0].id
-            );
-            arr.unshift(pinnedThread[0]);
-            result = arr;
-          } else {
-            // if no pinnedThread was found, we can just return the threads list normally
-            result = paginatedThreads.list;
-          }
-
-          return {
-            pageInfo: {
-              hasNextPage: paginatedThreads.hasMoreItems,
-            },
-            edges: result.map(thread => ({
-              cursor: encode(thread.id),
-              node: thread,
-            })),
-          };
-        });
+      return {
+        pageInfo: {
+          hasNextPage: result && result.length >= first,
+        },
+        edges: result.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
+          node: thread,
+        })),
+      };
     },
-    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    metaData: ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
+      // $FlowIssue
       return Promise.all([
         loaders.communityChannelCount.load(id),
         loaders.communityMemberCount.load(id),
-      ]).then(([channelCount, memberCount]) => ({
-        channels: channelCount ? channelCount.reduction : 0,
-        members: memberCount ? memberCount.reduction : 0,
-      }));
+      ]).then(
+        (
+          [channelCount, memberCount]: [
+            MemberOrChannelCount,
+            MemberOrChannelCount,
+          ]
+        ) => ({
+          channels: channelCount ? channelCount.reduction : 0,
+          members: memberCount ? memberCount.reduction : 0,
+        })
+      );
     },
     slackImport: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -235,7 +268,7 @@ module.exports = {
         };
       });
     },
-    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+    invoices: ({ id }: DBCommunity, _: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError(
@@ -245,7 +278,7 @@ module.exports = {
       return getInvoicesByCommunity(id);
     },
     recurringPayments: (
-      { id }: { id: string },
+      { id }: DBCommunity,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -283,8 +316,8 @@ module.exports = {
       return queryRecurringPayments();
     },
     memberGrowth: async (
-      { id }: { id: string },
-      __: any,
+      { id }: DBCommunity,
+      _: any,
       { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
@@ -336,7 +369,7 @@ module.exports = {
       };
     },
     conversationGrowth: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -380,7 +413,7 @@ module.exports = {
       };
     },
     topMembers: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -407,7 +440,7 @@ module.exports = {
       });
     },
     topAndNewThreads: async (
-      { id }: { id: string },
+      { id }: DBCommunity,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -458,7 +491,7 @@ module.exports = {
         };
       });
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    isPro: ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
       return loaders.communityRecurringPayments.load(id).then(res => {
         const subs = res && res.reduction;
         if (!subs || subs.length === 0) return false;
@@ -468,7 +501,7 @@ module.exports = {
       });
     },
     contextPermissions: (
-      community: any,
+      community: DBCommunity,
       _: any,
       { loaders }: GraphQLContext,
       info: any
@@ -492,6 +525,7 @@ module.exports = {
               community.id,
             ]);
             return {
+              communityId: community.id,
               reputation,
               isModerator,
               isOwner,
@@ -501,6 +535,12 @@ module.exports = {
       };
 
       return handleCheck();
+    },
+    watercooler: async ({ watercoolerId }: DBCommunity) => {
+      if (!watercoolerId) return null;
+      return await getThreads([watercoolerId]).then(
+        res => (res && res.length > 0 ? res[0] : null)
+      );
     },
   },
 };

@@ -1,15 +1,13 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Avatar from '../../components/avatar';
 import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
   FlexCol,
   FlexRow,
-  Truncate,
   H1,
   H3,
-  H4,
   Transition,
   zIndex,
   Tooltip,
@@ -19,13 +17,14 @@ export const ThreadViewContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  max-height: 100%;
+  max-height: ${props => (props.constrain ? 'calc(100% - 48px)' : '100%')};
   max-width: 1024px;
   background-color: ${({ theme }) => theme.bg.wash};
   margin: ${props =>
     props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
 
   @media (max-width: 1024px) {
+    max-height: 100%;
     flex-direction: column;
     overflow: hidden;
   }
@@ -38,7 +37,7 @@ export const ThreadContentView = styled(FlexCol)`
     css`
       box-shadow: -1px 0 0 ${props => props.theme.bg.border},
         1px 0 0 ${props => props.theme.bg.border};
-    `} overflow-y: scroll;
+    `} overflow-y: auto;
   overflow-x: visible;
   max-width: 100%;
   max-height: 100%;
@@ -63,7 +62,7 @@ export const ThreadSidebarView = styled(FlexCol)`
   align-self: stretch;
   position: relative;
   right: 1px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: 1032px) {
     display: none;
@@ -74,7 +73,7 @@ export const Content = styled(FlexRow)`
   justify-content: center;
   align-items: flex-start;
   flex: auto;
-  overflow-y: scroll;
+  overflow-y: auto;
   grid-area: body;
   width: 100%;
   max-width: 1024px;
@@ -143,10 +142,10 @@ export const ThreadWrapper = styled(FlexCol)`
 `;
 
 export const ThreadContent = styled.div`
-  padding: 32px;
+  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
 
   @media (max-width: 1024px) {
-    padding: 16px;
+    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
   }
 `;
 
@@ -223,10 +222,18 @@ export const FlyoutRow = styled(FlexRow)`
       border-radius: 0 0 4px 4px;
     }
   }
+
+  ${p =>
+    p.hideBelow &&
+    css`
+      @media screen and (max-width: ${p.hideBelow}px) {
+        display: none;
+      }
+    `};
 `;
 
 export const Byline = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   color: ${({ theme }) => theme.brand.alt};
   display: flex;
   margin-bottom: 24px;
@@ -245,7 +252,7 @@ export const AuthorName = styled(H3)`
   font-weight: 500;
   max-width: 100%;
   color: ${props => props.theme.text.default};
-  margin-right: 8px;
+  margin-right: 6px;
   font-size: 14px;
 
   &:hover {
@@ -253,16 +260,20 @@ export const AuthorName = styled(H3)`
   }
 `;
 
-export const AuthorUsername = styled(H4)`
+export const AuthorUsername = styled.span`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-weight: 400;
+  margin-right: 6px;
 
   @media (max-width: 768px) {
     font-size: 12px;
   }
 `;
+
+export const ReputationRow = styled.div``;
 
 export const Location = styled(FlexRow)`
   font-weight: 500;
@@ -315,6 +326,10 @@ export const ChatWrapper = styled.div`
   max-width: 100%;
   flex: none;
   margin-top: 16px;
+
+  @media (max-width: 768px) {
+    overflow-x: hidden;
+  }
 `;
 
 export const ThreadTitle = {
@@ -375,15 +390,17 @@ export const ShareButton = styled.span`
 `;
 
 export const CommunityHeader = styled.div`
-  display: flex;
+  display: ${props => (props.hide ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
   padding: 14px 32px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   flex: auto;
+  background: ${props => props.theme.bg.default};
 
   @media (max-width: 728px) {
     padding: 16px;
+    display: flex;
   }
 `;
 export const CommunityHeaderName = styled.h3`
@@ -423,7 +440,7 @@ export const CommunityHeaderMetaCol = styled.div`
   flex-wrap: wrap;
   align-items: center;
   align-self: center;
-  margin-left: 16px;
+  margin-left: 12px;
   margin-right: 16px;
 `;
 
@@ -654,3 +671,34 @@ export const RelatedCount = styled.p`
 `;
 
 export const Label = styled.p`font-size: 14px;`;
+
+export const WatercoolerDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 600px;
+`;
+
+export const WatercoolerIntroContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 32px 36px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.default};
+  flex: auto;
+  flex-direction: column;
+`;
+
+export const WatercoolerTitle = styled.h3`
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 8px;
+`;
+
+export const WatercoolerAvatar = styled(Avatar)`margin-bottom: 16px;`;

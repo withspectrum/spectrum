@@ -2,14 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
 import { track } from '../../../helpers/events';
 import { toggleThreadNotificationsMutation } from '../mutations';
-import { toJSON } from 'shared/draft-utils';
 import {
   FollowButton,
   ShareButtons,
@@ -62,6 +61,7 @@ type Props = {
   triggerDelete: Function,
   threadLock: Function,
   isSavingEdit: boolean,
+  title: string,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -147,14 +147,11 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, isEditing, isSavingEdit } = this.props;
+    const { thread, currentUser, isEditing, isSavingEdit, title } = this.props;
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    const authorIsCommunityOwner =
-      thread.creator.contextPermissions &&
-      thread.creator.contextPermissions.isOwner;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     if (isEditing) {
@@ -166,7 +163,11 @@ class ActionBar extends React.Component<Props, State> {
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
-              <Button loading={isSavingEdit} onClick={this.props.saveEdit}>
+              <Button
+                loading={isSavingEdit}
+                disabled={title.trim().length === 0}
+                onClick={this.props.saveEdit}
+              >
                 Save
               </Button>
             </EditDone>
@@ -266,29 +267,26 @@ class ActionBar extends React.Component<Props, State> {
                     onClick={this.toggleFlyout}
                   />
                   <Flyout>
-                    {window.innerWidth < 1024 && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon={
-                            thread.receiveNotifications
-                              ? 'notification-fill'
-                              : 'notification'
-                          }
-                          hoverColor={'text.default'}
-                          onClick={this.toggleNotification}
-                        >
-                          {thread.receiveNotifications
-                            ? 'Unfollow conversation'
-                            : 'Follow conversation'}
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
+                    <FlyoutRow hideBelow={1024}>
+                      <TextButton
+                        icon={
+                          thread.receiveNotifications
+                            ? 'notification-fill'
+                            : 'notification'
+                        }
+                        hoverColor={'text.default'}
+                        onClick={this.toggleNotification}
+                      >
+                        {thread.receiveNotifications
+                          ? 'Unfollow conversation'
+                          : 'Follow conversation'}
+                      </TextButton>
+                    </FlyoutRow>
 
                     {thread.isCreator && (
                       <FlyoutRow>
                         <TextButton
                           icon="edit"
-                          hoverColor="text.alt"
                           tipText="Edit"
                           tipLocation="top-left"
                           onClick={this.props.toggleEdit}

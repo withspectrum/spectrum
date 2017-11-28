@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, Tooltip, monoStack } from '../globals';
+import { Gradient, zIndex, Transition, monoStack } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -144,7 +144,7 @@ export const Wrapper = styled.div`
   transition: ${Transition.hover.off};
 
   @media (max-width: 768px) {
-    max-width: 85%;
+    max-width: 75%;
   }
 
   ${props =>
@@ -307,3 +307,5 @@ export const Line = styled.pre`
   word-wrap: break-word;
   ${monoStack};
 `;
+
+export const Paragraph = styled.p`line-height: 1.5;`;

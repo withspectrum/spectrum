@@ -58,6 +58,7 @@ const User = /* GraphQL */ `
 		newThreadCreated: NotificationKindSettings
 		weeklyDigest: NotificationKindSettings
 		dailyDigest: NotificationKindSettings
+		newMention: NotificationKindSettings
 	}
 
 	type UserNotificationsSettings {
@@ -66,6 +67,11 @@ const User = /* GraphQL */ `
 
 	type UserSettings {
 		notifications: UserNotificationsSettings
+	}
+
+	enum ThreadConnectionType {
+		participant
+		creator
 	}
 
 	type User {
@@ -93,7 +99,7 @@ const User = /* GraphQL */ `
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
+		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
 		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
 import { hexa, Gradient, FlexCol, FlexRow } from '../../components/globals';

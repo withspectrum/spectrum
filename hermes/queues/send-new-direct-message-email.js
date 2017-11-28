@@ -5,10 +5,9 @@ import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
   NEW_DIRECT_MESSAGE_TEMPLATE,
   TYPE_NEW_DIRECT_MESSAGE,
-  DEBUG_TEMPLATE,
   TYPE_MUTE_DIRECT_MESSAGE_THREAD,
+  SEND_NEW_DIRECT_MESSAGE_EMAIL,
 } from './constants';
-import capitalize from '../utils/capitalize';
 
 type SendNewMessageEmailJobData = {
   recipient: {
@@ -64,6 +63,7 @@ export default async (job: SendNewMessageEmailJob) => {
     return sendEmail({
       TemplateId: NEW_DIRECT_MESSAGE_TEMPLATE,
       To: recipient.email,
+      Tag: SEND_NEW_DIRECT_MESSAGE_EMAIL,
       TemplateModel: {
         subject,
         user,

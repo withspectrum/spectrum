@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { StyledSubnav, SubnavList, SubnavListItem } from '../style';
 
 type Props = {

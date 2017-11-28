@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import Reputation from '../../../components/reputation';
 import SidebarChannels from './sidebarChannels';

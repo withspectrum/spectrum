@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Icon from '../../../components/icons';
-import { Button, OutlineButton } from '../../../components/buttons';
+import { Button } from '../../../components/buttons';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
@@ -12,7 +12,6 @@ import { track } from '../../../helpers/events';
 import {
   CommunityHeader,
   CommunityHeaderName,
-  CommunityHeaderChannelTag,
   CommunityHeaderLink,
   CommunityHeaderMeta,
   CommunityHeaderMetaCol,
@@ -25,8 +24,11 @@ type Props = {
   dispatch: Function,
   toggleChannelSubscription: Function,
   currentUser: Object,
+  hide: boolean,
+  watercooler: boolean,
   thread: {
     id: string,
+    watercooler?: boolean,
     community: {
       name: string,
       slug: string,
@@ -102,37 +104,45 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         this.setState({
           isLoading: false,
         });
-        console.log(err);
+        console.log('error toggling channel subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
-    const { thread: { channel, community, id }, currentUser } = this.props;
+    const {
+      thread: { channel, community, id, watercooler },
+      currentUser,
+      hide,
+    } = this.props;
     const { isLoading } = this.state;
 
     return (
-      <CommunityHeader>
+      <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
             <Avatar src={community.profilePhoto} community size={32} />
-            <CommunityHeaderMetaCol>
-              <CommunityHeaderName>{community.name}</CommunityHeaderName>
-
-              {channel.slug !== 'general' && (
-                <PillLink to={`/${community.slug}/${channel.slug}`}>
-                  {channel.isPrivate && (
-                    <Lock>
-                      <Icon glyph="private" size={12} />
-                    </Lock>
-                  )}
-                  <PillLabel isPrivate={channel.isPrivate}>
-                    {channel.name}
-                  </PillLabel>
-                </PillLink>
-              )}
-            </CommunityHeaderMetaCol>
           </CommunityHeaderLink>
+          <CommunityHeaderMetaCol>
+            <CommunityHeaderLink to={`/${community.slug}`}>
+              <CommunityHeaderName>
+                {watercooler ? `${community.name} watercooler` : community.name}
+              </CommunityHeaderName>
+            </CommunityHeaderLink>
+
+            {channel.slug !== 'general' && (
+              <PillLink to={`/${community.slug}/${channel.slug}`}>
+                {channel.isPrivate && (
+                  <Lock>
+                    <Icon glyph="private" size={12} />
+                  </Lock>
+                )}
+                <PillLabel isPrivate={channel.isPrivate}>
+                  {channel.name}
+                </PillLabel>
+              </PillLink>
+            )}
+          </CommunityHeaderMetaCol>
         </CommunityHeaderMeta>
 
         {channel.channelPermissions.isMember ? (

@@ -7,7 +7,7 @@ const html = fs
   .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
   .toString()
   .replace(
-    '<script type="text/javascript" src="/./static/js/bootstrap.js">',
+    '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
     ''
   )
   .replace(/(src="\/static\/js\/main\.\w+?\.js")/g, ' defer="defer" $1');
@@ -43,7 +43,7 @@ export const getHTML = ({
         '<div id="root"></div>',
         `<script>window.__SERVER_STATE__=${serialize(
           state
-        )}</script><div id="root">${content}</div>${sentry}${polyfill}${scriptTags}`
+        )}</script><div id="root">${content}</div><script type="text/javascript" src="/./static/js/bootstrap.js"></script>${sentry}${polyfill}${scriptTags}`
       )
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)

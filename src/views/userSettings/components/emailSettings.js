@@ -69,6 +69,13 @@ const parseNotificationTypes = notifications => {
             'Email me once every week with the top conversations in my communities',
           display: 'center',
         };
+      case 'newMention':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label: 'Email me if someone @mentions me on Spectrum',
+          display: 'flex-start',
+        };
       default:
       case 'null':
         return {};
@@ -237,6 +244,13 @@ class EmailSettings extends Component {
                         You can turn off email notifications for individual
                         channels by turning thread notifications off on in the
                         sidebar of the individual channel's page.
+                      </Notice>
+                    )}
+
+                    {setting.type === 'newMention' && (
+                      <Notice>
+                        If you mute a specific conversation, new @mentions will
+                        not send you an email.
                       </Notice>
                     )}
                   </CheckboxContent>

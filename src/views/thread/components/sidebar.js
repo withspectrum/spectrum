@@ -3,15 +3,13 @@ import * as React from 'react';
 import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
 import {
-  LoadingList,
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
 } from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { getCommunityThreads } from '../../community/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -144,7 +142,6 @@ class Sidebar extends React.Component<Props, State> {
       );
     }
 
-    const isPinned = thread.id === thread.community.pinnedThreadId;
     const threadsToRender =
       threads &&
       threads.length > 0 &&

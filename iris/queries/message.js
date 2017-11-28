@@ -1,5 +1,6 @@
-const { getMessage } = require('../models/message');
+// @flow
 import { getReactions } from '../models/reaction';
+const { getMessage, getMediaMessagesForThread } = require('../models/message');
 import { getThread } from '../models/thread';
 import type { GraphQLContext } from '../';
 
@@ -45,6 +46,7 @@ module.exports = {
       return {
         ...sender,
         contextPermissions: {
+          communityId: thread.communityId,
           reputation: permissions ? permissions.reputation : 0,
           isModerator: permissions ? permissions.isModerator : false,
           isOwner: permissions ? permissions.isOwner : false,
@@ -53,8 +55,14 @@ module.exports = {
     },
     thread: ({ threadId }: { threadId: string }, _: any, __: any) =>
       getThread(threadId),
-    reactions: ({ id }: Root, _, { user }) =>
-      getReactions(id).then(reactions => {
+    reactions: ({ id }: Root, _, { user, loaders }: GraphQLContext) =>
+      loaders.messageReaction.load(id).then(result => {
+        if (!result)
+          return {
+            count: 0,
+            hasReacted: false,
+          };
+        const reactions = result.reduction;
         return {
           count: reactions.length,
           hasReacted: user

@@ -116,13 +116,24 @@ class Browser extends Component {
 
     if (!images || images.length === 0) return null;
 
+    // when a user uploads an image, sometimes the resulting image doesn't get updated in the Apollo cache
+    // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
+    // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
+    let filteredIndex;
+    if (!index) {
+      filteredIndex = messages.length - 1;
+    } else {
+      filteredIndex = index;
+    }
+
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={`${images[index].src}?max-w=${window.innerWidth}`}
+          src={`${images[filteredIndex].content
+            .body}?max-w=${window.innerWidth}`}
         />
         <Minigallery>
           <MiniContainer>
@@ -132,7 +143,7 @@ class Browser extends Component {
                   src={`${image.src}?max-w=64`}
                   key={i}
                   onClick={() => this.setCount(i)}
-                  active={i === index}
+                  active={i === filteredIndex}
                 />
               );
             })}

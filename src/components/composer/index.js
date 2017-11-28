@@ -8,7 +8,7 @@ import isURL from 'validator/lib/isURL';
 import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
-import { openComposer, closeComposer } from '../../actions/composer';
+import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
@@ -49,6 +49,7 @@ type State = {
   linkPreviewTrueUrl: ?string,
   linkPreviewLength: number,
   fetchingLinkPreview: boolean,
+  postWasPublished: boolean,
 };
 
 type Props = {
@@ -60,6 +61,7 @@ type Props = {
   location: Object,
   activeCommunity?: string,
   activeChannel?: string,
+  threadSliderIsOpen?: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
@@ -80,6 +82,7 @@ class ComposerWithData extends Component<Props, State> {
       linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      postWasPublished: false,
     };
   }
 
@@ -138,6 +141,14 @@ class ComposerWithData extends Component<Props, State> {
   componentWillUnmount() {
     // $FlowIssue
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    const { postWasPublished } = this.state;
+
+    // if a post was published, in this session, clear redux so that the next
+    // composer open will start fresh
+    if (postWasPublished) return this.closeComposer('clear');
+
+    // otherwise, clear the composer normally and save the state
+    return this.closeComposer();
   }
 
   handleKeyPress = e => {
@@ -194,7 +205,13 @@ class ComposerWithData extends Component<Props, State> {
     }
   }
 
-  closeComposer = () => {
+  closeComposer = (clear?: string) => {
+    // we will clear the composer if it unmounts as a result of a post
+    // being published, that way the next composer open will start fresh
+    if (clear) return this.props.dispatch(closeComposer('', ''));
+
+    // otherwise, we will save the editor state to rehydrate the title and
+    // body if the user reopens the composer in the same session
     const { title, body } = this.state;
     this.props.dispatch(closeComposer(title, body));
   };
@@ -255,7 +272,7 @@ class ComposerWithData extends Component<Props, State> {
     const jsonBody = toJSON(body);
 
     const content = {
-      title,
+      title: title.trim(),
       body: JSON.stringify(jsonBody),
     };
 
@@ -302,6 +319,7 @@ class ComposerWithData extends Component<Props, State> {
         // stop the loading spinner on the publish button
         this.setState({
           isPublishing: false,
+          postWasPublished: true,
         });
 
         // redirect the user to the thread
@@ -402,7 +420,7 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { data: { user } } = this.props;
+    const { data: { user }, threadSliderIsOpen } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
     return (
@@ -452,7 +470,7 @@ class ComposerWithData extends Component<Props, State> {
             value={this.state.title}
             placeholder={`What's up?`}
             ref="titleTextarea"
-            autoFocus
+            autoFocus={!threadSliderIsOpen}
           />
 
           <Editor
@@ -484,7 +502,7 @@ class ComposerWithData extends Component<Props, State> {
             <Button
               onClick={this.publishThread}
               loading={isPublishing}
-              disabled={!title || isPublishing}
+              disabled={!title || title.trim().length === 0 || isPublishing}
               color={'brand'}
             >
               Publish
@@ -506,6 +524,7 @@ const mapStateToProps = state => ({
   isOpen: state.composer.isOpen,
   title: state.composer.title,
   body: state.composer.body,
+  threadSliderIsOpen: state.threadSlider.isOpen,
 });
 
 // $FlowIssue

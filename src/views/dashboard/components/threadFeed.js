@@ -11,7 +11,7 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
-import InboxThread from './inboxThread';
+import InboxThread, { WatercoolerThread } from './inboxThread';
 
 type Props = {
   mountedWithActiveThread: ?string,
@@ -61,6 +61,9 @@ class ThreadFeed extends React.Component<Props, State> {
       return;
     }
 
+    // don't select a thread if the composer is open
+    if (prevProps.selectedId === 'new') return;
+
     const hasThreadsButNoneSelected =
       this.props.data.threads && !this.props.selectedId;
     const justLoadedThreads =
@@ -72,6 +75,20 @@ class ThreadFeed extends React.Component<Props, State> {
       (hasThreadsButNoneSelected || justLoadedThreads) &&
       this.props.data.threads.length > 0
     ) {
+      if (
+        this.props.data.community &&
+        this.props.data.community.watercooler &&
+        this.props.data.community.watercooler.id
+      ) {
+        this.props.history.replace(
+          `/?t=${this.props.data.community.watercooler.id}`
+        );
+        this.props.dispatch(
+          changeActiveThread(this.props.data.community.watercooler.id)
+        );
+        return;
+      }
+
       const threadNodes = this.props.data.threads
         .slice()
         .map(thread => thread.node);
@@ -122,7 +139,11 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { threads, networkStatus }, selectedId } = this.props;
+    const {
+      data: { threads, networkStatus },
+      selectedId,
+      activeCommunity,
+    } = this.props;
     const { scrollElement } = this.state;
 
     // loading state
@@ -137,10 +158,21 @@ class ThreadFeed extends React.Component<Props, State> {
 
     const threadNodes = threads.slice().map(thread => thread.node);
 
-    const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    if (activeCommunity) {
+      sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
+    }
 
     return (
       <div data-e2e-id="inbox-thread-feed">
+        {this.props.data.community &&
+          this.props.data.community.watercooler &&
+          this.props.data.community.watercooler.id && (
+            <WatercoolerThread
+              data={this.props.data.community.watercooler}
+              active={selectedId === this.props.data.community.watercooler.id}
+            />
+          )}
         <InfiniteList
           pageStart={0}
           loadMore={this.props.data.fetchMore}
@@ -170,5 +202,6 @@ class ThreadFeed extends React.Component<Props, State> {
 }
 const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
+  activeCommunity: state.dashboardFeed.activeCommunity,
 });
 export default compose(withRouter, connect(map))(ThreadFeed);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
@@ -63,6 +63,7 @@ class ThreadComposerWithData extends Component {
     linkPreviewTrueUrl: ?string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    postWasPublished: boolean,
   };
 
   constructor(props) {
@@ -80,6 +81,7 @@ class ThreadComposerWithData extends Component {
       linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      postWasPublished: false,
     };
   }
 
@@ -233,6 +235,14 @@ class ThreadComposerWithData extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyPress, false);
+    const { postWasPublished } = this.state;
+
+    // if a post was published, in this session, clear redux so that the next
+    // composer open will start fresh
+    if (postWasPublished) return this.closeComposer('clear');
+
+    // otherwise, clear the composer normally and save the state
+    return this.closeComposer();
   }
 
   handleKeyPress = e => {
@@ -340,7 +350,13 @@ class ThreadComposerWithData extends Component {
     }
   };
 
-  closeComposer = () => {
+  closeComposer = (clear?: string) => {
+    // we will clear the composer if it unmounts as a result of a post
+    // being published, that way the next composer open will start fresh
+    if (clear) return this.props.dispatch(closeComposer('', ''));
+
+    // otherwise, we will save the editor state to rehydrate the title and
+    // body if the user reopens the composer in the same session
     const { title, body } = this.state;
     this.props.dispatch(closeComposer(title, body));
   };
@@ -459,6 +475,7 @@ class ThreadComposerWithData extends Component {
 
         // stop the loading spinner on the publish button
         this.setState({
+          postWasPublished: true,
           isPublishing: false,
         });
 
@@ -553,7 +570,7 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, isLoading, hasError, isInbox } = this.props;
+    const { isOpen, isLoading, isInbox } = this.props;
     const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
     if (!isLoading && (!availableCommunities || !availableChannels)) {

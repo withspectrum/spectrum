@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { fontStack, hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
   display: grid;
-  grid-template-rows: 48px 1fr 64px;
+  grid-template-rows: 60px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
   align-self: stretch;
@@ -154,6 +154,8 @@ export const ThreadTitle = {
   minHeight: '34px',
   flex: 'none',
   display: 'inline-block',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif",
 };
 
 export const ThreadDescription = {
