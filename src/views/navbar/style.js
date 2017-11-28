@@ -55,12 +55,34 @@ export const Nav = styled(FlexRow)`
 
 export const Section = styled(FlexRow)`
   align-items: stretch;
-  display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
+  display: flex;
+  flex: auto;
 
   @media (max-width: 768px) {
     flex: auto;
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
+  }
+`;
+
+export const LoggedOutSection = styled(FlexRow)`
+  display: flex;
+  flex: auto;
+  justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    flex: auto;
+    justify-content: center;
+    display: flex;
+  }
+`;
+
+export const SectionFlex = styled.div`
+  display: flex;
+  flex: 1 1 100%;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -108,9 +130,26 @@ export const IconDrop = styled(FlexRow)`
   align-self: stretch;
   position: relative;
   flex: auto;
+  flex: 0 1;
 
   &:hover {
     opacity: 1;
+    /* 
+      this padding left makes it so that there is a left zone on the
+      icon that the user can mouseover without un-hovering the dropdown
+     */
+    ${props =>
+      props.padOnHover &&
+      css`
+        @media (min-width: 768px) {
+          padding-left: 120px;
+        }
+      `};
+  }
+
+  @media (max-width: 768px) {
+    flex: 1 1;
+    ${props => props.hideOnMobile && css`display: none;`};
   }
 
   .dropdown {
@@ -140,7 +179,7 @@ export const IconDrop = styled(FlexRow)`
 
 export const IconLink = styled(Link)`
   display: flex;
-  flex: auto;
+  flex: 1 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -151,6 +190,10 @@ export const IconLink = styled(Link)`
   opacity: 0.8;
   position: relative;
   width: 100%;
+
+  &.hideOnDesktop {
+    display: none;
+  }
 
   &:hover {
     opacity: 1;
@@ -171,6 +214,14 @@ export const IconLink = styled(Link)`
       opacity: 1;
     }
 
+    &.hideOnDesktop {
+      display: flex;
+    }
+
+    &.hideOnMobile {
+      display: none;
+    }
+
     div {
       width: 32px;
       height: 32px;
@@ -178,12 +229,19 @@ export const IconLink = styled(Link)`
   }
 `;
 
+export const ExploreLink = styled(IconLink)`
+  width: auto;
+  align-self: center;
+  flex: none;
+`;
+
 export const Label = styled.span`
   font-size: 14px;
   font-weight: 700;
   margin-left: 12px;
-
-  @media (max-width: 768px) {
+  ${props =>
+    props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    display: flex;
     font-size: 9px;
     text-transform: uppercase;
     font-weight: 700;
@@ -203,9 +261,18 @@ export const DropdownHeader = styled(FlexRow)`
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  font-weight: 800;
+  font-weight: 500;
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
+
+  a {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+    }
+  }
 `;
 
 export const DropdownFooter = styled(FlexRow)`
@@ -223,6 +290,11 @@ export const DropdownFooter = styled(FlexRow)`
     &:first-of-type:not(:last-of-type) {
       margin-right: 8px;
     }
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+      background: ${props => props.theme.bg.wash};
+    }
   }
 `;
 
@@ -231,4 +303,15 @@ export const Notification = styled.div`
   padding: 8px;
   border-bottom: 1px solid ${props => props.theme.bg.border};
   overflow-x: hidden;
+`;
+
+export const MarkAllSeen = styled.span`
+  color: ${props =>
+    props.isActive ? props.theme.brand.alt : props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props =>
+      props.isActive ? props.theme.brand.default : props.theme.text.alt};
+  }
 `;

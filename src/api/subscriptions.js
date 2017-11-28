@@ -24,6 +24,15 @@ export const subscribeToNewNotifications = gql`
   ${notificationInfoFragment}
 `;
 
+export const subscribeToDirectMessageNotifications = gql`
+  subscription subscribeToDirectMessageNotifications {
+    dmNotificationAdded {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
 export const subscribeToUpdatedDirectMessageThreads = gql`
   subscription subscribeToUpdatedDirectMessageThreads {
     directMessageThreadUpdated {

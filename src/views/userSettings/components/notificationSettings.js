@@ -52,7 +52,7 @@ class NotificationSettings extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
-        console.log('err', err);
+        console.log('error subscribing to browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -81,7 +81,7 @@ class NotificationSettings extends Component {
         }
       })
       .catch(err => {
-        console.log(err);
+        console.log('error unsubscribing from browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',

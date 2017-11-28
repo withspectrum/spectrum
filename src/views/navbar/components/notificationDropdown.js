@@ -11,7 +11,7 @@ import Dropdown from '../../../components/dropdown';
 import { Loading } from '../../../components/loading';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
-import { DropdownHeader, DropdownFooter } from '../style';
+import { DropdownHeader, DropdownFooter, MarkAllSeen } from '../style';
 import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
@@ -23,9 +23,27 @@ const NullNotifications = () => (
 );
 
 const NotificationContainer = props => {
-  const { rawNotifications, currentUser, history, error, loading } = props;
+  const {
+    rawNotifications,
+    currentUser,
+    history,
+    error,
+    loading,
+    markSingleNotificationAsSeenInState,
+  } = props;
 
-  const noNotifications = !rawNotifications || rawNotifications.length === 0;
+  if (rawNotifications && rawNotifications.length > 0) {
+    return (
+      <NotificationDropdownList
+        rawNotifications={rawNotifications}
+        currentUser={currentUser}
+        history={history}
+        markSingleNotificationAsSeenInState={
+          markSingleNotificationAsSeenInState
+        }
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -33,38 +51,49 @@ const NotificationContainer = props => {
         <Loading />
       </div>
     );
-  } else if (noNotifications || error) {
-    return <NullNotifications />;
-  } else {
-    return (
-      <NotificationDropdownList
-        rawNotifications={rawNotifications}
-        currentUser={currentUser}
-        history={history}
-      />
-    );
   }
+
+  return <NullNotifications />;
 };
 
 const NotificationDropdownPure = props => {
-  const { rawNotifications, currentUser, history } = props;
+  const {
+    rawNotifications,
+    currentUser,
+    history,
+    markAllAsSeen,
+    count,
+    markSingleNotificationAsSeenInState,
+    loading,
+  } = props;
 
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
-        My Notifications
         <Link to={`/users/${currentUser.username}/settings`}>
           <Icon glyph="settings" />
         </Link>
+        <TextButton
+          color={count > 0 ? 'brand.alt' : 'text.alt'}
+          onClick={markAllAsSeen}
+        >
+          Mark all as seen
+        </TextButton>
       </DropdownHeader>
 
-      <NotificationContainer {...props} />
+      <NotificationContainer
+        {...props}
+        loading={loading}
+        markSingleNotificationAsSeenInState={
+          markSingleNotificationAsSeenInState
+        }
+      />
 
       {rawNotifications &&
         rawNotifications.length > 0 && (
           <DropdownFooter>
             <TextButton
-              color={'brand.default'}
+              color={'text.alt'}
               onClick={() => history.push('/notifications')}
             >
               View all
