@@ -674,7 +674,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, hideOnMobile } = this.props;
 
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
@@ -685,7 +685,7 @@ class NewThread extends Component {
     });
 
     return (
-      <MessagesContainer>
+      <MessagesContainer hideOnMobile={hideOnMobile}>
         <Head title={title} description={description} />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills

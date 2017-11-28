@@ -112,43 +112,44 @@ class DirectMessages extends React.Component<Props, State> {
           noComposer={isComposing || isViewingThread}
           messageComposer={!isComposing && !isViewingThread}
         />
-        <MessagesList isViewingThread={isViewingThread}>
+        <MessagesList isViewingThread={isViewingThread || isComposing}>
           <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
             <ComposeHeader>
               <Icon glyph="message-new" />
             </ComposeHeader>
           </Link>
 
-          {dataExists && (
+          {dataExists ? (
             <ThreadsList
               active={activeThread}
               threads={threads}
               currentUser={currentUser}
             />
+          ) : (
+            <div>
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+            </div>
           )}
         </MessagesList>
 
-        {dataExists ? (
+        {dataExists && (
           <ThreadDetail
             match={match}
             threads={threads}
             currentUser={currentUser}
             setActiveThread={this.setActiveThread}
+            hideOnMobile={!(isComposing || isViewingThread)}
           />
-        ) : (
-          <div>
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-          </div>
         )}
       </View>
     );

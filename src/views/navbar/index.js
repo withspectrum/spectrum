@@ -16,12 +16,14 @@ import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
 import {
   Section,
+  LoggedOutSection,
   SectionFlex,
   Nav,
   LogoLink,
   Logo,
   IconDrop,
   IconLink,
+  ExploreLink,
   Label,
   UserProfileAvatar,
 } from './style';
@@ -220,17 +222,11 @@ class Navbar extends React.Component<Props> {
     if (isLoading) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
-          <Section hideOnMobile>
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          </Section>
-          <Section>
-            <IconLink data-active={match.url === '/explore'} to="/explore">
-              <Icon glyph="explore" />
-              <Label>Explore Communities on Spectrum</Label>
-            </IconLink>
-          </Section>
+          <LogoLink to="/">
+            <Logo src="/img/mark-white.png" role="presentation" />
+          </LogoLink>
+          {/* $FlowIssue */}
+          <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );
     }
@@ -241,8 +237,24 @@ class Navbar extends React.Component<Props> {
           <LogoLink to="/">
             <Logo src="/img/mark-white.png" role="presentation" />
           </LogoLink>
-          {/* $FlowIssue */}
-          <Loading size={'20'} color={'bg.default'} />
+        </Nav>
+      );
+    }
+
+    if (!loggedInUser) {
+      return (
+        <Nav hideOnMobile={hideNavOnMobile}>
+          <Section hideOnMobile>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
+          </Section>
+          <LoggedOutSection>
+            <ExploreLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore Communities on Spectrum</Label>
+            </ExploreLink>
+          </LoggedOutSection>
         </Nav>
       );
     }
