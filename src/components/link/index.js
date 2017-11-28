@@ -27,7 +27,6 @@ export default withRouter(
             typeof rest.to === 'string'
               ? createLocation(rest.to, null, null, history.location)
               : rest.to;
-          alert(history.createHref(location));
           return (window.location = history.createHref(location));
         }
         return history.push(rest.to);
