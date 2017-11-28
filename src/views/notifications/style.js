@@ -60,8 +60,8 @@ export const ContentWash = styled(Content)`
   background-color: ${props => hexa(props.theme.bg.wash, 0.75)};
   border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
   border-top: 2px solid ${props => props.theme.bg.wash};
-  padding: 16px;
-  padding-top: 8px;
+  padding: 8px;
+  padding-top: 0;
 `;
 
 export const NotificationListContainer = styled(FlexCol)`
@@ -130,7 +130,7 @@ export const NotificationListRow = styled(FlexCol)`
   &:hover {
     transition: ${Transition.hover.on};
     background-color: ${({ theme }) => hexa(theme.brand.wash, 0.15)};
-    box-shadow: inset 8px 0 0 0 ${({ theme }) => theme.brand.alt};
+    box-shadow: inset 4px 0 0 0 ${({ theme }) => theme.brand.alt};
     cursor: pointer;
   }
 `;

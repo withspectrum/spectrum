@@ -1,7 +1,9 @@
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { notificationInfoFragment } from './fragments/notification/notificationInfo';
-import { subscribeToNewNotifications } from './subscriptions';
+import {
+  subscribeToNewNotifications,
+  subscribeToDirectMessageNotifications,
+} from './subscriptions';
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {
@@ -43,8 +45,19 @@ export const GET_NOTIFICATIONS_QUERY = gql`
 `;
 
 export const GET_NOTIFICATIONS_OPTIONS = {
-  props: ({ data: { fetchMore, error, loading, notifications } }) => ({
+  props: ({
     data: {
+      fetchMore,
+      error,
+      loading,
+      notifications,
+      subscribeToMore,
+      refetch,
+      networkStatus,
+    },
+  }) => ({
+    data: {
+      networkStatus,
       error,
       loading,
       notifications,
@@ -76,66 +89,56 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             });
           },
         }),
-    },
-  }),
-};
+      refetch: () => refetch(),
+      subscribeToNewNotifications: () =>
+        subscribeToMore({
+          document: subscribeToNewNotifications,
+          updateQuery: (prev, { subscriptionData }) => {
+            let newNotification = subscriptionData.data.notificationAdded;
+            if (!newNotification) return prev;
 
-export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
-  name: 'notificationsQuery',
-  options: {
-    fetchPolicy: 'network-only',
-  },
-  props: props => ({
-    ...props,
-    subscribeToNewNotifications: () => {
-      return props.notificationsQuery.subscribeToMore({
-        document: subscribeToNewNotifications,
-        updateQuery: (prev, { subscriptionData }) => {
-          const newNotification = subscriptionData.data.notificationAdded;
-          if (!newNotification) return prev;
+            const notificationNode = {
+              ...newNotification,
+              __typename: 'Notification',
+            };
 
-          const notificationNode = {
-            ...newNotification,
-            __typename: 'Notification',
-          };
+            if (!prev.notifications) {
+              return {
+                __typename: 'NotificationsConnection',
+                pageInfo: {
+                  hasNextPage: true,
+                  __typename: 'PageInfo',
+                },
+                notifications: {
+                  edges: [
+                    {
+                      node: notificationNode,
+                      cursor: '__this-is-a-cursor__',
+                      __typename: 'NotificationEdge',
+                    },
+                  ],
+                },
+                ...prev,
+              };
+            }
 
-          if (!prev.notifications) {
-            return {
-              __typename: 'NotificationsConnection',
-              pageInfo: {
-                hasNextPage: true,
-                __typename: 'PageInfo',
-              },
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
               notifications: {
+                ...prev.notifications,
                 edges: [
                   {
                     node: notificationNode,
                     cursor: '__this-is-a-cursor__',
                     __typename: 'NotificationEdge',
                   },
+                  ...prev.notifications.edges,
                 ],
               },
-              ...prev,
-            };
-          }
-
-          // Add the new notification to the data
-          return Object.assign({}, prev, {
-            ...prev,
-            notifications: {
-              ...prev.notifications,
-              edges: [
-                {
-                  node: notificationNode,
-                  cursor: '__this-is-a-cursor__',
-                  __typename: 'NotificationEdge',
-                },
-                ...prev.notifications.edges,
-              ],
-            },
-          });
-        },
-      });
+            });
+          },
+        }),
     },
   }),
 };
@@ -143,11 +146,6 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
 export const getNotifications = graphql(
   GET_NOTIFICATIONS_QUERY,
   GET_NOTIFICATIONS_OPTIONS
-);
-
-export const getNotificationsForNavbar = graphql(
-  GET_NOTIFICATIONS_QUERY,
-  GET_NOTIFICATIONS_NAVBAR_OPTIONS
 );
 
 export const MARK_NOTIFICATIONS_READ_MUTATION = gql`
@@ -229,7 +227,7 @@ export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
   props: ({ mutate }) => ({
     markSingleNotificationSeen: () => mutate(),
   }),
-  options: id => ({
+  options: ({ notification: { id } }) => ({
     variables: {
       id,
     },
@@ -239,4 +237,87 @@ export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
 export const markSingleNotificationSeenMutation = graphql(
   MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
   MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS
+);
+
+export const GET_UNREAD_DMS_QUERY = gql`
+  query getDMNotifications($after: String) {
+    directMessageNotifications(after: $after) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          ...notificationInfo
+        }
+      }
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const GET_UNREAD_DMS_OPTIONS = {
+  options: {
+    fetchPolicy: 'network-only',
+  },
+  props: props => ({
+    ...props,
+    refetch: () => props.data.refetch(),
+    subscribeToDMs: () => {
+      return props.data.subscribeToMore({
+        document: subscribeToDirectMessageNotifications,
+        updateQuery: (prev, { subscriptionData }) => {
+          const newNotification = subscriptionData.data.dmNotificationAdded;
+
+          if (!newNotification) return prev;
+          const notificationNode = {
+            ...newNotification,
+            __typename: 'Notification',
+          };
+
+          if (!prev.directMessageNotifications) {
+            return {
+              __typename: 'NotificationsConnection',
+              pageInfo: {
+                hasNextPage: false,
+                __typename: 'PageInfo',
+              },
+              directMessageNotifications: {
+                edges: [
+                  {
+                    node: notificationNode,
+                    cursor: '__this-is-a-cursor__',
+                    __typename: 'NotificationEdge',
+                  },
+                ],
+              },
+              ...prev,
+            };
+          }
+
+          // Add the new notification to the data
+          return Object.assign({}, prev, {
+            ...prev,
+            directMessageNotifications: {
+              ...prev.directMessageNotifications,
+              edges: [
+                {
+                  node: notificationNode,
+                  cursor: '__this-is-a-cursor__',
+                  __typename: 'NotificationEdge',
+                },
+                ...prev.directMessageNotifications.edges,
+              ],
+            },
+          });
+        },
+      });
+    },
+  }),
+};
+
+export const getUnreadDMQuery = graphql(
+  GET_UNREAD_DMS_QUERY,
+  GET_UNREAD_DMS_OPTIONS
 );
