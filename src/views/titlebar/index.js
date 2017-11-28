@@ -47,7 +47,6 @@ class Titlebar extends Component {
       noComposer,
       messageComposer,
     } = this.props;
-    console.log('titlebar props', this.props);
     return (
       <TitleBar>
         {provideBack ? (

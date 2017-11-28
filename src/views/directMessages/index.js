@@ -12,6 +12,7 @@ import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
+import { LoadingDM } from '../../components/loading';
 import Titlebar from '../titlebar';
 import { View, MessagesList, ComposeHeader } from './style';
 
@@ -77,13 +78,17 @@ class DirectMessages extends React.Component<Props, State> {
 
   render() {
     const { match, currentUser, data, isLoading, hasError } = this.props;
+    // Only logged-in users can view DM threads
+    if (!currentUser) return null;
+
     const { activeThread } = this.state;
     const isComposing = match.url === '/messages/new' && match.isExact;
     const isViewingThread = !!match.params.threadId;
     const ThreadDetail = isViewingThread ? ExistingThread : NewThread;
+    const dataExists =
+      currentUser && data.user && data.user.directMessageThreadsConnection;
     const threads =
-      data.user &&
-      data.user.directMessageThreadsConnection &&
+      dataExists &&
       data.user.directMessageThreadsConnection.edges &&
       data.user.directMessageThreadsConnection.edges.length > 0
         ? data.user.directMessageThreadsConnection.edges
@@ -96,51 +101,57 @@ class DirectMessages extends React.Component<Props, State> {
             })
         : null;
 
-    const titlebar = (
-      <Titlebar
-        title={isComposing ? 'New Message' : 'Messages'}
-        provideBack={isComposing || isViewingThread}
-        backRoute={`/messages`}
-        noComposer={isComposing || isViewingThread}
-        messageComposer={!isComposing && !isViewingThread}
-      />
-    );
+    if (hasError) return <ViewError />;
 
-    if (currentUser && data.user && data.user.directMessageThreadsConnection) {
-      return (
-        <View>
-          {titlebar}
-          <MessagesList isViewingThread={isViewingThread}>
-            <Link
-              to="/messages/new"
-              onClick={() => this.setActiveThread('new')}
-            >
-              <ComposeHeader>
-                <Icon glyph="message-new" />
-              </ComposeHeader>
-            </Link>
+    return (
+      <View>
+        <Titlebar
+          title={isComposing ? 'New Message' : 'Messages'}
+          provideBack={isComposing || isViewingThread}
+          backRoute={`/messages`}
+          noComposer={isComposing || isViewingThread}
+          messageComposer={!isComposing && !isViewingThread}
+        />
+        <MessagesList isViewingThread={isViewingThread}>
+          <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
+            <ComposeHeader>
+              <Icon glyph="message-new" />
+            </ComposeHeader>
+          </Link>
 
+          {dataExists && (
             <ThreadsList
               active={activeThread}
               threads={threads}
               currentUser={currentUser}
             />
-          </MessagesList>
+          )}
+        </MessagesList>
 
+        {dataExists ? (
           <ThreadDetail
             match={match}
             threads={threads}
             currentUser={currentUser}
             setActiveThread={this.setActiveThread}
           />
-        </View>
-      );
-    }
-
-    if (isLoading) return <Loading>{titlebar}</Loading>;
-    if (hasError) return <ViewError />;
-
-    return null;
+        ) : (
+          <div>
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+          </div>
+        )}
+      </View>
+    );
   }
 }
 
