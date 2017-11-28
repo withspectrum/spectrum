@@ -1,30 +1,49 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import Link from 'src/components/link';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { getCurrentUserDirectMessageThreads } from '../../api/directMessageThread';
 import { markDirectMessageNotificationsSeenMutation } from '../../api/notification';
 import Icon from '../../components/icons';
-import { displayLoadingState } from './components/loading';
+import Loading from './components/loading';
 import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
-import { View, MessagesList, ComposeHeader } from './style';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
+import ViewError from '../../components/viewError';
+import { LoadingDM } from '../../components/loading';
 import Titlebar from '../titlebar';
+import { View, MessagesList, ComposeHeader } from './style';
 
-class DirectMessages extends Component {
-  state: {
-    activeThread: string,
-  };
+type Props = {
+  subscribeToUpdatedDirectMessageThreads: Function,
+  markDirectMessageNotificationsSeen: Function,
+  dispatch: Function,
+  match: Object,
+  currentUser?: Object,
+  isLoading: boolean,
+  hasError: boolean,
+  data: {
+    user: {
+      directMessageThreadsConnection: {
+        edges: Array<Object>,
+      },
+    },
+  },
+};
+type State = {
+  activeThread: string,
+  subscription: ?Function,
+};
 
+class DirectMessages extends React.Component<Props, State> {
   constructor() {
     super();
 
     this.state = {
       activeThread: '',
+      subscription: null,
     };
   }
 
@@ -58,204 +77,89 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, currentUser, data } = this.props;
-    const isMobile = window.innerWidth < 768;
+    const { match, currentUser, data, isLoading, hasError } = this.props;
+    // Only logged-in users can view DM threads
+    if (!currentUser) return null;
 
     const { activeThread } = this.state;
+    const isComposing = match.url === '/messages/new' && match.isExact;
+    const isViewingThread = !!match.params.threadId;
+    const ThreadDetail = isViewingThread ? ExistingThread : NewThread;
+    const dataExists =
+      currentUser && data.user && data.user.directMessageThreadsConnection;
+    const threads =
+      dataExists &&
+      data.user.directMessageThreadsConnection.edges &&
+      data.user.directMessageThreadsConnection.edges.length > 0
+        ? data.user.directMessageThreadsConnection.edges
+            .map(thread => thread.node)
+            .sort((a, b) => {
+              const x = new Date(a.threadLastActive).getTime();
+              const y = new Date(b.threadLastActive).getTime();
+              const val = y - x;
+              return val;
+            })
+        : null;
 
-    // if the user exists, but does not have any dm threads, show the null state
-    if (
-      (data.user && !data.user.directMessageThreadsConnection) ||
-      (data.user && data.user.directMessageThreadsConnection.edges.length === 0)
-    ) {
-      // if the user is viewing mobile
-      if (isMobile) {
-        // if the user is trying to compose a new message, show the new thread composer
-        if (match.url === '/messages/new' && match.isExact) {
-          return (
-            <View>
-              <NewThread
-                threads={null}
-                currentUser={currentUser}
-                setActiveThread={this.setActiveThread}
-              />
-            </View>
-          );
-        } else {
-          // otherwise just show the messages list
-          return (
-            <View>
-              <Titlebar
-                title={'Messages'}
-                provideBack={false}
-                messageComposer
-              />
-              <MessagesList>
-                <ThreadsList
-                  active={activeThread}
-                  threads={null}
-                  currentUser={currentUser}
-                />
-              </MessagesList>
-            </View>
-          );
-        }
-      } else {
-        // if no data exists and the user is not on mobile
-        return (
-          <View>
-            <MessagesList>
-              <Link
-                to="/messages/new"
-                onClick={() => this.setActiveThread('new')}
-              >
-                <ComposeHeader>
-                  <Icon glyph="message-new" />
-                </ComposeHeader>
-              </Link>
-            </MessagesList>
+    if (hasError) return <ViewError />;
 
-            <NewThread
-              threads={null}
-              currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
-            />
-          </View>
-        );
-      }
-    }
+    return (
+      <View>
+        <Titlebar
+          title={isComposing ? 'New Message' : 'Messages'}
+          provideBack={isComposing || isViewingThread}
+          backRoute={`/messages`}
+          noComposer={isComposing || isViewingThread}
+          messageComposer={!isComposing && !isViewingThread}
+        />
+        <MessagesList isViewingThread={isViewingThread}>
+          <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
+            <ComposeHeader>
+              <Icon glyph="message-new" />
+            </ComposeHeader>
+          </Link>
 
-    // at this point we know that data exists
-    const threads = data.user.directMessageThreadsConnection.edges
-      .map(thread => thread.node)
-      .sort((a, b) => {
-        const x = new Date(a.threadLastActive).getTime();
-        const y = new Date(b.threadLastActive).getTime();
-        const val = y - x;
-        return val;
-      });
-
-    // if the user is on a phone, only render one view column at a time
-    if (isMobile) {
-      // if there's a threadId, that column should be a threadDetail
-      if (match.params.threadId) {
-        return (
-          <View>
-            <Titlebar
-              title={'Messages'}
-              provideBack={true}
-              backRoute={'/messages'}
-              noComposer
-            />
-            <ExistingThread
-              match={match}
+          {dataExists && (
+            <ThreadsList
+              active={activeThread}
               threads={threads}
               currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
             />
-          </View>
-        );
-      } else if (match.url === '/messages/new' && match.isExact) {
-        // if they're in the newMessage flow, it should be the composer
-        return (
-          <View>
-            <NewThread
-              threads={threads}
-              currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
-            />
-          </View>
-        );
-      } else {
-        //if it's not one of those, it should return the messages list
-        return (
-          <View>
-            <Titlebar title={'Messages'} provideBack={false} messageComposer />
-            <MessagesList>
-              <ThreadsList
-                active={activeThread}
-                threads={threads}
-                currentUser={currentUser}
-              />
-            </MessagesList>
-          </View>
-        );
-      }
-    } else {
-      if (match.params.threadId) {
-        /*
-        pass the user's existing DM threads into the composer so that we can more quickly
-        determine if the user is creating a new thread or has typed the names that map
-        to an existing DM thread
-        */
-        return (
-          <View>
-            <MessagesList>
-              <Link
-                to="/messages/new"
-                onClick={() => this.setActiveThread('new')}
-              >
-                <ComposeHeader>
-                  <Icon glyph="message-new" />
-                </ComposeHeader>
-              </Link>
-              <ThreadsList
-                active={activeThread}
-                threads={threads}
-                currentUser={currentUser}
-              />
-            </MessagesList>
-            <ExistingThread
-              match={match}
-              threads={threads}
-              currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
-            />
-          </View>
-        );
-      } else {
-        /*
-        if a thread is being viewed and the threadId !== 'new', pass the
-        threads down the tree to fetch the messages for the urls threadId
-        */
-        return (
-          <View>
-            <MessagesList>
-              <Link
-                to="/messages/new"
-                onClick={() => this.setActiveThread('new')}
-              >
-                <ComposeHeader>
-                  <Icon glyph="message-new" />
-                </ComposeHeader>
-              </Link>
-              <ThreadsList
-                active={activeThread}
-                threads={threads}
-                currentUser={currentUser}
-              />
-            </MessagesList>
-            <NewThread
-              match={match}
-              threads={threads}
-              currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
-            />
-          </View>
-        );
-      }
-    }
+          )}
+        </MessagesList>
+
+        {dataExists ? (
+          <ThreadDetail
+            match={match}
+            threads={threads}
+            currentUser={currentUser}
+            setActiveThread={this.setActiveThread}
+          />
+        ) : (
+          <div>
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+            <LoadingDM />
+          </div>
+        )}
+      </View>
+    );
   }
 }
 
-const DirectMessagesWithQuery = compose(
+const map = state => ({ currentUser: state.users.currentUser });
+export default compose(
+  // $FlowIssue
+  connect(map),
   getCurrentUserDirectMessageThreads,
-  displayLoadingState,
-  markDirectMessageNotificationsSeenMutation
+  markDirectMessageNotificationsSeenMutation,
+  viewNetworkHandler
 )(DirectMessages);
-
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-
-export default connect(mapStateToProps)(DirectMessagesWithQuery);
