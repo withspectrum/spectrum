@@ -7,29 +7,14 @@ import { ThreadListItem } from '../listItems';
 import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
-  state = {
-    communityNameSet: false,
-  };
-
-  componentWillReceiveProps(next) {
-    if (this.state.communityNameSet || !next.setName) return;
-
-    if (next.data.thread && next.data.thread.community && next.setName) {
-      this.setState(
-        {
-          communityNameSet: true,
-        },
-        () => {
-          next.setName(next.data.thread.community.name);
-        }
-      );
-    }
-  }
-
   render() {
     const { data: { thread, error }, setName } = this.props;
     if (error || !thread) {
       return null;
+    }
+
+    if (setName && thread) {
+      this.props.setName(thread.community.name);
     }
 
     return (
