@@ -169,6 +169,9 @@ export const getViewableThreadsByUser = (
       .getAll(evalUser, { index: 'creatorId' })
       // hide any that are deleted
       .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       // join them with the channels table
       .eqJoin('channelId', db.table('channels'))
       // remove all the info about the channel except its privacy
@@ -206,8 +209,6 @@ export const getViewableThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
 };
@@ -223,6 +224,9 @@ export const getPublicThreadsByUser = (
       .getAll(evalUser, { index: 'creatorId' })
       // hide any that are deleted
       .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       // join them with the channels table
       .eqJoin('channelId', db.table('channels'))
       // remove all the info about the community except its privacy
@@ -243,9 +247,6 @@ export const getPublicThreadsByUser = (
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
 };

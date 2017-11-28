@@ -155,7 +155,7 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                Active in
+                Threads &amp; Replies
               </DesktopSegment>
 
               <DesktopSegment
@@ -170,7 +170,7 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                Active in
+                Threads &amp; Replies
               </MobileSegment>
               <MobileSegment
                 segmentLabel="creator"
