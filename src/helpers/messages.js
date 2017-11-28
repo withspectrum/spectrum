@@ -6,6 +6,7 @@ export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
   let newArray = [];
+  let hasInjectedUnreadRobo = false;
   let checkId;
 
   for (let i = 0; i < messages.length; i++) {
@@ -41,6 +42,19 @@ export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
       },
     ];
 
+    const unseenRobo = [
+      {
+        sender: {
+          id: 'robo',
+        },
+        timestamp: lastSeen,
+        message: {
+          content: '',
+          type: 'unseen-messages-below',
+        },
+      },
+    ];
+
     const sameUser =
       messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
@@ -72,19 +86,11 @@ export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
         // push the message to the array
         newArray.push(messages[i]);
       } else {
-        if (messages[i].timestamp > lastSeen) {
-          masterArray.push([
-            {
-              sender: {
-                id: 'robo',
-              },
-              timestamp: lastSeen,
-              message: {
-                content: '',
-                type: 'unseen-messages-below',
-              },
-            },
-          ]);
+        if (messages[i].timestamp > lastSeen && !hasInjectedUnreadRobo) {
+          hasInjectedUnreadRobo = true;
+          masterArray.push(newArray);
+          masterArray.push(unseenRobo);
+          newArray = [];
         }
         // if we're on to the second message, we need to evaulate the timestamp
         // if the second message is older than the first message by our variance
@@ -110,18 +116,7 @@ export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
       if (messages[i].timestamp > lastSeen) {
-        masterArray.push([
-          {
-            sender: {
-              id: 'robo',
-            },
-            timestamp: lastSeen,
-            message: {
-              content: '',
-              type: 'unseen-messages-below',
-            },
-          },
-        ]);
+        masterArray.push(unseenRobo);
       }
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {

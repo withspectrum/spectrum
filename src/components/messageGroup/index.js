@@ -19,6 +19,8 @@ import {
   Time,
   Sender,
   MessageGroup,
+  UnseenRobotext,
+  UnseenTime,
 } from './style';
 
 type SenderType = {
@@ -188,9 +190,17 @@ class Messages extends Component<MessageGroupProps, State> {
                 </Timestamp>
               );
             } else if (
-              initialMessage.message.type === 'unseen-messages-below'
+              initialMessage.message.type === 'unseen-messages-below' &&
+              messages[i + 1][0].sender.id !== currentUser.id
             ) {
-              return <p key={`unseen-${initialMessage.timestamp}`}>UNSEEN</p>;
+              console.log('group', group);
+              return (
+                <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
+                  <hr />
+                  <UnseenTime>New messages</UnseenTime>
+                  <hr />
+                </UnseenRobotext>
+              );
               // Ignore any unknown robo type messages
             } else {
               return null;

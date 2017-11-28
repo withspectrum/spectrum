@@ -72,6 +72,13 @@ export const Timestamp = styled(HorizontalRule)`
   }
 `;
 
+export const UnseenRobotext = styled(Timestamp)`
+  hr {
+    border-color: ${props => props.theme.warn.alt};
+    opacity: 0.1;
+  }
+`;
+
 export const Time = styled.span`
   text-align: center;
   color: ${({ theme }) => theme.text.placeholder};
@@ -84,6 +91,10 @@ export const Time = styled.span`
     color: ${({ theme }) => theme.text.alt};
     transiton: ${Transition.hover.on};
   }
+`;
+
+export const UnseenTime = styled(Time)`
+  color: ${({ theme }) => theme.warn.alt};
 `;
 
 export const MessageLink = styled.a`
