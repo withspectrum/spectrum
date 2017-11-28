@@ -1,5 +1,5 @@
 // @flow
-import { graphiqlExpress } from 'graphql-server-express';
+import { graphiqlExpress } from 'apollo-server-express';
 
 export default graphiqlExpress({
   endpointURL: '/api',
