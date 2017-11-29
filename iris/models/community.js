@@ -29,7 +29,7 @@ export const getCommunitiesBySlug = (
 ): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
-    .filter(community => db.expr(slugs).contains(community('slug')))
+    .getAll(...slugs, { index: 'slug' })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
