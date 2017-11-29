@@ -1,11 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { convertTimestampToDate } from '../../helpers/utils';
-import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
@@ -71,7 +68,7 @@ type MessageType = Object; // TODO: Refine type
 type MessageGroupType = Array<MessageType>;
 
 type MessageGroupProps = {
-  messages?: Array<MessageGroupType>,
+  messages: Array<MessageGroupType>,
   currentUser: Object,
   threadType: string,
   threadId: string,
@@ -160,9 +157,6 @@ class Messages extends Component<MessageGroupProps, State> {
       thread,
       isModerator,
     } = this.props;
-
-    if (!messages || messages.length === 0)
-      return <NewThreadShare thread={thread} />;
 
     return (
       <Wrapper data-e2e-id="message-group">
