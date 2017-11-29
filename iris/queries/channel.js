@@ -98,19 +98,19 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastUserIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
 
-      // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getMembersInChannel(id)
+      return getMembersInChannel(id, { first, after: lastUserIndex })
         .then(users => loaders.user.loadMany(users))
-        .then(users =>
-          paginate(users, { first, after: cursor }, user => user.id === cursor)
-        )
         .then(result => ({
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: result && result.length >= first,
           },
-          edges: result.list.map(user => ({
-            cursor: encode(user.id),
+          edges: result.map((user, index) => ({
+            cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
             node: user,
           })),
         }));
