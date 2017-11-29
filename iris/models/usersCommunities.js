@@ -253,13 +253,18 @@ const removeModeratorInCommunity = (
 ===========================================================
 */
 
-const getMembersInCommunity = (communityId: string): Promise<Array<string>> => {
+const getMembersInCommunity = (
+  communityId: string,
+  { first, after }: { first: number, after: number }
+): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isMember: true })
       .orderBy(db.desc('reputation'))
+      .skip(after || 0)
+      .limit(first || 999999)
       .run()
       // return an array of the userIds to be loaded by gql
       .then(users => users.map(user => user.userId))
