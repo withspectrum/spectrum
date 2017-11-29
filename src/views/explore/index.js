@@ -6,8 +6,9 @@ import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Search from './components/search';
+import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Wrapper } from './style';
-import { CommunitySearch, Charts } from './view';
+import { Charts } from './view';
 
 const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
@@ -23,12 +24,12 @@ const ExplorePure = props => {
       <Wrapper>
         <Head title={title} description={description} />
         <Titlebar title={'Explore'} noComposer />
-        <CommunitySearch
+        <CommunitySearchWrapper
           currentUser={props.currentUser}
           redirectPath={window.location}
         >
           <Search />
-        </CommunitySearch>
+        </CommunitySearchWrapper>
         <Charts />
       </Wrapper>
     </AppViewWrapper>

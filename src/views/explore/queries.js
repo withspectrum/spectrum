@@ -73,17 +73,17 @@ export const getRecentCommunities = graphql(
 );
 
 const GET_COMMUNITIES_OPTIONS = {
-  options: ({ slugs }) => ({
+  options: ({ curatedContentType }) => ({
     variables: {
-      slugs,
+      curatedContentType,
     },
     fetchPolicy: 'cache-and-network',
   }),
 };
 
 const GET_COMMUNITIES_QUERY = gql`
-  query getCommunitiesCollection($slugs: [String]) {
-    communities(slugs: $slugs) {
+  query getCommunitiesCollection($curatedContentType: String) {
+    communities(curatedContentType: $curatedContentType) {
       ...communityInfo
       metaData {
         members

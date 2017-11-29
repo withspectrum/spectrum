@@ -4,7 +4,6 @@
  */
 import UserError from '../utils/UserError';
 const {
-  getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
   searchThreadsInCommunity,
@@ -12,6 +11,7 @@ const {
   getThreadCount,
   getCommunityGrowth,
 } = require('../models/community');
+import { getCuratedCommunities } from '../models/curatedContent';
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
@@ -48,14 +48,25 @@ type GetCommunityArgs = GetCommunityById | GetCommunityBySlug;
 type GetCommunitiesByIds = {
   ids: Array<string>,
   slugs: void,
+  curatedContentType: void,
 };
 
 type GetCommunitiesBySlugs = {
   ids: void,
   slugs: Array<string>,
+  curatedContentType: void,
 };
 
-type GetCommunitiesArgs = GetCommunitiesByIds | GetCommunitiesBySlugs;
+type GetCuratedContent = {
+  ids: void,
+  slugs: void,
+  curatedContentType: string,
+};
+
+type GetCommunitiesArgs =
+  | GetCommunitiesByIds
+  | GetCommunitiesBySlugs
+  | GetCuratedContent;
 
 type MemberOrChannelCount = {
   reduction?: number,
@@ -78,12 +89,14 @@ module.exports = {
       args: GetCommunitiesArgs,
       { loaders }: GraphQLContext
     ) => {
+      if (args.curatedContentType) {
+        return getCuratedCommunities(args.curatedContentType);
+      }
       if (args.ids) return loaders.community.loadMany(args.ids);
       if (args.slugs) return loaders.communityBySlug.loadMany(args.slugs);
       return null;
     },
-    topCommunities: (_: any, { amount = 20 }: { amount: number }) =>
-      getTopCommunities(amount),
+    topCommunities: () => getCuratedCommunities('top-communities-by-members'),
     recentCommunities: () => getRecentCommunities(),
     searchCommunities: (
       _: any,
