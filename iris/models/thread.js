@@ -169,9 +169,12 @@ export const getViewableThreadsByUser = (
       .getAll(evalUser, { index: 'creatorId' })
       // hide any that are deleted
       .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       // join them with the channels table
       .eqJoin('channelId', db.table('channels'))
-      // remove all the info about the community except its privacy
+      // remove all the info about the channel except its privacy
       .without({
         right: [
           'communityId',
@@ -206,8 +209,6 @@ export const getViewableThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
 };
@@ -223,6 +224,9 @@ export const getPublicThreadsByUser = (
       .getAll(evalUser, { index: 'creatorId' })
       // hide any that are deleted
       .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       // join them with the channels table
       .eqJoin('channelId', db.table('channels'))
       // remove all the info about the community except its privacy
@@ -243,32 +247,16 @@ export const getPublicThreadsByUser = (
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
 };
 
-/*
-  When viewing a user profile we have to take two arguments into account:
-  1. The user who is being viewed
-  2. The user who is doing the viewing
-
-  We need to return only threads that meet the following criteria:
-  1. The thread was posted to a public channel
-  2. The thread was posted to a private channel and the viewing user is a member
-*/
-export const getViewableParticipantThreadsByUser = (
-  evalUser: string,
-  currentUser: string,
-  { first, after }: PaginationOptions
-): Promise<Array<DBThread>> => {
+const getUsersThreadsForParticipantFeed = userId => {
   return (
     db
       .table('usersThreads')
       // get the evaluting users threads
-      .getAll(evalUser, { index: 'userId' })
+      .getAll(userId, { index: 'userId' })
       // get the threads where the user is a participant
       .filter({ isParticipant: true })
       // get the thread records
@@ -287,7 +275,24 @@ export const getViewableParticipantThreadsByUser = (
       .zip()
       // hide any that are deleted
       .filter(thread => db.not(thread.hasFields('deletedAt')))
-      // join them with the channels table
+      .pluck('id')
+      .run()
+  );
+};
+
+const getThreadsViewableByCurrentUser = (
+  threadIds,
+  after,
+  first,
+  currentUser
+) => {
+  return (
+    db
+      .table('threads')
+      .getAll(...threadIds)
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       .eqJoin('channelId', db.table('channels'))
       // remove all the info about the community except its privacy
       .without({
@@ -324,40 +329,18 @@ export const getViewableParticipantThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
 };
 
-export const getPublicParticipantThreadsByUser = (
-  evalUser: string,
-  { first, after }: PaginationOptions
-): Promise<Array<DBThread>> => {
+const getPublicViewableUsersThreads = (threadIds, after, first) => {
   return (
     db
-      .table('usersThreads')
-      // get the evaluting users threads
-      .getAll(evalUser, { index: 'userId' })
-      // get the threads where the user is a participant
-      .filter({ isParticipant: true })
-      // get the thread records
-      .eqJoin('threadId', db.table('threads'))
-      // get rid of everything on the left
-      .without({
-        left: [
-          'createdAt',
-          'id',
-          'isParticipant',
-          'receiveNotifications',
-          'threadId',
-          'userId',
-        ],
-      })
-      .zip()
-      // hide any that are deleted
-      .filter(thread => db.not(thread.hasFields('deletedAt')))
-      // join them with the channels table
+      .table('threads')
+      .getAll(...threadIds)
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+      .skip(after || 0)
+      .limit(first)
       .eqJoin('channelId', db.table('channels'))
       // remove all the info about the community except its privacy
       .without({
@@ -378,10 +361,38 @@ export const getPublicParticipantThreadsByUser = (
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
       .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-      .skip(after || 0)
-      .limit(first)
       .run()
   );
+};
+
+export const getViewableParticipantThreadsByUser = async (
+  evalUser: string,
+  currentUser: string,
+  { first, after }: PaginationOptions
+): Promise<Array<DBThread>> => {
+  // get the threadids where the evaluated user is a participant
+  const threadIds = await getUsersThreadsForParticipantFeed(evalUser);
+  // create an array of thread ids
+  const mapped = threadIds.map(t => t.id);
+  // make sure the current user has permission to view the threads being checked
+  return await getThreadsViewableByCurrentUser(
+    mapped,
+    after,
+    first,
+    currentUser
+  );
+};
+
+export const getPublicParticipantThreadsByUser = async (
+  evalUser: string,
+  { first, after }: PaginationOptions
+): Promise<Array<DBThread>> => {
+  // get the threadids where the evaluated user is a participant
+  const threadIds = await getUsersThreadsForParticipantFeed(evalUser);
+  // create an array of thread ids
+  const mapped = threadIds.map(t => t.id);
+  // make sure the current user has permission to view the threads being checked
+  return await getPublicViewableUsersThreads(mapped, after, first);
 };
 
 /*
