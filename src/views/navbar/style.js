@@ -4,10 +4,9 @@ import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
 import Avatar from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
-  flex: 0 0 24px;
-  flex: 0 0 28px;
-  height: 28px;
-  width: 28px;
+  flex: 0 0 32px;
+  height: 32px;
+  width: 32px;
   margin-top: 0;
   border-radius: 100%;
 
@@ -134,7 +133,7 @@ export const IconDrop = styled(FlexRow)`
 
   &:hover {
     opacity: 1;
-    /* 
+    /*
       this padding left makes it so that there is a left zone on the
       icon that the user can mouseover without un-hovering the dropdown
      */

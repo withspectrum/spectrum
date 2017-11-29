@@ -3,22 +3,6 @@ import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
 
-export const StyledAvatarFallback = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: ${props => (props.community ? `25%` : '100%')};
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  object-fit: cover;
-  background-color: ${({ theme }) => theme.bg.default};
-  position: relative;
-  z-index: ${zIndex.avatar - 1};
-`;
-
 export const HoverWrapper = styled.div`
   display: none;
   position: absolute;
@@ -34,7 +18,7 @@ export const HoverWrapper = styled.div`
   }
 `;
 
-export const StyledAvatarStatus = styled.div`
+export const Status = styled.div`
   position: relative;
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
@@ -70,16 +54,7 @@ export const StyledAvatarStatus = styled.div`
   }
 `;
 
-export const StyledAvatar = styled.img`
-  position: relative;
-  display: inline-block;
-  width: ${props => (props.size ? `${props.size}px` : '32px')};
-  height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
-  object-fit: cover;
-`;
-
-export const StyledAvatarLink = styled(Link)`
+export const AvatarLink = styled(Link)`
   display: flex;
   flex: none;
   flex-direction: column;
@@ -93,4 +68,23 @@ export const CoverAction = styled(ProfileHeaderAction)`
   top: 12px;
   right: 12px;
   z-index: ${zIndex.tooltip + 1};
+`;
+
+export const Img = styled.img`
+  position: relative;
+  display: inline-block;
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: ${props => (props.community ? `25%` : '100%')};
+  object-fit: cover;
+`;
+
+export const ImgPlaceholder = styled.div`
+  position: relative;
+  display: inline-block;
+  background-color: ${props => props.theme.bg.border};
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: ${props => (props.community ? `25%` : '100%')};
+  object-fit: cover;
 `;
