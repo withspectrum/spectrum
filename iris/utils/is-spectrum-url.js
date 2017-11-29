@@ -1,10 +1,13 @@
 // @flow
 import { URL } from 'url';
+import { RELATIVE_URL } from 'shared/regexps';
 const IS_PROD = process.env.NODE_ENV === 'production';
 /**
  * Make a URL string is a spectrum.chat URL
  */
 export default (url: string): boolean => {
+  if (RELATIVE_URL.test(url)) return true;
+
   try {
     const { hostname } = new URL(url);
     // hostname might be spectrum.chat or subdomain.spectrum.chat, so we use .endsWith

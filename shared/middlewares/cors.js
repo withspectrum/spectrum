@@ -6,8 +6,8 @@ export default cors({
     process.env.NODE_ENV === 'production'
       ? [
           'https://spectrum.chat',
-          /spectrum-(\w|-)+\.now\.sh/,
-          /(\w|-)+\.spectrum.chat/,
+          /spectrum-(\w|-)+\.now\.sh/g,
+          /spectrum\.chat$/,
         ]
       : [
           'http://localhost:3000',
