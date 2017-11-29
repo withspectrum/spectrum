@@ -135,6 +135,7 @@ class CategoryList extends React.Component<CategoryListProps> {
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
             {filteredCommunities.map((community, i) => (
+              // $FlowFixMe
               <CommunityProfile
                 key={i}
                 profileSize={'upsell'}
