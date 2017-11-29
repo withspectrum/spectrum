@@ -36,10 +36,10 @@ const Avatar = (props: Object): React$Element<any> => {
       <Status size={size || 32} {...props}>
         {link && !noLink ? (
           <AvatarLink to={link}>
-            <AvatarImage src={source} size={size} />
+            <AvatarImage src={source} size={size} community={community} />
           </AvatarLink>
         ) : (
-          <AvatarImage src={source} />
+          <AvatarImage src={source} size={size} community={community} />
         )}
         {showProfile && <HoverProfile source={source} {...props} />}
       </Status>

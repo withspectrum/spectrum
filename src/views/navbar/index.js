@@ -197,6 +197,7 @@ class Navbar extends React.Component<Props> {
                 <UserProfileAvatar
                   user={loggedInUser}
                   src={`${loggedInUser.profilePhoto}`}
+                  size={24}
                 />
               </IconLink>
               <ProfileDropdown user={loggedInUser} />

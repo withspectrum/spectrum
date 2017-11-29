@@ -4,11 +4,9 @@ import { Transition, FlexRow, hexa, zIndex } from '../../components/globals';
 import Avatar from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
-  flex: 0 0 32px;
-  height: 32px;
-  width: 32px;
   margin-top: 0;
   border-radius: 100%;
+  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
     position: relative;
@@ -87,7 +85,7 @@ export const SectionFlex = styled.div`
 
 export const LogoLink = styled(Link)`
   margin-left: 8px;
-  margin-right: 24px;
+  margin-right: 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -183,9 +181,7 @@ export const IconLink = styled(Link)`
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  margin: 0 8px;
-  padding: 0 4px;
-  padding-right: 8px;
+  ${'' /* margin: 0 8px; */} padding: 0 16px;
   opacity: 0.8;
   position: relative;
   width: 100%;

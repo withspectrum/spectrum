@@ -71,7 +71,6 @@ export const CoverAction = styled(ProfileHeaderAction)`
 `;
 
 export const Img = styled.img`
-  position: relative;
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
@@ -80,7 +79,6 @@ export const Img = styled.img`
 `;
 
 export const ImgPlaceholder = styled.div`
-  position: relative;
   display: inline-block;
   background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
