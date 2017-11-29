@@ -457,9 +457,9 @@ const getMembersInChannel = (
       .filter({ isMember: true })
       .skip(after || 0)
       .limit(first || 999999)
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -471,9 +471,9 @@ const getPendingUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isPending: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -494,9 +494,9 @@ const getBlockedUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isBlocked: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -506,9 +506,9 @@ const getModeratorsInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isModerator: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -518,9 +518,9 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isOwner: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
