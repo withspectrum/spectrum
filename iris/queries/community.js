@@ -4,7 +4,6 @@
  */
 import UserError from '../utils/UserError';
 const {
-  getCommunityMetaData,
   getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
@@ -29,7 +28,6 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
-import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { GraphQLContext } from '../';
@@ -68,7 +66,7 @@ module.exports = {
     community: (
       _: any,
       args: GetCommunityArgs,
-      { loaders, user }: GraphQLContext
+      { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.community.load(args.id);
       if (args.slug) return loaders.communityBySlug.load(args.slug);
@@ -86,8 +84,7 @@ module.exports = {
     },
     topCommunities: (_: any, { amount = 20 }: { amount: number }) =>
       getTopCommunities(amount),
-    recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
-      getRecentCommunities(),
+    recentCommunities: () => getRecentCommunities(),
     searchCommunities: (
       _: any,
       { string, amount = 30 }: { string: string, amount: number }
@@ -436,10 +433,10 @@ module.exports = {
         return loaders.user.loadMany(users);
       });
     },
-    topAndNewThreads: async (
+    topAndNewThreads: (
       { id }: DBCommunity,
       __: any,
-      { user, loaders }: GraphQLContext
+      { user }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -447,18 +444,13 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await loaders.userPermissionsInCommunity.load([
-        currentUser.id,
-        id,
-      ]);
-
       return getThreadsByCommunityInTimeframe(
         id,
         'week'
       ).then(async threads => {
         if (!threads) return { topThreads: [], newThreads: [] };
 
-        const messageCountPromises = threads.map(async ({ id, ...thread }) => ({
+        const messageCountPromises = threads.map(async ({ id }) => ({
           id,
           messageCount: await getMessageCount(id),
         }));
