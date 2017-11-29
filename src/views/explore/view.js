@@ -121,12 +121,8 @@ class CategoryList extends React.Component<CategoryListProps> {
   render() {
     const { data: { communities }, title, slugs, currentUser } = this.props;
 
-    console.log('communities', communities);
-    console.log('slugs', slugs);
-
     if (communities) {
       const filteredCommunities = communities.filter(c => {
-        console.log(slugs.indexOf(c.slug));
         if (slugs.indexOf(c.slug) > -1) return c;
         return null;
       });
