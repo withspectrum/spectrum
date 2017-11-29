@@ -265,9 +265,9 @@ const getMembersInCommunity = (
       .orderBy(db.desc('reputation'))
       .skip(after || 0)
       .limit(first || 999999)
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -279,9 +279,9 @@ const getBlockedUsersInCommunity = (
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isBlocked: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -293,9 +293,9 @@ const getModeratorsInCommunity = (
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isModerator: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -305,9 +305,9 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isOwner: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
