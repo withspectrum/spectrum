@@ -31,9 +31,6 @@ export const getTopCommunities = graphql(
 		{
 		  topCommunities {
         ...communityInfo
-        metaData {
-          members
-        }
       }
     }
     ${communityInfoFragment}
@@ -44,29 +41,6 @@ export const getTopCommunities = graphql(
         error,
         loading,
         topCommunities,
-      },
-    }),
-  }
-);
-
-export const getRecentCommunities = graphql(
-  gql`
-		{
-		  recentCommunities {
-        ...communityInfo
-        metaData {
-          members
-        }
-      }
-    }
-    ${communityInfoFragment}
-	`,
-  {
-    props: ({ data: { error, loading, recentCommunities } }) => ({
-      data: {
-        error,
-        loading,
-        recentCommunities,
       },
     }),
   }
@@ -85,9 +59,6 @@ const GET_COMMUNITIES_QUERY = gql`
   query getCommunitiesCollection($curatedContentType: String) {
     communities(curatedContentType: $curatedContentType) {
       ...communityInfo
-      metaData {
-        members
-      }
     }
   }
   ${communityInfoFragment}

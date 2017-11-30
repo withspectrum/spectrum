@@ -148,9 +148,6 @@ class CommunityWithData extends Component {
               />
               <CoverTitle>{community.name}</CoverTitle>
             </CoverLink>
-            <CoverSubtitle>
-              {community.metaData.members.toLocaleString()} members
-            </CoverSubtitle>
 
             <CoverDescription>{community.description}</CoverDescription>
 

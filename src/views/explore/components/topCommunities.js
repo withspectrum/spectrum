@@ -16,9 +16,6 @@ class CommunityList extends Component {
 
     const sorted = topCommunities
       .slice()
-      .sort((a, b) => {
-        return b.metaData.members - a.metaData.members;
-      })
       .filter(comm => !comm.communityPermissions.isBlocked);
 
     if (!error && topCommunities.length > 0) {
