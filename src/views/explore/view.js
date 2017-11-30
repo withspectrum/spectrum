@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
@@ -23,99 +24,7 @@ import { displayLoadingState } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 import { Tagline, Copy, Content } from '../splash/style';
 
-export const CommunitySearch = (props: Props) => {
-  const ThisContent = styled(Content)`
-    flex-direction: column;
-    width: 640px;
-    align-content: center;
-    align-self: center;
-    margin-top: 40px;
-    margin-bottom: 0;
-    padding: 16px;
-
-    @media (max-width: 640px) {
-      margin-top: 80px;
-      margin-bottom: 0;
-      width: 100%;
-    }
-  `;
-
-  const PrimaryCTA = styled(Button)`
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 14px;
-    border-radius: 12px;
-    background-color: ${props => props.theme.bg.default};
-    background-image: none;
-    color: ${props => props.theme.brand.alt};
-    transition: ${Transition.hover.off};
-    z-index: ${zIndex.card};
-
-    &:hover {
-      background-color: ${props => props.theme.bg.default};
-      color: ${props => props.theme.brand.default};
-      box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
-      transition: ${Transition.hover.on};
-    }
-  `;
-
-  const SecondaryContent = styled(ThisContent)`
-    margin-top: 0;
-    margin-bottom: 0;
-  `;
-
-  const ThisTagline = styled(Tagline)`margin-bottom: 0;`;
-
-  const SecondaryTagline = styled(ThisTagline)`
-    font-size: 20px;
-    font-weight: 900;
-    margin-top: 0;
-    margin-bottom: 2px;
-  `;
-
-  const ThisCopy = styled(Copy)`
-    font-size: 16px;
-    margin-bottom: 16px;
-    font-weight: 500;
-    text-align: center;
-    max-width: 640px;
-
-    @media (max-width: 768px) {
-      text-align: left;
-    }
-  `;
-
-  const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
-
-  return (
-    <ViewSegment goop={3} background="constellations">
-      <ThisContent>
-        <ThisTagline>Find a community for you!</ThisTagline>
-        <ThisCopy>
-          Try searching for topics like "crypto" or for products like "React"
-        </ThisCopy>
-        {props.children}
-        <SecondaryContent>
-          <SecondaryTagline>...or create your own community</SecondaryTagline>
-          <SecondaryCopy>
-            Building communities on Spectrum is easy and free!
-          </SecondaryCopy>
-          {props.currentUser ? (
-            <Link to={`/new/community`}>
-              <PrimaryCTA>Get Started</PrimaryCTA>
-            </Link>
-          ) : (
-            <Link to={`/login?r=${CLIENT_URL}/new/community`}>
-              <PrimaryCTA>Get Started</PrimaryCTA>
-            </Link>
-          )}
-        </SecondaryContent>
-      </ThisContent>
-    </ViewSegment>
-  );
-};
-
-export const Charts = props => {
+export const Charts = () => {
   const ChartGrid = styled.div`
     display: flex;
     flex-direction: column;
@@ -125,21 +34,19 @@ export const Charts = props => {
   return <ChartGrid>{collections && <CollectionSwitcher />}</ChartGrid>;
 };
 
-class CollectionSwitcher extends Component {
-  constructor() {
-    super();
+type Props = {};
+type State = {
+  selectedView: string,
+};
 
-    this.state = {
-      selectedView: 'Top Communities',
-    };
-  }
+class CollectionSwitcher extends React.Component<Props, State> {
+  state = {
+    selectedView: 'Top Communities',
+  };
 
-  handleSegmentClick(title) {
-    if (this.state === title) return;
-
-    return this.setState({
-      selectedView: title,
-    });
+  handleSegmentClick(selectedView) {
+    if (this.state.selectedView === selectedView) return;
+    return this.setState({ selectedView });
   }
 
   render() {
@@ -173,6 +80,7 @@ class CollectionSwitcher extends Component {
         </SegmentedControl>
         <CollectionWrapper>
           <TopCommunityList
+            curatedContentType={'top-communities-by-members'}
             selected={this.state.selectedView === 'Top Communities'}
           />
           {collections.map((collection, index) => {
@@ -188,6 +96,7 @@ class CollectionSwitcher extends Component {
                       key={i}
                       title={category.title}
                       slugs={category.communities}
+                      curatedContentType={collection.curatedContentType}
                     />
                   );
                 })}
@@ -200,16 +109,29 @@ class CollectionSwitcher extends Component {
   }
 }
 
-class CategoryList extends Component {
+type CategoryListProps = {
+  title: string,
+  currentUser?: Object,
+  slugs: Array<string>,
+  data: {
+    communities?: Array<Object>,
+  },
+};
+class CategoryList extends React.Component<CategoryListProps> {
   render() {
-    const { data: { communities }, title, currentUser } = this.props;
+    const { data: { communities }, title, slugs, currentUser } = this.props;
 
     if (communities) {
+      const filteredCommunities = communities.filter(c => {
+        if (slugs.indexOf(c.slug) > -1) return c;
+        return null;
+      });
       return (
         <ListWithTitle>
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
-            {communities.map((community, i) => (
+            {filteredCommunities.map((community, i) => (
+              // $FlowFixMe
               <CommunityProfile
                 key={i}
                 profileSize={'upsell'}
@@ -226,9 +148,10 @@ class CategoryList extends Component {
   }
 }
 
-const CategoryWithData = compose(
+const map = state => ({ currentUser: state.users.currentUser });
+export const Category = compose(
+  // $FlowIssue
+  connect(map),
   getCommunitiesCollectionQuery,
   displayLoadingState
 )(CategoryList);
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export const Category = connect(mapStateToProps)(CategoryWithData);

@@ -4,8 +4,6 @@
  */
 import UserError from '../utils/UserError';
 const {
-  getCommunityMetaData,
-  getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
   searchThreadsInCommunity,
@@ -13,6 +11,7 @@ const {
   getThreadCount,
   getCommunityGrowth,
 } = require('../models/community');
+import { getCuratedCommunities } from '../models/curatedContent';
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
@@ -29,7 +28,6 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
-import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { GraphQLContext } from '../';
@@ -50,14 +48,25 @@ type GetCommunityArgs = GetCommunityById | GetCommunityBySlug;
 type GetCommunitiesByIds = {
   ids: Array<string>,
   slugs: void,
+  curatedContentType: void,
 };
 
 type GetCommunitiesBySlugs = {
   ids: void,
   slugs: Array<string>,
+  curatedContentType: void,
 };
 
-type GetCommunitiesArgs = GetCommunitiesByIds | GetCommunitiesBySlugs;
+type GetCuratedContent = {
+  ids: void,
+  slugs: void,
+  curatedContentType: string,
+};
+
+type GetCommunitiesArgs =
+  | GetCommunitiesByIds
+  | GetCommunitiesBySlugs
+  | GetCuratedContent;
 
 type MemberOrChannelCount = {
   reduction?: number,
@@ -68,7 +77,7 @@ module.exports = {
     community: (
       _: any,
       args: GetCommunityArgs,
-      { loaders, user }: GraphQLContext
+      { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.community.load(args.id);
       if (args.slug) return loaders.communityBySlug.load(args.slug);
@@ -80,14 +89,15 @@ module.exports = {
       args: GetCommunitiesArgs,
       { loaders }: GraphQLContext
     ) => {
+      if (args.curatedContentType) {
+        return getCuratedCommunities(args.curatedContentType);
+      }
       if (args.ids) return loaders.community.loadMany(args.ids);
       if (args.slugs) return loaders.communityBySlug.loadMany(args.slugs);
       return null;
     },
-    topCommunities: (_: any, { amount = 20 }: { amount: number }) =>
-      getTopCommunities(amount),
-    recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
-      getRecentCommunities(),
+    topCommunities: () => getCuratedCommunities('top-communities-by-members'),
+    recentCommunities: () => getRecentCommunities(),
     searchCommunities: (
       _: any,
       { string, amount = 30 }: { string: string, amount: number }
@@ -436,10 +446,10 @@ module.exports = {
         return loaders.user.loadMany(users);
       });
     },
-    topAndNewThreads: async (
+    topAndNewThreads: (
       { id }: DBCommunity,
       __: any,
-      { user, loaders }: GraphQLContext
+      { user }: GraphQLContext
     ) => {
       const currentUser = user;
 
@@ -447,18 +457,13 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      const { isOwner } = await loaders.userPermissionsInCommunity.load([
-        currentUser.id,
-        id,
-      ]);
-
       return getThreadsByCommunityInTimeframe(
         id,
         'week'
       ).then(async threads => {
         if (!threads) return { topThreads: [], newThreads: [] };
 
-        const messageCountPromises = threads.map(async ({ id, ...thread }) => ({
+        const messageCountPromises = threads.map(async ({ id }) => ({
           id,
           messageCount: await getMessageCount(id),
         }));
