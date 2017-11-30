@@ -186,19 +186,6 @@ export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
   options: { fetchPolicy: 'cache-first' },
 });
 
-export const GET_NAVBAR_USER_PROFILE_QUERY = gql`
-query getNavbarUserProfile {
-  user: currentUser {
-    ...userInfo
-  }
-}
-${userInfoFragment}
-`;
-
-export const getNavbarUserProfile = graphql(GET_NAVBAR_USER_PROFILE_QUERY, {
-  options: { fetchPolicy: 'cache-first' },
-});
-
 /*
   Delete a thread
 */
