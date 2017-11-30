@@ -36,8 +36,5 @@ const ExplorePure = props => {
   );
 };
 
-const Explore = compose()(ExplorePure);
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-export default connect(mapStateToProps)(Explore);
+const map = state => ({ currentUser: state.users.currentUser });
+export default compose(connect(map))(ExplorePure);

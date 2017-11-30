@@ -1,5 +1,9 @@
 export const collections = [
   {
+    title: 'Top Communities',
+    curatedContentType: 'top-communities-by-members',
+  },
+  {
     title: 'Design',
     curatedContentType: 'design-communities',
     categories: [
