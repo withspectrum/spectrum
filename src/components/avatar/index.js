@@ -12,7 +12,15 @@ import { optimize } from '../../helpers/images';
 import { addProtocolToString } from '../../helpers/utils';
 import HoverProfile from './hoverProfile';
 import AvatarImage from './image';
-import { Status, AvatarLink } from './style';
+import { Status, AvatarLink, AvatarNoLink } from './style';
+
+const LinkHandler = props => {
+  if (props.link && !props.noLink) {
+    return <AvatarLink to={props.link}>{props.children}</AvatarLink>;
+  } else {
+    return <AvatarNoLink>{props.children}</AvatarNoLink>;
+  }
+};
 
 const Avatar = (props: Object): React$Element<any> => {
   const { src, community, user, size, link, noLink, showProfile } = props;
@@ -34,13 +42,9 @@ const Avatar = (props: Object): React$Element<any> => {
   } else {
     return (
       <Status size={size || 32} {...props}>
-        {link && !noLink ? (
-          <AvatarLink to={link}>
-            <AvatarImage src={source} size={size} community={community} />
-          </AvatarLink>
-        ) : (
+        <LinkHandler>
           <AvatarImage src={source} size={size} community={community} />
-        )}
+        </LinkHandler>
         {showProfile && <HoverProfile source={source} {...props} />}
       </Status>
     );

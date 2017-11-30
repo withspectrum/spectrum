@@ -63,6 +63,8 @@ export const AvatarLink = styled(Link)`
   pointer-events: auto;
 `;
 
+export const AvatarNoLink = AvatarLink.withComponent('div');
+
 export const CoverAction = styled(ProfileHeaderAction)`
   position: absolute;
   top: 12px;
