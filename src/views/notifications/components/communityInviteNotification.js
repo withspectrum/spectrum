@@ -48,7 +48,7 @@ export const CommunityInviteNotification = ({ notification, currentUser }) => {
 
 type Props = {
   notification: Object,
-  currentUsre: Object,
+  currentUser: Object,
   history: Object,
   markSingleNotificationSeen: Function,
   markSingleNotificationAsSeenInState: Function,

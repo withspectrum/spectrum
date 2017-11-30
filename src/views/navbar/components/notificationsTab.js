@@ -268,6 +268,7 @@ class NotificationsTab extends React.Component<Props, State> {
     const filteredByContext = distinct.map(n => {
       const contextId = n.context.id;
       const { thread: threadParam } = queryString.parse(location.search);
+
       // 1
       const isViewingSlider = threadParam === contextId && !n.isSeen;
       // 2
@@ -281,7 +282,25 @@ class NotificationsTab extends React.Component<Props, State> {
         ? parts[2] === contextId && !n.isSeen
         : false;
 
-      if (isViewingSlider || isViewingInbox || isViewingThreadDetail) {
+      // newly published threads have a context id that is equal to the thread's channel
+      // we have to use different logic to mark these notifications as seen if a user views
+      // the thread before clicking the notification
+      const isNewThreadNotification = n.event === 'THREAD_CREATED';
+      const isViewingANewlyPublishedThread =
+        isNewThreadNotification &&
+        n.entities.some(
+          e =>
+            e.id === activeInboxThread ||
+            e.id === threadParam ||
+            (isViewingThread && e.id === parts[2])
+        );
+
+      if (
+        isViewingSlider ||
+        isViewingInbox ||
+        isViewingThreadDetail ||
+        isViewingANewlyPublishedThread
+      ) {
         // if the user shouldn't see a new notification badge,
         // mark it as seen before it ever hits the component
         const newNotification = Object.assign({}, n, {
