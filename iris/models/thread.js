@@ -251,7 +251,7 @@ export const getPublicThreadsByUser = (
   );
 };
 
-const getUsersThreadsForParticipantFeed = userId => {
+const getUsersThreadsForParticipantFeed = (userId, first, after) => {
   return (
     db
       .table('usersThreads')
@@ -274,6 +274,8 @@ const getUsersThreadsForParticipantFeed = userId => {
       })
       .zip()
       // hide any that are deleted
+      .skip(after || 0)
+      .limit(first)
       .filter(thread => db.not(thread.hasFields('deletedAt')))
       .pluck('id')
       .run()
@@ -371,7 +373,11 @@ export const getViewableParticipantThreadsByUser = async (
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   // get the threadids where the evaluated user is a participant
-  const threadIds = await getUsersThreadsForParticipantFeed(evalUser);
+  const threadIds = await getUsersThreadsForParticipantFeed(
+    evalUser,
+    first,
+    after
+  );
   // create an array of thread ids
   const mapped = threadIds.map(t => t.id);
   // make sure the current user has permission to view the threads being checked
