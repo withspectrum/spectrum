@@ -104,6 +104,7 @@ type CategoryListProps = {
     communities?: Array<Object>,
   },
   isLoading: boolean,
+  categories?: Array<any>,
 };
 class CategoryList extends React.Component<CategoryListProps> {
   render() {
