@@ -7,9 +7,9 @@ import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
 import ViewSegment from '../../components/viewSegment';
 import { Button } from '../../components/buttons';
-import TopCommunityList from './components/topCommunities';
 import { CommunityProfile } from '../../components/profile';
 import { collections } from './collections';
+import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
   ListWithTitle,
   ListTitle,
@@ -17,10 +17,11 @@ import {
   CategoryWrapper,
   Collections,
   CollectionWrapper,
+  LoadingContainer,
 } from './style';
 import { CLIENT_URL } from '../../api/constants';
 import { getCommunitiesCollectionQuery } from './queries';
-import { displayLoadingState } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 import { Tagline, Copy, Content } from '../splash/style';
 
@@ -41,7 +42,7 @@ type State = {
 
 class CollectionSwitcher extends React.Component<Props, State> {
   state = {
-    selectedView: 'Top Communities',
+    selectedView: 'top-communities-by-members',
   };
 
   handleSegmentClick(selectedView) {
@@ -50,13 +51,6 @@ class CollectionSwitcher extends React.Component<Props, State> {
   }
 
   render() {
-    let selectorItems = [];
-    selectorItems.push('Top Communities');
-    collections.map(collection => {
-      selectorItems.push(collection.title);
-      return null;
-    });
-
     const ThisSegment = styled(Segment)`
       @media (max-width: 768px) {
         &:not(:first-of-type) {
@@ -68,38 +62,31 @@ class CollectionSwitcher extends React.Component<Props, State> {
     return (
       <Collections>
         <SegmentedControl>
-          {selectorItems.map((title, i) => (
+          {collections.map((collection, i) => (
             <ThisSegment
               key={i}
-              onClick={() => this.handleSegmentClick(title)}
-              selected={title === this.state.selectedView}
+              onClick={() =>
+                this.handleSegmentClick(collection.curatedContentType)}
+              selected={
+                collection.curatedContentType === this.state.selectedView
+              }
             >
-              {title}
+              {collection.title}
             </ThisSegment>
           ))}
         </SegmentedControl>
+
         <CollectionWrapper>
-          <TopCommunityList
-            curatedContentType={'top-communities-by-members'}
-            selected={this.state.selectedView === 'Top Communities'}
-          />
           {collections.map((collection, index) => {
             const { title, categories } = collection;
             return (
-              <CategoryWrapper
-                key={index}
-                selected={this.state.selectedView === title}
-              >
-                {categories.map((category, i) => {
-                  return (
-                    <Category
-                      key={i}
-                      title={category.title}
-                      slugs={category.communities}
-                      curatedContentType={collection.curatedContentType}
-                    />
-                  );
-                })}
+              <CategoryWrapper key={index}>
+                {collection.curatedContentType === this.state.selectedView && (
+                  <Category
+                    categories={collection.categories}
+                    curatedContentType={collection.curatedContentType}
+                  />
+                )}
               </CategoryWrapper>
             );
           })}
@@ -116,35 +103,87 @@ type CategoryListProps = {
   data: {
     communities?: Array<Object>,
   },
+  isLoading: boolean,
+  categories?: Array<any>,
 };
 class CategoryList extends React.Component<CategoryListProps> {
   render() {
-    const { data: { communities }, title, slugs, currentUser } = this.props;
+    const {
+      data: { communities },
+      title,
+      slugs,
+      isLoading,
+      currentUser,
+      categories,
+    } = this.props;
 
     if (communities) {
-      const filteredCommunities = communities.filter(c => {
-        if (slugs.indexOf(c.slug) > -1) return c;
-        return null;
-      });
+      let filteredCommunities = communities;
+      if (slugs) {
+        filteredCommunities = communities.filter(c => {
+          if (slugs.indexOf(c.slug) > -1) return c;
+          return null;
+        });
+      }
+
+      if (!categories) {
+        return (
+          <ListWithTitle>
+            {title ? <ListTitle>{title}</ListTitle> : null}
+            <ListWrapper>
+              {filteredCommunities.map((community, i) => (
+                // $FlowFixMe
+                <CommunityProfile
+                  key={i}
+                  profileSize={'upsell'}
+                  data={{ community }}
+                  currentUser={currentUser}
+                />
+              ))}
+            </ListWrapper>
+          </ListWithTitle>
+        );
+      }
+
       return (
-        <ListWithTitle>
-          {title ? <ListTitle>{title}</ListTitle> : null}
-          <ListWrapper>
-            {filteredCommunities.map((community, i) => (
-              // $FlowFixMe
-              <CommunityProfile
-                key={i}
-                profileSize={'upsell'}
-                data={{ community }}
-                currentUser={currentUser}
-              />
-            ))}
-          </ListWrapper>
-        </ListWithTitle>
+        <div>
+          {categories.map((cat, i) => {
+            if (cat.communities) {
+              filteredCommunities = communities.filter(c => {
+                if (cat.communities.indexOf(c.slug) > -1) return c;
+                return null;
+              });
+            }
+            return (
+              <ListWithTitle key={i}>
+                {cat.title ? <ListTitle>{cat.title}</ListTitle> : null}
+                <ListWrapper>
+                  {filteredCommunities.map((community, i) => (
+                    // $FlowFixMe
+                    <CommunityProfile
+                      key={i}
+                      profileSize={'upsell'}
+                      data={{ community }}
+                      currentUser={currentUser}
+                    />
+                  ))}
+                </ListWrapper>
+              </ListWithTitle>
+            );
+          })}
+        </div>
       );
-    } else {
-      return null;
     }
+
+    if (isLoading) {
+      return (
+        <LoadingContainer>
+          <Loading />
+        </LoadingContainer>
+      );
+    }
+
+    return null;
   }
 }
 
@@ -153,5 +192,5 @@ export const Category = compose(
   // $FlowIssue
   connect(map),
   getCommunitiesCollectionQuery,
-  displayLoadingState
+  viewNetworkHandler
 )(CategoryList);

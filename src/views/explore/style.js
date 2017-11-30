@@ -457,8 +457,10 @@ export const CollectionWrapper = styled.div`
 `;
 
 export const CategoryWrapper = styled.div`
-  display: ${props => (props.selected ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
   justify-content: flex-start;
   flex: none;
 `;
+
+export const LoadingContainer = styled.div`padding: 32px;`;
