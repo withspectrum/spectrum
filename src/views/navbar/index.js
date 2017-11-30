@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
 import { withApollo } from 'react-apollo';
-import { getCurrentUserProfile } from '../../api/user';
+import { getNavbarUserProfile } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../components/icons';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
@@ -270,7 +270,7 @@ const mapStateToProps = state => ({
 export default compose(
   // $FlowIssue
   connect(mapStateToProps),
-  getCurrentUserProfile,
+  getNavbarUserProfile,
   withApollo,
   viewNetworkHandler
 )(Navbar);
