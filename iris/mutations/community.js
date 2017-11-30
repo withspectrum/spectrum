@@ -327,7 +327,7 @@ module.exports = {
               // remove all relationships to the community's channels
               const removeAllRelationshipsToChannels = Promise.all(
                 allChannelsInCommunity.map(channel =>
-                  removeMemberInChannel(channel.id, currentUser.id)
+                  removeMemberInChannel(channel, currentUser.id)
                 )
               );
 

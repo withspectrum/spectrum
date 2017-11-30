@@ -122,9 +122,9 @@ module.exports = {
         channelsToGetThreadsFor = getPublicChannelsByCommunity(communityId);
       }
 
-      return channelsToGetThreadsFor
-        .then(channels => channels.map(channel => channel.id))
-        .then(channels => searchThreadsInCommunity(channels, searchString));
+      return channelsToGetThreadsFor.then(channels =>
+        searchThreadsInCommunity(channels, searchString)
+      );
     },
   },
   Community: {
@@ -198,7 +198,7 @@ module.exports = {
 
       const [threads, pinnedThread] = await Promise.all([
         // $FlowFixMe
-        getThreadsByChannels(channels.map(c => c.id), {
+        getThreadsByChannels(channels, {
           first,
           after: lastThreadIndex,
         }),
