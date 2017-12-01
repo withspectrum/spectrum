@@ -15,7 +15,6 @@ import { getCuratedCommunities } from '../models/curatedContent';
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
-const { getUserByUsername } = require('../models/user');
 const {
   getThreadsByChannels,
   getThreads,
@@ -517,7 +516,7 @@ module.exports = {
         switch (queryName) {
           case 'getUser': {
             const username = info.variableValues.username;
-            const user = await getUserByUsername(username);
+            const user = await loaders.userByUsername.load(username);
             const {
               reputation,
               isModerator,
