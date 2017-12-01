@@ -149,7 +149,7 @@ module.exports = {
     }),
     memberConnection: (
       { id }: DBCommunity,
-      { first = 20, after }: PaginationOptions,
+      { first = 10, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
       const cursor = decode(after);

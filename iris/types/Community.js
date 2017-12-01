@@ -103,7 +103,7 @@ const Community = /* GraphQL */ `
 		pinnedThreadId: String
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
-		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
+		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
