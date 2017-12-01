@@ -470,11 +470,9 @@ export const getTopCommunities = graphql(
 		{
 		  topCommunities {
         ...communityInfo
-        ...communityMetaData
       }
     }
     ${communityInfoFragment}
-    ${communityMetaDataFragment}
 	`,
   {
     props: ({ data: { error, loading, topCommunities } }) => ({

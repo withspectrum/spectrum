@@ -53,11 +53,7 @@ class ChannelList extends React.Component<Props> {
                     key={item.id}
                     to={`/${communitySlug}/${item.slug}/settings`}
                   >
-                    <ChannelListItem
-                      contents={item}
-                      withDescription={false}
-                      meta={`${item.metaData.members.toLocaleString()} members`}
-                    >
+                    <ChannelListItem contents={item} withDescription={false}>
                       <IconButton glyph="settings" />
                     </ChannelListItem>
                   </Link>

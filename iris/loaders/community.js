@@ -7,7 +7,6 @@ import {
 } from '../models/community';
 import { getCommunitiesRecurringPayments } from '../models/recurringPayment';
 import createLoader from './create-loader';
-import type { Loader } from './types';
 
 export const __createCommunityRecurringPaymentsLoader = () =>
   createLoader(

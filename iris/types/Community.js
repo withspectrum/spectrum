@@ -120,7 +120,7 @@ const Community = /* GraphQL */ `
 
 	extend type Query {
 		community(id: ID, slug: String): Community
-		communities(slugs: [String], ids: [ID]): [Community]
+		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
 		searchCommunities(string: String, amount: Int = 30): [Community]

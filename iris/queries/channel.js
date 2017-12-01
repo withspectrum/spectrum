@@ -109,7 +109,7 @@ module.exports = {
           pageInfo: {
             hasNextPage: result && result.length >= first,
           },
-          edges: result.map((user, index) => ({
+          edges: result.filter(Boolean).map((user, index) => ({
             cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
             node: user,
           })),

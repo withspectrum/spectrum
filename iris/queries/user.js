@@ -42,7 +42,7 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.user.load(args.id);
-      if (args.username) return getUser({ username: args.username });
+      if (args.username) return loaders.userByUsername.load(args.username);
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
@@ -132,20 +132,32 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: (
+    directMessageThreadsConnection: async (
       _: any,
-      __: any,
+      { first = 15, after }: PaginationOptions,
       { user }: GraphQLContext
-    ) => ({
-      pageInfo: {
-        hasNextPage: false,
-      },
-      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
-        threads.map(thread => ({
+    ) => {
+      const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+
+      const threads = await getDirectMessageThreadsByUser(user.id, {
+        first,
+        after: lastThreadIndex,
+      });
+
+      return {
+        pageInfo: {
+          hasNextPage: threads && threads.length >= first,
+        },
+        edges: threads.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
           node: thread,
-        }))
-      ),
-    }),
+        })),
+      };
+    },
     threadConnection: (
       { id }: { id: string },
       {
