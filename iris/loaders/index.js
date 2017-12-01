@@ -1,6 +1,7 @@
 // @flow
 import {
   __createUserLoader,
+  __createUserByUsernameLoader,
   __createUserThreadCountLoader,
   __createUserRecurringPaymentsLoader,
   __createUserPermissionsInCommunityLoader,
@@ -37,6 +38,7 @@ import { __createReactionLoader } from './reaction';
 // Create all the necessary loaders to be attached to the GraphQL context for each request
 const createLoaders = () => ({
   user: __createUserLoader(),
+  userByUsername: __createUserByUsernameLoader(),
   userThreadCount: __createUserThreadCountLoader(),
   userRecurringPayments: __createUserRecurringPaymentsLoader(),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
