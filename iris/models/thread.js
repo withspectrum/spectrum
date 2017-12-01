@@ -163,7 +163,7 @@ export const getViewableThreadsByUser = async (
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   // get a list of the channelIds the current user is allowed to see threads
-  const currentUsersChannelIds = await db
+  const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(currentUser, { index: 'userId' })
     .filter({ isBlocked: false })
@@ -171,11 +171,16 @@ export const getViewableThreadsByUser = async (
     .run();
 
   // get a list of the channels where the user posted a thread
-  const publishedChannelIds = await db
+  const getPublishedChannelIds = db
     .table('threads')
     .getAll(evalUser, { index: 'creatorId' })
     .map(thread => thread('channelId'))
     .run();
+
+  const [currentUsersChannelIds, publishedChannelIds] = await Promise.all([
+    getCurrentUsersChannelIds,
+    getPublishedChannelIds,
+  ]);
 
   // get a list of all the channels that are public
   const publicChannelIds = await db
@@ -231,7 +236,7 @@ export const getViewableParticipantThreadsByUser = async (
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
   // get a list of the channelIds the current user is allowed to see threads for
-  const currentUsersChannelIds = await db
+  const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(currentUser, { index: 'userId' })
     .filter({ isBlocked: false })
@@ -239,7 +244,7 @@ export const getViewableParticipantThreadsByUser = async (
     .run();
 
   // get a list of the channels where the user participated in a thread
-  const participantChannelIds = await db
+  const getParticipantChannelIds = db
     .table('usersThreads')
     .getAll(evalUser, { index: 'userId' })
     .filter({ isParticipant: true })
@@ -247,6 +252,11 @@ export const getViewableParticipantThreadsByUser = async (
     .zip()
     .pluck('channelId', 'threadId')
     .run();
+
+  const [currentUsersChannelIds, participantChannelIds] = await Promise.all([
+    getCurrentUsersChannelIds,
+    getParticipantChannelIds,
+  ]);
 
   const participantThreadIds = participantChannelIds.map(c => c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
