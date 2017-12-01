@@ -6,7 +6,6 @@ import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 

@@ -52,11 +52,6 @@ export const getCommunitiesByUser = (
       .zip()
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
-      .filter(row =>
-        row('isMember')
-          .eq(true)
-          .or(row('isOwner').eq(true))
-      )
       .run()
   );
 };
