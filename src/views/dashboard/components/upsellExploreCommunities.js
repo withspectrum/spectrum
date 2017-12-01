@@ -127,9 +127,6 @@ class UpsellExploreCommunities extends React.Component {
                     <CommunityListName active={c.id === activeCommunity}>
                       {c.name}
                     </CommunityListName>
-                    <CommunityListReputation active={c.id === activeCommunity}>
-                      {c.metaData.members.toLocaleString()} members
-                    </CommunityListReputation>
                   </CommunityListText>
                 </CommunityListPadding>
               </CommunityListItem>
