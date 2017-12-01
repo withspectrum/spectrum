@@ -42,12 +42,14 @@ type Props = {
 type State = {
   notifications: ?Array<any>,
   subscription: ?Function,
+  shouldRenderDropdown: boolean,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
     notifications: null,
     subscription: null,
+    shouldRenderDropdown: false,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -99,6 +101,10 @@ class NotificationsTab extends React.Component<Props, State> {
 
     // when the notifications get set for the first time
     if (!prevState.notifications && nextState.notifications) return true;
+
+    // when hovered
+    if (!prevState.shouldRenderDropdown && nextState.shouldRenderDropdown)
+      return true;
 
     // any time the count changes
     if (prevProps.count !== nextProps.count) return true;
@@ -374,12 +380,18 @@ class NotificationsTab extends React.Component<Props, State> {
     return this.setCount(newNotifications);
   };
 
+  setHover = () => {
+    return this.setState({
+      shouldRenderDropdown: true,
+    });
+  };
+
   render() {
     const { active, currentUser, data, isLoading, count } = this.props;
-    const { notifications } = this.state;
+    const { notifications, shouldRenderDropdown } = this.state;
 
     return (
-      <IconDrop padOnHover>
+      <IconDrop padOnHover onMouseEnter={this.setHover}>
         <IconLink
           data-active={active}
           to="/notifications"
@@ -393,18 +405,20 @@ class NotificationsTab extends React.Component<Props, State> {
           <Label hideOnDesktop>Notifications</Label>
         </IconLink>
 
-        <NotificationDropdown
-          rawNotifications={notifications}
-          count={count}
-          markAllAsSeen={this.markAllAsSeen}
-          currentUser={currentUser}
-          width={'480px'}
-          loading={isLoading}
-          error={false}
-          markSingleNotificationAsSeenInState={
-            this.markSingleNotificationAsSeenInState
-          }
-        />
+        {shouldRenderDropdown && (
+          <NotificationDropdown
+            rawNotifications={notifications}
+            count={count}
+            markAllAsSeen={this.markAllAsSeen}
+            currentUser={currentUser}
+            width={'480px'}
+            loading={isLoading}
+            error={false}
+            markSingleNotificationAsSeenInState={
+              this.markSingleNotificationAsSeenInState
+            }
+          />
+        )}
       </IconDrop>
     );
   }

@@ -148,7 +148,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
         edges {
           node {
             ...channelInfo
-            ...channelMetaData
           }
         }
       }
@@ -156,7 +155,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   }
   ${channelInfoFragment}
   ${communityInfoFragment}
-  ${channelMetaDataFragment}
 `;
 
 export const GET_COMMUNITY_CHANNELS_OPTIONS = {

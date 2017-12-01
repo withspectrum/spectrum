@@ -3,11 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import { withApollo } from 'react-apollo';
-import { getCurrentUserProfile } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../components/icons';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Loading } from '../../components/loading';
 import { ProfileDropdown } from './components/profileDropdown';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -38,9 +35,6 @@ type Props = {
     notifications: number,
     directMessageNotifications: number,
   },
-  data: {
-    user?: Object,
-  },
   currentUser?: Object,
   activeInboxThread: ?string,
 };
@@ -57,11 +51,7 @@ class Navbar extends React.Component<Props> {
     if (currProps.location.search !== nextProps.location.search) return true;
 
     // Had no user, now have user or user changed
-    if (
-      (!nextProps.data.user && currProps.data.user) ||
-      nextProps.data.user !== currProps.data.user
-    )
-      return true;
+    if (nextProps.currentUser !== currProps.currentUser) return true;
 
     // if the badge counts change
     const thisBadgeSum =
@@ -89,14 +79,13 @@ class Navbar extends React.Component<Props> {
     const {
       history,
       match,
-      data: { user },
       isLoading,
       hasError,
       currentUser,
       notificationCounts,
     } = this.props;
 
-    const loggedInUser = user || currentUser;
+    const loggedInUser = currentUser;
 
     const viewing = history.location.pathname;
 
@@ -219,28 +208,6 @@ class Navbar extends React.Component<Props> {
       );
     }
 
-    if (isLoading) {
-      return (
-        <Nav hideOnMobile={hideNavOnMobile}>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
-          {/* $FlowIssue */}
-          <Loading size={'20'} color={'bg.default'} />
-        </Nav>
-      );
-    }
-
-    if (hasError) {
-      return (
-        <Nav hideOnMobile={hideNavOnMobile}>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
-        </Nav>
-      );
-    }
-
     if (!loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile}>
@@ -269,8 +236,5 @@ const mapStateToProps = state => ({
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps),
-  getCurrentUserProfile,
-  withApollo,
-  viewNetworkHandler
+  connect(mapStateToProps)
 )(Navbar);

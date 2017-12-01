@@ -329,6 +329,7 @@ const getUserPermissionsInCommunity = (
     .getAll([userId, communityId], {
       index: 'userIdAndCommunityId',
     })
+    .distinct()
     .run()
     .then(data => {
       // if a record exists
@@ -354,6 +355,7 @@ const getUsersPermissionsInCommunities = (
   return db
     .table('usersCommunities')
     .getAll(...input, { index: 'userIdAndCommunityId' })
+    .distinct()
     .run()
     .then(data => {
       if (!data)
