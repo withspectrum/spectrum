@@ -29,6 +29,7 @@ const getDirectMessageThreads = (
 
 const getDirectMessageThreadsByUser = (
   userId: string,
+  // $FlowFixMe
   { first, after }
 ): Promise<Array<DBDirectMessageThread>> => {
   return db
