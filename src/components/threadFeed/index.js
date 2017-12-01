@@ -92,6 +92,14 @@ class ThreadFeedPure extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
