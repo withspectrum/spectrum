@@ -83,7 +83,10 @@ class MiniNewChannelNotificationWithMutation extends React.Component<Props> {
         : 'A new channel was';
 
     return (
-      <SegmentedNotificationListRow onClick={this.markAsSeen}>
+      <SegmentedNotificationListRow
+        isSeen={notification.isSeen}
+        onClick={this.markAsSeen}
+      >
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={false}>

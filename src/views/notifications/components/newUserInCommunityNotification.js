@@ -80,7 +80,10 @@ class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
     const context = parseContext(notification.context);
 
     return (
-      <NotificationListRow onClick={this.markAsSeen}>
+      <NotificationListRow
+        isSeen={notification.isSeen}
+        onClick={this.markAsSeen}
+      >
         <CardLink to={`/${notification.context.payload.slug}`} />
         <CardContent>
           <JoinContext>

@@ -76,7 +76,10 @@ class MiniCommunityInviteNotificationWithMutation extends React.Component<
     const actors = parseActors(notification.actors, currentUser, true);
 
     return (
-      <SegmentedNotificationListRow onClick={this.markAsSeen}>
+      <SegmentedNotificationListRow
+        isSeen={notification.isSeen}
+        onClick={this.markAsSeen}
+      >
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={false}>
