@@ -1,20 +1,42 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import { Spinner } from '../../../components/globals';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { getDirectMessageThreadMessages } from '../queries';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
 import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
+import { subscribeToNewMessages } from '../../../api/subscriptions';
 
-class MessagesWithData extends Component {
-  state: {
-    subscription: ?Object,
-  };
+type Props = {
+  id: string,
+  forceScrollToBottom: Function,
+  contextualScrollToBottom: Function,
+  data: {
+    directMessageThread: {
+      id: string,
+    },
+    messages: Array<Object>,
+    hasNextPage: boolean,
+    fetchMore: Function,
+  },
+  subscribeToNewMessages: Function,
+  isLoading: boolean,
+  hasError: boolean,
+  isFetchingMore: boolean,
+  setLastSeen: Function,
+  toggleReaction: Function,
+};
 
+type State = {
+  subscription: ?Function,
+};
+
+class MessagesWithData extends React.Component<Props, State> {
   state = {
     subscription: null,
   };
@@ -67,11 +89,14 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      data: { error, messages, hasNextPage, fetchMore, networkStatus },
+      data: { messages, hasNextPage, fetchMore },
+      hasError,
+      isLoading,
+      isFetchingMore,
       toggleReaction,
     } = this.props;
 
-    if (error) {
+    if (hasError) {
       return <div>Error!</div>;
     }
 
@@ -79,7 +104,7 @@ class MessagesWithData extends Component {
     // it the loading indicator doesn't show when switching between threads which
     // is hella annoying as the old msgs stick around until the new ones are there.
     // TODO: FIXME and remove the networkStatus === 7
-    if (messages && networkStatus === 7) {
+    if (isFetchingMore || (messages && messages.length > 0)) {
       let unsortedMessages = messages.map(message => message.node);
 
       const unique = array => {
@@ -102,10 +127,10 @@ class MessagesWithData extends Component {
           {hasNextPage && (
             <HasNextPage>
               <NextPageButton
-                loading={networkStatus === 3}
+                loading={isFetchingMore}
                 onClick={() => fetchMore()}
               >
-                {networkStatus === 3 ? (
+                {isFetchingMore ? (
                   <Spinner size={16} color={'brand.default'} />
                 ) : (
                   'Load previous messages'
@@ -125,18 +150,19 @@ class MessagesWithData extends Component {
       );
     }
 
-    if (networkStatus === 7) {
-      return null;
-    } else {
+    if (isLoading) {
       return <Loading />;
     }
+
+    return null;
   }
 }
 
 const Messages = compose(
   toggleReactionMutation,
   setLastSeenMutation,
-  getDirectMessageThreadMessages
+  getDirectMessageThreadMessages,
+  viewNetworkHandler
 )(MessagesWithData);
 
 export default Messages;
