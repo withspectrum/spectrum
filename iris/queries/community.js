@@ -15,7 +15,6 @@ import { getCuratedCommunities } from '../models/curatedContent';
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const { getMembersInCommunity } = require('../models/usersCommunities');
 import { getMessageCount } from '../models/message';
-const { getUserByUsername } = require('../models/user');
 const {
   getThreadsByChannels,
   getThreads,
@@ -122,9 +121,9 @@ module.exports = {
         channelsToGetThreadsFor = getPublicChannelsByCommunity(communityId);
       }
 
-      return channelsToGetThreadsFor
-        .then(channels => channels.map(channel => channel.id))
-        .then(channels => searchThreadsInCommunity(channels, searchString));
+      return channelsToGetThreadsFor.then(channels =>
+        searchThreadsInCommunity(channels, searchString)
+      );
     },
   },
   Community: {
@@ -198,7 +197,7 @@ module.exports = {
 
       const [threads, pinnedThread] = await Promise.all([
         // $FlowFixMe
-        getThreadsByChannels(channels.map(c => c.id), {
+        getThreadsByChannels(channels, {
           first,
           after: lastThreadIndex,
         }),
@@ -517,7 +516,7 @@ module.exports = {
         switch (queryName) {
           case 'getUser': {
             const username = info.variableValues.username;
-            const user = await getUserByUsername(username);
+            const user = await loaders.userByUsername.load(username);
             const {
               reputation,
               isModerator,

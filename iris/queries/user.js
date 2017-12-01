@@ -42,7 +42,7 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.user.load(args.id);
-      if (args.username) return getUser({ username: args.username });
+      if (args.username) return loaders.userByUsername.load(args.username);
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,

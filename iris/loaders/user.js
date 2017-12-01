@@ -1,5 +1,9 @@
 // @flow
-import { getUsers, getUsersThreadCount } from '../models/user';
+import {
+  getUsers,
+  getUsersThreadCount,
+  getUsersByUsername,
+} from '../models/user';
 import { getUsersRecurringPayments } from '../models/recurringPayment';
 import {
   getUsersPermissionsInCommunities,
@@ -12,6 +16,9 @@ import type { Loader } from './types';
 
 export const __createUserLoader = () =>
   createLoader(users => getUsers(users), 'id');
+
+export const __createUserByUsernameLoader = () =>
+  createLoader(users => getUsersByUsername(users), 'username');
 
 export const __createUserThreadCountLoader = () =>
   createLoader(users => getUsersThreadCount(users), 'id');

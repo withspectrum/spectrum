@@ -540,6 +540,7 @@ const getUserPermissionsInChannel = (
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
+    .distinct()
     .run()
     .then(data => {
       // if a record exists
@@ -559,6 +560,7 @@ const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
   return db
     .table('usersChannels')
     .getAll(...input, { index: 'userIdAndChannelId' })
+    .distinct()
     .run()
     .then(data => {
       if (!data || data.length === 0)

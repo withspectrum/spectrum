@@ -91,17 +91,6 @@ class ChannelList extends React.Component<Props> {
                         contents={channel}
                         withDescription={false}
                         channelIcon
-                        meta={
-                          channel.metaData.members > 1
-                            ? `${channel.metaData.members.toLocaleString()} members ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
-                            : `${channel.metaData.members} member ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
-                        }
                       >
                         <Icon glyph="view-forward" />
                       </ChannelListItem>
@@ -126,11 +115,6 @@ class ChannelList extends React.Component<Props> {
                         contents={channel}
                         withDescription={false}
                         channelIcon
-                        meta={
-                          channel.metaData.members === 1
-                            ? `${channel.metaData.members} member`
-                            : `${channel.metaData.members.toLocaleString()} members`
-                        }
                       >
                         <Icon glyph="view-forward" />
                       </ChannelListItem>

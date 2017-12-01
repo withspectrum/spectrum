@@ -66,6 +66,15 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
     );
 };
 
+const getUsersByUsername = (
+  usernames: Array<string>
+): Promise<Array<DBUser>> => {
+  return db
+    .table('users')
+    .getAll(...usernames, { index: 'username' })
+    .run();
+};
+
 const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
@@ -488,6 +497,7 @@ module.exports = {
   getUserById,
   getUserByEmail,
   getUserByUsername,
+  getUsersByUsername,
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,
