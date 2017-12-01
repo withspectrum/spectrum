@@ -3,6 +3,7 @@
  * The entry point for the server, this is where everything starts
  */
 console.log('Server starting...');
+const compression = require('compression');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');
 import path from 'path';
@@ -27,6 +28,8 @@ initPassport();
 // API server
 const app = express();
 
+app.use(compression());
+
 import middlewares from './routes/middlewares';
 app.use(middlewares);
 
@@ -47,7 +50,7 @@ if (IS_PROD || process.env.SSR) {
     `Web server running at http://localhost:${PORT} (server-side rendering enabled)`
   );
 } else {
-  console.log(`Server-side rendering disabled for development`);
+  console.log('Server-side rendering disabled for development');
 }
 
 import type { Loader } from './loaders/types';
