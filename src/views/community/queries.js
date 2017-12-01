@@ -127,6 +127,9 @@ export const getCommunityThreads = graphql(
 		query communityThreads($slug: String, $after: String, $id: ID) {
 			community(slug: $slug, id: $id) {
         ...communityInfo
+        pinnedThread {
+          ...threadInfo
+        }
         watercooler {
           ...threadInfo
         }

@@ -101,6 +101,7 @@ const Community = /* GraphQL */ `
 		coverPhoto: String
 		reputation: Int
 		pinnedThreadId: String
+		pinnedThread: Thread
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!

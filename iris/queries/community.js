@@ -171,6 +171,20 @@ module.exports = {
           })),
         }));
     },
+    pinnedThread: async ({ pinnedThreadId }: DBCommunity) => {
+      let pinnedThread;
+      if (pinnedThreadId) {
+        pinnedThread = await getThreads([pinnedThreadId]);
+      }
+
+      if (
+        pinnedThread &&
+        Array.isArray(pinnedThread) &&
+        pinnedThread.length > 0
+      )
+        return pinnedThread[0];
+      return null;
+    },
     threadConnection: async (
       { id, ...community }: DBCommunity,
       { first = 10, after }: PaginationOptions,
@@ -195,36 +209,17 @@ module.exports = {
         channels = await getPublicChannelsByCommunity(id);
       }
 
-      const [threads, pinnedThread] = await Promise.all([
-        // $FlowFixMe
-        getThreadsByChannels(channels, {
-          first,
-          after: lastThreadIndex,
-        }),
-        community.pinnedThreadId && getThreads([community.pinnedThreadId]),
-      ]);
-
-      // result will be used to return the graphQL pagination data
-      let result = threads;
-
-      if (
-        pinnedThread &&
-        Array.isArray(pinnedThread) &&
-        pinnedThread.length > 0
-      ) {
-        // if a pinnedThread was found, filter it out of the list of fetched threads
-        // to avoid duplication in the feed, and then add the pinned thread to the
-        // Front of the array
-        let arr = threads.filter(thread => thread.id !== pinnedThread[0].id);
-        arr.unshift(pinnedThread[0]);
-        result = arr;
-      }
+      // $FlowFixMe
+      const threads = await getThreadsByChannels(channels, {
+        first,
+        after: lastThreadIndex,
+      });
 
       return {
         pageInfo: {
-          hasNextPage: result && result.length >= first,
+          hasNextPage: threads && threads.length >= first,
         },
-        edges: result.map((thread, index) => ({
+        edges: threads.map((thread, index) => ({
           cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
           node: thread,
         })),
