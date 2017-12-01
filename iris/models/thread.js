@@ -247,6 +247,7 @@ export const getPublicThreadsByUser = (
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .run()
   );
 };
@@ -274,9 +275,10 @@ const getUsersThreadsForParticipantFeed = (userId, first, after) => {
       })
       .zip()
       // hide any that are deleted
+      .filter(thread => db.not(thread.hasFields('deletedAt')))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .skip(after || 0)
       .limit(first)
-      .filter(thread => db.not(thread.hasFields('deletedAt')))
       .pluck('id')
       .run()
   );
