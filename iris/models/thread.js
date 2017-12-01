@@ -162,7 +162,6 @@ export const getViewableThreadsByUser = async (
   currentUser: string,
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
-  console.time('getViewableThreadsByUser');
   // get a list of the channelIds the current user is allowed to see threads
   const currentUsersChannelIds = await db
     .table('usersChannels')
@@ -201,7 +200,6 @@ export const getViewableThreadsByUser = async (
     .limit(first)
     .run()
     .then(res => {
-      console.timeEnd('getViewableThreadsByUser');
       return res;
     });
 };
@@ -210,7 +208,6 @@ export const getPublicThreadsByUser = (
   evalUser: string,
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
-  console.time('getPublicThreadsByUser');
   return db
     .table('threads')
     .getAll(evalUser, { index: 'creatorId' })
@@ -224,7 +221,6 @@ export const getPublicThreadsByUser = (
     .limit(first || 10)
     .run()
     .then(res => {
-      console.timeEnd('getPublicThreadsByUser');
       return res;
     });
 };
@@ -234,7 +230,6 @@ export const getViewableParticipantThreadsByUser = async (
   currentUser: string,
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
-  console.time('getViewableParticipantThreadsByUser');
   // get a list of the channelIds the current user is allowed to see threads for
   const currentUsersChannelIds = await db
     .table('usersChannels')
@@ -280,7 +275,6 @@ export const getViewableParticipantThreadsByUser = async (
     .limit(first)
     .run()
     .then(res => {
-      console.timeEnd('getViewableParticipantThreadsByUser');
       return res;
     });
 };
@@ -289,7 +283,6 @@ export const getPublicParticipantThreadsByUser = async (
   evalUser: string,
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
-  console.time('getPublicParticipantThreadsByUser');
   return db
     .table('usersThreads')
     .getAll(evalUser, { index: 'userId' })
@@ -315,7 +308,6 @@ export const getPublicParticipantThreadsByUser = async (
     .limit(first || 10)
     .run()
     .then(res => {
-      console.timeEnd('getPublicParticipantThreadsByUser');
       return res;
     });
 };
