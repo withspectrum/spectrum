@@ -140,7 +140,6 @@ class NotificationsTab extends React.Component<Props, State> {
     // set the count to 0 if the tab is active so that if a user loads
     // /notifications view directly, the badge won't update
     if (curr.active) {
-      this.processAndMarkSeenNotifications(notifications);
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
