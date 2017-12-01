@@ -3,7 +3,7 @@
  * The entry point for the server, this is where everything starts
  */
 console.log('Server starting...');
-const compression = require('compression');
+const shrinkRay = require('shrink-ray');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');
 import path from 'path';
@@ -28,7 +28,7 @@ initPassport();
 // API server
 const app = express();
 
-app.use(compression());
+app.use(shrinkRay());
 
 import middlewares from './routes/middlewares';
 app.use(middlewares);
