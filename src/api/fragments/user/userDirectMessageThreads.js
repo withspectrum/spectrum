@@ -1,9 +1,7 @@
 // @flow
 // $FlowFixme
 import { gql } from 'react-apollo';
-import {
-  directMessageThreadInfoFragment,
-} from '../directMessageThread/directMessageThreadInfo';
+import { directMessageThreadInfoFragment } from '../directMessageThread/directMessageThreadInfo';
 
 export const userDirectMessageThreadsFragment = gql`
   fragment userDirectMessageThreads on User {
@@ -13,6 +11,7 @@ export const userDirectMessageThreadsFragment = gql`
         hasPreviousPage
       }
       edges {
+        cursor
         node {
           ...directMessageThreadInfo
         }
