@@ -112,6 +112,7 @@ class Input extends React.Component<Props, State> {
           autoCapitalize="sentences"
           autoComplete="on"
           autoCorrect="on"
+          stripPastedStyles={true}
           {...rest}
         />
       </InputWrapper>

@@ -24,6 +24,8 @@ type Props = {
   currentUser?: Object,
   isLoading: boolean,
   hasError: boolean,
+  hasNextPage: boolean,
+  fetchMore: Function,
   data: {
     user: {
       directMessageThreadsConnection: {
@@ -61,6 +63,14 @@ class DirectMessages extends React.Component<Props, State> {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentDidMount() {
     this.props.markDirectMessageNotificationsSeen();
     this.subscribe();
@@ -77,7 +87,16 @@ class DirectMessages extends React.Component<Props, State> {
   };
 
   render() {
-    const { match, currentUser, data, isLoading, hasError } = this.props;
+    const {
+      match,
+      currentUser,
+      data,
+      isLoading,
+      hasError,
+      fetchMore,
+      hasNextPage,
+    } = this.props;
+
     // Only logged-in users can view DM threads
     if (!currentUser) return null;
 
@@ -112,43 +131,46 @@ class DirectMessages extends React.Component<Props, State> {
           noComposer={isComposing || isViewingThread}
           messageComposer={!isComposing && !isViewingThread}
         />
-        <MessagesList isViewingThread={isViewingThread}>
+        <MessagesList isViewingThread={isViewingThread || isComposing}>
           <Link to="/messages/new" onClick={() => this.setActiveThread('new')}>
             <ComposeHeader>
               <Icon glyph="message-new" />
             </ComposeHeader>
           </Link>
 
-          {dataExists && (
+          {dataExists ? (
             <ThreadsList
+              hasNextPage={hasNextPage}
+              fetchMore={fetchMore}
               active={activeThread}
               threads={threads}
               currentUser={currentUser}
             />
+          ) : (
+            <div>
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+              <LoadingDM />
+            </div>
           )}
         </MessagesList>
 
-        {dataExists ? (
+        {dataExists && (
           <ThreadDetail
             match={match}
             threads={threads}
             currentUser={currentUser}
             setActiveThread={this.setActiveThread}
+            hideOnMobile={!(isComposing || isViewingThread)}
           />
-        ) : (
-          <div>
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-            <LoadingDM />
-          </div>
         )}
       </View>
     );

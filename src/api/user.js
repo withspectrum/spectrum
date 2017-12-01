@@ -285,7 +285,7 @@ export const updateUserEmailMutation = graphql(
   queries specific to each component.
 */
 export const GET_USER_AUTH_QUERY = gql`
-query getCurrentUserProfile {
+query getUserAuthProfile {
   user: currentUser {
     ...userInfo
     isPro

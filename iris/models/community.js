@@ -29,7 +29,7 @@ export const getCommunitiesBySlug = (
 ): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
-    .filter(community => db.expr(slugs).contains(community('slug')))
+    .getAll(...slugs, { index: 'slug' })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
@@ -537,46 +537,6 @@ export const userIsMemberOfAnyChannelInCommunity = (
     .then(channels => {
       // if any of the channels return true for isMember, we return true
       return channels.some(channel => channel.isMember);
-    });
-};
-
-export const getTopCommunities = (amount: number): Array<DBCommunity> => {
-  return db
-    .table('communities')
-    .pluck('id')
-    .run()
-    .then(communities => communities.map(community => community.id))
-    .then(communityIds => {
-      return Promise.all(
-        communityIds.map(community => {
-          return db
-            .table('usersCommunities')
-            .getAll(community, { index: 'communityId' })
-            .filter({ isMember: true })
-            .count()
-            .run()
-            .then(count => {
-              return {
-                id: community,
-                count,
-              };
-            });
-        })
-      );
-    })
-    .then(data => {
-      let sortedCommunities = data
-        .sort((x, y) => {
-          return y.count - x.count;
-        })
-        .map(community => community.id)
-        .slice(0, amount);
-
-      return db
-        .table('communities')
-        .getAll(...sortedCommunities)
-        .filter(community => db.not(community.hasFields('deletedAt')))
-        .run();
     });
 };
 

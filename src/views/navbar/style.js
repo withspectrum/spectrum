@@ -61,6 +61,18 @@ export const Section = styled(FlexRow)`
   @media (max-width: 768px) {
     flex: auto;
     justify-content: space-around;
+    display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
+  }
+`;
+
+export const LoggedOutSection = styled(FlexRow)`
+  display: flex;
+  flex: auto;
+  justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    flex: auto;
+    justify-content: center;
     display: flex;
   }
 `;
@@ -215,6 +227,12 @@ export const IconLink = styled(Link)`
       height: 32px;
     }
   }
+`;
+
+export const ExploreLink = styled(IconLink)`
+  width: auto;
+  align-self: center;
+  flex: none;
 `;
 
 export const Label = styled.span`
