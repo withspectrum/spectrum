@@ -27,7 +27,6 @@ import { HoverWrapper, Status, CoverAction } from './style';
 type ProfileProps = {
   user: Object,
   community: ?Object,
-  showProfile: ?boolean,
   dispatch: Function,
   source: string,
   currentUser: ?Object,
@@ -43,112 +42,113 @@ class HoverProfile extends Component<ProfileProps> {
   };
 
   render() {
-    const {
-      user,
-      community,
-      showProfile,
-      dispatch,
-      source,
-      currentUser,
-    } = this.props;
+    const { user, community, dispatch, source, currentUser } = this.props;
 
-    if (showProfile && community) {
-      if (community) {
-        return (
-          <HoverWrapper
-            top={this.props.top ? true : this.props.bottom ? false : true}
-            bottom={this.props.bottom}
-            right={this.props.right ? true : this.props.left ? false : true}
-            left={this.props.left}
-          >
-            <Container>
-              <CoverPhoto url={community.coverPhoto} />
-              <CoverLink to={`/${community.slug}`}>
-                <AvatarImage src={source} />
-                <CoverTitle>{community.name}</CoverTitle>
-              </CoverLink>
-              <CoverSubtitle>
-                {community.metaData.members.toLocaleString()} members
-              </CoverSubtitle>
+    if (community) {
+      return (
+        <HoverWrapper
+          top={this.props.top ? true : this.props.bottom ? false : true}
+          bottom={this.props.bottom}
+          right={this.props.right ? true : this.props.left ? false : true}
+          left={this.props.left}
+        >
+          <Container>
+            <CoverPhoto url={community.coverPhoto} />
+            <CoverLink to={`/${community.slug}`}>
+              <AvatarImage
+                src={source}
+                size="64"
+                style={{ boxShadow: '0 0 0 2px white', zIndex: '2' }}
+              />
+              <CoverTitle>{community.name}</CoverTitle>
+            </CoverLink>
+            <CoverSubtitle>
+              {community.metaData.members.toLocaleString()} members
+            </CoverSubtitle>
 
-              <CoverDescription>{community.description}</CoverDescription>
-            </Container>
-          </HoverWrapper>
-        );
-      } else if (showProfile && user) {
-        return (
-          <HoverWrapper
-            top={this.props.top ? true : this.props.bottom ? false : true}
-            bottom={this.props.bottom}
-            right={this.props.right ? true : this.props.left ? false : true}
-            left={this.props.left}
-          >
-            <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
-              <CoverPhoto url={user.coverPhoto}>
-                {currentUser &&
-                  user &&
-                  currentUser.id !== user.id && (
-                    <Link
-                      to={`/messages/new`}
-                      onClick={() => this.initMessage(dispatch, user)}
-                    >
-                      <CoverAction
-                        glyph="message-fill"
-                        color="text.reverse"
-                        hoverColor="text.reverse"
-                        tipText={`Message ${user.name}`}
-                        tipLocation={'left'}
-                      />
-                    </Link>
-                  )}
-              </CoverPhoto>
-              <CoverLink to={`/users/${user.username}`}>
-                <AvatarImage src={source} />
-                <CoverTitle>{user.name}</CoverTitle>
-              </CoverLink>
-              <CoverSubtitle center>
-                @{user.username}
-                {user.isPro && <Badge type="pro" />}
-              </CoverSubtitle>
-
-              {(user.description || user.website) && (
-                  <CoverDescription>
-                    {user.description && <p>{user.description}</p>}
-                    {user.website && (
-                      <ExtLink>
-                        <Icon glyph="link" size={24} />
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={addProtocolToString(user.website)}
-                        >
-                          {user.website}
-                        </a>
-                      </ExtLink>
-                    )}
-                  </CoverDescription>
-                )}
-
-              {user.totalReputation > 0 && (
-                <ReputationContainer>
-                  <Reputation
-                    tipText={'Total rep across all communities'}
-                    size={'large'}
-                    reputation={
-                      user.contextPermissions
-                        ? user.contextPermissions.reputation
-                        : user.totalReputation
-                    }
-                  />
-                </ReputationContainer>
-              )}
-            </Card>
-          </HoverWrapper>
-        );
-      }
-    } else {
-      return null;
+            <CoverDescription>{community.description}</CoverDescription>
+          </Container>
+        </HoverWrapper>
+      );
     }
+
+    if (user) {
+      return (
+        <HoverWrapper
+          top={this.props.top ? true : this.props.bottom ? false : true}
+          bottom={this.props.bottom}
+          right={this.props.right ? true : this.props.left ? false : true}
+          left={this.props.left}
+        >
+          <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
+            <CoverPhoto url={user.coverPhoto}>
+              {currentUser &&
+                user &&
+                currentUser.id !== user.id && (
+                  <Link
+                    to={`/messages/new`}
+                    onClick={() => this.initMessage(dispatch, user)}
+                  >
+                    <CoverAction
+                      glyph="message-fill"
+                      color="text.reverse"
+                      hoverColor="text.reverse"
+                      tipText={`Message ${user.name}`}
+                      tipLocation={'left'}
+                    />
+                  </Link>
+                )}
+            </CoverPhoto>
+            <CoverLink to={`/users/${user.username}`}>
+              <AvatarImage
+                src={source}
+                size="64"
+                style={{ boxShadow: '0 0 0 2px white', zIndex: '2' }}
+              />
+              <CoverTitle>{user.name}</CoverTitle>
+            </CoverLink>
+            <CoverSubtitle center>
+              @{user.username}
+              {user.isPro && <Badge type="pro" />}
+            </CoverSubtitle>
+
+            {(user.description || user.website) && (
+                <CoverDescription>
+                  {user.description && <p>{user.description}</p>}
+                  {user.website && (
+                    <ExtLink>
+                      <Icon glyph="link" size={24} />
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={addProtocolToString(user.website)}
+                      >
+                        {user.website}
+                      </a>
+                    </ExtLink>
+                  )}
+                </CoverDescription>
+              )}
+
+            {user.totalReputation > 0 && (
+              <ReputationContainer>
+                <Reputation
+                  tipText={'Total rep across all communities'}
+                  size={'large'}
+                  reputation={
+                    user.contextPermissions
+                      ? user.contextPermissions.reputation
+                      : user.totalReputation
+                  }
+                />
+              </ReputationContainer>
+            )}
+          </Card>
+        </HoverWrapper>
+      );
+    }
+
+    return null;
   }
 }
 

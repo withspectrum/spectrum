@@ -44,7 +44,7 @@ const Avatar = (props: AvatarProps) => {
 
   return (
     <Status size={size || 32} {...props}>
-      <LinkHandler>
+      <LinkHandler {...props}>
         <AvatarImage src={source} size={size} community={community} />
       </LinkHandler>
       {showProfile && <HoverProfile source={source} {...props} />}
