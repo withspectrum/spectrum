@@ -9,7 +9,6 @@ import {
   Shadow,
   hexa,
 } from '../globals';
-import Avatar from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
 

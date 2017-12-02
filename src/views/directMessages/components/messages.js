@@ -10,7 +10,6 @@ import { getDirectMessageThreadMessages } from '../queries';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
 import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
-import { subscribeToNewMessages } from '../../../api/subscriptions';
 
 type Props = {
   id: string,

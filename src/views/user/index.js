@@ -5,7 +5,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import Icon from '../../components/icons';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { track } from '../../helpers/events';
@@ -20,7 +19,6 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import {
   SegmentedControl,
-  Segment,
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';

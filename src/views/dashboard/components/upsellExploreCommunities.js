@@ -12,7 +12,6 @@ import {
   CommunityListItem,
   CommunityListPadding,
   CommunityListAvatar,
-  CommunityListReputation,
   CommunityListText,
   UpsellExploreDivider,
 } from '../style';

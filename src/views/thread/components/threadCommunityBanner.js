@@ -111,7 +111,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, id, watercooler },
+      thread: { channel, community, watercooler },
       currentUser,
       hide,
     } = this.props;

@@ -11,7 +11,6 @@ import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { addToastWithTimeout } from './actions/toasts';
 import { track } from './helpers/events';
 
 const { thread, t } = queryString.parse(history.location.search);

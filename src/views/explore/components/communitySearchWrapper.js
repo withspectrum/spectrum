@@ -1,29 +1,11 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import compose from 'recompose/compose';
 import { Transition, zIndex, Shadow, hexa } from '../../../components/globals';
 import ViewSegment from '../../../components/viewSegment';
 import { Button } from '../../../components/buttons';
-import { CommunityProfile } from '../../../components/profile';
-import { collections } from '../collections';
-import {
-  ListWithTitle,
-  ListTitle,
-  ListWrapper,
-  CategoryWrapper,
-  Collections,
-  CollectionWrapper,
-} from '../style';
 import { CLIENT_URL } from '../../../api/constants';
-import { getCommunitiesCollectionQuery } from '../queries';
-import { displayLoadingState } from '../../../components/loading';
-import {
-  SegmentedControl,
-  Segment,
-} from '../../../components/segmentedControl';
 import { Tagline, Copy, Content } from '../../splash/style';
 
 // $FlowFixMe

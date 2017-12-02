@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
@@ -123,13 +122,12 @@ class NotificationsTab extends React.Component<Props, State> {
   componentDidUpdate(prevProps, prevState) {
     const {
       data: prevData,
-      active: prevActive,
       location: prevLocation,
       activeInboxThread: prevActiveInboxThread,
     } = prevProps;
     const curr = this.props;
 
-    const { subscription, notifications } = this.state;
+    const { notifications } = this.state;
 
     if (!notifications && curr.data.notifications) {
       this.subscribe();
@@ -337,7 +335,7 @@ class NotificationsTab extends React.Component<Props, State> {
   setCount = notifications => {
     const curr = this.props;
 
-    if (!notifications || notifications.length == 0) {
+    if (!notifications || notifications.length === 0) {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
@@ -386,7 +384,7 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   render() {
-    const { active, currentUser, data, isLoading, count } = this.props;
+    const { active, currentUser, isLoading, count } = this.props;
     const { notifications, shouldRenderDropdown } = this.state;
 
     return (

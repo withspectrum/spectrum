@@ -2,7 +2,6 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';

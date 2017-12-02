@@ -2,7 +2,6 @@ import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 export const getThisCommunity = graphql(
   gql`

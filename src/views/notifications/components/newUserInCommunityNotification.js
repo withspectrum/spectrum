@@ -52,7 +52,6 @@ export const NewUserInCommunityNotification = ({
 type Props = {
   notification: Object,
   currentUsre: Object,
-  history: Object,
   markSingleNotificationSeen: Function,
   markSingleNotificationAsSeenInState: Function,
 };
@@ -72,7 +71,7 @@ class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
   };
 
   render() {
-    const { notification, currentUser, history } = this.props;
+    const { notification, currentUser } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, true);
     const event = parseEvent(notification.event);

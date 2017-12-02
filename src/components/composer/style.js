@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fontStack, hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexCol)`
   background-color: ${props => props.theme.bg.default};
