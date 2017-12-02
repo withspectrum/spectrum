@@ -17,9 +17,9 @@ export const MediaRow = styled.div`
   display: flex;
   background: ${props => props.theme.bg.wash};
   border-top: 2px solid ${props => props.theme.bg.border};
-  padding: 0 16px;
+  padding: 8px 16px;
   margin-left: -24px;
-  margin-bottom: -28px;
+  margin-bottom: -24px;
   margin-top: 16px;
   width: calc(100% + 48px);
 
