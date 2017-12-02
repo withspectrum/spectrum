@@ -2,11 +2,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
 import compose from 'recompose/compose';
-import { Transition, zIndex, Shadow, hexa } from '../../components/globals';
-import ViewSegment from '../../components/viewSegment';
-import { Button } from '../../components/buttons';
 import { CommunityProfile } from '../../components/profile';
 import { collections } from './collections';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
@@ -19,11 +15,9 @@ import {
   CollectionWrapper,
   LoadingContainer,
 } from './style';
-import { CLIENT_URL } from '../../api/constants';
 import { getCommunitiesCollectionQuery } from './queries';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
-import { Tagline, Copy, Content } from '../splash/style';
 
 export const Charts = () => {
   const ChartGrid = styled.div`
@@ -78,7 +72,6 @@ class CollectionSwitcher extends React.Component<Props, State> {
 
         <CollectionWrapper>
           {collections.map((collection, index) => {
-            const { title, categories } = collection;
             return (
               <CategoryWrapper key={index}>
                 {collection.curatedContentType === this.state.selectedView && (

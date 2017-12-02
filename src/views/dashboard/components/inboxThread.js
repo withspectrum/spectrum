@@ -114,7 +114,7 @@ export default compose(connect(), withRouter)(InboxThread);
 class WatercoolerThreadPure extends React.Component {
   render() {
     const {
-      data: { attachments, participants, creator, community, messageCount, id },
+      data: { participants, creator, community, messageCount, id },
       active,
     } = this.props;
     const participantsExist = participants && participants.length > 0;

@@ -55,7 +55,6 @@ export const NewChannelNotification = ({ notification, currentUser }) => {
 type Props = {
   notification: Object,
   currentUsre: Object,
-  history: Object,
   markSingleNotificationSeen: Function,
   markSingleNotificationAsSeenInState: Function,
 };
@@ -73,7 +72,7 @@ class MiniNewChannelNotificationWithMutation extends React.Component<Props> {
   };
 
   render() {
-    const { notification, currentUser, history } = this.props;
+    const { notification } = this.props;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
@@ -83,7 +82,10 @@ class MiniNewChannelNotificationWithMutation extends React.Component<Props> {
         : 'A new channel was';
 
     return (
-      <SegmentedNotificationListRow onClick={this.markAsSeen}>
+      <SegmentedNotificationListRow
+        isSeen={notification.isSeen}
+        onClick={this.markAsSeen}
+      >
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={false}>

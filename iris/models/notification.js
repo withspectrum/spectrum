@@ -18,13 +18,13 @@ export const getNotificationsByUser = (
       }
     )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
-    .limit(first)
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .limit(first)
     .run();
 };
 

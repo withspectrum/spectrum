@@ -99,8 +99,8 @@ const User = /* GraphQL */ `
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
-		everything(first: Int = 20, after: String): EverythingThreadsConnection!
+		threadConnection(first: Int = 10, after: String, kind: ThreadConnectionType): UserThreadsConnection!
+		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings

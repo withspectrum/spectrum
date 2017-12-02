@@ -11,7 +11,7 @@ import Dropdown from '../../../components/dropdown';
 import { Loading } from '../../../components/loading';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
-import { DropdownHeader, DropdownFooter, MarkAllSeen } from '../style';
+import { DropdownHeader, DropdownFooter } from '../style';
 import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
@@ -27,7 +27,6 @@ const NotificationContainer = props => {
     rawNotifications,
     currentUser,
     history,
-    error,
     loading,
     markSingleNotificationAsSeenInState,
   } = props;

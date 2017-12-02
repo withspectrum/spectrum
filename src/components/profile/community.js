@@ -31,29 +31,9 @@ import {
   CoverPhoto,
   CoverLink,
   CoverTitle,
-  CoverSubtitle,
   CoverDescription,
   ButtonContainer,
 } from './style';
-
-// type CommunityProps = {
-//   id: string,
-//   name: string,
-//   slug: string,
-//   isMember: boolean,
-//   website: string,
-//   profilePhoto: string,
-//   metaData: {
-//     channels: number,
-//     members: number,
-//   },
-//   communityPermissions: {
-//     isOwner: boolean,
-//     isMember: boolean,
-//     isModerator: boolean,
-//     isBlocked: boolean,
-//   },
-// };
 
 class CommunityWithData extends Component {
   state: {

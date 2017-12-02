@@ -86,7 +86,7 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
             )}
             {props.contents.name}
           </Heading>
-          <Meta>{props.meta}</Meta>
+          <Meta>{props.meta && props.meta}</Meta>
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>

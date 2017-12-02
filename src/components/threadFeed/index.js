@@ -92,6 +92,14 @@ class ThreadFeedPure extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
@@ -146,12 +154,52 @@ class ThreadFeedPure extends Component {
       ? threads.slice().map(thread => thread.node)
       : [];
 
+    let filteredThreads = threadNodes;
+    if (
+      this.props.data.community &&
+      this.props.data.community.watercooler &&
+      this.props.data.community.watercooler.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.watercooler.id
+      );
+    }
+    if (
+      this.props.data.community &&
+      this.props.data.community.pinnedThread &&
+      this.props.data.community.pinnedThread.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.pinnedThread.id
+      );
+    }
+
     if (dataExists) {
       return (
         <Threads data-e2e-id="thread-feed">
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
           )}
+
+          {this.props.data.community &&
+            this.props.data.community.pinnedThread &&
+            this.props.data.community.pinnedThread.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.pinnedThread}
+                viewContext={viewContext}
+                isPinned={true}
+              />
+            )}
+
+          {this.props.data.community &&
+            this.props.data.community.watercooler &&
+            this.props.data.community.watercooler.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.watercooler}
+                viewContext={viewContext}
+              />
+            )}
+
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
@@ -162,13 +210,12 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {threadNodes.map(thread => {
+            {filteredThreads.map(thread => {
               return (
                 <ThreadFeedCard
                   key={thread.id}
                   data={thread}
                   viewContext={viewContext}
-                  isPinned={thread.id === this.props.pinnedThreadId}
                 />
               );
             })}

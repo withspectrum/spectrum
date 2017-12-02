@@ -1,11 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import { withRouter } from 'react-router';
-import { zIndex } from '../globals';
 import { Card } from '../card';
 import Reputation from '../reputation';
 import Icon from '../icons';
@@ -226,7 +224,7 @@ const AvatarWithFallback = ({ style, ...props }) => (
 );
 
 const Avatar = (props: Object): React$Element<any> => {
-  const { src, community, user, size, link, noLink, showProfile } = props;
+  const { src, link, noLink, showProfile } = props;
   const source = src;
 
   // $FlowFixMe
