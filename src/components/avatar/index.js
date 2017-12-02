@@ -1,15 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import Link from 'src/components/link';
-import { withRouter } from 'react-router';
-import { zIndex } from '../globals';
-import { Card } from '../card';
-import Reputation from '../reputation';
-import Icon from '../icons';
-import Badge from '../badges';
 import { optimize } from '../../helpers/images';
-import { addProtocolToString } from '../../helpers/utils';
 import HoverProfile from './hoverProfile';
 import AvatarImage from './image';
 import { Status, AvatarLink, AvatarNoLink } from './style';
