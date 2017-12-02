@@ -22,10 +22,24 @@ const LinkHandler = props => {
   }
 };
 
-const Avatar = (props: Object): React$Element<any> => {
+type AvatarProps = {
+  src: string,
+  community?: any,
+  user?: any,
+  size: string,
+  link?: ?string,
+  noLink?: boolean,
+  showProfile?: boolean,
+};
+
+const Avatar = (props: AvatarProps) => {
   const { src, community, user, size, link, noLink, showProfile } = props;
 
-  const optimizedAvatar = optimize(src, { w: size, dpr: '2', format: 'png' });
+  const optimizedAvatar = optimize(src, {
+    w: size,
+    dpr: '2',
+    format: 'png',
+  });
   const communityFallback = '/img/default_community.svg';
   const userFallback = '/img/default_avatar.svg';
 
@@ -37,18 +51,14 @@ const Avatar = (props: Object): React$Element<any> => {
     source = [optimizedAvatar, userFallback];
   }
 
-  if (!src || !source) {
-    return null;
-  } else {
-    return (
-      <Status size={size || 32} {...props}>
-        <LinkHandler>
-          <AvatarImage src={source} size={size} community={community} />
-        </LinkHandler>
-        {showProfile && <HoverProfile source={source} {...props} />}
-      </Status>
-    );
-  }
+  return (
+    <Status size={size || 32} {...props}>
+      <LinkHandler>
+        <AvatarImage src={source} size={size} community={community} />
+      </LinkHandler>
+      {showProfile && <HoverProfile source={source} {...props} />}
+    </Status>
+  );
 };
 
 export default Avatar;

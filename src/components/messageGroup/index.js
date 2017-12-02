@@ -39,7 +39,7 @@ export const AuthorAvatar = ({
       src={sender.profilePhoto}
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
-      size={24}
+      size="24"
       showProfile={showProfile}
     />
   );
