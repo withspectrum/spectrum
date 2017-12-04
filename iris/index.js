@@ -57,6 +57,14 @@ const boot = () => {
   console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 };
 
+import type { Loader } from './loaders/types';
+export type GraphQLContext = {
+  user: Object,
+  loaders: {
+    [key: string]: Loader,
+  },
+};
+
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
