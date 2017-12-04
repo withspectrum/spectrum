@@ -25,6 +25,9 @@ initPassport();
 // API server
 const app = express();
 
+// Trust the now proxy
+app.set('trust proxy', true);
+
 // Send all responses as gzip
 app.use(compression());
 

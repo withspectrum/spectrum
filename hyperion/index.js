@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3006;
 
 const app = express();
 
+// Trust the now proxy
+app.set('trust proxy', true);
+
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
   app.use(logging);
