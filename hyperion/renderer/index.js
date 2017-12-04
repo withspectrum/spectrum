@@ -41,7 +41,7 @@ const renderer = (req, res) => {
     networkInterface: createNetworkInterface({
       uri:
         IS_PROD && !FORCE_DEV
-          ? `https://alpha.spectrum.chat/api`
+          ? `https://${req.hostname}/api`
           : 'http://localhost:3001/api',
       opts: {
         credentials: 'include',
