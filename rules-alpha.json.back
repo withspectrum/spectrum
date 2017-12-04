@@ -6,6 +6,6 @@
     { "pathname": "/auth/**", "dest": "api.alpha.spectrum.chat" },
     { "pathname": "/websocket", "dest": "api.alpha.spectrum.chat" },
     { "pathname": "/websocket/**", "dest": "api.alpha.spectrum.chat" },
-    { "dest": "hyperion.alpha.spectrum.chat" }
+    { "dest": "cadmus.alpha.spectrum.chat" }
   ]
 }
