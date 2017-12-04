@@ -154,7 +154,6 @@ class Messages extends Component<MessageGroupProps, State> {
       toggleReaction,
       threadType,
       threadId,
-      thread,
       isModerator,
     } = this.props;
 

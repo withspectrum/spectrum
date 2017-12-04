@@ -1,5 +1,4 @@
 // @flow
-import findWithRegex from 'find-with-regex';
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
 import { Mention } from './style';
 import { MENTIONS } from 'shared/regexps';

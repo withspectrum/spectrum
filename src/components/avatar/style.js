@@ -12,6 +12,7 @@ export const HoverWrapper = styled.div`
   left: ${props => (props.right ? '0' : 'auto')};
   z-index: ${zIndex.tooltip};
   width: 256px;
+  padding-bottom: 12px;
 
   &:hover {
     display: inline-block;

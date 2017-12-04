@@ -152,7 +152,10 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
 
     if (threads && threads.length > 0) {
       return (
-        <SegmentedNotificationListRow onClick={this.markAsSeen}>
+        <SegmentedNotificationListRow
+          isSeen={notification.isSeen}
+          onClick={this.markAsSeen}
+        >
           <ThreadContext>
             <Icon glyph="post-fill" />
             <TextContent pointer={false}>

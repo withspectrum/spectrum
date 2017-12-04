@@ -7,6 +7,7 @@ import { withRouter } from 'react-router';
 import Reputation from '../reputation';
 import Icon from '../icons';
 import Badge from '../badges';
+import { Button } from '../buttons';
 import { addProtocolToString } from '../../helpers/utils';
 import { Card } from '../card';
 import { optimize } from '../../helpers/images';
@@ -21,6 +22,7 @@ import {
   CoverDescription,
   ExtLink,
   ReputationContainer,
+  MessageButtonContainer,
 } from '../profile/style';
 import { HoverWrapper, Status, CoverAction } from './style';
 
@@ -81,24 +83,7 @@ class HoverProfile extends Component<ProfileProps> {
           left={this.props.left}
         >
           <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
-            <CoverPhoto url={user.coverPhoto}>
-              {currentUser &&
-                user &&
-                currentUser.id !== user.id && (
-                  <Link
-                    to={`/messages/new`}
-                    onClick={() => this.initMessage(dispatch, user)}
-                  >
-                    <CoverAction
-                      glyph="message-fill"
-                      color="text.reverse"
-                      hoverColor="text.reverse"
-                      tipText={`Message ${user.name}`}
-                      tipLocation={'left'}
-                    />
-                  </Link>
-                )}
-            </CoverPhoto>
+            <CoverPhoto url={user.coverPhoto} />
             <CoverLink to={`/users/${user.username}`}>
               <AvatarImage
                 src={source}
@@ -143,6 +128,19 @@ class HoverProfile extends Component<ProfileProps> {
                 />
               </ReputationContainer>
             )}
+
+            {currentUser &&
+              user &&
+              currentUser.id !== user.id && (
+                <MessageButtonContainer>
+                  <Link
+                    to={`/messages/new`}
+                    onClick={() => this.initMessage(dispatch, user)}
+                  >
+                    <Button>Message</Button>
+                  </Link>
+                </MessageButtonContainer>
+              )}
           </Card>
         </HoverWrapper>
       );

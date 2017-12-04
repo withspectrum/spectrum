@@ -3,11 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import { openModal } from '../../actions/modals';
 import Icon from '../../components/icons';
-import { Loading } from '../../components/loading';
 import { ProfileDropdown } from './components/profileDropdown';
-import NewUserOnboarding from '../../views/newUserOnboarding';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
@@ -76,14 +73,7 @@ class Navbar extends React.Component<Props> {
   }
 
   render() {
-    const {
-      history,
-      match,
-      isLoading,
-      hasError,
-      currentUser,
-      notificationCounts,
-    } = this.props;
+    const { history, match, currentUser, notificationCounts } = this.props;
 
     const loggedInUser = currentUser;
 

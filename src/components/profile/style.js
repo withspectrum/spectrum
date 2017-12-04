@@ -9,7 +9,6 @@ import {
   Shadow,
   hexa,
 } from '../globals';
-import Avatar from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
 
@@ -279,5 +278,21 @@ export const ButtonContainer = styled.div`
 
   button {
     width: 100%;
+  }
+`;
+
+export const MessageButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 0 8px 8px;
+  align-items: stretch;
+
+  a,
+  button {
+    width: 100%;
+    display: flex;
+    flex: auto;
+    justify-content: center;
+    text-align: center;
   }
 `;

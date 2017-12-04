@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { getCurrentUserDirectMessageThreads } from '../../api/directMessageThread';
 import { markDirectMessageNotificationsSeenMutation } from '../../api/notification';
 import Icon from '../../components/icons';
-import Loading from './components/loading';
 import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
@@ -22,7 +21,6 @@ type Props = {
   dispatch: Function,
   match: Object,
   currentUser?: Object,
-  isLoading: boolean,
   hasError: boolean,
   hasNextPage: boolean,
   fetchMore: Function,
@@ -91,7 +89,6 @@ class DirectMessages extends React.Component<Props, State> {
       match,
       currentUser,
       data,
-      isLoading,
       hasError,
       fetchMore,
       hasNextPage,
