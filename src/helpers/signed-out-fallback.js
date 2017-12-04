@@ -7,7 +7,6 @@ import queryString from 'query-string';
 const Switch = props => {
   const { Component, FallbackComponent, currentUser, ...rest } = props;
   const { authed } = queryString.parse(props.location.search);
-
   if ((!currentUser && !authed) || !Component) {
     return <FallbackComponent {...rest} />;
   } else {
