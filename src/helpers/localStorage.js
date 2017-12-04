@@ -4,7 +4,7 @@ export const getItemFromStorage = (key: string) => {
   try {
     JSON.parse(localStorage.getItem(key));
   } catch (err) {
-    console.log(`Error getting item ${item} from localStoragee`, err);
+    console.log(`Error getting item ${key} from localStoragee`, err);
   }
 };
 
@@ -16,10 +16,10 @@ export const storeItem = (key: string, item: any) => {
   }
 };
 
-export const removeItemFromStorage = (item: string) => {
+export const removeItemFromStorage = (key: string) => {
   try {
-    localStorage.removeItem(item);
+    localStorage.removeItem(key);
   } catch (err) {
-    console.log(`Error removing item ${item} from localStoragee`, err);
+    console.log(`Error removing item ${key} from localStoragee`, err);
   }
 };
