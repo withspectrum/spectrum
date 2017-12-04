@@ -65,6 +65,9 @@ export type GraphQLContext = {
   },
 };
 
+import createSubscriptionsServer from './routes/create-subscription-server';
+const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
+
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
