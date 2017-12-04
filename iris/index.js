@@ -71,7 +71,13 @@ process.on('unhandledRejection', async err => {
 if (IS_PROD || process.env.SSR) {
   Loadable.preloadAll()
     .then(boot)
-    .catch(err => console.log(err));
+    .catch(async err => {
+      try {
+        await Raven.captureException(err);
+      } catch (err) {
+        console.error('Raven error', err);
+      }
+    });
 } else {
   boot();
 }
