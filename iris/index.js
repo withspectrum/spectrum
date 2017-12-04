@@ -10,6 +10,7 @@ import path from 'path';
 import { createServer } from 'http';
 import express from 'express';
 import Loadable from 'react-loadable';
+import Raven from 'shared/raven';
 import { init as initPassport } from './authentication.js';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
@@ -55,6 +56,17 @@ const boot = () => {
   // Start database listeners
   console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 };
+
+process.on('unhandledRejection', async err => {
+  console.error('Unhandled rejection', err);
+  try {
+    await Raven.captureException(err);
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
 
 if (IS_PROD || process.env.SSR) {
   Loadable.preloadAll()
