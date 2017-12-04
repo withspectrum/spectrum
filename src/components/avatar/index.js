@@ -22,34 +22,57 @@ type AvatarProps = {
   noLink?: boolean,
   showProfile?: boolean,
 };
-
-const Avatar = (props: AvatarProps) => {
-  const { src, community, user, size, link, noLink, showProfile } = props;
-
-  const optimizedAvatar = optimize(src, {
-    w: size,
-    dpr: '2',
-    format: 'png',
-  });
-  const communityFallback = '/img/default_community.svg';
-  const userFallback = '/img/default_avatar.svg';
-
-  let source;
-
-  if (community && !user) {
-    source = [optimizedAvatar, communityFallback];
-  } else {
-    source = [optimizedAvatar, userFallback];
-  }
-
-  return (
-    <Status size={size || 32} {...props}>
-      <LinkHandler {...props}>
-        <AvatarImage src={source} size={size} community={community} />
-      </LinkHandler>
-      {showProfile && <HoverProfile source={source} {...props} />}
-    </Status>
-  );
+type State = {
+  isHovering: boolean,
 };
+class Avatar extends React.Component<AvatarProps, State> {
+  state = { isHovering: false };
+  hover = () =>
+    this.setState(({ isHovering }) => ({ isHovering: !isHovering }));
+
+  render() {
+    const {
+      src,
+      community,
+      user,
+      size,
+      link,
+      noLink,
+      showProfile,
+    } = this.props;
+    const { isHovering } = this.state;
+
+    const optimizedAvatar = optimize(src, {
+      w: size,
+      dpr: '2',
+      format: 'png',
+    });
+    const communityFallback = '/img/default_community.svg';
+    const userFallback = '/img/default_avatar.svg';
+
+    let source;
+
+    if (community && !user) {
+      source = [optimizedAvatar, communityFallback];
+    } else {
+      source = [optimizedAvatar, userFallback];
+    }
+
+    return (
+      <Status
+        size={size || 32}
+        {...this.props}
+        onMouseEnter={this.hover}
+        onMouseLeave={this.hover}
+      >
+        <LinkHandler {...this.props}>
+          <AvatarImage src={source} size={size} community={community} />
+        </LinkHandler>
+        {showProfile &&
+          isHovering && <HoverProfile source={source} {...this.props} />}
+      </Status>
+    );
+  }
+}
 
 export default Avatar;
