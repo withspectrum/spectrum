@@ -13,7 +13,7 @@ build-athena
 build-hermes
 build-chronos
 build-mercury
-build-cadmus
+build-hyperion
 package-lock.json
 .vscode
 dump.rdb

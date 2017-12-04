@@ -1,5 +1,5 @@
 // @flow
-console.log('Cadmus starting...');
+console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
 debug('logging with debug enabled');
 // $FlowFixMe
@@ -72,6 +72,6 @@ app.get('*', renderer);
 Loadable.preloadAll().then(() => {
   app.listen(PORT);
   console.log(
-    `Cadmus, the server-side renderer, running at http://localhost:${PORT}`
+    `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
 });
