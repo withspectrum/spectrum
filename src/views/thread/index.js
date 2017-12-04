@@ -5,7 +5,6 @@ import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from '../../views/titlebar';
-import { Button } from '../../components/buttons';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
 import Head from '../../components/head';

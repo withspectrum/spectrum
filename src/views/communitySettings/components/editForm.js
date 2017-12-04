@@ -9,7 +9,7 @@ import {
 } from '../../../api/community';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { Button, TextButton, IconButton } from '../../../components/buttons';
+import { Button, IconButton } from '../../../components/buttons';
 import { Notice } from '../../../components/listItems/style';
 import {
   Input,

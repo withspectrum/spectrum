@@ -14,7 +14,7 @@ class ThreadWithData extends Component {
     }
   }
   render() {
-    const { data: { thread, error }, setName } = this.props;
+    const { data: { thread, error } } = this.props;
     if (error || !thread) {
       return null;
     }

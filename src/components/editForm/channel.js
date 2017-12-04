@@ -12,7 +12,7 @@ import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Notice } from '../listItems/style';
-import { Button, TextButton, IconButton } from '../buttons';
+import { Button, IconButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import Icon from '../../components/icons';
