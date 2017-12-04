@@ -7,27 +7,21 @@ const compression = require('compression');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');
 import path from 'path';
-import fs from 'fs';
 import { createServer } from 'http';
-//$FlowFixMe
 import express from 'express';
-import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
-
-import schema from './schema';
+import Raven from 'shared/raven';
 import { init as initPassport } from './authentication.js';
-import createLoaders from './loaders';
-import getMeta from './utils/get-page-meta';
-
 const IS_PROD = process.env.NODE_ENV === 'production';
-
 const PORT = 3001;
 
 // Initialize authentication
 initPassport();
+
 // API server
 const app = express();
 
+// Send all responses as gzip
 app.use(compression());
 
 import middlewares from './routes/middlewares';
@@ -53,19 +47,7 @@ if (IS_PROD || process.env.SSR) {
   console.log('Server-side rendering disabled for development');
 }
 
-import type { Loader } from './loaders/types';
-export type GraphQLContext = {
-  user: Object,
-  loaders: {
-    [key: string]: Loader,
-  },
-};
-
 const server = createServer(app);
-
-// Create subscriptions server at /websocket
-import createSubscriptionsServer from './routes/create-subscription-server';
-const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
 const boot = () => {
   // Start webserver
@@ -75,8 +57,35 @@ const boot = () => {
   console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 };
 
+import type { Loader } from './loaders/types';
+export type GraphQLContext = {
+  user: Object,
+  loaders: {
+    [key: string]: Loader,
+  },
+};
+
+process.on('unhandledRejection', async err => {
+  console.error('Unhandled rejection', err);
+  try {
+    await Raven.captureException(err);
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
+
 if (IS_PROD || process.env.SSR) {
-  Loadable.preloadAll().then(boot);
+  Loadable.preloadAll()
+    .then(boot)
+    .catch(async err => {
+      try {
+        await Raven.captureException(err);
+      } catch (err) {
+        console.error('Raven error', err);
+      }
+    });
 } else {
   boot();
 }
