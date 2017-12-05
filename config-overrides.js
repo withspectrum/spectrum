@@ -50,11 +50,7 @@ const removeEslint = config => {
 };
 
 module.exports = function override(config, env) {
-  config.plugins.push(
-    WriteFilePlugin({
-      test: /^((?!hot-update).)*$/gi,
-    })
-  );
+  config.plugins.push(WriteFilePlugin());
   config.plugins.push(
     new ManifestPlugin({
       filename: './build/client.manifest.json',
