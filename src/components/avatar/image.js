@@ -116,10 +116,15 @@ class AvatarImage extends Component<ImageProps> {
   };
 
   unloadImg = () => {
-    delete this.i.onerror;
-    delete this.i.onload;
-    delete this.i.src;
-    delete this.i;
+    try {
+      delete this.i.onerror;
+      delete this.i.onload;
+      delete this.i.src;
+      delete this.i;
+    } catch (err) {
+      console.log(err);
+      delete this.i;
+    }
   };
 
   componentDidMount() {
