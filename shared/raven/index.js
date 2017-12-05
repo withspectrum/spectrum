@@ -9,4 +9,4 @@ Raven.config(
   }
 ).install();
 
-export default Raven.requestHandler();
+export default Raven;
