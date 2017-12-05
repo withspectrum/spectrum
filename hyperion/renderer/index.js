@@ -44,7 +44,12 @@ const renderer = (req, res) => {
           ? `https://${req.hostname}/api`
           : 'http://localhost:3001/api',
       opts: {
+        // Send credentials on
         credentials: 'include',
+        // Forward the cookies to the API so it can authenticate the user
+        headers: {
+          cookie: req.headers.cookie,
+        },
       },
     }),
     ...getSharedApolloClientOptions(),
