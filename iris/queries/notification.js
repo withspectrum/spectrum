@@ -41,7 +41,7 @@ module.exports = {
       { first = 10, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
-      if (!user) return [];
+      if (!user) return;
       // return an array of unread direct message notifications
       // $FlowFixMe
       return getUnreadDirectMessageNotifications(user.id, {

@@ -12,16 +12,32 @@ If you'd rather not install an app (or are using Windows Substem for Linux) you 
 npm install -g now
 ```
 
-## Frontend and Iris
+## Naming scheme
 
-Since the frontend and iris are the parts that change the most often the repo is set up such that typing `now` in the root directory will deploy them.
+All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the Iris (the API server) which runs at `api.spectrum.chat`. 
+
+### Path aliases
+
+[Now's path alias feature](https://zeit.co/docs/features/path-aliases) takes care of routing requests to the right workers. To see our current production aliases check the `rules.json` file in the root of the project.
+
+To deploy new rules, simply run the following command: (assuming `rules.json` has the changes)
+
+```sh
+now alias spectrum.chat -r rules.json
+```
+
+The same command with a different URL and slightly adapted rules can also be used to create an alpha/beta/staging/... version of the site.
+
+## Frontend and Hyperion 
+
+Since the frontend is the part that changes the most often the repo is set up such that typing `now` in the root directory will deploy the frontend with hyperion. (the server-side rendering worker)
 
 ### Deploying
 
 First, make sure you're in the Space Program `now` team:
 
 ```
-now switch
+now switch spaceprogram
 ```
 
 > Note: If you haven't been added to the now team yet ask one of your coworkers to add you!
@@ -32,21 +48,21 @@ Second, deploy a new version of the app:
 now
 ```
 
-This will do an _immutable deploy_ of the app and will return a unique URL that this specific version is accessible at. (something like `spectrum-grtertb34.now.sh`)
+This will do an _immutable deploy_ of the hyperion and will return a unique URL that this specific version is accessible at. (something like `spectrum-grtertb34.now.sh`)
 
 Third, test that version of the app to make sure the new feature(s) work(s) as expected in production. Note that nobody except for people will access to the unique URL from the last step can access it at this point.
 
-Fourth, if you're happy with the new feature(s) alias your unique URL to `spectrum.chat` to make it immediately available to all users:
+Fourth, if you're happy with the new feature(s) alias your unique URL to `hyperion.workers.spectrum.chat` to make it immediately available to all users:
 
 ```
-now alias spectrum-grtertb34.now.sh spectrum.chat
+now alias spectrum-grtertb34.now.sh hyperion.workers.spectrum.chat
 ```
 
-And that's it, you've now deployed a new version of iris and the frontend!
+And that's it, you've now deployed a new version of hyperion and the frontend!
 
-## Workers
+## Other workers
 
-We use [`backpack`](https://github.com/palmerhq/backpack) to get a nice development setup and build process in place for our workers. Since this is a mono-repo and `now` doesn't have any special functionality to handle monorepos we have to deploy the _built_ version of the workers. (compared to the frontend/iris deploy where you deploy the raw code which gets built on the server) We alias them to `<name>.workers.spectrum.chat` to make sure only one version of the code is running at any given point.
+We use [`backpack`](https://github.com/palmerhq/backpack) to get a nice development setup and build process in place for our workers. Since this is a mono-repo and `now` doesn't have any special functionality to handle monorepos we have to deploy the _built_ version of the workers. (compared to the frontend deploy where you deploy the raw code which gets built on the server)
 
 ### Deploying
 

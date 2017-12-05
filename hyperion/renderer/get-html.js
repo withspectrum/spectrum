@@ -3,14 +3,18 @@ import fs from 'fs';
 import path from 'path';
 import serialize from 'serialize-javascript';
 
-const html = fs
-  .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
-  .toString()
-  .replace(
-    '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
-    ''
-  )
-  .replace(/(src="\/static\/js\/main\.\w+?\.js")/g, ' defer="defer" $1');
+const getIndex = () => {
+  return fs
+    .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+    .toString()
+    .replace(
+      '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
+      ''
+    )
+    .replace(/(src="\/static\/js\/main\.\w+?\.js")/g, ' defer="defer" $1');
+};
+
+let html = getIndex();
 
 type Arguments = {
   styleTags: string,
@@ -36,6 +40,7 @@ export const getHTML = ({
   content,
   scriptTags,
 }: Arguments) => {
+  if (process.env.NODE_ENV === 'development') html = getIndex();
   return (
     html
       // Inject the state and the content instead of <div id="root">

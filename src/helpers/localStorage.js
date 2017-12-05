@@ -12,7 +12,7 @@ export const storeItem = (key: string, item: any) => {
   try {
     return localStorage.setItem(key, JSON.stringify(item));
   } catch (err) {
-    console.log(`Error storing item ${item} to localStoragee`, err);
+    console.log(`Error storing item ${key} to localStoragee`, err);
   }
 };
 

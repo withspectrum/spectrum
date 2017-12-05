@@ -32,6 +32,12 @@ module.exports = {
         filename: './build/server.manifest.json',
       })
     );
+    // Tell Sentry which server the errors are coming from
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.SENTRY_NAME': JSON.stringify(dir),
+      })
+    );
     config.resolve.modules.push(nodePath);
     return config;
   },

@@ -1,0 +1,11 @@
+{
+  "rules": [
+    { "pathname": "/api", "dest": "api.spectrum.chat" },
+    { "pathname": "/api/**", "dest": "api.spectrum.chat" },
+    { "pathname": "/auth", "dest": "api.spectrum.chat" },
+    { "pathname": "/auth/**", "dest": "api.spectrum.chat" },
+    { "pathname": "/websocket", "dest": "api.spectrum.chat" },
+    { "pathname": "/websocket/**", "dest": "api.spectrum.chat" },
+    { "dest": "hyperion.workers.spectrum.chat" }
+  ]
+}

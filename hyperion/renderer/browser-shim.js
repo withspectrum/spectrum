@@ -11,7 +11,7 @@ global.window = {
 global.localStorage = {
   getItem: () => null,
   setItem: () => {},
-  removeItem: () => null,
+  removeItem: () => {},
 };
 global.navigator = {
   userAgent: '',
