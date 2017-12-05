@@ -16,6 +16,7 @@ import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
+import Raven from 'shared/raven';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
@@ -131,10 +132,10 @@ const renderer = (req, res) => {
       res.end();
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
+      Raven.captureException(err);
       res.status(500);
-      res.end();
-      throw err;
+      res.send('Oops, something went wrong. Please try again!');
     });
 };
 
