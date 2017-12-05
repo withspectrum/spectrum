@@ -9,9 +9,13 @@ debug('logging with debug enabled!');
 import path from 'path';
 import { createServer } from 'http';
 import express from 'express';
-import Loadable from 'react-loadable';
+import * as graphql from 'graphql';
+
 import Raven from 'shared/raven';
+import schema from './schema';
 import { init as initPassport } from './authentication.js';
+import createLoaders from './loaders';
+
 const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
 
@@ -20,6 +24,9 @@ initPassport();
 
 // API server
 const app = express();
+
+// Trust the now proxy
+app.set('trust proxy', true);
 
 // Send all responses as gzip
 app.use(compression());
@@ -33,30 +40,6 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-// Use express to server-side render the React app
-if (IS_PROD || process.env.SSR) {
-  const renderer = require('./renderer').default;
-  app.use(
-    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-  );
-  app.get('*', renderer);
-  console.log(
-    `Web server running at http://localhost:${PORT} (server-side rendering enabled)`
-  );
-} else {
-  console.log('Server-side rendering disabled for development');
-}
-
-const server = createServer(app);
-
-const boot = () => {
-  // Start webserver
-  server.listen(PORT);
-
-  // Start database listeners
-  console.log(`GraphQL server running at http://localhost:${PORT}/api`);
-};
-
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
   user: Object,
@@ -65,13 +48,22 @@ export type GraphQLContext = {
   },
 };
 
+const server = createServer(app);
+
+// Create subscriptions server at /websocket
 import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
+
+// Start webserver
+server.listen(PORT);
+
+// Start database listeners
+console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
-    await Raven.captureException(err);
+    await new Promise(res => Raven.captureException(err, res));
   } catch (err) {
     console.error('Raven error', err);
   } finally {
@@ -82,24 +74,10 @@ process.on('unhandledRejection', async err => {
 process.on('uncaughtException', async err => {
   console.error('Uncaught exception', err);
   try {
-    await Raven.captureException(err);
+    await new Promise(res => Raven.captureException(err, res));
   } catch (err) {
     console.error('Raven error', err);
   } finally {
     process.exit(1);
   }
 });
-
-if (IS_PROD || process.env.SSR) {
-  Loadable.preloadAll()
-    .then(boot)
-    .catch(async err => {
-      try {
-        await Raven.captureException(err);
-      } catch (err) {
-        console.error('Raven error', err);
-      }
-    });
-} else {
-  boot();
-}

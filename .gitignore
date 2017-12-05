@@ -13,9 +13,12 @@ build-athena
 build-hermes
 build-chronos
 build-mercury
+build-hyperion
 package-lock.json
 .vscode
 dump.rdb
 *.swp
 queries-by-response-size.js
 queries-by-time.js
+test-extend.js
+stats.json

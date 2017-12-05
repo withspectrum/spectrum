@@ -87,10 +87,10 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'providerId')
+        return createOrFindUser(user, 'providerId')
           .then(user => {
             done(null, user);
-            return null;
+            return user;
           })
           .catch(err => {
             done(err);
@@ -154,10 +154,10 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'fbProviderId')
+        return createOrFindUser(user, 'fbProviderId')
           .then(user => {
             done(null, user);
-            return null;
+            return user;
           })
           .catch(err => {
             done(err);
@@ -221,10 +221,10 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'googleProviderId')
+        return createOrFindUser(user, 'googleProviderId')
           .then(user => {
             done(null, user);
-            return null;
+            return user;
           })
           .catch(err => {
             done(err);
@@ -262,10 +262,10 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'githubProviderId')
+        return createOrFindUser(user, 'githubProviderId')
           .then(user => {
             done(null, user);
-            return null;
+            return user;
           })
           .catch(err => {
             done(err);
