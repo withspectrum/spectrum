@@ -153,7 +153,7 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                Threads &amp; Replies
+                Replies
               </DesktopSegment>
 
               <DesktopSegment
@@ -161,21 +161,21 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('creator')}
                 selected={selectedView === 'creator'}
               >
-                Created
+                Threads
               </DesktopSegment>
               <MobileSegment
                 segmentLabel="participant"
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                Threads &amp; Replies
+                Replies
               </MobileSegment>
               <MobileSegment
                 segmentLabel="creator"
                 onClick={() => this.handleSegmentClick('creator')}
                 selected={selectedView === 'creator'}
               >
-                Creator
+                Threads
               </MobileSegment>
             </SegmentedControl>
             {hasThreads && (

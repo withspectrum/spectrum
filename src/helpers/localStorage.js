@@ -2,7 +2,7 @@ export const clearStorage = () => localStorage.clear();
 
 export const getItemFromStorage = (key: string) => {
   try {
-    JSON.parse(localStorage.getItem(key));
+    return JSON.parse(localStorage.getItem(key));
   } catch (err) {
     console.log(`Error getting item ${key} from localStoragee`, err);
   }
@@ -10,7 +10,7 @@ export const getItemFromStorage = (key: string) => {
 
 export const storeItem = (key: string, item: any) => {
   try {
-    localStorage.setItem(key, JSON.stringify(item));
+    return localStorage.setItem(key, JSON.stringify(item));
   } catch (err) {
     console.log(`Error storing item ${key} to localStoragee`, err);
   }
@@ -18,7 +18,7 @@ export const storeItem = (key: string, item: any) => {
 
 export const removeItemFromStorage = (key: string) => {
   try {
-    localStorage.removeItem(key);
+    return localStorage.removeItem(key);
   } catch (err) {
     console.log(`Error removing item ${key} from localStoragee`, err);
   }

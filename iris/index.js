@@ -70,3 +70,14 @@ process.on('unhandledRejection', async err => {
     process.exit(1);
   }
 });
+
+process.on('uncaughtException', async err => {
+  console.error('Uncaught exception', err);
+  try {
+    await Raven.captureException(err);
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
