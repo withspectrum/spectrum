@@ -66,6 +66,11 @@ const timedOut = recipient => {
         replies: groupReplies(threads[threadId].replies),
       }));
       debug(`adding email for @${recipient.username} to queue`);
+      console.log(JSON.stringify(threadsWithGroupedReplies));
+      console.log(
+        'replies: ',
+        JSON.stringify(threadsWithGroupedReplies[0].replies)
+      );
       return addQueue(
         SEND_NEW_MESSAGE_EMAIL,
         {

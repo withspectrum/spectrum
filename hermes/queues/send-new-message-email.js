@@ -5,40 +5,42 @@ import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import {
   NEW_MESSAGE_TEMPLATE,
   TYPE_NEW_MESSAGE_IN_THREAD,
-  DEBUG_TEMPLATE,
   TYPE_MUTE_THREAD,
   SEND_NEW_MESSAGE_EMAIL,
 } from './constants';
-import capitalize from '../utils/capitalize';
 
 type ReplyData = {
   sender: {
-    profilePhoto: string,
     name: string,
+    username: string,
+    profilePhoto: string,
   },
   content: {
     body: string,
   },
 };
 
-type ThreadContent = {
-  title: string,
-};
-
 type ThreadData = {
-  title: string,
   id: string,
+  content: {
+    title: string,
+  },
+  community: {
+    slug: string,
+    name: string,
+  },
+  channel: {
+    name: string,
+  },
   replies: Array<ReplyData>,
-  content: ThreadContent,
 };
 
 type SendNewMessageEmailJobData = {
-  user: {
-    displayName: string,
+  recipient: {
+    id: string,
+    email: string,
     username: string,
-    userId: string,
   },
-  to: string,
   threads: Array<ThreadData>,
 };
 
@@ -49,61 +51,65 @@ type SendNewMessageEmailJob = {
 
 export default async (job: SendNewMessageEmailJob) => {
   debug(`\nnew job: ${job.id}`);
-  const repliesAmount = job.data.threads.reduce(
-    (total, thread) => total + thread.replies.length,
-    0
-  );
-  const repliesText = repliesAmount > 1 ? 'new replies' : 'a new reply';
-  const postfix = job.data.threads.length > 1 ? ' and other threads' : '';
-  const subject = `You've got ${repliesText} in ${job.data.threads[0].content
-    .title}${postfix}`;
+  const { recipient, threads } = job.data;
+
+  // how many threads were grouped into this email
+  const threadsAmount = threads.length;
+  let totalNames = [];
+  threads.map(thread => {
+    const replyNames = thread.replies.map(reply => reply.sender.name);
+    return replyNames.map(name => {
+      totalNames.push(name);
+      return name;
+    });
+  });
+  // how many unique people sent replies in all of these threads
+  totalNames = totalNames.filter((x, i, a) => a.indexOf(x) == i);
+  const firstName = totalNames.splice(0, 1)[0];
+  const restNames = totalNames.length > 0 ? totalNames : null;
+  const numUsersText = restNames ? ` and ${restNames.length} others` : ' ';
+  const threadsText =
+    threadsAmount === 1
+      ? `'${threads[0].content.title}'`
+      : `${threadsAmount} conversations`;
+  // Brian and 3 others replied in 4 conversations
+  // Brian replied in 'Thread title'
+  // Brian and 3 others replied in 'Thread title'
+  const subject = `${firstName}${numUsersText} replied in ${threadsText}`;
+  const preheaderSubtext = restNames
+    ? ` and ${restNames.length} others...`
+    : '';
+  const preheader = `Reply to ${firstName}${preheaderSubtext}`;
 
   const unsubscribeToken = await generateUnsubscribeToken(
-    job.data.user.userId,
+    recipient.id,
     TYPE_NEW_MESSAGE_IN_THREAD
   );
 
-  if (!unsubscribeToken) {
-    try {
-      return sendEmail({
-        TemplateId: DEBUG_TEMPLATE,
-        To: 'briandlovin@gmail.com',
-        TemplateModel: {
-          unsubscribeToken,
-          userData: job.data.user,
-          type: TYPE_NEW_MESSAGE_IN_THREAD,
-        },
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    try {
-      return sendEmail({
-        TemplateId: NEW_MESSAGE_TEMPLATE,
-        To: job.data.to,
-        Tag: SEND_NEW_MESSAGE_EMAIL,
-        TemplateModel: {
-          subject,
-          user: job.data.user,
-          username: job.data.user.username,
-          threads: job.data.threads.map(thread => ({
+  if (!unsubscribeToken || !recipient.email || !recipient.username) return;
+  try {
+    return sendEmail({
+      TemplateId: NEW_MESSAGE_TEMPLATE,
+      To: recipient.email,
+      Tag: SEND_NEW_MESSAGE_EMAIL,
+      TemplateModel: {
+        subject,
+        preheader,
+        recipient,
+        unsubscribeToken,
+        data: {
+          threads: threads.map(thread => ({
             ...thread,
-            // Capitalize the first letter of all titles in the body of the email
-            // Don't capitalize the one in the subject though because in a DM thread
-            // that is "your conversation with X", so we don't want to capitalize it.
-            title: capitalize(thread.content.title),
             muteThreadToken: generateUnsubscribeToken(
-              job.data.user.userId,
+              recipient.id,
               TYPE_MUTE_THREAD,
               thread.id
             ),
           })),
-          unsubscribeToken,
         },
-      });
-    } catch (err) {
-      console.log(err);
-    }
+      },
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
