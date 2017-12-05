@@ -8,6 +8,7 @@ import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
 import { getUser } from 'iris/models/user';
+import Raven from 'shared/raven';
 
 const PORT = process.env.PORT || 3006;
 
@@ -68,6 +69,28 @@ app.use(
 
 import renderer from './renderer';
 app.get('*', renderer);
+
+process.on('unhandledRejection', async err => {
+  console.error('Unhandled rejection', err);
+  try {
+    await new Promise(res => Raven.captureException(err, res));
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
+
+process.on('uncaughtException', async err => {
+  console.error('Uncaught exception', err);
+  try {
+    await new Promise(res => Raven.captureException(err, res));
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
 
 Loadable.preloadAll().then(() => {
   app.listen(PORT);

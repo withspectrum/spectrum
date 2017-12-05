@@ -63,7 +63,7 @@ console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
-    await Raven.captureException(err);
+    await new Promise(res => Raven.captureException(err, res));
   } catch (err) {
     console.error('Raven error', err);
   } finally {
@@ -74,7 +74,7 @@ process.on('unhandledRejection', async err => {
 process.on('uncaughtException', async err => {
   console.error('Uncaught exception', err);
   try {
-    await Raven.captureException(err);
+    await new Promise(res => Raven.captureException(err, res));
   } catch (err) {
     console.error('Raven error', err);
   } finally {
