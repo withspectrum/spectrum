@@ -36,7 +36,7 @@ app.use(cors);
 // This allows deploy previews to work, as this route would only be called
 // if there's no path alias in Now for hyperionurl.com/api, which would only
 // happen on deploy previews
-app.use('/api', (req, res) => {
+app.use('/api', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
@@ -44,7 +44,7 @@ app.use('/api', (req, res) => {
   );
 });
 
-app.use('/auth', (req, res) => {
+app.use('/auth', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
@@ -52,20 +52,12 @@ app.use('/auth', (req, res) => {
   );
 });
 
-app.use('/websocket', (req, res) => {
+app.use('/websocket', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
     `https://spectrum.chat${redirectUrl}`
   );
-});
-
-app.all('/auth', (req, res) => {
-  res.redirect(307, 'https://spectrum.chat/auth');
-});
-
-app.all('/websocket', (req, res) => {
-  res.redirect(307, 'https://spectrum.chat/websocket');
 });
 
 import cookieParser from 'cookie-parser';
