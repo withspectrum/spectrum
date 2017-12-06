@@ -36,8 +36,28 @@ app.use(cors);
 // This allows deploy previews to work, as this route would only be called
 // if there's no path alias in Now for hyperionurl.com/api, which would only
 // happen on deploy previews
-app.all('/api', (req, res) => {
-  res.redirect(307, 'https://spectrum.chat/api');
+app.use('/api', (req, res) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  res.redirect(
+    req.method === 'POST' || req.xhr ? 307 : 301,
+    `https://spectrum.chat${redirectUrl}`
+  );
+});
+
+app.use('/auth', (req, res) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  res.redirect(
+    req.method === 'POST' || req.xhr ? 307 : 301,
+    `https://spectrum.chat${redirectUrl}`
+  );
+});
+
+app.use('/websocket', (req, res) => {
+  const redirectUrl = `${req.baseUrl}${req.path}`;
+  res.redirect(
+    req.method === 'POST' || req.xhr ? 307 : 301,
+    `https://spectrum.chat${redirectUrl}`
+  );
 });
 
 app.all('/auth', (req, res) => {
