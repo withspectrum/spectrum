@@ -37,7 +37,7 @@ type ThreadData = {
 
 type SendNewMessageEmailJobData = {
   recipient: {
-    id: string,
+    userId: string,
     email: string,
     username: string,
   },
@@ -53,6 +53,8 @@ export default async (job: SendNewMessageEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, threads } = job.data;
 
+  console.log('recipient', recipient);
+
   // how many threads were grouped into this email
   const threadsAmount = threads.length;
   let totalNames = [];
@@ -67,7 +69,11 @@ export default async (job: SendNewMessageEmailJob) => {
   totalNames = totalNames.filter((x, i, a) => a.indexOf(x) == i);
   const firstName = totalNames.splice(0, 1)[0];
   const restNames = totalNames.length > 0 ? totalNames : null;
-  const numUsersText = restNames ? ` and ${restNames.length} others` : ' ';
+  const numUsersText = restNames
+    ? ` and ${restNames.length === 1
+        ? `${restNames.length} other person`
+        : `${restNames.length} others`}`
+    : '';
   const threadsText =
     threadsAmount === 1
       ? `'${threads[0].content.title}'`
@@ -77,14 +83,25 @@ export default async (job: SendNewMessageEmailJob) => {
   // Brian and 3 others replied in 'Thread title'
   const subject = `${firstName}${numUsersText} replied in ${threadsText}`;
   const preheaderSubtext = restNames
-    ? ` and ${restNames.length} others...`
+    ? ` and ${restNames.length === 1
+        ? `${restNames.length} other person`
+        : `${restNames.length} others`}...`
     : '';
-  const preheader = `Reply to ${firstName}${preheaderSubtext}`;
+  const preheader = `View your conversations with ${firstName}${preheaderSubtext}`;
 
   const unsubscribeToken = await generateUnsubscribeToken(
-    recipient.id,
+    recipient.userId,
     TYPE_NEW_MESSAGE_IN_THREAD
   );
+
+  const singleThreadMuteToken =
+    threads.length === 1
+      ? generateUnsubscribeToken(
+          recipient.userId,
+          TYPE_MUTE_THREAD,
+          threads[0].id
+        )
+      : null;
 
   if (!unsubscribeToken || !recipient.email || !recipient.username) return;
   try {
@@ -97,11 +114,12 @@ export default async (job: SendNewMessageEmailJob) => {
         preheader,
         recipient,
         unsubscribeToken,
+        singleThreadMuteToken,
         data: {
           threads: threads.map(thread => ({
             ...thread,
             muteThreadToken: generateUnsubscribeToken(
-              recipient.id,
+              recipient.userId,
               TYPE_MUTE_THREAD,
               thread.id
             ),

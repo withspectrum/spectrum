@@ -33,7 +33,10 @@ export default async replies => {
     };
 
     if (index === 0) return newReplies.push(newGroup);
-    if (reply.sender.id === message.senderId) {
+    if (
+      newReplies[newReplies.length - 1] &&
+      newReplies[newReplies.length - 1].sender.id === message.senderId
+    ) {
       newReplies[newReplies.length - 1].content.body += body;
       return;
     } else {

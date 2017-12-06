@@ -96,18 +96,12 @@ const timedOut = async recipient => {
     return;
   }
 
-  console.log('final data', JSON.stringify(threadsWithGroupedReplies));
   debug(`adding email for @${recipient.username} to queue`);
   return addQueue(
     SEND_NEW_MESSAGE_EMAIL,
     {
-      to: recipient.email,
-      user: {
-        displayName: recipient.name,
-        username: recipient.username,
-        userId: recipient.userId,
-      },
-      threads: threadsWithGroupedReplies,
+      recipient,
+      threads: filteredThreadsWithGroupedReplies,
     },
     {
       removeOnComplete: true,
