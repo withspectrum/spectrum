@@ -34,7 +34,7 @@ type JobData = {
 
 export default async (job: JobData) => {
   const { message: incomingMessage } = job.data;
-  const { id: messageSenderId } = incomingMessage;
+  const { senderId: messageSenderId } = incomingMessage;
 
   debug(
     `new job: message sent by ${messageSenderId} in thread #${incomingMessage.threadId}`

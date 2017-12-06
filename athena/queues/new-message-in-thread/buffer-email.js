@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena:send-message-notification-email');
+const debug = require('debug')('athena::send-message-notification-email');
 import addQueue from '../../utils/addQueue';
 import { SEND_NEW_MESSAGE_EMAIL } from '../constants';
 import { getNotifications } from '../../models/notification';
@@ -15,11 +15,9 @@ const MAX_WAIT = 600000;
 // Called when the buffer time is over to actually send an email
 const timedOut = async recipient => {
   const threadsInScope = timeouts[recipient.email].threads;
-  console.log('threads in scope', threadsInScope);
 
   // array of DBNotifications
   const notificationsInScope = timeouts[recipient.email].notifications;
-  console.log('notificationsInScope', notificationsInScope);
 
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
@@ -40,7 +38,10 @@ const timedOut = async recipient => {
   const notifications = await getNotifications(
     notificationsInScope.map(notification => notification.id)
   );
-  if (!notifications || notifications.length) return;
+  if (!notifications || notifications.length === 0) {
+    debug('No notifications in scope');
+    return;
+  }
 
   debug('notifications loaded, finding unseen threads');
   const unseenThreadIds = notifications
@@ -70,17 +71,20 @@ const timedOut = async recipient => {
 
   debug('group replies');
   // Group replies by sender, turn it back into an array
-  const threadsWithGroupedReplies = Object.keys(threads).map(threadId => ({
-    ...threads[threadId],
-    replies: groupReplies(threads[threadId].replies),
-  }));
+  const threadKeys = Object.keys(threads);
+  const threadsWithGroupedRepliesPromises = threadKeys.map(async threadId => {
+    const replies = await groupReplies(threads[threadId].replies);
+    return {
+      ...threads[threadId],
+      replies,
+    };
+  });
 
+  const [threadsWithGroupedReplies] = await Promise.all([
+    ...threadsWithGroupedRepliesPromises,
+  ]).catch(err => console.log('error grouping threads and replies', err));
   debug(`adding email for @${recipient.username} to queue`);
-  console.log(JSON.stringify(threadsWithGroupedReplies));
-  console.log(
-    'replies: ',
-    JSON.stringify(threadsWithGroupedReplies[0].replies)
-  );
+  console.log('WTF', JSON.stringify(threadsWithGroupedReplies));
 
   return addQueue(
     SEND_NEW_MESSAGE_EMAIL,
