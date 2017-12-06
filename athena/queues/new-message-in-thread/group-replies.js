@@ -1,3 +1,4 @@
+// @flow
 export default replies => {
   let newReplies = [];
   replies.forEach((reply, index) => {
