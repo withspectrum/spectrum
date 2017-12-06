@@ -32,6 +32,14 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 import cors from 'shared/middlewares/cors';
 app.use(cors);
 
+// Redirect requests to /api to the production API
+// This allows deploy previews to work, as this route would only be called
+// if there's no path alias in Now for hyperionurl.com/api, which would only
+// happen on deploy previews
+app.all('/api', (req, res) => {
+  res.redirect(307, 'https://spectrum.chat/api');
+});
+
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 
