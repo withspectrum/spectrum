@@ -73,23 +73,16 @@ const timedOut = async recipient => {
   // Group replies by sender, turn it back into an array
   const threadKeys = Object.keys(threads);
 
-  console.log('threadKeys', threadKeys);
+  const threadsWithGroupedRepliesPromises = threadKeys.map(async threadId => ({
+    ...threads[threadId],
+    replies: await groupReplies(threads[threadId].replies),
+  }));
 
-  const threadsWithGroupedRepliesPromises = threadKeys.map(async threadId => {
-    const replies = await groupReplies(threads[threadId].replies);
-    console.log('replies', replies);
-    return {
-      ...threads[threadId],
-      replies,
-    };
-  });
-
-  const [threadsWithGroupedReplies] = await Promise.all([
+  const threadsWithGroupedReplies = await Promise.all([
     ...threadsWithGroupedRepliesPromises,
   ]).catch(err => console.log('error grouping threads and replies', err));
-  debug(`adding email for @${recipient.username} to queue`);
-  console.log('WTF', JSON.stringify(threadsWithGroupedReplies));
 
+  debug(`adding email for @${recipient.username} to queue`);
   return addQueue(
     SEND_NEW_MESSAGE_EMAIL,
     {
