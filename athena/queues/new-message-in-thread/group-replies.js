@@ -1,4 +1,4 @@
-const groupReplies = replies => {
+export default replies => {
   let newReplies = [];
   replies.forEach((reply, index) => {
     if (
@@ -16,5 +16,3 @@ const groupReplies = replies => {
   });
   return newReplies;
 };
-
-export default groupReplies;

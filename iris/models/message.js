@@ -100,7 +100,7 @@ export const storeMessage = (
 
       if (message.threadType === 'story') {
         checkMessageToxicity(message);
-        addQueue('message notification', { message, userId });
+        addQueue('message notification', { message });
         addQueue('process reputation event', {
           userId,
           type: 'message created',
