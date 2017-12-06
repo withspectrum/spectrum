@@ -49,9 +49,13 @@ export default async replies => {
   const replyPromises = replies.map(
     async reply => await getMessageById(reply.id)
   );
+
   const messageRecords = await Promise.all(replyPromises).catch(err =>
     console.log('error getting reply promises', err)
   );
+
+  console.log('\n message records', messageRecords);
+
   const filteredMessageRecords = messageRecords
     .filter(message => !message.deletedAt)
     .sort((a, b) => a.timestamp > b.timestamp);

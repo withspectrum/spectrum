@@ -72,8 +72,12 @@ const timedOut = async recipient => {
   debug('group replies');
   // Group replies by sender, turn it back into an array
   const threadKeys = Object.keys(threads);
+
+  console.log('threadKeys', threadKeys);
+
   const threadsWithGroupedRepliesPromises = threadKeys.map(async threadId => {
     const replies = await groupReplies(threads[threadId].replies);
+    console.log('replies', replies);
     return {
       ...threads[threadId],
       replies,
