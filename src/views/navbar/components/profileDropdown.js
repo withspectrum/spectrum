@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
+import { SERVER_URL } from '../../../api/constants';
 
 const UserProfileDropdown = styled(Dropdown)`width: 160px;`;
 
@@ -49,9 +50,9 @@ export const ProfileDropdown = (props: ProfileProps) => {
             </UserProfileDropdownListItem>
           </Link>
         )}
-        {/* <UserProfileDropdownListItem onClick={props.logout}>
-          Log Out
-        </UserProfileDropdownListItem> */}
+        <a href={`${SERVER_URL}/auth/logout`}>
+          <UserProfileDropdownListItem>Log Out</UserProfileDropdownListItem>
+        </a>
       </UserProfileDropdownList>
     </UserProfileDropdown>
   );

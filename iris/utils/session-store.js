@@ -1,8 +1,8 @@
 // @flow
 import session from 'express-session';
-import RethinkSessionStore from 'session-rethinkdb';
 import cookieParser from 'cookie-parser';
 import { db } from '../models/db';
+import { decode } from './base64';
 
 const ONE_YEAR = 31556952000;
 const ONE_DAY = 86400000;
@@ -21,31 +21,15 @@ export const getUserIdFromReq = (req: any): Promise<string> =>
     sessionCookieParser(req, null, err => {
       if (err) return rej(err);
 
-      const sessionId = req.signedCookies['connect.sid'];
+      const sessionId = req.cookies['connect.sid'];
       if (!sessionId) return rej();
-      sessionStore.get(sessionId, (err, session) => {
-        if (err || !session || !session.passport || !session.passport.user) {
-          return rej(err);
-        }
-
-        return res(session.passport.user);
-      });
+      let user;
+      try {
+        let { passport } = JSON.parse(decode(sessionId));
+        user = passport.user;
+      } catch (err) {
+        return rej();
+      }
+      return res(user);
     });
   });
-
-const SessionStore = RethinkSessionStore(session);
-
-const sessionStore = new SessionStore(db, {
-  db: 'spectrum',
-  table: 'sessions',
-  // I'm a bit unclear what this does, it's set to 60 seconds by default
-  // so it might be how long after the cookie expires we clear it? Anyway, setting it to
-  // one year like the cookie can't hurt.
-  browserSessionsMaxAge: ONE_YEAR,
-  // Clear expired cookies once a day
-  // The default is 60 seconds, but that puts unnecessary load on the database. Once a day should
-  // be perfectly fine.
-  clearInterval: ONE_DAY,
-});
-
-export default sessionStore;
