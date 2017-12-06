@@ -82,6 +82,21 @@ const timedOut = async recipient => {
     ...threadsWithGroupedRepliesPromises,
   ]).catch(err => console.log('error grouping threads and replies', err));
 
+  const filteredThreadsWithGroupedReplies =
+    threadsWithGroupedReplies &&
+    threadsWithGroupedReplies.length > 0 &&
+    threadsWithGroupedReplies.filter(thread => thread.replies.length > 0);
+
+  // this would happen if someone sends a message in a thread then deletes that message
+  if (
+    filteredThreadsWithGroupedReplies &&
+    filteredThreadsWithGroupedReplies.length === 0
+  ) {
+    debug('no threads with at least one reply');
+    return;
+  }
+
+  console.log('final data', JSON.stringify(threadsWithGroupedReplies));
   debug(`adding email for @${recipient.username} to queue`);
   return addQueue(
     SEND_NEW_MESSAGE_EMAIL,
