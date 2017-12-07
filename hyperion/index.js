@@ -95,6 +95,9 @@ app.use(
   express.static(path.resolve(__dirname, '..', 'build'), { index: false })
 );
 
+import cache from './cache';
+app.use(cache);
+
 import renderer from './renderer';
 app.get('*', renderer);
 
