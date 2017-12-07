@@ -19,13 +19,9 @@ githubAuthRouter.get('/', (req, ...rest) => {
   }
 
   // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
-  req.session.redirectURL = url;
-  return new Promise(res => {
-    // Save the new session data to the database before redirecting
-    req.session.save(err => {
-      res(passport.authenticate('github', { scope: ['user'] })(req, ...rest));
-    });
-  });
+  req.session.redirectUrl = url;
+
+  return passport.authenticate('github', { scope: ['user'] })(req, ...rest);
 });
 
 // Twitter will redirect the user to this URL after approval. Finish the
@@ -38,21 +34,15 @@ githubAuthRouter.get(
   }),
   (req, res) => {
     // req.session.redirectURL is set in the /auth/twitter route
-    if (!req.session.redirectURL) return res.redirect(FALLBACK_URL);
+    if (!req.session.redirectUrl) return res.redirect(FALLBACK_URL);
 
-    const redirectUrl = new URL(req.session.redirectURL);
+    const redirectUrl = new URL(req.session.redirectUrl);
     redirectUrl.searchParams.append('authed', 'true');
 
     // Delete the redirectURL from the session again so we don't redirect
     // to the old URL the next time around
-    req.session.redirectURL = undefined;
-
-    return new Promise(resolve => {
-      req.session.save(err => {
-        if (err) console.log(err);
-        resolve(res.redirect(redirectUrl.href));
-      });
-    });
+    req.session.redirectUrl = undefined;
+    return res.redirect(redirectUrl.href);
   }
 );
 

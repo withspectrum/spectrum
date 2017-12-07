@@ -20,8 +20,8 @@ export default withRouter(
       onClick={evt => {
         if (rest.onClick) rest.onClick(evt);
         if (evt.metaKey || evt.ctrlKey) return;
-        evt.preventDefault();
         if (window.appUpdateAvailable === true) {
+          evt.preventDefault();
           // This is copied from react-router's <Link /> component and is basically what it does internally
           const location =
             typeof rest.to === 'string'
@@ -29,7 +29,6 @@ export default withRouter(
               : rest.to;
           return (window.location = history.createHref(location));
         }
-        return history.push(rest.to);
       }}
     />
   )

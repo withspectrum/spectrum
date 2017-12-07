@@ -9,7 +9,7 @@ import {
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
 } from '../../../api/notification';
-import { IconLink, Label } from '../style';
+import { Tab, Label } from '../style';
 
 type Props = {
   active: boolean,
@@ -200,7 +200,7 @@ class MessagesTab extends React.Component<Props, State> {
     const { active, count } = this.props;
 
     return (
-      <IconLink
+      <Tab
         data-active={active}
         to="/messages"
         rel="nofollow"
@@ -211,7 +211,7 @@ class MessagesTab extends React.Component<Props, State> {
           withCount={count > 10 ? '10+' : count > 0 ? count : false}
         />
         <Label>Messages</Label>
-      </IconLink>
+      </Tab>
     );
   }
 }

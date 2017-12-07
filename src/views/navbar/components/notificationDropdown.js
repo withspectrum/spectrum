@@ -12,7 +12,7 @@ import { Loading } from '../../../components/loading';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
 import { DropdownHeader, DropdownFooter } from '../style';
-import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
+import { NotificationDropdownList } from '../../notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
   <NullState

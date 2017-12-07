@@ -134,8 +134,8 @@ export const NotificationListRow = styled(FlexCol)`
     background-color: ${({ theme }) => hexa(theme.brand.wash, 0.15)};
     box-shadow: ${props =>
       !props.isSeen
-        ? `inset 4px 0 0 0 ${props.theme.brand.alt}`
-        : `inset 2px 0 0 0 ${props.theme.brand.alt}`};
+        ? `inset 6px 0 0 0 ${props.theme.brand.alt}`
+        : `inset 4px 0 0 0 ${props.theme.brand.alt}`};
     cursor: pointer;
   }
 `;
