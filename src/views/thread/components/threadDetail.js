@@ -3,7 +3,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
-import { EditorState } from 'draft-js';
 import {
   getLinkPreviewFromUrl,
   timeDifference,
@@ -52,7 +51,6 @@ class ThreadDetailPure extends Component {
   }
 
   setThreadState() {
-    const { body } = this.state;
     const { thread } = this.props;
 
     let rawLinkPreview =

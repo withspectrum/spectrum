@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
@@ -14,7 +13,7 @@ import {
   markNotificationsSeenMutation,
   MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
 } from '../../../api/notification';
-import { IconLink, IconDrop, Label } from '../style';
+import { Tab, NotificationTab, Label } from '../style';
 import { getDistinctNotifications } from '../../notifications/utils';
 
 type Props = {
@@ -42,12 +41,14 @@ type Props = {
 type State = {
   notifications: ?Array<any>,
   subscription: ?Function,
+  shouldRenderDropdown: boolean,
 };
 
 class NotificationsTab extends React.Component<Props, State> {
   state = {
     notifications: null,
     subscription: null,
+    shouldRenderDropdown: false,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -100,6 +101,10 @@ class NotificationsTab extends React.Component<Props, State> {
     // when the notifications get set for the first time
     if (!prevState.notifications && nextState.notifications) return true;
 
+    // when hovered
+    if (!prevState.shouldRenderDropdown && nextState.shouldRenderDropdown)
+      return true;
+
     // any time the count changes
     if (prevProps.count !== nextProps.count) return true;
 
@@ -117,13 +122,12 @@ class NotificationsTab extends React.Component<Props, State> {
   componentDidUpdate(prevProps, prevState) {
     const {
       data: prevData,
-      active: prevActive,
       location: prevLocation,
       activeInboxThread: prevActiveInboxThread,
     } = prevProps;
     const curr = this.props;
 
-    const { subscription, notifications } = this.state;
+    const { notifications } = this.state;
 
     if (!notifications && curr.data.notifications) {
       this.subscribe();
@@ -134,7 +138,6 @@ class NotificationsTab extends React.Component<Props, State> {
     // set the count to 0 if the tab is active so that if a user loads
     // /notifications view directly, the badge won't update
     if (curr.active) {
-      this.processAndMarkSeenNotifications(notifications);
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
@@ -268,6 +271,7 @@ class NotificationsTab extends React.Component<Props, State> {
     const filteredByContext = distinct.map(n => {
       const contextId = n.context.id;
       const { thread: threadParam } = queryString.parse(location.search);
+
       // 1
       const isViewingSlider = threadParam === contextId && !n.isSeen;
       // 2
@@ -281,7 +285,25 @@ class NotificationsTab extends React.Component<Props, State> {
         ? parts[2] === contextId && !n.isSeen
         : false;
 
-      if (isViewingSlider || isViewingInbox || isViewingThreadDetail) {
+      // newly published threads have a context id that is equal to the thread's channel
+      // we have to use different logic to mark these notifications as seen if a user views
+      // the thread before clicking the notification
+      const isNewThreadNotification = n.event === 'THREAD_CREATED';
+      const isViewingANewlyPublishedThread =
+        isNewThreadNotification &&
+        n.entities.some(
+          e =>
+            e.id === activeInboxThread ||
+            e.id === threadParam ||
+            (isViewingThread && e.id === parts[2])
+        );
+
+      if (
+        isViewingSlider ||
+        isViewingInbox ||
+        isViewingThreadDetail ||
+        isViewingANewlyPublishedThread
+      ) {
         // if the user shouldn't see a new notification badge,
         // mark it as seen before it ever hits the component
         const newNotification = Object.assign({}, n, {
@@ -313,7 +335,7 @@ class NotificationsTab extends React.Component<Props, State> {
   setCount = notifications => {
     const curr = this.props;
 
-    if (!notifications || notifications.length == 0) {
+    if (!notifications || notifications.length === 0) {
       return curr.dispatch(updateNotificationsCount('notifications', 0));
     }
 
@@ -355,13 +377,19 @@ class NotificationsTab extends React.Component<Props, State> {
     return this.setCount(newNotifications);
   };
 
+  setHover = () => {
+    return this.setState({
+      shouldRenderDropdown: true,
+    });
+  };
+
   render() {
-    const { active, currentUser, data, isLoading, count } = this.props;
-    const { notifications } = this.state;
+    const { active, currentUser, isLoading, count } = this.props;
+    const { notifications, shouldRenderDropdown } = this.state;
 
     return (
-      <IconDrop padOnHover>
-        <IconLink
+      <NotificationTab padOnHover onMouseOver={this.setHover}>
+        <Tab
           data-active={active}
           to="/notifications"
           rel="nofollow"
@@ -372,21 +400,23 @@ class NotificationsTab extends React.Component<Props, State> {
             withCount={count > 10 ? '10+' : count > 0 ? count : false}
           />
           <Label hideOnDesktop>Notifications</Label>
-        </IconLink>
+        </Tab>
 
-        <NotificationDropdown
-          rawNotifications={notifications}
-          count={count}
-          markAllAsSeen={this.markAllAsSeen}
-          currentUser={currentUser}
-          width={'480px'}
-          loading={isLoading}
-          error={false}
-          markSingleNotificationAsSeenInState={
-            this.markSingleNotificationAsSeenInState
-          }
-        />
-      </IconDrop>
+        {shouldRenderDropdown && (
+          <NotificationDropdown
+            rawNotifications={notifications}
+            count={count}
+            markAllAsSeen={this.markAllAsSeen}
+            currentUser={currentUser}
+            width={'480px'}
+            loading={isLoading}
+            error={false}
+            markSingleNotificationAsSeenInState={
+              this.markSingleNotificationAsSeenInState
+            }
+          />
+        )}
+      </NotificationTab>
     );
   }
 }

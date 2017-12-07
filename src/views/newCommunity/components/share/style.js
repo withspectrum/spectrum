@@ -75,5 +75,6 @@ export const Input = styled.div`
     border-left: 2px solid ${props => props.theme.bg.border};
     border-radius: 0 8px 8px 0;
     z-index: ${zIndex.form + 1};
+    line-height: 2.1;
   }
 `;

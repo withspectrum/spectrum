@@ -48,8 +48,7 @@ export const CommunityInviteNotification = ({ notification, currentUser }) => {
 
 type Props = {
   notification: Object,
-  currentUsre: Object,
-  history: Object,
+  currentUser: Object,
   markSingleNotificationSeen: Function,
   markSingleNotificationAsSeenInState: Function,
 };
@@ -69,14 +68,17 @@ class MiniCommunityInviteNotificationWithMutation extends React.Component<
   };
 
   render() {
-    const { notification, currentUser, history } = this.props;
+    const { notification, currentUser } = this.props;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
     const actors = parseActors(notification.actors, currentUser, true);
 
     return (
-      <SegmentedNotificationListRow onClick={this.markAsSeen}>
+      <SegmentedNotificationListRow
+        isSeen={notification.isSeen}
+        onClick={this.markAsSeen}
+      >
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={false}>

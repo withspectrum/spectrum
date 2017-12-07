@@ -18,13 +18,13 @@ export const getNotificationsByUser = (
       }
     )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
-    .limit(first)
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .limit(first)
     .run();
 };
 
@@ -44,16 +44,13 @@ export const getUnreadDirectMessageNotifications = (
       }
     )
     .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
+    .filter({ isSeen: false })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
-    .filter(row =>
-      row('isSeen')
-        .eq(false)
-        .and(row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
-    )
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
     .limit(first)
     .run();
 };

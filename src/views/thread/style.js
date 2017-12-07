@@ -332,6 +332,31 @@ export const ChatWrapper = styled.div`
   }
 `;
 
+export const NullMessagesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  padding-top: 64px;
+  flex: 1;
+  color: ${props => props.theme.text.alt};
+  flex-direction: column;
+  opacity: 0.8;
+
+  .icon {
+    opacity: 0.4;
+  }
+`;
+
+export const NullCopy = styled.h5`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  margin-top: 16px;
+  text-align: center;
+  max-width: 600px;
+`;
+
 export const ThreadTitle = {
   fontSize: '32px',
   padding: '0',
@@ -368,6 +393,7 @@ export const ShareButtons = styled.div`
 export const ShareButton = styled.span`
   color: ${props => props.theme.text.alt};
   display: flex;
+  background: none;
 
   a {
     display: flex;

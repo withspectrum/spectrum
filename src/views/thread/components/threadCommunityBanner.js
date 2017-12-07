@@ -111,7 +111,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, id, watercooler },
+      thread: { channel, community, watercooler },
       currentUser,
       hide,
     } = this.props;
@@ -121,7 +121,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size={32} />
+            <Avatar src={community.profilePhoto} community size="32" />
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
             <CommunityHeaderLink to={`/${community.slug}`}>

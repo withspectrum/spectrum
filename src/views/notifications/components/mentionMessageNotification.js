@@ -101,7 +101,7 @@ export class MiniMentionMessageNotification extends React.Component<
     const context = parseContext(notification.context, currentUser);
 
     return (
-      <NotificationListRow>
+      <NotificationListRow isSeen={notification.isSeen}>
         <CardLink
           to={{
             pathname: window.location.pathname,

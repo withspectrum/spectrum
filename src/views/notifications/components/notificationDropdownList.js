@@ -86,6 +86,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }

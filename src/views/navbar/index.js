@@ -1,31 +1,23 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import queryString from 'query-string';
-import { withApollo } from 'react-apollo';
-import { getCurrentUserProfile } from '../../api/user';
-import { openModal } from '../../actions/modals';
 import Icon from '../../components/icons';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import { Loading } from '../../components/loading';
 import { ProfileDropdown } from './components/profileDropdown';
-import NewUserOnboarding from '../../views/newUserOnboarding';
 import MessagesTab from './components/messagesTab';
 import NotificationsTab from './components/notificationsTab';
 import Head from '../../components/head';
 import {
-  Section,
-  LoggedOutSection,
-  SectionFlex,
   Nav,
-  LogoLink,
   Logo,
-  IconDrop,
-  IconLink,
-  ExploreLink,
+  HomeTab,
+  ExploreTab,
+  ProfileDrop,
+  ProfileTab,
+  Tab,
   Label,
-  UserProfileAvatar,
+  Navatar,
 } from './style';
 
 type Props = {
@@ -37,9 +29,6 @@ type Props = {
   notificationCounts: {
     notifications: number,
     directMessageNotifications: number,
-  },
-  data: {
-    user?: Object,
   },
   currentUser?: Object,
   activeInboxThread: ?string,
@@ -57,11 +46,7 @@ class Navbar extends React.Component<Props> {
     if (currProps.location.search !== nextProps.location.search) return true;
 
     // Had no user, now have user or user changed
-    if (
-      (!nextProps.data.user && currProps.data.user) ||
-      nextProps.data.user !== currProps.data.user
-    )
-      return true;
+    if (nextProps.currentUser !== currProps.currentUser) return true;
 
     // if the badge counts change
     const thisBadgeSum =
@@ -86,17 +71,9 @@ class Navbar extends React.Component<Props> {
   }
 
   render() {
-    const {
-      history,
-      match,
-      data: { user },
-      isLoading,
-      hasError,
-      currentUser,
-      notificationCounts,
-    } = this.props;
+    const { history, match, currentUser, notificationCounts } = this.props;
 
-    const loggedInUser = user || currentUser;
+    const loggedInUser = currentUser;
 
     const viewing = history.location.pathname;
 
@@ -151,59 +128,36 @@ class Navbar extends React.Component<Props> {
             )}
           </Head>
 
-          <Section>
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
+          <Logo to="/">
+            <Icon glyph="logo" size={28} />
+          </Logo>
 
-            <IconLink data-active={match.url === '/' && match.isExact} to="/">
-              <Icon glyph="home" />
-              <Label>Home</Label>
-            </IconLink>
+          <HomeTab data-active={match.url === '/' && match.isExact} to="/">
+            <Icon glyph="home" />
+            <Label>Home</Label>
+          </HomeTab>
 
-            <MessagesTab
-              active={history.location.pathname.includes('/messages')}
-            />
+          <MessagesTab
+            active={history.location.pathname.includes('/messages')}
+          />
 
-            <IconLink
-              data-active={history.location.pathname === '/explore'}
-              to="/explore"
-            >
-              <Icon glyph="explore" />
-              <Label>Explore</Label>
-            </IconLink>
+          <ExploreTab
+            data-active={history.location.pathname === '/explore'}
+            to="/explore"
+          >
+            <Icon glyph="explore" />
+            <Label>Explore</Label>
+          </ExploreTab>
 
-            <SectionFlex />
+          <NotificationsTab
+            location={history.location}
+            currentUser={loggedInUser}
+            active={history.location.pathname.includes('/notifications')}
+          />
 
-            <NotificationsTab
-              location={history.location}
-              currentUser={loggedInUser}
-              active={history.location.pathname.includes('/notifications')}
-            />
-
-            <IconDrop hideOnMobile>
-              <IconLink
-                className={'hideOnMobile'}
-                data-active={
-                  history.location.pathname ===
-                  `/users/${loggedInUser.username}`
-                }
-                to={
-                  loggedInUser.username
-                    ? `/users/${loggedInUser.username}`
-                    : '/'
-                }
-              >
-                <UserProfileAvatar
-                  user={loggedInUser}
-                  src={`${loggedInUser.profilePhoto}`}
-                />
-              </IconLink>
-              <ProfileDropdown user={loggedInUser} />
-            </IconDrop>
-
-            <IconLink
-              className={'hideOnDesktop'}
+          <ProfileDrop>
+            <Tab
+              className={'hideOnMobile'}
               data-active={
                 history.location.pathname === `/users/${loggedInUser.username}`
               }
@@ -211,50 +165,43 @@ class Navbar extends React.Component<Props> {
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
             >
-              <Icon glyph="profile" />
-              <Label>Profile</Label>
-            </IconLink>
-          </Section>
-        </Nav>
-      );
-    }
+              <Navatar
+                user={loggedInUser}
+                src={`${loggedInUser.profilePhoto}`}
+                size={24}
+              />
+            </Tab>
+            <ProfileDropdown user={loggedInUser} />
+          </ProfileDrop>
 
-    if (isLoading) {
-      return (
-        <Nav hideOnMobile={hideNavOnMobile}>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
-          {/* $FlowIssue */}
-          <Loading size={'20'} color={'bg.default'} />
-        </Nav>
-      );
-    }
-
-    if (hasError) {
-      return (
-        <Nav hideOnMobile={hideNavOnMobile}>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
+          <ProfileTab
+            className={'hideOnDesktop'}
+            data-active={
+              history.location.pathname === `/users/${loggedInUser.username}`
+            }
+            to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
+          >
+            <Icon glyph="profile" />
+            <Label>Profile</Label>
+          </ProfileTab>
         </Nav>
       );
     }
 
     if (!loggedInUser) {
       return (
-        <Nav hideOnMobile={hideNavOnMobile}>
-          <Section hideOnMobile>
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          </Section>
-          <LoggedOutSection>
-            <ExploreLink data-active={match.url === '/explore'} to="/explore">
-              <Icon glyph="explore" />
-              <Label>Explore Communities on Spectrum</Label>
-            </ExploreLink>
-          </LoggedOutSection>
+        <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
+          <Logo to="/">
+            <Icon glyph="logo" size={28} />
+          </Logo>
+          <ExploreTab
+            data-active={history.location.pathname === '/explore'}
+            to="/explore"
+            loggedOut={!loggedInUser}
+          >
+            <Icon glyph="explore" />
+            <Label>Explore Spectrum</Label>
+          </ExploreTab>
         </Nav>
       );
     }
@@ -269,8 +216,5 @@ const mapStateToProps = state => ({
 });
 export default compose(
   // $FlowIssue
-  connect(mapStateToProps),
-  getCurrentUserProfile,
-  withApollo,
-  viewNetworkHandler
+  connect(mapStateToProps)
 )(Navbar);

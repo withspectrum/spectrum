@@ -1,6 +1,7 @@
 // @flow
 //$FlowFixMe
 import DataLoader from 'dataloader';
+import unique from 'shared/unique-elements';
 import type { Loader } from './types';
 
 /**
@@ -15,7 +16,7 @@ const createLoader = (
   cacheKeyFn: Function = key => key
 ): Loader => {
   return new DataLoader(keys => {
-    return batchFn(keys).then(
+    return batchFn(unique(keys)).then(
       normalizeRethinkDbResults(keys, indexField, cacheKeyFn)
     );
   });

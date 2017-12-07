@@ -10,6 +10,8 @@ import {
 } from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
+import { addQueue } from '../utils/workerQueue';
+import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
@@ -103,7 +105,8 @@ module.exports = {
     },
     messageConnection: (
       { id, watercooler }: { id: String },
-      { first = 999999, after }: PaginationOptions
+      { first = 999999, after }: PaginationOptions,
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
@@ -115,6 +118,13 @@ module.exports = {
         first,
         after: lastMessageIndex,
       }).then(result => {
+        if (user && user.id) {
+          addQueue(TRACK_USER_THREAD_LAST_SEEN, {
+            threadId: id,
+            userId: user.id,
+            timestamp: Date.now(),
+          });
+        }
         return {
           pageInfo: {
             hasNextPage: result && result.length >= first,
@@ -156,6 +166,21 @@ module.exports = {
       return loaders.threadMessageCount
         .load(id)
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
+    },
+    currentUserLastSeen: (
+      { id }: DBThread,
+      _: any,
+      { user }: GraphQLContext
+    ) => {
+      if (!user || !user.id) return null;
+
+      return getThreadNotificationStatusForUser(id, user.id).then(result => {
+        if (!result || result.length === 0) return;
+        const data = result[0];
+        if (!data || !data.lastSeen) return null;
+
+        return data.lastSeen;
+      });
     },
   },
 };

@@ -9,7 +9,7 @@ import {
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
 } from '../../../api/notification';
-import { IconLink, Label } from '../style';
+import { Tab, Label } from '../style';
 
 type Props = {
   active: boolean,
@@ -39,7 +39,6 @@ class MessagesTab extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps, nextState) {
     const prevProps = this.props;
-    const prevState = this.state;
 
     // if a refetch completes
     if (prevProps.isRefetching !== nextProps.isRefetching) return true;
@@ -73,7 +72,6 @@ class MessagesTab extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const { data: prevData } = prevProps;
     const curr = this.props;
-    const { subscription } = this.state;
 
     // never update the badge if the user is viewing the messages tab
     // set the count to 0 if the tab is active so that if a user loads
@@ -158,9 +156,9 @@ class MessagesTab extends React.Component<Props, State> {
     // bundle dm notifications
     const obj = {};
     nodes.filter(n => !n.isSeen).map(o => {
-      if (obj[o.context.id]) return;
+      if (obj[o.context.id]) return null;
       obj[o.context.id] = o;
-      return;
+      return null;
     });
 
     // count of unique notifications determined by the thread id
@@ -202,7 +200,7 @@ class MessagesTab extends React.Component<Props, State> {
     const { active, count } = this.props;
 
     return (
-      <IconLink
+      <Tab
         data-active={active}
         to="/messages"
         rel="nofollow"
@@ -213,7 +211,7 @@ class MessagesTab extends React.Component<Props, State> {
           withCount={count > 10 ? '10+' : count > 0 ? count : false}
         />
         <Label>Messages</Label>
-      </IconLink>
+      </Tab>
     );
   }
 }

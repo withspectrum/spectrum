@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { throttle } from '../../helpers/utils';
-import { Button, TextButton } from '../buttons';
+import { Button } from '../buttons';
 import Icon from '../../components/icons';
 import {
   Input,

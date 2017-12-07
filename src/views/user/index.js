@@ -5,7 +5,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import Icon from '../../components/icons';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { track } from '../../helpers/events';
@@ -20,7 +19,6 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import {
   SegmentedControl,
-  Segment,
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
@@ -155,8 +153,7 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                <Icon glyph={'message'} />
-                Active in
+                Replies
               </DesktopSegment>
 
               <DesktopSegment
@@ -164,22 +161,21 @@ class UserView extends React.Component<Props, State> {
                 onClick={() => this.handleSegmentClick('creator')}
                 selected={selectedView === 'creator'}
               >
-                <Icon glyph={'post'} />
-                Created
+                Threads
               </DesktopSegment>
               <MobileSegment
                 segmentLabel="participant"
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
               >
-                Active in
+                Replies
               </MobileSegment>
               <MobileSegment
                 segmentLabel="creator"
                 onClick={() => this.handleSegmentClick('creator')}
                 selected={selectedView === 'creator'}
               >
-                Creator
+                Threads
               </MobileSegment>
             </SegmentedControl>
             {hasThreads && (

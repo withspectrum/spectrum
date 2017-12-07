@@ -1,7 +1,6 @@
 // @flow
 // $FlowFixMe
 const env = require('node-env-file');
-const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
 env(path.resolve(__dirname, './.env'), { raise: false });
 // $FlowFixMe
@@ -32,9 +31,11 @@ const init = () => {
     getUser({ id })
       .then(user => {
         done(null, user);
+        return null;
       })
       .catch(err => {
         done(err);
+        return null;
       });
   });
 
@@ -44,7 +45,7 @@ const init = () => {
       {
         consumerKey: 'vxmsICGyIIoT5NEYi1I8baPrf',
         consumerSecret: TWITTER_OAUTH_CLIENT_SECRET,
-        callbackURL: `/auth/twitter/callback`,
+        callbackURL: '/auth/twitter/callback',
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
@@ -86,12 +87,14 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'providerId')
+        return createOrFindUser(user, 'providerId')
           .then(user => {
             done(null, user);
+            return user;
           })
           .catch(err => {
             done(err);
+            return null;
           });
       }
     )
@@ -103,7 +106,7 @@ const init = () => {
       {
         clientID: FACEBOOK_OAUTH_CLIENT_ID,
         clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
-        callbackURL: `/auth/facebook/callback`,
+        callbackURL: '/auth/facebook/callback',
         profileFields: [
           'id',
           'displayName',
@@ -151,12 +154,14 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'fbProviderId')
+        return createOrFindUser(user, 'fbProviderId')
           .then(user => {
             done(null, user);
+            return user;
           })
           .catch(err => {
             done(err);
+            return null;
           });
       }
     )
@@ -169,7 +174,7 @@ const init = () => {
         clientID:
           '923611718470-chv7p9ep65m3fqqjr154r1p3a5j6oidc.apps.googleusercontent.com',
         clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
-        callbackURL: `/auth/google/callback`,
+        callbackURL: '/auth/google/callback',
       },
       (token, tokenSecret, profile, done) => {
         const user = {
@@ -216,12 +221,14 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'googleProviderId')
+        return createOrFindUser(user, 'googleProviderId')
           .then(user => {
             done(null, user);
+            return user;
           })
           .catch(err => {
             done(err);
+            return null;
           });
       }
     )
@@ -233,7 +240,7 @@ const init = () => {
       {
         clientID: '208a2e8684d88883eded',
         clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
-        callbackURL: `/auth/github/callback`,
+        callbackURL: '/auth/github/callback',
         scope: ['user'],
       },
       (token, tokenSecret, profile, done) => {
@@ -255,12 +262,14 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user, 'githubProviderId')
+        return createOrFindUser(user, 'githubProviderId')
           .then(user => {
             done(null, user);
+            return user;
           })
           .catch(err => {
             done(err);
+            return null;
           });
       }
     )

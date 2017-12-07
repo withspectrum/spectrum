@@ -1,6 +1,11 @@
 export const collections = [
   {
+    title: 'Top Communities',
+    curatedContentType: 'top-communities-by-members',
+  },
+  {
     title: 'Design',
+    curatedContentType: 'design-communities',
     categories: [
       {
         title: 'Shop Talk',
@@ -47,6 +52,7 @@ export const collections = [
   },
   {
     title: 'Web development',
+    curatedContentType: 'development-communities',
     categories: [
       {
         title: 'Web Frameworks',
@@ -101,6 +107,7 @@ export const collections = [
   // },
   {
     title: 'Tech',
+    curatedContentType: 'tech-communities',
     categories: [
       {
         title: 'Get the latest news',
@@ -118,6 +125,7 @@ export const collections = [
   },
   {
     title: 'Life',
+    curatedContentType: 'life-communities',
     categories: [
       {
         title: 'Do good, feel good',

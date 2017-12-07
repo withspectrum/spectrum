@@ -1,6 +1,6 @@
 // @flow
 import session from 'express-session';
-import sessionStore, { SESSION_COOKIE_SECRET } from '../../utils/session-store';
+import sessionStore, { SESSION_COOKIE_SECRET } from 'iris/utils/session-store';
 
 const ONE_YEAR = 31556952000;
 
@@ -8,6 +8,8 @@ const ONE_YEAR = 31556952000;
 export default session({
   store: sessionStore,
   secret: SESSION_COOKIE_SECRET,
+  // Trust the proxy, might be necessary see expressjs/session#281
+  proxy: true,
   // Forces the session to be saved back to the session store, even if the session was never modified during the request.
   // Necessary with the RethinkDB session store, ref: llambda/session-rethinkdb#6
   resave: true,

@@ -229,7 +229,6 @@ class ChannelWithData extends Component {
           clickable
           contents={channel}
           withDescription={false}
-          meta={`${channel.metaData.members} members`}
           channelIcon={false}
         >
           {currentUser &&

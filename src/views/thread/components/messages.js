@@ -5,9 +5,10 @@ import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
+import Icon from '../../../components/icons';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { ChatWrapper } from '../style';
+import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
@@ -128,7 +129,10 @@ class MessagesWithData extends Component {
       };
 
       const uniqueMessages = unique(unsortedMessages);
-      const sortedMessages = sortAndGroupMessages(uniqueMessages);
+      const sortedMessages = sortAndGroupMessages(
+        uniqueMessages,
+        data.thread.currentUserLastSeen
+      );
 
       return (
         <ChatWrapper>
@@ -150,7 +154,15 @@ class MessagesWithData extends Component {
     }
 
     if (!messagesExist) {
-      return <ChatWrapper />;
+      return (
+        <NullMessagesWrapper>
+          <Icon glyph={'emoji'} size={64} />
+          <NullCopy>
+            No messages have been sent in this conversation yet - why don't you
+            kick things off below?
+          </NullCopy>
+        </NullMessagesWrapper>
+      );
     }
 
     return (
