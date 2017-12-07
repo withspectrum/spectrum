@@ -12,6 +12,7 @@ import processSlackImport from './queues/slack-import';
 import processCommunityInvite from './queues/community-invite';
 import processCommunityInvoicePaid from './queues/community-invoice-paid';
 import processProInvoicePaid from './queues/pro-invoice-paid';
+import trackUserThreadLastSeen from './queues/track-user-thread-last-seen';
 import {
   MESSAGE_NOTIFICATION,
   MENTION_NOTIFICATION,
@@ -25,6 +26,7 @@ import {
   COMMUNITY_INVOICE_PAID_NOTIFICATION,
   PRO_INVOICE_PAID_NOTIFICATION,
 } from './queues/constants';
+import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 
 const PORT = process.env.PORT || 3003;
 
@@ -44,6 +46,7 @@ const server = createWorker({
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
   [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
+  [TRACK_USER_THREAD_LAST_SEEN]: trackUserThreadLastSeen,
 });
 
 console.log(

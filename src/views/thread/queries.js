@@ -28,6 +28,7 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
       content {
         title
       }
+      currentUserLastSeen
       ...threadMessages
     }
   }

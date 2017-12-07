@@ -13,7 +13,7 @@ import {
   markNotificationsSeenMutation,
   MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
 } from '../../../api/notification';
-import { IconLink, IconDrop, Label } from '../style';
+import { Tab, NotificationTab, Label } from '../style';
 import { getDistinctNotifications } from '../../notifications/utils';
 
 type Props = {
@@ -388,8 +388,8 @@ class NotificationsTab extends React.Component<Props, State> {
     const { notifications, shouldRenderDropdown } = this.state;
 
     return (
-      <IconDrop padOnHover onMouseEnter={this.setHover}>
-        <IconLink
+      <NotificationTab padOnHover onMouseOver={this.setHover}>
+        <Tab
           data-active={active}
           to="/notifications"
           rel="nofollow"
@@ -400,7 +400,7 @@ class NotificationsTab extends React.Component<Props, State> {
             withCount={count > 10 ? '10+' : count > 0 ? count : false}
           />
           <Label hideOnDesktop>Notifications</Label>
-        </IconLink>
+        </Tab>
 
         {shouldRenderDropdown && (
           <NotificationDropdown
@@ -416,7 +416,7 @@ class NotificationsTab extends React.Component<Props, State> {
             }
           />
         )}
-      </IconDrop>
+      </NotificationTab>
     );
   }
 }
