@@ -12,7 +12,10 @@ const config =
       }
     : undefined;
 
-const redis = createRedis(config);
+const redis = createRedis({
+  keyPrefix: 'cache:',
+  ...config,
+});
 
 const cache = (
   req: express$Request,
@@ -32,7 +35,7 @@ const cache = (
 
   // NOTE(@mxstbr): Using req.path here (instead of req.url or req.originalUrl) to avoid sending unique pages
   // for query params, i.e. /spectrum?bla=xyz will be treated the same as /spectrum
-  const key = `__cache__${req.path}`;
+  const key = req.path;
   debug(`unauthenticated request, checking cache for ${req.path}`);
   redis.get(key).then(result => {
     if (result) {
