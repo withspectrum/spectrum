@@ -29,7 +29,6 @@ export default withRouter(
               : rest.to;
           return (window.location = history.createHref(location));
         }
-        // return history.push(rest.to);
       }}
     />
   )
