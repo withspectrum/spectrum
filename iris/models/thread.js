@@ -2,7 +2,6 @@
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
 import { addQueue } from '../utils/workerQueue';
-import checkThreadToxicity from '../utils/moderationEvents/thread';
 const {
   listenToNewDocumentsIn,
   NEW_DOCUMENTS,
@@ -355,7 +354,7 @@ export const publishThread = (
         type: 'thread created',
         entityId: thread.id,
       });
-      checkThreadToxicity(thread);
+      addQueue('process admin toxic thread', { thread });
 
       return thread;
     });

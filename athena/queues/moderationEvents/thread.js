@@ -1,34 +1,47 @@
 // @flow
+const debug = require('debug')('athena:queue:channel-notification');
 import { getUserById } from '../../models/user';
-import { getThread } from '../../models/thread';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
-import { addQueue } from '../workerQueue';
-import type { DBMessage } from 'shared/types';
+import { addQueue } from '../../utils/addQueue';
+import type { DBThread } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
 
-export default async (message: DBMessage) => {
-  const text =
-    message.messageType === 'draftjs'
-      ? toPlainText(toState(JSON.parse(message.content.body)))
-      : message.content.body;
+type JobData = {
+  data: {
+    thread: DBThread,
+  },
+};
+
+export default async (job: JobData) => {
+  debug('new job for admin thread moderation');
+
+  const { data: { thread } } = job;
+
+  const body =
+    thread.type === 'DRAFTJS'
+      ? thread.content.body
+        ? toPlainText(toState(JSON.parse(thread.content.body)))
+        : ''
+      : thread.content.body || '';
+
+  const title = thread.content.title;
+  const text = `${title} ${body}`;
 
   const [spectrumScore, perspectiveScore] = await Promise.all([
-    getSpectrumScore(text, message.id),
+    getSpectrumScore(text, thread.id),
     getPerspectiveScore(text),
-  ]);
+  ]).catch(err =>
+    console.log('Error getting thread moderation scores from providers', err)
+  );
 
   // if neither models returned results
   if (!spectrumScore && !perspectiveScore) return;
 
-  const [user, thread] = await Promise.all([
-    getUserById(message.senderId),
-    getThread(message.threadId),
-  ]);
-
-  const [community, channel] = await Promise.all([
+  const [user, community, channel] = await Promise.all([
+    getUserById(thread.creatorId),
     getCommunityById(thread.communityId),
     getChannelById(thread.channelId),
   ]);
