@@ -52,6 +52,9 @@ const Thread = /* GraphQL */ `
 		creator: User!
 		attachments: [Attachment]
 		watercooler: Boolean
+
+        # Logged-in users only
+        currentUserLastSeen: Date
 	}
 
 	extend type Query {

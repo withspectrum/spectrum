@@ -129,7 +129,10 @@ class MessagesWithData extends Component {
       };
 
       const uniqueMessages = unique(unsortedMessages);
-      const sortedMessages = sortAndGroupMessages(uniqueMessages);
+      const sortedMessages = sortAndGroupMessages(
+        uniqueMessages,
+        data.thread.currentUserLastSeen
+      );
 
       return (
         <ChatWrapper>
