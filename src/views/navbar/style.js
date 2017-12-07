@@ -25,7 +25,7 @@ export const Nav = styled.nav`
     position: relative;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
     grid-template-columns: repeat(5, 20%);
-    grid-template-areas: 'home messages notifications explore profile';
+    grid-template-areas: 'home messages explore notifications profile';
   }
 
   .hideOnMobile {
@@ -58,8 +58,16 @@ export const Label = styled.span`
   font-size: 14px;
   font-weight: 700;
   margin-left: 12px;
+
   ${props =>
     props.hideOnDesktop && css`display: none;`} @media (max-width: 768px) {
+    font-size: 10px;
+    font-weight: 700;
+    margin: 0;
+    display: inline-block;
+  }
+
+  @media (max-width: 360px) {
     display: none;
   }
 `;
@@ -85,6 +93,7 @@ export const Tab = styled(Link)`
   > ${Label} {
     grid-area: label;
   }
+
   @media (min-width: 768px) {
     &[data-active~='true'] {
       box-shadow: inset 0 -4px 0 ${({ theme }) => theme.text.reverse};
@@ -102,6 +111,14 @@ export const Tab = styled(Link)`
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
     }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0;
+    grid-template-columns: 'auto';
+    grid-template-rows: 'auto auto';
+    grid-template-areas: 'icon' 'label';
+    align-content: center;
   }
 `;
 
@@ -128,7 +145,8 @@ export const DropTab = styled(FlexRow)`
   }
 
   @media (max-width: 768px) {
-    flex: 1 1;
+    flex: auto;
+    justify-content: center;
     ${props => props.hideOnMobile && css`display: none;`};
   }
 
@@ -177,7 +195,7 @@ export const ExploreTab = styled(Tab)`
 
   ${props => props.loggedOut && css`grid-area: profile;`} ${Label} {
     @media (max-width: 768px) {
-      display: inline-block;
+      display: flex;
     }
   }
 `;

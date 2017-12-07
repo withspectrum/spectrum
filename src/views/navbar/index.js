@@ -153,7 +153,6 @@ class Navbar extends React.Component<Props> {
             location={history.location}
             currentUser={loggedInUser}
             active={history.location.pathname.includes('/notifications')}
-            position={'notifications'}
           />
 
           <ProfileDrop>
