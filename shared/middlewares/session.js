@@ -11,4 +11,5 @@ export default session({
   secure: process.env.NODE_ENV === 'production',
   // Expire the browser cookie one year from now
   maxAge: ONE_YEAR,
+  signed: process.env.TEST_DB ? false : true,
 });

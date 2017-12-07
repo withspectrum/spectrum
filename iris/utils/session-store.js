@@ -7,8 +7,9 @@ import { decode } from './base64';
 const ONE_YEAR = 31556952000;
 const ONE_DAY = 86400000;
 // NOTE(@mxstbr): 1Password generated this, LGTM!
-export const SESSION_COOKIE_SECRET =
-  't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo';
+export const SESSION_COOKIE_SECRET = process.env.TEST_DB
+  ? ''
+  : 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo';
 
 // We need a custom cookie parser for session cookies to do auth in websockets
 export const sessionCookieParser = cookieParser(SESSION_COOKIE_SECRET);
