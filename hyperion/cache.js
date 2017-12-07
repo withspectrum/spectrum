@@ -3,7 +3,16 @@
 import createRedis from 'shared/bull/create-redis';
 const debug = require('debug')('hyperion:cache');
 
-const redis = createRedis();
+const config =
+  process.env.NODE_ENV === 'production'
+    ? {
+        port: process.env.REDIS_CACHE_PORT,
+        host: process.env.REDIS_CACHE_URL,
+        password: process.env.REDIS_CACHE_PASSWORD,
+      }
+    : undefined;
+
+const redis = createRedis(config);
 
 const cache = (
   req: express$Request,
