@@ -10,7 +10,6 @@ import Badge from '../badges';
 import { Button } from '../buttons';
 import { addProtocolToString } from '../../helpers/utils';
 import { Card } from '../card';
-import { optimize } from '../../helpers/images';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import AvatarImage from './image';
 import {
@@ -24,7 +23,7 @@ import {
   ReputationContainer,
   MessageButtonContainer,
 } from '../profile/style';
-import { HoverWrapper, Status, CoverAction } from './style';
+import { HoverWrapper } from './style';
 
 type ProfileProps = {
   user: Object,
