@@ -1,9 +1,11 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-weekly-digest-email');
 import sendEmail from '../send-email';
-import { DIGEST_TEMPLATE, DEBUG_TEMPLATE } from './constants';
+import { DIGEST_TEMPLATE } from './constants';
+import Raven from 'shared/raven';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
 import { TYPE_DAILY_DIGEST, TYPE_WEEKLY_DIGEST } from './constants';
+import formatDate from '../utils/format-date';
 
 type ChannelType = {
   name: string,
@@ -40,7 +42,7 @@ type SendWeeklyDigestJobData = {
   username: string,
   userId: string,
   userId: string,
-  threads: ThreadType,
+  threads: Array<ThreadType>,
   reputationString: string,
   communities: ?Array<TopCommunityType>,
   timeframe: 'daily' | 'weekly',
@@ -55,10 +57,11 @@ export default async (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
+  console.log('job data', job.data);
+
   const {
     email,
     userId,
-    name,
     username,
     threads,
     communities,
@@ -72,52 +75,57 @@ export default async (job: SendWeeklyDigestJob) => {
 
   const unsubscribeType =
     timeframe === 'daily' ? TYPE_DAILY_DIGEST : TYPE_WEEKLY_DIGEST;
-  const tag =
-    timeframe === 'daily'
-      ? 'send daily digest email'
-      : 'send weekly digest email';
   const unsubscribeToken = await generateUnsubscribeToken(
     userId,
     unsubscribeType
   );
 
-  if (!unsubscribeToken) {
-    try {
-      return sendEmail({
-        TemplateId: DEBUG_TEMPLATE,
-        To: 'briandlovin@gmail.com',
-        TemplateModel: {
-          unsubscribeToken,
-          userData: userId,
-          type: unsubscribeType,
-        },
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    const greeting = name ? `Hey ${name},` : 'Hey there,';
+  if (!unsubscribeToken) return;
 
-    try {
-      return sendEmail({
-        TemplateId: DIGEST_TEMPLATE,
-        To: email,
-        Tag: tag,
-        TemplateModel: {
+  const tag =
+    timeframe === 'daily'
+      ? 'send daily digest email'
+      : 'send weekly digest email';
+  const subjectPrefix = timeframe === 'weekly' ? 'Weekly digest: ' : '';
+  const subjectStart =
+    threads.length > 2
+      ? `${threads[0].title}, ${threads[1].title}`
+      : `${threads[0].title}`;
+  const subjectEnd = ` and ${threads.length > 2
+    ? threads.length - 2
+    : threads.length - 1} more active conversations in your communities`;
+  const subject = `${subjectPrefix}${subjectStart}${subjectEnd}`;
+  const { day, month, year } = formatDate();
+  const preheader =
+    timeframe === 'daily'
+      ? `Your Spectrum daily digest · ${month} ${day}, ${year}`
+      : 'Your Spectrum weekly digest';
+
+  try {
+    return sendEmail({
+      TemplateId: DIGEST_TEMPLATE,
+      To: email,
+      Tag: tag,
+      TemplateModel: {
+        subject,
+        preheader,
+        unsubscribeToken,
+        data: {
+          username,
           threads,
-          greeting,
           communities,
           reputationString,
-          username,
-          unsubscribeToken,
           timeframe: {
             subject: timeframe,
             time: timeframe === 'daily' ? 'day' : 'week',
           },
         },
-      });
-    } catch (err) {
-      console.log(err);
-    }
+      },
+    });
+  } catch (err) {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+    console.log(err);
   }
 };
