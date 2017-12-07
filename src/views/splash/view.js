@@ -46,10 +46,12 @@ const Section = (props: Props) => (
 );
 
 export const Overview = (props: Props) => {
+  const ThisContent = styled(Content)`margin-top: 96px;`;
+
   const Text = styled(FlexCol)`
-    margin: 60px 16px 120px 16px;
-    text-align: center;
-    align-items: center;
+    margin: 120px 16px 120px 16px;
+    text-align: left;
+    align-items: flex-start;
 
     @media (max-width: 768px) {
       margin-bottom: 16px;
@@ -58,7 +60,7 @@ export const Overview = (props: Props) => {
 
   const ThisCopy = styled(Copy)`
     font-size: 20px;
-    line-height: 1.3;
+    line-height: 1.6;
     font-weight: 500;
     opacity: 0.95;
     max-width: 580px;
@@ -112,23 +114,15 @@ export const Overview = (props: Props) => {
 
   return (
     <Section background="constellations" goop={2}>
-      <Header>
-        <Logo />
-        <Links>
-          <Link to="/pricing">Pricing</Link>
-          <Link to="https://github.com/withspectrum/code-of-conduct">
-            Code of Conduct
-          </Link>
-          <Link to="/login">
-            <ThisButton>Log in</ThisButton>
-          </Link>
-        </Links>
-      </Header>
-      <Content>
+      <ThisContent>
         <Text>
-          <ThisTagline>Build better communities.</ThisTagline>
+          <ThisTagline>The internet was built for communities.</ThisTagline>
           <ThisCopy>
-            Spectrum makes it easy to create and grow your online community.
+            We all deserve a better, more forward-looking platform than forums
+            and IRC knockoffs.
+          </ThisCopy>
+          <ThisCopy>
+            Spectrum is a platform for building the communities of the future.
           </ThisCopy>
           <Actions>
             <Link to="/new/community">
@@ -136,14 +130,12 @@ export const Overview = (props: Props) => {
                 Create a community
               </ThisPrimaryCTA>
             </Link>
-            <Link to="/explore">
-              <ThisSecondaryCTA icon="explore">
-                Find communities
-              </ThisSecondaryCTA>
+            <Link to="/login">
+              <ThisSecondaryCTA icon="explore">Sign Up</ThisSecondaryCTA>
             </Link>
           </Actions>
         </Text>
-      </Content>
+      </ThisContent>
     </Section>
   );
 };

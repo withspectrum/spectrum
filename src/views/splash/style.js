@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from '../../components/link';
 import { Button } from '../../components/buttons';
 import {
   H2,
@@ -311,5 +312,92 @@ export const LinkBlock = styled.a`
         border-bottom: none;
       }
     }
+  }
+`;
+
+export const NavContainer = styled.div`
+  display: grid;
+  grid-template-rows: 48px 8px;
+  grid-template-columns: auto;
+  grid-template-areas: 'tabs' 'goop';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: ${zIndex.chrome};
+`;
+
+export const Tabs = styled.div`
+  display: grid;
+  padding: 0 32px;
+  grid-template-columns: auto 1fr repeat(3, auto);
+  grid-column-gap: 32px;
+  grid-template-rows: auto;
+  grid-template-areas: 'logo . pricing support auth';
+  align-items: end;
+  justify-items: center;
+  background-color: ${props => props.theme.bg.default};
+  color: ${props => props.theme.brand.alt};
+  grid-area: tabs;
+  z-index: ${zIndex.chrome + 1};
+`;
+
+export const Tab = styled(Link)`font-weight: 500;`;
+
+export const LogoTab = styled(Tab)`grid-area: logo;`;
+
+export const PricingTab = styled(Tab)`grid-area: pricing;`;
+
+export const SupportTab = styled(Tab)`grid-area: support;`;
+
+export const AuthTab = styled.div`
+  grid-area: auth;
+  > a > button {
+    font-weight: 700;
+    margin-bottom: -8px;
+  }
+`;
+
+export const InlineSvg = styled.svg`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: inherit;
+  fill: ${props => props.theme.bg.default};
+  pointer-events: none;
+  z-index: ${zIndex.chrome - 1};
+  filter: drop-shadow(
+    ${Shadow.high} ${props => hexa(props.theme.brand.alt, 0.5)}
+  );
+
+  > path {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+  }
+`;
+
+export const SvgWrapper = styled.div`
+  position: relative;
+  flex: none;
+  height: 8px;
+  width: 110%;
+  top: 0;
+  left: -5%;
+  right: -5%;
+  bottom: 0;
+  display: 'inline-block';
+  color: currentColor;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    width: 150%;
+    left: -25%;
+    right: -25%;
   }
 `;

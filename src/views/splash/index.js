@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { track } from '../../helpers/events';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import {
@@ -10,9 +10,10 @@ import {
   Yours,
   PageFooter,
 } from './view';
+import Nav from './nav';
 import { Wrapper } from './style';
 
-class Splash extends Component {
+class Splash extends PureComponent {
   state: {
     preferredSigninMethod: string,
   };
@@ -39,6 +40,7 @@ class Splash extends Component {
   render() {
     return (
       <Wrapper data-e2e-id="splash-page">
+        <Nav />
         <Overview />
         <Centralized />
         <CommunitySearch />
