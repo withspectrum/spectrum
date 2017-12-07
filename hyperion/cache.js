@@ -30,8 +30,10 @@ const cache = (
     return next();
   }
 
-  const key = `__cache__${req.originalUrl || req.url}`;
-  debug(`unauthenticated request, checking cache for ${key}`);
+  // NOTE(@mxstbr): Using req.path here (instead of req.url or req.originalUrl) to avoid sending unique pages
+  // for query params, i.e. /spectrum?bla=xyz will be treated the same as /spectrum
+  const key = `__cache__${req.path}`;
+  debug(`unauthenticated request, checking cache for ${req.path}`);
   redis.get(key).then(result => {
     if (result) {
       debug(`cached html found, sending to user`);
@@ -43,7 +45,7 @@ const cache = (
     res.originalSend = res.send;
     // $FlowFixMe
     res.send = (...args) => {
-      debug(`monkey-patched res.send called, caching at ${key}`);
+      debug(`monkey-patched res.send called, caching at ${req.path}`);
 
       redis.set(key, ...args, 'ex', 3600);
       // $FlowFixMe
