@@ -10,7 +10,7 @@ import getPerspectiveScore from './perspective';
 
 export default async (thread: DBThread) => {
   const body =
-    thread.type === 'draftjs'
+    thread.type === 'DRAFTJS'
       ? thread.content.body
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : ''

@@ -5,6 +5,7 @@ import { getThreadById } from '../../../api/thread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
+import { markSingleNotificationSeenMutation } from '../../../api/notification';
 import Icon from '../../../components/icons';
 import { ThreadProfile } from '../../../components/profile';
 import {
@@ -20,6 +21,8 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history: Object,
+  markSingleNotificationSeen: Function,
+  markSingleNotificationAsSeenInState: Function,
 };
 type State = {
   communityName: string,
@@ -110,7 +113,10 @@ export class NewThreadNotification extends React.Component<Props, State> {
   }
 }
 
-export class MiniNewThreadNotification extends React.Component<Props, State> {
+class MiniNewThreadNotificationWithMutation extends React.Component<
+  Props,
+  State
+> {
   constructor() {
     super();
 
@@ -118,6 +124,17 @@ export class MiniNewThreadNotification extends React.Component<Props, State> {
       communityName: '',
     };
   }
+
+  markAsSeen = () => {
+    const {
+      markSingleNotificationSeen,
+      notification,
+      markSingleNotificationAsSeenInState,
+    } = this.props;
+    if (notification.isSeen) return;
+    markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen(notification.id);
+  };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });
 
@@ -135,7 +152,10 @@ export class MiniNewThreadNotification extends React.Component<Props, State> {
 
     if (threads && threads.length > 0) {
       return (
-        <SegmentedNotificationListRow>
+        <SegmentedNotificationListRow
+          isSeen={notification.isSeen}
+          onClick={this.markAsSeen}
+        >
           <ThreadContext>
             <Icon glyph="post-fill" />
             <TextContent pointer={false}>
@@ -163,3 +183,7 @@ export class MiniNewThreadNotification extends React.Component<Props, State> {
     }
   }
 }
+
+export const MiniNewThreadNotification = compose(
+  markSingleNotificationSeenMutation
+)(MiniNewThreadNotificationWithMutation);

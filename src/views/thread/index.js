@@ -24,6 +24,10 @@ import {
   Input,
   Detail,
   ChatInputWrapper,
+  WatercoolerDescription,
+  WatercoolerIntroContainer,
+  WatercoolerTitle,
+  WatercoolerAvatar,
 } from './style';
 
 type Props = {
@@ -182,6 +186,10 @@ class ThreadContainer extends React.Component<Props, State> {
           <ThreadViewContainer
             data-e2e-id="thread-view"
             threadViewContext={threadViewContext}
+            constrain={
+              threadViewContext === 'slider' ||
+              threadViewContext === 'fullscreen'
+            }
           >
             {shouldRenderThreadSidebar && (
               <Sidebar
@@ -209,10 +217,22 @@ class ThreadContainer extends React.Component<Props, State> {
               />
               <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
                 <Detail type={slider ? '' : 'only'}>
-                  <ThreadCommunityBanner
-                    hide={threadViewContext === 'fullscreen'}
-                    thread={thread}
-                  />
+                  <WatercoolerIntroContainer>
+                    <WatercoolerAvatar
+                      src={thread.community.profilePhoto}
+                      community
+                      size={44}
+                      radius={8}
+                    />
+                    <WatercoolerTitle>
+                      The {thread.community.name} watercooler
+                    </WatercoolerTitle>
+                    <WatercoolerDescription>
+                      Welcome to the {thread.community.name} watercooler, a new
+                      space for general chat with everyone in the community.
+                      Jump in to the conversation below or introduce yourself!
+                    </WatercoolerDescription>
+                  </WatercoolerIntroContainer>
                   {!isEditing && (
                     <Messages
                       threadType={thread.threadType}
@@ -278,6 +298,9 @@ class ThreadContainer extends React.Component<Props, State> {
         <ThreadViewContainer
           data-e2e-id="thread-view"
           threadViewContext={threadViewContext}
+          constrain={
+            threadViewContext === 'slider' || threadViewContext === 'fullscreen'
+          }
         >
           {shouldRenderThreadSidebar && (
             <Sidebar

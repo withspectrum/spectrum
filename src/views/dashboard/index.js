@@ -83,6 +83,7 @@ class Dashboard extends Component {
       isLoading,
       hasError,
     } = this.props;
+
     const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 

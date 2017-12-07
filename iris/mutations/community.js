@@ -7,6 +7,7 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   unsubscribeFromAllChannelsInCommunity,
+  getCommunityById,
   setPinnedThreadInCommunity,
 } from '../models/community';
 import {
@@ -33,6 +34,7 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getUserById } from '../models/user';
 import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
@@ -325,7 +327,7 @@ module.exports = {
               // remove all relationships to the community's channels
               const removeAllRelationshipsToChannels = Promise.all(
                 allChannelsInCommunity.map(channel =>
-                  removeMemberInChannel(channel.id, currentUser.id)
+                  removeMemberInChannel(channel, currentUser.id)
                 )
               );
 
@@ -432,8 +434,26 @@ module.exports = {
               });
           })
           // send the community record back to the client
-          .then(() => getCommunities([input.id]))
-          .then(data => data[0])
+          .then(async () => {
+            const [{ members, teamName }, community, user] = await Promise.all([
+              getSlackImport(input.id),
+              getCommunityById(input.id),
+              getUserById(currentUser.id),
+            ]);
+
+            const invitedCount = members
+              .filter(user => !!user.email)
+              .filter(user => user.email !== currentUser.email).length;
+
+            addQueue('admin slack import processed email', {
+              user,
+              community,
+              invitedCount,
+              teamName,
+            });
+
+            return community;
+          })
       );
     },
     sendEmailInvites: (_, { input }, { user }) => {

@@ -1,252 +1,70 @@
 // @flow
 import React, { Component } from 'react';
-import compose from 'recompose/compose';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import Link from 'src/components/link';
-import { withRouter } from 'react-router';
-import { zIndex } from '../globals';
-import { Card } from '../card';
-import Reputation from '../reputation';
-import Icon from '../icons';
-import Badge from '../badges';
 import { optimize } from '../../helpers/images';
-import { addProtocolToString } from '../../helpers/utils';
-import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import {
-  Container,
-  CoverLink,
-  CoverPhoto,
-  CoverTitle,
-  CoverSubtitle,
-  CoverDescription,
-  ExtLink,
-  ReputationContainer,
-} from '../profile/style';
-import {
-  StyledAvatarFallback,
-  HoverWrapper,
-  StyledAvatarStatus,
-  StyledAvatar,
-  StyledAvatarLink,
-  CoverAction,
-} from './style';
+import HoverProfile from './hoverProfile';
+import AvatarImage from './image';
+import { Status, AvatarLink, AvatarNoLink } from './style';
 
-type ProfileProps = {
-  user: Object,
-  community: ?Object,
-  showProfile: ?boolean,
-  dispatch: Function,
-  source: string,
-  currentUser: ?Object,
-  top: ?Boolean,
-  left: ?Boolean,
-  bottom: ?Boolean,
-  right: ?Boolean,
+const LinkHandler = props => {
+  if (props.link && !props.noLink) {
+    return <AvatarLink to={props.link}>{props.children}</AvatarLink>;
+  } else {
+    return <AvatarNoLink>{props.children}</AvatarNoLink>;
+  }
 };
 
-class HoverProfile extends Component<ProfileProps> {
-  initMessage = (dispatch, user) => {
-    dispatch(initNewThreadWithUser(user));
-  };
+type AvatarProps = {
+  src: string,
+  community?: any,
+  user?: any,
+  size: string,
+  link?: ?string,
+  noLink?: boolean,
+  showProfile?: boolean,
+};
+
+type State = {
+  isHovering: boolean,
+};
+
+export default class Avatar extends Component<AvatarProps, State> {
+  state = { isHovering: false };
+  hover = () =>
+    this.setState(({ isHovering }) => ({ isHovering: !isHovering }));
 
   render() {
-    const {
-      user,
-      community,
-      showProfile,
-      dispatch,
-      source,
-      currentUser,
-    } = this.props;
+    const { src, community, user, size, showProfile } = this.props;
+    const { isHovering } = this.state;
 
-    if (showProfile && community) {
-      if (community) {
-        return (
-          <HoverWrapper
-            top={this.props.top ? true : this.props.bottom ? false : true}
-            bottom={this.props.bottom}
-            right={this.props.right ? true : this.props.left ? false : true}
-            left={this.props.left}
-          >
-            <Container>
-              <CoverPhoto url={community.coverPhoto} />
-              <CoverLink to={`/${community.slug}`}>
-                <StyledAvatar
-                  data={optimize(source, { w: '64', dpr: '2', format: 'png' })}
-                  type="image/png"
-                  size={64}
-                  {...this.props}
-                  style={{
-                    boxShadow: '0 0 0 2px #fff',
-                    flex: '0 0 64px',
-                    width: '64px',
-                    height: '64px',
-                    marginRight: '0',
-                  }}
-                >
-                  <StyledAvatarFallback
-                    {...this.props}
-                    src={
-                      community
-                        ? `/img/default_community.svg`
-                        : `/img/default_avatar.svg`
-                    }
-                  />
-                </StyledAvatar>
-                <CoverTitle>{community.name}</CoverTitle>
-              </CoverLink>
-              <CoverSubtitle>
-                {community.metaData.members.toLocaleString()} members
-              </CoverSubtitle>
+    const optimizedAvatar = optimize(src, {
+      w: size,
+      dpr: '2',
+      format: 'png',
+    });
+    const communityFallback = '/img/default_community.svg';
+    const userFallback = '/img/default_avatar.svg';
 
-              <CoverDescription>{community.description}</CoverDescription>
-            </Container>
-          </HoverWrapper>
-        );
-      } else if (showProfile && user) {
-        return (
-          <HoverWrapper
-            top={this.props.top ? true : this.props.bottom ? false : true}
-            bottom={this.props.bottom}
-            right={this.props.right ? true : this.props.left ? false : true}
-            left={this.props.left}
-          >
-            <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
-              <CoverPhoto url={user.coverPhoto}>
-                {currentUser &&
-                  user &&
-                  currentUser.id !== user.id && (
-                    <Link
-                      to={`/messages/new`}
-                      onClick={() => this.initMessage(dispatch, user)}
-                    >
-                      <CoverAction
-                        glyph="message-fill"
-                        color="text.reverse"
-                        hoverColor="text.reverse"
-                        tipText={`Message ${user.name}`}
-                        tipLocation={'left'}
-                      />
-                    </Link>
-                  )}
-              </CoverPhoto>
-              <CoverLink to={`/users/${user.username}`}>
-                <StyledAvatar
-                  data={optimize(source, {
-                    w: '64',
-                    dpr: '2',
-                    format: 'png',
-                  })}
-                  type="image/png"
-                  size={64}
-                  {...this.props}
-                  style={{
-                    boxShadow: '0 0 0 2px #fff',
-                    flex: '0 0 64px',
-                    width: '64px',
-                    height: '64px',
-                    marginRight: '0',
-                  }}
-                >
-                  <StyledAvatarFallback
-                    {...this.props}
-                    src={
-                      this.props.community
-                        ? `/img/default_community.svg`
-                        : `/img/default_avatar.svg`
-                    }
-                  />
-                </StyledAvatar>
-                <CoverTitle>{user.name}</CoverTitle>
-              </CoverLink>
-              <CoverSubtitle center>
-                @{user.username}
-                {user.isPro && <Badge type="pro" />}
-              </CoverSubtitle>
+    let source;
 
-              {(user.description || user.website) && (
-                  <CoverDescription>
-                    {user.description && <p>{user.description}</p>}
-                    {user.website && (
-                      <ExtLink>
-                        <Icon glyph="link" size={24} />
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={addProtocolToString(user.website)}
-                        >
-                          {user.website}
-                        </a>
-                      </ExtLink>
-                    )}
-                  </CoverDescription>
-                )}
-
-              {user.totalReputation > 0 && (
-                <ReputationContainer>
-                  <Reputation
-                    tipText={'Total rep across all communities'}
-                    size={'large'}
-                    reputation={
-                      user.contextPermissions
-                        ? user.contextPermissions.reputation
-                        : user.totalReputation
-                    }
-                  />
-                </ReputationContainer>
-              )}
-            </Card>
-          </HoverWrapper>
-        );
-      }
+    if (community && !user) {
+      source = [optimizedAvatar, communityFallback];
     } else {
-      return null;
+      source = [optimizedAvatar, userFallback];
     }
+
+    return (
+      <Status
+        size={size || 32}
+        {...this.props}
+        onMouseEnter={this.hover}
+        onMouseLeave={this.hover}
+      >
+        <LinkHandler {...this.props}>
+          <AvatarImage src={source} size={size} community={community} />
+        </LinkHandler>
+        {showProfile &&
+          isHovering && <HoverProfile source={source} {...this.props} />}
+      </Status>
+    );
   }
 }
-
-const AvatarWithFallback = ({ style, ...props }) => (
-  <StyledAvatar
-    data={optimize(props.source, { w: props.size, dpr: '2', format: 'png' })}
-    type="image/png"
-    size={props.size || 32}
-    style={style}
-    {...props}
-  >
-    <StyledAvatarFallback
-      {...props}
-      src={
-        props.community
-          ? `/img/default_community.svg`
-          : `/img/default_avatar.svg`
-      }
-    />
-  </StyledAvatar>
-);
-
-const Avatar = (props: Object): React$Element<any> => {
-  const { src, community, user, size, link, noLink, showProfile } = props;
-  const source = src;
-
-  // $FlowFixMe
-  if (!source) return null;
-
-  return (
-    <StyledAvatarStatus size={props.size || 32} {...props}>
-      {link && !noLink ? (
-        <StyledAvatarLink to={link}>
-          <AvatarWithFallback source={source} {...props} />
-        </StyledAvatarLink>
-      ) : (
-        <AvatarWithFallback source={source} {...props} />
-      )}
-      {showProfile && <HoverProfile source={source} {...props} />}
-    </StyledAvatarStatus>
-  );
-};
-
-const map = state => ({ currentUser: state.users.currentUser });
-
-//$FlowFixMe
-export default compose(connect(map), withRouter)(Avatar);

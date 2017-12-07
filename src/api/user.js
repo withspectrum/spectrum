@@ -277,3 +277,28 @@ export const updateUserEmailMutation = graphql(
   UPDATE_USER_EMAIL_MUTATION,
   UPDATE_USER_EMAIL_OPTIONS
 );
+
+/*
+  Loads the sidebar profile component widget independent of the thread feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+export const GET_USER_AUTH_QUERY = gql`
+query getUserAuthProfile {
+  user: currentUser {
+    ...userInfo
+    isPro
+    totalReputation
+  }
+}
+${userInfoFragment}
+`;
+export const GET_USER_AUTH_OPTIONS = {
+  options: { fetchPolicy: 'cache-first' },
+};
+
+export const userAuthQuery = graphql(
+  GET_USER_AUTH_QUERY,
+  GET_USER_AUTH_OPTIONS
+);

@@ -17,13 +17,14 @@ export const ThreadViewContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  max-height: 100%;
+  max-height: ${props => (props.constrain ? 'calc(100% - 48px)' : '100%')};
   max-width: 1024px;
   background-color: ${({ theme }) => theme.bg.wash};
   margin: ${props =>
     props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
 
   @media (max-width: 1024px) {
+    max-height: 100%;
     flex-direction: column;
     overflow: hidden;
   }
@@ -331,6 +332,31 @@ export const ChatWrapper = styled.div`
   }
 `;
 
+export const NullMessagesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  padding-top: 64px;
+  flex: 1;
+  color: ${props => props.theme.text.alt};
+  flex-direction: column;
+  opacity: 0.8;
+
+  .icon {
+    opacity: 0.4;
+  }
+`;
+
+export const NullCopy = styled.h5`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  margin-top: 16px;
+  text-align: center;
+  max-width: 600px;
+`;
+
 export const ThreadTitle = {
   fontSize: '32px',
   padding: '0',
@@ -367,6 +393,7 @@ export const ShareButtons = styled.div`
 export const ShareButton = styled.span`
   color: ${props => props.theme.text.alt};
   display: flex;
+  background: none;
 
   a {
     display: flex;
@@ -670,3 +697,34 @@ export const RelatedCount = styled.p`
 `;
 
 export const Label = styled.p`font-size: 14px;`;
+
+export const WatercoolerDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 600px;
+`;
+
+export const WatercoolerIntroContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 32px 36px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.default};
+  flex: auto;
+  flex-direction: column;
+`;
+
+export const WatercoolerTitle = styled.h3`
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 8px;
+`;
+
+export const WatercoolerAvatar = styled(Avatar)`margin-bottom: 16px;`;

@@ -101,9 +101,10 @@ const Community = /* GraphQL */ `
 		coverPhoto: String
 		reputation: Int
 		pinnedThreadId: String
+		pinnedThread: Thread
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
-		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
+		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
@@ -120,10 +121,10 @@ const Community = /* GraphQL */ `
 
 	extend type Query {
 		community(id: ID, slug: String): Community
-		communities(slugs: [String], ids: [ID]): [Community]
+		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
-		searchCommunities(string: String, amount: Int = 30): [Community]
+		searchCommunities(string: String, amount: Int = 20): [Community]
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
 	}
 

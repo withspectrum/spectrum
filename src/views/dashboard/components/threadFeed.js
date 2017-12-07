@@ -47,6 +47,14 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
@@ -76,16 +84,19 @@ class ThreadFeed extends React.Component<Props, State> {
       this.props.data.threads.length > 0
     ) {
       if (
-        this.props.data.community &&
-        this.props.data.community.watercooler &&
-        this.props.data.community.watercooler.id
+        (this.props.data.community &&
+          this.props.data.community.watercooler &&
+          this.props.data.community.watercooler.id) ||
+        (this.props.data.community &&
+          this.props.data.community.pinnedThread &&
+          this.props.data.community.pinnedThread.id)
       ) {
-        this.props.history.replace(
-          `/?t=${this.props.data.community.watercooler.id}`
-        );
-        this.props.dispatch(
-          changeActiveThread(this.props.data.community.watercooler.id)
-        );
+        const selectId = this.props.data.community.watercooler
+          ? this.props.data.community.watercooler.id
+          : this.props.data.community.pinnedThread.id;
+
+        this.props.history.replace(`/?t=${selectId}`);
+        this.props.dispatch(changeActiveThread(selectId));
         return;
       }
 
@@ -139,7 +150,11 @@ class ThreadFeed extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { threads, networkStatus }, selectedId } = this.props;
+    const {
+      data: { threads, networkStatus },
+      selectedId,
+      activeCommunity,
+    } = this.props;
     const { scrollElement } = this.state;
 
     // loading state
@@ -152,12 +167,33 @@ class ThreadFeed extends React.Component<Props, State> {
     // no threads yet
     if (threads.length === 0) return <EmptyThreadFeed />;
 
-    const threadNodes = threads
-      .slice()
-      .map(thread => thread.node)
-      .filter(thread => !thread.watercooler);
+    const threadNodes = threads.slice().map(thread => thread.node);
 
-    const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+    if (activeCommunity) {
+      sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
+    }
+
+    let filteredThreads = sortedThreadNodes;
+    if (
+      this.props.data.community &&
+      this.props.data.community.watercooler &&
+      this.props.data.community.watercooler.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.watercooler.id
+      );
+    }
+
+    if (
+      this.props.data.community &&
+      this.props.data.community.pinnedThread &&
+      this.props.data.community.pinnedThread.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.pinnedThread.id
+      );
+    }
 
     return (
       <div data-e2e-id="inbox-thread-feed">
@@ -167,6 +203,18 @@ class ThreadFeed extends React.Component<Props, State> {
             <WatercoolerThread
               data={this.props.data.community.watercooler}
               active={selectedId === this.props.data.community.watercooler.id}
+            />
+          )}
+
+        {this.props.data.community &&
+          this.props.data.community.pinnedThread &&
+          this.props.data.community.pinnedThread.id && (
+            <InboxThread
+              data={this.props.data.community.pinnedThread}
+              active={selectedId === this.props.data.community.pinnedThread.id}
+              hasActiveCommunity={this.props.hasActiveCommunity}
+              hasActiveChannel={this.props.hasActiveChannel}
+              pinnedThreadId={this.props.data.community.pinnedThread.id}
             />
           )}
         <InfiniteList
@@ -179,7 +227,7 @@ class ThreadFeed extends React.Component<Props, State> {
           scrollElement={scrollElement}
           threshold={750}
         >
-          {sortedThreadNodes.map(thread => {
+          {filteredThreads.map(thread => {
             return (
               <InboxThread
                 key={thread.id}
@@ -187,7 +235,6 @@ class ThreadFeed extends React.Component<Props, State> {
                 active={selectedId === thread.id}
                 hasActiveCommunity={this.props.hasActiveCommunity}
                 hasActiveChannel={this.props.hasActiveChannel}
-                pinnedThreadId={this.props.pinnedThreadId}
               />
             );
           })}
@@ -198,5 +245,6 @@ class ThreadFeed extends React.Component<Props, State> {
 }
 const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
+  activeCommunity: state.dashboardFeed.activeCommunity,
 });
 export default compose(withRouter, connect(map))(ThreadFeed);

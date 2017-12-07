@@ -1,17 +1,11 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import branch from 'recompose/branch';
-// $FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-// $FlowFixMe
 import Link from 'src/components/link';
-
 import Icon from '../../../components/icons';
 import { LoadingDM } from '../../../components/loading';
 import { View, MessagesList, ComposeHeader } from '../style';
 
-export const LoadingDMs = () => (
+export default () => (
   <View>
     <MessagesList>
       <Link to="/messages/new">
@@ -34,9 +28,4 @@ export const LoadingDMs = () => (
       </div>
     </MessagesList>
   </View>
-);
-
-export const displayLoadingState = branch(
-  props => !props.data.user && !props.data.error,
-  renderComponent(LoadingDMs)
 );

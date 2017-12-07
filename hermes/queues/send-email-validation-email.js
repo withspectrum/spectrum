@@ -1,7 +1,10 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-email-validation-email');
 import sendEmail from '../send-email';
-import { EMAIL_VALIDATION_TEMPLATE } from './constants';
+import {
+  EMAIL_VALIDATION_TEMPLATE,
+  SEND_EMAIL_VALIDATION_EMAIL,
+} from './constants';
 import { generateEmailValidationToken } from '../utils/generate-jwt';
 
 type SendEmailValidationJob = {
@@ -18,7 +21,7 @@ export default async (job: SendEmailValidationJob) => {
 
   const { email, userId } = job.data;
   if (!email || !userId) {
-    debug(`\nno email or userId found for this request, returning`);
+    debug('\nno email or userId found for this request, returning');
     return;
   }
 
@@ -31,6 +34,7 @@ export default async (job: SendEmailValidationJob) => {
       return sendEmail({
         TemplateId: EMAIL_VALIDATION_TEMPLATE,
         To: email,
+        Tag: SEND_EMAIL_VALIDATION_EMAIL,
         TemplateModel: {
           validateToken,
         },

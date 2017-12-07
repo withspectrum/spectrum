@@ -92,6 +92,14 @@ class ThreadFeedPure extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
@@ -105,12 +113,34 @@ class ThreadFeedPure extends Component {
     this.subscribe();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      !prevProps.data.thread &&
+      this.props.data.threads &&
+      this.props.data.threads.length === 0
+    ) {
+      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
+      if (this.props.setThreadsStatus) {
+        this.props.setThreadsStatus();
+      }
+
+      if (this.props.hasThreads) {
+        this.props.hasThreads();
+      }
+
+      if (this.props.hasNoThreads) {
+        this.props.hasNoThreads();
+      }
+    }
+  }
+
   render() {
     const {
       data: { threads, networkStatus, error },
       viewContext,
       newActivityIndicator,
     } = this.props;
+
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
@@ -121,11 +151,28 @@ class ThreadFeedPure extends Component {
       !this.props.community.communityPermissions.isBlocked;
 
     const threadNodes = dataExists
-      ? threads
-          .slice()
-          .map(thread => thread.node)
-          .filter(thread => !thread.watercooler)
+      ? threads.slice().map(thread => thread.node)
       : [];
+
+    let filteredThreads = threadNodes;
+    if (
+      this.props.data.community &&
+      this.props.data.community.watercooler &&
+      this.props.data.community.watercooler.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.watercooler.id
+      );
+    }
+    if (
+      this.props.data.community &&
+      this.props.data.community.pinnedThread &&
+      this.props.data.community.pinnedThread.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.pinnedThread.id
+      );
+    }
 
     if (dataExists) {
       return (
@@ -133,6 +180,26 @@ class ThreadFeedPure extends Component {
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
           )}
+
+          {this.props.data.community &&
+            this.props.data.community.pinnedThread &&
+            this.props.data.community.pinnedThread.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.pinnedThread}
+                viewContext={viewContext}
+                isPinned={true}
+              />
+            )}
+
+          {this.props.data.community &&
+            this.props.data.community.watercooler &&
+            this.props.data.community.watercooler.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.watercooler}
+                viewContext={viewContext}
+              />
+            )}
+
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
@@ -143,13 +210,12 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {threadNodes.map(thread => {
+            {filteredThreads.map(thread => {
               return (
                 <ThreadFeedCard
                   key={thread.id}
                   data={thread}
                   viewContext={viewContext}
-                  isPinned={thread.id === this.props.pinnedThreadId}
                 />
               );
             })}
@@ -187,19 +253,6 @@ class ThreadFeedPure extends Component {
           />
         </Card>
       );
-    }
-
-    // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-    if (this.props.setThreadsStatus) {
-      this.props.setThreadsStatus();
-    }
-
-    if (this.props.hasThreads) {
-      this.props.hasThreads();
-    }
-
-    if (this.props.hasNoThreads) {
-      this.props.hasNoThreads();
     }
 
     if (this.props.isNewAndOwned) {

@@ -17,8 +17,16 @@ import { getUserThreads, getUser } from './queries';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
+import {
+  SegmentedControl,
+  DesktopSegment,
+  MobileSegment,
+} from '../../components/segmentedControl';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
+  ThreadFeed
+);
 
 type Props = {
   match: {
@@ -37,12 +45,13 @@ type Props = {
 
 type State = {
   hasNoThreads: boolean,
+  selectedView: 'participant' | 'creator',
 };
 
 class UserView extends React.Component<Props, State> {
   constructor() {
     super();
-    this.state = { hasThreads: true };
+    this.state = { hasThreads: true, selectedView: 'participant' };
   }
 
   componentDidMount() {
@@ -60,6 +69,15 @@ class UserView extends React.Component<Props, State> {
   hasNoThreads = () => this.setState({ hasThreads: false });
   hasThreads = () => this.setState({ hasThreads: true });
 
+  handleSegmentClick = label => {
+    if (this.state.selectedView === label) return;
+
+    return this.setState({
+      selectedView: label,
+      hasThreads: true,
+    });
+  };
+
   render() {
     const {
       data: { user },
@@ -69,7 +87,7 @@ class UserView extends React.Component<Props, State> {
       match: { params: { username } },
       currentUser,
     } = this.props;
-    const { hasThreads } = this.state;
+    const { hasThreads, selectedView } = this.state;
 
     if (queryVarIsChanging) {
       return <LoadingScreen />;
@@ -89,6 +107,17 @@ class UserView extends React.Component<Props, State> {
         user.communityConnection.edges.length > 0
           ? user.communityConnection.edges.map(c => c.node)
           : [];
+
+      const nullHeading = `${user.firstName
+        ? user.firstName
+        : user.name} hasn’t ${selectedView === 'creator'
+        ? 'created'
+        : 'joined'} any conversations yet.`;
+
+      const Feed =
+        selectedView === 'creator'
+          ? ThreadFeedWithData
+          : ThreadParticipantFeedWithData;
 
       return (
         <AppViewWrapper data-e2e-id="user-view">
@@ -118,22 +147,49 @@ class UserView extends React.Component<Props, State> {
           </Column>
 
           <Column type="primary" alignItems="center">
-            {hasThreads ? (
-              <ThreadFeedWithData
+            <SegmentedControl style={{ margin: '-16px 0 16px' }}>
+              <DesktopSegment
+                segmentLabel="participant"
+                onClick={() => this.handleSegmentClick('participant')}
+                selected={selectedView === 'participant'}
+              >
+                Replies
+              </DesktopSegment>
+
+              <DesktopSegment
+                segmentLabel="creator"
+                onClick={() => this.handleSegmentClick('creator')}
+                selected={selectedView === 'creator'}
+              >
+                Threads
+              </DesktopSegment>
+              <MobileSegment
+                segmentLabel="participant"
+                onClick={() => this.handleSegmentClick('participant')}
+                selected={selectedView === 'participant'}
+              >
+                Replies
+              </MobileSegment>
+              <MobileSegment
+                segmentLabel="creator"
+                onClick={() => this.handleSegmentClick('creator')}
+                selected={selectedView === 'creator'}
+              >
+                Threads
+              </MobileSegment>
+            </SegmentedControl>
+            {hasThreads && (
+              <Feed
                 userId={user.id}
                 username={username}
                 viewContext="profile"
                 hasNoThreads={this.hasNoThreads}
                 hasThreads={this.hasThreads}
-              />
-            ) : (
-              <NullState
-                bg="message"
-                heading={`${user.firstName
-                  ? user.firstName
-                  : user.name} hasn’t posted anything yet.`}
+                kind={selectedView}
               />
             )}
+
+            {!hasThreads && <NullState bg="null" heading={nullHeading} />}
           </Column>
         </AppViewWrapper>
       );

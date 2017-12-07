@@ -46,7 +46,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 
 class NotificationsPure extends Component {
   state: {
-    isFetching: boolean,
     showWebPushPrompt: boolean,
     webPushPromptLoading: boolean,
   };
@@ -55,7 +54,6 @@ class NotificationsPure extends Component {
     super();
 
     this.state = {
-      isFetching: false,
       showWebPushPrompt: false,
       webPushPromptLoading: false,
     };
@@ -70,14 +68,6 @@ class NotificationsPure extends Component {
       .catch(err => {
         // error
       });
-  };
-
-  fetchMore = () => {
-    this.setState({
-      isFetching: true,
-    });
-
-    this.props.data.fetchMore();
   };
 
   componentDidMount() {
@@ -104,12 +94,12 @@ class NotificationsPure extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.setState({
-        isFetching: false,
-      });
-    }
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
   }
 
   subscribeToWebPush = () => {
@@ -129,7 +119,6 @@ class NotificationsPure extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
-        console.log('err', err);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -197,7 +186,7 @@ class NotificationsPure extends Component {
     const { scrollElement } = this.state;
 
     return (
-      <FlexCol style={{ flex: '1 1 auto' }}>
+      <FlexCol style={{ flex: '1 1 auto', maxHeight: 'calc(100% - 48px)' }}>
         <Head title={title} description={description} />
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>

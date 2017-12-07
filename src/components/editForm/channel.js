@@ -12,7 +12,7 @@ import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Notice } from '../listItems/style';
-import { Button, TextButton, IconButton } from '../buttons';
+import { Button, IconButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import Icon from '../../components/icons';
@@ -116,12 +116,6 @@ class ChannelWithData extends Component {
 
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
-  };
-
-  cancelForm = e => {
-    e.preventDefault();
-    return (window.location.href = `/${this.props.channel.community.slug}/${this
-      .props.channel.slug}`);
   };
 
   triggerDeleteChannel = (e, channelId) => {
@@ -242,9 +236,6 @@ class ChannelWithData extends Component {
               <Button onClick={this.save} loading={isLoading}>
                 Save
               </Button>
-              <TextButton color={'text.alt'} onClick={this.cancelForm}>
-                Cancel
-              </TextButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
                   <IconButton

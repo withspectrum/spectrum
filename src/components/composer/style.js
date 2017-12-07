@@ -154,6 +154,8 @@ export const ThreadTitle = {
   minHeight: '34px',
   flex: 'none',
   display: 'inline-block',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif",
 };
 
 export const ThreadDescription = {

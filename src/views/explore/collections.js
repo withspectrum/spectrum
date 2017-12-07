@@ -1,6 +1,11 @@
 export const collections = [
   {
+    title: 'Top Communities',
+    curatedContentType: 'top-communities-by-members',
+  },
+  {
     title: 'Design',
+    curatedContentType: 'design-communities',
     categories: [
       {
         title: 'Shop Talk',
@@ -36,6 +41,7 @@ export const collections = [
           'abstract',
           'invision',
           'principle',
+          'compositor',
           // 'xd',
           'origami-studio',
           'webflow',
@@ -46,6 +52,7 @@ export const collections = [
   },
   {
     title: 'Web development',
+    curatedContentType: 'development-communities',
     categories: [
       {
         title: 'Web Frameworks',
@@ -60,12 +67,13 @@ export const collections = [
           'styled-components',
           'graphql',
           'css-in-js',
+          'electron',
         ],
       },
-      // {
-      //   title: 'Native',
-      //   communities: ['compileswift', 'swiftdev'],
-      // },
+      {
+        title: 'Native',
+        communities: ['android', 'swiftdev', 'react-native'],
+      },
       {
         title: 'Resources',
         communities: ['frontend', 'specfm'],
@@ -74,12 +82,12 @@ export const collections = [
         title: 'Tools',
         communities: [
           'zeit',
-          // 'realm',
+          'realm',
           'expo',
+          'compositor',
           'codepen',
           'bootstrap',
           'tachyons',
-          'jxnstk',
         ],
       },
     ],
@@ -99,6 +107,7 @@ export const collections = [
   // },
   {
     title: 'Tech',
+    curatedContentType: 'tech-communities',
     categories: [
       {
         title: 'Get the latest news',
@@ -116,6 +125,7 @@ export const collections = [
   },
   {
     title: 'Life',
+    curatedContentType: 'life-communities',
     categories: [
       {
         title: 'Do good, feel good',

@@ -1,7 +1,10 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
-import { COMMUNITY_INVITE_TEMPLATE } from './constants';
+import {
+  COMMUNITY_INVITE_TEMPLATE,
+  SEND_COMMUNITY_INVITE_EMAIL,
+} from './constants';
 
 type SendCommunityInviteJobData = {
   to: string,
@@ -30,6 +33,7 @@ export default (job: SendCommunityInviteEmailJob) => {
     return sendEmail({
       TemplateId: COMMUNITY_INVITE_TEMPLATE,
       To: job.data.to,
+      Tag: SEND_COMMUNITY_INVITE_EMAIL,
       TemplateModel: {
         subject,
         sender: job.data.sender,

@@ -9,7 +9,7 @@ import {
 } from '../../../api/community';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { Button, TextButton, IconButton } from '../../../components/buttons';
+import { Button, IconButton } from '../../../components/buttons';
 import { Notice } from '../../../components/listItems/style';
 import {
   Input,
@@ -228,11 +228,6 @@ class EditForm extends React.Component<Props> {
       });
   };
 
-  cancelForm = e => {
-    e.preventDefault();
-    return (window.location.href = `/${this.props.community.slug}`);
-  };
-
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
     track('community', 'delete inited', null);
@@ -343,9 +338,6 @@ class EditForm extends React.Component<Props> {
             >
               Save
             </Button>
-            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
-              Cancel
-            </TextButton>
             <TertiaryActionContainer>
               <IconButton
                 glyph="delete"

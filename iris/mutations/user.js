@@ -122,13 +122,12 @@ module.exports = {
               TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
             }
           ).catch(err => {
-            console.log('error sending welcome notification');
             console.log(err);
           });
         })
         .then(() => true)
         .catch(err => {
-          throw new UserError(`Couldn't store web push subscription.`);
+          throw new UserError("Couldn't store web push subscription.");
         });
     },
     unsubscribeWebPush: (
@@ -143,7 +142,7 @@ module.exports = {
       return removeSubscription(endpoint)
         .then(() => true)
         .catch(err => {
-          throw new UserError(`Couldn't remove web push subscription.`);
+          throw new UserError("Couldn't remove web push subscription.");
         });
     },
     updateUserEmail: (

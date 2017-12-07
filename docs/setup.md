@@ -59,6 +59,12 @@ cd mercury
 npm install
 # Navigate back to the root folder
 cd ..
+# Navigate to the hyperion/ folder
+cd hyperion 
+# Install the dependencies
+npm install
+# Navigate back to the root folder
+cd ..
 ```
 
 ## Database

@@ -236,6 +236,10 @@ injectGlobal`
     margin-top: 12px;
   }
 
+  .markdown div[data-block='true']:first-of-type {
+    margin-top: 0;
+  }
+
   .markdown span[data-text='true'] {
     line-height: 1.4;
   }
@@ -247,7 +251,6 @@ injectGlobal`
   }
 
   .markdown iframe {
-    min-height: 400px;
     margin: 1rem 0;
   }
 
