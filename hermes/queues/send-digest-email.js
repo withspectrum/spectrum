@@ -84,7 +84,6 @@ export default async (job: SendWeeklyDigestJob) => {
     timeframe === 'daily'
       ? 'send daily digest email'
       : 'send weekly digest email';
-  const subjectPrefix = timeframe === 'weekly' ? 'Weekly digest: ' : '';
   const subjectStart =
     threads.length > 2
       ? `${threads[0].title}, ${threads[1].title}`
@@ -92,7 +91,7 @@ export default async (job: SendWeeklyDigestJob) => {
   const subjectEnd = ` and ${threads.length > 2
     ? threads.length - 2
     : threads.length - 1} more active conversations in your communities`;
-  const subject = `${subjectPrefix}${subjectStart}${subjectEnd}`;
+  const subject = `${subjectStart}${subjectEnd}`;
   const { day, month, year } = formatDate();
   const preheader =
     timeframe === 'daily'
