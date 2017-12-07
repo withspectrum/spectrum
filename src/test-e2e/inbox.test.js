@@ -1,14 +1,11 @@
 // @flow
 import puppeteer from 'puppeteer';
+import { encode } from 'iris/utils/base64';
 import data from '../../shared/testing/data';
 
 let browser;
 let page;
 const user = data.users[0];
-const session = data.sessions.find(
-  session =>
-    session.session.passport && session.session.passport.user === user.id
-);
 const channelIds = data.usersChannels
   .filter(({ userId }) => userId === user.id)
   .map(({ channelId }) => channelId);
@@ -31,13 +28,10 @@ beforeAll(async () => {
 
   // Set the right cookie so that we're logged in
   await page.setCookie({
-    name: 'connect.sid',
-    // NOTE(@mxstbr): I logged in locally and copy and pasted this value so it works in conjunction with the ID in migrations/seed/default.js. Don't change it.
-    value:
-      's%3A18-Czh8IkWuq6o8LJ0OnDRXCYt7iBsQ_.7APwOHUEEQJOjmfHyGnYsSmbcaWdkBxqxLKKKosHh7E',
+    name: 'session',
+    value: encode(JSON.stringify({ passport: { user: user.id } })),
     domain: 'localhost',
     path: '/',
-    expires: session.session.cookie._expires.getTime() / 1000,
     httpOnly: true,
     secure: false,
   });
