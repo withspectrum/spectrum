@@ -33,6 +33,7 @@ type ThreadData = {
     name: string,
   },
   replies: Array<ReplyData>,
+  repliesCount: number,
 };
 
 type SendNewMessageEmailJobData = {
@@ -52,8 +53,6 @@ type SendNewMessageEmailJob = {
 export default async (job: SendNewMessageEmailJob) => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, threads } = job.data;
-
-  console.log('recipient', recipient);
 
   // how many threads were grouped into this email
   const threadsAmount = threads.length;
@@ -82,12 +81,16 @@ export default async (job: SendNewMessageEmailJob) => {
   // Brian replied in 'Thread title'
   // Brian and 3 others replied in 'Thread title'
   const subject = `${firstName}${numUsersText} replied in ${threadsText}`;
+  const newMessagesLength = threads.reduce(
+    (a, thread) => a + thread.repliesCount,
+    0
+  );
   const preheaderSubtext = restNames
     ? ` and ${restNames.length === 1
         ? `${restNames.length} other person`
         : `${restNames.length} others`}...`
     : '';
-  const preheader = `View your conversations with ${firstName}${preheaderSubtext}`;
+  const preheader = `View ${newMessagesLength} new messages from ${firstName}${preheaderSubtext}`;
 
   const unsubscribeToken = await generateUnsubscribeToken(
     recipient.userId,

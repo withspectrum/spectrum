@@ -76,6 +76,7 @@ const timedOut = async recipient => {
   const threadsWithGroupedRepliesPromises = threadKeys.map(async threadId => ({
     ...threads[threadId],
     replies: await groupReplies(threads[threadId].replies),
+    repliesCount: threads[threadId].replies.length,
   }));
 
   const threadsWithGroupedReplies = await Promise.all([
