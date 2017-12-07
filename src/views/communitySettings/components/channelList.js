@@ -1,19 +1,24 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 //$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { openModal } from '../../../actions/modals';
-import { LoadingCard } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import { ChannelListItem } from '../../../components/listItems';
 import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import { getCommunityChannels } from '../queries';
-import { StyledCard, ListHeading, ListContainer, ListHeader } from '../style';
+import {
+  ListContainer,
+  SectionCard,
+  SectionTitle,
+  SectionCardFooter,
+} from '../style';
 
 type Props = {
   data: {
@@ -37,17 +42,9 @@ class ChannelList extends React.Component<Props> {
       const channels = community.channelConnection.edges.map(c => c.node);
 
       return (
-        <StyledCard>
-          <ListHeader>
-            <ListHeading>Manage Channels</ListHeading>
-            <Button
-              icon={'plus'}
-              onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
-            >
-              Create Channel
-            </Button>
-          </ListHeader>
+        <SectionCard>
+          <SectionTitle>Channels</SectionTitle>
+
           <ListContainer>
             {channels.length > 0 &&
               channels.map(item => {
@@ -56,33 +53,44 @@ class ChannelList extends React.Component<Props> {
                     key={item.id}
                     to={`/${communitySlug}/${item.slug}/settings`}
                   >
-                    <ChannelListItem
-                      contents={item}
-                      withDescription={false}
-                      meta={`${item.metaData.members.toLocaleString()} members`}
-                    >
+                    <ChannelListItem contents={item} withDescription={false}>
                       <IconButton glyph="settings" />
                     </ChannelListItem>
                   </Link>
                 );
               })}
           </ListContainer>
-        </StyledCard>
+
+          <SectionCardFooter>
+            <Button
+              style={{ alignSelf: 'flex-start' }}
+              icon={'plus'}
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+            >
+              Create Channel
+            </Button>
+          </SectionCardFooter>
+        </SectionCard>
       );
     }
 
     if (isLoading) {
-      return <LoadingCard />;
+      return (
+        <SectionCard>
+          <Loading />
+        </SectionCard>
+      );
     }
 
     return (
-      <StyledCard>
+      <SectionCard>
         <ViewError
           refresh
           small
           heading={`We couldn’t load the channels for this community.`}
         />
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

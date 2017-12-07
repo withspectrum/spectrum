@@ -7,6 +7,7 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   unsubscribeFromAllChannelsInCommunity,
+  getCommunityById,
   setPinnedThreadInCommunity,
 } from '../models/community';
 import {
@@ -33,10 +34,11 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getUserById } from '../models/user';
 import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
-import { slugIsBlacklisted } from '../utils/permissions';
+import { communitySlugIsBlacklisted } from '../utils/permissions';
 import { addQueue } from '../utils/workerQueue';
 
 module.exports = {
@@ -50,7 +52,30 @@ module.exports = {
         );
       }
 
-      if (slugIsBlacklisted(args.input.slug)) {
+      if (!args.input.slug || args.input.slug.length === 0) {
+        return new UserError(
+          'Communities must have a valid url so people can find it!'
+        );
+      }
+
+      // replace any non alpha-num characters to prevent bad community slugs
+      // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+      // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+      const sanitizedSlug = args.input.slug
+        .replace(/[\W_]/g, '-')
+        .replace(/-{2,}/g, '-');
+      const sanitizedArgs = Object.assign(
+        {},
+        {
+          ...args,
+          input: {
+            ...args.input,
+            slug: sanitizedSlug,
+          },
+        }
+      );
+
+      if (communitySlugIsBlacklisted(sanitizedSlug)) {
         return new UserError(
           `This url is already taken - feel free to change it if
           you're set on the name ${args.input.name}!`
@@ -59,7 +84,7 @@ module.exports = {
 
       // get communities with the input slug to check for duplicates
       return (
-        getCommunitiesBySlug([args.input.slug])
+        getCommunitiesBySlug([sanitizedSlug])
           .then(communities => {
             // if a community with this slug already exists
             if (communities.length > 0) {
@@ -68,7 +93,7 @@ module.exports = {
               );
             }
             // all checks passed
-            return createCommunity(args, currentUser);
+            return createCommunity(sanitizedArgs, currentUser);
           })
           .then(community => {
             // create a new relationship with the community
@@ -235,7 +260,7 @@ module.exports = {
 
       // user must be authed to join a community
       if (!currentUser) {
-        return new UserError('You must be signed in to follow this community.');
+        return new UserError('You must be signed in to join this community.');
       }
 
       // get the current user's permissions in the community
@@ -302,7 +327,7 @@ module.exports = {
               // remove all relationships to the community's channels
               const removeAllRelationshipsToChannels = Promise.all(
                 allChannelsInCommunity.map(channel =>
-                  removeMemberInChannel(channel.id, currentUser.id)
+                  removeMemberInChannel(channel, currentUser.id)
                 )
               );
 
@@ -409,8 +434,26 @@ module.exports = {
               });
           })
           // send the community record back to the client
-          .then(() => getCommunities([input.id]))
-          .then(data => data[0])
+          .then(async () => {
+            const [{ members, teamName }, community, user] = await Promise.all([
+              getSlackImport(input.id),
+              getCommunityById(input.id),
+              getUserById(currentUser.id),
+            ]);
+
+            const invitedCount = members
+              .filter(user => !!user.email)
+              .filter(user => user.email !== currentUser.email).length;
+
+            addQueue('admin slack import processed email', {
+              user,
+              community,
+              invitedCount,
+              teamName,
+            });
+
+            return community;
+          })
       );
     },
     sendEmailInvites: (_, { input }, { user }) => {

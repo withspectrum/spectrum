@@ -34,6 +34,7 @@ const CREATE_DIRECT_MESSAGE_THREAD_OPTIONS = {
           input,
         },
         update: (store, { data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) return;
           const data = store.readQuery({
             query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY,
           });
@@ -58,6 +59,27 @@ export const createDirectMessageThreadMutation = graphql(
   CREATE_DIRECT_MESSAGE_THREAD_OPTIONS
 );
 
+const LoadMoreDirectMessageThreads = gql`
+  query loadMoreDirectMessageThreads($after: String) {
+    user: currentUser {
+      ...userInfo
+      directMessageThreadsConnection(after: $after) {
+        pageInfo {
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            ...directMessageThreadInfo
+          }
+        }
+      }
+    }
+  }
+  ${userInfoFragment}
+  ${directMessageThreadInfoFragment}
+`;
+
 export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
   query currentUserDirectMessageThreads {
     user: currentUser {
@@ -75,6 +97,44 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
   },
   props: props => ({
     ...props,
+    hasNextPage: props.data.user
+      ? props.data.user.directMessageThreadsConnection.pageInfo.hasNextPage
+      : false,
+    fetchMore: () =>
+      props.data.fetchMore({
+        query: LoadMoreDirectMessageThreads,
+        variables: {
+          after:
+            props.data.user.directMessageThreadsConnection.edges[
+              props.data.user.directMessageThreadsConnection.edges.length - 1
+            ].cursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult.user) {
+            return prev;
+          }
+
+          const foo = {
+            ...prev,
+            user: {
+              ...prev.user,
+              directMessageThreadsConnection: {
+                ...prev.user.directMessageThreadsConnection,
+                pageInfo: {
+                  ...prev.user.directMessageThreadsConnection.pageInfo,
+                  ...fetchMoreResult.user.directMessageThreadsConnection
+                    .pageInfo,
+                },
+                edges: [
+                  ...prev.user.directMessageThreadsConnection.edges,
+                  ...fetchMoreResult.user.directMessageThreadsConnection.edges,
+                ],
+              },
+            },
+          };
+          return foo;
+        },
+      }),
     subscribeToUpdatedDirectMessageThreads: () => {
       return props.data.subscribeToMore({
         document: subscribeToUpdatedDirectMessageThreads,

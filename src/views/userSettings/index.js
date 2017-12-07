@@ -3,8 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
@@ -123,7 +121,7 @@ class UserSettings extends React.Component<Props> {
             <RecurringPaymentsList data={data} currentUser={user} />
             <EmailSettings largeOnly currentUser={user} />
             {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
+              'PushManager' in window && <NotificationSettings largeOnly />}
             <Invoices />
           </Column>
         </AppViewWrapper>
@@ -136,6 +134,6 @@ const map = state => ({
   currentUser: state.users.currentUser,
 });
 
-export default compose(connect(map), GetUserProfile, viewNetworkHandler, pure)(
+export default compose(connect(map), GetUserProfile, viewNetworkHandler)(
   UserSettings
 );

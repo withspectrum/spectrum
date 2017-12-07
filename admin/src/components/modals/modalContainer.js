@@ -24,9 +24,7 @@ const ModalContainer = ({
         <CloseButton onClick={() => closeModal()} glyph="view-close" />
       </Header>
 
-      <ModalContent>
-        {children}
-      </ModalContent>
+      <ModalContent>{children}</ModalContent>
     </ModalBody>
   );
 };

@@ -3,9 +3,7 @@
 import styled from 'styled-components';
 import { FlexRow, Transition, zIndex } from '../../globals';
 
-export const Row = styled(FlexRow)`
-  margin: 16px 24px;
-`;
+export const Row = styled(FlexRow)`margin: 16px 24px;`;
 
 export const HiddenInput = styled.input`
   visibility: hidden;

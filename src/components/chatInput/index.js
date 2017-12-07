@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import withState from 'recompose/withState';
-// $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-// $FlowFixMe
 import { connect } from 'react-redux';
+import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
+import { KeyBindingUtil } from 'draft-js';
 import Icon from '../../components/icons';
+import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
-import { toPlainText, fromPlainText } from '../../components/editor';
+import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
+import mentionsDecorator from '../draftjs-editor/mentions-decorator';
+import linksDecorator from '../draftjs-editor/links-decorator';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
+import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
+import Input from './input';
 import {
-  Form,
-  EditorInput,
-  ChatInputWrapper,
-  SendButton,
-  PhotoSizeError,
-} from './style';
-import { sendMessageMutation } from '../../api/message';
+  sendMessageMutation,
+  sendDirectMessageMutation,
+} from '../../api/message';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -30,7 +28,7 @@ import {
 } from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
-class ChatInputWithMutation extends Component {
+class ChatInput extends Component {
   state: {
     isFocused: boolean,
     photoSizeError: string,
@@ -42,6 +40,7 @@ class ChatInputWithMutation extends Component {
     this.state = {
       isFocused: false,
       photoSizeError: '',
+      code: false,
     };
   }
 
@@ -49,16 +48,53 @@ class ChatInputWithMutation extends Component {
     this.props.onRef(this);
   }
 
+  shouldComponentUpdate(next) {
+    const curr = this.props;
+
+    // User changed
+    if (curr.currentUser !== next.currentUser) return true;
+
+    // State changed
+    if (curr.state !== next.state) return true;
+
+    return false;
+  }
+
   componentWillUnmount() {
+    const { state } = this.props;
     this.props.onRef(undefined);
+    if (toPlainText(state).trim() === '')
+      return this.props.dispatch(closeChatInput(''));
+    return this.props.dispatch(closeChatInput(state));
   }
 
   triggerFocus = () => {
-    this.chatInput.focus();
+    // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
+    // decorators that are passed to the editor are removed from the editor
+    // state
+    setTimeout(() => {
+      this.editor && this.editor.focus();
+    }, 0);
+  };
+
+  toggleCodeMessage = () => {
+    const { onChange, state } = this.props;
+    const { code } = this.state;
+    this.setState(
+      {
+        code: !code,
+      },
+      () => {
+        onChange(
+          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+        );
+        setTimeout(() => this.triggerFocus());
+      }
+    );
   };
 
   submit = e => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     const {
       state,
@@ -67,6 +103,7 @@ class ChatInputWithMutation extends Component {
       createThread,
       dispatch,
       sendMessage,
+      sendDirectMessage,
       clear,
       forceScrollToBottom,
     } = this.props;
@@ -78,46 +115,80 @@ class ChatInputWithMutation extends Component {
     }
 
     // If the input is empty don't do anything
-    if (toPlainText(state).trim() === '') return;
+    if (toPlainText(state).trim() === '') return 'handled';
+
+    this.setState({
+      code: false,
+    });
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
-      return createThread({
-        messageBody: toPlainText(state),
-        messageType: 'text',
+      createThread({
+        messageBody: JSON.stringify(toJSON(state)),
+        messageType: 'draftjs',
       });
+      clear();
+      return 'handled';
     }
 
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
-    sendMessage({
-      threadId: thread,
-      messageType: 'text',
-      threadType,
-      content: {
-        body: toPlainText(state),
-      },
-    })
-      .then(({ data: { addMessage } }) => {
-        track(`${threadType} message`, 'text message created', null);
+    if (threadType === 'directMessageThread') {
+      sendDirectMessage({
+        threadId: thread,
+        messageType: 'draftjs',
+        threadType,
+        content: {
+          body: JSON.stringify(toJSON(state)),
+        },
       })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
+        .then(({ data: { addMessage } }) => {
+          track(`${threadType} message`, 'text message created', null);
+        })
+        .catch(err => {
+          dispatch(addToastWithTimeout('error', err.message));
+        });
+    } else {
+      sendMessage({
+        threadId: thread,
+        messageType: 'draftjs',
+        threadType,
+        content: {
+          body: JSON.stringify(toJSON(state)),
+        },
+      })
+        .then(({ data: { addMessage } }) => {
+          dispatch(clearChatInput());
+          track(`${threadType} message`, 'text message created', null);
+        })
+        .catch(err => {
+          dispatch(addToastWithTimeout('error', err.message));
+        });
+    }
 
     // refocus the input
     setTimeout(() => {
       clear();
-      this.editor.focus();
+      this.editor && this.editor.focus();
     });
+
+    return 'handled';
   };
 
-  handleEnter = e => {
-    //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-    e.preventDefault(); //=> prevent linebreak
-    this.submit(e); //=> send the message instead
+  handleReturn = e => {
+    // Always submit on CMD+Enter
+    if (KeyBindingUtil.hasCommandModifier(e)) {
+      return this.submit(e);
+    }
+
+    // Also submit non-code messages on ENTER
+    if (!this.state.code && !e.shiftKey) {
+      return this.submit(e);
+    }
+
+    return 'not-handled';
   };
 
   sendMediaMessage = e => {
@@ -129,6 +200,8 @@ class ChatInputWithMutation extends Component {
       createThread,
       dispatch,
       forceScrollToBottom,
+      sendDirectMessage,
+      sendMessage,
     } = this.props;
 
     if (!file) return;
@@ -171,8 +244,8 @@ class ChatInputWithMutation extends Component {
         });
       }
 
-      this.props
-        .sendMessage({
+      if (threadType === 'directMessageThread') {
+        sendDirectMessage({
           threadId: thread,
           messageType: 'media',
           threadType,
@@ -181,12 +254,30 @@ class ChatInputWithMutation extends Component {
           },
           file,
         })
-        .then(({ addMessage }) => {
-          track(`${threadType} message`, 'media message created', null);
+          .then(({ addMessage }) => {
+            dispatch(clearChatInput());
+            track(`${threadType} message`, 'media message created', null);
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+          });
+      } else {
+        sendMessage({
+          threadId: thread,
+          messageType: 'media',
+          threadType,
+          content: {
+            body: reader.result,
+          },
+          file,
         })
-        .catch(err => {
-          dispatch(addToastWithTimeout('error', err.message));
-        });
+          .then(({ addMessage }) => {
+            track(`${threadType} message`, 'media message created', null);
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+          });
+      }
     };
   };
 
@@ -218,12 +309,16 @@ class ChatInputWithMutation extends Component {
     });
   };
 
+  clearError = () => {
+    this.setState({ photoSizeError: '' });
+  };
+
   render() {
     const { state, onChange, currentUser } = this.props;
-    const { isFocused, photoSizeError } = this.state;
+    const { isFocused, photoSizeError, code } = this.state;
 
     return (
-      <ChatInputWrapper focus={isFocused}>
+      <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
         {photoSizeError && (
           <PhotoSizeError>
             <p
@@ -235,7 +330,7 @@ class ChatInputWithMutation extends Component {
               {photoSizeError}
             </p>
             <Icon
-              onClick={() => this.setState({ photoSizeError: '' })}
+              onClick={() => this.clearError()}
               glyph="view-close"
               size={16}
               color={'warn.default'}
@@ -243,20 +338,28 @@ class ChatInputWithMutation extends Component {
           </PhotoSizeError>
         )}
         <MediaInput onChange={this.sendMediaMessage} />
+        <IconButton
+          glyph={'code'}
+          onClick={this.toggleCodeMessage}
+          tipText={'Write code'}
+          tipLocation={'top'}
+          style={{ margin: '0 4px' }}
+          color={code ? 'brand.alt' : 'text.placeholder'}
+          hoverColor={'brand.alt'}
+        />
         <Form focus={isFocused}>
-          <EditorInput
+          <Input
             focus={isFocused}
-            placeholder="Your message here..."
-            state={state}
-            onEnter={this.handleEnter}
+            placeholder={`Your ${code ? 'code' : 'message'} here...`}
+            editorState={state}
+            handleReturn={this.handleReturn}
             onChange={onChange}
-            markdown={false}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            singleLine
-            images={false}
+            code={code}
             editorRef={editor => (this.editor = editor)}
-            innerRef={input => (this.chatInput = input)}
+            editorKey="chat-input"
+            decorators={[mentionsDecorator, linksDecorator]}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
@@ -267,16 +370,20 @@ class ChatInputWithMutation extends Component {
 
 const map = state => ({
   currentUser: state.users.currentUser,
+  chatInputRedux: state.composer.chatInput,
 });
-const ChatInput = compose(
+export default compose(
   sendMessageMutation,
-  withState('state', 'changeState', fromPlainText('')),
+  sendDirectMessageMutation,
+  connect(map),
+  withState(
+    'state',
+    'changeState',
+    ({ chatInputRedux }) =>
+      chatInputRedux ? chatInputRedux : fromPlainText('')
+  ),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
-  }),
-  connect(map),
-  pure
-)(ChatInputWithMutation);
-
-export default ChatInput;
+  })
+)(ChatInput);

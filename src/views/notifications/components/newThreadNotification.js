@@ -1,12 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import { getThreadById } from '../../../api/thread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
+import { markSingleNotificationSeenMutation } from '../../../api/notification';
 import Icon from '../../../components/icons';
 import { ThreadProfile } from '../../../components/profile';
 import {
@@ -17,6 +16,17 @@ import {
   ThreadContext,
   ContentWash,
 } from '../style';
+
+type Props = {
+  notification: Object,
+  currentUser: Object,
+  history: Object,
+  markSingleNotificationSeen: Function,
+  markSingleNotificationAsSeenInState: Function,
+};
+type State = {
+  communityName: string,
+};
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
@@ -33,82 +43,147 @@ const sortThreads = (entities, currentUser) => {
   return threads;
 };
 
-const ThreadCreatedComponent = ({ data }) => {
-  return <ThreadProfile profileSize="mini" data={data} />;
+const ThreadCreatedComponent = ({ data, ...rest }) => {
+  return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
-const ThreadCreated = compose(getThreadById, displayLoadingCard, pure)(
+const ThreadCreated = compose(getThreadById, displayLoadingCard)(
   ThreadCreatedComponent
 );
 
-export const NewThreadNotification = ({ notification, currentUser }) => {
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
+/*
+  NOTE: @brianlovin
+  These new thread notifications are handled with a contextId that matches a *channel*. This means that we can't easily access community information within the notification.
 
-  // sort and order the threads
-  const threads = sortThreads(notification.entities, currentUser);
+  However, because this notification fetches thread data, we will get community info back from the response! I use a slightly hacky component state + props to bubble the community name up from the ThreadCreated component whenever the data fetches, then use that to set local component state to show the community name in the notification.
+*/
 
-  const newThreadCount = threads.length > 1
-    ? `New threads were`
-    : 'A new thread was';
+export class NewThreadNotification extends React.Component<Props, State> {
+  constructor() {
+    super();
 
-  if (threads && threads.length > 0) {
-    return (
-      <SegmentedNotificationCard>
-        <ThreadContext>
-          <Icon glyph="post-fill" />
-          <TextContent pointer={true}>
-            {newThreadCount} published in {context.asString} {date}
-          </TextContent>
-        </ThreadContext>
-        <ContentWash>
-          <AttachmentsWash>
-            {threads.map(thread => {
-              return <ThreadCreated key={thread.id} id={thread.id} />;
-            })}
-          </AttachmentsWash>
-        </ContentWash>
-      </SegmentedNotificationCard>
-    );
-  } else {
-    return null;
+    this.state = {
+      communityName: '',
+    };
   }
-};
 
-export const MiniNewThreadNotification = ({
-  notification,
-  currentUser,
-  history,
-}) => {
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
+  setCommunityName = (name: string) => this.setState({ communityName: name });
 
-  // sort and order the threads
-  const threads = sortThreads(notification.entities, currentUser);
+  render() {
+    const { notification, currentUser } = this.props;
+    const { communityName } = this.state;
 
-  const newThreadCount = threads.length > 1
-    ? `New threads were`
-    : 'A new thread was';
+    const date = parseNotificationDate(notification.modifiedAt);
+    const context = parseContext(notification.context);
 
-  if (threads && threads.length > 0) {
-    return (
-      <SegmentedNotificationListRow>
-        <ThreadContext>
-          <Icon glyph="post-fill" />
-          <TextContent pointer={false}>
-            {newThreadCount} published in {context.asString} {date}
-          </TextContent>
-        </ThreadContext>
-        <ContentWash mini>
-          <AttachmentsWash>
-            {threads.map(thread => {
-              return <ThreadCreated key={thread.id} id={thread.id} />;
-            })}
-          </AttachmentsWash>
-        </ContentWash>
-      </SegmentedNotificationListRow>
-    );
-  } else {
-    return null;
+    // sort and order the threads
+    const threads = sortThreads(notification.entities, currentUser);
+
+    const newThreadCount =
+      threads.length > 1 ? `New threads were` : 'A new thread was';
+
+    if (threads && threads.length > 0) {
+      return (
+        <SegmentedNotificationCard>
+          <ThreadContext>
+            <Icon glyph="post-fill" />
+            <TextContent pointer={true}>
+              {newThreadCount} published in{' '}
+              {communityName && `${communityName}, `} {context.asString} {date}
+            </TextContent>
+          </ThreadContext>
+          <ContentWash>
+            <AttachmentsWash>
+              {threads.map(thread => {
+                return (
+                  <ThreadCreated
+                    setName={this.setCommunityName}
+                    key={thread.id}
+                    id={thread.id}
+                  />
+                );
+              })}
+            </AttachmentsWash>
+          </ContentWash>
+        </SegmentedNotificationCard>
+      );
+    } else {
+      return null;
+    }
   }
-};
+}
+
+class MiniNewThreadNotificationWithMutation extends React.Component<
+  Props,
+  State
+> {
+  constructor() {
+    super();
+
+    this.state = {
+      communityName: '',
+    };
+  }
+
+  markAsSeen = () => {
+    const {
+      markSingleNotificationSeen,
+      notification,
+      markSingleNotificationAsSeenInState,
+    } = this.props;
+    if (notification.isSeen) return;
+    markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen(notification.id);
+  };
+
+  setCommunityName = (name: string) => this.setState({ communityName: name });
+
+  render() {
+    const { notification, currentUser } = this.props;
+    const { communityName } = this.state;
+
+    const date = parseNotificationDate(notification.modifiedAt);
+    const context = parseContext(notification.context);
+
+    const threads = sortThreads(notification.entities, currentUser);
+
+    const newThreadCount =
+      threads.length > 1 ? `New threads were` : 'A new thread was';
+
+    if (threads && threads.length > 0) {
+      return (
+        <SegmentedNotificationListRow
+          isSeen={notification.isSeen}
+          onClick={this.markAsSeen}
+        >
+          <ThreadContext>
+            <Icon glyph="post-fill" />
+            <TextContent pointer={false}>
+              {newThreadCount} published in{' '}
+              {communityName && `${communityName}, `} {context.asString} {date}
+            </TextContent>
+          </ThreadContext>
+          <ContentWash mini>
+            <AttachmentsWash>
+              {threads.map(thread => {
+                return (
+                  <ThreadCreated
+                    setName={this.setCommunityName}
+                    key={thread.id}
+                    id={thread.id}
+                  />
+                );
+              })}
+            </AttachmentsWash>
+          </ContentWash>
+        </SegmentedNotificationListRow>
+      );
+    } else {
+      return null;
+    }
+  }
+}
+
+export const MiniNewThreadNotification = compose(
+  markSingleNotificationSeenMutation
+)(MiniNewThreadNotificationWithMutation);

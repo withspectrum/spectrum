@@ -1,33 +1,25 @@
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
-import { IS_EMAIL } from '../../../helpers/regexps';
+import isEmail from 'validator/lib/isEmail';
 import { sendEmailInvitationsMutation } from '../../../api/community';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  ButtonContainer,
   EmailInviteForm,
   EmailInviteInput,
   AddRow,
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  SectionCard,
+  SectionTitle,
+  SectionCardFooter,
 } from '../style';
-import {
-  StyledCard,
-  LargeListHeading,
-  Description,
-} from '../../../components/listItems/style';
 
 type Props = {
   community: Object,
@@ -116,6 +108,7 @@ class EmailInvites extends React.Component<Props, State> {
       .filter(contact => contact.error === false)
       .filter(contact => contact.email.length > 0)
       .filter(contact => contact.email !== currentUser.email)
+      .filter(contact => isEmail(contact.email))
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
@@ -219,7 +212,7 @@ class EmailInvites extends React.Component<Props, State> {
 
   validate = (e, i) => {
     const { contacts } = this.state;
-    if (!e.target.value.match(IS_EMAIL)) {
+    if (!isEmail(e.target.value)) {
       contacts[i].error = true;
     } else {
       contacts[i].error = false;
@@ -263,11 +256,8 @@ class EmailInvites extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <div style={{ width: '100%' }}>
-        <LargeListHeading>Invite by Email</LargeListHeading>
-        <Description>
-          Invite people to your community directly by email.
-        </Description>
+      <div>
+        <SectionTitle>Invite members by email</SectionTitle>
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -295,11 +285,9 @@ class EmailInvites extends React.Component<Props, State> {
 
         <CustomMessageToggle onClick={this.toggleCustomMessage}>
           <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
-          {hasCustomMessage ? (
-            'Remove custom message'
-          ) : (
-            'Optional: Add a custom message to your invitation'
-          )}
+          {hasCustomMessage
+            ? 'Remove custom message'
+            : 'Optional: Add a custom message to your invitation'}
         </CustomMessageToggle>
 
         {hasCustomMessage && (
@@ -318,13 +306,13 @@ class EmailInvites extends React.Component<Props, State> {
         )}
 
         {hasCustomMessage &&
-        customMessageError && (
-          <Error>
-            Your custom invitation message can be up to 500 characters.
-          </Error>
-        )}
+          customMessageError && (
+            <Error>
+              Your custom invitation message can be up to 500 characters.
+            </Error>
+          )}
 
-        <ButtonContainer>
+        <SectionCardFooter>
           <Button
             loading={isLoading}
             onClick={this.sendInvitations}
@@ -332,16 +320,16 @@ class EmailInvites extends React.Component<Props, State> {
           >
             Send Invitations
           </Button>
-        </ButtonContainer>
+        </SectionCardFooter>
       </div>
     );
   }
 }
 
 const EmailInvitesCard = props => (
-  <StyledCard>
+  <SectionCard>
     <EmailInvites {...props} />
-  </StyledCard>
+  </SectionCard>
 );
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;
@@ -353,13 +341,11 @@ const map = state => ({
 export const EmailInvitesWithoutCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
   sendEmailInvitationsMutation,
   connect(map),
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(EmailInvitesCard);
 export default EmailInvitesWithCard;

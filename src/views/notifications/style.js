@@ -51,23 +51,23 @@ export const NotificationListContentHeading = styled(ContentHeading)`
 `;
 
 export const Content = styled(FlexCol)`
-  margin-left: 32px;
+  margin-left: 8px;
   align-self: stretch;
 `;
 
 export const ContentWash = styled(Content)`
   margin: 0;
   background-color: ${props => hexa(props.theme.bg.wash, 0.75)};
-  border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
-  border-top: 2px solid ${props => props.theme.bg.wash};
-  padding: 16px;
-  padding-top: 8px;
+  border-radius: ${props => (props.mini ? '0' : '0 0 8px 8px')};
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding: 8px;
+  padding-top: 0;
 `;
 
 export const NotificationListContainer = styled(FlexCol)`
   align-self: stretch;
   max-height: 480px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 `;
 
@@ -112,7 +112,7 @@ export const ChatMessage = styled.p`
 export const NotificationListRow = styled(FlexCol)`
   padding: 16px;
   padding-top: 12px;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  border-bottom: 1px solid ${({ theme }) => theme.bg.border};
   justify-content: center;
   align-items: flex-start;
   color: ${({ theme }) => theme.text.default};
@@ -122,15 +122,20 @@ export const NotificationListRow = styled(FlexCol)`
   transition: ${Transition.hover.off};
   max-width: 100%;
   overflow-x: hidden;
+  box-shadow: ${props =>
+    !props.isSeen ? `inset 2px 0 0 0 ${props.theme.brand.alt}` : 'none'};
 
   &:last-of-type {
-    border-bottom: 2px solid transparent;
+    border-bottom: 1px solid transparent;
   }
 
   &:hover {
     transition: ${Transition.hover.on};
     background-color: ${({ theme }) => hexa(theme.brand.wash, 0.15)};
-    box-shadow: inset 8px 0 0 0 ${({ theme }) => theme.brand.alt};
+    box-shadow: ${props =>
+      !props.isSeen
+        ? `inset 6px 0 0 0 ${props.theme.brand.alt}`
+        : `inset 4px 0 0 0 ${props.theme.brand.alt}`};
     cursor: pointer;
   }
 `;
@@ -144,7 +149,6 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
-  overflow-x: hidden;
 `;
 
 export const ActorPhotoItem = styled.div`margin-right: 4px;`;
@@ -159,10 +163,16 @@ export const ContextRow = styled(FlexRow)`
     margin-left: 8px;
   }
   margin-bottom: 8px;
+  max-width: 100%;
+  overflow: hidden;
 `;
 
 export const SuccessContext = styled(ContextRow)`
   color: ${({ theme }) => theme.success.alt};
+`;
+
+export const SpecialContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.special.default};
 `;
 
 export const ReactionContext = styled(ContextRow)`
@@ -191,6 +201,7 @@ export const TextContent = styled.p`
   color: ${props => props.theme.text.alt};
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
+  padding-right: 16px;
 
   a {
     font-weight: 600;

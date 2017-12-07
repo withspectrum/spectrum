@@ -1,3 +1,4 @@
+// @flow
 const DirectMessageThread = /* GraphQL */ `
 	type DirectMessagesConnection {
 		pageInfo: PageInfo!
@@ -22,7 +23,7 @@ const DirectMessageThread = /* GraphQL */ `
 
 	type DirectMessageThread {
 		id: ID!
-		messageConnection(first: Int = 30, after: String): DirectMessagesConnection!
+		messageConnection(first: Int = 20, after: String): DirectMessagesConnection!
 		participants: [ParticipantInfo]!
 		snippet: String!
 		threadLastActive: Date!
@@ -35,6 +36,7 @@ const DirectMessageThread = /* GraphQL */ `
 	enum MessageType {
 		text
 		media
+        draftjs
 	}
 
 	input ContentInput {

@@ -1,4 +1,10 @@
-const isAdmin = (id: string) => {
+// @flow
+import {
+  COMMUNITY_SLUG_BLACKLIST,
+  CHANNEL_SLUG_BLACKLIST,
+} from 'shared/slug-blacklists';
+
+export const isAdmin = (id: string): boolean => {
   const admins = [
     'gVk5mYwccUOEKiN5vtOouqroGKo1',
     '01p2A7kDCWUjGj6zQLlMQUOSQL42',
@@ -7,52 +13,10 @@ const isAdmin = (id: string) => {
   return admins.indexOf(id) > -1;
 };
 
-const COMMUNITY_SLUG_BLACKLIST = [
-  'everything',
-  'notifications',
-  'login',
-  'logout',
-  'discover',
-  'explore',
-  'admin',
-  'dashboard',
-  'home',
-  'pro',
-  'share',
-  'undefined',
-  'null',
-  'legal',
-  'terms',
-  'privacy',
-  'cookies',
-  'team',
-  'about',
-  'contact',
-  'help',
-  'jobs',
-  'upgrade',
-  'pricing',
-  'business',
-  'blog',
-  'apps',
-  'developers',
-  'status',
-  'copyright',
-  'downgrade',
-  'faq',
-  'help',
-  'security',
-  'api',
-  'shop',
-  'new',
-  'auth',
-];
-
-const slugIsBlacklisted = slug => {
+export const communitySlugIsBlacklisted = (slug: string): boolean => {
   return COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1;
 };
 
-module.exports = {
-  isAdmin,
-  slugIsBlacklisted,
+export const channelSlugIsBlacklisted = (slug: string): boolean => {
+  return CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1;
 };

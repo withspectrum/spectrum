@@ -1,4 +1,5 @@
-export const convertTimestampToDate = (timestamp: Date) => {
+// @flow
+export const convertTimestampToDate = (timestamp: number): string => {
   let monthNames = [
     'January',
     'February',

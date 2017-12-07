@@ -1,3 +1,4 @@
+// @flow
 const { getDirectMessageThread } = require('../models/directMessageThread');
 const {
   getMembersInDirectMessageThread,
@@ -7,6 +8,7 @@ import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
+import { toPlainText, toState } from 'shared/draft-utils';
 
 type DirectMessageUser = {
   userId: any,
@@ -14,46 +16,107 @@ type DirectMessageUser = {
   lastActivity: Date,
 };
 
+const canViewDMThread = async (
+  threadId: string,
+  userId: string,
+  { loaders }: { loaders: Object }
+) => {
+  if (!userId) return false;
+
+  const result = await loaders.directMessageParticipants.load(threadId);
+  if (!result || !result.reduction || result.reduction.length === 0)
+    return false;
+
+  const members = result.reduction;
+  const ids = members.map(({ userId }) => userId);
+  if (ids.indexOf(userId) === -1) return false;
+
+  return true;
+};
+
 module.exports = {
   Query: {
-    directMessageThread: (_: any, { id }: { id: String }) =>
-      getDirectMessageThread(id),
+    directMessageThread: async (
+      _: any,
+      { id }: { id: string },
+      { user, loaders }: GraphQLContext
+    ) => {
+      // signed out users should never be able to request a dm thread
+      if (!user || !user.id) return null;
+
+      const canViewThread = await canViewDMThread(id, user.id, { loaders });
+
+      if (!canViewThread) return null;
+
+      return loaders.directMessageThread.load(id);
+    },
   },
   DirectMessageThread: {
-    messageConnection: (
-      { id }: { id: String },
-      { first = 30, after }: PaginationOptions
+    messageConnection: async (
+      { id }: { id: string },
+      { first = 30, after }: PaginationOptions,
+      { user, loaders }: GraphQLContext
     ) => {
+      if (!user || !user.id) return null;
+
+      const canViewThread = await canViewDMThread(id, user.id, { loaders });
+      if (!canViewThread) return null;
+
       const cursor = decode(after);
-      return getMessages(id, {
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+      // $FlowFixMe
+      const messages = await getMessages(id, {
         first,
-        after: cursor,
-      })
-        .then(messages => messages.reverse())
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
-            node: message,
-          })),
-        }));
+        after: lastMessageIndex,
+        reverse: true,
+      });
+
+      return {
+        pageInfo: {
+          hasNextPage: messages && messages.length >= first,
+        },
+        edges: messages.map((message, index) => ({
+          cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+          node: message,
+        })),
+      };
     },
-    participants: ({ id }, _, { loaders, user }) => {
-      return getMembersInDirectMessageThread(id);
+    participants: async (
+      { id }: { id: string },
+      _: any,
+      { loaders, user }: GraphQLContext
+    ) => {
+      if (!user || !user.id) return null;
+
+      const canViewThread = await canViewDMThread(id, user.id, { loaders });
+
+      if (!canViewThread) return null;
+
+      return loaders.directMessageParticipants.load(id).then(results => {
+        if (!results || results.length === 0) return null;
+        return results.reduction;
+      });
     },
-    snippet: ({ id }) => {
-      return getLastMessage(id).then(message => {
-        if (!message) return 'No messages yet...';
-        return message.content.body;
+    snippet: async (
+      { id }: { id: string },
+      _: any,
+      { loaders, user }: GraphQLContext
+    ) => {
+      if (!user || !user.id) return null;
+
+      const canViewThread = await canViewDMThread(id, user.id, { loaders });
+
+      if (!canViewThread) return null;
+
+      return loaders.directMessageSnippet.load(id).then(results => {
+        if (!results) return 'No messages yet...';
+        const message = results.reduction;
+        return message.messageType === 'draftjs'
+          ? toPlainText(toState(JSON.parse(message.content.body)))
+          : message.content.body;
       });
     },
   },

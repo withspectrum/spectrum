@@ -11,6 +11,12 @@ export const userCommunitiesFragment = gql`
       edges {
         node {
           ...communityInfo
+          contextPermissions {
+            communityId
+            isOwner
+            isModerator
+            reputation
+          }
         }
       }
     }

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { zIndex } from '../globals';
 
 export const MediaInput = styled.input`
-  width: 0.1px;
-  height: 0.1px;
+  width: 0;
+  height: 0;
   opacity: 0;
   overflow: hidden;
   position: absolute;
@@ -16,14 +16,12 @@ export const MediaLabel = styled.label`
   display: inline-block;
   background: transparent;
   transition: all 0.3s ease-out;
-  border-radius: 4px;
-  padding: 4px;
-  position: relative;
-  top: 2px;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${({ theme }) => theme.text.placeholder};
+  height: 32px;
+  width: 32px;
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.brand.default};
+    color: ${({ theme }) => theme.brand.alt};
   }
 `;

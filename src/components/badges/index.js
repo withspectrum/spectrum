@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -78,4 +76,4 @@ class Badge extends Component {
 const map = state => ({
   currentUser: state.users.currentUser,
 });
-export default compose(connect(map), pure)(Badge);
+export default compose(connect(map))(Badge);

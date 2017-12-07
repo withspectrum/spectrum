@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
+import Head from '../../../components/head';
 import { connect } from 'react-redux';
+import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import Titlebar from '../../titlebar';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
@@ -175,6 +172,9 @@ class NewThread extends Component {
   };
 
   handleKeyPress = (e: any) => {
+    // if the thread slider is open, we shouldn't be doing anything in DMs
+    if (this.props.threadSliderIsOpen) return;
+
     // destructure the whole state object
     const {
       searchString,
@@ -541,7 +541,10 @@ class NewThread extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
 
-    const { initNewThreadWithUser } = this.props;
+    const { initNewThreadWithUser, threadSliderIsOpen } = this.props;
+
+    // if someone is viewing a thread, don't focus here
+    if (threadSliderIsOpen) return;
 
     // focus the composer input if no users were already in the composer
     if (initNewThreadWithUser.length === 0) {
@@ -613,6 +616,15 @@ class NewThread extends Component {
       this.props
         .createDirectMessageThread(input)
         .then(({ data: { createDirectMessageThread } }) => {
+          if (!createDirectMessageThread) {
+            this.props.dispatch(
+              addToastWithTimeout(
+                'error',
+                'Failed to create direct message thread, please try again!'
+              )
+            );
+            return;
+          }
           track(
             'direct message thread',
             `${isPrivate ? 'private thread' : 'group thread'} created`,
@@ -662,16 +674,19 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, hideOnMobile } = this.props;
+
+    const { title, description } = generateMetaInfo({
+      type: 'directMessage',
+      data: {
+        title: 'New message',
+        description: null,
+      },
+    });
 
     return (
-      <MessagesContainer>
-        <Titlebar
-          title={'New Message'}
-          provideBack={true}
-          backRoute={`/messages`}
-          noComposer
-        />
+      <MessagesContainer hideOnMobile={hideOnMobile}>
+        <Head title={title} description={description} />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 && (
@@ -718,6 +733,7 @@ class NewThread extends Component {
                       onClick={() => this.addUserToSelectedUsersList(user)}
                     >
                       <SearchResultImage
+                        user={user}
                         isOnline={user.isOnline}
                         size={32}
                         radius={32}
@@ -755,12 +771,12 @@ class NewThread extends Component {
           innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
-          existingThreadWithMessages.id && (
-            <Header
-              thread={existingThreadWithMessages}
-              currentUser={currentUser}
-            />
-          )}
+            existingThreadWithMessages.id && (
+              <Header
+                thread={existingThreadWithMessages}
+                currentUser={currentUser}
+              />
+            )}
 
           {existingThreadBasedOnSelectedUsers && (
             <Messages
@@ -795,6 +811,7 @@ class NewThread extends Component {
 
 const mapStateToProps = state => ({
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
+  threadSliderIsOpen: state.threadSlider.isOpen,
 });
 
 export default compose(

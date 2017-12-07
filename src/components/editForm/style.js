@@ -49,6 +49,8 @@ export const Actions = styled(FlexRow)`
   margin-top: 24px;
   justify-content: flex-start;
   flex-direction: row-reverse;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding-top: 16px;
 
   button + button {
     margin-left: 8px;

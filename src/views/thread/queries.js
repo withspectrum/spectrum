@@ -25,6 +25,10 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
   query getThreadMessages($id: ID!, $after: String) {
     thread(id: $id) {
       id
+      content {
+        title
+      }
+      currentUserLastSeen
       ...threadMessages
     }
   }

@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
-// $FlowFixMe
+import Link from 'src/components/link';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import slugg from 'slugg';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
+import Avatar from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { COMMUNITY_SLUG_BLACKLIST } from '../../../../helpers/regexps';
+import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
+  SEARCH_COMMUNITIES_QUERY,
 } from '../../../../api/community';
 import { Button } from '../../../../components/buttons';
 import {
@@ -28,7 +26,13 @@ import {
   Error,
   Checkbox,
 } from '../../../../components/formElements';
-import { ImageInputWrapper, Spacer } from './style';
+import {
+  ImageInputWrapper,
+  Spacer,
+  CommunitySuggestionsWrapper,
+  CommunitySuggestion,
+  CommunitySuggestionsText,
+} from './style';
 import { FormContainer, Form, Actions } from '../../style';
 
 class CreateCommunityForm extends Component {
@@ -49,6 +53,7 @@ class CreateCommunityForm extends Component {
     isLoading: boolean,
     agreeCoC: boolean,
     photoSizeError: boolean,
+    communitySuggestions: ?Array<Object>,
   };
 
   constructor(props) {
@@ -71,6 +76,7 @@ class CreateCommunityForm extends Component {
       isLoading: false,
       agreeCoC: false,
       photoSizeError: false,
+      communitySuggestions: null,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -81,8 +87,22 @@ class CreateCommunityForm extends Component {
   }
 
   changeName = e => {
+    const { communitySuggestions } = this.state;
+    if (communitySuggestions) {
+      this.setState({
+        communitySuggestions: null,
+      });
+    }
+
     const name = e.target.value;
-    let lowercaseName = name.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseName = name
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
     if (name.length >= 20) {
@@ -113,7 +133,14 @@ class CreateCommunityForm extends Component {
 
   changeSlug = e => {
     let slug = e.target.value;
-    let lowercaseSlug = slug.toLowerCase().trim();
+    // replace any non alpha-num characters to prevent bad community slugs
+    // (/[\W_]/g, "-") => replace non-alphanum with hyphens
+    // (/-{2,}/g, '-') => replace multiple hyphens in a row with one hyphen
+    let lowercaseSlug = slug
+      .toLowerCase()
+      .trim()
+      .replace(/[\W_]/g, '-')
+      .replace(/-{2,}/g, '-');
     slug = slugg(lowercaseSlug);
 
     if (slug.length >= 24) {
@@ -162,11 +189,44 @@ class CreateCommunityForm extends Component {
             slugTaken: true,
           });
         } else {
-          return this.setState({
+          this.setState({
             slugTaken: false,
           });
         }
       });
+  };
+
+  checkSuggestedCommunities = () => {
+    const { name, slug, slugError } = this.state;
+    if (name && name.length > 1 && slug && slug.length > 1 && !slugError) {
+      // if the user has found a valid url, do a community search to see if they might be creating a duplicate community
+      this.props.client
+        .query({
+          query: SEARCH_COMMUNITIES_QUERY,
+          variables: {
+            string: slug,
+            amount: 10,
+          },
+        })
+        .then(({ data: { searchCommunities: communitySuggestions } }) => {
+          const filtered =
+            communitySuggestions &&
+            communitySuggestions
+              .slice()
+              .sort((a, b) => b.metaData.members - a.metaData.members)
+              .slice(0, 5);
+
+          if (filtered && filtered.length > 0) {
+            this.setState({
+              communitySuggestions: filtered,
+            });
+          } else {
+            this.setState({
+              communitySuggestions: null,
+            });
+          }
+        });
+    }
   };
 
   changeDescription = e => {
@@ -328,9 +388,14 @@ class CreateCommunityForm extends Component {
       isLoading,
       agreeCoC,
       photoSizeError,
+      communitySuggestions,
     } = this.state;
 
-    const isMobile = window.innerWidth < 768;
+    const suggestionString = slugTaken
+      ? communitySuggestions && communitySuggestions.length > 0
+        ? `Were you looking for one of these communities?`
+        : null
+      : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
 
     return (
       <FormContainer>
@@ -352,35 +417,76 @@ class CreateCommunityForm extends Component {
             />
           </ImageInputWrapper>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '32px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
 
           <Spacer height={8} />
 
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={!isMobile}
+            autoFocus={!window.innerWidth < 768}
+            onBlur={this.checkSuggestedCommunities}
           >
             What is your community called?
           </Input>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
-          <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-            sp.chat/
+          <UnderlineInput
+            defaultValue={slug}
+            onChange={this.changeSlug}
+            onBlur={this.checkSuggestedCommunities}
+          >
+            spectrum.chat/
           </UnderlineInput>
 
-          {slugTaken &&
+          {slugTaken && (
             <Error>
               This url is already taken - feel free to change it if you're set
               on the name {name}!
-            </Error>}
+            </Error>
+          )}
 
           {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
+
+          {suggestionString &&
+            !nameError &&
+            !slugError &&
+            communitySuggestions &&
+            communitySuggestions.length > 0 && (
+              <CommunitySuggestionsText>
+                {suggestionString}
+              </CommunitySuggestionsText>
+            )}
+
+          <CommunitySuggestionsWrapper>
+            {!nameError &&
+              !slugError &&
+              communitySuggestions &&
+              communitySuggestions.length > 0 &&
+              communitySuggestions.map(suggestion => {
+                return (
+                  <Link to={`/${suggestion.slug}`} key={suggestion.id}>
+                    <CommunitySuggestion>
+                      <Avatar
+                        size={20}
+                        radius={4}
+                        community={suggestion}
+                        src={suggestion.profilePhoto}
+                      />
+                      <strong>{suggestion.name}</strong>{' '}
+                      {suggestion.metaData.members.toLocaleString()} members
+                    </CommunitySuggestion>
+                  </Link>
+                );
+              })}
+          </CommunitySuggestionsWrapper>
 
           <TextArea
             defaultValue={description}
@@ -389,10 +495,11 @@ class CreateCommunityForm extends Component {
             Describe it in 140 characters or less
           </TextArea>
 
-          {descriptionError &&
+          {descriptionError && (
             <Error>
               Oop, that's more than 140 characters - try trimming that up.
-            </Error>}
+            </Error>
+          )}
 
           <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
@@ -412,10 +519,11 @@ class CreateCommunityForm extends Component {
             </span>
           </Checkbox>
 
-          {createError &&
+          {createError && (
             <Error>
               Please fix any errors above before creating this community.
-            </Error>}
+            </Error>
+          )}
         </Form>
 
         <Actions>

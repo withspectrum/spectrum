@@ -1,6 +1,6 @@
 import React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Card from '../card';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
@@ -17,18 +15,17 @@ import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
 import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
+import Avatar from '../avatar';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import ReputationIcon from '../reputation';
+import Reputation from '../reputation';
 import {
-  ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderNoLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
-  CoverAvatar,
   CoverTitle,
   CoverSubtitle,
   CoverDescription,
@@ -37,7 +34,6 @@ import {
   ExtLink,
   ProUpgrade,
   ReputationContainer,
-  ReputationCount,
 } from './style';
 
 type UserProps = {
@@ -89,215 +85,221 @@ const UserWithData = ({
     dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
-  if (componentSize === 'full') {
-    return (
-      <Card>
-        <CoverPhoto
-          user={user}
-          onClick={() => initMessage()}
-          currentUser={currentUser}
-        >
+  switch (componentSize) {
+    case 'full':
+      return (
+        <Card>
+          <CoverPhoto
+            user={user}
+            onClick={() => initMessage()}
+            currentUser={currentUser}
+          />
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar
+            <Avatar
+              user={user}
               size={64}
               radius={64}
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
               noLink
+              style={{
+                boxShadow: '0 0 0 2px #fff',
+                flex: '0 0 64px',
+                marginRight: '0',
+              }}
             />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
-        </CoverPhoto>
-        <CoverSubtitle center>
-          @{user.username}
-          {user.isAdmin && <Badge type="admin" />}
-          {user.isPro && <Badge type="pro" />}
-        </CoverSubtitle>
+          <CoverSubtitle center>
+            @{user.username}
+            {user.isPro && <Badge type="pro" />}
+          </CoverSubtitle>
 
-        {(user.description || user.website) && (
-          <CoverDescription>
-            {user.description && <p>{user.description}</p>}
-            {user.website && (
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={addProtocolToString(user.website)}
-                >
-                  {user.website}
-                </a>
-              </ExtLink>
+          {(user.description || user.website) && (
+              <CoverDescription>
+                {user.description && <p>{user.description}</p>}
+                {user.website && (
+                  <ExtLink>
+                    <Icon glyph="link" size={24} />
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={addProtocolToString(user.website)}
+                    >
+                      {user.website}
+                    </a>
+                  </ExtLink>
+                )}
+              </CoverDescription>
             )}
-          </CoverDescription>
-        )}
 
-        {!user.isPro &&
-        currentUser &&
-        user.id === currentUser.id && (
-          <ProUpgrade>
-            <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
-              Upgrade to Pro
-            </Button>
-          </ProUpgrade>
-        )}
+          {!user.isPro &&
+            currentUser &&
+            user.id === currentUser.id && (
+              <ProUpgrade>
+                <Button
+                  onClick={() => triggerUpgrade()}
+                  gradientTheme={'success'}
+                >
+                  Upgrade to Pro
+                </Button>
+              </ProUpgrade>
+            )}
 
-        {user.totalReputation > 0 && (
-          <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
-              </strong>{' '}
-              rep
-            </ReputationCount>
-          </ReputationContainer>
-        )}
-      </Card>
-    );
-  } else if (componentSize === 'simple') {
-    return (
-      <Card>
-        <CoverPhoto
-          user={user}
-          onClick={() => initMessage()}
-          currentUser={currentUser}
-        >
+          {user.totalReputation > 0 && (
+            <ReputationContainer>
+              <Reputation
+                tipText={'Total rep across all communities'}
+                size={'large'}
+                reputation={
+                  user.contextPermissions
+                    ? user.contextPermissions.reputation
+                    : user.totalReputation
+                }
+              />
+            </ReputationContainer>
+          )}
+        </Card>
+      );
+    case 'simple':
+      return (
+        <Card>
+          <CoverPhoto
+            user={user}
+            onClick={() => initMessage()}
+            currentUser={currentUser}
+          />
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar
+            <Avatar
+              user={user}
               size={64}
               radius={64}
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
               noLink
+              style={{
+                boxShadow: '0 0 0 2px #fff',
+                flex: '0 0 64px',
+                marginRight: '0',
+              }}
             />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
-        </CoverPhoto>
-        <CoverSubtitle center>
-          {user.username && `@${user.username}`}
-          {user.isAdmin && <Badge type="admin" />}
-          {user.isPro && <Badge type="pro" />}
-        </CoverSubtitle>
+          <CoverSubtitle center>
+            {user.username && `@${user.username}`}
+            {user.isPro && <Badge type="pro" />}
+          </CoverSubtitle>
 
-        {user.description && (
-          <CoverDescription>
-            <p>{user.description}</p>
-          </CoverDescription>
-        )}
-
-        {user.totalReputation > 0 && (
-          <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
-              </strong>{' '}
-              rep
-            </ReputationCount>
-          </ReputationContainer>
-        )}
-      </Card>
-    );
-  } else {
-    return (
-      <Card>
-        <ProfileHeader>
-          {user.username ? (
-            <ProfileHeaderLink to={`/users/${user.username}`}>
-              <ProfileAvatar
-                size={32}
-                radius={32}
-                isOnline={user.isOnline}
-                src={`${user.profilePhoto}`}
-                noLink
-              />
-              <ProfileHeaderMeta>
-                <Title>{user.name}</Title>
-                {user.username && (
-                  <Subtitle>
-                    @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
-                    {user.isPro && <Badge type="pro" />}
-                  </Subtitle>
-                )}
-              </ProfileHeaderMeta>
-            </ProfileHeaderLink>
-          ) : (
-            <ProfileHeaderNoLink>
-              <ProfileAvatar
-                size={32}
-                radius={32}
-                isOnline={user.isOnline}
-                src={`${user.profilePhoto}`}
-                noLink
-              />
-              <ProfileHeaderMeta>
-                <Title>{user.name}</Title>
-                {user.username && (
-                  <Subtitle>
-                    @{user.username}
-                    {user.isAdmin && <Badge type="admin" />}
-                    {user.isPro && <Badge type="pro" />}
-                  </Subtitle>
-                )}
-              </ProfileHeaderMeta>
-            </ProfileHeaderNoLink>
+          {user.description && (
+            <CoverDescription>
+              <p>{user.description}</p>
+            </CoverDescription>
           )}
-          {currentUser && currentUser.id === user.id ? (
-            <Link to={`../users/${currentUser.username}/settings`}>
+
+          {user.totalReputation > 0 && (
+            <ReputationContainer>
+              <Reputation
+                tipText={'Total rep across all communities'}
+                size={'large'}
+                reputation={
+                  user.contextPermissions
+                    ? user.contextPermissions.reputation
+                    : user.totalReputation
+                }
+              />
+            </ReputationContainer>
+          )}
+        </Card>
+      );
+    case 'default':
+    default:
+      return (
+        <Card>
+          <ProfileHeader>
+            {user.username ? (
+              <ProfileHeaderLink to={`/users/${user.username}`}>
+                <Avatar
+                  user={user}
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                  style={{ marginRight: '16px' }}
+                />
+                <ProfileHeaderMeta>
+                  <Title>{user.name}</Title>
+                  {user.username && (
+                    <Subtitle>
+                      @{user.username}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>
+                  )}
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
+            ) : (
+              <ProfileHeaderNoLink>
+                <Avatar
+                  user={user}
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                  style={{ marginRight: '16px' }}
+                />
+                <ProfileHeaderMeta>
+                  <Title>{user.name}</Title>
+                  {user.username && (
+                    <Subtitle>
+                      @{user.username}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>
+                  )}
+                </ProfileHeaderMeta>
+              </ProfileHeaderNoLink>
+            )}
+            {currentUser && currentUser.id === user.id ? (
+              <Link to={`../users/${currentUser.username}/settings`}>
+                <ProfileHeaderAction
+                  glyph="settings"
+                  tipText={`Edit profile`}
+                  tipLocation={'top-left'}
+                />
+              </Link>
+            ) : (
               <ProfileHeaderAction
-                glyph="settings"
-                tipText={`Edit profile`}
+                glyph="message-fill"
+                color="text.alt"
+                hoverColor="brand.alt"
+                onClick={() => initMessage()}
+                tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
               />
-            </Link>
-          ) : (
-            <ProfileHeaderAction
-              glyph="message-fill"
-              color="text.alt"
-              hoverColor="brand.alt"
-              onClick={() => initMessage()}
-              tipText={`Message ${user.name}`}
-              tipLocation={'top-left'}
-            />
+            )}
+          </ProfileHeader>
+
+          {user.totalReputation > 0 && (
+            <ReputationContainer>
+              <Reputation
+                tipText={'Total rep across all communities'}
+                size={'large'}
+                reputation={
+                  user.contextPermissions
+                    ? user.contextPermissions.reputation
+                    : user.totalReputation
+                }
+              />
+            </ReputationContainer>
           )}
-        </ProfileHeader>
-
-        {user.totalReputation > 0 && (
-          <ReputationContainer>
-            <ReputationIcon tipText={'Total rep across all communities'} />
-
-            <ReputationCount>
-              <strong>
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
-              </strong>{' '}
-              rep
-            </ReputationCount>
-          </ReputationContainer>
-        )}
-      </Card>
-    );
+        </Card>
+      );
   }
 };
 
-const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

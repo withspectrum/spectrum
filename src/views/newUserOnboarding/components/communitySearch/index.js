@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../../helpers/events';
@@ -129,7 +129,7 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString },
+        variables: { string: searchString, amount: 30 },
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
@@ -256,8 +256,6 @@ class Search extends Component {
       loading,
     } = this.state;
 
-    const isMobile = window.innerWidth < 768;
-
     return (
       <SearchWrapper>
         {searchIsLoading && (
@@ -274,7 +272,7 @@ class Search extends Component {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
-            autoFocus={!isMobile}
+            autoFocus={window.innerWidth < 768}
           />
         </SearchInputWrapper>
 
@@ -288,7 +286,10 @@ class Search extends Component {
                     focused={focusedSearchResult === community.id}
                     key={community.id}
                   >
-                    <SearchResultImage community src={community.profilePhoto} />
+                    <SearchResultImage
+                      community={community}
+                      src={community.profilePhoto}
+                    />
 
                     <SearchResultMetaWrapper>
                       <SearchResultName>{community.name}</SearchResultName>

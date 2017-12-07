@@ -6,16 +6,14 @@ import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { throttle } from '../../helpers/utils';
-import { Button, TextButton } from '../buttons';
+import { Button } from '../buttons';
 import Icon from '../../components/icons';
 import {
   Input,
@@ -473,7 +471,6 @@ class UserWithData extends Component {
             >
               Save
             </Button>
-            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
           </Actions>
 
           {createError && (
@@ -493,7 +490,6 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  connect(map),
-  pure
+  connect(map)
 )(UserWithData);
 export default UserSettings;

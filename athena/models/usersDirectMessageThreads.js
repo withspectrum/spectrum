@@ -7,20 +7,9 @@ export const getDirectMessageThreadMembers = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(id, { index: 'threadId' })
+    .filter({ receiveNotifications: true })
     .eqJoin('userId', db.table('users'))
     .without({ right: ['id', 'createdAt'] })
     .zip()
     .run();
-};
-
-export const getUserNotificationPermissionsInDirectMessageThread = (
-  userId: string,
-  threadId: string
-): Promise<Boolean> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
-    .run()
-    .then(data => data.receiveNotifications);
 };

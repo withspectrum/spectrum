@@ -3,13 +3,12 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
-import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query loadMoreUserThreads($username: String, $after: String) {
+  query loadMoreUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
     user(username: $username) {
       ...userInfo
       ...userThreads
@@ -75,6 +74,7 @@ const threadsQueryOptions = {
                 user.threadConnection.edges.length - 1
               ].cursor,
             username: user.username,
+            kind: ownProps.kind,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.user) {
@@ -101,9 +101,10 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ username }) => ({
+  options: ({ username, kind }) => ({
     variables: {
-      username: username,
+      username,
+      kind,
     },
     fetchPolicy: 'cache-first',
   }),
@@ -111,7 +112,7 @@ const threadsQueryOptions = {
 
 export const getUserThreads = graphql(
   gql`
-		query getUserThreads($username: String, $after: String) {
+		query getUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
 			user(username: $username) {
         ...userInfo
         ...userThreads
@@ -143,12 +144,12 @@ export const getUser = graphql(
 		query getUser($username: String) {
 			user(username: $username) {
         ...userInfo
-        ...userMetaData
+        isPro
+        totalReputation
         ...userCommunities
       }
 		}
     ${userInfoFragment}
-    ${userMetaDataFragment}
     ${userCommunitiesFragment}
 	`,
   profileQueryOptions

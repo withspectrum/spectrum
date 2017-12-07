@@ -11,6 +11,7 @@ export const communityMembersFragment = gql`
       edges {
         node {
           ...userInfo
+          isPro
         }
       }
     }

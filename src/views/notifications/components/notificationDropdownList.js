@@ -8,11 +8,14 @@ import { MiniNewChannelNotification } from './newChannelNotification';
 import { MiniNewThreadNotification } from './newThreadNotification';
 import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
 import { MiniCommunityInviteNotification } from './communityInviteNotification';
+import { MiniMentionMessageNotification } from './mentionMessageNotification';
+import { MiniMentionThreadNotification } from './mentionThreadNotification';
 
 export const NotificationDropdownList = ({
   rawNotifications,
   currentUser,
   history,
+  markSingleNotificationAsSeenInState,
 }) => {
   /*
     parse the notifications and cut it down to the latest 5
@@ -57,6 +60,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }
@@ -67,6 +73,9 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }
@@ -77,12 +86,38 @@ export const NotificationDropdownList = ({
                 notification={notification}
                 currentUser={currentUser}
                 history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
               />
             );
           }
           case 'COMMUNITY_INVITE': {
             return (
               <MiniCommunityInviteNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+                markSingleNotificationAsSeenInState={
+                  markSingleNotificationAsSeenInState
+                }
+              />
+            );
+          }
+          case 'MENTION_THREAD': {
+            return (
+              <MiniMentionThreadNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+              />
+            );
+          }
+          case 'MENTION_MESSAGE': {
+            return (
+              <MiniMentionMessageNotification
                 key={notification.id}
                 notification={notification}
                 currentUser={currentUser}

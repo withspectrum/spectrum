@@ -1,3 +1,4 @@
+// @flow
 const User = /* GraphQL */ `
 	type UserCommunitiesConnection {
 		pageInfo: PageInfo!
@@ -47,19 +48,17 @@ const User = /* GraphQL */ `
 		node: Thread!
 	}
 
-	type UserMetaData {
-		threads: Int
-	}
-
 	type NotificationKindSettings {
 		email: Boolean
 	}
 
 	type NotificationSettingsType {
 		newMessageInThreads: NotificationKindSettings
+		newDirectMessage: NotificationKindSettings
 		newThreadCreated: NotificationKindSettings
 		weeklyDigest: NotificationKindSettings
 		dailyDigest: NotificationKindSettings
+		newMention: NotificationKindSettings
 	}
 
 	type UserNotificationsSettings {
@@ -70,9 +69,15 @@ const User = /* GraphQL */ `
 		notifications: UserNotificationsSettings
 	}
 
+	enum ThreadConnectionType {
+		participant
+		creator
+	}
+
 	type User {
 		id: ID!
 		name: String
+		firstName: String
 		description: String
 		website: String
 		username: String
@@ -85,16 +90,17 @@ const User = /* GraphQL */ `
 		isOnline: Boolean
 		timezone: Int
 		totalReputation: Int
+		pendingEmail: String
 
 		# non-schema fields
 		threadCount: Int
-		isAdmin: Boolean!
+		isAdmin: Boolean
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
-		everything(first: Int = 20, after: String): EverythingThreadsConnection!
+		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
+		threadConnection(first: Int = 10, after: String, kind: ThreadConnectionType): UserThreadsConnection!
+		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
@@ -144,6 +150,7 @@ const User = /* GraphQL */ `
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
+		updateUserEmail(email: String!): User
 	}
 `;
 

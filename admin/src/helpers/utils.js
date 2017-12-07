@@ -17,18 +17,7 @@ export const convertTimestampToDate = (timestamp: Date) => {
   let day = date.getDate();
   let monthIndex = date.getMonth();
   let month = monthNames[monthIndex];
-  let year = date.getFullYear();
-  let hours = date.getHours() || 0;
-  let cleanHours;
-  if (hours === 0) {
-    cleanHours = 12; // if timestamp is between midnight and 1am, show 12:XX am
-  } else {
-    cleanHours = hours > 12 ? hours - 12 : hours; // else show proper am/pm -- todo: support 24hr time
-  }
-  let minutes = date.getMinutes();
-  minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
-  let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
-  return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
+  return `${month} ${day}`;
 };
 
 export const convertTimestampToTime = (timestamp: Date) => {
@@ -187,4 +176,22 @@ export const truncate = (str, length) => {
   }
   const subString = str.substr(0, length);
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
+};
+
+export const cColors = {
+  dau: '#5DFDCB',
+  wau: '#FECDAA',
+  mau: '#7FC29B',
+  dac: '#0FA3B1',
+  wac: '#FF8CC6',
+  mac: '#8884d8',
+  cpu: '#FFE066',
+  mpu: '#F25F5C',
+  tpu: '#50514F',
+  users: '#D8A7CA',
+  communities: '#C7B8EA',
+  threads: '#42D9C8',
+  dmThreads: '#564787',
+  threadMessages: '#28587B',
+  dmMessages: '#240B36',
 };

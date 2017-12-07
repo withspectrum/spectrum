@@ -12,32 +12,37 @@ import {
   Lock,
 } from '../style';
 
-export default ({ thread, active, activeCommunity, isPinned }) => {
-  const { channel } = thread;
+export default ({
+  thread,
+  active,
+  activeCommunity,
+  activeChannel,
+  isPinned,
+}) => {
+  const { channel, community } = thread;
   const isGeneral = channel.slug === 'general';
   if (activeCommunity && isGeneral && !isPinned) return null;
+  if (activeChannel === channel.id) return null;
 
   return (
     <CommunityInfoContainer active={active}>
       {!activeCommunity && (
-        <AvatarLink to={`/${channel.community.slug}`}>
+        <AvatarLink to={`/${community.slug}`}>
           <CommunityAvatar
-            src={`${channel.community.profilePhoto}?w=20&dpr=2`}
+            community={community}
+            src={`${community.profilePhoto}?w=20&dpr=2`}
           />
         </AvatarLink>
       )}
 
       {!activeCommunity && (
-        <MetaCommunityName to={`/${channel.community.slug}`}>
-          {channel.community.name}
+        <MetaCommunityName to={`/${community.slug}`}>
+          {community.name}
         </MetaCommunityName>
       )}
 
       {!isGeneral && (
-        <PillLink
-          className="pill"
-          to={`/${channel.community.slug}/${channel.slug}`}
-        >
+        <PillLink className="pill" to={`/${community.slug}/${channel.slug}`}>
           {channel.isPrivate && (
             <Lock>
               <Icon glyph="private" size={12} />
@@ -58,3 +63,11 @@ export default ({ thread, active, activeCommunity, isPinned }) => {
     </CommunityInfoContainer>
   );
 };
+
+export const WaterCoolerPill = ({ active }) => (
+  <CommunityInfoContainer active={active}>
+    <PillLinkPinned>
+      <PillLabel>Open chat</PillLabel>
+    </PillLinkPinned>
+  </CommunityInfoContainer>
+);

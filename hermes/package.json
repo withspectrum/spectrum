@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.0.0-rc.2",
+    "bull": "3.3.1",
     "debug": "^2.6.8",
     "jsonwebtoken": "^8.0.1",
     "node-env-file": "^0.1.8",

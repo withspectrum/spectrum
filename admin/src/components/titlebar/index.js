@@ -25,19 +25,22 @@ class Titlebar extends Component {
     const { title, subtitle, provideBack } = this.props;
     return (
       <TitleBar>
-        {provideBack
-          ? <IconButton
-              glyph="view-back"
-              color="text.reverse"
-              onClick={this.handleBack}
-            />
-          : <Spacer />}
+        {provideBack ? (
+          <IconButton
+            glyph="view-back"
+            color="text.reverse"
+            onClick={this.handleBack}
+          />
+        ) : (
+          <Spacer />
+        )}
         <Text>
           {subtitle && <Subtitle>{subtitle}</Subtitle>}
-          {title
-            ? <Title large={subtitle ? false : true}>{title}</Title>
-            : <Icon glyph="logo" />}
-
+          {title ? (
+            <Title large={subtitle ? false : true}>{title}</Title>
+          ) : (
+            <Icon glyph="logo" />
+          )}
         </Text>
       </TitleBar>
     );

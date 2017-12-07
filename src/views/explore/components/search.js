@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
@@ -65,7 +65,7 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString },
+        variables: { string: searchString, amount: 30 },
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
@@ -105,6 +105,7 @@ class Search extends Component {
       this.setState({
         searchResults: [],
         searchIsLoading: false,
+        searchString: '',
       });
 
       input.focus();
@@ -125,7 +126,7 @@ class Search extends Component {
     // if person presses down
     if (e.keyCode === 40) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
-      if (searchResults.length === 1) return;
+      if (searchResults.length <= 1) return;
 
       return this.setState({
         focusedSearchResult: searchResults[indexOfFocusedSearchResult + 1].id,
@@ -135,7 +136,7 @@ class Search extends Component {
     // if person presses up
     if (e.keyCode === 38) {
       if (indexOfFocusedSearchResult === 0) return;
-      if (searchResults.length === 1) return;
+      if (searchResults.length <= 1) return;
 
       return this.setState({
         focusedSearchResult: searchResults[indexOfFocusedSearchResult - 1].id,
@@ -186,10 +187,11 @@ class Search extends Component {
 
     return (
       <SearchWrapper>
-        {searchIsLoading &&
+        {searchIsLoading && (
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
-          </SearchSpinnerContainer>}
+          </SearchSpinnerContainer>
+        )}
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
@@ -203,7 +205,7 @@ class Search extends Component {
         </SearchInputWrapper>
 
         {// user has typed in a search string
-        searchString &&
+        searchString && (
           <SearchResultsDropdown>
             {searchResults.length > 0 &&
               searchResults.map(community => {
@@ -214,18 +216,17 @@ class Search extends Component {
                   >
                     <SearchLink to={`/${community.slug}`}>
                       <SearchResultImage
-                        community
+                        community={community}
                         src={community.profilePhoto}
                       />
                       <SearchResultTextContainer>
                         <SearchResultMetaWrapper>
-                          <SearchResultName>
-                            {community.name}
-                          </SearchResultName>
-                          {community.metaData &&
+                          <SearchResultName>{community.name}</SearchResultName>
+                          {community.metaData && (
                             <SearchResultMetadata>
                               {community.metaData.members} members
-                            </SearchResultMetadata>}
+                            </SearchResultMetadata>
+                          )}
                         </SearchResultMetaWrapper>
                       </SearchResultTextContainer>
                     </SearchLink>
@@ -234,20 +235,20 @@ class Search extends Component {
               })}
 
             {searchResults.length === 0 &&
-              isFocused &&
-              <SearchResult>
-                <SearchResultTextContainer>
-                  <SearchResultNull>
-                    <p>
-                      No communities found matching "{searchString}"
-                    </p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResultTextContainer>
-              </SearchResult>}
-          </SearchResultsDropdown>}
+              isFocused && (
+                <SearchResult>
+                  <SearchResultTextContainer>
+                    <SearchResultNull>
+                      <p>No communities found matching "{searchString}"</p>
+                      <Link to={'/new/community'}>
+                        <Button>Create a Community</Button>
+                      </Link>
+                    </SearchResultNull>
+                  </SearchResultTextContainer>
+                </SearchResult>
+              )}
+          </SearchResultsDropdown>
+        )}
       </SearchWrapper>
     );
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar } from '../../../components/avatar';
+import Avatar from '../../../components/avatar';
 import {
   FacepileContainer,
   ParticipantHead,
@@ -19,6 +19,7 @@ const messageAvatars = (list, active) => {
       tipLocation={'top-right'}
     >
       <Avatar
+        user={participant}
         size={24}
         isOnline={false}
         link={participant.username ? `/users/${participant.username}` : null}
@@ -42,6 +43,7 @@ const Facepile = ({ participants, creator, active }) => {
           tipLocation={'top-right'}
         >
           <Avatar
+            user={creator}
             size={24}
             isOnline={false}
             link={creator.username ? `/users/${creator.username}` : null}
@@ -75,6 +77,7 @@ const Facepile = ({ participants, creator, active }) => {
         tipLocation={'top-right'}
       >
         <Avatar
+          user={creator}
           size={24}
           isOnline={false}
           link={creator.username ? `/users/${creator.username}` : null}
@@ -84,14 +87,7 @@ const Facepile = ({ participants, creator, active }) => {
       </ParticipantHead>
       {messageAvatars(participantList, active)}
       {hasOverflow && (
-        <EmptyParticipantHead
-          active={active}
-          offset={NUM_TO_DISPLAY + 1}
-          tipText={
-            participantCount - NUM_TO_DISPLAY > 9 ? `+${overflowAmount}` : false
-          }
-          tipLocation={'top-right'}
-        >
+        <EmptyParticipantHead active={active} offset={NUM_TO_DISPLAY + 1}>
           {overflowAmount}
         </EmptyParticipantHead>
       )}

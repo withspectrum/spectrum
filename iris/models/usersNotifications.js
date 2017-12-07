@@ -1,8 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
-import { getNotificationsByUser } from './notification';
 /*
 ===========================================================
 
@@ -39,9 +36,9 @@ export const markNotificationRead = (
 ): Promise<Object> => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
+    .getAll(notificationId, { index: 'notificationId' })
     .filter({
-      notificationId,
+      userId,
     })
     .update(
       {
@@ -65,9 +62,9 @@ export const markSingleNotificationSeen = (
 ): Promise<Object> => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
+    .getAll(notificationId, { index: 'notificationId' })
     .filter({
-      notificationId,
+      userId,
     })
     .update(
       {

@@ -84,7 +84,7 @@ export const PropsList = styled.ul`
 `;
 
 export const ComponentContainer = styled.div`
-  background: #f6f7f8;
+  background: ${props => props.theme.bg.wash};
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);

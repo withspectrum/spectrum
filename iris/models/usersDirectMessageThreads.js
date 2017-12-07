@@ -2,6 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
+import type { DBUser } from './user';
 
 /*
 ===========================================================
@@ -74,7 +75,27 @@ const setUserLastSeenInDirectMessageThread = (
       lastSeen: db.now(),
     })
     .run()
-    .then(() => db.table('directMessageThreads').get(threadId).run());
+    .then(() =>
+      db
+        .table('directMessageThreads')
+        .get(threadId)
+        .run()
+    );
+};
+
+const updateDirectMessageThreadNotificationStatusForUser = (
+  threadId: string,
+  userId: string,
+  val: boolean
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .update({
+      receiveNotifications: val,
+    })
+    .run();
 };
 
 /*
@@ -87,7 +108,7 @@ const setUserLastSeenInDirectMessageThread = (
 
 const getMembersInDirectMessageThread = (
   threadId: string
-): Promise<Array<string>> => {
+): Promise<Array<Object>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
@@ -97,11 +118,36 @@ const getMembersInDirectMessageThread = (
     .run();
 };
 
+// for loader
+const getMembersInDirectMessageThreads = (
+  threadIds: Array<string>
+): Promise<Array<Object>> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(...threadIds, { index: 'threadId' })
+    .eqJoin('userId', db.table('users'))
+    .without({ left: ['createdAt'], right: ['id', 'lastSeen'] })
+    .group(rec => rec('left')('threadId'))
+    .zip()
+    .run();
+};
+
+const isMemberOfDirectMessageThread = (threadId: string, userId: string) => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(threadId, { index: 'threadId' })('userId')
+    .contains(userId)
+    .run();
+};
+
 module.exports = {
   createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
   setUserLastSeenInDirectMessageThread,
+  updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,
+  getMembersInDirectMessageThreads,
+  isMemberOfDirectMessageThread,
 };

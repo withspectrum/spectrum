@@ -1,9 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
-import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
@@ -111,24 +109,4 @@ export const getEverythingThreads = graphql(
   ${userEverythingFragment}
 `,
   threadsQueryOptions
-);
-
-/*
-  Loads the sidebar profile component widget independent of the thread feed.
-  In the future we can compose these queries together since they are fetching
-  such similar data, but for now we're making a decision to keep the data
-  queries specific to each component.
-*/
-export const getCurrentUserProfile = graphql(
-  gql`
-    query getCurrentUserProfile {
-			user: currentUser {
-        ...userInfo
-        ...userCommunities
-      }
-		}
-    ${userInfoFragment}
-    ${userCommunitiesFragment}
-	`,
-  { options: { fetchPolicy: 'cache-and-network' } }
 );

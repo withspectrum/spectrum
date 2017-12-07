@@ -1,17 +1,15 @@
 import * as React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import pure from 'recompose/pure';
 import Icon from '../icons';
 import Badge from '../badges';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { ReputationMini } from '../reputation';
+import Reputation from '../reputation';
 import {
   Wrapper,
   WrapperLi,
@@ -40,12 +38,13 @@ type CommunityProps = {
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const { community, showDescription, showMeta, meta, children } = this.props;
+    const { community, showDescription, children, reputation } = this.props;
+
     return (
       <Wrapper>
         <Row>
           <Avatar
-            community
+            community={community}
             radius={4}
             src={`${community.profilePhoto}`}
             size={32}
@@ -53,14 +52,11 @@ export class CommunityListItem extends React.Component<CommunityProps> {
           />
           <Col style={{ marginLeft: '12px' }}>
             <Heading>{community.name}</Heading>
-            {showMeta && (
+
+            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+            {reputation > -1 && (
               <Meta>
-                {meta && (
-                  <span>
-                    <ReputationMini tipText={'Your rep in this community'} />
-                    {meta}
-                  </span>
-                )}
+                <Reputation size={'default'} reputation={reputation} />
               </Meta>
             )}
           </Col>
@@ -90,7 +86,7 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
             )}
             {props.contents.name}
           </Heading>
-          <Meta>{props.meta}</Meta>
+          <Meta>{props.meta && props.meta}</Meta>
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
@@ -152,12 +148,21 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
+  reputationTipText = 'Your rep in this community',
 }: Object): React$Element<any> => {
+  const reputation = user.contextPermissions
+    ? user.contextPermissions.reputation &&
+      user.contextPermissions.reputation > 0 &&
+      user.contextPermissions.reputation
+    : user.totalReputation && user.totalReputation > 0
+      ? user.totalReputation
+      : '0';
   return (
-    <Wrapper>
+    <Wrapper border>
       <Row>
         <Avatar
           radius={20}
+          user={user}
           src={`${user.profilePhoto}`}
           size={40}
           link={user.username ? `/users/${user.username}` : null}
@@ -171,21 +176,12 @@ export const UserListItem = ({
             )}
           </Heading>
           <Meta>
-            {user.username && (
-              <span>
-                <Link to={`/users/${user.username}`}>@{user.username}</Link> ·{' '}
-              </span>
-            )}
-            {user.totalReputation && (
-              <span>
-                <ReputationMini tipText={'Your rep in this community'} />
-                {user.contextPermissions ? (
-                  user.contextPermissions.reputation.toLocaleString()
-                ) : (
-                  user.totalReputation.toLocaleString()
-                )}
-              </span>
-            )}
+            {(user.totalReputation || user.contextPermissions) && (
+                <Reputation
+                  tipText={reputationTipText}
+                  reputation={reputation}
+                />
+              )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
@@ -236,11 +232,9 @@ class InvoiceListItemPure extends React.Component {
                 .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}
             </Heading>
             <Meta>
-              {invoice.paidAt ? (
-                `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
-              ) : (
-                'Unpaid'
-              )}{' '}
+              {invoice.paidAt
+                ? `Paid on ${convertTimestampToDate(invoice.paidAt * 1000)}`
+                : 'Unpaid'}{' '}
               · {invoice.sourceBrand} {invoice.sourceLast4}
             </Meta>
           </Col>
@@ -250,4 +244,4 @@ class InvoiceListItemPure extends React.Component {
   }
 }
 
-export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);
+export const InvoiceListItem = compose(connect())(InvoiceListItemPure);

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import ThreadContainer from '../thread/containers';
-import { NullContainer, Container, NullThread, Thread, Heading } from './style';
+import Composer from '../../components/composer';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
+import ThreadContainer from '../thread';
+import { Container, Thread } from './style';
 
 class DashboardThread extends Component {
   render() {
-    const { threadId } = this.props;
+    const { threadId, threadSliderIsOpen } = this.props;
 
     // no thread has been selected
     if (!threadId) return null;
@@ -12,22 +15,27 @@ class DashboardThread extends Component {
     // composer is selected
     if (threadId === 'new')
       return (
-        <NullContainer>
-          <NullThread>
-            <Heading>New thread composer will go here</Heading>
-          </NullThread>
-        </NullContainer>
+        <Container>
+          <Thread>
+            <Composer isInbox={true} {...this.props} />
+          </Thread>
+        </Container>
       );
 
     // otherwise return the thread that was selected
     return (
       <Container>
         <Thread>
-          <ThreadContainer threadId={threadId} slider />
+          <ThreadContainer
+            threadSliderIsOpen={threadSliderIsOpen}
+            threadViewContext={'inbox'}
+            threadId={threadId}
+          />
         </Thread>
       </Container>
     );
   }
 }
 
-export default DashboardThread;
+const map = state => ({ threadSliderIsOpen: state.threadSlider.isOpen });
+export default compose(connect(map))(DashboardThread);

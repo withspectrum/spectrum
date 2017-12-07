@@ -37,6 +37,7 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     profilePhoto: user.profilePhoto,
     coverPhoto: user.coverPhoto,
     website: user.website,
+    totalReputation: user.totalReputation,
   };
 
   // logs the user id to sentry errors

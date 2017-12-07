@@ -2,8 +2,6 @@ import * as React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
@@ -41,7 +39,6 @@ type Props = {
 class CommunitySettings extends React.Component<Props> {
   togglePending = (userId, action) => {
     const { data: { channel }, togglePendingUser, dispatch } = this.props;
-
     const input = {
       channelId: channel.id,
       userId,
@@ -149,6 +146,7 @@ class CommunitySettings extends React.Component<Props> {
           <Column type="primary">
             {channel.isPrivate && (
               <span>
+                <ChannelMembers channel={channel} id={channel.id} />
                 <PendingUsers
                   togglePending={this.togglePending}
                   channel={channel}
@@ -216,6 +214,5 @@ export default compose(
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
-  viewNetworkHandler,
-  pure
+  viewNetworkHandler
 )(CommunitySettings);

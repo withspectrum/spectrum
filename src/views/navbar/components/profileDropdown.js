@@ -1,9 +1,9 @@
+// @flow
 import React from 'react';
-// @FlowFixMe
 import styled from 'styled-components';
-// @FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
+import { SERVER_URL } from '../../../api/constants';
 
 const UserProfileDropdown = styled(Dropdown)`width: 160px;`;
 
@@ -37,7 +37,9 @@ const UserProfileDropdownListItem = styled.li`
   }
 `;
 
-export const ProfileDropdown = props => {
+type ProfileProps = Object;
+
+export const ProfileDropdown = (props: ProfileProps) => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
@@ -48,9 +50,9 @@ export const ProfileDropdown = props => {
             </UserProfileDropdownListItem>
           </Link>
         )}
-        {/* <UserProfileDropdownListItem onClick={props.logout}>
-          Log Out
-        </UserProfileDropdownListItem> */}
+        <a href={`${SERVER_URL}/auth/logout`}>
+          <UserProfileDropdownListItem>Log Out</UserProfileDropdownListItem>
+        </a>
       </UserProfileDropdownList>
     </UserProfileDropdown>
   );

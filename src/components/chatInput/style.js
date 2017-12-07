@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+// @flow
+import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
-import { FlexRow, Transition, zIndex } from '../globals';
-import Editor from '../../components/editor';
+import { FlexRow, Transition, zIndex, monoStack } from '../globals';
+import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
 
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;
@@ -11,13 +12,19 @@ export const ChatInputWrapper = styled(FlexRow)`
   width: 100%;
   margin: 0;
   padding: 8px;
-  border-top: 2px solid ${({ theme }) => theme.bg.border};
+  background-color: ${props => props.theme.bg.default};
+  border-top: 1px solid ${({ theme }) => theme.bg.border};
+  box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+    1px 0 0 ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
-    background-color: ${props => props.theme.bg.default};
     z-index: ${zIndex.mobileInput};
+  }
+
+  a {
+    text-decoration: underline;
   }
 `;
 
@@ -33,22 +40,18 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const EditorInput = styled(Editor)`
+export const InputWrapper = styled(EditorWrapper)`
   flex: auto;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  max-height: 120px;
   min-height: 40px;
   max-width: 100%;
   padding: 8px 40px 8px 16px;
   border-radius: 24px;
-  border: 2px solid ${props => props.theme.text.placeholder};
-  border-color: ${props =>
-    props.focus ? props.theme.brand.default : props.theme.text.placeholder};
+  border: 1px solid ${props => props.theme.bg.border};
   transition: border 0.3s ease-out;
   color: ${props => props.theme.text.default};
-  overflow-y: scroll;
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -73,6 +76,15 @@ export const EditorInput = styled(Editor)`
     border-color: ${props => props.theme.text.alt};
     transition: border-color 0.2s ease-in;
   }
+
+  ${props =>
+    props.code &&
+    css`
+      ${monoStack};
+      font-size: 14px;
+      font-weight: 500;
+      background-color: #f5f8fc;
+    `};
 `;
 
 export const SendButton = styled(IconButton)`

@@ -1,3 +1,4 @@
+// @flow
 const Thread = /* GraphQL */ `
 	type ThreadMessagesConnection {
 		pageInfo: PageInfo!
@@ -11,7 +12,7 @@ const Thread = /* GraphQL */ `
 
 	# The contents of a thread
 	type ThreadContent {
-		title: String!
+		title: String
 		body: String
 		media: String
 	}
@@ -23,6 +24,7 @@ const Thread = /* GraphQL */ `
 
 	enum ThreadType {
 		SLATE
+		DRAFTJS
 	}
 
 	type Attachment {
@@ -49,6 +51,10 @@ const Thread = /* GraphQL */ `
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
+		watercooler: Boolean
+
+        # Logged-in users only
+        currentUserLastSeen: Date
 	}
 
 	extend type Query {

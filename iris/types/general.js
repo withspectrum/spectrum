@@ -1,3 +1,4 @@
+// @flow
 /**
  * General, reusable types
  */
@@ -41,10 +42,24 @@ const general = /* GraphQL */ `
 	}
 
 	type ContextPermissions {
+		communityId: String
 		reputation: Int
 		isModerator: Boolean
 		isOwner: Boolean
 	}
+
+	type GrowthDataCounts {
+    growth: Float
+    currentPeriodCount: Int
+    prevPeriodCount: Int
+  }
+
+  type GrowthData {
+    count: Int
+    weeklyGrowth: GrowthDataCounts
+    monthlyGrowth: GrowthDataCounts
+    quarterlyGrowth: GrowthDataCounts
+  }
 `;
 
 module.exports = general;

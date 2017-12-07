@@ -37,5 +37,5 @@ export const Subheading = styled.h4`
   line-height: 1.4;
   color: ${props => props.theme.text.alt};
   max-width: 540px;
-  margin-bottom: 32px;
+  margin-bottom: ${props => (props.small ? '16px' : '32px')};
 `;

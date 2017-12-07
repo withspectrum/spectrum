@@ -1,3 +1,4 @@
+// @flow
 // $FlowFixMe
 import ImgixClient from 'imgix-core-js';
 const {
@@ -6,29 +7,28 @@ const {
   getUsersBySearchString,
 } = require('../models/user');
 const { getUsersSettings } = require('../models/usersSettings');
-const { getCommunitiesByUser } = require('../models/community');
-const { getChannelsByUser } = require('../models/channel');
+const {
+  getCommunitiesByUser,
+  getCommunitiesBySlug,
+} = require('../models/community');
+const { getChannelById, getChannelsByUser } = require('../models/channel');
 const {
   getThread,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
+  getPublicParticipantThreadsByUser,
+  getViewableParticipantThreadsByUser,
 } = require('../models/thread');
-const { getUserRecurringPayments } = require('../models/recurringPayment');
 const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
-const { getNotificationsByUser } = require('../models/notification');
 import { getInvoicesByUser } from '../models/invoice';
-import paginate from '../utils/paginate-arrays';
-import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
+import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
-import {
-  getReputationByUser,
-  getUserPermissionsInCommunity,
-} from '../models/usersCommunities';
+import type { DBUser } from '../models/user';
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -38,11 +38,11 @@ module.exports = {
   Query: {
     user: (
       _: any,
-      args: { id: string, username: string } = {},
+      args: { id?: string, username?: string } = {},
       { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.user.load(args.id);
-      if (args.username) return getUser({ username: args.username });
+      if (args.username) return loaders.userByUsername.load(args.username);
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
@@ -50,7 +50,14 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    coverPhoto: ({ coverPhoto }) => {
+    email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
+      // admin can view email
+      if (isAdmin(user.id)) return email;
+      // user should only be able to view their own email
+      if (id !== user.id) return null;
+      return email;
+    },
+    coverPhoto: ({ coverPhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
         return imgix.buildURL(coverPhoto, { w: 640, h: 192 });
@@ -58,7 +65,7 @@ module.exports = {
       // if the image is being served from the S3 imgix source, return that url
       return coverPhoto;
     },
-    profilePhoto: ({ profilePhoto }) => {
+    profilePhoto: ({ profilePhoto }: DBUser) => {
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
       if (profilePhoto && profilePhoto.indexOf('spectrum.imgix.net') < 0) {
         return imgix.buildURL(profilePhoto, { w: 128, h: 128 });
@@ -66,27 +73,27 @@ module.exports = {
       // if the image is being served from the S3 imgix source, return that url
       return profilePhoto;
     },
-    isAdmin: ({ id }: { id: string }) => {
-      return isAdmin(id);
-    },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
-      return loaders.userRecurringPayments
-        .load(id)
-        .then(
-          sub => (!(sub == null) && sub.status === 'active' ? true : false)
+    isPro: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
+      return loaders.userRecurringPayments.load(id).then(result => {
+        if (!result || result.length === 0) return false;
+        const subs = result.reduction;
+
+        return subs.some(
+          sub => sub.status === 'active' && sub.planId === 'beta-pro'
         );
+      });
     },
     everything: (
-      { id }: { id: string },
+      _: any,
       { first, after }: PaginationOptions,
-      { user }
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
       // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
       const lastDigits = cursor.match(/-(\d+)$/);
       const lastThreadIndex =
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-      // TODO: Make this more performant by doingan actual db query rather than this hacking around
+      // $FlowFixMe
       return getEverything(user.id, {
         first,
         after: lastThreadIndex,
@@ -102,7 +109,7 @@ module.exports = {
           : [],
       }));
     },
-    communityConnection: (user: Object) => ({
+    communityConnection: (user: DBUser) => ({
       // Don't paginate communities and channels of a user
       pageInfo: {
         hasNextPage: false,
@@ -115,7 +122,7 @@ module.exports = {
         }))
       ),
     }),
-    channelConnection: (user: Object) => ({
+    channelConnection: (user: DBUser) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -125,63 +132,113 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: ({ id }) => ({
-      pageInfo: {
-        hasNextPage: false,
-      },
-      edges: getDirectMessageThreadsByUser(id).then(threads =>
-        threads.map(thread => ({
+    directMessageThreadsConnection: async (
+      _: any,
+      { first = 15, after }: PaginationOptions,
+      { user }: GraphQLContext
+    ) => {
+      const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+
+      const threads = await getDirectMessageThreadsByUser(user.id, {
+        first,
+        after: lastThreadIndex,
+      });
+
+      return {
+        pageInfo: {
+          hasNextPage: threads && threads.length >= first,
+        },
+        edges: threads.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
           node: thread,
-        }))
-      ),
-    }),
+        })),
+      };
+    },
     threadConnection: (
       { id }: { id: string },
-      { first, after }: PaginationOptions,
-      { user }
+      {
+        first,
+        after,
+        kind,
+      }: { ...PaginationOptions, kind: 'creator' | 'participant' },
+      { user }: GraphQLContext
     ) => {
       const currentUser = user;
-      // if a logged in user is viewing the profile, handle logic to get viewable threads
-      const getThreads =
-        currentUser && currentUser !== null
-          ? getViewableThreadsByUser(id, currentUser.id)
-          : // if the viewing user is logged out, only return publicly viewable threads
-            getPublicThreadsByUser(id);
-
       const cursor = decode(after);
-      return getThreads
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+      // if a logged in user is viewing the profile, handle logic to get viewable threads
+
+      let getThreads;
+      if (currentUser) {
+        getThreads =
+          kind === 'creator'
+            ? // $FlowIssue
+              getViewableThreadsByUser(id, currentUser.id, {
+                first,
+                after: lastThreadIndex,
+              })
+            : // $FlowIssue
+              getViewableParticipantThreadsByUser(id, currentUser.id, {
+                first,
+                after: lastThreadIndex,
+              });
+      } else {
+        getThreads =
+          kind === 'creator'
+            ? // $FlowIssue
+              getPublicThreadsByUser(id, { first, after: lastThreadIndex })
+            : // $FlowIssue
+              getPublicParticipantThreadsByUser(id, {
+                first,
+                after: lastThreadIndex,
+              });
+      }
+
+      return getThreads.then(result => ({
+        pageInfo: {
+          // $FlowFixMe => super weird
+          hasNextPage: result && result.length >= first,
+        },
+        edges: result.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
+          node: thread,
+        })),
+      }));
     },
     threadCount: (
       { id }: { id: string },
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return loaders.userThreadCount.load(id).then(data => data.count);
+      return loaders.userThreadCount
+        .load(id)
+        .then(data => (data ? data.count : 0));
     },
-    recurringPayments: (_, __, { user }) => {
+    recurringPayments: (
+      { id }: DBUser,
+      __: any,
+      { user, loaders }: GraphQLContext
+    ) => {
       if (!user) {
         return new UserError('You must be signed in to continue.');
       }
+      if (id !== user.id) {
+        throw new UserError('You can only see your own recurring payments.');
+      }
 
-      return getUserRecurringPayments(user.id).then(subs => {
+      return loaders.userRecurringPayments.load(user.id).then(result => {
+        const subs = result && result.reduction;
         const userProSubs =
-          subs && subs.filter(obj => obj.planId === 'beta-pro');
+          subs &&
+          subs.length > 0 &&
+          subs.filter(obj => obj.planId === 'beta-pro');
         if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {
@@ -196,27 +253,33 @@ module.exports = {
         }
       });
     },
-    settings: (_: any, __: any, { user }: GraphQLContext) => {
+    settings: (_: DBUser, __: any, { user }: GraphQLContext) => {
       if (!user) return new UserError('You must be signed in to continue.');
       return getUsersSettings(user.id);
     },
-    invoices: ({ id }: { id: string }, _: any, { user }: GraphQLContext) => {
+    invoices: (_: any, __: any, { user }: GraphQLContext) => {
       const currentUser = user;
       if (!currentUser)
         return new UserError('You must be logged in to view these settings.');
 
       return getInvoicesByUser(currentUser.id);
     },
-    totalReputation: async ({ id }: { id: string }, _: any, __: any) => {
+    totalReputation: ({ id }: DBUser, _: any, { loaders }: GraphQLContext) => {
       if (!id) return 0;
-      return getReputationByUser(id);
+      return loaders.userTotalReputation
+        .load(id)
+        .then(data => (data ? data.reputation : 0));
     },
-    contextPermissions: (user: any, _: any, __: any, info: any) => {
+    isAdmin: ({ id }: DBUser) => isAdmin(id),
+    contextPermissions: (
+      user: any,
+      _: any,
+      { loaders }: GraphQLContext,
+      info: any
+    ) => {
       // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
       if (user.contextPermissions) return user.contextPermissions;
-
       const queryName = info.operation.name.value;
-
       const handleCheck = async () => {
         switch (queryName) {
           case 'getThread':
@@ -227,8 +290,12 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
+              communityId,
               reputation,
               isModerator,
               isOwner,
@@ -241,9 +308,50 @@ module.exports = {
               reputation,
               isModerator,
               isOwner,
-            } = await getUserPermissionsInCommunity(communityId, user.id);
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
             return {
+              communityId,
               reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          // eslint-disable-next-line
+          case 'loadMoreCommunityMembers':
+          case 'getChannelMembers': {
+            const channelId = info.variableValues.id;
+            const { communityId } = await getChannelById(channelId);
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await loaders.userPermissionsInCommunity.load([
+              user.id,
+              communityId,
+            ]);
+            return {
+              communityId,
+              reputation,
+              isModerator,
+              isOwner,
+            };
+          }
+          case 'getCommunityTopMembers': {
+            const communities = await getCommunitiesBySlug([
+              info.variableValues.slug,
+            ]);
+            const { id } = communities[0];
+            const {
+              reputation,
+              isModerator,
+              isOwner,
+            } = await loaders.userPermissionsInCommunity.load([user.id, id]);
+            return {
+              communityId: id,
+              reputation: reputation || 0,
               isModerator,
               isOwner,
             };

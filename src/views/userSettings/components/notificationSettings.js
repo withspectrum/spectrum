@@ -52,7 +52,7 @@ class NotificationSettings extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
-        console.log('err', err);
+        console.log('error subscribing to browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -81,7 +81,7 @@ class NotificationSettings extends Component {
         }
       })
       .catch(err => {
-        console.log(err);
+        console.log('error unsubscribing from browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -107,15 +107,16 @@ class NotificationSettings extends Component {
         </ListHeader>
         <ListContainer>
           <EmailListItem>
-            {subscription !== null &&
+            {subscription !== null && (
               <Checkbox
                 checked={!!subscription}
                 disabled={webPushBlocked}
                 onChange={onChange}
               >
                 Enable browser push notifications
-              </Checkbox>}
-            {webPushBlocked &&
+              </Checkbox>
+            )}
+            {webPushBlocked && (
               <Notice>
                 <strong>
                   You have blocked browser push notifications on this device!
@@ -124,7 +125,8 @@ class NotificationSettings extends Component {
                 <a href="https://support.sendpulse.com/456261-How-to-Unblock-Web-Push-Notifications">
                   these steps
                 </a>.
-              </Notice>}
+              </Notice>
+            )}
           </EmailListItem>
         </ListContainer>
       </StyledCard>

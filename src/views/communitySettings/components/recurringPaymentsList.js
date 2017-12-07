@@ -8,12 +8,8 @@ import { IconButton } from '../../../components/buttons';
 import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { SectionCard, SectionTitle } from '../style';
+import { ListContainer } from '../../../components/listItems/style';
 
 const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
   const openCommunityProModal = () => {
@@ -34,10 +30,8 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
 
   if (filteredRecurringPayments.length > 0) {
     return (
-      <StyledCard>
-        <ListHeader>
-          <LargeListHeading>Subscriptions</LargeListHeading>
-        </ListHeader>
+      <SectionCard>
+        <SectionTitle>Plan</SectionTitle>
         <ListContainer>
           {filteredRecurringPayments.map(payment => {
             const amount = payment.amount / 100;
@@ -56,10 +50,14 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
             );
           })}
         </ListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   } else {
-    return <UpsellUpgradeCommunity community={community} />;
+    return (
+      <SectionCard>
+        <UpsellUpgradeCommunity community={community} />
+      </SectionCard>
+    );
   }
 };
 

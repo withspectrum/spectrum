@@ -1,14 +1,8 @@
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Column from '../../components/column';
@@ -23,8 +17,16 @@ import { getUserThreads, getUser } from './queries';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
+import {
+  SegmentedControl,
+  DesktopSegment,
+  MobileSegment,
+} from '../../components/segmentedControl';
 
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
+const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
+  ThreadFeed
+);
 
 type Props = {
   match: {
@@ -41,7 +43,17 @@ type Props = {
   queryVarIsChanging: boolean,
 };
 
-class UserView extends React.Component<Props> {
+type State = {
+  hasNoThreads: boolean,
+  selectedView: 'participant' | 'creator',
+};
+
+class UserView extends React.Component<Props, State> {
+  constructor() {
+    super();
+    this.state = { hasThreads: true, selectedView: 'participant' };
+  }
+
   componentDidMount() {
     track('user', 'profile viewed', null);
   }
@@ -54,6 +66,18 @@ class UserView extends React.Component<Props> {
     }
   }
 
+  hasNoThreads = () => this.setState({ hasThreads: false });
+  hasThreads = () => this.setState({ hasThreads: true });
+
+  handleSegmentClick = label => {
+    if (this.state.selectedView === label) return;
+
+    return this.setState({
+      selectedView: label,
+      hasThreads: true,
+    });
+  };
+
   render() {
     const {
       data: { user },
@@ -63,6 +87,7 @@ class UserView extends React.Component<Props> {
       match: { params: { username } },
       currentUser,
     } = this.props;
+    const { hasThreads, selectedView } = this.state;
 
     if (queryVarIsChanging) {
       return <LoadingScreen />;
@@ -83,9 +108,24 @@ class UserView extends React.Component<Props> {
           ? user.communityConnection.edges.map(c => c.node)
           : [];
 
+      const nullHeading = `${user.firstName
+        ? user.firstName
+        : user.name} hasn’t ${selectedView === 'creator'
+        ? 'created'
+        : 'joined'} any conversations yet.`;
+
+      const Feed =
+        selectedView === 'creator'
+          ? ThreadFeedWithData
+          : ThreadParticipantFeedWithData;
+
       return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
+        <AppViewWrapper data-e2e-id="user-view">
+          <Head
+            title={title}
+            description={description}
+            image={user.profilePhoto}
+          />
           <Titlebar
             title={user.name}
             subtitle={'Posts By'}
@@ -107,19 +147,49 @@ class UserView extends React.Component<Props> {
           </Column>
 
           <Column type="primary" alignItems="center">
-            {user.threadCount === 0 && (
-              <NullState
-                bg="message"
-                heading={`${user.name} hasn’t posted anything yet.`}
-              />
-            )}
-            {user.threadCount > 0 && (
-              <ThreadFeedWithData
+            <SegmentedControl style={{ margin: '-16px 0 16px' }}>
+              <DesktopSegment
+                segmentLabel="participant"
+                onClick={() => this.handleSegmentClick('participant')}
+                selected={selectedView === 'participant'}
+              >
+                Replies
+              </DesktopSegment>
+
+              <DesktopSegment
+                segmentLabel="creator"
+                onClick={() => this.handleSegmentClick('creator')}
+                selected={selectedView === 'creator'}
+              >
+                Threads
+              </DesktopSegment>
+              <MobileSegment
+                segmentLabel="participant"
+                onClick={() => this.handleSegmentClick('participant')}
+                selected={selectedView === 'participant'}
+              >
+                Replies
+              </MobileSegment>
+              <MobileSegment
+                segmentLabel="creator"
+                onClick={() => this.handleSegmentClick('creator')}
+                selected={selectedView === 'creator'}
+              >
+                Threads
+              </MobileSegment>
+            </SegmentedControl>
+            {hasThreads && (
+              <Feed
                 userId={user.id}
                 username={username}
                 viewContext="profile"
+                hasNoThreads={this.hasNoThreads}
+                hasThreads={this.hasThreads}
+                kind={selectedView}
               />
             )}
+
+            {!hasThreads && <NullState bg="null" heading={nullHeading} />}
           </Column>
         </AppViewWrapper>
       );
@@ -169,6 +239,4 @@ class UserView extends React.Component<Props> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getUser, viewNetworkHandler, pure)(
-  UserView
-);
+export default compose(connect(map), getUser, viewNetworkHandler)(UserView);

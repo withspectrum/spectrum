@@ -4,14 +4,12 @@ const {
   getChannelMemberCount,
 } = require('../models/channel');
 const {
-  getUserPermissionsInChannel,
   getPendingUsersInChannel,
   getBlockedUsersInChannel,
   getModeratorsInChannel,
   getMembersInChannel,
   getOwnersInChannel,
 } = require('../models/usersChannels');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 const { getThreadsByChannel } = require('../models/thread');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -52,15 +50,47 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    channelPermissions: (args, _: any, { user }: Context) => {
+    channelPermissions: (args, _: any, { user, loaders }: GraphQLContext) => {
       const channelId = args.id || args.channelId;
-      if (!channelId || !user) return false;
-      return getUserPermissionsInChannel(channelId, user.id);
+      if (!channelId || !user) {
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        };
+      }
+      return loaders.userPermissionsInChannel
+        .load([user.id, channelId])
+        .then(res => {
+          if (!res) {
+            return {
+              isOwner: false,
+              isMember: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: false,
+              receiveNotifications: false,
+            };
+          }
+          return res;
+        });
     },
-    communityPermissions: (args, _: any, { user }: Context) => {
+    communityPermissions: (args, _: any, { user, loaders }: Context) => {
       const communityId = args.id || args.communityId;
-      if (!communityId || !user) return false;
-      return getUserPermissionsInCommunity(communityId, user.id);
+      if (!communityId || !user) {
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        };
+      }
+      return loaders.userPermissionsInCommunity.load([user.id, communityId]);
     },
     memberConnection: (
       { id },
@@ -68,35 +98,43 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastUserIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
 
-      // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getMembersInChannel(id)
+      return getMembersInChannel(id, { first, after: lastUserIndex })
         .then(users => loaders.user.loadMany(users))
-        .then(users =>
-          paginate(users, { first, after: cursor }, user => user.id === cursor)
-        )
         .then(result => ({
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: result && result.length >= first,
           },
-          edges: result.list.map(user => ({
-            cursor: encode(user.id),
+          edges: result.filter(Boolean).map((user, index) => ({
+            cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
             node: user,
           })),
         }));
     },
-    metaData: ({ id }: { id: string }) => {
-      return getChannelMetaData(id).then(data => {
-        return {
-          threads: data[0],
-          members: data[1],
-        };
-      });
+    metaData: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return Promise.all([
+        loaders.channelThreadCount.load(id),
+        loaders.channelMemberCount.load(id),
+      ]).then(([threadCount, memberCount]) => ({
+        threads: threadCount ? threadCount.reduction : 0,
+        members: memberCount ? memberCount.reduction : 0,
+      }));
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getPendingUsersInChannel(id).then(users =>
-        loaders.user.loadMany(users)
-      );
+      return loaders.channelPendingUsers
+        .load(id)
+        .then(res => {
+          if (!res || res.length === 0) return [];
+          return res.reduction.map(rec => rec.userId);
+        })
+        .then(users => {
+          if (!users || users.length === 0) return [];
+          return loaders.user.loadMany(users);
+        });
     },
     blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
       return getBlockedUsersInChannel(id).then(users =>

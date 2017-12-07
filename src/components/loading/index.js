@@ -10,14 +10,16 @@ import { Spinner, FlexCol } from '../globals';
 import Grid from '../grid';
 import { Card } from '../card';
 import { Column } from '../column';
-import { View, Detail, Content } from '../../views/thread/style';
+import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
 import {
   LoadingScreenContainer,
   ShimmerList,
+  ShimmerListLite,
   ShimmerInboxThread,
   ShimmerThread,
   ShimmerThreadDetail,
   ShimmerProfile,
+  ShimmerProfileLite,
   ShimmerListItem,
   ShimmerDM,
   ShimmerBubble,
@@ -26,6 +28,7 @@ import {
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
+  ShimmerSelect,
   Cover,
   LoadingOverlay,
   LoadingNavbarContainer,
@@ -41,7 +44,7 @@ import {
 */
 const LoadingContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
+  flex: auto;
   align-self: stretch;
   align-items: center;
   justify-content: center;
@@ -65,8 +68,8 @@ export const Loading = ({
   size,
   color,
 }: {
-  size?: Number,
-  color?: String,
+  size?: number,
+  color?: string,
 }): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />
@@ -521,6 +524,62 @@ export const LoadingListItem = () => (
   </ShimmerListItem>
 );
 
+export const LoadingListItemLite = () => (
+  <ShimmerListItem>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '10px',
+          left: '0px',
+          height: '14px',
+          width: 'calc(100% - 72px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '32px',
+          height: '20px',
+          width: '96px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '26px',
+          height: '32px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '32px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerListItem>
+);
+
 export const LoadingList = () => (
   <ShimmerList>
     <LoadingListItem />
@@ -534,6 +593,16 @@ export const LoadingList = () => (
     <LoadingListItem />
     <LoadingListItem />
   </ShimmerList>
+);
+
+export const LoadingListThreadDetail = () => (
+  <ShimmerListLite>
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+    <LoadingListItemLite />
+  </ShimmerListLite>
 );
 
 export const LoadingDM = () => (
@@ -816,6 +885,86 @@ export const LoadingProfile = () => (
   </ShimmerProfile>
 );
 
+export const LoadingProfileThreadDetail = () => (
+  <ShimmerProfileLite>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '0',
+          left: '0',
+          height: '48px',
+          width: 'calc(50% - 20px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '48px',
+          width: 'calc(50% - 20px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '40px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '64px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '88px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '48px',
+          right: '0',
+          height: '16px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '48px',
+          left: '0',
+          height: '16px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          right: '0',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          left: '0',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerProfileLite>
+);
+
 export const LoadingProfileGrid = () => (
   <Grid>
     <LoadingProfile />
@@ -831,22 +980,18 @@ export const LoadingProfileGrid = () => (
   </Grid>
 );
 
-/*
-  Outputs a full-screen loader with shimmering cards and columns. This is useful
-  when an entire view is wrapped in a query and we need certain data (like
-  permission checks) before we render anything.
-*/
-
-const isMobile = window.innerWidth < 768;
+export const LoadingSelect = () => (
+  <ShimmerSelect>
+    <ShimmerBase />
+  </ShimmerSelect>
+);
 
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
-    {!isMobile && (
-      <Column type="secondary">
-        <LoadingProfile />
-        <LoadingList />
-      </Column>
-    )}
+    <Column hideOnMobile type="secondary">
+      <LoadingProfile />
+      <LoadingList />
+    </Column>
 
     <Column type="primary" alignItems="center">
       <LoadingComposer />
@@ -856,14 +1001,14 @@ export const LoadingScreen = (): React$Element<any> => (
 );
 
 export const LoadingThreadView = (): React$Element<any> => (
-  <View>
+  <ThreadViewContainer>
     <Content>
       <Detail type="only">
         <LoadingThreadDetail />
         <LoadingChat />
       </Detail>
     </Content>
-  </View>
+  </ThreadViewContainer>
 );
 
 export const LoadingNotifications = (): React$Element<any> => (

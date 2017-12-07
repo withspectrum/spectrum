@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar } from '../avatar';
+import Avatar from '../avatar';
 import Icon from '../icons';
 import { FauxOutlineButton } from '../buttons';
 
@@ -55,7 +55,7 @@ export const PhotoInput = (props: InputProps) => {
         <Icon glyph="photo" />
       </InputOverlay>
       <Avatar
-        style={{ border: '2px solid #fff' }}
+        style={{ boxShadow: '0 0 0 2px white' }}
         size={props.size || 48}
         src={`${props.defaultValue}`}
         user={props.user}

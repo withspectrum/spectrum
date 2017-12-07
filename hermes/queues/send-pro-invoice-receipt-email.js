@@ -1,6 +1,9 @@
 const debug = require('debug')('hermes:queue:send-pro-invoice-receipt-email');
 import sendEmail from '../send-email';
-import { PRO_INVOICE_RECEIPT_TEMPLATE } from './constants';
+import {
+  PRO_INVOICE_RECEIPT_TEMPLATE,
+  SEND_PRO_INVOICE_RECEIPT_EMAIL,
+} from './constants';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
@@ -15,6 +18,7 @@ export default job => {
     return sendEmail({
       TemplateId: PRO_INVOICE_RECEIPT_TEMPLATE,
       To: to,
+      Tag: SEND_PRO_INVOICE_RECEIPT_EMAIL,
       TemplateModel: {
         invoice,
       },

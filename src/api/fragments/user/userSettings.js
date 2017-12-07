@@ -8,6 +8,9 @@ export const userSettingsFragment = gql`
           newMessageInThreads {
             email
           }
+          newDirectMessage {
+            email
+          }
           newThreadCreated {
             email
           }
@@ -15,6 +18,9 @@ export const userSettingsFragment = gql`
             email
           }
           dailyDigest {
+            email
+          }
+          newMention {
             email
           }
         }

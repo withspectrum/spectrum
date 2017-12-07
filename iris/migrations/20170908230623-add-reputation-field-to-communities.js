@@ -36,5 +36,11 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  return Promise.resolve();
+  return r
+    .tableDrop('reputationEvents')
+    .run(conn)
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
 };

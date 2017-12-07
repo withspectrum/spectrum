@@ -4,10 +4,7 @@ import { execute, subscribe } from 'graphql';
 import schema from '../schema';
 import createLoaders from '../loaders';
 import { getUser, setUserOnline } from '../models/user';
-import sessionStore, {
-  sessionCookieParser,
-  getUserIdFromReq,
-} from '../utils/session-store';
+import { getUserIdFromReq } from '../utils/session-store';
 
 /**
  * Create a subscription server based on an exisiting express.js server
@@ -34,15 +31,11 @@ const createSubscriptionsServer = (server: any, path: string) => {
           .then(user => {
             return {
               user,
-              // TODO: Pass optics to subscriptions context
-              // opticsContext: OpticsAgent.context(req),
               loaders: createLoaders(),
             };
           })
           .catch(err => {
             return {
-              // TODO: Pass optics to subscriptions context
-              // opticsContext: OpticsAgent.context(req),
               loaders: createLoaders(),
             };
           }),

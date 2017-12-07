@@ -2,19 +2,17 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Notice } from '../listItems/style';
-import { Button, TextButton, IconButton } from '../buttons';
+import { Button, IconButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import Icon from '../../components/icons';
@@ -118,12 +116,6 @@ class ChannelWithData extends Component {
 
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
-  };
-
-  cancelForm = e => {
-    e.preventDefault();
-    return (window.location.href = `/${this.props.channel.community.slug}/${this
-      .props.channel.slug}`);
   };
 
   triggerDeleteChannel = (e, channelId) => {
@@ -231,22 +223,19 @@ class ChannelWithData extends Component {
 
             {// if the user is moving from private to public
             this.props.channel.isPrivate &&
-            !isPrivate && (
-              <Notice>
-                When a private channel is made public all pending users will be
-                added as members of the channel. Blocked users will remain
-                blocked from viewing all content in this channel but in the
-                future any new person will be able to join.
-              </Notice>
-            )}
+              !isPrivate && (
+                <Notice>
+                  When a private channel is made public all pending users will
+                  be added as members of the channel. Blocked users will remain
+                  blocked from viewing all content in this channel but in the
+                  future any new person will be able to join.
+                </Notice>
+              )}
 
             <Actions>
               <Button onClick={this.save} loading={isLoading}>
                 Save
               </Button>
-              <TextButton color={'text.alt'} onClick={this.cancelForm}>
-                Cancel
-              </TextButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
                   <IconButton
@@ -275,10 +264,7 @@ class ChannelWithData extends Component {
   }
 }
 
-const Channel = compose(
-  deleteChannelMutation,
-  editChannelMutation,
-  withRouter,
-  pure
-)(ChannelWithData);
+const Channel = compose(deleteChannelMutation, editChannelMutation, withRouter)(
+  ChannelWithData
+);
 export default connect()(Channel);

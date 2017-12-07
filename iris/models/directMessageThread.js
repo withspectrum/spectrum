@@ -2,15 +2,36 @@
 const { db } = require('./db');
 import { NEW_DOCUMENTS } from './utils';
 
+export type DBDirectMessageThread = {
+  createdAt: Date,
+  id: string,
+  name?: string,
+  threadLastActive: Date,
+};
+
 const getDirectMessageThread = (
-  directMessageThreadId: String
-): Promise<Object> => {
-  return db.table('directMessageThreads').get(directMessageThreadId).run();
+  directMessageThreadId: string
+): Promise<DBDirectMessageThread> => {
+  return db
+    .table('directMessageThreads')
+    .get(directMessageThreadId)
+    .run();
+};
+
+const getDirectMessageThreads = (
+  ids: Array<string>
+): Promise<Array<DBDirectMessageThread>> => {
+  return db
+    .table('directMessageThreads')
+    .getAll(...ids)
+    .run();
 };
 
 const getDirectMessageThreadsByUser = (
-  userId: String
-): Promise<Array<Object>> => {
+  userId: string,
+  // $FlowFixMe
+  { first, after }
+): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
@@ -19,10 +40,13 @@ const getDirectMessageThreadsByUser = (
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
     })
     .zip()
+    .orderBy(db.desc('threadLastActive'))
+    .skip(after || 0)
+    .limit(first)
     .run();
 };
 
-const createDirectMessageThread = (isGroup: boolean): Object => {
+const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .insert(
@@ -38,7 +62,9 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
     .then(result => result.changes[0].new_val);
 };
 
-const setDirectMessageThreadLastActive = (id: string): Object => {
+const setDirectMessageThreadLastActive = (
+  id: string
+): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .get(id)
@@ -77,6 +103,7 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
+  getDirectMessageThreads,
   getDirectMessageThreadsByUser,
   setDirectMessageThreadLastActive,
   listenToUpdatedDirectMessageThreads,

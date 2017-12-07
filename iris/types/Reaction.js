@@ -1,3 +1,4 @@
+// @flow
 const Reaction = /* GraphQL */ `
 	enum ReactionTypes {
 		like

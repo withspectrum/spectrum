@@ -2,6 +2,7 @@ import onlyContainsEmoji from '../../shared/only-contains-emoji';
 import sentencify from '../../shared/sentencify';
 import { short as timeDifferenceShort } from '../../shared/time-difference';
 import sortByDate from '../../shared/sort-by-date';
+import { toState, toPlainText } from 'shared/draft-utils';
 
 const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
@@ -34,6 +35,8 @@ const EVENT_VERB = {
   REACTION_CREATED: 'liked',
   CHANNEL_CREATED: 'created in',
   USER_JOINED_COMMUNITY: 'joined',
+  MENTION_MESSAGE: 'mentioned you in',
+  MENTION_THREAD: 'mentioned you in',
 };
 
 const contextToString = (context, currentUser) => {
@@ -101,9 +104,22 @@ const formatNotification = (incomingNotification, currentUserId) => {
         ({ payload }) => payload.senderId !== currentUserId
       );
 
-      href = `/thread/${notification.context.id}`;
+      if (notification.context.type === 'DIRECT_MESSAGE_THREAD') {
+        href = `/messages/${notification.context.id}`;
+      } else {
+        href = `/thread/${notification.context.id}`;
+      }
       body = sentencify(
-        entities.map(({ payload }) => `"${payload.content.body}"`)
+        entities.map(({ payload }) => {
+          if (payload.messageType === 'draftjs') {
+            let body = payload.content.body;
+            if (typeof body === 'string')
+              body = JSON.parse(payload.content.body);
+            return `"${toPlainText(toState(body))}"`;
+          }
+
+          return `"${payload.content.body}"`;
+        })
       );
       break;
     }
@@ -111,7 +127,10 @@ const formatNotification = (incomingNotification, currentUserId) => {
       const message = notification.context.payload;
 
       href = `/thread/${message.threadId}`;
-      body = message.content.body;
+      body =
+        message.messageType === 'draftjs'
+          ? toPlainText(toState(message.content.body))
+          : message.content.body;
       break;
     }
     case 'CHANNEL_CREATED': {

@@ -446,15 +446,20 @@ const toggleUserChannelNotifications = (
 ===========================================================
 */
 
-const getMembersInChannel = (channelId: string): Promise<Array<string>> => {
+const getMembersInChannel = (
+  channelId: string,
+  { first, after }: { first: number, after: number }
+): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isMember: true })
-      .run()
+      .skip(after || 0)
+      .limit(first || 999999)
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -466,10 +471,19 @@ const getPendingUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isPending: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
+};
+
+const getPendingUsersInChannels = (channelIds: Array<string>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .group('channelId')
+    .filter({ isPending: true })
+    .run();
 };
 
 const getBlockedUsersInChannel = (
@@ -480,9 +494,9 @@ const getBlockedUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isBlocked: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -492,9 +506,9 @@ const getModeratorsInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isModerator: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -504,10 +518,19 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isOwner: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
+};
+
+const DEFAULT_USER_CHANNEL_PERMISSIONS = {
+  isOwner: false,
+  isMember: false,
+  isModerator: false,
+  isBlocked: false,
+  isPending: false,
+  receiveNotifications: false,
 };
 
 const getUserPermissionsInChannel = (
@@ -516,8 +539,7 @@ const getUserPermissionsInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run()
     .then(data => {
       // if a record exists
@@ -526,15 +548,35 @@ const getUserPermissionsInChannel = (
       } else {
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
-        return {
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          isPending: false,
-          receiveNotifications: false,
-        };
+        return DEFAULT_USER_CHANNEL_PERMISSIONS;
       }
+    });
+};
+
+type UserIdAndChannelId = [string, string];
+
+const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
+  return db
+    .table('usersChannels')
+    .getAll(...input, { index: 'userIdAndChannelId' })
+    .run()
+    .then(data => {
+      if (!data || data.length === 0)
+        return Array.from({ length: input.length }).map((_, index) => ({
+          ...DEFAULT_USER_CHANNEL_PERMISSIONS,
+          userId: input[index][0],
+          channelId: input[index][1],
+        }));
+
+      return data.map((rec, index) => {
+        if (rec) return rec;
+
+        return {
+          ...DEFAULT_USER_CHANNEL_PERMISSIONS,
+          userId: input[index][0],
+          channelId: input[index][1],
+        };
+      });
     });
 };
 
@@ -563,4 +605,6 @@ module.exports = {
   getModeratorsInChannel,
   getOwnersInChannel,
   getUserPermissionsInChannel,
+  getUsersPermissionsInChannels,
+  getPendingUsersInChannels,
 };

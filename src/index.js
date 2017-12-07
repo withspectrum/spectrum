@@ -1,31 +1,19 @@
-// @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-//$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
-//$FlowFixMe
 import { Router } from 'react-router';
-// $FlowFixMe
 import queryString from 'query-string';
+import Loadable from 'react-loadable';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
-import { addToastWithTimeout } from './actions/toasts';
-import registerServiceWorker from './registerServiceWorker';
-import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
-const { thread } = queryString.parse(history.location.search);
-if (thread) {
-  const hash = window.location.hash.substr(1);
-  if (hash && hash.length > 1) {
-    history.replace(`/thread/${thread}#${hash}`);
-  } else {
-    history.replace(`/thread/${thread}`);
-  }
-}
+const { thread, t } = queryString.parse(history.location.search);
 
 const existingUser = getItemFromStorage('spectrum');
 let initialState;
@@ -34,9 +22,30 @@ if (existingUser) {
     users: {
       currentUser: existingUser.currentUser,
     },
+    dashboardFeed: {
+      activeThread: t ? t : '',
+      mountedWithActiveThread: t ? t : '',
+    },
   };
 } else {
   initialState = {};
+}
+
+if (thread) {
+  const hash = window.location.hash.substr(1);
+  if (hash && hash.length > 1) {
+    history.replace(`/thread/${thread}#${hash}`);
+  } else {
+    history.replace(`/thread/${thread}`);
+  }
+}
+if (t && (!existingUser || !existingUser.currentUser)) {
+  const hash = window.location.hash.substr(1);
+  if (hash && hash.length > 1) {
+    history.replace(`/thread/${t}#${hash}`);
+  } else {
+    history.replace(`/thread/${t}`);
+  }
 }
 
 const store = initStore(window.__SERVER_STATE__ || initialState, {
@@ -59,24 +68,22 @@ function render() {
   );
 }
 
-try {
-  render();
-} catch (err) {
-  render();
-}
+Loadable.preloadReady().then(render);
 
-registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
-  if (newContent) {
-    store.dispatch(
-      addToastWithTimeout(
-        'success',
-        'A new version of Spectrum is available, refresh the page to see it! 🚀'
-      )
-    );
-  }
-  // We don't show a message on first cache, simply because the API isn't cached offline
-  // so the app isn't offline usable, it's just cached so the first pageload is much faster
+OfflinePluginRuntime.install({
+  // Apply new updates immediately
+  onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
+  // Set a global variable when an update was installed so that we can reload the page when users
+  // go to a new page, leading to no interruption in the workflow.
+  // Idea from https://zach.codes/handling-client-side-app-updates-with-service-workers/
+  onUpdated: () => (window.appUpdateAvailable = true),
 });
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  navigator.serviceWorker.ready.then(registration => {
+    webPushManager.set(registration.pushManager);
+  });
+}
 
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics

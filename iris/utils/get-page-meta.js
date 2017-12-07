@@ -29,8 +29,7 @@ export default (
       /**
        * Thread
        */
-      promise = request(
-        /* GraphQL */ `
+      promise = request(/* GraphQL */ `
         {
           thread(id: "${second}") {
             content {
@@ -42,10 +41,12 @@ export default (
               name
               isPrivate
             }
+            community {
+              profilePhoto
+            }
           }
         }
-      `
-      ).then(res => {
+      `).then(res => {
         const { thread: { type, content, channel } } = res.data;
         return generateMetaInfo({
           type: 'thread',
@@ -55,6 +56,7 @@ export default (
             body: content.body,
             channelName: channel.name,
             privateChannel: channel.isPrivate,
+            image: community.profilePhoto,
           },
         });
       });
@@ -64,18 +66,17 @@ export default (
       /**
        * User
        */
-      promise = request(
-        /* GraphQL */ `
+      promise = request(/* GraphQL */ `
         {
           user(username: "${second}") {
             name
             username
             description
+            profilePhoto
             # coverPhoto
           }
         }
-      `
-      ).then(res => {
+      `).then(res => {
         const { user } = res.data;
         return generateMetaInfo({
           type: 'user',
@@ -83,6 +84,7 @@ export default (
             username: user.username,
             description: user.description,
             name: user.name,
+            image: user.profilePhoto,
           },
         });
       });
@@ -94,8 +96,7 @@ export default (
         /**
          * Channel
          */
-        promise = request(
-          /* GraphQL */ `
+        promise = request(/* GraphQL */ `
           {
             channel(channelSlug: "${second}", communitySlug: "${first}") {
               name
@@ -103,11 +104,11 @@ export default (
               isPrivate
               community {
                 name
+                profilePhoto
               }
             }
           }
-        `
-        ).then(res => {
+        `).then(res => {
           const { channel, channel: { community } } = res.data;
           return generateMetaInfo({
             type: 'channel',
@@ -116,6 +117,7 @@ export default (
               description: channel.description,
               communityName: community.name,
               private: channel.isPrivate,
+              image: community.profilePhoto,
             },
           });
         });
@@ -123,22 +125,22 @@ export default (
         /**
          * Community
          */
-        promise = request(
-          /* GraphQL */ `
+        promise = request(/* GraphQL */ `
           {
             community(slug: "${first}") {
               name
               description
+              profilePhoto
             }
           }
-        `
-        ).then(res => {
+        `).then(res => {
           const { community } = res.data;
           return generateMetaInfo({
             type: 'community',
             data: {
               name: community.name,
               description: community.description,
+              image: community.profilePhoto,
             },
           });
         });

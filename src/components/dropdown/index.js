@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
@@ -29,14 +27,14 @@ const StyledCard = styled(Card)`
   overflow: hidden;
   align-items: stretch;
   display: inline-block;
+  border-radius: 8px;
 `;
 
-const DropdownPure = (props: Object): React$Element<any> =>
+const DropdownPure = (props: Object): React$Element<any> => (
   <StyledDropdown className={'dropdown'} {...props}>
-    <StyledCard>
-      {props.children}
-    </StyledCard>
-  </StyledDropdown>;
+    <StyledCard>{props.children}</StyledCard>
+  </StyledDropdown>
+);
 
-export const Dropdown = compose(pure)(DropdownPure);
+export const Dropdown = compose()(DropdownPure);
 export default Dropdown;

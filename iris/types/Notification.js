@@ -1,3 +1,4 @@
+// @flow
 const Notification = /* GraphQL */ `
 	enum NotificationEventType {
 		REACTION_CREATED
@@ -11,6 +12,8 @@ const Notification = /* GraphQL */ `
 	  THREAD_LOCKED_BY_OWNER
 	  THREAD_DELETED_BY_OWNER
 		COMMUNITY_INVITE
+		MENTION_THREAD
+		MENTION_MESSAGE
 	}
 
 	enum EntityType {
@@ -54,6 +57,7 @@ const Notification = /* GraphQL */ `
 	extend type Query {
 		notification(id: ID!): Notification
 		notifications(first: Int = 10, after: String): NotificationsConnection
+		directMessageNotifications(first: Int = 10, after: String): NotificationsConnection
 	}
 
 	extend type Mutation {
@@ -66,6 +70,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Subscription {
 		notificationAdded: Notification
+		dmNotificationAdded: Notification
 	}
 `;
 

@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
 import Facepile from './facepile';
-import ThreadCommunityInfo from './threadCommunityInfo';
+import truncate from 'shared/truncate';
+import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
-  InboxClickWrapper,
   InboxThreadContent,
   ThreadTitle,
   AttachmentsContainer,
@@ -30,30 +28,41 @@ class InboxThread extends Component {
       data,
       active,
       hasActiveCommunity,
+      hasActiveChannel,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
-    const isMobile = window && window.innerWidth < 768;
     const isPinned = data.id === this.props.pinnedThreadId;
+
+    if (data.watercooler) {
+      return <WatercoolerThread data={data} active={active} />;
+    }
 
     return (
       <InboxThreadItem active={active}>
-        {isMobile ? (
-          <InboxLinkWrapper to={`?thread=${data.id}`} />
-        ) : (
-          <InboxClickWrapper
-            onClick={() => this.props.dispatch(changeActiveThread(data.id))}
-          />
-        )}
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search:
+              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+          }}
+          onClick={e =>
+            window.innerWidth > 768 &&
+            !e.metaKey &&
+            this.props.dispatch(changeActiveThread(data.id))}
+        />
         <InboxThreadContent>
           <ThreadCommunityInfo
             thread={data}
             active={active}
             activeCommunity={hasActiveCommunity}
+            activeChannel={hasActiveChannel}
             isPinned={isPinned}
           />
 
-          <ThreadTitle active={active}>{data.content.title}</ThreadTitle>
+          <ThreadTitle active={active}>
+            {truncate(data.content.title, 80)}
+          </ThreadTitle>
 
           {attachmentsExist &&
             attachments
@@ -65,7 +74,7 @@ class InboxThread extends Component {
 
                 return (
                   <AttachmentsContainer active={active} key={url}>
-                    <MiniLinkPreview to={url} target="_blank">
+                    <MiniLinkPreview href={url} target="_blank">
                       <Icon glyph="link" size={18} />
                       {url}
                     </MiniLinkPreview>
@@ -75,20 +84,18 @@ class InboxThread extends Component {
 
           <ThreadMeta>
             {(participantsExist || creator) && (
-              <Facepile
-                active={active}
-                participants={participants}
-                creator={data.creator}
-              />
-            )}
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={data.creator}
+                />
+              )}
 
             {data.messageCount > 0 ? (
               <MetaText offset={participants.length} active={active}>
-                {data.messageCount > 1 ? (
-                  `${data.messageCount} messages`
-                ) : (
-                  `${data.messageCount} message`
-                )}
+                {data.messageCount > 1
+                  ? `${data.messageCount} messages`
+                  : `${data.messageCount} message`}
               </MetaText>
             ) : (
               <MetaTextPill offset={participants.length} active={active} new>
@@ -102,4 +109,56 @@ class InboxThread extends Component {
   }
 }
 
-export default compose(connect(), withRouter, pure)(InboxThread);
+export default compose(connect(), withRouter)(InboxThread);
+
+class WatercoolerThreadPure extends React.Component {
+  render() {
+    const {
+      data: { participants, creator, community, messageCount, id },
+      active,
+    } = this.props;
+    const participantsExist = participants && participants.length > 0;
+
+    return (
+      <InboxThreadItem active={active}>
+        <InboxLinkWrapper
+          to={{
+            pathname: window.location.pathname,
+            search: window.innerWidth < 768 ? `?thread=${id}` : `?t=${id}`,
+          }}
+          onClick={() =>
+            window.innerWidth > 768 &&
+            this.props.dispatch(changeActiveThread(id))}
+        />
+        <InboxThreadContent>
+          <WaterCoolerPill active={active} />
+          <ThreadTitle active={active}>
+            {community.name} Watercooler
+          </ThreadTitle>
+
+          <ThreadMeta>
+            {(participantsExist || creator) && (
+                <Facepile
+                  active={active}
+                  participants={participants}
+                  creator={creator}
+                />
+              )}
+
+            {messageCount > 0 && (
+              <MetaText offset={participants.length} active={active}>
+                {messageCount > 1
+                  ? `${messageCount} messages`
+                  : `${messageCount} message`}
+              </MetaText>
+            )}
+          </ThreadMeta>
+        </InboxThreadContent>
+      </InboxThreadItem>
+    );
+  }
+}
+
+export const WatercoolerThread = compose(connect(), withRouter)(
+  WatercoolerThreadPure
+);

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
@@ -15,6 +13,8 @@ import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
 import { CommunityInviteNotification } from './components/communityInviteNotification';
+import { MentionMessageNotification } from './components/mentionMessageNotification';
+import { MentionThreadNotification } from './components/mentionThreadNotification';
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -46,7 +46,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 
 class NotificationsPure extends Component {
   state: {
-    isFetching: boolean,
     showWebPushPrompt: boolean,
     webPushPromptLoading: boolean,
   };
@@ -55,7 +54,6 @@ class NotificationsPure extends Component {
     super();
 
     this.state = {
-      isFetching: false,
       showWebPushPrompt: false,
       webPushPromptLoading: false,
     };
@@ -70,14 +68,6 @@ class NotificationsPure extends Component {
       .catch(err => {
         // error
       });
-  };
-
-  fetchMore = () => {
-    this.setState({
-      isFetching: true,
-    });
-
-    this.props.data.fetchMore();
   };
 
   componentDidMount() {
@@ -104,12 +94,12 @@ class NotificationsPure extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.setState({
-        isFetching: false,
-      });
-    }
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
   }
 
   subscribeToWebPush = () => {
@@ -129,7 +119,6 @@ class NotificationsPure extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
-        console.log('err', err);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -152,7 +141,6 @@ class NotificationsPure extends Component {
 
   render() {
     const { currentUser, data } = this.props;
-
     if (!currentUser) {
       return (
         <AppViewWrapper>
@@ -198,7 +186,7 @@ class NotificationsPure extends Component {
     const { scrollElement } = this.state;
 
     return (
-      <FlexCol style={{ flex: '1 1 auto' }}>
+      <FlexCol style={{ flex: '1 1 auto', maxHeight: 'calc(100% - 48px)' }}>
         <Head title={title} description={description} />
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
@@ -276,6 +264,24 @@ class NotificationsPure extends Component {
                       />
                     );
                   }
+                  case 'MENTION_MESSAGE': {
+                    return (
+                      <MentionMessageNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'MENTION_THREAD': {
+                    return (
+                      <MentionThreadNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
                   default: {
                     return null;
                   }
@@ -299,6 +305,5 @@ export default compose(
   displayLoadingNotifications,
   markNotificationsSeenMutation,
   connect(mapStateToProps),
-  withInfiniteScroll,
-  pure
+  withInfiniteScroll
 )(NotificationsPure);

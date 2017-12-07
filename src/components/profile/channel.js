@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-//$FlowFixMe
-import { Link } from 'react-router-dom';
+import Link from 'src/components/link';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
@@ -199,6 +197,41 @@ class ChannelWithData extends Component {
             channelIcon={false}
           >
             {currentUser &&
+              member && (
+                <Button
+                  loading={isLoading}
+                  icon="checkmark"
+                  gradientTheme="none"
+                  color="text.placeholder"
+                  hoverColor="text.placeholder"
+                  onClick={() => this.toggleSubscription(channel.id)}
+                >
+                  Joined
+                </Button>
+              )}
+            {currentUser &&
+              !member && (
+                <Button
+                  loading={isLoading}
+                  icon="plus-fill"
+                  gradientTheme="success"
+                  onClick={() => this.toggleSubscription(channel.id)}
+                >
+                  Join
+                </Button>
+              )}
+          </ChannelListItem>
+        </ProfileCard>
+      );
+    } else if (componentSize === 'listItemWithAction') {
+      return (
+        <ChannelListItemLi
+          clickable
+          contents={channel}
+          withDescription={false}
+          channelIcon={false}
+        >
+          {currentUser &&
             member && (
               <Button
                 loading={isLoading}
@@ -211,64 +244,26 @@ class ChannelWithData extends Component {
                 Joined
               </Button>
             )}
-            {currentUser &&
+          {currentUser &&
             !member && (
               <Button
+                size={'small'}
                 loading={isLoading}
                 icon="plus-fill"
+                color={'success.alt'}
                 gradientTheme="success"
                 onClick={() => this.toggleSubscription(channel.id)}
               >
                 Join
               </Button>
             )}
-          </ChannelListItem>
-        </ProfileCard>
-      );
-    } else if (componentSize === 'listItemWithAction') {
-      return (
-        <ChannelListItemLi
-          clickable
-          contents={channel}
-          withDescription={false}
-          meta={`${channel.metaData.members} members`}
-          channelIcon={false}
-        >
-          {currentUser &&
-          member && (
-            <Button
-              loading={isLoading}
-              icon="checkmark"
-              gradientTheme="none"
-              color="text.placeholder"
-              hoverColor="text.placeholder"
-              onClick={() => this.toggleSubscription(channel.id)}
-            >
-              Joined
-            </Button>
-          )}
-          {currentUser &&
-          !member && (
-            <Button
-              size={'small'}
-              loading={isLoading}
-              icon="plus-fill"
-              color={'success.alt'}
-              gradientTheme="success"
-              onClick={() => this.toggleSubscription(channel.id)}
-            >
-              Join
-            </Button>
-          )}
         </ChannelListItemLi>
       );
     }
   }
 }
 
-const Channel = compose(toggleChannelSubscriptionMutation, pure)(
-  ChannelWithData
-);
+const Channel = compose(toggleChannelSubscriptionMutation)(ChannelWithData);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

@@ -1,33 +1,31 @@
 import data from './data';
 const tables = Object.keys(data);
 
+console.log('\nAdding test data to db...');
 /**
- * This is run before all tests in src/setupTests.js
+ * This is run before all tests
  */
-export const setup = () => {
+export const setup = db => {
   // Create the tables
-  return (
-    Promise.all(tables.map(table => db.tableCreate(table).run()))
-      // Insert data into the tables
-      .then(() =>
-        Promise.all(
-          tables.map(table => db.table(table).insert(data[table]).run())
-        )
-      )
-      .catch(err => {
-        console.log(err);
-        throw err;
-      })
-  );
+  return Promise.all(
+    tables.map(
+      table =>
+        console.log(`Insert data into ${table}`) ||
+        db
+          .table(table)
+          .insert(data[table])
+          .run()
+    )
+  ).catch(err => {
+    console.log(err);
+    throw err;
+  });
 };
 
 const db = require('rethinkdbdash')({
   db: 'testing',
 });
 
-db
-  .dbCreate('testing')
-  .run()
-  .then(() => console.log('db created'))
-  .then(setup)
-  .then(() => process.exit());
+setup(db).then(
+  () => console.log('Finished adding test data to db.') || process.exit()
+);

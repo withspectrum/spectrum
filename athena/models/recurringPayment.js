@@ -1,9 +1,10 @@
 // @flow
 const { db } = require('./db');
+import type { DBInvoice, DBRecurringPayment } from 'shared/types';
 
 export const getRecurringPaymentFromInvoice = (
-  invoice: Object
-): Promise<Object> => {
+  invoice: DBInvoice
+): Promise<?DBRecurringPayment> => {
   return db
     .table('recurringPayments')
     .filter({

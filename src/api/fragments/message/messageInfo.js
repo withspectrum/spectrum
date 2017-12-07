@@ -10,7 +10,9 @@ export const messageInfoFragment = gql`
     messageType
     sender {
       ...userInfo
+      isPro
       contextPermissions {
+        communityId
         reputation
         isOwner
         isModerator

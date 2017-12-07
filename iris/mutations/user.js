@@ -1,5 +1,13 @@
-import { editUser, getUsers, getUser } from '../models/user';
-import type { EditUserArguments } from '../models/user';
+// @flow
+import {
+  editUser,
+  getUsers,
+  getUser,
+  getUserByEmail,
+  setUserPendingEmail,
+  updateUserEmail,
+} from '../models/user';
+import type { EditUserArguments, DBUser } from '../models/user';
 import {
   getUsersSettings,
   updateUsersNotificationSettings,
@@ -8,9 +16,9 @@ import {
   storeSubscription,
   removeSubscription,
 } from '../models/web-push-subscription';
-// $FlowFixMe
 import UserError from '../utils/UserError';
 import { sendWebPushNotification } from '../utils/web-push';
+import { addQueue } from '../utils/workerQueue';
 
 type ToggleNotificationsArguments = {
   deliveryMethod: string,
@@ -27,7 +35,7 @@ export type WebPushSubscription = {
 
 module.exports = {
   Mutation: {
-    editUser: (_, args: EditUserArguments, { user }) => {
+    editUser: (_: any, args: EditUserArguments, { user }: { user: DBUser }) => {
       const currentUser = user;
 
       // user must be authed to edit a channel
@@ -59,9 +67,9 @@ module.exports = {
       }
     },
     toggleNotificationSettings: (
-      _,
+      _: any,
       { input }: { input: ToggleNotificationsArguments },
-      { user }
+      { user }: { user: DBUser }
     ) => {
       const currentUser = user;
 
@@ -93,9 +101,9 @@ module.exports = {
       );
     },
     subscribeWebPush: (
-      _,
+      _: any,
       { subscription }: { subscription: WebPushSubscription },
-      { user }
+      { user }: { user: DBUser }
     ) => {
       if (!user || !user.id)
         throw new UserError(
@@ -114,22 +122,59 @@ module.exports = {
               TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
             }
           ).catch(err => {
-            console.log('error sending welcome notification');
             console.log(err);
           });
         })
         .then(() => true)
         .catch(err => {
-          throw new UserError(`Couldn't store web push subscription.`);
+          throw new UserError("Couldn't store web push subscription.");
         });
     },
-    unsubscribeWebPush: (_, endpoint: string, { user }) => {
+    unsubscribeWebPush: (
+      _: any,
+      endpoint: string,
+      { user }: { user: DBUser }
+    ) => {
       if (!user || !user.id)
         throw new UserError(
           'Can only unsubscribe from web push notifications when logged in.'
         );
-      return removeSubscription(endpoint).then(() => true).catch(err => {
-        throw new UserError(`Couldn't remove web push subscription.`);
+      return removeSubscription(endpoint)
+        .then(() => true)
+        .catch(err => {
+          throw new UserError("Couldn't remove web push subscription.");
+        });
+    },
+    updateUserEmail: (
+      _: any,
+      { email }: { email: string },
+      { user }: { user: DBUser }
+    ) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to update your email address'
+        );
+      }
+
+      return getUserByEmail(email).then(result => {
+        if (result && result.email === email) {
+          return new UserError(
+            'Another person on Spectrum is already using this email.'
+          );
+        }
+
+        return setUserPendingEmail(user.id, email)
+          .then(user => {
+            addQueue('send email validation email', { email, userId: user.id });
+            return user;
+          })
+          .catch(
+            err =>
+              new UserError(
+                "We weren't able to send a confirmation email. Please try again."
+              )
+          );
       });
     },
   },

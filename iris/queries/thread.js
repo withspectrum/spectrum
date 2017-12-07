@@ -4,14 +4,14 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
-import { getUserPermissionsInChannel } from '../models/usersChannels';
 import {
   getParticipantsInThread,
   getThreadNotificationStatusForUser,
 } from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
+import { addQueue } from '../utils/workerQueue';
+import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
@@ -33,21 +33,21 @@ module.exports = {
         if (!user) {
           return Promise.all([
             thread,
-            getChannels([thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, channel]) => {
             // if the channel is private, don't return any thread data
-            if (channel[0].isPrivate) return null;
+            if (channel.isPrivate) return null;
             return thread;
           });
         } else {
           // if the user is signed in, we need to check if the channel is private as well as the user's permission in that channel
           return Promise.all([
             thread,
-            getUserPermissionsInChannel(thread.channelId, user.id),
-            getChannels([thread.channelId]),
+            loaders.userPermissionsInChannel.load([user.id, thread.channelId]),
+            loaders.channel.load(thread.channelId),
           ]).then(([thread, permissions, channel]) => {
             // if the thread is in a private channel where the user is not a member, don't return any thread data
-            if (channel[0].isPrivate && !permissions.isMember) return null;
+            if (channel.isPrivate && !permissions.isMember) return null;
             return thread;
           });
         }
@@ -77,7 +77,9 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return getParticipantsInThread(id);
+      return loaders.threadParticipants
+        .load(id)
+        .then(result => (result ? result.reduction : []));
     },
     isCreator: (
       { creatorId }: { creatorId: string },
@@ -90,45 +92,49 @@ module.exports = {
     receiveNotifications: (
       { id }: { id: string },
       __: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       if (!currentUser) {
         return false;
       } else {
-        return getThreadNotificationStatusForUser(
-          id,
-          currentUser.id
-        ).then(threads => {
-          return threads.length > 0 ? threads[0].receiveNotifications : false;
-        });
+        return loaders.userThreadNotificationStatus
+          .load([currentUser.id, id])
+          .then(result => (result ? result.receiveNotifications : false));
       }
     },
     messageConnection: (
-      { id }: { id: String },
-      { first = Infinity, after }: PaginationOptions
+      { id, watercooler }: { id: String },
+      { first = 999999, after }: PaginationOptions,
+      { user }: GraphQLContext
     ) => {
       const cursor = decode(after);
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      const lastMessageIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
+        // Only send down 200 messages for the watercooler?
         first,
-        after: cursor,
-      })
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => ({
+        after: lastMessageIndex,
+      }).then(result => {
+        if (user && user.id) {
+          addQueue(TRACK_USER_THREAD_LAST_SEEN, {
+            threadId: id,
+            userId: user.id,
+            timestamp: Date.now(),
+          });
+        }
+        return {
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: result && result.length >= first,
           },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
+          edges: result.map((message, index) => ({
+            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
             node: message,
           })),
-        }));
+        };
+      });
     },
     creator: async (
       { creatorId, communityId }: { creatorId: string, communityId: string },
@@ -137,21 +143,44 @@ module.exports = {
     ) => {
       const creator = await loaders.user.load(creatorId);
 
-      const {
-        reputation,
-        isModerator,
-        isOwner,
-      } = await getUserPermissionsInCommunity(communityId, creatorId);
+      const permissions = await loaders.userPermissionsInCommunity.load([
+        creatorId,
+        communityId,
+      ]);
 
       return {
         ...creator,
         contextPermissions: {
-          reputation,
-          isModerator,
-          isOwner,
+          communityId,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
         },
       };
     },
-    messageCount: ({ id }: { id: string }) => getMessageCount(id),
+    messageCount: (
+      { id }: { id: string },
+      __: any,
+      { loaders }: GraphQLContext
+    ) => {
+      return loaders.threadMessageCount
+        .load(id)
+        .then(messageCount => (messageCount ? messageCount.reduction : 0));
+    },
+    currentUserLastSeen: (
+      { id }: DBThread,
+      _: any,
+      { user }: GraphQLContext
+    ) => {
+      if (!user || !user.id) return null;
+
+      return getThreadNotificationStatusForUser(id, user.id).then(result => {
+        if (!result || result.length === 0) return;
+        const data = result[0];
+        if (!data || !data.lastSeen) return null;
+
+        return data.lastSeen;
+      });
+    },
   },
 };

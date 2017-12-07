@@ -1,4 +1,6 @@
+// @flow
 const debug = require('debug')('athena:queue:pro-invoice-paid-notification');
+import Raven from '../../shared/raven';
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_PRO_INVOICE_RECEIPT_EMAIL } from './constants';
 import { convertTimestampToDate } from '../utils/timestamp-to-date';
@@ -7,12 +9,25 @@ import { getRecurringPaymentFromInvoice } from '../models/recurringPayment';
 
 const sendProInvoiceReceiptQueue = createQueue(SEND_PRO_INVOICE_RECEIPT_EMAIL);
 
-export default async job => {
+type JobData = {
+  data: {
+    invoice: {
+      id: string,
+      amount: number,
+      paidAt: number,
+      sourceBrand: string,
+      sourceLast4: string,
+      planName: string,
+    },
+  },
+};
+export default async (job: JobData) => {
   const { invoice } = job.data;
 
   debug(`new job for pro invoice id ${invoice.id}`);
 
   debug('processing pro invoice');
+  // $FlowFixMe
   const recurringPayment = await getRecurringPaymentFromInvoice(invoice);
   const userToEvaluate = await getUsers([recurringPayment.userId]);
 
@@ -53,5 +68,10 @@ export default async job => {
         removeOnFail: true,
       }
     )
-    .catch(err => new Error(err));
+    .catch(err => {
+      debug('❌ Error in job:\n');
+      debug(err);
+      Raven.captureException(err);
+      console.log(err);
+    });
 };

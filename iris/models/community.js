@@ -1,24 +1,22 @@
+// @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
-import { createChannel, deleteChannel } from './channel';
+import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import { addQueue } from '../utils/workerQueue';
+import { removeMemberInChannel } from './usersChannels';
+import type { DBCommunity } from 'shared/types';
 
-type GetCommunityByIdArgs = {
-  id: string,
+export const getCommunityById = (id: string): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(id)
+    .run();
 };
 
-type GetCommunityBySlugArgs = {
-  slug: string,
-};
-
-export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
-
-const getCommunities = (
+export const getCommunities = (
   communityIds: Array<string>
-): Promise<Array<Object>> => {
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .getAll(...communityIds)
@@ -26,15 +24,19 @@ const getCommunities = (
     .run();
 };
 
-const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
+export const getCommunitiesBySlug = (
+  slugs: Array<string>
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
-    .filter(community => db.expr(slugs).contains(community('slug')))
+    .getAll(...slugs, { index: 'slug' })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
 
-const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
+export const getCommunitiesByUser = (
+  userId: string
+): Promise<Array<DBCommunity>> => {
   return (
     db
       .table('usersCommunities')
@@ -50,16 +52,33 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       .zip()
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
-      .filter(row =>
-        row('isMember')
-          .eq(true)
-          .or(row('isOwner').eq(true))
-      )
       .run()
   );
 };
 
-const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
+export const getCommunitiesChannelCounts = (communityIds: Array<string>) => {
+  return db
+    .table('channels')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .group('communityId')
+    .count()
+    .run();
+};
+
+export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...communityIds, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .group('communityId')
+    .count()
+    .run();
+};
+
+export const getCommunityMetaData = (
+  communityId: string
+): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -75,6 +94,15 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
     .run();
 
   return Promise.all([getChannelCount, getMemberCount]);
+};
+
+export const getMemberCount = (communityId: string): Promise<number> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isBlocked: false, isMember: true })
+    .count()
+    .run();
 };
 
 export type CreateCommunityArguments = {
@@ -95,16 +123,20 @@ export type EditCommunityArguments = {
     description: string,
     website: string,
     file: Object,
+    coverFile: Object,
     communityId: string,
   },
 };
 
-const createCommunity = (
+// TODO(@mxstbr): Use DBUser type
+type CommunityCreator = Object;
+
+export const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
   }: CreateCommunityArguments,
-  user
-): Promise<Object> => {
+  user: CommunityCreator
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .insert(
@@ -124,6 +156,8 @@ const createCommunity = (
     .then(community => {
       // send a welcome email to the community creator
       addQueue('send new community welcome email', { user, community });
+      // email brian with info about the community and owner
+      addQueue('admin community created', { user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
@@ -264,9 +298,9 @@ const createCommunity = (
     });
 };
 
-const editCommunity = ({
+export const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
-}: EditCommunityArguments): Promise<Object> => {
+}: EditCommunityArguments): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -423,7 +457,7 @@ const editCommunity = ({
   - run logs for deletions over time
   - etc
 */
-const deleteCommunity = (communityId: string): Promise<Object> => {
+export const deleteCommunity = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -440,10 +474,10 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     .run();
 };
 
-const setPinnedThreadInCommunity = (
+export const setPinnedThreadInCommunity = (
   communityId: string,
   value: string
-): Promise<Object> => {
+): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -457,7 +491,7 @@ const setPinnedThreadInCommunity = (
     .then(result => result.changes[0].new_val);
 };
 
-const unsubscribeFromAllChannelsInCommunity = (
+export const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Array<Object>> => {
@@ -466,11 +500,11 @@ const unsubscribeFromAllChannelsInCommunity = (
     .getAll(communityId, { index: 'communityId' })
     .run()
     .then(channels => {
-      return channels.map(channel => leaveChannel(channel.id, userId));
+      return channels.map(channel => removeMemberInChannel(channel.id, userId));
     });
 };
 
-const userIsMemberOfCommunity = (
+export const userIsMemberOfCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
@@ -483,7 +517,7 @@ const userIsMemberOfCommunity = (
     });
 };
 
-const userIsMemberOfAnyChannelInCommunity = (
+export const userIsMemberOfAnyChannelInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
@@ -501,47 +535,7 @@ const userIsMemberOfAnyChannelInCommunity = (
     });
 };
 
-const getTopCommunities = (amount: number): Array<Object> => {
-  return db
-    .table('communities')
-    .pluck('id')
-    .run()
-    .then(communities => communities.map(community => community.id))
-    .then(communityIds => {
-      return Promise.all(
-        communityIds.map(community => {
-          return db
-            .table('usersCommunities')
-            .getAll(community, { index: 'communityId' })
-            .filter({ isMember: true })
-            .count()
-            .run()
-            .then(count => {
-              return {
-                id: community,
-                count,
-              };
-            });
-        })
-      );
-    })
-    .then(data => {
-      let sortedCommunities = data
-        .sort((x, y) => {
-          return y.count - x.count;
-        })
-        .map(community => community.id)
-        .slice(0, amount);
-
-      return db
-        .table('communities')
-        .getAll(...sortedCommunities)
-        .filter(community => db.not(community.hasFields('deletedAt')))
-        .run();
-    });
-};
-
-const getRecentCommunities = (amount: number): Array<Object> => {
+export const getRecentCommunities = (): Array<DBCommunity> => {
   return db
     .table('communities')
     .orderBy({ index: db.desc('createdAt') })
@@ -550,18 +544,20 @@ const getRecentCommunities = (amount: number): Array<Object> => {
     .run();
 };
 
-const getCommunitiesBySearchString = (
-  string: string
-): Promise<Array<Object>> => {
+export const getCommunitiesBySearchString = (
+  string: string,
+  amount: number
+): Promise<Array<DBCommunity>> => {
   return db
     .table('communities')
     .filter(community => community.coerceTo('string').match(`(?i)${string}`))
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(15)
+    .limit(amount)
     .run();
 };
 
-const searchThreadsInCommunity = (
+// TODO(@mxstbr): Replace Array<Object> with Array<DBThread>
+export const searchThreadsInCommunity = (
   channels: Array<string>,
   searchString: string
 ): Promise<Array<Object>> => {
@@ -574,20 +570,43 @@ const searchThreadsInCommunity = (
     .run();
 };
 
-module.exports = {
-  getCommunities,
-  getCommunitiesBySlug,
-  getCommunityMetaData,
-  getCommunitiesByUser,
-  createCommunity,
-  editCommunity,
-  deleteCommunity,
-  setPinnedThreadInCommunity,
-  unsubscribeFromAllChannelsInCommunity,
-  userIsMemberOfCommunity,
-  userIsMemberOfAnyChannelInCommunity,
-  getTopCommunities,
-  getRecentCommunities,
-  getCommunitiesBySearchString,
-  searchThreadsInCommunity,
+export const getThreadCount = async (communityId: string) => {
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .count()
+    .run();
+};
+
+export const getCommunityGrowth = async (
+  table: string,
+  range: string,
+  field: string,
+  communityId: string,
+  filter?: mixed
+) => {
+  const { current, previous } = parseRange(range);
+  const currentPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(current), db.now()))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const prevPeriodCount = await db
+    .table(table)
+    .getAll(communityId, { index: 'communityId' })
+    .filter(db.row(field).during(db.now().sub(previous), db.now().sub(current)))
+    .filter(filter ? filter : '')
+    .count()
+    .run();
+
+  const rate = (await (currentPeriodCount - prevPeriodCount)) / prevPeriodCount;
+  return {
+    currentPeriodCount,
+    prevPeriodCount,
+    growth: Math.round(rate * 100),
+  };
 };

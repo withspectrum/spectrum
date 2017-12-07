@@ -1,13 +1,10 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
+import truncate from 'shared/truncate';
 import compose from 'recompose/compose';
-// $FlowFixMe
-import { Link, withRouter } from 'react-router-dom';
-// $FlowFixMe
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Link from 'src/components/link';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
 import FacePile from './facePile';
@@ -47,7 +44,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             search: `?thread=${props.data.id}`,
           }}
         >
-          <Title>{props.data.content.title}</Title>
+          <Title>{truncate(props.data.content.title, 80)}</Title>
           {props.isPinned && (
             <Pinned>
               <PinnedBanner />
@@ -94,5 +91,5 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   );
 };
 
-const ThreadFeedCard = compose(pure, withRouter)(ThreadFeedCardPure);
+const ThreadFeedCard = compose(withRouter)(ThreadFeedCardPure);
 export default connect()(ThreadFeedCard);

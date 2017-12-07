@@ -1,52 +1,14 @@
-// Regex to match "~channel-slug" in text
 // eslint-disable-next-line
-export const CHANNELS = /(^|\s)(~[A-Z0-9\-]+)/gi;
-// Regex to match ">spectrum.chat/~channel</a>"
+export const URLS = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/gi;
 // eslint-disable-next-line
-export const CHANNEL_ANCHORS = />spectrum\.chat\/[A-Z0-9\-]+\/(~[A-Z0-9\-]+)<\/a>/gi;
-// Prevent community slugs from being created
-export const COMMUNITY_SLUG_BLACKLIST = [
-  'everything',
-  'notifications',
-  'login',
-  'logout',
-  'discover',
-  'explore',
-  'admin',
-  'dashboard',
-  'home',
-  'pro',
-  'share',
-  'undefined',
-  'null',
-  'legal',
-  'terms',
-  'privacy',
-  'cookies',
-  'team',
-  'about',
-  'contact',
-  'help',
-  'jobs',
-  'upgrade',
-  'pricing',
-  'business',
-  'blog',
-  'apps',
-  'developers',
-  'status',
-  'copyright',
-  'downgrade',
-  'faq',
-  'help',
-  'security',
-  'api',
-  'shop',
-  'new',
-];
-
+export const FIGMA_URLS = /https:\/\/([w.-]+.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/gi;
 // eslint-disable-next-line
-export const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-
+export const YOUTUBE_URLS = /(?:[?&]v=|\/embed\/|\/1\/|\/v\/|https:\/\/(?:www\.)?youtu\.be\/)([^&\n?#]+)/gi;
 // eslint-disable-next-line
-export const IS_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi;
+export const VIMEO_URLS = /\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/gi;
+// eslint-disable-next-line
+export const IFRAME_TAG = /(<iframe.*?src=['"](.*?)['"])/gi;
+// eslint-disable-next-line
+export const FRAMER_URLS = /(https?:\/\/(.+?\.)?framer\.cloud(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gi;
+// eslint-disable-next-line
+export const ENDS_IN_WHITESPACE = /(\s|\n)$/;

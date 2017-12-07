@@ -2,7 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { openComposer } from '../../../actions/composer';
+import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { Button } from '../../../components/buttons';
 import { NullThreadFeed, NullHeading } from '../style';
 
@@ -11,7 +11,7 @@ const EmptyThreadFeed = ({ dispatch }) => (
     <NullHeading>
       There are no conversations in this community yet...
     </NullHeading>
-    <Button onClick={() => dispatch(openComposer())}>
+    <Button onClick={() => dispatch(changeActiveThread('new'))}>
       Start a conversation
     </Button>
   </NullThreadFeed>

@@ -4,17 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='mask-icon' href='%PUBLIC_URL%/img/pinned-tab.svg' color='#171A21'>
-    <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/reset.css">
     <meta name="theme-color" content="#171A21">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <!-- Open Graph -->
-    <meta name="og:image" content="https://spectrum.chat/img/apple-icon-144x144-precomposed.png">
     <meta name="og:type" content="website">
     <meta name="og:site_name" content="Spectrum.chat">
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@withspectrum">
-    <meta name="twitter:image" content="https://spectrum.chat/img/apple-icon-144x144-precomposed.png">
     <meta name="twitter:image:alt" content="Where communities are built">
     <!-- Favicon -->
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="%PUBLIC_URL%/img/apple-icon-57x57-precomposed.png" />
@@ -35,7 +32,7 @@
     }),
     (i[r].l = 1 * new Date());
   (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-  a.async = 1;
+  a.defer = 1;
   a.src = g;
   m.parentNode.insertBefore(a, m);
 })(
@@ -49,12 +46,6 @@
 ga('create', 'UA-92673909-1', 'auto');
 ga('send', 'pageview');
 </script>
-
-    <!-- Sentry Logging -->
-    <script src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script>
-    <script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', {
-      whitelistUrls: [/spectrum\.chat/, /www\.spectrum\.chat/]
-    }).install();</script>
 
   </head>
   <body>

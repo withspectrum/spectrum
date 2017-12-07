@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 //$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import pure from 'recompose/pure';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
@@ -94,6 +92,14 @@ class ThreadFeedPure extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
@@ -107,12 +113,34 @@ class ThreadFeedPure extends Component {
     this.subscribe();
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      !prevProps.data.thread &&
+      this.props.data.threads &&
+      this.props.data.threads.length === 0
+    ) {
+      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
+      if (this.props.setThreadsStatus) {
+        this.props.setThreadsStatus();
+      }
+
+      if (this.props.hasThreads) {
+        this.props.hasThreads();
+      }
+
+      if (this.props.hasNoThreads) {
+        this.props.hasNoThreads();
+      }
+    }
+  }
+
   render() {
     const {
       data: { threads, networkStatus, error },
       viewContext,
       newActivityIndicator,
     } = this.props;
+
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
     const isCommunityMember =
@@ -126,12 +154,52 @@ class ThreadFeedPure extends Component {
       ? threads.slice().map(thread => thread.node)
       : [];
 
+    let filteredThreads = threadNodes;
+    if (
+      this.props.data.community &&
+      this.props.data.community.watercooler &&
+      this.props.data.community.watercooler.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.watercooler.id
+      );
+    }
+    if (
+      this.props.data.community &&
+      this.props.data.community.pinnedThread &&
+      this.props.data.community.pinnedThread.id
+    ) {
+      filteredThreads = filteredThreads.filter(
+        t => t.id !== this.props.data.community.pinnedThread.id
+      );
+    }
+
     if (dataExists) {
       return (
-        <Threads>
+        <Threads data-e2e-id="thread-feed">
           {newActivityIndicator && (
             <NewActivityIndicator elem="scroller-for-thread-feed" />
           )}
+
+          {this.props.data.community &&
+            this.props.data.community.pinnedThread &&
+            this.props.data.community.pinnedThread.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.pinnedThread}
+                viewContext={viewContext}
+                isPinned={true}
+              />
+            )}
+
+          {this.props.data.community &&
+            this.props.data.community.watercooler &&
+            this.props.data.community.watercooler.id && (
+              <ThreadFeedCard
+                data={this.props.data.community.watercooler}
+                viewContext={viewContext}
+              />
+            )}
+
           <InfiniteList
             pageStart={0}
             loadMore={this.props.data.fetchMore}
@@ -142,13 +210,12 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {threadNodes.map(thread => {
+            {filteredThreads.map(thread => {
               return (
                 <ThreadFeedCard
                   key={thread.id}
                   data={thread}
                   viewContext={viewContext}
-                  isPinned={thread.id === this.props.pinnedThreadId}
                 />
               );
             })}
@@ -188,10 +255,6 @@ class ThreadFeedPure extends Component {
       );
     }
 
-    // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
-    if (this.props.setThreadsStatus) {
-      this.props.setThreadsStatus();
-    }
     if (this.props.isNewAndOwned) {
       return <UpsellState community={this.props.community} />;
     } else if (isCommunityMember || this.props.viewContext === 'channel') {
@@ -205,6 +268,6 @@ class ThreadFeedPure extends Component {
 const map = state => ({
   newActivityIndicator: state.newActivityIndicator.hasNew,
 });
-const ThreadFeed = compose(connect(map), pure)(ThreadFeedPure);
+const ThreadFeed = compose(connect(map))(ThreadFeedPure);
 
 export default ThreadFeed;

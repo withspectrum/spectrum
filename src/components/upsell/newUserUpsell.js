@@ -112,9 +112,7 @@ class UpsellNewUser extends Component {
               👋
             </span>
           </LargeEmoji>
-          <Title>
-            Howdy, {user.name}!
-          </Title>
+          <Title>Howdy, {user.name}!</Title>
           <Subtitle>
             Spectrum is a place where communities live. It's easy to follow the
             things that you care about most, or even create your own community
@@ -220,10 +218,9 @@ class UpsellNewUser extends Component {
             you're ready to go!
           </SmallSubtitle>
 
-          {this.state.error &&
-            <FriendlyError>
-              {this.state.error}
-            </FriendlyError>}
+          {this.state.error && (
+            <FriendlyError>{this.state.error}</FriendlyError>
+          )}
 
           <Button onClick={this.graduate} icon="logo">
             Cool! Take me home.

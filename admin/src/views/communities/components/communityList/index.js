@@ -16,9 +16,7 @@ class CommunityList extends Component {
 
     return (
       <ListCard>
-        <Label>
-          {label}
-        </Label>
+        <Label>{label}</Label>
         {sorted.map(community => {
           return (
             <CommunityItem key={community.id}>

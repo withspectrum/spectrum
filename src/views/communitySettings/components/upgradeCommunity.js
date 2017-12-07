@@ -8,16 +8,15 @@ import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
 import { upgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
-import Card from '../../../components/card';
 import { NullCard } from '../../../components/upsell';
 import { Button } from '../../../components/buttons';
 import {
-  Title,
   Pitch,
   PitchItem,
   Cost,
   CostNumber,
   CostSubtext,
+  SectionTitle,
 } from '../style';
 
 class UpsellUpgradeCommunityPure extends Component {
@@ -71,8 +70,8 @@ class UpsellUpgradeCommunityPure extends Component {
     const { community } = this.props;
 
     return (
-      <Card style={{ padding: '16px' }}>
-        <Title>Upgrade to Spectrum Standard</Title>
+      <div>
+        <SectionTitle>Upgrade to Spectrum Standard</SectionTitle>
         <Cost>
           <CostNumber per="month">
             {Math.ceil(community.metaData.members / 1000) * 100}
@@ -132,12 +131,7 @@ class UpsellUpgradeCommunityPure extends Component {
             Upgrade your community
           </Button>
         </StripeCheckout>
-
-        {/* {!upgradeError &&
-          <UpgradeError>
-            {upgradeError}
-          </UpgradeError>} */}
-      </Card>
+      </div>
     );
   }
 }

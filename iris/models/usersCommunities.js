@@ -253,16 +253,21 @@ const removeModeratorInCommunity = (
 ===========================================================
 */
 
-const getMembersInCommunity = (communityId: string): Promise<Array<string>> => {
+const getMembersInCommunity = (
+  communityId: string,
+  { first, after }: { first: number, after: number }
+): Promise<Array<string>> => {
   return (
     db
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isMember: true })
       .orderBy(db.desc('reputation'))
-      .run()
+      .skip(after || 0)
+      .limit(first || 999999)
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -274,9 +279,9 @@ const getBlockedUsersInCommunity = (
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isBlocked: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -288,9 +293,9 @@ const getModeratorsInCommunity = (
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isModerator: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
 };
 
@@ -300,10 +305,19 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
       .filter({ isOwner: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userCommunity => userCommunity('userId'))
+      .run()
   );
+};
+
+const DEFAULT_PERMISSIONS = {
+  isOwner: false,
+  isMember: false,
+  isModerator: false,
+  isBlocked: false,
+  receiveNotifications: false,
+  reputation: 0,
 };
 
 const getUserPermissionsInCommunity = (
@@ -312,10 +326,8 @@ const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .between([userId, communityId], [userId, communityId], {
+    .getAll([userId, communityId], {
       index: 'userIdAndCommunityId',
-      rightBound: 'closed',
-      leftBound: 'closed',
     })
     .run()
     .then(data => {
@@ -326,13 +338,41 @@ const getUserPermissionsInCommunity = (
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
         return {
-          isOwner: false,
-          isMember: false,
-          isModerator: false,
-          isBlocked: false,
-          receiveNotifications: false,
+          ...DEFAULT_PERMISSIONS,
+          userId,
+          communityId,
         };
       }
+    });
+};
+
+type UserIdAndCommunityId = [string, string];
+
+const getUsersPermissionsInCommunities = (
+  input: Array<UserIdAndCommunityId>
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll(...input, { index: 'userIdAndCommunityId' })
+    .run()
+    .then(data => {
+      if (!data)
+        return Array.from({ length: input.length }, (_, index) => ({
+          ...DEFAULT_PERMISSIONS,
+          userId: input[index][0],
+          communityId: input[index][1],
+        }));
+
+      return data.map(
+        (rec, index) =>
+          rec
+            ? rec
+            : {
+                ...DEFAULT_PERMISSIONS,
+                userId: input[index][0],
+                communityId: input[index][1],
+              }
+      );
     });
 };
 
@@ -345,6 +385,29 @@ const getReputationByUser = (userId: string): Promise<Number> => {
     .reduce((l, r) => l.add(r))
     .default(0)
     .run();
+};
+
+const getUsersTotalReputation = (
+  userIds: Array<string>
+): Promise<Array<number>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(...userIds, { index: 'userId' })
+    .filter({ isMember: true })
+    .group('userId')
+    .map(rec => rec('reputation'))
+    .reduce((l, r) => l.add(r))
+    .default(0)
+    .run()
+    .then(res =>
+      res.map(
+        (res, index) =>
+          res && {
+            reputation: res.reduction,
+            userId: userIds[index],
+          }
+      )
+    );
 };
 
 module.exports = {
@@ -364,4 +427,6 @@ module.exports = {
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
   getReputationByUser,
+  getUsersTotalReputation,
+  getUsersPermissionsInCommunities,
 };

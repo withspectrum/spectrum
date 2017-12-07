@@ -25,7 +25,7 @@ export const listenToNewDocumentsIn = (table, cb) => {
   );
 };
 
-const parseRange = timeframe => {
+export const parseRange = timeframe => {
   switch (timeframe) {
     case 'daily': {
       return { current: 60 * 60 * 24, previous: 60 * 60 * 24 * 2 };
@@ -96,5 +96,12 @@ export const getCount = (table: string, filter: mixed) => {
   return db
     .table(table)
     .count()
+    .run();
+};
+
+export const getCoreMetrics = () => {
+  return db
+    .table('coreMetrics')
+    .orderBy('date')
     .run();
 };

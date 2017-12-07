@@ -2,8 +2,6 @@ import { gql } from 'react-apollo';
 import { userInfoFragment } from '../user/userInfo';
 import { communityInfoFragment } from '../community/communityInfo';
 import { channelInfoFragment } from '../channel/channelInfo';
-import { userMetaDataFragment } from '../user/userMetaData';
-import { channelMetaDataFragment } from '../channel/channelMetaData';
 
 export const threadInfoFragment = gql`
   fragment threadInfo on Thread {
@@ -15,8 +13,9 @@ export const threadInfoFragment = gql`
     receiveNotifications
     creator {
       ...userInfo
-      ...userMetaData
+      isPro
       contextPermissions {
+        communityId
         reputation
         isOwner
         isModerator
@@ -24,15 +23,9 @@ export const threadInfoFragment = gql`
     }
     channel {
       ...channelInfo
-      ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
     community {
-      id
-      name
-      slug
+      ...communityInfo
     }
     isPublished
     isLocked
@@ -49,11 +42,9 @@ export const threadInfoFragment = gql`
       attachmentType
       data
     }
+    watercooler
   }
   ${userInfoFragment}
-  ${userInfoFragment}
-  ${userMetaDataFragment}
-  ${channelMetaDataFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
 `;

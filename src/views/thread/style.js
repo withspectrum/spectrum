@@ -1,41 +1,84 @@
-import styled from 'styled-components';
-import { Avatar } from '../../components/avatar';
-import Markdown from '../../components/markdown';
+import styled, { css } from 'styled-components';
+import Link from 'src/components/link';
+import Avatar from '../../components/avatar';
+import { Button } from '../../components/buttons';
 import Column from '../../components/column';
 import {
   FlexCol,
   FlexRow,
   H1,
   H3,
-  H4,
   Transition,
-  hexa,
   zIndex,
+  Tooltip,
 } from '../../components/globals';
 
-export const View = styled(FlexCol)`
+export const ThreadViewContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-height: ${props => (props.constrain ? 'calc(100% - 48px)' : '100%')};
+  max-width: 1024px;
+  background-color: ${({ theme }) => theme.bg.wash};
+  margin: ${props =>
+    props.threadViewContext === 'fullscreen' ? '0 auto' : '0'};
+
+  @media (max-width: 1024px) {
+    max-height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+  }
+`;
+
+export const ThreadContentView = styled(FlexCol)`
   background-color: ${({ theme }) => theme.bg.default};
-  overflow: hidden;
+  ${props =>
+    !props.slider &&
+    css`
+      box-shadow: -1px 0 0 ${props => props.theme.bg.border},
+        1px 0 0 ${props => props.theme.bg.border};
+    `} overflow-y: auto;
+  overflow-x: visible;
   max-width: 100%;
   max-height: 100%;
   flex: auto;
+  display: flex;
+  align-items: center;
   align-self: stretch;
   grid-template-rows: 48px 1fr 64px;
   grid-template-columns: 100%;
   grid-template-areas: 'header' 'body' 'footer';
 `;
 
+export const ThreadSidebarView = styled(FlexCol)`
+  background-color: ${({ theme }) => theme.bg.wash};
+  overflow: hidden;
+  min-width: 320px;
+  max-width: 320px;
+  max-height: 100%;
+  flex: auto;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  position: relative;
+  right: 1px;
+  overflow-y: auto;
+
+  @media (max-width: 1032px) {
+    display: none;
+  }
+`;
+
 export const Content = styled(FlexRow)`
   justify-content: center;
   align-items: flex-start;
   flex: auto;
-  overflow-y: scroll;
-  padding-top: 32px;
+  overflow-y: auto;
   grid-area: body;
-
-  @media (max-width: 768px) {
-    padding-top: 16px;
-  }
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  background: ${props => props.theme.bg.default};
 `;
 
 export const Input = styled(FlexRow)`
@@ -43,6 +86,8 @@ export const Input = styled(FlexRow)`
   justify-content: center;
   z-index: ${zIndex.chatInput};
   grid-area: footer;
+  width: 100%;
+  max-width: 1024px;
 
   @media (max-width: 768px) {
     z-index: ${zIndex.mobileInput};
@@ -52,27 +97,15 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   flex: auto;
   margin: 0;
-  align-self: stretch;
+  max-width: 100%;
 `;
 
-export const ChatInputWrapper = styled(Column)`
+export const ChatInputWrapper = styled(FlexCol)`
   align-self: stretch;
   align-items: stretch;
   margin: 0;
   flex: auto;
   position: relative;
-
-  > div {
-    background-image: ${({ theme }) =>
-      `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(
-        theme.bg.wash,
-        0.25
-      )} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
-
-    > form > div {
-      background-color: ${({ theme }) => theme.bg.default};
-    }
-  }
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -103,17 +136,22 @@ export const Container = styled(FlexCol)`
 `;
 
 export const ThreadWrapper = styled(FlexCol)`
-  padding: 16px 32px;
-  font-size: 14px;
-  flex: 1 0 auto;
+  font-size: 16px;
+  flex: none;
+  min-width: 320px;
+`;
 
-  @media (max-width: 768px) {
-    padding: 16px;
+export const ThreadContent = styled.div`
+  padding: ${props => (props.isEditing ? '32px 32px 32px 64px' : '32px')};
+
+  @media (max-width: 1024px) {
+    padding: ${props => (props.isEditing ? '16px 16px 16px 48px' : '16px')};
   }
 `;
 
 export const ThreadHeading = styled(H1)`
-  font-size: 32px;
+  font-size: 28px;
+  font-weight: 600;
 
   @media (max-width: 768px) {
     margin-top: 8px;
@@ -134,6 +172,7 @@ export const DropWrap = styled(FlexCol)`
   position: relative;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
+  align-self: flex-end;
 
   &:hover {
     color: ${({ theme }) => theme.bg.border};
@@ -141,66 +180,100 @@ export const DropWrap = styled(FlexCol)`
   }
 
   .flyout {
-    opacity: 0;
-    pointer-events: none;
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
     transition: ${Transition.hover.off};
   }
 
   &:hover .flyout,
-  .flyout:hover,
-  &:active .flyout,
   &.open > .flyout {
-    opacity: 1;
-    pointer-events: auto;
+    display: inline-block;
     transition: ${Transition.hover.on};
   }
 `;
 
-export const FlyoutRow = styled(FlexRow)`padding: 8px;`;
+export const FlyoutRow = styled(FlexRow)`
+  width: 100%;
+
+  button {
+    width: 100%;
+    justify-content: flex-start;
+    border-top: 1px solid ${props => props.theme.bg.wash};
+    border-radius: 0;
+    transition: none;
+  }
+
+  button:hover {
+    background: ${props => props.theme.bg.wash};
+    transition: none;
+  }
+
+  &:first-of-type {
+    button {
+      border-top: 0;
+      border-radius: 4px 4px 0 0;
+    }
+  }
+
+  &:last-of-type {
+    button {
+      border-radius: 0 0 4px 4px;
+    }
+  }
+
+  ${p =>
+    p.hideBelow &&
+    css`
+      @media screen and (max-width: ${p.hideBelow}px) {
+        display: none;
+      }
+    `};
+`;
 
 export const Byline = styled.div`
-  font-weight: 500;
+  font-weight: 400;
   color: ${({ theme }) => theme.brand.alt};
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   align-items: center;
   flex: auto;
-
-  &:hover h3 {
-    color: ${({ theme }) => theme.brand.alt};
-  }
+  font-size: 14px;
 `;
 
-export const BylineMeta = styled(FlexCol)`
-  margin-left: 12px;
-
-  @media (max-width: 768px) {
-    margin-left: 8px;
-  }
-`;
+export const BylineMeta = styled(FlexCol)`margin-left: 12px;`;
 
 export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
 
+export const AuthorNameLink = styled(Link)`display: flex;`;
+export const AuthorNameNoLink = styled.div`display: flex;`;
 export const AuthorName = styled(H3)`
-  font-weight: 700;
-  cursor: pointer;
+  font-weight: 500;
   max-width: 100%;
+  color: ${props => props.theme.text.default};
+  margin-right: 6px;
+  font-size: 14px;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
+  &:hover {
+    color: ${props => props.theme.text.default};
   }
 `;
 
-export const AuthorUsername = styled(H4)`
+export const AuthorUsername = styled.span`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-weight: 400;
+  margin-right: 6px;
 
   @media (max-width: 768px) {
     font-size: 12px;
   }
 `;
+
+export const ReputationRow = styled.div``;
 
 export const Location = styled(FlexRow)`
   font-weight: 500;
@@ -235,22 +308,53 @@ export const Location = styled(FlexRow)`
 `;
 
 export const Timestamp = styled.span`
-  font-weight: 500;
-  font-size: 12px;
+  font-weight: 400;
+  margin: 8px 0;
+  font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
+  display: inline-block;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
 `;
 
 export const Edited = styled(Timestamp)`margin-left: 4px;`;
 
 export const ChatWrapper = styled.div`
   width: 100%;
+  max-width: 100%;
   flex: none;
+  margin-top: 16px;
+
+  @media (max-width: 768px) {
+    overflow-x: hidden;
+  }
 `;
 
-export const ThreadContent = styled(Markdown)`
-  margin-top: 1rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
+export const NullMessagesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  padding-top: 64px;
+  flex: 1;
+  color: ${props => props.theme.text.alt};
+  flex-direction: column;
+  opacity: 0.8;
+
+  .icon {
+    opacity: 0.4;
+  }
+`;
+
+export const NullCopy = styled.h5`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  margin-top: 16px;
+  text-align: center;
+  max-width: 600px;
 `;
 
 export const ThreadTitle = {
@@ -280,3 +384,347 @@ export const ThreadDescription = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
 };
+
+export const ShareButtons = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ShareButton = styled.span`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  background: none;
+
+  a {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+  }
+
+  &:hover {
+    color: ${props =>
+      props.facebook
+        ? props.theme.social.facebook.default
+        : props.twitter
+          ? props.theme.social.twitter.default
+          : props.theme.text.default};
+  }
+
+  ${Tooltip};
+`;
+
+export const CommunityHeader = styled.div`
+  display: ${props => (props.hide ? 'none' : 'flex')};
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  flex: auto;
+  background: ${props => props.theme.bg.default};
+
+  @media (max-width: 728px) {
+    padding: 16px;
+    display: flex;
+  }
+`;
+export const CommunityHeaderName = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 8px;
+  color: ${props => props.theme.text.default};
+  line-height: 1.28;
+`;
+export const CommunityHeaderChannelTag = styled.div`
+  color: ${props => props.theme.text.reverse};
+  background: ${props => props.theme.warn.alt};
+  border-radius: 20px;
+  padding: 0 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+
+  @media (max-width: 728px) {
+    display: none;
+  }
+`;
+
+export const CommunityHeaderMeta = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const CommunityHeaderMetaCol = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: center;
+  margin-left: 12px;
+  margin-right: 16px;
+`;
+
+export const CommunityHeaderLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  flex: auto;
+`;
+
+export const PillLink = styled(Link)`
+  font-size: 12px;
+  box-shadow: 0 0 0 1px ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.wash};
+  font-weight: ${props => '400'};
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  flex: none;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-top: 4px;
+  max-height: 24px;
+  line-height: 1;
+  pointer-events: auto;
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const PillLinkPinned = styled.div`
+  background: ${props => props.theme.special.wash};
+  border: 1px solid ${props => props.theme.special.border};
+  color: ${props => props.theme.special.dark};
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 8px;
+  font-size: 12px;
+  max-height: 24px;
+  line-height: 1;
+
+  .icon {
+    top: -1px;
+  }
+`;
+
+export const PillLabel = styled.span`
+  ${props => props.isPrivate && css`position: relative;`};
+`;
+
+export const Lock = styled.span`margin-right: 4px;`;
+export const PinIcon = styled.span`
+  margin-right: 4px;
+  margin-left: -2px;
+`;
+
+export const ActionBarContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 64px);
+  align-items: center;
+  margin: 0 32px;
+  border-radius: 4px;
+  background: ${props => props.theme.bg.wash};
+  padding: 8px;
+  border: 1px solid ${props => props.theme.bg.border};
+
+  @media (max-width: 1024px) {
+    width: calc(100%);
+    border-radius: 0;
+    margin: 0;
+    border-left: 0;
+    border-right: 0;
+    margin-top: 16px;
+  }
+`;
+
+export const FollowButton = styled(Button)`
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  color: ${props => props.theme.text.alt};
+  margin-right: 16px;
+
+  &:hover {
+    background: ${props => props.theme.bg.default};
+    color: ${props => props.theme.text.default};
+  }
+
+  @media (max-width: 768px) {
+    display: ${props => (props.currentUser ? 'none' : 'flex')};
+  }
+
+  ${Tooltip};
+`;
+
+export const SidebarSection = styled.div`
+  margin: 8px 16px;
+  background: ${props => props.theme.bg.default};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  align-self: stretch;
+  position: relative;
+
+  &:first-of-type {
+    margin-top: 16px;
+  }
+`;
+
+export const SidebarSectionTitle = styled.h3`
+  margin: 16px 16px 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+`;
+
+export const SidebarSectionBody = styled.p`
+  margin: 0 16px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  white-space: pre-wrap;
+
+  a {
+    color: ${props => props.theme.text.default};
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+export const SidebarSectionActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px 8px;
+
+  button {
+    width: 100%;
+    margin: 4px 0;
+  }
+`;
+
+export const SidebarSectionAuth = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 8px 16px 16px;
+  button {
+    width: 100%;
+  }
+  a {
+    flex: auto;
+  }
+  a:first-child {
+    margin-bottom: 8px;
+  }
+`;
+export const SidebarCommunityCover = styled.div`
+  border-radius: 4px 4px 0 0;
+  height: 72px;
+  background: url("${props => props.src}") no-repeat;
+  background-size: cover;
+  display: block;
+`;
+export const SidebarCommunityProfile = styled.img`
+  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 48px;
+  background: ${props => props.theme.bg.default};
+  border: 2px solid ${props => props.theme.bg.default};
+`;
+export const SidebarCommunityName = styled(SidebarSectionTitle)`
+  text-align: center;
+  align-self: center;
+  margin-top: 32px;
+  text-align: center;
+`;
+export const SidebarCommunityDescription = styled(SidebarSectionBody)`
+  text-align: center;
+  align-self: center;
+`;
+export const SidebarRelatedThreadList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const SidebarRelatedThread = styled.li`
+  font-size: 14px;
+  border-top: 1px solid ${props => props.theme.bg.wash};
+
+  &:hover {
+    a {
+      background-color: ${props => props.theme.bg.wash};
+    }
+  }
+
+  a {
+    padding: 8px 16px;
+    display: block;
+  }
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  &:last-of-type {
+    a {
+      padding-bottom: 12px;
+      border-radius: 0 0 4px 4px;
+    }
+  }
+`;
+export const RelatedTitle = styled.p``;
+export const RelatedCount = styled.p`
+  font-size: 13px;
+  color: ${props => props.theme.text.alt};
+`;
+
+export const Label = styled.p`font-size: 14px;`;
+
+export const WatercoolerDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 600px;
+`;
+
+export const WatercoolerIntroContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 32px 36px;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  background: ${props => props.theme.bg.default};
+  flex: auto;
+  flex-direction: column;
+`;
+
+export const WatercoolerTitle = styled.h3`
+  text-align: center;
+  font-size: 22px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 8px;
+`;
+
+export const WatercoolerAvatar = styled(Avatar)`margin-bottom: 16px;`;

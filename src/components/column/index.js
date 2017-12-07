@@ -1,9 +1,7 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { FlexCol } from '../globals';
 
 const BaseColumn = styled(FlexCol)`
@@ -14,6 +12,14 @@ const BaseColumn = styled(FlexCol)`
     margin: 0;
     max-width: 100%;
   }
+
+  ${p =>
+    p.hideOnMobile &&
+    css`
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    `};
 `;
 
 const PrimaryColumn = styled(BaseColumn)`
@@ -52,7 +58,7 @@ const OnlyColumn = styled(PrimaryColumn)`
   }
 `;
 
-const ColumnPure = (props: Object): React$Element<any> => {
+export const Column = (props: Object): React$Element<any> => {
   if (props.type === 'primary') {
     return <PrimaryColumn {...props}>{props.children}</PrimaryColumn>;
   } else if (props.type === 'secondary') {
@@ -64,5 +70,4 @@ const ColumnPure = (props: Object): React$Element<any> => {
   }
 };
 
-export const Column = pure(ColumnPure);
 export default Column;
