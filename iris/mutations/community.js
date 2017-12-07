@@ -233,27 +233,26 @@ module.exports = {
       );
       const communities = getCommunities([args.input.communityId]);
 
-      return Promise.all([
-        currentUserCommunityPermissions,
-        communities,
-      ]).then(([currentUserCommunityPermissions, communities]) => {
-        const communityToEvaluate = communities[0];
+      return Promise.all([currentUserCommunityPermissions, communities]).then(
+        ([currentUserCommunityPermissions, communities]) => {
+          const communityToEvaluate = communities[0];
 
-        // if no community was found or was deleted
-        if (!communityToEvaluate || communityToEvaluate.deletedAt) {
-          return new UserError("This community doesn't exist.");
+          // if no community was found or was deleted
+          if (!communityToEvaluate || communityToEvaluate.deletedAt) {
+            return new UserError("This community doesn't exist.");
+          }
+
+          // user must own the community to edit the community
+          if (!currentUserCommunityPermissions.isOwner) {
+            return new UserError(
+              "You don't have permission to make changes to this community."
+            );
+          }
+
+          // all checks passed
+          return editCommunity(args);
         }
-
-        // user must own the community to edit the community
-        if (!currentUserCommunityPermissions.isOwner) {
-          return new UserError(
-            "You don't have permission to make changes to this community."
-          );
-        }
-
-        // all checks passed
-        return editCommunity(args);
-      });
+      );
     },
     toggleCommunityMembership: (_, { communityId }, { user }) => {
       const currentUser = user;
@@ -272,105 +271,104 @@ module.exports = {
       // get the community to evaluate
       const communities = getCommunities([communityId]);
 
-      return Promise.all([
-        currentUserCommunityPermissions,
-        communities,
-      ]).then(([currentUserCommunityPermissions, communities]) => {
-        // select the community
-        const communityToEvaluate = communities[0];
+      return Promise.all([currentUserCommunityPermissions, communities]).then(
+        ([currentUserCommunityPermissions, communities]) => {
+          // select the community
+          const communityToEvaluate = communities[0];
 
-        // if community wasn't found or was deleted
-        if (!communityToEvaluate || communityToEvaluate.deletedAt) {
-          return new UserError("This community doesn't exist");
-        }
+          // if community wasn't found or was deleted
+          if (!communityToEvaluate || communityToEvaluate.deletedAt) {
+            return new UserError("This community doesn't exist");
+          }
 
-        // user is blocked, they can't join the community
-        if (currentUserCommunityPermissions.isBlocked) {
-          return new UserError("You don't have permission to do that.");
-        }
-
-        // if the person owns the community, they have accidentally triggered
-        // a join or leave action, which isn't allowed
-        if (currentUserCommunityPermissions.isOwner) {
-          return new UserError(
-            "Owners of a community can't join or leave their own community."
-          );
-        }
-
-        // if the user is a member of the community, it means they are trying
-        // to leave the community
-        if (currentUserCommunityPermissions.isMember) {
-          // remove the relationship of the user to the community
-          const removeRelationshipToCommunity = removeMemberInCommunity(
-            communityId,
-            currentUser.id
-          );
-
-          // returns an array of channel ids the user is a member of and public channels as well
-          const getAllChannelsInCommunity = getChannelsByUserAndCommunity(
-            communityId,
-            currentUser.id
-          );
-
-          return Promise.all([
-            communityToEvaluate,
-            removeRelationshipToCommunity,
-            getAllChannelsInCommunity,
-          ]).then(
-            (
-              [
-                communityToEvaluate,
-                removedRelationshipToCommunity,
-                allChannelsInCommunity,
-              ]
-            ) => {
-              // remove all relationships to the community's channels
-              const removeAllRelationshipsToChannels = Promise.all(
-                allChannelsInCommunity.map(channel =>
-                  removeMemberInChannel(channel.id, currentUser.id)
-                )
-              );
-
-              return (
-                Promise.all([
-                  communityToEvaluate,
-                  removeAllRelationshipsToChannels,
-                ])
-                  // return the community that was being evaluated
-                  .then(data => data[0])
-              );
-            }
-          );
-        } else {
-          // the user is not a member of the current community, so create a new
-          // relationship to the community and then create a relationship
-          // with all default channels
-
-          // make sure the user isn't blocked
+          // user is blocked, they can't join the community
           if (currentUserCommunityPermissions.isBlocked) {
+            return new UserError("You don't have permission to do that.");
+          }
+
+          // if the person owns the community, they have accidentally triggered
+          // a join or leave action, which isn't allowed
+          if (currentUserCommunityPermissions.isOwner) {
             return new UserError(
-              "You don't have permission to join this community."
+              "Owners of a community can't join or leave their own community."
             );
           }
 
-          // create a new relationship to the community
-          const joinCommunity = createMemberInCommunity(
-            communityId,
-            currentUser.id
-          );
+          // if the user is a member of the community, it means they are trying
+          // to leave the community
+          if (currentUserCommunityPermissions.isMember) {
+            // remove the relationship of the user to the community
+            const removeRelationshipToCommunity = removeMemberInCommunity(
+              communityId,
+              currentUser.id
+            );
 
-          return (
-            Promise.all([
+            // returns an array of channel ids the user is a member of and public channels as well
+            const getAllChannelsInCommunity = getChannelsByUserAndCommunity(
+              communityId,
+              currentUser.id
+            );
+
+            return Promise.all([
               communityToEvaluate,
-              joinCommunity,
-              // join the user to all the default channels in the community
-              createMemberInDefaultChannels(communityId, currentUser.id),
-            ])
-              // return the evaluated cmomunity
-              .then(data => data[0])
-          );
+              removeRelationshipToCommunity,
+              getAllChannelsInCommunity,
+            ]).then(
+              (
+                [
+                  communityToEvaluate,
+                  removedRelationshipToCommunity,
+                  allChannelsInCommunity,
+                ]
+              ) => {
+                // remove all relationships to the community's channels
+                const removeAllRelationshipsToChannels = Promise.all(
+                  allChannelsInCommunity.map(channel =>
+                    removeMemberInChannel(channel, currentUser.id)
+                  )
+                );
+
+                return (
+                  Promise.all([
+                    communityToEvaluate,
+                    removeAllRelationshipsToChannels,
+                  ])
+                    // return the community that was being evaluated
+                    .then(data => data[0])
+                );
+              }
+            );
+          } else {
+            // the user is not a member of the current community, so create a new
+            // relationship to the community and then create a relationship
+            // with all default channels
+
+            // make sure the user isn't blocked
+            if (currentUserCommunityPermissions.isBlocked) {
+              return new UserError(
+                "You don't have permission to join this community."
+              );
+            }
+
+            // create a new relationship to the community
+            const joinCommunity = createMemberInCommunity(
+              communityId,
+              currentUser.id
+            );
+
+            return (
+              Promise.all([
+                communityToEvaluate,
+                joinCommunity,
+                // join the user to all the default channels in the community
+                createMemberInDefaultChannels(communityId, currentUser.id),
+              ])
+                // return the evaluated cmomunity
+                .then(data => data[0])
+            );
+          }
         }
-      });
+      );
     },
     sendSlackInvites: (_, { input }, { user }) => {
       const currentUser = user;
@@ -466,31 +464,32 @@ module.exports = {
       }
 
       // make sure the user is the owner of the community
-      return getUserPermissionsInCommunity(
-        input.id,
-        currentUser.id
-      ).then(permissions => {
-        if (!permissions.isOwner) {
-          return new UserError(
-            "You don't have permission to invite people to this community."
-          );
-        } else {
-          return input.contacts
-            .filter(user => user.email !== currentUser.email)
-            .map(user => {
-              return addQueue('community invite notification', {
-                recipient: {
-                  email: user.email,
-                  firstName: user.firstName ? user.firstName : null,
-                  lastName: user.lastName ? user.lastName : null,
-                },
-                communityId: input.id,
-                senderId: currentUser.id,
-                customMessage: input.customMessage ? input.customMessage : null,
+      return getUserPermissionsInCommunity(input.id, currentUser.id).then(
+        permissions => {
+          if (!permissions.isOwner) {
+            return new UserError(
+              "You don't have permission to invite people to this community."
+            );
+          } else {
+            return input.contacts
+              .filter(user => user.email !== currentUser.email)
+              .map(user => {
+                return addQueue('community invite notification', {
+                  recipient: {
+                    email: user.email,
+                    firstName: user.firstName ? user.firstName : null,
+                    lastName: user.lastName ? user.lastName : null,
+                  },
+                  communityId: input.id,
+                  senderId: currentUser.id,
+                  customMessage: input.customMessage
+                    ? input.customMessage
+                    : null,
+                });
               });
-            });
+          }
         }
-      });
+      );
     },
     pinThread: (_, { threadId, communityId, value }, { user }) => {
       const currentUser = user;

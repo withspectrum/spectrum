@@ -66,6 +66,15 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
     );
 };
 
+const getUsersByUsername = (
+  usernames: Array<string>
+): Promise<Array<DBUser>> => {
+  return db
+    .table('users')
+    .getAll(...usernames, { index: 'username' })
+    .run();
+};
+
 const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
   return db
     .table('users')
@@ -86,20 +95,6 @@ const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
   );
 };
 
-// leaving the filter here as an index on providerId would be a waste of
-// space. This function is only invoked for signups when checking
-// for an existing user on the previous Firebase stack.
-const getUserByProviderId = (providerId: string): Promise<DBUser> => {
-  return db
-    .table('users')
-    .filter({ providerId })
-    .run()
-    .then(result => {
-      if (result && result.length > 0) return result[0];
-      throw new new UserError('No user found with this providerId')();
-    });
-};
-
 const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
@@ -113,7 +108,7 @@ const storeUser = (user: Object): Promise<DBUser> => {
       addQueue('send new user welcome email', { user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
-    .then(([user, settings]) => user);
+    .then(([user]) => user);
 };
 
 const saveUserProvider = (userId, providerMethod, providerId) => {
@@ -160,20 +155,19 @@ const createOrFindUser = (
     promise = getUser({ id: user.id });
   } else {
     if (user[providerMethod]) {
-      promise = getUserByIndex(
-        providerMethod,
-        user[providerMethod]
-      ).then(storedUser => {
-        if (storedUser) {
-          return storedUser;
-        }
+      promise = getUserByIndex(providerMethod, user[providerMethod]).then(
+        storedUser => {
+          if (storedUser) {
+            return storedUser;
+          }
 
-        if (user.email) {
-          return getUserByEmail(user.email);
-        } else {
-          return Promise.resolve({});
+          if (user.email) {
+            return getUserByEmail(user.email);
+          } else {
+            return Promise.resolve({});
+          }
         }
-      });
+      );
     } else {
       if (user.email) {
         promise = getUserByEmail(user.email);
@@ -193,7 +187,7 @@ const createOrFindUser = (
             storedUser.id,
             providerMethod,
             user[providerMethod]
-          ).then(user => Promise.resolve(storedUser));
+          ).then(() => Promise.resolve(storedUser));
         } else {
           return Promise.resolve(storedUser);
         }
@@ -204,24 +198,11 @@ const createOrFindUser = (
     })
     .catch(err => {
       if (user.id) {
+        console.log(err);
         throw new UserError(`No user found for id ${user.id}.`);
       }
       return storeUser(user);
     });
-};
-
-const setUsername = (id: string, username: string) => {
-  return db
-    .table('users')
-    .get(id)
-    .update(
-      {
-        username,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
 };
 
 const getEverything = (
@@ -488,6 +469,7 @@ module.exports = {
   getUserById,
   getUserByEmail,
   getUserByUsername,
+  getUsersByUsername,
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,

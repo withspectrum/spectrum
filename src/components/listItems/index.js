@@ -86,7 +86,7 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
             )}
             {props.contents.name}
           </Heading>
-          <Meta>{props.meta}</Meta>
+          <Meta>{props.meta && props.meta}</Meta>
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
@@ -177,11 +177,8 @@ export const UserListItem = ({
           </Heading>
           <Meta>
             {(user.totalReputation || user.contextPermissions) && (
-                <Reputation
-                  tipText={reputationTipText}
-                  reputation={reputation}
-                />
-              )}
+              <Reputation tipText={reputationTipText} reputation={reputation} />
+            )}
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>

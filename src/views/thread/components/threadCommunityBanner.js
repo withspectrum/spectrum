@@ -81,20 +81,25 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Your request to join the ${toggleChannelSubscription.name} channel in ${toggleChannelSubscription
-            .community.name} has been sent.`;
+          str = `Your request to join the ${
+            toggleChannelSubscription.name
+          } channel in ${
+            toggleChannelSubscription.community.name
+          } has been sent.`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined the ${toggleChannelSubscription.community
-            .name} community!`;
+          str = `Joined the ${
+            toggleChannelSubscription.community.name
+          } community!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -104,14 +109,14 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         this.setState({
           isLoading: false,
         });
-        console.log(err);
+        console.log('error toggling channel subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
     const {
-      thread: { channel, community, id, watercooler },
+      thread: { channel, community, watercooler },
       currentUser,
       hide,
     } = this.props;
@@ -121,7 +126,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
       <CommunityHeader hide={hide}>
         <CommunityHeaderMeta>
           <CommunityHeaderLink to={`/${community.slug}`}>
-            <Avatar src={community.profilePhoto} community size={32} />
+            <Avatar src={community.profilePhoto} community size="32" />
           </CommunityHeaderLink>
           <CommunityHeaderMetaCol>
             <CommunityHeaderLink to={`/${community.slug}`}>

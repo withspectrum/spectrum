@@ -7,14 +7,16 @@ import { ThreadListItem } from '../listItems';
 import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
-  render() {
-    const { data: { thread, error }, setName } = this.props;
-    if (error || !thread) {
-      return null;
-    }
-
+  componentWillMount() {
+    const { data: { thread }, setName } = this.props;
     if (setName && thread) {
       this.props.setName(thread.community.name);
+    }
+  }
+  render() {
+    const { data: { thread, error } } = this.props;
+    if (error || !thread) {
+      return null;
     }
 
     return (
@@ -27,9 +29,9 @@ class ThreadWithData extends Component {
           <ThreadListItem
             contents={thread}
             withDescription={false}
-            meta={`${thread.messageCount} message${thread.messageCount === 1
-              ? ''
-              : 's'}`}
+            meta={`${thread.messageCount} message${
+              thread.messageCount === 1 ? '' : 's'
+            }`}
           />
         </Link>
       </ProfileCard>

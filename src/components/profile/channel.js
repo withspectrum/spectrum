@@ -49,20 +49,23 @@ class ChannelWithData extends Component {
         let str;
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -229,7 +232,6 @@ class ChannelWithData extends Component {
           clickable
           contents={channel}
           withDescription={false}
-          meta={`${channel.metaData.members} members`}
           channelIcon={false}
         >
           {currentUser &&

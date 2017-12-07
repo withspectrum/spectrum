@@ -28,7 +28,9 @@ const getDirectMessageThreads = (
 };
 
 const getDirectMessageThreadsByUser = (
-  userId: string
+  userId: string,
+  // $FlowFixMe
+  { first, after }
 ): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('usersDirectMessageThreads')
@@ -38,6 +40,9 @@ const getDirectMessageThreadsByUser = (
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
     })
     .zip()
+    .orderBy(db.desc('threadLastActive'))
+    .skip(after || 0)
+    .limit(first)
     .run();
 };
 
@@ -70,7 +75,9 @@ const setDirectMessageThreadLastActive = (
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
 const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {

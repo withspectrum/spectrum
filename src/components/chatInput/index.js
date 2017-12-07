@@ -309,6 +309,10 @@ class ChatInput extends Component {
     });
   };
 
+  clearError = () => {
+    this.setState({ photoSizeError: '' });
+  };
+
   render() {
     const { state, onChange, currentUser } = this.props;
     const { isFocused, photoSizeError, code } = this.state;
@@ -321,12 +325,13 @@ class ChatInput extends Component {
               onClick={() =>
                 this.props.dispatch(
                   openModal('UPGRADE_MODAL', { user: currentUser })
-                )}
+                )
+              }
             >
               {photoSizeError}
             </p>
             <Icon
-              onClick={() => this.setState({ photoSizeError: '' })}
+              onClick={() => this.clearError()}
               glyph="view-close"
               size={16}
               color={'warn.default'}

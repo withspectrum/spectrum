@@ -400,29 +400,28 @@ const createMemberInDefaultChannels = (
     .getAll(userId, { index: 'userId' })
     .run();
 
-  return Promise.all([
-    defaultChannels,
-    usersChannels,
-  ]).then(([defaultChannels, usersChannels]) => {
-    // convert default channels and users channels to arrays of ids
-    // to efficiently filter down to find the default channels that exist
-    // which a user has not joined
-    const defaultChannelIds = defaultChannels.map(channel => channel.id);
-    const usersChannelIds = usersChannels.map(e => e.channelId);
+  return Promise.all([defaultChannels, usersChannels]).then(
+    ([defaultChannels, usersChannels]) => {
+      // convert default channels and users channels to arrays of ids
+      // to efficiently filter down to find the default channels that exist
+      // which a user has not joined
+      const defaultChannelIds = defaultChannels.map(channel => channel.id);
+      const usersChannelIds = usersChannels.map(e => e.channelId);
 
-    // returns a list of Ids that represent channels which are defaults
-    // in the community but the user has no relationship with yet
-    const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
-      channelId => usersChannelIds.indexOf(channelId) >= -1
-    );
+      // returns a list of Ids that represent channels which are defaults
+      // in the community but the user has no relationship with yet
+      const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
+        channelId => usersChannelIds.indexOf(channelId) >= -1
+      );
 
-    // create all the necessary relationships
-    return Promise.all(
-      defaultChannelsTheUserHasNotJoined.map(channel =>
-        createMemberInChannel(channel, userId)
-      )
-    );
-  });
+      // create all the necessary relationships
+      return Promise.all(
+        defaultChannelsTheUserHasNotJoined.map(channel =>
+          createMemberInChannel(channel, userId)
+        )
+      );
+    }
+  );
 };
 
 const toggleUserChannelNotifications = (
@@ -446,15 +445,20 @@ const toggleUserChannelNotifications = (
 ===========================================================
 */
 
-const getMembersInChannel = (channelId: string): Promise<Array<string>> => {
+const getMembersInChannel = (
+  channelId: string,
+  { first, after }: { first: number, after: number }
+): Promise<Array<string>> => {
   return (
     db
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isMember: true })
-      .run()
+      .skip(after || 0)
+      .limit(first || 999999)
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -466,9 +470,9 @@ const getPendingUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isPending: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -489,9 +493,9 @@ const getBlockedUsersInChannel = (
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isBlocked: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -501,9 +505,9 @@ const getModeratorsInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isModerator: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 
@@ -513,9 +517,9 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
       .table('usersChannels')
       .getAll(channelId, { index: 'channelId' })
       .filter({ isOwner: true })
-      .run()
       // return an array of the userIds to be loaded by gql
-      .then(users => users.map(user => user.userId))
+      .map(userChannel => userChannel('userId'))
+      .run()
   );
 };
 

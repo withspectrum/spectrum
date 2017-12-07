@@ -6,7 +6,7 @@ import { channelMetaDataFragment } from '../../api/fragments/channel/channelMeta
 export const getThisCommunity = graphql(
   gql`
     query thisCommunity($slug: String) {
-			community(slug: $slug) {
+      community(slug: $slug) {
         ...communityInfo
         recurringPayments {
           plan
@@ -15,9 +15,9 @@ export const getThisCommunity = graphql(
           status
         }
       }
-		}
+    }
     ${communityInfoFragment}
-	`,
+  `,
   {
     options: props => ({
       variables: {
@@ -36,7 +36,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
         edges {
           node {
             ...channelInfo
-            ...channelMetaData
           }
         }
       }
@@ -44,7 +43,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   }
   ${channelInfoFragment}
   ${communityInfoFragment}
-  ${channelMetaDataFragment}
 `;
 
 export const GET_COMMUNITY_CHANNELS_OPTIONS = {

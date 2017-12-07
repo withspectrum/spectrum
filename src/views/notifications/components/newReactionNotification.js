@@ -89,7 +89,7 @@ export const MiniNewReactionNotification = ({
     : null;
 
   return (
-    <NotificationListRow>
+    <NotificationListRow isSeen={notification.isSeen}>
       <CardLink
         to={{
           pathname: window.location.pathname,

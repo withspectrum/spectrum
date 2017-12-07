@@ -14,7 +14,9 @@ import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
 import { IconButton } from '../../components/buttons';
 
-export const HzRule = styled(HorizontalRule)`margin: 0;`;
+export const HzRule = styled(HorizontalRule)`
+  margin: 0;
+`;
 
 export const NotificationCard = styled(Card)`
   padding: 16px;
@@ -58,10 +60,10 @@ export const Content = styled(FlexCol)`
 export const ContentWash = styled(Content)`
   margin: 0;
   background-color: ${props => hexa(props.theme.bg.wash, 0.75)};
-  border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
-  border-top: 2px solid ${props => props.theme.bg.wash};
-  padding: 16px;
-  padding-top: 8px;
+  border-radius: ${props => (props.mini ? '0' : '0 0 8px 8px')};
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding: 8px;
+  padding-top: 0;
 `;
 
 export const NotificationListContainer = styled(FlexCol)`
@@ -112,7 +114,7 @@ export const ChatMessage = styled.p`
 export const NotificationListRow = styled(FlexCol)`
   padding: 16px;
   padding-top: 12px;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  border-bottom: 1px solid ${({ theme }) => theme.bg.border};
   justify-content: center;
   align-items: flex-start;
   color: ${({ theme }) => theme.text.default};
@@ -122,15 +124,20 @@ export const NotificationListRow = styled(FlexCol)`
   transition: ${Transition.hover.off};
   max-width: 100%;
   overflow-x: hidden;
+  box-shadow: ${props =>
+    !props.isSeen ? `inset 2px 0 0 0 ${props.theme.brand.alt}` : 'none'};
 
   &:last-of-type {
-    border-bottom: 2px solid transparent;
+    border-bottom: 1px solid transparent;
   }
 
   &:hover {
     transition: ${Transition.hover.on};
     background-color: ${({ theme }) => hexa(theme.brand.wash, 0.15)};
-    box-shadow: inset 8px 0 0 0 ${({ theme }) => theme.brand.alt};
+    box-shadow: ${props =>
+      !props.isSeen
+        ? `inset 6px 0 0 0 ${props.theme.brand.alt}`
+        : `inset 4px 0 0 0 ${props.theme.brand.alt}`};
     cursor: pointer;
   }
 `;
@@ -146,9 +153,13 @@ export const ActorPhotosContainer = styled(FlexRow)`
   max-width: 100%;
 `;
 
-export const ActorPhotoItem = styled.div`margin-right: 4px;`;
+export const ActorPhotoItem = styled.div`
+  margin-right: 4px;
+`;
 
-export const ActorPhoto = styled.img`width: 100%;`;
+export const ActorPhoto = styled.img`
+  width: 100%;
+`;
 
 export const ContextRow = styled(FlexRow)`
   align-items: center;

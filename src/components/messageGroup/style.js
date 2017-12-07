@@ -54,7 +54,9 @@ export const Name = styled.span`
   }
 `;
 
-export const Username = styled(Name)`font-weight: 400;`;
+export const Username = styled(Name)`
+  font-weight: 400;
+`;
 
 export const Timestamp = styled(HorizontalRule)`
   margin: 16px 0 8px;
@@ -72,6 +74,13 @@ export const Timestamp = styled(HorizontalRule)`
   }
 `;
 
+export const UnseenRobotext = styled(Timestamp)`
+  hr {
+    border-color: ${props => props.theme.warn.alt};
+    opacity: 0.1;
+  }
+`;
+
 export const Time = styled.span`
   text-align: center;
   color: ${({ theme }) => theme.text.placeholder};
@@ -82,6 +91,15 @@ export const Time = styled.span`
 
   &:hover {
     color: ${({ theme }) => theme.text.alt};
+    transiton: ${Transition.hover.on};
+  }
+`;
+
+export const UnseenTime = styled(Time)`
+  color: ${({ theme }) => theme.warn.alt};
+
+  &:hover {
+    color: ${({ theme }) => theme.warn.alt};
     transiton: ${Transition.hover.on};
   }
 `;

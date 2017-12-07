@@ -1,6 +1,6 @@
 // Server-side renderer for our React code
 import fs from 'fs';
-const debug = require('debug')('iris:renderer');
+const debug = require('debug')('hyperion:renderer');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
@@ -12,16 +12,14 @@ import {
 } from 'react-apollo';
 import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
-import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
+import Raven from 'shared/raven';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import schema from '../schema';
-import createLoaders from '../loaders';
 import { getHTML, createScriptTag } from './get-html';
 
 // Browser shim has to come before any client imports
@@ -31,16 +29,29 @@ import { initStore } from '../../src/store';
 
 const IN_MAINTENANCE_MODE =
   process.env.REACT_APP_MAINTENANCE_MODE === 'enabled';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const FORCE_DEV = process.env.FORCE_DEV;
+
+if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 
 const renderer = (req, res) => {
   debug(`server-side render ${req.url}`);
+  debug(`querying API at https://${req.hostname}/api`);
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
-    networkInterface: createLocalInterface(graphql, schema, {
-      context: {
-        loaders: createLoaders(),
-        user: req.user,
+    networkInterface: createNetworkInterface({
+      uri:
+        IS_PROD && !FORCE_DEV
+          ? `https://${req.hostname}/api`
+          : 'http://localhost:3001/api',
+      opts: {
+        // Send credentials on
+        credentials: 'include',
+        // Forward the cookies to the API so it can authenticate the user
+        headers: {
+          cookie: req.headers.cookie,
+        },
       },
     }),
     ...getSharedApolloClientOptions(),
@@ -122,10 +133,10 @@ const renderer = (req, res) => {
       res.end();
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
+      Raven.captureException(err);
       res.status(500);
-      res.end();
-      throw err;
+      res.send('Oops, something went wrong. Please try again!');
     });
 };
 

@@ -15,6 +15,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const ManifestPlugin = require('webpack-module-manifest-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
@@ -108,6 +109,15 @@ module.exports = function override(config, env) {
           },
         },
         AppCache: false, // Don't cache using AppCache, too buggy that thing
+      })
+    );
+  }
+  if (process.env.ANALYZE_BUNDLE === 'true') {
+    console.log('Bundle analyzer enabled');
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
       })
     );
   }

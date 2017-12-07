@@ -5,7 +5,6 @@ import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import Titlebar from '../../views/titlebar';
-import { Button } from '../../components/buttons';
 import ThreadDetail from './components/threadDetail';
 import Messages from './components/messages';
 import Head from '../../components/head';
@@ -204,8 +203,9 @@ class ThreadContainer extends React.Component<Props, State> {
             <ThreadContentView slider={slider}>
               <Head
                 title={`The Watercooler · ${thread.community.name}`}
-                description={`Watercooler chat for the ${thread.community
-                  .name} community`}
+                description={`Watercooler chat for the ${
+                  thread.community.name
+                } community`}
                 image={thread.community.profilePhoto}
               />
               <Titlebar

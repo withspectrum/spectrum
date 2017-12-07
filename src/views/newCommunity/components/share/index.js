@@ -1,31 +1,25 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { OutlineButton, Button } from '../../../../components/buttons';
 import { ButtonRow, InputRow, Input } from './style';
 import { Description } from '../../style';
 import { Loading } from '../../../../components/loading';
+import Clipboard from 'react-clipboard.js';
 
 const Share = ({ community, history, onboarding }) => {
   if (!community) return <Loading />;
-
-  const highlightAndCopy = e => {
-    let selection = window.getSelection();
-    let range = document.createRange();
-    range.selectNode(e.target);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand('copy');
-  };
 
   return (
     <div>
       <ButtonRow>
         <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${community.slug}&t=Come hang out with me in the ${community.name} community on Spectrum!`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/${
+            community.slug
+          }&t=Come hang out with me in the ${
+            community.name
+          } community on Spectrum!`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -39,7 +33,11 @@ const Share = ({ community, history, onboarding }) => {
           </Button>
         </a>
         <a
-          href={`https://twitter.com/share?text=Come hang out with me in the ${community.name} community on @withspectrum!&url=https://spectrum.chat/${community.slug}`}
+          href={`https://twitter.com/share?text=Come hang out with me in the ${
+            community.name
+          } community on @withspectrum!&url=https://spectrum.chat/${
+            community.slug
+          }`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -54,13 +52,16 @@ const Share = ({ community, history, onboarding }) => {
         </a>
       </ButtonRow>
 
-      <InputRow>
-        <Input onClick={highlightAndCopy}>
-          {`https://spectrum.chat/${community.slug}`}
-        </Input>
-      </InputRow>
+      <Clipboard
+        component="div"
+        data-clipboard-text={`https://spectrum.chat/${community.slug}`}
+      >
+        <InputRow>
+          <Input>{`https://spectrum.chat/${community.slug}`}</Input>
+        </InputRow>
+      </Clipboard>
 
-      {onboarding &&
+      {onboarding && (
         <ButtonRow>
           <Description centered>
             You're ready to start building your community - you can view it now,
@@ -72,7 +73,8 @@ const Share = ({ community, history, onboarding }) => {
           <a href={`/${community.slug}`}>
             <Button>Go to my community</Button>
           </a>
-        </ButtonRow>}
+        </ButtonRow>
+      )}
     </div>
   );
 };

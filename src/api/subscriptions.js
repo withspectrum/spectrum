@@ -7,17 +7,26 @@ import { threadInfoFragment } from './fragments/thread/threadInfo';
 import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
 
 export const subscribeToNewMessages = gql`
-	subscription subscribeToNewMessages($thread: ID!) {
-		messageAdded(thread: $thread) {
-			...messageInfo
-		}
-	}
-	${messageInfoFragment}
+  subscription subscribeToNewMessages($thread: ID!) {
+    messageAdded(thread: $thread) {
+      ...messageInfo
+    }
+  }
+  ${messageInfoFragment}
 `;
 
 export const subscribeToNewNotifications = gql`
   subscription subscribeToNewNotifications {
     notificationAdded {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const subscribeToDirectMessageNotifications = gql`
+  subscription subscribeToDirectMessageNotifications {
+    dmNotificationAdded {
       ...notificationInfo
     }
   }

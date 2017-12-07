@@ -16,8 +16,9 @@ const Bubble = styled.div`
 
   box-shadow: ${props =>
     props.hashed
-      ? `inset 0 0 0 2px ${props.theme.bg.default}, inset 0 0 0 4px ${props
-          .theme.brand.default}`
+      ? `inset 0 0 0 2px ${props.theme.bg.default}, inset 0 0 0 4px ${
+          props.theme.brand.default
+        }`
       : ''};
   margin-top: 4px;
   margin-bottom: ${props => (props.hashed ? '4px' : '0')};
@@ -117,7 +118,6 @@ export const ActionUI = styled.div`
       transition: ${Transition.hover.on};
       visibility: hidden;
       opacity: 0;
-      ${props => (props.me ? 'right: 100%' : 'left: 100%')};
     }
   }
 
@@ -131,7 +131,6 @@ export const ActionUI = styled.div`
     transition: ${Transition.hover.off};
     visibility: visible;
     opacity: 1;
-    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
   }
 `;
 
@@ -166,7 +165,6 @@ export const Wrapper = styled.div`
           transition: ${Transition.hover.on};
           visibility: hidden;
           opacity: 0;
-          ${props => (props.me ? 'right: 100%' : 'left: 100%')};
         }
       }
     `} &:hover {
@@ -183,7 +181,6 @@ export const Wrapper = styled.div`
         transition: ${Transition.hover.on};
         visibility: hidden;
         opacity: 0;
-        ${props => (props.me ? 'right: 100%' : 'left: 100%')};
       }
     }
   }
@@ -283,8 +280,9 @@ export const Image = styled.img`
   margin-bottom: ${props => (props.hashed ? '4px' : '0')};
   box-shadow: ${props =>
     props.hashed
-      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
-          .default}`
+      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${
+          props.theme.brand.default
+        }`
       : ''};
 `;
 
@@ -308,4 +306,6 @@ export const Line = styled.pre`
   ${monoStack};
 `;
 
-export const Paragraph = styled.p`line-height: 1.5;`;
+export const Paragraph = styled.p`
+  line-height: 1.5;
+`;

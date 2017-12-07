@@ -4,10 +4,7 @@ import { execute, subscribe } from 'graphql';
 import schema from '../schema';
 import createLoaders from '../loaders';
 import { getUser, setUserOnline } from '../models/user';
-import sessionStore, {
-  sessionCookieParser,
-  getUserIdFromReq,
-} from '../utils/session-store';
+import { getUserIdFromReq } from '../utils/session-store';
 
 /**
  * Create a subscription server based on an exisiting express.js server

@@ -11,7 +11,7 @@ import { userCommunitiesFragment } from './fragments/user/userCommunities';
 */
 const UPLOAD_PROFILE_PHOTO_MUTATION = gql`
   mutation uploadProfilePhoto($file: File!) {
-    uploadProfilePhoto (file: $file) {
+    uploadProfilePhoto(file: $file) {
       ...userInfo
     }
   }
@@ -54,7 +54,7 @@ export const SEARCH_USERS_QUERY = gql`
 */
 const EDIT_USER_MUTATION = gql`
   mutation editUser($input: EditUserInput!) {
-    editUser (input: $input) {
+    editUser(input: $input) {
       ...userInfo
     }
   }
@@ -192,7 +192,7 @@ export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
 const TOGGLE_NOTIFICATION_SETTINGS_MUTATION = gql`
   mutation toggleNotificationSettings($input: ToggleNotificationSettingsInput) {
     toggleNotificationSettings(input: $input) {
-      ...userInfo,
+      ...userInfo
       ...userSettings
     }
   }
@@ -253,7 +253,7 @@ export const getUserInvoices = graphql(
 */
 const UPDATE_USER_EMAIL_MUTATION = gql`
   mutation updateUserEmail($email: String!) {
-    updateUserEmail (email: $email) {
+    updateUserEmail(email: $email) {
       ...userInfo
       email
       pendingEmail
@@ -276,4 +276,29 @@ const UPDATE_USER_EMAIL_OPTIONS = {
 export const updateUserEmailMutation = graphql(
   UPDATE_USER_EMAIL_MUTATION,
   UPDATE_USER_EMAIL_OPTIONS
+);
+
+/*
+  Loads the sidebar profile component widget independent of the thread feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+export const GET_USER_AUTH_QUERY = gql`
+  query getUserAuthProfile {
+    user: currentUser {
+      ...userInfo
+      isPro
+      totalReputation
+    }
+  }
+  ${userInfoFragment}
+`;
+export const GET_USER_AUTH_OPTIONS = {
+  options: { fetchPolicy: 'cache-first' },
+};
+
+export const userAuthQuery = graphql(
+  GET_USER_AUTH_QUERY,
+  GET_USER_AUTH_OPTIONS
 );

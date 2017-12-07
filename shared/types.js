@@ -33,6 +33,12 @@ export type DBCommunity = {
   watercoolerId?: string,
 };
 
+export type DBCuratedContent = {
+  type: string,
+  id: string,
+  data: any,
+};
+
 export type DBDirectMessageThread = {
   createdAt: Date,
   id: string,

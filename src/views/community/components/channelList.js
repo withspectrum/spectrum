@@ -68,7 +68,8 @@ class ChannelList extends React.Component<Props> {
                 glyph="plus"
                 color="text.placeholder"
                 onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                }
               />
             )}
           </ListHeader>
@@ -79,37 +80,26 @@ class ChannelList extends React.Component<Props> {
             user is logged in but hasn't joined this community, channel list is used for navigation
           */}
           {(!currentUser || (currentUser && !isMember)) && (
-              <ListContainer>
-                {channels.map(channel => {
-                  return (
-                    <Link
-                      key={channel.id}
-                      to={`/${communitySlug}/${channel.slug}`}
+            <ListContainer>
+              {channels.map(channel => {
+                return (
+                  <Link
+                    key={channel.id}
+                    to={`/${communitySlug}/${channel.slug}`}
+                  >
+                    <ChannelListItem
+                      clickable
+                      contents={channel}
+                      withDescription={false}
+                      channelIcon
                     >
-                      <ChannelListItem
-                        clickable
-                        contents={channel}
-                        withDescription={false}
-                        channelIcon
-                        meta={
-                          channel.metaData.members > 1
-                            ? `${channel.metaData.members.toLocaleString()} members ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
-                            : `${channel.metaData.members} member ${isOwner &&
-                              channel.pendingUsers.length > 0
-                                ? `(${channel.pendingUsers.length.toLocaleString()} pending)`
-                                : ``}`
-                        }
-                      >
-                        <Icon glyph="view-forward" />
-                      </ChannelListItem>
-                    </Link>
-                  );
-                })}
-              </ListContainer>
-            )}
+                      <Icon glyph="view-forward" />
+                    </ChannelListItem>
+                  </Link>
+                );
+              })}
+            </ListContainer>
+          )}
 
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
           {joinedChannels &&
@@ -126,11 +116,6 @@ class ChannelList extends React.Component<Props> {
                         contents={channel}
                         withDescription={false}
                         channelIcon
-                        meta={
-                          channel.metaData.members === 1
-                            ? `${channel.metaData.members} member`
-                            : `${channel.metaData.members.toLocaleString()} members`
-                        }
                       >
                         <Icon glyph="view-forward" />
                       </ChannelListItem>

@@ -176,8 +176,7 @@ export const Item = styled(FlexCol)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    box-shadow: ${Shadow.high} ${props =>
-        hexa(props.theme.text.placeholder, 1)};
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
@@ -370,7 +369,9 @@ export const SearchLink = styled(Link)`
 
 export const SearchResultImage = styled(Avatar)``;
 
-export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
+export const SearchResultMetaWrapper = styled(FlexCol)`
+  margin-left: 16px;
+`;
 
 export const SearchResultName = styled.h2`
   font-size: 16px;
@@ -416,7 +417,9 @@ export const SearchResultNull = styled.div`
   }
 `;
 
-export const ListWithTitle = styled(FlexCol)`flex: auto;`;
+export const ListWithTitle = styled(FlexCol)`
+  flex: auto;
+`;
 
 export const ListTitle = styled(H2)`
   border-bottom: 1px solid ${props => props.theme.bg.border};
@@ -457,8 +460,12 @@ export const CollectionWrapper = styled.div`
 `;
 
 export const CategoryWrapper = styled.div`
-  display: ${props => (props.selected ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
   justify-content: flex-start;
   flex: none;
+`;
+
+export const LoadingContainer = styled.div`
+  padding: 32px;
 `;

@@ -52,17 +52,23 @@ class JoinChannel extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -73,7 +79,7 @@ class JoinChannel extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        console.log(err);
+        console.log('error toggling subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };

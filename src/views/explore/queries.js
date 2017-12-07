@@ -5,13 +5,13 @@ import { communityInfoFragment } from '../../api/fragments/community/communityIn
 
 export const getCommunity = graphql(
   gql`
-		query getCommunity($slug: String) {
-			community(slug: $slug) {
+    query getCommunity($slug: String) {
+      community(slug: $slug) {
         ...communityInfo
       }
-		}
+    }
     ${communityInfoFragment}
-	`,
+  `,
   {
     props: ({ data: { error, loading, community } }) => ({
       data: {
@@ -28,16 +28,13 @@ export const getCommunity = graphql(
 */
 export const getTopCommunities = graphql(
   gql`
-		{
-		  topCommunities {
+    {
+      topCommunities {
         ...communityInfo
-        metaData {
-          members
-        }
       }
     }
     ${communityInfoFragment}
-	`,
+  `,
   {
     props: ({ data: { error, loading, topCommunities } }) => ({
       data: {
@@ -49,45 +46,19 @@ export const getTopCommunities = graphql(
   }
 );
 
-export const getRecentCommunities = graphql(
-  gql`
-		{
-		  recentCommunities {
-        ...communityInfo
-        metaData {
-          members
-        }
-      }
-    }
-    ${communityInfoFragment}
-	`,
-  {
-    props: ({ data: { error, loading, recentCommunities } }) => ({
-      data: {
-        error,
-        loading,
-        recentCommunities,
-      },
-    }),
-  }
-);
-
 const GET_COMMUNITIES_OPTIONS = {
-  options: ({ slugs }) => ({
+  options: ({ curatedContentType }) => ({
     variables: {
-      slugs,
+      curatedContentType,
     },
     fetchPolicy: 'cache-and-network',
   }),
 };
 
 const GET_COMMUNITIES_QUERY = gql`
-  query getCommunitiesCollection($slugs: [String]) {
-    communities(slugs: $slugs) {
+  query getCommunitiesCollection($curatedContentType: String) {
+    communities(curatedContentType: $curatedContentType) {
       ...communityInfo
-      metaData {
-        members
-      }
     }
   }
   ${communityInfoFragment}

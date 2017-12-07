@@ -1,11 +1,8 @@
 // @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { convertTimestampToDate } from '../../helpers/utils';
-import NewThreadShare from '../upsell/newThreadShare';
 import Badge from '../badges';
 import Avatar from '../avatar';
 import Message from '../message';
@@ -19,6 +16,8 @@ import {
   Time,
   Sender,
   MessageGroup,
+  UnseenRobotext,
+  UnseenTime,
 } from './style';
 
 type SenderType = {
@@ -42,7 +41,7 @@ export const AuthorAvatar = ({
       src={sender.profilePhoto}
       username={sender.username}
       link={sender.username ? `/users/${sender.username}` : null}
-      size={24}
+      size="24"
       showProfile={showProfile}
     />
   );
@@ -71,7 +70,7 @@ type MessageType = Object; // TODO: Refine type
 type MessageGroupType = Array<MessageType>;
 
 type MessageGroupProps = {
-  messages?: Array<MessageGroupType>,
+  messages: Array<MessageGroupType>,
   currentUser: Object,
   threadType: string,
   threadId: string,
@@ -157,12 +156,8 @@ class Messages extends Component<MessageGroupProps, State> {
       toggleReaction,
       threadType,
       threadId,
-      thread,
       isModerator,
     } = this.props;
-
-    if (!messages || messages.length === 0)
-      return <NewThreadShare thread={thread} />;
 
     return (
       <Wrapper data-e2e-id="message-group">
@@ -177,13 +172,31 @@ class Messages extends Component<MessageGroupProps, State> {
             threadType !== 'directMessageThread' && (me || isModerator);
 
           if (roboText) {
-            return (
-              <Timestamp key={initialMessage.message.content}>
-                <hr />
-                <Time>{convertTimestampToDate(initialMessage.timestamp)}</Time>
-                <hr />
-              </Timestamp>
-            );
+            if (initialMessage.message.type === 'timestamp') {
+              return (
+                <Timestamp key={initialMessage.timestamp}>
+                  <hr />
+                  <Time>
+                    {convertTimestampToDate(initialMessage.timestamp)}
+                  </Time>
+                  <hr />
+                </Timestamp>
+              );
+            } else if (
+              initialMessage.message.type === 'unseen-messages-below' &&
+              messages[i + 1][0].sender.id !== currentUser.id
+            ) {
+              return (
+                <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
+                  <hr />
+                  <UnseenTime>New messages</UnseenTime>
+                  <hr />
+                </UnseenRobotext>
+              );
+              // Ignore any unknown robo type messages
+            } else {
+              return null;
+            }
           }
 
           return (

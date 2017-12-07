@@ -53,11 +53,7 @@ class ChannelList extends React.Component<Props> {
                     key={item.id}
                     to={`/${communitySlug}/${item.slug}/settings`}
                   >
-                    <ChannelListItem
-                      contents={item}
-                      withDescription={false}
-                      meta={`${item.metaData.members.toLocaleString()} members`}
-                    >
+                    <ChannelListItem contents={item} withDescription={false}>
                       <IconButton glyph="settings" />
                     </ChannelListItem>
                   </Link>
@@ -70,7 +66,8 @@ class ChannelList extends React.Component<Props> {
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
               onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+              }
             >
               Create Channel
             </Button>

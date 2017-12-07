@@ -23,6 +23,7 @@
 		"SLACK_SECRET": "@slack-secret",
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
 		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
-		"PERSPECTIVE_API_KEY": "@perspective-api-key"
+		"PERSPECTIVE_API_KEY": "@perspective-api-key",
+        "SESSION_COOKIE_SECRET": "@session-cookie-secret"
 	}
 }

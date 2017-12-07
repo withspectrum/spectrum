@@ -94,13 +94,13 @@ const User = /* GraphQL */ `
 
 		# non-schema fields
 		threadCount: Int
-        isAdmin: Boolean
+		isAdmin: Boolean
 		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
-		everything(first: Int = 20, after: String): EverythingThreadsConnection!
+		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
+		threadConnection(first: Int = 10, after: String, kind: ThreadConnectionType): UserThreadsConnection!
+		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings

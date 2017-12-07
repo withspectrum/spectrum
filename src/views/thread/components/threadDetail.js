@@ -3,7 +3,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
-import { EditorState } from 'draft-js';
 import {
   getLinkPreviewFromUrl,
   timeDifference,
@@ -52,7 +51,6 @@ class ThreadDetailPure extends Component {
   }
 
   setThreadState() {
-    const { body } = this.state;
     const { thread } = this.props;
 
     let rawLinkPreview =
@@ -132,11 +130,13 @@ class ThreadDetailPure extends Component {
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread
-        .community
-        .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.community.name
+      } community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.channel
+      } channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
     } else {
