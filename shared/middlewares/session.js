@@ -1,13 +1,18 @@
 // @flow
-import { SESSION_COOKIE_SECRET } from 'iris/utils/session-store';
 import session from 'cookie-session';
 
 const ONE_YEAR = 31556952000;
 
+if (!process.env.SESSION_COOKIE_SECRET && !process.env.TEST_DB) {
+  throw new Error(
+    '[shared/middlewares/session] You have to provide the SESSION_COOKIE_SECRET environment variable.'
+  );
+}
+
 // Create session middleware
 export default session({
-  keys: [SESSION_COOKIE_SECRET],
-  name: 'connect.sid',
+  keys: [process.env.SESSION_COOKIE_SECRET],
+  name: 'session',
   secure: process.env.NODE_ENV === 'production',
   // Expire the browser cookie one year from now
   maxAge: ONE_YEAR,
