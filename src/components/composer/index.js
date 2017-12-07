@@ -420,8 +420,6 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    console.log('activeCommunity', activeCommunity);
-
     const { data: { user }, threadSliderIsOpen } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
 
