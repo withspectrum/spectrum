@@ -36,6 +36,7 @@ if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 
 const renderer = (req, res) => {
   debug(`server-side render ${req.url}`);
+  debug(`querying API at https://${req.hostname}/api`);
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
