@@ -7,19 +7,8 @@ const HOME = IS_PROD ? '/' : 'http://localhost:3000/';
 const logoutRouter = Router();
 
 logoutRouter.get('/', (req, res) => {
-  debug('started');
-  const sessionCookie = req.cookies['connect.sid'];
-  if (req.isUnauthenticated() || !sessionCookie) {
-    debug('is unauthenticated, aborting logout');
-    return res.redirect(HOME);
-  }
-  debug('logging out');
-  req.logout();
-  req.session.destroy(err => {
-    if (err) console.log(err);
-    debug(`destroyed session, redirecting`);
-    res.redirect(HOME);
-  });
+  req.session = null;
+  return res.redirect(HOME);
 });
 
 export default logoutRouter;
