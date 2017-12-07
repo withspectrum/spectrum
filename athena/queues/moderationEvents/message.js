@@ -24,12 +24,15 @@ export default async (job: JobData) => {
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 
-  const [spectrumScore, perspectiveScore] = await Promise.all([
+  const scores = await Promise.all([
     getSpectrumScore(text, message.id),
     getPerspectiveScore(text),
   ]).catch(err =>
     console.log('Error getting message moderation scores from providers', err)
   );
+
+  const spectrumScore = scores && scores[0];
+  const perspectiveScore = scores && scores[1];
 
   // if neither models returned results
   if (!spectrumScore && !perspectiveScore) return;
