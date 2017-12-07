@@ -290,8 +290,7 @@ export const Code = styled(Bubble)`
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 500;
-  background-color: ${props => props.theme.bg.reverse};
-  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.bg.wash};
   max-width: 100%;
   overflow-x: scroll;
   list-style: none;
