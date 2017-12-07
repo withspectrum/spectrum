@@ -27,17 +27,7 @@ type Props = {
     },
   },
 };
-type State = {
-  default: string,
-};
-class ChannelSelector extends React.Component<Props, State> {
-  componentDidUpdate(prevProps) {
-    const curr = this.props;
-    const { currentChannel } = curr;
-
-    if (prevProps.isLoading && !curr.isLoading) {
-    }
-  }
+class ChannelSelector extends React.Component<Props> {
   render() {
     const { isLoading, currentChannel, data, setActiveChannel } = this.props;
 
