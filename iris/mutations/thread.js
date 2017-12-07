@@ -436,14 +436,17 @@ module.exports = {
         thread.communityId,
         currentUser.id
       );
-      if (thread.creatorId !== currentUser.id && !isOwner && !isModerator)
+
+      if (thread.creatorId !== currentUser.id || (!isOwner && !isModerator))
         throw new UserError(
           'You have to be a moderator or owner of the community to move a thread.'
         );
 
       const [newChannel] = await getChannels([channelId]);
       if (newChannel.communityId !== thread.communityId)
-        throw new UserError('You can only move threads within a community.');
+        throw new UserError(
+          'You can only move threads within the same community.'
+        );
 
       return moveThread(threadId, channelId).then(res => {
         if (res) return res;

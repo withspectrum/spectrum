@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { openModal } from '../../../actions/modals';
 import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
@@ -84,6 +85,11 @@ class ActionBar extends React.Component<Props, State> {
     } else {
       return this.setState({ flyoutOpen: false });
     }
+  };
+
+  triggerChangeChannel = () => {
+    const { thread, dispatch } = this.props;
+    dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
   toggleNotification = () => {
@@ -294,6 +300,16 @@ class ActionBar extends React.Component<Props, State> {
                           </TextButton>
                         </FlyoutRow>
                       )}
+
+                    <FlyoutRow hideBelow={1024}>
+                      <TextButton
+                        icon={'channel'}
+                        hoverColor={'text.default'}
+                        onClick={this.triggerChangeChannel}
+                      >
+                        Change channel
+                      </TextButton>
+                    </FlyoutRow>
 
                     {(isChannelOwner || isCommunityOwner) && (
                         <FlyoutRow>
