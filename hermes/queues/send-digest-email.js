@@ -57,8 +57,6 @@ export default async (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
-  console.log('job data', job.data);
-
   const {
     email,
     userId,
