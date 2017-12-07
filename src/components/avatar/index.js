@@ -1,13 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import compose from 'recompose/compose';
-import { connect } from 'react-redux';
-import Link from 'src/components/link';
-import { withRouter } from 'react-router';
-import { Card } from '../card';
-import Reputation from '../reputation';
-import Icon from '../icons';
-import Badge from '../badges';
 import { optimize } from '../../helpers/images';
 import HoverProfile from './hoverProfile';
 import AvatarImage from './image';
@@ -30,24 +22,18 @@ type AvatarProps = {
   noLink?: boolean,
   showProfile?: boolean,
 };
+
 type State = {
   isHovering: boolean,
 };
-export default class Avatar extends React.Component<AvatarProps, State> {
+
+export default class Avatar extends Component<AvatarProps, State> {
   state = { isHovering: false };
   hover = () =>
     this.setState(({ isHovering }) => ({ isHovering: !isHovering }));
 
   render() {
-    const {
-      src,
-      community,
-      user,
-      size,
-      link,
-      noLink,
-      showProfile,
-    } = this.props;
+    const { src, community, user, size, showProfile } = this.props;
     const { isHovering } = this.state;
 
     const optimizedAvatar = optimize(src, {
