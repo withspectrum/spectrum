@@ -28,7 +28,7 @@ beforeAll(async () => {
 
   // Set the right cookie so that we're logged in
   await page.setCookie({
-    name: 'connect.sid',
+    name: 'session',
     value: encode(JSON.stringify({ passport: { user: user.id } })),
     domain: 'localhost',
     path: '/',
