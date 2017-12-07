@@ -136,7 +136,8 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
     markSingleNotificationSeen(notification.id);
   };
 
-  setCommunityName = (name: string) => this.setState({ communityName: name });
+  setCommunityName = (name: string) =>
+    console.log('setting name') || this.setState({ communityName: name });
 
   render() {
     const { notification, currentUser } = this.props;
