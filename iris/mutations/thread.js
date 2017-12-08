@@ -432,10 +432,20 @@ module.exports = {
       const thread = await getThread(threadId);
       if (!thread) throw new UserError('Cannot move a non-existant thread.');
 
-      const { isOwner, isModerator } = await getUserPermissionsInCommunity(
+      const {
+        isOwner,
+        isModerator,
+        isBlocked,
+      } = await getUserPermissionsInCommunity(
         thread.communityId,
         currentUser.id
       );
+
+      if (isBlocked) {
+        throw new UserError(
+          "You don't have permission to post in that channelId."
+        );
+      }
 
       if (thread.creatorId !== currentUser.id || (!isOwner && !isModerator))
         throw new UserError(

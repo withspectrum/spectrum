@@ -12,6 +12,12 @@ type ChannelType = {
   node: {
     id: string,
     name: string,
+    channelPermissions: {
+      isMember: boolean,
+      isOwner: boolean,
+      isBlocked: boolean,
+      isModerator: boolean,
+    },
   },
 };
 type Props = {
@@ -40,10 +46,19 @@ class ChannelSelector extends React.Component<Props> {
       const availableChannels = data.community.channelConnection.edges.map(
         n => n.node
       );
+      const channels = availableChannels
+        .filter(channel => {
+          if (channel.isPrivate && !channel.channelPermissions.isMember)
+            return null;
+
+          return channel;
+        })
+        .filter(channel => !channel.channelPermissions.isBlocked);
+
       return (
         <SelectorContainer>
           <RequiredSelector onChange={setActiveChannel} value={currentChannel}>
-            {availableChannels.map(channel => {
+            {channels.map(channel => {
               return (
                 <option key={channel.id} value={channel.id}>
                   {channel.name}
