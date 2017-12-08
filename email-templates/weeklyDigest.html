@@ -3,57 +3,61 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Your Spectrum {{timeframe.subject}} digest</title>
+    <title>{{subject}}</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
     compatibility. You can just update styles here, and Postmark does the rest.
     -->
     <style type="text/css" rel="stylesheet" media="all">
-    /* Base ------------------------------ */
-
     *:not(br):not(tr):not(html) {
       font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
       box-sizing: border-box;
     }
-
+    
     body {
       width: 100% !important;
       height: 100%;
       margin: 0;
       line-height: 1.4;
-      background-color: #F2F5F9;
-      color: #171a21;
+      background-color: #F5F8FC;
+      color: #16171A;
       -webkit-text-size-adjust: none;
     }
-
+    
     p,
     ul,
     ol,
     blockquote {
       line-height: 1.4;
       text-align: left;
+      margin: 0;
+      padding: 0;
     }
-
+    
     a {
-      color: #7b16ff;
-      font-weight: bold;
+      color: #7B16FF;
       text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
+    a.black {
+      color: #16171A;
+    }
+
+    a.block {
+      display: block;
+      width: 100%;
+    }
+    
     a img {
       border: none;
     }
-
+    
     td {
       word-break: break-word;
     }
     /* Layout ------------------------------ */
-
+    
     .email-wrapper {
       width: 100%;
       margin: 0;
@@ -61,9 +65,9 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #F2F5f9;
+      background-color: #F5F8FC;
     }
-
+    
     .email-content {
       width: 100%;
       margin: 0;
@@ -71,120 +75,60 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
     }
-
+    
     /* Body ------------------------------ */
-
+    
     .email-body {
       width: 100%;
       margin: 0;
-      padding: 0;
+      padding: 32px 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      border-top: 1px solid #DFE7EF;
-      border-bottom: 1px solid #DFE7EF;
-      background-color: #FFFFFF;
     }
-
+    
     .email-body_inner {
-      width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       background-color: #FFFFFF;
     }
-
+    
     .email-footer {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 8px;
-      -premailer-width: 560px;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
-      background-color: #F2F5F9;
-      margin-top: 32px;
-      font-weight: 400;
     }
-
+    
     .email-footer p {
-      color: #747E8D;
-      margin-bottom: 0;
+      color: #828C99;
       font-size: 14px;
     }
-
+    
     .email-footer a {
-      color: #16171A;
-      font-weight: 500;
+      color: #1D2129;
     }
 
     .email-footer ul {
       list-style-type: none;
-      margin: 16px 0;
-      padding: 0;
-      font-size: 14px;
-      color: #747E8D;
+      margin: 24px 0;
     }
 
     .email-footer li {
-      margin-top: 8px;
-      display: block;
-      width: 100%;
+      margin: 8px 0;
+      font-size: 14px;
     }
-
-    .body-action {
-      width: 100%;
-      margin: 32px auto;
-      padding: 0;
-      -premailer-width: 100%;
-      -premailer-cellpadding: 0;
-      -premailer-cellspacing: 0;
-      text-align: center;
-    }
-
-    .body-sub {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid #DFE7EF;
-    }
-
-    .divider {
-      height: 0px;
-      border-bottom: 2px solid #DFE7EF;
-      display: block;
-      width: 100%;
-    }
-
-    .post {
-      padding: 8px 0 16px;
-    }
-
-    .reply-container {
-      margin-top: 16px;
-      display: block;
-    }
-
-    .header-cell {
-      padding: 32px 16px 0 16px
-    }
-
-    .header-cell p {
-      margin-bottom: 8px;
-    }
-
-    .content-cell {
-      padding: 24px 16px;
-      display: block;
-    }
-
-    .footer-cell {
-      margin-bottom: 32px;
-    }
-
+    
     .preheader {
       display: none !important;
       visibility: hidden;
@@ -197,40 +141,51 @@
       overflow: hidden;
     }
 
-    img.avatar {
-      height: 40px;
-      width: 40px;
-      border-radius: 20px;
-      margin-right: 8px;
+    .signoff {
+      padding-top: 32px;
     }
-
     /* Utilities ------------------------------ */
-
+    
     .align-right {
       text-align: right;
     }
-
+    
     .align-left {
       text-align: left;
     }
-
+    
     .align-center {
       text-align: center;
     }
 
-    .collapse {
-      border-collapse: collapse;
+    .divider {
+      height: 1px;
+      background-color: #DAE4F2;
+      display: block;
+      width: 100%;
+      margin: 16px 0;
     }
-    /*Media Queries ------------------------------ */
 
+    /*Media Queries ------------------------------ */
+    
     @media only screen and (max-width: 600px) {
       .email-body_inner,
       .email-footer {
         width: 100% !important;
       }
     }
-
+    
+    @media only screen and (max-width: 500px) {
+      .button {
+        width: 100% !important;
+      }
+    }
     /* Buttons ------------------------------ */
+    
+    .button-row {
+      display: block;
+      margin: 16px 0;
+    }
 
     .button {
       background-color: #7B16FF;
@@ -238,75 +193,86 @@
       color: #FFF;
       padding: 12px 16px;
       text-decoration: none;
-      border-radius: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
-
-      &:hover {
-        text-decoration: none;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      }
+      text-align: center;
     }
-
+    
     .button.outline {
-      background-color: #fff;
-      border: 2px solid #7B16FF;
-      color: #7B16FF;
+      background-color: #FFFFFF;
+      color: #828C99;
+      border: 1px solid #828C99;
       box-shadow: none;
-      margin-left: 8px;
     }
-
+    
+    .button.textonly {
+      background-color: #FFFFFF;
+      color: #828C99;
+      border: 0;
+      box-shadow: none;
+    }
+    
+    .button:hover {
+      text-decoration: none;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .button.black {
+      background-color: #16171A;
+    }
+    
+    .button.twitter {
+     background-color: #00ACED; 
+    }
+    
+    .button.facebook {
+      background-color: #3B5998;
+    }
+    
+    .button.success {
+      background-color: #00B88B;
+    }
     /* Type ------------------------------ */
-
+    
     h1 {
-      margin: 0;
-      padding: 0;
-      color: #171A21;
+      margin-top: 0;
+      color: #16171A;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    h2 {
+      margin-top: 0;
+      color: #16171A;
       font-size: 20px;
       font-weight: bold;
       text-align: left;
     }
-
-    h2 {
-      margin: 0;
-      padding: 0;
-      color: #171A21;
-      font-size: 18px;
-      font-weight: bold;
-      text-align: left;
-    }
-
+    
     h3 {
-      margin: 0;
-      padding: 0;
-      color: #171A21;
-      font-size: 14px;
+      margin-top: 0;
+      color: #16171A;
+      font-size: 16px;
       font-weight: bold;
       text-align: left;
     }
-
+    
     p {
-      margin: 0;
-      padding: 0;
-      color: #171A21;
+      margin-top: 12px;
+      color: #828C99;
       font-size: 16px;
-      line-height: 1.5em;
+      line-height: 1.4;
       text-align: left;
     }
-
-    p.sub {
-      color: #747E8D;
-    }
-
-    p.reply {
-      font-weight: 400;
-      margin-bottom: 16px;
-      background: #E6ECF7;
-      margin-bottom: 2px;
-      padding: 8px 12px;
-      border-radius: 12px;
+    
+    p.center {
+      text-align: center;
     }
 
     p.emoji, span.emoji {
@@ -315,104 +281,83 @@
       line-height: 1.6;
     }
 
-    span.name {
-      font-size: 11px;
-      font-weight: 400;
-      color: #747E8D;
+    a.a-p {
+      color: #828C99;
     }
 
-    h1.title {
-      margin-bottom: 16px;
+    /*Custom for this email ------------------------------ */
+    .thread {
+      margin: 8px 12px;
+      width: 100%;
+      background: #FFFFFF;
+      padding-top: 16px!important;
     }
 
-    h2.title {
-      font-size: 16px;
-      font-weight: 500;
+    .thread-community-header {
+      padding: 4px 0;
     }
 
-    .button.feed {
-      margin-top: 16px;
-      font-size: 18px;
-    }
-
-    .community-icon {
-      width: 24px;
-      height: 24px;
+    .thread-community-header img {
       border-radius: 4px;
       display: inline-block;
-      margin-right: 8px;
-    }
-
-    .community-name {
-      font-size: 14px;
-      color: #747E8D;
-      font-weight: 400;
-    }
-
-    .thread-meta {
-      margin-top: 4px;
-      display: block;
-    }
-
-    .community-name a {
-      color: #747E8D;
-      font-weight: 400;
-    }
-
-    .community-description {
-      font-size: 14px;
-      color: #747E8D;
-      max-width: 400px;
-      font-weight: 400;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .suggested-community-photo {
-      width: 44px;
       margin-right: 16px;
-      display: inline-block;
     }
 
-    .suggested-community-photo img {
-      width: 44px;
-      height: 44px;
-      position: relative;
-      top: 4px;
-      border-radius: 8px;
-    }
-
-    .section-divider {
-      margin: 24px 0;
-      border-top: 2px solid #DFE7EF;
+    .thread-community-header p {
+      color: #828C99;
+      font-weight: 400;
+      margin: 0;
       display: block;
-      width: 100%;
-      height: 2px;
+      font-size: 14px;
+      margin-top: 0!important;
     }
 
-    .suggest-communities-title {
-      margin-left: 16px;
-      font-size: 18px;
+    .thread-community-header a {
+      color: #828C99;
+    }
+
+    .thread-title {
+      padding: 0;
+    }
+
+    .thread-title h3 {
       font-weight: 500;
-      margin-top: 16px;
-    }
-
-    .suggested-community-table {
-      display: block;
-      margin-bottom: 20px;
-      white-space: nowrap;
-      overflow: hidden;
-      max-width: 480px;
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 0!important;
     }
 
     .newMessageCount {
       color: #E2197A;
     }
+
+    .section-divider {
+      display: block;
+      margin: 32px 0!important;
+      border-bottom: 1px solid #DAE4F2;
+      height: 1px;
+    }
+
+    .suggested-community-title {
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 0!important;
+    }
+
+    .suggested-community {
+      margin-top: 16px!important;
+      padding-top: 16px!important;
+    }
+    
+    h2.discover-divider {
+      margin-bottom: 0;
+    }
     </style>
   </head>
   <body>
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      View the top conversations in your communities in the past {{timeframe.time}}.
+    <div class="preheader">
+      {{preheader}}
     </div>
 
     <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
@@ -438,121 +383,99 @@
             <!-- Email Body -->
             <tr>
               <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
-                  <!-- Body content -->
-                  <tr>
-                    <td class="header-cell">
-                      <p>{{greeting}}</p>
-
-                      {{#reputationString}}
-                        <p>{{.}}</p>
-                      {{/reputationString}}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="section-divider"></div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <h2 class="suggest-communities-title">The most active conversations in your communities:</h2>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td class="content-cell">
-
-                      {{#each threads}}
-                        <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td>
-                              <a href="https://spectrum.chat/thread/{{threadId}}">
-                                <h2 class="title">{{title}}</h2>
+                <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
+                  {{#each data.threads}}
+                    <tr>
+                      <td class="thread">
+                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-title">
+                          <tr width="100%" cellpadding="0" cellspacing="0">
+                            <td valign="middle">
+                              <a href="https://spectrum.chat/thread/{{id}}" class="block">
+                                <h3>{{title}}</h3>
                               </a>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
-                              <table class="thread-meta" width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                  <td>
-                                    <img class="community-icon" src="{{community.profilePhoto}}" width="20" height="20" />
-                                  </td>
-                                  <td class="community-name">
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                      <tr>
-                                        <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;/&nbsp;
-                                        <a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
-                                      </tr>
-                                      <tr>
-                                        <td>{{{messageCountString}}}</td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
                         </table>
-                      {{/each}}
-                    </td>
-                  </tr>
 
-                  {{#communities}}
+                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header">
+                          <tr width="100%" cellpadding="0" cellspacing="0">
+                            <td valign="middle" width="32">
+                              <a href="https://spectrum.chat/{{community.slug}}" class="block" style="height:32px">
+                                <img src={{community.profilePhoto}} width="32" height="32" />
+                              </a>
+                            </td>
+  
+                            <td valign="middle">
+                              <p>
+                                Posted in <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;·&nbsp;<a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
+                              </p>
+                              <p>
+                                <a href="https://spectrum.chat/{{community.slug}}" class="block a-p">
+                                  {{{messageCountString}}}
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    {{/each}}
+  
+                    {{#data.communities}}
+                    <tr>
+                      <td>
+                        <div class="section-divider"></div>
+                      </td>
+                    </tr>
+  
+                    <tr>
+                      <td>
+                        <h2 class="discover-divider">Discover more communities:</h2>
+                      </td>
+                    </tr>
+                    {{/data.communities}}
+  
+                  {{#each data.communities}}
+                    <tr>
+                      <td>
+                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header suggested-community">
+                          <tr width="100%" cellpadding="0" cellspacing="0">
+                            <td valign="middle" width="32">
+                              <a href="https://spectrum.chat/{{slug}}" class="block">
+                                <img src={{profilePhoto}} width="44" height="44" />
+                              </a>
+                            </td>
+  
+                            <td valign="middle">
+                              <a href="https://spectrum.chat/{{slug}}" class="block"><h2 class="suggested-community-title">{{name}}</h2></a>
+                              <a href="https://spectrum.chat/{{slug}}" class="block">
+                                <p>
+                                  {{description}}
+                                </p>
+                              </a>
+                            </td>
+
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  {{/each}}
+
+
                   <tr>
                     <td>
                       <div class="section-divider"></div>
                     </td>
                   </tr>
-
+  
                   <tr>
                     <td>
-                      <h2 class="suggest-communities-title">Discover more communities:</h2>
-                    </td>
-                  </tr>
-                  {{/communities}}
-
-                  <tr>
-                    <td class="content-cell">
-                      {{#each communities}}
-                        <table class="suggested-community-table" width="100%" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td class="suggested-community-photo">
-                              <img src="{{profilePhoto}}" width="44" height="44" />
-                            </td>
-                            <td align="left" style="display:inline-block;">
-                              <table class="thread-meta" width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                  <td>
-                                    <a href="https://spectrum.chat/{{slug}}">
-                                      <h2 class="title">{{name}}</h2>
-                                    </a>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="community-description">
-                                    {{description}}
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      {{/each}}
-                    </td>
-                  </tr>
-
-
-                  <tr>
-                    <td class="content-cell">
-                      <a class="feed button" href="https://spectrum.chat/">Go to my feed</a>
-                      <a class="feed button outline" href="https://spectrum.chat/explore">Explore communities</a>
+                      <a class="button" href="https://spectrum.chat/">Go to my feed</a>
                     </td>
                   </tr>
 
                   <tr>
-                    <td class="content-cell footer-cell">
+                    <td class="signoff">
                       <p class="emoji">✌️</p>
                       <p>- The Spectrum team</p>
                     </td>
@@ -561,26 +484,37 @@
               </td>
             </tr>
           </table>
+
           <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
             <tr>
-              <td class="content-cell">
-                <p class="sub">
+              <td>
+                <p>
                   You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>. If you no longer want to receive emails like this, you can:
                 </p>
 
                 <ul>
                   <li>
-                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Turn off {{timeframe.subject}} digests</a>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Turn off {{data.timeframe.subject}} digests</a>
                   </li>
 
-                  {{#username}}
+                  {{#data.username}}
                     <li>
                       <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
                     </li>
-                  {{/username}}
+                  {{/data.username}}
                 </ul>
 
-                <p class="sub">Spectrum is made by Space Program, Inc.<br/>542 Brannan St. 409, San Francisco, CA 94107</p>
+                <ul>
+                  <li>
+                    <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                  </li>
+
+                  <li>
+                    <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request a feature</a>
+                  </li>
+                </ul>
+
+                <p>Spectrum is made by Space Program, Inc.<br/>542 Brannan St. 409, San Francisco, CA 94107</p>
               </td>
             </tr>
           </table>
