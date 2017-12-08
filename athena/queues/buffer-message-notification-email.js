@@ -66,22 +66,15 @@ const timedOut = recipient => {
         replies: groupReplies(threads[threadId].replies),
       }));
       debug(`adding email for @${recipient.username} to queue`);
-      return addQueue(
-        SEND_NEW_MESSAGE_EMAIL,
-        {
-          to: recipient.email,
-          user: {
-            displayName: recipient.name,
-            username: recipient.username,
-            userId: recipient.userId,
-          },
-          threads: threadsWithGroupedReplies,
+      return addQueue(SEND_NEW_MESSAGE_EMAIL, {
+        to: recipient.email,
+        user: {
+          displayName: recipient.name,
+          username: recipient.username,
+          userId: recipient.userId,
         },
-        {
-          removeOnComplete: true,
-          removeOnFail: true,
-        }
-      );
+        threads: threadsWithGroupedReplies,
+      });
     });
 };
 

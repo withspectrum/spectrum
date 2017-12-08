@@ -8,7 +8,14 @@ if (!IS_PROD) {
 }
 const PERSPECTIVE_API_KEY = process.env.PERSPECTIVE_API_KEY;
 
+if (!PERSPECTIVE_API_KEY) {
+  console.log(
+    'No API key for Perspective provided, not sending moderation events.'
+  );
+}
+
 export default async (text: string) => {
+  if (!PERSPECTIVE_API_KEY) return;
   // $FlowFixMe
   const request = await axios({
     method: 'post',

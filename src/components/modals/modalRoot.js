@@ -7,6 +7,7 @@ import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import UpgradeModal from './UpgradeModal';
 import CommunityUpgradeModal from './CommunityUpgradeModal';
 import RepExplainerModal from './RepExplainerModal';
+import ChangeChannelModal from './ChangeChannelModal';
 
 const MODAL_COMPONENTS = {
   USER_PROFILE_MODAL: UserProfileModal,
@@ -15,6 +16,7 @@ const MODAL_COMPONENTS = {
   UPGRADE_MODAL: UpgradeModal,
   COMMUNITY_UPGRADE_MODAL: CommunityUpgradeModal,
   REP_EXPLAINER_MODAL: RepExplainerModal,
+  CHANGE_CHANNEL: ChangeChannelModal,
 };
 
 /*
