@@ -158,35 +158,28 @@ export default async ({ data }: { data: JobData }) => {
       : SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL;
 
   return Promise.all([
-    addQueue(
-      QUEUE_NAME,
-      {
-        recipient,
-        sender,
-        primaryActionLabel,
-        thread: {
-          ...thread,
-          creator: sender,
-          community,
-          channel,
-          content: {
-            title: thread.content.title,
-            body: threadBody,
-          },
-        },
-        message: {
-          ...message,
-          sender,
-          content: {
-            body: messageBody,
-          },
+    addQueue(QUEUE_NAME, {
+      recipient,
+      sender,
+      primaryActionLabel,
+      thread: {
+        ...thread,
+        creator: sender,
+        community,
+        channel,
+        content: {
+          title: thread.content.title,
+          body: threadBody,
         },
       },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    ),
+      message: {
+        ...message,
+        sender,
+        content: {
+          body: messageBody,
+        },
+      },
+    }),
     storeUsersNotifications(storedNotification.id, recipient.id),
   ]);
 };

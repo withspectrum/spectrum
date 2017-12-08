@@ -71,3 +71,27 @@ export const getThreadById = graphql(
 	`,
   getThreadByIdOptions
 );
+
+const MOVE_THREAD_MUTATION = gql`
+  mutation moveThread($threadId: ID!, $channelId: ID!) {
+    moveThread(threadId: $threadId, channelId: $channelId) {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
+`;
+const MOVE_THREAD_OPTIONS = {
+  props: ({ mutate }) => ({
+    moveThread: ({ threadId, channelId }) =>
+      mutate({
+        variables: {
+          threadId,
+          channelId,
+        },
+      }),
+  }),
+};
+export const moveThreadMutation = graphql(
+  MOVE_THREAD_MUTATION,
+  MOVE_THREAD_OPTIONS
+);
