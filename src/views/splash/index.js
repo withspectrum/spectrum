@@ -6,7 +6,6 @@ import {
   Centralized,
   CommunitySearch,
   Chat,
-  Sell,
   Yours,
   PageFooter,
 } from './view';
@@ -45,7 +44,6 @@ class Splash extends PureComponent {
         <Centralized />
         <CommunitySearch />
         <Chat />
-        <Sell />
         <Yours />
         <PageFooter />
       </Wrapper>

@@ -15,9 +15,21 @@ import {
   H2,
   Span,
   P,
+  Transition,
 } from '../../components/globals';
 import Search from '../explore/components/search';
-
+import { Communities } from './components/communities';
+import {
+  AbstractLogo,
+  BootstrapLogo,
+  ExpoLogo,
+  FigmaLogo,
+  InvisionLogo,
+  ZeitLogo,
+  SketchLogo,
+  RealmLogo,
+  NodeLogo,
+} from './components/logos';
 import ViewSegment from '../../components/viewSegment';
 import { Conversation, Discover } from '../../components/illustrations';
 import {
@@ -52,6 +64,7 @@ export const Overview = (props: Props) => {
     margin: 120px 16px 120px 16px;
     text-align: left;
     align-items: flex-start;
+    z-index: 2;
 
     @media (max-width: 768px) {
       margin-bottom: 16px;
@@ -59,16 +72,10 @@ export const Overview = (props: Props) => {
   `;
 
   const ThisCopy = styled(Copy)`
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1.6;
     font-weight: 500;
-    opacity: 0.95;
     max-width: 580px;
-
-    @media (max-width: 768px) {
-      font-size: 20px;
-      text-align: center;
-    }
   `;
 
   const ThisTagline = styled(Tagline)`
@@ -78,6 +85,7 @@ export const Overview = (props: Props) => {
 
   const Actions = styled(Flexer)`
     margin-top: 48px;
+    align-items: flex-start;
     justify-content: space-between;
   `;
 
@@ -89,6 +97,15 @@ export const Overview = (props: Props) => {
     @media (max-width: 768px) {
       margin-left: 0;
       margin-top: 16px;
+    }
+  `;
+
+  const ThisText = styled(Text)`
+    position: relative;
+    right: 20vw;
+
+    @media (max-width: 768px) {
+      right: 0;
     }
   `;
 
@@ -112,29 +129,45 @@ export const Overview = (props: Props) => {
     }
   `;
 
+  const Img = styled.img`
+    position: absolute;
+    top: 32px;
+    bottom: 0;
+    left: calc(20vw + 480px);
+    max-height: calc(100% - 32px);
+    z-index: 0;
+    ${'' /* transform: perspective(600px) rotate3d(0, 1, 0, -10deg); */} @media(max-width: 768px) {
+      display: none;
+    }
+  `;
+
   return (
     <Section background="constellations" goop={2}>
       <ThisContent>
-        <Text>
-          <ThisTagline>The internet was built for communities.</ThisTagline>
+        <ThisText>
+          <ThisTagline>A community platform for the future.</ThisTagline>
+          <ThisCopy>The internet was built for communities.</ThisCopy>
           <ThisCopy>
-            We all deserve a better, more forward-looking platform than forums
-            and IRC knockoffs.
+            But, as the web has changed and improved radically, community
+            software has hardly improved since the heyday of messageboards and
+            IRC.
           </ThisCopy>
           <ThisCopy>
-            Spectrum is a platform for building the communities of the future.
+            Spectrum makes it easy to grow safe, successful online communities
+            that are built to last.
           </ThisCopy>
           <Actions>
-            <Link to="/new/community">
-              <ThisPrimaryCTA icon="plus-fill">
-                Create a community
-              </ThisPrimaryCTA>
-            </Link>
             <Link to="/login">
-              <ThisSecondaryCTA icon="explore">Sign Up</ThisSecondaryCTA>
+              <ThisPrimaryCTA icon="private">Join Spectrum</ThisPrimaryCTA>
+            </Link>
+            <Link to="/new/community">
+              <ThisSecondaryCTA icon="plus-fill">
+                Create your community
+              </ThisSecondaryCTA>
             </Link>
           </Actions>
-        </Text>
+        </ThisText>
+        <Img src={'/img/diagram.png'} />
       </ThisContent>
     </Section>
   );
@@ -186,30 +219,60 @@ export const Centralized = (props: Props) => {
     }
   `;
 
+  const LogoSection = styled.div`
+    display: flex;
+    align-self: center;
+    max-width: 80vw;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 2;
+
+    img {
+      margin-top: 32px;
+      margin-right: 32px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  `;
+
   return (
     <Section goop={6} color={'space.alt'}>
       <ThisContent>
         <Discover />
         <Text>
-          <ThisTagline>Discoverable by default</ThisTagline>
+          <ThisTagline>Grow together</ThisTagline>
           <ThisCopy>
-            People shouldn't have to hunt down an email invite or search through
-            a help center to find your community.
+            By building on Spectrum, communities become easily discoverable
+            through search, curation, and even other community members.
           </ThisCopy>
           <ThisCopy>
-            When you build on Spectrum, people can find your community
-            organically with search, curation, and through other community
-            members.
+            It also means no more managing multiple logins or playing
+            whack-a-mole with different notifications and preferences. Everyone
+            wins!
           </ThisCopy>
           <Actions>
             <Link to="/explore">
               <ThisPrimaryCTA icon="explore">
-                Check out our top communities
+                Explore communities
               </ThisPrimaryCTA>
             </Link>
           </Actions>
         </Text>
       </ThisContent>
+      <LogoSection>
+        <FigmaLogo />
+        <BootstrapLogo />
+        <ExpoLogo />
+        <ZeitLogo />
+        <SketchLogo />
+        <AbstractLogo />
+        <RealmLogo />
+        <NodeLogo />
+        <InvisionLogo />
+      </LogoSection>
     </Section>
   );
 };
@@ -299,7 +362,7 @@ export const Chat = (props: Props) => {
   `;
 
   return (
-    <Section goop={7} color={'space.dark'}>
+    <Section goop={7} color={'bg.reverse'}>
       <ThisContent>
         <Conversation />
         <FlexCol>
@@ -317,7 +380,7 @@ export const Chat = (props: Props) => {
           <Actions>
             <Link to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9">
               <ThisPrimaryCTA icon="message-fill">
-                View a live conversation
+                Check out a conversation
               </ThisPrimaryCTA>
             </Link>
           </Actions>
@@ -349,7 +412,7 @@ export const Sell = (props: Props) => {
   const ThisSection = styled(Section)`margin-bottom: 40px;`;
 
   return (
-    <ThisSection goop={2} background="dark">
+    <ThisSection goop={2} background="dark" color={'bg.reverse'}>
       <ThisContent>
         <Text>
           <ThisTagline>Spectrum saves you time and money</ThisTagline>
@@ -418,36 +481,24 @@ export const Yours = (props: Props) => {
     text-align: left;
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
-  `;
-
   const ThisSecondaryCTA = styled(SecondaryCTA)`
     margin-left: 16px;
-    background-color: transparent;
-    color: ${props => props.theme.brand.alt};
-    border-color: ${props => props.theme.brand.alt};
-
-    &:hover {
-      border-color: ${props => props.theme.brand.alt};
-      color: ${props => props.theme.brand.alt};
-      box-shadow: 0 0 8px ${props => hexa(props.theme.brand.alt, 1)};
-    }
-
-    > div {
-      top: -1px;
-    }
+    font-size: 16px;
+    border: 2px solid ${props => props.theme.text.reverse};
 
     @media (max-width: 768px) {
       margin-left: 0;
       margin-top: 16px;
+    }
+  `;
+
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    font-size: 16px;
+    color: ${props => props.theme.text.default};
+
+    &:hover {
+      color: ${props => props.theme.brand.alt};
+      box-shadow: ${Shadow.high} #000;
     }
   `;
 
@@ -465,7 +516,7 @@ export const Yours = (props: Props) => {
   `;
 
   return (
-    <Section goop={1} color="bg.reverse">
+    <Section goop={0} background={'reverse'}>
       <ThisContent>
         <FlexCol>
           <Tagline>All your communities in one place</Tagline>
@@ -480,14 +531,12 @@ export const Yours = (props: Props) => {
             community they're in.
           </ThisCopy>
           <Actions>
-            <Link to="/new/community">
-              <ThisPrimaryCTA icon="plus-fill">
-                Create a community
-              </ThisPrimaryCTA>
+            <Link to="/login">
+              <ThisPrimaryCTA icon="private">Join Spectrum</ThisPrimaryCTA>
             </Link>
             <Link to="/explore">
               <ThisSecondaryCTA icon="explore">
-                Find communities
+                Explore communities
               </ThisSecondaryCTA>
             </Link>
           </Actions>
@@ -525,6 +574,7 @@ export const Plans = (props: Props) => {
     flex: auto;
     display: grid;
     margin: 64px;
+    margin-top: 120px;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: 'pricing';
@@ -761,7 +811,7 @@ export const Plans = (props: Props) => {
   `;
 
   return (
-    <Section background="illustrated" goop={1} color="bg.reverse">
+    <Section background="illustrated" goop={1} color="space.dark">
       <Layout>
         <PricingGrid>
           <ThisTagline>Community plans</ThisTagline>

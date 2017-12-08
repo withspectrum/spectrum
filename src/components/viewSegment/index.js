@@ -80,6 +80,12 @@ export const Grayscale = styled(Default)`
   color: ${({ theme }) => theme.text.reverse};
 `;
 
+export const Reverse = styled(Default)`
+  background-color: ${({ theme }) => theme.bg.reverse};
+  background-image: none;
+  color: ${({ theme }) => theme.text.reverse};
+`;
+
 export const Illustrated = styled(Default)`
   img {
     opacity: 0.15;
@@ -169,6 +175,13 @@ const Theme = (props: ThemeProps) => {
           {props.children}
           <Goop {...props} />
         </Illustrated>
+      );
+    case 'reverse':
+      return (
+        <Reverse>
+          {props.children}
+          <Goop {...props} />
+        </Reverse>
       );
   }
 };
