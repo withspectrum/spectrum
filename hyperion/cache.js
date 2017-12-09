@@ -48,9 +48,15 @@ const cache = (
     res.originalSend = res.send;
     // $FlowFixMe
     res.send = (...args) => {
-      debug(`monkey-patched res.send called, caching at ${req.path}`);
-
-      redis.set(key, ...args, 'ex', 3600);
+      debug(`monkey-patched res.send called`);
+      if (res.statusCode > 199 && res.statusCode < 300) {
+        debug(`successful render, caching at ${req.path}`);
+        redis.set(key, ...args, 'ex', 3600);
+      } else {
+        debug(
+          `unsuccessful render (status code: ${res.statusCode}), not caching`
+        );
+      }
       // $FlowFixMe
       res.originalSend(...args);
     };
