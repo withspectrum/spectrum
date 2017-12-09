@@ -1,20 +1,36 @@
-const { getChannels } = require('../models/channel');
-const {
-  getCommunities,
-  getCommunityPermissions,
-} = require('../models/community');
-const { getUsers } = require('../models/user');
+// @flow
+import { getThreadNotificationStatusForUser } from '../models/usersThreads';
 import {
-  getParticipantsInThread,
-  getThreadNotificationStatusForUser,
-} from '../models/usersThreads';
-const { getMessages, getMessageCount } = require('../models/message');
-import paginate from '../utils/paginate-arrays';
+  getUserPermissionsInChannel,
+  DEFAULT_USER_CHANNEL_PERMISSIONS,
+} from '../models/usersChannels';
+const { getMessages } = require('../models/message');
 import { addQueue } from '../utils/workerQueue';
 import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
+import {
+  getPublicChannelIdsInCommunity,
+  getPrivateChannelIdsInCommunity,
+  getUsersJoinedPrivateChannelIds,
+  getPublicChannelIdsForUsersThreads,
+  getPrivateChannelIdsForUsersThreads,
+  getUsersJoinedChannels,
+  getAllPublicChannelIds,
+  getAllPrivateChannelIds,
+} from '../models/search';
+import { intersection } from 'lodash';
+import algoliasearch from 'algoliasearch';
+var algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
+var threadsIndex = algolia.initIndex('dev_threads_and_messages');
+
+type FilterTypes = {
+  communityId?: string,
+  channelId?: string,
+  userId?: string,
+  everythingFeed?: boolean,
+};
 
 module.exports = {
   Query: {
@@ -52,6 +68,30 @@ module.exports = {
           });
         }
       }),
+    searchThreads: async (
+      _: any,
+      { queryString, filter }: { queryString: string, filter: FilterTypes },
+      { user, loaders }: GraphQLContext
+    ) => {
+      /*
+        This Query method's only purpose is to construct a string of filters that gets sent to Algolia, our search provider.
+        The string of channels we send to Algolia will only return threadIds where the current user has permission
+        to view threads.
+      */
+
+      const threadIds = await threadsIndex
+        .search({ query: queryString })
+        .then(content => {
+          if (!content.hits || content.hits.length === 0) return null;
+          return content.hits.map(o => o.threadId);
+        })
+        .catch(err => {
+          console.log('err', err);
+        });
+
+      if (!threadIds) return [];
+      return loaders.thread.loadMany(threadIds);
+    },
   },
   Thread: {
     attachments: ({ attachments }: { attachments: Array<any> }) =>

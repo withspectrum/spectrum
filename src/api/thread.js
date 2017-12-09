@@ -71,3 +71,12 @@ export const getThreadById = graphql(
 	`,
   getThreadByIdOptions
 );
+
+export const SEARCH_THREADS_QUERY = gql`
+  query searchThreads($queryString: String!, $filter: SearchThreadsFilter) {
+    searchThreads(queryString: $queryString, filter: $filter) {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
+`;
