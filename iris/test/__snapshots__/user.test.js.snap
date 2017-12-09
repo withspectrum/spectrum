@@ -4,13 +4,11 @@ exports[`queries should fetch a user 1`] = `
 Object {
   "data": Object {
     "user": Object {
-      "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F2451223458%2F1479507323%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=4d24c5f6290c8dfc5ccc7b92822cbf28",
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
       "email": null,
       "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
       "name": "Max Stoiber",
-      "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fimg.gs%2Fjztmrqvgzv%2F500%2Fmxstbr.com%2Fheadshot.jpeg?w=128&h=128&ixlib=js-1.1.1&s=a69e5728b3d22482db14a9e55628fffe",
       "providerId": "2451223458",
       "username": "mxstbr",
       "website": "https://mxstbr.com",
