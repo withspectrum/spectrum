@@ -110,6 +110,12 @@ const Splash = Loadable({
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
+/* prettier-ignore */
+const Search = Loadable({
+  loader: () => import('./views/search'/* webpackChunkName: "Splash" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
 const About = () => (
   <div>
     <h3>About</h3>
@@ -206,6 +212,7 @@ class Routes extends React.Component<{}> {
               <Route path="/terms" component={About} />
               <Route path="/code-of-conduct" component={About} />
               <Route path="/style-guide" component={StyleGuide} />
+              <Route path="/search" component={Search} />
 
               {/* App Pages */}
               <Route path="/new/community" component={NewCommunityFallback} />
