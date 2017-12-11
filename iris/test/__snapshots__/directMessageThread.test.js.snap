@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`messageConnection should fetch a directMessageThreads messages 1`] = `
+Object {
+  "data": Object {
+    "directMessageThread": Object {
+      "messageConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "id": "b546f27e-d842-4afe-900d-ad26ee60ca03",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`should fetch a directMessageThread 1`] = `
+Object {
+  "data": Object {
+    "directMessageThread": Object {
+      "id": "first-dm-thread-asdf123",
+      "threadLastActive": "2016-12-31T23:00:00.000Z",
+    },
+  },
+}
+`;

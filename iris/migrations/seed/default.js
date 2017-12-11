@@ -1,7 +1,7 @@
 const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
 // 2017/01/01
-const DATE = 1483225200000;
+export const DATE = 1483225200000;
 
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
@@ -208,18 +208,34 @@ const DEFAULT_USERS_THREADS = [
 
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
-    id: 'first-dm-thread-asfd123',
+    id: 'first-dm-thread-asdf123',
     createdAt: new Date(DATE),
     name: null,
-    threadLastActive: new Date(),
+    threadLastActive: new Date(DATE),
   },
 ];
 
 const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
     createdAt: new Date(DATE),
-    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
-    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    userId: BRIAN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    threadId: 'first-dm-thread-asdf123',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
@@ -348,6 +364,21 @@ const DEFAULT_MESSAGES = [
     threadType: 'story',
     senderId: BRIAN_ID,
     timestamp: new Date(DATE + 3),
+  },
+  // DM Thread
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: 'b546f27e-d842-4afe-900d-ad26ee60ca03',
+    attachments: [],
+    content: {
+      body: JSON.stringify(
+        toJSON(fromPlainText('Direct message thread message!'))
+      ),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE),
   },
 ];
 
