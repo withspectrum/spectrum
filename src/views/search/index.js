@@ -36,7 +36,7 @@ class Search extends React.Component<Props, State> {
           onError={this.onError}
           placeholder={'Search for conversations...'}
           StyledComponent={Input}
-          filter={{}}
+          filter={{ creatorId: 'KKW3pv8Y9ObYWlBwZVV4cl2v6ss2' }}
         />
 
         {gqlResults.length > 0 &&

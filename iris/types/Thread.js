@@ -59,7 +59,7 @@ const Thread = /* GraphQL */ `
 
 	input SearchThreadsFilter {
 		communityId: ID
-		userId: ID
+		creatorId: ID
 		channelId: ID
 		everythingFeed: Boolean
 	}
