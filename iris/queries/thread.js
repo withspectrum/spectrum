@@ -1,8 +1,6 @@
+// @flow
 const { getChannels } = require('../models/channel');
-const {
-  getCommunities,
-  getCommunityPermissions,
-} = require('../models/community');
+const { getCommunities } = require('../models/community');
 const { getUsers } = require('../models/user');
 import {
   getParticipantsInThread,
@@ -14,6 +12,7 @@ import { addQueue } from '../utils/workerQueue';
 import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
+import type { DBThread } from 'shared/types';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
@@ -54,7 +53,7 @@ module.exports = {
       }),
   },
   Thread: {
-    attachments: ({ attachments }: { attachments: Array<any> }) =>
+    attachments: ({ attachments }: DBThread) =>
       attachments &&
       attachments.map(attachment => {
         return {
@@ -62,18 +61,15 @@ module.exports = {
           data: JSON.stringify(attachment.data),
         };
       }),
-    channel: (
-      { channelId }: { channelId: string },
-      _: any,
-      { loaders }: GraphQLContext
-    ) => loaders.channel.load(channelId),
+    channel: ({ channelId }: DBThread, _: any, { loaders }: GraphQLContext) =>
+      loaders.channel.load(channelId),
     community: (
-      { communityId }: { communityId: string },
+      { communityId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
     participants: (
-      { id, creatorId }: { id: string, creatorId: string },
+      { id, creatorId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => {
@@ -81,16 +77,12 @@ module.exports = {
         .load(id)
         .then(result => (result ? result.reduction : []));
     },
-    isCreator: (
-      { creatorId }: { creatorId: string },
-      _: any,
-      { user }: GraphQLContext
-    ) => {
+    isCreator: ({ creatorId }: DBThread, _: any, { user }: GraphQLContext) => {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
     receiveNotifications: (
-      { id }: { id: string },
+      { id }: DBThread,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -104,7 +96,7 @@ module.exports = {
       }
     },
     messageConnection: (
-      { id, watercooler }: { id: String },
+      { id }: DBThread,
       { first = 999999, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
@@ -114,9 +106,8 @@ module.exports = {
       const lastMessageIndex =
         lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       return getMessages(id, {
-        // Only send down 200 messages for the watercooler?
         first,
-        after: lastMessageIndex,
+        after: lastMessageIndex || 0,
       }).then(result => {
         if (user && user.id) {
           addQueue(TRACK_USER_THREAD_LAST_SEEN, {
@@ -137,7 +128,7 @@ module.exports = {
       });
     },
     creator: async (
-      { creatorId, communityId }: { creatorId: string, communityId: string },
+      { creatorId, communityId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => {
@@ -158,11 +149,7 @@ module.exports = {
         },
       };
     },
-    messageCount: (
-      { id }: { id: string },
-      __: any,
-      { loaders }: GraphQLContext
-    ) => {
+    messageCount: ({ id }: DBThread, __: any, { loaders }: GraphQLContext) => {
       return loaders.threadMessageCount
         .load(id)
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
