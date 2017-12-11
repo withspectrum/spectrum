@@ -80,7 +80,7 @@ export const createUserThread = ({
       threadId,
       lastSeen: lastSeen || db.literal(),
       isParticipant: isParticipant || false,
-      receiveNotifications: null,
+      receiveNotifications: receiveNotifications || null,
     })
     .run();
 };
