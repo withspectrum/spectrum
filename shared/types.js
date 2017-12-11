@@ -298,3 +298,40 @@ export type Mention = {
   username: string,
   type: 'thread' | 'message',
 };
+
+export type SearchThread = {
+  channelId: string,
+  communityId: string,
+  creatorId: string,
+  lastActive: number,
+  messageContent: {
+    body: ?string,
+  },
+  threadContent: {
+    body: ?string,
+  },
+  createdAt: number,
+  isLocked: boolean,
+  isPublished: boolean,
+  threadId: string,
+};
+
+export type SearchUser = {
+  description: ?string,
+  name: string,
+  username: string,
+  website: ?string,
+  coverPhoto: ?string,
+  profilePhoto: ?string,
+  id: string,
+};
+
+export type SearchCommunity = {
+  description: ?string,
+  name: string,
+  slug: string,
+  website: ?string,
+  coverPhoto: ?string,
+  profilePhoto: ?string,
+  id: string,
+};
