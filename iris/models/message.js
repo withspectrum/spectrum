@@ -25,19 +25,22 @@ export const getMessages = (
     first = 999999,
     after,
     reverse = false,
-  }: { first?: number, after?: number, reverse?: boolean }
+  }: { first?: number, after?: number | Date, reverse?: boolean }
 ): Promise<Array<Message>> => {
   const order = reverse
     ? db.desc('threadIdAndTimestamp')
     : 'threadIdAndTimestamp';
   return db
     .table('messages')
-    .between([threadId, db.minval], [threadId, db.maxval], {
-      index: 'threadIdAndTimestamp',
-    })
+    .between(
+      [threadId, after ? new Date(after) : db.minval],
+      [threadId, db.maxval],
+      {
+        index: 'threadIdAndTimestamp',
+      }
+    )
     .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
-    .skip(after || 0)
     .limit(first)
     .run();
 };

@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('iris:queries:thread');
 const { getChannels } = require('../models/channel');
 const { getCommunities } = require('../models/community');
 const { getUsers } = require('../models/user');
@@ -10,6 +11,7 @@ const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import { addQueue } from '../utils/workerQueue';
 import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
+import UserError from '../utils/UserError';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import type { DBThread } from 'shared/types';
@@ -95,20 +97,39 @@ module.exports = {
           .then(result => (result ? result.receiveNotifications : false));
       }
     },
-    messageConnection: (
+    messageConnection: async (
       { id }: DBThread,
-      { first = 999999, after }: PaginationOptions,
-      { user }: GraphQLContext
+      { first = 50, after }: PaginationOptions,
+      { user, loaders }: GraphQLContext
     ) => {
-      const cursor = decode(after);
-      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
-      const lastDigits = cursor.match(/-(\d+)$/);
-      const lastMessageIndex =
-        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-      return getMessages(id, {
-        first,
-        after: lastMessageIndex || 0,
-      }).then(result => {
+      debug(`get messages for ${id}`);
+      let cursor;
+      try {
+        cursor = parseInt(decode(after), 10);
+      } catch (err) {
+        debug(err);
+        throw new UserError(
+          'Invalid cursor passed to "after" parameter of thread.messageConnection.'
+        );
+      }
+      if (!cursor && user) {
+        debug(
+          `no valid cursor provided, getting user last seen for user ${user.id}`
+        );
+        try {
+          cursor = await loaders.userThreadNotificationStatus
+            .load([user.id, id])
+            .then(result => result && result.lastSeen);
+        } catch (err) {
+          // Ignore errors from getting user last seen
+        }
+      }
+      debug(`cursor: ${cursor}`);
+      const messageCount = await loaders.threadMessageCount
+        .load(id)
+        .then(res => (res ? res.reduction : 0));
+
+      return getMessages(id, { first, after: cursor }).then(result => {
         if (user && user.id) {
           addQueue(TRACK_USER_THREAD_LAST_SEEN, {
             threadId: id,
@@ -118,10 +139,13 @@ module.exports = {
         }
         return {
           pageInfo: {
-            hasNextPage: result && result.length >= first,
+            // TODO(@mxstbr): Figure out how we know this
+            hasNextPage:
+              messageCount !== 0 && result && result.length <= messageCount,
+            hasPreviousPage: false,
           },
           edges: result.map((message, index) => ({
-            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+            cursor: encode(message.timestamp.getTime().toString()),
             node: message,
           })),
         };
@@ -157,17 +181,19 @@ module.exports = {
     currentUserLastSeen: (
       { id }: DBThread,
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       if (!user || !user.id) return null;
 
-      return getThreadNotificationStatusForUser(id, user.id).then(result => {
-        if (!result || result.length === 0) return;
-        const data = result[0];
-        if (!data || !data.lastSeen) return null;
+      return loaders.userThreadNotificationStatus
+        .load([user.id, id])
+        .then(result => {
+          if (!result || result.length === 0) return;
+          const data = result[0];
+          if (!data || !data.lastSeen) return null;
 
-        return data.lastSeen;
-      });
+          return data.lastSeen;
+        });
     },
   },
 };
