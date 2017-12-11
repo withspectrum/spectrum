@@ -17,7 +17,7 @@ beforeAll(async () => {
   browser = await puppeteer.launch(config);
   page = await browser.newPage();
   // Navigate the page to the splash page for all tests
-  await page.goto('http://localhost:3000/');
+  await page.goto('http://localhost:3006/');
 });
 
 // Afterwards close the browser

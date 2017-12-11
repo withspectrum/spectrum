@@ -36,7 +36,7 @@ beforeAll(async () => {
     secure: false,
   });
   // Navigate the page to the inbox page for all tests
-  await page.goto('http://localhost:3000/');
+  await page.goto('http://localhost:3006/');
 });
 
 // Afterwards close the browser
