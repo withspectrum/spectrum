@@ -54,6 +54,7 @@ module.exports = {
       // relationship to the thread - this will enable us to query against
       // thread.participants as well as have per-thread notifications for a user
       if (message.threadType === 'story' && (thread && !thread.watercooler)) {
+        console.log('setting participant');
         createParticipantInThread(message.threadId, currentUser.id);
       }
 
