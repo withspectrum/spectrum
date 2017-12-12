@@ -197,10 +197,13 @@ export type DBThread = {
   createdAt: Date,
   creatorId: string,
   isPublished: boolean,
+  isLocked: boolean,
   lastActive: Date,
   modifiedAt?: Date,
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
+  watercooler?: boolean,
+  type: string,
 };
 
 export type DBUser = {

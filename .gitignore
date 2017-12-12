@@ -9,6 +9,7 @@ rethinkdb_data
 debug
 iris/.env
 athena/.env
+vulcan/.env
 build-iris
 build-athena
 build-hermes

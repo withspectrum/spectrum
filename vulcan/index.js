@@ -1,6 +1,8 @@
 // $FlowFixMe
 const debug = require('debug')('vulcan');
 const PORT = process.env.PORT || 3007;
+import listenForNewThreads from './models/thread';
+import createServer from './server';
 
 console.log('\n✉️ Vulcan, the search worker, is starting...');
 debug('Logging with debug enabled!');
@@ -12,6 +14,9 @@ console.log(
     'locally'}`
 );
 
+listenForNewThreads();
+
+const server = createServer();
 server.listen(PORT, 'localhost', () => {
   console.log(
     `💉 Healthcheck server running at ${server.address()
