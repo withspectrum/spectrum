@@ -67,7 +67,7 @@ module.exports = {
         // NOTE(@mxstbr): We used to use first/after for reverse DM pagination
         // so we have to keep it that way for backwards compat, but really this
         // should be last/before since it's in the other way of time
-        last: first,
+        last: first || 30,
         before: cursor,
       });
 
