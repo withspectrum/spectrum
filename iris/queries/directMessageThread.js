@@ -54,7 +54,7 @@ module.exports = {
   DirectMessageThread: {
     messageConnection: async (
       { id }: { id: string },
-      { first = 30, after }: PaginationOptions,
+      { first, after }: PaginationOptions,
       { user, loaders }: GraphQLContext
     ) => {
       if (!user || !user.id) return null;
@@ -64,9 +64,11 @@ module.exports = {
 
       const cursor = parseInt(decode(after), 10);
       const messages = await getMessages(id, {
-        first,
-        after: cursor,
-        reverse: true,
+        // NOTE(@mxstbr): We used to use first/after for reverse DM pagination
+        // so we have to keep it that way for backwards compat, but really this
+        // should be last/before since it's in the other way of time
+        last: first,
+        before: cursor,
       });
 
       return {
