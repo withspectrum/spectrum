@@ -63,7 +63,6 @@ module.exports = {
       if (!canViewThread) return null;
 
       const cursor = parseInt(decode(after), 10);
-      // $FlowFixMe
       const messages = await getMessages(id, {
         first,
         after: cursor,
@@ -73,6 +72,12 @@ module.exports = {
       return {
         pageInfo: {
           hasNextPage: messages && messages.length >= first,
+          // NOTE(@mxstbr): For DM threads we just assume there to be a previous page
+          // if the user provided a cursor and there were at least some messages
+          // That way they might get a false positive here if they request the messages before the last message
+          // but since that query returns no messages this will be false and all will be well
+          // (so it essentially just takes 1 “unnecessary” request to figure out whether or not there is a previous page)
+          hasPreviousPage: messages && messages.length > 0 && !!cursor,
         },
         edges: messages.map((message, index) => ({
           cursor: encode(message.timestamp.getTime().toString()),
