@@ -18,7 +18,7 @@ export const createParticipantInThread = (
       // with this thread
       if (result && result.length > 0) {
         // if they are already a participant, we can return
-        const { id, isParticipant } = result[0];
+        const { id, isParticipant, receiveNotifications } = result[0];
         if (isParticipant) return;
 
         // otherwise, mark them as a participant
@@ -27,6 +27,9 @@ export const createParticipantInThread = (
           .get(id)
           .update({
             isParticipant: true,
+            // if receiveNotifications is null, it means that the user is leaving
+            // their first message on the thread, so this should set it to true
+            receiveNotifications: receiveNotifications === false ? false : true,
           })
           .run();
       } else {

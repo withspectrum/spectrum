@@ -2,6 +2,7 @@
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
+import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
 import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
 import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
@@ -154,10 +155,15 @@ export const getChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
+        community {
+          ...communityInfo
+          ...communityMetaData
+        }
       }
 		}
     ${channelInfoFragment}
     ${communityInfoFragment}
+    ${communityMetaDataFragment}
     ${channelMetaDataFragment}
 	`,
   profileQueryOptions

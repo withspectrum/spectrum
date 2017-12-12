@@ -117,7 +117,6 @@ export const ActionUI = styled.div`
       transition: ${Transition.hover.on};
       visibility: hidden;
       opacity: 0;
-      ${props => (props.me ? 'right: 100%' : 'left: 100%')};
     }
   }
 
@@ -131,7 +130,6 @@ export const ActionUI = styled.div`
     transition: ${Transition.hover.off};
     visibility: visible;
     opacity: 1;
-    ${props => (props.me ? 'right: -12px' : 'left: -12px')};
   }
 `;
 
@@ -166,7 +164,6 @@ export const Wrapper = styled.div`
           transition: ${Transition.hover.on};
           visibility: hidden;
           opacity: 0;
-          ${props => (props.me ? 'right: 100%' : 'left: 100%')};
         }
       }
     `} &:hover {
@@ -183,7 +180,6 @@ export const Wrapper = styled.div`
         transition: ${Transition.hover.on};
         visibility: hidden;
         opacity: 0;
-        ${props => (props.me ? 'right: 100%' : 'left: 100%')};
       }
     }
   }

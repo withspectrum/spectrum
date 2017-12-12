@@ -109,16 +109,19 @@ export const Actions = props => {
     canModerate,
     deleteMessage,
     hideIndicator,
+    isOptimisticMessage,
   } = props;
 
   return (
     <ActionUI me={me}>
       {props.children}
       {/* {props.shareable && <Action me={me} action={'share'} /> } */}
-      {canModerate && (
-        <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
-      )}
-      {hideIndicator || <Indicator reaction={reaction} me={me} />}
+      {canModerate &&
+        !isOptimisticMessage && (
+          <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
+        )}
+      {hideIndicator ||
+        (!isOptimisticMessage && <Indicator reaction={reaction} me={me} />)}
     </ActionUI>
   );
 };
