@@ -2,15 +2,19 @@
 const debug = require('debug')(
   'athena:queue:format-and-buffer-notification-email'
 );
+import { getCommunityById } from '../../models/community';
+import { getChannelById } from '../../models/channel';
 import { toPlainText, toState } from 'shared/draft-utils';
-import bufferNotificationEmail from '../queues/buffer-message-notification-email';
+import bufferNotificationEmail from './buffer-email';
 
 type UserType = {
   id: string,
   profilePhoto: string,
   name: string,
+  username: string,
 };
 type MessageType = {
+  id: string,
   content: {
     body: string,
   },
@@ -22,9 +26,13 @@ type RecipientType = {
   name: string,
 };
 type NotificationType = {};
-type ThreadType = {};
+type ThreadType = {
+  id: string,
+  channelId: string,
+  communityId: string,
+};
 
-export const formatAndBufferNotificationEmail = (
+export default async (
   recipient: RecipientType,
   thread: ThreadType,
   user: UserType,
@@ -43,16 +51,22 @@ export const formatAndBufferNotificationEmail = (
     return Promise.resolve();
   }
 
+  const { communityId, channelId, ...restOfThread } = thread;
+
   return bufferNotificationEmail(
     recipient,
     {
-      ...thread,
+      ...restOfThread,
+      community: await getCommunityById(communityId),
+      channel: await getChannelById(channelId),
       replies: [
         {
+          id: message.id,
           sender: {
             id: user.id,
             profilePhoto: user.profilePhoto,
             name: user.name,
+            username: user.username,
           },
           content: {
             body:
@@ -66,5 +80,3 @@ export const formatAndBufferNotificationEmail = (
     notification
   );
 };
-
-export default formatAndBufferNotificationEmail;
