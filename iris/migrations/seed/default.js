@@ -380,6 +380,54 @@ const DEFAULT_MESSAGES = [
     senderId: MAX_ID,
     timestamp: new Date(DATE),
   },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '2017f510-fe85-4de2-b5b2-6324567a6871',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A second one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 50),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '965830bb-e79d-4cec-acfa-91f67b590865',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A third one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRIAN_ID,
+    timestamp: new Date(DATE + 100),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '77e9619d-bea2-443a-bb9c-4b2957980644',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fourth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE + 200),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '9356f7f1-4be0-4230-8f79-71a9f97f7a1f',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fifth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 300),
+  },
 ];
 
 const DEFAULT_NOTIFICATIONS = [];
