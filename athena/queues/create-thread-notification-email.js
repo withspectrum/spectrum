@@ -47,27 +47,20 @@ const createThreadNotificationEmail = async (
 
     const primaryActionLabel = 'View conversation';
 
-    return addQueue(
-      SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-      {
-        recipient,
-        primaryActionLabel,
-        thread: {
-          ...thread,
-          creator,
-          community,
-          channel,
-          content: {
-            title: thread.content.title,
-            body,
-          },
+    return addQueue(SEND_THREAD_CREATED_NOTIFICATION_EMAIL, {
+      recipient,
+      primaryActionLabel,
+      thread: {
+        ...thread,
+        creator,
+        community,
+        channel,
+        content: {
+          title: thread.content.title,
+          body,
         },
       },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
+    });
   });
 
   // send all the emails

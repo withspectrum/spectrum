@@ -98,17 +98,10 @@ const timedOut = async recipient => {
   }
 
   debug(`adding email for @${recipient.username} to queue`);
-  return addQueue(
-    SEND_NEW_MESSAGE_EMAIL,
-    {
-      recipient,
-      threads: filteredThreadsWithGroupedReplies,
-    },
-    {
-      removeOnComplete: true,
-      removeOnFail: true,
-    }
-  );
+  return addQueue(SEND_NEW_MESSAGE_EMAIL, {
+    recipient,
+    threads: filteredThreadsWithGroupedReplies,
+  });
 };
 
 type Timeouts = {

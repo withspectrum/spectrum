@@ -3,7 +3,6 @@ const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
-import checkMessageToxicity from '../utils/moderationEvents/message';
 
 export type MessageTypes = 'text' | 'media';
 // TODO: Fix this
@@ -99,8 +98,8 @@ export const storeMessage = (
       }
 
       if (message.threadType === 'story') {
-        checkMessageToxicity(message);
         addQueue('message notification', { message });
+        addQueue('process admin toxic message', { message });
         addQueue('process reputation event', {
           userId,
           type: 'message created',

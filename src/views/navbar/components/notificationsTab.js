@@ -219,20 +219,19 @@ class NotificationsTab extends React.Component<Props, State> {
     // don't perform a mutation is there are no unread notifs
     if (count === 0) return;
 
+    const oldNotifications = notifications && notifications.slice();
+
+    // Optimistically update the seen status of the notifications
+    const newNotifications =
+      notifications &&
+      notifications.map(n => Object.assign({}, n, { isSeen: true }));
+    this.processAndMarkSeenNotifications(newNotifications);
     // otherwise
-    return markAllNotificationsSeen()
-      .then(() => {
-        // notifs were marked as seen
-        if (!notifications) return;
-        const newNotifications = notifications.map(n =>
-          Object.assign({}, n, { isSeen: true })
-        );
-        this.processAndMarkSeenNotifications(newNotifications);
-        return refetch();
-      })
-      .catch(err => {
-        // err
-      });
+    return markAllNotificationsSeen().catch(err => {
+      console.log(err);
+      // Undo the optimistic update from above
+      this.processAndMarkSeenNotifications(oldNotifications);
+    });
   };
 
   processAndMarkSeenNotifications = stateNotifications => {
@@ -326,9 +325,6 @@ class NotificationsTab extends React.Component<Props, State> {
 
     this.setState({ notifications: filteredByContext });
 
-    // if we are performing a local state update, go ahead and refetch data
-    // from the server to update our props
-    stateNotifications && refetch();
     return this.setCount(filteredByContext);
   };
 
