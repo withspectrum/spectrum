@@ -30,15 +30,16 @@ export const getMessages = (
   const order = reverse
     ? db.desc('threadIdAndTimestamp')
     : 'threadIdAndTimestamp';
+
+  const firstBound = reverse ? db.minval : after ? new Date(after) : db.minval;
+  const secondBound = reverse
+    ? after ? new Date(after) : db.maxval
+    : db.maxval;
   return db
     .table('messages')
-    .between(
-      [threadId, after ? new Date(after) : db.minval],
-      [threadId, db.maxval],
-      {
-        index: 'threadIdAndTimestamp',
-      }
-    )
+    .between([threadId, firstBound], [threadId, secondBound], {
+      index: 'threadIdAndTimestamp',
+    })
     .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
     .limit(first)

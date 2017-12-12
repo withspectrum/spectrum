@@ -62,15 +62,11 @@ module.exports = {
       const canViewThread = await canViewDMThread(id, user.id, { loaders });
       if (!canViewThread) return null;
 
-      const cursor = decode(after);
-      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
-      const lastDigits = cursor.match(/-(\d+)$/);
-      const lastMessageIndex =
-        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+      const cursor = parseInt(decode(after), 10);
       // $FlowFixMe
       const messages = await getMessages(id, {
         first,
-        after: lastMessageIndex,
+        after: cursor,
         reverse: true,
       });
 
@@ -79,7 +75,7 @@ module.exports = {
           hasNextPage: messages && messages.length >= first,
         },
         edges: messages.map((message, index) => ({
-          cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+          cursor: encode(message.timestamp.getTime().toString()),
           node: message,
         })),
       };
