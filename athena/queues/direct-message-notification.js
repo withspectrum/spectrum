@@ -99,38 +99,31 @@ export default async (job: JobData) => {
     : storeUsersNotifications;
 
   const addToQueue = recipient => {
-    return addQueue(
-      SEND_NEW_DIRECT_MESSAGE_EMAIL,
-      {
-        recipient,
-        thread: {
-          content: {
-            // Contruct title out of direct message thread users
-            title: `Conversation with ${sentencify(
-              recipients
-                .filter(userThread => userThread.userId !== recipient.userId)
-                .map(user => user.name)
-            )}`,
-          },
-          path: `messages/${thread.id}`,
-          id: thread.id,
+    return addQueue(SEND_NEW_DIRECT_MESSAGE_EMAIL, {
+      recipient,
+      thread: {
+        content: {
+          // Contruct title out of direct message thread users
+          title: `Conversation with ${sentencify(
+            recipients
+              .filter(userThread => userThread.userId !== recipient.userId)
+              .map(user => user.name)
+          )}`,
         },
-        user,
-        message: {
-          ...message,
-          content: {
-            body:
-              message.messageType === 'draftjs'
-                ? toPlainText(toState(JSON.parse(message.content.body)))
-                : message.content.body,
-          },
+        path: `messages/${thread.id}`,
+        id: thread.id,
+      },
+      user,
+      message: {
+        ...message,
+        content: {
+          body:
+            message.messageType === 'draftjs'
+              ? toPlainText(toState(JSON.parse(message.content.body)))
+              : message.content.body,
         },
       },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
+    });
   };
 
   // send each recipient a notification

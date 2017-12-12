@@ -10,8 +10,6 @@ describe('queries', () => {
           description
           website
           username
-          profilePhoto
-          coverPhoto
           email
           providerId
           createdAt
