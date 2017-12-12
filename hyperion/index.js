@@ -111,6 +111,9 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
+import cache from './cache';
+app.use(cache);
+
 import renderer from './renderer';
 app.get('*', renderer);
 
