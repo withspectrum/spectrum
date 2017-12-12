@@ -2,21 +2,21 @@
 const debug = require('debug')('athena:queue:message-notification');
 import { toState, toPlainText } from 'shared/draft-utils';
 import getMentions from 'shared/get-mentions';
-import addQueue from '../utils/addQueue';
-import Raven from '../../shared/raven';
-import { fetchPayload, createPayload } from '../utils/payloads';
-import { getDistinctActors } from '../utils/actors';
-import { formatAndBufferNotificationEmail } from '../utils/formatAndBufferNotificationEmail';
+import addQueue from '../../utils/addQueue';
+import Raven from 'shared/raven';
+import { fetchPayload, createPayload } from '../../utils/payloads';
+import { getDistinctActors } from '../../utils/actors';
+import formatData from './format-data';
 import {
   storeNotification,
   updateNotification,
   checkForExistingNotification,
-} from '../models/notification';
+} from '../../models/notification';
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
-import { getThreadNotificationUsers } from '../models/usersThreads';
+} from '../../models/usersNotifications';
+import { getThreadNotificationUsers } from '../../models/usersThreads';
 
 type JobData = {
   data: {
@@ -29,15 +29,15 @@ type JobData = {
         body: string,
       },
     },
-    userId: string,
   },
 };
 
 export default async (job: JobData) => {
-  const { message: incomingMessage, userId: currentUserId } = job.data;
+  const { message: incomingMessage } = job.data;
+  const { senderId: messageSenderId } = incomingMessage;
 
   debug(
-    `new job: message sent by ${currentUserId} in thread #${incomingMessage.threadId}`
+    `new job: message sent by ${messageSenderId} in thread #${incomingMessage.threadId}`
   );
 
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
@@ -47,7 +47,7 @@ export default async (job: JobData) => {
   );
 
   //get the user who left the message
-  const actor = await fetchPayload('USER', incomingMessage.senderId);
+  const actor = await fetchPayload('USER', messageSenderId);
 
   // get the thread the message was left in
   const context = await fetchPayload('THREAD', incomingMessage.threadId);
@@ -66,10 +66,10 @@ export default async (job: JobData) => {
 
   // Create notification
   const newNotification = Object.assign({}, existing || {}, {
-    actors: actors,
+    actors,
     event: 'MESSAGE_CREATED',
     context,
-    entities: entities,
+    entities,
   });
 
   const notification = existing
@@ -81,7 +81,7 @@ export default async (job: JobData) => {
 
   // filter out the user who sent the message
   const filteredRecipients = recipients.filter(
-    recipient => recipient.userId !== currentUserId
+    recipient => recipient.userId !== messageSenderId
   );
 
   // convert the message body to be checked for mentions
@@ -93,29 +93,24 @@ export default async (job: JobData) => {
   // get mentions in the message
   const mentions = getMentions(body);
   if (mentions && mentions.length > 0) {
-    mentions.forEach(
-      username => {
-        addQueue('mention notification', {
-          messageId: incomingMessage.id,
-          threadId: incomingMessage.threadId,
-          senderId: incomingMessage.senderId,
-          username: username,
-          type: 'message',
-        });
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
+    mentions.forEach(username => {
+      addQueue('mention notification', {
+        messageId: incomingMessage.id,
+        threadId: incomingMessage.threadId,
+        senderId: incomingMessage.senderId,
+        username: username,
+        type: 'message',
+      });
+    });
   }
 
   // if a user was mentioned, they should only get the mention notification
   // and not get a new message notification, so remove them here
-  const recipientsWithoutMentions = filteredRecipients.filter(r => {
-    return mentions.indexOf(r.username) < 0;
-  });
+  const recipientsWithoutMentions = filteredRecipients.filter(
+    r => mentions.indexOf(r.username) < 0
+  );
 
+  // if no more receipients are valid, escape the function
   if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0) {
     debug('No recipients for this message notification');
     return;
@@ -124,23 +119,14 @@ export default async (job: JobData) => {
   // get raw data for the email
   const thread = JSON.parse(context.payload);
   const message = JSON.parse(entity.payload);
-  const user = JSON.parse(actor.payload);
+  const sender = JSON.parse(actor.payload);
   const dbMethod = existing
     ? markUsersNotificationsAsNew
     : storeUsersNotifications;
 
   // send each recipient a notification
   const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
-    formatAndBufferNotificationEmail(
-      recipient,
-      {
-        ...thread,
-        path: `thread/${thread.id}`,
-      },
-      user,
-      message,
-      notification
-    );
+    formatData(recipient, thread, sender, message, notification);
 
     // store or update the notification in the db to trigger a ui update in app
     debug('Updating the notification record in the db');

@@ -101,20 +101,14 @@ export default async (job: JobData) => {
   );
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {
-    mentions.forEach(
-      username => {
-        addQueue('mention notification', {
-          threadId: incomingThread.id, // thread where the mention happened
-          senderId: incomingThread.creatorId, // user who created the mention
-          username: username,
-          type: 'thread',
-        });
-      },
-      {
-        removeOnComplete: true,
-        removeOnFail: true,
-      }
-    );
+    mentions.forEach(username => {
+      addQueue('mention notification', {
+        threadId: incomingThread.id, // thread where the mention happened
+        senderId: incomingThread.creatorId, // user who created the mention
+        username: username,
+        type: 'thread',
+      });
+    });
   }
 
   // if a user was mentioned, they should only get the mention email

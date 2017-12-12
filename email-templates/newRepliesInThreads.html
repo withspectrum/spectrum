@@ -173,6 +173,30 @@
       .email-footer {
         width: 100% !important;
       }
+
+      .thread-actions.multi {
+        background: transparent;
+      }
+
+      .thread-actions.multi a {
+        width: auto;
+        display: inline-block;
+      }
+
+      .thread-actions.multi td {
+        padding-right: 0!important;
+        display: block;
+        width: 100%;
+        margin: 0!important;
+        padding: 8px 0!important;
+        background: transparent;
+      }
+
+      .thread-actions.multi td:not(:first-of-type) {
+        margin-top: 12px!important;
+        clear: both;
+        z-index: 1000;
+      }
     }
     
     @media only screen and (max-width: 500px) {
@@ -281,43 +305,58 @@
       line-height: 1.6;
     }
 
-    a.a-p {
-      color: #828C99;
-    }
-
     /*Custom for this email ------------------------------ */
     .thread {
-      margin: 8px 12px;
+      display: block;
+      margin: 12px 0 32px;
+      border-radius: 4px;
+      border: 1px solid #DAE4F2;
       width: 100%;
       background: #FFFFFF;
-      padding-top: 16px!important;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
     }
 
     .thread-community-header {
-      padding: 4px 0;
+      padding: 16px 16px 0;
     }
 
     .thread-community-header img {
       border-radius: 4px;
       display: inline-block;
-      margin-right: 16px;
+      margin-right: 8px;
     }
 
     .thread-community-header p {
       color: #828C99;
       font-weight: 400;
       margin: 0;
-      display: block;
+      display: inline-block;
       font-size: 14px;
       margin-top: 0!important;
     }
 
-    .thread-community-header a {
+    .thread-byline {
+      padding: 16px 16px 8px;
+    }
+
+    .thread-byline img {
+      border-radius: 40px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .thread-byline p {
       color: #828C99;
+      font-weight: 400;
+      font-size: 15px;
+      margin: 0;
+      margin-top: 0!important;
+      display: inline-block;
     }
 
     .thread-title {
-      padding: 0;
+      padding: 8px 16px 16px;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     .thread-title h3 {
@@ -327,31 +366,77 @@
       margin-bottom: 0!important;
     }
 
-    .newMessageCount {
-      color: #E2197A;
+    .thread-body {
+      padding: 8px 16px;
     }
 
-    .section-divider {
-      display: block;
-      margin: 32px 0!important;
-      border-bottom: 1px solid #DAE4F2;
-      height: 1px;
-    }
-
-    .suggested-community-title {
-      font-weight: 500;
-      font-size: 15px;
+    .thread-body p {
+      font-size: 16px;
+      color: #828C99;
       line-height: 1.4;
-      margin-bottom: 0!important;
+      margin-top: 0!important;
     }
 
-    .suggested-community {
-      margin-top: 16px!important;
-      padding-top: 16px!important;
+    .thread-body p a {
+      color: #16171A;
     }
-    
-    h2.discover-divider {
-      margin-bottom: 0;
+
+    .thread-actions {
+      padding: 16px;
+    }
+
+    .thread-actions.multi a {
+      display: block;
+      width: 100%;
+    }
+
+    .thread-actions.multi td {
+      padding-right: 16px;
+    }
+
+    .thread-actions.multi td:last-of-type {
+      padding-right: 0;
+    }
+
+    .message-group-container {
+      padding: 0 16px 8px 16px;
+    }
+
+    .reply-body {
+      margin-bottom: 16px;
+      margin-bottom: 2px;
+      display: inline-block;
+      max-width: 100%;
+      color: #16171A;
+    }
+
+    .reply-body p.reply {
+      font-weight: 400;
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      display: block;
+      max-width: 100%;
+      margin-top: 0!important;
+      color: #16171A;
+    }
+
+    .reply-body p.reply-img-container {
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      border-radius: 12px;
+      overflow: hidden;
+      display: block;
+      max-width: 100%;
+      margin-top: 0!important;
+      color: #16171A;
+    }
+
+    .reply-body .reply-img {
+      display: block;
+      width: 100%;
+      border-radius: 12px;
     }
     </style>
   </head>
@@ -384,95 +469,91 @@
             <tr>
               <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
                 <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
-                  {{#each data.threads}}
-                    <tr>
-                      <td class="thread">
-                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-title">
-                          <tr width="100%" cellpadding="0" cellspacing="0">
-                            <td valign="middle">
-                              <a href="https://spectrum.chat/thread/{{id}}" class="block">
-                                <h3>{{title}}</h3>
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
 
-                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header">
+                {{#each data.threads}}
+                  <!-- Body content -->
+                  <tr>
+                    <!-- Thread preview -->
+                    <td class="thread">
+                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header">
+                        <tr width="100%" cellpadding="0" cellspacing="0">
+                          <td valign="middle" width="32">
+                            <a href="https://spectrum.chat/{{community.slug}}" class="block">
+                              <img src={{community.profilePhoto}} width="24" height="24" />
+                            </a>
+                          </td>
+
+                          <td valign="middle">
+                            <a href="https://spectrum.chat/{{community.slug}}" class="block">
+                              <p>{{community.name}} ({{channel.name}})</p>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-title">
+                        <tr width="100%" cellpadding="0" cellspacing="0">
+                          <td valign="middle">
+                            <a href="https://spectrum.chat/thread/{{id}}" class="block">
+                              <h3>{{content.title}}</h3>
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
+                      {{#each replies}}
+                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-byline">
                           <tr width="100%" cellpadding="0" cellspacing="0">
                             <td valign="middle" width="32">
-                              <a href="https://spectrum.chat/{{community.slug}}" class="block" style="height:32px">
-                                <img src={{community.profilePhoto}} width="32" height="32" />
+                              <a href="https://spectrum.chat/users/{{sender.username}}" class="block">
+                                <img src={{sender.profilePhoto}} width="24" height="24" />
                               </a>
                             </td>
-  
+                            
                             <td valign="middle">
-                              <p>
-                                Posted in <a href="https://spectrum.chat/{{community.slug}}">{{community.name}}</a>&nbsp;·&nbsp;<a href="https://spectrum.chat/{{community.slug}}/{{channel.slug}}">{{channel.name}}</a>
-                              </p>
-                              <p>
-                                <a href="https://spectrum.chat/{{community.slug}}" class="block a-p">
-                                  {{{messageCountString}}}
-                                </a>
-                              </p>
+                              <a href="https://spectrum.chat/users/{{sender.username}}" class="block">
+                                <p>{{sender.name}}</p>
+                              </a>
                             </td>
                           </tr>
                         </table>
-                      </td>
-                    </tr>
-                    {{/each}}
-  
-                    {{#data.communities}}
-                    <tr>
-                      <td>
-                        <div class="section-divider"></div>
-                      </td>
-                    </tr>
-  
-                    <tr>
-                      <td>
-                        <h2 class="discover-divider">Discover more communities:</h2>
-                      </td>
-                    </tr>
-                    {{/data.communities}}
-  
-                  {{#each data.communities}}
-                    <tr>
-                      <td>
-                        <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header suggested-community">
+
+                        <table width="100%" cellpadding="0" cellspacing="0" class="message-group-container">
                           <tr width="100%" cellpadding="0" cellspacing="0">
-                            <td valign="middle" width="32">
-                              <a href="https://spectrum.chat/{{slug}}" class="block">
-                                <img src={{profilePhoto}} width="44" height="44" />
-                              </a>
-                            </td>
-  
-                            <td valign="middle">
-                              <a href="https://spectrum.chat/{{slug}}" class="block"><h2 class="suggested-community-title">{{name}}</h2></a>
-                              <a href="https://spectrum.chat/{{slug}}" class="block">
-                                <p>
-                                  {{description}}
-                                </p>
-                              </a>
-                            </td>
+                            <td valign="top">
+                              
+                              <table cellpadding="0" cellspacing="0" class="reply-body">
+                                <tr width="100%" cellpadding="0" cellspacing="0">
+                                  <td valign="middle">
+                                    <a href="https://spectrum.chat/thread/{{../id}}" class="block">
+                                      {{{content.body}}}
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
 
+                            </td>
                           </tr>
                         </table>
-                      </td>
-                    </tr>
-                  {{/each}}
+                      {{/each}}
 
-
-                  <tr>
-                    <td>
-                      <div class="section-divider"></div>
+                      <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions multi">
+                        <tr width="100%" cellpadding="0" cellspacing="0">
+                          <td valign="middle">
+                            <a href="https://spectrum.chat/thread/{{id}}" class="button">
+                              View conversation
+                            </a>
+                          </td>
+                          <td valign="middle">
+                            <a href="https://spectrum.chat/email/unsubscribe?token={{muteThreadToken}}" class="button outline">
+                              Mute conversation
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                   </tr>
-  
-                  <tr>
-                    <td>
-                      <a class="button" href="https://spectrum.chat/">Go to my feed</a>
-                    </td>
-                  </tr>
+                {{/each}}
 
                   <tr>
                     <td class="signoff">
@@ -493,15 +574,21 @@
                 </p>
 
                 <ul>
+                  {{#singleThreadMuteToken}}
+                    <li>
+                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Mute this thread (including future @mentions)</a>
+                    </li>
+                  {{/singleThreadMuteToken}}
+
                   <li>
-                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Turn off {{data.timeframe.subject}} digests</a>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Don't email me when new replies happen in conversations where I'm active</a>
                   </li>
 
-                  {{#data.username}}
+                  {{#recipient.username}}
                     <li>
                       <a href="https://spectrum.chat/users/{{.}}/settings">Manage your email preferences on Spectrum</a>
                     </li>
-                  {{/data.username}}
+                  {{/recipient.username}}
                 </ul>
 
                 <ul>

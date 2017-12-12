@@ -8,6 +8,7 @@ npm-debug.log
 rethinkdb_data
 debug
 iris/.env
+athena/.env
 build-iris
 build-athena
 build-hermes
