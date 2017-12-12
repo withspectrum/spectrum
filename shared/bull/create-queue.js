@@ -1,8 +1,7 @@
 // @flow
 const Queue = require('bull');
-// $FlowFixMe
-const Redis = require('ioredis');
-const Raven = require('raven');
+import Raven from 'raven';
+import createRedis from './create-redis';
 
 if (process.env.NODE_ENV !== 'development') {
   Raven.config(
@@ -13,17 +12,8 @@ if (process.env.NODE_ENV !== 'development') {
   ).install();
 }
 
-const redis =
-  process.env.NODE_ENV === 'production'
-    ? {
-        port: process.env.COMPOSE_REDIS_PORT,
-        host: process.env.COMPOSE_REDIS_URL,
-        password: process.env.COMPOSE_REDIS_PASSWORD,
-      }
-    : undefined; // Use the local instance of Redis in development by not passing any connection string
-
-const client = new Redis(redis);
-const subscriber = new Redis(redis);
+const client = createRedis();
+const subscriber = createRedis();
 
 function createQueue(name /*: string */) {
   const queue = new Queue(name, {
@@ -34,7 +24,7 @@ function createQueue(name /*: string */) {
         case 'subscriber':
           return subscriber;
         default:
-          return new Redis(redis);
+          return createRedis();
       }
     },
   });
