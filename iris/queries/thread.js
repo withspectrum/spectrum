@@ -99,37 +99,55 @@ module.exports = {
     },
     messageConnection: async (
       { id }: DBThread,
-      { first = 50, after }: PaginationOptions,
+      {
+        first,
+        after,
+        last,
+        before,
+      }: { ...PaginationOptions, last: number, before: string },
       { user, loaders }: GraphQLContext
     ) => {
+      if ((first && last) || (after && before))
+        throw new UserError(
+          'Cannot paginate back- and forwards at the same time. Please only provide first/after or last/before.'
+        );
+
       debug(`get messages for ${id}`);
-      let cursor;
+      const cursor = after || before;
+      let timestamp;
       try {
-        cursor = parseInt(decode(after), 10);
+        timestamp = parseInt(decode(cursor), 10);
       } catch (err) {
         debug(err);
         throw new UserError(
           'Invalid cursor passed to "after" parameter of thread.messageConnection.'
         );
       }
-      if (!cursor && user) {
+      if (!timestamp && user) {
         debug(
           `no valid cursor provided, getting user last seen for user ${user.id}`
         );
         try {
-          cursor = await loaders.userThreadNotificationStatus
+          timestamp = await loaders.userThreadNotificationStatus
             .load([user.id, id])
             .then(result => result && result.lastSeen);
         } catch (err) {
           // Ignore errors from getting user last seen
         }
       }
-      debug(`cursor: ${cursor}`);
+      debug(`timestamp: ${timestamp}`);
       const messageCount = await loaders.threadMessageCount
         .load(id)
         .then(res => (res ? res.reduction : 0));
 
-      return getMessages(id, { first, after: cursor }).then(result => {
+      const options = {
+        first: first ? first : after ? 50 : undefined,
+        last: last ? last : before ? 50 : undefined,
+        after: after ? timestamp : undefined,
+        before: before ? timestamp : undefined,
+      };
+
+      return getMessages(id, options).then(result => {
         if (user && user.id) {
           addQueue(TRACK_USER_THREAD_LAST_SEEN, {
             threadId: id,
@@ -141,7 +159,7 @@ module.exports = {
           pageInfo: {
             // TODO(@mxstbr): Figure out how we know this
             hasNextPage: result && result.length <= messageCount,
-            hasPreviousPage: result && result.length !== 0 && !!cursor,
+            hasPreviousPage: result && result.length !== 0 && !!timestamp,
           },
           edges: result.map((message, index) => ({
             cursor: encode(message.timestamp.getTime().toString()),

@@ -167,4 +167,93 @@ describe('messageConnection', () => {
         })
     );
   });
+
+  describe.only('reverse pagination', () => {
+    it('should fetch with reverse pagination', () => {
+      // Get the first message, same as above
+      const query = /* GraphQL */ `
+        {
+          thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+            messageConnection(first: 3) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+              }
+              edges {
+                cursor
+                node {
+                  content {
+                    body
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      expect.assertions(6);
+      return (
+        request(query)
+          // Get the cursor of the first message
+          .then(result => {
+            // Make sure pageInfo is calculated correctly
+            expect(result.data.thread.messageConnection.pageInfo).toEqual({
+              hasNextPage: true,
+              hasPreviousPage: false,
+            });
+            expect(
+              messageToPlainText(
+                result.data.thread.messageConnection.edges[0].node
+              )
+            ).toEqual(messageToPlainText(messages[0]));
+            expect(
+              messageToPlainText(
+                result.data.thread.messageConnection.edges[1].node
+              )
+            ).toEqual(messageToPlainText(messages[1]));
+            expect(
+              messageToPlainText(
+                result.data.thread.messageConnection.edges[2].node
+              )
+            ).toEqual(messageToPlainText(messages[2]));
+            // Return the cursor of the third message
+            return result.data.thread.messageConnection.edges[2].cursor;
+          })
+          .then(cursor => {
+            const nextQuery = /* GraphQL */ `
+            {
+              thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+                messageConnection(last: 1, before: "${cursor}") {
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  edges {
+                    node {
+                      content {
+                        body
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          `;
+            return request(nextQuery);
+          })
+          .then(result => {
+            expect(result.data.thread.messageConnection.pageInfo).toEqual({
+              hasNextPage: true,
+              hasPreviousPage: true,
+            });
+            expect(
+              messageToPlainText(
+                result.data.thread.messageConnection.edges[0].node
+              )
+            ).toEqual(messageToPlainText(messages[1]));
+          })
+      );
+    });
+  });
 });

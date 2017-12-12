@@ -390,7 +390,7 @@ const DEFAULT_MESSAGES = [
     },
     messageType: 'draftjs',
     senderId: BRYN_ID,
-    timestamp: new Date(DATE + 50),
+    timestamp: new Date(DATE + 50000),
   },
   {
     threadId: 'first-dm-thread-asdf123',
@@ -402,7 +402,7 @@ const DEFAULT_MESSAGES = [
     },
     messageType: 'draftjs',
     senderId: BRIAN_ID,
-    timestamp: new Date(DATE + 100),
+    timestamp: new Date(DATE + 100000),
   },
   {
     threadId: 'first-dm-thread-asdf123',
@@ -414,7 +414,7 @@ const DEFAULT_MESSAGES = [
     },
     messageType: 'draftjs',
     senderId: MAX_ID,
-    timestamp: new Date(DATE + 200),
+    timestamp: new Date(DATE + 200000),
   },
   {
     threadId: 'first-dm-thread-asdf123',
@@ -426,7 +426,7 @@ const DEFAULT_MESSAGES = [
     },
     messageType: 'draftjs',
     senderId: BRYN_ID,
-    timestamp: new Date(DATE + 300),
+    timestamp: new Date(DATE + 300000),
   },
 ];
 
