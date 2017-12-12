@@ -5,12 +5,16 @@
 import UserError from '../utils/UserError';
 const {
   getRecentCommunities,
-  getCommunitiesBySearchString,
-  searchThreadsInCommunity,
+  getCommunityById,
   getMemberCount,
   getThreadCount,
   getCommunityGrowth,
 } = require('../models/community');
+import {
+  getPublicChannelIdsInCommunity,
+  getPrivateChannelIdsInCommunity,
+  getUsersJoinedPrivateChannelIds,
+} from '../models/search';
 import { getCuratedCommunities } from '../models/curatedContent';
 const { getTopMembersInCommunity } = require('../models/reputationEvents');
 const { getMembersInCommunity } = require('../models/usersCommunities');
@@ -29,9 +33,15 @@ import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
-
+import algoliasearch from 'algoliasearch';
+import { intersection } from 'lodash';
 import type { GraphQLContext } from '../';
 import type { DBCommunity } from 'shared/types';
+const algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
+const communitySearchIndex = algolia.initIndex('dev_communities');
+const communityThreadsSearchIndex = algolia.initIndex(
+  'dev_threads_and_messages'
+);
 
 type GetCommunityById = {
   id: string,
@@ -100,31 +110,94 @@ module.exports = {
     recentCommunities: () => getRecentCommunities(),
     searchCommunities: (
       _: any,
-      { string, amount = 30 }: { string: string, amount: number }
-    ) => getCommunitiesBySearchString(string, amount),
-    searchCommunityThreads: (
+      { string, amount = 30 }: { string: string, amount: number },
+      { loaders }: GraphQLContext
+    ) => {
+      return communitySearchIndex
+        .search({ query: string })
+        .then(content => {
+          if (!content.hits || content.hits.length === 0) return [];
+          const communityIds = content.hits.map(o => o.id);
+          return loaders.community.loadMany(communityIds);
+        })
+        .catch(err => {
+          console.log('err', err);
+        });
+    },
+    searchCommunityThreads: async (
       _: any,
       {
         communityId,
         searchString,
       }: { communityId: string, searchString: string },
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
-      const currentUser = user;
+      let getSearchResultThreads = (filters: string) =>
+        communityThreadsSearchIndex
+          .search({ query: searchString, filters })
+          .then(content => {
+            if (!content.hits || content.hits.length === 0) return null;
+            return content.hits.map(o => ({
+              threadId: o.threadId,
+              channelId: o.channelId,
+              communityId: o.communityId,
+              creatorId: o.creatorId,
+            }));
+          })
+          .catch(err => {
+            console.log('err', err);
+          });
 
-      let channelsToGetThreadsFor;
-      if (currentUser) {
-        channelsToGetThreadsFor = getChannelsByUserAndCommunity(
-          communityId,
-          currentUser.id
-        );
-      } else {
-        channelsToGetThreadsFor = getPublicChannelsByCommunity(communityId);
-      }
+      const IS_AUTHED_USER = user && user.id;
 
-      return channelsToGetThreadsFor.then(channels =>
-        searchThreadsInCommunity(channels, searchString)
+      const filters = `communityId:"${communityId}"`;
+      let searchResultThreads = await getSearchResultThreads(filters);
+
+      // if no threads exist, send an empty array to the client
+      if (!searchResultThreads || searchResultThreads.length === 0) return [];
+
+      const getCommunity = await getCommunityById(communityId);
+      const getPublicChannelIds = await getPublicChannelIdsInCommunity(
+        communityId
       );
+      const getPrivateChannelIds = IS_AUTHED_USER
+        ? await getPrivateChannelIdsInCommunity(communityId)
+        : [];
+      const getCurrentUsersChannelIds = IS_AUTHED_USER
+        ? await getUsersJoinedPrivateChannelIds(user.id)
+        : [];
+
+      const [
+        community,
+        publicChannels,
+        privateChannels,
+        currentUsersPrivateChannels,
+      ] = await Promise.all([
+        getCommunity,
+        getPublicChannelIds,
+        getPrivateChannelIds,
+        getCurrentUsersChannelIds,
+      ]);
+
+      // community is deleted or not found
+      if (!community || community.deletedAt) return [];
+
+      const privateChannelsWhereUserIsMember = intersection(
+        privateChannels,
+        currentUsersPrivateChannels
+      );
+      const availableChannelsForSearch = [
+        ...publicChannels,
+        ...privateChannelsWhereUserIsMember,
+      ];
+
+      searchResultThreads = searchResultThreads
+        .filter(t => availableChannelsForSearch.indexOf(t.channelId) >= 0)
+        .filter(t => t.communityId === communityId);
+
+      return loaders.thread
+        .loadMany(searchResultThreads.map(t => t.threadId))
+        .then(data => data.filter(thread => thread && !thread.deletedAt));
     },
   },
   Community: {

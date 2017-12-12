@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from '../../components/link';
-import AlgoliaInput from './algoliaInput';
-import ThreadsAlgoliaInput from './gqlAlgoliaInput';
+// import AlgoliaInput from './algoliaInput';
+// import ThreadsAlgoliaInput from './gqlAlgoliaInput';
 import { Input } from './style';
 
 type Props = {};
@@ -26,33 +26,34 @@ class Search extends React.Component<Props, State> {
   onGQLResults = gqlResults => this.setState({ gqlResults, hasError: false });
 
   render() {
-    const { results, gqlResults } = this.state;
-    console.log('gqlResults', gqlResults);
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <ThreadsAlgoliaInput
-          onResults={this.onGQLResults}
-          onEmptyField={this.onGQLEmptyField}
-          onError={this.onError}
-          placeholder={'Search for conversations...'}
-          StyledComponent={Input}
-          filter={{ creatorId: 'KKW3pv8Y9ObYWlBwZVV4cl2v6ss2' }}
-        />
+    return null;
+    // const { results, gqlResults } = this.state;
+    // console.log('gqlResults', gqlResults);
+    // return (
+    //   <div style={{ display: 'flex', flexDirection: 'column' }}>
+    //     <ThreadsAlgoliaInput
+    //       onResults={this.onGQLResults}
+    //       onEmptyField={this.onGQLEmptyField}
+    //       onError={this.onError}
+    //       placeholder={'Search for conversations...'}
+    //       StyledComponent={Input}
+    //       filter={{ creatorId: 'KKW3pv8Y9ObYWlBwZVV4cl2v6ss2' }}
+    //     />
 
-        {gqlResults.length > 0 &&
-          gqlResults.map(thread => (
-            <Link
-              key={thread.id}
-              to={{
-                pathname: window.location.pathname,
-                search: `?thread=${thread.id}`,
-              }}
-            >
-              {thread.content.title}
-            </Link>
-          ))}
-      </div>
-    );
+    //     {gqlResults.length > 0 &&
+    //       gqlResults.map(thread => (
+    //         <Link
+    //           key={thread.id}
+    //           to={{
+    //             pathname: window.location.pathname,
+    //             search: `?thread=${thread.id}`,
+    //           }}
+    //         >
+    //           {thread.content.title}
+    //         </Link>
+    //       ))}
+    //   </div>
+    // );
   }
 }
 

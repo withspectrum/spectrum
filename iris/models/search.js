@@ -1,32 +1,6 @@
 //@flow
 const { db } = require('./db');
 
-export const getAllPublicChannelIds = (): Promise<Array<string>> => {
-  return db
-    .table('channels')
-    .filter(row =>
-      row
-        .hasFields('deletedAt')
-        .not()
-        .and(row('isPrivate').eq(false))
-    )
-    .map(row => row('id'))
-    .run();
-};
-
-export const getAllPrivateChannelIds = (): Promise<Array<string>> => {
-  return db
-    .table('channels')
-    .filter(row =>
-      row
-        .hasFields('deletedAt')
-        .not()
-        .and(row('isPrivate').eq(true))
-    )
-    .map(row => row('id'))
-    .run();
-};
-
 export const getPublicChannelIdsInCommunity = (
   communityId: string
 ): Promise<Array<string>> => {

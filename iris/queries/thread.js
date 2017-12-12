@@ -17,15 +17,13 @@ import {
   getPublicChannelIdsForUsersThreads,
   getPrivateChannelIdsForUsersThreads,
   getUsersJoinedChannels,
-  getAllPublicChannelIds,
-  getAllPrivateChannelIds,
 } from '../models/search';
 import { intersection } from 'lodash';
 import algoliasearch from 'algoliasearch';
 import { getChannelById, getChannels } from '../models/channel';
 import { getCommunityById } from '../models/community';
-var algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
-var threadsIndex = algolia.initIndex('dev_threads_and_messages');
+const algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
+const threadsSearchIndex = algolia.initIndex('dev_threads_and_messages');
 
 type FilterTypes = {
   communityId?: string,
@@ -78,7 +76,7 @@ module.exports = {
       // perform an initial search to ensure that there are some threads that exist
       // for this search query
       let getSearchResultThreads = (filters: string) =>
-        threadsIndex
+        threadsSearchIndex
           .search({ query: queryString, filters })
           .then(content => {
             if (!content.hits || content.hits.length === 0) return null;

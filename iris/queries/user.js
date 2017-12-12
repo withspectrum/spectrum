@@ -29,6 +29,9 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
+import algoliasearch from 'algoliasearch';
+const algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
+const usersSearchIndex = algolia.initIndex('dev_users');
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -46,8 +49,22 @@ module.exports = {
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
-    searchUsers: (_: any, { string }: { string: string }) =>
-      getUsersBySearchString(string),
+    searchUsers: (
+      _: any,
+      { string }: { string: string },
+      { loaders }: GraphQLContext
+    ) => {
+      return usersSearchIndex
+        .search({ query: string })
+        .then(content => {
+          if (!content.hits || content.hits.length === 0) return [];
+          const userIds = content.hits.map(o => o.id);
+          return loaders.user.loadMany(userIds);
+        })
+        .catch(err => {
+          console.log('err', err);
+        });
+    },
   },
   User: {
     email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
