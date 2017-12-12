@@ -184,6 +184,8 @@ class Messages extends Component<MessageGroupProps, State> {
               );
             } else if (
               initialMessage.message.type === 'unseen-messages-below' &&
+              messages[i + 1] &&
+              messages[i + 1].length > 0 &&
               messages[i + 1][0].sender.id !== currentUser.id
             ) {
               return (
