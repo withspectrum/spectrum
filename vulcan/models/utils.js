@@ -76,25 +76,71 @@ export const NEW_DOCUMENTS = db
   .eq(null)
   .and(db.not(db.row('new_val').eq(null)));
 
-export const HAS_CHANGED = (field: string) =>
+export const DELETED_DOCUMENTS = db
+  .row('old_val')
+  .hasFields('deletedAt')
+  .not()
+  .and(
+    db
+      .row('new_val')
+      .hasFields('deletedAt')
+      .and(db.row('new_val')('deletedAt').ne(null))
+  );
+
+export const hasChangedField = (field: string) =>
   db.row('old_val')(field).ne(db.row('new_val')(field));
 
 export const listenToNewDocumentsIn = (table: string, cb: Function) => {
-  return (
-    db
-      .table(table)
-      .changes({
-        includeInitial: false,
-      })
-      // Filter to only include newly inserted messages in the changefeed
-      .filter(NEW_DOCUMENTS)
-      .run({ cursor: true }, (err, cursor) => {
+  return db
+    .table(table)
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS)
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
         if (err) throw err;
-        cursor.each((err, data) => {
-          if (err) throw err;
-          // Call the passed callback with the new data
-          cb(data.new_val);
-        });
-      })
-  );
+        // Call the passed callback with the new data
+        cb(data.new_val);
+      });
+    });
+};
+
+export const listenToDeletedDocumentsIn = (table: string, cb: Function) => {
+  return db
+    .table(table)
+    .changes({
+      includeInitial: false,
+    })
+    .filter(DELETED_DOCUMENTS)
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the new data
+        cb(data.new_val);
+      });
+    });
+};
+
+export const listenToChangedFieldIn = (field: string) => (
+  table: string,
+  cb: Function
+) => {
+  const CHANGED_FIELD = hasChangedField(field);
+  return db
+    .table(table)
+    .changes({
+      includeInitial: false,
+    })
+    .filter(CHANGED_FIELD)
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the new data
+        cb(data.new_val);
+      });
+    });
 };

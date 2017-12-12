@@ -1,7 +1,12 @@
-// $FlowFixMe
+// @flow
 const debug = require('debug')('vulcan');
 const PORT = process.env.PORT || 3007;
-import listenForNewThreads from './models/thread';
+import {
+  newThreads,
+  deletedThreads,
+  movedChannelThreads,
+  changedThreadContent,
+} from './models/thread';
 import createServer from './server';
 
 console.log('\n✉️ Vulcan, the search worker, is starting...');
@@ -10,11 +15,15 @@ console.log('');
 
 console.log(
   `🗄 Vulcan open for business ${(process.env.NODE_ENV === 'production' &&
+    // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
     'locally'}`
 );
 
-listenForNewThreads();
+newThreads();
+deletedThreads();
+movedChannelThreads();
+changedThreadContent();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
