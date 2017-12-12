@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
+import Avatar from '../../components/avatar';
 import {
   zIndex,
   hexa,
@@ -16,7 +17,9 @@ import {
   Span,
   P,
   Transition,
+  HorizontalRule,
 } from '../../components/globals';
+import Badge from '../../components/badges';
 import Search from '../explore/components/search';
 import { Communities } from './components/communities';
 import {
@@ -47,7 +50,22 @@ import {
   PrimaryCTA,
   SecondaryCTA,
   Content,
+  FeatureList,
+  Feature,
+  Layout,
+  PricingGrid,
+  Free,
+  Title,
+  Cost,
+  CostNumber,
+  CostSubtext,
+  Description,
+  PlanFooter,
+  FreePrimaryCTA,
+  Paid,
+  PaidPrimaryCTA,
 } from './style';
+import Nav from './nav';
 
 // const Link = styled.a``;
 
@@ -58,15 +76,19 @@ const Section = (props: Props) => (
 );
 
 export const Overview = (props: Props) => {
-  const ThisContent = styled(Content)`margin-top: 96px;`;
+  const ThisContent = styled(Content)`
+    max-width: 100vw;
+    margin-top: 24px;
+  `;
 
   const Text = styled(FlexCol)`
-    margin: 120px 16px 120px 16px;
+    margin: 120px 32px 120px 32px;
     text-align: left;
     align-items: flex-start;
     z-index: 2;
 
     @media (max-width: 768px) {
+      margin-top: 0;
       margin-bottom: 16px;
     }
   `;
@@ -81,6 +103,10 @@ export const Overview = (props: Props) => {
   const ThisTagline = styled(Tagline)`
     margin-bottom: 16px;
     font-size: 40px;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
   `;
 
   const Actions = styled(Flexer)`
@@ -104,7 +130,11 @@ export const Overview = (props: Props) => {
     position: relative;
     right: 20vw;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1400px) {
+      right: 15vw;
+    }
+
+    @media (max-width: 1200px) {
       right: 0;
     }
   `;
@@ -133,19 +163,29 @@ export const Overview = (props: Props) => {
     position: absolute;
     top: 32px;
     bottom: 0;
-    left: calc(20vw + 480px);
+    left: calc(25vw + 480px);
     max-height: calc(100% - 32px);
     z-index: 0;
-    ${'' /* transform: perspective(600px) rotate3d(0, 1, 0, -10deg); */} @media(max-width: 768px) {
+
+    @media (max-width: 1400px) {
+      left: calc(20vw + 480px);
+    }
+
+    @media (max-width: 1200px) {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
       display: none;
     }
   `;
 
   return (
     <Section background="constellations" goop={2}>
+      <Nav dark />
       <ThisContent>
         <ThisText>
-          <ThisTagline>A community platform for the future.</ThisTagline>
+          <ThisTagline>The community platform for the future.</ThisTagline>
           <ThisCopy>The internet was built for communities.</ThisCopy>
           <ThisCopy>
             But, as the web has changed and improved radically, community
@@ -158,7 +198,7 @@ export const Overview = (props: Props) => {
           </ThisCopy>
           <Actions>
             <Link to="/login">
-              <ThisPrimaryCTA icon="private">Join Spectrum</ThisPrimaryCTA>
+              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
             </Link>
             <Link to="/new/community">
               <ThisSecondaryCTA icon="plus-fill">
@@ -167,7 +207,7 @@ export const Overview = (props: Props) => {
             </Link>
           </Actions>
         </ThisText>
-        <Img src={'/img/diagram.png'} />
+        <Img src={'/img/diagram.svg'} />
       </ThisContent>
     </Section>
   );
@@ -475,10 +515,15 @@ export const Yours = (props: Props) => {
   `;
 
   const ThisContent = styled(Content)`
-    margin: 60px 16px 40px;
+    margin: 60px 16px 16px;
     font-size: 18px;
     align-items: center;
     text-align: left;
+  `;
+
+  const ThisTagline = styled(Tagline)`
+    text-align: center;
+    align-self: center;
   `;
 
   const ThisSecondaryCTA = styled(SecondaryCTA)`
@@ -504,7 +549,7 @@ export const Yours = (props: Props) => {
 
   const Actions = styled(Flexer)`
     margin-top: 32px;
-    justify-content: flex-start;
+    justify-content: center;
 
     > a {
       display: inline-block;
@@ -515,24 +560,150 @@ export const Yours = (props: Props) => {
     }
   `;
 
+  const Quotes = styled.div`
+    display: flex;
+    flex: auto;
+    align-items: start;
+    justify-content: center;
+    padding: 40px 0;
+    max-width: 100vw;
+    flex-wrap: wrap;
+    margin-left: -32px;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  `;
+
+  const Quote = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: white;
+    width: 400px;
+    min-width: 320px;
+    flex: none;
+    box-shadow: 0 8px 16px #000;
+    color: ${props => props.theme.text.default};
+    position: relative;
+    padding: 24px;
+    transition: ${Transition.hover.off};
+    margin-top: 32px;
+    margin-left: 32px;
+    border-radius: 8px;
+
+    &:hover {
+      box-shadow: 0 0px 32px ${props => props.theme.brand.alt};
+      transition: ${Transition.hover.on};
+
+      > div {
+        color: ${props => props.theme.brand.alt};
+        transition: ${Transition.hover.on};
+      }
+    }
+  `;
+
+  const Pullquote = styled.p`
+    padding: 0;
+    padding-left: 16px;
+    line-height: 1.6;
+    margin: 16px 8px 8px 8px;
+    font-size: 16px;
+    position: relative;
+    z-index: 2;
+  `;
+
+  const Signature = styled(Link)`
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    margin-left: 8px;
+
+    div {
+      margin-right: 8px;
+    }
+
+    span {
+      color: ${props => props.theme.text.alt};
+      font-weight: 400;
+      margin-left: 4px;
+    }
+  `;
+
+  const Rule = styled(HorizontalRule)`
+    color: ${props => props.theme.brand.border};
+    transition: ${Transition.hover.off};
+
+    hr {
+      color: inherit;
+      border-color: currentColor;
+    }
+  `;
+
   return (
     <Section goop={0} background={'reverse'}>
       <ThisContent>
         <FlexCol>
-          <Tagline>All your communities in one place</Tagline>
-          <ThisCopy>
-            Before Spectrum, participating in online communities meant joining
-            multiple platforms, remembering different logins, and managing
-            endless notifications.
-          </ThisCopy>
-          <ThisCopy>
-            On Spectrum you only have one account, and the conversations that
-            matter come to you in one simple feed &mdash; no matter which
-            community they're in.
-          </ThisCopy>
+          <ThisTagline>You're gonna love Spectrum.</ThisTagline>
+          <Quotes>
+            <Quote>
+              <Rule>
+                <hr />
+                <Icon glyph="quote" />
+                <hr />
+              </Rule>
+              <Pullquote>
+                okay, honestly Spectrum is the best thing that happened to me
+                regarding social interaction in 2017
+              </Pullquote>
+              <Signature to="https://spectrum.chat/users/alextraykov">
+                <Avatar
+                  size={'40'}
+                  src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
+                />Alexander Traykov<span>@traykov</span>
+              </Signature>
+            </Quote>
+            <Quote>
+              <Rule>
+                <hr />
+                <Icon glyph="quote" />
+                <hr />
+              </Rule>
+              <Pullquote>
+                Spectrum will take the place that Reddit used to have a long
+                time ago for communities (especially tech) to freely share ideas
+                and interact. Except realtime and trolling-free
+              </Pullquote>
+              <Signature to="https://spectrum.chat/users/rauchg">
+                <Avatar
+                  size={'40'}
+                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F871555682608136205%2FyMs8Gnot_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=cc42ed724e75265fbb959ec43c910be2"
+                />Guillermo Rauch <span>@rauchg</span>
+              </Signature>
+            </Quote>
+            <Quote>
+              <Rule>
+                <hr />
+                <Icon glyph="quote" />
+                <hr />
+              </Rule>
+              <Pullquote>
+                Spectrum is definitely a product worth looking out for. Huge fan
+                and been lovely to be a part of the unique communities.
+              </Pullquote>
+              <Signature to="https://www.spectrum.chat/users/tayler-m-odea">
+                <Avatar
+                  size={'40'}
+                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
+                />Tayler O'Dea <span>@tayler2412</span>
+              </Signature>
+            </Quote>
+          </Quotes>
           <Actions>
             <Link to="/login">
-              <ThisPrimaryCTA icon="private">Join Spectrum</ThisPrimaryCTA>
+              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
             </Link>
             <Link to="/explore">
               <ThisSecondaryCTA icon="explore">
@@ -569,327 +740,200 @@ export const PageFooter = (props: Props) => {
   );
 };
 
-export const Plans = (props: Props) => {
-  const Layout = styled.div`
-    flex: auto;
-    display: grid;
-    margin: 64px;
-    margin-top: 120px;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: 'pricing';
-    justify-items: center;
-    z-index: ${zIndex.background + 1};
-
-    @media (max-width: 768px) {
-      grid-template-columns: 100%;
-      grid-template-rows: 1fr;
-      grid-template-areas: 'pricing';
-      margin: 32px 0 -80px;
-    }
-  `;
-
-  const PricingGrid = styled.div`
-    grid-area: pricing;
-    display: grid;
-    grid-template-columns: minmax(auto, 400px) minmax(auto, 400px);
-    grid-template-rows: auto auto;
-    grid-row-gap: 16px;
-    grid-template-areas: 'view-title view-title' 'free pro';
-    transform: rotateX(-10deg) rotateY(15deg);
-    margin-right: 64px;
-
-    > div > * {
-      transform: rotateX(10deg) rotateY(15deg);
-    }
-
-    @media (max-width: 768px) {
-      grid-template-columns: 100%;
-      grid-template-rows: auto auto auto;
-      grid-row-gap: 0;
-      grid-template-areas: 'view-title' 'free' 'pro';
-      margin-right: 0;
-      transform: none;
-    }
-  `;
-
-  const ThisTagline = styled(Tagline)`
-    grid-area: view-title;
+export const UserPricing = (props: Props) => {
+  const Text = styled(FlexCol)`
+    margin: 120px 16px 120px 16px;
     text-align: center;
-    transform: rotateX(10deg) rotateY(15deg);
-  `;
-
-  const Plan = styled.div`padding: 40px 32px 32px;`;
-
-  const CostNumber = styled.h2`
-    font-weight: 900;
-    font-size: 72px;
-    letter-spacing: -2px;
-    vertical-align: baseline;
-    position: relative;
-
-    &:before {
-      content: '$';
-      vertical-align: top;
-      position: absolute;
-      top: 24px;
-      right: calc(100% + 4px);
-      font-weight: 500;
-      font-size: 20px;
-      letter-spacing: normal;
-      color: ${props => props.theme.text.placeholder};
-    }
-
-    &:after {
-      content: ${props => (props.per ? `'/ ${props.per}'` : `''`)};
-      position: absolute;
-      font-size: 14px;
-      white-space: nowrap;
-      left: calc(100% + 4px);
-      bottom: 24px;
-      font-weight: 700;
-      letter-spacing: normal;
-      color: ${props => props.theme.text.placeholder};
-    }
-  `;
-
-  const Free = styled(Plan)`
-    grid-area: free;
-    color: ${props => props.theme.text.default};
-
-    @media (max-width: 768px) {
-      padding-top: 16px;
-    }
-
-    ${CostNumber} {
-      &:before {
-        content: '';
-      }
-    }
-  `;
-
-  const Cost = styled(FlexCol)`
     align-items: center;
-    text-align: center;
-  `;
+    z-index: 2;
 
-  const Description = styled.p`
-    font-size: 16px;
-    font-weight: 400;
-    margin: 16px 0;
-    border-top: 2px solid ${({ theme }) => theme.bg.border};
-    border-bottom: 2px solid ${({ theme }) => theme.bg.border};
-    padding: 16px 8px;
-  `;
+    @media (max-width: 768px) {
+      margin-bottom: 16px;
+    }
 
-  const Feature = styled.li`
-    text-indent: -18px;
-    font-weight: 400;
+    p {
+      margin-top: 16px;
 
-    a {
-      font-weight: 500;
-      text-decoration: underline;
-      color: ${props => props.theme.brand.alt};
+      & + p {
+        margin-top: 32px;
+      }
     }
 
     b {
-      font-weight: 700;
-    }
-
-    + li {
-      margin-top: 8px;
-    }
-
-    &:before {
-      content: '+';
-      margin-right: 8px;
-      font-weight: 700;
-      color: ${props => props.theme.text.placeholder};
+      font-weight: 900;
     }
   `;
 
-  const Paid = styled(Plan)`
-    grid-area: pro;
-    background-color: ${props => props.theme.brand.default};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-    box-shadow: 0 16px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
+  const ThisFeatureList = styled(FeatureList)`
+    margin-top: 8px;
 
-    @media (max-width: 768px) {
-      box-shadow: none;
-      margin-top: 32px;
+    li > span {
+      box-shadow: 0 0 8px 8px ${props => props.theme.space.dark};
+      line-height: 2;
+      vertical-align: middle;
+      margin-right: 4px;
+      display: inline-block;
+    }
+  `;
+
+  const ThisFree = styled(Free)`box-shadow: none;`;
+
+  const ThisPricingGrid = styled(PricingGrid)`
+    grid-template-rows: auto;
+    grid-template-columns: minmax(auto, 400px);
+    grid-template-areas: 'paid';
+    justify-content: center;
+    margin-top: 40px;
+  `;
+
+  const ThisPaid = styled(Paid)`
+    box-shadow: none;
+    background-color: ${props => props.theme.success.default};
+    background-image: ${props =>
+      Gradient(props.theme.space.alt, props.theme.space.default)};
+    grid-area: paid;
+
+    ${FeatureList}, ${Feature} {
+      text-align: left;
     }
 
     ${CostNumber} {
-      left: -16px;
-
       &:before,
       &:after {
-        color: ${props => props.theme.brand.border};
+        color: ${props => props.theme.space.wash};
       }
+    }
+
+    ${Feature}:before {
+      color: ${props => props.theme.space.border};
     }
 
     ${Description} {
-      font-weight: 500;
-      border-color: ${props => props.theme.brand.alt};
-    }
-
-    ${Feature} {
-      font-weight: 400;
-
-      a {
-        font-weight: 700;
-        color: inherit;
-      }
-
-      b {
-        font-weight: 900;
-      }
-
-      &:before {
-        color: ${props => hexa(props.theme.brand.border, 0.5)};
-      }
-    }
-  `;
-
-  const Title = styled.h1`
-    text-align: center;
-    font-weight: 700;
-  `;
-
-  const CostPer = styled.span`
-    position: relative;
-    left: -12px;
-    font-weight: 500;
-    letter-spacing: normal;
-  `;
-
-  const CostSubtext = styled(FlexCol)`
-    margin-top: 8px;
-    flex: 0 0 48px;
-    justify-content: flex-start;
-    font-size: 14px;
-    font-weight: 700;
-  `;
-
-  const FeatureList = styled.ul`
-    padding-left: 24px;
-    list-style: none;
-    font-size: 16px;
-    font-weight: 500;
-  `;
-
-  const PlanFooter = styled(FlexRow)`justify-content: center;`;
-
-  const FreePrimaryCTA = styled(PrimaryCTA)`
-    margin-top: 32px;
-    background-color: ${props => props.theme.success.default};
-    background-image: ${props =>
-      Gradient(props.theme.success.alt, props.theme.success.default)};
-    color: ${props => props.theme.text.reverse};
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-      box-shadow: ${Shadow.high}
-        ${props => hexa(props.theme.success.dark, 0.25)};
-    }
-  `;
-
-  const PaidPrimaryCTA = styled(PrimaryCTA)`
-    margin-top: 32px;
-    margin-bottom: 16px;
-
-    &:hover {
-      color: ${props => props.theme.brand.alt};
-      box-shadow: ${Shadow.high} ${props => hexa(props.theme.brand.dark, 0.75)};
-    }
-
-    @media (max-width: 768px) {
-      margin-bottom: 48px;
+      border-color: ${props => props.theme.space.border};
+      text-align: left;
     }
   `;
 
   return (
+    <Section background="dark" goop={1}>
+      <Content>
+        <Text>
+          <Tagline>Spectrum will always be free for users.</Tagline>
+          <Copy>Unlimited usage. Zero ads.</Copy>
+          <Copy>We'll never sell your data either.</Copy>
+        </Text>
+      </Content>
+    </Section>
+  );
+};
+
+export const Plans = (props: Props) => {
+  const Text = styled(FlexCol)`
+    margin: 48px 16px;
+    text-align: left;
+    align-items: start;
+    z-index: 2;
+
+    ${Copy} {
+      margin-top: 16px;
+      margin-left: 32px;
+    }
+
+    @media (max-width: 768px) {
+      margin: 0;
+      z-index: 1;
+    }
+  `;
+
+  const ThisTagline = styled(Tagline)`
+    text-align: center;
+    margin-left: 16px;
+  `;
+
+  return (
     <Section background="illustrated" goop={1} color="space.dark">
-      <Layout>
-        <PricingGrid>
-          <ThisTagline>Community plans</ThisTagline>
-          <Free>
-            <Title>Open</Title>
-            <Cost>
-              <CostNumber>Free</CostNumber>
-              <CostSubtext>forever</CostSubtext>
-            </Cost>
-            <Description>
-              Build your community on a platform purpose-built for constructive
-              public communities.
-            </Description>
-            <FeatureList>
-              <Feature>
-                Never lose a thing. Spectrum gives you{' '}
-                <b>
-                  unlimited members, channels, messages, and file uploads
-                </b>{' '}
-                by default.
-              </Feature>
-              <Feature>
-                Find that conversation you're looking for with{' '}
-                <b>permalinked, search-indexed chat threads</b>.
-              </Feature>
-              <Feature>
-                <b>Simple, powerful moderation</b> with automated toxicity
-                monitoring and clear guidelines set by our open source{' '}
-                <a href="https://github.com/withspectrum/code-of-conduct">
-                  Code of Conduct
-                </a>.
-              </Feature>
-            </FeatureList>
-            <PlanFooter>
-              <Link to="/new/community">
-                <FreePrimaryCTA icon="plus-fill">
-                  Create my community
-                </FreePrimaryCTA>
-              </Link>
-            </PlanFooter>
-          </Free>
-          <Paid>
-            <Title>Standard</Title>
-            <Cost>
-              <CostNumber per="month">100</CostNumber>
-              <CostSubtext>per 1,000 members</CostSubtext>
-            </Cost>
-            <Description>
-              Take your community to the next level with top-tier moderation and
-              support tools.
-            </Description>
-            <FeatureList>
-              <Feature>
-                Keep team conversations confidential with{' '}
-                <b>invite-only, private channels</b>.
-              </Feature>
-              <Feature>
-                <b>Community analytics</b> provide a bird's-eye view of
-                community behavior and ROI.
-              </Feature>
-              <Feature>
-                Highlight your team and incentivize your community members with{' '}
-                <b>additional moderators</b> and <b>custom badges</b>.
-              </Feature>
-              <Feature>
-                <b>Priority support</b> for moderation and technical issues.
-              </Feature>
-            </FeatureList>
-            <PlanFooter>
-              <Link to="/new/community">
-                <PaidPrimaryCTA icon="plus-fill">
-                  Create my community
-                </PaidPrimaryCTA>
-              </Link>
-            </PlanFooter>
-          </Paid>
-        </PricingGrid>
-      </Layout>
+      <Nav location={'pricing'} />
+      <Content>
+        <Text>
+          <Layout>
+            <PricingGrid>
+              <Free>
+                <Title>Open</Title>
+                <Cost>
+                  <CostNumber>Free</CostNumber>
+                  <CostSubtext>forever</CostSubtext>
+                </Cost>
+                <Description>
+                  Build your community on a platform purpose-built for
+                  constructive public communities.
+                </Description>
+                <FeatureList>
+                  <Feature>
+                    Never lose a thing. Spectrum gives you{' '}
+                    <b>
+                      unlimited members, channels, messages, and file uploads
+                    </b>{' '}
+                    by default.
+                  </Feature>
+                  <Feature>
+                    Find that conversation you're looking for with{' '}
+                    <b>permalinked, search-indexed chat threads</b>.
+                  </Feature>
+                  <Feature>
+                    <b>Simple, powerful moderation</b> with automated toxicity
+                    monitoring and clear guidelines set by our open source{' '}
+                    <a href="https://github.com/withspectrum/code-of-conduct">
+                      Code of Conduct
+                    </a>.
+                  </Feature>
+                </FeatureList>
+                <PlanFooter>
+                  <Link to="/new/community">
+                    <FreePrimaryCTA icon="plus-fill">
+                      Create my community
+                    </FreePrimaryCTA>
+                  </Link>
+                </PlanFooter>
+              </Free>
+              <Paid>
+                <Title>Standard</Title>
+                <Cost>
+                  <CostNumber per="month">100</CostNumber>
+                  <CostSubtext>per 1,000 members</CostSubtext>
+                </Cost>
+                <Description>
+                  Take your community to the next level with top-tier moderation
+                  and support tools.
+                </Description>
+                <FeatureList>
+                  <Feature>
+                    Keep team conversations confidential with{' '}
+                    <b>invite-only, private channels</b>.
+                  </Feature>
+                  <Feature>
+                    <b>Community analytics</b> provide a bird's-eye view of
+                    community behavior and ROI.
+                  </Feature>
+                  <Feature>
+                    Highlight your team and incentivize your community members
+                    with <b>additional moderators</b> and <b>custom badges</b>.
+                  </Feature>
+                  <Feature>
+                    <b>Priority support</b> for moderation and technical issues.
+                  </Feature>
+                </FeatureList>
+                <PlanFooter>
+                  <Link to="/new/community">
+                    <PaidPrimaryCTA icon="plus-fill">
+                      Create my community
+                    </PaidPrimaryCTA>
+                  </Link>
+                </PlanFooter>
+              </Paid>
+            </PricingGrid>
+          </Layout>
+        </Text>
+      </Content>
     </Section>
   );
 };

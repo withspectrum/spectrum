@@ -87,7 +87,7 @@ export const Reverse = styled(Default)`
 `;
 
 export const Illustrated = styled(Default)`
-  img {
+  > img {
     opacity: 0.15;
 
     @media (max-width: 768px) {

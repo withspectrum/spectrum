@@ -9,7 +9,6 @@ import {
   Yours,
   PageFooter,
 } from './view';
-import Nav from './nav';
 import { Wrapper } from './style';
 
 class Splash extends PureComponent {
@@ -39,7 +38,6 @@ class Splash extends PureComponent {
   render() {
     return (
       <Wrapper data-e2e-id="splash-page">
-        <Nav />
         <Overview />
         <Centralized />
         <CommunitySearch />

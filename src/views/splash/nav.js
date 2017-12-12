@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Button } from '../../components/buttons';
+import { Button, IconButton } from '../../components/buttons';
 import Link from '../../components/link';
+import Icon from '../../components/icons';
 import { Logo } from '../../components/logo';
 import Avatar from '../../components/avatar';
 import { DropTab } from '../navbar/style';
@@ -10,58 +11,96 @@ import {
   NavContainer,
   Tabs,
   LogoTab,
+  MenuTab,
   PricingTab,
   SupportTab,
   AuthTab,
+  LogoLink,
+  AuthLink,
+  PricingLink,
+  SupportLink,
+  ExploreLink,
+  MenuContainer,
   SvgWrapper,
   InlineSvg,
 } from './style';
 
-const Goop = () => {
-  return (
-    <SvgWrapper>
-      <InlineSvg
-        fillRule="evenodd"
-        clipRule="evenodd"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-labelledby="title"
-        viewBox="0 0 1920 64"
-      >
-        <title id="title">goop</title>
-        <path d="M0,61l0,-61l1920,0l0,25c-196,36 -285,22 -493.5,22c-208.5,0 -1034,-81.5 -1426.5,14Z" />
-      </InlineSvg>
-    </SvgWrapper>
-  );
-};
+class Nav extends Component {
+  constructor(props) {
+    super(props);
 
-class Nav extends PureComponent {
-  // if currentUser exists (or a cookie), show the avatar and a "launch" button instead of the log in button...
+    this.state = {
+      menuIsOpen: false,
+    };
+  }
 
-  // if mobile, simplify navbar and add menu to get to add'l links
+  toggleMenu() {
+    this.setState({ menuIsOpen: !this.state.menuIsOpen });
+
+    console.log('toggled', this.state.menuIsOpen);
+  }
 
   render() {
     return (
       <NavContainer>
         <Tabs>
-          <LogoTab to="/about">
+          <LogoTab dark={this.props.dark} to="/about">
             <Logo />
+            <Icon glyph={'logo'} />
           </LogoTab>
 
-          <PricingTab to="/pricing">Pricing</PricingTab>
-          <SupportTab to="/support">Support</SupportTab>
-          <AuthTab>
+          <PricingTab
+            dark={this.props.dark}
+            selected={this.props.location === 'pricing'}
+            to="/pricing"
+          >
+            Pricing
+          </PricingTab>
+          <SupportTab
+            dark={this.props.dark}
+            selected={this.props.location === 'support'}
+            to="/support"
+          >
+            Support
+          </SupportTab>
+          <AuthTab dark={this.props.dark}>
             {this.props.currentUser ? (
-              <DropTab>
-                <Avatar user={this.props.currentUser} />
-              </DropTab>
+              <Link to={'/'}>
+                <Avatar
+                  src={this.props.currentUser.profilePhoto}
+                  user={this.props.currentUser}
+                />
+              </Link>
             ) : (
               <Link to="/login">
                 <Button>Log In</Button>
               </Link>
             )}
           </AuthTab>
+          <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
+            <IconButton
+              glyph={this.state.menuIsOpen ? 'view-close' : 'menu'}
+              onClick={() => this.toggleMenu()}
+            />
+            <MenuContainer open={this.state.menuIsOpen}>
+              <LogoLink to="/">
+                <Logo />
+              </LogoLink>
+              <PricingLink to="/pricing">
+                <Icon glyph="payment" />Pricing
+              </PricingLink>
+              <SupportLink to="/support">
+                <Icon glyph="like" />Support
+              </SupportLink>
+              <ExploreLink to="/explore">
+                <Icon glyph="explore" />Explore
+              </ExploreLink>
+              <AuthLink to={'/login'}>
+                <Icon glyph="welcome" />Log in
+              </AuthLink>
+            </MenuContainer>
+          </MenuTab>
         </Tabs>
-        <Goop />
       </NavContainer>
     );
   }

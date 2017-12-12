@@ -9,7 +9,6 @@ import {
   Plans,
   PageFooter,
 } from './view';
-import Nav from './nav';
 import { Wrapper } from './style';
 
 class Pricing extends Component {
@@ -39,7 +38,6 @@ class Pricing extends Component {
   render() {
     return (
       <Wrapper data-e2e-id="pricing-page">
-        <Nav />
         <Plans />
         <Sell />
         <PageFooter />

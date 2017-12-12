@@ -39,6 +39,10 @@ export const theme = {
       default: '#1475DA',
       alt: '#1475DA',
     },
+    ph: {
+      default: '#D85537',
+      alt: '#D85537',
+    },
   },
   space: {
     default: '#0062D6',

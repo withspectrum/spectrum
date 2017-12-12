@@ -112,7 +112,13 @@ const Splash = Loadable({
 
 /* prettier-ignore */
 const Pricing = Loadable({
-  loader: () => import('./views/splash/pricing'/* webpackChunkName: "Splash" */),
+  loader: () => import('./views/splash/pricing'/* webpackChunkName: "Pricing" */),
+  loading: ({ isLoading }) => isLoading && <Loading />,
+});
+
+/* prettier-ignore */
+const Support = Loadable({
+  loader: () => import('./views/splash/support'/* webpackChunkName: "Support" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
@@ -179,7 +185,7 @@ class Routes extends React.Component<{}> {
             {/* Default meta tags, get overriden by anything further down the tree */}
             <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
-            {/* 
+            {/*
               AuthViewHandler often returns null, but is responsible for triggering
               things like the 'set username' prompt when a user auths and doesn't
               have a username set.
@@ -202,10 +208,11 @@ class Routes extends React.Component<{}> {
 
               {/* Public Business Pages */}
               <Route path="/about" component={Splash} />
-              <Route path="/contact" component={Splash} />
-              <Route path="/terms" component={Splash} />
-              <Route path="/code-of-conduct" component={Splash} />
+              <Route path="/contact" component={Support} />
+              <Route path="/terms" component={Support} />
+              <Route path="/code-of-conduct" component={Support} />
               <Route path="/pricing" component={Pricing} />
+              <Route path="/support" component={Support} />
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
