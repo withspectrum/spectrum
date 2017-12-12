@@ -140,9 +140,8 @@ module.exports = {
         return {
           pageInfo: {
             // TODO(@mxstbr): Figure out how we know this
-            hasNextPage:
-              messageCount !== 0 && result && result.length <= messageCount,
-            hasPreviousPage: false,
+            hasNextPage: result && result.length <= messageCount,
+            hasPreviousPage: result && result.length !== 0 && !!cursor,
           },
           edges: result.map((message, index) => ({
             cursor: encode(message.timestamp.getTime().toString()),

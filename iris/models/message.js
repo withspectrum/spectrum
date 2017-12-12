@@ -39,6 +39,8 @@ export const getMessages = (
     .table('messages')
     .between([threadId, firstBound], [threadId, secondBound], {
       index: 'threadIdAndTimestamp',
+      leftBound: 'open',
+      rightBound: 'open',
     })
     .orderBy({ index: order })
     .filter(db.row.hasFields('deletedAt').not())
