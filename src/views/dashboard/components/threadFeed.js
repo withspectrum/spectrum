@@ -240,7 +240,7 @@ class ThreadFeed extends React.Component<Props, State> {
           useWindow={false}
           initialLoad={false}
           scrollElement={scrollElement}
-          threshold={200}
+          threshold={750}
         >
           {filteredThreads.map(thread => {
             return (
