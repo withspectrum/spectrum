@@ -62,6 +62,7 @@ export const AvatarLink = styled(Link)`
   justify-content: center;
   align-items: center;
   pointer-events: auto;
+  border-radius: 100%;
 `;
 
 export const AvatarNoLink = AvatarLink.withComponent('div');

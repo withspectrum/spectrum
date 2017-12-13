@@ -65,7 +65,7 @@ export const Tagline = styled(H2)`
 export const Copy = styled(P)`
   max-width: 480px;
   width: 100%;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.5;
   color: inherit;
   font-weight: 500;
@@ -415,8 +415,12 @@ const DropdownLink = styled(Link)`
   display: flex;
   align-items: center;
 
-  > div {
+  > div:first-of-type {
     margin-right: 16px;
+  }
+
+  &:hover {
+    color: ${props => props.theme.brand.default};
   }
 `;
 
@@ -424,6 +428,10 @@ export const LogoLink = styled(DropdownLink)`
   grid-area: logo;
   padding: 0;
   color: ${props => props.theme.text.placeholder};
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
 `;
 
 export const PricingLink = styled(DropdownLink)`
@@ -451,6 +459,31 @@ export const AuthLink = styled(DropdownLink)`
   background-color: ${props => props.theme.brand.alt};
   background-image: ${props =>
     Gradient(props.theme.brand.alt, props.theme.brand.default)};
+
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'icon label . arrow';
+
+  > div > div {
+    box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
+  }
+
+  &:hover {
+    color: ${props => props.theme.brand.border};
+  }
+
+  > div:first-of-type {
+    grid-area: icon;
+  }
+
+  > span {
+    grid-area: label;
+  }
+
+  > div:last-of-type {
+    grid-area: arrow;
+  }
 `;
 
 export const MenuContainer = styled.div`

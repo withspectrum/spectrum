@@ -95,9 +95,22 @@ class Nav extends Component {
               <ExploreLink to="/explore">
                 <Icon glyph="explore" />Explore
               </ExploreLink>
-              <AuthLink to={'/login'}>
-                <Icon glyph="welcome" />Log in
-              </AuthLink>
+              {this.props.currentUser ? (
+                <AuthLink to={'/'}>
+                  <Avatar
+                    src={this.props.currentUser.profilePhoto}
+                    user={this.props.currentUser}
+                  />
+                  <span>{this.props.currentUser.name}</span>
+                  <Icon glyph="enter" />
+                </AuthLink>
+              ) : (
+                <AuthLink to={'/login'}>
+                  <Icon glyph="welcome" />
+                  <span>Log in</span>
+                  <Icon glyph="enter" />
+                </AuthLink>
+              )}
             </MenuContainer>
           </MenuTab>
         </Tabs>
