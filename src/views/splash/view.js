@@ -100,6 +100,10 @@ export const Overview = (props: Props) => {
     line-height: 1.6;
     font-weight: 500;
     max-width: 580px;
+
+    @media (max-width: 768px) {
+      text-align: center;
+    }
   `;
 
   const ThisTagline = styled(Tagline)`
