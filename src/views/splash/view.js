@@ -732,11 +732,11 @@ export const PageFooter = (props: Props) => {
         </Link>
       </FlexRow>
       <Flexer>
-        <LinkBlock href="/pricing">
-          <div>Pricing</div>
+        <LinkBlock href="/privacy">
+          <div>Privacy</div>
         </LinkBlock>
-        <LinkBlock href="/support">
-          <div>Support</div>
+        <LinkBlock href="/terms">
+          <div>Terms</div>
         </LinkBlock>
         <LinkBlock href="https://github.com/withspectrum/code-of-conduct">
           <div>Code of Conduct</div>
