@@ -65,11 +65,36 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
 
 export const dbMessageToSearchThread = (message: DBMessage): SearchThread => {};
 
-export const dbUserToSearchUser = (user: DBUser): SearchUser => {};
+export const dbUserToSearchUser = (user: DBUser): SearchUser => {
+  const {
+    email,
+    lastSeen,
+    providerId,
+    fbProviderId,
+    googleProviderId,
+    createdAt,
+    isOnline,
+    githubProviderId,
+    timezone,
+    modifiedAt,
+    ...rest
+  } = user;
+
+  return {
+    ...rest,
+    objectID: user.id,
+  };
+};
 
 export const dbCommunityToSearchCommunity = (
   community: DBCommunity
-): SearchCommunity => {};
+): SearchCommunity => {
+  const { createdAt, pinnedThreadId, watercoolerId, ...rest } = community;
+  return {
+    ...rest,
+    objectID: community.id,
+  };
+};
 
 export const NEW_DOCUMENTS = db
   .row('old_val')

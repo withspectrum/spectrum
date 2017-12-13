@@ -2,10 +2,10 @@
 const debug = require('debug')('vulcan');
 const PORT = process.env.PORT || 3007;
 import {
-  newThreads,
-  deletedThreads,
-  movedChannelThreads,
-  changedThreadContent,
+  newThread,
+  deletedThread,
+  movedThread,
+  editedThread,
 } from './models/thread';
 import createServer from './server';
 
@@ -20,10 +20,10 @@ console.log(
     'locally'}`
 );
 
-newThreads();
-deletedThreads();
-movedChannelThreads();
-changedThreadContent();
+newThread();
+deletedThread();
+movedThreads();
+editedThread();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
