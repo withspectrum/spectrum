@@ -15,6 +15,8 @@ import {
   ExploreTab,
   ProfileDrop,
   ProfileTab,
+  SupportTab,
+  PricingTab,
   Tab,
   Label,
   Navatar,
@@ -195,14 +197,36 @@ class Navbar extends React.Component<Props> {
           <Logo to="/">
             <Icon glyph="logo" size={28} />
           </Logo>
+          <HomeTab
+            className={'hideOnDesktop'}
+            data-active={match.url === '/' && match.isExact}
+            to="/"
+          >
+            <Icon glyph="logo" />
+            <Label>About</Label>
+          </HomeTab>
           <ExploreTab
             data-active={history.location.pathname === '/explore'}
             to="/explore"
             loggedOut={!loggedInUser}
           >
             <Icon glyph="explore" />
-            <Label>Explore Spectrum</Label>
+            <Label>Explore</Label>
           </ExploreTab>
+          <SupportTab
+            data-active={history.location.pathname === '/support'}
+            to="/support"
+          >
+            <Icon glyph="like" />
+            <Label>Support</Label>
+          </SupportTab>
+          <PricingTab
+            data-active={history.location.pathname === '/pricing'}
+            to="/pricing"
+          >
+            <Icon glyph="payment" />
+            <Label>Pricing</Label>
+          </PricingTab>
         </Nav>
       );
     }

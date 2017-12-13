@@ -86,14 +86,23 @@ class Nav extends Component {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              <PricingLink to="/pricing">
-                <Icon glyph="payment" />Pricing
+              <PricingLink
+                to="/pricing"
+                selected={this.props.location === 'pricing'}
+              >
+                <Icon glyph="payment" />Pricing<Icon glyph="enter" />
               </PricingLink>
-              <SupportLink to="/support">
-                <Icon glyph="like" />Support
+              <SupportLink
+                to="/support"
+                selected={this.props.location === 'support'}
+              >
+                <Icon glyph="like" />Support<Icon glyph="enter" />
               </SupportLink>
-              <ExploreLink to="/explore">
-                <Icon glyph="explore" />Explore
+              <ExploreLink
+                to="/explore"
+                selected={this.props.location === 'explore'}
+              >
+                <Icon glyph="explore" />Explore<Icon glyph="enter" />
               </ExploreLink>
               {this.props.currentUser ? (
                 <AuthLink to={'/'}>

@@ -408,19 +408,44 @@ export const LogoTab = styled(Tab)`
 `;
 
 const DropdownLink = styled(Link)`
-  display: inline-block;
   padding: 16px 0;
   margin: 0 16px;
   font-weight: 500;
   display: flex;
   align-items: center;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'icon label . arrow';
+  transition: ${Transition.hover.off};
+  color: ${props =>
+    props.selected ? props.theme.text.placeholder : props.theme.brand.alt};
+
+  > div:last-of-type {
+    grid-area: arrow;
+    opacity: 0;
+    display: ${props => (props.selected ? 'none' : 'inline-block')};
+    transition: ${Transition.hover.off};
+  }
 
   > div:first-of-type {
+    grid-area: icon;
     margin-right: 16px;
   }
 
+  > span {
+    grid-area: label;
+  }
+
   &:hover {
-    color: ${props => props.theme.brand.default};
+    transition: ${Transition.hover.on};
+    color: ${props =>
+      props.selected ? props.theme.text.alt : props.theme.brand.default};
+
+    > div:last-of-type {
+      opacity: 1;
+      transition: ${Transition.hover.on};
+    }
   }
 `;
 
@@ -428,6 +453,11 @@ export const LogoLink = styled(DropdownLink)`
   grid-area: logo;
   padding: 0;
   color: ${props => props.theme.text.placeholder};
+
+  > div:last-of-type {
+    opacity: 1;
+    display: inline-block;
+  }
 
   &:hover {
     color: ${props => props.theme.brand.alt};
@@ -460,17 +490,13 @@ export const AuthLink = styled(DropdownLink)`
   background-image: ${props =>
     Gradient(props.theme.brand.alt, props.theme.brand.default)};
 
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  grid-template-rows: 1fr;
-  grid-template-areas: 'icon label . arrow';
-
   > div > div {
     box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
   }
 
   &:hover {
-    color: ${props => props.theme.brand.border};
+    color: ${props => props.theme.text.reverse};
+    text-shadow: 0 0 32px ${props => hexa(props.theme.text.reverse, 0.5)};
   }
 
   > div:first-of-type {

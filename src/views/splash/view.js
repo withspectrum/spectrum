@@ -658,11 +658,11 @@ export const Yours = (props: Props) => {
                 okay, honestly Spectrum is the best thing that happened to me
                 regarding social interaction in 2017
               </Pullquote>
-              <Signature to="https://spectrum.chat/users/alextraykov">
+              <Signature to="https://spectrum.chat/users/Traykov">
                 <Avatar
                   size={'40'}
                   src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
-                />Alexander Traykov<span>@traykov</span>
+                />Alexander Traykov<span>@Traykov</span>
               </Signature>
             </Quote>
             <Quote>
@@ -697,7 +697,7 @@ export const Yours = (props: Props) => {
                 <Avatar
                   size={'40'}
                   src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
-                />Tayler O'Dea <span>@tayler2412</span>
+                />Tayler O'Dea <span>@tayler-m-odea</span>
               </Signature>
             </Quote>
           </Quotes>
@@ -951,11 +951,17 @@ export const ContactInfo = () => {
     grid-template-rows: repeat(2, minmax(240px, auto));
     grid-row-gap: 32px;
     grid-column-gap: 32px;
+
+    @media (max-width: 768px) {
+      align-self: stretch;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, minmax(240px, auto));
+    }
   `;
 
   const HelpCard = styled.div`
     background-color: ${props => props.theme.bg.default};
-    box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.25)};
+    box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.default, 0.2)};
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap: 16px;
@@ -964,7 +970,9 @@ export const ContactInfo = () => {
     padding: 32px;
     justify-items: center;
 
-    > button {
+    > a > button {
+      font-size: 16px;
+      font-weight: 700;
       align-self: end;
     }
 
@@ -974,9 +982,7 @@ export const ContactInfo = () => {
   `;
 
   const BugCard = styled(HelpCard)`
-    box-shadow: 0 8px 32px ${props => hexa(props.theme.warn.dark, 0.2)};
-
-    > button {
+    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.warn.dark, 0.2)}; */} button {
       background-color: ${props => props.theme.warn.alt};
       background-image: ${props =>
         Gradient(props.theme.warn.alt, props.theme.warn.default)};
@@ -988,9 +994,7 @@ export const ContactInfo = () => {
   `;
 
   const FeatCard = styled(HelpCard)`
-    box-shadow: 0 8px 32px ${props => hexa(props.theme.success.dark, 0.2)};
-
-    > button {
+    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.success.dark, 0.2)}; */} button {
       background-color: ${props => props.theme.success.alt};
       background-image: ${props =>
         Gradient(props.theme.success.alt, props.theme.success.default)};
@@ -1001,12 +1005,20 @@ export const ContactInfo = () => {
     }
   `;
 
-  const EmailCard = styled(HelpCard)``;
+  const EmailCard = styled(HelpCard)`
+    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.special.dark, 0.2)}; */} button {
+      background-color: ${props => props.theme.special.default};
+      background-image: ${props =>
+        Gradient(props.theme.special.alt, props.theme.special.default)};
+
+      &:hover {
+        box-shadow: 0 4px 32px ${props => hexa(props.theme.special.dark, 0.25)};
+      }
+    }
+  `;
 
   const TweetCard = styled(HelpCard)`
-    box-shadow: 0 8px 32px ${props => hexa(props.theme.space.default, 0.2)};
-
-    > button {
+    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.space.default, 0.2)}; */} button {
       background-color: ${props => props.theme.social.twitter.alt};
       background-image: ${props =>
         Gradient(
@@ -1023,6 +1035,7 @@ export const ContactInfo = () => {
   const Lede = styled.h4`
     font-size: 24px;
     font-weight: 900;
+    text-align: center;
   `;
 
   const Flavor = styled.p`
@@ -1042,7 +1055,9 @@ export const ContactInfo = () => {
               Join our <b>Hugs n Bugs</b> channel to check if there's already a
               fix or report a new issue!
             </Flavor>
-            <Button icon="bug">Join spectrum/hugs-n-bugs</Button>
+            <Link to={'/spectrum/hugs-n-bugs'}>
+              <Button icon="bug">Join spectrum/hugs-n-bugs</Button>
+            </Link>
           </BugCard>
           <FeatCard>
             <Lede>Need some more features?</Lede>
@@ -1050,23 +1065,29 @@ export const ContactInfo = () => {
               Jump into our <b>Feature Requests</b> channel and tell us what you
               want or add onto existing requests from others!
             </Flavor>
-            <Button icon="idea">Join spectrum/feature-requests</Button>
+            <Link to={'/spectrum/feature-requests'}>
+              <Button icon="idea">Join spectrum/feature-requests</Button>
+            </Link>
           </FeatCard>
-          <HelpCard>
+          <EmailCard>
             <Lede>Something else?</Lede>
             <Flavor>
               Concerned about something on Spectrum? Shoot us an email and we'll
               take care of it right away.
             </Flavor>
-            <Button icon="email">Email support@spectrum.chat</Button>
-          </HelpCard>
+            <a href={'mailto://support@spectrum.chat'}>
+              <Button icon="email">Email support@spectrum.chat</Button>
+            </a>
+          </EmailCard>
           <TweetCard>
             <Lede>Looking for updates?</Lede>
             <Flavor>
               We post news, release notes, and threads from all over Spectrum on
               Twitter!
             </Flavor>
-            <Button icon="twitter">@withspectrum on Twitter</Button>
+            <a href={'https://twitter.com/withspectrum'}>
+              <Button icon="twitter">@withspectrum on Twitter</Button>
+            </a>
           </TweetCard>
         </Grid>
       </ThisContent>
