@@ -29,7 +29,7 @@ it('should fetch a thread', () => {
     }
   `;
 
-  expect.assertions(1);
+  expect.hasAssertions();
   return request(query).then(result => {
     expect(result).toMatchSnapshot();
   });
@@ -51,8 +51,11 @@ describe('messageConnection', () => {
       }
     `;
 
-    expect.assertions(1);
+    expect.hasAssertions();
     return request(query).then(result => {
+      expect(result.data.thread.messageConnection.edges.length).toEqual(
+        messages.length
+      );
       expect(result).toMatchSnapshot();
     });
   });
@@ -79,10 +82,13 @@ describe('messageConnection', () => {
       }
     `;
 
-    expect.assertions(2);
+    expect.hasAssertions();
     return request(query).then(result => {
+      expect(result.data.thread.messageConnection.edges.length).toEqual(1);
       expect(result.data.thread.messageConnection.pageInfo).toEqual({
-        hasNextPage: true,
+        // This is true if there is more messages than this one
+        hasNextPage: messages.length > 1,
+        // This has to be false since it's the first message
         hasPreviousPage: false,
       });
       expect(
@@ -92,48 +98,26 @@ describe('messageConnection', () => {
   });
 
   it('should fetch the second message next', () => {
-    // Get the first message, same as above
+    // Get the cursor of the first message
     const query = /* GraphQL */ `
       {
         thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
           messageConnection(first: 1) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-            }
             edges {
               cursor
-              node {
-                content {
-                  body
-                }
-              }
             }
           }
         }
       }
     `;
 
-    expect.assertions(4);
-    return (
-      request(query)
-        // Get the cursor of the first message
-        .then(result => {
-          // Make sure pageInfo is calculated correctly
-          expect(result.data.thread.messageConnection.pageInfo).toEqual({
-            hasNextPage: true,
-            hasPreviousPage: false,
-          });
-          expect(
-            messageToPlainText(
-              result.data.thread.messageConnection.edges[0].node
-            )
-          ).toEqual(messageToPlainText(messages[0]));
-          return result.data.thread.messageConnection.edges[0].cursor;
-        })
-        .then(cursor => {
-          // Generate a query of the first message after the cursor of the last message
-          const nextQuery = /* GraphQL */ `
+    expect.hasAssertions();
+    return request(query)
+      .then(result => result.data.thread.messageConnection.edges[0].cursor)
+      .then(cursor => {
+        // Get one message after the cursor of the first message
+        // i.e. the second message
+        const nextQuery = /* GraphQL */ `
           {
             thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
               messageConnection(first: 1, after: "${cursor}") {
@@ -152,25 +136,24 @@ describe('messageConnection', () => {
             }
           }
         `;
-          return request(nextQuery);
-        })
-        .then(result => {
-          expect(result.data.thread.messageConnection.pageInfo).toEqual({
-            hasNextPage: true,
-            hasPreviousPage: true,
-          });
-          expect(
-            messageToPlainText(
-              result.data.thread.messageConnection.edges[0].node
-            )
-          ).toEqual(messageToPlainText(messages[1]));
-        })
-    );
+        return request(nextQuery);
+      })
+      .then(result => {
+        expect(result.data.thread.messageConnection.edges.length).toEqual(1);
+        expect(result.data.thread.messageConnection.pageInfo).toEqual({
+          hasNextPage: messages.length > 2,
+          // We know this has a previous page
+          hasPreviousPage: true,
+        });
+        expect(
+          messageToPlainText(result.data.thread.messageConnection.edges[0].node)
+        ).toEqual(messageToPlainText(messages[1]));
+      });
   });
 
-  describe.only('reverse pagination', () => {
+  describe('reverse pagination', () => {
     it('should fetch with reverse pagination', () => {
-      // Get the first message, same as above
+      // Get the first three messages
       const query = /* GraphQL */ `
         {
           thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
@@ -192,35 +175,30 @@ describe('messageConnection', () => {
         }
       `;
 
-      expect.assertions(6);
+      expect.hasAssertions();
       return (
         request(query)
           // Get the cursor of the first message
           .then(result => {
+            const { edges, pageInfo } = result.data.thread.messageConnection;
+            expect(edges.length).toEqual(3);
             // Make sure pageInfo is calculated correctly
-            expect(result.data.thread.messageConnection.pageInfo).toEqual({
-              hasNextPage: true,
+            expect(pageInfo).toEqual({
+              hasNextPage: messages.length > 3,
+              // We know this can't have a previous page since we fetched the very first one
               hasPreviousPage: false,
             });
-            expect(
-              messageToPlainText(
-                result.data.thread.messageConnection.edges[0].node
-              )
-            ).toEqual(messageToPlainText(messages[0]));
-            expect(
-              messageToPlainText(
-                result.data.thread.messageConnection.edges[1].node
-              )
-            ).toEqual(messageToPlainText(messages[1]));
-            expect(
-              messageToPlainText(
-                result.data.thread.messageConnection.edges[2].node
-              )
-            ).toEqual(messageToPlainText(messages[2]));
-            // Return the cursor of the third message
-            return result.data.thread.messageConnection.edges[2].cursor;
+            // Make sure we got the right messages
+            edges.forEach(({ node }, index) => {
+              expect(messageToPlainText(node)).toEqual(
+                messageToPlainText(messages[index])
+              );
+            });
+            // Return the cursor of the last message
+            return edges[2].cursor;
           })
           .then(cursor => {
+            // Get one message before the last message of the first page we just got
             const nextQuery = /* GraphQL */ `
             {
               thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
@@ -243,15 +221,15 @@ describe('messageConnection', () => {
             return request(nextQuery);
           })
           .then(result => {
-            expect(result.data.thread.messageConnection.pageInfo).toEqual({
+            const { pageInfo, edges } = result.data.thread.messageConnection;
+            expect(pageInfo).toEqual({
+              // We know there's more messages on either side of this one
               hasNextPage: true,
               hasPreviousPage: true,
             });
-            expect(
-              messageToPlainText(
-                result.data.thread.messageConnection.edges[0].node
-              )
-            ).toEqual(messageToPlainText(messages[1]));
+            expect(messageToPlainText(edges[0].node)).toEqual(
+              messageToPlainText(messages[1])
+            );
           })
       );
     });
