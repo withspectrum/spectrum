@@ -49,7 +49,7 @@ const getForwardMessages = (
     .between(
       [threadId, after ? new Date(after) : db.minval],
       [threadId, db.maxval],
-      { index: 'threadIdAndTimestamp' }
+      { index: 'threadIdAndTimestamp', leftBound: 'open', rightBound: 'closed' }
     )
     .orderBy({ index: 'threadIdAndTimestamp' })
     .filter(db.row.hasFields('deletedAt').not())
