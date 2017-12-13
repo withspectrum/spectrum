@@ -58,7 +58,6 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
             thread.messageConnection.edges.length - 1
           ].cursor;
       }
-      console.log(cursor);
       return props.data.fetchMore({
         variables: {
           after: cursor,
@@ -75,7 +74,6 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
             fetchMoreResult.thread.messageConnection.edges.length < 1
           )
             return prev;
-          console.log(fetchMoreResult.thread.messageConnection);
 
           return {
             ...prev,
@@ -84,10 +82,11 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
               messageConnection: {
                 ...prev.thread.messageConnection,
                 pageInfo: {
-                  ...prev.thread.messageConnection.pageInfo,
                   hasNextPage:
                     fetchMoreResult.thread.messageConnection.pageInfo
                       .hasNextPage,
+                  hasPreviousPage:
+                    prev.thread.messageConnection.pageInfo.hasPreviousPage,
                 },
                 edges: [
                   ...prev.thread.messageConnection.edges,
@@ -118,14 +117,10 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
           last: 1,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (
-            !fetchMoreResult ||
-            !fetchMoreResult.thread ||
-            !fetchMoreResult.thread.messageConnection ||
-            !fetchMoreResult.thread.messageConnection.edges ||
-            fetchMoreResult.thread.messageConnection.edges.length < 1
-          )
-            return prev;
+          if (!fetchMoreResult || !fetchMoreResult.thread) return prev;
+          const {
+            messageConnection: { pageInfo, edges },
+          } = fetchMoreResult.thread;
 
           return {
             ...prev,
@@ -134,15 +129,14 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
               messageConnection: {
                 ...prev.thread.messageConnection,
                 pageInfo: {
-                  ...prev.thread.messageConnection.pageInfo,
-                  hasPreviousPage:
-                    fetchMoreResult.thread.messageConnection.pageInfo
-                      .hasPreviousPage,
+                  hasNextPage:
+                    prev.thread.messageConnection.pageInfo.hasNextPage,
+                  // Copy the new pageinfo
+                  hasPreviousPage: pageInfo.hasPreviousPage,
                 },
-                edges: [
-                  ...fetchMoreResult.thread.messageConnection.edges,
-                  ...prev.thread.messageConnection.edges,
-                ],
+                edges: edges
+                  ? [...edges, ...prev.thread.messageConnection.edges]
+                  : prev.thread.messageConnection.edges,
               },
             },
           };
