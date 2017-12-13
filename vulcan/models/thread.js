@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+const { promisify } = require('util');
 const env = require('node-env-file');
 const path = require('path');
 env(path.resolve(__dirname, '../.env'), { raise: false });
@@ -35,6 +36,7 @@ export const deletedThread = () =>
     if (!data.deletedAt) return;
     return threadsSearchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
+        ``;
         console.log('error deleting a thread', err);
       }
       console.log('deleted thread in search', obj.objectID);
@@ -42,19 +44,42 @@ export const deletedThread = () =>
   });
 
 export const movedThread = () =>
-  listenToChangedFieldIn('channelId')('threads', data => {
-    return threadsSearchIndex.partialUpdateObject(
-      {
-        objectID: data.id,
+  listenToChangedFieldIn('channelId')('threads', async data => {
+    const getAllRecordsForThreadId = data => {
+      return new Promise((resolve, reject) => {
+        return threadsSearchIndex.browse(
+          {
+            query: '',
+            filters: `threadId:'${data.id}'`,
+          },
+          (err, content) => {
+            if (err) {
+              console.log("couldn't find any results for this thread", err);
+              reject(err);
+            }
+            console.log('got hits');
+            resolve(content.hits);
+            return content.hits;
+          }
+        );
+      });
+    };
+
+    return await Promise.all([
+      getAllRecordsForThreadId(data),
+    ]).then(([hits]) => {
+      const allRecords = hits.map(r => ({
         channelId: data.channelId,
-      },
-      (err, obj) => {
+        objectID: r.objectID,
+      }));
+
+      return threadsSearchIndex.partialUpdateObjects(allRecords, (err, obj) => {
         if (err) {
-          console.log('error moving channel for a thread', err);
+          console.log('error moving channels for a thread', err);
         }
-        console.log('changed thread channel id in search', obj.objectID);
-      }
-    );
+        console.log('changed thread channels id in search', obj);
+      });
+    });
   });
 
 export const editedThread = () =>
