@@ -91,6 +91,8 @@ export const Overview = (props: Props) => {
     @media (max-width: 768px) {
       margin-top: 0;
       margin-bottom: 16px;
+      text-align: center;
+      align-items: center;
     }
   `;
 
@@ -113,6 +115,10 @@ export const Overview = (props: Props) => {
     margin-top: 48px;
     align-items: flex-start;
     justify-content: space-between;
+
+    @media (max-width: 768px) {
+      align-items: center;
+    }
   `;
 
   const ThisSecondaryCTA = styled(SecondaryCTA)`
@@ -267,6 +273,7 @@ export const Centralized = (props: Props) => {
     align-items: center;
     flex-wrap: wrap;
     z-index: 2;
+    margin-bottom: 40px;
 
     img {
       margin-top: 32px;
@@ -590,7 +597,6 @@ export const Yours = (props: Props) => {
     transition: ${Transition.hover.off};
     margin-top: 32px;
     margin-left: 32px;
-    border-radius: 8px;
 
     &:hover {
       box-shadow: 0 0px 32px ${props => props.theme.brand.alt};
@@ -721,9 +727,9 @@ export const PageFooter = (props: Props) => {
   return (
     <Footer>
       <FlexRow>
-        <a href="/spectrum">
+        <Link to="/">
           <Icon glyph="logo" size={32} />
-        </a>
+        </Link>
       </FlexRow>
       <Flexer>
         <LinkBlock href="/pricing">
@@ -915,8 +921,7 @@ export const Plans = (props: Props) => {
                     community behavior and ROI.
                   </Feature>
                   <Feature>
-                    Highlight your team and incentivize your community members
-                    with <b>additional moderators</b> and <b>custom badges</b>.
+                    Empower your team with <b>additional moderators</b>.
                   </Feature>
                   <Feature>
                     <b>Priority support</b> for moderation and technical issues.
@@ -942,6 +947,10 @@ export const ContactInfo = () => {
   const ThisContent = styled(Content)`
     flex-direction: column;
     align-items: center;
+
+    > h2 {
+      margin: 0 32px;
+    }
   `;
 
   const Grid = styled.div`
@@ -953,6 +962,7 @@ export const ContactInfo = () => {
     grid-column-gap: 32px;
 
     @media (max-width: 768px) {
+      margin: 32px 0;
       align-self: stretch;
       grid-template-columns: 1fr;
       grid-template-rows: repeat(4, minmax(240px, auto));
@@ -978,6 +988,10 @@ export const ContactInfo = () => {
 
     b {
       font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      padding: 32px auto;
     }
   `;
 

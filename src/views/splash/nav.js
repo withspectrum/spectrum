@@ -21,6 +21,7 @@ import {
   SupportLink,
   ExploreLink,
   MenuContainer,
+  MenuOverlay,
   SvgWrapper,
   InlineSvg,
 } from './style';
@@ -121,6 +122,10 @@ class Nav extends Component {
                 </AuthLink>
               )}
             </MenuContainer>
+            <MenuOverlay
+              onClick={() => this.toggleMenu()}
+              open={this.state.menuIsOpen}
+            />
           </MenuTab>
         </Tabs>
       </NavContainer>
