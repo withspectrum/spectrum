@@ -151,6 +151,35 @@ describe('messageConnection', () => {
       });
   });
 
+  it('should correctly set hasNextPage when more messages are requested than are available', () => {
+    // Request more messages than there are
+    const query = /* GraphQL */ `
+      {
+        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+          messageConnection(first: ${messages.length + 1}) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              cursor
+            }
+          }
+        }
+      }
+    `;
+
+    expect.hasAssertions();
+    return request(query).then(result => {
+      const { edges, pageInfo } = result.data.thread.messageConnection;
+      expect(edges.length).toEqual(messages.length);
+      expect(pageInfo).toEqual({
+        hasNextPage: false,
+        hasPreviousPage: false,
+      });
+    });
+  });
+
   describe('reverse pagination', () => {
     it('should fetch with reverse pagination', () => {
       // Get the first three messages
