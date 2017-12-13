@@ -12,28 +12,9 @@ import {
 import { Wrapper } from './style';
 
 class Pricing extends Component {
-  state: {
-    preferredSigninMethod: string,
-  };
-
-  constructor() {
-    super();
-
-    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
-
-    this.state = {
-      preferredSigninMethod,
-    };
-  }
-
   componentDidMount() {
     track('pricing', 'viewed', null);
   }
-
-  trackSignin = (type, method) => {
-    track('pricing', 'logged in', type);
-    storeItem('preferred_signin_method', method);
-  };
 
   render() {
     return (

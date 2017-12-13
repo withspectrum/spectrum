@@ -5,28 +5,9 @@ import { ContactInfo, Plans, TermsSection, PageFooter } from './view';
 import { Wrapper } from './style';
 
 class Support extends Component {
-  state: {
-    preferredSigninMethod: string,
-  };
-
-  constructor() {
-    super();
-
-    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
-
-    this.state = {
-      preferredSigninMethod,
-    };
-  }
-
   componentDidMount() {
     track('support', 'viewed', null);
   }
-
-  trackSignin = (type, method) => {
-    track('support', 'logged in', type);
-    storeItem('preferred_signin_method', method);
-  };
 
   render() {
     return (
