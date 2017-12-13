@@ -7,6 +7,12 @@ import {
   movedThread,
   editedThread,
 } from './models/thread';
+import {
+  newCommunity,
+  deletedCommunity,
+  editedCommunity,
+} from './models/community';
+import { newUser, deletedUser, editedUser } from './models/user';
 import createServer from './server';
 
 console.log('\n✉️ Vulcan, the search worker, is starting...');
@@ -22,8 +28,16 @@ console.log(
 
 newThread();
 deletedThread();
-movedThreads();
+movedThread();
 editedThread();
+
+newCommunity();
+deletedCommunity();
+editedCommunity();
+
+newUser();
+deletedUser();
+editedUser();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {

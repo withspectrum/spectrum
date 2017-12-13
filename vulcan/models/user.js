@@ -16,7 +16,7 @@ import {
   listenToChangedFieldIn,
 } from './utils';
 
-export const newCommunity = () =>
+export const newUser = () =>
   listenToNewDocumentsIn('users', data => {
     const searchableUser = dbUserToSearchUser(data);
     return usersSearchIndex.saveObject(searchableUser, (err, obj) => {
@@ -27,7 +27,7 @@ export const newCommunity = () =>
     });
   });
 
-export const deletedCommunity = () =>
+export const deletedUser = () =>
   listenToDeletedDocumentsIn('users', data => {
     // something went wrong if it hits here and doesn't have a deleted field
     if (!data.deletedAt) return;
@@ -39,7 +39,7 @@ export const deletedCommunity = () =>
     });
   });
 
-export const editedCommunity = () =>
+export const editedUser = () =>
   listenToChangedFieldIn('modifiedAt')('users', data => {
     // if we deleted the users email or username, we are deleting their account
     if (!data.username || !data.email) {
