@@ -151,7 +151,7 @@ describe('messageConnection', () => {
       });
   });
 
-  it('should correctly set hasNextPage when more messages are requested than are available', () => {
+  it('should correctly set pageInfo when more messages are requested than are available', () => {
     // Request more messages than there are
     const query = /* GraphQL */ `
       {
@@ -178,6 +178,86 @@ describe('messageConnection', () => {
         hasPreviousPage: false,
       });
     });
+  });
+
+  // TODO(@mxstbr): Somehow make this happen
+  it.skip(
+    'should correctly set pageInfo when all messages are requested',
+    () => {
+      // Request more messages than there are
+      const query = /* GraphQL */ `
+      {
+        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+          messageConnection(first: ${messages.length}) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              cursor
+            }
+          }
+        }
+      }
+    `;
+
+      expect.hasAssertions();
+      return request(query).then(result => {
+        const { edges, pageInfo } = result.data.thread.messageConnection;
+        expect(edges.length).toEqual(messages.length);
+        expect(pageInfo).toEqual({
+          hasNextPage: false,
+          hasPreviousPage: false,
+        });
+      });
+    }
+  );
+
+  it('should correctly set pageInfo when more messages are requested than are available after a cursor', () => {
+    // Get the cursor of the first message
+    const query = /* GraphQL */ `
+      {
+        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+          messageConnection(first: 1) {
+            edges {
+              cursor
+            }
+          }
+        }
+      }
+    `;
+
+    expect.hasAssertions();
+    return request(query)
+      .then(result => result.data.thread.messageConnection.edges[0].cursor)
+      .then(cursor => {
+        // Get all messages after the cursor of the first message
+        // but get more than are available
+        const nextQuery = /* GraphQL */ `
+          {
+            thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+              messageConnection(first: ${messages.length}, after: "${cursor}") {
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                }
+                edges {
+                  cursor
+                }
+              }
+            }
+          }
+        `;
+        return request(nextQuery);
+      })
+      .then(result => {
+        const { edges, pageInfo } = result.data.thread.messageConnection;
+        expect(edges.length).toEqual(messages.length - 1);
+        expect(pageInfo).toEqual({
+          hasNextPage: false,
+          hasPreviousPage: true,
+        });
+      });
   });
 
   describe('reverse pagination', () => {
@@ -261,6 +341,115 @@ describe('messageConnection', () => {
             );
           })
       );
+    });
+
+    it('should correctly set pageInfo when more messages are requested than are available', () => {
+      // Request more messages than there are
+      const query = /* GraphQL */ `
+        {
+          thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+            messageConnection(last: ${messages.length + 1}) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+              }
+              edges {
+                cursor
+              }
+            }
+          }
+        }
+      `;
+
+      expect.hasAssertions();
+      return request(query).then(result => {
+        const { edges, pageInfo } = result.data.thread.messageConnection;
+        expect(edges.length).toEqual(messages.length);
+        expect(pageInfo).toEqual({
+          hasNextPage: false,
+          hasPreviousPage: false,
+        });
+      });
+    });
+
+    // TODO(@mxstbr): Figure out how to do this
+    it.skip(
+      'should correctly set pageInfo when all messages are requested',
+      () => {
+        // Request more messages than there are
+        const query = /* GraphQL */ `
+        {
+          thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+            messageConnection(last: ${messages.length}) {
+              pageInfo {
+                hasNextPage
+                hasPreviousPage
+              }
+              edges {
+                cursor
+              }
+            }
+          }
+        }
+      `;
+
+        expect.hasAssertions();
+        return request(query).then(result => {
+          const { edges, pageInfo } = result.data.thread.messageConnection;
+          expect(edges.length).toEqual(messages.length);
+          expect(pageInfo).toEqual({
+            hasNextPage: false,
+            hasPreviousPage: false,
+          });
+        });
+      }
+    );
+
+    it('should correctly set pageInfo when more messages are requested than are available after a cursor', () => {
+      // Get the cursor of the last message
+      const query = /* GraphQL */ `
+        {
+          thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+            messageConnection(last: 1) {
+              edges {
+                cursor
+              }
+            }
+          }
+        }
+      `;
+
+      expect.hasAssertions();
+      return request(query)
+        .then(result => result.data.thread.messageConnection.edges[0].cursor)
+        .then(cursor => {
+          // Get all messages after the cursor of the last message
+          // but get more than are available
+          const nextQuery = /* GraphQL */ `
+            {
+              thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+                messageConnection(last: ${messages.length}, before: "${cursor}") {
+                  pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                  }
+                  edges {
+                    cursor
+                  }
+                }
+              }
+            }
+          `;
+          return request(nextQuery);
+        })
+        .then(result => {
+          const { edges, pageInfo } = result.data.thread.messageConnection;
+          expect(edges.length).toEqual(messages.length - 1);
+          expect(pageInfo).toEqual({
+            hasNextPage: true,
+            hasPreviousPage: false,
+          });
+        });
     });
   });
 });
