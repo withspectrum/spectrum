@@ -210,6 +210,7 @@ class Routes extends React.Component<{}> {
               <Route path="/about" component={Splash} />
               <Route path="/contact" component={Support} />
               <Route path="/terms" component={Support} />
+              <Route path="/privacy" component={Support} />
               <Route path="/code-of-conduct" component={Support} />
               <Route path="/pricing" component={Pricing} />
               <Route path="/support" component={Support} />
