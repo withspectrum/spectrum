@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { track } from '../../helpers/events';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import {
@@ -6,13 +6,12 @@ import {
   Centralized,
   CommunitySearch,
   Chat,
-  Sell,
   Yours,
   PageFooter,
 } from './view';
 import { Wrapper } from './style';
 
-class Splash extends Component {
+class Splash extends PureComponent {
   state: {
     preferredSigninMethod: string,
   };
@@ -43,7 +42,6 @@ class Splash extends Component {
         <Centralized />
         <CommunitySearch />
         <Chat />
-        <Sell />
         <Yours />
         <PageFooter />
       </Wrapper>

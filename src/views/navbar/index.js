@@ -15,6 +15,8 @@ import {
   ExploreTab,
   ProfileDrop,
   ProfileTab,
+  SupportTab,
+  PricingTab,
   Tab,
   Label,
   Navatar,
@@ -80,11 +82,15 @@ class Navbar extends React.Component<Props> {
     const isHome = viewing === '/' || viewing === '/home';
 
     const isSplash =
-      viewing === '/pricing' ||
       viewing === '/about' ||
+      viewing === '/code-of-conduct' ||
       viewing === '/contact' ||
+      viewing === '/pricing' ||
+      viewing === '/privacy' ||
+      viewing === '/privacy.html' ||
+      viewing === '/support' ||
       viewing === '/terms' ||
-      viewing === '/code-of-conduct';
+      viewing === '/terms.html';
 
     // Bail out if the splash page is showing
     if ((!loggedInUser && isHome) || isSplash) return null;
@@ -194,14 +200,36 @@ class Navbar extends React.Component<Props> {
           <Logo to="/">
             <Icon glyph="logo" size={28} />
           </Logo>
+          <HomeTab
+            className={'hideOnDesktop'}
+            data-active={match.url === '/' && match.isExact}
+            to="/"
+          >
+            <Icon glyph="logo" />
+            <Label>About</Label>
+          </HomeTab>
           <ExploreTab
             data-active={history.location.pathname === '/explore'}
             to="/explore"
             loggedOut={!loggedInUser}
           >
             <Icon glyph="explore" />
-            <Label>Explore Spectrum</Label>
+            <Label>Explore</Label>
           </ExploreTab>
+          <SupportTab
+            data-active={history.location.pathname === '/support'}
+            to="/support"
+          >
+            <Icon glyph="like" />
+            <Label>Support</Label>
+          </SupportTab>
+          <PricingTab
+            data-active={history.location.pathname === '/pricing'}
+            to="/pricing"
+          >
+            <Icon glyph="payment" />
+            <Label>Pricing</Label>
+          </PricingTab>
         </Nav>
       );
     }

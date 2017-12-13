@@ -13,12 +13,11 @@ export const getCommunity = graphql(
     ${communityInfoFragment}
 	`,
   {
-    props: ({ data: { error, loading, community } }) => ({
-      data: {
-        error,
-        loading,
-        community,
+    options: ({ slug }) => ({
+      variables: {
+        slug,
       },
+      fetchPolicy: 'cache-and-network',
     }),
   }
 );
