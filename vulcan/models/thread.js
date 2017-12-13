@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('vulcan:thread');
 const { db } = require('./db');
 const { promisify } = require('util');
 const env = require('node-env-file');
@@ -24,9 +25,10 @@ export const newThread = () =>
     const searchableThread = dbThreadToSearchThread(data);
     return threadsSearchIndex.saveObject(searchableThread, (err, obj) => {
       if (err) {
-        console.log('error indexing a thread', err);
+        debug('error indexing a thread');
+        console.log(err);
       }
-      console.log('stored new thread in search', obj.objectID);
+      debug('stored new thread in search');
     });
   });
 
@@ -36,10 +38,10 @@ export const deletedThread = () =>
     if (!data.deletedAt) return;
     return threadsSearchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
-        ``;
-        console.log('error deleting a thread', err);
+        debug('error deleting a thread');
+        console.log(err);
       }
-      console.log('deleted thread in search', obj.objectID);
+      debug('deleted thread in search');
     });
   });
 
@@ -54,7 +56,8 @@ export const movedThread = () =>
           },
           (err, content) => {
             if (err) {
-              console.log("couldn't find any results for this thread", err);
+              debug("couldn't find any results for this thread id");
+              console.log(err);
               reject(err);
             }
             console.log('got hits');
@@ -76,9 +79,10 @@ export const movedThread = () =>
 
     return threadsSearchIndex.partialUpdateObjects(allRecords, (err, obj) => {
       if (err) {
-        console.log('error moving channels for a thread', err);
+        debug('error moving channels for a thread');
+        console.log(err);
       }
-      console.log('changed thread channels id in search', obj);
+      debug('changed thread channels id in search');
     });
   });
 
@@ -94,9 +98,10 @@ export const editedThread = () =>
       },
       (err, obj) => {
         if (err) {
-          console.log('error saving edited thread', err);
+          debug('error saving edited thread');
+          console.log(err);
         }
-        console.log('changed edited thread content in search', obj.objectID);
+        debug('changed edited thread content in search');
       }
     );
   });

@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('vulcan:community');
 const { db } = require('./db');
 const env = require('node-env-file');
 const path = require('path');
@@ -25,9 +26,10 @@ export const newCommunity = () =>
       searchableCommunity,
       (err, obj) => {
         if (err) {
-          console.log('error indexing a community', err);
+          debug('error indexing a community');
+          console.log(err);
         }
-        console.log('stored new community in search', obj.objectID);
+        debug('stored new community in search');
       }
     );
   });
@@ -38,9 +40,10 @@ export const deletedCommunity = () =>
     if (!data.deletedAt) return;
     return communitiesSearchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
-        console.log('error deleting a community', err);
+        debug('error deleting a community');
+        console.log(err);
       }
-      console.log('deleted community in search', obj.objectID);
+      debug('deleted community in search');
     });
   });
 
@@ -54,9 +57,10 @@ export const editedCommunity = () =>
       },
       (err, obj) => {
         if (err) {
-          console.log('error saving edited community', err);
+          debug('error saving edited community');
+          console.log(err);
         }
-        console.log('changed edited community content in search', obj.objectID);
+        debug('changed edited community content in search');
       }
     );
   });

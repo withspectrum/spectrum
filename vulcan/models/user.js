@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('vulcan:user');
 const { db } = require('./db');
 const env = require('node-env-file');
 const path = require('path');
@@ -21,9 +22,10 @@ export const newUser = () =>
     const searchableUser = dbUserToSearchUser(data);
     return usersSearchIndex.saveObject(searchableUser, (err, obj) => {
       if (err) {
-        console.log('error indexing a user', err);
+        debug('error indexing a user');
+        console.log(err);
       }
-      console.log('stored new user in search', obj.objectID);
+      debug('stored new user in search');
     });
   });
 
@@ -33,9 +35,10 @@ export const deletedUser = () =>
     if (!data.deletedAt) return;
     return usersSearchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
-        console.log('error deleting a user', err);
+        debug('error deleting a user');
+        console.log(err);
       }
-      console.log('deleted user in search', obj.objectID);
+      debug('deleted user in search');
     });
   });
 
@@ -45,9 +48,10 @@ export const editedUser = () =>
     if (!data.username || !data.email) {
       return usersSearchIndex.deleteObject(data.id, (err, obj) => {
         if (err) {
-          console.log('error deleting a user after editing', err);
+          debug('error deleting a user after editing');
+          console.log(err);
         }
-        console.log('deleted user in search after editing', obj.objectID);
+        debug('deleted user in search after editing');
       });
     }
 
@@ -59,9 +63,10 @@ export const editedUser = () =>
       },
       (err, obj) => {
         if (err) {
-          console.log('error saving edited user', err);
+          debug('error saving edited user');
+          console.log(err);
         }
-        console.log('changed edited user content in search', obj.objectID);
+        debug('changed edited user content in search');
       }
     );
   });
