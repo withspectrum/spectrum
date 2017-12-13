@@ -162,6 +162,7 @@ class Messages extends Component<MessageGroupProps, State> {
     return (
       <Wrapper data-e2e-id="message-group">
         {messages.map((group, i) => {
+          if (group.length === 0) return null;
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
           const initialMessage = group[0];
           const { sender } = initialMessage;
@@ -183,8 +184,7 @@ class Messages extends Component<MessageGroupProps, State> {
                 </Timestamp>
               );
             } else if (
-              initialMessage.message.type === 'unseen-messages-below' &&
-              messages[i + 1][0].sender.id !== currentUser.id
+              initialMessage.message.type === 'unseen-messages-below'
             ) {
               return (
                 <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>

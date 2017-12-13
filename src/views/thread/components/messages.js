@@ -138,9 +138,7 @@ class MessagesWithData extends Component {
       );
 
       return (
-        <ChatWrapper
-          marginTop={!data.thread.messageConnection.pageInfo.hasPreviousPage}
-        >
+        <ChatWrapper>
           {data.thread.messageConnection.pageInfo.hasPreviousPage && (
             <NextPageButton
               isFetchingMore={isFetchingMore}

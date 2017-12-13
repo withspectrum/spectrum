@@ -66,14 +66,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
           last: undefined,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (
-            !fetchMoreResult ||
-            !fetchMoreResult.thread ||
-            !fetchMoreResult.thread.messageConnection ||
-            !fetchMoreResult.thread.messageConnection.edges ||
-            fetchMoreResult.thread.messageConnection.edges.length < 1
-          )
-            return prev;
+          if (!fetchMoreResult || !fetchMoreResult.thread) return prev;
 
           return {
             ...prev,
@@ -82,9 +75,10 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
               messageConnection: {
                 ...prev.thread.messageConnection,
                 pageInfo: {
-                  ...fetchMoreResult.thread.messageConnection.pageInfo,
-                  hasPreviousPage:
-                    prev.thread.messageConnection.pageInfo.hasPreviousPage,
+                  ...prev.thread.messageConnection.pageInfo,
+                  hasNextPage:
+                    fetchMoreResult.thread.messageConnection.pageInfo
+                      .hasNextPage,
                 },
                 edges: [
                   ...prev.thread.messageConnection.edges,

@@ -325,7 +325,7 @@ export const ChatWrapper = styled.div`
   width: 100%;
   max-width: 100%;
   flex: none;
-  margin-top: ${p => p.marginTop !== false && '16px'};
+  margin-top: 16px;
 
   @media (max-width: 768px) {
     overflow-x: hidden;
