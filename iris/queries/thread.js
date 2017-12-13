@@ -136,16 +136,21 @@ module.exports = {
         }
       }
       debug(`timestamp: ${timestamp}`);
-      const messageCount = await loaders.threadMessageCount
-        .load(id)
-        .then(res => (res ? res.reduction : 0));
 
-      const options = {
-        first: first ? first : after ? 50 : undefined,
-        last: last ? last : before ? 50 : undefined,
-        after: after ? timestamp : undefined,
-        before: before ? timestamp : undefined,
+      let options = {
+        first: first ? first : after ? 50 : null,
+        last: last ? last : before ? 50 : null,
+        after: after ? timestamp : null,
+        before: before ? timestamp : null,
       };
+
+      // If we didn't get any arguments, set first to 50
+      // $FlowIssue
+      if (Object.keys(options).every(key => !options[key])) {
+        options = {
+          first: 50,
+        };
+      }
 
       return getMessages(id, options).then(result => {
         if (user && user.id) {
@@ -157,9 +162,12 @@ module.exports = {
         }
         return {
           pageInfo: {
-            // TODO(@mxstbr): Figure out how we know this
-            hasNextPage: result && result.length <= messageCount,
-            hasPreviousPage: result && result.length !== 0 && !!timestamp,
+            hasNextPage: options.first
+              ? result.length >= options.first
+              : !!options.before,
+            hasPreviousPage: options.last
+              ? result.length >= options.last
+              : !!options.after,
           },
           edges: result.map((message, index) => ({
             cursor: encode(message.timestamp.getTime().toString()),
@@ -206,7 +214,7 @@ module.exports = {
         .load([user.id, id])
         .then(result => {
           if (!result || result.length === 0) return;
-          const data = result[0];
+          const data = result;
           if (!data || !data.lastSeen) return null;
 
           return data.lastSeen;
