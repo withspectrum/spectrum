@@ -66,7 +66,9 @@ export const getMessages = (
     before,
   }: { ...BackwardsPaginationOptions, ...ForwardsPaginationOptions }
 ): Promise<Array<Message>> => {
+  // $FlowIssue
   if (last || before) return getBackwardsMessages(threadId, { last, before });
+  // $FlowIssue
   return getForwardMessages(threadId, { first, after });
 };
 

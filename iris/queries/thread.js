@@ -167,7 +167,8 @@ module.exports = {
               : !!options.before,
             hasPreviousPage: options.last
               ? result.length >= options.last
-              : !!options.after,
+              : // $FlowIssue
+                !!options.after,
           },
           edges: result.map((message, index) => ({
             cursor: encode(message.timestamp.getTime().toString()),
