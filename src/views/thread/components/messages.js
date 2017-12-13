@@ -134,8 +134,13 @@ class MessagesWithData extends Component {
         data.thread.currentUserLastSeen
       );
 
+      console.log(data.thread.messageConnection.pageInfo);
+
       return (
         <ChatWrapper>
+          {data.thread.messageConnection.pageInfo.hasPreviousPage && (
+            <button onClick={this.props.loadPreviousPage}>Previous page</button>
+          )}
           <ChatMessages
             threadId={data.thread.id}
             thread={data.thread}
@@ -145,6 +150,9 @@ class MessagesWithData extends Component {
             forceScrollToBottom={forceScrollToBottom}
             isModerator={isModerator}
           />
+          {data.thread.messageConnection.pageInfo.hasNextPage && (
+            <button onClick={this.props.loadNextPage}>Next page</button>
+          )}
         </ChatWrapper>
       );
     }

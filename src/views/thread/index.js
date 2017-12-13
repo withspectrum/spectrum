@@ -181,6 +181,8 @@ class ThreadContainer extends React.Component<Props, State> {
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
 
+      console.log(thread);
+
       if (thread.watercooler)
         return (
           <ThreadViewContainer
@@ -238,6 +240,7 @@ class ThreadContainer extends React.Component<Props, State> {
                       threadType={thread.threadType}
                       id={thread.id}
                       currentUser={currentUser}
+                      lastSeen={thread.currentUserLastSeen}
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
@@ -343,6 +346,7 @@ class ThreadContainer extends React.Component<Props, State> {
                     threadType={thread.threadType}
                     id={thread.id}
                     currentUser={currentUser}
+                    lastSeen={thread.currentUserLastSeen}
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}
