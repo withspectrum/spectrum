@@ -65,20 +65,20 @@ export const movedThread = () =>
       });
     };
 
-    return await Promise.all([
-      getAllRecordsForThreadId(data),
-    ]).then(([hits]) => {
-      const allRecords = hits.map(r => ({
-        channelId: data.channelId,
-        objectID: r.objectID,
-      }));
+    const [hits] = await Promise.all([getAllRecordsForThreadId(data)]);
 
-      return threadsSearchIndex.partialUpdateObjects(allRecords, (err, obj) => {
-        if (err) {
-          console.log('error moving channels for a thread', err);
-        }
-        console.log('changed thread channels id in search', obj);
-      });
+    if (!hits || hits.length === 0) return;
+
+    const allRecords = hits.map(r => ({
+      channelId: data.channelId,
+      objectID: r.objectID,
+    }));
+
+    return threadsSearchIndex.partialUpdateObjects(allRecords, (err, obj) => {
+      if (err) {
+        console.log('error moving channels for a thread', err);
+      }
+      console.log('changed thread channels id in search', obj);
     });
   });
 
