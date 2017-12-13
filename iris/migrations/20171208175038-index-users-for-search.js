@@ -25,6 +25,7 @@ exports.up = function(r, conn) {
           createdAt,
           isOnline,
           githubProviderId,
+          modifiedAt,
           timezone,
           ...rest
         } = user;

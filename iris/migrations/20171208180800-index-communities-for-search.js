@@ -18,7 +18,13 @@ exports.up = function(r, conn) {
     .then(cursor => cursor.toArray())
     .then(communities =>
       communities.map(community => {
-        const { createdAt, pinnedThreadId, watercoolerId, ...rest } = community;
+        const {
+          createdAt,
+          pinnedThreadId,
+          watercoolerId,
+          modifiedAt,
+          ...rest
+        } = community;
         const searchableCommunity = {
           ...rest,
           objectID: community.id,
