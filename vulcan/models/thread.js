@@ -18,18 +18,18 @@ import {
   listenToChangedFieldIn,
 } from './utils';
 
-export const newThreads = () =>
+export const newThread = () =>
   listenToNewDocumentsIn('threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
     return threadsSearchIndex.saveObject(searchableThread, (err, obj) => {
       if (err) {
         console.log('error indexing a thread', err);
       }
-      console.log('stored edited thread in search', obj.objectID);
+      console.log('stored new thread in search', obj.objectID);
     });
   });
 
-export const deletedThreads = () =>
+export const deletedThread = () =>
   listenToDeletedDocumentsIn('threads', data => {
     // something went wrong if it hits here and doesn't have a deleted field
     if (!data.deletedAt) return;
@@ -41,7 +41,7 @@ export const deletedThreads = () =>
     });
   });
 
-export const movedChannelThreads = () =>
+export const movedThread = () =>
   listenToChangedFieldIn('channelId')('threads', data => {
     return threadsSearchIndex.partialUpdateObject(
       {
@@ -57,7 +57,7 @@ export const movedChannelThreads = () =>
     );
   });
 
-export const changedThreadContent = () =>
+export const editedThread = () =>
   listenToChangedFieldIn('modifiedAt')('threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
     return threadsSearchIndex.partialUpdateObject(

@@ -221,6 +221,9 @@ export type DBUser = {
   timezone?: number,
   isOnline?: boolean,
   lastSeen?: Date,
+  description?: ?string,
+  website?: ?string,
+  modifiedAt: ?Date,
 };
 
 export type DBUsersChannels = {
