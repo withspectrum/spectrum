@@ -82,9 +82,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
               messageConnection: {
                 ...prev.thread.messageConnection,
                 pageInfo: {
-                  hasNextPage:
-                    fetchMoreResult.thread.messageConnection.pageInfo
-                      .hasNextPage,
+                  ...fetchMoreResult.thread.messageConnection.pageInfo,
                   hasPreviousPage:
                     prev.thread.messageConnection.pageInfo.hasPreviousPage,
                 },
@@ -129,9 +127,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
               messageConnection: {
                 ...prev.thread.messageConnection,
                 pageInfo: {
-                  hasNextPage:
-                    prev.thread.messageConnection.pageInfo.hasNextPage,
-                  // Copy the new pageinfo
+                  ...prev.thread.messageConnection.pageInfo,
                   hasPreviousPage: pageInfo.hasPreviousPage,
                 },
                 edges: edges

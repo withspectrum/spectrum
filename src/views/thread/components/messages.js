@@ -8,6 +8,7 @@ import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -101,6 +102,8 @@ class MessagesWithData extends Component {
       hasMessagesToLoad,
       id,
       isModerator,
+      isFetchingMore,
+      loadPreviousPage,
     } = this.props;
 
     const dataExists =
@@ -134,12 +137,15 @@ class MessagesWithData extends Component {
         data.thread.currentUserLastSeen
       );
 
-      console.log(data.thread.messageConnection.pageInfo);
-
       return (
-        <ChatWrapper>
+        <ChatWrapper
+          marginTop={!data.thread.messageConnection.pageInfo.hasPreviousPage}
+        >
           {data.thread.messageConnection.pageInfo.hasPreviousPage && (
-            <button onClick={this.props.loadPreviousPage}>Previous page</button>
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={loadPreviousPage}
+            />
           )}
           <ChatMessages
             threadId={data.thread.id}
