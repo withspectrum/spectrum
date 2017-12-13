@@ -98,8 +98,8 @@ export const storeMessage = (
       }
 
       if (message.threadType === 'story') {
+        addQueue('message notification', { message });
         addQueue('process admin toxic message', { message });
-        addQueue('message notification', { message, userId });
         addQueue('process reputation event', {
           userId,
           type: 'message created',

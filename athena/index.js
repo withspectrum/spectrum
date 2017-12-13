@@ -1,7 +1,8 @@
+// @flow
 const debug = require('debug')('athena');
 import createWorker from '../shared/bull/create-worker';
 // Our job-processing worker server
-import processMessageNotification from './queues/message-notification';
+import processMessageNotification from './queues/new-message-in-thread';
 import processMentionNotification from './queues/mention-notification';
 import processDirectMessageNotification from './queues/direct-message-notification';
 import processReactionNotification from './queues/reaction-notification';
@@ -57,6 +58,7 @@ const server = createWorker({
 
 console.log(
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
+    // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
     'locally'}`
 );
