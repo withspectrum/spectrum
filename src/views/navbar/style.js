@@ -82,7 +82,7 @@ export const Tab = styled(Link)`
   padding: 0 16px;
   color: ${({ theme }) =>
     process.env.NODE_ENV === 'production'
-      ? theme.bg.border
+      ? theme.text.placeholder
       : theme.warn.border};
   transition: ${Transition.hover.off};
 
@@ -107,14 +107,17 @@ export const Tab = styled(Link)`
     }
 
     &:hover {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.bg.border : theme.warn.border)};
+      box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
     }
   }
 
   @media (max-width: 768px) {
-    color: ${props => props.theme.warn.border};
+    color: ${props =>
+      process.env.NODE_ENV === 'production'
+        ? props.theme.text.placeholder
+        : props.theme.warn.border};
     padding: 0;
     grid-template-columns: 'auto';
     grid-template-rows: 'auto auto';
