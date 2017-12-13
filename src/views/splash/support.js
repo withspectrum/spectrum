@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { track } from '../../helpers/events';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
-import { ContactInfo, Plans, PageFooter } from './view';
+import { ContactInfo, Plans, TermsSection, PageFooter } from './view';
 import { Wrapper } from './style';
 
 class Support extends Component {
@@ -32,6 +32,7 @@ class Support extends Component {
     return (
       <Wrapper data-e2e-id="support-page">
         <ContactInfo />
+        <TermsSection />
         <PageFooter />
       </Wrapper>
     );

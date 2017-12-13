@@ -5,6 +5,8 @@ import Link from 'src/components/link';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
+import Privacy from '../../components/privacy';
+import Terms from '../../components/terms';
 import {
   zIndex,
   hexa,
@@ -23,6 +25,8 @@ import Badge from '../../components/badges';
 import { Button } from '../../components/buttons';
 import Search from '../explore/components/search';
 import { Communities } from './components/communities';
+import ViewSegment from '../../components/viewSegment';
+import { Conversation, Discover } from '../../components/illustrations';
 import {
   AbstractLogo,
   BootstrapLogo,
@@ -34,8 +38,6 @@ import {
   RealmLogo,
   NodeLogo,
 } from './components/logos';
-import ViewSegment from '../../components/viewSegment';
-import { Conversation, Discover } from '../../components/illustrations';
 import {
   Header,
   Tagline,
@@ -67,8 +69,6 @@ import {
   PaidPrimaryCTA,
 } from './style';
 import Nav from './nav';
-
-// const Link = styled.a``;
 
 type Props = Object;
 
@@ -1044,7 +1044,7 @@ export const ContactInfo = () => {
   `;
 
   return (
-    <Section goop={4} color="bg.reverse">
+    <Section goop={4} color="brand.alt">
       <Nav location={'support'} />
       <ThisContent>
         <Tagline>What can we help you with?</Tagline>
@@ -1090,6 +1090,56 @@ export const ContactInfo = () => {
             </a>
           </TweetCard>
         </Grid>
+      </ThisContent>
+    </Section>
+  );
+};
+
+export const TermsSection = () => {
+  const ThisContent = styled(Content)`
+    margin: 32px;
+    align-items: flex-start;
+    justify-content: space-around;
+
+    > p:not(:first-of-type) {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-top: 16px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 900;
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+
+    p,
+    ul {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+
+    li {
+      margin-top: 8px;
+    }
+  `;
+
+  return (
+    <Section background={'brand'} goop={6} color="bg.reverse">
+      <ThisContent>
+        <Copy>
+          <Terms />
+        </Copy>
+        <Copy>
+          <Privacy />
+        </Copy>
       </ThisContent>
     </Section>
   );

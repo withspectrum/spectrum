@@ -82,12 +82,13 @@ class Navbar extends React.Component<Props> {
     const isHome = viewing === '/' || viewing === '/home';
 
     const isSplash =
-      viewing === '/pricing' ||
       viewing === '/about' ||
-      viewing === '/contact' ||
-      viewing === '/terms' ||
       viewing === '/code-of-conduct' ||
-      viewing === '/support';
+      viewing === '/contact' ||
+      viewing === '/pricing' ||
+      viewing === '/privacy' ||
+      viewing === '/support' ||
+      viewing === '/terms';
 
     // Bail out if the splash page is showing
     if ((!loggedInUser && isHome) || isSplash) return null;
