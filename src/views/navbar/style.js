@@ -43,12 +43,12 @@ export const Nav = styled.nav`
   ${props =>
     props.loggedOut &&
     css`
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas: 'logo . profile';
+      grid-template-columns: auto auto auto auto 1fr;
+      grid-template-areas: 'logo explore support pricing .';
 
       @media (max-width: 768px) {
-        grid-template-columns: 1fr auto 1fr;
-        grid-template-areas: '. profile .';
+        grid-template-columns: auto auto auto auto;
+        grid-template-areas: 'home explore support pricing';
       }
     `} ${props =>
       props.hideOnMobile && css`@media (max-width: 768px) {display: none;}`};
@@ -107,18 +107,24 @@ export const Tab = styled(Link)`
     }
 
     &:hover {
-      box-shadow: inset 0 -4px 0 ${({ theme }) => theme.warn.border};
+      box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.bg.border : theme.warn.border)};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
     }
   }
 
   @media (max-width: 768px) {
+    color: ${props => props.theme.warn.border};
     padding: 0;
     grid-template-columns: 'auto';
     grid-template-rows: 'auto auto';
     grid-template-areas: 'icon' 'label';
     align-content: center;
+
+    &[data-active~='true'] {
+      color: ${props => props.theme.text.reverse};
+      transition: ${Transition.hover.on};
+    }
   }
 `;
 
@@ -181,6 +187,10 @@ export const Logo = styled(Tab)`
   color: ${({ theme }) => theme.text.reverse};
   opacity: 1;
 
+  &:hover {
+    box-shadow: none;
+  }
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -193,12 +203,16 @@ export const MessageTab = styled(Tab)`grid-area: messages;`;
 export const ExploreTab = styled(Tab)`
   grid-area: explore;
 
-  ${props => props.loggedOut && css`grid-area: profile;`} ${Label} {
+  ${props => props.loggedOut && css`grid-area: explore;`} ${Label} {
     @media (max-width: 768px) {
       display: flex;
     }
   }
 `;
+
+export const SupportTab = styled(Tab)`grid-area: support;`;
+
+export const PricingTab = styled(MessageTab)`grid-area: pricing;`;
 
 export const NotificationTab = styled(DropTab)`
   grid-area: notifications;
