@@ -1,12 +1,6 @@
 require('now-env');
-const IS_PROD = process.env.NODE_ENV === 'production';
-let ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
-let ALGOLIA_API_SECRET = process.env.ALGOLIA_API_SECRET;
-const algoliasearch = require('algoliasearch');
-const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_SECRET);
-const communitiesSearchIndex = algolia.initIndex(
-  IS_PROD ? 'communities' : 'dev_communities'
-);
+const initIndex = require('shared/algolia');
+const searchIndex = initIndex('communities');
 
 exports.up = function(r, conn) {
   return r
@@ -25,7 +19,7 @@ exports.up = function(r, conn) {
       }))
     )
     .then(searchableCommunities => {
-      return communitiesSearchIndex.addObjects(searchableCommunities);
+      return searchIndex.addObjects(searchableCommunities);
     })
     .catch(err => {
       console.log(err);

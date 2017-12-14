@@ -1,12 +1,7 @@
 require('now-env');
-const IS_PROD = process.env.NODE_ENV === 'production';
-let ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
-let ALGOLIA_API_SECRET = process.env.ALGOLIA_API_SECRET;
-const algoliasearch = require('algoliasearch');
-const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_SECRET);
-const threadsSearchIndex = algolia.initIndex(
-  IS_PROD ? 'threads_and_messages' : 'dev_threads_and_messages'
-);
+const { toPlainText, toState } = require('shared/draft-utils');
+const initIndex = require('shared/algolia');
+const searchIndex = initIndex('threads_and_messages');
 
 const byteCount = str => {
   // returns the byte length of an utf8 string
@@ -60,7 +55,7 @@ exports.up = function(r, conn) {
       })
     )
     .then(searchableThreads => {
-      return threadsSearchIndex.addObjects(searchableThreads);
+      return searchIndex.addObjects(searchableThreads);
     })
     .catch(err => console.log(err));
 };
