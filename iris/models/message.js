@@ -1,8 +1,8 @@
 //@flow
 const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
-const { listenToNewDocumentsIn } = require('./utils');
-const { setThreadLastActive } = require('./thread');
+import { listenToNewDocumentsIn } from './utils';
+import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';
 // TODO: Fix this
@@ -105,7 +105,6 @@ export const storeMessage = (
           type: 'message created',
           entityId: message.threadId,
         });
-
         setThreadLastActive(message.threadId, message.timestamp);
       }
 

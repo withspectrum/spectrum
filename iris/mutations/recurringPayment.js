@@ -1,14 +1,6 @@
-// $FlowFixMe
+require('now-env');
 import UserError from '../utils/UserError';
-// $FlowFixMe
-const env = require('node-env-file');
-const IS_PROD = process.env.NODE_ENV === 'production';
-// $FlowFixMe
-const path = require('path');
-env(path.resolve(__dirname, '../.env'), { raise: false });
-
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
-// $FlowFixMe
 const stripe = require('stripe')(STRIPE_TOKEN),
   currency = 'USD';
 import {

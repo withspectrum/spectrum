@@ -7,8 +7,7 @@ src/config/FirebaseConfig.js
 npm-debug.log
 rethinkdb_data
 debug
-iris/.env
-athena/.env
+now-secrets.json
 build-iris
 build-athena
 build-hermes

@@ -1,6 +1,4 @@
-const env = require('node-env-file');
-const path = require('path');
-env(path.resolve(__dirname, '../.env'), { raise: false });
+require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
 let ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
 let ALGOLIA_API_SECRET = process.env.ALGOLIA_API_SECRET;

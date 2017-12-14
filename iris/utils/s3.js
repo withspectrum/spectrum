@@ -1,10 +1,6 @@
-// $FlowFixMe
+require('now-env');
 const Uploader = require('s3-image-uploader');
-// $FlowFixMe
-const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
-const path = require('path');
-env(path.resolve(__dirname, '../.env'), { raise: false });
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;
