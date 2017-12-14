@@ -94,6 +94,7 @@ export default class Embed extends Component {
       selection, // eslint-disable-line no-unused-vars
       tree, // eslint-disable-line no-unused-vars
       contentState,
+      blockStyleFn,
       ...elementProps
     } = otherProps;
     const data = Entity.get(block.getEntityAt(0)).getData();

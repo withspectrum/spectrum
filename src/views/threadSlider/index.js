@@ -41,6 +41,9 @@ class ThreadSlider extends Component {
   }
 
   handleKeyPress = e => {
+    const parsed = queryString.parse(this.props.location.search);
+    const threadId = parsed.thread;
+    if (!threadId) return;
     // if user presses esc
     if (e.keyCode === 27) {
       this.closeSlider();
