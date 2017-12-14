@@ -1,18 +1,8 @@
 // @flow
 const debug = require('debug')('vulcan:thread');
-const { db } = require('./db');
-const { promisify } = require('util');
-const env = require('node-env-file');
-const path = require('path');
-env(path.resolve(__dirname, '../.env'), { raise: false });
-const IS_PROD = process.env.NODE_ENV === 'production';
-const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
-const ALGOLIA_API_SECRET = process.env.ALGOLIA_API_SECRET;
-const algoliasearch = require('algoliasearch');
-const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_SECRET);
-const threadsSearchIndex = algolia.initIndex(
-  IS_PROD ? 'threads_and_messages' : 'dev_threads_and_messages'
-);
+import { db } from './db';
+import initIndex from './algolia';
+const searchIndex = initIndex('threads_and_messages');
 import type { DBThread } from 'shared/types';
 import {
   dbThreadToSearchThread,
@@ -31,7 +21,7 @@ export const getThreadById = (threadId: string): Promise<DBThread> => {
 export const newThread = () =>
   listenToNewDocumentsIn('threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
-    return threadsSearchIndex.saveObject(searchableThread, (err, obj) => {
+    return searchIndex.saveObject(searchableThread, (err, obj) => {
       if (err) {
         debug('error indexing a thread');
         console.log(err);
@@ -44,7 +34,7 @@ export const deletedThread = () =>
   listenToDeletedDocumentsIn('threads', data => {
     // something went wrong if it hits here and doesn't have a deleted field
     if (!data.deletedAt) return;
-    return threadsSearchIndex.deleteObject(data.id, (err, obj) => {
+    return searchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
         debug('error deleting a thread');
         console.log(err);
@@ -57,7 +47,7 @@ export const movedThread = () =>
   listenToChangedFieldIn('channelId')('threads', async data => {
     const getAllRecordsForThreadId = data => {
       return new Promise((resolve, reject) => {
-        return threadsSearchIndex.browse(
+        return searchIndex.browse(
           {
             query: '',
             filters: `threadId:'${data.id}'`,
@@ -85,7 +75,7 @@ export const movedThread = () =>
       objectID: r.objectID,
     }));
 
-    return threadsSearchIndex.partialUpdateObjects(allRecords, (err, obj) => {
+    return searchIndex.partialUpdateObjects(allRecords, (err, obj) => {
       if (err) {
         debug('error moving channels for a thread');
         console.log(err);
@@ -97,7 +87,7 @@ export const movedThread = () =>
 export const editedThread = () =>
   listenToChangedFieldIn('modifiedAt')('threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
-    return threadsSearchIndex.partialUpdateObject(
+    return searchIndex.partialUpdateObject(
       {
         objectID: data.id,
         threadContent: {

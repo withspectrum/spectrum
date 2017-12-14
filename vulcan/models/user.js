@@ -1,15 +1,7 @@
 // @flow
 const debug = require('debug')('vulcan:user');
-const { db } = require('./db');
-const env = require('node-env-file');
-const path = require('path');
-env(path.resolve(__dirname, '../.env'), { raise: false });
-const IS_PROD = process.env.NODE_ENV === 'production';
-const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
-const ALGOLIA_API_SECRET = process.env.ALGOLIA_API_SECRET;
-const algoliasearch = require('algoliasearch');
-const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_SECRET);
-const usersSearchIndex = algolia.initIndex(IS_PROD ? 'users' : 'dev_users');
+import initIndex from './algolia';
+const searchIndex = initIndex('users');
 import {
   dbUserToSearchUser,
   listenToNewDocumentsIn,
@@ -20,7 +12,7 @@ import {
 export const newUser = () =>
   listenToNewDocumentsIn('users', data => {
     const searchableUser = dbUserToSearchUser(data);
-    return usersSearchIndex.saveObject(searchableUser, (err, obj) => {
+    return searchIndex.saveObject(searchableUser, (err, obj) => {
       if (err) {
         debug('error indexing a user');
         console.log(err);
@@ -33,7 +25,7 @@ export const deletedUser = () =>
   listenToDeletedDocumentsIn('users', data => {
     // something went wrong if it hits here and doesn't have a deleted field
     if (!data.deletedAt) return;
-    return usersSearchIndex.deleteObject(data.id, (err, obj) => {
+    return searchIndex.deleteObject(data.id, (err, obj) => {
       if (err) {
         debug('error deleting a user');
         console.log(err);
@@ -46,7 +38,7 @@ export const editedUser = () =>
   listenToChangedFieldIn('modifiedAt')('users', data => {
     // if we deleted the users email or username, we are deleting their account
     if (!data.username || !data.email) {
-      return usersSearchIndex.deleteObject(data.id, (err, obj) => {
+      return searchIndex.deleteObject(data.id, (err, obj) => {
         if (err) {
           debug('error deleting a user after editing');
           console.log(err);
@@ -56,7 +48,7 @@ export const editedUser = () =>
     }
 
     const searchableUser = dbUserToSearchUser(data);
-    return usersSearchIndex.partialUpdateObject(
+    return searchIndex.partialUpdateObject(
       {
         objectID: data.id,
         ...searchableUser,
