@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('vulcan:utils');
 import { db } from './db';
 import type {
   DBThread,
@@ -61,10 +62,16 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
 
 const filterMessageString = (message: DBMessage): ?string => {
   // don't index photo uploads
-  if (message.messageType === 'media') return null;
+  if (message.messageType === 'media') {
+    debug('message was media, dont send');
+    return null;
+  }
 
   // don't index dms
-  if (message.threadType === 'directMessageThread') return null;
+  if (message.threadType === 'directMessageThread') {
+    debug('message was in dm, dont send');
+    return null;
+  }
 
   // don't index emoji messages
   let messageString =
@@ -73,11 +80,17 @@ const filterMessageString = (message: DBMessage): ?string => {
     toPlainText(toState(JSON.parse(message.content.body)));
 
   // if no string could be parsed
-  if (!messageString || messageString.length === 0) return null;
+  if (!messageString || messageString.length === 0) {
+    debug('message could not be parsed or was 0 characters');
+    return null;
+  }
 
   // if the message is only an emoji
   const emojiOnly = messageString && onlyContainsEmoji(messageString);
-  if (emojiOnly) return null;
+  if (emojiOnly) {
+    debug('message was emoji only, dont send');
+    return null;
+  }
 
   // filter out stop words
   messageString = withoutStopWords(messageString);
@@ -86,7 +99,10 @@ const filterMessageString = (message: DBMessage): ?string => {
 
   // don't index short messages - will eliminate things like
   // +1, nice, lol, cool, etc from being stored
-  if (messageString && getWordCount(messageString) < 10) return null;
+  if (messageString && getWordCount(messageString) < 10) {
+    debug('message was less than 10 significant words, dont send');
+    return null;
+  }
 
   while (byteCount(messageString) >= 19000) {
     messageString = messageString.slice(0, -100);
