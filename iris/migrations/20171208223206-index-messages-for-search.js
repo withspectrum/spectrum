@@ -59,20 +59,16 @@ exports.up = function(r, conn) {
                 : ''
               : message.content.body || '';
 
-          // algolia only supports 20kb records
-          // slice it down until its under 19k, leaving room for the rest
-          // of the thread data
-          // this will impact very few threads, and will only cut out the
-          // last few words
+          // algolia only supports 20kb records slice it down until its under 19k, leaving room for the rest of the message data. This will impact very few messages, and will only cut out the last few words
           while (byteCount(body) >= 19000) {
             body = body.slice(0, -100);
           }
 
-          const searchableThread = {
+          const searchableMessage = {
             channelId: message.channelId,
             communityId: message.communityId,
             creatorId: message.senderId,
-            lastActive: new Date(message.lastActive).getTime() / 1000,
+            lastActive: new Date(message.lastActive).getTime(),
             threadId: message.threadId,
             messageContent: {
               body,
@@ -82,22 +78,24 @@ exports.up = function(r, conn) {
               body: '',
             },
             objectID: message.id,
-            createdAt: new Date(message.timestamp).getTime() / 1000,
+            createdAt: new Date(message.timestamp).getTime(),
           };
 
-          const threadAsString = JSON.stringify(searchableThread);
-          if (byteCount(threadAsString) >= 19000) {
+          const messageAsString = JSON.stringify(searchableMessage);
+          if (byteCount(messageAsString) >= 19000) {
             // we have a few code messages that can't get turned into plain
             // text, and are pretty huge - if we encounter one of those, we return
             // here
             console.log('escaping a message');
             return;
           }
-          return searchableThread;
+          return searchableMessage;
         })
       )
-      .then(searchableThreads => {
-        return threadsSearchIndex.addObjects(searchableThreads.filter(Boolean));
+      .then(searchableMessages => {
+        return threadsSearchIndex.addObjects(
+          searchableMessages.filter(Boolean)
+        );
       })
       .catch(err => console.log(err))
   );

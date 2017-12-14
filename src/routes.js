@@ -112,7 +112,7 @@ const Splash = Loadable({
 
 /* prettier-ignore */
 const Search = Loadable({
-  loader: () => import('./views/search'/* webpackChunkName: "Splash" */),
+  loader: () => import('./views/search'/* webpackChunkName: "Search" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
 });
 

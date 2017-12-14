@@ -26,8 +26,6 @@ export const newCommunity = () =>
 
 export const deletedCommunity = () =>
   listenToDeletedDocumentsIn('communities', data => {
-    // something went wrong if it hits here and doesn't have a deleted field
-    if (!data.deletedAt) return;
     return searchIndex
       .deleteObject(data.id)
       .then(() => {

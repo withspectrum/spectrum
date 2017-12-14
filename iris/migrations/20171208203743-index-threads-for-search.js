@@ -48,7 +48,7 @@ exports.up = function(r, conn) {
           channelId: thread.channelId,
           communityId: thread.communityId,
           creatorId: thread.creatorId,
-          lastActive: new Date(thread.lastActive).getTime() / 1000,
+          lastActive: new Date(thread.lastActive).getTime(),
           threadId: thread.id,
           messageContent: {
             body: '',
@@ -58,7 +58,7 @@ exports.up = function(r, conn) {
             body,
           },
           objectID: thread.id,
-          createdAt: new Date(thread.createdAt).getTime() / 1000,
+          createdAt: new Date(thread.createdAt).getTime(),
         };
       })
     )

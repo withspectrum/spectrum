@@ -35,8 +35,6 @@ export const newThread = () =>
 
 export const deletedThread = () =>
   listenToDeletedDocumentsIn('threads', data => {
-    // something went wrong if it hits here and doesn't have a deleted field
-    if (!data.deletedAt) return;
     return searchIndex
       .deleteObject(data.id)
       .then(() => {

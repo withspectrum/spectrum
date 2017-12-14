@@ -153,15 +153,13 @@ module.exports = {
       // if no threads exist, send an empty array to the client
       if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-      const getCommunity = await getCommunityById(communityId);
-      const getPublicChannelIds = await getPublicChannelIdsInCommunity(
-        communityId
-      );
+      const getCommunity = getCommunityById(communityId);
+      const getPublicChannelIds = getPublicChannelIdsInCommunity(communityId);
       const getPrivateChannelIds = IS_AUTHED_USER
-        ? await getPrivateChannelIdsInCommunity(communityId)
+        ? getPrivateChannelIdsInCommunity(communityId)
         : [];
       const getCurrentUsersChannelIds = IS_AUTHED_USER
-        ? await getUsersJoinedPrivateChannelIds(user.id)
+        ? getUsersJoinedPrivateChannelIds(user.id)
         : [];
 
       const [

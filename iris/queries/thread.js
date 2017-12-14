@@ -99,9 +99,9 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-        const getChannel = await getChannelById(filter.channelId);
+        const getChannel = getChannelById(filter.channelId);
         const usersPermissionsInChannel = IS_AUTHED_USER
-          ? await getUserPermissionsInChannel(filter.channelId, user.id)
+          ? getUserPermissionsInChannel(filter.channelId, user.id)
           : DEFAULT_USER_CHANNEL_PERMISSIONS;
 
         const [channel, permissions] = await Promise.all([
@@ -133,15 +133,15 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-        const getCommunity = await getCommunityById(filter.communityId);
-        const getPublicChannelIds = await getPublicChannelIdsInCommunity(
+        const getCommunity = getCommunityById(filter.communityId);
+        const getPublicChannelIds = getPublicChannelIdsInCommunity(
           filter.communityId
         );
         const getPrivateChannelIds = IS_AUTHED_USER
-          ? await getPrivateChannelIdsInCommunity(filter.communityId)
+          ? getPrivateChannelIdsInCommunity(filter.communityId)
           : [];
         const getCurrentUsersChannelIds = IS_AUTHED_USER
-          ? await getUsersJoinedPrivateChannelIds(user.id)
+          ? getUsersJoinedPrivateChannelIds(user.id)
           : [];
 
         const [
