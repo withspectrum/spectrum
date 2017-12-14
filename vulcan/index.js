@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('vulcan');
 const PORT = process.env.PORT || 3007;
+import Raven from 'shared/raven';
 import {
   newThread,
   deletedThread,
@@ -49,4 +50,26 @@ server.listen(PORT, 'localhost', () => {
     `💉 Healthcheck server running at ${server.address()
       .address}:${server.address().port}`
   );
+});
+
+process.on('unhandledRejection', async err => {
+  console.error('Unhandled rejection', err);
+  try {
+    await new Promise(resolve => Raven.captureException(err, resolve));
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
+});
+
+process.on('uncaughtException', async err => {
+  console.error('Uncaught exception', err);
+  try {
+    await new Promise(resolve => Raven.captureException(err, resolve));
+  } catch (err) {
+    console.error('Raven error', err);
+  } finally {
+    process.exit(1);
+  }
 });

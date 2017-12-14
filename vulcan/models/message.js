@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('vulcan:message');
 import initIndex from 'shared/algolia';
+import Raven from 'shared/raven';
 const searchIndex = initIndex('threads_and_messages');
 import {
   dbMessageToSearchThread,
@@ -25,6 +26,7 @@ export const newMessage = () =>
       .catch(err => {
         debug('error indexing a message');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -39,5 +41,6 @@ export const deletedMessage = () =>
       .catch(err => {
         debug('error deleting a message');
         console.log(err);
+        Raven.captureException(err);
       });
   });

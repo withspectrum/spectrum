@@ -2,6 +2,7 @@
 const debug = require('debug')('vulcan:thread');
 import { db } from './db';
 import initIndex from 'shared/algolia';
+import Raven from 'shared/raven';
 const searchIndex = initIndex('threads_and_messages');
 import type { DBThread } from 'shared/types';
 import {
@@ -30,6 +31,7 @@ export const newThread = () =>
       .catch(err => {
         debug('error indexing a thread');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -44,6 +46,7 @@ export const deletedThread = () =>
       .catch(err => {
         debug('error deleting a thread');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -64,6 +67,7 @@ export const movedThread = () =>
           .catch(err => {
             debug("couldn't find any results for this thread id");
             console.log(err);
+            Raven.captureException(err);
             reject(err);
           });
       });
@@ -87,6 +91,7 @@ export const movedThread = () =>
       .catch(err => {
         debug('error changing thread channel');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -107,5 +112,6 @@ export const editedThread = () =>
       .catch(err => {
         debug('error editing a thread');
         console.log(err);
+        Raven.captureException(err);
       });
   });

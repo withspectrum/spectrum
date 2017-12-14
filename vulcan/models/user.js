@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('vulcan:user');
 import initIndex from 'shared/algolia';
+import Raven from 'shared/raven';
 const searchIndex = initIndex('users');
 import {
   dbUserToSearchUser,
@@ -21,6 +22,7 @@ export const newUser = () =>
       .catch(err => {
         debug('error indexing a user');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -35,6 +37,7 @@ export const deletedUser = () =>
       .catch(err => {
         debug('error deleting a user');
         console.log(err);
+        Raven.captureException(err);
       });
   });
 
@@ -51,6 +54,7 @@ export const editedUser = () =>
         .catch(err => {
           debug('error deleting a user');
           console.log(err);
+          Raven.captureException(err);
         });
     }
 
@@ -67,5 +71,6 @@ export const editedUser = () =>
       .catch(err => {
         debug('error editing a user');
         console.log(err);
+        Raven.captureException(err);
       });
   });
