@@ -13,12 +13,20 @@ const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_SECRET);
 const threadsSearchIndex = algolia.initIndex(
   IS_PROD ? 'threads_and_messages' : 'dev_threads_and_messages'
 );
+import type { DBThread } from 'shared/types';
 import {
   dbThreadToSearchThread,
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
   listenToChangedFieldIn,
 } from './utils';
+
+export const getThreadById = (threadId: string): Promise<DBThread> => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .run();
+};
 
 export const newThread = () =>
   listenToNewDocumentsIn('threads', data => {

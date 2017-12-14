@@ -77,6 +77,7 @@ exports.up = function(r, conn) {
               : null,
             threadId: thread.threadId,
             threadContent: {
+              title: '',
               body: '',
             },
             messageContent: {

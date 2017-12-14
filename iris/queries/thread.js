@@ -1,4 +1,3 @@
-// @flow
 import { getThreadNotificationStatusForUser } from '../models/usersThreads';
 import {
   getUserPermissionsInChannel,

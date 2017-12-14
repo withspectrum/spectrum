@@ -39,6 +39,8 @@ exports.up = function(r, conn) {
           modifiedAt,
           id,
           type,
+          isLocked,
+          isPublished,
           ...rest
         } = thread;
         let body =

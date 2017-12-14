@@ -9,8 +9,15 @@ import type {
   SearchUser,
   SearchCommunity,
 } from 'shared/types';
+import { getThreadById } from './thread';
 import { byteCount } from './text-parsing';
 import { toPlainText, toState } from 'shared/draft-utils';
+import {
+  getWordCount,
+  withoutStopWords,
+  withoutSwearWords,
+  onlyContainsEmoji,
+} from './text-parsing';
 
 export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
   const {
@@ -52,7 +59,79 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
   };
 };
 
-export const dbMessageToSearchThread = (message: DBMessage): SearchThread => {};
+const filterMessageString = (message: DBMessage): ?string => {
+  // don't index photo uploads
+  if (message.messageType === 'media') return null;
+
+  // don't index dms
+  if (message.threadType === 'directMessageThread') return null;
+
+  // don't index emoji messages
+  let messageString =
+    message.messageType &&
+    message.messageType === 'draftjs' &&
+    toPlainText(toState(JSON.parse(message.content.body)));
+
+  // if no string could be parsed
+  if (!messageString || messageString.length === 0) return null;
+
+  // if the message is only an emoji
+  const emojiOnly = messageString && onlyContainsEmoji(messageString);
+  if (emojiOnly) return null;
+
+  // filter out stop words
+  messageString = withoutStopWords(messageString);
+  // filter out swear words
+  messageString = withoutSwearWords(messageString);
+
+  // don't index short messages - will eliminate things like
+  // +1, nice, lol, cool, etc from being stored
+  if (messageString && getWordCount(messageString) < 10) return null;
+
+  while (byteCount(messageString) >= 19000) {
+    messageString = messageString.slice(0, -100);
+  }
+
+  // passed all checks
+  return messageString;
+};
+
+export const dbMessageToSearchThread = async (
+  message: DBMessage
+): ?SearchThread => {
+  const messageString = filterMessageString(message);
+  if (!messageString) return;
+
+  const thread = await getThreadById(message.threadId);
+  if (!thread || thread.deletedAt) return;
+
+  const {
+    content,
+    id,
+    messageType,
+    senderId,
+    threadId,
+    timestamp,
+    ...rest
+  } = message;
+
+  return {
+    channelId: thread.channelId,
+    communityId: thread.communityId,
+    creatorId: senderId,
+    createdAt: new Date(thread.createdAt).getTime() / 1000,
+    lastActive: new Date(thread.lastActive).getTime() / 1000,
+    threadId: thread.id,
+    messageContent: {
+      body: messageString,
+    },
+    threadContent: {
+      title: '',
+      body: '',
+    },
+    objectID: message.id,
+  };
+};
 
 export const dbUserToSearchUser = (user: DBUser): SearchUser => {
   const {

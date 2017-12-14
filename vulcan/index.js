@@ -12,6 +12,7 @@ import {
   deletedCommunity,
   editedCommunity,
 } from './models/community';
+import { newMessage } from './models/message';
 import { newUser, deletedUser, editedUser } from './models/user';
 import createServer from './server';
 
@@ -38,6 +39,8 @@ editedCommunity();
 newUser();
 deletedUser();
 editedUser();
+
+newMessage();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
