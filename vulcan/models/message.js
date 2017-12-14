@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('vulcan:message');
-import initIndex from './algolia';
+import initIndex from 'shared/algolia';
 const searchIndex = initIndex('threads_and_messages');
 import {
   dbMessageToSearchThread,

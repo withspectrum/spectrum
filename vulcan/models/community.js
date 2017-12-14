@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('vulcan:community');
-import initIndex from './algolia';
+import initIndex from 'shared/algolia';
 const searchIndex = initIndex('communities');
 import {
   dbCommunityToSearchCommunity,

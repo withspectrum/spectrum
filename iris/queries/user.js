@@ -29,9 +29,8 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
-import algoliasearch from 'algoliasearch';
-const algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
-const usersSearchIndex = algolia.initIndex('dev_users');
+import initIndex from 'shared/algolia';
+const usersSearchIndex = initIndex('users');
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',

@@ -7019,6 +7019,10 @@ normalize-url@^1.4.0:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
+now-env@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.1.tgz#ef67f208b94cb1da07af6a3a958a8dd492fdf63b"
+
 npm-path@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/npm-path/-/npm-path-2.0.3.tgz#15cff4e1c89a38da77f56f6055b24f975dfb2bbe"

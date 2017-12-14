@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('vulcan:user');
-import initIndex from './algolia';
+import initIndex from 'shared/algolia';
 const searchIndex = initIndex('users');
 import {
   dbUserToSearchUser,

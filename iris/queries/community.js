@@ -33,15 +33,12 @@ import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
-import algoliasearch from 'algoliasearch';
 import { intersection } from 'lodash';
 import type { GraphQLContext } from '../';
 import type { DBCommunity } from 'shared/types';
-const algolia = algoliasearch('LNYZYXHAO8', '529eabbb4963c9b0bf8d7c3dbd5cf42e');
-const communitySearchIndex = algolia.initIndex('dev_communities');
-const communityThreadsSearchIndex = algolia.initIndex(
-  'dev_threads_and_messages'
-);
+import initIndex from 'shared/algolia';
+const communitySearchIndex = initIndex('communities');
+const communityThreadsSearchIndex = initIndex('threads_and_messages');
 
 type GetCommunityById = {
   id: string,

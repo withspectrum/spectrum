@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('vulcan:thread');
 import { db } from './db';
-import initIndex from './algolia';
+import initIndex from 'shared/algolia';
 const searchIndex = initIndex('threads_and_messages');
 import type { DBThread } from 'shared/types';
 import {
