@@ -60,6 +60,14 @@ app.use('/websocket', (req: express$Request, res: express$Response) => {
   );
 });
 
+// In development the Webpack HMR server requests /sockjs-node constantly,
+// so let's patch that through to it!
+if (process.env.NODE_ENV === 'development') {
+  app.use('/sockjs-node', (req: express$Request, res: express$Response) => {
+    res.redirect(301, `http://localhost:3000${req.path}`);
+  });
+}
+
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 
@@ -94,6 +102,17 @@ app.use(threadParamRedirect);
 app.use(
   express.static(path.resolve(__dirname, '..', 'build'), { index: false })
 );
+
+// In dev the static files from the root public folder aren't moved to the build folder by create-react-app
+// so we just tell Express to serve those too
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'public'), { index: false })
+  );
+}
+
+import cache from './cache';
+app.use(cache);
 
 import renderer from './renderer';
 app.get('*', renderer);

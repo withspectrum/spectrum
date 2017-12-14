@@ -5,7 +5,7 @@ import Link from 'src/components/link';
 import Dropdown from '../../../components/dropdown';
 import { SERVER_URL } from '../../../api/constants';
 
-const UserProfileDropdown = styled(Dropdown)`width: 160px;`;
+const UserProfileDropdown = styled(Dropdown)`width: 200px;`;
 
 const UserProfileDropdownList = styled.ul`
   list-style-type: none;
@@ -50,6 +50,15 @@ export const ProfileDropdown = (props: ProfileProps) => {
             </UserProfileDropdownListItem>
           </Link>
         )}
+        <Link to={`/about`}>
+          <UserProfileDropdownListItem>
+            About Spectrum
+          </UserProfileDropdownListItem>
+        </Link>
+        <Link to={`/support`}>
+          <UserProfileDropdownListItem>Support</UserProfileDropdownListItem>
+        </Link>
+
         <a href={`${SERVER_URL}/auth/logout`}>
           <UserProfileDropdownListItem>Log Out</UserProfileDropdownListItem>
         </a>

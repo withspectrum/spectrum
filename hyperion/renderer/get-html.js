@@ -4,14 +4,17 @@ import path from 'path';
 import serialize from 'serialize-javascript';
 
 const getIndex = () => {
-  return fs
-    .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
-    .toString()
-    .replace(
-      '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
-      ''
-    )
-    .replace(/(src="\/static\/js\/main\.\w+?\.js")/g, ' defer="defer" $1');
+  return (
+    fs
+      .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+      .toString()
+      .replace(
+        '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
+        ''
+      )
+      // This automatically gets injected without the defer tag in development by create-react-app, gotta get rid of it for dev to work!
+      .replace(/(src="\/static\/js\/bundle\.js")/g, ' defer="defer" $1')
+  );
 };
 
 let html = getIndex();

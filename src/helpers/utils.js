@@ -177,10 +177,10 @@ export function timeDifferenceShort(current: Date, previous: Date) {
 
 export const debounce = (func, wait, immediate) => {
   let timeout;
-  return () => {
+  return function() {
     let context = this,
       args = arguments;
-    let later = () => {
+    let later = function() {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
