@@ -61,7 +61,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
       return props.data.fetchMore({
         variables: {
           after: cursor,
-          first: 1,
+          first: undefined,
           before: undefined,
           last: undefined,
         },
@@ -106,7 +106,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
           after: undefined,
           first: undefined,
           before: cursor,
-          last: 1,
+          last: undefined,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !fetchMoreResult.thread) return prev;

@@ -52,6 +52,7 @@ class ThreadContainer extends React.Component<Props, State> {
     super();
 
     this.state = {
+      messagesContainer: null,
       scrollElement: null,
       isEditing: false,
     };
@@ -61,6 +62,13 @@ class ThreadContainer extends React.Component<Props, State> {
     const { isEditing } = this.state;
     this.setState({
       isEditing: !isEditing,
+    });
+  };
+
+  setMessagesContainer = elem => {
+    if (this.state.messagesContainer) return;
+    this.setState({
+      messagesContainer: elem,
     });
   };
 
@@ -215,7 +223,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 noComposer
                 style={{ gridArea: 'header' }}
               />
-              <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+              <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
                   <WatercoolerIntroContainer>
                     <WatercoolerAvatar
@@ -237,6 +245,7 @@ class ThreadContainer extends React.Component<Props, State> {
                     <Messages
                       threadType={thread.threadType}
                       id={thread.id}
+                      scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
                       lastSeen={thread.currentUserLastSeen}
                       forceScrollToBottom={this.forceScrollToBottom}
@@ -326,7 +335,7 @@ class ThreadContainer extends React.Component<Props, State> {
               noComposer
               style={{ gridArea: 'header' }}
             />
-            <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+            <Content innerRef={this.setMessagesContainer}>
               <Detail type={slider ? '' : 'only'}>
                 <ThreadCommunityBanner
                   hide={threadViewContext === 'fullscreen'}
@@ -343,6 +352,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   <Messages
                     threadType={thread.threadType}
                     id={thread.id}
+                    scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
                     lastSeen={thread.currentUserLastSeen}
                     forceScrollToBottom={this.forceScrollToBottom}

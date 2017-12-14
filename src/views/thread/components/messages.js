@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
+import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
@@ -57,7 +58,7 @@ class MessagesWithData extends Component {
     }
 
     // force scroll to bottom when a message is sent in the same thread
-    if (newMessageSent) {
+    if (newMessageSent && !prevProps.isFetchingMore) {
       this.props.contextualScrollToBottom();
     }
 
@@ -104,6 +105,8 @@ class MessagesWithData extends Component {
       isModerator,
       isFetchingMore,
       loadPreviousPage,
+      loadNextPage,
+      scrollContainer,
     } = this.props;
 
     const dataExists =
@@ -145,18 +148,26 @@ class MessagesWithData extends Component {
               fetchMore={loadPreviousPage}
             />
           )}
-          <ChatMessages
-            threadId={data.thread.id}
-            thread={data.thread}
-            toggleReaction={toggleReaction}
-            messages={sortedMessages}
-            threadType={'story'}
-            forceScrollToBottom={forceScrollToBottom}
-            isModerator={isModerator}
-          />
-          {data.thread.messageConnection.pageInfo.hasNextPage && (
-            <button onClick={this.props.loadNextPage}>Next page</button>
-          )}
+          <InfiniteList
+            pageStart={0}
+            loadMore={loadNextPage}
+            hasMore={data.thread.messageConnection.pageInfo.hasNextPage}
+            loader={<LoadingChat size="small" />}
+            useWindow={false}
+            initialLoad={false}
+            scrollElement={scrollContainer}
+            threshold={750}
+          >
+            <ChatMessages
+              threadId={data.thread.id}
+              thread={data.thread}
+              toggleReaction={toggleReaction}
+              messages={sortedMessages}
+              threadType={'story'}
+              forceScrollToBottom={forceScrollToBottom}
+              isModerator={isModerator}
+            />
+          </InfiniteList>
         </ChatWrapper>
       );
     }
