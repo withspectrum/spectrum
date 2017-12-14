@@ -3,12 +3,15 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
+    "algoliasearch": "^3.24.7",
+    "bad-words": "^1.6.1",
     "debug": "^2.6.8",
+    "emoji-regex": "^6.1.1",
+    "node-env-file": "^0.1.8",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
-    "node-env-file": "^0.1.8",
-    "algoliasearch": "^3.24.7"
+    "stopword": "^0.1.9"
   },
   "devDependencies": {
     "json-stringify-pretty-compact": "^1.0.4"

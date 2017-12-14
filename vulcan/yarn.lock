@@ -26,6 +26,16 @@ algoliasearch@^3.24.7:
     semver "^5.1.0"
     tunnel-agent "^0.6.0"
 
+bad-words@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-1.6.1.tgz#06483021951a9d80fb5fcaa2f0d9a1e75a745b50"
+  dependencies:
+    badwords-list "^1.0.0"
+
+badwords-list@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/badwords-list/-/badwords-list-1.0.0.tgz#5e9856dbf13482a295c3b0b304afb9d4cfc5c579"
+
 "bluebird@>= 3.0.1":
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
@@ -43,6 +53,10 @@ debug@^2.6.8:
 dom-walk@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
+
+emoji-regex@^6.1.1:
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.5.1.tgz#9baea929b155565c11ea41c6626eaa65cef992c2"
 
 envify@^4.0.0:
   version "4.1.0"
@@ -163,6 +177,10 @@ source-map@^0.5.6:
 stack-trace@0.0.9:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.9.tgz#a8f6eaeca90674c333e7c43953f275b451510695"
+
+stopword@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/stopword/-/stopword-0.1.9.tgz#09895c4cdaa96fa7b04abf8d240f9b0fdb6f51b2"
 
 through@~2.3.4:
   version "2.3.8"
