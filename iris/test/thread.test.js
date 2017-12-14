@@ -180,12 +180,9 @@ describe('messageConnection', () => {
     });
   });
 
-  // TODO(@mxstbr): Somehow make this happen
-  it.skip(
-    'should correctly set pageInfo when all messages are requested',
-    () => {
-      // Request more messages than there are
-      const query = /* GraphQL */ `
+  it('should correctly set pageInfo when all messages are requested', () => {
+    // Request more messages than there are
+    const query = /* GraphQL */ `
       {
         thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
           messageConnection(first: ${messages.length}) {
@@ -201,17 +198,16 @@ describe('messageConnection', () => {
       }
     `;
 
-      expect.hasAssertions();
-      return request(query).then(result => {
-        const { edges, pageInfo } = result.data.thread.messageConnection;
-        expect(edges.length).toEqual(messages.length);
-        expect(pageInfo).toEqual({
-          hasNextPage: false,
-          hasPreviousPage: false,
-        });
+    expect.hasAssertions();
+    return request(query).then(result => {
+      const { edges, pageInfo } = result.data.thread.messageConnection;
+      expect(edges.length).toEqual(messages.length);
+      expect(pageInfo).toEqual({
+        hasNextPage: false,
+        hasPreviousPage: false,
       });
-    }
-  );
+    });
+  });
 
   it('should correctly set pageInfo when more messages are requested than are available after a cursor', () => {
     // Get the cursor of the first message
@@ -372,12 +368,9 @@ describe('messageConnection', () => {
       });
     });
 
-    // TODO(@mxstbr): Figure out how to do this
-    it.skip(
-      'should correctly set pageInfo when all messages are requested',
-      () => {
-        // Request more messages than there are
-        const query = /* GraphQL */ `
+    it('should correctly set pageInfo when all messages are requested', () => {
+      // Request more messages than there are
+      const query = /* GraphQL */ `
         {
           thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
             messageConnection(last: ${messages.length}) {
@@ -393,17 +386,16 @@ describe('messageConnection', () => {
         }
       `;
 
-        expect.hasAssertions();
-        return request(query).then(result => {
-          const { edges, pageInfo } = result.data.thread.messageConnection;
-          expect(edges.length).toEqual(messages.length);
-          expect(pageInfo).toEqual({
-            hasNextPage: false,
-            hasPreviousPage: false,
-          });
+      expect.hasAssertions();
+      return request(query).then(result => {
+        const { edges, pageInfo } = result.data.thread.messageConnection;
+        expect(edges.length).toEqual(messages.length);
+        expect(pageInfo).toEqual({
+          hasNextPage: false,
+          hasPreviousPage: false,
         });
-      }
-    );
+      });
+    });
 
     it('should correctly set pageInfo when more messages are requested than are available after a cursor', () => {
       // Get the cursor of the last message

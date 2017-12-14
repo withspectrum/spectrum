@@ -107,9 +107,15 @@ module.exports = {
       }: { ...PaginationOptions, last: number, before: string },
       { user, loaders }: GraphQLContext
     ) => {
-      if ((first && last) || (after && before))
+      // Make sure users don't provide bonkers arguments that paginate in both directions at the same time
+      if (
+        (first && last) ||
+        (after && before) ||
+        (first && before) ||
+        (after && last)
+      )
         throw new UserError(
-          'Cannot paginate back- and forwards at the same time. Please only provide first/after or last/before.'
+          'Cannot paginate back-and forwards at the same time. Please only ask for the first messages after a certain point or the last messages before a certain point.'
         );
 
       debug(`get messages for ${id}`);
@@ -125,7 +131,7 @@ module.exports = {
       }
       if (!timestamp && user) {
         debug(
-          `no valid cursor provided, getting user last seen for user ${user.id}`
+          `no valid cursor provided, trying userLastSeen for user ${user.id}`
         );
         try {
           timestamp = await loaders.userThreadNotificationStatus
@@ -135,22 +141,34 @@ module.exports = {
           // Ignore errors from getting user last seen
         }
       }
-      debug(`timestamp: ${timestamp}`);
+      debug(`cursor: ${timestamp}`);
 
       let options = {
+        // Default first/last to 50 if their counterparts after/before are provided
+        // so users can query messageConnection(after: "cursor") or (before: "cursor")
         first: first ? first : after ? 50 : null,
         last: last ? last : before ? 50 : null,
+        // Set after/before to the parsed timestamp depending on which one was requested
+        // by the user
         after: after ? timestamp : null,
         before: before ? timestamp : null,
       };
 
-      // If we didn't get any arguments, set first to 50
+      // If we didn't get any arguments at all (i.e messageConnection {})
+      // then just fetch the first 50 messages
       // $FlowIssue
       if (Object.keys(options).every(key => !options[key])) {
         options = {
           first: 50,
         };
       }
+
+      debug('pagination options for query:', options);
+
+      // Load one message too much so that we know whether there's
+      // a next or previous page
+      options.first && options.first++;
+      options.last && options.last++;
 
       return getMessages(id, options).then(result => {
         if (user && user.id) {
@@ -160,17 +178,30 @@ module.exports = {
             timestamp: Date.now(),
           });
         }
+        let messages = result;
+        // Check if more messages were returned than were requested, which would mean
+        // there's a next/previous page. (depending on the direction of the pagination)
+        const loadedMoreFirst =
+          options.first && result.length > options.first - 1;
+        const loadedMoreLast = options.last && result.length > options.last - 1;
+
+        // Get rid of the extranous message if there is one
+        if (loadedMoreFirst || loadedMoreLast) {
+          debug('not sending extranous message');
+          messages = result.slice(0, result.length - 1);
+        }
+
         return {
           pageInfo: {
-            hasNextPage: options.first
-              ? result.length >= options.first
-              : !!options.before,
-            hasPreviousPage: options.last
-              ? result.length >= options.last
-              : // $FlowIssue
-                !!options.after,
+            // Use the extranous message that was maybe loaded to figure out whether
+            // there is a next/previous page, otherwise just try and guess based on
+            // if a cursor was provided
+            // $FlowIssue
+            hasNextPage: loadedMoreFirst || !!options.before,
+            // $FlowIssue
+            hasPreviousPage: loadedMoreLast || !!options.after,
           },
-          edges: result.map((message, index) => ({
+          edges: messages.map((message, index) => ({
             cursor: encode(message.timestamp.getTime().toString()),
             node: message,
           })),
