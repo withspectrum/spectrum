@@ -16,24 +16,30 @@ export const newMessage = () =>
       return;
     }
 
-    return searchIndex.saveObject(searchableMessage, (err, obj) => {
-      if (err) {
-        debug('error indexing a thread');
+    return searchIndex
+      .saveObject(searchableMessage)
+      .then(() => {
+        debug('indexed new message in search');
+        return;
+      })
+      .catch(err => {
+        debug('error indexing a message');
         console.log(err);
-      }
-      debug('stored new thread in search');
-    });
+      });
   });
 
 export const deletedMessage = () =>
   listenToDeletedDocumentsIn('messages', data => {
     // something went wrong if it hits here and doesn't have a deleted field
     if (!data.deletedAt) return;
-    return searchIndex.deleteObject(data.id, (err, obj) => {
-      if (err) {
+    return searchIndex
+      .deleteObject(data.id)
+      .then(() => {
+        debug('deleted message in search');
+        return;
+      })
+      .catch(err => {
         debug('error deleting a message');
         console.log(err);
-      }
-      debug('deleted message in search');
-    });
+      });
   });
