@@ -106,7 +106,7 @@ const filterMessageString = (message: DBMessage): ?string => {
 
 export const dbMessageToSearchThread = async (
   message: DBMessage
-): ?SearchThread => {
+): Promise<?SearchThread> => {
   const messageString = filterMessageString(message);
   if (!messageString) return;
 
