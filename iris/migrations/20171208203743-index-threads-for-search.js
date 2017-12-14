@@ -31,18 +31,6 @@ exports.up = function(r, conn) {
     .then(cursor => cursor.toArray())
     .then(threads =>
       threads.map(thread => {
-        const {
-          attachments,
-          edits,
-          watercooler,
-          content,
-          modifiedAt,
-          id,
-          type,
-          isLocked,
-          isPublished,
-          ...rest
-        } = thread;
         let body =
           thread.type === 'DRAFTJS'
             ? thread.content.body
@@ -51,41 +39,33 @@ exports.up = function(r, conn) {
             : thread.content.body || '';
 
         // algolia only supports 20kb records
-        // slice it down until its under 19k, leaving room for the rest
-        // of the thread data
-        // this will impact very few threads, and will only cut out the
-        // last few words
+        // slice it down until its under 19k, leaving room for the rest of the thread data
         while (byteCount(body) >= 19000) {
           body = body.slice(0, -100);
         }
 
-        const searchableThread = {
-          ...rest,
-          createdAt: new Date(thread.createdAt).getTime() / 1000,
-          lastActive: thread.lastActive
-            ? new Date(thread.lastActive).getTime() / 1000
-            : null,
+        return {
+          channelId: thread.channelId,
+          communityId: thread.communityId,
+          creatorId: thread.creatorId,
+          lastActive: new Date(thread.lastActive).getTime() / 1000,
           threadId: thread.id,
           messageContent: {
             body: '',
           },
           threadContent: {
-            ...thread.content,
+            title: thread.content.title,
             body,
           },
           objectID: thread.id,
+          createdAt: new Date(thread.createdAt).getTime() / 1000,
         };
-        return searchableThread;
       })
     )
     .then(searchableThreads => {
-      return threadsSearchIndex.addObjects(searchableThreads, (err, obj) => {
-        if (err) {
-          console.log('error indexing threads', err);
-        }
-        console.log('stored threads in search');
-      });
-    });
+      return threadsSearchIndex.addObjects(searchableThreads);
+    })
+    .catch(err => console.log(err));
 };
 
 exports.down = function(r, conn) {

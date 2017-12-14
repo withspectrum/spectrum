@@ -21,16 +21,6 @@ import {
 } from './text-parsing';
 
 export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
-  const {
-    content,
-    watercooler,
-    id,
-    type,
-    modifiedAt,
-    edits,
-    attachments,
-    ...rest
-  } = thread;
   let body =
     thread.type === 'DRAFTJS'
       ? thread.content.body
@@ -45,18 +35,20 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
   }
 
   return {
-    ...rest,
-    createdAt: new Date(thread.createdAt).getTime() / 1000,
+    channelId: thread.channelId,
+    communityId: thread.communityId,
+    creatorId: thread.creatorId,
     lastActive: new Date(thread.lastActive).getTime() / 1000,
     threadId: thread.id,
     messageContent: {
       body: '',
     },
     threadContent: {
-      ...thread.content,
+      title: thread.content.title,
       body,
     },
     objectID: thread.id,
+    createdAt: new Date(thread.createdAt).getTime() / 1000,
   };
 };
 
@@ -121,20 +113,10 @@ export const dbMessageToSearchThread = async (
   const thread = await getThreadById(message.threadId);
   if (!thread || thread.deletedAt) return;
 
-  const {
-    content,
-    id,
-    messageType,
-    senderId,
-    threadId,
-    timestamp,
-    ...rest
-  } = message;
-
   return {
     channelId: thread.channelId,
     communityId: thread.communityId,
-    creatorId: senderId,
+    creatorId: message.senderId,
     createdAt: new Date(thread.createdAt).getTime() / 1000,
     lastActive: new Date(thread.lastActive).getTime() / 1000,
     threadId: thread.id,
@@ -150,35 +132,26 @@ export const dbMessageToSearchThread = async (
 };
 
 export const dbUserToSearchUser = (user: DBUser): SearchUser => {
-  const {
-    email,
-    lastSeen,
-    providerId,
-    fbProviderId,
-    googleProviderId,
-    createdAt,
-    isOnline,
-    githubProviderId,
-    timezone,
-    modifiedAt,
-    ...rest
-  } = user;
-
   return {
-    ...rest,
+    name: user.name,
+    username: user.username,
+    description: user.description,
+    website: user.website,
+    id: user.id,
     objectID: user.id,
   };
 };
 
 export const dbCommunityToSearchCommunity = (
   community: DBCommunity
-): SearchCommunity => {
-  const { createdAt, pinnedThreadId, watercoolerId, ...rest } = community;
-  return {
-    ...rest,
-    objectID: community.id,
-  };
-};
+): SearchCommunity => ({
+  id: community.id,
+  description: community.description,
+  name: community.name,
+  slug: community.slug,
+  website: community.website ? community.website : null,
+  objectID: community.id,
+});
 
 export const NEW_DOCUMENTS = db
   .row('old_val')

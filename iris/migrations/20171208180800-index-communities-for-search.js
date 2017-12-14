@@ -17,31 +17,20 @@ exports.up = function(r, conn) {
     .run(conn)
     .then(cursor => cursor.toArray())
     .then(communities =>
-      communities.map(community => {
-        const {
-          createdAt,
-          pinnedThreadId,
-          watercoolerId,
-          modifiedAt,
-          ...rest
-        } = community;
-        const searchableCommunity = {
-          ...rest,
-          objectID: community.id,
-        };
-        return searchableCommunity;
-      })
+      communities.map(community => ({
+        id: community.id,
+        description: community.description,
+        name: community.name,
+        slug: community.slug,
+        website: community.website ? community.website : null,
+        objectID: community.id,
+      }))
     )
     .then(searchableCommunities => {
-      return communitiesSearchIndex.addObjects(
-        searchableCommunities,
-        (err, obj) => {
-          if (err) {
-            console.log('error indexing communities', err);
-          }
-          console.log('stored communities in search');
-        }
-      );
+      return communitiesSearchIndex.addObjects(searchableCommunities);
+    })
+    .catch(err => {
+      console.log(err);
     });
 };
 

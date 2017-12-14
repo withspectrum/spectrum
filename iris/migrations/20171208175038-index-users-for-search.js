@@ -15,35 +15,19 @@ exports.up = function(r, conn) {
     .run(conn)
     .then(cursor => cursor.toArray())
     .then(users =>
-      users.map(user => {
-        const {
-          email,
-          lastSeen,
-          providerId,
-          fbProviderId,
-          googleProviderId,
-          createdAt,
-          isOnline,
-          githubProviderId,
-          modifiedAt,
-          timezone,
-          ...rest
-        } = user;
-        const searchableUser = {
-          ...rest,
-          objectID: user.id,
-        };
-        return searchableUser;
-      })
+      users.map(user => ({
+        name: user.name,
+        username: user.username,
+        description: user.description,
+        website: user.website,
+        id: user.id,
+        objectID: user.id,
+      }))
     )
     .then(searchableUsers => {
-      return usersSearchIndex.addObjects(searchableUsers, (err, obj) => {
-        if (err) {
-          console.log('error indexing users', err);
-        }
-        console.log('stored users in search');
-      });
-    });
+      return usersSearchIndex.addObjects(searchableUsers);
+    })
+    .catch(err => console.log(err));
 };
 
 exports.down = function(r, conn) {

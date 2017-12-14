@@ -36,7 +36,7 @@ exports.up = function(r, conn) {
       )
       .eqJoin('threadId', r.table('threads'))
       .without({
-        left: ['messageType', 'threadType', 'timestamp'],
+        left: ['threadType'],
         right: [
           'attachments',
           'edits',
@@ -50,15 +50,14 @@ exports.up = function(r, conn) {
       .zip()
       .run(conn)
       .then(cursor => cursor.toArray())
-      .then(threads =>
-        threads.map(thread => {
-          const { messageType, content, ...rest } = thread;
+      .then(messages =>
+        messages.map(message => {
           let body =
-            messageType === 'draftjs'
-              ? thread.content.body
-                ? toPlainText(toState(JSON.parse(thread.content.body)))
+            message.messageType === 'draftjs'
+              ? message.content.body
+                ? toPlainText(toState(JSON.parse(message.content.body)))
                 : ''
-              : thread.content.body || '';
+              : message.content.body || '';
 
           // algolia only supports 20kb records
           // slice it down until its under 19k, leaving room for the rest
@@ -70,20 +69,20 @@ exports.up = function(r, conn) {
           }
 
           const searchableThread = {
-            ...rest,
-            createdAt: new Date(thread.createdAt).getTime() / 1000,
-            lastActive: thread.lastActive
-              ? new Date(thread.lastActive).getTime() / 1000
-              : null,
-            threadId: thread.threadId,
+            channelId: message.channelId,
+            communityId: message.communityId,
+            creatorId: message.senderId,
+            lastActive: new Date(message.lastActive).getTime() / 1000,
+            threadId: message.threadId,
+            messageContent: {
+              body,
+            },
             threadContent: {
               title: '',
               body: '',
             },
-            messageContent: {
-              body,
-            },
-            objectID: thread.id, // message id
+            objectID: message.id,
+            createdAt: new Date(message.timestamp).getTime() / 1000,
           };
 
           const threadAsString = JSON.stringify(searchableThread);
@@ -98,17 +97,9 @@ exports.up = function(r, conn) {
         })
       )
       .then(searchableThreads => {
-        console.log('inserting ', searchableThreads.filter(Boolean).length);
-        return threadsSearchIndex.addObjects(
-          searchableThreads.filter(Boolean),
-          (err, obj) => {
-            if (err) {
-              console.log('error indexing threads', err);
-            }
-            console.log('stored threads in search');
-          }
-        );
+        return threadsSearchIndex.addObjects(searchableThreads.filter(Boolean));
       })
+      .catch(err => console.log(err))
   );
 };
 

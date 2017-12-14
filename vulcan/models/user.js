@@ -43,7 +43,7 @@ export const deletedUser = () =>
 export const editedUser = () =>
   listenToChangedFieldIn('modifiedAt')('users', data => {
     // if we deleted the users email or username, we are deleting their account
-    if (!data.username || !data.email) {
+    if (!data.username) {
       return searchIndex
         .deleteObject(data.id)
         .then(() => {
