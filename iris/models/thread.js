@@ -3,6 +3,7 @@ const { db } = require('./db');
 import intersection from 'lodash.intersection';
 import { addQueue } from '../utils/workerQueue';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
+import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
@@ -410,7 +411,11 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     )
     .run()
     .then(result =>
-      Promise.all([result, turnOffAllThreadNotifications(threadId)])
+      Promise.all([
+        result,
+        turnOffAllThreadNotifications(threadId),
+        deleteMessagesInThread(threadId),
+      ])
     )
     .then(([result]) => {
       const thread = result.changes[0].new_val;

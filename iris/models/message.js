@@ -156,6 +156,16 @@ export const deleteMessage = (userId: string, id: string) => {
     });
 };
 
+export const deleteMessagesInThread = (threadId: string) => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .update({
+      deletedAt: new Date(),
+    })
+    .run();
+};
+
 export const userHasMessagesInThread = (threadId: string, userId: string) => {
   return db
     .table('messages')
