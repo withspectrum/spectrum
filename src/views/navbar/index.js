@@ -104,10 +104,12 @@ class Navbar extends React.Component<Props> {
       parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
     const isComposingDm = history.location.pathname === '/messages/new';
     const isComposingThread = history.location.pathname === '/new/thread';
+    const isSearching = history.location.pathname === '/new/search';
     const isViewingThreadSlider = threadParam !== undefined;
     const hideNavOnMobile =
       isViewingThreadSlider ||
       isComposingDm ||
+      isSearching ||
       isViewingThread ||
       isViewingDm ||
       isComposingThread;
