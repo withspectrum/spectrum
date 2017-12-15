@@ -71,6 +71,7 @@ class SearchViewInput extends React.Component<Props, State> {
             innerRef={input => {
               this.searchInput = input;
             }}
+            autoFocus={true}
           />
         </SearchForm>
       </SearchWrapper>
