@@ -114,7 +114,7 @@ module.exports = {
         .search({ query: string })
         .then(content => {
           if (!content.hits || content.hits.length === 0) return [];
-          const communityIds = content.hits.map(o => o.id);
+          const communityIds = content.hits.map(o => o.objectID);
           return loaders.community.loadMany(communityIds);
         })
         .catch(err => {

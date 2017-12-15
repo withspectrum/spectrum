@@ -57,7 +57,7 @@ module.exports = {
         .search({ query: string })
         .then(content => {
           if (!content.hits || content.hits.length === 0) return [];
-          const userIds = content.hits.map(o => o.id);
+          const userIds = content.hits.map(o => o.objectID);
           return loaders.user.loadMany(userIds);
         })
         .catch(err => {

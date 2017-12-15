@@ -1,7 +1,7 @@
 require('now-env');
-const initIndex = require('shared/algolia');
+const initIndex = require('../../shared/algolia');
 const searchIndex = initIndex('threads_and_messages');
-const { toPlainText, toState } = require('shared/draft-utils');
+const { toPlainText, toState } = require('../../shared/draft-utils');
 const stopword = require('stopword');
 const Filter = require('bad-words');
 const filter = new Filter({ placeHolder: ' ' });
@@ -168,9 +168,9 @@ exports.up = function(r, conn) {
           return searchableMessage;
         })
       )
-      .then(searchableMessages => {
-        return searchIndex.addObjects(searchableMessages.filter(Boolean));
-      })
+      .then(searchableMessages =>
+        searchIndex.addObjects(searchableMessages.filter(Boolean))
+      )
       .catch(err => console.log(err))
   );
 };

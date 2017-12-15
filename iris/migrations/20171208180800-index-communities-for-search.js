@@ -1,5 +1,5 @@
 require('now-env');
-const initIndex = require('shared/algolia');
+const initIndex = require('../../shared/algolia');
 const searchIndex = initIndex('communities');
 
 exports.up = function(r, conn) {
@@ -10,7 +10,6 @@ exports.up = function(r, conn) {
     .then(cursor => cursor.toArray())
     .then(communities =>
       communities.map(community => ({
-        id: community.id,
         description: community.description,
         name: community.name,
         slug: community.slug,
@@ -18,12 +17,10 @@ exports.up = function(r, conn) {
         objectID: community.id,
       }))
     )
-    .then(searchableCommunities => {
-      return searchIndex.addObjects(searchableCommunities);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    .then(searchableCommunities =>
+      searchIndex.addObjects(searchableCommunities)
+    )
+    .catch(err => console.log(err));
 };
 
 exports.down = function(r, conn) {

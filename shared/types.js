@@ -314,10 +314,12 @@ export type SearchThread = {
     body: ?string,
   },
   threadContent: {
+    title: string,
     body: ?string,
   },
   createdAt: number,
   threadId: string,
+  objectID: string,
 };
 
 export type SearchUser = {
@@ -325,7 +327,6 @@ export type SearchUser = {
   name: string,
   username: ?string,
   website: ?string,
-  id: string,
   objectID: string,
 };
 
@@ -334,5 +335,5 @@ export type SearchCommunity = {
   name: string,
   slug: string,
   website: ?string,
-  id: string,
+  objectID: string,
 };

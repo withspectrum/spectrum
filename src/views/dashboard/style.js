@@ -799,7 +799,7 @@ export const SearchWrapper = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  padding: 8px;
+  padding: 6px 8px;
   padding-left: 40px;
   font-size: 16px;
   border-radius: 40px;
@@ -812,8 +812,9 @@ export const SearchInput = styled.input`
   padding-right: 40px;
 
   &:focus {
+    background: ${props => props.theme.bg.wash};
     color: ${props => props.theme.text.default};
-    border: 1px solid ${props => props.theme.brand.alt};
+    border: 1px solid ${props => props.theme.bg.border};
   }
 `;
 

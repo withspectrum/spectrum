@@ -1,5 +1,5 @@
 require('now-env');
-const initIndex = require('shared/algolia');
+const initIndex = require('../../shared/algolia');
 const searchIndex = initIndex('users');
 
 exports.up = function(r, conn) {
@@ -14,13 +14,10 @@ exports.up = function(r, conn) {
         username: user.username,
         description: user.description,
         website: user.website,
-        id: user.id,
         objectID: user.id,
       }))
     )
-    .then(searchableUsers => {
-      return searchIndex.addObjects(searchableUsers);
-    })
+    .then(searchableUsers => searchIndex.addObjects(searchableUsers))
     .catch(err => console.log(err));
 };
 
