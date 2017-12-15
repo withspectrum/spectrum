@@ -5,8 +5,7 @@ const { toPlainText, toState } = require('shared/draft-utils');
 const stopword = require('stopword');
 const Filter = require('bad-words');
 const filter = new Filter({ placeHolder: ' ' });
-
-import createEmojiRegex from 'emoji-regex';
+const createEmojiRegex = require('emoji-regex');
 
 // This regex matches every string with any emoji in it, not just strings that only have emojis
 const originalEmojiRegex = createEmojiRegex();
