@@ -178,7 +178,7 @@ class Dashboard extends Component {
 
               {// community, no channel, no search results
               activeCommunity &&
-                activeChannel &&
+                !activeChannel &&
                 !searchQueryString && (
                   <CommunityThreadFeed
                     id={activeCommunity}
