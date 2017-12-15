@@ -17,7 +17,10 @@ exports.up = function(r, conn) {
         objectID: user.id,
       }))
     )
-    .then(searchableUsers => searchIndex.addObjects(searchableUsers))
+    .then(searchableUsers => {
+      return;
+      // return searchIndex.addObjects(searchableUsers)
+    })
     .catch(err => console.log(err));
 };
 

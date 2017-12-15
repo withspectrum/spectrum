@@ -17,9 +17,10 @@ exports.up = function(r, conn) {
         objectID: community.id,
       }))
     )
-    .then(searchableCommunities =>
-      searchIndex.addObjects(searchableCommunities)
-    )
+    .then(searchableCommunities => {
+      return;
+      // searchIndex.addObjects(searchableCommunities)
+    })
     .catch(err => console.log(err));
 };
 
