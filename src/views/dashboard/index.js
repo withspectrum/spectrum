@@ -130,7 +130,7 @@ class Dashboard extends Component {
       return (
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
-          <Titlebar />
+          <Titlebar hasSearch />
           <CommunityListWrapper
             data-e2e-id="inbox-community-list"
             onMouseEnter={this.setHover}
@@ -252,7 +252,6 @@ const map = state => ({
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
   activeChannel: state.dashboardFeed.activeChannel,
-  searchResults: state.dashboardFeed.search.results,
   searchQueryString: state.dashboardFeed.search.queryString,
 });
 export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(

@@ -28,7 +28,6 @@ export default function dashboardFeed(state = initialState, action) {
         mountedWithActiveThread: null,
       });
     case 'TOGGLE_SEARCH_OPEN': {
-      console.log('toggling to ', !state.search.isOpen);
       return Object.assign({}, state, {
         search: {
           ...state.search,

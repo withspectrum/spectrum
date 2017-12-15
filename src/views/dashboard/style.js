@@ -688,7 +688,7 @@ export const NullThreadFeed = styled.div`
   justify-content: center;
   padding: 32px;
   flex-direction: column;
-  background: ${props => props.theme.bg.default};
+  background: ${props => props.theme.bg.wash};
 `;
 
 export const NullHeading = styled.p`
