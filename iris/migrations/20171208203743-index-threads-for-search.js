@@ -1,4 +1,5 @@
 require('now-env');
+const fs = require('fs');
 const { toPlainText, toState } = require('../../shared/draft-utils');
 const initIndex = require('../../shared/algolia');
 const searchIndex = initIndex('threads_and_messages');
@@ -92,7 +93,17 @@ exports.up = function(r, conn) {
         };
       })
     )
-    .then(searchableThreads => searchIndex.addObjects(searchableThreads))
+    .then(searchableThreads => {
+      let filtered = searchableThreads.filter(Boolean);
+      let content = JSON.stringify(filtered);
+      return fs.writeFile('dump-threads.json', content, 'utf8', err => {
+        if (err) {
+          return console.log(err);
+        }
+        return console.log('saved threads');
+      });
+      // return searchIndex.addObjects(searchableThreads)
+    })
     .catch(err => console.log(err));
 };
 
