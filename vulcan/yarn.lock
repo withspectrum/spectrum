@@ -122,6 +122,10 @@ node-env-file@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/node-env-file/-/node-env-file-0.1.8.tgz#fccb7b050f735b5a33da9eb937cf6f1ab457fb69"
 
+now-env@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.0.1.tgz#ef67f208b94cb1da07af6a3a958a8dd492fdf63b"
+
 object-keys@^1.0.11, object-keys@~1.0.0:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"

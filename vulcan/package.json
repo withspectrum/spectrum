@@ -8,8 +8,10 @@
     "debug": "^2.6.8",
     "emoji-regex": "^6.1.1",
     "node-env-file": "^0.1.8",
+    "draft-js": "^0.10.3",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
+    "now-env": "^3.0.1",
     "source-map-support": "^0.4.15",
     "stopword": "^0.1.9"
   },
