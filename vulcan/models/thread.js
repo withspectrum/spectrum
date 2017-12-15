@@ -75,7 +75,10 @@ export const movedThread = () =>
 
     const [hits] = await Promise.all([getAllRecordsForThreadId(data)]);
 
-    if (!hits || hits.length === 0) return;
+    if (!hits || hits.length === 0) {
+      debug('could not find any matching results for this thread');
+      return;
+    }
 
     const allRecords = hits.map(r => ({
       channelId: data.channelId,
@@ -101,12 +104,10 @@ export const editedThread = () =>
     return searchIndex
       .partialUpdateObject({
         objectID: data.id,
-        threadContent: {
-          ...searchableThread.threadContent,
-        },
+        ...searchableThread,
       })
       .then(() => {
-        debug('edited thread channel in search');
+        debug('edited thread in search');
         return;
       })
       .catch(err => {

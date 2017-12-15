@@ -12,6 +12,11 @@ import {
 
 export const newUser = () =>
   listenToNewDocumentsIn('users', data => {
+    // dont save any user without a username - they can't be linked to!
+    if (!data.username) {
+      debug('new user without a username, returning');
+      return;
+    }
     const searchableUser = dbUserToSearchUser(data);
     return searchIndex
       .saveObject(searchableUser)
@@ -48,7 +53,7 @@ export const editedUser = () =>
       return searchIndex
         .deleteObject(data.id)
         .then(() => {
-          debug('deleted new user in search');
+          debug('deleted user in search');
           return;
         })
         .catch(err => {
