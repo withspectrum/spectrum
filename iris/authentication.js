@@ -1,17 +1,9 @@
 // @flow
-// $FlowFixMe
-const env = require('node-env-file');
-const path = require('path');
-env(path.resolve(__dirname, './.env'), { raise: false });
-// $FlowFixMe
+require('now-env');
 const passport = require('passport');
-// $FlowFixMe
 const { Strategy: TwitterStrategy } = require('passport-twitter');
-// $FlowFixMe
 const { Strategy: FacebookStrategy } = require('passport-facebook');
-// $FlowFixMe
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
-// $FlowFixMe
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
 

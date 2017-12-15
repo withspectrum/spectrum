@@ -10,6 +10,7 @@ import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
 import { getChannelThreads } from '../../views/channel/queries';
 import { getCurrentUserProfile } from '../../api/user';
+import { searchThreadsQuery } from '../../api/thread';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -30,6 +31,7 @@ import {
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
+  SearchStringHeader,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -41,6 +43,10 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
 );
 
 const ChannelThreadFeed = compose(connect(), getChannelThreads)(
+  DashboardThreadFeed
+);
+
+const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
   DashboardThreadFeed
 );
 
@@ -82,7 +88,23 @@ class Dashboard extends Component {
       activeChannel,
       isLoading,
       hasError,
+      searchResults,
+      searchQueryString,
     } = this.props;
+
+    let searchFilter = {};
+    if (activeChannel) {
+      searchFilter.everythingFeed = false;
+      searchFilter.communityId = null;
+      searchFilter.channelId = activeChannel;
+    } else if (activeCommunity) {
+      (searchFilter.everythingFeed = false), (searchFilter.channelId = null);
+      searchFilter.communityId = activeCommunity;
+    } else {
+      searchFilter.channelId = null;
+      searchFilter.communityId = null;
+      searchFilter.everythingFeed = true;
+    }
 
     const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
@@ -108,7 +130,7 @@ class Dashboard extends Component {
       return (
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
-          <Titlebar />
+          <Titlebar hasSearch />
           <CommunityListWrapper
             data-e2e-id="inbox-community-list"
             onMouseEnter={this.setHover}
@@ -127,39 +149,66 @@ class Dashboard extends Component {
 
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Header />
+              <Header filter={searchFilter} />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />
             )}
-            <InboxScroller id="scroller-for-inbox">
-              {!activeCommunity ? (
-                <EverythingThreadFeed selectedId={activeThread} />
-              ) : activeChannel ? (
-                <ChannelThreadFeed
-                  id={activeChannel}
-                  selectedId={activeThread}
-                  hasActiveCommunity={activeCommunity}
-                  hasActiveChannel={activeChannel}
-                  community={activeCommunityObject}
-                  pinnedThreadId={
-                    activeCommunityObject &&
-                    activeCommunityObject.pinnedThreadId
-                  }
-                  channelId={activeChannel}
-                />
-              ) : (
-                <CommunityThreadFeed
-                  id={activeCommunity}
-                  selectedId={activeThread}
-                  hasActiveCommunity={activeCommunity}
-                  community={activeCommunityObject}
-                  pinnedThreadId={
-                    activeCommunityObject &&
-                    activeCommunityObject.pinnedThreadId
-                  }
-                />
+            {searchQueryString &&
+              searchQueryString.length > 0 && (
+                <SearchStringHeader>
+                  Search results for "{searchQueryString}"
+                </SearchStringHeader>
               )}
+            <InboxScroller id="scroller-for-inbox">
+              {searchQueryString &&
+                searchQueryString.length > 0 &&
+                searchFilter && (
+                  <SearchThreadFeed
+                    queryString={searchQueryString}
+                    filter={searchFilter}
+                  />
+                )}
+
+              {// no community, no search results
+              !activeCommunity &&
+                !searchQueryString && (
+                  <EverythingThreadFeed selectedId={activeThread} />
+                )}
+
+              {// community, no channel, no search results
+              activeCommunity &&
+                !activeChannel &&
+                !searchQueryString && (
+                  <CommunityThreadFeed
+                    id={activeCommunity}
+                    selectedId={activeThread}
+                    hasActiveCommunity={activeCommunity}
+                    community={activeCommunityObject}
+                    pinnedThreadId={
+                      activeCommunityObject &&
+                      activeCommunityObject.pinnedThreadId
+                    }
+                  />
+                )}
+
+              {// channel and community, no search results
+              activeChannel &&
+                activeCommunity &&
+                !searchQueryString && (
+                  <ChannelThreadFeed
+                    id={activeChannel}
+                    selectedId={activeThread}
+                    hasActiveCommunity={activeCommunity}
+                    hasActiveChannel={activeChannel}
+                    community={activeCommunityObject}
+                    pinnedThreadId={
+                      activeCommunityObject &&
+                      activeCommunityObject.pinnedThreadId
+                    }
+                    channelId={activeChannel}
+                  />
+                )}
             </InboxScroller>
           </InboxWrapper>
 
@@ -203,6 +252,7 @@ const map = state => ({
   activeThread: state.dashboardFeed.activeThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
   activeChannel: state.dashboardFeed.activeChannel,
+  searchQueryString: state.dashboardFeed.search.queryString,
 });
 export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
   Dashboard

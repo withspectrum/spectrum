@@ -1,12 +1,7 @@
 // @flow
-const env = require('node-env-file');
+require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
-const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'), { raise: false });
-}
 import { Router } from 'express';
-// $FlowIssue
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
 import { updateUserEmail } from '../../models/user';

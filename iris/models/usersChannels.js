@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 
 /*
 ===========================================================
@@ -200,7 +198,7 @@ const createOrUpdatePendingUserInChannel = (
           .run();
       }
     })
-    .then(result => {
+    .then(() => {
       return db.table('channels').get(channelId);
     });
 };
@@ -607,4 +605,6 @@ module.exports = {
   getUserPermissionsInChannel,
   getUsersPermissionsInChannels,
   getPendingUsersInChannels,
+  // constants
+  DEFAULT_USER_CHANNEL_PERMISSIONS,
 };

@@ -32,7 +32,7 @@ To install all necessary dependencies for the frontend and for `iris` (the web s
 npm install
 ```
 
-To install the dependencies for `athena`, `hermes`, `chronos`, and `mercury`:
+To install the dependencies for `athena`, `hermes`, `chronos`, `mercury` and `vulcan`:
 
 ```sh
 # Navigate to the hermes/ folder
@@ -61,6 +61,12 @@ npm install
 cd ..
 # Navigate to the hyperion/ folder
 cd hyperion 
+# Install the dependencies
+npm install
+# Navigate back to the root folder
+cd ..
+# Navigate to the vulcan/ folder
+cd vulcan
 # Install the dependencies
 npm install
 # Navigate back to the root folder

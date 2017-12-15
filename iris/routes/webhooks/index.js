@@ -1,15 +1,6 @@
 // @flow
-// $FlowFixMe
-const env = require('node-env-file');
-const IS_PROD = process.env.NODE_ENV === 'production';
-// $FlowFixMe
-const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'), { raise: false });
-}
+require('now-env');
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
-const STRIPE_WEBHOOK_SECRET = process.env['STRIPE_WEBHOOK_SECRET'];
-// $FlowFixMe
 const stripe = require('stripe')(STRIPE_TOKEN),
   currency = 'USD';
 

@@ -13,6 +13,7 @@ import { LoadingScreen } from '../../components/loading';
 import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
+import Search from './components/search';
 import { getUserThreads, getUser } from './queries';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
@@ -22,7 +23,9 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
+import { searchThreadsQuery } from '../../api/thread';
 
+const SearchFeed = compose(connect(), searchThreadsQuery)(ThreadFeed);
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
   ThreadFeed
@@ -149,6 +152,14 @@ class UserView extends React.Component<Props, State> {
           <Column type="primary" alignItems="center">
             <SegmentedControl style={{ margin: '-16px 0 16px' }}>
               <DesktopSegment
+                segmentLabel="search"
+                onClick={() => this.handleSegmentClick('search')}
+                selected={selectedView === 'search'}
+              >
+                Search
+              </DesktopSegment>
+
+              <DesktopSegment
                 segmentLabel="participant"
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
@@ -164,6 +175,13 @@ class UserView extends React.Component<Props, State> {
                 Threads
               </DesktopSegment>
               <MobileSegment
+                segmentLabel="search"
+                onClick={() => this.handleSegmentClick('search')}
+                selected={selectedView === 'search'}
+              >
+                Search
+              </MobileSegment>
+              <MobileSegment
                 segmentLabel="participant"
                 onClick={() => this.handleSegmentClick('participant')}
                 selected={selectedView === 'participant'}
@@ -178,16 +196,21 @@ class UserView extends React.Component<Props, State> {
                 Threads
               </MobileSegment>
             </SegmentedControl>
-            {hasThreads && (
-              <Feed
-                userId={user.id}
-                username={username}
-                viewContext="profile"
-                hasNoThreads={this.hasNoThreads}
-                hasThreads={this.hasThreads}
-                kind={selectedView}
-              />
-            )}
+
+            {hasThreads &&
+              (selectedView === 'creator' ||
+                selectedView === 'participant') && (
+                <Feed
+                  userId={user.id}
+                  username={username}
+                  viewContext="profile"
+                  hasNoThreads={this.hasNoThreads}
+                  hasThreads={this.hasThreads}
+                  kind={selectedView}
+                />
+              )}
+
+            {selectedView === 'search' && <Search user={user} />}
 
             {!hasThreads && <NullState bg="null" heading={nullHeading} />}
           </Column>
