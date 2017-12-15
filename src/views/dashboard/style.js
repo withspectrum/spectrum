@@ -854,3 +854,8 @@ export const SearchStringHeader = styled.div`
   font-weight: 600;
   border-bottom: 1px solid ${props => props.theme.bg.border};
 `;
+
+export const SearchForm = styled.form`
+  display: flex;
+  flex: 1;
+`;

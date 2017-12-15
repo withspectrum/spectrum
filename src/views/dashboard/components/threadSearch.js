@@ -1,7 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { SearchWrapper, SearchInput, ClearSearch } from '../style';
+import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from '../style';
 import Icon from '../../../components/icons';
 import { throttle } from '../../../helpers/utils';
 import {
@@ -38,13 +38,13 @@ class ThreadSearch extends React.Component<Props, State> {
       if (!this.props.isOpen) return;
       this.close();
     }
+  };
 
-    // enter
-    if (e.keyCode === 13) {
-      const searchString = e.target.value.toLowerCase().trim();
-      if (searchString.length > 0) {
-        this.props.dispatch(setSearchStringVariable(searchString));
-      }
+  submit = e => {
+    e.preventDefault();
+    const searchString = this.state.value.toLowerCase().trim();
+    if (searchString.length > 0) {
+      this.props.dispatch(setSearchStringVariable(searchString));
     }
   };
 
@@ -91,16 +91,18 @@ class ThreadSearch extends React.Component<Props, State> {
         >
           <span>&times;</span>
         </ClearSearch>
-        <SearchInput
-          isOpen={isOpen}
-          onBlur={this.close}
-          onChange={this.onChange}
-          value={value}
-          placeholder={placeholder}
-          innerRef={input => {
-            this.searchInput = input;
-          }}
-        />
+        <SearchForm onSubmit={this.submit}>
+          <SearchInput
+            isOpen={isOpen}
+            onBlur={this.close}
+            onChange={this.onChange}
+            value={value}
+            placeholder={placeholder}
+            innerRef={input => {
+              this.searchInput = input;
+            }}
+          />
+        </SearchForm>
       </SearchWrapper>
     );
   }
