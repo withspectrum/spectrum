@@ -22,7 +22,13 @@ type State = {
   value: string,
 };
 class ThreadSearch extends React.Component<Props, State> {
-  state = { value: '' };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: props.queryString ? props.queryString : '',
+    };
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress, false);
@@ -108,5 +114,8 @@ class ThreadSearch extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ isOpen: state.dashboardFeed.search.isOpen });
+const map = state => ({
+  isOpen: state.dashboardFeed.search.isOpen,
+  queryString: state.dashboardFeed.search.queryString,
+});
 export default compose(connect(map))(ThreadSearch);

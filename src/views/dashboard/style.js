@@ -829,7 +829,7 @@ export const ClearSearch = styled.span`
   border-radius: 50%;
   font-size: 20px;
   position: absolute;
-  right: 4px;
+  right: 1px;
   top: 50%;
   color: ${props => props.theme.text.alt};
   transform: translate(-4px, -50%);
