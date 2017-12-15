@@ -21,12 +21,22 @@ import {
 } from './text-parsing';
 
 export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
+  let title = thread.content.title;
   let body =
     thread.type === 'DRAFTJS'
       ? thread.content.body
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : ''
       : thread.content.body || '';
+
+  // filter out stop words
+  body = withoutStopWords(body);
+  // filter out swear words
+  body = withoutSwearWords(body);
+  // filter out stop words
+  title = withoutStopWords(title);
+  // filter out swear words
+  title = withoutSwearWords(title);
 
   // algolia only supports 20kb records
   // slice it down until its under 19k, leaving room for the rest of the thread data
@@ -44,7 +54,7 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
       body: '',
     },
     threadContent: {
-      title: thread.content.title,
+      title,
       body,
     },
     objectID: thread.id,
@@ -132,10 +142,16 @@ export const dbMessageToSearchThread = async (
 };
 
 export const dbUserToSearchUser = (user: DBUser): SearchUser => {
+  let description = user.description;
+  // filter out stop words
+  description = description && withoutStopWords(description);
+  // filter out swear words
+  description = description && withoutSwearWords(description);
+
   return {
     name: user.name,
     username: user.username,
-    description: user.description,
+    description,
     website: user.website,
     id: user.id,
     objectID: user.id,
@@ -144,14 +160,22 @@ export const dbUserToSearchUser = (user: DBUser): SearchUser => {
 
 export const dbCommunityToSearchCommunity = (
   community: DBCommunity
-): SearchCommunity => ({
-  id: community.id,
-  description: community.description,
-  name: community.name,
-  slug: community.slug,
-  website: community.website ? community.website : null,
-  objectID: community.id,
-});
+): SearchCommunity => {
+  let description = community.description;
+  // filter out stop words
+  description = description && withoutStopWords(description);
+  // filter out swear words
+  description = description && withoutSwearWords(description);
+
+  return {
+    id: community.id,
+    description,
+    name: community.name,
+    slug: community.slug,
+    website: community.website ? community.website : null,
+    objectID: community.id,
+  };
+};
 
 export const NEW_DOCUMENTS = db
   .row('old_val')

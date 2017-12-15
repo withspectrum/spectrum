@@ -2,6 +2,9 @@ require('now-env');
 const { toPlainText, toState } = require('shared/draft-utils');
 const initIndex = require('shared/algolia');
 const searchIndex = initIndex('threads_and_messages');
+const stopword = require('stopword');
+const Filter = require('bad-words');
+const filter = new Filter({ placeHolder: ' ' });
 
 const byteCount = str => {
   // returns the byte length of an utf8 string
@@ -15,6 +18,31 @@ const byteCount = str => {
   return s;
 };
 
+const strToArray = str => {
+  // turn the string into an array of words
+  return (
+    str
+      .split(' ')
+      // remove any space characters
+      .filter(n => n.length > 0)
+      // remove any newline characters
+      .filter(n => n !== '\n')
+  );
+};
+
+const withoutStopWords = str => {
+  // turn the string into an array of words
+  const arr = strToArray(str);
+  // filter out any words that are considered stop words
+  const cleaned = stopword.removeStopwords(arr);
+  // join the array back into a string
+  const joined = cleaned.join(' ');
+  // return the string
+  return joined;
+};
+
+const withoutSwearWords = str => filter.clean(str);
+
 exports.up = function(r, conn) {
   return r
     .table('threads')
@@ -23,12 +51,22 @@ exports.up = function(r, conn) {
     .then(cursor => cursor.toArray())
     .then(threads =>
       threads.map(thread => {
+        let title = thread.content.title;
         let body =
           thread.type === 'DRAFTJS'
             ? thread.content.body
               ? toPlainText(toState(JSON.parse(thread.content.body)))
               : ''
             : thread.content.body || '';
+
+        // filter out stop words
+        body = withoutStopWords(body);
+        // filter out swear words
+        body = withoutSwearWords(body);
+        // filter out stop words
+        title = withoutStopWords(title);
+        // filter out swear words
+        title = withoutSwearWords(title);
 
         // algolia only supports 20kb records
         // slice it down until its under 19k, leaving room for the rest of the thread data
@@ -46,7 +84,7 @@ exports.up = function(r, conn) {
             body: '',
           },
           threadContent: {
-            title: thread.content.title,
+            title,
             body,
           },
           objectID: thread.id,
