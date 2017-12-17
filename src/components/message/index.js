@@ -86,6 +86,7 @@ class Message extends Component {
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
             hideIndicator={hideIndicator}
+            isOptimisticMessage={message.id < 0}
           >
             {reaction &&
               reactable && (

@@ -1,7 +1,6 @@
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { getChannels } from '../models/channel';
-import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getCommunityRecurringPayments } from '../models/recurringPayment';
@@ -18,11 +17,10 @@ const {
   deleteThread,
   setThreadLock,
   editThread,
-  updateThreadWithImages,
+  moveThread,
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
 import { addQueue } from '../utils/workerQueue';
-import { toState, toPlainText } from 'shared/draft-utils';
 
 module.exports = {
   Mutation: {
@@ -422,6 +420,48 @@ module.exports = {
           }
         })
         .then(() => getThread(threadId));
+    },
+    moveThread: async (_: any, { threadId, channelId }, { user }) => {
+      const currentUser = user;
+      if (!currentUser)
+        throw new UserError('You must be signed in to move a thread.');
+
+      const thread = await getThread(threadId);
+      if (!thread) throw new UserError('Cannot move a non-existant thread.');
+
+      const {
+        isOwner,
+        isModerator,
+        isBlocked,
+      } = await getUserPermissionsInCommunity(
+        thread.communityId,
+        currentUser.id
+      );
+
+      if (isBlocked) {
+        throw new UserError(
+          "You don't have permission to post in that channelId."
+        );
+      }
+
+      if (thread.creatorId !== currentUser.id && (!isOwner && !isModerator))
+        throw new UserError(
+          'You have to be a moderator or owner of the community to move a thread.'
+        );
+
+      const [newChannel] = await getChannels([channelId]);
+      if (newChannel.communityId !== thread.communityId)
+        throw new UserError(
+          'You can only move threads within the same community.'
+        );
+
+      return moveThread(threadId, channelId).then(res => {
+        if (res) return res;
+
+        throw new UserError(
+          'Oops, something went wrong with moving the thread. Please try again!'
+        );
+      });
     },
   },
 };

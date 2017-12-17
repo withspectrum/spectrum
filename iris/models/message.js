@@ -1,9 +1,8 @@
 //@flow
 const { db } = require('./db');
 import { addQueue } from '../utils/workerQueue';
-const { listenToNewDocumentsIn } = require('./utils');
-const { setThreadLastActive } = require('./thread');
-import checkMessageToxicity from '../utils/moderationEvents/message';
+import { listenToNewDocumentsIn } from './utils';
+import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';
 // TODO: Fix this
@@ -99,14 +98,13 @@ export const storeMessage = (
       }
 
       if (message.threadType === 'story') {
-        checkMessageToxicity(message);
-        addQueue('message notification', { message, userId });
+        addQueue('message notification', { message });
+        addQueue('process admin toxic message', { message });
         addQueue('process reputation event', {
           userId,
           type: 'message created',
           entityId: message.threadId,
         });
-
         setThreadLastActive(message.threadId, message.timestamp);
       }
 
@@ -155,6 +153,16 @@ export const deleteMessage = (userId: string, id: string) => {
       });
       return res;
     });
+};
+
+export const deleteMessagesInThread = (threadId: string) => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .update({
+      deletedAt: new Date(),
+    })
+    .run();
 };
 
 export const userHasMessagesInThread = (threadId: string, userId: string) => {

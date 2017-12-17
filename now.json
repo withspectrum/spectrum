@@ -11,6 +11,9 @@
 		"COMPOSE_REDIS_PASSWORD": "@compose-redis-password",
 		"COMPOSE_REDIS_URL": "@compose-redis-url",
 		"COMPOSE_REDIS_PORT": "@compose-redis-port",
+		"REDIS_CACHE_PORT": "@redis-labs-port",
+		"REDIS_CACHE_URL": "@redis-labs-url",
+		"REDIS_CACHE_PASSWORD": "@redis-labs-password",
 		"VAPID_PUBLIC_KEY": "@vapid-public-key",
 		"VAPID_PRIVATE_KEY": "@vapid-private-key",
     "OPTICS_API_KEY": "@optics-api-key",
@@ -24,6 +27,8 @@
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
 		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
 		"PERSPECTIVE_API_KEY": "@perspective-api-key",
-        "SESSION_COOKIE_SECRET": "@session-cookie-secret"
+		"SESSION_COOKIE_SECRET": "@session-cookie-secret",
+		"ALGOLIA_APP_ID": "@algolia-app-id",
+		"ALGOLIA_API_SECRET": "@algolia-api-secret"
 	}
 }

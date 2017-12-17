@@ -148,6 +148,7 @@ export const createCommunity = (
         profilePhoto: null,
         coverPhoto: null,
         slug,
+        modifiedAt: null,
       },
       { returnChanges: true }
     )
@@ -311,6 +312,7 @@ export const editCommunity = ({
         slug,
         description,
         website,
+        modifiedAt: new Date(),
       });
     })
     .then(community => {

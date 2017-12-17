@@ -45,6 +45,7 @@ class Titlebar extends Component {
       subtitle,
       provideBack,
       noComposer,
+      hasSearch,
       messageComposer,
     } = this.props;
     return (
@@ -55,6 +56,10 @@ class Titlebar extends Component {
             color="text.reverse"
             onClick={this.handleBack}
           />
+        ) : hasSearch ? (
+          <Link to={`/new/search`}>
+            <IconButton glyph="search" color="text.reverse" />
+          </Link>
         ) : (
           <Spacer />
         )}

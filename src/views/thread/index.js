@@ -78,7 +78,10 @@ class ThreadContainer extends React.Component<Props, State> {
     // to the top before continuing with logic to force scroll to the bottom
     const { scrollElement } = this.state;
     if (
+      prevProps.data &&
       prevProps.data.thread &&
+      this.props.data &&
+      this.props.data.thread &&
       prevProps.data.thread.id !== this.props.data.thread.id
     ) {
       track('thread', 'viewed', null);

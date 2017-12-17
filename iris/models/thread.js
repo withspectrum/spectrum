@@ -2,12 +2,8 @@
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
 import { addQueue } from '../utils/workerQueue';
-import checkThreadToxicity from '../utils/moderationEvents/thread';
-const {
-  listenToNewDocumentsIn,
-  NEW_DOCUMENTS,
-  parseRange,
-} = require('./utils');
+const { NEW_DOCUMENTS, parseRange } = require('./utils');
+import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
@@ -348,14 +344,13 @@ export const publishThread = (
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
-
       addQueue('thread notification', { thread });
       addQueue('process reputation event', {
         userId,
         type: 'thread created',
         entityId: thread.id,
       });
-      checkThreadToxicity(thread);
+      addQueue('process admin toxic thread', { thread });
 
       return thread;
     });
@@ -416,7 +411,11 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     )
     .run()
     .then(result =>
-      Promise.all([result, turnOffAllThreadNotifications(threadId)])
+      Promise.all([
+        result,
+        turnOffAllThreadNotifications(threadId),
+        deleteMessagesInThread(threadId),
+      ])
     )
     .then(([result]) => {
       const thread = result.changes[0].new_val;
@@ -464,13 +463,12 @@ export const editThread = (
     .then(result => {
       // if an update happened
       if (result.replaced === 1) {
-        return result.changes[0].new_val;
+        const thread = result.changes[0].new_val;
+        return thread;
       }
 
       // an update was triggered from the client, but no data was changed
-      if (result.unchanged === 1) {
-        return result.changes[0].old_val;
-      }
+      return result.changes[0].old_val;
     });
 };
 
@@ -497,6 +495,23 @@ export const updateThreadWithImages = (id: string, body: string) => {
       if (result.unchanged === 1) {
         return result.changes[0].old_val;
       }
+    });
+};
+
+export const moveThread = (id: string, channelId: string) => {
+  return db
+    .table('threads')
+    .get(id)
+    .update(
+      {
+        channelId,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      if (result.replaced === 1) return result.changes[0].new_val;
+      return null;
     });
 };
 

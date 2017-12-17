@@ -11,10 +11,13 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
+import EmptySearchFeed from './emptySearchFeed';
 import InboxThread, { WatercoolerThread } from './inboxThread';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 
 type Props = {
   mountedWithActiveThread: ?string,
+  queryString?: ?string,
 };
 
 type State = {
@@ -25,6 +28,9 @@ type State = {
 class ThreadFeed extends React.Component<Props, State> {
   constructor() {
     super();
+
+    this.innerScrollElement = null;
+
     this.state = {
       scrollElement: null,
       subscription: null,
@@ -102,7 +108,12 @@ class ThreadFeed extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
-    const { mountedWithActiveThread } = this.props;
+    const { mountedWithActiveThread, isFetchingMore, queryString } = this.props;
+
+    // user is searching, don't select anything
+    if (queryString) {
+      return;
+    }
 
     // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
     if (this.props.data.threads && mountedWithActiveThread) {
@@ -111,6 +122,22 @@ class ThreadFeed extends React.Component<Props, State> {
       }
       this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
       return;
+    }
+
+    if (
+      // a thread has been selected
+      ((!prevProps.selectedId && this.props.selectedId) ||
+        prevProps.selectedId !== this.props.selectedId ||
+        prevProps.activeCommunity !== this.props.activeCommunity) &&
+      // elems exist
+      this.innerScrollElement &&
+      scrollElement &&
+      // the threads height is less than the container scroll area
+      this.innerScrollElement.offsetHeight < scrollElement.offsetHeight &&
+      // the component isn't currently fetching more
+      !isFetchingMore
+    ) {
+      this.props.data.fetchMore();
     }
 
     // don't select a thread if the composer is open
@@ -196,8 +223,10 @@ class ThreadFeed extends React.Component<Props, State> {
   render() {
     const {
       data: { threads, networkStatus },
+      data,
       selectedId,
       activeCommunity,
+      queryString,
     } = this.props;
     const { scrollElement } = this.state;
 
@@ -209,7 +238,10 @@ class ThreadFeed extends React.Component<Props, State> {
     if (networkStatus === 8) return <ErrorThreadFeed />;
 
     // no threads yet
-    if (threads.length === 0) return <EmptyThreadFeed />;
+    if (threads.length === 0 && !queryString) return <EmptyThreadFeed />;
+
+    if (threads.length === 0 && queryString)
+      return <EmptySearchFeed queryString={queryString} />;
 
     const threadNodes = threads.slice().map(thread => thread.node);
 
@@ -240,7 +272,10 @@ class ThreadFeed extends React.Component<Props, State> {
     }
 
     return (
-      <div data-e2e-id="inbox-thread-feed">
+      <div
+        data-e2e-id="inbox-thread-feed"
+        ref={el => (this.innerScrollElement = el)}
+      >
         {this.props.data.community &&
           this.props.data.community.watercooler &&
           this.props.data.community.watercooler.id && (
@@ -291,4 +326,6 @@ const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
 });
-export default compose(withRouter, connect(map))(ThreadFeed);
+export default compose(withRouter, connect(map), viewNetworkHandler)(
+  ThreadFeed
+);

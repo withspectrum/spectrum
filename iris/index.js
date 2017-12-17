@@ -6,17 +6,10 @@ console.log('Server starting...');
 const compression = require('compression');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');
-import path from 'path';
 import { createServer } from 'http';
 import express from 'express';
-import * as graphql from 'graphql';
-
 import Raven from 'shared/raven';
-import schema from './schema';
 import { init as initPassport } from './authentication.js';
-import createLoaders from './loaders';
-
-const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
 
 // Initialize authentication
@@ -63,7 +56,7 @@ console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
-    await new Promise(res => Raven.captureException(err, res));
+    await new Promise(resolve => Raven.captureException(err, resolve));
   } catch (err) {
     console.error('Raven error', err);
   } finally {
@@ -74,7 +67,7 @@ process.on('unhandledRejection', async err => {
 process.on('uncaughtException', async err => {
   console.error('Uncaught exception', err);
   try {
-    await new Promise(res => Raven.captureException(err, res));
+    await new Promise(resolve => Raven.captureException(err, resolve));
   } catch (err) {
     console.error('Raven error', err);
   } finally {

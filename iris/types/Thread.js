@@ -57,8 +57,16 @@ const Thread = /* GraphQL */ `
         currentUserLastSeen: Date
 	}
 
+	input SearchThreadsFilter {
+		communityId: ID
+		creatorId: ID
+		channelId: ID
+		everythingFeed: Boolean
+	}
+
 	extend type Query {
 		thread(id: ID!): Thread
+		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
 	}
 
 	input AttachmentInput {
@@ -93,6 +101,7 @@ const Thread = /* GraphQL */ `
 		setThreadLock(threadId: ID!, value: Boolean!): Thread
 		toggleThreadNotifications(threadId: ID!): Thread
 		deleteThread(threadId: ID!): Boolean
+        moveThread(threadId: ID!, channelId: ID!): Thread
 	}
 
 	extend type Subscription {

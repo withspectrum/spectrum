@@ -339,7 +339,7 @@ export const ThreadScroller = styled.div`
 export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 export const ThreadComposerContainer = styled.div`
@@ -688,6 +688,7 @@ export const NullThreadFeed = styled.div`
   justify-content: center;
   padding: 32px;
   flex-direction: column;
+  background: ${props => props.theme.bg.wash};
 `;
 
 export const NullHeading = styled.p`
@@ -775,4 +776,87 @@ export const UpsellExploreDivider = styled.div`
   display: block;
   width: 100%;
   margin: 16px 0 16px;
+`;
+
+export const SearchWrapper = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  flex: ${props => (props.isOpen ? 'auto' : '0 0 40px')};
+  overflow: ${props => (props.isOpen ? 'visible' : 'hidden')};
+  transition: all 0.2s;
+  margin-right: 8px;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translate(-4px, -50%);
+    cursor: pointer;
+    border-radius: 40px;
+  }
+`;
+
+export const SearchInput = styled.input`
+  padding: 6px 8px;
+  padding-left: 40px;
+  font-size: 16px;
+  border-radius: 40px;
+  display: flex;
+  flex: 1;
+  transition: all 0.2s;
+  border: 1px solid
+    ${props => (props.isOpen ? props.theme.bg.border : 'transparent')};
+  color: ${props => props.theme.text.alt};
+  padding-right: 40px;
+
+  &:focus {
+    background: ${props => props.theme.bg.wash};
+    color: ${props => props.theme.text.default};
+    border: 1px solid ${props => props.theme.bg.border};
+  }
+`;
+
+export const ClearSearch = styled.span`
+  width: 24px;
+  height: 24px;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: ${props => props.theme.bg.border};
+  border-radius: 50%;
+  font-size: 20px;
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  color: ${props => props.theme.text.alt};
+  transform: translate(-4px, -50%);
+  font-weight: 500;
+  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${props => props.theme.text.alt};
+    color: ${props => props.theme.text.reverse};
+  }
+
+  span {
+    position: relative;
+    top: -2px;
+  }
+`;
+
+export const SearchStringHeader = styled.div`
+  background: #fff;
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+`;
+
+export const SearchForm = styled.form`
+  display: flex;
+  flex: 1;
 `;
