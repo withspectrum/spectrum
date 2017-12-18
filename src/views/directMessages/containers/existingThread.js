@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
@@ -7,17 +8,33 @@ import { setLastSeenMutation } from '../../../api/directMessageThread';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import { getDirectMessageThread } from '../../../api/directMessageThread';
 import { MessagesContainer, ViewContent } from '../style';
+import { Loading } from '../../../components/loading';
+import ViewError from '../../../components/viewError';
 
-class ExistingThread extends Component {
+type Props = {
+  data: Object,
+  isLoading: boolean,
+  setActiveThread: Function,
+  setLastSeen: Function,
+  match: Object,
+  id: ?string,
+  currentUser: Object,
+};
+class ExistingThread extends React.Component<Props> {
+  scrollBody: ?HTMLDivElement;
+  chatInput: ?ChatInput;
+
   componentDidMount() {
-    const threadId = this.props.match.params.threadId;
+    const threadId = this.props.id;
     this.props.setActiveThread(threadId);
     this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
 
     // autofocus on desktop
-    if (window && window.innerWidth > 768) {
+    if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.triggerFocus();
     }
 
@@ -28,7 +45,11 @@ class ExistingThread extends Component {
     // if the thread slider is open, dont be focusing shit up in heyuhr
     if (this.props.threadSliderIsOpen) return;
     // if the thread slider is closed and we're viewing DMs, refocus the chat input
-    if (prevProps.threadSliderIsOpen && !this.props.threadSliderIsOpen) {
+    if (
+      prevProps.threadSliderIsOpen &&
+      !this.props.threadSliderIsOpen &&
+      this.chatInput
+    ) {
       this.chatInput.triggerFocus();
     }
     if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
@@ -37,7 +58,7 @@ class ExistingThread extends Component {
       this.props.setLastSeen(threadId);
       this.forceScrollToBottom();
       // autofocus on desktop
-      if (window && window.innerWidth > 768) {
+      if (window && window.innerWidth > 768 && this.chatInput) {
         this.chatInput.triggerFocus();
       }
     }
@@ -59,32 +80,46 @@ class ExistingThread extends Component {
 
   render() {
     const id = this.props.match.params.threadId;
-    const { threads, currentUser } = this.props;
+    const { currentUser, data, isLoading } = this.props;
 
     if (id !== 'new') {
-      const thread = threads.filter(thread => thread.id === id)[0];
+      if (data.directMessageThread) {
+        const thread = data.directMessageThread;
+        return (
+          <MessagesContainer>
+            <ViewContent
+              innerRef={scrollBody => (this.scrollBody = scrollBody)}
+            >
+              <Header thread={thread} currentUser={currentUser} />
+              <Messages
+                id={id}
+                threadType={thread.threadType}
+                currentUser={currentUser}
+                forceScrollToBottom={this.forceScrollToBottom}
+                contextualScrollToBottom={this.contextualScrollToBottom}
+              />
+            </ViewContent>
+
+            <ChatInput
+              thread={id}
+              currentUser={currentUser}
+              threadType={'directMessageThread'}
+              forceScrollToBottom={this.forceScrollToBottom}
+              onRef={chatInput => (this.chatInput = chatInput)}
+            />
+          </MessagesContainer>
+        );
+      }
+
+      if (isLoading) {
+        return <Loading />;
+      }
 
       return (
-        <MessagesContainer>
-          <ViewContent innerRef={scrollBody => (this.scrollBody = scrollBody)}>
-            <Header thread={thread} currentUser={currentUser} />
-            <Messages
-              id={id}
-              threadType={thread.threadType}
-              currentUser={currentUser}
-              forceScrollToBottom={this.forceScrollToBottom}
-              contextualScrollToBottom={this.contextualScrollToBottom}
-            />
-          </ViewContent>
-
-          <ChatInput
-            thread={id}
-            currentUser={currentUser}
-            threadType={'directMessageThread'}
-            forceScrollToBottom={this.forceScrollToBottom}
-            onRef={chatInput => (this.chatInput = chatInput)}
-          />
-        </MessagesContainer>
+        <ViewError
+          heading={'We had trouble loading this conversation'}
+          refresh
+        />
       );
     }
 
@@ -97,6 +132,11 @@ class ExistingThread extends Component {
 }
 
 const map = state => ({ threadSliderIsOpen: state.threadSlider.isOpen });
-export default compose(connect(map), setLastSeenMutation, withApollo)(
-  ExistingThread
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getDirectMessageThread,
+  setLastSeenMutation,
+  withApollo,
+  viewNetworkHandler
+)(ExistingThread);
