@@ -119,39 +119,45 @@ module.exports = {
         );
 
       debug(`get messages for ${id}`);
-      const cursor = after || before;
-      let timestamp;
+      let cursor = after || before;
+      let userLastSeen;
       try {
-        timestamp = parseInt(decode(cursor), 10);
+        cursor = parseInt(decode(cursor), 10);
       } catch (err) {
         debug(err);
         throw new UserError(
           'Invalid cursor passed to "after" parameter of thread.messageConnection.'
         );
       }
-      if (!timestamp && user) {
+      if (!cursor && user) {
         debug(
           `no valid cursor provided, trying userLastSeen for user ${user.id}`
         );
         try {
-          timestamp = await loaders.userThreadNotificationStatus
+          userLastSeen = await loaders.userThreadNotificationStatus
             .load([user.id, id])
             .then(result => result && result.lastSeen);
+          if (userLastSeen) {
+            debug(
+              `user last seen record found, using as cursor: ${userLastSeen}`
+            );
+            cursor = userLastSeen;
+          }
         } catch (err) {
           // Ignore errors from getting user last seen
         }
       }
-      debug(`cursor: ${timestamp}`);
+      debug(`cursor: ${cursor}`);
 
       let options = {
         // Default first/last to 50 if their counterparts after/before are provided
         // so users can query messageConnection(after: "cursor") or (before: "cursor")
+        // without any more options
         first: first ? first : after ? 50 : null,
         last: last ? last : before ? 50 : null,
-        // Set after/before to the parsed timestamp depending on which one was requested
-        // by the user
-        after: after ? timestamp : null,
-        before: before ? timestamp : null,
+        // Set after/before to the cursor depending on which one was requested by the user
+        after: after ? cursor : null,
+        before: before ? cursor : null,
       };
 
       // If we didn't get any arguments at all (i.e messageConnection {})
@@ -164,6 +170,22 @@ module.exports = {
       }
 
       debug('pagination options for query:', options);
+
+      const totalMessageCount = await loaders.threadMessageCount
+        .load(id)
+        .then(({ reduction }) => reduction);
+      // If we would paginate based on userLastSeen and more messages were requested then there are total don't paginate
+      if (
+        userLastSeen &&
+        ((options.first && options.first > totalMessageCount) ||
+          (options.last && options.last > totalMessageCount))
+      ) {
+        debug(
+          `less messages than requested total, not paginating based on userLastSeen`
+        );
+        options.after = null;
+        options.before = null;
+      }
 
       // Load one message too much so that we know whether there's
       // a next or previous page

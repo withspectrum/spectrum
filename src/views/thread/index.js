@@ -243,6 +243,7 @@ class ThreadContainer extends React.Component<Props, State> {
                   </WatercoolerIntroContainer>
                   {!isEditing && (
                     <Messages
+                      threadMessageCount={thread.messageCount}
                       threadType={thread.threadType}
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
@@ -350,6 +351,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
                 {!isEditing && (
                   <Messages
+                    threadMessageCount={thread.messageCount}
                     threadType={thread.threadType}
                     id={thread.id}
                     scrollContainer={this.state.messagesContainer}

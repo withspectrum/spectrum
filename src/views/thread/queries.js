@@ -38,7 +38,11 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
   options: props => ({
     variables: {
       id: props.id,
-      after: props.lastSeen && window.btoa(new Date(props.lastSeen).getTime()),
+      // Don't paginate based on lastSeen if there's less than 50 messages
+      after:
+        props.threadMessageCount > 50 && props.lastSeen
+          ? window.btoa(new Date(props.lastSeen).getTime())
+          : undefined,
     },
     fetchPolicy: 'cache-and-network',
   }),
