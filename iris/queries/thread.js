@@ -183,7 +183,9 @@ module.exports = {
         debug(
           `less messages than requested total, not paginating based on userLastSeen`
         );
+        // $FlowIssue
         options.after = null;
+        // $FlowIssue
         options.before = null;
       }
 
