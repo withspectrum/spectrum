@@ -1,7 +1,7 @@
 // @flow
 import axios from 'axios';
 
-export default async (text: string, contextId: string) => {
+export default async (text: string, contextId: string, userId: string) => {
   const request = await axios({
     method: 'post',
     url: 'https://api.prod.getspectrum.io/api/v1/classification',
@@ -14,6 +14,9 @@ export default async (text: string, contextId: string) => {
       method: 'classifyText',
       params: {
         text: text,
+        meta: {
+          authorId: userId,
+        },
       },
       id: contextId,
     },

@@ -1,7 +1,5 @@
 // @flow
 const stopword = require('stopword');
-const Filter = require('bad-words');
-const filter = new Filter({ placeHolder: ' ' });
 
 import createEmojiRegex from 'emoji-regex';
 
@@ -52,5 +50,3 @@ export const withoutStopWords = (str: string): string => {
   // return the string
   return joined;
 };
-
-export const withoutSwearWords = (str: string): string => filter.clean(str);
