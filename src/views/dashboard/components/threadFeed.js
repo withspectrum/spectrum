@@ -85,7 +85,7 @@ class ThreadFeed extends React.Component<Props, State> {
       // the component isn't currently fetching more
       !isFetchingMore
     ) {
-      this.props.datahasNextPage && this.props.data.fetchMore();
+      this.props.data.hasNextPage && this.props.data.fetchMore();
       return;
     }
 
