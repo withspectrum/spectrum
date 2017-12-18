@@ -1,7 +1,6 @@
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { getChannels } from '../models/channel';
-import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { getCommunityRecurringPayments } from '../models/recurringPayment';
@@ -18,12 +17,10 @@ const {
   deleteThread,
   setThreadLock,
   editThread,
-  updateThreadWithImages,
   moveThread,
 } = require('../models/thread');
 const { uploadImage } = require('../utils/s3');
 import { addQueue } from '../utils/workerQueue';
-import { toState, toPlainText } from 'shared/draft-utils';
 
 module.exports = {
   Mutation: {
@@ -447,7 +444,7 @@ module.exports = {
         );
       }
 
-      if (thread.creatorId !== currentUser.id || (!isOwner && !isModerator))
+      if (thread.creatorId !== currentUser.id && (!isOwner && !isModerator))
         throw new UserError(
           'You have to be a moderator or owner of the community to move a thread.'
         );

@@ -11,11 +11,13 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
+import EmptySearchFeed from './emptySearchFeed';
 import InboxThread, { WatercoolerThread } from './inboxThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 
 type Props = {
   mountedWithActiveThread: ?string,
+  queryString?: ?string,
 };
 
 type State = {
@@ -54,7 +56,12 @@ class ThreadFeed extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
-    const { mountedWithActiveThread, isFetchingMore } = this.props;
+    const { mountedWithActiveThread, isFetchingMore, queryString } = this.props;
+
+    // user is searching, don't select anything
+    if (queryString) {
+      return;
+    }
 
     // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
     if (this.props.data.threads && mountedWithActiveThread) {
@@ -164,8 +171,10 @@ class ThreadFeed extends React.Component<Props, State> {
   render() {
     const {
       data: { threads, networkStatus },
+      data,
       selectedId,
       activeCommunity,
+      queryString,
     } = this.props;
     const { scrollElement } = this.state;
 
@@ -177,7 +186,10 @@ class ThreadFeed extends React.Component<Props, State> {
     if (networkStatus === 8) return <ErrorThreadFeed />;
 
     // no threads yet
-    if (threads.length === 0) return <EmptyThreadFeed />;
+    if (threads.length === 0 && !queryString) return <EmptyThreadFeed />;
+
+    if (threads.length === 0 && queryString)
+      return <EmptySearchFeed queryString={queryString} />;
 
     const threadNodes = threads.slice().map(thread => thread.node);
 

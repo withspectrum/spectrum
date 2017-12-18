@@ -25,3 +25,24 @@ export const toggleComposer = () => {
     type: 'TOGGLE_COMPOSER',
   };
 };
+
+export const openSearch = () => {
+  return {
+    type: 'TOGGLE_SEARCH_OPEN',
+    value: true,
+  };
+};
+
+export const closeSearch = () => {
+  return {
+    type: 'TOGGLE_SEARCH_OPEN',
+    value: false,
+  };
+};
+
+export const setSearchStringVariable = (value: string) => {
+  return {
+    type: 'SET_SEARCH_VALUE_FOR_SERVER',
+    value,
+  };
+};

@@ -27,7 +27,7 @@ export type DBCommunity = {
   name: string,
   profilePhoto: string,
   slug: string,
-  website?: string,
+  website?: ?string,
   deletedAt?: Date,
   pinnedThreadId?: string,
   watercoolerId?: string,
@@ -197,10 +197,13 @@ export type DBThread = {
   createdAt: Date,
   creatorId: string,
   isPublished: boolean,
+  isLocked: boolean,
   lastActive: Date,
   modifiedAt?: Date,
   attachments?: Array<DBThreadAttachment>,
   edits?: Array<DBThreadEdits>,
+  watercooler?: boolean,
+  type: string,
 };
 
 export type DBUser = {
@@ -210,14 +213,17 @@ export type DBUser = {
   name: string,
   coverPhoto: string,
   profilePhoto: string,
-  providerId?: string,
-  githubProviderId?: string,
-  fbProviderId?: string,
-  googleProviderId?: string,
-  username?: string,
-  timezone?: number,
+  providerId?: ?string,
+  githubProviderId?: ?string,
+  fbProviderId?: ?string,
+  googleProviderId?: ?string,
+  username: ?string,
+  timezone?: ?number,
   isOnline?: boolean,
-  lastSeen?: Date,
+  lastSeen?: ?Date,
+  description?: ?string,
+  website?: ?string,
+  modifiedAt: ?Date,
 };
 
 export type DBUsersChannels = {
@@ -297,4 +303,37 @@ export type Mention = {
   senderId: string,
   username: string,
   type: 'thread' | 'message',
+};
+
+export type SearchThread = {
+  channelId: string,
+  communityId: string,
+  creatorId: string,
+  lastActive: number,
+  messageContent: {
+    body: ?string,
+  },
+  threadContent: {
+    title: string,
+    body: ?string,
+  },
+  createdAt: number,
+  threadId: string,
+  objectID: string,
+};
+
+export type SearchUser = {
+  description: ?string,
+  name: string,
+  username: ?string,
+  website: ?string,
+  objectID: string,
+};
+
+export type SearchCommunity = {
+  description: ?string,
+  name: string,
+  slug: string,
+  website: ?string,
+  objectID: string,
 };

@@ -164,6 +164,7 @@ class Messages extends Component<MessageGroupProps, State> {
         {messages.map((group, i) => {
           if (group.length === 0) return null;
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+          if (group.length === 0) return;
           const initialMessage = group[0];
           const { sender } = initialMessage;
 
