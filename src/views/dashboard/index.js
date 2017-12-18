@@ -167,6 +167,7 @@ class Dashboard extends Component {
                   <SearchThreadFeed
                     queryString={searchQueryString}
                     filter={searchFilter}
+                    selectedId={activeThread}
                   />
                 )}
 

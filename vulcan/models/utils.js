@@ -16,7 +16,6 @@ import { toPlainText, toState } from 'shared/draft-utils';
 import {
   getWordCount,
   withoutStopWords,
-  withoutSwearWords,
   onlyContainsEmoji,
 } from './text-parsing';
 
@@ -31,12 +30,8 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
 
   // filter out stop words
   body = withoutStopWords(body);
-  // filter out swear words
-  body = withoutSwearWords(body);
   // filter out stop words
   title = withoutStopWords(title);
-  // filter out swear words
-  title = withoutSwearWords(title);
 
   // algolia only supports 20kb records
   // slice it down until its under 19k, leaving room for the rest of the thread data
@@ -96,8 +91,6 @@ const filterMessageString = (message: DBMessage): ?string => {
 
   // filter out stop words
   messageString = withoutStopWords(messageString);
-  // filter out swear words
-  messageString = withoutSwearWords(messageString);
 
   // don't index short messages - will eliminate things like
   // +1, nice, lol, cool, etc from being stored
@@ -145,8 +138,6 @@ export const dbUserToSearchUser = (user: DBUser): SearchUser => {
   let description = user.description;
   // filter out stop words
   description = description && withoutStopWords(description);
-  // filter out swear words
-  description = description && withoutSwearWords(description);
 
   return {
     name: user.name,
@@ -164,8 +155,6 @@ export const dbCommunityToSearchCommunity = (
   let description = community.description;
   // filter out stop words
   description = description && withoutStopWords(description);
-  // filter out swear words
-  description = description && withoutSwearWords(description);
 
   return {
     id: community.id,
