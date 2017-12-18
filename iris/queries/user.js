@@ -68,8 +68,7 @@ module.exports = {
   User: {
     email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
       // Only admins and the user themselves can view the email
-      if (!user || id !== user.id || (id !== user.id && !isAdmin(user.id)))
-        return null;
+      if (!user || (id !== user.id && !isAdmin(user.id))) return null;
       return email;
     },
     coverPhoto: ({ coverPhoto }: DBUser) => {
