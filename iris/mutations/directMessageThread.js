@@ -57,7 +57,7 @@ module.exports = {
       const allMemberIds = [...participants, currentUser.id];
 
       // placeholder
-      let threadId;
+      let threadId, threadToReturn;
 
       // check to see if a dm thread with this exact set of participants exists
       const existingThreads = await checkForExistingDMThread(allMemberIds);
@@ -65,8 +65,9 @@ module.exports = {
       // if so, we will be evaulating the first result (should only ever be one)
       if (existingThreads && existingThreads.length > 0) {
         threadId = existingThreads[0].group;
+        threadToReturn = await getDirectMessageThread(threadId);
       } else {
-        const threadToReturn = await createDirectMessageThread(isGroup);
+        threadToReturn = await createDirectMessageThread(isGroup);
         threadId = threadToReturn.id;
       }
 
@@ -106,24 +107,19 @@ module.exports = {
       };
 
       if (existingThreads.length > 0) {
-        const [_, thread] = await Promise.all([
+        return await Promise.all([
           handleStoreMessage(message),
-          getDirectMessageThread(threadId),
-        ]);
-
-        return thread;
+          setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+        ]).then(() => threadToReturn);
       }
 
-      const [__, ___, ____, thread] = await Promise.all([
+      return await Promise.all([
         handleStoreMessage(message),
         createMemberInDirectMessageThread(threadId, currentUser.id, true),
         participants.map(participant =>
           createMemberInDirectMessageThread(threadId, participant, false)
         ),
-        createDirectMessageThread(isGroup),
-      ]);
-
-      return thread;
+      ]).then(() => threadToReturn);
     },
     setLastSeen: (_: any, { id }: { id: string }, { user }: GraphQLContext) =>
       setUserLastSeenInDirectMessageThread(id, user.id),
