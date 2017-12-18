@@ -102,9 +102,11 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
+        // $FlowIssue
         const getChannel = getChannelById(filter.channelId);
         const usersPermissionsInChannel = IS_AUTHED_USER
-          ? getUserPermissionsInChannel(filter.channelId, user.id)
+          ? // $FlowIssue
+            getUserPermissionsInChannel(filter.channelId, user.id)
           : DEFAULT_USER_CHANNEL_PERMISSIONS;
 
         const [channel, permissions] = await Promise.all([
@@ -136,12 +138,15 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
+        // $FlowIssue
         const getCommunity = getCommunityById(filter.communityId);
         const getPublicChannelIds = getPublicChannelIdsInCommunity(
+          // $FlowIssue
           filter.communityId
         );
         const getPrivateChannelIds = IS_AUTHED_USER
-          ? getPrivateChannelIdsInCommunity(filter.communityId)
+          ? // $FlowIssue
+            getPrivateChannelIdsInCommunity(filter.communityId)
           : [];
         const getCurrentUsersChannelIds = IS_AUTHED_USER
           ? getUsersJoinedPrivateChannelIds(user.id)
@@ -188,10 +193,12 @@ module.exports = {
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
         const getPublicChannelIds = getPublicChannelIdsForUsersThreads(
+          // $FlowIssue
           filter.creatorId
         );
         const getPrivateChannelIds = IS_AUTHED_USER
-          ? getPrivateChannelIdsForUsersThreads(filter.creatorId)
+          ? // $FlowIssue
+            getPrivateChannelIdsForUsersThreads(filter.creatorId)
           : [];
         const getCurrentUsersChannelIds = IS_AUTHED_USER
           ? getUsersJoinedPrivateChannelIds(user.id)
