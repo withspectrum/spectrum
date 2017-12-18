@@ -96,7 +96,6 @@ class DirectMessages extends React.Component<Props, State> {
 
     // Only logged-in users can view DM threads
     if (!currentUser) return null;
-
     const { activeThread } = this.state;
     const isComposing = match.url === '/messages/new' && match.isExact;
     const isViewingThread = !!match.params.threadId;
@@ -163,10 +162,10 @@ class DirectMessages extends React.Component<Props, State> {
         {dataExists && (
           <ThreadDetail
             match={match}
-            threads={threads}
             currentUser={currentUser}
             setActiveThread={this.setActiveThread}
             hideOnMobile={!(isComposing || isViewingThread)}
+            id={match.params.threadId && match.params.threadId}
           />
         )}
       </View>

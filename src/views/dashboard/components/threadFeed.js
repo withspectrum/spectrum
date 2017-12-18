@@ -137,7 +137,8 @@ class ThreadFeed extends React.Component<Props, State> {
       // the component isn't currently fetching more
       !isFetchingMore
     ) {
-      this.props.data.fetchMore();
+      this.props.data.hasNextPage && this.props.data.fetchMore();
+      return;
     }
 
     // don't select a thread if the composer is open
@@ -152,7 +153,8 @@ class ThreadFeed extends React.Component<Props, State> {
     if (
       isDesktop &&
       (hasThreadsButNoneSelected || justLoadedThreads) &&
-      this.props.data.threads.length > 0
+      this.props.data.threads.length > 0 &&
+      !prevProps.isFetchingMore
     ) {
       if (
         (this.props.data.community &&

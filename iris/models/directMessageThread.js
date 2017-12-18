@@ -100,6 +100,24 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     });
 };
 
+const checkForExistingDMThread = (
+  participants: Array<string>
+): Promise<Array<any>> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(...participants, { index: 'userId' })
+    .group('threadId')
+    .map(row => row('userId'))
+    .ungroup()
+    .filter(row =>
+      row('reduction')
+        .count()
+        .eq(participants.length)
+    )
+    .pluck('group')
+    .run();
+};
+
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
@@ -107,4 +125,5 @@ module.exports = {
   getDirectMessageThreadsByUser,
   setDirectMessageThreadLastActive,
   listenToUpdatedDirectMessageThreads,
+  checkForExistingDMThread,
 };
