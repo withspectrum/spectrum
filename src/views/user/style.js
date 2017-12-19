@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from '../../components/globals';
 import Card from '../../components/card';
-import { Button } from '../../components/buttons';
 import { Transition, Shadow, hexa, zIndex } from '../../components/globals';
 
 export const Row = styled(FlexRow)`

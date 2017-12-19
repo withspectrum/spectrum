@@ -88,7 +88,7 @@ class Dashboard extends Component {
       activeChannel,
       isLoading,
       hasError,
-      searchResults,
+
       searchQueryString,
     } = this.props;
 

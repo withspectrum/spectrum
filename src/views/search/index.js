@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Composer from '../../components/composer';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Titlebar from '../titlebar';

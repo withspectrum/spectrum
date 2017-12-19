@@ -173,7 +173,6 @@ class ThreadFeed extends React.Component<Props, State> {
   render() {
     const {
       data: { threads, networkStatus },
-      data,
       selectedId,
       activeCommunity,
       queryString,
