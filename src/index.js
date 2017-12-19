@@ -14,49 +14,53 @@ import Routes from './routes';
 import { track } from './helpers/events';
 
 const { thread, t } = queryString.parse(history.location.search);
-
+console.log('querystring', thread, t);
 const existingUser = getItemFromStorage('spectrum');
-let initialState;
-if (existingUser) {
-  initialState = {
-    users: {
-      currentUser: existingUser.currentUser,
+console.log('existingUser', existingUser);
+const initialState = {
+  users: {
+    currentUser: existingUser ? existingUser.currentUser : null,
+  },
+  dashboardFeed: {
+    activeThread: t ? t : '',
+    mountedWithActiveThread: t ? t : '',
+    search: {
+      isOpen: false,
     },
-    dashboardFeed: {
-      activeThread: t ? t : '',
-      mountedWithActiveThread: t ? t : '',
-      search: {
-        isOpen: false,
-      },
-    },
-  };
-} else {
-  initialState = {};
-}
+  },
+};
 
 if (thread) {
   const hash = window.location.hash.substr(1);
   if (hash && hash.length > 1) {
+    console.log('redirecting 1');
     history.replace(`/thread/${thread}#${hash}`);
   } else {
+    console.log('redirecting 2');
     history.replace(`/thread/${thread}`);
   }
 }
 if (t && (!existingUser || !existingUser.currentUser)) {
   const hash = window.location.hash.substr(1);
   if (hash && hash.length > 1) {
+    console.log('redirecting 3');
     history.replace(`/thread/${t}#${hash}`);
   } else {
+    console.log('redirecting 4');
     history.replace(`/thread/${t}`);
   }
 }
 
+console.log('initialstate', initialState);
+console.log('window state', window.__SERVER_STATE__);
 const store = initStore(window.__SERVER_STATE__ || initialState, {
   middleware: [client.middleware()],
   reducers: {
     apollo: client.reducer(),
   },
 });
+
+console.log('store', store.getState());
 
 function render() {
   return ReactDOM.render(

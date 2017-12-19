@@ -61,6 +61,13 @@ const renderer = (req, res) => {
     users: {
       currentUser: req.user,
     },
+    dashboardFeed: {
+      activeThread: req.query.t ? req.query.t : '',
+      mountedWithActiveThread: req.query.t ? req.query.t : '',
+      search: {
+        isOpen: false,
+      },
+    },
   };
   // Create the Redux store
   const store = initStore(initialReduxState, {

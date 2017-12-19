@@ -56,8 +56,13 @@ class ThreadSlider extends Component {
   };
 
   render() {
-    const parsed = queryString.parse(this.props.location.search);
-    const threadId = parsed.thread;
+    const { thread: threadId, t } = queryString.parse(
+      this.props.location.search
+    );
+
+    console.log('thread slider', threadId);
+    if (!threadId) return null;
+    if (t) return null;
 
     return (
       <div>
