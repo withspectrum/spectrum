@@ -1093,7 +1093,7 @@ export const ContactInfo = () => {
               Concerned about something on Spectrum? Shoot us an email and we'll
               take care of it right away.
             </Flavor>
-            <a href={'mailto://support@spectrum.chat'}>
+            <a href={'mailto:support@spectrum.chat'}>
               <Button icon="email">Email support@spectrum.chat</Button>
             </a>
           </EmailCard>

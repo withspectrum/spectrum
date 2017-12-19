@@ -7,6 +7,7 @@ import Icon from '../../components/icons';
 import { Logo } from '../../components/logo';
 import Avatar from '../../components/avatar';
 import { DropTab } from '../navbar/style';
+import Head from '../../components/head';
 import {
   NavContainer,
   Tabs,
@@ -44,6 +45,14 @@ class Nav extends Component {
   render() {
     return (
       <NavContainer>
+        <Head>
+          <link
+            rel="shortcut icon"
+            id="dynamic-favicon"
+            // $FlowIssue
+            href={`${process.env.PUBLIC_URL}/img/favicon.ico`}
+          />
+        </Head>
         <Tabs>
           <LogoTab dark={this.props.dark} to="/about">
             <Logo />
