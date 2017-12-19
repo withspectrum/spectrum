@@ -12,8 +12,6 @@ import {
   hexa,
   Gradient,
 } from '../../components/globals';
-import Icon from '../../components/icons';
-import { Logo } from '../../components/logo';
 
 export const Wrapper = styled(FlexCol)`
   flex: 1 0 auto;

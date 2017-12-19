@@ -860,3 +860,26 @@ export const SearchForm = styled.form`
   display: flex;
   flex: 1;
 `;
+
+export const OutlineButton = styled.button`
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.alt};
+  border-radius: 8px;
+  padding: 4px 12px 4px 6px;
+
+  span {
+    margin-left: 8px;
+  }
+`;
+
+export const Hint = styled.span`
+  font-size: 14px;
+  color: ${props => props.theme.text.alt};
+  margin-top: 8px;
+  margin-bottom: 16px;
+`;

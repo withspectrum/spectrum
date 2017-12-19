@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { track } from '../../helpers/events';
-import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
-import { ContactInfo, Plans, TermsSection, PageFooter } from './view';
+import { ContactInfo, TermsSection, PageFooter } from './view';
 import { Wrapper } from './style';
 
 class Support extends Component {

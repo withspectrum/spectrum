@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Button, IconButton } from '../../components/buttons';
 import Link from '../../components/link';
 import Icon from '../../components/icons';
 import { Logo } from '../../components/logo';
 import Avatar from '../../components/avatar';
-import { DropTab } from '../navbar/style';
 import Head from '../../components/head';
 import {
   NavContainer,
@@ -23,8 +21,6 @@ import {
   ExploreLink,
   MenuContainer,
   MenuOverlay,
-  SvgWrapper,
-  InlineSvg,
 } from './style';
 
 class Nav extends Component {
