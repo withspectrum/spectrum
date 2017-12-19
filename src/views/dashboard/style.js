@@ -694,9 +694,9 @@ export const NullThreadFeed = styled.div`
 export const NullHeading = styled.p`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 `;
 
 export const Lock = styled.span`margin-right: 4px;`;
@@ -878,8 +878,8 @@ export const OutlineButton = styled.button`
 `;
 
 export const Hint = styled.span`
-  font-size: 14px;
+  font-size: 16px;
   color: ${props => props.theme.text.alt};
-  margin-top: 8px;
-  margin-bottom: 16px;
+  margin-top: 32px;
+  margin-bottom: 8px;
 `;

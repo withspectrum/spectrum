@@ -10,18 +10,21 @@ import { NullThreadFeed, NullHeading, OutlineButton, Hint } from '../style';
 
 const EmptyThreadFeed = ({ dispatch }) => (
   <NullThreadFeed>
-    <NullHeading>Your feed's a little quiet right now...</NullHeading>
-    <Button icon={'post'} onClick={() => dispatch(changeActiveThread('new'))}>
-      Start a conversation
-    </Button>
+    <NullHeading>
+      Your feed's a little quiet right now, but don't worry...
+    </NullHeading>
+    <NullHeading>We've got recommendations!</NullHeading>
     <Hint>Kick your community off right!</Hint>
+    <Button icon={'post'} onClick={() => dispatch(changeActiveThread('new'))}>
+      Post your first thread
+    </Button>
+    <Hint>Find new friends and great conversations!</Hint>
     <Link to={'/explore'}>
-      <OutlineButton style={{ marginTop: '16px' }}>
+      <OutlineButton>
         <Icon glyph="explore" />
         <span>Join more communities</span>
       </OutlineButton>
     </Link>
-    <Hint>The more the merrier!</Hint>
   </NullThreadFeed>
 );
 
