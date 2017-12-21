@@ -2,6 +2,7 @@
 .*/node_modules/.*
 .*/build.*
 .*/*.test.js
+.*/.expo
 
 [include]
 
