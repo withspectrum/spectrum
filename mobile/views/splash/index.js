@@ -2,17 +2,19 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 
 import { Wrapper } from './style';
 
-class Splash extends Component {
+class Splash extends React.Component<{}> {
   render() {
     return (
-      <View testID="welcome">
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <Wrapper>
+        <View testID="welcome">
+          <Text>Open up App.js to start working on your app!</Text>
+        </View>
+      </Wrapper>
     );
   }
 }
