@@ -14,10 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
-    },
-    "packagerOpts": {
-      "config": "rn-cli.config.js"
+			"supportsTablet": true,
+			"bundleIdentifier": "com.spectrum.mobile"
     }
   }
 }

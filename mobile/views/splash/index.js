@@ -3,16 +3,16 @@
  */
 
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Wrapper } from './style';
 
 class Splash extends Component {
   render() {
     return (
-      <Wrapper>
+      <View testID="welcome">
         <Text>Open up App.js to start working on your app!</Text>
-      </Wrapper>
+      </View>
     );
   }
 }
