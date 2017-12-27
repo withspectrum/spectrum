@@ -213,7 +213,7 @@ class NotificationsTab extends React.Component<Props, State> {
   };
 
   markAllAsSeen = () => {
-    const { markAllNotificationsSeen, refetch, count } = this.props;
+    const { markAllNotificationsSeen, count } = this.props;
     const { notifications } = this.state;
 
     // don't perform a mutation is there are no unread notifs
@@ -236,7 +236,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
   processAndMarkSeenNotifications = stateNotifications => {
     const {
-      data: { notifications, refetch },
+      data: { notifications },
       location,
       client,
       activeInboxThread,

@@ -4,13 +4,16 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import ThreadContainer from '../thread';
 import { Container, Thread } from './style';
+import ViewSegment from '../../components/viewSegment';
 
 class DashboardThread extends Component {
   render() {
     const { threadId, threadSliderIsOpen } = this.props;
 
     // no thread has been selected
-    if (!threadId) return null;
+    if (!threadId) {
+      return null;
+    }
 
     // composer is selected
     if (threadId === 'new')

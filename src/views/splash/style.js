@@ -12,8 +12,6 @@ import {
   hexa,
   Gradient,
 } from '../../components/globals';
-import Icon from '../../components/icons';
-import { Logo } from '../../components/logo';
 
 export const Wrapper = styled(FlexCol)`
   flex: 1 0 auto;
@@ -728,22 +726,30 @@ export const CostNumber = styled.h2`
 export const Free = styled(Plan)`
   grid-area: free;
   color: ${props => props.theme.text.default};
-  background-color: ${props => props.theme.bg.default};
-  box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
-  transform: rotateX(10deg) rotateY(15deg);
+  position: relative;
 
-  > * {
-    transform: rotateX(-10deg) rotateY(15deg);
+  &:after {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: ${props => props.theme.bg.default};
+    box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
+    transform: rotateX(10deg) rotateY(15deg);
+
+    @media (max-width: 768px) {
+      box-shadow: none;
+      transform: none;
+    }
   }
 
   @media (max-width: 768px) {
     padding-top: 16px;
-    box-shadow: none;
-    transform: none;
-
-    > * {
-      transform: none;
-    }
   }
 
   ${CostNumber} {
@@ -769,15 +775,34 @@ export const Description = styled.p`
 
 export const Paid = styled(Plan)`
   grid-area: pro;
-  background-color: ${props => props.theme.brand.default};
-  background-image: ${props =>
-    Gradient(props.theme.brand.alt, props.theme.brand.default)};
   color: ${props => props.theme.text.reverse};
-  box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
-  transform: rotateX(-10deg) rotateY(15deg);
 
-  > * {
-    transform: rotateX(10deg) rotateY(15deg);
+  position: relative;
+
+  &:after {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: ${props => props.theme.brand.default};
+    background-image: ${props =>
+      Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
+    transform: rotateX(-10deg) rotateY(15deg);
+
+    @media (max-width: 768px) {
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding-top: 16px;
   }
 
   @media (max-width: 768px) {
@@ -785,10 +810,6 @@ export const Paid = styled(Plan)`
     margin-top: 32px;
     box-shadow: none;
     transform: none;
-
-    > * {
-      transform: none;
-    }
   }
 
   ${CostNumber} {

@@ -23,9 +23,7 @@ import {
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
-import { searchThreadsQuery } from '../../api/thread';
 
-const SearchFeed = compose(connect(), searchThreadsQuery)(ThreadFeed);
 const ThreadFeedWithData = compose(connect(), getUserThreads)(ThreadFeed);
 const ThreadParticipantFeedWithData = compose(connect(), getUserThreads)(
   ThreadFeed

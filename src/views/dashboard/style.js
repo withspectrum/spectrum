@@ -694,9 +694,9 @@ export const NullThreadFeed = styled.div`
 export const NullHeading = styled.p`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 `;
 
 export const Lock = styled.span`margin-right: 4px;`;
@@ -859,4 +859,27 @@ export const SearchStringHeader = styled.div`
 export const SearchForm = styled.form`
   display: flex;
   flex: 1;
+`;
+
+export const OutlineButton = styled.button`
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.alt};
+  border-radius: 8px;
+  padding: 4px 12px 4px 6px;
+
+  span {
+    margin-left: 8px;
+  }
+`;
+
+export const Hint = styled.span`
+  font-size: 16px;
+  color: ${props => props.theme.text.alt};
+  margin-top: 32px;
+  margin-bottom: 8px;
 `;
