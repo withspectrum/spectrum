@@ -60,7 +60,8 @@ class ThreadSlider extends Component {
       this.props.location.search
     );
 
-    console.log('thread slider', threadId);
+    // don't load the slider if there is not a thread id, and don't load
+    // it if there is a t param
     if (!threadId) return null;
     if (t) return null;
 

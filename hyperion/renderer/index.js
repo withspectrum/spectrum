@@ -99,7 +99,6 @@ const renderer = (req, res) => {
   renderToStringWithData(sheet.collectStyles(frontend))
     .then(content => {
       if (context.url) {
-        console.log('context ', context);
         debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
         res.redirect(301, context.url);

@@ -61,49 +61,6 @@ class ThreadFeed extends React.Component<Props, State> {
     return true;
   }
 
-  componentWillMount() {
-    const { scrollElement } = this.state;
-    const { mountedWithActiveThread } = this.props;
-    console.log('cwm', this.props.mountedWithActiveThread);
-    // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
-    if (mountedWithActiveThread) {
-      return;
-    }
-
-    // const hasThreadsButNoneSelected =
-    //   this.props.data.threads && !this.props.selectedId;
-
-    // if (hasThreadsButNoneSelected && this.props.data.threads.length > 0) {
-    //   if (
-    //     (this.props.data.community &&
-    //       this.props.data.community.watercooler &&
-    //       this.props.data.community.watercooler.id) ||
-    //     (this.props.data.community &&
-    //       this.props.data.community.pinnedThread &&
-    //       this.props.data.community.pinnedThread.id)
-    //   ) {
-    //     const selectId = this.props.data.community.watercooler
-    //       ? this.props.data.community.watercooler.id
-    //       : this.props.data.community.pinnedThread.id;
-
-    //     this.props.history.replace(`/?t=${selectId}`);
-    //     this.props.dispatch(changeActiveThread(selectId));
-    //     return;
-    //   }
-
-    //   const threadNodes = this.props.data.threads
-    //     .slice()
-    //     .map(thread => thread.node);
-    //   const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
-    //   const hasFirstThread = sortedThreadNodes.length > 0;
-    //   const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
-    //   if (hasFirstThread) {
-    //     this.props.history.replace(`/?t=${firstThreadId}`);
-    //     this.props.dispatch(changeActiveThread(firstThreadId));
-    //   }
-    // }
-  }
-
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
@@ -116,9 +73,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
     if (this.props.data.threads && mountedWithActiveThread) {
-      console.log('cwm 2', mountedWithActiveThread);
       if (!isDesktop) {
-        console.log('is desktop, redirecting');
         this.props.history.replace(`/?thread=${mountedWithActiveThread}`);
       }
       this.props.dispatch({ type: 'REMOVE_MOUNTED_THREAD_ID' });
@@ -169,7 +124,6 @@ class ThreadFeed extends React.Component<Props, State> {
           ? this.props.data.community.watercooler.id
           : this.props.data.community.pinnedThread.id;
 
-        console.log('replace 1');
         this.props.history.replace(`/?t=${selectId}`);
         this.props.dispatch(changeActiveThread(selectId));
         return;
@@ -199,7 +153,6 @@ class ThreadFeed extends React.Component<Props, State> {
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
       if (hasFirstThread) {
-        console.log('replace 2');
         this.props.history.replace(`/?t=${firstThreadId}`);
         this.props.dispatch(changeActiveThread(firstThreadId));
       }
