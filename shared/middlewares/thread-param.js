@@ -1,7 +1,9 @@
 // Redirect any route ?thread=<id> to /thread/<id>
 
 const threadParamRedirect = (req, res, next) => {
-  console.log(req);
+  console.log('req.user', req.user);
+  console.log('req.query.t', req.query.t);
+  console.log('req.query.thread', req.query.thread);
   // Redirect /?t=asdf123 if the user isn't logged in
   if (!req.user && req.query.t) {
     console.log('redirect 5');
