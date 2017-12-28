@@ -1,18 +1,13 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { LoadingScreen } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { ChannelEditForm } from '../../components/editForm';
-import PendingUsers from './components/pendingUsers';
-import BlockedUsers from './components/blockedUsers';
-import ChannelMembers from '../../components/channelMembers';
 import { Upsell404Channel } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import {
@@ -22,11 +17,16 @@ import {
 import Titlebar from '../titlebar';
 import Login from '../login';
 import ViewError from '../../components/viewError';
+import { View } from '../../components/settingsViews/style';
+import Header from '../../components/settingsViews/header';
+import Overview from './components/overview';
+import Subnav from '../../components/settingsViews/subnav';
 
 type Props = {
   data: {
     channel: Object,
   },
+  location: Object,
   match: Object,
   isLoading: boolean,
   hasError: boolean,
@@ -36,7 +36,7 @@ type Props = {
   unblockUser: Function,
 };
 
-class CommunitySettings extends React.Component<Props> {
+class ChannelSettings extends React.Component<Props> {
   togglePending = (userId, action) => {
     const { data: { channel }, togglePendingUser, dispatch } = this.props;
     const input = {
@@ -88,23 +88,22 @@ class CommunitySettings extends React.Component<Props> {
 
   render() {
     const {
-      match,
       data: { channel },
+      match,
+      location,
       isLoading,
       hasError,
       currentUser,
     } = this.props;
     const { communitySlug, channelSlug } = match.params;
-    const isLoggedIn = currentUser;
 
-    // if a user isn't logged in they should never be able to view settings
-    if (!isLoggedIn) {
-      return <Login redirectPath={`${window.location.href}`} />;
-    }
+    // this is hacky, but will tell us if we're viewing analytics or the root settings view
+    const pathname = location.pathname;
+    const lastIndex = pathname.lastIndexOf('/');
+    const activeTab = pathname.substr(lastIndex + 1);
 
     if (channel) {
-      // at this point the view is no longer loading, has not encountered an error, and has returned a community record
-      const { isOwner, isModerator } = channel.channelPermissions;
+      const { isModerator, isOwner } = channel.channelPermissions;
       const userHasPermissions =
         isOwner ||
         isModerator ||
@@ -131,6 +130,36 @@ class CommunitySettings extends React.Component<Props> {
         );
       }
 
+      const ActiveView = () => {
+        switch (activeTab) {
+          case 'settings':
+            return (
+              <Overview
+                community={channel.community}
+                channel={channel}
+                communitySlug={communitySlug}
+                togglePending={this.togglePending}
+                unblock={this.unblock}
+              />
+            );
+          default:
+            return null;
+        }
+      };
+
+      const subnavItems = [
+        {
+          to: `/${channel.community.slug}/${channel.slug}/settings`,
+          label: 'Overview',
+          activeLabel: 'settings',
+        },
+      ];
+
+      const subheading = {
+        to: `/${channel.community.slug}/settings`,
+        label: `Return to ${channel.community.name} settings`,
+      };
+
       return (
         <AppViewWrapper>
           <Titlebar
@@ -140,33 +169,22 @@ class CommunitySettings extends React.Component<Props> {
             backRoute={`/${channel.community.slug}/${channel.slug}`}
             noComposer
           />
-          <Column type="secondary">
-            <ChannelEditForm channel={channel} />
-          </Column>
-          <Column type="primary">
-            {channel.isPrivate && (
-              <span>
-                <ChannelMembers channel={channel} id={channel.id} />
-                <PendingUsers
-                  togglePending={this.togglePending}
-                  channel={channel}
-                  id={channel.id}
-                />
-                <BlockedUsers
-                  unblock={this.unblock}
-                  channel={channel}
-                  id={channel.id}
-                />
-              </span>
-            )}
-            {!channel.isPrivate && <ChannelMembers id={channel.id} />}
-          </Column>
+
+          <View>
+            <Header
+              subheading={subheading}
+              heading={`${channel.name} Settings`}
+            />
+            <Subnav items={subnavItems} activeTab={activeTab} />
+
+            <ActiveView />
+          </View>
         </AppViewWrapper>
       );
     }
 
     if (isLoading) {
-      return <LoadingScreen />;
+      return <Loading />;
     }
 
     if (hasError) {
@@ -205,14 +223,12 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
+const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
+  // $FlowIssue
   connect(map),
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
   viewNetworkHandler
-)(CommunitySettings);
+)(ChannelSettings);

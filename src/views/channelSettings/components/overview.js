@@ -1,0 +1,51 @@
+// @flow
+import * as React from 'react';
+import {
+  SectionsContainer,
+  Column,
+} from '../../../components/settingsViews/style';
+import { ChannelEditForm } from '../../../components/editForm';
+import PendingUsers from './pendingUsers';
+import BlockedUsers from './blockedUsers';
+import ChannelMembers from '../../../components/channelMembers';
+
+type Props = {
+  community: Object,
+  channel: Object,
+  communitySlug: string,
+  togglePending: Function,
+  unblock: Function,
+};
+class Overview extends React.Component<Props> {
+  render() {
+    const { community, communitySlug, channel } = this.props;
+
+    return (
+      <SectionsContainer>
+        <Column>
+          <ChannelEditForm channel={channel} />
+        </Column>
+        <Column>
+          {channel.isPrivate && (
+            <span>
+              <ChannelMembers channel={channel} id={channel.id} />
+              <PendingUsers
+                togglePending={this.props.togglePending}
+                channel={channel}
+                id={channel.id}
+              />
+              <BlockedUsers
+                unblock={this.props.unblock}
+                channel={channel}
+                id={channel.id}
+              />
+            </span>
+          )}
+          {!channel.isPrivate && <ChannelMembers id={channel.id} />}
+        </Column>
+      </SectionsContainer>
+    );
+  }
+}
+
+export default Overview;
