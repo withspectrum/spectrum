@@ -37,6 +37,7 @@ import type {
 } from '../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../models/thread';
 import { channelSlugIsBlacklisted } from '../utils/permissions';
+import { addQueue } from '../utils/workerQueue';
 
 type Context = {
   user: Object,
@@ -55,7 +56,7 @@ module.exports = {
       }
 
       if (channelSlugIsBlacklisted(args.input.slug)) {
-        return new UserError(`This channel name is reserved.`);
+        return new UserError('This channel name is reserved.');
       }
 
       // get the community parent where the channel is being created
@@ -687,6 +688,45 @@ module.exports = {
             );
           }
         );
+    },
+    sendEmailInvites: async (_, { input }, { user }) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to invite people to this channel.'
+        );
+      }
+
+      // make sure the user is the owner of the channel
+      const permissions = await getUserPermissionsInChannel(
+        input.id,
+        currentUser.id
+      );
+
+      if (!permissions.isOwner) {
+        return new UserError(
+          "You don't have permission to invite people to this channel."
+        );
+      }
+
+      return (
+        input.contacts
+          // can't invite yourself
+          .filter(user => user.email !== currentUser.email)
+          .map(user => {
+            return addQueue('private channel invite notification', {
+              recipient: {
+                email: user.email,
+                firstName: user.firstName ? user.firstName : null,
+                lastName: user.lastName ? user.lastName : null,
+              },
+              channelId: input.id,
+              senderId: currentUser.id,
+              customMessage: input.customMessage ? input.customMessage : null,
+            });
+          })
+      );
     },
   },
 };
