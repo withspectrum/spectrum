@@ -84,6 +84,10 @@ export const Subheading = styled.h3`
   color: ${props => props.theme.text.alt};
   font-weight: 400;
   line-height: 1.3;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
 `;
 
 export const StyledHeader = styled.div`

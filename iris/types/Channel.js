@@ -92,7 +92,7 @@ const Channel = /* GraphQL */ `
 		toggleChannelNotifications(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
-		sendEmailInvites(input: EmailInvitesInput!): Boolean
+		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
 	}
 `;
 
