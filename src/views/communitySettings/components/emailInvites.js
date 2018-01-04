@@ -5,7 +5,7 @@ import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
 import isEmail from 'validator/lib/isEmail';
-import { sendEmailInvitationsMutation } from '../../../api/community';
+import { sendCommunityEmailInvitationsMutation } from '../../../api/community';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -339,12 +339,12 @@ const map = state => ({
 });
 
 export const EmailInvitesWithoutCard = compose(
-  sendEmailInvitationsMutation,
+  sendCommunityEmailInvitationsMutation,
   connect(map),
   viewNetworkHandler
 )(EmailInvitesNoCard);
 export const EmailInvitesWithCard = compose(
-  sendEmailInvitationsMutation,
+  sendCommunityEmailInvitationsMutation,
   connect(map),
   viewNetworkHandler
 )(EmailInvitesCard);

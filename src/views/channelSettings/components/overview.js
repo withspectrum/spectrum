@@ -4,10 +4,10 @@ import {
   SectionsContainer,
   Column,
 } from '../../../components/settingsViews/style';
-import { ChannelEditForm } from '../../../components/editForm';
+import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
-import ChannelMembers from '../../../components/channelMembers';
+import ChannelMembers from './channelMembers';
 
 type Props = {
   community: Object,
@@ -23,7 +23,7 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <ChannelEditForm channel={channel} />
+          <EditForm channel={channel} />
         </Column>
         <Column>
           {channel.isPrivate && (

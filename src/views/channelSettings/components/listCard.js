@@ -10,9 +10,8 @@ import { ChannelListItem } from '../../../components/listItems';
 import { FlexRow, FlexCol } from '../../../components/globals';
 import Card from '../../../components/card';
 import Icon from '../../../components/icons';
-
+import { SectionCard } from '../../../components/settingsViews/style';
 import {
-  StyledCard,
   LargeListHeading,
   LargeListContainer,
   MoreLink,
@@ -22,7 +21,7 @@ const ListCardPure = ({ data }) => {
   const channels = data.community.channelConnection.edges;
   if (!!channels) {
     return (
-      <StyledCard>
+      <SectionCard>
         <LargeListHeading>Manage Channels</LargeListHeading>
         <LargeListContainer>
           {channels.map(item => {
@@ -42,7 +41,7 @@ const ListCardPure = ({ data }) => {
             );
           })}
         </LargeListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   } else {
     return <div />;

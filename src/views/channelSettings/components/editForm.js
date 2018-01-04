@@ -1,21 +1,26 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import Link from 'src/components/link';
-import { track } from '../../helpers/events';
-import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
-import { openModal } from '../../actions/modals';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { Notice } from '../listItems/style';
-import { Button, IconButton } from '../buttons';
-import { NullCard } from '../upsell';
-import { Input, UnderlineInput, TextArea } from '../formElements';
-import Icon from '../../components/icons';
+import { track } from '../../../helpers/events';
+import {
+  editChannelMutation,
+  deleteChannelMutation,
+} from '../../../api/channel';
+import { openModal } from '../../../actions/modals';
+import { addToastWithTimeout } from '../../../actions/toasts';
+import { Notice } from '../../../components/listItems/style';
+import { Button, IconButton } from '../../../components/buttons';
+import { NullCard } from '../../../components/upsell';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+} from '../../../components/formElements';
+import Icon from '../../../components/icons';
+import { SectionCard } from '../../../components/settingsViews/style';
 import {
   StyledCard,
   Form,
@@ -25,18 +30,19 @@ import {
   Actions,
   GeneralNotice,
   Location,
-} from './style';
+} from '../../../components/editForm/style';
 
-class ChannelWithData extends Component {
-  state: {
-    name: string,
-    slug: string,
-    description: string,
-    isPrivate: boolean,
-    channelId: string,
-    channelData: Object,
-    isLoading: boolean,
-  };
+type State = {
+  name: string,
+  slug: string,
+  description: string,
+  isPrivate: boolean,
+  channelId: string,
+  channelData: Object,
+  isLoading: boolean,
+};
+
+class ChannelWithData extends React.Component<{}, State> {
   constructor(props) {
     super(props);
 
@@ -174,7 +180,7 @@ class ChannelWithData extends Component {
       );
     } else {
       return (
-        <StyledCard>
+        <SectionCard>
           <Location>
             <Icon glyph="view-back" size={16} />
             <Link to={`/${channel.community.slug}/${channel.slug}`}>
@@ -258,7 +264,7 @@ class ChannelWithData extends Component {
               </GeneralNotice>
             )}
           </Form>
-        </StyledCard>
+        </SectionCard>
       );
     }
   }
