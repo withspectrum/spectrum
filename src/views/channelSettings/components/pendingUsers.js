@@ -6,13 +6,15 @@ import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { getPendingUsersQuery } from '../../../api/channel';
+import ViewError from '../../../components/viewError';
 import {
-  StyledCard,
-  LargeListHeading,
   ListContainer,
   Description,
 } from '../../../components/listItems/style';
-import { SectionCard } from '../../../components/settingsViews/style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 
 type Props = {
   data: {
@@ -33,7 +35,7 @@ class PendingUsers extends React.Component<Props> {
 
       return (
         <SectionCard>
-          <LargeListHeading>Pending Users</LargeListHeading>
+          <SectionTitle>Pending Users</SectionTitle>
           {pendingUsers.length > 0 && (
             <Description>
               Approving requests will allow a person to view all threads and
@@ -90,7 +92,11 @@ class PendingUsers extends React.Component<Props> {
       );
     }
 
-    return null;
+    return (
+      <SectionCard>
+        <ViewError />
+      </SectionCard>
+    );
   }
 }
 

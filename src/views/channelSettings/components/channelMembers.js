@@ -7,7 +7,10 @@ import { getChannelMembersQuery } from '../../../api/channel';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
 import ViewError from '../../../components/viewError';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { SectionCard } from '../../../components/settingsViews/style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 import {
   ListHeader,
   LargeListHeading,
@@ -37,13 +40,16 @@ class ChannelMembers extends Component<Props> {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member.node);
-      const totalCount = channel.metaData && channel.metaData.members;
+      const totalCount =
+        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
         <SectionCard>
-          <ListHeader>
-            <LargeListHeading>{totalCount} Members</LargeListHeading>
-          </ListHeader>
+          <SectionTitle>
+            {totalCount === 1
+              ? `${totalCount} member`
+              : `${totalCount} members`}
+          </SectionTitle>
 
           <ListContainer>
             {members &&

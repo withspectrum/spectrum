@@ -689,7 +689,7 @@ module.exports = {
           }
         );
     },
-    sendEmailInvites: async (_, { input }, { user }) => {
+    sendChannelEmailInvites: async (_, { input }, { user }) => {
       const currentUser = user;
 
       if (!currentUser) {

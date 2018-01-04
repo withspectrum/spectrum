@@ -1,19 +1,15 @@
+// @flow
 import React, { Component } from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { track } from '../../helpers/events';
-// $FlowFixMe
 import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { ImportSlackWithoutCard } from '../communitySettings/components/importSlack';
-import { EmailInvitesWithoutCard } from '../communitySettings/components/emailInvites';
+import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
@@ -202,10 +198,7 @@ class NewCommunity extends Component {
                       hasInvitedPeople={this.hasInvitedPeople}
                     />
                     <Divider />
-                    <EmailInvitesWithoutCard
-                      community={community}
-                      hasInvitedPeople={this.hasInvitedPeople}
-                    />
+                    <CommunityInvitationForm id={community.id} />
                   </ContentContainer>
                 )}
 

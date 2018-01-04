@@ -10,6 +10,7 @@ import { sendCommunityEmailInvitationsMutation } from '../../api/community';
 import { sendChannelEmailInvitationMutation } from '../../api/channel';
 import { Button } from '../buttons';
 import { Error } from '../formElements';
+import { SectionCardFooter } from '../settingsViews/style';
 import {
   EmailInviteForm,
   EmailInviteInput,
@@ -20,7 +21,7 @@ import {
 } from './style';
 
 type Props = {
-  community: Object,
+  id: string,
   dispatch: Function,
   currentUser: Object,
   sendEmailInvites: Function,
@@ -42,34 +43,35 @@ type State = {
 };
 
 class EmailInvitationForm extends React.Component<Props, State> {
-  initialState = {
-    isLoading: false,
-    contacts: [
-      {
-        email: '',
-        firstName: '',
-        lastName: '',
-        error: false,
-      },
-      {
-        email: '',
-        firstName: '',
-        lastName: '',
-        error: false,
-      },
-      {
-        email: '',
-        firstName: '',
-        lastName: '',
-        error: false,
-      },
-    ],
-    hasCustomMessage: false,
-    customMessageString: '',
-    customMessageError: false,
-  };
-
-  state = this.initialState;
+  constructor() {
+    super();
+    this.state = {
+      isLoading: false,
+      contacts: [
+        {
+          email: '',
+          firstName: '',
+          lastName: '',
+          error: false,
+        },
+        {
+          email: '',
+          firstName: '',
+          lastName: '',
+          error: false,
+        },
+        {
+          email: '',
+          firstName: '',
+          lastName: '',
+          error: false,
+        },
+      ],
+      hasCustomMessage: false,
+      customMessageString: '',
+      customMessageError: false,
+    };
+  }
 
   getUniqueEmails = array => array.filter((x, i, a) => a.indexOf(x) == i);
 
@@ -80,7 +82,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
       customMessageError,
       customMessageString,
     } = this.state;
-    const { community, dispatch, currentUser, sendEmailInvites } = this.props;
+    const { dispatch, currentUser, sendEmailInvites } = this.props;
 
     this.setState({ isLoading: true });
 
@@ -110,12 +112,37 @@ class EmailInvitationForm extends React.Component<Props, State> {
     }
 
     sendEmailInvites({
-      id: community.id,
+      id: this.props.id,
       contacts: validContacts,
       customMessage,
     })
       .then(({ data: { sendEmailInvites } }) => {
-        this.setState(this.initialState);
+        this.setState({
+          isLoading: false,
+          contacts: [
+            {
+              email: '',
+              firstName: '',
+              lastName: '',
+              error: false,
+            },
+            {
+              email: '',
+              firstName: '',
+              lastName: '',
+              error: false,
+            },
+            {
+              email: '',
+              firstName: '',
+              lastName: '',
+              error: false,
+            },
+          ],
+          hasCustomMessage: false,
+          customMessageString: '',
+          customMessageError: false,
+        });
 
         dispatch(
           addToastWithTimeout(

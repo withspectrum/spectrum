@@ -20,7 +20,10 @@ import {
   TextArea,
 } from '../../../components/formElements';
 import Icon from '../../../components/icons';
-import { SectionCard } from '../../../components/settingsViews/style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 import {
   StyledCard,
   Form,
@@ -182,12 +185,11 @@ class ChannelWithData extends React.Component<{}, State> {
       return (
         <SectionCard>
           <Location>
-            <Icon glyph="view-back" size={16} />
             <Link to={`/${channel.community.slug}/${channel.slug}`}>
-              Return to Channel
+              View Channel
             </Link>
           </Location>
-          <FormTitle>Channel Settings</FormTitle>
+          <SectionTitle>Channel Settings</SectionTitle>
           <Form onSubmit={this.save}>
             <Input defaultValue={name} id="name" onChange={this.handleChange}>
               Name

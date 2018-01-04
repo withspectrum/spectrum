@@ -6,10 +6,13 @@ import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
 import { getBlockedUsersQuery } from '../../../api/channel';
-import { SectionCard } from '../../../components/settingsViews/style';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  LargeListHeading,
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import ViewError from '../../../components/viewError';
+import {
   ListContainer,
   Description,
   Notice,
@@ -33,7 +36,7 @@ class BlockedUsers extends React.Component<Props> {
       const { blockedUsers } = data.channel;
       return (
         <SectionCard>
-          <LargeListHeading>Blocked Users</LargeListHeading>
+          <SectionTitle>Blocked Users</SectionTitle>
           {blockedUsers.length > 0 && (
             <Description>
               Blocked users can not see threads or messages posted in this
@@ -87,7 +90,11 @@ class BlockedUsers extends React.Component<Props> {
       );
     }
 
-    return null;
+    return (
+      <SectionCard>
+        <ViewError />
+      </SectionCard>
+    );
   }
 }
 

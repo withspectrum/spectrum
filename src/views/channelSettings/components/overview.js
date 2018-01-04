@@ -8,6 +8,11 @@ import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
+import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 
 type Props = {
   community: Object,
@@ -25,6 +30,16 @@ class Overview extends React.Component<Props> {
         <Column>
           <EditForm channel={channel} />
         </Column>
+
+        {channel.isPrivate && (
+          <Column>
+            <SectionCard>
+              <SectionTitle>Invite by email</SectionTitle>
+              <ChannelInvitationForm community={community} />
+            </SectionCard>
+          </Column>
+        )}
+
         <Column>
           {channel.isPrivate && (
             <span>
