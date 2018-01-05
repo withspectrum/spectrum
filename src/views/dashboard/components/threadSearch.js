@@ -54,13 +54,13 @@ class ThreadSearch extends React.Component<Props, State> {
   };
 
   open = () => {
-    this.props.dispatch(openSearch());
+    // this.props.dispatch(openSearch());
     this.searchInput.focus();
   };
 
   close = () => {
     if (this.state.value.length === 0) {
-      this.props.dispatch(closeSearch());
+      // this.props.dispatch(closeSearch());
       this.props.dispatch(setSearchStringVariable(''));
     }
     this.searchInput.blur();
@@ -87,19 +87,14 @@ class ThreadSearch extends React.Component<Props, State> {
         : 'Search your communities...';
 
     return (
-      <SearchWrapper isOpen={isOpen}>
-        <Icon glyph={'search'} size={32} onClick={this.open} />
-        <ClearSearch
-          onClick={this.clearClose}
-          isVisible={isOpen && value.length > 0}
-          isOpen={isOpen}
-        >
+      <SearchWrapper isOpen={true}>
+        <Icon glyph={'search'} size={24} onClick={this.open} />
+        <ClearSearch onClick={this.clearClose} isVisible={true} isOpen={true}>
           <span>&times;</span>
         </ClearSearch>
         <SearchForm onSubmit={this.submit}>
           <SearchInput
-            isOpen={isOpen}
-            onBlur={this.close}
+            isOpen={true}
             onChange={this.onChange}
             value={value}
             placeholder={placeholder}

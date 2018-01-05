@@ -138,7 +138,6 @@ class Dashboard extends Component {
           >
             <CommunityListScroller>
               <CommunityList
-                isHovered={isHovered}
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
@@ -149,7 +148,13 @@ class Dashboard extends Component {
 
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Header filter={searchFilter} />
+              <Header
+                filter={searchFilter}
+                communities={communities}
+                user={user}
+                activeCommunity={activeCommunity}
+                activeChannel={activeChannel}
+              />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />

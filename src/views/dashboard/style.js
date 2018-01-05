@@ -35,7 +35,7 @@ export const InboxWrapper = styled.div`
   position: relative;
   align-self: stretch;
   flex-direction: column;
-  background: ${props => props.theme.bg.wash};
+  background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
@@ -55,8 +55,8 @@ export const InboxScroller = styled.div`
 
 export const CommunityListWrapper = styled.div`
   display: flex;
-  width: 72px;
-  min-width: 72px;
+  width: 256px;
+  min-width: 256px;
   overflow-y: hidden;
   overflow-x: visible;
   position: relative;
@@ -69,37 +69,33 @@ export const CommunityListWrapper = styled.div`
   padding-bottom: 48px;
 
   .channelsContainer {
-    max-height: 0;
-    padding: 0;
-    transition-delay: 1s;
+    max-height: 1000px;
+    padding: 8px 8px 12px;
     transform: translateZ(0);
-    transition: ${Transition.hover.off};
+    transition: ${Transition.hover.on};
+    transition-delay: 1s;
 
     .divider {
-      max-width: 0;
-      border-top: 1px solid ${props => props.theme.bg.wash};
-      height: 0;
-      margin: 12px 0 8px -28px;
-      position: relative;
-      right: -20px;
+      max-width: 230px;
+      border-top: 1px solid ${props => props.theme.bg.border};
+      height: 1px;
       transition-delay: 1s;
       transition: ${Transition.hover.on};
     }
-  }
 
-  .communityListText {
-    opacity: 0;
-    transform: translateZ(0);
-    transition: ${Transition.hover.off};
-  }
+    .communityListText {
+      opacity: 0;
+      transform: translateZ(0);
+      transition: ${Transition.hover.off};
+    }
 
-  img {
-    opacity: 0.4;
-    filter: grayscale(60%);
-    transition: ${Transition.hover.on};
-  }
+    img {
+      opacity: 0.4;
+      filter: grayscale(60%);
+      transition: ${Transition.hover.on};
+    }
 
-  &:hover {
+    ${'' /* &:hover {
     transform: translateZ(0);
     width: 256px;
     min-width: 256px;
@@ -120,9 +116,7 @@ export const CommunityListWrapper = styled.div`
         transition-delay: 1s;
         transition: ${Transition.hover.on};
       }
-    }
-
-    .communityListText {
+    } */} .communityListText {
       opacity: 1;
       transform: translateZ(0);
       transition: ${Transition.hover.on};
@@ -311,7 +305,7 @@ export const FeedHeaderContainer = styled.div`
   padding: 14px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
-  z-index: 10;
+  z-index: ${zIndex.chrome - 1};
 
   @media (max-width: 768px) {
     display: none;
@@ -324,6 +318,7 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
+  background-color: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
     display: none;
@@ -688,7 +683,7 @@ export const NullThreadFeed = styled.div`
   justify-content: center;
   padding: 32px;
   flex-direction: column;
-  background: ${props => props.theme.bg.wash};
+  background: ${props => props.theme.bg.default};
 `;
 
 export const NullHeading = styled.p`
@@ -791,7 +786,7 @@ export const SearchWrapper = styled.div`
   .icon {
     position: absolute;
     top: 50%;
-    left: 8px;
+    left: 16px;
     transform: translate(-4px, -50%);
     cursor: pointer;
     border-radius: 40px;
@@ -800,8 +795,9 @@ export const SearchWrapper = styled.div`
 
 export const SearchInput = styled.input`
   padding: 6px 8px;
-  padding-left: 40px;
-  font-size: 16px;
+  margin-left: 4px;
+  padding-left: 32px;
+  font-size: 14px;
   border-radius: 40px;
   display: flex;
   flex: 1;
@@ -812,27 +808,26 @@ export const SearchInput = styled.input`
   padding-right: 40px;
 
   &:focus {
-    background: ${props => props.theme.bg.wash};
     color: ${props => props.theme.text.default};
     border: 1px solid ${props => props.theme.bg.border};
   }
 `;
 
 export const ClearSearch = styled.span`
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   opacity: ${props => (props.isVisible ? '1' : '0')};
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${props => props.theme.bg.border};
+  background: ${props => props.theme.text.placeholder};
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 16px;
   position: absolute;
   right: 1px;
   top: 50%;
-  color: ${props => props.theme.text.alt};
-  transform: translate(-4px, -50%);
+  color: ${props => props.theme.text.reverse};
+  transform: translate(-8px, -50%);
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
@@ -840,7 +835,6 @@ export const ClearSearch = styled.span`
 
   &:hover {
     background: ${props => props.theme.text.alt};
-    color: ${props => props.theme.text.reverse};
   }
 
   span {
@@ -882,4 +876,13 @@ export const Hint = styled.span`
   color: ${props => props.theme.text.alt};
   margin-top: 32px;
   margin-bottom: 8px;
+`;
+
+export const NarrowOnly = styled.div`
+  display: none;
+
+  @media (max-width: 956px) {
+    display: flex;
+    flex: none;
+  }
 `;
