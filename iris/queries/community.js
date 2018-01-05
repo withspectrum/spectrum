@@ -557,6 +557,7 @@ module.exports = {
       });
     },
     isPro: ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
+      return true;
       return loaders.communityRecurringPayments.load(id).then(res => {
         const subs = res && res.reduction;
         if (!subs || subs.length === 0) return false;

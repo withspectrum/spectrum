@@ -45,7 +45,21 @@ type State = {
   isLoading: boolean,
 };
 
-class ChannelWithData extends React.Component<{}, State> {
+type Props = {
+  editChannel: Function,
+  dispatch: Function,
+  channel: {
+    name: string,
+    slug: string,
+    description: string,
+    isPrivate: boolean,
+    id: string,
+    community: {
+      slug: string,
+    },
+  },
+};
+class ChannelWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -99,7 +113,7 @@ class ChannelWithData extends React.Component<{}, State> {
 
     // if privacy changed in this edit
     if (this.props.channel.isPrivate !== isPrivate) {
-      track('channel', `privacy changed to ${isPrivate}`, null);
+      track('channel', `privacy changed to ${isPrivate.toString()}`, null);
     }
 
     this.props

@@ -1,4 +1,4 @@
-// $FlowFixMe
+// @flow
 import UserError from '../utils/UserError';
 import {
   getChannels,
@@ -9,7 +9,6 @@ import {
 } from '../models/channel';
 import {
   getCommunities,
-  userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
 } from '../models/community';
 import {
@@ -38,14 +37,34 @@ import type {
 import { getThreadsByChannelToDelete, deleteThread } from '../models/thread';
 import { channelSlugIsBlacklisted } from '../utils/permissions';
 import { addQueue } from '../utils/workerQueue';
+import type { GraphQLContext } from '../';
 
-type Context = {
-  user: Object,
+type Contact = {
+  email: string,
+  firstName: ?string,
+};
+type EmailInvitesInput = {
+  customMessage: ?string,
+  contacts: Array<Contact>,
+  id: string,
+};
+type UnblockInput = {
+  channelId: string,
+  userId: string,
+};
+type TogglePendingInput = {
+  channelId: string,
+  userId: string,
+  action: 'block' | 'approve',
 };
 
 module.exports = {
   Mutation: {
-    createChannel: (_, args, { user }) => {
+    createChannel: async (
+      _: any,
+      args: CreateChannelArguments,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to create a channel
@@ -60,67 +79,61 @@ module.exports = {
       }
 
       // get the community parent where the channel is being created
-      const communities = getCommunities([args.input.communityId]);
+      const getCommunitiesRecords = getCommunities([args.input.communityId]);
 
       // get the permission of the user in the parent community
-      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+      const getCurrentUserCommunityPermissions = getUserPermissionsInCommunity(
         args.input.communityId,
         currentUser.id
       );
 
-      return (
-        Promise.all([communities, currentUserCommunityPermissions])
-          .then(([communities, currentUserCommunityPermissions]) => {
-            // select the community to evaluate
-            const communityToEvaluate = communities[0];
+      const [communities, currentUserCommunityPermissions] = await Promise.all([
+        getCommunitiesRecords,
+        getCurrentUserCommunityPermissions,
+      ]);
 
-            // if there is no community being evaluated, we can assume the
-            // community doesn't exist any more
-            if (!communityToEvaluate) {
-              return new UserError(
-                "You don't have permission to create a channel in this community."
-              );
-            }
+      // select the community to evaluate
+      const communityToEvaluate = communities[0];
 
-            // if the current user is not the owner of the parent community
-            // they can not create channels
-            if (!currentUserCommunityPermissions.isOwner) {
-              return new UserError(
-                "You don't have permission to create a channel in this community."
-              );
-            }
+      // if there is no community being evaluated, we can assume the
+      // community doesn't exist any more
+      if (!communityToEvaluate) {
+        return new UserError(
+          "You don't have permission to create a channel in this community."
+        );
+      }
 
-            const channelWithSlug = getChannelBySlug(
-              args.input.slug,
-              communityToEvaluate.slug
-            );
+      // if the current user is not the owner of the parent community
+      // they can not create channels
+      if (!currentUserCommunityPermissions.isOwner) {
+        return new UserError(
+          "You don't have permission to create a channel in this community."
+        );
+      }
 
-            return Promise.all([channelWithSlug]);
-          })
-          .then(([channelWithSlug]) => {
-            // if a channel is returned, it means a duplicate was being created
-            // so we need to escape
-            if (channelWithSlug) {
-              return new UserError('A channel with this slug already exists.');
-            }
-
-            // if no channel was returned, it means we are creating a unique
-            // new channel and can proceed
-            return createChannel(args, currentUser.id);
-          })
-          .then(channel => {
-            // once the channel is created, create the user's relationship with
-            // the new channel
-            return Promise.all([
-              channel,
-              createOwnerInChannel(channel.id, currentUser.id),
-            ]);
-          })
-          // return the channel object that was created
-          .then(data => data[0])
+      const channelWithSlug = await getChannelBySlug(
+        args.input.slug,
+        communityToEvaluate.slug
       );
+
+      // if a channel is returned, it means a duplicate was being created
+      // so we need to escape
+      if (channelWithSlug) {
+        return new UserError('A channel with this slug already exists.');
+      }
+
+      // if no channel was returned, it means we are creating a unique
+      // new channel and can proceed
+      const newChannel = await createChannel(args, currentUser.id);
+      return Promise.all([
+        createOwnerInChannel(newChannel.id, currentUser.id),
+      ]).then(() => newChannel);
     },
-    deleteChannel: (_, { channelId }, { user }) => {
+    deleteChannel: async (
+      _: any,
+      { channelId }: { channelId: string },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to delete a channel
@@ -131,89 +144,74 @@ module.exports = {
       }
 
       // get the channel's permissions
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
+      const getCurrentUserChannelPermissions = getUserPermissionsInChannel(
         channelId,
         currentUser.id
       );
 
       // get the channel to evaluate
-      const channels = getChannels([channelId]);
+      const getChannelRecords = getChannels([channelId]);
 
-      return Promise.all([currentUserChannelPermissions, channels])
-        .then(([currentUserChannelPermissions, channels]) => {
-          // select the channel to evaluate
-          const channelToEvaluate = channels[0];
+      const [channels, currentUserChannelPermissions] = await Promise.all([
+        getChannelRecords,
+        getCurrentUserChannelPermissions,
+      ]);
 
-          // if channel wasn't found or was previously deleted, something
-          // has gone wrong and we need to escape
-          if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-            return new UserError("Channel doesn't exist");
-          }
+      const channelToEvaluate = channels[0];
 
-          // get the community parent of the channel being deleted
-          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-            channelToEvaluate.communityId,
-            currentUser.id
-          );
+      // if channel wasn't found or was previously deleted, something
+      // has gone wrong and we need to escape
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("Channel doesn't exist");
+      }
 
-          return Promise.all([
-            currentUserChannelPermissions,
-            currentUserCommunityPermissions,
-          ]);
-        })
-        .then(
-          (
-            [currentUserChannelPermissions, currentUserCommunityPermissions]
-          ) => {
-            // if the currentUser is either a community owner or channel owner,
-            // they are allowed delete the channel
-            if (
-              currentUserCommunityPermissions.isOwner ||
-              currentUserChannelPermissions.isOwner
-            ) {
-              // all checks passed
-              // delete the channel requested from the client side user
-              const deleteTheInputChannel = deleteChannel(channelId);
-              // get all the threads in the channel to prepare for deletion
-              const getAllThreadsInChannel = getThreadsByChannelToDelete(
-                channelId
-              );
-              // update all the UsersChannels objects in the db to be non-members
-              const removeRelationships = removeMembersInChannel(channelId);
+      // get the community parent of the channel being deleted
+      const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+        channelToEvaluate.communityId,
+        currentUser.id
+      );
 
-              return Promise.all([
-                deleteTheInputChannel,
-                getAllThreadsInChannel,
-                removeRelationships,
-              ]).then(
-                (
-                  [
-                    deletedInputChannel,
-                    allThreadsInChannel,
-                    removedRelationships,
-                  ]
-                ) => {
-                  // if there were no threads in that channel, we are done
-                  if (allThreadsInChannel.length === 0) return;
-
-                  // otherwise we need to mark all the threads in that channel
-                  // as deleted
-                  return allThreadsInChannel.map(thread =>
-                    deleteThread(thread.id)
-                  );
-                }
-              );
-            } else {
-              // if the currentUser does not own the channel or the parent
-              // community they can not delete the channel
-              return new UserError(
-                "You don't have permission to make changes to this channel"
-              );
-            }
-          }
+      if (
+        !currentUserChannelPermissions.isOwner &&
+        !currentUserCommunityPermissions.isOwner
+      ) {
+        // if the currentUser does not own the channel or the parent
+        // community they can not delete the channel
+        return new UserError(
+          "You don't have permission to make changes to this channel"
         );
+      }
+
+      // all checks passed
+      // delete the channel requested from the client side user
+      const deleteTheInputChannel = deleteChannel(channelId);
+      // get all the threads in the channel to prepare for deletion
+      const getAllThreadsInChannel = getThreadsByChannelToDelete(channelId);
+      // update all the UsersChannels objects in the db to be non-members
+      const removeRelationships = removeMembersInChannel(channelId);
+
+      const [
+        deletedInputChannel,
+        allThreadsInChannel,
+        removedRelationships,
+      ] = await Promise.all([
+        deleteTheInputChannel,
+        getAllThreadsInChannel,
+        removeRelationships,
+      ]);
+
+      // if there were no threads in that channel, we are done
+      if (allThreadsInChannel.length === 0) return;
+
+      // otherwise we need to mark all the threads in that channel
+      // as deleted
+      return allThreadsInChannel.map(thread => deleteThread(thread.id));
     },
-    editChannel: (_, args: EditChannelArguments, { user }) => {
+    editChannel: async (
+      _: any,
+      args: EditChannelArguments,
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to edit a channel
@@ -224,68 +222,59 @@ module.exports = {
       }
 
       // get the user's permission in this channel
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
+      const getCurrentUserChannelPermissions = getUserPermissionsInChannel(
         args.input.channelId,
         currentUser.id
       );
 
       // get the channel to evaluate
-      const channels = getChannels([args.input.channelId]);
+      const getChannelRecords = getChannels([args.input.channelId]);
 
-      return Promise.all([currentUserChannelPermissions, channels])
-        .then(([currentUserChannelPermission, channels]) => {
-          // select the channel to evaluate
-          const channelToEvaluate = channels[0];
+      const [channels, currentUserChannelPermissions] = await Promise.all([
+        getCurrentUserChannelPermissions,
+        getChannelRecords,
+      ]);
 
-          // if a channel wasn't found or was deleted
-          if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-            return new UserError("This channel doesn't exist");
-          }
+      // select the channel to evaluate
+      const channelToEvaluate = channels[0];
 
-          // get the community parent of the channel being deleted
-          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-            channelToEvaluate.communityId,
-            currentUser.id
-          );
+      // if a channel wasn't found or was deleted
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("This channel doesn't exist");
+      }
 
-          return Promise.all([
-            channelToEvaluate,
-            currentUserChannelPermissions,
-            currentUserCommunityPermissions,
-          ]);
-        })
-        .then(
-          (
-            [
-              channelToEvaluate,
-              currentUserChannelPermissions,
-              currentUserCommunityPermissions,
-            ]
-          ) => {
-            // if the user owns the community or owns the channel, they
-            // are allowed to make the changes
-            if (
-              currentUserCommunityPermissions.isOwner ||
-              currentUserChannelPermissions.isOwner
-            ) {
-              // all checks passed
-              // if a channel is being converted from private to public, make
-              // all the pending users members in the channel
-              if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
-                approvePendingUsersInChannel(args.input.channelId);
-              }
+      // get the community parent of the channel being deleted
+      const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+        channelToEvaluate.communityId,
+        currentUser.id
+      );
 
-              return editChannel(args);
-            }
+      // if the user owns the community or owns the channel, they
+      // are allowed to make the changes
+      if (
+        currentUserCommunityPermissions.isOwner ||
+        currentUserChannelPermissions.isOwner
+      ) {
+        // all checks passed
+        // if a channel is being converted from private to public, make
+        // all the pending users members in the channel
+        if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
+          approvePendingUsersInChannel(args.input.channelId);
+        }
 
-            // otherwise the user does not have permission
-            return new UserError(
-              "You don't have permission to make changes to this channel."
-            );
-          }
-        );
+        return editChannel(args);
+      }
+
+      // otherwise the user does not have permission
+      return new UserError(
+        "You don't have permission to make changes to this channel."
+      );
     },
-    toggleChannelSubscription: (_, { channelId }, { user }) => {
+    toggleChannelSubscription: async (
+      _: any,
+      { channelId }: { channelId: string },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to join a channel
@@ -294,164 +283,137 @@ module.exports = {
       }
 
       // get the channel to evaluate
-      const channels = getChannels([channelId]);
+      const getChannelRecords = getChannels([channelId]);
+      const getCurrentUserPermissionsInChannel = getUserPermissionsInChannel(
+        channelId,
+        currentUser.id
+      );
 
-      return Promise.all([
-        getUserPermissionsInChannel(channelId, currentUser.id),
-        channels,
-      ]).then(([currentUserChannelPermissions, channels]) => {
-        // select the channel
-        const channelToEvaluate = channels[0];
+      const [channels, currentUserChannelPermissions] = await Promise.all([
+        getChannelRecords,
+        getCurrentUserPermissionsInChannel,
+      ]);
 
-        // if channel wasn't found or was deleted
-        if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-          return new UserError("This channel doesn't exist");
-        }
+      // select the channel
+      const channelToEvaluate = channels[0];
 
-        // user is blocked, they can't join the channel
-        if (currentUserChannelPermissions.isBlocked) {
-          return new UserError("You don't have permission to do that.");
-        }
+      // if channel wasn't found or was deleted
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("This channel doesn't exist");
+      }
 
-        // if the person owns the channel, they have accidentally triggered
-        // a join or leave action, which isn't allowed
-        if (currentUserChannelPermissions.isOwner) {
-          return new UserError(
-            "Owners of a community can't join or leave their own channel."
-          );
-        }
+      // user is blocked, they can't join the channel
+      if (currentUserChannelPermissions.isBlocked) {
+        return new UserError("You don't have permission to do that.");
+      }
 
-        // if the user is a member of the channel, it means they are trying
-        // to leave the channel
-        if (currentUserChannelPermissions.isMember) {
-          // remove the relationship of the user to the channel
-          const removeRelationship = removeMemberInChannel(
-            channelId,
-            currentUser.id
-          );
+      // if the person owns the channel, they have accidentally triggered
+      // a join or leave action, which isn't allowed
+      if (currentUserChannelPermissions.isOwner) {
+        return new UserError(
+          "Owners of a community can't join or leave their own channel."
+        );
+      }
 
-          return (
-            Promise.all([channelToEvaluate, removeRelationship])
-              .then(([channelToEvaluate, remove]) => {
-                // check to see if the user is a member of any other channels
-                // in that community. if they are, we can return. if they are
-                // not a member of any other channels in that community then we
-                // know that this is the *last* channel they are leaving and they
-                // should also be removed from the parent community itself
-                const isMemberOfAnotherChannel = userIsMemberOfAnyChannelInCommunity(
-                  channelToEvaluate.communityId,
-                  currentUser.id
-                );
+      // if the user is a member of the channel, it means they are trying
+      // to leave the channel
+      if (currentUserChannelPermissions.isMember) {
+        // remove the relationship of the user to the channel
+        const removeRelationship = removeMemberInChannel(
+          channelId,
+          currentUser.id
+        );
 
-                return Promise.all([
-                  channelToEvaluate,
-                  isMemberOfAnotherChannel,
-                ]);
-              })
-              .then(([channelToEvaluate, isMemberOfAnotherChannel]) => {
-                // if they are a member of another channel, we can continue
-                if (isMemberOfAnotherChannel) {
-                  return Promise.all([channelToEvaluate]);
-                } else {
-                  // otherwise if this is the last channel they are leaving
-                  // in that community, the user should also be removed from
-                  // the community
-                  return Promise.all([
-                    channelToEvaluate,
-                    removeMemberInCommunity(
-                      channelToEvaluate.communityId,
-                      currentUser.id
-                    ),
-                  ]);
-                }
-              })
-              // return only channel that was being evaluated in the first place
-              .then(data => data[0])
-          );
-        } else {
-          // the user is not a member of the current channel, which means
-          // that they are trying to join this channel.
-          // we need to check a few things:
-          // 1. if the channel is private, and the user is already pending,
-          //    remove their relationship from the channel
-          // 2. if the channel is private and the user is not already pending,
-          //    create a new pending relationship with the channel
-
-          // 1. user has already requested to join, so remove them from pending
-          if (currentUserChannelPermissions.isPending) {
-            return removeMemberInChannel(channelId, currentUser.id);
-          }
-
-          // 2. if the channel is private, request to join - since this action
-          // doesn't actually join the channel, we don't need to perform
-          // the downstream checks to see if the user needs to join the parent
-          // community - those actions will instead be handled when the channel
-          // owner approves the user
-          if (channelToEvaluate.isPrivate) {
-            return createOrUpdatePendingUserInChannel(
-              channelId,
+        return Promise.all([removeRelationship])
+          .then(async () => {
+            // check to see if the user is a member of any other channels
+            // in that community. if they are, we can return. if they are
+            // not a member of any other channels in that community then we
+            // know that this is the *last* channel they are leaving and they
+            // should also be removed from the parent community itself
+            const isMemberOfAnotherChannel = await userIsMemberOfAnyChannelInCommunity(
+              channelToEvaluate.communityId,
               currentUser.id
             );
-          }
 
-          // otherwise the channel is not private so the user can just join.
-          // we'll create new usersChannels relationship
-          const join = createMemberInChannel(channelId, currentUser.id);
+            // if they are a member of another channel, we can continue
+            if (isMemberOfAnotherChannel) {
+              return;
+            } else {
+              // otherwise if this is the last channel they are leaving
+              // in that community, the user should also be removed from
+              // the community
+              return await removeMemberInCommunity(
+                channelToEvaluate.communityId,
+                currentUser.id
+              );
+            }
+          })
+          .then(() => channelToEvaluate);
+      } else {
+        // the user is not a member of the current channel, which means
+        // that they are trying to join this channel.
+        // we need to check a few things:
+        // 1. if the channel is private, and the user is already pending,
+        //    remove their relationship from the channel
+        // 2. if the channel is private and the user is not already pending,
+        //    create a new pending relationship with the channel
 
-          // we also need to see if the user is a member of the parent community.
-          // if they are, we can just continue
-          // otherwise this tells us that the user is joining the community
-          // for the first time so we will create that relationship, as well
-          // as create relationships between the user and all the default
-          // channels in that community
-
-          // get the current user's permissions in the community
-          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-            channelToEvaluate.communityId,
-            currentUser.id
-          );
-
-          return (
-            Promise.all([
-              channelToEvaluate,
-              join,
-              currentUserCommunityPermissions,
-            ])
-              .then(
-                (
-                  [
-                    channelToEvaluate,
-                    joinedChannel,
-                    currentUserCommunityPermissions,
-                  ]
-                ) => {
-                  // if the user is a member of the parent community, we can return
-                  if (currentUserCommunityPermissions.isMember) {
-                    return Promise.all([joinedChannel]);
-                  } else {
-                    // if the user is not a member of the parent community,
-                    // join the community and the community's default channels
-                    return Promise.all([
-                      joinedChannel,
-                      createMemberInCommunity(
-                        joinedChannel.communityId,
-                        currentUser.id
-                      ),
-                      createMemberInDefaultChannels(
-                        joinedChannel.communityId,
-                        currentUser.id
-                      ),
-                    ]);
-                  }
-                }
-              )
-              // return the channel being evaluated in the first place
-              .then(data => data[0])
-          );
+        // 1. user has already requested to join, so remove them from pending
+        if (currentUserChannelPermissions.isPending) {
+          return removeMemberInChannel(channelId, currentUser.id);
         }
-      });
+
+        // 2. if the channel is private, request to join - since this action
+        // doesn't actually join the channel, we don't need to perform
+        // the downstream checks to see if the user needs to join the parent
+        // community - those actions will instead be handled when the channel
+        // owner approves the user
+        if (channelToEvaluate.isPrivate) {
+          return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
+        }
+
+        // otherwise the channel is not private so the user can just join.
+        // we'll create new usersChannels relationship
+        const joinedChannel = await createMemberInChannel(
+          channelId,
+          currentUser.id
+        );
+
+        // we also need to see if the user is a member of the parent community.
+        // if they are, we can just continue
+        // otherwise this tells us that the user is joining the community
+        // for the first time so we will create that relationship, as well
+        // as create relationships between the user and all the default
+        // channels in that community
+
+        // get the current user's permissions in the community
+        const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+          channelToEvaluate.communityId,
+          currentUser.id
+        );
+
+        // if the user is a member of the parent community, we can return
+        if (currentUserCommunityPermissions.isMember) {
+          return joinedChannel;
+        } else {
+          // if the user is not a member of the parent community,
+          // join the community and the community's default channels
+          return Promise.all([
+            createMemberInCommunity(joinedChannel.communityId, currentUser.id),
+            createMemberInDefaultChannels(
+              joinedChannel.communityId,
+              currentUser.id
+            ),
+          ]).then(() => joinedChannel);
+        }
+      }
     },
-    toggleChannelNotifications: (_, { channelId }, { user }) => {
+    toggleChannelNotifications: (
+      _: any,
+      { channelId }: { channelId: string },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to join a channel
@@ -477,12 +439,17 @@ module.exports = {
             value
           );
         })
-        .then(() => {
+        .then(async () => {
           // return the channel being evaluated
-          return getChannels([channelId]).then(data => data[0]);
+          const channelRecords = await getChannels([channelId]);
+          return channelRecords[0];
         });
     },
-    togglePendingUser: (_: any, { input }, { user }: Context) => {
+    togglePendingUser: async (
+      _: any,
+      { input }: { input: TogglePendingInput },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to edit a channel
@@ -492,114 +459,103 @@ module.exports = {
         );
 
       // get the channel's permissions for the current user
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
+      const getCurrentUserChannelPermissions = getUserPermissionsInChannel(
         input.channelId,
         currentUser.id
       );
 
       // get the channel's permissions for the user being toggled
-      const evaluatedUserPermissions = getUserPermissionsInChannel(
+      const getEvaluatedUserPermissions = getUserPermissionsInChannel(
         input.channelId,
         input.userId
       );
 
       // get the channel object to be evaluated
-      const channels = getChannels([input.channelId]);
+      const getChannelRecords = getChannels([input.channelId]);
 
-      return Promise.all([
-        currentUserChannelPermissions,
+      const [
+        channelPermissions,
         evaluatedUserPermissions,
         channels,
-      ])
-        .then(([channelPermissions, evaluatedUserPermissions, channels]) => {
-          // select the channel to be evaluated
-          const channelToEvaluate = channels[0];
+      ] = await Promise.all([
+        getCurrentUserChannelPermissions,
+        getEvaluatedUserPermissions,
+        getChannelRecords,
+      ]);
 
-          // if channel wasn't found or was deleted
-          if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-            return new UserError("This channel doesn't exist");
-          }
+      // select the channel to be evaluated
+      const channelToEvaluate = channels[0];
 
-          // get the community parent of channel
-          const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-            channelToEvaluate.communityId,
-            currentUser.id
+      // if channel wasn't found or was deleted
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("This channel doesn't exist");
+      }
+
+      // get the community parent of channel
+      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+        channelToEvaluate.communityId,
+        currentUser.id
+      );
+
+      // if the user isn't on the pending list
+      if (!evaluatedUserPermissions.isPending) {
+        return new UserError(
+          'This user is not currently pending access to this channel.'
+        );
+      }
+
+      // user is neither a community or channel owner, they don't have permission
+      if (
+        !channelPermissions.isOwner ||
+        !currentUserCommunityPermissions.isOwner
+      ) {
+        return new UserError(
+          "You don't have permission to make changes to this channel."
+        );
+      }
+
+      // determine whether to approve or block them
+      if (input.action === 'block') {
+        // remove the user from the pending list
+        return blockUserInChannel(input.channelId, input.userId).then(
+          () => channelToEvaluate
+        );
+      }
+
+      if (input.action === 'approve') {
+        const approveUser = approvePendingUserInChannel(
+          input.channelId,
+          input.userId
+        );
+
+        // if the user is a member of the parent community, we can return
+        if (currentUserCommunityPermissions.isMember) {
+          return Promise.all([channelToEvaluate, approveUser]).then(
+            () => channelToEvaluate
           );
-
+        } else {
+          // if the user is not a member of the parent community,
+          // join the community and the community's default channels
           return Promise.all([
             channelToEvaluate,
-            currentUserChannelPermissions,
-            evaluatedUserPermissions,
-            currentUserCommunityPermissions,
-          ]);
-        })
-        .then(
-          (
-            [
-              channelToEvaluate,
-              currentUserChannelPermissions,
-              evaluatedUserPermissions,
-              currentUserCommunityPermissions,
-            ]
-          ) => {
-            // if the user isn't on the pending list
-            if (!evaluatedUserPermissions.isPending) {
-              return new UserError(
-                'This user is not currently pending access to this channel.'
-              );
-            }
-
-            // if a user owns the community or owns the channel, they can make this change
-            if (
-              currentUserChannelPermissions.isOwner ||
-              currentUserCommunityPermissions.isOwner
-            ) {
-              // determine whether to approve or block them
-              if (input.action === 'block') {
-                // remove the user from the pending list
-                return blockUserInChannel(input.channelId, input.userId).then(
-                  () => channelToEvaluate
-                );
-              }
-
-              if (input.action === 'approve') {
-                const approveUser = approvePendingUserInChannel(
-                  input.channelId,
-                  input.userId
-                );
-
-                // if the user is a member of the parent community, we can return
-                if (currentUserCommunityPermissions.isMember) {
-                  return Promise.all([channelToEvaluate, approveUser]).then(
-                    () => channelToEvaluate
-                  );
-                } else {
-                  // if the user is not a member of the parent community,
-                  // join the community and the community's default channels
-                  return Promise.all([
-                    channelToEvaluate,
-                    createMemberInCommunity(
-                      channelToEvaluate.communityId,
-                      input.userId
-                    ),
-                    createMemberInDefaultChannels(
-                      channelToEvaluate.communityId,
-                      input.userId
-                    ),
-                    approveUser,
-                  ]).then(() => channelToEvaluate);
-                }
-              }
-            }
-
-            // user is neither a community or channel owner, they don't have permission
-            return new UserError(
-              "You don't have permission to make changes to this channel."
-            );
-          }
-        );
+            createMemberInCommunity(
+              channelToEvaluate.communityId,
+              input.userId
+            ),
+            createMemberInDefaultChannels(
+              channelToEvaluate.communityId,
+              input.userId
+            ),
+            approveUser,
+          ]).then(() => channelToEvaluate);
+        }
+      }
     },
-    unblockUser: (_: any, { input }, { user }: Context) => {
+    unblockUser: async (
+      _: any,
+      { input }: { input: UnblockInput },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       // user must be authed to edit a channel
@@ -610,86 +566,68 @@ module.exports = {
       }
 
       // get the current user's permission in the channel
-
-      // get the current user's permission in the channel
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
+      const getCurrentUserChannelPermissions = getUserPermissionsInChannel(
         input.channelId,
         currentUser.id
       );
-      const evaluatedUserChannelPermissions = getUserPermissionsInChannel(
+
+      const getEvaluatedUserChannelPermissions = getUserPermissionsInChannel(
         input.channelId,
         input.userId
       );
 
       // get the channel being edited
-      const channels = getChannels([input.channelId]);
+      const getChannelRecords = getChannels([input.channelId]);
 
-      return Promise.all([
+      const [
         currentUserChannelPermissions,
         evaluatedUserChannelPermissions,
         channels,
-      ])
-        .then(
-          (
-            [
-              currentUserChannelPermissions,
-              evaluatedUserChannelPermissions,
-              channels,
-            ]
-          ) => {
-            // get the channel to evaluate
-            const channelToEvaluate = channels[0];
+      ] = await Promise.all([
+        getCurrentUserChannelPermissions,
+        getEvaluatedUserChannelPermissions,
+        getChannelRecords,
+      ]);
 
-            // if channel wasn't found or was deleted
-            if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-              return new UserError("This channel doesn't exist");
-            }
+      // get the channel to evaluate
+      const channelToEvaluate = channels[0];
 
-            const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-              channelToEvaluate.communityId,
-              currentUser.id
-            );
-            return Promise.all([
-              currentUserChannelPermissions,
-              evaluatedUserChannelPermissions,
-              channelToEvaluate,
-              currentUserCommunityPermissions,
-            ]);
-          }
-        )
-        .then(
-          (
-            [
-              currentUserChannelPermissions,
-              evaluatedUserChannelPermissions,
-              channelToEvaluate,
-              currentUserCommunityPermissions,
-            ]
-          ) => {
-            if (!evaluatedUserChannelPermissions.isBlocked) {
-              return new UserError(
-                'This user is not currently blocked in this channel.'
-              );
-            }
+      // if channel wasn't found or was deleted
+      if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+        return new UserError("This channel doesn't exist");
+      }
 
-            // if a user owns the community or owns the channel, they can make this change
-            if (
-              currentUserChannelPermissions.isOwner ||
-              currentUserCommunityPermissions.isOwner
-            ) {
-              return unblockMemberInChannel(input.channelId, input.userId).then(
-                () => channelToEvaluate
-              );
-            }
+      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+        channelToEvaluate.communityId,
+        currentUser.id
+      );
 
-            // user is neither a community or channel owner, they don't have permission
-            return new UserError(
-              "You don't have permission to make changes to this channel."
-            );
-          }
+      if (!evaluatedUserChannelPermissions.isBlocked) {
+        return new UserError(
+          'This user is not currently blocked in this channel.'
         );
+      }
+
+      // if a user owns the community or owns the channel, they can make this change
+      if (
+        currentUserChannelPermissions.isOwner ||
+        currentUserCommunityPermissions.isOwner
+      ) {
+        return unblockMemberInChannel(input.channelId, input.userId).then(
+          () => channelToEvaluate
+        );
+      }
+
+      // user is neither a community or channel owner, they don't have permission
+      return new UserError(
+        "You don't have permission to make changes to this channel."
+      );
     },
-    sendChannelEmailInvites: async (_, { input }, { user }) => {
+    sendChannelEmailInvites: async (
+      _: any,
+      { input }: { input: EmailInvitesInput },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       if (!currentUser) {
@@ -713,13 +651,13 @@ module.exports = {
       return (
         input.contacts
           // can't invite yourself
-          .filter(user => user.email !== currentUser.email)
-          .map(user => {
+          .filter(contact => contact.email !== currentUser.email)
+          .map(contact => {
             return addQueue('private channel invite notification', {
               recipient: {
-                email: user.email,
-                firstName: user.firstName ? user.firstName : null,
-                lastName: user.lastName ? user.lastName : null,
+                email: contact.email,
+                firstName: contact.firstName ? contact.firstName : null,
+                lastName: contact.lastName ? contact.lastName : null,
               },
               channelId: input.id,
               senderId: currentUser.id,

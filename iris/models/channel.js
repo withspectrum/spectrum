@@ -113,6 +113,8 @@ const getChannelBySlug = (
       if (result && result[0]) {
         return result[0].left;
       }
+
+      return null;
     });
 };
 
@@ -259,10 +261,10 @@ const createGeneralChannel = (
   );
 };
 
-const editChannel = ({
+const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
-}: EditChannelArguments): DBChannel => {
-  return db
+}: EditChannelArguments): Promise<DBChannel> => {
+  const channelRecord = await db
     .table('channels')
     .get(channelId)
     .run()
@@ -273,24 +275,25 @@ const editChannel = ({
         slug,
         isPrivate,
       });
-    })
-    .then(obj => {
-      return db
-        .table('channels')
-        .get(channelId)
-        .update({ ...obj }, { returnChanges: 'always' })
-        .run()
-        .then(result => {
-          // if an update happened
-          if (result.replaced === 1) {
-            return result.changes[0].new_val;
-          }
+    });
 
-          // an update was triggered from the client, but no data was changed
-          if (result.unchanged === 1) {
-            return result.changes[0].old_val;
-          }
-        });
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({ ...channelRecord }, { returnChanges: 'always' })
+    .run()
+    .then(result => {
+      // if an update happened
+      if (result.replaced === 1) {
+        return result.changes[0].new_val;
+      }
+
+      // an update was triggered from the client, but no data was changed
+      if (result.unchanged === 1) {
+        return result.changes[0].old_val;
+      }
+
+      return null;
     });
 };
 

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
@@ -26,15 +26,21 @@ import {
   ContentContainer,
 } from './style';
 
-class NewCommunity extends Component {
-  state: {
-    activeStep: number,
-    isLoading: boolean,
-    community: any,
-    existingId: string,
-    hasInvitedPeople: boolean,
-  };
+type State = {
+  activeStep: number,
+  isLoading: boolean,
+  community: any,
+  existingId: ?string,
+  hasInvitedPeople: boolean,
+};
 
+type Props = {
+  currentUser: ?Object,
+  client: Object,
+  history: Object,
+};
+
+class NewCommunity extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -235,4 +241,8 @@ class NewCommunity extends Component {
   }
 }
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default compose(withApollo, connect(mapStateToProps))(NewCommunity);
+export default compose(
+  withApollo,
+  // $FlowIssue
+  connect(mapStateToProps)
+)(NewCommunity);

@@ -15,9 +15,7 @@ import {
 
 type Props = {
   communitySlug: string,
-  community: {
-    id: string,
-  },
+  community: Object,
 };
 class Overview extends React.Component<Props> {
   render() {
