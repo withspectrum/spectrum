@@ -19,7 +19,7 @@ const Header = ({
 }) => (
   <HeaderWrapper>
     <NarrowOnly>
-      <Menu>
+      <Menu hasNavBar>
         <CommunityListScroller>
           <CommunityList
             communities={communities}

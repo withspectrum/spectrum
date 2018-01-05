@@ -15,6 +15,7 @@ import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
 import Head from '../../components/head';
+import Menu from '../../components/menu';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
@@ -130,7 +131,18 @@ class Dashboard extends Component {
       return (
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
-          <Titlebar hasSearch />
+          <Titlebar hasChildren hasSearch filter={searchFilter}>
+            <Menu darkContext>
+              <CommunityListScroller>
+                <CommunityList
+                  communities={communities}
+                  user={user}
+                  activeCommunity={activeCommunity}
+                  activeChannel={activeChannel}
+                />
+              </CommunityListScroller>
+            </Menu>
+          </Titlebar>
           <CommunityListWrapper
             data-e2e-id="inbox-community-list"
             onMouseEnter={this.setHover}

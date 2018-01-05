@@ -95,28 +95,7 @@ export const CommunityListWrapper = styled.div`
       transition: ${Transition.hover.on};
     }
 
-    ${'' /* &:hover {
-    transform: translateZ(0);
-    width: 256px;
-    min-width: 256px;
-    transition: ${Transition.hover.on};
-    transition-delay: 1s;
-
-    .channelsContainer {
-      max-height: 1000px;
-      padding: 8px 8px 12px;
-      transform: translateZ(0);
-      transition: ${Transition.hover.on};
-      transition-delay: 1s;
-
-      .divider {
-        max-width: 230px;
-        border-top: 1px solid ${props => props.theme.bg.border};
-        height: 1px;
-        transition-delay: 1s;
-        transition: ${Transition.hover.on};
-      }
-    } */} .communityListText {
+    .communityListText {
       opacity: 1;
       transform: translateZ(0);
       transition: ${Transition.hover.on};
@@ -147,7 +126,7 @@ export const CommunityListItem = styled.div`
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
+    props.active ? props.theme.bg.default : 'transparent'};
   border: 1px solid
     ${props => (props.active ? props.theme.bg.border : 'transparent')};
 
@@ -332,9 +311,25 @@ export const ThreadScroller = styled.div`
 `;
 
 export const HeaderWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'center right';
+  grid-column-gap: 8px;
   align-items: center;
-  justify-content: space-between;
+  justify-items: center;
+  padding-left: 4px;
+
+  > button {
+    grid-area: right;
+  }
+
+  @media (max-width: 956px) {
+    padding-left: 0;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'left center right';
+  }
 `;
 
 export const ThreadComposerContainer = styled.div`
@@ -773,43 +768,44 @@ export const UpsellExploreDivider = styled.div`
   margin: 16px 0 16px;
 `;
 
-export const SearchWrapper = styled.div`
-  color: ${props => props.theme.text.alt};
-  display: flex;
-  align-items: center;
-  flex: ${props => (props.isOpen ? 'auto' : '0 0 40px')};
-  overflow: ${props => (props.isOpen ? 'visible' : 'hidden')};
-  transition: all 0.2s;
-  margin-right: 8px;
-  position: relative;
-
-  .icon {
-    position: absolute;
-    top: 50%;
-    left: 16px;
-    transform: translate(-4px, -50%);
-    cursor: pointer;
-    border-radius: 40px;
-  }
-`;
+// export const SearchWrapper = styled.div`
+//   color: ${props => props.theme.text.alt};
+//   display: flex;
+//   align-items: center;
+//   flex: auto;
+//   overflow: visible;
+//   position: relative;
+//   align-self: stretch;
+//
+//   .icon {
+//     position: absolute;
+//     top: 50%;
+//     left: 16px;
+//     cursor: pointer;
+//     border-radius: 40px;
+//   }
+// `;
 
 export const SearchInput = styled.input`
-  padding: 6px 8px;
-  margin-left: 4px;
-  padding-left: 32px;
+  align-self: stretch;
+  height: 100%;
   font-size: 14px;
-  border-radius: 40px;
-  display: flex;
-  flex: 1;
-  transition: all 0.2s;
-  border: 1px solid
-    ${props => (props.isOpen ? props.theme.bg.border : 'transparent')};
-  color: ${props => props.theme.text.alt};
-  padding-right: 40px;
+  color: ${props =>
+    props.darkContext ? props.theme.text.placeholder : props.theme.text.alt};
+  background-color: transparent;
+  justify-self: stretch;
+  border: none;
+
+  &:placeholder {
+    color: ${props =>
+      props.darkContext
+        ? props.theme.text.border
+        : props.theme.text.placeholder};
+  }
 
   &:focus {
-    color: ${props => props.theme.text.default};
-    border: 1px solid ${props => props.theme.bg.border};
+    color: ${props =>
+      props.darkContext ? props.theme.text.reverse : props.theme.text.default};
   }
 `;
 
@@ -817,17 +813,10 @@ export const ClearSearch = styled.span`
   width: 16px;
   height: 16px;
   opacity: ${props => (props.isVisible ? '1' : '0')};
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: ${props => props.theme.text.placeholder};
   border-radius: 50%;
   font-size: 16px;
-  position: absolute;
-  right: 1px;
-  top: 50%;
   color: ${props => props.theme.text.reverse};
-  transform: translate(-8px, -50%);
   font-weight: 500;
   pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
   cursor: pointer;
@@ -843,16 +832,41 @@ export const ClearSearch = styled.span`
   }
 `;
 
-export const SearchStringHeader = styled.div`
-  background: #fff;
-  padding: 16px;
-  font-weight: 600;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-`;
-
 export const SearchForm = styled.form`
-  display: flex;
-  flex: 1;
+  display: grid;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  color: ${props => props.theme.text.alt};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 16px;
+  grid-template-columns: 32px 1fr 32px;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'icon input clear';
+  align-items: center;
+  justify-items: center;
+  flex: auto;
+  justify-self: stretch;
+  grid-area: center;
+
+  ${props =>
+    props.darkContext &&
+    css`
+      border-color: transparent;
+      background-color: ${props => hexa(props.theme.text.alt, 0.35)};
+      color: ${props => props.theme.text.reverse};
+    `};
+
+  > div:last-of-type {
+    display: ${props => (props.isOpen ? 'flex' : 'none')};
+    color: ${props => props.theme.text.reverse};
+    background-color: ${props => props.theme.text.alt};
+    border-radius: 100%;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
 `;
 
 export const OutlineButton = styled.button`
@@ -871,6 +885,13 @@ export const OutlineButton = styled.button`
   }
 `;
 
+export const SearchStringHeader = styled.div`
+  background: #fff;
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+`;
+
 export const Hint = styled.span`
   font-size: 16px;
   color: ${props => props.theme.text.alt};
@@ -884,5 +905,6 @@ export const NarrowOnly = styled.div`
   @media (max-width: 956px) {
     display: flex;
     flex: none;
+    grid-area: left;
   }
 `;

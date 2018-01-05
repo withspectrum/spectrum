@@ -13,7 +13,24 @@ import {
   Gradient,
 } from '../../components/globals';
 
-export const Wrapper = styled.div`display: inline-block;`;
+export const Wrapper = styled.div`
+  display: inline-block;
+
+  ${props =>
+    props.darkContext &&
+    css`
+      > button {
+        color: ${props => props.theme.text.reverse};
+        transition: ${Transition.hover.off};
+
+        &:hover {
+          color: ${props => props.theme.text.reverse};
+          transform: scale(1.1);
+          transition: ${Transition.hover.on};
+        }
+      }
+    `};
+`;
 
 export const Absolute = styled.div`
   display: ${props => (props.open ? 'flex' : 'none')};
@@ -32,17 +49,15 @@ export const Absolute = styled.div`
     color: ${props => props.theme.text.reverse};
     z-index: 2;
     align-self: flex-start;
-    margin-top: 56px;
+    margin-top: ${props => (props.hasNavBar ? '56px' : '8px')};
     margin-left: 8px;
   }
 `;
 
 export const MenuContainer = styled.div`
   position: relative;
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'pricing' 'support' 'explore' '.' 'auth';
+  display: flex;
+  flex-direction: column;
   align-content: start;
   left: 0;
   top: 0;
@@ -54,7 +69,7 @@ export const MenuContainer = styled.div`
   background-image: ${props =>
     Gradient(props.theme.bg.default, props.theme.bg.wash)};
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
-  padding-top: 48px;
+  padding-top: ${props => (props.hasNavBar ? '48px' : '0')};
   z-index: ${zIndex.fullscreen + 1};
 `;
 

@@ -17,12 +17,19 @@ class Menu extends Component {
   }
 
   render() {
+    const { hasNavBar, darkContext } = this.props;
     return (
-      <Wrapper>
+      <Wrapper darkContext={darkContext}>
         <IconButton glyph={'menu'} onClick={() => this.toggleMenu()} />
-        <Absolute open={this.state.menuIsOpen}>
-          <MenuContainer>{this.props.children}</MenuContainer>
-          <IconButton glyph={'view-close'} onClick={() => this.toggleMenu()} />
+        <Absolute open={this.state.menuIsOpen} hasNavBar={hasNavBar}>
+          <MenuContainer hasNavBar={hasNavBar}>
+            {this.props.children}
+          </MenuContainer>
+          <IconButton
+            glyph={'view-close'}
+            onClick={() => this.toggleMenu()}
+            hasNavBar={hasNavBar}
+          />
           <MenuOverlay onClick={() => this.toggleMenu()} />
         </Absolute>
       </Wrapper>

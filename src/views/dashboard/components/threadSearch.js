@@ -1,8 +1,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from '../style';
+import { SearchInput, ClearSearch, SearchForm } from '../style';
 import Icon from '../../../components/icons';
+import { IconButton } from '../../../components/buttons';
 import {
   closeSearch,
   openSearch,
@@ -54,13 +55,13 @@ class ThreadSearch extends React.Component<Props, State> {
   };
 
   open = () => {
-    // this.props.dispatch(openSearch());
+    this.props.dispatch(openSearch());
     this.searchInput.focus();
   };
 
   close = () => {
     if (this.state.value.length === 0) {
-      // this.props.dispatch(closeSearch());
+      this.props.dispatch(closeSearch());
       this.props.dispatch(setSearchStringVariable(''));
     }
     this.searchInput.blur();
@@ -77,7 +78,7 @@ class ThreadSearch extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, filter } = this.props;
+    const { isOpen, filter, darkContext } = this.props;
     const { value } = this.state;
 
     const placeholder = filter.communityId
@@ -87,23 +88,26 @@ class ThreadSearch extends React.Component<Props, State> {
         : 'Search your communities...';
 
     return (
-      <SearchWrapper isOpen={true}>
-        <Icon glyph={'search'} size={24} onClick={this.open} />
-        <ClearSearch onClick={this.clearClose} isVisible={true} isOpen={true}>
-          <span>&times;</span>
-        </ClearSearch>
-        <SearchForm onSubmit={this.submit}>
-          <SearchInput
-            isOpen={true}
-            onChange={this.onChange}
-            value={value}
-            placeholder={placeholder}
-            innerRef={input => {
-              this.searchInput = input;
-            }}
-          />
-        </SearchForm>
-      </SearchWrapper>
+      <SearchForm
+        onSubmit={this.submit}
+        isOpen={isOpen}
+        darkContext={darkContext}
+      >
+        <Icon glyph={'search'} size={24} />
+        <SearchInput
+          onFocus={this.open}
+          onBlur={this.close}
+          isOpen={true}
+          onChange={this.onChange}
+          value={value}
+          placeholder={placeholder}
+          innerRef={input => {
+            this.searchInput = input;
+          }}
+          darkContext={darkContext}
+        />
+        <Icon glyph="view-close" size={16} onClick={this.clearClose} />
+      </SearchForm>
     );
   }
 }
