@@ -8,7 +8,7 @@ import {
   changeActiveThread,
 } from '../../../actions/dashboardFeed';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { sortByDate } from '../../../helpers/utils';
+import { sortByDate, sortByTitle } from '../../../helpers/utils';
 import compose from 'recompose/compose';
 import {
   CommunityListName,
@@ -58,7 +58,7 @@ class SidebarChannels extends React.Component<Props> {
         .filter(channel => channel.channelPermissions.isMember)
         .filter(channel => !channel.channelPermissions.isBlocked);
 
-      const sortedChannels = sortByDate(channels, 'createdAt', 'desc');
+      const sortedChannels = sortByTitle(channels);
 
       return (
         <ChannelsContainer className={'channelsContainer'}>
@@ -100,24 +100,29 @@ class SidebarChannels extends React.Component<Props> {
               </Link>
             )}
 
-          <SectionTitle>Filter by Channel</SectionTitle>
-          {sortedChannels.map(channel => {
-            return (
-              <ChannelListItem
-                key={channel.id}
-                active={activeChannel === channel.id}
-                onClick={() => this.changeChannel(channel.id)}
-              >
-                {channel.isPrivate ? (
-                  <Icon glyph="channel-private" size={24} />
-                ) : (
-                  <Icon glyph="channel" size={24} />
-                )}
+          {sortedChannels &&
+            sortedChannels.length > 1 && (
+              <SectionTitle>Filter by Channel</SectionTitle>
+            )}
+          {sortedChannels &&
+            sortedChannels.length > 1 &&
+            sortedChannels.map(channel => {
+              return (
+                <ChannelListItem
+                  key={channel.id}
+                  active={activeChannel === channel.id}
+                  onClick={() => this.changeChannel(channel.id)}
+                >
+                  {channel.isPrivate ? (
+                    <Icon glyph="channel-private" size={24} />
+                  ) : (
+                    <Icon glyph="channel" size={24} />
+                  )}
 
-                <CommunityListName>{channel.name}</CommunityListName>
-              </ChannelListItem>
-            );
-          })}
+                  <CommunityListName>{channel.name}</CommunityListName>
+                </ChannelListItem>
+              );
+            })}
         </ChannelsContainer>
       );
     }
