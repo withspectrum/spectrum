@@ -20,14 +20,12 @@ const Header = ({
   <HeaderWrapper>
     <NarrowOnly>
       <Menu hasNavBar>
-        <CommunityListScroller>
-          <CommunityList
-            communities={communities}
-            user={user}
-            activeCommunity={activeCommunity}
-            activeChannel={activeChannel}
-          />
-        </CommunityListScroller>
+        <CommunityList
+          communities={communities}
+          user={user}
+          activeCommunity={activeCommunity}
+          activeChannel={activeChannel}
+        />
       </Menu>
     </NarrowOnly>
     <ThreadSearch filter={filter} />

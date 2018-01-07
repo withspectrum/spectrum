@@ -47,6 +47,10 @@ class CollectionSwitcher extends React.Component<Props, State> {
   render() {
     const ThisSegment = styled(Segment)`
       @media (max-width: 768px) {
+        &:first-of-type {
+          color: ${props => props.theme.text.alt};
+          border-bottom: 2px solid ${props => props.theme.bg.border};
+        }
         &:not(:first-of-type) {
           display: none;
         }

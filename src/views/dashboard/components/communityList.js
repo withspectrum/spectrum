@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -8,14 +8,14 @@ import Reputation from '../../../components/reputation';
 import SidebarChannels from './sidebarChannels';
 import UpsellExploreCommunities from './upsellExploreCommunities';
 import {
-  AllCommunityListItem,
-  ExploreCommunityListItem,
   CommunityListItem,
-  CommunityListText,
+  CommunityListMeta,
   CommunityListName,
-  CommunityListReputation,
   CommunityListAvatar,
-  CommunityListPadding,
+  CommunityListScroller,
+  CommunityListWrapper,
+  SpecialListItem,
+  SectionTitle,
   Fixed,
 } from '../style';
 import {
@@ -24,7 +24,7 @@ import {
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
 
-class CommunityList extends Component {
+class CommunityList extends PureComponent {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
     this.props.history.replace(`/`);
@@ -47,14 +47,20 @@ class CommunityList extends Component {
     }
   };
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.activeCommunity !== nextProps.activeCommunity) {
+      return true;
+    }
+
+    if (this.props.communities !== nextProps.communities) {
+      return true;
+    }
+
+    return false;
+  }
+
   render() {
-    const {
-      activeCommunity,
-      activeChannel,
-      communities,
-      isHovered,
-      user,
-    } = this.props;
+    const { activeCommunity, activeChannel, communities, user } = this.props;
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);
@@ -62,34 +68,19 @@ class CommunityList extends Component {
     });
 
     return (
-      <div>
-        <CommunityListItem
-          active={!activeCommunity}
-          onClick={() => this.changeCommunity('')}
-        >
-          <CommunityListPadding>
-            <AllCommunityListItem active={!activeCommunity}>
-              <Icon glyph={'everything'} />
-            </AllCommunityListItem>
-            <CommunityListText className={'communityListText'}>
-              <CommunityListName active={!activeCommunity}>
-                Everything
-              </CommunityListName>
-              <CommunityListReputation>
-                <Reputation
-                  ignoreClick
-                  tipLocation={'top-right'}
-                  tipText={'Your total rep'}
-                  reputation={user.totalReputation}
-                />
-              </CommunityListReputation>
-            </CommunityListText>
-          </CommunityListPadding>
-        </CommunityListItem>
-
-        {sortedCommunities.map(c => (
-          <CommunityListItem key={c.id} active={c.id === activeCommunity}>
-            <CommunityListPadding
+      <CommunityListWrapper data-e2e-id="inbox-community-list">
+        <CommunityListScroller>
+          <SectionTitle>Filter by community</SectionTitle>
+          <SpecialListItem
+            active={!activeCommunity}
+            onClick={() => this.changeCommunity('')}
+          >
+            <Icon glyph={'everything'} />
+            <CommunityListName>Everything</CommunityListName>
+          </SpecialListItem>
+          {sortedCommunities.map(c => (
+            <CommunityListItem
+              key={c.id}
               onClick={() => this.handleOnClick(c.id)}
               active={c.id === activeCommunity}
             >
@@ -97,58 +88,44 @@ class CommunityList extends Component {
                 active={c.id === activeCommunity}
                 src={c.profilePhoto}
               />
-              <CommunityListText className={'communityListText'}>
-                <CommunityListName
-                  active={!activeChannel && c.id === activeCommunity}
-                >
-                  {c.name}
-                </CommunityListName>
-                <CommunityListReputation active={c.id === activeCommunity}>
-                  <Reputation
-                    ignoreClick
-                    size={'mini'}
-                    tipText={'Rep in this community'}
-                    reputation={c.communityPermissions.reputation}
-                  />
-                </CommunityListReputation>
-              </CommunityListText>
-            </CommunityListPadding>
+              <CommunityListMeta>
+                <CommunityListName>{c.name}</CommunityListName>
+                <Reputation
+                  ignoreClick
+                  size={'mini'}
+                  tipText={`Rep in ${c.name}`}
+                  reputation={c.communityPermissions.reputation}
+                />
+              </CommunityListMeta>
 
-            {c.id === activeCommunity && (
-              <SidebarChannels
-                activeChannel={activeChannel}
-                communitySlug={c.slug}
-                isHovered={isHovered}
-              />
-            )}
-          </CommunityListItem>
-        ))}
+              {c.id === activeCommunity && (
+                <SidebarChannels
+                  activeChannel={activeChannel}
+                  communitySlug={c.slug}
+                  thisCommunity={c}
+                />
+              )}
+            </CommunityListItem>
+          ))}
+        </CommunityListScroller>
 
-        {// if user has joined less than 5 communities, upsell some popular ones
-        communities.length < 5 && (
-          <UpsellExploreCommunities
-            activeCommunity={activeCommunity}
-            communities={communities}
-            handleOnClick={this.handleOnClick}
-          />
-        )}
-
-        {// if user has joined more than 5 communities, show a small fixed upsell for explore
-        communities.length > 5 && (
-          <Fixed>
-            <ExploreCommunityListItem>
-              <Link to={'/explore'}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <AllCommunityListItem>
-                    <Icon glyph={'explore'} />
-                  </AllCommunityListItem>
-                  <CommunityListName>Explore communities</CommunityListName>
-                </div>
-              </Link>
-            </ExploreCommunityListItem>
-          </Fixed>
-        )}
-      </div>
+        <Fixed>
+          <Link to={'/explore'}>
+            <CommunityListItem>
+              <Icon glyph={'explore'} />
+              <CommunityListName>Find more communities</CommunityListName>
+            </CommunityListItem>
+          </Link>
+          {// if user has joined less than 5 communities, upsell some popular ones
+          communities.length < 5 && (
+            <UpsellExploreCommunities
+              activeCommunity={activeCommunity}
+              communities={communities}
+              handleOnClick={this.handleOnClick}
+            />
+          )}
+        </Fixed>
+      </CommunityListWrapper>
     );
   }
 }

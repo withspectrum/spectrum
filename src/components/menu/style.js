@@ -59,10 +59,11 @@ export const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-content: start;
+  justify-content: stretch;
   left: 0;
   top: 0;
   bottom: 0;
-  height: 100vh;
+  height: ${props => (props.hasNavbar ? 'calc(100vh - 48px)' : '100vh')};
   width: 300px;
   color: ${props => props.theme.brand.alt};
   background-color: ${props => props.theme.bg.default};

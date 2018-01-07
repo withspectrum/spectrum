@@ -33,6 +33,7 @@ import {
   ThreadWrapper,
   ThreadScroller,
   SearchStringHeader,
+  Sidebar,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -133,31 +134,22 @@ class Dashboard extends Component {
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext>
-              <CommunityListScroller>
-                <CommunityList
-                  communities={communities}
-                  user={user}
-                  activeCommunity={activeCommunity}
-                  activeChannel={activeChannel}
-                />
-              </CommunityListScroller>
-            </Menu>
-          </Titlebar>
-          <CommunityListWrapper
-            data-e2e-id="inbox-community-list"
-            onMouseEnter={this.setHover}
-            onMouseLeave={this.removeHover}
-          >
-            <CommunityListScroller>
               <CommunityList
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
                 activeChannel={activeChannel}
               />
-            </CommunityListScroller>
-          </CommunityListWrapper>
-
+            </Menu>
+          </Titlebar>
+          <Sidebar>
+            <CommunityList
+              communities={communities}
+              user={user}
+              activeCommunity={activeCommunity}
+              activeChannel={activeChannel}
+            />
+          </Sidebar>
           <InboxWrapper>
             <FeedHeaderContainer>
               <Header
