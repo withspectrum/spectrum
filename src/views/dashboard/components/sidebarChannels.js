@@ -61,11 +61,7 @@ class SidebarChannels extends React.Component<Props> {
 
       return (
         <ChannelsContainer className={'channelsContainer'}>
-          <Link
-            to={`/${thisCommunity.slug}`}
-            target="_blank"
-            rel="nofollower noopener"
-          >
+          <Link to={`/${community.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
               <CommunityListName>Visit community</CommunityListName>
@@ -73,11 +69,7 @@ class SidebarChannels extends React.Component<Props> {
           </Link>
 
           {isOwner && (
-            <Link
-              to={`/${thisCommunity.slug}/settings`}
-              target="_blank"
-              rel="nofollower noopener"
-            >
+            <Link to={`/${community.slug}/settings`}>
               <ChannelListItem>
                 <Icon glyph={'settings'} size={24} />
                 <CommunityListName>Settings</CommunityListName>
@@ -86,12 +78,8 @@ class SidebarChannels extends React.Component<Props> {
           )}
 
           {isOwner &&
-            thisCommunity.isPro && (
-              <Link
-                to={`/${thisCommunity.slug}/settings/analytics`}
-                target="_blank"
-                rel="nofollower noopener"
-              >
+            community.isPro && (
+              <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />
                   <CommunityListName>Analytics</CommunityListName>
@@ -129,11 +117,7 @@ class SidebarChannels extends React.Component<Props> {
     if (isLoading || queryVarIsChanging) {
       return (
         <ChannelsContainer className={'channelsContainer'}>
-          <Link
-            to={`/${thisCommunity.slug}`}
-            target="_blank"
-            rel="nofollower noopener"
-          >
+          <Link to={`/${thisCommunity.slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
               <CommunityListName>Visit community</CommunityListName>
@@ -141,11 +125,7 @@ class SidebarChannels extends React.Component<Props> {
           </Link>
 
           {isOwner && (
-            <Link
-              to={`/${thisCommunity.slug}/settings`}
-              target="_blank"
-              rel="nofollower noopener"
-            >
+            <Link to={`/${thisCommunity.slug}/settings`}>
               <ChannelListItem>
                 <Icon glyph={'settings'} size={24} />
                 <CommunityListName>Settings</CommunityListName>
@@ -155,11 +135,7 @@ class SidebarChannels extends React.Component<Props> {
 
           {isOwner &&
             thisCommunity.isPro && (
-              <Link
-                to={`/${thisCommunity.slug}/settings/analytics`}
-                target="_blank"
-                rel="nofollower noopener"
-              >
+              <Link to={`/${thisCommunity.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />
                   <CommunityListName>Analytics</CommunityListName>
