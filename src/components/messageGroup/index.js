@@ -48,7 +48,7 @@ export const AuthorAvatar = ({
 };
 
 export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
-  const { me, sender } = props;
+  const { sender } = props;
 
   return (
     <Byline>

@@ -3,7 +3,7 @@ import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
-import { HeaderWrapper, CommunityListScroller, NarrowOnly } from '../style';
+import { HeaderWrapper, NarrowOnly } from '../style';
 import { IconButton } from '../../../components/buttons';
 import ThreadSearch from './threadSearch';
 import Menu from '../../../components/menu';

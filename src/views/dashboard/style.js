@@ -7,11 +7,9 @@ import {
   zIndex,
   Truncate,
   Tooltip,
-  Transition,
   Shadow,
   hexa,
 } from '../../components/globals';
-import { ReputationWrapper } from '../../components/reputation/style';
 
 export const Wrapper = styled.div`
   display: flex;

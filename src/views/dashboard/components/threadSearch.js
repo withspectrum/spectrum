@@ -1,9 +1,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { SearchInput, ClearSearch, SearchForm } from '../style';
+import { SearchInput, SearchForm } from '../style';
 import Icon from '../../../components/icons';
-import { IconButton } from '../../../components/buttons';
 import {
   closeSearch,
   openSearch,

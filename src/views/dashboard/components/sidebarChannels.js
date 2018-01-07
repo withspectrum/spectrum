@@ -8,13 +8,12 @@ import {
   changeActiveThread,
 } from '../../../actions/dashboardFeed';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { sortByDate, sortByTitle } from '../../../helpers/utils';
+import { sortByTitle } from '../../../helpers/utils';
 import compose from 'recompose/compose';
 import {
   CommunityListName,
   ChannelsContainer,
   ChannelListItem,
-  ChannelListDivider,
   LoadingContainer,
   LoadingBar,
   SectionTitle,
@@ -36,7 +35,7 @@ class SidebarChannels extends React.Component<Props> {
       activeChannel,
     } = this.props;
 
-    const { slug, isPro, communityPermissions: { isOwner } } = thisCommunity;
+    const { communityPermissions: { isOwner } } = thisCommunity;
 
     if (community) {
       const { isOwner } = community.communityPermissions;

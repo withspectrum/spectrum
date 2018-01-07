@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import ThreadContainer from '../thread';
 import { Container, Thread } from './style';
-import ViewSegment from '../../components/viewSegment';
 
 class DashboardThread extends Component {
   render() {

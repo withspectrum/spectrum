@@ -60,7 +60,7 @@ class CommunityList extends PureComponent {
   }
 
   render() {
-    const { activeCommunity, activeChannel, communities, user } = this.props;
+    const { activeCommunity, activeChannel, communities } = this.props;
     const sortedCommunities = communities.slice().sort((a, b) => {
       const bc = parseInt(b.communityPermissions.reputation, 10);
       const ac = parseInt(a.communityPermissions.reputation, 10);

@@ -22,20 +22,8 @@ export const TitleBar = styled(FlexRow)`
   z-index: ${zIndex.chrome};
   box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   justify-items: center;
-  ${'' /* width: 100%;
-  display: flex;
-  background-color: ${({ theme }) => theme.bg.reverse};
-  color: ${({ theme }) => theme.text.reverse};
-  min-height: 48px;
-  height: 48px;
-  order: 0;
-  flex: 0 0 48px;
-  z-index: ${zIndex.chrome};
-  box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 8px;
-  grid-area: 'title'; */} @media (min-width: 768px) {
+
+  @media (min-width: 768px) {
     display: none;
   }
 `;
@@ -74,9 +62,4 @@ export const Subtitle = styled.p`
   overflow: hidden;
   word-break: break-word;
   white-space: nowrap;
-`;
-
-export const Spacer = styled.span`
-  width: 32px;
-  height: 32px;
 `;

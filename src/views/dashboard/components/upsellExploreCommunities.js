@@ -3,8 +3,6 @@ import { getTopCommunities } from '../../explore/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Link from 'src/components/link';
-import Icon from '../../../components/icons';
 import { CommunityListAvatar } from '../style';
 import { FlexRow } from '../../../components/globals';
 

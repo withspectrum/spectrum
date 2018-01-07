@@ -1,11 +1,5 @@
 import styled, { css } from 'styled-components';
-import Link from '../../components/link';
-import { Button } from '../../components/buttons';
 import {
-  H2,
-  FlexCol,
-  FlexRow,
-  P,
   Transition,
   Shadow,
   zIndex,

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { IconButton } from '../../components/buttons';
 import { Wrapper, MenuContainer, MenuOverlay, Absolute } from './style';
 

@@ -7,7 +7,7 @@ import Link from 'src/components/link';
 import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
-import { TitleBar, Text, Subtitle, Title, Spacer } from './style';
+import { TitleBar, Text, Subtitle, Title } from './style';
 
 const TextHeading = ({ title, subtitle }) => (
   <Text>

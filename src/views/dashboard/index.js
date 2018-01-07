@@ -27,8 +27,6 @@ import {
   Wrapper,
   InboxWrapper,
   InboxScroller,
-  CommunityListWrapper,
-  CommunityListScroller,
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
@@ -107,8 +105,6 @@ class Dashboard extends Component {
       searchFilter.communityId = null;
       searchFilter.everythingFeed = true;
     }
-
-    const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 
     if (user) {
