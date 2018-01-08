@@ -221,8 +221,7 @@ export const CommunityListItem = styled.div`
     `};
 
   &:hover {
-    ${'' /* border: 1px solid ${props => props.theme.bg.border}; */} background: ${props =>
-        props.active ? props.theme.bg.default : props.theme.bg.default};
+    background: ${props => props.theme.bg.default};
     color: ${props => props.theme.text.default};
     box-shadow: 0 1px 0 ${props => props.theme.bg.border},
       0 -1px 0 ${props => props.theme.bg.border};
@@ -231,10 +230,6 @@ export const CommunityListItem = styled.div`
       box-shadow: 0;
     }
   }
-`;
-
-export const SpecialListItem = styled(CommunityListItem)`
-  ${props => props.active && css`color: ${props => props.theme.text.default};`};
 `;
 
 export const CommunityListScroller = styled.div`

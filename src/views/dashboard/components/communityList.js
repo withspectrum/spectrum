@@ -14,7 +14,6 @@ import {
   CommunityListAvatar,
   CommunityListScroller,
   CommunityListWrapper,
-  SpecialListItem,
   SectionTitle,
   Fixed,
 } from '../style';
@@ -58,13 +57,13 @@ class CommunityList extends Component {
     return (
       <CommunityListWrapper data-e2e-id="inbox-community-list">
         <CommunityListScroller>
-          <SpecialListItem
+          <CommunityListItem
             active={!activeCommunity}
             onClick={() => this.changeCommunity('')}
           >
             <Icon glyph={'everything'} />
             <CommunityListName>Everything</CommunityListName>
-          </SpecialListItem>
+          </CommunityListItem>
           {sortedCommunities.map(c => (
             <CommunityListItem
               key={c.id}
