@@ -43,7 +43,7 @@ class Reputation extends React.Component<Props> {
         <Icon glyph="rep" size={24} />
 
         <ReputationLabel size={size}>
-          {truncateNumber(renderedReputation, 1)} rep
+          {truncateNumber(renderedReputation, 1)}
         </ReputationLabel>
       </ReputationWrapper>
     );

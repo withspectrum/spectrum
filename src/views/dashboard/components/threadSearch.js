@@ -1,7 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from '../style';
+import { SearchInput, SearchForm } from '../style';
 import Icon from '../../../components/icons';
 import {
   closeSearch,
@@ -77,7 +77,7 @@ class ThreadSearch extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, filter } = this.props;
+    const { isOpen, filter, darkContext } = this.props;
     const { value } = this.state;
 
     const placeholder = filter.communityId
@@ -87,28 +87,26 @@ class ThreadSearch extends React.Component<Props, State> {
         : 'Search your communities...';
 
     return (
-      <SearchWrapper isOpen={isOpen}>
-        <Icon glyph={'search'} size={32} onClick={this.open} />
-        <ClearSearch
-          onClick={this.clearClose}
-          isVisible={isOpen && value.length > 0}
-          isOpen={isOpen}
-        >
-          <span>&times;</span>
-        </ClearSearch>
-        <SearchForm onSubmit={this.submit}>
-          <SearchInput
-            isOpen={isOpen}
-            onBlur={this.close}
-            onChange={this.onChange}
-            value={value}
-            placeholder={placeholder}
-            innerRef={input => {
-              this.searchInput = input;
-            }}
-          />
-        </SearchForm>
-      </SearchWrapper>
+      <SearchForm
+        onSubmit={this.submit}
+        isOpen={isOpen}
+        darkContext={darkContext}
+      >
+        <Icon glyph={'search'} size={24} />
+        <SearchInput
+          onFocus={this.open}
+          onBlur={this.close}
+          isOpen={true}
+          onChange={this.onChange}
+          value={value}
+          placeholder={placeholder}
+          innerRef={input => {
+            this.searchInput = input;
+          }}
+          darkContext={darkContext}
+        />
+        <Icon glyph="view-close" size={16} onClick={this.clearClose} />
+      </SearchForm>
     );
   }
 }
