@@ -17,7 +17,7 @@ export const Thread = styled.div`
   display: flex;
   background: ${props => props.theme.bg.wash};
   flex: auto;
-  z-index: ${zIndex.chrome - 1};
+  z-index: ${zIndex.chrome - 2};
   flex-direction: column;
   max-width: 100%;
 `;

@@ -45,7 +45,7 @@ class ThreadByline extends React.Component<Props> {
           {creator.username ? (
             <AuthorNameLink to={`/users/${creator.username}`}>
               <AuthorName>{creator.name}</AuthorName>
-              <AuthorUsername>· @{creator.username}</AuthorUsername>
+              <AuthorUsername>@{creator.username}</AuthorUsername>
               {creator &&
                 creator.contextPermissions &&
                 creator.contextPermissions.isOwner && <Badge type="admin" />}
