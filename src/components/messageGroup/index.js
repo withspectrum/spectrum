@@ -48,13 +48,13 @@ export const AuthorAvatar = ({
 };
 
 export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
-  const { me, sender } = props;
+  const { sender } = props;
 
   return (
     <Byline>
       <Link to={`/users/${sender.username}`}>
-        <Name>{me ? 'Me' : sender.name}</Name>{' '}
-        <Username>{sender.username && ` · @${sender.username}`}</Username>
+        <Name>{sender.name}</Name>{' '}
+        <Username>{sender.username && `@${sender.username}`}</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}

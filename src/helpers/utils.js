@@ -271,6 +271,19 @@ export const sortByDate = (array, key, order) => {
   });
 };
 
+export const sortByTitle = array => {
+  return array.sort((a, b) => {
+    const x = a['name'];
+    const y = b['name'];
+    const val = x.localeCompare(y, {
+      sensitivity: 'base',
+      numeric: 'true',
+      caseFirst: 'upper',
+    });
+    return val;
+  });
+};
+
 export const renderMarkdownLinks = text => {
   const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 

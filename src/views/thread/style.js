@@ -252,7 +252,7 @@ export const AuthorName = styled(H3)`
   font-weight: 500;
   max-width: 100%;
   color: ${props => props.theme.text.default};
-  margin-right: 6px;
+  margin-right: 4px;
   font-size: 14px;
 
   &:hover {
@@ -266,7 +266,7 @@ export const AuthorUsername = styled.span`
   flex-direction: row;
   align-items: center;
   font-weight: 400;
-  margin-right: 6px;
+  margin-right: 4px;
 
   @media (max-width: 768px) {
     font-size: 12px;
