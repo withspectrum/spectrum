@@ -58,7 +58,6 @@ class CommunityList extends Component {
     return (
       <CommunityListWrapper data-e2e-id="inbox-community-list">
         <CommunityListScroller>
-          <SectionTitle>Filter by community</SectionTitle>
           <SpecialListItem
             active={!activeCommunity}
             onClick={() => this.changeCommunity('')}

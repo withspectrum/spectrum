@@ -188,7 +188,7 @@ export const CommunityListItem = styled.div`
   grid-auto-rows: 48px auto;
   grid-template-areas: 'icon title' 'menu menu';
   min-height: 48px;
-  padding: 4px 8px;
+  padding: 6px 8px;
   justify-items: start;
   align-items: center;
   cursor: pointer;
@@ -222,10 +222,10 @@ export const CommunityListItem = styled.div`
 
   &:hover {
     ${'' /* border: 1px solid ${props => props.theme.bg.border}; */} background: ${props =>
-        props.active ? props.theme.bg.default : props.theme.brand.wash};
+        props.active ? props.theme.bg.default : props.theme.bg.default};
     color: ${props => props.theme.text.default};
-    box-shadow: 0 1px 0 ${props => props.theme.brand.border},
-      0 -1px 0 ${props => props.theme.brand.border};
+    box-shadow: 0 1px 0 ${props => props.theme.bg.border},
+      0 -1px 0 ${props => props.theme.bg.border};
 
     img {
       box-shadow: 0;
@@ -234,7 +234,7 @@ export const CommunityListItem = styled.div`
 `;
 
 export const SpecialListItem = styled(CommunityListItem)`
-  ${props => props.active && css`color: ${props => props.theme.brand.alt};`};
+  ${props => props.active && css`color: ${props => props.theme.text.default};`};
 `;
 
 export const CommunityListScroller = styled.div`
