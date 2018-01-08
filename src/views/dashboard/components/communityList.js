@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -24,7 +24,7 @@ import {
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
 
-class CommunityList extends PureComponent {
+class CommunityList extends Component {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
     this.props.history.replace(`/`);
@@ -46,18 +46,6 @@ class CommunityList extends PureComponent {
       this.changeCommunity(id);
     }
   };
-
-  shouldComponentUpdate(nextProps) {
-    if (this.props.activeCommunity !== nextProps.activeCommunity) {
-      return true;
-    }
-
-    if (this.props.communities !== nextProps.communities) {
-      return true;
-    }
-
-    return false;
-  }
 
   render() {
     const { activeCommunity, activeChannel, communities } = this.props;

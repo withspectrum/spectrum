@@ -98,7 +98,10 @@ class SidebarChannels extends React.Component<Props> {
                 <ChannelListItem
                   key={channel.id}
                   active={activeChannel === channel.id}
-                  onClick={() => this.changeChannel(channel.id)}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    this.changeChannel(channel.id);
+                  }}
                 >
                   {channel.isPrivate ? (
                     <Icon glyph="channel-private" size={24} />
