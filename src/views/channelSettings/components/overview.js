@@ -31,14 +31,14 @@ class Overview extends React.Component<Props> {
           <EditForm channel={channel} />
         </Column>
 
-        {channel.isPrivate && (
-          <Column>
-            <SectionCard>
-              <SectionTitle>Invite by email</SectionTitle>
-              <ChannelInvitationForm community={community} />
-            </SectionCard>
-          </Column>
-        )}
+        {/*channel.isPrivate && (
+          // <Column>
+          //   <SectionCard>
+          //     <SectionTitle>Invite by email</SectionTitle>
+          //     <ChannelInvitationForm community={community} />
+          //   </SectionCard>
+          // </Column>
+        )*/}
 
         <Column>
           {channel.isPrivate && (
