@@ -11,7 +11,10 @@ import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import { SectionsContainer, Column } from '../communitySettings/style';
+import {
+  SectionsContainer,
+  Column,
+} from '../../components/settingsViews/style';
 import { Loading } from '../../components/loading';
 
 type Props = {

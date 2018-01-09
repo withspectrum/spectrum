@@ -27,7 +27,10 @@ import {
   TertiaryActionContainer,
   ImageInputWrapper,
 } from '../../../components/editForm/style';
-import { SectionCard, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 
 type Props = {};
 class EditForm extends React.Component<Props> {

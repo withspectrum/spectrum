@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { SectionsContainer, Column } from '../style';
 import EditForm from './editForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import ChannelList from './channelList';
@@ -11,6 +10,8 @@ import CommunityMembers from './communityMembers';
 import {
   SectionCard,
   SectionTitle,
+  SectionsContainer,
+  Column,
 } from '../../../components/settingsViews/style';
 
 type Props = {

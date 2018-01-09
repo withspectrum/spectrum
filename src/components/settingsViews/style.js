@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Tooltip } from '../globals';
 
 export const View = styled.div`
   display: flex;
@@ -17,6 +18,10 @@ export const SectionsContainer = styled.div`
   flex-wrap: wrap;
   padding: 8px;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 8px 0;
+  }
 `;
 
 export const Column = styled.div`
@@ -28,8 +33,7 @@ export const Column = styled.div`
 
   @media (max-width: 768px) {
     flex: 1 0 100%;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0;
 
     &:first-of-type {
       padding-top: 8px;
@@ -45,6 +49,10 @@ export const SectionCard = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+  }
 `;
 
 export const SectionCardFooter = styled.div`
@@ -148,4 +156,20 @@ export const HeaderText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+`;
+
+export const GrowthText = styled.h5`
+  color: ${props =>
+    props.positive
+      ? props.theme.success.default
+      : props.negative ? props.theme.warn.alt : props.theme.text.alt};
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 14px;
+`;
+
+export const MessageIcon = styled.div`
+  color: ${props => props.theme.brand.alt};
+  cursor: pointer;
+  ${Tooltip} top: 2px;
 `;
