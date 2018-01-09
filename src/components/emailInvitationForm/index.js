@@ -258,6 +258,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
+                hideOnMobile
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />

@@ -39,7 +39,7 @@ export const EmailInviteInput = styled.input`
   }
 
   @media screen and (max-width: 768px) {
-    display: none;
+    display: ${props => (props.hideOnMobile ? 'none' : 'auto')};
   }
 `;
 
