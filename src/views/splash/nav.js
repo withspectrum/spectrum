@@ -41,7 +41,10 @@ class Nav extends Component {
   render() {
     return (
       <NavContainer>
-        <Head>
+        <Head
+          title={'Spectrum'}
+          description={'The community platform for the future.'}
+        >
           <link
             rel="shortcut icon"
             id="dynamic-favicon"
