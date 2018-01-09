@@ -16,19 +16,20 @@ type JobData = {
     userId: string,
     channelId: string,
     communityId: string,
+    moderatorId: string,
   },
 };
 export default async (job: JobData) => {
-  const { userId, channelId, communityId } = job.data;
+  const { userId, channelId, communityId, moderatorId } = job.data;
   debug(`user request to join channel ${channelId} approved`);
 
   const [actor, context, entity] = await Promise.all([
-    fetchPayload('USER', userId),
+    fetchPayload('USER', moderatorId),
     fetchPayload('COMMUNITY', communityId),
     fetchPayload('CHANNEL', channelId),
   ]);
 
-  const eventType = 'USER_PRIVATE_CHANNEL_REQUEST_APPROVED';
+  const eventType = 'PRIVATE_CHANNEL_REQUEST_APPROVED';
 
   // construct a new notification record to either be updated or stored in the db
   const nextNotificationRecord = Object.assign(

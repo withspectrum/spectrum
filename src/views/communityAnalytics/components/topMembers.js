@@ -21,6 +21,12 @@ type User = {
   profilePhoto: string,
   name: string,
   username: string,
+  contextPermissions: {
+    isOwner: boolean,
+    isMember: boolean,
+    isModerator: boolean,
+    reputation: number,
+  },
 };
 
 type Props = {
@@ -30,6 +36,8 @@ type Props = {
       topMembers: Array<User>,
     },
   },
+  dispatch: Function,
+  history: Object,
 };
 
 class ConversationGrowth extends React.Component<Props> {

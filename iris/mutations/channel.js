@@ -545,6 +545,7 @@ module.exports = {
               userId: input.userId,
               channelId: channelToEvaluate.id,
               communityId: channelToEvaluate.communityId,
+              moderatorId: currentUser.id,
             });
             return channelToEvaluate;
           });
@@ -567,6 +568,7 @@ module.exports = {
               userId: input.userId,
               channelId: channelToEvaluate.id,
               communityId: channelToEvaluate.communityId,
+              moderatorId: currentUser.id,
             });
             return channelToEvaluate;
           });

@@ -31,7 +31,7 @@ export default async (job: JobData) => {
     createPayload('CHANNEL', channel),
   ]);
 
-  const eventType = 'USER_REQUESTED_JOIN_PRIVATE_CHANNEL';
+  const eventType = 'PRIVATE_CHANNEL_REQUEST_SENT';
 
   // construct a new notification record to either be updated or stored in the db
   const nextNotificationRecord = Object.assign(
