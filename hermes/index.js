@@ -17,7 +17,9 @@ import processSendAdminCommunityCreatedEmail from './queues/send-admin-community
 import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import processSendAdminSlackImportProcessedEmail from './queues/send-admin-slack-import-email';
 import processSendAdminActiveCommunityReportEmail from './queues/send-admin-active-community-report-email';
-import processSendRequestJoinPrivateChannelEmail from './queues/send-request-join-private-channel-email';
+import processSendRequestJoinPrivateChannelEmail from './queues/send-private-channel-request-sent-email';
+import processSendPrivateChannelRequestApprovedEmail from './queues/send-private-channel-request-approved-email';
+
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
@@ -36,6 +38,7 @@ import {
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
   SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3002;
@@ -62,6 +65,7 @@ const server = createWorker({
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,
   [SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL]: processSendAdminActiveCommunityReportEmail,
   [SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL]: processSendRequestJoinPrivateChannelEmail,
+  [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
 });
 
 console.log(

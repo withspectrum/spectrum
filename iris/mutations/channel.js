@@ -502,7 +502,7 @@ module.exports = {
       }
 
       // get the community parent of channel
-      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+      const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
         channelToEvaluate.communityId,
         currentUser.id
       );
@@ -540,9 +540,14 @@ module.exports = {
 
         // if the user is a member of the parent community, we can return
         if (currentUserCommunityPermissions.isMember) {
-          return Promise.all([channelToEvaluate, approveUser]).then(
-            () => channelToEvaluate
-          );
+          return Promise.all([channelToEvaluate, approveUser]).then(() => {
+            addQueue('request join private channel approved', {
+              userId: input.userId,
+              channelId: channelToEvaluate.id,
+              communityId: channelToEvaluate.communityId,
+            });
+            return channelToEvaluate;
+          });
         } else {
           // if the user is not a member of the parent community,
           // join the community and the community's default channels
@@ -557,7 +562,14 @@ module.exports = {
               input.userId
             ),
             approveUser,
-          ]).then(() => channelToEvaluate);
+          ]).then(() => {
+            addQueue('request join private channel approved', {
+              userId: input.userId,
+              channelId: channelToEvaluate.id,
+              communityId: channelToEvaluate.communityId,
+            });
+            return channelToEvaluate;
+          });
         }
       }
     },

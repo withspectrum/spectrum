@@ -26,6 +26,8 @@ export const PROCESS_ADMIN_TOXIC_MESSAGE = 'process admin toxic message';
 export const PROCESS_ADMIN_TOXIC_THREAD = 'process admin toxic thread';
 export const USER_REQUESTED_JOIN_PRIVATE_CHANNEL =
   'user requested join private channel';
+export const REQUEST_JOIN_PRIVATE_CHANNEL_APPROVED =
+  'request join private channel approved';
 
 // invoices and recurring payments
 export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';

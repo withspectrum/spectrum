@@ -24,6 +24,8 @@ export const SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL =
   'send active community admin report email';
 export const SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL =
   'send request join private channel email';
+export const SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL =
+  'send private channel request approved email';
 
 export const NEW_MESSAGE_TEMPLATE = IS_PROD ? 2266041 : 3788381;
 export const NEW_MENTION_THREAD_TEMPLATE = IS_PROD ? 3776541 : 3844623;
@@ -45,6 +47,9 @@ export const ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE = 3947362;
 export const SEND_REQUEST_JOIN_PRIVATE_CHANNEL_TEMPLATE = IS_PROD
   ? null
   : 4543221;
+export const SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE = IS_PROD
+  ? null
+  : 4543861;
 
 // types used to generate unsubscribe tokens
 export const TYPE_DAILY_DIGEST = 'dailyDigest';

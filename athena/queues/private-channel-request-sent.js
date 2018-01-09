@@ -25,8 +25,9 @@ export default async (job: JobData) => {
     `new request to join a private channel from user ${userId} in channel ${channel.id}`
   );
 
-  const [actor, context] = await Promise.all([
+  const [actor, context, entity] = await Promise.all([
     fetchPayload('USER', userId),
+    fetchPayload('COMMUNITY', channel.communityId),
     createPayload('CHANNEL', channel),
   ]);
 
@@ -39,7 +40,7 @@ export default async (job: JobData) => {
       event: eventType,
       actors: [actor],
       context,
-      entities: [context],
+      entities: [entity],
     }
   );
 
