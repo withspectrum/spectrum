@@ -16,6 +16,7 @@ import processProInvoicePaid from './queues/pro-invoice-paid';
 import trackUserThreadLastSeen from './queues/track-user-thread-last-seen';
 import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
+import processUserRequestedJoinPrivateChannel from './queues/user-requested-private-channel';
 import {
   MESSAGE_NOTIFICATION,
   MENTION_NOTIFICATION,
@@ -30,6 +31,7 @@ import {
   PRO_INVOICE_PAID_NOTIFICATION,
   PROCESS_ADMIN_TOXIC_MESSAGE,
   PROCESS_ADMIN_TOXIC_THREAD,
+  USER_REQUESTED_JOIN_PRIVATE_CHANNEL,
 } from './queues/constants';
 import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 
@@ -54,6 +56,7 @@ const server = createWorker({
   [TRACK_USER_THREAD_LAST_SEEN]: trackUserThreadLastSeen,
   [PROCESS_ADMIN_TOXIC_MESSAGE]: processAdminMessageModeration,
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
+  [USER_REQUESTED_JOIN_PRIVATE_CHANNEL]: processUserRequestedJoinPrivateChannel,
 });
 
 console.log(

@@ -162,8 +162,8 @@ const createOrUpdatePendingUserInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
     .run()
     .then(data => {
       if (data && data.length > 0) {

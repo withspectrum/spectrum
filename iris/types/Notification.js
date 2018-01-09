@@ -14,6 +14,7 @@ const Notification = /* GraphQL */ `
 		COMMUNITY_INVITE
 		MENTION_THREAD
 		MENTION_MESSAGE
+		USER_REQUESTED_JOIN_PRIVATE_CHANNEL
 	}
 
 	enum EntityType {

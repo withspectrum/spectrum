@@ -28,7 +28,7 @@ export const NotificationDropdownList = ({
     );
 
   notifications = sortByDate(notifications, 'modifiedAt', 'desc');
-
+  console.log('notifications', notifications);
   return (
     <NotificationListContainer>
       {notifications.map(notification => {

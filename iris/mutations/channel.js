@@ -370,7 +370,17 @@ module.exports = {
         // community - those actions will instead be handled when the channel
         // owner approves the user
         if (channelToEvaluate.isPrivate) {
-          return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
+          const [channel, _] = await Promise.all([
+            // create a pending users channels record
+            createOrUpdatePendingUserInChannel(channelId, currentUser.id),
+            // notify the community owners via email and in-app notification => athena
+            addQueue('user requested join private channel', {
+              userId: currentUser.id,
+              channel: channelToEvaluate,
+            }),
+          ]);
+
+          return channel;
         }
 
         // otherwise the channel is not private so the user can just join.
