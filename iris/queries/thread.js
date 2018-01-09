@@ -408,11 +408,9 @@ module.exports = {
       __: any,
       { loaders }: GraphQLContext
     ) => {
-      console.log('messageCount for', id);
       return loaders.threadMessageCount
         .load(id)
-        .then(messageCount => (messageCount ? messageCount.reduction : 0))
-        .then(messageCount => console.log(messageCount) || messageCount);
+        .then(messageCount => (messageCount ? messageCount.reduction : 0));
     },
     currentUserLastSeen: (
       { id }: DBThread,
