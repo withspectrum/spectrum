@@ -37,7 +37,7 @@ import {
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
-  SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
 } from './queues/constants';
 
@@ -64,7 +64,7 @@ const server = createWorker({
   [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,
   [SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL]: processSendAdminActiveCommunityReportEmail,
-  [SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL]: processSendRequestJoinPrivateChannelEmail,
+  [SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL]: processSendRequestJoinPrivateChannelEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
 });
 

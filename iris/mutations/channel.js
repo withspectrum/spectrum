@@ -374,7 +374,7 @@ module.exports = {
             // create a pending users channels record
             createOrUpdatePendingUserInChannel(channelId, currentUser.id),
             // notify the community owners via email and in-app notification => athena
-            addQueue('user requested join private channel', {
+            addQueue('private channel request sent', {
               userId: currentUser.id,
               channel: channelToEvaluate,
             }),
@@ -541,7 +541,7 @@ module.exports = {
         // if the user is a member of the parent community, we can return
         if (currentUserCommunityPermissions.isMember) {
           return Promise.all([channelToEvaluate, approveUser]).then(() => {
-            addQueue('request join private channel approved', {
+            addQueue('private channel request approved', {
               userId: input.userId,
               channelId: channelToEvaluate.id,
               communityId: channelToEvaluate.communityId,
@@ -564,7 +564,7 @@ module.exports = {
             ),
             approveUser,
           ]).then(() => {
-            addQueue('request join private channel approved', {
+            addQueue('private channel request approved', {
               userId: input.userId,
               channelId: channelToEvaluate.id,
               communityId: channelToEvaluate.communityId,

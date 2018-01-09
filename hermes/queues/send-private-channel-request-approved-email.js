@@ -5,7 +5,7 @@ const debug = require('debug')(
 import sendEmail from '../send-email';
 import {
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
-  SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
+  PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
 } from './constants';
 
 type JobData = {
@@ -37,7 +37,7 @@ export default (job: SendEmail) => {
 
   try {
     return sendEmail({
-      TemplateId: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
+      TemplateId: PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
       To: recipient.email,
       Tag: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
       TemplateModel: {

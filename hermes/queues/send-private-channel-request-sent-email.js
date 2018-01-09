@@ -4,8 +4,8 @@ const debug = require('debug')(
 );
 import sendEmail from '../send-email';
 import {
-  SEND_REQUEST_JOIN_PRIVATE_CHANNEL_TEMPLATE,
-  SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL,
+  PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE,
+  SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
 } from './constants';
 
 type JobData = {
@@ -42,9 +42,9 @@ export default (job: SendRequestPrivateChannelEmail) => {
 
   try {
     return sendEmail({
-      TemplateId: SEND_REQUEST_JOIN_PRIVATE_CHANNEL_TEMPLATE,
+      TemplateId: PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE,
       To: recipient.email,
-      Tag: SEND_REQUEST_JOIN_PRIVATE_CHANNEL_EMAIL,
+      Tag: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
       TemplateModel: {
         subject,
         preheader,
