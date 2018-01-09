@@ -2,7 +2,7 @@
 //$FlowFixMe
 import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
-import type { Loader } from './types';
+import type { Loader, DataLoaderOptions } from './types';
 
 /**
  * Create a dataloader instance for a request and type
@@ -14,12 +14,12 @@ const createLoader = (
   batchFn: Function,
   indexField: string | Function = 'id',
   cacheKeyFn: Function = key => key
-): Loader => {
+) => (options?: DataLoaderOptions): Loader => {
   return new DataLoader(keys => {
     return batchFn(unique(keys)).then(
       normalizeRethinkDbResults(keys, indexField, cacheKeyFn)
     );
-  });
+  }, options);
 };
 
 // These helper functions were taken from the DataLoader docs
