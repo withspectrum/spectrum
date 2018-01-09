@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import Card from '../../components/card';
-import Link from 'src/components/link';
-import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
 
 export const EmailInviteForm = styled.div`
   display: flex;

@@ -11,12 +11,7 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import {
-  ListHeader,
-  LargeListHeading,
-  ListContainer,
-  ListFooter,
-} from '../../../components/listItems/style';
+import { ListContainer, ListFooter } from '../../../components/listItems/style';
 
 type Props = {
   data: {

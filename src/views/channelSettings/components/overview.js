@@ -8,11 +8,7 @@ import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
-import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+// import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
 
 type Props = {
   community: Object,
@@ -23,7 +19,7 @@ type Props = {
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { community, communitySlug, channel } = this.props;
+    const { channel } = this.props;
 
     return (
       <SectionsContainer>

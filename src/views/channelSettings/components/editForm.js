@@ -19,15 +19,12 @@ import {
   UnderlineInput,
   TextArea,
 } from '../../../components/formElements';
-import Icon from '../../../components/icons';
 import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
 import {
-  StyledCard,
   Form,
-  FormTitle,
   TertiaryActionContainer,
   Description,
   Actions,

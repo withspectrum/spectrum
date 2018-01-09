@@ -73,7 +73,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
     };
   }
 
-  getUniqueEmails = array => array.filter((x, i, a) => a.indexOf(x) == i);
+  getUniqueEmails = array => array.filter((x, i, a) => a.indexOf(x) === i);
 
   sendInvitations = () => {
     const {

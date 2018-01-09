@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
 import { Loading } from '../../components/loading';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Upsell404Channel } from '../../components/upsell';
@@ -15,7 +14,6 @@ import {
   unblockUserInChannelMutation,
 } from '../../api/channel';
 import Titlebar from '../titlebar';
-import Login from '../login';
 import ViewError from '../../components/viewError';
 import { View } from '../../components/settingsViews/style';
 import Header from '../../components/settingsViews/header';
@@ -30,7 +28,6 @@ type Props = {
   match: Object,
   isLoading: boolean,
   hasError: boolean,
-  currentUser: Object,
   dispatch: Function,
   togglePendingUser: Function,
   unblockUser: Function,
@@ -93,7 +90,6 @@ class ChannelSettings extends React.Component<Props> {
       location,
       isLoading,
       hasError,
-      currentUser,
     } = this.props;
     const { communitySlug, channelSlug } = match.params;
 
@@ -223,10 +219,9 @@ class ChannelSettings extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
-  connect(map),
+  connect(),
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
