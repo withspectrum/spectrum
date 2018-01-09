@@ -356,7 +356,7 @@
                   <!-- Body content -->
                   <tr>
                     <td class="content-cell">
-                      <p><a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a> has requested to join the <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}">{{channel.name}} channel</a> in the {<a href="https://spectrum.chat/{{data.community.slug}}">{community.name}} community</a>. You can approve or block this request in your channel settings.</p>
+                      <p><a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a> has requested to join the <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}">{{data.channel.name}} channel</a> in the <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}} community</a>. You can approve or block this request in your channel settings.</p>
                     </td>
                   </tr>
 
@@ -394,10 +394,10 @@
 
                 <ul>
                   <li>
-                    <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}/settings">View settings for the {{channel.name}} channel</a>
+                    <a href="https://spectrum.chat/{{data.community.slug}}/{{data.channel.slug}}/settings">View settings for the {{data.channel.name}} channel</a>
                   </li>
                   <li>
-                    <a href="https://spectrum.chat/{{data.community.slug}}/settings">View settings for the {{community.name}} community</a>
+                    <a href="https://spectrum.chat/{{data.community.slug}}/settings">View settings for the {{data.community.name}} community</a>
                   </li>
                 </ul>
 

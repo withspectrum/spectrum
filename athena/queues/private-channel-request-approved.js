@@ -58,8 +58,8 @@ export default async (job: JobData) => {
   );
 
   // for each owner,send an email
-  const channelPayload = JSON.parse(context.payload);
-  const community = await getCommunityById(channelPayload.communityId);
+  const channelPayload = JSON.parse(entity.payload);
+  const community = await getCommunityById(communityId);
   const usersEmailPromises = filteredRecipients.map(
     async recipient =>
       await addQueue('send private channel request approved email', {
@@ -69,7 +69,7 @@ export default async (job: JobData) => {
       })
   );
 
-  return Promise.all([
+  return await Promise.all([
     usersEmailPromises, // handle emails separately
     usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
