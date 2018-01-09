@@ -34,34 +34,37 @@ import {
   __createDirectMessageSnippetLoader,
 } from './directMessageThread';
 import { __createReactionLoader } from './reaction';
+import type { DataLoaderOptions } from './types';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
-const createLoaders = () => ({
-  user: __createUserLoader(),
-  userByUsername: __createUserByUsernameLoader(),
-  userThreadCount: __createUserThreadCountLoader(),
-  userRecurringPayments: __createUserRecurringPaymentsLoader(),
-  userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(),
-  userPermissionsInChannel: __createUserPermissionsInChannelLoader(),
-  userTotalReputation: __createUserTotalReputationLoader(),
-  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(),
-  thread: __createThreadLoader(),
-  threadParticipants: __createThreadParticipantsLoader(),
-  threadMessageCount: __createThreadMessageCountLoader(),
-  notification: __createNotificationLoader(),
-  channel: __createChannelLoader(),
-  channelMemberCount: __createChannelMemberCountLoader(),
-  channelThreadCount: __createChannelThreadCountLoader(),
-  channelPendingUsers: __createChannelPendingMembersLoader(),
-  community: __createCommunityLoader(),
-  communityBySlug: __createCommunityBySlugLoader(),
-  communityRecurringPayments: __createCommunityRecurringPaymentsLoader(),
-  communityChannelCount: __createCommunityChannelCountLoader(),
-  communityMemberCount: __createCommunityMemberCountLoader(),
-  directMessageThread: __createDirectMessageThreadLoader(),
-  directMessageParticipants: __createDirectMessageParticipantsLoader(),
-  directMessageSnippet: __createDirectMessageSnippetLoader(),
-  messageReaction: __createReactionLoader(),
+const createLoaders = (options?: DataLoaderOptions) => ({
+  user: __createUserLoader(options),
+  userByUsername: __createUserByUsernameLoader(options),
+  userThreadCount: __createUserThreadCountLoader(options),
+  userRecurringPayments: __createUserRecurringPaymentsLoader(options),
+  userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(options),
+  userPermissionsInChannel: __createUserPermissionsInChannelLoader(options),
+  userTotalReputation: __createUserTotalReputationLoader(options),
+  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(
+    options
+  ),
+  thread: __createThreadLoader(options),
+  threadParticipants: __createThreadParticipantsLoader(options),
+  threadMessageCount: __createThreadMessageCountLoader(options),
+  notification: __createNotificationLoader(options),
+  channel: __createChannelLoader(options),
+  channelMemberCount: __createChannelMemberCountLoader(options),
+  channelThreadCount: __createChannelThreadCountLoader(options),
+  channelPendingUsers: __createChannelPendingMembersLoader(options),
+  community: __createCommunityLoader(options),
+  communityBySlug: __createCommunityBySlugLoader(options),
+  communityRecurringPayments: __createCommunityRecurringPaymentsLoader(options),
+  communityChannelCount: __createCommunityChannelCountLoader(options),
+  communityMemberCount: __createCommunityMemberCountLoader(options),
+  directMessageThread: __createDirectMessageThreadLoader(options),
+  directMessageParticipants: __createDirectMessageParticipantsLoader(options),
+  directMessageSnippet: __createDirectMessageSnippetLoader(options),
+  messageReaction: __createReactionLoader(options),
 });
 
 export default createLoaders;

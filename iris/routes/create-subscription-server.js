@@ -1,3 +1,4 @@
+// @flow
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { execute, subscribe } from 'graphql';
 
@@ -31,12 +32,12 @@ const createSubscriptionsServer = (server: any, path: string) => {
           .then(user => {
             return {
               user,
-              loaders: createLoaders(),
+              loaders: createLoaders({ cache: false }),
             };
           })
           .catch(err => {
             return {
-              loaders: createLoaders(),
+              loaders: createLoaders({ cache: false }),
             };
           }),
     },

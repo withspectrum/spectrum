@@ -4,3 +4,7 @@ export type Loader = {
   load: (key: string | Array<string>) => Promise<any>,
   loadMany: (keys: Array<string>) => Promise<any>,
 };
+
+export type DataLoaderOptions = {
+  cache?: boolean,
+};
