@@ -8,14 +8,15 @@ import {
   changeActiveThread,
 } from '../../../actions/dashboardFeed';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { sortByDate } from '../../../helpers/utils';
+import { sortByTitle } from '../../../helpers/utils';
 import compose from 'recompose/compose';
 import {
+  CommunityListName,
   ChannelsContainer,
   ChannelListItem,
-  ChannelListDivider,
   LoadingContainer,
   LoadingBar,
+  SectionTitle,
 } from '../style';
 
 type Props = {};
@@ -28,11 +29,13 @@ class SidebarChannels extends React.Component<Props> {
   render() {
     const {
       data: { community },
+      thisCommunity,
       isLoading,
       queryVarIsChanging,
       activeChannel,
-      isHovered,
     } = this.props;
+
+    const { communityPermissions: { isOwner } } = thisCommunity;
 
     if (community) {
       const { isOwner } = community.communityPermissions;
@@ -54,63 +57,94 @@ class SidebarChannels extends React.Component<Props> {
         .filter(channel => channel.channelPermissions.isMember)
         .filter(channel => !channel.channelPermissions.isBlocked);
 
-      const sortedChannels = sortByDate(channels, 'createdAt', 'desc');
+      const sortedChannels = sortByTitle(channels);
 
       return (
         <ChannelsContainer className={'channelsContainer'}>
-          {sortedChannels.map(channel => {
-            return (
-              <ChannelListItem
-                key={channel.id}
-                active={activeChannel === channel.id}
-                onClick={() => this.changeChannel(channel.id)}
-              >
-                {channel.isPrivate && (
-                  <Icon glyph="channel-private" size={16} />
-                )}
-
-                {channel.name}
-              </ChannelListItem>
-            );
-          })}
-
-          <ChannelListDivider className={'divider'} />
-
-          <Link
-            to={`/${community.slug}`}
-            target="_blank"
-            rel="nofollower noopener"
-          >
-            <ChannelListItem>View community</ChannelListItem>
+          <Link to={`/${community.slug}`}>
+            <ChannelListItem>
+              <Icon glyph={'link'} size={24} />
+              <CommunityListName>Visit community</CommunityListName>
+            </ChannelListItem>
           </Link>
 
           {isOwner && (
-            <Link
-              to={`/${community.slug}/settings`}
-              target="_blank"
-              rel="nofollower noopener"
-            >
-              <ChannelListItem>Settings</ChannelListItem>
+            <Link to={`/${community.slug}/settings`}>
+              <ChannelListItem>
+                <Icon glyph={'settings'} size={24} />
+                <CommunityListName>Settings</CommunityListName>
+              </ChannelListItem>
             </Link>
           )}
 
           {isOwner &&
             community.isPro && (
-              <Link
-                to={`/${community.slug}/settings/analytics`}
-                target="_blank"
-                rel="nofollower noopener"
-              >
-                <ChannelListItem>Analytics</ChannelListItem>
+              <Link to={`/${community.slug}/settings/analytics`}>
+                <ChannelListItem>
+                  <Icon glyph={'link'} size={24} />
+                  <CommunityListName>Analytics</CommunityListName>
+                </ChannelListItem>
               </Link>
             )}
+
+          {sortedChannels &&
+            sortedChannels.length > 1 && (
+              <SectionTitle>Filter by Channel</SectionTitle>
+            )}
+          {sortedChannels &&
+            sortedChannels.length > 1 &&
+            sortedChannels.map(channel => {
+              return (
+                <ChannelListItem
+                  key={channel.id}
+                  active={activeChannel === channel.id}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    this.changeChannel(channel.id);
+                  }}
+                >
+                  {channel.isPrivate ? (
+                    <Icon glyph="channel-private" size={24} />
+                  ) : (
+                    <Icon glyph="channel" size={24} />
+                  )}
+
+                  <CommunityListName>{channel.name}</CommunityListName>
+                </ChannelListItem>
+              );
+            })}
         </ChannelsContainer>
       );
     }
 
-    if (isHovered && (isLoading || queryVarIsChanging)) {
+    if (isLoading || queryVarIsChanging) {
       return (
         <ChannelsContainer className={'channelsContainer'}>
+          <Link to={`/${thisCommunity.slug}`}>
+            <ChannelListItem>
+              <Icon glyph={'link'} size={24} />
+              <CommunityListName>Visit community</CommunityListName>
+            </ChannelListItem>
+          </Link>
+
+          {isOwner && (
+            <Link to={`/${thisCommunity.slug}/settings`}>
+              <ChannelListItem>
+                <Icon glyph={'settings'} size={24} />
+                <CommunityListName>Settings</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
+
+          {isOwner &&
+            thisCommunity.isPro && (
+              <Link to={`/${thisCommunity.slug}/settings/analytics`}>
+                <ChannelListItem>
+                  <Icon glyph={'link'} size={24} />
+                  <CommunityListName>Analytics</CommunityListName>
+                </ChannelListItem>
+              </Link>
+            )}
           <LoadingContainer>
             <LoadingBar width={56} />
             <LoadingBar width={128} />

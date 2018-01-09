@@ -15,6 +15,7 @@ import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
 import Head from '../../components/head';
+import Menu from '../../components/menu';
 import DashboardLoading from './components/dashboardLoading';
 import DashboardError from './components/dashboardError';
 import NewActivityIndicator from './components/newActivityIndicator';
@@ -26,12 +27,11 @@ import {
   Wrapper,
   InboxWrapper,
   InboxScroller,
-  CommunityListWrapper,
-  CommunityListScroller,
   FeedHeaderContainer,
   ThreadWrapper,
   ThreadScroller,
   SearchStringHeader,
+  Sidebar,
 } from './style';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
@@ -105,8 +105,6 @@ class Dashboard extends Component {
       searchFilter.communityId = null;
       searchFilter.everythingFeed = true;
     }
-
-    const { isHovered } = this.state;
     const { title, description } = generateMetaInfo();
 
     if (user) {
@@ -130,26 +128,33 @@ class Dashboard extends Component {
       return (
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
-          <Titlebar hasSearch />
-          <CommunityListWrapper
-            data-e2e-id="inbox-community-list"
-            onMouseEnter={this.setHover}
-            onMouseLeave={this.removeHover}
-          >
-            <CommunityListScroller>
+          <Titlebar hasChildren hasSearch filter={searchFilter}>
+            <Menu darkContext>
               <CommunityList
-                isHovered={isHovered}
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
                 activeChannel={activeChannel}
               />
-            </CommunityListScroller>
-          </CommunityListWrapper>
-
+            </Menu>
+          </Titlebar>
+          <Sidebar>
+            <CommunityList
+              communities={communities}
+              user={user}
+              activeCommunity={activeCommunity}
+              activeChannel={activeChannel}
+            />
+          </Sidebar>
           <InboxWrapper>
             <FeedHeaderContainer>
-              <Header filter={searchFilter} />
+              <Header
+                filter={searchFilter}
+                communities={communities}
+                user={user}
+                activeCommunity={activeCommunity}
+                activeChannel={activeChannel}
+              />
             </FeedHeaderContainer>
             {newActivityIndicator && (
               <NewActivityIndicator elem="scroller-for-inbox" />

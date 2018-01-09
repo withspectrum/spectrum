@@ -8252,6 +8252,10 @@ react-error-overlay@^2.0.1:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
+react-flip-move@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-2.10.1.tgz#a641ad897cecff2b81520062cebfec286cf11261"
+
 react-helmet@5.x:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-5.2.0.tgz#a81811df21313a6d55c5f058c4aeba5d6f3d97a7"

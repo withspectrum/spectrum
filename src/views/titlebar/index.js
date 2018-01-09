@@ -4,10 +4,17 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
-
+import ThreadSearch from '../dashboard/components/threadSearch';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
-import { TitleBar, Text, Subtitle, Title, Spacer } from './style';
+import { TitleBar, Text, Subtitle, Title } from './style';
+
+const TextHeading = ({ title, subtitle }) => (
+  <Text>
+    {subtitle && <Subtitle>{subtitle}</Subtitle>}
+    {title && <Title large={!subtitle}>{title}</Title>}
+  </Text>
+);
 
 class Titlebar extends Component {
   handleBack = () => {
@@ -45,7 +52,10 @@ class Titlebar extends Component {
       subtitle,
       provideBack,
       noComposer,
+      hasChildren,
       hasSearch,
+      filter,
+      children,
       messageComposer,
     } = this.props;
     return (
@@ -56,24 +66,17 @@ class Titlebar extends Component {
             color="text.reverse"
             onClick={this.handleBack}
           />
+        ) : hasChildren ? (
+          children
+        ) : null}
+        {title || subtitle ? (
+          <TextHeading subtitle={subtitle} title={title} />
         ) : hasSearch ? (
-          <Link to={`/new/search`}>
-            <IconButton glyph="search" color="text.reverse" />
-          </Link>
+          <ThreadSearch filter={filter} darkContext />
         ) : (
-          <Spacer />
+          <Icon glyph="logo" />
         )}
-        <Text>
-          {subtitle && <Subtitle>{subtitle}</Subtitle>}
-          {title ? (
-            <Title large={subtitle ? false : true}>{title}</Title>
-          ) : (
-            <Icon glyph="logo" />
-          )}
-        </Text>
-        {noComposer ? (
-          <Spacer />
-        ) : messageComposer ? (
+        {noComposer ? null : messageComposer ? (
           <Link to={`/messages/new`}>
             <IconButton glyph="message-new" color="text.reverse" />
           </Link>

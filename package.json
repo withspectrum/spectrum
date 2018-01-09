@@ -108,6 +108,7 @@
     "react-app-rewired": "^1.0.5",
     "react-clipboard.js": "^1.1.3",
     "react-dom": "^15.4.1",
+    "react-flip-move": "^2.10.1",
     "react-helmet": "5.x",
     "react-infinite-scroller-with-scroll-element": "^1.0.4",
     "react-loadable": "5.2.2",

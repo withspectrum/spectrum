@@ -3,18 +3,8 @@ import { getTopCommunities } from '../../explore/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import {
-  ExploreCommunityListItem,
-  AllCommunityListItem,
-  CommunityListName,
-  CommunityListItem,
-  CommunityListPadding,
-  CommunityListAvatar,
-  CommunityListText,
-  UpsellExploreDivider,
-} from '../style';
+import { CommunityListAvatar } from '../style';
+import { FlexRow } from '../../../components/globals';
 
 const getRandom = (arr, n) => {
   let result = new Array(n),
@@ -97,41 +87,16 @@ class UpsellExploreCommunities extends React.Component {
 
     if (communitiesToJoin && communitiesToJoin.length > 0) {
       return (
-        <div>
-          <UpsellExploreDivider />
-
-          <ExploreCommunityListItem upsell>
-            <Link to={'/explore'}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AllCommunityListItem>
-                  <Icon glyph={'explore'} />
-                </AllCommunityListItem>
-                <CommunityListName>Explore communities</CommunityListName>
-              </div>
-            </Link>
-          </ExploreCommunityListItem>
-
+        <FlexRow>
           {communitiesToJoin.map(c => {
             return (
-              <CommunityListItem key={c.id} active={c.id === activeCommunity}>
-                <CommunityListPadding
-                  onClick={() => this.props.handleOnClick(c.id)}
-                  active={c.id === activeCommunity}
-                >
-                  <CommunityListAvatar
-                    active={c.id === activeCommunity}
-                    src={c.profilePhoto}
-                  />
-                  <CommunityListText className={'communityListText'}>
-                    <CommunityListName active={c.id === activeCommunity}>
-                      {c.name}
-                    </CommunityListName>
-                  </CommunityListText>
-                </CommunityListPadding>
-              </CommunityListItem>
+              <CommunityListAvatar
+                active={c.id === activeCommunity}
+                src={c.profilePhoto}
+              />
             );
           })}
-        </div>
+        </FlexRow>
       );
     }
 
