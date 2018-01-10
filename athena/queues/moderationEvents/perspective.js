@@ -1,11 +1,6 @@
 // @flow
+require('now-env');
 import axios from 'axios';
-const env = require('node-env-file');
-const IS_PROD = process.env.NODE_ENV === 'production';
-const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../../.env'), { raise: false });
-}
 const PERSPECTIVE_API_KEY = process.env.PERSPECTIVE_API_KEY;
 
 if (!PERSPECTIVE_API_KEY) {

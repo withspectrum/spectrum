@@ -27,6 +27,8 @@
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
 		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
 		"PERSPECTIVE_API_KEY": "@perspective-api-key",
-        "SESSION_COOKIE_SECRET": "@session-cookie-secret"
+		"SESSION_COOKIE_SECRET": "@session-cookie-secret",
+		"ALGOLIA_APP_ID": "@algolia-app-id",
+		"ALGOLIA_API_SECRET": "@algolia-api-secret"
 	}
 }

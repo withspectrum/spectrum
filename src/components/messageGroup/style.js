@@ -47,14 +47,16 @@ export const Byline = styled.span`
 `;
 
 export const Name = styled.span`
-  margin-right: 4px;
   &:hover {
     color: ${({ theme }) => theme.brand.default};
     cursor: pointer;
   }
 `;
 
-export const Username = styled(Name)`font-weight: 400;`;
+export const Username = styled(Name)`
+  font-weight: 400;
+  margin-left: 2px;
+`;
 
 export const Timestamp = styled(HorizontalRule)`
   margin: 16px 0 8px;

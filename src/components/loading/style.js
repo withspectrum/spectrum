@@ -73,10 +73,14 @@ export const ShimmerThread = styled(Card)`
 export const ShimmerInboxThread = styled.div`
   background: ${props => props.theme.bg.default};
   padding: 16px;
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 
   section {
     min-height: 96px;
+  }
+
+  &:last-of-type {
+    border-bottom: 0;
   }
 `;
 

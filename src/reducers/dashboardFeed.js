@@ -3,6 +3,10 @@ const initialState = {
   activeThread: null,
   activeChannel: null,
   mountedWithActiveThread: null,
+  search: {
+    isOpen: false,
+    queryString: '',
+  },
 };
 
 export default function dashboardFeed(state = initialState, action) {
@@ -23,6 +27,30 @@ export default function dashboardFeed(state = initialState, action) {
       return Object.assign({}, state, {
         mountedWithActiveThread: null,
       });
+    case 'TOGGLE_SEARCH_OPEN': {
+      return Object.assign({}, state, {
+        search: {
+          ...state.search,
+          isOpen: action.value,
+        },
+      });
+    }
+    case 'SET_SEARCH_VALUE': {
+      return Object.assign({}, state, {
+        search: {
+          ...state.search,
+          value: action.value,
+        },
+      });
+    }
+    case 'SET_SEARCH_VALUE_FOR_SERVER': {
+      return Object.assign({}, state, {
+        search: {
+          ...state.search,
+          queryString: action.value,
+        },
+      });
+    }
     default:
       return state;
   }

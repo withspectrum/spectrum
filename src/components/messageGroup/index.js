@@ -48,13 +48,13 @@ export const AuthorAvatar = ({
 };
 
 export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
-  const { me, sender } = props;
+  const { sender } = props;
 
   return (
     <Byline>
       <Link to={`/users/${sender.username}`}>
-        <Name>{me ? 'Me' : sender.name}</Name>{' '}
-        <Username>{sender.username && ` · @${sender.username}`}</Username>
+        <Name>{sender.name}</Name>{' '}
+        <Username>{sender.username && `@${sender.username}`}</Username>
       </Link>
       {sender.contextPermissions &&
         sender.contextPermissions.isOwner && <Badge type="admin" />}
@@ -163,6 +163,7 @@ class Messages extends Component<MessageGroupProps, State> {
       <Wrapper data-e2e-id="message-group">
         {messages.map((group, i) => {
           // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+          if (group.length === 0) return null;
           const initialMessage = group[0];
           const { sender } = initialMessage;
 

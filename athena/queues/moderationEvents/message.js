@@ -25,7 +25,7 @@ export default async (job: JobData) => {
       : message.content.body;
 
   const scores = await Promise.all([
-    getSpectrumScore(text, message.id),
+    getSpectrumScore(text, message.id, message.senderId),
     getPerspectiveScore(text),
   ]).catch(err =>
     console.log('Error getting message moderation scores from providers', err)

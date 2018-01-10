@@ -111,6 +111,12 @@ const Splash = Loadable({
 });
 
 /* prettier-ignore */
+const Search = Loadable({
+  loader: () => import('./views/search'/* webpackChunkName: "Search" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
 const Pricing = Loadable({
   loader: () => import('./views/splash/pricing'/* webpackChunkName: "Pricing" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
@@ -217,6 +223,7 @@ class Routes extends React.Component<{}> {
               <Route path="/pricing" component={Pricing} />
               <Route path="/support" component={Support} />
               <Route path="/style-guide" component={StyleGuide} />
+              <Route path="/new/search" component={Search} />
 
               {/* App Pages */}
               <Route path="/new/community" component={NewCommunityFallback} />

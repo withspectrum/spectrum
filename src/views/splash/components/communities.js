@@ -1,24 +1,8 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import compose from 'recompose/compose';
-import Link from 'src/components/link';
-import Icon from '../../../components/icons';
-import Avatar from '../../../components/avatar';
-import { Button } from '../../../components/buttons';
 import { getCommunity } from '../../explore/queries';
-import {
-  zIndex,
-  hexa,
-  Shadow,
-  Gradient,
-  FlexCol,
-  FlexRow,
-  H1,
-  H2,
-  Span,
-  P,
-  Transition,
-} from '../../../components/globals';
+import { hexa, Shadow, Transition } from '../../../components/globals';
 
 const Community = styled.div`
   width: 400px;
@@ -61,14 +45,13 @@ class CommunityWithData extends PureComponent {
   }
 
   render() {
-    const { data: { community, loading, error } } = this.props;
-    const { isLoading } = this.state;
+    const { data: { community } } = this.props;
 
     return <Community>{community.name}</Community>;
   }
 }
 
-export const CommunityProfile = compose(getCommunity)(Community);
+export const CommunityProfile = compose(getCommunity)(CommunityWithData);
 
 export const Communities = () => {
   return (

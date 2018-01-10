@@ -7,7 +7,6 @@ import {
   zIndex,
   Truncate,
   Tooltip,
-  Transition,
   Shadow,
   hexa,
 } from '../../components/globals';
@@ -35,7 +34,7 @@ export const InboxWrapper = styled.div`
   position: relative;
   align-self: stretch;
   flex-direction: column;
-  background: ${props => props.theme.bg.wash};
+  background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
   @media (max-width: 768px) {
@@ -53,117 +52,163 @@ export const InboxScroller = styled.div`
   flex: 1;
 `;
 
-export const CommunityListWrapper = styled.div`
+export const Sidebar = styled.div`
   display: flex;
-  width: 72px;
-  min-width: 72px;
-  overflow-y: hidden;
-  overflow-x: visible;
+  width: 256px;
+  min-width: 256px;
+  max-width: 256px;
   position: relative;
   align-self: stretch;
   flex-direction: column;
-  background: ${props => props.theme.bg.wash};
   border-right: 1px solid ${props => props.theme.bg.border};
-  transform: translateZ(0);
-  transition: ${Transition.hover.off};
-  padding-bottom: 48px;
-
-  .channelsContainer {
-    max-height: 0;
-    padding: 0;
-    transition-delay: 1s;
-    transform: translateZ(0);
-    transition: ${Transition.hover.off};
-
-    .divider {
-      max-width: 0;
-      border-top: 1px solid ${props => props.theme.bg.wash};
-      height: 0;
-      margin: 12px 0 8px -28px;
-      position: relative;
-      right: -20px;
-      transition-delay: 1s;
-      transition: ${Transition.hover.on};
-    }
-  }
-
-  .communityListText {
-    opacity: 0;
-    transform: translateZ(0);
-    transition: ${Transition.hover.off};
-  }
-
-  img {
-    opacity: 0.4;
-    filter: grayscale(60%);
-    transition: ${Transition.hover.on};
-  }
-
-  &:hover {
-    transform: translateZ(0);
-    width: 256px;
-    min-width: 256px;
-    transition: ${Transition.hover.on};
-    transition-delay: 1s;
-
-    .channelsContainer {
-      max-height: 1000px;
-      padding: 8px 8px 12px;
-      transform: translateZ(0);
-      transition: ${Transition.hover.on};
-      transition-delay: 1s;
-
-      .divider {
-        max-width: 230px;
-        border-top: 1px solid ${props => props.theme.bg.border};
-        height: 1px;
-        transition-delay: 1s;
-        transition: ${Transition.hover.on};
-      }
-    }
-
-    .communityListText {
-      opacity: 1;
-      transform: translateZ(0);
-      transition: ${Transition.hover.on};
-      transition-delay: 1s;
-    }
-
-    img {
-      filter: grayscale(0%);
-      opacity: 1;
-      transition: ${Transition.hover.on};
-    }
-  }
 
   @media (max-width: 956px) {
     display: none;
   }
 `;
 
-export const CommunityListItem = styled.div`
-  margin: 4px 12px;
-  min-width: 48px;
-  border-radius: 5px;
+export const SectionTitle = styled.span`
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  font-variant: small-caps;
+  text-transform: lowercase;
+  margin: 8px 16px;
+  letter-spacing: 1.4px;
+`;
+
+export const ChannelsContainer = styled.div`
+  grid-area: menu;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-self: stretch;
+  padding: 4px;
+
+  ${SectionTitle} {
+    color: ${props => props.theme.text.placeholder};
+    margin: 8px 8px 4px 8px;
+  }
+`;
+
+export const CommunityListName = styled.p`
+  grid-area: title;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.28;
+  max-width: 164px;
+
+  ${Truncate};
+`;
+
+export const ChannelListItem = styled.div`
+  display: grid;
+  font-size: 14px;
+  grid-template-columns: 40px 1fr;
+  grid-auto-rows: auto;
+  grid-template-areas: 'icon title';
+  padding: 4px 0;
+  justify-items: start;
+  align-items: center;
   cursor: pointer;
-  position: relative;
+  font-weight: ${props => (props.active ? '500' : '400')};
+  color: ${props =>
+    props.active ? props.theme.text.default : props.theme.text.alt};
+  ${Truncate}
+  }
+
+  > div:first-child {
+    justify-self: center;
+  }
+
+  ${CommunityListName} {
+    margin-left: 12px;
+  }
+
+  &:hover {
+    color: ${props =>
+      props.active ? props.theme.brand.alt : props.theme.text.default};
+  }
+
+`;
+
+export const ChannelListDivider = styled.div``;
+
+const placeHolderShimmer = keyframes`
+	0%{
+			transform: translateX(-200%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
+	}
+	100%{
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
+	}
+`;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  padding: 0 8px;
+  flex-direction: column;
+  margin-left: 36px;
+  overflow: hidden;
+`;
+
+export const LoadingBar = styled.div`
+  width: ${props => `${props.width}px`};
+  height: 4px;
+  border-radius: 4px;
+  margin-top: 8px;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  animation-name: ${placeHolderShimmer};
+`;
+
+export const CommunityListMeta = styled.div`
+  grid-area: title;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 4px;
+`;
+
+export const CommunityListItem = styled.div`
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  grid-auto-rows: 48px auto;
+  grid-template-areas: 'icon title' 'menu menu';
+  min-height: 48px;
+  padding: 6px 8px;
+  justify-items: start;
+  align-items: center;
+  cursor: pointer;
   color: ${props =>
     props.active ? props.theme.text.default : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
-  border: 1px solid
-    ${props => (props.active ? props.theme.bg.border : 'transparent')};
+    props.active ? props.theme.bg.default : 'transparent'};
 
-  a {
-    display: flex;
-    align-items: center;
+  box-shadow: ${props =>
+    props.active
+      ? `0 1px 0 ${props.theme.bg.border}, 0 -1px 0 ${props.theme.bg.border}`
+      : 'none'};
+
+  > ${CommunityListName} {
+    margin-left: 4px;
   }
 
-  &:first-of-type {
-    margin-top: 16px;
+  > div:first-child,
+  > img:first-child {
+    justify-self: center;
   }
 
   ${props =>
@@ -173,10 +218,13 @@ export const CommunityListItem = styled.div`
         opacity: 1;
         filter: grayscale(0%);
       }
-    `} &:hover {
-    border: 1px solid ${props => props.theme.bg.border};
+    `};
+
+  &:hover {
     background: ${props => props.theme.bg.default};
     color: ${props => props.theme.text.default};
+    box-shadow: 0 1px 0 ${props => props.theme.bg.border},
+      0 -1px 0 ${props => props.theme.bg.border};
 
     img {
       box-shadow: 0;
@@ -184,16 +232,28 @@ export const CommunityListItem = styled.div`
   }
 `;
 
-export const CommunityListPadding = styled.div`
-  display: flex;
-  padding: 6px;
-  min-width: 48px;
+export const CommunityListScroller = styled.div`
+  grid-area: scroll;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  position: relative;
+`;
+
+export const CommunityListWrapper = styled.div`
+  flex: auto;
+  background: ${props => props.theme.bg.wash};
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'scroll' 'fixed';
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
 `;
 
 export const Fixed = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  grid-area: fixed;
   width: 100%;
   box-shadow: 0 -1px 0 ${props => props.theme.bg.border};
 
@@ -208,87 +268,6 @@ export const Fixed = styled.div`
   }
 `;
 
-export const ExploreCommunityListItem = styled(CommunityListItem)`
-  color: ${props => props.theme.text.alt};
-  margin: 1px 12px;
-  margin-top: 0 !important; //need to override the first child selector above
-  padding: 6px;
-  border-radius: ${props => (props.upsell ? '4px' : '0')};
-
-  ${Truncate} &:hover {
-    color: ${props =>
-      props.upsell ? props.theme.text.default : props.theme.brand.alt};
-    border: 1px solid
-      ${props => (props.upsell ? props.theme.bg.border : 'transparent')};
-
-    div {
-      color: ${props => props.theme.brand.alt};
-    }
-  }
-`;
-
-export const CommunityListText = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 100%;
-  white-space: nowrap;
-`;
-
-export const CommunityListName = styled.p`
-  font-size: 14px;
-  font-weight: 500;
-  margin-left: 12px;
-  line-height: 1.28;
-  max-width: 164px;
-
-  ${Truncate};
-`;
-
-export const CommunityListReputation = styled.div`
-  margin-left: 12px;
-  line-height: 1.2;
-  color: ${props => props.theme.text.alt};
-  width: 100%;
-  font-size: 12px;
-
-  > div {
-    > div {
-      flex-basis: 16px;
-      width: 16px;
-      height: 16px;
-      min-width: 16px;
-      min-height: 16px;
-    }
-
-    > span {
-      font-size: 12px;
-    }
-  }
-`;
-
-export const AllCommunityListItem = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${props =>
-    props.active ? props.theme.bg.default : props.theme.bg.wash};
-  color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.alt};
-`;
-
-export const ExploreListItem = styled(AllCommunityListItem)`
-  width: 32px;
-  height: 32px;
-  background: none;
-  margin-right: 3px;
-  border-radius: 0;
-  ${Truncate};
-`;
-
 export const CommunityListAvatar = styled.img`
   width: 32px;
   min-width: 32px;
@@ -298,20 +277,12 @@ export const CommunityListAvatar = styled.img`
   box-shadow: ${props => (props.active ? '0' : '0 1px 2px rgba(0, 0, 0, 0.1)')};
 `;
 
-export const CommunityListScroller = styled.div`
-  width: 100%;
-  overflow: hidden;
-  overflow-y: auto;
-  position: relative;
-  padding-bottom: 16px;
-`;
-
 export const FeedHeaderContainer = styled.div`
   background: ${props => props.theme.bg.default};
   padding: 14px 8px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   position: relative;
-  z-index: 10;
+  z-index: ${zIndex.chrome - 1};
 
   @media (max-width: 768px) {
     display: none;
@@ -324,6 +295,7 @@ export const ThreadWrapper = styled.div`
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
+  background-color: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
     display: none;
@@ -337,9 +309,25 @@ export const ThreadScroller = styled.div`
 `;
 
 export const HeaderWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'center right';
+  grid-column-gap: 8px;
   align-items: center;
-  justify-content: flex-end;
+  justify-items: center;
+  padding-left: 4px;
+
+  > button {
+    grid-area: right;
+  }
+
+  @media (max-width: 956px) {
+    padding-left: 0;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'left center right';
+  }
 `;
 
 export const ThreadComposerContainer = styled.div`
@@ -688,14 +676,15 @@ export const NullThreadFeed = styled.div`
   justify-content: center;
   padding: 32px;
   flex-direction: column;
+  background: ${props => props.theme.bg.default};
 `;
 
 export const NullHeading = styled.p`
   font-size: 18px;
   font-weight: 500;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 `;
 
 export const Lock = styled.span`margin-right: 4px;`;
@@ -706,73 +695,132 @@ export const PinIcon = styled.span`
   align-items: center;
 `;
 
-export const ChannelsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const ChannelListItem = styled.div`
-  font-size: 14px;
-  padding-left: 36px;
-  margin-top: 4px;
-  font-weight: ${props => (props.active ? '500' : '400')};
-  color: ${props =>
-    props.active ? props.theme.text.default : props.theme.text.alt};
-  ${Truncate} .icon {
-    position: relative;
-    top: 4px;
-    left: -2px;
-  }
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const ChannelListDivider = styled.div``;
-
-const placeHolderShimmer = keyframes`
-	0%{
-			transform: translateX(-200%) translateY(0%);
-			background-size: 100%;
-			opacity: 1;
-	}
-	100%{
-			transform: translateX(200%) translateY(0%);
-			background-size: 500%;
-			opacity: 0;
-	}
-`;
-
-export const LoadingContainer = styled.div`
-  display: flex;
-  padding: 0 8px;
-  flex-direction: column;
-  margin-left: 36px;
-  overflow: hidden;
-`;
-
-export const LoadingBar = styled.div`
-  width: ${props => `${props.width}px`};
-  height: 4px;
-  border-radius: 4px;
-  margin-top: 8px;
-  animation-duration: 1.5s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  background: linear-gradient(
-    to right,
-    ${({ theme }) => theme.bg.wash} 10%,
-    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
-    ${({ theme }) => theme.bg.wash} 30%
-  );
-  animation-name: ${placeHolderShimmer};
-`;
-
 export const UpsellExploreDivider = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.border};
   display: block;
   width: 100%;
   margin: 16px 0 16px;
+`;
+
+export const SearchInput = styled.input`
+  align-self: stretch;
+  height: 100%;
+  font-size: 14px;
+  color: ${props =>
+    props.darkContext ? props.theme.text.placeholder : props.theme.text.alt};
+  background-color: transparent;
+  justify-self: stretch;
+  border: none;
+
+  &:placeholder {
+    color: ${props =>
+      props.darkContext
+        ? props.theme.text.border
+        : props.theme.text.placeholder};
+  }
+
+  &:focus {
+    color: ${props =>
+      props.darkContext ? props.theme.text.reverse : props.theme.text.default};
+  }
+`;
+
+export const ClearSearch = styled.span`
+  width: 16px;
+  height: 16px;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  background: ${props => props.theme.text.placeholder};
+  border-radius: 50%;
+  font-size: 16px;
+  color: ${props => props.theme.text.reverse};
+  font-weight: 500;
+  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: ${props => props.theme.text.alt};
+  }
+
+  span {
+    position: relative;
+    top: -2px;
+  }
+`;
+
+export const SearchForm = styled.form`
+  display: grid;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  color: ${props => props.theme.text.alt};
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 16px;
+  grid-template-columns: 32px 1fr 32px;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'icon input clear';
+  align-items: center;
+  justify-items: center;
+  flex: auto;
+  justify-self: stretch;
+  grid-area: center;
+
+  ${props =>
+    props.darkContext &&
+    css`
+      border-color: transparent;
+      background-color: ${props => hexa(props.theme.text.alt, 0.35)};
+      color: ${props => props.theme.text.reverse};
+    `};
+
+  > div:last-of-type {
+    display: ${props => (props.isOpen ? 'flex' : 'none')};
+    color: ${props => props.theme.text.reverse};
+    background-color: ${props => props.theme.text.alt};
+    border-radius: 100%;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+`;
+
+export const OutlineButton = styled.button`
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.alt};
+  border-radius: 8px;
+  padding: 4px 12px 4px 6px;
+
+  span {
+    margin-left: 8px;
+  }
+`;
+
+export const SearchStringHeader = styled.div`
+  background: #fff;
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+`;
+
+export const Hint = styled.span`
+  font-size: 16px;
+  color: ${props => props.theme.text.alt};
+  margin-top: 32px;
+  margin-bottom: 8px;
+`;
+
+export const NarrowOnly = styled.div`
+  display: none;
+
+  @media (max-width: 956px) {
+    display: flex;
+    flex: none;
+    grid-area: left;
+  }
 `;

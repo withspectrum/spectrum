@@ -29,6 +29,8 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import type { DBUser } from '../models/user';
+import initIndex from 'shared/algolia';
+const usersSearchIndex = initIndex('users');
 let imgix = new ImgixClient({
   host: 'spectrum-imgp.imgix.net',
   secureURLToken: 'asGmuMn5yq73B3cH',
@@ -46,13 +48,27 @@ module.exports = {
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
-    searchUsers: (_: any, { string }: { string: string }) =>
-      getUsersBySearchString(string),
+    searchUsers: (
+      _: any,
+      { string }: { string: string },
+      { loaders }: GraphQLContext
+    ) => {
+      return usersSearchIndex
+        .search({ query: string })
+        .then(content => {
+          if (!content.hits || content.hits.length === 0) return [];
+          const userIds = content.hits.map(o => o.objectID);
+          return loaders.user.loadMany(userIds);
+        })
+        .catch(err => {
+          console.log('err', err);
+        });
+    },
   },
   User: {
     email: ({ id, email }: DBUser, _: any, { user }: GraphQLContext) => {
       // Only admins and the user themselves can view the email
-      if (!user || !isAdmin(user.id) || id !== user.id) return null;
+      if (!user || (id !== user.id && !isAdmin(user.id))) return null;
       return email;
     },
     coverPhoto: ({ coverPhoto }: DBUser) => {

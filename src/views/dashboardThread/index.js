@@ -10,7 +10,9 @@ class DashboardThread extends Component {
     const { threadId, threadSliderIsOpen } = this.props;
 
     // no thread has been selected
-    if (!threadId) return null;
+    if (!threadId) {
+      return null;
+    }
 
     // composer is selected
     if (threadId === 'new')

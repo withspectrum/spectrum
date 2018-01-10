@@ -1,17 +1,19 @@
-**Make sure this template is filled out before submitting the PR.**
-
-
-## Deployment notes
-
+### Deployment notes
 - 
 
-### Run database migration?
+### Will deploy
+- [ ] iris
+- [ ] hyperion
+- [ ] athena
+- [ ] vulcan
+- [ ] mercury
+- [ ] hermes
+- [ ] chronos
 
-YES/NO
+### Run database migration?
+- [ ] yes
+- [ ] no
 
 ## Release notes
-
-In a sentence or two, explain to a user what was changed:
-
 -
 

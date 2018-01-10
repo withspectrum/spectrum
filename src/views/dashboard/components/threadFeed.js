@@ -5,17 +5,20 @@ import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import FlipMove from 'react-flip-move';
 import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import LoadingThreadFeed from './loadingThreadFeed';
 import ErrorThreadFeed from './errorThreadFeed';
 import EmptyThreadFeed from './emptyThreadFeed';
+import EmptySearchFeed from './emptySearchFeed';
 import InboxThread, { WatercoolerThread } from './inboxThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 
 type Props = {
   mountedWithActiveThread: ?string,
+  queryString?: ?string,
 };
 
 type State = {
@@ -54,7 +57,12 @@ class ThreadFeed extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     const isDesktop = window.innerWidth > 768;
     const { scrollElement } = this.state;
-    const { mountedWithActiveThread, isFetchingMore } = this.props;
+    const { mountedWithActiveThread, isFetchingMore, queryString } = this.props;
+
+    // user is searching, don't select anything
+    if (queryString) {
+      return;
+    }
 
     // if the app loaded with a ?t query param, it means the user was linked to a thread from the inbox view and is already logged in. In this case we want to load the thread identified in the url and ignore the fact that a feed is loading in which auto-selects a different thread. If the user is on mobile, we should push them to the thread detail view
     if (this.props.data.threads && mountedWithActiveThread) {
@@ -78,7 +86,8 @@ class ThreadFeed extends React.Component<Props, State> {
       // the component isn't currently fetching more
       !isFetchingMore
     ) {
-      this.props.data.fetchMore();
+      this.props.data.hasNextPage && this.props.data.fetchMore();
+      return;
     }
 
     // don't select a thread if the composer is open
@@ -93,7 +102,8 @@ class ThreadFeed extends React.Component<Props, State> {
     if (
       isDesktop &&
       (hasThreadsButNoneSelected || justLoadedThreads) &&
-      this.props.data.threads.length > 0
+      this.props.data.threads.length > 0 &&
+      !prevProps.isFetchingMore
     ) {
       if (
         (this.props.data.community &&
@@ -166,6 +176,7 @@ class ThreadFeed extends React.Component<Props, State> {
       data: { threads, networkStatus },
       selectedId,
       activeCommunity,
+      queryString,
     } = this.props;
     const { scrollElement } = this.state;
 
@@ -177,7 +188,10 @@ class ThreadFeed extends React.Component<Props, State> {
     if (networkStatus === 8) return <ErrorThreadFeed />;
 
     // no threads yet
-    if (threads.length === 0) return <EmptyThreadFeed />;
+    if (threads.length === 0 && !queryString) return <EmptyThreadFeed />;
+
+    if (threads.length === 0 && queryString)
+      return <EmptySearchFeed queryString={queryString} />;
 
     const threadNodes = threads.slice().map(thread => thread.node);
 
@@ -242,17 +256,19 @@ class ThreadFeed extends React.Component<Props, State> {
           scrollElement={scrollElement}
           threshold={750}
         >
-          {filteredThreads.map(thread => {
-            return (
-              <InboxThread
-                key={thread.id}
-                data={thread}
-                active={selectedId === thread.id}
-                hasActiveCommunity={this.props.hasActiveCommunity}
-                hasActiveChannel={this.props.hasActiveChannel}
-              />
-            );
-          })}
+          <FlipMove duration={350}>
+            {filteredThreads.map(thread => {
+              return (
+                <InboxThread
+                  key={thread.id}
+                  data={thread}
+                  active={selectedId === thread.id}
+                  hasActiveCommunity={this.props.hasActiveCommunity}
+                  hasActiveChannel={this.props.hasActiveChannel}
+                />
+              );
+            })}
+          </FlipMove>
         </InfiniteList>
       </div>
     );

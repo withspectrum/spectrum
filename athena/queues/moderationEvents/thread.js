@@ -31,7 +31,7 @@ export default async (job: JobData) => {
   const text = `${title} ${body}`;
 
   const scores = await Promise.all([
-    getSpectrumScore(text, thread.id),
+    getSpectrumScore(text, thread.id, thread.creatorId),
     getPerspectiveScore(text),
   ]).catch(err =>
     console.log('Error getting thread moderation scores from providers', err)

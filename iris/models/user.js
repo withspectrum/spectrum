@@ -98,7 +98,13 @@ const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
 const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
-    .insert(user, { returnChanges: true })
+    .insert(
+      {
+        ...user,
+        modifiedAt: null,
+      },
+      { returnChanges: true }
+    )
     .run()
     .then(result => {
       const user = result.changes[0].new_val;
@@ -289,6 +295,7 @@ const editUser = (
         website,
         username,
         timezone,
+        modifiedAt: new Date(),
       });
     })
     .then(user => {

@@ -1,8 +1,9 @@
-// $FlowFixMe
+// @flow
 import UserError from '../utils/UserError';
 const {
   createDirectMessageThread,
-  getDirectMessageThreadsByUser,
+  checkForExistingDMThread,
+  getDirectMessageThread,
 } = require('../models/directMessageThread');
 const {
   createMemberInDirectMessageThread,
@@ -10,27 +11,31 @@ const {
 } = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
 const { uploadImage } = require('../utils/s3');
+import type { GraphQLContext } from '../';
+
+type DMThreadInput = {
+  participants: Array<string>,
+  message: {
+    messageType: 'text' | 'media',
+    threadType: 'directMessageThread',
+    content: {
+      body: string,
+    },
+    file: any,
+  },
+};
 
 module.exports = {
   Mutation: {
-    createDirectMessageThread: (_: any, { input }, { user }) => {
+    createDirectMessageThread: async (
+      _: any,
+      { input }: { input: DMThreadInput },
+      { user }: GraphQLContext
+    ) => {
       const currentUser = user;
 
       if (!currentUser)
         return new UserError('You must be signed in to send a direct message.');
-
-      /*
-        input shape:
-
-        participants: [ids],
-        message: {
-          messageType: 'text' | 'media',
-          threadType: 'directMessageThread',
-          content: {
-            body: string
-          }
-        }
-      */
 
       if (!input.participants)
         return new UserError('Nobody was selected to create a thread.');
@@ -46,83 +51,77 @@ module.exports = {
       // mutations to add or remove members
       const isGroup = participants.length > 1;
 
-      // create a direct message thread object in order to generate an id
-      return createDirectMessageThread(isGroup)
-        .then(thread => {
-          if (
-            message.messageType === 'text' ||
-            message.messageType === 'draftjs'
-          ) {
-            // once we have an id we can generate a proper message object
-            const messageWithThread = {
-              ...message,
-              threadId: thread.id,
-            };
+      // collect all participant ids and the current user id into an array - we
+      // use this to determine if an existing DM thread with this exact
+      // set of participants already exists or not
+      const allMemberIds = [...participants, currentUser.id];
 
-            // when we have a thread id, we can create the thread owner
-            // relationship with the current user and a member relationship
-            // with each particpant
-            return Promise.all([
-              thread,
-              // create member relationship with the current user
-              // the third 'true' argument determines whether or not to set a 'lastActive' field date
-              // since we know the user who is creating the dm thread is active right now, we set it as true
-              createMemberInDirectMessageThread(
-                thread.id,
-                currentUser.id,
-                true
-              ),
-              // create member relationships - the third argument is false because at this point the other people in the dm group are not active
-              participants.map(participant =>
-                createMemberInDirectMessageThread(thread.id, participant, false)
-              ),
-              // create message
-              storeMessage(messageWithThread, currentUser.id),
-            ]);
-          } else if (message.messageType === 'media') {
-            // if the first message in a dm group is a photo, we need to handle more operations before we can return:
-            // 1. create the participants, upload the image, rebuild the message with the returned image url, and then return the final message
-            return Promise.all([
-              thread,
-              // create member relationship with the current user
-              createMemberInDirectMessageThread(
-                thread.id,
-                currentUser.id,
-                true
-              ),
-              // create member relationships
-              participants.map(participant =>
-                createMemberInDirectMessageThread(thread.id, participant, false)
-              ),
-              uploadImage(
-                message.file,
-                'threads',
-                message.threadId
-              ).then(url => {
-                // build a new message object with a new file field with metadata
-                const newMessage = Object.assign({}, message, {
-                  ...message,
-                  threadId: thread.id,
-                  content: {
-                    body: url,
-                  },
-                  file: {
-                    name: message.file.name,
-                    size: message.file.size,
-                    type: message.file.type,
-                  },
-                });
+      // placeholder
+      let threadId, threadToReturn;
 
-                return storeMessage(newMessage, currentUser.id);
-              }),
-            ]);
-          } else {
-            return new UserError('Unknown message type on this bad boy.');
-          }
-        })
-        .then(thread => thread[0]);
+      // check to see if a dm thread with this exact set of participants exists
+      const existingThreads = await checkForExistingDMThread(allMemberIds);
+
+      // if so, we will be evaulating the first result (should only ever be one)
+      if (existingThreads && existingThreads.length > 0) {
+        threadId = existingThreads[0].group;
+        threadToReturn = await getDirectMessageThread(threadId);
+      } else {
+        threadToReturn = await createDirectMessageThread(isGroup);
+        threadId = threadToReturn.id;
+      }
+
+      const handleStoreMessage = async message => {
+        if (
+          message.messageType === 'text' ||
+          message.messageType === 'draftjs'
+        ) {
+          // once we have an id we can generate a proper message object
+          const messageWithThread = {
+            ...message,
+            threadId,
+          };
+
+          return await storeMessage(messageWithThread, currentUser.id);
+        } else if (message.messageType === 'media') {
+          const url = await uploadImage(message.file, 'threads', threadId);
+
+          // build a new message object with a new file field with metadata
+          const newMessage = Object.assign({}, message, {
+            ...message,
+            threadId: threadId,
+            content: {
+              body: url,
+            },
+            file: {
+              name: message.file.name,
+              size: message.file.size,
+              type: message.file.type,
+            },
+          });
+
+          return await storeMessage(newMessage, currentUser.id);
+        } else {
+          return new UserError('Unknown message type on this bad boy.');
+        }
+      };
+
+      if (existingThreads.length > 0) {
+        return await Promise.all([
+          handleStoreMessage(message),
+          setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+        ]).then(() => threadToReturn);
+      }
+
+      return await Promise.all([
+        handleStoreMessage(message),
+        createMemberInDirectMessageThread(threadId, currentUser.id, true),
+        participants.map(participant =>
+          createMemberInDirectMessageThread(threadId, participant, false)
+        ),
+      ]).then(() => threadToReturn);
     },
-    setLastSeen: (_, { id }, { user }) =>
+    setLastSeen: (_: any, { id }: { id: string }, { user }: GraphQLContext) =>
       setUserLastSeenInDirectMessageThread(id, user.id),
   },
 };
