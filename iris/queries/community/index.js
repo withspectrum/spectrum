@@ -1,14 +1,12 @@
 // @flow
 
-// root resolvers
-import rootCommunity from './rootCommunity';
-import rootCommunities from './rootCommunities';
-import rootTopCommunities from './rootTopCommunities';
-import rootRecentCommunities from './rootRecentCommunities';
-import rootSearchCommunities from './rootSearchCommunities';
-import rootSearchCommunityThreads from './rootSearchCommunityThreads';
+import community from './rootCommunity';
+import communities from './rootCommunities';
+import topCommunities from './rootTopCommunities';
+import recentCommunities from './rootRecentCommunities';
+import searchCommunities from './rootSearchCommunities';
+import searchCommunityThreads from './rootSearchCommunityThreads';
 
-// community resolvers
 import communityPermissions from './communityPermissions';
 import channelConnection from './channelConnection';
 import memberConnection from './memberConnection';
@@ -28,29 +26,29 @@ import watercooler from './watercooler';
 
 module.exports = {
   Query: {
-    community: rootCommunity,
-    communities: rootCommunities,
-    topCommunities: rootTopCommunities,
-    recentCommunities: rootRecentCommunities,
-    searchCommunities: rootSearchCommunities,
-    searchCommunityThreads: rootSearchCommunityThreads,
+    community,
+    communities,
+    topCommunities,
+    recentCommunities,
+    searchCommunities,
+    searchCommunityThreads,
   },
   Community: {
-    communityPermissions: communityPermissions,
-    channelConnection: channelConnection,
-    memberConnection: memberConnection,
-    pinnedThread: pinnedThread,
-    threadConnection: threadConnection,
-    metaData: metaData,
-    slackImport: slackImport,
-    invoices: invoices,
-    recurringPayments: recurringPayments,
-    memberGrowth: memberGrowth,
-    conversationGrowth: conversationGrowth,
-    topMembers: topMembers,
-    topAndNewThreads: topAndNewThreads,
-    isPro: isPro,
-    contextPermissions: contextPermissions,
-    watercooler: watercooler,
+    communityPermissions,
+    channelConnection,
+    memberConnection,
+    pinnedThread,
+    threadConnection,
+    metaData,
+    slackImport,
+    invoices,
+    recurringPayments,
+    memberGrowth,
+    conversationGrowth,
+    topMembers,
+    topAndNewThreads,
+    isPro,
+    contextPermissions,
+    watercooler,
   },
 };
