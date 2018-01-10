@@ -26,6 +26,7 @@ const Message = /* GraphQL */ `
 		id: ID!
 		timestamp: Date!
 		thread: Thread
+        quotedMessage: Message
 		content: MessageContent!
 		sender: User!
 		reactions: ReactionData
@@ -42,6 +43,7 @@ const Message = /* GraphQL */ `
 		messageType: MessageTypes!
 		content: MessageContentInput!
 		file: File
+        quotedMessageId: ID
 	}
 
 	extend type Query {

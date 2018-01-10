@@ -1,27 +1,18 @@
+// @flow
 const { getMessage, getMediaMessagesForThread } = require('../models/message');
 import { getThread } from '../models/thread';
 import type { GraphQLContext } from '../';
-
-type GetMessageProps = {
-  messageId: string,
-};
-
-type Root = {
-  messageId: string,
-  senderId: string,
-  threadId: string,
-  threadType: 'directMessageThread' | 'story',
-};
+import type { DBMessage } from 'shared/types';
 
 module.exports = {
   Query: {
-    message: (_: Root, { id }: GetMessageProps) => getMessage(id),
-    getMediaMessagesForThread: (_, { threadId }) =>
+    message: (_: DBMessage, { id }: { id: string }) => getMessage(id),
+    getMediaMessagesForThread: (_: any, { threadId }: { threadId: string }) =>
       getMediaMessagesForThread(threadId),
   },
   Message: {
     sender: async (
-      { senderId, threadId, threadType }: Root,
+      { senderId, threadId, threadType }: DBMessage,
       _: any,
       { loaders }: GraphQLContext
     ) => {
@@ -55,7 +46,7 @@ module.exports = {
     },
     thread: ({ threadId }: { threadId: string }, _: any, __: any) =>
       getThread(threadId),
-    reactions: ({ id }: Root, _, { user, loaders }: GraphQLContext) =>
+    reactions: ({ id }: DBMessage, _: any, { user, loaders }: GraphQLContext) =>
       loaders.messageReaction.load(id).then(result => {
         if (!result)
           return {
@@ -70,5 +61,10 @@ module.exports = {
             : false,
         };
       }),
+    quotedMessage: (
+      { quotedMessageId }: DBMessage,
+      _: any,
+      { loaders }: GraphQLContext
+    ) => (quotedMessageId ? loaders.message.load(quotedMessageId) : null),
   },
 };
