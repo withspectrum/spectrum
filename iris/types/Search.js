@@ -6,7 +6,7 @@ const Search = /* GraphQL */ `
     THREADS
   }
 
-  union SearchResultNode = Community |  Thread | User
+  union SearchResultNode = Community | Thread | User
 
   type SearchResultEdge {
     cursor: String!
@@ -25,6 +25,10 @@ const Search = /* GraphQL */ `
     everythingFeed: Boolean
   }
 
+  type SearchResults {
+    searchResultConnection: SearchResultsConnection
+  }
+
 	extend type Query {
 		search (
       # Returns the first *n* results from the list
@@ -41,7 +45,7 @@ const Search = /* GraphQL */ `
       type: SearchType!
       # Optional ID to be used to filter search results by community, channel, user, etc.
       filter: SearchFilter
-    ): [SearchResultNode]
+    ): SearchResults
 	}
 `;
 

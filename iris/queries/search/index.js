@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-
+import { encode } from '../../utils/base64';
 import searchCommunities from './searchCommunities';
 import searchUsers from './searchUsers';
 import searchThreads from './searchThreads';
@@ -25,17 +25,32 @@ module.exports = {
       }
     },
   },
+  SearchResults: {
+    searchResultConnection: results => {
+      return {
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+        edges: results.map(result => ({
+          cursor: encode(result.id),
+          node: result,
+        })),
+      };
+    },
+  },
   SearchResultNode: {
-    __resolveType(obj) {
-      if (obj.creatorId) {
+    __resolveType(root) {
+      if (root.creatorId) {
         return 'Thread';
       }
-      if (obj.slug) {
+      if (root.slug) {
         return 'Community';
       }
-      if (obj.username) {
+      if (root.username) {
         return 'User';
       }
+      return null;
     },
   },
 };
