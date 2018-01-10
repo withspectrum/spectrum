@@ -6,7 +6,7 @@
         "node": true
     },
     "parser": "babel-eslint",
-    "extends": ["eslint:recommended", "plugin:promise/recommended", "plugin:flowtype/recommended"],
+    "extends": ["eslint:recommended", "plugin:promise/recommended", "plugin:flowtype/recommended", "plugin:react/recommended"],
     "parserOptions": {
         "ecmaVersion": 2017,
         "ecmaFeatures": {
