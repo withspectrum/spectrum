@@ -367,41 +367,35 @@ module.exports = {
         (after && before) ||
         (first && before) ||
         (after && last)
-      )
-        throw new UserError(
-          'Cannot paginate back-and forwards at the same time. Please only ask for the first messages after a certain point or the last messages before a certain point.'
+      ) {
+        debug('invalid pagination options provided:');
+        debug(
+          'first:',
+          first,
+          ' last:',
+          last,
+          ' after:',
+          after,
+          ' before:',
+          before
         );
+        throw new UserError(
+          'Cannot paginate back- and forwards at the same time. Please only ask for the first messages after a certain point or the last messages before a certain point.'
+        );
+      }
 
       debug(`get messages for ${id}`);
       let cursor = after || before;
-      let userLastSeen;
       try {
-        cursor = parseInt(decode(cursor), 10);
+        cursor = decode(cursor);
+        if (cursor) cursor = parseInt(cursor, 10);
       } catch (err) {
         debug(err);
         throw new UserError(
-          'Invalid cursor passed to "after" parameter of thread.messageConnection.'
+          'Invalid cursor passed to thread.messageConnection.'
         );
       }
-      if (!cursor && user) {
-        debug(
-          `no valid cursor provided, trying userLastSeen for user ${user.id}`
-        );
-        try {
-          userLastSeen = await loaders.userThreadNotificationStatus
-            .load([user.id, id])
-            .then(result => result && result.lastSeen);
-          if (userLastSeen) {
-            debug(
-              `user last seen record found, using as cursor: ${userLastSeen}`
-            );
-            cursor = userLastSeen;
-          }
-        } catch (err) {
-          // Ignore errors from getting user last seen
-        }
-      }
-      debug(`cursor: ${cursor}`);
+      if (cursor) debug(`cursor: ${cursor}`);
 
       let options = {
         // Default first/last to 50 if their counterparts after/before are provided
@@ -425,24 +419,6 @@ module.exports = {
 
       debug('pagination options for query:', options);
 
-      const totalMessageCount = await loaders.threadMessageCount
-        .load(id)
-        .then(({ reduction }) => reduction);
-      // If we would paginate based on userLastSeen and more messages were requested then there are total don't paginate
-      if (
-        userLastSeen &&
-        ((options.first && options.first > totalMessageCount) ||
-          (options.last && options.last > totalMessageCount))
-      ) {
-        debug(
-          `less messages than requested total, not paginating based on userLastSeen`
-        );
-        // $FlowIssue
-        options.after = null;
-        // $FlowIssue
-        options.before = null;
-      }
-
       // Load one message too much so that we know whether there's
       // a next or previous page
       options.first && options.first++;
@@ -464,9 +440,12 @@ module.exports = {
         const loadedMoreLast = options.last && result.length > options.last - 1;
 
         // Get rid of the extranous message if there is one
-        if (loadedMoreFirst || loadedMoreLast) {
-          debug('not sending extranous message');
+        if (loadedMoreFirst) {
+          debug('not sending extranous message loaded first');
           messages = result.slice(0, result.length - 1);
+        } else if (loadedMoreLast) {
+          debug('not sending extranous message loaded last');
+          messages = result.reverse().slice(1, result.length);
         }
 
         return {

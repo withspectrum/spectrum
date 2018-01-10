@@ -35,17 +35,36 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
   ${threadMessagesFragment}
 `;
 export const GET_THREAD_MESSAGES_OPTIONS = {
-  options: props => ({
-    variables: {
+  options: props => {
+    let variables = {
       id: props.id,
-      // Don't paginate based on lastSeen if there's less than 50 messages
-      after:
-        props.threadMessageCount > 50 && props.lastSeen
-          ? window.btoa(new Date(props.lastSeen).getTime())
-          : undefined,
-    },
-    fetchPolicy: 'cache-and-network',
-  }),
+      after: null,
+      before: null,
+      last: null,
+      first: null,
+    };
+
+    // Any thread with less than 50 messages just load all of 'em
+    if (props.threadMessageCount >= 50) {
+      // If the thread was active after the user last saw it, only load the new messages
+      if (props.lastSeen) {
+        if (
+          new Date(props.lastSeen).getTime() <
+          new Date(props.lastActive).getTime()
+        ) {
+          variables.after = window.btoa(new Date(props.lastSeen).getTime());
+          // Otherwise load the last 50 messages
+        } else {
+          variables.last = 50;
+        }
+      }
+    }
+
+    return {
+      variables,
+      fetchPolicy: 'cache-and-network',
+    };
+  },
   props: props => ({
     data: props.data,
     loadNextPage: () => {
