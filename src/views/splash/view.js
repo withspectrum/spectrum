@@ -1,30 +1,22 @@
 // @flow
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Link from 'src/components/link';
-import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
 import Privacy from '../../components/privacy';
 import Terms from '../../components/terms';
 import {
-  zIndex,
   hexa,
   Shadow,
   Gradient,
   FlexCol,
   FlexRow,
-  H1,
-  H2,
-  Span,
-  P,
   Transition,
   HorizontalRule,
 } from '../../components/globals';
-import Badge from '../../components/badges';
 import { Button } from '../../components/buttons';
 import Search from '../explore/components/search';
-import { Communities } from './components/communities';
 import ViewSegment from '../../components/viewSegment';
 import { Conversation, Discover } from '../../components/illustrations';
 import {
@@ -39,7 +31,6 @@ import {
   NodeLogo,
 } from './components/logos';
 import {
-  Header,
   Tagline,
   Copy,
   Bullets,
@@ -150,24 +141,6 @@ export const Overview = (props: Props) => {
   `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`font-size: 16px;`;
-
-  const ThisButton = styled(SecondaryCTA)`
-    padding: 12px 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
-  `;
-
-  const Links = styled(FlexRow)`
-    > a {
-      font-weight: 700;
-      margin-left: 32px;
-
-      &:not(:last-of-type) {
-        @media (max-width: 640px) {
-          display: none;
-        }
-      }
-    }
-  `;
 
   const Img = styled.img`
     position: absolute;
@@ -519,12 +492,6 @@ export const Sell = (props: Props) => {
 };
 
 export const Yours = (props: Props) => {
-  const ThisCopy = styled(Copy)`
-    font-weight: 400;
-    max-width: 640px;
-    margin-top: 16px;
-  `;
-
   const ThisContent = styled(Content)`
     margin: 60px 16px 16px;
     font-size: 18px;
@@ -774,56 +741,6 @@ export const UserPricing = (props: Props) => {
     }
   `;
 
-  const ThisFeatureList = styled(FeatureList)`
-    margin-top: 8px;
-
-    li > span {
-      box-shadow: 0 0 8px 8px ${props => props.theme.space.dark};
-      line-height: 2;
-      vertical-align: middle;
-      margin-right: 4px;
-      display: inline-block;
-    }
-  `;
-
-  const ThisFree = styled(Free)`box-shadow: none;`;
-
-  const ThisPricingGrid = styled(PricingGrid)`
-    grid-template-rows: auto;
-    grid-template-columns: minmax(auto, 400px);
-    grid-template-areas: 'paid';
-    justify-content: center;
-    margin-top: 40px;
-  `;
-
-  const ThisPaid = styled(Paid)`
-    box-shadow: none;
-    background-color: ${props => props.theme.success.default};
-    background-image: ${props =>
-      Gradient(props.theme.space.alt, props.theme.space.default)};
-    grid-area: paid;
-
-    ${FeatureList}, ${Feature} {
-      text-align: left;
-    }
-
-    ${CostNumber} {
-      &:before,
-      &:after {
-        color: ${props => props.theme.space.wash};
-      }
-    }
-
-    ${Feature}:before {
-      color: ${props => props.theme.space.border};
-    }
-
-    ${Description} {
-      border-color: ${props => props.theme.space.border};
-      text-align: left;
-    }
-  `;
-
   return (
     <Section background="dark" goop={1}>
       <Content>
@@ -853,11 +770,6 @@ export const Plans = (props: Props) => {
       margin: 0;
       z-index: 1;
     }
-  `;
-
-  const ThisTagline = styled(Tagline)`
-    text-align: center;
-    margin-left: 16px;
   `;
 
   return (
@@ -1093,7 +1005,7 @@ export const ContactInfo = () => {
               Concerned about something on Spectrum? Shoot us an email and we'll
               take care of it right away.
             </Flavor>
-            <a href={'mailto://support@spectrum.chat'}>
+            <a href={'mailto:support@spectrum.chat'}>
               <Button icon="email">Email support@spectrum.chat</Button>
             </a>
           </EmailCard>

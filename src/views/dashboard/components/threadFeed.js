@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import FlipMove from 'react-flip-move';
 import { sortByDate } from '../../../helpers/utils';
 import { LoadingInboxThread } from '../../../components/loading';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
@@ -85,7 +86,8 @@ class ThreadFeed extends React.Component<Props, State> {
       // the component isn't currently fetching more
       !isFetchingMore
     ) {
-      this.props.data.fetchMore();
+      this.props.data.hasNextPage && this.props.data.fetchMore();
+      return;
     }
 
     // don't select a thread if the composer is open
@@ -100,7 +102,8 @@ class ThreadFeed extends React.Component<Props, State> {
     if (
       isDesktop &&
       (hasThreadsButNoneSelected || justLoadedThreads) &&
-      this.props.data.threads.length > 0
+      this.props.data.threads.length > 0 &&
+      !prevProps.isFetchingMore
     ) {
       if (
         (this.props.data.community &&
@@ -171,7 +174,6 @@ class ThreadFeed extends React.Component<Props, State> {
   render() {
     const {
       data: { threads, networkStatus },
-      data,
       selectedId,
       activeCommunity,
       queryString,
@@ -254,17 +256,19 @@ class ThreadFeed extends React.Component<Props, State> {
           scrollElement={scrollElement}
           threshold={750}
         >
-          {filteredThreads.map(thread => {
-            return (
-              <InboxThread
-                key={thread.id}
-                data={thread}
-                active={selectedId === thread.id}
-                hasActiveCommunity={this.props.hasActiveCommunity}
-                hasActiveChannel={this.props.hasActiveChannel}
-              />
-            );
-          })}
+          <FlipMove duration={350}>
+            {filteredThreads.map(thread => {
+              return (
+                <InboxThread
+                  key={thread.id}
+                  data={thread}
+                  active={selectedId === thread.id}
+                  hasActiveCommunity={this.props.hasActiveCommunity}
+                  hasActiveChannel={this.props.hasActiveChannel}
+                />
+              );
+            })}
+          </FlipMove>
         </InfiniteList>
       </div>
     );

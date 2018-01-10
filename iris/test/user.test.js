@@ -39,6 +39,27 @@ describe('queries', () => {
     });
   });
 
+  it('should fetch a users communities', () => {
+    const query = /* GraphQL */ `
+      {
+        user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+          communityConnection {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    expect.assertions(1);
+    return request(query).then(result => {
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe.skip('everything', () => {
     it('should return the latest thread', () => {
       const query = /* GraphQL */ `

@@ -217,6 +217,7 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
 
 const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
+    id: '1f462515-e1e7-4aff-be48-adda326df133',
     createdAt: new Date(DATE),
     userId: BRIAN_ID,
     threadId: 'first-dm-thread-asdf123',
@@ -244,6 +245,7 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
 
 const DEFAULT_USERS_COMMUNITIES = [
   {
+    id: '6a942fe5-ee63-478d-afd6-ff19ad2d4677',
     createdAt: new Date(DATE),
     userId: MAX_ID,
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -255,6 +257,7 @@ const DEFAULT_USERS_COMMUNITIES = [
     reputation: 100,
   },
   {
+    id: '12803353-cb86-4109-8c4a-9abba79398d8',
     createdAt: new Date(DATE),
     userId: BRIAN_ID,
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -266,6 +269,7 @@ const DEFAULT_USERS_COMMUNITIES = [
     reputation: 101,
   },
   {
+    id: '80b16afe-8576-4970-99ab-240b1a975b99',
     createdAt: new Date(DATE),
     userId: BRYN_ID,
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -280,6 +284,7 @@ const DEFAULT_USERS_COMMUNITIES = [
 
 const DEFAULT_USERS_CHANNELS = [
   {
+    id: '11fa5e3e-930d-4ba9-a1d4-0664ad451012',
     createdAt: new Date(DATE),
     userId: MAX_ID,
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
@@ -291,6 +296,7 @@ const DEFAULT_USERS_CHANNELS = [
     receiveNotifications: true,
   },
   {
+    id: '2511be41-9d36-462f-bedc-3eecc62759e3',
     createdAt: new Date(DATE),
     userId: BRYN_ID,
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
@@ -301,6 +307,7 @@ const DEFAULT_USERS_CHANNELS = [
     receiveNotifications: true,
   },
   {
+    id: '7411906b-54a0-4c18-b26c-2522ad59c7f9',
     createdAt: new Date(DATE),
     userId: BRIAN_ID,
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',

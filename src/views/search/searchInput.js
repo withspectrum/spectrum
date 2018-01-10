@@ -1,14 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { connect } from 'react-redux';
 import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from './style';
 import Icon from '../../components/icons';
-import { throttle } from '../../helpers/utils';
-import {
-  closeSearch,
-  openSearch,
-  setSearchStringVariable,
-} from '../../actions/dashboardFeed';
 
 type Props = {};
 type State = {

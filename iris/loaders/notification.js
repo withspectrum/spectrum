@@ -2,8 +2,9 @@ import { getNotifications } from '../models/notification';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-export const __createNotificationLoader = () =>
-  createLoader(notifications => getNotifications(notifications));
+export const __createNotificationLoader = createLoader(notifications =>
+  getNotifications(notifications)
+);
 
 export default () => {
   throw new Error(

@@ -1,8 +1,14 @@
+// @flow
 import { sortByDate } from './utils';
 
-export const sortAndGroupMessages = (messagesToSort, lastSeen) => {
-  if (!messagesToSort.length > 0) return [];
-  let messages = messagesToSort;
+// TODO: FIXME
+type Message = Object;
+
+export const sortAndGroupMessages = (
+  messages: Array<Message>,
+  lastSeen?: number
+) => {
+  if (messages.length === 0) return [];
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
   let newArray = [];

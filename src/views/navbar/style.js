@@ -210,6 +210,10 @@ export const ExploreTab = styled(Tab)`
     @media (max-width: 768px) {
       display: flex;
     }
+
+    @media (max-width: 360px) {
+      display: none;
+    }
   }
 `;
 
