@@ -1,16 +1,19 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { DBChannel } from 'shared/types';
 
-export default (
-  { id }: { id: string },
+export default async (
+  { id }: DBChannel,
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return Promise.all([
+  const [threads, members] = await Promise.all([
     loaders.channelThreadCount.load(id),
     loaders.channelMemberCount.load(id),
-  ]).then(([threadCount, memberCount]) => ({
-    threads: threadCount ? threadCount.reduction : 0,
-    members: memberCount ? memberCount.reduction : 0,
-  }));
+  ]);
+
+  return {
+    threads: threads ? threads.reduction : 0,
+    members: members ? members.reduction : 0,
+  };
 };

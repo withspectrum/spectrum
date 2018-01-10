@@ -1,11 +1,12 @@
 // @flow
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import type { GraphQLContext } from '../../';
+import type { DBChannel } from 'shared/types';
 import { getMembersInChannel } from '../../models/usersChannels';
 import { encode, decode } from '../../utils/base64';
 
 export default (
-  { id },
+  { id }: DBChannel,
   { first, after }: PaginationOptions,
   { loaders }: GraphQLContext
 ) => {

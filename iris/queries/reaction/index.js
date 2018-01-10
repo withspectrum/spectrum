@@ -1,6 +1,6 @@
 // @flow
 import reaction from './reaction';
-import users from './users';
+import user from './user';
 import message from './message';
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     reaction,
   },
   Reaction: {
-    users,
+    user,
     message,
   },
 };

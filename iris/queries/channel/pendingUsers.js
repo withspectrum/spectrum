@@ -1,7 +1,8 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { DBChannel } from 'shared/types';
 
-export default ({ id }: { id: string }, _, { loaders }: GraphQLContext) => {
+export default ({ id }: DBChannel, _: any, { loaders }: GraphQLContext) => {
   return loaders.channelPendingUsers
     .load(id)
     .then(res => {

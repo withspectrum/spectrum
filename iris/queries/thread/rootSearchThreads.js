@@ -8,9 +8,23 @@ import {
   getPrivateChannelIdsForUsersThreads,
   getUsersJoinedChannels,
 } from '../../models/search';
+import { getChannelById, getChannels } from '../../models/channel';
+import { getCommunityById } from '../../models/community';
+import {
+  getUserPermissionsInChannel,
+  DEFAULT_USER_CHANNEL_PERMISSIONS,
+} from '../../models/usersChannels';
+import intersection from 'lodash.intersection';
 
 import initIndex from 'shared/algolia';
 const searchIndex = initIndex('threads_and_messages');
+
+type FilterTypes = {
+  communityId?: string,
+  channelId?: string,
+  creatorId?: string,
+  everythingFeed?: boolean,
+};
 
 export default async (
   _: any,

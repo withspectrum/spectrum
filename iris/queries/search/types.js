@@ -9,7 +9,7 @@ export type Args = {
   searchFilter?: {
     communityId?: string,
     channelId?: string,
-    userId?: string,
+    creatorId?: string,
     everythingFeed?: boolean,
   },
 };

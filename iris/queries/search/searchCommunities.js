@@ -4,7 +4,7 @@ import initIndex from 'shared/algolia';
 const communitySearchIndex = initIndex('communities');
 import type { Args } from './types';
 
-export default (args: Args, loaders: GraphQLContext) => {
+export default (args: Args, { loaders }: GraphQLContext) => {
   const { queryString } = args;
 
   return communitySearchIndex

@@ -1,8 +1,9 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { DBChannel } from 'shared/types';
 
-export default (args, _: any, { user, loaders }: GraphQLContext) => {
-  const channelId = args.id || args.channelId;
+export default (root: DBChannel, _: any, { user, loaders }: GraphQLContext) => {
+  const channelId = root.id;
   if (!channelId || !user) {
     return {
       isOwner: false,

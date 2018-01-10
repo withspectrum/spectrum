@@ -26,7 +26,7 @@ const Search = /* GraphQL */ `
   }
 
   type SearchResults {
-    searchResultConnection: SearchResultsConnection
+    searchResultsConnection: SearchResultsConnection
   }
 
 	extend type Query {
