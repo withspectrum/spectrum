@@ -113,6 +113,7 @@ const getChannelBySlug = (
       if (result && result[0]) {
         return result[0].left;
       }
+      return null;
     });
 };
 
@@ -187,7 +188,7 @@ const getChannelsMemberCounts = (
     .run();
 };
 
-export type CreateChannelArguments = {
+export type CreateChannelInput = {
   input: {
     communityId: string,
     name: string,
@@ -198,7 +199,7 @@ export type CreateChannelArguments = {
   },
 };
 
-export type EditChannelArguments = {
+export type EditChannelInput = {
   input: {
     channelId: string,
     name: string,
@@ -211,7 +212,7 @@ export type EditChannelArguments = {
 const createChannel = (
   {
     input: { communityId, name, slug, description, isPrivate, isDefault },
-  }: CreateChannelArguments,
+  }: CreateChannelInput,
   userId: string
 ): Promise<DBChannel> => {
   return db
@@ -261,7 +262,7 @@ const createGeneralChannel = (
 
 const editChannel = ({
   input: { name, slug, description, isPrivate, channelId },
-}: EditChannelArguments): DBChannel => {
+}: EditChannelInput): DBChannel => {
   return db
     .table('channels')
     .get(channelId)
@@ -290,6 +291,8 @@ const editChannel = ({
           if (result.unchanged === 1) {
             return result.changes[0].old_val;
           }
+
+          return null;
         });
     });
 };
