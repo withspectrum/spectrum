@@ -12,4 +12,6 @@ export default graphqlExpress(req => ({
     user: req.user,
     loaders: createLoaders(),
   },
+  tracing: true,
+  cacheControl: true,
 }));

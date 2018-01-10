@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "algoliasearch": "^3.24.7",
+    "apollo-engine": "^0.8.3",
     "apollo-upload-client": "^5.1.0",
     "apollo-upload-server": "^2.0.4",
     "axios": "^0.16.2",
