@@ -1,11 +1,7 @@
 // @flow
 // $FlowFixMe
 import ImgixClient from 'imgix-core-js';
-const {
-  getEverything,
-  getUser,
-  getUsersBySearchString,
-} = require('../models/user');
+const { getEverything } = require('../models/user');
 const { getUsersSettings } = require('../models/usersSettings');
 const {
   getCommunitiesByUser,

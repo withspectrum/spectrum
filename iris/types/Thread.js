@@ -66,7 +66,7 @@ const Thread = /* GraphQL */ `
 
 	extend type Query {
 		thread(id: ID!): Thread
-		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
+		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
 	input AttachmentInput {
