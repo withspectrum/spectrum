@@ -6,7 +6,7 @@ export type Args = {
   last?: number,
   before?: string,
   queryString: string,
-  filter?: {
+  searchFilter?: {
     communityId?: string,
     channelId?: string,
     userId?: string,

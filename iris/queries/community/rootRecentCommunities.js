@@ -1,3 +1,3 @@
 // @flow
-import getRecentCommunities from '../../models/community';
+import { getRecentCommunities } from '../../models/community';
 export default () => getRecentCommunities();

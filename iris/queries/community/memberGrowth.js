@@ -1,6 +1,6 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
-import { GraphQLContext } from '../../';
+import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 const {
   getMemberCount,

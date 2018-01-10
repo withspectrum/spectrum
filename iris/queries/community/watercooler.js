@@ -1,5 +1,4 @@
 // @flow
-// @flow
 import type { DBCommunity } from 'shared/types';
 import { getThreads } from '../../models/thread';
 

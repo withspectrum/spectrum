@@ -1,6 +1,7 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
-import { GraphQLContext } from '../../';
+import type { GraphQLContext } from '../../';
+import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
 const { getMembersInCommunity } = require('../../models/usersCommunities');
 

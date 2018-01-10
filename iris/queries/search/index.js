@@ -1,14 +1,21 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { Args } from './types';
 import UserError from '../../utils/UserError';
 import { encode } from '../../utils/base64';
 import searchCommunities from './searchCommunities';
 import searchUsers from './searchUsers';
 import searchThreads from './searchThreads';
 
+type SearchTypes = 'COMMUNITIES' | 'USERS' | 'THREADS';
+
 module.exports = {
   Query: {
-    search: (_: any, { type, ...args }, { loaders, user }: GraphQLContext) => {
+    search: (
+      _: any,
+      { type, ...args }: { type: SearchTypes, args: Args },
+      { loaders, user }: GraphQLContext
+    ) => {
       switch (type) {
         case 'COMMUNITIES': {
           return searchCommunities(args, loaders);
@@ -26,7 +33,7 @@ module.exports = {
     },
   },
   SearchResults: {
-    searchResultConnection: results => {
+    searchResultConnection: (results: Array<any>) => {
       return {
         pageInfo: {
           hasNextPage: false,

@@ -23,8 +23,8 @@ const threadsSearchIndex = initIndex('threads_and_messages');
 
 export default async (
   args: Args,
-  loaders: GraphQLContext.loaders,
-  user: GraphQLContext.user
+  loaders: GraphQLContext,
+  user: GraphQLContext
 ) => {
   const { queryString, searchFilter } = args;
 
