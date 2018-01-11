@@ -138,10 +138,5 @@ Object {
       },
     },
   },
-  "errors": Array [
-    [GraphQLError: Cannot read property 'value' of null],
-    [GraphQLError: Cannot read property 'value' of null],
-    [GraphQLError: Cannot read property 'value' of null],
-  ],
 }
 `;

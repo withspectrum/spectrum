@@ -132,6 +132,7 @@ it('should fetch a channels member connection', () => {
 
   expect.assertions(1);
   return request(query).then(result => {
+    console.log(result.errors);
     expect(result).toMatchSnapshot();
   });
 });

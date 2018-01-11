@@ -7,6 +7,7 @@ import { getCommunitiesBySlug } from '../../models/community';
 export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
   // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
   if (user.contextPermissions) return user.contextPermissions;
+  if (!info.operation.name) return null;
   const queryName = info.operation.name.value;
   const handleCheck = async () => {
     switch (queryName) {
