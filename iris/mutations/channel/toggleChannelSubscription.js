@@ -2,10 +2,19 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getChannels } from '../../models/channel';
+import { userIsMemberOfAnyChannelInCommunity } from '../../models/community';
+import { removeMemberInCommunity } from '../../models/usersCommunities';
 import {
   getUserPermissionsInChannel,
   removeMemberInChannel,
+  createMemberInChannel,
+  createOrUpdatePendingUserInChannel,
+  createMemberInDefaultChannels,
 } from '../../models/usersChannels';
+import {
+  getUserPermissionsInCommunity,
+  createMemberInCommunity,
+} from '../../models/usersCommunities';
 
 export default async (
   _: any,

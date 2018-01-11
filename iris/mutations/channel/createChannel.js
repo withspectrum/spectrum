@@ -24,16 +24,14 @@ export default async (
     return new UserError('This channel name is reserved.');
   }
 
-  // get the community parent where the channel is being created
-  const communities = await getCommunities([args.input.communityId]);
+  const [communities, currentUserCommunityPermissions] = await Promise.all([
+    // get the community parent where the channel is being created
+    getCommunities([args.input.communityId]),
+    // get the permission of the user in the parent community
+    getUserPermissionsInCommunity(args.input.communityId, currentUser.id),
+  ]);
 
-  // get the permission of the user in the parent community
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    args.input.communityId,
-    currentUser.id
-  );
-
-  const communityToEvaluate = communities[0];
+  const communityToEvaluate = communities && communities[0];
 
   // if there is no community being evaluated, we can assume the
   // community doesn't exist any more

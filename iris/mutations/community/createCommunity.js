@@ -1,8 +1,18 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { CreateCommunityInput } from '../../models/community';
 import UserError from '../../utils/UserError';
+import { communitySlugIsBlacklisted } from '../../utils/permissions';
+import { getCommunitiesBySlug, createCommunity } from '../../models/community';
+import { createOwnerInCommunity } from '../../models/usersCommunities';
+import { createGeneralChannel } from '../../models/channel';
+import { createOwnerInChannel } from '../../models/usersChannels';
 
-export default (_, args: CreateCommunityArguments, { user }) => {
+export default async (
+  _: any,
+  args: CreateCommunityInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
   // user must be authed to create a community
   if (!currentUser) {
@@ -40,41 +50,35 @@ export default (_, args: CreateCommunityArguments, { user }) => {
   }
 
   // get communities with the input slug to check for duplicates
-  return (
-    getCommunitiesBySlug([sanitizedSlug])
-      .then(communities => {
-        // if a community with this slug already exists
-        if (communities.length > 0) {
-          return new UserError('A community with this slug already exists.');
-        }
-        // all checks passed
-        return createCommunity(sanitizedArgs, currentUser);
-      })
-      .then(community => {
-        // create a new relationship with the community
-        const communityRelationship = createOwnerInCommunity(
-          community.id,
-          currentUser.id
-        );
+  const communities = await getCommunitiesBySlug([sanitizedSlug]);
 
-        // create a default 'general' channel
-        const generalChannel = createGeneralChannel(
-          community.id,
-          currentUser.id
-        );
+  // if a community with this slug already exists
+  if (communities.length > 0) {
+    return new UserError('A community with this slug already exists.');
+  }
 
-        return Promise.all([community, communityRelationship, generalChannel]);
-      })
-      .then(([community, communityRelationship, generalChannel]) => {
-        // create a new relationship with the general channel
-        const generalChannelRelationship = createOwnerInChannel(
-          generalChannel.id,
-          currentUser.id
-        );
+  // all checks passed
+  const community = await createCommunity(sanitizedArgs, currentUser);
 
-        return Promise.all([community, generalChannelRelationship]);
-      })
-      // return only the newly created community
-      .then(data => data[0])
+  // create a new relationship with the community
+  const communityRelationship = await createOwnerInCommunity(
+    community.id,
+    currentUser.id
+  );
+
+  // create a default 'general' channel
+  const generalChannel = await createGeneralChannel(
+    community.id,
+    currentUser.id
+  );
+
+  // create a new relationship with the general channel
+  const generalChannelRelationship = createOwnerInChannel(
+    generalChannel.id,
+    currentUser.id
+  );
+
+  return Promise.all([communityRelationship, generalChannelRelationship]).then(
+    () => community
   );
 };

@@ -23,17 +23,15 @@ export default async (
     );
   }
 
-  // get the channel's permissions
-  const currentUserChannelPermissions = await getUserPermissionsInChannel(
-    channelId,
-    currentUser.id
-  );
-
-  // get the channel to evaluate
-  const channels = await getChannels([channelId]);
+  const [channels, currentUserChannelPermissions] = await Promise.all([
+    // get the channel to evaluate
+    getChannels([channelId]),
+    // get the channel's permissions
+    getUserPermissionsInChannel(channelId, currentUser.id),
+  ]);
 
   // select the channel to evaluate
-  const channelToEvaluate = channels[0];
+  const channelToEvaluate = channels && channels[0];
 
   // if channel wasn't found or was previously deleted, something
   // has gone wrong and we need to escape

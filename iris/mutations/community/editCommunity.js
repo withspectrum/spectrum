@@ -1,8 +1,15 @@
 // @flow
 import type { GraphQLContext } from '../../';
+import type { EditCommunityInput } from '../../models/community';
 import UserError from '../../utils/UserError';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getCommunities, editCommunity } from '../../models/community';
 
-export default (_, args: EditCommunityArguments, { user }) => {
+export default async (
+  _: any,
+  args: EditCommunityInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to edit a community
@@ -12,31 +19,25 @@ export default (_, args: EditCommunityArguments, { user }) => {
     );
   }
 
-  const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-    args.input.communityId,
-    currentUser.id
-  );
-  const communities = getCommunities([args.input.communityId]);
+  const [currentUserCommunityPermissions, communities] = await Promise.all([
+    getUserPermissionsInCommunity(args.input.communityId, currentUser.id),
+    getCommunities([args.input.communityId]),
+  ]);
 
-  return Promise.all([
-    currentUserCommunityPermissions,
-    communities,
-  ]).then(([currentUserCommunityPermissions, communities]) => {
-    const communityToEvaluate = communities[0];
+  const communityToEvaluate = communities && communities[0];
 
-    // if no community was found or was deleted
-    if (!communityToEvaluate || communityToEvaluate.deletedAt) {
-      return new UserError("This community doesn't exist.");
-    }
+  // if no community was found or was deleted
+  if (!communityToEvaluate || communityToEvaluate.deletedAt) {
+    return new UserError("This community doesn't exist.");
+  }
 
-    // user must own the community to edit the community
-    if (!currentUserCommunityPermissions.isOwner) {
-      return new UserError(
-        "You don't have permission to make changes to this community."
-      );
-    }
+  // user must own the community to edit the community
+  if (!currentUserCommunityPermissions.isOwner) {
+    return new UserError(
+      "You don't have permission to make changes to this community."
+    );
+  }
 
-    // all checks passed
-    return editCommunity(args);
-  });
+  // all checks passed
+  return editCommunity(args);
 };

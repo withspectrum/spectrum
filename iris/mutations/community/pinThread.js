@@ -1,8 +1,22 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
+import { getThreads } from '../../models/thread';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { setPinnedThreadInCommunity } from '../../models/community';
+import { getChannels } from '../../models/channel';
 
-export default (_, { threadId, communityId, value }, { user }) => {
+type PinThreadInput = {
+  threadId: string,
+  communityId: string,
+  value: string,
+};
+
+export default async (
+  _: any,
+  { threadId, communityId, value }: PinThreadInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
   if (!currentUser) {
     return new UserError(
@@ -10,26 +24,22 @@ export default (_, { threadId, communityId, value }, { user }) => {
     );
   }
 
-  const promises = [
+  const [permissions, threads] = await Promise.all([
     getUserPermissionsInCommunity(communityId, currentUser.id),
     getThreads([threadId]),
-  ];
+  ]);
 
-  return Promise.all([...promises])
-    .then(([permissions, threads]) => {
-      if (!permissions.isOwner) {
-        return new UserError("You don't have permission to do this.");
-      }
+  if (!permissions.isOwner) {
+    return new UserError("You don't have permission to do this.");
+  }
 
-      const threadToEvaluate = threads[0];
+  const threadToEvaluate = threads[0];
 
-      // we have to ensure the thread isn't in a private channel
-      return getChannels([threadToEvaluate.channelId]);
-    })
-    .then(channels => {
-      if (channels[0].isPrivate) {
-        return new UserError('Only threads in public channels can be pinned.');
-      }
-      return setPinnedThreadInCommunity(communityId, value);
-    });
+  // we have to ensure the thread isn't in a private channel
+  const channels = await getChannels([threadToEvaluate.channelId]);
+
+  if (channels && channels[0].isPrivate) {
+    return new UserError('Only threads in public channels can be pinned.');
+  }
+  return setPinnedThreadInCommunity(communityId, value);
 };
