@@ -1,4 +1,5 @@
-import { getThreadNotificationStatusForUser } from '../models/usersThreads';
+// @flow
+const debug = require('debug')('iris:queries:thread');
 import {
   getUserPermissionsInChannel,
   DEFAULT_USER_CHANNEL_PERMISSIONS,
@@ -6,8 +7,10 @@ import {
 const { getMessages } = require('../models/message');
 import { addQueue } from '../utils/workerQueue';
 import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
+import UserError from '../utils/UserError';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
+import type { DBThread } from 'shared/types';
 import { encode, decode } from '../utils/base64';
 import {
   getPublicChannelIdsInCommunity,
@@ -19,7 +22,7 @@ import {
 } from '../models/search';
 import { intersection } from 'lodash';
 import { getChannelById, getChannels } from '../models/channel';
-import { getCommunityById } from '../models/community';
+import { getCommunityById, getCommunities } from '../models/community';
 import initIndex from 'shared/algolia';
 const searchIndex = initIndex('threads_and_messages');
 
@@ -99,9 +102,11 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
+        // $FlowIssue
         const getChannel = getChannelById(filter.channelId);
         const usersPermissionsInChannel = IS_AUTHED_USER
-          ? getUserPermissionsInChannel(filter.channelId, user.id)
+          ? // $FlowIssue
+            getUserPermissionsInChannel(filter.channelId, user.id)
           : DEFAULT_USER_CHANNEL_PERMISSIONS;
 
         const [channel, permissions] = await Promise.all([
@@ -133,12 +138,15 @@ module.exports = {
         // if no threads exist, send an empty array to the client
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
+        // $FlowIssue
         const getCommunity = getCommunityById(filter.communityId);
         const getPublicChannelIds = getPublicChannelIdsInCommunity(
+          // $FlowIssue
           filter.communityId
         );
         const getPrivateChannelIds = IS_AUTHED_USER
-          ? getPrivateChannelIdsInCommunity(filter.communityId)
+          ? // $FlowIssue
+            getPrivateChannelIdsInCommunity(filter.communityId)
           : [];
         const getCurrentUsersChannelIds = IS_AUTHED_USER
           ? getUsersJoinedPrivateChannelIds(user.id)
@@ -185,10 +193,12 @@ module.exports = {
         if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
         const getPublicChannelIds = getPublicChannelIdsForUsersThreads(
+          // $FlowIssue
           filter.creatorId
         );
         const getPrivateChannelIds = IS_AUTHED_USER
-          ? getPrivateChannelIdsForUsersThreads(filter.creatorId)
+          ? // $FlowIssue
+            getPrivateChannelIdsForUsersThreads(filter.creatorId)
           : [];
         const getCurrentUsersChannelIds = IS_AUTHED_USER
           ? getUsersJoinedPrivateChannelIds(user.id)
@@ -299,7 +309,7 @@ module.exports = {
     },
   },
   Thread: {
-    attachments: ({ attachments }: { attachments: Array<any> }) =>
+    attachments: ({ attachments }: DBThread) =>
       attachments &&
       attachments.map(attachment => {
         return {
@@ -307,18 +317,15 @@ module.exports = {
           data: JSON.stringify(attachment.data),
         };
       }),
-    channel: (
-      { channelId }: { channelId: string },
-      _: any,
-      { loaders }: GraphQLContext
-    ) => loaders.channel.load(channelId),
+    channel: ({ channelId }: DBThread, _: any, { loaders }: GraphQLContext) =>
+      loaders.channel.load(channelId),
     community: (
-      { communityId }: { communityId: string },
+      { communityId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
     participants: (
-      { id, creatorId }: { id: string, creatorId: string },
+      { id, creatorId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => {
@@ -326,16 +333,12 @@ module.exports = {
         .load(id)
         .then(result => (result ? result.reduction : []));
     },
-    isCreator: (
-      { creatorId }: { creatorId: string },
-      _: any,
-      { user }: GraphQLContext
-    ) => {
+    isCreator: ({ creatorId }: DBThread, _: any, { user }: GraphQLContext) => {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
     receiveNotifications: (
-      { id }: { id: string },
+      { id }: DBThread,
       __: any,
       { user, loaders }: GraphQLContext
     ) => {
@@ -348,21 +351,80 @@ module.exports = {
           .then(result => (result ? result.receiveNotifications : false));
       }
     },
-    messageConnection: (
-      { id, watercooler }: { id: String },
-      { first = 999999, after }: PaginationOptions,
-      { user }: GraphQLContext
-    ) => {
-      const cursor = decode(after);
-      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
-      const lastDigits = cursor.match(/-(\d+)$/);
-      const lastMessageIndex =
-        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-      return getMessages(id, {
-        // Only send down 200 messages for the watercooler?
+    messageConnection: async (
+      { id }: DBThread,
+      {
         first,
-        after: lastMessageIndex,
-      }).then(result => {
+        after,
+        last,
+        before,
+      }: { ...PaginationOptions, last: number, before: string },
+      { user, loaders }: GraphQLContext
+    ) => {
+      // Make sure users don't provide bonkers arguments that paginate in both directions at the same time
+      if (
+        (first && last) ||
+        (after && before) ||
+        (first && before) ||
+        (after && last)
+      ) {
+        debug('invalid pagination options provided:');
+        debug(
+          'first:',
+          first,
+          ' last:',
+          last,
+          ' after:',
+          after,
+          ' before:',
+          before
+        );
+        throw new UserError(
+          'Cannot paginate back- and forwards at the same time. Please only ask for the first messages after a certain point or the last messages before a certain point.'
+        );
+      }
+
+      debug(`get messages for ${id}`);
+      let cursor = after || before;
+      try {
+        cursor = decode(cursor);
+        if (cursor) cursor = parseInt(cursor, 10);
+      } catch (err) {
+        debug(err);
+        throw new UserError(
+          'Invalid cursor passed to thread.messageConnection.'
+        );
+      }
+      if (cursor) debug(`cursor: ${cursor}`);
+
+      let options = {
+        // Default first/last to 50 if their counterparts after/before are provided
+        // so users can query messageConnection(after: "cursor") or (before: "cursor")
+        // without any more options
+        first: first ? first : after ? 50 : null,
+        last: last ? last : before ? 50 : null,
+        // Set after/before to the cursor depending on which one was requested by the user
+        after: after ? cursor : null,
+        before: before ? cursor : null,
+      };
+
+      // If we didn't get any arguments at all (i.e messageConnection {})
+      // then just fetch the first 50 messages
+      // $FlowIssue
+      if (Object.keys(options).every(key => !options[key])) {
+        options = {
+          first: 50,
+        };
+      }
+
+      debug('pagination options for query:', options);
+
+      // Load one message too much so that we know whether there's
+      // a next or previous page
+      options.first && options.first++;
+      options.last && options.last++;
+
+      return getMessages(id, options).then(result => {
         if (user && user.id) {
           addQueue(TRACK_USER_THREAD_LAST_SEEN, {
             threadId: id,
@@ -370,19 +432,41 @@ module.exports = {
             timestamp: Date.now(),
           });
         }
+        let messages = result;
+        // Check if more messages were returned than were requested, which would mean
+        // there's a next/previous page. (depending on the direction of the pagination)
+        const loadedMoreFirst =
+          options.first && result.length > options.first - 1;
+        const loadedMoreLast = options.last && result.length > options.last - 1;
+
+        // Get rid of the extranous message if there is one
+        if (loadedMoreFirst) {
+          debug('not sending extranous message loaded first');
+          messages = result.slice(0, result.length - 1);
+        } else if (loadedMoreLast) {
+          debug('not sending extranous message loaded last');
+          messages = result.reverse().slice(1, result.length);
+        }
+
         return {
           pageInfo: {
-            hasNextPage: result && result.length >= first,
+            // Use the extranous message that was maybe loaded to figure out whether
+            // there is a next/previous page, otherwise just try and guess based on
+            // if a cursor was provided
+            // $FlowIssue
+            hasNextPage: loadedMoreFirst || !!options.before,
+            // $FlowIssue
+            hasPreviousPage: loadedMoreLast || !!options.after,
           },
-          edges: result.map((message, index) => ({
-            cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+          edges: messages.map((message, index) => ({
+            cursor: encode(message.timestamp.getTime().toString()),
             node: message,
           })),
         };
       });
     },
     creator: async (
-      { creatorId, communityId }: { creatorId: string, communityId: string },
+      { creatorId, communityId }: DBThread,
       _: any,
       { loaders }: GraphQLContext
     ) => {
@@ -403,11 +487,7 @@ module.exports = {
         },
       };
     },
-    messageCount: (
-      { id }: { id: string },
-      __: any,
-      { loaders }: GraphQLContext
-    ) => {
+    messageCount: ({ id }: DBThread, __: any, { loaders }: GraphQLContext) => {
       return loaders.threadMessageCount
         .load(id)
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
@@ -415,17 +495,19 @@ module.exports = {
     currentUserLastSeen: (
       { id }: DBThread,
       _: any,
-      { user }: GraphQLContext
+      { user, loaders }: GraphQLContext
     ) => {
       if (!user || !user.id) return null;
 
-      return getThreadNotificationStatusForUser(id, user.id).then(result => {
-        if (!result || result.length === 0) return;
-        const data = result[0];
-        if (!data || !data.lastSeen) return null;
+      return loaders.userThreadNotificationStatus
+        .load([user.id, id])
+        .then(result => {
+          if (!result || result.length === 0) return;
+          const data = result;
+          if (!data || !data.lastSeen) return null;
 
-        return data.lastSeen;
-      });
+          return data.lastSeen;
+        });
     },
   },
 };

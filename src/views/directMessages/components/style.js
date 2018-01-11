@@ -416,30 +416,5 @@ export const Username = styled.h3`
 export const MessagesScrollWrapper = styled.div`
   width: 100%;
   flex: 1 0 auto;
-`;
-
-export const HasNextPage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const NextPageButton = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  padding: 8px;
-  background: ${props => props.theme.bg.wash};
-  color: ${props => props.theme.text.alt};
-  font-size: 14px;
-  font-weight: 500;
-  margin-top: 24px;
-  position: relative;
-  min-height: 40px;
-
-  &:hover {
-    color: ${props => props.theme.brand.default};
-    cursor: pointer;
-    background: rgba(56, 24, 229, 0.1);
-  }
+  padding-top: 24px;
 `;
