@@ -29,6 +29,12 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
     return new UserError('You must be signed in to upgrade to Pro.');
   }
 
+  if (!currentUser.email) {
+    return new UserError(
+      'Please add an email address in your settings before upgrading to Pro'
+    );
+  }
+
   // gql should have caught this, but just in case not token or plan
   // was specified, return an error
   if (!args.input.plan || !args.input.token) {
@@ -59,7 +65,7 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
     const hasCustomerId = rPayments && rPayments.length > 0;
 
     // if no recurringPaymentToEvaluate is found, it means the user has never been pro and we can go ahead and create a new subscription
-    if (!recurringPaymentToEvaluate) {
+    if (!recurringPaymentToEvaluate && currentUser.email) {
       const customer = hasCustomerId
         ? await getStripeCustomer(rPayments[0].customerId)
         : await createStripeCustomer(currentUser.email, token.id);
@@ -76,11 +82,14 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       });
     }
 
-    if (recurringPaymentToEvaluate.status === 'active') {
+    if (
+      recurringPaymentToEvaluate &&
+      recurringPaymentToEvaluate.status === 'active'
+    ) {
       return new UserError("You're already a Pro member - thank you!");
     }
 
-    if (recurringPaymentToEvaluate) {
+    if (recurringPaymentToEvaluate && currentUser.email) {
       const customer = await updateStripeCustomer(
         recurringPaymentToEvaluate.customerId,
         currentUser.email,

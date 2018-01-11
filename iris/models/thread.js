@@ -288,6 +288,7 @@ export const getPublicParticipantThreadsByUser = (
   of the thread fields
 */
 export const publishThread = (
+  // eslint-disable-next-line
   { filesToUpload, ...thread }: Object,
   userId: string
 ): Promise<DBThread> => {
@@ -472,6 +473,8 @@ export const updateThreadWithImages = (id: string, body: string) => {
       if (result.unchanged === 1) {
         return result.changes[0].old_val;
       }
+
+      return null;
     });
 };
 

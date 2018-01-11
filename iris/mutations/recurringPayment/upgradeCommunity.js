@@ -30,6 +30,12 @@ export default (
 ) => {
   const currentUser = user;
 
+  if (!currentUser.email) {
+    return new UserError(
+      'Please add an email address in your settings before upgrading to Pro'
+    );
+  }
+
   // user must be authed to create a community
   if (!currentUser) {
     return new UserError('You must be signed in to upgrade this community.');
@@ -69,7 +75,7 @@ export default (
     const hasCustomerId = (await rPayments) && rPayments.length > 0;
 
     // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
-    if (!recurringPaymentToEvaluate) {
+    if (!recurringPaymentToEvaluate && currentUser.email) {
       const customer = hasCustomerId
         ? await getStripeCustomer(rPayments[0].customerId)
         : await createStripeCustomer(currentUser.email, token.id);
@@ -93,7 +99,7 @@ export default (
       });
     }
 
-    if (recurringPaymentToEvaluate) {
+    if (recurringPaymentToEvaluate && currentUser.email) {
       // if a result is returned, lets make sure that they don't
       // already have an active recurringPayment
       if (recurringPaymentToEvaluate.status === 'active') {

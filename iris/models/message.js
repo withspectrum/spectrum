@@ -21,11 +21,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
 
 export const getMessages = (
   threadId: string,
-  {
-    first = 999999,
-    after,
-    reverse = false,
-  }: { first?: number, after?: number, reverse?: boolean }
+  { first = 999999, after, reverse = false }: Object
 ): Promise<Array<Message>> => {
   const order = reverse
     ? db.desc('threadIdAndTimestamp')

@@ -149,7 +149,10 @@ export default async (job: JobData) => {
           .slice()
           .filter(entity => {
             const parsed = JSON.parse(entity.payload);
-            return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
+            if (!lastSeen) return true;
+            return (
+              Date.parse(parsed.timestamp) > Date.parse(lastSeen.toString())
+            );
           });
 
         if (entitiesCreatedSinceUserLastSeen.length < 1) {

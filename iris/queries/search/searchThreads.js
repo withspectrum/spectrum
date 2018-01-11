@@ -78,7 +78,11 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
   }
 
   // searching a community
-  if (searchFilter && searchFilter.communityId) {
+  if (
+    searchFilter &&
+    searchFilter.communityId &&
+    typeof searchFilter.communityId === String
+  ) {
     const filters = `communityId:"${searchFilter.communityId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
