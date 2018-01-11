@@ -44,15 +44,16 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
 
   // searching a channel
   if (searchFilter && searchFilter.channelId) {
-    const filters = `channelId:"${searchFilter.channelId}"`;
+    const { channelId } = searchFilter;
+    const filters = `channelId:"${channelId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getChannel = getChannelById(searchFilter.channelId);
+    const getChannel = getChannelById(channelId);
     const usersPermissionsInChannel = IS_AUTHED_USER
-      ? getUserPermissionsInChannel(searchFilter.channelId, user.id)
+      ? getUserPermissionsInChannel(channelId, user.id)
       : DEFAULT_USER_CHANNEL_PERMISSIONS;
 
     const [channel, permissions] = await Promise.all([
@@ -83,18 +84,17 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     searchFilter.communityId &&
     typeof searchFilter.communityId === String
   ) {
-    const filters = `communityId:"${searchFilter.communityId}"`;
+    const { communityId } = searchFilter;
+    const filters = `communityId:"${communityId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getCommunity = getCommunityById(searchFilter.communityId);
-    const getPublicChannelIds = getPublicChannelIdsInCommunity(
-      searchFilter.communityId
-    );
+    const getCommunity = getCommunityById(communityId);
+    const getPublicChannelIds = getPublicChannelIdsInCommunity(communityId);
     const getPrivateChannelIds = IS_AUTHED_USER
-      ? getPrivateChannelIdsInCommunity(searchFilter.communityId)
+      ? getPrivateChannelIdsInCommunity(communityId)
       : [];
     const getCurrentUsersChannelIds = IS_AUTHED_USER
       ? getUsersJoinedPrivateChannelIds(user.id)
@@ -134,17 +134,16 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
   }
 
   if (searchFilter && searchFilter.creatorId) {
-    const filters = `creatorId:"${searchFilter.creatorId}"`;
+    const { creatorId } = searchFilter;
+    const filters = `creatorId:"${creatorId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getPublicChannelIds = getPublicChannelIdsForUsersThreads(
-      searchFilter.creatorId
-    );
+    const getPublicChannelIds = getPublicChannelIdsForUsersThreads(creatorId);
     const getPrivateChannelIds = IS_AUTHED_USER
-      ? getPrivateChannelIdsForUsersThreads(searchFilter.creatorId)
+      ? getPrivateChannelIdsForUsersThreads(creatorId)
       : [];
     const getCurrentUsersChannelIds = IS_AUTHED_USER
       ? getUsersJoinedPrivateChannelIds(user.id)

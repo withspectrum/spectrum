@@ -53,15 +53,16 @@ export default async (
 
   // searching a channel
   if (filter.channelId) {
-    const filters = `channelId:"${filter.channelId}"`;
+    const { channelId } = filter;
+    const filters = `channelId:"${channelId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getChannel = getChannelById(filter.channelId);
+    const getChannel = getChannelById(channelId);
     const usersPermissionsInChannel = IS_AUTHED_USER
-      ? getUserPermissionsInChannel(filter.channelId, user.id)
+      ? getUserPermissionsInChannel(channelId, user.id)
       : DEFAULT_USER_CHANNEL_PERMISSIONS;
 
     const [channel, permissions] = await Promise.all([
@@ -87,18 +88,17 @@ export default async (
 
   // searching a community
   if (filter.communityId) {
-    const filters = `communityId:"${filter.communityId}"`;
+    const { communityId } = filter;
+    const filters = `communityId:"${communityId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getCommunity = getCommunityById(filter.communityId);
-    const getPublicChannelIds = getPublicChannelIdsInCommunity(
-      filter.communityId
-    );
+    const getCommunity = getCommunityById(communityId);
+    const getPublicChannelIds = getPublicChannelIdsInCommunity(communityId);
     const getPrivateChannelIds = IS_AUTHED_USER
-      ? getPrivateChannelIdsInCommunity(filter.communityId)
+      ? getPrivateChannelIdsInCommunity(communityId)
       : [];
     const getCurrentUsersChannelIds = IS_AUTHED_USER
       ? getUsersJoinedPrivateChannelIds(user.id)
@@ -138,17 +138,16 @@ export default async (
   }
 
   if (filter.creatorId) {
-    const filters = `creatorId:"${filter.creatorId}"`;
+    const { creatorId } = filter;
+    const filters = `creatorId:"${creatorId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);
 
     // if no threads exist, send an empty array to the client
     if (!searchResultThreads || searchResultThreads.length === 0) return [];
 
-    const getPublicChannelIds = getPublicChannelIdsForUsersThreads(
-      filter.creatorId
-    );
+    const getPublicChannelIds = getPublicChannelIdsForUsersThreads(creatorId);
     const getPrivateChannelIds = IS_AUTHED_USER
-      ? getPrivateChannelIdsForUsersThreads(filter.creatorId)
+      ? getPrivateChannelIdsForUsersThreads(creatorId)
       : [];
     const getCurrentUsersChannelIds = IS_AUTHED_USER
       ? getUsersJoinedPrivateChannelIds(user.id)
