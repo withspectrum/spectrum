@@ -21,8 +21,14 @@ import { uploadImage } from '../utils/s3';
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
 
-type AddMessageProps = {
-  message: Message,
+type MessageInput = {
+  threadId: string,
+  threadType: 'story' | 'directMessageThread',
+  messageType: 'text' | 'media' | 'draftjs',
+  content: {
+    body: string,
+  },
+  file?: File,
 };
 
 type DeleteMessageInput = {
@@ -33,16 +39,48 @@ module.exports = {
   Mutation: {
     addMessage: async (
       _: any,
-      { message }: AddMessageProps,
+      { message }: { message: MessageInput },
       { user, loaders }: GraphQLContext
     ) => {
       const currentUser = user;
       // user must be authed to send a message
-      if (!currentUser) {
-        return new UserError('You must be signed in to send a message.');
-      }
+      if (!currentUser)
+        throw new UserError('You must be signed in to send a message.');
+      if (message.messageType === 'media' && !message.file)
+        throw new UserError(
+          `Can't send media message without an image, please try again.`
+        );
+      if (message.messageType !== 'media' && message.file)
+        throw new UserError(
+          `To send an image, please use messageType: "media" instead of "${message.messageType}".`
+        );
 
-      const thread = await getThread(message.threadId);
+      const thread = await loaders.thread.load(message.threadId);
+
+      let contextPermissions;
+      // Make sure that we have permission to send a message in the community
+      if (message.threadType === 'story') {
+        const permissions = await loaders.userPermissionsInCommunity.load([
+          currentUser.id,
+          thread.communityId,
+        ]);
+
+        if (
+          permissions.isBlocked ||
+          (!permissions.isMember &&
+            !permissions.isModerator &&
+            !permissions.isOwner)
+        ) {
+          throw new UserError(`You're not allowed to post in this community.`);
+        }
+
+        contextPermissions = {
+          communityId: thread.communityId,
+          reputation: permissions ? permissions.reputation : 0,
+          isModerator: permissions ? permissions.isModerator : false,
+          isOwner: permissions ? permissions.isOwner : false,
+        };
+      }
 
       // if the message was a dm thread, set the last seen and last active times
       if (message.threadType === 'directMessageThread') {
@@ -64,69 +102,34 @@ module.exports = {
         );
       }
 
-      // all checks passed
-      if (message.messageType === 'text' || message.messageType === 'draftjs') {
-        // send a normal text message
-        return storeMessage(message, currentUser.id)
-          .then(async message => {
-            if (message.threadType === 'directMessageThread') return message;
-            const { communityId } = await loaders.thread.load(message.threadId);
-            const permissions = await loaders.userPermissionsInCommunity.load([
-              message.senderId,
-              communityId,
-            ]);
-
-            return {
-              ...message,
-              contextPermissions: {
-                reputation: permissions ? permissions.reputation : 0,
-                isModerator: permissions ? permissions.isModerator : false,
-                isOwner: permissions ? permissions.isOwner : false,
-              },
-            };
-          })
-          .catch(err => new UserError(err.message));
-      } else if (message.messageType === 'media') {
-        // upload the photo, return the photo url, then store the message
-
-        return uploadImage(message.file, 'threads', message.threadId)
-          .then(url => {
-            // build a new message object with a new file field with metadata
-            const newMessage = Object.assign({}, message, {
-              content: {
-                body: url,
-              },
-              file: {
-                name: message.file.name,
-                size: message.file.size,
-                type: message.file.type,
-              },
-            });
-            return newMessage;
-          })
-          .then(newMessage => storeMessage(newMessage, currentUser.id))
-          .then(async message => {
-            if (message.threadType === 'directMessageThread') return message;
-            const { communityId } = await loaders.thread.load(message.threadId);
-            const permissions = await loaders.userPermissionsInCommunity.load([
-              message.senderId,
-              communityId,
-            ]);
-
-            return {
-              ...message,
-              contextPermissions: {
-                communityId,
-                reputation: permissions ? permissions.reputation : 0,
-                isModerator: permissions ? permissions.isModerator : false,
-                isOwner: permissions ? permissions.isOwner : false,
-              },
-            };
-          })
-          .catch(err => new UserError(err.message));
-      } else {
-        return new UserError('Unknown message type');
+      let messageForDb = Object.assign({}, message);
+      if (message.file && message.messageType === 'media') {
+        const fileMetaData = {
+          name: message.file.name,
+          size: message.file.size,
+          type: message.file.type,
+        };
+        const url = await uploadImage(
+          message.file,
+          'threads',
+          message.threadId
+        );
+        messageForDb = Object.assign({}, messageForDb, {
+          content: {
+            body: url,
+          },
+          file: fileMetaData,
+        });
       }
+
+      const dbMessage = await storeMessage(messageForDb, currentUser.id);
+
+      if (dbMessage.threadType === 'directMessageThread') return dbMessage;
+
+      return {
+        ...dbMessage,
+        contextPermissions,
+      };
     },
     deleteMessage: async (
       _: any,
