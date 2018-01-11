@@ -1,6 +1,15 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import type { EditThreadInput } from '../../models/thread';
+import UserError from '../../utils/UserError';
+import { uploadImage } from '../../utils/s3';
+import { getThreads, editThread } from '../../models/thread';
 
-export default async (_, { input }, { user }) => {
+export default async (
+  _: any,
+  { input }: { input: EditThreadInput },
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to edit a thread
@@ -67,7 +76,8 @@ export default async (_, { input }, { user }) => {
   if (!urls || urls.length === 0) return editedThread;
 
   // Replace the local image srcs with the remote image src
-  const body = JSON.parse(editedThread.content.body);
+  const body =
+    editedThread.content.body && JSON.parse(editedThread.content.body);
   const imageKeys = Object.keys(body.entityMap).filter(
     key => body.entityMap[key].type === 'image'
   );

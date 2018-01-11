@@ -1,6 +1,14 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import {
+  getUserRecurringPayments,
+  updateRecurringPayment,
+} from '../../models/recurringPayment';
+import { getStripeCustomer, deleteStripeSubscription } from './utils';
+import { getUserById } from '../../models/user';
 
-export default (_, __, { user }) => {
+export default (_: any, __: any, { user }: GraphQLContext) => {
   const currentUser = user;
 
   // user must be authed to create a community

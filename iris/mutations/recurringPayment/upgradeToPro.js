@@ -1,6 +1,27 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import {
+  getUserRecurringPayments,
+  updateRecurringPayment,
+  createRecurringPayment,
+} from '../../models/recurringPayment';
+import {
+  getStripeCustomer,
+  createStripeCustomer,
+  updateStripeCustomer,
+  createStripeSubscription,
+} from './utils';
+import { getUserById } from '../../models/user';
 
-export default (_, args: UpgradeToProArguments, { user }) => {
+type UpgradeToProInput = {
+  input: {
+    plan: string,
+    token: string,
+  },
+};
+
+export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
   const currentUser = user;
 
   // user must be authed to create a community

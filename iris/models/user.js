@@ -265,7 +265,7 @@ const getUsersThreadCount = (
   });
 };
 
-export type EditUserArguments = {
+export type EditUserInput = {
   input: {
     file?: any,
     name?: string,
@@ -277,10 +277,7 @@ export type EditUserArguments = {
   },
 };
 
-const editUser = (
-  input: EditUserArguments,
-  userId: string
-): Promise<DBUser> => {
+const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
   const {
     input: { name, description, website, file, coverFile, username, timezone },
   } = input;

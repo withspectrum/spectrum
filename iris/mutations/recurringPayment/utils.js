@@ -1,44 +1,46 @@
 // @flow
-export const parseStripeErrors = err => {
+require('now-env');
+import UserError from '../../utils/UserError';
+const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
+const stripe = require('stripe')(STRIPE_TOKEN);
+
+type Err = {
+  type: string,
+};
+
+export const parseStripeErrors = (err: Err) => {
   switch (err.type) {
     case 'StripeCardError':
       // A declined card error
       return new UserError(err); // => e.g. "Your card's expiration year is invalid."
-      break;
     case 'RateLimitError':
       // Too many requests made to the API too quickly
       return new UserError(
         'Could not upgrade to Pro at this time, try again later: 1'
       );
-      break;
     case 'StripeInvalidRequestError':
       // Invalid parameters were supplied to Stripe's API
       return new UserError(
         'Could not upgrade to Pro at this time, try again later: 2'
       );
-      break;
     case 'StripeAPIError':
       // An error occurred internally with Stripe's API
       return new UserError(
         'Something went wrong at Stripe, try again later: 3'
       );
-      break;
     case 'StripeConnectionError':
       // Some kind of error occurred during the HTTPS communication
       return new UserError(
         'Something went wrong at Stripe, try again later: 4'
       );
-      break;
     case 'StripeAuthenticationError':
       // You probably used an incorrect API key
       return new UserError(
         'Something went wrong at Stripe, try again later: 5'
       );
-      break;
     default:
       // Handle any other types of unexpected errors
       return new UserError('Something went wrong, try again later: 6');
-      break;
   }
 };
 
@@ -61,7 +63,11 @@ export const createStripeCustomer = (email: string, source: string) => {
   }
 };
 
-export const updateStripeCustomer = (customer, email, source) => {
+export const updateStripeCustomer = (
+  customer: string,
+  email: string,
+  source: string
+) => {
   try {
     return stripe.customers.update(customer, {
       email,

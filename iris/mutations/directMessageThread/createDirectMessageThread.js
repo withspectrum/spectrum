@@ -1,10 +1,40 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
+import {
+  checkForExistingDMThread,
+  getDirectMessageThread,
+  createDirectMessageThread,
+} from '../../models/directMessageThread';
+import { uploadImage } from '../../utils/s3';
+import { storeMessage } from '../../models/message';
+import {
+  setUserLastSeenInDirectMessageThread,
+  createMemberInDirectMessageThread,
+} from '../../models/usersDirectMessageThreads';
+
+type DMThreadInput = {
+  input: {
+    participants: Array<string>,
+    message: {
+      messageType: 'text' | 'media' | 'draftjs',
+      threadType: string,
+      content: {
+        body: string,
+      },
+      file?: {
+        name: string,
+        type: string,
+        size: number,
+        path: string,
+      },
+    },
+  },
+};
 
 export default async (
   _: any,
-  { input }: { input: DMThreadInput },
+  { input }: DMThreadInput,
   { user }: GraphQLContext
 ) => {
   const currentUser = user;
@@ -66,9 +96,9 @@ export default async (
           body: url,
         },
         file: {
-          name: message.file.name,
-          size: message.file.size,
-          type: message.file.type,
+          name: message.file && message.file.name,
+          size: message.file && message.file.size,
+          type: message.file && message.file.type,
         },
       });
 

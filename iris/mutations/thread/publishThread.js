@@ -1,6 +1,44 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import { uploadImage } from '../../utils/s3';
+import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { getCommunityRecurringPayments } from '../../models/recurringPayment';
+import { getChannels } from '../../models/channel';
+import { publishThread, editThread } from '../../models/thread';
+import { createParticipantInThread } from '../../models/usersThreads';
 
-export default async (_, { thread }, { user }) => {
+type Attachment = {
+  attachmentType: string,
+  data: string,
+};
+
+type File = {
+  name: string,
+  type: string,
+  size: number,
+  path: string,
+};
+
+type PublishThreadInput = {
+  thread: {
+    channelId: string,
+    communityId: string,
+    type: 'SLATE' | 'DRAFTJS',
+    content: {
+      title: string,
+      body?: string,
+    },
+    attachments?: ?Array<Attachment>,
+    filesToUpload?: ?Array<File>,
+  },
+};
+
+export default async (
+  _: any,
+  { thread }: PublishThreadInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to publish a thread
@@ -110,7 +148,7 @@ export default async (_, { thread }, { user }) => {
   );
 
   // Replace the local image srcs with the remote image src
-  const body = JSON.parse(dbThread.content.body);
+  const body = dbThread.content.body && JSON.parse(dbThread.content.body);
   const imageKeys = Object.keys(body.entityMap).filter(
     key => body.entityMap[key].type === 'image'
   );

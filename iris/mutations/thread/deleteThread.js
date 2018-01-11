@@ -1,6 +1,16 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import { addQueue } from '../../utils/workerQueue';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { deleteThread, getThreads } from '../../models/thread';
 
-export default (_, { threadId }, { user }) => {
+export default async (
+  _: any,
+  { threadId }: { threadId: string },
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to edit a thread
@@ -11,62 +21,46 @@ export default (_, { threadId }, { user }) => {
   }
 
   // get the thread being locked
-  return getThreads([threadId])
-    .then(threads => {
-      // select the thread
-      const threadToEvaluate = threads[0];
+  const threads = await getThreads([threadId]);
 
-      // if the thread doesn't exist
-      if (!threadToEvaluate || threadToEvaluate.deletedAt) {
-        return new UserError("This thread doesn't exist");
-      }
+  const threadToEvaluate = threads && threads[0];
 
-      // get the channel permissions
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
-        threadToEvaluate.channelId,
-        currentUser.id
-      );
-      // get the community permissions (community owners and mods can delete a thread anywhere in the community)
-      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-        threadToEvaluate.communityId,
-        currentUser.id
-      );
+  // if the thread doesn't exist
+  if (!threadToEvaluate || threadToEvaluate.deletedAt) {
+    return new UserError("This thread doesn't exist");
+  }
 
-      // return the thread, channels and communities
-      return Promise.all([
-        threadToEvaluate,
-        currentUserChannelPermissions,
-        currentUserCommunityPermissions,
-      ]);
-    })
-    .then(
-      (
-        [thread, currentUserChannelPermissions, currentUserCommunityPermissions]
-      ) => {
-        // if the user owns the community or the channel, or they are the original creator, they can delete the thread
-        if (
-          currentUserChannelPermissions.isOwner ||
-          currentUserChannelPermissions.isModerator ||
-          currentUserCommunityPermissions.isOwner ||
-          currentUserCommunityPermissions.isModerator ||
-          thread.creatorId === currentUser.id
-        ) {
-          // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
-          if (currentUser.id !== thread.creatorId) {
-            addQueue('process reputation event', {
-              userId: currentUser.id,
-              type: 'thread deleted by moderation',
-              entityId: thread.communityId,
-            });
-          }
+  // return the thread, channels and communities
+  const [
+    currentUserChannelPermissions,
+    currentUserCommunityPermissions,
+  ] = await Promise.all([
+    getUserPermissionsInChannel(threadToEvaluate.channelId, currentUser.id),
+    getUserPermissionsInCommunity(threadToEvaluate.communityId, currentUser.id),
+  ]);
 
-          return deleteThread(threadId);
-        }
+  // if the user owns the community or the channel, or they are the original creator, they can delete the thread
+  if (
+    currentUserChannelPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator ||
+    threadToEvaluate.creatorId === currentUser.id
+  ) {
+    // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
+    if (currentUser.id !== threadToEvaluate.creatorId) {
+      addQueue('process reputation event', {
+        userId: currentUser.id,
+        type: 'thread deleted by moderation',
+        entityId: threadToEvaluate.communityId,
+      });
+    }
 
-        // if the user is not a channel or community owner, the thread can't be locked
-        return new UserError(
-          "You don't have permission to make changes to this thread."
-        );
-      }
-    );
+    return deleteThread(threadId);
+  }
+
+  // if the user is not a channel or community owner, the thread can't be locked
+  return new UserError(
+    "You don't have permission to make changes to this thread."
+  );
 };

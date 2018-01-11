@@ -1,9 +1,14 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import type { WebPushSubscription } from './';
+import UserError from '../../utils/UserError';
+import { storeSubscription } from '../../models/web-push-subscription';
+import { sendWebPushNotification } from '../../utils/web-push';
 
 export default (
   _: any,
   { subscription }: { subscription: WebPushSubscription },
-  { user }: { user: DBUser }
+  { user }: GraphQLContext
 ) => {
   if (!user || !user.id)
     throw new UserError(

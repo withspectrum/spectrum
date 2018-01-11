@@ -1,10 +1,10 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import type { EditUserInput } from '../../models/user';
+import UserError from '../../utils/UserError';
+import { getUser, editUser } from '../../models/user';
 
-export default (
-  _: any,
-  args: EditUserArguments,
-  { user }: { user: DBUser }
-) => {
+export default (_: any, args: EditUserInput, { user }: GraphQLContext) => {
   const currentUser = user;
 
   // user must be authed to edit a channel

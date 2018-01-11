@@ -1,6 +1,33 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import {
+  getUserRecurringPayments,
+  updateRecurringPayment,
+  createRecurringPayment,
+} from '../../models/recurringPayment';
+import {
+  getStripeCustomer,
+  createStripeCustomer,
+  updateStripeCustomer,
+  createStripeSubscription,
+} from './utils';
+import { getCommunities } from '../../models/community';
+import { getMemberCount } from '../../models/community';
 
-export default (_, args, { user }) => {
+type UpgradeCommunityInput = {
+  input: {
+    plan: string,
+    token: string,
+    communityId: string,
+  },
+};
+
+export default (
+  _: any,
+  args: UpgradeCommunityInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to create a community
@@ -22,7 +49,7 @@ export default (_, args, { user }) => {
     const { input: { plan, communityId } } = args;
 
     // get the number of members in a community to determine the quantity of subscriptions to create, as well as retreive any existing recurringPayments records for this community to determine if the user is re-upgrading
-    const members = await getMembersInCommunity(communityId);
+    const memberCount = await getMemberCount(communityId);
     const rPayments = await getUserRecurringPayments(currentUser.id);
 
     // only evaluate community subscriptions, and not pro subscriptions
@@ -51,7 +78,7 @@ export default (_, args, { user }) => {
       const subscription = await createStripeSubscription(
         customer.id,
         plan,
-        Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
+        Math.ceil(memberCount / 1000) // round up from the nearest 1,000 members
       );
 
       // create a recurringPayment record in the database
@@ -82,7 +109,7 @@ export default (_, args, { user }) => {
       const subscription = await createStripeSubscription(
         customer.id,
         plan,
-        Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
+        Math.ceil(memberCount / 1000) // round up from the nearest 1,000 members
       );
 
       return await updateRecurringPayment({

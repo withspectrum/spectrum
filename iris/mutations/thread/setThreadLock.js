@@ -1,6 +1,15 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import { getThreads, setThreadLock } from '../../models/thread';
+import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
-export default (_, { threadId, value }, { user }) => {
+export default (
+  _: any,
+  { threadId, value }: { threadId: string, value: boolean },
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to edit a thread

@@ -3,9 +3,11 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 
 type TogglePendingUserInput = {
-  channelId: string,
-  userId: string,
-  action: 'approve' | 'block',
+  input: {
+    channelId: string,
+    userId: string,
+    action: 'approve' | 'block',
+  },
 };
 
 export default async (

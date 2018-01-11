@@ -1,6 +1,29 @@
 // @flow
+require('now-env');
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
+const stripe = require('stripe')(STRIPE_TOKEN);
 
-export default (_, { input }, { user }) => {
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import {
+  getUserRecurringPayments,
+  updateRecurringPayment,
+} from '../../models/recurringPayment';
+import { deleteStripeSubscription } from './utils';
+import { getCommunities } from '../../models/community';
+
+type DowngradeCommunityInput = {
+  input: {
+    id: string,
+  },
+};
+
+export default (
+  _: any,
+  { input }: DowngradeCommunityInput,
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
 
   // user must be authed to create a community

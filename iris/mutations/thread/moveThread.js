@@ -1,6 +1,15 @@
 // @flow
+import type { GraphQLContext } from '../../';
+import UserError from '../../utils/UserError';
+import { getThread, moveThread } from '../../models/thread';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getChannels } from '../../models/channel';
 
-export default async (_: any, { threadId, channelId }, { user }) => {
+export default async (
+  _: any,
+  { threadId, channelId }: { threadId: string, channelId: string },
+  { user }: GraphQLContext
+) => {
   const currentUser = user;
   if (!currentUser)
     throw new UserError('You must be signed in to move a thread.');
