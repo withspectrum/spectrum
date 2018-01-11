@@ -1,0 +1,37 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "dependencies": {
+    "expo": "^24.0.0",
+    "react": "16.0.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "styled-components": "^2.3.3"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.1",
+    "detox": "^6.0.0",
+    "detox-expo-helpers": "^0.2.0",
+    "exp": "^47.1.2",
+    "jest": "^22.0.3",
+    "react-test-renderer": "^16.2.0"
+  },
+  "scripts": {
+    "dev": "exp start ios",
+    "setup": "curl https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xf - -C ./expo/Exponent.app",
+    "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
+    "test:unit": "jest .",
+    "test": "yarn test:unit && yarn test:e2e"
+  },
+  "detox": {
+    "test-runner": "jest",
+    "runner-config": "./jest.config.js",
+    "specs": ".",
+    "configurations": {
+      "ios.sim": {
+        "binaryPath": "./.expo/bin/Exponent.app",
+        "type": "ios.simulator",
+        "name": "iPhone 8"
+      }
+    }
+  }
+}

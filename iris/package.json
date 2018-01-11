@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "algoliasearch": "^3.24.7",
+    "apollo-engine": "^0.8.3",
     "apollo-local-query": "^0.3.0",
     "apollo-upload-client": "^5.1.0",
     "apollo-upload-server": "^2.0.4",
