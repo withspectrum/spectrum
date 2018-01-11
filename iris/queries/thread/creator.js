@@ -7,11 +7,9 @@ export default async (
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  const creator = await loaders.user.load(creatorId);
-
-  const permissions = await loaders.userPermissionsInCommunity.load([
-    creatorId,
-    communityId,
+  const [creator, permissions] = await Promise.all([
+    loaders.user.load(creatorId),
+    loaders.userPermissionsInCommunity.load([creatorId, communityId]),
   ]);
 
   return {
