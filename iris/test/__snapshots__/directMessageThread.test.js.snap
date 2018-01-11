@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a direct message thread 1`] = `
+Object {
+  "data": Object {
+    "directMessageThread": null,
+  },
+}
+`;

@@ -42,10 +42,106 @@ Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "The future of communities",
       "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "name": "Spectrum",
       "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
       "slug": "spectrum",
       "website": "https://spectrum.chat",
     },
   },
+}
+`;
+
+exports[`should fetch a list of communities 1`] = `
+Object {
+  "data": Object {
+    "communities": Array [
+      Object {
+        "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
+        "createdAt": "2016-12-31T23:00:00.000Z",
+        "description": "The future of communities",
+        "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+        "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
+        "slug": "spectrum",
+        "website": "https://spectrum.chat",
+      },
+    ],
+  },
+}
+`;
+
+exports[`should fetch a list of community members 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "memberConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "VlRvS2NkZTE2ZFJFZ0RrWGNEbDNoaGNyRk4zMy0x",
+            "node": Object {
+              "contextPermissions": null,
+              "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F17106008%2F1491444958%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=f544283ec86a42694f40b2d6c462d695",
+              "description": "full-stack flapjack",
+              "firstName": null,
+              "id": "VToKcde16dREgDkXcDl3hhcrFN33",
+              "isOnline": null,
+              "isPro": false,
+              "name": "Bryn Jackson",
+              "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F848823167699230721%2F-9CbPtto_bigger.jpg?w=128&h=128&ixlib=js-1.1.1&s=fc14b0aafec83958dc1896b0c899b68c",
+              "timezone": null,
+              "totalReputation": 101,
+              "username": "bryn",
+              "website": "https://bryn.io",
+            },
+          },
+          Object {
+            "cursor": "MDFwMkE3a0RDV1VqR2o2elFMbE1RVU9TUUw0Mi0y",
+            "node": Object {
+              "contextPermissions": null,
+              "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F465068802%2F1490051733%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=f0f258219cd1a658d2659b2e49ee575c",
+              "description": "Chief Nice Boy™",
+              "firstName": null,
+              "id": "01p2A7kDCWUjGj6zQLlMQUOSQL42",
+              "isOnline": null,
+              "isPro": false,
+              "name": "Brian Lovin",
+              "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F570313913648955392%2Fcf4tgX7M_bigger.jpeg?w=128&h=128&ixlib=js-1.1.1&s=180a063278507bcc3c847db99bf037ad",
+              "timezone": null,
+              "totalReputation": 102,
+              "username": "brian",
+              "website": "https://brianlovin.com",
+            },
+          },
+          Object {
+            "cursor": "Z1ZrNW1Zd2NjVU9FS2lONXZ0T291cXJvR0tvMS0z",
+            "node": Object {
+              "contextPermissions": null,
+              "coverPhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_banners%2F2451223458%2F1479507323%2F1500x500?w=640&h=192&ixlib=js-1.1.1&s=4d24c5f6290c8dfc5ccc7b92822cbf28",
+              "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
+              "firstName": null,
+              "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+              "isOnline": null,
+              "isPro": false,
+              "name": "Max Stoiber",
+              "profilePhoto": "https://spectrum-imgp.imgix.net/https%3A%2F%2Fimg.gs%2Fjztmrqvgzv%2F500%2Fmxstbr.com%2Fheadshot.jpeg?w=128&h=128&ixlib=js-1.1.1&s=a69e5728b3d22482db14a9e55628fffe",
+              "timezone": null,
+              "totalReputation": 100,
+              "username": "mxstbr",
+              "website": "https://mxstbr.com",
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
+          "hasPreviousPage": null,
+        },
+      },
+    },
+  },
+  "errors": Array [
+    [GraphQLError: Cannot read property 'value' of null],
+    [GraphQLError: Cannot read property 'value' of null],
+    [GraphQLError: Cannot read property 'value' of null],
+  ],
 }
 `;
