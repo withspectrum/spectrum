@@ -124,14 +124,14 @@ const getChannelById = (id: string) => {
     .run();
 };
 
-type GetChannelByIdArgs = {
+type GetChannelByIdArgs = {|
   id: string,
-};
+|};
 
-type GetChannelBySlugArgs = {
+type GetChannelBySlugArgs = {|
   slug: string,
   communitySlug: string,
-};
+|};
 
 export type GetChannelArgs = GetChannelByIdArgs | GetChannelBySlugArgs;
 

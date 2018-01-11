@@ -133,6 +133,7 @@ export default async (
     });
   }
 
+  // $FlowIssue
   const dbThread = await publishThread(threadObject, currentUser.id);
 
   // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain

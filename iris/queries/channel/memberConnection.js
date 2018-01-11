@@ -16,6 +16,7 @@ export default (
   const lastUserIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
 
+  // $FlowIssue
   return getMembersInChannel(id, { first, after: lastUserIndex })
     .then(users => loaders.user.loadMany(users))
     .then(result => ({

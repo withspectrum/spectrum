@@ -7,20 +7,31 @@ import searchCommunities from './searchCommunities';
 import searchUsers from './searchUsers';
 import searchThreads from './searchThreads';
 
-export default (
-  _: any,
-  { type, ...args }: { type: SearchTypes, args: Args },
-  { loaders, user }: GraphQLContext
-) => {
+type Input = {
+  type: SearchTypes,
+  ...Args,
+};
+
+export default (_: any, input: Input, ctx: GraphQLContext) => {
+  const { type, first, after, last, before, queryString, searchFilter } = input;
+  if (!queryString) throw new UserError('Please provide a search term.');
+  const args = {
+    first,
+    after,
+    last,
+    before,
+    queryString,
+    searchFilter,
+  };
   switch (type) {
     case 'COMMUNITIES': {
-      return searchCommunities(args, { loaders });
+      return searchCommunities(args, ctx);
     }
     case 'USERS': {
-      return searchUsers(args, { loaders });
+      return searchUsers(args, ctx);
     }
     case 'THREADS': {
-      return searchThreads(args, { loaders, user });
+      return searchThreads(args, ctx);
     }
     default: {
       return new UserError('Invalid searchType supplied to Search query');

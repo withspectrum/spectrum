@@ -63,6 +63,7 @@ export default async (
     attachments,
   });
 
+  // $FlowIssue
   const editedThread = await editThread(newInput);
 
   if (!input.filesToUpload) return editedThread;
