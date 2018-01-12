@@ -11,6 +11,7 @@ export const threadInfoFragment = gql`
     modifiedAt
     lastActive
     receiveNotifications
+    currentUserLastSeen
     creator {
       ...userInfo
       isPro

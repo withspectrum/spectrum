@@ -309,18 +309,18 @@ export const LoadingBubble = () => (
   </ShimmerBubble>
 );
 
-export const LoadingChat = () => (
+export const LoadingChat = ({ size }: { size?: 'small' }) => (
   <ShimmerChat>
     <LoadingBubble />
     <LoadingBubble />
     <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
-    <LoadingBubble />
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
+    {size !== 'small' && <LoadingBubble />}
   </ShimmerChat>
 );
 

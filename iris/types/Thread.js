@@ -47,7 +47,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		edits: [Edit!]
 		participants: [User]
-		messageConnection(first: Int, after: String): ThreadMessagesConnection!
+		messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection!
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
