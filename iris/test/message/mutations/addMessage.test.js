@@ -38,11 +38,18 @@ describe('story', () => {
   };
 
   afterEach(() => {
-    return db
-      .table('messages')
-      .filter({ content: { body: newMessage.content.body } })
-      .delete()
-      .run();
+    return Promise.all([
+      db
+        .table('messages')
+        .filter({ content: { body: newMessage.content.body } })
+        .delete()
+        .run(),
+      db
+        .table('threads')
+        .get(thread.id)
+        .update(thread)
+        .run(),
+    ]);
   });
 
   it('should add a new message to the database', async () => {
@@ -69,6 +76,9 @@ describe('directMessageThread', () => {
   // Find a member of a dm thread
   const userDmThread = data.usersDirectMessageThreads[0];
   const user = data.users.find(({ id }) => id === userDmThread.userId);
+  const dmThread = data.directMessageThreads.find(
+    ({ id }) => id === userDmThread.threadId
+  );
 
   const newMessage = {
     threadId: userDmThread.threadId,
@@ -80,11 +90,18 @@ describe('directMessageThread', () => {
   };
 
   afterEach(() => {
-    return db
-      .table('messages')
-      .filter({ content: { body: newMessage.content.body } })
-      .delete()
-      .run();
+    return Promise.all([
+      db
+        .table('messages')
+        .filter({ content: { body: newMessage.content.body } })
+        .delete()
+        .run(),
+      db
+        .table('directMessageThreads')
+        .get(userDmThread.threadId)
+        .update(dmThread)
+        .run(),
+    ]);
   });
 
   it('should add a new message to the database', async () => {
