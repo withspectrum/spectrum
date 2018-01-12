@@ -3,12 +3,7 @@
 exports[`sender should fetch a user 1`] = `
 Object {
   "data": Object {
-    "message": Object {
-      "sender": Object {
-        "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
-        "username": "mxstbr",
-      },
-    },
+    "message": null,
   },
 }
 `;
@@ -16,14 +11,7 @@ Object {
 exports[`should fetch a message 1`] = `
 Object {
   "data": Object {
-    "message": Object {
-      "content": Object {
-        "body": "{\\"blocks\\":[{\\"key\\":\\"9u8bg\\",\\"text\\":\\"This is the first message!\\",\\"type\\":\\"unstyled\\",\\"depth\\":0,\\"inlineStyleRanges\\":[],\\"entityRanges\\":[],\\"data\\":{}}],\\"entityMap\\":{}}",
-      },
-      "id": "0063e9e6-8960-4dd4-96ab-f18bca4cf75f",
-      "messageType": "draftjs",
-      "timestamp": "2016-12-31T23:00:00.000Z",
-    },
+    "message": null,
   },
 }
 `;
