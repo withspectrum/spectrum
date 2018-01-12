@@ -21,3 +21,22 @@ it('should fetch a message', async () => {
 
   expect(result).toMatchSnapshot();
 });
+
+describe('sender', () => {
+  it('should fetch a user', async () => {
+    const query = /* GraphQL */ `
+      {
+        message(id: "${data.messages[0].id}") {
+          sender {
+            id
+            username
+          }
+        }
+      }
+    `;
+
+    expect.hasAssertions();
+    const result = await request(query);
+    expect(result).toMatchSnapshot();
+  });
+});
