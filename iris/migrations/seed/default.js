@@ -325,7 +325,20 @@ const DEFAULT_MESSAGES = [
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     attachments: [],
     content: {
-      body: JSON.stringify(toJSON(fromPlainText('This is the first message!'))),
+      body: JSON.stringify({
+        blocks: [
+          {
+            key: '9u8bg',
+            text: 'This is the first message!',
+            type: 'unstyled',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+        entityMap: {},
+      }),
     },
     messageType: 'draftjs',
     threadType: 'story',
