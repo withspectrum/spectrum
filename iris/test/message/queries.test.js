@@ -1,10 +1,11 @@
 // @flow
-import { request } from './utils';
+import { request } from '../utils';
+import data from 'shared/testing/data';
 
 it('should fetch a message', async () => {
   const query = /* GraphQL */ `
     {
-      message(id: "0063e9e6-8960-4dd4-96ab-f18bca4cf75f") {
+      message(id: "${data.messages[0].id}") {
         id
         timestamp
         content {
@@ -15,7 +16,7 @@ it('should fetch a message', async () => {
     }
   `;
 
-  expect.assertions(1);
+  expect.hasAssertions();
   const result = await request(query);
 
   expect(result).toMatchSnapshot();
