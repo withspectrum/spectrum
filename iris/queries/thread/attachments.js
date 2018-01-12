@@ -1,7 +1,7 @@
 // @flow
-import type { GraphQLContext } from '../../';
+import type { DBThread } from 'shared/types';
 
-export default ({ attachments }: { attachments: Array<any> }) =>
+export default ({ attachments }: DBThread) =>
   attachments &&
   attachments.map(attachment => {
     return {

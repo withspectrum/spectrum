@@ -7,7 +7,7 @@ import { getMessages } from '../../models/message';
 
 export default async (
   { id }: { id: string },
-  { first = 30, after }: PaginationOptions,
+  { first, after }: PaginationOptions,
   { user, loaders }: GraphQLContext
 ) => {
   if (!user || !user.id) return null;
@@ -15,24 +15,27 @@ export default async (
   const canViewThread = await canViewDMThread(id, user.id, { loaders });
   if (!canViewThread) return null;
 
-  const cursor = decode(after);
-  // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
-  const lastDigits = cursor.match(/-(\d+)$/);
-  const lastMessageIndex =
-    lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-  // $FlowFixMe
+  const cursor = parseInt(decode(after), 10);
   const messages = await getMessages(id, {
-    first,
-    after: lastMessageIndex,
-    reverse: true,
+    // NOTE(@mxstbr): We used to use first/after for reverse DM pagination
+    // so we have to keep it that way for backwards compat, but really this
+    // should be last/before since it's in the other way of time
+    last: first || 30,
+    before: cursor,
   });
 
   return {
     pageInfo: {
       hasNextPage: messages && messages.length >= first,
+      // NOTE(@mxstbr): For DM threads we just assume there to be a previous page
+      // if the user provided a cursor and there were at least some messages
+      // That way they might get a false positive here if they request the messages before the last message
+      // but since that query returns no messages this will be false and all will be well
+      // (so it essentially just takes 1 “unnecessary” request to figure out whether or not there is a previous page)
+      hasPreviousPage: messages && messages.length > 0 && !!cursor,
     },
-    edges: messages.map((message, index) => ({
-      cursor: encode(`${message.id}-${lastMessageIndex + index + 1}`),
+    edges: messages.map(message => ({
+      cursor: encode(message.timestamp.getTime().toString()),
       node: message,
     })),
   };

@@ -7,6 +7,7 @@ export default (
   { id }: { id: string },
   { first, after }: PaginationOptions
 ) => {
+  // $FlowFixMe
   return getThreadsByChannel(id, {
     first,
     after: after && parseInt(decode(after), 10),
