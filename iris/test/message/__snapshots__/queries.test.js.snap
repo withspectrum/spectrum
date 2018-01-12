@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`sender should fetch a user 1`] = `
+Object {
+  "data": Object {
+    "message": Object {
+      "sender": Object {
+        "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+        "username": "mxstbr",
+      },
+    },
+  },
+}
+`;
+
 exports[`should fetch a message 1`] = `
 Object {
   "data": Object {
