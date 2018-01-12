@@ -81,16 +81,6 @@ it('should fetch a list of community members', async () => {
             cursor
             node {
               id
-              profilePhoto
-              coverPhoto
-              name
-              firstName
-              description
-              website
-              username
-              isOnline
-              timezone
-              isPro
               totalReputation
               contextPermissions {
                 communityId
