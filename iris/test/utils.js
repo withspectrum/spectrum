@@ -11,5 +11,15 @@ type Options = {
 };
 
 // Nice little helper function for tests
-export const request = (query: mixed, { context }: Options = {}) =>
-  graphql(schema, query, undefined, { loaders: createLoaders(), ...context });
+export const request = (
+  query: mixed,
+  { context }: Options = {},
+  variables: Object = {}
+) =>
+  graphql(
+    schema,
+    query,
+    undefined,
+    { loaders: createLoaders(), ...context },
+    variables
+  );

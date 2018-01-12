@@ -1,46 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should fetch a channel by id 1`] = `
-Object {
-  "data": Object {
-    "channel": Object {
-      "createdAt": "2016-12-31T23:00:00.000Z",
-      "description": "General chatter",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
-      "isPrivate": false,
-      "name": "General",
-      "slug": "general",
-    },
-  },
-}
-`;
-
-exports[`should fetch a channel by slug and community slug 1`] = `
-Object {
-  "data": Object {
-    "channel": Object {
-      "createdAt": "2016-12-31T23:00:00.000Z",
-      "description": "General chatter",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
-      "isPrivate": false,
-      "name": "General",
-      "slug": "general",
-    },
-  },
-}
-`;
-
-exports[`should fetch a channels blocked users 1`] = `
-Object {
-  "data": Object {
-    "channel": Object {
-      "blockedUsers": Array [],
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
-    },
-  },
-}
-`;
-
 exports[`should fetch a channels member connection 1`] = `
 Object {
   "data": Object {
@@ -105,17 +64,6 @@ Object {
           "hasPreviousPage": null,
         },
       },
-    },
-  },
-}
-`;
-
-exports[`should fetch a channels pending users 1`] = `
-Object {
-  "data": Object {
-    "channel": Object {
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
-      "pendingUsers": Array [],
     },
   },
 }

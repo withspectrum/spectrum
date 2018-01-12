@@ -5,7 +5,7 @@ Object {
   "data": Object {
     "message": Object {
       "content": Object {
-        "body": "{\\"blocks\\":[{\\"key\\":\\"g0ec\\",\\"text\\":\\"This is the first message!\\",\\"type\\":\\"unstyled\\",\\"depth\\":0,\\"inlineStyleRanges\\":[],\\"entityRanges\\":[],\\"data\\":{}}],\\"entityMap\\":{}}",
+        "body": "{\\"blocks\\":[{\\"key\\":\\"eku0p\\",\\"text\\":\\"This is the first message!\\",\\"type\\":\\"unstyled\\",\\"depth\\":0,\\"inlineStyleRanges\\":[],\\"entityRanges\\":[],\\"data\\":{}}],\\"entityMap\\":{}}",
       },
       "id": "0063e9e6-8960-4dd4-96ab-f18bca4cf75f",
       "messageType": "draftjs",

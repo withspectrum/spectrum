@@ -1,4 +1,5 @@
 import data from './data';
+import db from './db';
 const tables = Object.keys(data);
 
 console.log('\nAdding test data to db...');
@@ -21,10 +22,6 @@ export const setup = db => {
     throw err;
   });
 };
-
-const db = require('rethinkdbdash')({
-  db: 'testing',
-});
 
 setup(db).then(
   () => console.log('Finished adding test data to db.') || process.exit()
