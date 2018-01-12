@@ -15,16 +15,7 @@ it('should fetch a channels member connection', () => {
             cursor
             node {
               id
-              profilePhoto
-              coverPhoto
               name
-              firstName
-              description
-              website
-              username
-              isOnline
-              timezone
-              isPro
               contextPermissions {
                 communityId
                 reputation
