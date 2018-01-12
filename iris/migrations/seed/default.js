@@ -6,6 +6,7 @@ export const DATE = 1483225200000;
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
 const BRYN_ID = 'VToKcde16dREgDkXcDl3hhcrFN33';
+const NO_PERMISSONS_USER = 'e16dREgWUjGj6iN5vtOo';
 
 const DEFAULT_USERS = [
   {
@@ -53,6 +54,22 @@ const DEFAULT_USERS = [
     email: 'hi@bryn.io',
     subscriptions: [],
     providerId: '17106008',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: NO_PERMISSONS_USER,
+    name: 'Bad Boy',
+    description: "I can't do shit on this website",
+    website: '',
+    username: 'bad-boy',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@badboy.io',
+    subscriptions: [],
+    providerId: '171060089',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },
