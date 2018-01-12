@@ -1,6 +1,5 @@
 //@flow
 import { request } from '../../utils';
-import { DEFAULT_USERS } from '../../../migrations/seed/default';
 import db from 'shared/testing/db';
 import data from 'shared/testing/data';
 
@@ -32,12 +31,10 @@ it('should create a channel if user is owner', () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
-        id
         name
         slug
         description
         isPrivate
-        createdAt
       }
     },
   `;
@@ -47,7 +44,7 @@ it('should create a channel if user is owner', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context }, variables).then(result => {
+  return request(query, { context, variables }).then(result => {
     expect(result).toMatchSnapshot();
   });
 });
@@ -71,16 +68,15 @@ it('should prevent duplicate channel slugs in the same community', () => {
   };
 
   expect.assertions(1);
-  return request(
-    query,
-    { context },
-    {
+  return request(query, {
+    context,
+    variables: {
       input: {
         ...variables.input,
         slug: 'general',
       },
-    }
-  ).then(result => {
+    },
+  }).then(result => {
     expect(result).toMatchSnapshot();
   });
 });
@@ -104,7 +100,7 @@ it('should prevent signed out users from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context }, variables).then(result => {
+  return request(query, { context, variables }).then(result => {
     expect(result).toMatchSnapshot();
   });
 });
@@ -128,7 +124,7 @@ it('should prevent non owners from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context }, variables).then(result => {
+  return request(query, { context, variables }).then(result => {
     expect(result).toMatchSnapshot();
   });
 });
@@ -152,7 +148,7 @@ it('should prevent moderators from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context }, variables).then(result => {
+  return request(query, { context, variables }).then(result => {
     expect(result).toMatchSnapshot();
   });
 });

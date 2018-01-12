@@ -4,9 +4,7 @@ exports[`should create a channel if user is owner 1`] = `
 Object {
   "data": Object {
     "createChannel": Object {
-      "createdAt": "2018-01-12T08:57:29.478Z",
       "description": "test description",
-      "id": "f9f4a93b-8bc0-4989-bddf-3abf029aab03",
       "isPrivate": false,
       "name": "test channel",
       "slug": "test-channel",
