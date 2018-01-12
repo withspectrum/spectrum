@@ -1,7 +1,7 @@
 //@flow
 import { request } from '../../utils';
 
-it('should fetch a channels member connection', () => {
+it('should fetch a channels member connection', async () => {
   const query = /* GraphQL */ `
     {
       channel(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a192") {
@@ -37,8 +37,7 @@ it('should fetch a channels member connection', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    console.log(result.errors);
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });

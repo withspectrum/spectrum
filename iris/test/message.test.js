@@ -1,7 +1,7 @@
 // @flow
 import { request } from './utils';
 
-it('should fetch a message', () => {
+it('should fetch a message', async () => {
   const query = /* GraphQL */ `
     {
       message(id: "0063e9e6-8960-4dd4-96ab-f18bca4cf75f") {
@@ -16,7 +16,7 @@ it('should fetch a message', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });

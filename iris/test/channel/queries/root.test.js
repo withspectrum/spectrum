@@ -1,7 +1,7 @@
 //@flow
 import { request } from '../../utils';
 
-it('should fetch a channel by id', () => {
+it('should fetch a channel by id', async () => {
   const query = /* GraphQL */ `
     {
       channel(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a192") {
@@ -16,12 +16,12 @@ it('should fetch a channel by id', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should fetch a channel by slug and community slug', () => {
+it('should fetch a channel by slug and community slug', async () => {
   const query = /* GraphQL */ `
     {
       channel(channelSlug: "general", communitySlug: "spectrum") {
@@ -36,7 +36,7 @@ it('should fetch a channel by slug and community slug', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });

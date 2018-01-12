@@ -1,7 +1,7 @@
 // @flow
 import { request } from './utils';
 
-it('should fetch a community', () => {
+it('should fetch a community', async () => {
   const query = /* GraphQL */ `
     {
       community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
@@ -18,12 +18,12 @@ it('should fetch a community', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should fetch a communities threads', () => {
+it('should fetch a communities threads', async () => {
   const query = /* GraphQL */ `
     {
       community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
@@ -41,12 +41,12 @@ it('should fetch a communities threads', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should fetch a list of communities', () => {
+it('should fetch a list of communities', async () => {
   const query = /* GraphQL */ `
     {
       communities(slugs: ["spectrum"]) {
@@ -62,12 +62,12 @@ it('should fetch a list of communities', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should fetch a list of community members', () => {
+it('should fetch a list of community members', async () => {
   const query = /* GraphQL */ `
     {
       community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
@@ -106,7 +106,7 @@ it('should fetch a list of community members', () => {
   `;
 
   expect.assertions(1);
-  return request(query).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query);
+
+  expect(result).toMatchSnapshot();
 });

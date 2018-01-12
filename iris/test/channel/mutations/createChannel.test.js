@@ -27,7 +27,7 @@ const variables = {
   },
 };
 
-it('should create a channel if user is owner', () => {
+it('should create a channel if user is owner', async () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
@@ -44,12 +44,12 @@ it('should create a channel if user is owner', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context, variables }).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+
+  const result = await request(query, { context, variables });
+  expect(result).toMatchSnapshot();
 });
 
-it('should prevent duplicate channel slugs in the same community', () => {
+it('should prevent duplicate channel slugs in the same community', async () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
@@ -68,7 +68,7 @@ it('should prevent duplicate channel slugs in the same community', () => {
   };
 
   expect.assertions(1);
-  return request(query, {
+  const result = await request(query, {
     context,
     variables: {
       input: {
@@ -76,12 +76,12 @@ it('should prevent duplicate channel slugs in the same community', () => {
         slug: 'general',
       },
     },
-  }).then(result => {
-    expect(result).toMatchSnapshot();
   });
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should prevent signed out users from creating a channel', () => {
+it('should prevent signed out users from creating a channel', async () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
@@ -100,12 +100,12 @@ it('should prevent signed out users from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context, variables }).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query, { context, variables });
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should prevent non owners from creating a channel', () => {
+it('should prevent non owners from creating a channel', async () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
@@ -124,12 +124,12 @@ it('should prevent non owners from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context, variables }).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query, { context, variables });
+
+  expect(result).toMatchSnapshot();
 });
 
-it('should prevent moderators from creating a channel', () => {
+it('should prevent moderators from creating a channel', async () => {
   const query = /* GraphQL */ `
     mutation createChannel($input: CreateChannelInput!) {
       createChannel (input: $input) {
@@ -148,7 +148,7 @@ it('should prevent moderators from creating a channel', () => {
   };
 
   expect.assertions(1);
-  return request(query, { context, variables }).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query, { context, variables });
+
+  expect(result).toMatchSnapshot();
 });
