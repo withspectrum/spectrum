@@ -6,7 +6,7 @@ export const DATE = 1483225200000;
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
 const BRYN_ID = 'VToKcde16dREgDkXcDl3hhcrFN33';
-const NO_PERMISSONS_USER = 'e16dREgWUjGj6iN5vtOo';
+const NO_PERMISSIONS_USER = 'e16dREgWUjGj6iN5vtOo';
 const BLOCKED_USER = 'kDCWUjGjDkXcDl3hhcrFNgWUjGj6iN5';
 
 const DEFAULT_USERS = [
@@ -59,7 +59,7 @@ const DEFAULT_USERS = [
     lastSeen: new Date(DATE),
   },
   {
-    id: NO_PERMISSONS_USER,
+    id: NO_PERMISSIONS_USER,
     name: 'Bad Boy',
     description: "I can't do shit on this website",
     website: '',
@@ -532,6 +532,12 @@ const DEFAULT_SESSIONS = [
 ];
 
 module.exports = {
+  MAX_ID,
+  BRIAN_ID,
+  NO_PERMISSIONS_USER,
+  BRYN_ID,
+  BLOCKED_USER,
+  DATE,
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,

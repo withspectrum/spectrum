@@ -39,6 +39,10 @@ export default async (
     return new UserError("Channel doesn't exist");
   }
 
+  if (channelToEvaluate.slug === 'general') {
+    return new UserError("The general channel can't be deleted");
+  }
+
   // get the community parent of the channel being deleted
   const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
     channelToEvaluate.communityId,
@@ -72,7 +76,7 @@ export default async (
   ]);
 
   // if there were no threads in that channel, we are done
-  if (allThreadsInChannel.length === 0) return;
+  if (allThreadsInChannel.length === 0) return true;
 
   // otherwise we need to mark all the threads in that channel
   // as deleted
