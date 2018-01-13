@@ -64,6 +64,38 @@ Object {
 }
 `;
 
+exports[`should only have one usersCommunities record after joining a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": true,
+        "isOwner": false,
+        "reputation": 0,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should only have one usersCommunities record after leaving a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": false,
+        "isOwner": false,
+        "reputation": 102,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
 exports[`should prevent a blocked user from joining a community 1`] = `
 Object {
   "data": Object {

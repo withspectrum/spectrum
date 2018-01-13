@@ -51,6 +51,14 @@ const getUsersChannels = (userId: string) =>
     .filter({ userId })
     .run();
 
+const getUsersCommunities = (userId: string, communityId: string) =>
+  db
+    .table('usersCommunities')
+    .getAll([userId, communityId], {
+      index: 'userIdAndCommunityId',
+    })
+    .run();
+
 it('should join a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
@@ -207,4 +215,59 @@ it('should prevent community owner from leaving community', async () => {
   expect.assertions(1);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
+});
+
+it('should only have one usersCommunities record after joining a community', async () => {
+  const query = /* GraphQL */ `
+    mutation toggleCommunityMembership($communityId: ID!) {
+      toggleCommunityMembership (communityId: $communityId) {
+        id
+        communityPermissions {
+          isMember
+          isBlocked
+          isOwner
+          reputation
+        }
+      }
+    }
+  `;
+
+  const context = {
+    user: nonMember,
+  };
+
+  expect.assertions(2);
+  const result = await request(query, { context, variables });
+  expect(result).toMatchSnapshot();
+  const usersCommunities = await getUsersCommunities(
+    nonMember.id,
+    community.id
+  );
+  expect(usersCommunities).toHaveLength(1);
+});
+
+it('should only have one usersCommunities record after leaving a community', async () => {
+  const query = /* GraphQL */ `
+    mutation toggleCommunityMembership($communityId: ID!) {
+      toggleCommunityMembership (communityId: $communityId) {
+        id
+        communityPermissions {
+          isMember
+          isBlocked
+          isOwner
+          reputation
+        }
+      }
+    }
+  `;
+
+  const context = {
+    user: member,
+  };
+
+  expect.assertions(2);
+  const result = await request(query, { context, variables });
+  expect(result).toMatchSnapshot();
+  const usersCommunities = await getUsersCommunities(member.id, community.id);
+  expect(usersCommunities).toHaveLength(1);
 });
