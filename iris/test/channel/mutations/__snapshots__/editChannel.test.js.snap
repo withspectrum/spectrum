@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should edit a channel if user is owner 1`] = `
+Object {
+  "data": Object {
+    "editChannel": Object {
+      "description": "edited description",
+      "isPrivate": false,
+      "name": "edited name",
+      "slug": "edited-slug",
+    },
+  },
+}
+`;
+
+exports[`should not edit a channel if user is not owner 1`] = `
+Object {
+  "data": Object {
+    "editChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to make changes to this channel.],
+  ],
+}
+`;
+
+exports[`should not edit a channel if user is not signed in 1`] = `
+Object {
+  "data": Object {
+    "editChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to make changes to this channel.],
+  ],
+}
+`;
