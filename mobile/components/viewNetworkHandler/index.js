@@ -38,7 +38,7 @@ Apollo NetworkStatus indicators:
 
 */
 
-const viewNetworkHandler = Component => {
+const ViewNetworkHandler = Component => {
   const C = props => {
     const { data, wrappedComponentRef, ...remainingProps } = props;
 
@@ -74,4 +74,4 @@ const viewNetworkHandler = Component => {
   return hoistStatics(C, Component);
 };
 
-export default viewNetworkHandler;
+export default ViewNetworkHandler;

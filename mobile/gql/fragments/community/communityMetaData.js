@@ -1,3 +1,4 @@
+// @flow
 import gql from 'graphql-tag';
 
 export const communityMetaDataFragment = gql`

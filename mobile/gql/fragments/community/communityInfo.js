@@ -1,11 +1,10 @@
+// @flow
 import gql from 'graphql-tag';
 
 export const communityInfoFragment = gql`
   fragment communityInfo on Community {
-    # admin
     id
     createdAt
-    # meta
     name
     slug
     description
@@ -14,7 +13,6 @@ export const communityInfoFragment = gql`
     coverPhoto
     pinnedThreadId
     isPro
-    # roles
     communityPermissions {
       isMember
       isBlocked

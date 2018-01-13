@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
-import getCommunityById from '../../gql/community/queries/getCommunity';
+import getThreadById from '../../gql/thread/queries/getThread';
 import ViewNetworkHandler from '../../components/viewNetworkHandler';
+import withSafeView from '../../components/safeAreaView';
 
 import { Wrapper } from './style';
 
@@ -11,19 +12,25 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   data: {
-    community?: {
-      name: string,
+    thread?: {
+      id: string,
+      creator: {
+        name: string,
+      },
     },
   },
 };
-class Splash extends React.Component<Props> {
+class Thread extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError, foo } = this.props;
-    if (data.community) {
+    const { data, isLoading, hasError } = this.props;
+
+    if (data.thread) {
       return (
         <Wrapper>
-          <View testID="welcome">
-            <Text>Now viewing {data.community.name}</Text>
+          <View testID="e2e-thread">
+            <Text>
+              Now viewing thread {data.thread.id} by {data.thread.creator.name}
+            </Text>
           </View>
         </Wrapper>
       );
@@ -32,7 +39,7 @@ class Splash extends React.Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="welcome">
+          <View testID="e2e-thread">
             <Text>Loading...</Text>
           </View>
         </Wrapper>
@@ -42,7 +49,7 @@ class Splash extends React.Component<Props> {
     if (hasError) {
       return (
         <Wrapper>
-          <View testID="welcome">
+          <View testID="e2e-thread">
             <Text>Error!</Text>
           </View>
         </Wrapper>
@@ -53,4 +60,4 @@ class Splash extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityById, ViewNetworkHandler)(Splash);
+export default compose(withSafeView, getThreadById, ViewNetworkHandler)(Thread);
