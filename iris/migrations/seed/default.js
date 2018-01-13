@@ -7,6 +7,7 @@ const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
 const BRYN_ID = 'VToKcde16dREgDkXcDl3hhcrFN33';
 const NO_PERMISSONS_USER = 'e16dREgWUjGj6iN5vtOo';
+const BLOCKED_USER = 'kDCWUjGjDkXcDl3hhcrFNgWUjGj6iN5';
 
 const DEFAULT_USERS = [
   {
@@ -70,6 +71,22 @@ const DEFAULT_USERS = [
     email: 'hi@badboy.io',
     subscriptions: [],
     providerId: '171060089',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: BLOCKED_USER,
+    name: 'Blocked user',
+    description: 'I am blocked in the Spectrum community',
+    website: '',
+    username: 'blocked-boy',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@blockedboy.io',
+    subscriptions: [],
+    providerId: '171060090',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },
@@ -297,6 +314,18 @@ const DEFAULT_USERS_COMMUNITIES = [
     receiveNotifications: true,
     reputation: 102,
   },
+  {
+    id: '80b16afe-8576-4970-99ab-240b1a975b100',
+    createdAt: new Date(DATE),
+    userId: BLOCKED_USER,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: false,
+    isMember: false,
+    isBlocked: true,
+    receiveNotifications: false,
+    reputation: 102,
+  },
 ];
 
 const DEFAULT_USERS_CHANNELS = [
@@ -333,6 +362,17 @@ const DEFAULT_USERS_CHANNELS = [
     isMember: true,
     isBlocked: false,
     receiveNotifications: true,
+  },
+  {
+    id: '7411906b-54a0-4c18-b26c-2522ad59c7f9',
+    createdAt: new Date(DATE),
+    userId: BLOCKED_USER,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    isOwner: false,
+    isModerator: false,
+    isMember: false,
+    isBlocked: true,
+    receiveNotifications: false,
   },
 ];
 
