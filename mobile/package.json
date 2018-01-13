@@ -2,9 +2,18 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
+    "apollo-cache-inmemory": "^1.1.5",
+    "apollo-client": "^2.2.0",
+    "apollo-link": "^1.0.7",
+    "apollo-link-error": "^1.0.3",
+    "apollo-link-http": "^1.3.2",
     "expo": "^24.0.0",
+    "graphql": "^0.12.3",
+    "graphql-tag": "^2.6.1",
     "react": "16.0.0",
+    "react-apollo": "^2.0.4",
     "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "recompose": "^0.26.0",
     "styled-components": "^2.3.3"
   },
   "devDependencies": {
