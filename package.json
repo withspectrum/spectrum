@@ -104,7 +104,7 @@
     "raven": "^2.0.2",
     "raven-js": "^3.18.1",
     "react": "^15.4.1",
-    "react-apollo": "^1.2.0",
+    "react-apollo": "1.4.16",
     "react-app-rewire-styled-components": "^3.0.0",
     "react-app-rewired": "^1.0.5",
     "react-clipboard.js": "^1.1.3",

@@ -88,10 +88,12 @@ const SEND_MESSAGE_MUTATION = gql`
 const SEND_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: message => {
+      console.log('---BEGIN SEND MESSAGE---');
       console.log('[sendMessage] new message:', message);
       const fakeId = Math.round(Math.random() * -1000000);
       console.log('[sendMessage] fake ID:', fakeId);
       console.log('[sendMessage] calling mutate');
+      console.log('---END SEND MESSAGE---\n\n');
       return mutate({
         variables: {
           message: {
@@ -102,52 +104,44 @@ const SEND_MESSAGE_OPTIONS = {
           },
         },
         optimisticResponse: {
-          __typename: 'Mutation',
           addMessage: {
-            __typename: 'ThreadMessageEdge',
-            cursor: window.btoa(fakeId),
-            node: {
-              __typename: 'Message',
-              sender: {
-                ...ownProps.currentUser,
-                contextPermissions: {
-                  communityId: ownProps.threadData.community.id,
-                  reputation: 0,
-                  isOwner: false,
-                  isModerator: false,
-                  __typename: 'ContextPermissions',
-                },
-                __typename: 'User',
+            id: fakeId,
+            timestamp: JSON.parse(JSON.stringify(new Date())),
+            messageType: message.messageType,
+            sender: {
+              ...ownProps.currentUser,
+              totalReputation: 0,
+              contextPermissions: {
+                communityId: ownProps.threadData.community.id,
+                reputation: 0,
+                isOwner: false,
+                isModerator: false,
+                __typename: 'ContextPermissions',
               },
-              timestamp: +new Date(),
-              content: {
-                ...message.content,
-                __typename: 'MessageContent',
-              },
-              id: fakeId,
-              reactions: {
-                count: 0,
-                hasReacted: false,
-                __typename: 'ReactionData',
-              },
-              messageType: message.messageType,
+              __typename: 'User',
             },
+            content: {
+              ...message.content,
+              __typename: 'MessageContent',
+            },
+            reactions: {
+              count: 0,
+              hasReacted: false,
+              __typename: 'ReactionData',
+            },
+            __typename: 'Message',
           },
         },
         update: (store, { data: { addMessage }, data: object }) => {
+          console.log('---BEGIN UPDATE---');
           if (typeof addMessage.id === 'string') {
             console.log('[update] New message from server, ignoring');
-            console.log(object);
+            console.log('---END UPDATE---');
             return;
           } else {
             console.log('[update] New optimistic response for message');
-            console.log(object);
           }
           console.log(addMessage);
-          // // we have to split out the optimistic update by thread type
-          // // because DMs and story threads have different queries and response
-          // // shapes
-          // if (ownProps.threadType === 'story') {
           console.log(
             `[update] readQuery for thread messages of thread#${ownProps.thread}`
           );
@@ -165,7 +159,11 @@ const SEND_MESSAGE_OPTIONS = {
           );
 
           console.log('[update] add message to messageConnection');
-          data.thread.messageConnection.edges.push(addMessage);
+          data.thread.messageConnection.edges.push({
+            __typename: 'ThreadMessageEdge',
+            cursor: window.btoa(addMessage.id),
+            node: addMessage,
+          });
           console.log('[update] message added:', data.thread.messageConnection);
 
           console.log(
@@ -180,6 +178,7 @@ const SEND_MESSAGE_OPTIONS = {
             },
           });
           console.log('[update] message written to store');
+          console.log('---END UPDATE---\n\n');
           // } else if (ownProps.threadType === 'directMessageThread') {
           //   // Read the data from our cache for this query.
           //   const data = store.readQuery({
