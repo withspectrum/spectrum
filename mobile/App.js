@@ -3,11 +3,11 @@ import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 
 import client from './gql';
-import Routes from './routes';
+import TabBar from './views/TabBar';
 
 const App = () => (
   <ApolloProvider client={client}>
-    <Routes />
+    <TabBar />
   </ApolloProvider>
 );
 
