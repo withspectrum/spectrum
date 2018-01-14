@@ -130,20 +130,22 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   forceScrollToTop = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    node.scrollTop = 0;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    messagesContainer.scrollTop = 0;
   };
 
   forceScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    const node = messagesContainer;
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
   contextualScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    const node = messagesContainer;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 280) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
