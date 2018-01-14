@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StackNavigator } from 'react-navigation';
 import Thread from './views/Thread';
 import Splash from './views/Splash';
+import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 
 const createComponent = (component, props) => {
   return () => React.createElement(component, props);
@@ -17,7 +18,7 @@ const Routes = StackNavigator(
       },
     },
     Thread: {
-      screen: Thread,
+      screen: withMappedNavigationProps(Thread),
       navigationOptions: {
         headerTitle: 'Thread',
       },

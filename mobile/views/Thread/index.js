@@ -62,9 +62,4 @@ class Thread extends React.Component<Props> {
   }
 }
 
-export default compose(
-  mapNavigationStateParamsToProps,
-  withSafeView,
-  getThreadById,
-  ViewNetworkHandler
-)(Thread);
+export default compose(withSafeView, getThreadById, ViewNetworkHandler)(Thread);

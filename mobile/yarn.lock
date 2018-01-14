@@ -5204,6 +5204,12 @@ react-native-vector-icons@4.4.2:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
+react-navigation-props-mapper@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-props-mapper/-/react-navigation-props-mapper-0.1.2.tgz#d45fea42baba4b8be136198df2f40a9c7f22d706"
+  dependencies:
+    hoist-non-react-statics "^2.2.1"
+
 react-navigation@^1.0.0-beta.26:
   version "1.0.0-beta.26"
   resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.0-beta.26.tgz#186fcd1ec13828c7c133ca560b5d95a55e2b9f66"
