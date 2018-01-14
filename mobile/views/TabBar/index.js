@@ -1,7 +1,7 @@
 // @flow
 import { TabNavigator } from 'react-navigation';
-// Tab-Navigators
 import HomeNavigator from './HomeNavigator';
+import theme from '../../components/theme';
 
 const routeConfiguration = {
   Home: { screen: HomeNavigator },
@@ -13,10 +13,10 @@ const routeConfiguration = {
 
 const tabBarConfiguration = {
   tabBarOptions: {
-    activeTintColor: 'white',
-    inactiveTintColor: 'blue',
-    activeBackgroundColor: 'blue',
-    inactiveBackgroundColor: 'white',
+    activeTintColor: theme.bg.default,
+    inactiveTintColor: theme.text.placeholder,
+    activeBackgroundColor: theme.bg.reverse,
+    inactiveBackgroundColor: theme.bg.reverse,
   },
 };
 
