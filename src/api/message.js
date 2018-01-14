@@ -88,12 +88,7 @@ const SEND_MESSAGE_MUTATION = gql`
 const SEND_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: message => {
-      console.log('---BEGIN SEND MESSAGE---');
-      console.log('[sendMessage] new message:', message);
       const fakeId = Math.round(Math.random() * -1000000);
-      console.log('[sendMessage] fake ID:', fakeId);
-      console.log('[sendMessage] calling mutate');
-      console.log('---END SEND MESSAGE---\n\n');
       return mutate({
         variables: {
           message: {
@@ -133,19 +128,12 @@ const SEND_MESSAGE_OPTIONS = {
           },
         },
         update: (store, { data: { addMessage }, data: object }) => {
-          console.log('---BEGIN UPDATE---');
+          // Ignore the message when it comes back from the server as Apollo will already
+          // have replaced the optimistic update with the server response
           if (typeof addMessage.id === 'string') {
-            console.log('[update] New message from server, ignoring');
-            console.log('---END UPDATE---');
             return;
-          } else {
-            console.log('[update] New optimistic response for message');
           }
-          console.log(addMessage);
-          console.log(
-            `[update] readQuery for thread messages of thread#${ownProps.thread}`
-          );
-          // Read the data from our cache for this query.
+
           const data = store.readQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             variables: {
@@ -153,22 +141,12 @@ const SEND_MESSAGE_OPTIONS = {
             },
           });
 
-          console.log(
-            `[update] data for thread message query for thread#${ownProps.thread}:`,
-            data
-          );
-
-          console.log('[update] add message to messageConnection');
           data.thread.messageConnection.edges.push({
             __typename: 'ThreadMessageEdge',
             cursor: window.btoa(addMessage.id),
             node: addMessage,
           });
-          console.log('[update] message added:', data.thread.messageConnection);
 
-          console.log(
-            `[update] writeQuery with message added for thread#${ownProps.thread}`
-          );
           // Write our data back to the cache.
           store.writeQuery({
             query: GET_THREAD_MESSAGES_QUERY,
@@ -177,37 +155,6 @@ const SEND_MESSAGE_OPTIONS = {
               id: ownProps.thread,
             },
           });
-          console.log('[update] message written to store');
-          console.log('---END UPDATE---\n\n');
-          // } else if (ownProps.threadType === 'directMessageThread') {
-          //   // Read the data from our cache for this query.
-          //   const data = store.readQuery({
-          //     query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-          //     variables: {
-          //       id: ownProps.thread,
-          //     },
-          //   });
-
-          //   // ignore the addMessage from the server, apollo will automatically
-          //   // override the optimistic object
-          //   if (!addMessage || typeof addMessage.id === 'string') {
-          //     return;
-          //   }
-
-          //   data.directMessageThread.messageConnection.edges.push({
-          //     cursor: addMessage.id,
-          //     node: addMessage,
-          //     __typename: 'DirectMessageEdge',
-          //   });
-          //   // Write our data back to the cache.
-          //   store.writeQuery({
-          //     query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-          //     data,
-          //     variables: {
-          //       id: ownProps.thread,
-          //     },
-          //   });
-          // }
         },
       });
     },
@@ -269,6 +216,12 @@ const SEND_DIRECT_MESSAGE_OPTIONS = {
           },
         },
         update: (store, { data: { addMessage } }) => {
+          // ignore the addMessage from the server, apollo will automatically
+          // override the optimistic object
+          if (!addMessage || typeof addMessage.id === 'string') {
+            return;
+          }
+
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: GET_DIRECT_MESSAGE_THREAD_QUERY,
@@ -277,17 +230,12 @@ const SEND_DIRECT_MESSAGE_OPTIONS = {
             },
           });
 
-          // ignore the addMessage from the server, apollo will automatically
-          // override the optimistic object
-          if (!addMessage || typeof addMessage.id === 'string') {
-            return;
-          }
-
           data.directMessageThread.messageConnection.edges.push({
             cursor: addMessage.id,
             node: addMessage,
             __typename: 'DirectMessageEdge',
           });
+
           // Write our data back to the cache.
           store.writeQuery({
             query: GET_DIRECT_MESSAGE_THREAD_QUERY,
