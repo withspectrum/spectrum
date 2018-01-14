@@ -13,6 +13,7 @@
     "react": "16.0.0",
     "react-apollo": "^2.0.4",
     "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-navigation": "^1.0.0-beta.26",
     "recompose": "^0.26.0",
     "styled-components": "^2.3.3"
   },

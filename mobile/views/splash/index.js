@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import compose from 'recompose/compose';
 import getCommunityById from '../../gql/community/queries/getCommunity';
 import ViewNetworkHandler from '../../components/viewNetworkHandler';
+import withSafeView from '../../components/safeAreaView';
 
 import { Wrapper } from './style';
 
@@ -18,16 +19,29 @@ type Props = {
 };
 class Splash extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError, foo } = this.props;
-    if (data.community) {
-      return (
-        <Wrapper>
-          <View testID="welcome">
-            <Text>Now viewing {data.community.name}</Text>
-          </View>
-        </Wrapper>
-      );
-    }
+    const { data, isLoading, hasError } = this.props;
+    console.log('SPLASH PRPS', this.props);
+
+    return (
+      <Wrapper>
+        <View testID="welcome">
+          <Button
+            title={'thread one'}
+            onPress={() =>
+              this.props.navigation.navigate(`Thread`, {
+                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+              })}
+          />
+          <Button
+            title={'thread two'}
+            onPress={() =>
+              this.props.navigation.navigate(`Thread`, {
+                id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
+              })}
+          />
+        </View>
+      </Wrapper>
+    );
 
     if (isLoading) {
       return (
@@ -53,4 +67,6 @@ class Splash extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityById, ViewNetworkHandler)(Splash);
+export default compose(withSafeView, getCommunityById, ViewNetworkHandler)(
+  Splash
+);
