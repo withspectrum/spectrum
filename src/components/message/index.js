@@ -52,6 +52,7 @@ class Message extends Component {
       context,
       selectedId,
       changeSelection,
+      pending,
     } = this.props;
 
     const parsedMessage =
@@ -61,8 +62,6 @@ class Message extends Component {
     const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
-    const reactable = typeof message.id === 'string';
-    const hideIndicator = !reactable && !shareable && !canModerate;
 
     return (
       <Wrapper
@@ -74,7 +73,6 @@ class Message extends Component {
           id={message.id}
           me={me}
           type={emojiOnly ? 'emoji' : message.messageType}
-          pending={message.id < 0}
           openGallery={() => this.toggleOpenGallery(message.id)}
           message={emojiOnly ? parsedMessage : message.content}
         />
@@ -85,20 +83,18 @@ class Message extends Component {
             currentUser={currentUser}
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
-            hideIndicator={hideIndicator}
-            isOptimisticMessage={message.id < 0}
+            isOptimisticMessage={pending}
           >
-            {reaction &&
-              reactable && (
-                <Reaction
-                  message={message}
-                  toggleReaction={toggleReaction}
-                  me={me}
-                  currentUser={currentUser}
-                  dispatch={dispatch}
-                  reaction={reaction}
-                />
-              )}
+            {reaction && (
+              <Reaction
+                message={message}
+                toggleReaction={toggleReaction}
+                me={me}
+                currentUser={currentUser}
+                dispatch={dispatch}
+                reaction={reaction}
+              />
+            )}
           </Actions>
         )}
       </Wrapper>
