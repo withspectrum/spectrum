@@ -11,6 +11,7 @@ export const threadInfoFragment = gql`
     modifiedAt
     lastActive
     receiveNotifications
+    currentUserLastSeen
     creator {
       ...userInfo
       isPro
@@ -30,7 +31,7 @@ export const threadInfoFragment = gql`
     isPublished
     isLocked
     isCreator
-		type
+    type
     participants {
       ...userInfo
     }

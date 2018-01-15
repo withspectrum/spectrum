@@ -130,7 +130,7 @@ class Dashboard extends Component {
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
-            <Menu darkContext>
+            <Menu darkContext hasTabBar>
               <CommunityList
                 communities={communities}
                 user={user}

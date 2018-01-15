@@ -1,0 +1,2 @@
+# Ignore Expo client that is downloaded locally
+.expo/Exponent.app/**

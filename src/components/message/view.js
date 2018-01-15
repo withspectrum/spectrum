@@ -36,40 +36,29 @@ const messageRenderer = {
 };
 
 export const Body = props => {
-  const { message, openGallery, pending, type, me } = props;
+  const { message, openGallery, type, me } = props;
 
   switch (type) {
     case 'text':
     default:
-      return (
-        <Text me={me} pending={pending}>
-          {message.body}
-        </Text>
-      );
+      return <Text me={me}>{message.body}</Text>;
     case 'media':
       return (
         <Image
           onClick={openGallery}
-          pending={pending}
-          src={`${message.body}${pending
-            ? ''
-            : `?max-w=${window.innerWidth * 0.6}`}`}
+          src={`${message.body}?max-w=${window.innerWidth * 0.6}`}
         />
       );
     case 'emoji':
-      return <Emoji pending={pending}>{message}</Emoji>;
+      return <Emoji>{message}</Emoji>;
     case 'draftjs':
       const body = JSON.parse(message.body);
       const isCode = body.blocks[0].type === 'code-block';
 
       if (isCode) {
-        return <Code pending={pending}>{redraft(body, codeRenderer)}</Code>;
+        return <Code>{redraft(body, codeRenderer)}</Code>;
       } else {
-        return (
-          <Text me={me} pending={pending}>
-            {redraft(body, messageRenderer)}
-          </Text>
-        );
+        return <Text me={me}>{redraft(body, messageRenderer)}</Text>;
       }
   }
 };
@@ -120,8 +109,7 @@ export const Actions = props => {
         !isOptimisticMessage && (
           <Action me={me} action={'delete'} deleteMessage={deleteMessage} />
         )}
-      {hideIndicator ||
-        (!isOptimisticMessage && <Indicator reaction={reaction} me={me} />)}
+      <Indicator reaction={reaction} me={me} />
     </ActionUI>
   );
 };

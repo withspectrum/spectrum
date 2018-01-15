@@ -19,27 +19,57 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
+type BackwardsPaginationOptions = { last?: number, before?: number | Date };
+
+const getBackwardsMessages = (
+  threadId: string,
+  { last, before }: BackwardsPaginationOptions
+) => {
+  return db
+    .table('messages')
+    .between(
+      [threadId, db.minval],
+      [threadId, before ? new Date(before) : db.maxval],
+      { index: 'threadIdAndTimestamp' }
+    )
+    .orderBy({ index: db.desc('threadIdAndTimestamp') })
+    .filter(db.row.hasFields('deletedAt').not())
+    .limit(last || 0)
+    .run();
+};
+
+type ForwardsPaginationOptions = { first?: number, after?: number | Date };
+
+const getForwardMessages = (
+  threadId: string,
+  { first, after }: ForwardsPaginationOptions
+) => {
+  return db
+    .table('messages')
+    .between(
+      [threadId, after ? new Date(after) : db.minval],
+      [threadId, db.maxval],
+      { index: 'threadIdAndTimestamp', leftBound: 'open', rightBound: 'closed' }
+    )
+    .orderBy({ index: 'threadIdAndTimestamp' })
+    .filter(db.row.hasFields('deletedAt').not())
+    .limit(first || 0)
+    .run();
+};
+
 export const getMessages = (
   threadId: string,
   {
-    first = 999999,
+    first,
     after,
-    reverse = false,
-  }: { first?: number, after?: number, reverse?: boolean }
+    last,
+    before,
+  }: { ...BackwardsPaginationOptions, ...ForwardsPaginationOptions }
 ): Promise<Array<Message>> => {
-  const order = reverse
-    ? db.desc('threadIdAndTimestamp')
-    : 'threadIdAndTimestamp';
-  return db
-    .table('messages')
-    .between([threadId, db.minval], [threadId, db.maxval], {
-      index: 'threadIdAndTimestamp',
-    })
-    .orderBy({ index: order })
-    .filter(db.row.hasFields('deletedAt').not())
-    .skip(after || 0)
-    .limit(first)
-    .run();
+  // $FlowIssue
+  if (last || before) return getBackwardsMessages(threadId, { last, before });
+  // $FlowIssue
+  return getForwardMessages(threadId, { first, after });
 };
 
 export const getLastMessage = (threadId: string): Promise<Message> => {

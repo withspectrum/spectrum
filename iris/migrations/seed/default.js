@@ -1,6 +1,6 @@
 const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
-// 2017/01/01
+// 2017 / 01 / 01;
 const DATE = 1483225200000;
 
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
@@ -208,10 +208,10 @@ const DEFAULT_USERS_THREADS = [
 
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
-    id: 'first-dm-thread-asfd123',
+    id: 'first-dm-thread-asdf123',
     createdAt: new Date(DATE),
     name: null,
-    threadLastActive: new Date(),
+    threadLastActive: new Date(DATE),
   },
 ];
 
@@ -219,8 +219,24 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
     id: '1f462515-e1e7-4aff-be48-adda326df133',
     createdAt: new Date(DATE),
-    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
-    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    userId: BRIAN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    threadId: 'first-dm-thread-asdf123',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
@@ -355,6 +371,69 @@ const DEFAULT_MESSAGES = [
     threadType: 'story',
     senderId: BRIAN_ID,
     timestamp: new Date(DATE + 3),
+  },
+  // DM Thread
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: 'b546f27e-d842-4afe-900d-ad26ee60ca03',
+    attachments: [],
+    content: {
+      body: JSON.stringify(
+        toJSON(fromPlainText('Direct message thread message!'))
+      ),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '2017f510-fe85-4de2-b5b2-6324567a6871',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A second one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 50000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '965830bb-e79d-4cec-acfa-91f67b590865',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A third one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRIAN_ID,
+    timestamp: new Date(DATE + 100000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '77e9619d-bea2-443a-bb9c-4b2957980644',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fourth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE + 200000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '9356f7f1-4be0-4230-8f79-71a9f97f7a1f',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fifth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 300000),
   },
 ];
 
