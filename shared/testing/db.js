@@ -1,4 +1,4 @@
 // @flow
-export default require('rethinkdbdash')({
+module.exports = require('rethinkdbdash')({
   db: 'testing',
 });

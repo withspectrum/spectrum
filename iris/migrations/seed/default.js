@@ -1,7 +1,7 @@
 const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
 // 2017/01/01
-export const DATE = 1483225200000;
+const DATE = 1483225200000;
 
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';

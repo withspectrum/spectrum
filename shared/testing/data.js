@@ -28,4 +28,4 @@ const data = {
   messages: DEFAULT_MESSAGES,
 };
 
-export default data;
+module.exports = data;
