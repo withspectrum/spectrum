@@ -174,7 +174,11 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
                 edges: [
                   ...prev.thread.messageConnection.edges,
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
-                  { node: newMessage, __typename: 'ThreadMessageEdge' },
+                  {
+                    node: newMessage,
+                    cursor: window.btoa(newMessage.id),
+                    __typename: 'ThreadMessageEdge',
+                  },
                 ],
               },
             },
