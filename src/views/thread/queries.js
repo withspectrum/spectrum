@@ -164,8 +164,15 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
         },
         updateQuery: (prev, { subscriptionData }) => {
           const newMessage = subscriptionData.data.messageAdded;
+          const existingMessage = prev.thread.messageConnection.edges.find(
+            ({ node }) => node.id === newMessage.id
+          );
+          // If the message is already in the state because the mutation already
+          // added it, replace it rather than appending it twice
+          if (existingMessage) return prev;
+
           // Add the new message to the data
-          return Object.assign({}, prev, {
+          return {
             ...prev,
             thread: {
               ...prev.thread,
@@ -182,7 +189,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
                 ],
               },
             },
-          });
+          };
         },
       });
     },

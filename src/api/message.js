@@ -128,12 +128,6 @@ const SEND_MESSAGE_OPTIONS = {
           },
         },
         update: (store, { data: { addMessage }, data: object }) => {
-          // Ignore the message when it comes back from the server as Apollo will already
-          // have replaced the optimistic update with the server response
-          if (typeof addMessage.id === 'string') {
-            return;
-          }
-
           const data = store.readQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             variables: {
