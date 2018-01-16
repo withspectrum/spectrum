@@ -81,8 +81,7 @@ const getCommunityThreadsOptions = {
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.community.threadConnection.edges,
-                  updatedThread,
-                  ownProps.dispatch
+                  updatedThread
                 ).filter(thread => thread.node.community.id === thisCommunityId)
               : [...prev.community.threadConnection.edges];
 

@@ -26,7 +26,7 @@ class Splash extends React.Component<Props> {
       <Wrapper>
         <View testID="welcome">
           <Button
-            title={'thread one'}
+            title={'thread'}
             onPress={() =>
               this.props.navigation.navigate(`Thread`, {
                 id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
@@ -34,7 +34,7 @@ class Splash extends React.Component<Props> {
             }
           />
           <Button
-            title={'community one'}
+            title={'community'}
             onPress={() =>
               this.props.navigation.navigate(`Community`, {
                 id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -42,10 +42,10 @@ class Splash extends React.Component<Props> {
             }
           />
           <Button
-            title={'thread two'}
+            title={'channel'}
             onPress={() =>
-              this.props.navigation.navigate(`Thread`, {
-                id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
+              this.props.navigation.navigate(`Channel`, {
+                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
               })
             }
           />
