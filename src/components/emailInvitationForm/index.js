@@ -147,9 +147,11 @@ class EmailInvitationForm extends React.Component<Props, State> {
         dispatch(
           addToastWithTimeout(
             'success',
-            `Invitations sent to ${validContacts.length > 1
-              ? `${validContacts.length} people`
-              : `${validContacts.length} person`}!`
+            `Invitations sent to ${
+              validContacts.length > 1
+                ? `${validContacts.length} people`
+                : `${validContacts.length} person`
+            }!`
           )
         );
       })

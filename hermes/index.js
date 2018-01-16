@@ -78,7 +78,8 @@ console.log(
 
 server.listen(PORT, 'localhost', () => {
   console.log(
-    `💉 Healthcheck server running at ${server.address()
-      .address}:${server.address().port}`
+    `💉 Healthcheck server running at ${server.address().address}:${
+      server.address().port
+    }`
   );
 });

@@ -67,7 +67,6 @@ const Notification = /* GraphQL */ `
 		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
 		markSingleNotificationSeen(id: ID!): Boolean
-		toggleNotificationReadState(notificationId: ID!): Notification!
 	}
 
 	extend type Subscription {

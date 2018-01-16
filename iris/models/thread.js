@@ -6,43 +6,7 @@ const { NEW_DOCUMENTS, parseRange } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-
-type DBThreadAttachment = {
-  attachmentType: 'photoPreview',
-  data: {
-    name: string,
-    type: string,
-    url: string,
-  },
-};
-
-type DBThreadEdits = {
-  attachment?: {
-    photos: Array<DBThreadAttachment>,
-  },
-  content: {
-    body?: string,
-    title: string,
-  },
-  timestamp: Date,
-};
-
-export type DBThread = {
-  id: string,
-  channelId: string,
-  communityId: string,
-  content: {
-    body?: string,
-    title: string,
-  },
-  createdAt: Date,
-  creatorId: string,
-  isPublished: boolean,
-  lastActive: Date,
-  modifiedAt?: Date,
-  attachments?: Array<DBThreadAttachment>,
-  edits?: Array<DBThreadEdits>,
-};
+import type { DBThread } from 'shared/types';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -285,7 +249,7 @@ export const getViewableParticipantThreadsByUser = async (
     });
 };
 
-export const getPublicParticipantThreadsByUser = async (
+export const getPublicParticipantThreadsByUser = (
   evalUser: string,
   { first, after }: PaginationOptions
 ): Promise<Array<DBThread>> => {
@@ -324,6 +288,7 @@ export const getPublicParticipantThreadsByUser = async (
   of the thread fields
 */
 export const publishThread = (
+  // eslint-disable-next-line
   { filesToUpload, ...thread }: Object,
   userId: string
 ): Promise<DBThread> => {
@@ -358,7 +323,7 @@ export const publishThread = (
 
 export const setThreadLock = (
   threadId: string,
-  value: Boolean
+  value: boolean
 ): Promise<DBThread> => {
   return (
     db
@@ -430,13 +395,26 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     });
 };
 
-type EditThreadInput = {
+type File = {
+  name: string,
+  type: string,
+  size: number,
+  path: string,
+};
+
+type Attachment = {
+  attachmentType: string,
+  data: string,
+};
+
+export type EditThreadInput = {
   threadId: string,
   content: {
     title: string,
-    body: string,
+    body: ?string,
   },
-  attachments: Array<DBThread>,
+  attachments?: ?Array<Attachment>,
+  filesToUpload?: ?Array<File>,
 };
 // shouldUpdate arguemnt is used to prevent a thread from being marked as edited when the images are uploaded at publish time
 export const editThread = (
@@ -495,6 +473,8 @@ export const updateThreadWithImages = (id: string, body: string) => {
       if (result.unchanged === 1) {
         return result.changes[0].old_val;
       }
+
+      return null;
     });
 };
 

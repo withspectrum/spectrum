@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should be able to delete self-published thread 1`] = `
+Object {
+  "data": Object {
+    "deleteThread": true,
+  },
+}
+`;
+
+exports[`should be able to delete thread if user owns community 1`] = `
+Object {
+  "data": Object {
+    "deleteThread": true,
+  },
+}
+`;
+
+exports[`should not delete thread if user doesn't have permissions 1`] = `
+Object {
+  "data": Object {
+    "deleteThread": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to make changes to this thread.],
+  ],
+}
+`;
+
+exports[`should not delete thread if user is not signed in 1`] = `
+Object {
+  "data": Object {
+    "deleteThread": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to make changes to this thread.],
+  ],
+}
+`;

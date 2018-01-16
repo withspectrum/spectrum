@@ -15,7 +15,7 @@ const messages = data.messages
   .filter(({ threadId }) => threadId === 'first-dm-thread-asdf123')
   .sort((a, b) => a.timestamp - b.timestamp);
 
-it('should fetch a directMessageThread', () => {
+it('should fetch a directMessageThread', async () => {
   const query = /* GraphQL */ `
     {
       directMessageThread(id: "first-dm-thread-asdf123") {
@@ -26,13 +26,13 @@ it('should fetch a directMessageThread', () => {
   `;
 
   expect.assertions(1);
-  return request(query, { context }).then(result => {
-    expect(result).toMatchSnapshot();
-  });
+  const result = await request(query, { context });
+
+  expect(result).toMatchSnapshot();
 });
 
 describe('messageConnection', () => {
-  it('should fetch a directMessageThreads messages', () => {
+  it('should fetch a directMessageThreads messages', async () => {
     const query = /* GraphQL */ `
       {
         directMessageThread(id: "first-dm-thread-asdf123") {
@@ -48,12 +48,12 @@ describe('messageConnection', () => {
     `;
 
     expect.assertions(1);
-    return request(query, { context }).then(result => {
-      expect(result).toMatchSnapshot();
-    });
+    const result = await request(query, { context });
+
+    expect(result).toMatchSnapshot();
   });
 
-  it('should fetch the last message first', () => {
+  it('should fetch the last message first', async () => {
     const query = /* GraphQL */ `
       {
         directMessageThread(id: "first-dm-thread-asdf123") {
@@ -76,22 +76,21 @@ describe('messageConnection', () => {
     `;
 
     expect.assertions(2);
-    return request(query, { context }).then(result => {
-      expect(
-        result.data.directMessageThread.messageConnection.pageInfo
-      ).toEqual({
-        hasNextPage: true,
-        hasPreviousPage: false,
-      });
-      expect(
-        messageToPlainText(
-          result.data.directMessageThread.messageConnection.edges[0].node
-        )
-      ).toEqual(messageToPlainText(messages[messages.length - 1]));
+    const result = await request(query, { context });
+
+    expect(result.data.directMessageThread.messageConnection.pageInfo).toEqual({
+      hasNextPage: true,
+      hasPreviousPage: false,
     });
+
+    expect(
+      messageToPlainText(
+        result.data.directMessageThread.messageConnection.edges[0].node
+      )
+    ).toEqual(messageToPlainText(messages[messages.length - 1]));
   });
 
-  it('should fetch the second to last message next', () => {
+  it('should fetch the second to last message next', async () => {
     // Get the first message, same as above
     const query = /* GraphQL */ `
       {
@@ -110,56 +109,52 @@ describe('messageConnection', () => {
     `;
 
     expect.assertions(3);
-    return (
-      request(query, { context })
-        // Get the cursor of the first message
-        .then(result => {
-          // Make sure pageInfo is calculated correctly
-          expect(
-            result.data.directMessageThread.messageConnection.pageInfo
-          ).toEqual({
-            hasNextPage: true,
-            hasPreviousPage: false,
-          });
-          return result.data.directMessageThread.messageConnection.edges[0]
-            .cursor;
-        })
-        .then(cursor => {
-          // Generate a query of the first message after the cursor of the last message
-          const nextQuery = /* GraphQL */ `
-          {
-            directMessageThread(id: "first-dm-thread-asdf123") {
-              messageConnection(first: 1, after: "${cursor}") {
-                pageInfo {
-                  hasNextPage
-                  hasPreviousPage
-                }
-                edges {
-                  node {
-                    content {
-                      body
-                    }
-                  }
+    const result = await request(query, { context });
+
+    // Get the cursor of the first message
+    // Make sure pageInfo is calculated correctly
+    expect(result.data.directMessageThread.messageConnection.pageInfo).toEqual({
+      hasNextPage: true,
+      hasPreviousPage: false,
+    });
+
+    const cursor =
+      result.data.directMessageThread.messageConnection.edges[0].cursor;
+
+    // Generate a query of the first message after the cursor of the last message
+    const nextQuery = /* GraphQL */ `
+      {
+        directMessageThread(id: "first-dm-thread-asdf123") {
+          messageConnection(first: 1, after: "${cursor}") {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+            }
+            edges {
+              node {
+                content {
+                  body
                 }
               }
             }
           }
-        `;
-          return request(nextQuery, { context });
-        })
-        .then(result => {
-          expect(
-            result.data.directMessageThread.messageConnection.pageInfo
-          ).toEqual({
-            hasNextPage: true,
-            hasPreviousPage: true,
-          });
-          expect(
-            messageToPlainText(
-              result.data.directMessageThread.messageConnection.edges[0].node
-            )
-          ).toEqual(messageToPlainText(messages[messages.length - 2]));
-        })
-    );
+        }
+      }
+    `;
+
+    const nextResult = await request(nextQuery, { context });
+
+    expect(
+      nextResult.data.directMessageThread.messageConnection.pageInfo
+    ).toEqual({
+      hasNextPage: true,
+      hasPreviousPage: true,
+    });
+
+    expect(
+      messageToPlainText(
+        nextResult.data.directMessageThread.messageConnection.edges[0].node
+      )
+    ).toEqual(messageToPlainText(messages[messages.length - 2]));
   });
 });
