@@ -26,7 +26,7 @@ const LoadMoreThreads = gql`
 `;
 
 const getCommunityThreadsQuery = gql`
-  query getCommunity($id: ID, $after: String) {
+  query getCommunityThreads($id: ID, $after: String) {
     community(id: $id) {
       ...communityInfo
       pinnedThread {

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Text, View, FlatList } from 'react-native';
 import compose from 'recompose/compose';
-import getCommunityById from '../../gql/community/queries/getCommunity';
+import getCommunityById from '../../gql/community/queries/getCommunityById';
 import getCommunityThreads from '../../gql/community/queries/getCommunityThreads';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';

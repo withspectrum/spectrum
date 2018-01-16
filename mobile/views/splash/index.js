@@ -2,26 +2,15 @@
 import * as React from 'react';
 import { Text, View, Button } from 'react-native';
 import compose from 'recompose/compose';
-import getCommunityById from '../../gql/community/queries/getCommunity';
-import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 
 import { Wrapper } from './style';
 
 type Props = {
-  isLoading: boolean,
-  hasError: boolean,
   navigation: Object,
-  data: {
-    community?: {
-      name: string,
-    },
-  },
 };
 class Splash extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError } = this.props;
-
     return (
       <Wrapper>
         <View testID="welcome">
@@ -49,34 +38,18 @@ class Splash extends React.Component<Props> {
               })
             }
           />
+          <Button
+            title={'user'}
+            onPress={() =>
+              this.props.navigation.navigate(`User`, {
+                id: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+              })
+            }
+          />
         </View>
       </Wrapper>
     );
-
-    if (isLoading) {
-      return (
-        <Wrapper>
-          <View testID="welcome">
-            <Text>Loading...</Text>
-          </View>
-        </Wrapper>
-      );
-    }
-
-    if (hasError) {
-      return (
-        <Wrapper>
-          <View testID="welcome">
-            <Text>Error!</Text>
-          </View>
-        </Wrapper>
-      );
-    }
-
-    return null;
   }
 }
 
-export default compose(withSafeView, getCommunityById, ViewNetworkHandler)(
-  Splash
-);
+export default compose(withSafeView)(Splash);
