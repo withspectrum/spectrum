@@ -57,15 +57,21 @@ export const getThreadsByChannel = (
 
 export const getThreadsByChannels = (
   channelIds: Array<string>,
-  { first, after }: PaginationOptions
+  {
+    first,
+    after,
+    last,
+    before,
+  }: { first: number, after: string, last: number, before: string }
 ): Promise<Array<DBThread>> => {
+  const reverse = !first && !after;
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-    .skip(after || 0)
-    .limit(first || 999999)
+    .orderBy(reverse ? db.asc('lastActive') : db.desc('lastActive'))
+    .skip(after || before || 0)
+    .limit(first || last || 999999)
     .run();
 };
 
@@ -496,7 +502,9 @@ export const moveThread = (id: string, channelId: string) => {
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
 export const listenToUpdatedThreads = (cb: Function): Function => {
@@ -505,15 +513,13 @@ export const listenToUpdatedThreads = (cb: Function): Function => {
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val').run(
-    { cursor: true },
-    (err, cursor) => {
+    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
+    .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
         if (err) throw err;
         // Call the passed callback with the notification
         cb(data);
       });
-    }
-  );
+    });
 };

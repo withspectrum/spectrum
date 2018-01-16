@@ -112,4 +112,61 @@ describe('pagination', () => {
     );
     expect(secondThread).toMatchSnapshot();
   });
+
+  it('should be able to reverse paginate threads', async () => {
+    expect.hasAssertions();
+    const query = /* GraphQL */ `
+      {
+        community(id: "${community.id}") {
+          threadConnection(last: 1) {
+            edges {
+              cursor
+              node {
+                lastActive
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const lastThread = await request(query);
+
+    expect(lastThread.data.community.threadConnection.edges.length).toEqual(1);
+    expect(lastThread).toMatchSnapshot();
+
+    // Construct a query with the cursor of the last thread
+    const secondQuery = /* GraphQL */ `
+      {
+        community(id: "${community.id}") {
+          threadConnection(last: 1, before: "${
+            lastThread.data.community.threadConnection.edges[0].cursor
+          }") {
+            edges {
+              cursor
+              node {
+                lastActive
+                id
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const secondThread = await request(secondQuery);
+
+    expect(secondThread).not.toEqual(lastThread);
+    expect(
+      new Date(
+        secondThread.data.community.threadConnection.edges[0].node.lastActive
+      ).getTime()
+    ).toBeGreaterThan(
+      new Date(
+        lastThread.data.community.threadConnection.edges[0].node.lastActive
+      ).getTime()
+    );
+    expect(secondThread).toMatchSnapshot();
+  });
 });

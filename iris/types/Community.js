@@ -93,7 +93,7 @@ const Community = /* GraphQL */ `
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
-		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
+		threadConnection(first: Int, after: String, last: Int, before: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
 		invoices: [Invoice]

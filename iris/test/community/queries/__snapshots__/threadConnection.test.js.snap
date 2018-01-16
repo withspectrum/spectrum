@@ -1,5 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`pagination should be able to reverse paginate threads 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "Y2UyYjQ0ODgtNGM3NS00N2UwLThlYmMtMjUzOWMxZTZhMTkzLTE=",
+            "node": Object {
+              "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a193",
+              "lastActive": "2016-12-31T23:00:00.000Z",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`pagination should be able to reverse paginate threads 2`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "MTFlNzM2YjMtNTQ2NC00YmFiLWFjZmQtYmJkNDJjZGRjMWRkLTI=",
+            "node": Object {
+              "id": "11e736b3-5464-4bab-acfd-bbd42cddc1dd",
+              "lastActive": "2016-12-31T23:00:00.001Z",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
 exports[`pagination should paginate threads 1`] = `
 Object {
   "data": Object {
