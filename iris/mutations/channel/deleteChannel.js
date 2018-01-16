@@ -50,35 +50,35 @@ export default async (
   );
 
   if (
-    !currentUserCommunityPermissions.isOwner ||
-    !currentUserChannelPermissions.isOwner
+    currentUserCommunityPermissions.isOwner ||
+    currentUserChannelPermissions.isOwner
   ) {
-    return new UserError(
-      "You don't have permission to make changes to this channel"
-    );
+    // all checks passed
+    // delete the channel requested from the client side user
+    const deleteTheInputChannel = deleteChannel(channelId);
+
+    // get all the threads in the channel to prepare for deletion
+    const getAllThreadsInChannel = getThreadsByChannelToDelete(channelId);
+
+    // update all the UsersChannels objects in the db to be non-members
+    const removeRelationships = removeMembersInChannel(channelId);
+
+    // eslint-disable-next-line
+    const [allThreadsInChannel, __, ___] = await Promise.all([
+      getAllThreadsInChannel,
+      deleteTheInputChannel,
+      removeRelationships,
+    ]);
+
+    // if there were no threads in that channel, we are done
+    if (allThreadsInChannel.length === 0) return true;
+
+    // otherwise we need to mark all the threads in that channel
+    // as deleted
+    return allThreadsInChannel.map(thread => deleteThread(thread.id));
   }
 
-  // all checks passed
-  // delete the channel requested from the client side user
-  const deleteTheInputChannel = deleteChannel(channelId);
-
-  // get all the threads in the channel to prepare for deletion
-  const getAllThreadsInChannel = getThreadsByChannelToDelete(channelId);
-
-  // update all the UsersChannels objects in the db to be non-members
-  const removeRelationships = removeMembersInChannel(channelId);
-
-  // eslint-disable-next-line
-  const [allThreadsInChannel, __, ___] = await Promise.all([
-    getAllThreadsInChannel,
-    deleteTheInputChannel,
-    removeRelationships,
-  ]);
-
-  // if there were no threads in that channel, we are done
-  if (allThreadsInChannel.length === 0) return true;
-
-  // otherwise we need to mark all the threads in that channel
-  // as deleted
-  return allThreadsInChannel.map(thread => deleteThread(thread.id));
+  return new UserError(
+    "You don't have permission to make changes to this channel"
+  );
 };
