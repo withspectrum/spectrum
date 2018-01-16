@@ -1,5 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`pagination should paginate threads 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "ZjJlYjlkM2QtZWQwNS00OWFlLThmYzktOTFkMDIzMTRkNWE5LTE=",
+            "node": Object {
+              "id": "f2eb9d3d-ed05-49ae-8fc9-91d02314d5a9",
+              "lastActive": "2016-12-31T23:00:00.002Z",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`pagination should paginate threads 2`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "MTFlNzM2YjMtNTQ2NC00YmFiLWFjZmQtYmJkNDJjZGRjMWRkLTI=",
+            "node": Object {
+              "id": "11e736b3-5464-4bab-acfd-bbd42cddc1dd",
+              "lastActive": "2016-12-31T23:00:00.001Z",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
 exports[`should fetch a communities threads 1`] = `
 Object {
   "data": Object {
