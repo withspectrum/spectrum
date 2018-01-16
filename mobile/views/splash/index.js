@@ -3,14 +3,15 @@ import * as React from 'react';
 import { Text, View, Button } from 'react-native';
 import compose from 'recompose/compose';
 import getCommunityById from '../../gql/community/queries/getCommunity';
-import ViewNetworkHandler from '../../components/viewNetworkHandler';
-import withSafeView from '../../components/safeAreaView';
+import ViewNetworkHandler from '../../components/ViewNetworkHandler';
+import withSafeView from '../../components/SafeAreaView';
 
 import { Wrapper } from './style';
 
 type Props = {
   isLoading: boolean,
   hasError: boolean,
+  navigation: Object,
   data: {
     community?: {
       name: string,
@@ -20,7 +21,6 @@ type Props = {
 class Splash extends React.Component<Props> {
   render() {
     const { data, isLoading, hasError } = this.props;
-    console.log('SPLASH PRPS', this.props);
 
     return (
       <Wrapper>

@@ -1,8 +1,8 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { communityInfoFragment } from '../../fragments/community/communityInfo';
-import { communityMetaDataFragment } from '../../fragments/community/communityMetaData';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import communityMetaDataFragment from '../../fragments/community/communityMetaData';
 
 export const getCommunityByIdQuery = gql`
   query getCommunity($id: ID) {

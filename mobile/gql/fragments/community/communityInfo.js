@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const communityInfoFragment = gql`
+export default gql`
   fragment communityInfo on Community {
     id
     createdAt

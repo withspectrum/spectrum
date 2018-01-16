@@ -19,4 +19,4 @@ module.system.node.resolve_dirname=spectrum
 all=warn
 
 [version]
-0.57.3
+0.63.1

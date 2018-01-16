@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const userInfoFragment = gql`
+export default gql`
   fragment userInfo on User {
     id
     profilePhoto

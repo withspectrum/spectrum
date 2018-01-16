@@ -3,13 +3,16 @@ import * as React from 'react';
 import { Text, View, FlatList } from 'react-native';
 import compose from 'recompose/compose';
 import getCommunityById from '../../gql/community/queries/getCommunity';
-import ViewNetworkHandler from '../../components/viewNetworkHandler';
-import withSafeView from '../../components/safeAreaView';
+import getCommunityThreads from '../../gql/community/queries/getCommunityThreads';
+import ViewNetworkHandler from '../../components/ViewNetworkHandler';
+import withSafeView from '../../components/SafeAreaView';
+import ThreadFeed from '../../components/ThreadFeed';
 
 import { Wrapper } from './style';
 
 type CommunityType = {
   id: string,
+  name: string,
   threadConnection: {
     pageInfo: {
       hasNextPage: boolean,
@@ -30,6 +33,8 @@ type Props = {
   },
 };
 
+const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
+
 class Community extends React.Component<Props> {
   render() {
     const { data, isLoading, hasError } = this.props;
@@ -40,6 +45,7 @@ class Community extends React.Component<Props> {
           <View testID="e2e-commmunity">
             <Text>Now viewing community {data.community.name}!</Text>
           </View>
+          <CommunityThreadFeed id={data.community.id} />
         </Wrapper>
       );
     }

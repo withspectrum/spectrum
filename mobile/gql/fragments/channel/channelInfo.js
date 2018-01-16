@@ -1,8 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
-import { communityInfoFragment } from '../community/communityInfo';
+import communityInfoFragment from '../community/communityInfo';
 
-export const channelInfoFragment = gql`
+export default gql`
   fragment channelInfo on Channel {
     id
     name

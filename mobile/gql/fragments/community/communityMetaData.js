@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const communityMetaDataFragment = gql`
+export default gql`
   fragment communityMetaData on Community {
     metaData {
       channels
