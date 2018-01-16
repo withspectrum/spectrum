@@ -1,15 +1,21 @@
+// @flow
 import Raven from 'raven';
 import { IsUserError } from './UserError';
+import type { GraphQLError } from 'graphql';
 
-const createGraphQLErrorFormatter = req => error => {
+const createGraphQLErrorFormatter = (req?: express$Request) => (
+  error: GraphQLError
+) => {
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
     : false;
   let sentryId = 'ID only generated in production';
   if (!isUserError) {
-    console.log(error);
     if (process.env.NODE_ENV === 'production') {
-      sentryId = Raven.captureException(error, Raven.parsers.parseRequest(req));
+      sentryId = Raven.captureException(
+        error,
+        req && Raven.parsers.parseRequest(req)
+      );
     }
   }
   return {
