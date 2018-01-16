@@ -25,11 +25,16 @@ class MessagesWithData extends Component {
 
   componentDidUpdate(prev = {}) {
     const curr = this.props;
+    const isDifferentThread =
+      prev.data &&
+      prev.data.thread &&
+      prev.data.thread.id !== curr.data.thread.id;
     const hadMessagesLoaded =
       prev.data && prev.data.thread && !!prev.data.thread.messageConnection;
     const hasMessagesLoaded =
       curr.data && curr.data.thread && !!curr.data.thread.messageConnection;
-    const isFirstLoad = !hadMessagesLoaded && hasMessagesLoaded;
+    const isFirstLoad =
+      isDifferentThread || (!hadMessagesLoaded && hasMessagesLoaded);
     // Check if a single new message has been sent
     const newMessageSent =
       hadMessagesLoaded &&
