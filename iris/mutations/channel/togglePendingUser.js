@@ -53,10 +53,16 @@ export default async (
   }
 
   // get the community parent of channel
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    channelToEvaluate.communityId,
-    currentUser.id
-  );
+  const [
+    currentUserCommunityPermissions,
+    evaluatedUserCommunityPermissions,
+  ] = await Promise.all([
+    getUserPermissionsInCommunity(
+      channelToEvaluate.communityId,
+      currentUser.id
+    ),
+    getUserPermissionsInCommunity(channelToEvaluate.communityId, input.userId),
+  ]);
 
   // if the user isn't on the pending list
   if (!evaluatedUserPermissions.isPending) {
@@ -67,46 +73,46 @@ export default async (
 
   // user is neither a community or channel owner, they don't have permission
   if (
-    !currentUserChannelPermissions.isOwner ||
-    !currentUserCommunityPermissions.isOwner
+    currentUserChannelPermissions.isOwner ||
+    currentUserCommunityPermissions.isOwner
   ) {
-    return new UserError(
-      "You don't have permission to make changes to this channel."
-    );
-  }
-
-  // all checks passed
-  // determine whether to approve or block them
-  if (input.action === 'block') {
-    // remove the user from the pending list
-    return blockUserInChannel(input.channelId, input.userId).then(
-      () => channelToEvaluate
-    );
-  }
-
-  if (input.action === 'approve') {
-    const approveUser = approvePendingUserInChannel(
-      input.channelId,
-      input.userId
-    );
-
-    // if the user is a member of the parent community, we can return
-    if (currentUserCommunityPermissions.isMember) {
-      return Promise.all([channelToEvaluate, approveUser]).then(
+    // all checks passed
+    // determine whether to approve or block them
+    if (input.action === 'block') {
+      // remove the user from the pending list
+      return blockUserInChannel(input.channelId, input.userId).then(
         () => channelToEvaluate
       );
-    } else {
-      // if the user is not a member of the parent community,
-      // join the community and the community's default channels
-      return Promise.all([
-        channelToEvaluate,
-        createMemberInCommunity(channelToEvaluate.communityId, input.userId),
-        createMemberInDefaultChannels(
-          channelToEvaluate.communityId,
-          input.userId
-        ),
-        approveUser,
-      ]).then(() => channelToEvaluate);
+    }
+
+    if (input.action === 'approve') {
+      const approveUser = approvePendingUserInChannel(
+        input.channelId,
+        input.userId
+      );
+
+      // if the user is a member of the parent community, we can return
+      if (evaluatedUserCommunityPermissions.isMember) {
+        return Promise.all([channelToEvaluate, approveUser]).then(
+          () => channelToEvaluate
+        );
+      } else {
+        // if the user is not a member of the parent community,
+        // join the community and the community's default channels
+        return await Promise.all([
+          channelToEvaluate,
+          createMemberInCommunity(channelToEvaluate.communityId, input.userId),
+          createMemberInDefaultChannels(
+            channelToEvaluate.communityId,
+            input.userId
+          ),
+          approveUser,
+        ]).then(() => channelToEvaluate);
+      }
     }
   }
+
+  return new UserError(
+    "You don't have permission to make changes to this channel."
+  );
 };

@@ -43,20 +43,20 @@ export default async (
   );
 
   if (
-    !currentUserCommunityPermissions.isOwner ||
-    !currentUserChannelPermissions.isOwner
+    currentUserCommunityPermissions.isOwner ||
+    currentUserChannelPermissions.isOwner
   ) {
-    return new UserError(
-      "You don't have permission to make changes to this channel."
-    );
+    // all checks passed
+    // if a channel is being converted from private to public, make
+    // all the pending users members in the channel
+    if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
+      approvePendingUsersInChannel(args.input.channelId);
+    }
+
+    return editChannel(args);
   }
 
-  // all checks passed
-  // if a channel is being converted from private to public, make
-  // all the pending users members in the channel
-  if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
-    approvePendingUsersInChannel(args.input.channelId);
-  }
-
-  return editChannel(args);
+  return new UserError(
+    "You don't have permission to make changes to this channel."
+  );
 };
