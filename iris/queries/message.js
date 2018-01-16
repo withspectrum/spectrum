@@ -53,8 +53,19 @@ module.exports = {
         },
       };
     },
-    thread: ({ threadId }: { threadId: string }, _: any, __: any) =>
-      getThread(threadId),
+    thread: async (
+      { threadId, ...rest }: { threadId: string },
+      _: any,
+      __: any
+    ) => {
+      const thread = await getThread(threadId);
+      const { currentUserLastSeen } = rest;
+
+      return {
+        ...thread,
+        currentUserLastSeen: currentUserLastSeen,
+      };
+    },
     reactions: ({ id }: Root, _, { user, loaders }: GraphQLContext) =>
       loaders.messageReaction.load(id).then(result => {
         if (!result)

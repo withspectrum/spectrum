@@ -84,6 +84,10 @@ const SEND_MESSAGE_MUTATION = gql`
   mutation sendMessage($message: MessageInput!) {
     addMessage(message: $message) {
       ...messageInfo
+      thread {
+        id
+        currentUserLastSeen
+      }
     }
   }
   ${messageInfoFragment}
