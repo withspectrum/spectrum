@@ -26,7 +26,7 @@ import {
 type Props = {
   notification: Object,
   currentUser: Object,
-  history: Object,
+  history?: Object,
 };
 type State = {
   communityName: string,

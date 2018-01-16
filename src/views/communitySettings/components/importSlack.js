@@ -1,10 +1,7 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
@@ -15,13 +12,12 @@ import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import { CustomMessageToggle, CustomMessageTextAreaStyles } from '../style';
 import {
-  CustomMessageToggle,
-  CustomMessageTextAreaStyles,
   SectionCard,
   SectionCardFooter,
   SectionTitle,
-} from '../style';
+} from '../../../components/settingsViews/style';
 import { Description, Notice } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 

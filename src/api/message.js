@@ -160,13 +160,13 @@ export const sendMessageMutation = graphql(
 );
 
 const SEND_DIRECT_MESSAGE_MUTATION = gql`
-mutation sendDirectMessage($message: MessageInput!) {
-  addMessage(message: $message) {
-    ...messageInfo
+  mutation sendDirectMessage($message: MessageInput!) {
+    addMessage(message: $message) {
+      ...messageInfo
+    }
   }
-}
-${messageInfoFragment}
-${userInfoFragment}
+  ${messageInfoFragment}
+  ${userInfoFragment}
 `;
 const SEND_DIRECT_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({

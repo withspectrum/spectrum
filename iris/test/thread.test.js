@@ -420,7 +420,9 @@ describe('messageConnection', () => {
           const nextQuery = /* GraphQL */ `
             {
               thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
-                messageConnection(last: ${messages.length}, before: "${cursor}") {
+                messageConnection(last: ${
+                  messages.length
+                }, before: "${cursor}") {
                   pageInfo {
                     hasNextPage
                     hasPreviousPage

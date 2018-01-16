@@ -1,20 +1,17 @@
 //@flow
 import React, { Component } from 'react';
-import { UserListItem } from '../listItems';
-// $FlowFixMe
+import { UserListItem } from '../../../components/listItems';
 import compose from 'recompose/compose';
-import { LoadingCard } from '../loading';
-import { getChannelMembersQuery } from '../../api/channel';
-import { FetchMoreButton } from '../threadFeed/style';
-import ViewError from '../viewError';
-import viewNetworkHandler from '../viewNetworkHandler';
+import { Loading } from '../../../components/loading';
+import { getChannelMembersQuery } from '../../../api/channel';
+import { FetchMoreButton } from '../../../components/threadFeed/style';
+import ViewError from '../../../components/viewError';
+import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import {
-  StyledCard,
-  ListHeader,
-  LargeListHeading,
-  ListContainer,
-  ListFooter,
-} from '../listItems/style';
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
+import { ListContainer, ListFooter } from '../../../components/listItems/style';
 
 type Props = {
   data: {
@@ -38,13 +35,16 @@ class ChannelMembers extends Component<Props> {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member.node);
-      const totalCount = channel.metaData && channel.metaData.members;
+      const totalCount =
+        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
-        <StyledCard>
-          <ListHeader>
-            <LargeListHeading>{totalCount} Members</LargeListHeading>
-          </ListHeader>
+        <SectionCard>
+          <SectionTitle>
+            {totalCount === 1
+              ? `${totalCount} member`
+              : `${totalCount} members`}
+          </SectionTitle>
 
           <ListContainer>
             {members &&
@@ -71,18 +71,22 @@ class ChannelMembers extends Component<Props> {
               </FetchMoreButton>
             </ListFooter>
           )}
-        </StyledCard>
+        </SectionCard>
       );
     }
 
     if (isLoading) {
-      return <LoadingCard />;
+      return (
+        <SectionCard>
+          <Loading />
+        </SectionCard>
+      );
     }
 
     return (
-      <StyledCard>
+      <SectionCard>
         <ViewError />
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

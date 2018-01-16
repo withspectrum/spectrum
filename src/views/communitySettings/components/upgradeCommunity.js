@@ -10,14 +10,8 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
 import { NullCard } from '../../../components/upsell';
 import { Button } from '../../../components/buttons';
-import {
-  Pitch,
-  PitchItem,
-  Cost,
-  CostNumber,
-  CostSubtext,
-  SectionTitle,
-} from '../style';
+import { Pitch, PitchItem, Cost, CostNumber, CostSubtext } from '../style';
+import { SectionTitle } from '../../../components/settingsViews/style';
 
 class UpsellUpgradeCommunityPure extends Component {
   state: {

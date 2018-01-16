@@ -98,7 +98,8 @@ class Dashboard extends Component {
       searchFilter.communityId = null;
       searchFilter.channelId = activeChannel;
     } else if (activeCommunity) {
-      (searchFilter.everythingFeed = false), (searchFilter.channelId = null);
+      searchFilter.everythingFeed = false;
+      searchFilter.channelId = null;
       searchFilter.communityId = activeCommunity;
     } else {
       searchFilter.channelId = null;

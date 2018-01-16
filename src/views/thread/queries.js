@@ -22,7 +22,13 @@ export const GET_THREAD_OPTIONS = {
 export const getThread = graphql(GET_THREAD_QUERY, GET_THREAD_OPTIONS);
 
 export const GET_THREAD_MESSAGES_QUERY = gql`
-  query getThreadMessages($id: ID!, $after: String, $first: Int, $before: String, $last: Int) {
+  query getThreadMessages(
+    $id: ID!
+    $after: String
+    $first: Int
+    $before: String
+    $last: Int
+  ) {
     thread(id: $id) {
       id
       content {

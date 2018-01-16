@@ -14,7 +14,6 @@ import {
   CommunityListAvatar,
   CommunityListScroller,
   CommunityListWrapper,
-  SectionTitle,
   Fixed,
 } from '../style';
 import {
