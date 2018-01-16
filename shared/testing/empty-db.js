@@ -1,4 +1,5 @@
 import data from './data';
+import db from './db';
 const tables = Object.keys(data);
 
 /**
@@ -18,9 +19,5 @@ export const empty = db => {
     throw err;
   });
 };
-
-const db = require('rethinkdbdash')({
-  db: 'testing',
-});
 
 empty(db).then(() => process.exit());

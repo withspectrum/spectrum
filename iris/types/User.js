@@ -110,7 +110,7 @@ const User = /* GraphQL */ `
 	extend type Query {
 		user(id: ID, username: String): User
 		currentUser: User
-		searchUsers(string: String): [User]
+		searchUsers(string: String): [User] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
 	input EditUserInput {

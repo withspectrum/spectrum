@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should edit a community name and description 1`] = `
+Object {
+  "data": Object {
+    "editCommunity": Object {
+      "description": "new description",
+      "name": "new name",
+    },
+  },
+}
+`;
+
+exports[`should prevent community from being edited by a non owner 1`] = `
+Object {
+  "data": Object {
+    "editCommunity": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to make changes to this community.],
+  ],
+}
+`;
+
+exports[`should prevent community from being edited by a non user 1`] = `
+Object {
+  "data": Object {
+    "editCommunity": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to make changes to this community.],
+  ],
+}
+`;

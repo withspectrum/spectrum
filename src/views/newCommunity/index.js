@@ -103,9 +103,11 @@ class NewCommunity extends React.Component<Props, State> {
         return community ? 'Update your community' : 'Create a community';
       }
       case 2: {
-        return `Invite people${community
-          ? ` to the ${community.name} community`
-          : ' to your community'}`;
+        return `Invite people${
+          community
+            ? ` to the ${community.name} community`
+            : ' to your community'
+        }`;
       }
       case 3: {
         return 'Done!';
@@ -123,9 +125,9 @@ class NewCommunity extends React.Component<Props, State> {
         return 'Creating a community on Spectrum is free, forever. To get started, tell us more about your community below.';
       }
       case 2: {
-        return `Kickstart ${community
-          ? `the ${community.name} community`
-          : 'your community'} by inviting an existing Slack team or by inviting a handful of folks directly by email. You'll be able to invite more people at any point in the future, too, if you're not quite ready.`;
+        return `Kickstart ${
+          community ? `the ${community.name} community` : 'your community'
+        } by inviting an existing Slack team or by inviting a handful of folks directly by email. You'll be able to invite more people at any point in the future, too, if you're not quite ready.`;
       }
       case 3: {
         return "You're all set! Your community is live - go check it out, start posting threads, and get the conversations started!";

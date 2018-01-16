@@ -117,8 +117,9 @@ class ChannelSettings extends React.Component<Props> {
             />
             <ViewError
               heading={`You don’t have permission to manage this channel.`}
-              subheading={`Head back to the ${channel.community
-                .name} community to get back on track.`}
+              subheading={`Head back to the ${
+                channel.community.name
+              } community to get back on track.`}
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>

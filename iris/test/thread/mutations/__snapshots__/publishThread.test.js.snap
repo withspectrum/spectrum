@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create a thread if user has permissions 1`] = `
+Object {
+  "data": Object {
+    "publishThread": Object {
+      "content": Object {
+        "title": "test thread",
+      },
+      "isLocked": false,
+      "isPublished": true,
+      "type": "DRAFTJS",
+    },
+  },
+}
+`;
+
+exports[`should prevent signed out users from publishing a thread 1`] = `
+Object {
+  "data": Object {
+    "publishThread": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to publish a new thread.],
+  ],
+}
+`;
+
+exports[`should prevent thread publish if user has no permissions 1`] = `
+Object {
+  "data": Object {
+    "publishThread": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to create threads in this channel.],
+  ],
+}
+`;

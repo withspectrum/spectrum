@@ -36,7 +36,9 @@ export default (job: SendRequestPrivateChannelEmail) => {
   const { user, recipient, channel, community } = job.data;
   debug(`\nsending notification to private channel owner: ${recipient.email}`);
 
-  const subject = `${user.name} has requested to join the ${channel.name} channel in the ${community.name} community`;
+  const subject = `${user.name} has requested to join the ${
+    channel.name
+  } channel in the ${community.name} community`;
   const preheader =
     'View your channel settings to approve or block this request';
 
