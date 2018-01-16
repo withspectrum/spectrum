@@ -7,7 +7,7 @@ export const TitleBar = styled(FlexRow)`
   grid-area: title;
   width: 100%;
   display: grid;
-  grid-template-columns: 32px 1fr 32px;
+  grid-template-columns: 32px minmax(1fr, calc(100% - 96px)) 32px;
   grid-template-rows: 1fr;
   grid-template-areas: 'left center right';
   grid-column-gap: 16px;
