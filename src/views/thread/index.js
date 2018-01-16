@@ -101,9 +101,7 @@ class ThreadContainer extends React.Component<Props, State> {
         addCommunityToOnboarding(this.props.data.thread.community)
       );
 
-      if (scrollElement) {
-        scrollElement.scrollTop = 0;
-      }
+      this.forceScrollToTop();
     }
 
     // we never autofocus on mobile
