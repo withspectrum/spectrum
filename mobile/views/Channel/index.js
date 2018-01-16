@@ -28,6 +28,7 @@ type ChannelType = {
 type Props = {
   isLoading: boolean,
   hasError: boolean,
+  navigation: Object,
   data: {
     channel?: ChannelType,
   },
@@ -37,7 +38,7 @@ const ChannelThreadFeed = compose(getChannelThreads)(ThreadFeed);
 
 class Channel extends React.Component<Props> {
   render() {
-    const { data, isLoading, hasError } = this.props;
+    const { data, isLoading, hasError, navigation } = this.props;
 
     if (data.channel) {
       return (
@@ -45,7 +46,7 @@ class Channel extends React.Component<Props> {
           <View testID="e2e-commmunity">
             <Text>Now viewing channel {data.channel.name}!</Text>
           </View>
-          <ChannelThreadFeed id={data.channel.id} />
+          <ChannelThreadFeed navigation={navigation} id={data.channel.id} />
         </Wrapper>
       );
     }

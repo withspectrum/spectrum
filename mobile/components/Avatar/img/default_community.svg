@@ -1,0 +1,34 @@
+<svg width="80" height="80" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>default_community</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(553 -345)">
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M -553 345L -473 345L -473 425L -553 425L -553 345Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="default_community" clip-path="url(#clip-0)">
+<g id="Rectangle 30">
+<use xlink:href="#path0_fill" transform="translate(-553 345)" fill="url(#paint0_radial)"/>
+</g>
+<g id="Group">
+<g id="Rectangle 8">
+<use xlink:href="#path1_fill" transform="translate(-516.221 369)" fill="#FFFFFF"/>
+</g>
+<g id="Rectangle 8">
+<use xlink:href="#path2_fill" transform="matrix(0.487204 0.873288 -0.858445 0.512906 -501.221 374.113)" fill="#FFFFFF"/>
+</g>
+<g id="Rectangle 8">
+<use xlink:href="#path2_fill" transform="matrix(-0.487204 0.873288 -0.858445 -0.512906 -498 390.113)" fill="#FFFFFF"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<radialGradient id="paint0_radial" cx="0.5" cy="0.5" r="0.5" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-160 160 -160 -160 240 2.38419e-06)">
+<stop offset="0" stop-color="#747E8D"/>
+<stop offset="1" stop-color="#171A21"/>
+</radialGradient>
+<path id="path0_fill" d="M 0 0L 80 0L 80 80L 0 80L 0 0Z"/>
+<path id="path1_fill" d="M 0.644202 13.3333C 0.644202 5.33333 -1.93261 0 3.22101 0C 8.37463 0 5.79782 5.33333 5.79782 13.3333L 5.79782 18.6667C 5.79782 26.6667 8.37463 32 3.22101 32C -1.93261 32 0.644202 26.6667 0.644202 18.6667L 0.644202 13.3333Z"/>
+<path id="path2_fill" d="M 0.661121 12.9978C 0.661121 5.19913 -1.98337 0 3.30561 0C 8.59459 0 5.9501 5.19913 5.9501 12.9978L 5.9501 18.197C 5.9501 25.9957 8.59459 31.1948 3.30561 31.1948C -1.98337 31.1948 0.661121 25.9957 0.661121 18.197L 0.661121 12.9978Z"/>
+</defs>
+</svg>

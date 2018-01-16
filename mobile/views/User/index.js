@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Text, View, FlatList, Button } from 'react-native';
+import { Text, View, FlatList, Button, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import getUserById from '../../gql/user/queries/getUserById';
 import getUserThreads from '../../gql/user/queries/getUserThreads';
@@ -28,6 +28,7 @@ type UserType = {
 type Props = {
   isLoading: boolean,
   hasError: boolean,
+  navigation: Object,
   data: {
     user?: UserType,
   },
@@ -49,29 +50,35 @@ class User extends React.Component<Props, State> {
   };
 
   render() {
-    const { data, isLoading, hasError } = this.props;
+    const { data, isLoading, hasError, navigation } = this.props;
     const { feed } = this.state;
 
     if (data.user) {
       return (
         <Wrapper>
-          <View testID="e2e-commmunity">
-            <Text>Now viewing User {data.user.name}!</Text>
-          </View>
+          <ScrollView>
+            <View testID="e2e-commmunity">
+              <Text>Now viewing User {data.user.name}!</Text>
+            </View>
 
-          <Button
-            title={'View active conversations'}
-            onPress={() => this.toggleFeed('participant')}
-          />
+            <Button
+              title={'View active conversations'}
+              onPress={() => this.toggleFeed('participant')}
+            />
 
-          <Button
-            title={'View created conversations'}
-            onPress={() => this.toggleFeed('creator')}
-          />
+            <Button
+              title={'View created conversations'}
+              onPress={() => this.toggleFeed('creator')}
+            />
 
-          <Text>Viewing {this.state.feed} thread feed</Text>
+            <Text>Viewing {this.state.feed} thread feed</Text>
 
-          <UserThreadFeed kind={this.state.feed} id={data.user.id} />
+            <UserThreadFeed
+              navigation={navigation}
+              kind={this.state.feed}
+              id={data.user.id}
+            />
+          </ScrollView>
         </Wrapper>
       );
     }

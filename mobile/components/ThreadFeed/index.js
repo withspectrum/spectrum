@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { View, Text, FlatList } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import Separator from './Separator';
+import ThreadItem from '../ThreadItem';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -25,6 +26,7 @@ type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
   hasError: boolean,
+  navigation: Object,
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: Function,
@@ -90,6 +92,7 @@ class ThreadFeed extends React.Component<Props, State> {
       isLoading,
       isFetchingMore,
       hasError,
+      navigation,
     } = this.props;
 
     console.log(this.props);
@@ -142,10 +145,10 @@ class ThreadFeed extends React.Component<Props, State> {
 
           <FlatList
             data={filteredThreads}
-            renderItem={({ item }) =>
-              console.log('ITEM IS', item) || <Text>thread: {item.id}</Text>
-            }
-            keyExtractor={item => console.log(item) || item.id}
+            renderItem={({ item }) => (
+              <ThreadItem navigation={navigation} thread={item} />
+            )}
+            keyExtractor={item => item.id}
             ItemSeparatorComponent={Separator}
             onEndReached={() => this.props.data.fetchMore()}
             onEndReachedThreshold={0.5}
