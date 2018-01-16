@@ -1,8 +1,3 @@
-// export our theme to the provider
-// This is globally available in styled-components when interpolating a function like so:
-// ${(props) => props.theme}
-// Or using import { withTheme } from 'styled-components';
-
 export default {
   bg: {
     default: '#FFFFFF',

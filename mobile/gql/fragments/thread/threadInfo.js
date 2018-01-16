@@ -1,10 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
-import { userInfoFragment } from '../user/userInfo';
-import { communityInfoFragment } from '../community/communityInfo';
-import { channelInfoFragment } from '../channel/channelInfo';
+import userInfoFragment from '../user/userInfo';
+import communityInfoFragment from '../community/communityInfo';
+import channelInfoFragment from '../channel/channelInfo';
 
-export const threadInfoFragment = gql`
+export default gql`
   fragment threadInfo on Thread {
     id
     messageCount
@@ -31,7 +31,7 @@ export const threadInfoFragment = gql`
     isPublished
     isLocked
     isCreator
-		type
+    type
     participants {
       ...userInfo
     }

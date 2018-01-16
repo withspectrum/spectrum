@@ -2,10 +2,9 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
-import { mapNavigationStateParamsToProps } from '../../utils/navigation';
-import getThreadById from '../../gql/thread/queries/getThread';
-import ViewNetworkHandler from '../../components/viewNetworkHandler';
-import withSafeView from '../../components/safeAreaView';
+import getThreadById from '../../gql/thread/queries/getThreadById';
+import ViewNetworkHandler from '../../components/ViewNetworkHandler';
+import withSafeView from '../../components/SafeAreaView';
 
 import { Wrapper } from './style';
 

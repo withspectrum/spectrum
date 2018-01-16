@@ -2,9 +2,9 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  fragment communityMetaData on Community {
+  fragment channelMetaData on Channel {
     metaData {
-      channels
+      threads
       members
     }
   }
