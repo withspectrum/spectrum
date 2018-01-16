@@ -7,7 +7,10 @@ import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
-import { SectionCard, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 import { ListContainer } from '../../../components/listItems/style';
 
 type InvoiceType = {

@@ -1,19 +1,15 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { track } from '../../helpers/events';
-// $FlowFixMe
 import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { ImportSlackWithoutCard } from '../communitySettings/components/importSlack';
-import { EmailInvitesWithoutCard } from '../communitySettings/components/emailInvites';
+import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
@@ -30,15 +26,21 @@ import {
   ContentContainer,
 } from './style';
 
-class NewCommunity extends Component {
-  state: {
-    activeStep: number,
-    isLoading: boolean,
-    community: any,
-    existingId: string,
-    hasInvitedPeople: boolean,
-  };
+type State = {
+  activeStep: number,
+  isLoading: boolean,
+  community: any,
+  existingId: ?string,
+  hasInvitedPeople: boolean,
+};
 
+type Props = {
+  currentUser: ?Object,
+  client: Object,
+  history: Object,
+};
+
+class NewCommunity extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -101,9 +103,11 @@ class NewCommunity extends Component {
         return community ? 'Update your community' : 'Create a community';
       }
       case 2: {
-        return `Invite people${community
-          ? ` to the ${community.name} community`
-          : ' to your community'}`;
+        return `Invite people${
+          community
+            ? ` to the ${community.name} community`
+            : ' to your community'
+        }`;
       }
       case 3: {
         return 'Done!';
@@ -121,9 +125,9 @@ class NewCommunity extends Component {
         return 'Creating a community on Spectrum is free, forever. To get started, tell us more about your community below.';
       }
       case 2: {
-        return `Kickstart ${community
-          ? `the ${community.name} community`
-          : 'your community'} by inviting an existing Slack team or by inviting a handful of folks directly by email. You'll be able to invite more people at any point in the future, too, if you're not quite ready.`;
+        return `Kickstart ${
+          community ? `the ${community.name} community` : 'your community'
+        } by inviting an existing Slack team or by inviting a handful of folks directly by email. You'll be able to invite more people at any point in the future, too, if you're not quite ready.`;
       }
       case 3: {
         return "You're all set! Your community is live - go check it out, start posting threads, and get the conversations started!";
@@ -202,10 +206,7 @@ class NewCommunity extends Component {
                       hasInvitedPeople={this.hasInvitedPeople}
                     />
                     <Divider />
-                    <EmailInvitesWithoutCard
-                      community={community}
-                      hasInvitedPeople={this.hasInvitedPeople}
-                    />
+                    <CommunityInvitationForm id={community.id} />
                   </ContentContainer>
                 )}
 
@@ -242,4 +243,8 @@ class NewCommunity extends Component {
   }
 }
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default compose(withApollo, connect(mapStateToProps))(NewCommunity);
+export default compose(
+  withApollo,
+  // $FlowIssue
+  connect(mapStateToProps)
+)(NewCommunity);

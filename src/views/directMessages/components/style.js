@@ -60,7 +60,9 @@ export const Wrapper = styled(FlexCol)`
   }
 `;
 
-export const Col = styled(FlexCol)`flex: 1;`;
+export const Col = styled(FlexCol)`
+  flex: 1;
+`;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
@@ -72,7 +74,9 @@ export const Row = styled(FlexRow)`
   }
 `;
 
-export const Heading = styled(H3)`font-weight: 700;`;
+export const Heading = styled(H3)`
+  font-weight: 700;
+`;
 
 export const Meta = styled(H4)`
   font-weight: ${props => (props.isUnread ? 600 : 400)};
@@ -315,7 +319,9 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled(Avatar)`margin-right: 8px;`;
+export const SearchResultImage = styled(Avatar)`
+  margin-right: 8px;
+`;
 
 export const SearchResultTextContainer = styled.div`
   display: flex;
@@ -393,7 +399,9 @@ export const PhotoWrapper = styled.span`
   display: inline-block;
 `;
 
-export const Photo = styled(Avatar)`border: 1px solid #fff;`;
+export const Photo = styled(Avatar)`
+  border: 1px solid #fff;
+`;
 
 export const Names = styled.h2`
   display: block;

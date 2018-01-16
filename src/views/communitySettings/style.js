@@ -32,7 +32,9 @@ export const MoreLink = styled(Link)`
   color: ${({ theme }) => theme.brand.alt};
 `;
 
-export const StyledCard = styled(Card)`padding: 16px 16px 16px 20px;`;
+export const StyledCard = styled(Card)`
+  padding: 16px 16px 16px 20px;
+`;
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -57,8 +59,7 @@ export const EmailInviteInput = styled.input`
   font-size: 14px;
   border-radius: 4px;
   border: 2px solid
-    ${props =>
-      props.error ? props.theme.warn.default : props.theme.bg.border};
+    ${props => (props.error ? props.theme.warn.default : props.theme.bg.border)};
   margin-bottom: 8px;
   margin-top: 8px;
   margin-left: 4px;
@@ -135,9 +136,13 @@ export const CustomMessageTextAreaStyles = {
   fontSize: '14px',
 };
 
-export const Title = styled(H1)`font-size: 20px;`;
+export const Title = styled(H1)`
+  font-size: 20px;
+`;
 
-export const Pitch = styled(FlexCol)`margin: 0 0 32px 0;`;
+export const Pitch = styled(FlexCol)`
+  margin: 0 0 32px 0;
+`;
 
 export const PitchItem = styled(FlexCol)`
   display: inline-block;
@@ -231,141 +236,6 @@ export const View = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
-`;
-
-export const SectionsContainer = styled.div`
-  display: flex;
-  flex: 1 0 auto;
-  flex-wrap: wrap;
-  padding: 8px;
-  justify-content: center;
-`;
-
-export const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 8px;
-  flex: 1 0 33%;
-  max-width: 600px;
-
-  @media (max-width: 768px) {
-    flex: 1 0 100%;
-    padding-top: 0;
-    padding-bottom: 0;
-
-    &:first-of-type {
-      padding-top: 8px;
-    }
-  }
-`;
-
-export const SectionCard = styled.div`
-  border-radius: 4px;
-  border: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
-  margin-bottom: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const SectionCardFooter = styled.div`
-  border-top: 1px solid ${props => props.theme.bg.border};
-  width: 100%;
-  padding: 16px 0 0;
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-`;
-
-export const SectionSubtitle = styled.h4`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.alt};
-`;
-
-export const SectionTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 700;
-  color: ${props => props.theme.text.default};
-  margin-bottom: 8px;
-`;
-
-export const Heading = styled.h1`
-  margin-left: 16px;
-  font-size: 32px;
-  color: ${props => props.theme.text.default};
-  font-weight: 600;
-  line-height: 1;
-`;
-
-export const Subheading = styled.h3`
-  margin-left: 16px;
-  font-size: 16px;
-  color: ${props => props.theme.text.alt};
-  font-weight: 400;
-  line-height: 1;
-`;
-
-export const StyledHeader = styled.div`
-  display: flex;
-  padding: 32px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
-  width: 100%;
-  align-items: center;
-  flex: none;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const StyledSubnav = styled.div`
-  display: flex;
-  padding: 0 32px;
-  border-bottom: 1px solid ${props => props.theme.bg.border};
-  background: ${props => props.theme.bg.default};
-  width: 100%;
-  flex: none;
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-    display: block;
-    justify-content: center;
-  }
-`;
-
-export const SubnavList = styled.ul`
-  list-style-type: none;
-  display: flex;
-  align-items: center;
-`;
-
-export const SubnavListItem = styled.li`
-  position: relative;
-  top: 1px;
-  border-bottom: 1px solid
-    ${props => (props.active ? props.theme.text.default : 'transparent')};
-  color: ${props =>
-    props.active ? props.theme.text.default : props.theme.text.alt};
-  font-weight: ${props => (props.active ? '500' : '400')};
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-
-  a {
-    padding: 16px;
-    display: inline-block;
-  }
-`;
-
-export const HeaderText = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 `;
 
 export const GrowthText = styled.h5`

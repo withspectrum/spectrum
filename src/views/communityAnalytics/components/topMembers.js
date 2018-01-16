@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -9,10 +10,10 @@ import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import { UserListItem } from '../../../components/listItems';
 import {
+  MessageIcon,
   SectionCard,
   SectionTitle,
-  MessageIcon,
-} from '../../communitySettings/style';
+} from '../../../components/settingsViews/style';
 import { getCommunityTopMembers } from '../queries';
 
 type User = {
@@ -20,6 +21,12 @@ type User = {
   profilePhoto: string,
   name: string,
   username: string,
+  contextPermissions: {
+    isOwner: boolean,
+    isMember: boolean,
+    isModerator: boolean,
+    reputation: number,
+  },
 };
 
 type Props = {
@@ -29,6 +36,8 @@ type Props = {
       topMembers: Array<User>,
     },
   },
+  dispatch: Function,
+  history: Object,
 };
 
 class ConversationGrowth extends React.Component<Props> {

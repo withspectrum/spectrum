@@ -1,13 +1,23 @@
+// @flow
 import * as React from 'react';
-import { SectionsContainer, Column } from '../style';
 import EditForm from './editForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import ChannelList from './channelList';
 import ImportSlack from './importSlack';
-import EmailInvites from './emailInvites';
+import { CommunityInvitationForm } from '../../../components/emailInvitationForm';
 import Invoices from './invoices';
 import CommunityMembers from './communityMembers';
+import {
+  SectionCard,
+  SectionTitle,
+  SectionsContainer,
+  Column,
+} from '../../../components/settingsViews/style';
 
+type Props = {
+  communitySlug: string,
+  community: Object,
+};
 class Overview extends React.Component<Props> {
   render() {
     const { community, communitySlug } = this.props;
@@ -21,7 +31,12 @@ class Overview extends React.Component<Props> {
         </Column>
         <Column>
           <ImportSlack community={community} id={community.id} />
-          <EmailInvites community={community} />
+
+          <SectionCard>
+            <SectionTitle>Invite by email</SectionTitle>
+            <CommunityInvitationForm id={community.id} />
+          </SectionCard>
+
           <ChannelList communitySlug={communitySlug} />
         </Column>
         <Column>

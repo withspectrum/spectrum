@@ -58,18 +58,6 @@ const Community = /* GraphQL */ `
 		communityId: ID!
 	}
 
-	input EmailInviteContactInput {
-		email: String!
-		firstName: String
-		lastName: String
-	}
-
-	input EmailInvitesInput {
-		id: ID!
-		contacts: [ EmailInviteContactInput ]
-		customMessage: String
-	}
-
 	input SendSlackInvitesInput {
 		id: ID!
 		customMessage: String

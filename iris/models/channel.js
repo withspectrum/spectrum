@@ -260,10 +260,10 @@ const createGeneralChannel = (
   );
 };
 
-const editChannel = ({
+const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
-}: EditChannelInput): DBChannel => {
-  return db
+}: EditChannelInput): Promise<DBChannel> => {
+  const channelRecord = await db
     .table('channels')
     .get(channelId)
     .run()
@@ -274,26 +274,25 @@ const editChannel = ({
         slug,
         isPrivate,
       });
-    })
-    .then(obj => {
-      return db
-        .table('channels')
-        .get(channelId)
-        .update({ ...obj }, { returnChanges: 'always' })
-        .run()
-        .then(result => {
-          // if an update happened
-          if (result.replaced === 1) {
-            return result.changes[0].new_val;
-          }
+    });
 
-          // an update was triggered from the client, but no data was changed
-          if (result.unchanged === 1) {
-            return result.changes[0].old_val;
-          }
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({ ...channelRecord }, { returnChanges: 'always' })
+    .run()
+    .then(result => {
+      // if an update happened
+      if (result.replaced === 1) {
+        return result.changes[0].new_val;
+      }
 
-          return null;
-        });
+      // an update was triggered from the client, but no data was changed
+      if (result.unchanged === 1) {
+        return result.changes[0].old_val;
+      }
+
+      return null;
     });
 };
 
@@ -330,7 +329,9 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
 };
 
 const getChannelMemberCount = (channelId: string): number => {
-  return db.table('channels').get(channelId)('members')
+  return db
+    .table('channels')
+    .get(channelId)('members')
     .count()
     .run();
 };

@@ -22,7 +22,13 @@ export const GET_THREAD_OPTIONS = {
 export const getThread = graphql(GET_THREAD_QUERY, GET_THREAD_OPTIONS);
 
 export const GET_THREAD_MESSAGES_QUERY = gql`
-  query getThreadMessages($id: ID!, $after: String, $first: Int, $before: String, $last: Int) {
+  query getThreadMessages(
+    $id: ID!
+    $after: String
+    $first: Int
+    $before: String
+    $last: Int
+  ) {
     thread(id: $id) {
       id
       content {
@@ -164,8 +170,15 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
         },
         updateQuery: (prev, { subscriptionData }) => {
           const newMessage = subscriptionData.data.messageAdded;
+          const existingMessage = prev.thread.messageConnection.edges.find(
+            ({ node }) => node.id === newMessage.id
+          );
+          // If the message is already in the state because the mutation already
+          // added it, replace it rather than appending it twice
+          if (existingMessage) return prev;
+
           // Add the new message to the data
-          return Object.assign({}, prev, {
+          return {
             ...prev,
             thread: {
               ...prev.thread,
@@ -174,11 +187,15 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
                 edges: [
                   ...prev.thread.messageConnection.edges,
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
-                  { node: newMessage, __typename: 'ThreadMessageEdge' },
+                  {
+                    node: newMessage,
+                    cursor: window.btoa(newMessage.id),
+                    __typename: 'ThreadMessageEdge',
+                  },
                 ],
               },
             },
-          });
+          };
         },
       });
     },
