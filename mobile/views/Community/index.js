@@ -1,37 +1,44 @@
 // @flow
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import compose from 'recompose/compose';
-import getThreadById from '../../gql/thread/queries/getThread';
+import getCommunityById from '../../gql/community/queries/getCommunity';
 import ViewNetworkHandler from '../../components/viewNetworkHandler';
 import withSafeView from '../../components/safeAreaView';
 
 import { Wrapper } from './style';
 
-type Props = {
-  isLoading: boolean,
-  hasError: boolean,
-  data: {
-    thread?: {
-      id: string,
-      creator: {
-        name: string,
+type CommunityType = {
+  id: string,
+  threadConnection: {
+    pageInfo: {
+      hasNextPage: boolean,
+    },
+    edges: {
+      node: {
+        id: string,
       },
     },
   },
 };
-class Thread extends React.Component<Props> {
+
+type Props = {
+  isLoading: boolean,
+  hasError: boolean,
+  data: {
+    community?: CommunityType,
+  },
+};
+
+class Community extends React.Component<Props> {
   render() {
     const { data, isLoading, hasError } = this.props;
-    console.log('THREAD PRPS', this.props);
 
-    if (data.thread) {
+    if (data.community) {
       return (
         <Wrapper>
-          <View testID="e2e-thread">
-            <Text>
-              Now viewing thread {data.thread.id} by {data.thread.creator.name}
-            </Text>
+          <View testID="e2e-commmunity">
+            <Text>Now viewing community {data.community.name}!</Text>
           </View>
         </Wrapper>
       );
@@ -40,7 +47,7 @@ class Thread extends React.Component<Props> {
     if (isLoading) {
       return (
         <Wrapper>
-          <View testID="e2e-thread">
+          <View testID="e2e-community">
             <Text>Loading...</Text>
           </View>
         </Wrapper>
@@ -50,7 +57,7 @@ class Thread extends React.Component<Props> {
     if (hasError) {
       return (
         <Wrapper>
-          <View testID="e2e-thread">
+          <View testID="e2e-community">
             <Text>Error!</Text>
           </View>
         </Wrapper>
@@ -61,4 +68,6 @@ class Thread extends React.Component<Props> {
   }
 }
 
-export default compose(withSafeView, getThreadById, ViewNetworkHandler)(Thread);
+export default compose(withSafeView, getCommunityById, ViewNetworkHandler)(
+  Community
+);

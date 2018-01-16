@@ -30,14 +30,24 @@ class Splash extends React.Component<Props> {
             onPress={() =>
               this.props.navigation.navigate(`Thread`, {
                 id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
-              })}
+              })
+            }
+          />
+          <Button
+            title={'community one'}
+            onPress={() =>
+              this.props.navigation.navigate(`Community`, {
+                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+              })
+            }
           />
           <Button
             title={'thread two'}
             onPress={() =>
               this.props.navigation.navigate(`Thread`, {
                 id: '11e736b3-5464-4bab-acfd-bbd42cddc1dd',
-              })}
+              })
+            }
           />
         </View>
       </Wrapper>
