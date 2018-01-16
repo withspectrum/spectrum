@@ -3,7 +3,10 @@
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
-import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
+import {
+  GET_THREAD_MESSAGES_QUERY,
+  GET_THREAD_QUERY,
+} from '../views/thread/queries';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
 const DELETE_MESSAGE_MUTATION = gql`
@@ -127,7 +130,7 @@ const SEND_MESSAGE_OPTIONS = {
             __typename: 'Message',
           },
         },
-        update: (store, { data: { addMessage }, data: object }) => {
+        update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             variables: {
@@ -141,12 +144,30 @@ const SEND_MESSAGE_OPTIONS = {
             node: addMessage,
           });
 
-          // Write our data back to the cache.
+          // Write the data with the new message to the store
           store.writeQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             data,
             variables: {
               id: ownProps.thread,
+            },
+          });
+
+          // Update thread.currentUserLastSeen optimistically
+          const threadData = store.readQuery({
+            query: GET_THREAD_QUERY,
+            variables: { id: ownProps.thread },
+          });
+
+          store.writeQuery({
+            query: GET_THREAD_QUERY,
+            variables: { id: ownProps.thread },
+            data: {
+              ...threadData,
+              thread: {
+                ...threadData.thread,
+                currentUserLastSeen: new Date(),
+              },
             },
           });
         },
