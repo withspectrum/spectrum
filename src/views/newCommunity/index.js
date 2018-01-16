@@ -1,19 +1,15 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { track } from '../../helpers/events';
-// $FlowFixMe
 import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { ImportSlackWithoutCard } from '../communitySettings/components/importSlack';
-import { EmailInvitesWithoutCard } from '../communitySettings/components/emailInvites';
+import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Titlebar from '../titlebar';
@@ -30,15 +26,21 @@ import {
   ContentContainer,
 } from './style';
 
-class NewCommunity extends Component {
-  state: {
-    activeStep: number,
-    isLoading: boolean,
-    community: any,
-    existingId: string,
-    hasInvitedPeople: boolean,
-  };
+type State = {
+  activeStep: number,
+  isLoading: boolean,
+  community: any,
+  existingId: ?string,
+  hasInvitedPeople: boolean,
+};
 
+type Props = {
+  currentUser: ?Object,
+  client: Object,
+  history: Object,
+};
+
+class NewCommunity extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -202,10 +204,7 @@ class NewCommunity extends Component {
                       hasInvitedPeople={this.hasInvitedPeople}
                     />
                     <Divider />
-                    <EmailInvitesWithoutCard
-                      community={community}
-                      hasInvitedPeople={this.hasInvitedPeople}
-                    />
+                    <CommunityInvitationForm id={community.id} />
                   </ContentContainer>
                 )}
 
@@ -242,4 +241,8 @@ class NewCommunity extends Component {
   }
 }
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default compose(withApollo, connect(mapStateToProps))(NewCommunity);
+export default compose(
+  withApollo,
+  // $FlowIssue
+  connect(mapStateToProps)
+)(NewCommunity);

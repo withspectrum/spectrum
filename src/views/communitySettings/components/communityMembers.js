@@ -6,7 +6,11 @@ import ViewError from '../../../components/viewError';
 import { getCommunityMembersQuery } from '../../../api/community';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
 import { ListContainer } from '../../../components/listItems/style';
-import { SectionCard, SectionCardFooter, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionCardFooter,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 
 type Props = {};
 class CommunityMembers extends React.Component<Props> {

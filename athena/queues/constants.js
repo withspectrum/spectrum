@@ -24,6 +24,9 @@ export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
 export const PROCESS_ADMIN_TOXIC_MESSAGE = 'process admin toxic message';
 export const PROCESS_ADMIN_TOXIC_THREAD = 'process admin toxic thread';
+export const PRIVATE_CHANNEL_REQUEST_SENT = 'private channel request sent';
+export const PRIVATE_CHANNEL_REQUEST_APPROVED =
+  'private channel request approved';
 
 // invoices and recurring payments
 export const PRO_INVOICE_PAID_NOTIFICATION = 'pro invoice paid notification';

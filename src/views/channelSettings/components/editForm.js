@@ -1,42 +1,62 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import Link from 'src/components/link';
-import { track } from '../../helpers/events';
-import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
-import { openModal } from '../../actions/modals';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { Notice } from '../listItems/style';
-import { Button, IconButton } from '../buttons';
-import { NullCard } from '../upsell';
-import { Input, UnderlineInput, TextArea } from '../formElements';
-import Icon from '../../components/icons';
+import { track } from '../../../helpers/events';
 import {
-  StyledCard,
+  editChannelMutation,
+  deleteChannelMutation,
+} from '../../../api/channel';
+import { openModal } from '../../../actions/modals';
+import { addToastWithTimeout } from '../../../actions/toasts';
+import { Notice } from '../../../components/listItems/style';
+import { Button, IconButton } from '../../../components/buttons';
+import { NullCard } from '../../../components/upsell';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+} from '../../../components/formElements';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
+import {
   Form,
-  FormTitle,
   TertiaryActionContainer,
   Description,
   Actions,
   GeneralNotice,
   Location,
-} from './style';
+} from '../../../components/editForm/style';
 
-class ChannelWithData extends Component {
-  state: {
+type State = {
+  name: string,
+  slug: string,
+  description: string,
+  isPrivate: boolean,
+  channelId: string,
+  channelData: Object,
+  isLoading: boolean,
+};
+
+type Props = {
+  editChannel: Function,
+  dispatch: Function,
+  channel: {
     name: string,
     slug: string,
     description: string,
     isPrivate: boolean,
-    channelId: string,
-    channelData: Object,
-    isLoading: boolean,
-  };
+    id: string,
+    community: {
+      slug: string,
+    },
+  },
+};
+class ChannelWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -90,7 +110,7 @@ class ChannelWithData extends Component {
 
     // if privacy changed in this edit
     if (this.props.channel.isPrivate !== isPrivate) {
-      track('channel', `privacy changed to ${isPrivate}`, null);
+      track('channel', `privacy changed to ${isPrivate.toString()}`, null);
     }
 
     this.props
@@ -174,14 +194,13 @@ class ChannelWithData extends Component {
       );
     } else {
       return (
-        <StyledCard>
+        <SectionCard>
           <Location>
-            <Icon glyph="view-back" size={16} />
             <Link to={`/${channel.community.slug}/${channel.slug}`}>
-              Return to Channel
+              View Channel
             </Link>
           </Location>
-          <FormTitle>Channel Settings</FormTitle>
+          <SectionTitle>Channel Settings</SectionTitle>
           <Form onSubmit={this.save}>
             <Input defaultValue={name} id="name" onChange={this.handleChange}>
               Name
@@ -258,7 +277,7 @@ class ChannelWithData extends Component {
               </GeneralNotice>
             )}
           </Form>
-        </StyledCard>
+        </SectionCard>
       );
     }
   }

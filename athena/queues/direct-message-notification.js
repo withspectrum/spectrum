@@ -149,6 +149,7 @@ export default async (job: JobData) => {
           .slice()
           .filter(entity => {
             const parsed = JSON.parse(entity.payload);
+            // $FlowFixMe
             return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
           });
 

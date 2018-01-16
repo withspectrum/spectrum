@@ -13,12 +13,12 @@ import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import { getCommunityChannels } from '../queries';
+import { ListContainer } from '../style';
 import {
-  ListContainer,
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../style';
+} from '../../../components/settingsViews/style';
 
 type Props = {
   data: {

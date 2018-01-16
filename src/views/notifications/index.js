@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
@@ -16,6 +15,8 @@ import { CommunityInviteNotification } from './components/communityInviteNotific
 import { MentionMessageNotification } from './components/mentionMessageNotification';
 import { MentionThreadNotification } from './components/mentionThreadNotification';
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
+import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
+import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -44,18 +45,34 @@ import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 
-class NotificationsPure extends Component {
-  state: {
-    showWebPushPrompt: boolean,
-    webPushPromptLoading: boolean,
-  };
+type Props = {
+  markAllNotificationsSeen: Function,
+  subscribeToWebPush: Function,
+  dispatch: Function,
+  currentUser: Object,
+  data: {
+    networkStatus: number,
+    fetchMore: Function,
+    hasNextPage: boolean,
+    notifications: {
+      edges: Array<Object>,
+    },
+  },
+};
+type State = {
+  showWebPushPrompt: boolean,
+  webPushPromptLoading: boolean,
+  scrollElement: any,
+};
 
+class NotificationsPure extends React.Component<Props, State> {
   constructor() {
     super();
 
     this.state = {
       showWebPushPrompt: false,
       webPushPromptLoading: false,
+      scrollElement: null,
     };
   }
 
@@ -282,6 +299,24 @@ class NotificationsPure extends Component {
                       />
                     );
                   }
+                  case 'PRIVATE_CHANNEL_REQUEST_SENT': {
+                    return (
+                      <PrivateChannelRequestSent
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                    return (
+                      <PrivateChannelRequestApproved
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
                   default: {
                     return null;
                   }
@@ -304,6 +339,7 @@ export default compose(
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,
+  // $FlowIssue
   connect(mapStateToProps),
   withInfiniteScroll
 )(NotificationsPure);

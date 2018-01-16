@@ -1,14 +1,16 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import Icon from '../../../components/icons';
+import { addToastWithTimeout } from '../../actions/toasts';
+import Icon from '../icons';
 import isEmail from 'validator/lib/isEmail';
-import { sendEmailInvitationsMutation } from '../../../api/community';
-import { Button } from '../../../components/buttons';
-import { Error } from '../../../components/formElements';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import { sendCommunityEmailInvitationsMutation } from '../../api/community';
+import { sendChannelEmailInvitationMutation } from '../../api/channel';
+import { Button } from '../buttons';
+import { Error } from '../formElements';
+import { SectionCardFooter } from '../settingsViews/style';
 import {
   EmailInviteForm,
   EmailInviteInput,
@@ -16,16 +18,12 @@ import {
   RemoveRow,
   CustomMessageToggle,
   CustomMessageTextAreaStyles,
-  SectionCard,
-  SectionTitle,
-  SectionCardFooter,
-} from '../style';
+} from './style';
 
 type Props = {
-  community: Object,
+  id: string,
   dispatch: Function,
   currentUser: Object,
-  hasInvitedPeople?: Function,
   sendEmailInvites: Function,
 };
 
@@ -44,11 +42,9 @@ type State = {
   customMessageError: boolean,
 };
 
-class EmailInvites extends React.Component<Props, State> {
+class EmailInvitationForm extends React.Component<Props, State> {
   constructor() {
     super();
-
-    // seed the default state with 3 empty email contacts
     this.state = {
       isLoading: false,
       contacts: [
@@ -77,18 +73,7 @@ class EmailInvites extends React.Component<Props, State> {
     };
   }
 
-  uniqueEmails = array => {
-    let unique = {};
-    let distinct = [];
-    for (let i in array) {
-      if (typeof unique[array[i].email] === 'undefined') {
-        distinct.push(array[i]);
-      }
-      unique[array[i].email] = 0;
-    }
-
-    return distinct;
-  };
+  getUniqueEmails = array => array.filter((x, i, a) => a.indexOf(x) === i);
 
   sendInvitations = () => {
     const {
@@ -97,17 +82,14 @@ class EmailInvites extends React.Component<Props, State> {
       customMessageError,
       customMessageString,
     } = this.state;
-    const { community, dispatch, currentUser, hasInvitedPeople } = this.props;
-    hasInvitedPeople && hasInvitedPeople();
+    const { dispatch, currentUser, sendEmailInvites } = this.props;
 
-    this.setState({
-      isLoading: true,
-    });
+    this.setState({ isLoading: true });
 
     let validContacts = contacts
       .filter(contact => contact.error === false)
-      .filter(contact => contact.email.length > 0)
       .filter(contact => contact.email !== currentUser.email)
+      .filter(contact => contact.email.length > 0)
       .filter(contact => isEmail(contact.email))
       .map(({ error, ...contact }) => {
         return { ...contact };
@@ -117,7 +99,7 @@ class EmailInvites extends React.Component<Props, State> {
       hasCustomMessage && !customMessageError ? customMessageString : null;
 
     // make sure to uniqify the emails so you can't enter on email multiple times
-    validContacts = this.uniqueEmails(validContacts);
+    validContacts = this.getUniqueEmails(validContacts);
 
     if (validContacts.length === 0) {
       this.setState({
@@ -129,14 +111,14 @@ class EmailInvites extends React.Component<Props, State> {
       );
     }
 
-    this.props
-      .sendEmailInvites({
-        id: community.id,
-        contacts: validContacts,
-        customMessage,
-      })
+    sendEmailInvites({
+      id: this.props.id,
+      contacts: validContacts,
+      customMessage,
+    })
       .then(({ data: { sendEmailInvites } }) => {
         this.setState({
+          isLoading: false,
           contacts: [
             {
               email: '',
@@ -157,9 +139,11 @@ class EmailInvites extends React.Component<Props, State> {
               error: false,
             },
           ],
-          isLoading: false,
           hasCustomMessage: false,
+          customMessageString: '',
+          customMessageError: false,
         });
+
         dispatch(
           addToastWithTimeout(
             'success',
@@ -193,6 +177,7 @@ class EmailInvites extends React.Component<Props, State> {
       email: '',
       firstName: '',
       lastName: '',
+      error: false,
     });
 
     this.setState({
@@ -201,9 +186,9 @@ class EmailInvites extends React.Component<Props, State> {
     });
   };
 
-  removeRow = i => {
+  removeRow = index => {
     const { contacts } = this.state;
-    contacts.splice(i, 1);
+    contacts.splice(index, 1);
     this.setState({
       ...this.state,
       contacts,
@@ -257,7 +242,6 @@ class EmailInvites extends React.Component<Props, State> {
 
     return (
       <div>
-        <SectionTitle>Invite members by email</SectionTitle>
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -274,6 +258,7 @@ class EmailInvites extends React.Component<Props, State> {
                 placeholder="First name (optional)"
                 value={contact.firstName}
                 onChange={e => this.handleChange(e, i, 'firstName')}
+                hideOnMobile
               />
               <RemoveRow onClick={() => this.removeRow(i)}>
                 <Icon glyph="view-close" size="16" />
@@ -281,6 +266,7 @@ class EmailInvites extends React.Component<Props, State> {
             </EmailInviteForm>
           );
         })}
+
         <AddRow onClick={this.addRow}>+ Add another</AddRow>
 
         <CustomMessageToggle onClick={this.toggleCustomMessage}>
@@ -326,26 +312,16 @@ class EmailInvites extends React.Component<Props, State> {
   }
 }
 
-const EmailInvitesCard = props => (
-  <SectionCard>
-    <EmailInvites {...props} />
-  </SectionCard>
-);
+const map = state => ({ currentUser: state.users.currentUser });
 
-const EmailInvitesNoCard = props => <EmailInvites {...props} />;
-
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
-export const EmailInvitesWithoutCard = compose(
-  sendEmailInvitationsMutation,
+export const CommunityInvitationForm = compose(
+  // $FlowIssue
   connect(map),
-  viewNetworkHandler
-)(EmailInvitesNoCard);
-export const EmailInvitesWithCard = compose(
-  sendEmailInvitationsMutation,
+  sendCommunityEmailInvitationsMutation
+)(EmailInvitationForm);
+
+export const ChannelInvitationForm = compose(
+  // $FlowIssue
   connect(map),
-  viewNetworkHandler
-)(EmailInvitesCard);
-export default EmailInvitesWithCard;
+  sendChannelEmailInvitationMutation
+)(EmailInvitationForm);

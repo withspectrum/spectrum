@@ -36,3 +36,15 @@ export const getUserPermissionsInChannel = (
       return groups[0].reduction[0]; // returns the usersChannel record
     });
 };
+
+// get the email address and id of all the channel owners
+export const getOwnersInChannel = (
+  channelId: string
+): Promise<Array<string>> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isOwner: true })
+    .map(user => user('userId'))
+    .run();
+};

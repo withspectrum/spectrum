@@ -8,7 +8,10 @@ import { IconButton } from '../../../components/buttons';
 import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
-import { SectionCard, SectionTitle } from '../style';
+import {
+  SectionCard,
+  SectionTitle,
+} from '../../../components/settingsViews/style';
 import { ListContainer } from '../../../components/listItems/style';
 
 const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
