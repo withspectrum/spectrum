@@ -32,8 +32,12 @@ export default (job: SendEmail) => {
   const { recipient, channel, community } = job.data;
   debug(`\nsending notification to user: ${recipient.email}`);
 
-  const subject = `Your request to join the ${channel.name} channel in the ${community.name} community was approved!`;
-  const preheader = `You can now join the conversations happening in the ${channel.name} channel!`;
+  const subject = `Your request to join the ${channel.name} channel in the ${
+    community.name
+  } community was approved!`;
+  const preheader = `You can now join the conversations happening in the ${
+    channel.name
+  } channel!`;
 
   try {
     return sendEmail({

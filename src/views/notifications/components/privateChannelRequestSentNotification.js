@@ -43,8 +43,9 @@ export class PrivateChannelRequestSent extends React.Component<Props> {
     return (
       <NotificationCard>
         <CardLink
-          to={`/${notification.context.payload.slug}/${notification.entities[0]
-            .payload.slug}/settings`}
+          to={`/${notification.context.payload.slug}/${
+            notification.entities[0].payload.slug
+          }/settings`}
         />
         <CardContent>
           <JoinContext>
@@ -56,9 +57,7 @@ export class PrivateChannelRequestSent extends React.Component<Props> {
           <TextContent pointer={false}>
             {' '}
             {actors.asString} {event} the{' '}
-            <Link to={`/${context.slug}/${channel.slug}`}>
-              {channel.name}
-            </Link>{' '}
+            <Link to={`/${context.slug}/${channel.slug}`}>{channel.name}</Link>{' '}
             channel in {context.asString} {date}{' '}
           </TextContent>
         </Content>
@@ -95,8 +94,9 @@ class MiniPrivateChannelRequestSentWithMutation extends React.Component<Props> {
         onClick={this.markAsSeen}
       >
         <CardLink
-          to={`/${notification.context.payload.slug}/${notification.entities[0]
-            .payload.slug}/settings`}
+          to={`/${notification.context.payload.slug}/${
+            notification.entities[0].payload.slug
+          }/settings`}
         />
         <CardContent>
           <JoinContext>
@@ -108,9 +108,7 @@ class MiniPrivateChannelRequestSentWithMutation extends React.Component<Props> {
           <TextContent pointer={false}>
             {' '}
             {actors.asString} {event} the{' '}
-            <Link to={`/${context.slug}/${channel.slug}`}>
-              {channel.name}
-            </Link>{' '}
+            <Link to={`/${context.slug}/${channel.slug}`}>{channel.name}</Link>{' '}
             channel in {context.asString} {date}{' '}
           </TextContent>
         </Content>

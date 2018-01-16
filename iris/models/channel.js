@@ -113,7 +113,6 @@ const getChannelBySlug = (
       if (result && result[0]) {
         return result[0].left;
       }
-
       return null;
     });
 };
@@ -125,14 +124,14 @@ const getChannelById = (id: string) => {
     .run();
 };
 
-type GetChannelByIdArgs = {
+type GetChannelByIdArgs = {|
   id: string,
-};
+|};
 
-type GetChannelBySlugArgs = {
+type GetChannelBySlugArgs = {|
   slug: string,
   communitySlug: string,
-};
+|};
 
 export type GetChannelArgs = GetChannelByIdArgs | GetChannelBySlugArgs;
 
@@ -189,7 +188,7 @@ const getChannelsMemberCounts = (
     .run();
 };
 
-export type CreateChannelArguments = {
+export type CreateChannelInput = {
   input: {
     communityId: string,
     name: string,
@@ -200,7 +199,7 @@ export type CreateChannelArguments = {
   },
 };
 
-export type EditChannelArguments = {
+export type EditChannelInput = {
   input: {
     channelId: string,
     name: string,
@@ -213,7 +212,7 @@ export type EditChannelArguments = {
 const createChannel = (
   {
     input: { communityId, name, slug, description, isPrivate, isDefault },
-  }: CreateChannelArguments,
+  }: CreateChannelInput,
   userId: string
 ): Promise<DBChannel> => {
   return db
@@ -263,7 +262,7 @@ const createGeneralChannel = (
 
 const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
-}: EditChannelArguments): Promise<DBChannel> => {
+}: EditChannelInput): Promise<DBChannel> => {
   const channelRecord = await db
     .table('channels')
     .get(channelId)
@@ -330,7 +329,9 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
 };
 
 const getChannelMemberCount = (channelId: string): number => {
-  return db.table('channels').get(channelId)('members')
+  return db
+    .table('channels')
+    .get(channelId)('members')
     .count()
     .run();
 };

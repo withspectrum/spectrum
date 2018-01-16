@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create a community 1`] = `
+Object {
+  "data": Object {
+    "createCommunity": Object {
+      "description": "test description",
+      "name": "test community",
+      "slug": "test-community",
+    },
+  },
+}
+`;
+
+exports[`should prevent a community being created without a slug 1`] = `
+Object {
+  "data": Object {
+    "createCommunity": null,
+  },
+  "errors": Array [
+    [GraphQLError: Communities must have a valid url so people can find it!],
+  ],
+}
+`;
+
+exports[`should prevent blacklisted community slug 1`] = `
+Object {
+  "data": Object {
+    "createCommunity": null,
+  },
+  "errors": Array [
+    [GraphQLError: This url is already taken - feel free to change it if
+      you're set on the name test community!],
+  ],
+}
+`;
+
+exports[`should prevent signed out users from creating a community 1`] = `
+Object {
+  "data": Object {
+    "createCommunity": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to create a new community.],
+  ],
+}
+`;

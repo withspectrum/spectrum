@@ -2,8 +2,6 @@
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getMembersInDirectMessageThread } from '../models/usersDirectMessageThreads';
 import { getChannels } from '../models/channel';
-import type { DBThread } from '../models/thread';
-import type { GraphQLContext } from '../';
 
 // Check that a user can view a channel
 export const userCanViewChannel = async (channelId: string, userId: string) => {
