@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a communities threads 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Yet another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "The first thread! 🎉",
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
