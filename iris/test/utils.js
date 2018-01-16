@@ -6,7 +6,7 @@ import schema from '../schema';
 
 type Options = {
   context?: {
-    user?: Object,
+    user?: ?Object,
   },
   variables?: ?Object,
 };
