@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
+import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
@@ -9,6 +10,7 @@ import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullState } from '../../../components/upsell';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import { getThreadMessages } from '../queries';
@@ -106,6 +108,7 @@ class MessagesWithData extends Component {
       loadPreviousPage,
       loadNextPage,
       scrollContainer,
+      location,
     } = this.props;
 
     const dataExists =
@@ -117,9 +120,8 @@ class MessagesWithData extends Component {
       dataExists && data.thread.messageConnection.edges.length > 0;
 
     if (messagesExist) {
-      const unsortedMessages = data.thread.messageConnection.edges.map(
-        message => message.node
-      );
+      const { edges, pageInfo } = data.thread.messageConnection;
+      const unsortedMessages = edges.map(message => message.node);
 
       const unique = array => {
         const processed = [];
@@ -141,16 +143,36 @@ class MessagesWithData extends Component {
 
       return (
         <ChatWrapper>
-          {data.thread.messageConnection.pageInfo.hasPreviousPage && (
-            <NextPageButton
-              isFetchingMore={isFetchingMore}
-              fetchMore={loadPreviousPage}
-            />
+          {pageInfo.hasPreviousPage && (
+            <div>
+              <NextPageButton
+                isFetchingMore={isFetchingMore}
+                fetchMore={loadPreviousPage}
+              />
+              <Head>
+                <link
+                  rel="prev"
+                  href={`${location.pathname}?msgsbefore=${edges[0].cursor}`}
+                />
+                <link rel="canonical" href={`/thread/${data.thread.id}`} />
+              </Head>
+            </div>
+          )}
+          {pageInfo.hasNextPage && (
+            <Head>
+              <link
+                rel="next"
+                href={`${location.pathname}?msgsafter=${
+                  edges[edges.length - 1].cursor
+                }`}
+              />
+              <link rel="canonical" href={`/thread/${data.thread.id}`} />
+            </Head>
           )}
           <InfiniteList
             pageStart={0}
             loadMore={loadNextPage}
-            hasMore={data.thread.messageConnection.pageInfo.hasNextPage}
+            hasMore={pageInfo.hasNextPage}
             loader={<LoadingChat size="small" />}
             useWindow={false}
             initialLoad={false}
@@ -202,6 +224,7 @@ class MessagesWithData extends Component {
 
 const Messages = compose(
   toggleReactionMutation,
+  withRouter,
   getThreadMessages,
   viewNetworkHandler
 )(MessagesWithData);
