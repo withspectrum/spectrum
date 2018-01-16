@@ -1,13 +1,9 @@
 // @flow
 import * as React from 'react';
 import { StackNavigator } from 'react-navigation';
-import Thread from './views/Thread';
-import Splash from './views/Splash';
+import Thread from '../Thread';
+import Splash from '../Splash';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
-
-const createComponent = (component, props) => {
-  return () => React.createElement(component, props);
-};
 
 const Routes = StackNavigator(
   {
