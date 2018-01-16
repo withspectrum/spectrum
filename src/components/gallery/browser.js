@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { closeGallery } from '../../actions/gallery';
 import {
@@ -12,17 +12,37 @@ import {
   GalleryWrapper,
 } from './style';
 
-class Browser extends Component {
-  state: {
-    images: Array<Object>,
-    activeMessageId: string,
-    index: number,
-  };
+type State = {
+  images: Array<Object>,
+  activeMessageId: string,
+  index: ?number,
+};
 
+type MessageType = {
+  id: string,
+  content: {
+    body: string,
+  },
+};
+
+type Props = {
+  dispatch: Function,
+  data: {
+    messages?: Array<?MessageType>,
+  },
+};
+
+class Browser extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     // if there are no messages found
-    if (!props.data.messages || props.data.messages.length === 0) return;
+    if (!props.data.messages || props.data.messages.length === 0) {
+      this.state = {
+        images: [],
+        activeMessageId: props.activeMessageId,
+        index: null,
+      };
+    }
 
     let index;
     props.data.messages.map((message, i) => {
@@ -42,10 +62,12 @@ class Browser extends Component {
   }
 
   componentDidMount() {
+    // $FlowFixMe
     document.addEventListener('keydown', this.handleKeyPress, false);
   }
 
   componentWillUnmount() {
+    // $FlowFixMe
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
@@ -75,12 +97,16 @@ class Browser extends Component {
 
   previousImage = () => {
     let { index, images } = this.state;
+
+    if (index === null) return;
+
     if (index === 0) {
       index = images.length - 1;
       this.setState({
         index,
       });
     } else {
+      // $FlowFixMe
       index -= 1;
 
       this.setState({
@@ -121,7 +147,7 @@ class Browser extends Component {
     // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
     // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
     let filteredIndex;
-    if (!index) {
+    if (index === null) {
       filteredIndex = messages.length - 1;
     } else {
       filteredIndex = index;
@@ -133,8 +159,10 @@ class Browser extends Component {
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={`${images[filteredIndex].content
-            .body}?max-w=${window.innerWidth}`}
+          // $FlowFixMe
+          src={`${images[filteredIndex].content.body}?max-w=${
+            window.innerWidth
+          }`}
         />
         <Minigallery>
           <MiniContainer>
