@@ -22,7 +22,9 @@ type JobData = {
 export default async (job: JobData) => {
   const { userId, channel } = job.data;
   debug(
-    `new request to join a private channel from user ${userId} in channel ${channel.id}`
+    `new request to join a private channel from user ${userId} in channel ${
+      channel.id
+    }`
   );
 
   const [actor, context, entity] = await Promise.all([

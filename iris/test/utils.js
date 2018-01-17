@@ -6,10 +6,17 @@ import schema from '../schema';
 
 type Options = {
   context?: {
-    user?: Object,
+    user?: ?Object,
   },
+  variables?: ?Object,
 };
 
 // Nice little helper function for tests
-export const request = (query: mixed, { context }: Options = {}) =>
-  graphql(schema, query, undefined, { loaders: createLoaders(), ...context });
+export const request = (query: mixed, { context, variables }: Options = {}) =>
+  graphql(
+    schema,
+    query,
+    undefined,
+    { loaders: createLoaders(), ...context },
+    variables
+  );

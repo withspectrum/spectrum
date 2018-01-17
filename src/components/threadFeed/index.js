@@ -32,7 +32,9 @@ const UpsellState = ({ community }) => {
       bg="onboarding"
       repeat
       heading={'Every community has to start somewhere...'}
-      copy={`${community.name} just needs more friends - invite people to your community to get a conversation started!`}
+      copy={`${
+        community.name
+      } just needs more friends - invite people to your community to get a conversation started!`}
     >
       <Share community={community} onboarding={false} />
       <Divider />

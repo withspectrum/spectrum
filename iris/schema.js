@@ -28,6 +28,7 @@ const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
 const Invoice = require('./types/Invoice');
+const Search = require('./types/Search');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -38,6 +39,7 @@ const reactionQueries = require('./queries/reaction');
 const directMessageThreadQueries = require('./queries/directMessageThread');
 const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
+const searchQueries = require('./queries/search');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
@@ -92,6 +94,7 @@ const resolvers = merge(
   reactionQueries,
   notificationQueries,
   metaQueries,
+  searchQueries,
   // mutations
   messageMutations,
   threadMutations,
@@ -131,6 +134,7 @@ const schema = makeExecutableSchema({
     Notification,
     Meta,
     Invoice,
+    Search,
   ],
   resolvers,
 });

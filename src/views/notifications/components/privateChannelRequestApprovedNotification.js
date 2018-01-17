@@ -43,8 +43,9 @@ export class PrivateChannelRequestApproved extends React.Component<Props> {
     return (
       <NotificationCard>
         <CardLink
-          to={`/${notification.context.payload.slug}/${notification.entities[0]
-            .payload.slug}`}
+          to={`/${notification.context.payload.slug}/${
+            notification.entities[0].payload.slug
+          }`}
         />
         <CardContent>
           <JoinContext>
@@ -56,9 +57,7 @@ export class PrivateChannelRequestApproved extends React.Component<Props> {
           <TextContent pointer={false}>
             {' '}
             {actors.asString} {event} the{' '}
-            <Link to={`/${context.slug}/${channel.slug}`}>
-              {channel.name}
-            </Link>{' '}
+            <Link to={`/${context.slug}/${channel.slug}`}>{channel.name}</Link>{' '}
             channel in {context.asString} {date}{' '}
           </TextContent>
         </Content>
@@ -97,8 +96,9 @@ class MiniPrivateChannelRequestApprovedWithMutation extends React.Component<
         onClick={this.markAsSeen}
       >
         <CardLink
-          to={`/${notification.context.payload.slug}/${notification.entities[0]
-            .payload.slug}`}
+          to={`/${notification.context.payload.slug}/${
+            notification.entities[0].payload.slug
+          }`}
         />
         <CardContent>
           <JoinContext>
@@ -110,9 +110,7 @@ class MiniPrivateChannelRequestApprovedWithMutation extends React.Component<
           <TextContent pointer={false}>
             {' '}
             {actors.asString} {event} the{' '}
-            <Link to={`/${context.slug}/${channel.slug}`}>
-              {channel.name}
-            </Link>{' '}
+            <Link to={`/${context.slug}/${channel.slug}`}>{channel.name}</Link>{' '}
             channel in {context.asString} {date}{' '}
           </TextContent>
         </Content>

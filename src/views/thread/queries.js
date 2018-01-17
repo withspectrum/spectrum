@@ -1,4 +1,5 @@
 import { graphql, gql } from 'react-apollo';
+import queryString from 'query-string';
 import { subscribeToNewMessages } from '../../api/subscriptions';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
 import { threadMessagesFragment } from '../../api/fragments/thread/threadMessages';
@@ -42,10 +43,21 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
 `;
 export const GET_THREAD_MESSAGES_OPTIONS = {
   options: props => {
+    let msgsafter, msgsbefore;
+    if (props.location && props.location.search) {
+      try {
+        const params = queryString.parse(props.location.search);
+        msgsafter = params.msgsafter;
+        msgsbefore = params.msgsbefore;
+      } catch (err) {
+        // Ignore errors in query string parsing, who cares
+        console.log(err);
+      }
+    }
     let variables = {
       id: props.id,
-      after: null,
-      before: null,
+      after: msgsafter ? msgsafter : null,
+      before: msgsbefore && !msgsafter ? msgsbefore : null,
       last: null,
       first: null,
     };

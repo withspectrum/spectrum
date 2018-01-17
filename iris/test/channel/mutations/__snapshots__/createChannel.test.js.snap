@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create a channel if user is owner 1`] = `
+Object {
+  "data": Object {
+    "createChannel": Object {
+      "description": "test description",
+      "isPrivate": false,
+      "name": "test channel",
+      "slug": "test-channel",
+    },
+  },
+}
+`;
+
+exports[`should prevent duplicate channel slugs in the same community 1`] = `
+Object {
+  "data": Object {
+    "createChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: A channel with this slug already exists.],
+  ],
+}
+`;
+
+exports[`should prevent moderators from creating a channel 1`] = `
+Object {
+  "data": Object {
+    "createChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to create a channel in this community.],
+  ],
+}
+`;
+
+exports[`should prevent non owners from creating a channel 1`] = `
+Object {
+  "data": Object {
+    "createChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to create a channel in this community.],
+  ],
+}
+`;
+
+exports[`should prevent signed out users from creating a channel 1`] = `
+Object {
+  "data": Object {
+    "createChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to create a new community.],
+  ],
+}
+`;

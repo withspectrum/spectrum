@@ -39,6 +39,8 @@ export const Text = styled.div`
   justify-self: center;
   align-self: center;
   grid-area: center;
+  max-width: calc(100vw - 96px);
+  overflow: hidden;
 `;
 
 export const Title = styled.h3`

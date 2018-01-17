@@ -149,7 +149,9 @@ class UpsellUpgradeCommunityPrivateChannelPure extends Component {
 
     const str = community.communityPermissions.isOwner
       ? `Private channels are only available to communities on the Standard plan. Upgrade your community to re-activate this channel.`
-      : `Private channels are only available to communities on the Standard plan. The owner of the ${community.name} community can upgrade it from the community settings page.`;
+      : `Private channels are only available to communities on the Standard plan. The owner of the ${
+          community.name
+        } community can upgrade it from the community settings page.`;
 
     return (
       <NullCard heading="This channel has been closed." copy={str}>
