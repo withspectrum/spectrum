@@ -56,7 +56,9 @@ export const getUnreadDirectMessageNotifications = (
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 
 const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
@@ -77,6 +79,9 @@ export const listenToNewNotifications = (cb: Function): Function => {
       if (err) throw err;
       cursor.each((err, data) => {
         if (err) throw err;
+        // For some reason this can be called without data, in which case
+        // we don't want to call the callback with it obviously
+        if (!data) return;
         // Call the passed callback with the notification
         cb(data);
       });
