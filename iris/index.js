@@ -10,6 +10,7 @@ import { createServer } from 'http';
 import express from 'express';
 import Raven from 'shared/raven';
 import { init as initPassport } from './authentication.js';
+import engine from './routes/middlewares/engine';
 const PORT = 3001;
 import type { DBUser } from 'shared/types';
 
@@ -50,9 +51,13 @@ const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
 // Start webserver
 server.listen(PORT);
-
-// Start database listeners
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
+
+if (process.env.NODE_ENV === 'production') {
+  // Start Apollo Engine
+  console.log('Apollo Engine starting...');
+  engine.start();
+}
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
