@@ -1,14 +1,12 @@
+// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
-import { getChannelThreadConnection } from '../../views/channel/queries';
+import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserProfile } from '../../api/user';
 import { searchThreadsQuery } from '../../api/thread';
 import Titlebar from '../../views/titlebar';
