@@ -56,6 +56,8 @@ class ThreadItem extends React.Component<Props> {
   render() {
     const { thread } = this.props;
 
+    if (!thread.id) return null;
+
     return (
       <InboxThreadItem>
         <TouchableHighlight

@@ -18,7 +18,7 @@ class Splash extends React.Component<Props> {
             title={'thread'}
             onPress={() =>
               this.props.navigation.navigate(`Thread`, {
-                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+                id: '315a4943-8357-46a9-a369-15906338e02b',
               })
             }
           />
@@ -26,7 +26,7 @@ class Splash extends React.Component<Props> {
             title={'community'}
             onPress={() =>
               this.props.navigation.navigate(`Community`, {
-                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+                id: '-Kh6RfPYjmSaIWbkck8i',
               })
             }
           />
@@ -34,7 +34,7 @@ class Splash extends React.Component<Props> {
             title={'channel'}
             onPress={() =>
               this.props.navigation.navigate(`Channel`, {
-                id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+                id: '-Kenm0MXIRCq8GkwiJKb',
               })
             }
           />

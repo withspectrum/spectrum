@@ -173,6 +173,8 @@ class ThreadFeed extends React.Component<Props, State> {
         </View>
       );
     }
+
+    return null;
   }
 }
 

@@ -1,5 +1,5 @@
 // @flow
-import { addActivityIndicator } from 'src/actions/newActivityIndicator';
+import { addActivityIndicator } from '../../../src/actions/newActivityIndicator';
 
 // used to update feed caches with new threads in real time
 // takes an array of existing threads in the cache and figures out how to insert the newly updated thread

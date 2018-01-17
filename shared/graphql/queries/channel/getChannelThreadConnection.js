@@ -1,9 +1,9 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
-import channelThreadConnectionFragment from 'shared/graphql/fragments/channel/channelThreadConnection';
-import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
+import channelInfoFragment from '../../fragments/channel/channelInfo';
+import channelThreadConnectionFragment from '../../fragments/channel/channelThreadConnection';
+import { subscribeToUpdatedThreads } from '../../subscriptions';
 
 export const getChannelThreadConnectionQuery = gql`
   query getChannelThreadConnection($id: ID, $after: String) {

@@ -1,10 +1,10 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
-import notificationInfoFragment from 'shared/graphql/fragments/notification/notificationInfo';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
-import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
+import messageInfoFragment from '../fragments/message/messageInfo';
+import notificationInfoFragment from '../fragments/notification/notificationInfo';
+import threadInfoFragment from '../fragments/thread/threadInfo';
+import directMessageThreadInfoFragment from '../fragments/directMessageThread/directMessageThreadInfo';
 
 export const subscribeToNewMessages = gql`
   subscription subscribeToNewMessages($thread: ID!) {
