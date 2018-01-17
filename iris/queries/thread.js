@@ -493,13 +493,11 @@ module.exports = {
         .then(messageCount => (messageCount ? messageCount.reduction : 0));
     },
     currentUserLastSeen: (
-      { id, ...rest }: DBThread,
+      { id }: DBThread,
       _: any,
       { user, loaders }: GraphQLContext
     ) => {
       if (!user || !user.id) return null;
-
-      if (rest.currentUserLastSeen) return rest.currentUserLastSeen;
 
       return loaders.userThreadNotificationStatus
         .load([user.id, id])

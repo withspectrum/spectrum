@@ -83,7 +83,6 @@ module.exports = {
                 isModerator: permissions ? permissions.isModerator : false,
                 isOwner: permissions ? permissions.isOwner : false,
               },
-              currentUserLastSeen: new Date(),
             };
           })
           .catch(err => new UserError(err.message));
@@ -122,7 +121,6 @@ module.exports = {
                 isModerator: permissions ? permissions.isModerator : false,
                 isOwner: permissions ? permissions.isOwner : false,
               },
-              currentUserLastSeen: new Date(),
             };
           })
           .catch(err => new UserError(err.message));
@@ -176,16 +174,17 @@ module.exports = {
         if (message.threadType === 'directMessageThread') return true;
 
         debug('thread message, check if user has more messages in thread');
-        return userHasMessagesInThread(message.threadId, message.senderId).then(
-          hasMoreMessages => {
-            if (hasMoreMessages) return true;
-            debug('user has no more messages, delete userThread record');
-            return deleteParticipantInThread(
-              message.threadId,
-              message.senderId
-            ).then(() => true);
-          }
-        );
+        return userHasMessagesInThread(
+          message.threadId,
+          message.senderId
+        ).then(hasMoreMessages => {
+          if (hasMoreMessages) return true;
+          debug('user has no more messages, delete userThread record');
+          return deleteParticipantInThread(
+            message.threadId,
+            message.senderId
+          ).then(() => true);
+        });
       });
     },
   },
