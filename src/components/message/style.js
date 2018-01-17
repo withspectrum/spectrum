@@ -305,3 +305,7 @@ export const Line = styled.pre`
 `;
 
 export const Paragraph = styled.p`line-height: 1.5;`;
+
+export const QuoteWrapper = styled.div`
+  background-color: ${props => props.theme.bg.default};
+`;

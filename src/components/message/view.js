@@ -13,7 +13,9 @@ import {
   Code,
   Line,
   Paragraph,
+  QuoteWrapper,
 } from './style';
+import { Byline } from '../messageGroup/style';
 import mentionsDecorator from 'src/components/draftjs-editor/mentions-decorator';
 import linksDecorator from 'src/components/draftjs-editor/links-decorator';
 
@@ -38,6 +40,7 @@ const messageRenderer = {
 export const Body = props => {
   const { message, openGallery, pending, type, me } = props;
 
+  // All messages use a type. Legacy messages use that type to determine styling, but new ones all use the 'draftjs' type and are subdivided by 'messageType'
   switch (type) {
     case 'text':
     default:
@@ -60,19 +63,35 @@ export const Body = props => {
       return <Emoji pending={pending}>{message}</Emoji>;
     case 'draftjs':
       const body = JSON.parse(message.body);
-      const isCode = body.blocks[0].type === 'code-block';
+      const messageType = body.blocks[0].type;
 
-      if (isCode) {
+      if (messageType === 'code-block') {
         return <Code pending={pending}>{redraft(body, codeRenderer)}</Code>;
-      } else {
-        return (
-          <Text me={me} pending={pending}>
-            {redraft(body, messageRenderer)}
-          </Text>
-        );
       }
+
+      if (messageType === 'reply') {
+        return <Text>{redraft(body, messageRenderer)}</Text>;
+      }
+
+      return (
+        <Text me={me} pending={pending}>
+          {redraft(body, messageRenderer)}
+        </Text>
+      );
   }
 };
+
+const Quote = ({ data: { message }, parsedMessage }) => (
+  <QuoteWrapper>
+    <Byline>{message.sender}</Byline>
+    {/* <Body
+      id={message.id}
+      type={emojiOnly ? 'text' : message.messageType}
+      openGallery={() => this.toggleOpenGallery(message.id)}
+      message={emojiOnly ? parsedMessage : message.content}
+    /> */}
+  </QuoteWrapper>
+);
 
 const Action = props => {
   const { me, action, deleteMessage } = props;
