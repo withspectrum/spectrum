@@ -48,6 +48,27 @@ const removeEslint = config => {
   });
 };
 
+// Make sure webpack transpiles files in the shared folder
+const transpileShared = config => {
+  config.module.rules.forEach(rule => {
+    if (!rule.oneOf) return;
+
+    rule.oneOf.forEach(loader => {
+      if (!loader.include) return;
+      if (!loader.options) return;
+      // The loader config we're looking for is for JS files,
+      // so we look whether the config has a babelrc option
+      if (!Object.keys(loader.options).includes('babelrc')) return;
+
+      // Add the shared folder to the locations
+      // that should be transpiled
+      loader.include = [loader.include, path.resolve(__dirname, './shared')];
+    });
+  });
+
+  return config;
+};
+
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
@@ -67,6 +88,7 @@ module.exports = function override(config, env) {
     removeEslint(config);
   }
   config = injectBabelPlugin('react-loadable/babel', config);
+  config = transpileShared(config);
   config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
