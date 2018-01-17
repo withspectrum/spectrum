@@ -4,15 +4,20 @@ import userInfoFragment from '../user/userInfo';
 
 export default gql`
   fragment channelMemberConnection on Channel {
-    memberConnection {
+    memberConnection(after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage
       }
       edges {
+        cursor
         node {
           ...userInfo
           isPro
+          contextPermissions {
+            communityId
+            reputation
+          }
         }
       }
     }

@@ -1,11 +1,9 @@
 // @flow
+import { addActivityIndicator } from 'src/actions/newActivityIndicator';
 
 // used to update feed caches with new threads in real time
 // takes an array of existing threads in the cache and figures out how to insert the newly updated thread
-export const parseRealtimeThreads = (
-  prevThreads: Array<any>,
-  updatedThread: Object
-) => {
+export const parseRealtimeThreads = (prevThreads, updatedThread, dispatch) => {
   // get an array of thread ids based on the threads already in cache
   const prevThreadIds = prevThreads.map(thread => thread.node.id);
 
@@ -15,9 +13,9 @@ export const parseRealtimeThreads = (
   const hasNewThread = prevThreadIds.indexOf(updatedThread.id) < 0;
 
   // if the updated thread is new, show the activity indicator in the ui
-  // if (hasNewThread) {
-  //   dispatch(addActivityIndicator());
-  // }
+  if (hasNewThread && dispatch) {
+    dispatch(addActivityIndicator());
+  }
 
   return hasNewThread
     ? [

@@ -4,7 +4,7 @@ import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 import userThreadConnectionFragment from 'shared/graphql/fragments/user/userThreadConnection';
 import userCommunityConnectionFragment from 'shared/graphql/fragments/user/userCommunityConnection';
 import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import parseRealtimeThreads from '../../helpers/realtimeThreads';
+import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads(

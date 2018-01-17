@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
-import getChannelById from '../../gql/channel/queries/getChannel';
-import getChannelThreads from '../../gql/channel/queries/getChannelThreads';
+import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
+import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -34,7 +34,7 @@ type Props = {
   },
 };
 
-const ChannelThreadFeed = compose(getChannelThreads)(ThreadFeed);
+const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends React.Component<Props> {
   render() {

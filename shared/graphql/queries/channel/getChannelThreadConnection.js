@@ -1,37 +1,33 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import channelThreadConnectionFragment from 'shared/graphql/fragments/channel/channelThreadConnection';
 import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
+
+export const getChannelThreadConnectionQuery = gql`
+  query getChannelThreadConnection($id: ID, $after: String) {
+    channel(id: $id) {
+      ...channelInfo
+      ...channelThreadConnection
+    }
+  }
+  ${channelInfoFragment}
+  ${channelThreadConnectionFragment}
+`;
 
 const LoadMoreThreads = gql`
-  query loadMorechannelThreads($after: String, $id: ID) {
+  query loadMoreChannelThreads($id: ID, $after: String) {
     channel(id: $id) {
       ...channelInfo
       ...channelThreadConnection
     }
   }
-  ${threadInfoFragment}
   ${channelInfoFragment}
   ${channelThreadConnectionFragment}
 `;
 
-const getchannelThreadsQuery = gql`
-  query getchannel($id: ID, $after: String) {
-    channel(id: $id) {
-      ...channelInfo
-      ...channelThreadConnection
-    }
-  }
-  ${threadInfoFragment}
-  ${channelInfoFragment}
-  ${channelThreadConnectionFragment}
-`;
-
-const getchannelThreadsOptions = {
+const getChannelThreadConnectionOptions = {
   props: ({
     ownProps,
     data: {
@@ -48,11 +44,11 @@ const getchannelThreadsOptions = {
       loading,
       networkStatus,
       channel,
-      threads: channel ? channel.threadConnection.edges.map(t => t.node) : [],
+      threads: channel ? channel.threadConnection.edges : '',
+      feed: channel && channel.id,
       hasNextPage: channel
         ? channel.threadConnection.pageInfo.hasNextPage
         : false,
-      feed: channel && channel.id,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
@@ -60,15 +56,16 @@ const getchannelThreadsOptions = {
             const updatedThread = subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
-            const thischannelId = ownProps.channel.id;
+            const thisChannelId = ownProps.channelId;
             const updatedThreadShouldAppearInContext =
-              thischannelId === updatedThread.channel.id;
+              thisChannelId === updatedThread.channel.id;
 
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.channel.threadConnection.edges,
-                  updatedThread
-                ).filter(thread => thread.node.channel.id === thischannelId)
+                  updatedThread,
+                  ownProps.dispatch
+                ).filter(thread => thread.node.channel.id === thisChannelId)
               : [...prev.channel.threadConnection.edges];
 
             return {
@@ -95,7 +92,7 @@ const getchannelThreadsOptions = {
               channel.threadConnection.edges[
                 channel.threadConnection.edges.length - 1
               ].cursor,
-            slug: channel.slug,
+            id: channel.id,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.channel) {
@@ -130,4 +127,7 @@ const getchannelThreadsOptions = {
   }),
 };
 
-export default graphql(getchannelThreadsQuery, getchannelThreadsOptions);
+export default graphql(
+  getChannelThreadConnectionQuery,
+  getChannelThreadConnectionOptions
+);

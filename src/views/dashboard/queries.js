@@ -2,7 +2,7 @@
 import { graphql, gql } from 'react-apollo';
 import userEverythingConnectionFragment from 'shared/graphql/fragments/user/userEverythingConnection';
 import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import parseRealtimeThreads from '../../helpers/realtimeThreads';
+import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {

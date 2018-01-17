@@ -1,9 +1,7 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import ThreadComposer from '../../components/threadComposer';
@@ -16,7 +14,8 @@ import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
-import { getChannelThreadConnection, getChannel } from './queries';
+import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
+import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
@@ -131,12 +130,10 @@ class ChannelView extends React.Component<Props> {
               }
               subheading={
                 isPending
-                  ? `Return to the ${
-                      channel.community.name
-                    } community until you hear back.`
-                  : `Request to join this channel and the admins of ${
-                      channel.community.name
-                    } will be notified.`
+                  ? `Return to the ${channel.community
+                      .name} community until you hear back.`
+                  : `Request to join this channel and the admins of ${channel
+                      .community.name} will be notified.`
               }
             >
               <RequestToJoinChannel
@@ -277,6 +274,9 @@ const map = state => ({
   currentUser: state.users.currentUser,
 });
 
-export default compose(connect(map), getChannel, viewNetworkHandler)(
-  ChannelView
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getChannelByMatch,
+  viewNetworkHandler
+)(ChannelView);

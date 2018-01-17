@@ -6,7 +6,7 @@ import communityInfoFragment from 'shared/graphql/fragments/community/communityI
 import communityThreadConnectionFragment from 'shared/graphql/fragments/community/communityThreadConnection';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import parseRealtimeThreads from '../../helpers/realtimeThreads';
+import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($slug: String, $after: String, $id: ID) {
