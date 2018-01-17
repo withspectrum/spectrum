@@ -27,7 +27,7 @@
     "react-test-renderer": "^16.2.0"
   },
   "scripts": {
-    "dev": "exp start ios",
+    "dev": "exp start .",
     "setup": "curl https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xf - -C ./expo/Exponent.app",
     "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
     "test:unit": "jest .",
