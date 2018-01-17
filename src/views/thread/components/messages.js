@@ -25,50 +25,49 @@ class MessagesWithData extends Component {
     subscription: null,
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prev = {}) {
+    const curr = this.props;
+    const isDifferentThread =
+      prev.data &&
+      prev.data.thread &&
+      prev.data.thread.id !== curr.data.thread.id;
+    const hadMessagesLoaded =
+      prev.data && prev.data.thread && !!prev.data.thread.messageConnection;
+    const hasMessagesLoaded =
+      curr.data && curr.data.thread && !!curr.data.thread.messageConnection;
+    const isFirstLoad =
+      isDifferentThread || (!hadMessagesLoaded && hasMessagesLoaded);
+    // Check if a single new message has been sent
     const newMessageSent =
-      prevProps &&
-      prevProps.data &&
-      prevProps.data.thread &&
-      this.props.data.thread &&
-      prevProps.data.thread.messageConnection !==
-        this.props.data.thread.messageConnection;
+      hadMessagesLoaded &&
+      hasMessagesLoaded &&
+      prev.data.thread.messageConnection.edges.length + 1 ===
+        curr.data.thread.messageConnection.edges.length;
 
-    // force scroll to bottom if the user is a participant/creator, after the messages load in
-    if (
-      (!newMessageSent &&
-        this.props.data.thread &&
-        this.props.data.thread.messageConnection &&
-        this.props.shouldForceScrollOnMessageLoad) ||
-      (!newMessageSent &&
-        this.props.data.networkStatus === 7 &&
-        this.props.shouldForceScrollOnMessageLoad)
-    ) {
-      setTimeout(() => this.props.forceScrollToBottom());
+    // force scroll to bottom if the user is a participant/creator, after the messages load in for the first time
+    if (!newMessageSent && isFirstLoad && curr.shouldForceScrollOnMessageLoad) {
+      setTimeout(() => curr.forceScrollToBottom());
     }
 
-    // force scroll to bottom if the user is a participant/creator, after the messages load in
+    // force scroll to top if the user is a participant/creator, after the messages load in for the first time
     if (
-      (!newMessageSent &&
-        this.props.data.thread &&
-        this.props.shouldForceScrollToTopOnMessageLoad) ||
-      (!newMessageSent &&
-        this.props.data.networkStatus === 7 &&
-        this.props.shouldForceScrollToTopOnMessageLoad)
+      !newMessageSent &&
+      isFirstLoad &&
+      curr.shouldForceScrollToTopOnMessageLoad
     ) {
-      setTimeout(() => this.props.forceScrollToTop());
+      setTimeout(() => curr.forceScrollToTop());
     }
 
     // force scroll to bottom when a message is sent in the same thread
-    if (newMessageSent && !prevProps.isFetchingMore) {
-      this.props.contextualScrollToBottom();
+    if (newMessageSent && !prev.isFetchingMore) {
+      curr.contextualScrollToBottom();
     }
 
     // if the thread changes in the inbox we have to update the subscription
     if (
-      prevProps.data.thread &&
-      this.props.data.thread &&
-      prevProps.data.thread.id !== this.props.data.thread.id
+      prev.data.thread &&
+      curr.data.thread &&
+      prev.data.thread.id !== curr.data.thread.id
     ) {
       this.unsubscribe().then(() => this.subscribe());
     }
