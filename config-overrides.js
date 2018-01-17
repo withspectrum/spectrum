@@ -12,7 +12,6 @@ const fs = require('fs');
 const path = require('path');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const ManifestPlugin = require('webpack-module-manifest-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -50,12 +49,15 @@ const removeEslint = config => {
 };
 
 module.exports = function override(config, env) {
-  config.plugins.push(WriteFilePlugin());
-  config.plugins.push(
-    new ManifestPlugin({
-      filename: './build/client.manifest.json',
-    })
-  );
+  if (process.env.NODE_ENV === 'development') {
+    config.output.path = path.join(__dirname, './build');
+    config.plugins.push(
+      WriteFilePlugin({
+        // Don't match hot-update files
+        test: /^((?!(hot-update)).)*$/g,
+      })
+    );
+  }
   config.plugins.push(
     new ReactLoadablePlugin({
       filename: './build/react-loadable.json',
