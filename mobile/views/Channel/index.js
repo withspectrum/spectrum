@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
-import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
-import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
+import { getChannelById } from '../../../shared/graphql/queries/channel/getChannel';
+import getChannelThreadConnection from '../../../shared/graphql/queries/channel/getChannelThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';

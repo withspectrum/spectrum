@@ -16,6 +16,10 @@
     "ios": {
 			"supportsTablet": true,
 			"bundleIdentifier": "com.spectrum.mobile"
+    },
+    "packagerOpts": {
+      "projectRoots": "",
+      "config": "rn-cli.config.js"
     }
   }
 }

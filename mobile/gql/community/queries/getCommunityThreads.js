@@ -1,11 +1,11 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
-import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
-import communityThreadConnectionFragment from 'shared/graphql/fragments/community/communityThreadConnection';
-import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
+import threadInfoFragment from '../../../../shared/graphql/fragments/thread/threadInfo';
+import communityInfoFragment from '../../../../shared/graphql/fragments/community/communityInfo';
+import communityThreadConnectionFragment from '../../../../shared/graphql/fragments/community/communityThreadConnection';
+import { subscribeToUpdatedThreads } from '../../../../shared/graphql/subscriptions';
+import { parseRealtimeThreads } from '../../../../shared/graphql/subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($after: String, $id: ID) {
