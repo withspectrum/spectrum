@@ -9,11 +9,12 @@ import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
 import { toggleUserChannelNotifications } from '../../models/usersChannels';
-import { getChannelsByCommunity } from '../../models/channel';
+import { getCommunityById } from '../../models/community';
+import { getChannelsByCommunity, getChannelById } from '../../models/channel';
 import { processInvoicePaid } from '../webhooks';
 
 // $FlowIssue
-emailRouter.get('/unsubscribe', async (req, res) => {
+emailRouter.get('/unsubscribe', (req, res) => {
   const { token } = req.query;
 
   // if no token was provided
@@ -130,7 +131,7 @@ emailRouter.get('/unsubscribe', async (req, res) => {
 });
 
 // $FlowIssue
-emailRouter.get('/validate', async (req, res) => {
+emailRouter.get('/validate', (req, res) => {
   const { token } = req.query;
 
   // if no token was provided

@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should join a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": true,
+        "isOwner": false,
+        "reputation": 0,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should join all default channels when joining a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": true,
+        "isOwner": false,
+        "reputation": 0,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should leave a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": false,
+        "isOwner": false,
+        "reputation": 102,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should leave all channels when leaving a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": false,
+        "isOwner": false,
+        "reputation": 102,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should only have one usersCommunities record after joining a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": true,
+        "isOwner": false,
+        "reputation": 0,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should only have one usersCommunities record after leaving a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": false,
+        "isOwner": false,
+        "reputation": 102,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;
+
+exports[`should prevent a blocked user from joining a community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to do that.],
+  ],
+}
+`;
+
+exports[`should prevent community owner from leaving community 1`] = `
+Object {
+  "data": Object {
+    "toggleCommunityMembership": null,
+  },
+  "errors": Array [
+    [GraphQLError: Owners of a community can't join or leave their own community.],
+  ],
+}
+`;

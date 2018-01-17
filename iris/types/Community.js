@@ -58,18 +58,6 @@ const Community = /* GraphQL */ `
 		communityId: ID!
 	}
 
-	input EmailInviteContactInput {
-		email: String!
-		firstName: String
-		lastName: String
-	}
-
-	input EmailInvitesInput {
-		id: ID!
-		contacts: [ EmailInviteContactInput ]
-		customMessage: String
-	}
-
 	input SendSlackInvitesInput {
 		id: ID!
 		customMessage: String
@@ -124,8 +112,8 @@ const Community = /* GraphQL */ `
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
-		searchCommunities(string: String, amount: Int = 20): [Community]
-		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
+		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
+		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
 	extend type Mutation {

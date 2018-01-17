@@ -331,7 +331,7 @@ const SEND_EMAIL_INVITATIONS_OPTIONS = {
   }),
 };
 
-export const sendEmailInvitationsMutation = graphql(
+export const sendCommunityEmailInvitationsMutation = graphql(
   SEND_EMAIL_INVITATIONS_MUTATION,
   SEND_EMAIL_INVITATIONS_OPTIONS
 );

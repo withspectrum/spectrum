@@ -42,9 +42,70 @@ Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "The future of communities",
       "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "name": "Spectrum",
       "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
       "slug": "spectrum",
       "website": "https://spectrum.chat",
+    },
+  },
+}
+`;
+
+exports[`should fetch a list of communities 1`] = `
+Object {
+  "data": Object {
+    "communities": Array [
+      Object {
+        "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
+        "createdAt": "2016-12-31T23:00:00.000Z",
+        "description": "The future of communities",
+        "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+        "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
+        "slug": "spectrum",
+        "website": "https://spectrum.chat",
+      },
+    ],
+  },
+}
+`;
+
+exports[`should fetch a list of community members 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "memberConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "VlRvS2NkZTE2ZFJFZ0RrWGNEbDNoaGNyRk4zMy0x",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "VToKcde16dREgDkXcDl3hhcrFN33",
+              "totalReputation": 101,
+            },
+          },
+          Object {
+            "cursor": "MDFwMkE3a0RDV1VqR2o2elFMbE1RVU9TUUw0Mi0y",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "01p2A7kDCWUjGj6zQLlMQUOSQL42",
+              "totalReputation": 102,
+            },
+          },
+          Object {
+            "cursor": "Z1ZrNW1Zd2NjVU9FS2lONXZ0T291cXJvR0tvMS0z",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+              "totalReputation": 100,
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
+          "hasPreviousPage": null,
+        },
+      },
     },
   },
 }

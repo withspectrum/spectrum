@@ -1,7 +1,7 @@
 import { request } from './utils';
 
 describe('queries', () => {
-  it('should fetch a user', () => {
+  it('should fetch a user', async () => {
     const query = /* GraphQL */ `
 			{
 				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
@@ -18,12 +18,12 @@ describe('queries', () => {
 		`;
 
     expect.assertions(1);
-    return request(query).then(result => {
-      expect(result).toMatchSnapshot();
-    });
+    const result = await request(query);
+
+    expect(result).toMatchSnapshot();
   });
 
-  it('should return null for a non-existant id', () => {
+  it('should return null for a non-existant id', async () => {
     const query = /* GraphQL */ `
 			{
 				user(id: "non-existant") {
@@ -34,12 +34,12 @@ describe('queries', () => {
 		`;
 
     expect.assertions(1);
-    return request(query).then(result => {
-      expect(result).toMatchSnapshot();
-    });
+    const result = await request(query);
+
+    expect(result).toMatchSnapshot();
   });
 
-  it('should fetch a users communities', () => {
+  it('should fetch a users communities', async () => {
     const query = /* GraphQL */ `
       {
         user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
@@ -55,13 +55,13 @@ describe('queries', () => {
     `;
 
     expect.assertions(1);
-    return request(query).then(result => {
-      expect(result).toMatchSnapshot();
-    });
+    const result = await request(query);
+
+    expect(result).toMatchSnapshot();
   });
 
   describe.skip('everything', () => {
-    it('should return the latest thread', () => {
+    it('should return the latest thread', async () => {
       const query = /* GraphQL */ `
   			{
   				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
@@ -79,12 +79,12 @@ describe('queries', () => {
   			}
   		`;
       expect.assertions(1);
-      return graphql(schema, query).then(result => {
-        expect(result).toMatchSnapshot();
-      });
+      const result = await graphql(schema, query);
+
+      expect(result).toMatchSnapshot();
     });
 
-    it('should paginate based on the after property', () => {
+    it('should paginate based on the after property', async () => {
       const query = /* GraphQL */ `
   			{
   				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
@@ -102,12 +102,12 @@ describe('queries', () => {
   			}
   		`;
       expect.assertions(1);
-      return graphql(schema, query).then(result => {
-        expect(result).toMatchSnapshot();
-      });
+      const result = await graphql(schema, query);
+
+      expect(result).toMatchSnapshot();
     });
 
-    it('should handle first being set to 0 correctly', () => {
+    it('should handle first being set to 0 correctly', async () => {
       const noCursorQuery = /* GraphQL */ `
   			{
   				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
@@ -141,14 +141,13 @@ describe('queries', () => {
   			}
   		`;
       expect.assertions(2);
-      return graphql(schema, noCursorQuery)
-        .then(result => {
-          expect(result).toMatchSnapshot();
-          return graphql(schema, cursorQuery);
-        })
-        .then(result => {
-          expect(result).toMatchSnapshot();
-        });
+      const result = await graphql(schema, noCursorQuery);
+
+      expect(result).toMatchSnapshot();
+
+      const nextResult = await graphql(schema, cursorQuery);
+
+      expect(nextResult).toMatchSnapshot();
     });
   });
 });

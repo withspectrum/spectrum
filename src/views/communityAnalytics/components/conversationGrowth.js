@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -6,7 +7,7 @@ import {
   SectionCard,
   SectionSubtitle,
   SectionTitle,
-} from '../../communitySettings/style';
+} from '../../../components/settingsViews/style';
 import { getCommunityConversationGrowth } from '../queries';
 import { parseGrowth } from '../utils';
 

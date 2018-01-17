@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -10,11 +11,27 @@ import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
-import Header from './components/header';
-import Subnav from './components/subnav';
+import Header from '../../components/settingsViews/header';
+import Subnav from '../../components/settingsViews/subnav';
 import { View } from './style';
 
-type Props = {};
+type Props = {
+  data: {
+    community: {
+      name: string,
+      slug: string,
+      profilePhoto: string,
+      communityPermissions: {
+        isMember: boolean,
+        isOwner: boolean,
+        isModerator: boolean,
+      },
+    },
+  },
+  location: Object,
+  isLoading: boolean,
+  hasError: boolean,
+};
 
 class CommunitySettings extends React.Component<Props> {
   render() {
@@ -23,7 +40,7 @@ class CommunitySettings extends React.Component<Props> {
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');
-    const activeRoute = pathname.substr(lastIndex + 1);
+    const activeTab = pathname.substr(lastIndex + 1);
     const communitySlug = community && community.slug;
 
     if (community) {
@@ -48,7 +65,7 @@ class CommunitySettings extends React.Component<Props> {
       }
 
       const ActiveView = () => {
-        switch (activeRoute) {
+        switch (activeTab) {
           case 'settings':
             return (
               <Overview community={community} communitySlug={communitySlug} />
@@ -62,6 +79,29 @@ class CommunitySettings extends React.Component<Props> {
         }
       };
 
+      const subnavItems = [
+        {
+          to: `/${community.slug}/settings`,
+          label: 'Overview',
+          activeLabel: 'settings',
+        },
+        {
+          to: `/${community.slug}/settings/analytics`,
+          label: 'Analytics',
+          activeLabel: 'analytics',
+        },
+      ];
+
+      const subheading = {
+        to: `/${community.slug}`,
+        label: `Return to ${community.name}`,
+      };
+
+      const avatar = {
+        profilePhoto: community.profilePhoto,
+        community,
+      };
+
       return (
         <AppViewWrapper>
           <Titlebar
@@ -73,8 +113,12 @@ class CommunitySettings extends React.Component<Props> {
           />
 
           <View>
-            <Header community={community} />
-            <Subnav communitySlug={communitySlug} active={activeRoute} />
+            <Header
+              avatar={avatar}
+              subheading={subheading}
+              heading={'Settings'}
+            />
+            <Subnav items={subnavItems} activeTab={activeTab} />
 
             <ActiveView />
           </View>

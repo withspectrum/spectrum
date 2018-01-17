@@ -12,7 +12,6 @@ const fs = require('fs');
 const path = require('path');
 const match = require('micromatch');
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const ManifestPlugin = require('webpack-module-manifest-plugin');
 const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -49,13 +48,37 @@ const removeEslint = config => {
   });
 };
 
+// Make sure webpack transpiles files in the shared folder
+const transpileShared = config => {
+  config.module.rules.forEach(rule => {
+    if (!rule.oneOf) return;
+
+    rule.oneOf.forEach(loader => {
+      if (!loader.include) return;
+      if (!loader.options) return;
+      // The loader config we're looking for is for JS files,
+      // so we look whether the config has a babelrc option
+      if (!Object.keys(loader.options).includes('babelrc')) return;
+
+      // Add the shared folder to the locations
+      // that should be transpiled
+      loader.include = [loader.include, path.resolve(__dirname, './shared')];
+    });
+  });
+
+  return config;
+};
+
 module.exports = function override(config, env) {
-  config.plugins.push(WriteFilePlugin());
-  config.plugins.push(
-    new ManifestPlugin({
-      filename: './build/client.manifest.json',
-    })
-  );
+  if (process.env.NODE_ENV === 'development') {
+    config.output.path = path.join(__dirname, './build');
+    config.plugins.push(
+      WriteFilePlugin({
+        // Don't match hot-update files
+        test: /^((?!(hot-update)).)*$/g,
+      })
+    );
+  }
   config.plugins.push(
     new ReactLoadablePlugin({
       filename: './build/react-loadable.json',
@@ -65,6 +88,7 @@ module.exports = function override(config, env) {
     removeEslint(config);
   }
   config = injectBabelPlugin('react-loadable/babel', config);
+  config = transpileShared(config);
   config.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],

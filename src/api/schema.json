@@ -28,52 +28,7 @@
       },
       {
         "kind": "SCALAR",
-        "name": "Boolean",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CommunityPermissions",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CommunityChannelsConnection",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "PageInfo",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "CommunityChannelEdge",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Channel",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ChannelPermissions",
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
         "name": "Int",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ChannelThreadsConnection",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ChannelThreadEdge",
         "possibleTypes": null
       },
       {
@@ -83,17 +38,47 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ThreadContent",
+        "name": "Channel",
         "possibleTypes": null
       },
       {
-        "kind": "ENUM",
-        "name": "ThreadType",
+        "kind": "SCALAR",
+        "name": "Boolean",
         "possibleTypes": null
       },
       {
         "kind": "OBJECT",
-        "name": "Edit",
+        "name": "ChannelPermissions",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommunityPermissions",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChannelThreadsConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageInfo",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChannelThreadEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChannelMembersConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChannelMemberEdge",
         "possibleTypes": null
       },
       {
@@ -172,6 +157,11 @@
         "possibleTypes": null
       },
       {
+        "kind": "ENUM",
+        "name": "ThreadConnectionType",
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "UserThreadsConnection",
         "possibleTypes": null
@@ -198,6 +188,56 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Invoice",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserNotificationsSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NotificationSettingsType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NotificationKindSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContextPermissions",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ChannelMetaData",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ThreadContent",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ThreadType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Edit",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "ThreadMessagesConnection",
         "possibleTypes": null
       },
@@ -213,17 +253,12 @@
       },
       {
         "kind": "OBJECT",
-        "name": "ChannelMembersConnection",
+        "name": "CommunityChannelsConnection",
         "possibleTypes": null
       },
       {
         "kind": "OBJECT",
-        "name": "ChannelMemberEdge",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ChannelMetaData",
+        "name": "CommunityChannelEdge",
         "possibleTypes": null
       },
       {
@@ -249,6 +284,36 @@
       {
         "kind": "OBJECT",
         "name": "CommunityMetaData",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SlackImport",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GrowthData",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GrowthDataCounts",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Float",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TopAndNewThreads",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SearchThreadsFilter",
         "possibleTypes": null
       },
       {
@@ -298,12 +363,12 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GrowthData",
+        "name": "UsersGrowthData",
         "possibleTypes": null
       },
       {
         "kind": "OBJECT",
-        "name": "SubscriptionGrowthData",
+        "name": "CoreMetrics",
         "possibleTypes": null
       },
       {
@@ -324,6 +389,31 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "EditCommunityInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SendSlackInvitesInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "EmailInvitesInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "EmailInviteContactInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpgradeCommunityInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DowngradeCommunityInput",
         "possibleTypes": null
       },
       {
@@ -403,6 +493,21 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "ToggleNotificationSettingsInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "WebPushSubscription",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "WebPushSubscriptionKeys",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "DirectMessageThreadInput",
         "possibleTypes": null
       },
@@ -419,6 +524,11 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ContentInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SaveUserCommunityPermissionsInput",
         "possibleTypes": null
       },
       {

@@ -33,7 +33,9 @@ export default async (job: JobData) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
 
   debug(
-    `new job: direct message sent by ${currentUserId} in thread #${incomingMessage.threadId}`
+    `new job: direct message sent by ${currentUserId} in thread #${
+      incomingMessage.threadId
+    }`
   );
 
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
@@ -149,6 +151,8 @@ export default async (job: JobData) => {
           .slice()
           .filter(entity => {
             const parsed = JSON.parse(entity.payload);
+            if (!lastSeen) return true;
+            // $FlowFixMe
             return Date.parse(parsed.timestamp) > Date.parse(lastSeen);
           });
 

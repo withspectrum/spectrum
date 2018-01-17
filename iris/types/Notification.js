@@ -14,6 +14,8 @@ const Notification = /* GraphQL */ `
 		COMMUNITY_INVITE
 		MENTION_THREAD
 		MENTION_MESSAGE
+		PRIVATE_CHANNEL_REQUEST_SENT
+		PRIVATE_CHANNEL_REQUEST_APPROVED
 	}
 
 	enum EntityType {
@@ -65,7 +67,6 @@ const Notification = /* GraphQL */ `
 		markAllNotificationsRead: Boolean
 		markDirectMessageNotificationsSeen: Boolean
 		markSingleNotificationSeen(id: ID!): Boolean
-		toggleNotificationReadState(notificationId: ID!): Notification!
 	}
 
 	extend type Subscription {

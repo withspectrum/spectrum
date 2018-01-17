@@ -105,7 +105,7 @@ export const getMemberCount = (communityId: string): Promise<number> => {
     .run();
 };
 
-export type CreateCommunityArguments = {
+export type CreateCommunityInput = {
   input: {
     name: string,
     slug: string,
@@ -116,7 +116,7 @@ export type CreateCommunityArguments = {
   },
 };
 
-export type EditCommunityArguments = {
+export type EditCommunityInput = {
   input: {
     name: string,
     slug: string,
@@ -134,7 +134,7 @@ type CommunityCreator = Object;
 export const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
-  }: CreateCommunityArguments,
+  }: CreateCommunityInput,
   user: CommunityCreator
 ): Promise<DBCommunity> => {
   return db
@@ -181,79 +181,78 @@ export const createCommunity = (
             if (result.unchanged === 1) {
               return result.changes[0].old_val;
             }
+            return null;
           });
       }
 
       if (file || coverFile) {
         if (file && !coverFile) {
           const { coverPhoto } = getRandomDefaultPhoto();
-          return uploadImage(
-            file,
-            'communities',
-            community.id
-          ).then(profilePhoto => {
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    profilePhoto,
-                    coverPhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(file, 'communities', community.id).then(
+            profilePhoto => {
+              return (
+                db
+                  .table('communities')
+                  .get(community.id)
+                  .update(
+                    {
+                      ...community,
+                      profilePhoto,
+                      coverPhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting community with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            }
+          );
         } else if (!file && coverFile) {
           const { profilePhoto } = getRandomDefaultPhoto();
-          return uploadImage(
-            coverFile,
-            'communities',
-            community.id
-          ).then(coverPhoto => {
-            // update the community with the profilePhoto
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    coverPhoto,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(coverFile, 'communities', community.id).then(
+            coverPhoto => {
+              // update the community with the profilePhoto
+              return (
+                db
+                  .table('communities')
+                  .get(community.id)
+                  .update(
+                    {
+                      ...community,
+                      coverPhoto,
+                      profilePhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting community with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+
+                    return null;
+                  })
+              );
+            }
+          );
         } else if (file && coverFile) {
           const uploadFile = file => {
             return uploadImage(file, 'communities', community.id);
@@ -291,6 +290,8 @@ export const createCommunity = (
                   if (result.unchanged === 1) {
                     return result.changes[0].old_val;
                   }
+
+                  return null;
                 })
             );
           });
@@ -301,7 +302,7 @@ export const createCommunity = (
 
 export const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
-}: EditCommunityArguments): Promise<DBCommunity> => {
+}: EditCommunityInput): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -338,71 +339,67 @@ export const editCommunity = ({
 
       if (file || coverFile) {
         if (file && !coverFile) {
-          return uploadImage(
-            file,
-            'communities',
-            community.id
-          ).then(profilePhoto => {
-            // update the community with the profilePhoto
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(file, 'communities', community.id).then(
+            profilePhoto => {
+              // update the community with the profilePhoto
+              return (
+                db
+                  .table('communities')
+                  .get(community.id)
+                  .update(
+                    {
+                      ...community,
+                      profilePhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting community with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            }
+          );
         } else if (!file && coverFile) {
-          return uploadImage(
-            coverFile,
-            'communities',
-            community.id
-          ).then(coverPhoto => {
-            // update the community with the profilePhoto
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    coverPhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+          return uploadImage(coverFile, 'communities', community.id).then(
+            coverPhoto => {
+              // update the community with the profilePhoto
+              return (
+                db
+                  .table('communities')
+                  .get(community.id)
+                  .update(
+                    {
+                      ...community,
+                      coverPhoto,
+                    },
+                    { returnChanges: 'always' }
+                  )
+                  .run()
+                  // return the resulting community with the profilePhoto set
+                  .then(result => {
+                    // if an update happened
+                    if (result.replaced === 1) {
+                      return result.changes[0].new_val;
+                    }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          });
+                    // an update was triggered from the client, but no data was changed
+                    if (result.unchanged === 1) {
+                      return result.changes[0].old_val;
+                    }
+                  })
+              );
+            }
+          );
         } else if (file && coverFile) {
           const uploadFile = file => {
             return uploadImage(file, 'communities', community.id);
@@ -440,6 +437,8 @@ export const editCommunity = ({
                   if (result.unchanged === 1) {
                     return result.changes[0].old_val;
                   }
+
+                  return null;
                 })
             );
           });
@@ -572,7 +571,7 @@ export const searchThreadsInCommunity = (
     .run();
 };
 
-export const getThreadCount = async (communityId: string) => {
+export const getThreadCount = (communityId: string) => {
   return db
     .table('threads')
     .getAll(communityId, { index: 'communityId' })

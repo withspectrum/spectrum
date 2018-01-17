@@ -1,11 +1,13 @@
 const { fromPlainText, toJSON } = require('../../../shared/draft-utils');
 
-// 2017/01/01
+// 2017 / 01 / 01;
 const DATE = 1483225200000;
 
 const MAX_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 const BRIAN_ID = '01p2A7kDCWUjGj6zQLlMQUOSQL42';
 const BRYN_ID = 'VToKcde16dREgDkXcDl3hhcrFN33';
+const NO_PERMISSIONS_USER = 'e16dREgWUjGj6iN5vtOo';
+const BLOCKED_USER = 'kDCWUjGjDkXcDl3hhcrFNgWUjGj6iN5';
 
 const DEFAULT_USERS = [
   {
@@ -53,6 +55,38 @@ const DEFAULT_USERS = [
     email: 'hi@bryn.io',
     subscriptions: [],
     providerId: '17106008',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: NO_PERMISSIONS_USER,
+    name: 'Bad Boy',
+    description: "I can't do shit on this website",
+    website: '',
+    username: 'bad-boy',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@badboy.io',
+    subscriptions: [],
+    providerId: '171060089',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: BLOCKED_USER,
+    name: 'Blocked user',
+    description: 'I am blocked in the Spectrum community',
+    website: '',
+    username: 'blocked-boy',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@blockedboy.io',
+    subscriptions: [],
+    providerId: '171060090',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },
@@ -208,10 +242,10 @@ const DEFAULT_USERS_THREADS = [
 
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
-    id: 'first-dm-thread-asfd123',
+    id: 'first-dm-thread-asdf123',
     createdAt: new Date(DATE),
     name: null,
-    threadLastActive: new Date(),
+    threadLastActive: new Date(DATE),
   },
 ];
 
@@ -219,8 +253,24 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
     id: '1f462515-e1e7-4aff-be48-adda326df133',
     createdAt: new Date(DATE),
-    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
-    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    userId: BRIAN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    threadId: 'first-dm-thread-asdf123',
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
+    receiveNotifications: true,
+  },
+  {
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    threadId: 'first-dm-thread-asdf123',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
     receiveNotifications: true,
@@ -264,6 +314,18 @@ const DEFAULT_USERS_COMMUNITIES = [
     receiveNotifications: true,
     reputation: 102,
   },
+  {
+    id: '80b16afe-8576-4970-99ab-240b1a975b100',
+    createdAt: new Date(DATE),
+    userId: BLOCKED_USER,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isModerator: false,
+    isMember: false,
+    isBlocked: true,
+    receiveNotifications: false,
+    reputation: 102,
+  },
 ];
 
 const DEFAULT_USERS_CHANNELS = [
@@ -301,6 +363,17 @@ const DEFAULT_USERS_CHANNELS = [
     isBlocked: false,
     receiveNotifications: true,
   },
+  {
+    id: '7411906b-54a0-4c18-b26c-2522ad59c7f9',
+    createdAt: new Date(DATE),
+    userId: BLOCKED_USER,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    isOwner: false,
+    isModerator: false,
+    isMember: false,
+    isBlocked: true,
+    receiveNotifications: false,
+  },
 ];
 
 const DEFAULT_MESSAGES = [
@@ -309,7 +382,20 @@ const DEFAULT_MESSAGES = [
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     attachments: [],
     content: {
-      body: JSON.stringify(toJSON(fromPlainText('This is the first message!'))),
+      body: JSON.stringify({
+        blocks: [
+          {
+            key: '9u8bg',
+            text: 'This is the first message!',
+            type: 'unstyled',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+        entityMap: {},
+      }),
     },
     messageType: 'draftjs',
     threadType: 'story',
@@ -356,6 +442,69 @@ const DEFAULT_MESSAGES = [
     senderId: BRIAN_ID,
     timestamp: new Date(DATE + 3),
   },
+  // DM Thread
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: 'b546f27e-d842-4afe-900d-ad26ee60ca03',
+    attachments: [],
+    content: {
+      body: JSON.stringify(
+        toJSON(fromPlainText('Direct message thread message!'))
+      ),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '2017f510-fe85-4de2-b5b2-6324567a6871',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A second one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 50000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '965830bb-e79d-4cec-acfa-91f67b590865',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A third one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRIAN_ID,
+    timestamp: new Date(DATE + 100000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '77e9619d-bea2-443a-bb9c-4b2957980644',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fourth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: MAX_ID,
+    timestamp: new Date(DATE + 200000),
+  },
+  {
+    threadId: 'first-dm-thread-asdf123',
+    threadType: 'directMessageThread',
+    id: '9356f7f1-4be0-4230-8f79-71a9f97f7a1f',
+    attachments: [],
+    content: {
+      body: JSON.stringify(toJSON(fromPlainText('A fifth one'))),
+    },
+    messageType: 'draftjs',
+    senderId: BRYN_ID,
+    timestamp: new Date(DATE + 300000),
+  },
 ];
 
 const DEFAULT_NOTIFICATIONS = [];
@@ -383,6 +532,12 @@ const DEFAULT_SESSIONS = [
 ];
 
 module.exports = {
+  MAX_ID,
+  BRIAN_ID,
+  NO_PERMISSIONS_USER,
+  BRYN_ID,
+  BLOCKED_USER,
+  DATE,
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,

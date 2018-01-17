@@ -13,12 +13,12 @@ import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import { getCommunityChannels } from '../queries';
+import { ListContainer } from '../style';
 import {
-  ListContainer,
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../style';
+} from '../../../components/settingsViews/style';
 
 type Props = {
   data: {
@@ -66,7 +66,8 @@ class ChannelList extends React.Component<Props> {
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
               onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+              }
             >
               Create Channel
             </Button>

@@ -15,8 +15,8 @@ slackRouter.get('/', (req, res) => {
   const communityId = req.query.state;
   const senderId = req.user.id;
   const returnURI = IS_PROD
-    ? `https://spectrum.chat/api/slack`
-    : `http://localhost:3001/api/slack`;
+    ? 'https://spectrum.chat/api/slack'
+    : 'http://localhost:3001/api/slack';
 
   // generate an oauth token. This token will be used to communicate with the Slack API to get user information, and we'll store the token in the db record to allow for the user to access their Slack team info in the future.
   return generateOAuthToken(code, returnURI)
@@ -50,8 +50,8 @@ slackRouter.get('/onboarding', (req, res) => {
   const communityId = req.query.state;
   const senderId = req.user.id;
   const returnURI = IS_PROD
-    ? `https://spectrum.chat/api/slack/onboarding`
-    : `http://localhost:3001/api/slack/onboarding`;
+    ? 'https://spectrum.chat/api/slack/onboarding'
+    : 'http://localhost:3001/api/slack/onboarding';
 
   // generate an oauth token. This token will be used to communicate with the Slack API to get user information, and we'll store the token in the db record to allow for the user to access their Slack team info in the future.
   return generateOAuthToken(code, returnURI)

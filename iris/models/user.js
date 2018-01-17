@@ -161,20 +161,19 @@ const createOrFindUser = (
     promise = getUser({ id: user.id });
   } else {
     if (user[providerMethod]) {
-      promise = getUserByIndex(
-        providerMethod,
-        user[providerMethod]
-      ).then(storedUser => {
-        if (storedUser) {
-          return storedUser;
-        }
+      promise = getUserByIndex(providerMethod, user[providerMethod]).then(
+        storedUser => {
+          if (storedUser) {
+            return storedUser;
+          }
 
-        if (user.email) {
-          return getUserByEmail(user.email);
-        } else {
-          return Promise.resolve({});
+          if (user.email) {
+            return getUserByEmail(user.email);
+          } else {
+            return Promise.resolve({});
+          }
         }
-      });
+      );
     } else {
       if (user.email) {
         promise = getUserByEmail(user.email);
@@ -265,7 +264,7 @@ const getUsersThreadCount = (
   });
 };
 
-export type EditUserArguments = {
+export type EditUserInput = {
   input: {
     file?: any,
     name?: string,
@@ -277,10 +276,7 @@ export type EditUserArguments = {
   },
 };
 
-const editUser = (
-  input: EditUserArguments,
-  userId: string
-): Promise<DBUser> => {
+const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
   const {
     input: { name, description, website, file, coverFile, username, timezone },
   } = input;
