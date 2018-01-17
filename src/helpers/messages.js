@@ -17,24 +17,6 @@ export const sortAndGroupMessages = (
 
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
-    if (i === 0) {
-      checkId = messages[i].sender.id;
-
-      // show a timestamp for when the first message in the conversation was sent
-      masterArray.push([
-        {
-          sender: {
-            id: 'robo',
-          },
-          timestamp: messages[0].timestamp,
-          message: {
-            content: messages[0].timestamp,
-            type: 'timestamp',
-          },
-        },
-      ]);
-    }
-
     const robo = [
       {
         sender: {
@@ -60,6 +42,16 @@ export const sortAndGroupMessages = (
         },
       },
     ];
+
+    if (i === 0) {
+      checkId = messages[i].sender.id;
+
+      if (messages[0].timestamp > lastSeen) {
+        masterArray.push(unseenRobo);
+      } else {
+        masterArray.push(robo);
+      }
+    }
 
     const sameUser =
       messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
@@ -121,7 +113,8 @@ export const sortAndGroupMessages = (
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
-      if (messages[i].timestamp > lastSeen) {
+      if (messages[i].timestamp > lastSeen && !hasInjectedUnreadRobo) {
+        hasInjectedUnreadRobo = true;
         masterArray.push(unseenRobo);
       }
       // if the new users message is older than our preferred variance

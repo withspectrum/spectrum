@@ -105,7 +105,7 @@ export const getMemberCount = (communityId: string): Promise<number> => {
     .run();
 };
 
-export type CreateCommunityArguments = {
+export type CreateCommunityInput = {
   input: {
     name: string,
     slug: string,
@@ -116,7 +116,7 @@ export type CreateCommunityArguments = {
   },
 };
 
-export type EditCommunityArguments = {
+export type EditCommunityInput = {
   input: {
     name: string,
     slug: string,
@@ -134,7 +134,7 @@ type CommunityCreator = Object;
 export const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
-  }: CreateCommunityArguments,
+  }: CreateCommunityInput,
   user: CommunityCreator
 ): Promise<DBCommunity> => {
   return db
@@ -181,6 +181,7 @@ export const createCommunity = (
             if (result.unchanged === 1) {
               return result.changes[0].old_val;
             }
+            return null;
           });
       }
 
@@ -251,6 +252,8 @@ export const createCommunity = (
                   if (result.unchanged === 1) {
                     return result.changes[0].old_val;
                   }
+
+                  return null;
                 })
             );
           });
@@ -291,6 +294,8 @@ export const createCommunity = (
                   if (result.unchanged === 1) {
                     return result.changes[0].old_val;
                   }
+
+                  return null;
                 })
             );
           });
@@ -301,7 +306,7 @@ export const createCommunity = (
 
 export const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
-}: EditCommunityArguments): Promise<DBCommunity> => {
+}: EditCommunityInput): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
@@ -440,6 +445,8 @@ export const editCommunity = ({
                   if (result.unchanged === 1) {
                     return result.changes[0].old_val;
                   }
+
+                  return null;
                 })
             );
           });
@@ -572,7 +579,7 @@ export const searchThreadsInCommunity = (
     .run();
 };
 
-export const getThreadCount = async (communityId: string) => {
+export const getThreadCount = (communityId: string) => {
   return db
     .table('threads')
     .getAll(communityId, { index: 'communityId' })

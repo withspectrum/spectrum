@@ -98,7 +98,8 @@ class Dashboard extends Component {
       searchFilter.communityId = null;
       searchFilter.channelId = activeChannel;
     } else if (activeCommunity) {
-      (searchFilter.everythingFeed = false), (searchFilter.channelId = null);
+      searchFilter.everythingFeed = false;
+      searchFilter.channelId = null;
       searchFilter.communityId = activeCommunity;
     } else {
       searchFilter.channelId = null;
@@ -129,7 +130,7 @@ class Dashboard extends Component {
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
-            <Menu darkContext>
+            <Menu darkContext hasTabBar>
               <CommunityList
                 communities={communities}
                 user={user}

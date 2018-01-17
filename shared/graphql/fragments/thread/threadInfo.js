@@ -12,6 +12,7 @@ export default gql`
     modifiedAt
     lastActive
     receiveNotifications
+    currentUserLastSeen
     creator {
       ...userInfo
       isPro

@@ -11,6 +11,7 @@ import express from 'express';
 import Raven from 'shared/raven';
 import { init as initPassport } from './authentication.js';
 const PORT = 3001;
+import type { DBUser } from 'shared/types';
 
 // Initialize authentication
 initPassport();
@@ -35,7 +36,7 @@ app.use('/api', apiRoutes);
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
-  user: Object,
+  user: DBUser,
   loaders: {
     [key: string]: Loader,
   },

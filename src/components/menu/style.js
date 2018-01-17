@@ -35,8 +35,8 @@ export const Absolute = styled.div`
   right: 0;
   width: 100vw;
   min-width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100%;
   z-index: 1;
 
   > button {
@@ -57,7 +57,7 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  height: ${props => (props.hasNavbar ? 'calc(100vh - 48px)' : '100vh')};
+  height: ${props => (props.hasTabBar ? 'calc(100% - 48px)' : '100%')};
   width: 300px;
   color: ${props => props.theme.brand.alt};
   background-color: ${props => props.theme.bg.default};

@@ -6,10 +6,11 @@ import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import { Spinner } from '../../../components/globals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import NextPageButton from '../../../components/nextPageButton';
 import { getDirectMessageThreadMessages } from '../queries';
 import { setLastSeenMutation } from '../../../api/directMessageThread';
 import { toggleReactionMutation } from '../mutations';
-import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
+import { MessagesScrollWrapper } from './style';
 
 type Props = {
   id: string,
@@ -124,18 +125,10 @@ class MessagesWithData extends React.Component<Props, State> {
       return (
         <MessagesScrollWrapper>
           {hasNextPage && (
-            <HasNextPage>
-              <NextPageButton
-                loading={isFetchingMore}
-                onClick={() => fetchMore()}
-              >
-                {isFetchingMore ? (
-                  <Spinner size={16} color={'brand.default'} />
-                ) : (
-                  'Load previous messages'
-                )}
-              </NextPageButton>
-            </HasNextPage>
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={fetchMore}
+            />
           )}
           <ChatMessages
             toggleReaction={toggleReaction}

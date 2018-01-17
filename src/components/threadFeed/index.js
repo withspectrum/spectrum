@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { connect } from 'react-redux';
 import { ImportSlackWithoutCard } from '../../views/communitySettings/components/importSlack';
-import { EmailInvitesWithoutCard } from '../../views/communitySettings/components/emailInvites';
+import { CommunityInvitationForm } from '../emailInvitationForm';
 import Share from '../../views/newCommunity/components/share';
 import ThreadFeedCard from '../threadFeedCard';
 import { Card } from '../card';
@@ -32,11 +32,13 @@ const UpsellState = ({ community }) => {
       bg="onboarding"
       repeat
       heading={'Every community has to start somewhere...'}
-      copy={`${community.name} just needs more friends - invite people to your community to get a conversation started!`}
+      copy={`${
+        community.name
+      } just needs more friends - invite people to your community to get a conversation started!`}
     >
       <Share community={community} onboarding={false} />
       <Divider />
-      <EmailInvitesWithoutCard community={community} />
+      <CommunityInvitationForm id={community.id} />
       <Divider />
       <ImportSlackWithoutCard community={community} id={community.id} />
     </NullCard>

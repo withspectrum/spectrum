@@ -47,7 +47,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		edits: [Edit!]
 		participants: [User]
-		messageConnection(first: Int, after: String): ThreadMessagesConnection!
+		messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection!
 		messageCount: Int
 		creator: User!
 		attachments: [Attachment]
@@ -66,7 +66,7 @@ const Thread = /* GraphQL */ `
 
 	extend type Query {
 		thread(id: ID!): Thread
-		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
+		searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
 	input AttachmentInput {

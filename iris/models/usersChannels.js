@@ -162,8 +162,8 @@ const createOrUpdatePendingUserInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ userId })
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
     .run()
     .then(data => {
       if (data && data.length > 0) {
@@ -398,29 +398,28 @@ const createMemberInDefaultChannels = (
     .getAll(userId, { index: 'userId' })
     .run();
 
-  return Promise.all([
-    defaultChannels,
-    usersChannels,
-  ]).then(([defaultChannels, usersChannels]) => {
-    // convert default channels and users channels to arrays of ids
-    // to efficiently filter down to find the default channels that exist
-    // which a user has not joined
-    const defaultChannelIds = defaultChannels.map(channel => channel.id);
-    const usersChannelIds = usersChannels.map(e => e.channelId);
+  return Promise.all([defaultChannels, usersChannels]).then(
+    ([defaultChannels, usersChannels]) => {
+      // convert default channels and users channels to arrays of ids
+      // to efficiently filter down to find the default channels that exist
+      // which a user has not joined
+      const defaultChannelIds = defaultChannels.map(channel => channel.id);
+      const usersChannelIds = usersChannels.map(e => e.channelId);
 
-    // returns a list of Ids that represent channels which are defaults
-    // in the community but the user has no relationship with yet
-    const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
-      channelId => usersChannelIds.indexOf(channelId) >= -1
-    );
+      // returns a list of Ids that represent channels which are defaults
+      // in the community but the user has no relationship with yet
+      const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
+        channelId => usersChannelIds.indexOf(channelId) >= -1
+      );
 
-    // create all the necessary relationships
-    return Promise.all(
-      defaultChannelsTheUserHasNotJoined.map(channel =>
-        createMemberInChannel(channel, userId)
-      )
-    );
-  });
+      // create all the necessary relationships
+      return Promise.all(
+        defaultChannelsTheUserHasNotJoined.map(channel =>
+          createMemberInChannel(channel, userId)
+        )
+      );
+    }
+  );
 };
 
 const toggleUserChannelNotifications = (

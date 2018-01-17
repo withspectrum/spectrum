@@ -59,7 +59,19 @@ const general = /* GraphQL */ `
     weeklyGrowth: GrowthDataCounts
     monthlyGrowth: GrowthDataCounts
     quarterlyGrowth: GrowthDataCounts
-  }
+	}
+	
+	input EmailInviteContactInput {
+		email: String!
+		firstName: String
+		lastName: String
+	}
+
+	input EmailInvitesInput {
+		id: ID!
+		contacts: [ EmailInviteContactInput ]
+		customMessage: String
+	}
 `;
 
 module.exports = general;

@@ -1,10 +1,7 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
@@ -15,13 +12,12 @@ import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import { CustomMessageToggle, CustomMessageTextAreaStyles } from '../style';
 import {
-  CustomMessageToggle,
-  CustomMessageTextAreaStyles,
   SectionCard,
   SectionCardFooter,
   SectionTitle,
-} from '../style';
+} from '../../../components/settingsViews/style';
 import { Description, Notice } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 
@@ -143,14 +139,20 @@ class ImportSlack extends React.Component<Props, State> {
       const hasAlreadyBeenSent = fullImport && community.slackImport.sent;
 
       const url = this.props.isOnboarding
-        ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=${process
-            .env.NODE_ENV === 'development'
-            ? 'http://localhost:3001/api/slack/onboarding'
-            : 'https://spectrum.chat/api/slack/onboarding'}`
-        : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=${process
-            .env.NODE_ENV === 'development'
-            ? 'http://localhost:3001/api/slack'
-            : 'https://spectrum.chat/api/slack'}`;
+        ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${
+            community.id
+          }&redirect_uri=${
+            process.env.NODE_ENV === 'development'
+              ? 'http://localhost:3001/api/slack/onboarding'
+              : 'https://spectrum.chat/api/slack/onboarding'
+          }`
+        : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${
+            community.id
+          }&redirect_uri=${
+            process.env.NODE_ENV === 'development'
+              ? 'http://localhost:3001/api/slack'
+              : 'https://spectrum.chat/api/slack'
+          }`;
 
       if (noImport) {
         return (

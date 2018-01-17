@@ -52,6 +52,7 @@ class ThreadContainer extends React.Component<Props, State> {
     super();
 
     this.state = {
+      messagesContainer: null,
       scrollElement: null,
       isEditing: false,
     };
@@ -61,6 +62,13 @@ class ThreadContainer extends React.Component<Props, State> {
     const { isEditing } = this.state;
     this.setState({
       isEditing: !isEditing,
+    });
+  };
+
+  setMessagesContainer = elem => {
+    if (this.state.messagesContainer) return;
+    this.setState({
+      messagesContainer: elem,
     });
   };
 
@@ -93,9 +101,7 @@ class ThreadContainer extends React.Component<Props, State> {
         addCommunityToOnboarding(this.props.data.thread.community)
       );
 
-      if (scrollElement) {
-        scrollElement.scrollTop = 0;
-      }
+      this.forceScrollToTop();
     }
 
     // we never autofocus on mobile
@@ -122,20 +128,22 @@ class ThreadContainer extends React.Component<Props, State> {
   }
 
   forceScrollToTop = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    node.scrollTop = 0;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    messagesContainer.scrollTop = 0;
   };
 
   forceScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    const node = messagesContainer;
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
   contextualScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
+    const { messagesContainer } = this.state;
+    if (!messagesContainer) return;
+    const node = messagesContainer;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 280) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
@@ -206,8 +214,9 @@ class ThreadContainer extends React.Component<Props, State> {
             <ThreadContentView slider={slider}>
               <Head
                 title={`The Watercooler · ${thread.community.name}`}
-                description={`Watercooler chat for the ${thread.community
-                  .name} community`}
+                description={`Watercooler chat for the ${
+                  thread.community.name
+                } community`}
                 image={thread.community.profilePhoto}
               />
               <Titlebar
@@ -218,7 +227,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 noComposer
                 style={{ gridArea: 'header' }}
               />
-              <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+              <Content innerRef={this.setMessagesContainer}>
                 <Detail type={slider ? '' : 'only'}>
                   <WatercoolerIntroContainer>
                     <WatercoolerAvatar
@@ -238,9 +247,13 @@ class ThreadContainer extends React.Component<Props, State> {
                   </WatercoolerIntroContainer>
                   {!isEditing && (
                     <Messages
+                      threadMessageCount={thread.messageCount}
                       threadType={thread.threadType}
                       id={thread.id}
+                      scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
+                      lastSeen={thread.currentUserLastSeen}
+                      lastActive={thread.lastActive}
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
@@ -328,7 +341,7 @@ class ThreadContainer extends React.Component<Props, State> {
               noComposer
               style={{ gridArea: 'header' }}
             />
-            <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+            <Content innerRef={this.setMessagesContainer}>
               <Detail type={slider ? '' : 'only'}>
                 <ThreadCommunityBanner
                   hide={threadViewContext === 'fullscreen'}
@@ -343,9 +356,12 @@ class ThreadContainer extends React.Component<Props, State> {
 
                 {!isEditing && (
                   <Messages
+                    threadMessageCount={thread.messageCount}
                     threadType={thread.threadType}
                     id={thread.id}
+                    scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
+                    lastSeen={thread.currentUserLastSeen}
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}

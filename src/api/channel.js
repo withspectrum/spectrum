@@ -435,3 +435,24 @@ export const getChannelMembersQuery = graphql(
   GET_CHANNEL_MEMBERS_QUERY,
   GET_CHANNEL_MEMBERS_OPTIONS
 );
+
+const SEND_CHANNEL_EMAIL_INVITATIONS_MUTATION = gql`
+  mutation sendChannelEmailInvites($input: EmailInvitesInput!) {
+    sendChannelEmailInvites(input: $input)
+  }
+`;
+const SEND_CHANNEL_EMAIL_INVITATIONS_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    sendEmailInvites: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const sendChannelEmailInvitationMutation = graphql(
+  SEND_CHANNEL_EMAIL_INVITATIONS_MUTATION,
+  SEND_CHANNEL_EMAIL_INVITATIONS_OPTIONS
+);

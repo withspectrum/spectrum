@@ -6,7 +6,6 @@ import { withFilter } from 'graphql-subscriptions';
 import { userIsMemberOfChannel } from './utils';
 const { listenToUpdatedThreads } = require('../models/thread');
 import asyncify from '../utils/asyncify';
-import type { DBThread } from '../models/thread';
 
 module.exports = {
   Subscription: {

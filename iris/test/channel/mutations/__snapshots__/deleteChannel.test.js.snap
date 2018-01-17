@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should delete a channel if user is owner 1`] = `
+Object {
+  "data": Object {
+    "deleteChannel": true,
+  },
+}
+`;
+
+exports[`should delete all threads in the deleted channel 1`] = `
+Object {
+  "data": Object {
+    "deleteChannel": true,
+  },
+}
+`;
+
+exports[`should not delete a channel if user is not owner 1`] = `
+Object {
+  "data": Object {
+    "deleteChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You don't have permission to make changes to this channel],
+  ],
+}
+`;
+
+exports[`should not delete a channel if user is not signed in 1`] = `
+Object {
+  "data": Object {
+    "deleteChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to make changes to this channel.],
+  ],
+}
+`;
+
+exports[`should not delete the general channel 1`] = `
+Object {
+  "data": Object {
+    "deleteChannel": null,
+  },
+  "errors": Array [
+    [GraphQLError: The general channel can't be deleted],
+  ],
+}
+`;
