@@ -38,7 +38,7 @@ import {
   getNotifications,
   markNotificationsSeenMutation,
 } from '../../api/notification';
-import { subscribeToWebPush } from '../../api/web-push-subscriptions';
+import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
 import BrowserNotificationRequest from './components/browserNotificationRequest';

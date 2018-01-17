@@ -3,7 +3,7 @@ import notificationInfoFragment from 'shared/graphql/fragments/notification/noti
 import {
   subscribeToNewNotifications,
   subscribeToDirectMessageNotifications,
-} from './subscriptions';
+} from 'shared/graphql/subscriptions';
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {

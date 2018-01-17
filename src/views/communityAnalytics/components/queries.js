@@ -1,7 +1,8 @@
-import { graphql, gql } from 'react-apollo';
+// @flow
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
-import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
 
 export const getThisCommunity = graphql(
   gql`

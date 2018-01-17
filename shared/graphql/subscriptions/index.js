@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 import notificationInfoFragment from 'shared/graphql/fragments/notification/notificationInfo';
 import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
@@ -50,3 +50,34 @@ export const subscribeToUpdatedThreads = gql`
   }
   ${threadInfoFragment}
 `;
+
+const SUBSCRIBE_TO_WEB_PUSH_MUTATION = gql`
+  mutation subscribeToWebPush($subscription: WebPushSubscription!) {
+    subscribeWebPush(subscription: $subscription)
+  }
+`;
+
+const SUBSCRIBE_TO_WEB_PUSH_OPTIONS = {
+  props: ({ mutate }) => ({
+    subscribeToWebPush: subscription => {
+      if (!subscription) return;
+      const json = subscription.toJSON();
+      return mutate({
+        variables: {
+          subscription: {
+            endpoint: json.endpoint,
+            keys: {
+              p256dh: json.keys.p256dh,
+              auth: json.keys.auth,
+            },
+          },
+        },
+      });
+    },
+  }),
+};
+
+export const subscribeToWebPush = graphql(
+  SUBSCRIBE_TO_WEB_PUSH_MUTATION,
+  SUBSCRIBE_TO_WEB_PUSH_OPTIONS
+);

@@ -5,7 +5,7 @@ import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import communityThreadConnectionFragment from 'shared/graphql/fragments/community/communityThreadConnection';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
-import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
@@ -111,7 +111,7 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ slug, params, id }) => ({
+  options: ({ slug, id }) => ({
     variables: {
       slug: slug && slug.toLowerCase(),
       id,

@@ -7,7 +7,7 @@ import WebPushManager from '../../../helpers/web-push-manager';
 import { removeItemFromStorage } from '../../../helpers/localStorage';
 import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { subscribeToWebPush } from '../../../api/web-push-subscriptions';
+import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import {
   StyledCard,
   LargeListHeading,

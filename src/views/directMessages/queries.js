@@ -1,6 +1,6 @@
-// $FlowFixMe
+// @flow
 import { graphql, gql } from 'react-apollo';
-import { subscribeToNewMessages } from '../../api/subscriptions';
+import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
 import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 
@@ -49,7 +49,7 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
 `;
 
 export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
-  options: ({ id }) => ({
+  options: ({ id }: { id: string }) => ({
     variables: {
       id,
     },

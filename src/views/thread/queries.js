@@ -1,5 +1,5 @@
 import { graphql, gql } from 'react-apollo';
-import { subscribeToNewMessages } from '../../api/subscriptions';
+import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
 import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
 import threadMessageConnectionFragment from 'shared/graphql/fragments/thread/threadMessageConnection';
 

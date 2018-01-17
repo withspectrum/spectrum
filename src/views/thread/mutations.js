@@ -52,7 +52,7 @@ const TOGGLE_REACTION_MUTATION = gql`
   ${messageInfoFragment}
 `;
 const TOGGLE_REACTION_OPTIONS = {
-  props: ({ ownProps, mutate }) => ({
+  props: ({ mutate }) => ({
     // renames the mutate method to 'toggleReaction' and accepts an argument
     // of the reaction object. This helps us keep the mutation logic out of
     // the component

@@ -3,7 +3,7 @@ import { graphql, gql } from 'react-apollo';
 import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 import userDirectMessageThreadConnectionFragment from 'shared/graphql/fragments/user/userDirectMessageThreadConnection';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
-import { subscribeToUpdatedDirectMessageThreads } from './subscriptions';
+import { subscribeToUpdatedDirectMessageThreads } from 'shared/graphql/subscriptions';
 
 /*
   Create a new direct message group

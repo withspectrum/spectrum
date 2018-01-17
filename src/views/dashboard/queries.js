@@ -1,7 +1,7 @@
 // @flow
 import { graphql, gql } from 'react-apollo';
 import userEverythingConnectionFragment from 'shared/graphql/fragments/user/userEverythingConnection';
-import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`

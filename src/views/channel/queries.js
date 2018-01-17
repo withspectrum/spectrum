@@ -5,7 +5,7 @@ import communityInfoFragment from 'shared/graphql/fragments/community/communityI
 import communityMetaDataFragment from 'shared/graphql/fragments/community/communityMetaData';
 import channelThreadConnectionFragment from 'shared/graphql/fragments/channel/channelThreadConnection';
 import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
-import { subscribeToUpdatedThreads } from '../../api/subscriptions';
+import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`

@@ -82,9 +82,7 @@ export const SEARCH_THREADS_QUERY = gql`
 `;
 
 const SEARCH_THREADS_OPTIONS = {
-  props: ({
-    data: { fetchMore, error, loading, searchThreads, networkStatus },
-  }) => ({
+  props: ({ data: { error, loading, searchThreads, networkStatus } }) => ({
     data: {
       error,
       loading,
