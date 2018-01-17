@@ -1,7 +1,7 @@
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
-import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
-import { threadMessagesFragment } from '../../api/fragments/thread/threadMessages';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import threadMessageConnectionFragment from 'shared/graphql/fragments/thread/threadMessageConnection';
 
 export const GET_THREAD_QUERY = gql`
   query getThread($id: ID!) {
@@ -29,10 +29,10 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
         title
       }
       currentUserLastSeen
-      ...threadMessages
+      ...threadMessageConnection
     }
   }
-  ${threadMessagesFragment}
+  ${threadMessageConnectionFragment}
 `;
 export const GET_THREAD_MESSAGES_OPTIONS = {
   options: props => ({

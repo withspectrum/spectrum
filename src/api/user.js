@@ -1,17 +1,17 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userInfoFragment } from './fragments/user/userInfo';
-import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
-import { userSettingsFragment } from './fragments/user/userSettings';
-import { userCommunitiesFragment } from './fragments/user/userCommunities';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import invoiceInfoFragment from 'shared/graphql/fragments/invoice/invoiceInfo';
+import userSettingsFragment from 'shared/graphql/fragments/user/userSettings';
+import userCommunityConnectionFragment from 'shared/graphql/fragments/user/userCommunityConnection';
 
 /*
   Upload a new profilePhoto for the given currentUser
 */
 const UPLOAD_PROFILE_PHOTO_MUTATION = gql`
   mutation uploadProfilePhoto($file: File!) {
-    uploadProfilePhoto (file: $file) {
+    uploadProfilePhoto(file: $file) {
       ...userInfo
     }
   }
@@ -54,7 +54,7 @@ export const SEARCH_USERS_QUERY = gql`
 */
 const EDIT_USER_MUTATION = gql`
   mutation editUser($input: EditUserInput!) {
-    editUser (input: $input) {
+    editUser(input: $input) {
       ...userInfo
     }
   }
@@ -175,11 +175,11 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
       ...userInfo
       isPro
       totalReputation
-      ...userCommunities
+      ...userCommunityConnection
     }
   }
   ${userInfoFragment}
-  ${userCommunitiesFragment}
+  ${userCommunityConnectionFragment}
 `;
 
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
@@ -192,7 +192,7 @@ export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
 const TOGGLE_NOTIFICATION_SETTINGS_MUTATION = gql`
   mutation toggleNotificationSettings($input: ToggleNotificationSettingsInput) {
     toggleNotificationSettings(input: $input) {
-      ...userInfo,
+      ...userInfo
       ...userSettings
     }
   }
@@ -253,7 +253,7 @@ export const getUserInvoices = graphql(
 */
 const UPDATE_USER_EMAIL_MUTATION = gql`
   mutation updateUserEmail($email: String!) {
-    updateUserEmail (email: $email) {
+    updateUserEmail(email: $email) {
       ...userInfo
       email
       pendingEmail
@@ -285,14 +285,14 @@ export const updateUserEmailMutation = graphql(
   queries specific to each component.
 */
 export const GET_USER_AUTH_QUERY = gql`
-query getUserAuthProfile {
-  user: currentUser {
-    ...userInfo
-    isPro
-    totalReputation
+  query getUserAuthProfile {
+    user: currentUser {
+      ...userInfo
+      isPro
+      totalReputation
+    }
   }
-}
-${userInfoFragment}
+  ${userInfoFragment}
 `;
 export const GET_USER_AUTH_OPTIONS = {
   options: { fetchPolicy: 'cache-first' },

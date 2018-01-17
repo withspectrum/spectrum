@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
 
 export const publishThread = graphql(
   gql`

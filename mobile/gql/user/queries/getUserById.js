@@ -1,7 +1,7 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import userInfoFragment from '../../fragments/user/userInfo';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 
 export const getUserByIdQuery = gql`
   query getUser($id: ID) {

@@ -1,9 +1,9 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import userInfoFragment from '../../fragments/user/userInfo';
-import threadInfoFragment from '../../fragments/thread/threadInfo';
-import userThreadConnectionFragment from '../../fragments/user/userThreadConnection';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import userThreadConnectionFragment from 'shared/graphql/fragments/user/userThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
 

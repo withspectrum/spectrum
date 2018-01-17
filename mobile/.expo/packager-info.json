@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19002,
-  "packagerPid": 5891,
+  "packagerPort": 19001,
+  "packagerPid": 889,
   "expoServerNgrokUrl": "https://ph-tqm.brianlovin.mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.ph-tqm.brianlovin.mobile.exp.direct",
-  "ngrokPid": 3288
+  "ngrokPid": 913
 }

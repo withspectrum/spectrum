@@ -1,13 +1,13 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { communityInfoFragment } from './fragments/community/communityInfo';
-import { threadInfoFragment } from './fragments/thread/threadInfo';
-import { communityMetaDataFragment } from './fragments/community/communityMetaData';
-import { channelInfoFragment } from './fragments/channel/channelInfo';
-import { userInfoFragment } from './fragments/user/userInfo';
-import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
-import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import communityMetaDataFragment from 'shared/graphql/fragments/community/communityMetaData';
+import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import invoiceInfoFragment from 'shared/graphql/fragments/invoice/invoiceInfo';
+import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
 import { GET_THREAD_QUERY } from '../views/thread/queries';
 
 const profileQueryOptions = {
@@ -37,7 +37,7 @@ export const getCommunity = graphql(GET_COMMUNITY_QUERY, profileQueryOptions);
 */
 const CREATE_COMMUNITY_MUTATION = gql`
   mutation createCommunity($input: CreateCommunityInput!) {
-    createCommunity (input: $input) {
+    createCommunity(input: $input) {
       ...communityInfo
     }
   }
@@ -90,7 +90,7 @@ export const deleteCommunityMutation = graphql(
 */
 const EDIT_COMMUNITY_MUTATION = gql`
   mutation editCommunity($input: EditCommunityInput!) {
-    editCommunity (input: $input) {
+    editCommunity(input: $input) {
       ...communityInfo
     }
   }
@@ -118,7 +118,7 @@ export const editCommunityMutation = graphql(
 */
 const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
   mutation toggleCommunityMembership($communityId: ID!) {
-    toggleCommunityMembership (communityId: $communityId) {
+    toggleCommunityMembership(communityId: $communityId) {
       ...communityInfo
       ...communityMetaData
       channelConnection {
@@ -259,7 +259,7 @@ const getCommunityMembersOptions = {
 
 export const getCommunityMembersQuery = graphql(
   gql`
-		query getCommunityMembers($id: ID) {
+    query getCommunityMembers($id: ID) {
       community(id: $id) {
         id
         ...communityMetaData
@@ -284,10 +284,10 @@ export const getCommunityMembersQuery = graphql(
           }
         }
       }
-		}
+    }
     ${userInfoFragment}
     ${communityMetaDataFragment}
-	`,
+  `,
   getCommunityMembersOptions
 );
 
@@ -427,7 +427,10 @@ export const pinThreadMutation = graphql(
 
 export const SEARCH_THREADS_IN_COMMUNITY_QUERY = gql`
   query searchCommunityThreads($communityId: ID!, $searchString: String!) {
-    searchCommunityThreads(communityId: $communityId, searchString: $searchString) {
+    searchCommunityThreads(
+      communityId: $communityId
+      searchString: $searchString
+    ) {
       ...threadInfo
     }
   }
@@ -467,13 +470,13 @@ export const searchCommunityThreadsQuery = graphql(
 */
 export const getTopCommunities = graphql(
   gql`
-		{
-		  topCommunities {
+    {
+      topCommunities {
         ...communityInfo
       }
     }
     ${communityInfoFragment}
-	`,
+  `,
   {
     props: ({ data: { error, loading, topCommunities } }) => ({
       data: {

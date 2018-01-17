@@ -1,8 +1,9 @@
-import { gql } from 'react-apollo';
-import { communityInfoFragment } from '../community/communityInfo';
+// @flow
+import gql from 'graphql-tag';
+import communityInfoFragment from '../community/communityInfo';
 
-export const userCommunitiesFragment = gql`
-  fragment userCommunities on User {
+export default gql`
+  fragment userCommunityConnection on User {
     communityConnection {
       pageInfo {
         hasNextPage

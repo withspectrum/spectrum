@@ -1,10 +1,10 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
-import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
-import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
-import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import communityThreadConnectionFragment from 'shared/graphql/fragments/community/communityThreadConnection';
+import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
@@ -12,11 +12,11 @@ const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($slug: String, $after: String, $id: ID) {
     community(slug: $slug, id: $id) {
       ...communityInfo
-      ...communityThreads
+      ...communityThreadConnection
     }
   }
   ${communityInfoFragment}
-  ${communityThreadsFragment}
+  ${communityThreadConnectionFragment}
 `;
 
 const threadsQueryOptions = {
@@ -122,8 +122,8 @@ const threadsQueryOptions = {
 
 export const getCommunityThreads = graphql(
   gql`
-		query communityThreads($slug: String, $after: String, $id: ID) {
-			community(slug: $slug, id: $id) {
+    query communityThreads($slug: String, $after: String, $id: ID) {
+      community(slug: $slug, id: $id) {
         ...communityInfo
         pinnedThread {
           ...threadInfo
@@ -131,13 +131,13 @@ export const getCommunityThreads = graphql(
         watercooler {
           ...threadInfo
         }
-        ...communityThreads
+        ...communityThreadConnection
       }
-		}
-    ${communityThreadsFragment}
+    }
+    ${communityThreadConnectionFragment}
     ${communityInfoFragment}
     ${threadInfoFragment}
-	`,
+  `,
   threadsQueryOptions
 );
 

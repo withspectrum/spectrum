@@ -1,9 +1,9 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import threadInfoFragment from '../../fragments/thread/threadInfo';
-import communityInfoFragment from '../../fragments/community/communityInfo';
-import communityThreadConnectionFragment from '../../fragments/community/communityThreadConnection';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import communityThreadConnectionFragment from 'shared/graphql/fragments/community/communityThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
 
@@ -11,12 +11,6 @@ const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($after: String, $id: ID) {
     community(id: $id) {
       ...communityInfo
-      pinnedThread {
-        ...threadInfo
-      }
-      watercooler {
-        ...threadInfo
-      }
       ...communityThreadConnection
     }
   }
@@ -29,12 +23,6 @@ const getCommunityThreadsQuery = gql`
   query getCommunityThreads($id: ID, $after: String) {
     community(id: $id) {
       ...communityInfo
-      pinnedThread {
-        ...threadInfo
-      }
-      watercooler {
-        ...threadInfo
-      }
       ...communityThreadConnection
     }
   }

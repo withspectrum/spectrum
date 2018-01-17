@@ -1,6 +1,7 @@
-import { gql } from 'react-apollo';
+// @flow
+import gql from 'graphql-tag';
 
-export const directMessageThreadInfoFragment = gql`
+export default gql`
   fragment directMessageThreadInfo on DirectMessageThread {
     id
     snippet

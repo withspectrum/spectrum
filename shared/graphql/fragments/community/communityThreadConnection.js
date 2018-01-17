@@ -4,6 +4,12 @@ import threadInfoFragment from '../thread/threadInfo';
 
 export default gql`
   fragment communityThreadConnection on Community {
+    pinnedThread {
+      ...threadInfo
+    }
+    watercooler {
+      ...threadInfo
+    }
     threadConnection(first: 10, after: $after) {
       pageInfo {
         hasNextPage

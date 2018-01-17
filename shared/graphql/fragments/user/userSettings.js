@@ -1,6 +1,7 @@
-import { gql } from 'react-apollo';
+// @flow
+import gql from 'graphql-tag';
 
-export const userSettingsFragment = gql`
+export default gql`
   fragment userSettings on User {
     settings {
       notifications {

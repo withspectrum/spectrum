@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
+import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 
 /*
   Send an id and boolean value to set a thread to be locked or unlocked.

@@ -1,8 +1,8 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { messageInfoFragment } from './fragments/message/messageInfo';
-import { userInfoFragment } from './fragments/user/userInfo';
+import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
@@ -229,13 +229,13 @@ export const sendMessageMutation = graphql(
 );
 
 const SEND_DIRECT_MESSAGE_MUTATION = gql`
-mutation sendDirectMessage($message: MessageInput!) {
-  addMessage(message: $message) {
-    ...messageInfo
+  mutation sendDirectMessage($message: MessageInput!) {
+    addMessage(message: $message) {
+      ...messageInfo
+    }
   }
-}
-${messageInfoFragment}
-${userInfoFragment}
+  ${messageInfoFragment}
+  ${userInfoFragment}
 `;
 const SEND_DIRECT_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
-import { getChannelThreads } from '../../views/channel/queries';
+import { getChannelThreadConnection } from '../../views/channel/queries';
 import { getCurrentUserProfile } from '../../api/user';
 import { searchThreadsQuery } from '../../api/thread';
 import Titlebar from '../../views/titlebar';
@@ -42,7 +42,7 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
   DashboardThreadFeed
 );
 
-const ChannelThreadFeed = compose(connect(), getChannelThreads)(
+const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
   DashboardThreadFeed
 );
 

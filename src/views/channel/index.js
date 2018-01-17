@@ -16,7 +16,7 @@ import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
-import { getChannelThreads, getChannel } from './queries';
+import { getChannelThreadConnection, getChannel } from './queries';
 import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
@@ -24,7 +24,9 @@ import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
-const ThreadFeedWithData = compose(connect(), getChannelThreads)(ThreadFeed);
+const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
+  ThreadFeed
+);
 
 type Props = {
   match: {
@@ -100,7 +102,7 @@ class ChannelView extends React.Component<Props> {
               noComposer
             />
             <ViewError
-              heading={`You don’t have permission to view this channel.`}
+              heading={'You don’t have permission to view this channel.'}
               subheading={`Head back to the ${communitySlug} community to get back on track.`}
             >
               <Upsell404Channel community={communitySlug} />
@@ -124,15 +126,17 @@ class ChannelView extends React.Component<Props> {
               emoji={isPending ? '🕓' : '🔑'}
               heading={
                 isPending
-                  ? `Your request to join this channel is pending`
-                  : `This channel is private`
+                  ? 'Your request to join this channel is pending'
+                  : 'This channel is private'
               }
               subheading={
                 isPending
-                  ? `Return to the ${channel.community
-                      .name} community until you hear back.`
-                  : `Request to join this channel and the admins of ${channel
-                      .community.name} will be notified.`
+                  ? `Return to the ${
+                      channel.community.name
+                    } community until you hear back.`
+                  : `Request to join this channel and the admins of ${
+                      channel.community.name
+                    } will be notified.`
               }
             >
               <RequestToJoinChannel
@@ -253,13 +257,13 @@ class ChannelView extends React.Component<Props> {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`Channel not found`}
+          title={'Channel not found'}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
         <ViewError
-          heading={`We couldn’t find a channel with this name.`}
+          heading={'We couldn’t find a channel with this name.'}
           subheading={`Head back to the ${communitySlug} community to get back on track.`}
         >
           <Upsell404Channel community={communitySlug} />

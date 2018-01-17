@@ -1,9 +1,8 @@
 // @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
-import { userInfoFragment } from '../user/userInfo';
+import gql from 'graphql-tag';
+import userInfoFragment from '../user/userInfo';
 
-export const messageInfoFragment = gql`
+export default gql`
   fragment messageInfo on Message {
     id
     timestamp

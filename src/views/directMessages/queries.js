@@ -1,8 +1,8 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
-import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
-import { directMessageThreadInfoFragment } from '../../api/fragments/directMessageThread/directMessageThreadInfo';
+import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
+import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 
 const LoadMoreMessages = gql`
   query loadMoreMessages($id: ID!, $after: String) {

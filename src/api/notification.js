@@ -1,5 +1,5 @@
 import { graphql, gql } from 'react-apollo';
-import { notificationInfoFragment } from './fragments/notification/notificationInfo';
+import notificationInfoFragment from 'shared/graphql/fragments/notification/notificationInfo';
 import {
   subscribeToNewNotifications,
   subscribeToDirectMessageNotifications,

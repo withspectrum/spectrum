@@ -1,7 +1,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { userSettingsFragment } from '../../api/fragments/user/userSettings';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import userSettingsFragment from 'shared/graphql/fragments/user/userSettings';
 
 export const GET_USER_PROFILE_QUERY = gql`
   query getUserSettings($username: String) {

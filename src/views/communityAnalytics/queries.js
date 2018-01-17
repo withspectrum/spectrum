@@ -1,10 +1,10 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
-import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
+import communityMetaDataFragment from 'shared/graphql/fragments/community/communityMetaData';
 
 export const getThisCommunity = graphql(
   gql`

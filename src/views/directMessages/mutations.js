@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
+import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 
 /*
   Toggles a reaction on a specific message. The reaction object is created

@@ -1,7 +1,6 @@
 // @flow
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userEverythingFragment } from '../../api/fragments/user/userEverything';
+import userEverythingConnectionFragment from 'shared/graphql/fragments/user/userEverythingConnection';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
@@ -9,10 +8,10 @@ const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
     user: currentUser {
       id
-      ...userEverything
+      ...userEverythingConnection
     }
   }
-  ${userEverythingFragment}
+  ${userEverythingConnectionFragment}
 `;
 
 const threadsQueryOptions = {
@@ -100,13 +99,13 @@ const threadsQueryOptions = {
 
 export const getEverythingThreads = graphql(
   gql`
-  query getEverythingThreads($after: String) {
-    user: currentUser {
-      id
-      ...userEverything
+    query getEverythingThreads($after: String) {
+      user: currentUser {
+        id
+        ...userEverythingConnection
+      }
     }
-  }
-  ${userEverythingFragment}
-`,
+    ${userEverythingConnectionFragment}
+  `,
   threadsQueryOptions
 );

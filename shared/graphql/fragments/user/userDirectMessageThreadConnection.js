@@ -1,10 +1,9 @@
 // @flow
-// $FlowFixme
-import { gql } from 'react-apollo';
-import { directMessageThreadInfoFragment } from '../directMessageThread/directMessageThreadInfo';
+import gql from 'graphql-tag';
+import directMessageThreadInfoFragment from '../directMessageThread/directMessageThreadInfo';
 
-export const userDirectMessageThreadsFragment = gql`
-  fragment userDirectMessageThreads on User {
+export default gql`
+  fragment userDirectMessageThreadConnection on User {
     directMessageThreadsConnection {
       pageInfo {
         hasNextPage

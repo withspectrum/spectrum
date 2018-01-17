@@ -1,21 +1,24 @@
 // @flow
-// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { userThreadsFragment } from '../../api/fragments/user/userThreads';
-import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import userThreadConnectionFragment from 'shared/graphql/fragments/user/userThreadConnection';
+import userCommunityConnectionFragment from 'shared/graphql/fragments/user/userCommunityConnection';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query loadMoreUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
+  query loadMoreUserThreads(
+    $username: String
+    $after: String
+    $kind: ThreadConnectionType
+  ) {
     user(username: $username) {
       ...userInfo
-      ...userThreads
+      ...userThreadConnection
     }
   }
   ${userInfoFragment}
-  ${userThreadsFragment}
+  ${userThreadConnectionFragment}
 `;
 
 const threadsQueryOptions = {
@@ -112,15 +115,19 @@ const threadsQueryOptions = {
 
 export const getUserThreads = graphql(
   gql`
-		query getUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
-			user(username: $username) {
+    query getUserThreads(
+      $username: String
+      $after: String
+      $kind: ThreadConnectionType
+    ) {
+      user(username: $username) {
         ...userInfo
-        ...userThreads
+        ...userThreadConnection
       }
-		}
+    }
     ${userInfoFragment}
-    ${userThreadsFragment}
-	`,
+    ${userThreadConnectionFragment}
+  `,
   threadsQueryOptions
 );
 
@@ -141,16 +148,16 @@ const profileQueryOptions = {
 
 export const getUser = graphql(
   gql`
-		query getUser($username: String) {
-			user(username: $username) {
+    query getUser($username: String) {
+      user(username: $username) {
         ...userInfo
         isPro
         totalReputation
-        ...userCommunities
+        ...userCommunityConnection
       }
-		}
+    }
     ${userInfoFragment}
-    ${userCommunitiesFragment}
-	`,
+    ${userCommunityConnectionFragment}
+  `,
   profileQueryOptions
 );

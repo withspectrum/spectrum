@@ -1,8 +1,7 @@
 // @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
-export const notificationInfoFragment = gql`
+export default gql`
   fragment notificationInfo on Notification {
     id
     createdAt

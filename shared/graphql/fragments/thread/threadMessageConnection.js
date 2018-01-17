@@ -1,10 +1,9 @@
 // @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
-import { messageInfoFragment } from '../message/messageInfo';
+import gql from 'graphql-tag';
+import messageInfoFragment from '../message/messageInfo';
 
-export const threadMessagesFragment = gql`
-  fragment threadMessages on Thread {
+export default gql`
+  fragment threadMessageConnection on Thread {
     messageConnection(after: $after) {
       pageInfo {
         hasNextPage

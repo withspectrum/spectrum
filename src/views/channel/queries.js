@@ -1,22 +1,22 @@
 // @flow
 import { graphql, gql } from 'react-apollo';
-import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
-import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
-import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
-import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
+import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import communityMetaDataFragment from 'shared/graphql/fragments/community/communityMetaData';
+import channelThreadConnectionFragment from 'shared/graphql/fragments/channel/channelThreadConnection';
+import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
 import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query loadMoreChannelThreads($id: ID, $after: String) {
+  query loadMorechannelThreadConnection($id: ID, $after: String) {
     channel(id: $id) {
       ...channelInfo
-      ...channelThreads
+      ...channelThreadConnection
     }
   }
   ${channelInfoFragment}
-  ${channelThreadsFragment}
+  ${channelThreadConnectionFragment}
 `;
 
 const threadsQueryOptions = {
@@ -119,17 +119,17 @@ const threadsQueryOptions = {
   }),
 };
 
-export const getChannelThreads = graphql(
+export const getChannelThreadConnection = graphql(
   gql`
-    query getChannelThreads($id: ID, $after: String) {
-			channel(id: $id) {
+    query getChannelThreadConnection($id: ID, $after: String) {
+      channel(id: $id) {
         ...channelInfo
-        ...channelThreads
+        ...channelThreadConnection
       }
     }
     ${channelInfoFragment}
-    ${channelThreadsFragment}
-	`,
+    ${channelThreadConnectionFragment}
+  `,
   threadsQueryOptions
 );
 
@@ -151,8 +151,8 @@ const profileQueryOptions = {
 
 export const getChannel = graphql(
   gql`
-		query getChannel($channelSlug: String, $communitySlug: String) {
-			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
+    query getChannel($channelSlug: String, $communitySlug: String) {
+      channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
         community {
@@ -160,11 +160,11 @@ export const getChannel = graphql(
           ...communityMetaData
         }
       }
-		}
+    }
     ${channelInfoFragment}
     ${communityInfoFragment}
     ${communityMetaDataFragment}
     ${channelMetaDataFragment}
-	`,
+  `,
   profileQueryOptions
 );

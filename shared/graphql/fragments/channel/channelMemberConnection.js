@@ -1,8 +1,9 @@
-import { gql } from 'react-apollo';
-import { userInfoFragment } from '../user/userInfo';
+// @flow
+import gql from 'graphql-tag';
+import userInfoFragment from '../user/userInfo';
 
-export const channelMembersFragment = gql`
-  fragment channelMembers on Channel {
+export default gql`
+  fragment channelMemberConnection on Channel {
     memberConnection {
       pageInfo {
         hasNextPage

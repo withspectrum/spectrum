@@ -1,16 +1,16 @@
 // @flow
 import { graphql, gql } from 'react-apollo';
-import { channelInfoFragment } from './fragments/channel/channelInfo';
-import { userInfoFragment } from './fragments/user/userInfo';
-import { communityInfoFragment } from './fragments/community/communityInfo';
-import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
+import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
+import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
 
 /*
   Create a new channel
 */
 const CREATE_CHANNEL_MUTATION = gql`
   mutation createChannel($input: CreateChannelInput!) {
-    createChannel (input: $input) {
+    createChannel(input: $input) {
       ...channelInfo
     }
   }
@@ -63,7 +63,7 @@ export const deleteChannelMutation = graphql(
 */
 const EDIT_CHANNEL_MUTATION = gql`
   mutation editChannel($input: EditChannelInput!) {
-    editChannel (input: $input) {
+    editChannel(input: $input) {
       ...channelInfo
     }
   }
@@ -91,7 +91,7 @@ export const editChannelMutation = graphql(
 */
 const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
   mutation toggleChannelSubscription($channelId: ID!) {
-    toggleChannelSubscription (channelId: $channelId) {
+    toggleChannelSubscription(channelId: $channelId) {
       ...channelInfo
     }
   }
@@ -221,14 +221,14 @@ const getChannelByIdOptions = {
 
 export const getChannelById = graphql(
   gql`
-		query getChannel($id: ID) {
-			channel(id: $id) {
+    query getChannel($id: ID) {
+      channel(id: $id) {
         ...channelInfo
       }
-		}
+    }
     ${channelInfoFragment}
     ${communityInfoFragment}
-	`,
+  `,
   getChannelByIdOptions
 );
 
@@ -246,18 +246,18 @@ const getPendingUsersOptions = {
 
 export const getPendingUsersQuery = graphql(
   gql`
-		query getChannel($id: ID) {
-			channel(id: $id) {
+    query getChannel($id: ID) {
+      channel(id: $id) {
         ...channelInfo
         pendingUsers {
           ...userInfo
         }
       }
-		}
+    }
     ${userInfoFragment}
     ${communityInfoFragment}
     ${channelInfoFragment}
-	`,
+  `,
   getPendingUsersOptions
 );
 
@@ -275,18 +275,18 @@ const getBlockedUsersOptions = {
 
 export const getBlockedUsersQuery = graphql(
   gql`
-		query getChannel($id: ID) {
-			channel(id: $id) {
+    query getChannel($id: ID) {
+      channel(id: $id) {
         ...channelInfo
         blockedUsers {
           ...userInfo
         }
       }
-		}
+    }
     ${userInfoFragment}
     ${communityInfoFragment}
     ${channelInfoFragment}
-	`,
+  `,
   getBlockedUsersOptions
 );
 
