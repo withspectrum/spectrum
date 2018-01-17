@@ -1,4 +1,4 @@
-var apollo = require('react-apollo'),
+var apollo = require('apollo-utilities'),
   toIdValue = apollo.toIdValue;
 
 function dataIdFromObject(result) {

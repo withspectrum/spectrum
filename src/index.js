@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
@@ -51,22 +52,21 @@ if (t && (!existingUser || !existingUser.currentUser)) {
   }
 }
 
-const store = initStore(window.__SERVER_STATE__ || initialState, {
-  middleware: [client.middleware()],
-  reducers: {
-    apollo: client.reducer(),
-  },
-});
+const store = initStore(window.__SERVER_STATE__ || initialState);
 
 function render() {
   return ReactDOM.render(
-    <ApolloProvider store={store} client={client}>
-      <Router history={history}>
-        <Routes
-          maintenanceMode={process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'}
-        />
-      </Router>
-    </ApolloProvider>,
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <Router history={history}>
+          <Routes
+            maintenanceMode={
+              process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
+            }
+          />
+        </Router>
+      </ApolloProvider>
+    </Provider>,
     document.querySelector('#root')
   );
 }
