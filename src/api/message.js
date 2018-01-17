@@ -127,7 +127,7 @@ const SEND_MESSAGE_OPTIONS = {
             __typename: 'Message',
           },
         },
-        update: (store, { data: { addMessage }, data: object }) => {
+        update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             variables: {
