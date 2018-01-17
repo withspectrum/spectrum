@@ -34,8 +34,17 @@ export default async (
   const cursor = decode(after || before);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);
-  const lastThreadIndex =
+  let lastThreadIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+  if (typeof lastThreadIndex !== 'number') {
+    if (!!after || !!before) {
+      throw new UserError(
+        'Invalid cursor provided to',
+        !!after ? 'after.' : 'before.'
+      );
+    }
+    lastThreadIndex = null;
+  }
   const currentUser = user;
 
   // if the user is signed in, only return stories for the channels

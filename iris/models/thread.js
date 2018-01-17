@@ -62,7 +62,7 @@ export const getThreadsByChannels = (
     after,
     last,
     before,
-  }: { first: number, after: string, last: number, before: string }
+  }: { first?: ?number, after?: ?number, last?: ?number, before?: ?number }
 ): Promise<Array<DBThread>> => {
   const reverse = !first && !after;
   return db
