@@ -1,5 +1,7 @@
+import gql from 'graphql-tag';
+
 // $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
 import { userDirectMessageThreadsFragment } from './fragments/user/userDirectMessageThreads';
 import { userInfoFragment } from './fragments/user/userInfo';

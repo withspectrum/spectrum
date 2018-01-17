@@ -1,6 +1,8 @@
+import gql from 'graphql-tag';
+
 // @flow
 // $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { threadInfoFragment } from './fragments/thread/threadInfo';
 
 /*
@@ -62,13 +64,13 @@ const getThreadByIdOptions = {
 
 export const getThreadById = graphql(
   gql`
-		query getThread($id: ID!) {
-			thread(id: $id) {
+    query getThread($id: ID!) {
+      thread(id: $id) {
         ...threadInfo
       }
-		}
+    }
     ${threadInfoFragment}
-	`,
+  `,
   getThreadByIdOptions
 );
 
