@@ -18,8 +18,8 @@ const createSubscriptionsServer = (server: any, path: string) => {
       execute,
       subscribe,
       schema,
-      onOperation: (_: any, params: Object, rawSocket: Socket) => {
-        const errorFormatter = createErrorFormatter(rawSocket.upgradeReq);
+      onOperation: (_: any, params: Object) => {
+        const errorFormatter = createErrorFormatter();
         params.formatError = errorFormatter;
         return params;
       },
