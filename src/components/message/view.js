@@ -69,27 +69,23 @@ export const Body = props => {
         return <Code pending={pending}>{redraft(body, codeRenderer)}</Code>;
       }
 
-      if (messageType === 'reply') {
-        return <Text>{redraft(body, messageRenderer)}</Text>;
-      }
-
       return (
         <Text me={me} pending={pending}>
+          {message.quotedMessage && <Quote message={message.quotedMessage} />}
           {redraft(body, messageRenderer)}
         </Text>
       );
   }
 };
 
-const Quote = ({ data: { message }, parsedMessage }) => (
+const Quote = ({ message }) => (
   <QuoteWrapper>
     <Byline>{message.sender}</Byline>
-    {/* <Body
+    <Body
       id={message.id}
       type={emojiOnly ? 'text' : message.messageType}
-      openGallery={() => this.toggleOpenGallery(message.id)}
       message={emojiOnly ? parsedMessage : message.content}
-    /> */}
+    />
   </QuoteWrapper>
 );
 
@@ -102,6 +98,12 @@ const Action = props => {
       return (
         <ActionWrapper>
           <Icon glyph="share" tipText={`Share`} tipLocation={'top'} size={20} />
+        </ActionWrapper>
+      );
+    case 'reply':
+      return (
+        <ActionWrapper>
+          <Icon glyph="reply" tipText={`Reply`} tipLocation={'top'} size={20} />
         </ActionWrapper>
       );
     case 'delete':
@@ -125,6 +127,7 @@ export const Actions = props => {
     reaction,
     // toggleReaction,
     // shareable,
+    quotable,
     canModerate,
     deleteMessage,
     hideIndicator,
@@ -134,6 +137,7 @@ export const Actions = props => {
   return (
     <ActionUI me={me}>
       {props.children}
+      {quotable && <Action me={me} action={'reply'} />}
       {/* {props.shareable && <Action me={me} action={'share'} /> } */}
       {canModerate &&
         !isOptimisticMessage && (

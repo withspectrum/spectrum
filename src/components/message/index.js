@@ -81,6 +81,7 @@ class Message extends Component {
         {actionable && (
           <Actions
             me={me}
+            quotable={message.messageType !== 'media'}
             shareable={shareable}
             currentUser={currentUser}
             canModerate={canModerate}
