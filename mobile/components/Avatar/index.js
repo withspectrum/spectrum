@@ -17,6 +17,7 @@ export default class Avatar extends Component<AvatarProps> {
   render() {
     const { src, community, user, size } = this.props;
 
+    // $FlowFixMe
     const optimizedAvatar = optimize(src, {
       w: size,
       dpr: '2',

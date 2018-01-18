@@ -95,8 +95,6 @@ class ThreadFeed extends React.Component<Props, State> {
       navigation,
     } = this.props;
 
-    console.log(this.props);
-
     const hasThreads = threads && threads.length > 0;
 
     let filteredThreads = hasThreads ? threads : [];
@@ -114,14 +112,18 @@ class ThreadFeed extends React.Component<Props, State> {
     // pull out the watercooler
     if (hasWatercooler) {
       filteredThreads = filteredThreads.filter(
-        t => t.id !== this.props.data.community.watercooler.id
+        t =>
+          this.props.data.community.watercooler &&
+          t.id !== this.props.data.community.watercooler.id
       );
     }
 
     // pull out the pinned thread
     if (hasPinnedThread) {
       filteredThreads = filteredThreads.filter(
-        t => t.id !== this.props.data.community.pinnedThread.id
+        t =>
+          this.props.data.community.pinnedThread &&
+          t.id !== this.props.data.community.pinnedThread.id
       );
     }
 

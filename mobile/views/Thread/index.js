@@ -23,7 +23,6 @@ type Props = {
 class Thread extends React.Component<Props> {
   render() {
     const { data, isLoading, hasError } = this.props;
-    console.log('THREAD PRPS', this.props);
 
     if (data.thread) {
       return (

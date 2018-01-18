@@ -55,6 +55,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
     },
     fetchPolicy: 'cache-and-network',
   }),
+  // $FlowFixMe
   props: ({ data: { directMessageThread }, data, ownProps, ...rest }) => ({
     ...rest,
     data: {

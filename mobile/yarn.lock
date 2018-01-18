@@ -6257,8 +6257,8 @@ tar@^2.1.1, tar@^2.2.1:
     inherits "2"
 
 tar@^4.0.2:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-4.2.0.tgz#7e2bdadf55a4a04bf64a9d2680b4455e7c61d45e"
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.3.0.tgz#11351be1c7944c59dd197850119c2081d8bc7fe5"
   dependencies:
     chownr "^1.0.1"
     fs-minipass "^1.2.3"

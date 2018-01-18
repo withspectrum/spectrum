@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { connect } from 'react-redux';
@@ -31,6 +31,7 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
+import newActivityIndicator from './components/newActivityIndicator';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -50,18 +51,40 @@ const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
 
 const DashboardWrapper = props => <Wrapper {...props} />;
 
-class Dashboard extends Component {
-  state: {
-    isHovered: boolean,
+type State = {
+  isHovered: boolean,
+};
+
+type EdgeType = {
+  node: {
+    id: string,
+    pinnedThreadId: ?string,
+    slug: string,
+  },
+};
+
+type Props = {
+  data: {
+    user?: {
+      id: string,
+      communityConnection: {
+        edges: Array<?EdgeType>,
+      },
+    },
+  },
+  newActivityIndicator: boolean,
+  activeThread: ?string,
+  activeCommunity: ?string,
+  activeChannel: ?string,
+  isLoading: boolean,
+  hasError: boolean,
+  searchQueryString: ?string,
+};
+
+class Dashboard extends React.Component<Props, State> {
+  state = {
+    isHovered: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isHovered: false,
-    };
-  }
 
   setHover = () => {
     setTimeout(() => {
@@ -86,7 +109,6 @@ class Dashboard extends Component {
       activeChannel,
       isLoading,
       hasError,
-
       searchQueryString,
     } = this.props;
 
@@ -119,9 +141,9 @@ class Dashboard extends Component {
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
-      const communities = user.communityConnection.edges.map(c => c.node);
+      const communities = user.communityConnection.edges.map(c => c && c.node);
       const activeCommunityObject = communities.filter(
-        c => c.id === activeCommunity
+        c => c && c.id === activeCommunity
       )[0];
 
       return (
@@ -259,6 +281,9 @@ const map = state => ({
   activeChannel: state.dashboardFeed.activeChannel,
   searchQueryString: state.dashboardFeed.search.queryString,
 });
-export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
-  Dashboard
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getCurrentUserProfile,
+  viewNetworkHandler
+)(Dashboard);

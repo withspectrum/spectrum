@@ -95,6 +95,7 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
   options: {
     fetchPolicy: 'cache-and-network',
   },
+  // $FlowFixMe
   props: props => ({
     ...props,
     hasNextPage: props.data.user
@@ -208,7 +209,7 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
 `;
 
 export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
-  options: ({ id }) => ({
+  options: ({ id }: { id: string }) => ({
     variables: {
       id,
     },

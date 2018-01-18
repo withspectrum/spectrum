@@ -11,23 +11,29 @@ const NUM_TO_DISPLAY = 5;
 const messageAvatars = list => {
   const avatarList = list.slice(0, NUM_TO_DISPLAY);
 
-  return avatarList.map((participant, i) => (
-    <ParticipantHead
-      offset={i + 1}
-      key={participant.id}
-      tipText={participant.name}
-      tipLocation={'top-right'}
-    >
-      <Avatar
-        user={participant}
-        size={24}
-        isOnline={false}
-        link={participant.username ? `/users/${participant.username}` : null}
-        src={`${participant.profilePhoto}`}
-        role="presentation"
-      />
-    </ParticipantHead>
-  ));
+  return avatarList.map((participant, i) => {
+    if (!participant) {
+      return null;
+    }
+
+    return (
+      <ParticipantHead
+        offset={i + 1}
+        key={participant.id}
+        tipText={participant.name}
+        tipLocation={'top-right'}
+      >
+        <Avatar
+          user={participant}
+          size={24}
+          isOnline={false}
+          link={participant.username ? `/users/${participant.username}` : null}
+          src={`${participant.profilePhoto}`}
+          role="presentation"
+        />
+      </ParticipantHead>
+    );
+  });
 };
 
 type UserType = {
@@ -66,7 +72,7 @@ const Facepile = ({ participants, creator }: FacepileProps) => {
   }
 
   const participantList = participants.filter(
-    participant => participant.id !== creator.id
+    participant => participant && participant.id !== creator.id
   );
   const participantCount = participants.length;
 

@@ -9,6 +9,7 @@ export default function withSafeAreaView(
   function EnhancedComponent(props: any) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#CCC' }}>
+        {/* $FlowFixMe */}
         <WrappedComponent {...props} />
       </SafeAreaView>
     );

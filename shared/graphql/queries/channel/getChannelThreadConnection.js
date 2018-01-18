@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import channelThreadConnectionFragment from '../../fragments/channel/channelThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
+import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 export const getChannelThreadConnectionQuery = gql`
   query getChannelThreadConnection($id: ID, $after: String) {

@@ -35,19 +35,15 @@ type Props = {
 };
 
 type State = {
-  feed: 'participant' | 'creator',
+  feed: string,
 };
 
 const UserThreadFeed = compose(getUserThreads)(ThreadFeed);
 
 class User extends React.Component<Props, State> {
-  state = {
-    feed: 'participant',
-  };
+  state = { feed: 'participant' };
 
-  toggleFeed = (feed: string) => {
-    return this.setState({ feed });
-  };
+  toggleFeed = (feed: string) => this.setState({ feed });
 
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
