@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
-import { toggleChannelSubscriptionMutation } from '../../../api/channel';
+import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
 import { track } from '../../../helpers/events';
@@ -81,20 +81,25 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Your request to join the ${toggleChannelSubscription.name} channel in ${toggleChannelSubscription
-            .community.name} has been sent.`;
+          str = `Your request to join the ${
+            toggleChannelSubscription.name
+          } channel in ${
+            toggleChannelSubscription.community.name
+          } has been sent.`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined the ${toggleChannelSubscription.community
-            .name} community!`;
+          str = `Joined the ${
+            toggleChannelSubscription.community.name
+          } community!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';

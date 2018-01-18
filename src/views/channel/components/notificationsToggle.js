@@ -4,7 +4,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { toggleChannelNotificationsMutation } from '../../../api/channel';
+import toggleChannelNotificationsMutation from 'shared/graphql/mutations/channel/toggleChannelNotifications';
 import { Checkbox } from '../../../components/formElements';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {

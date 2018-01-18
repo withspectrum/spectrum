@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
-import { getBlockedUsersQuery } from '../../../api/channel';
+import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import {
   SectionCard,
   SectionTitle,

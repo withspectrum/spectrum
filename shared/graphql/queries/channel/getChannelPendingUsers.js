@@ -1,8 +1,8 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
-import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
+import userInfoFragment from '../../fragments/user/userInfo';
+import channelInfoFragment from '../../fragments/channel/channelInfo';
 
 const getChannelPendingUsersQuery = gql`
   query getChannelPendingUsers($id: ID) {

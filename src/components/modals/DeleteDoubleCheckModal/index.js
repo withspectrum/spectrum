@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
-import { deleteChannelMutation } from '../../../api/channel';
+import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import { deleteThreadMutation } from '../../../api/thread';
 import { deleteMessage } from '../../../api/message';
 
@@ -34,18 +31,30 @@ import { Actions, Message } from './style';
   redirect => optional => string which represents the path a user should return
   too after deleting a thing (e.g. '/foo/bar')
 */
-class DeleteDoubleCheckModal extends Component {
-  state: {
-    isLoading: boolean,
+type State = {
+  isLoading: boolean,
+};
+
+type Props = {
+  dispatch: Function,
+  modalProps: {
+    id: string,
+    entity: string,
+    redirect?: ?string,
+    message?: ?string,
+  },
+  deleteMessage: Function,
+  deleteCommunity: Function,
+  deleteThread: Function,
+  deleteChannel: Function,
+  dispatch: Function,
+  isOpen: boolean,
+};
+
+class DeleteDoubleCheckModal extends React.Component<Props, State> {
+  state = {
+    isLoading: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-    };
-  }
 
   close = () => {
     this.props.dispatch(closeModal());
@@ -59,7 +68,6 @@ class DeleteDoubleCheckModal extends Component {
       deleteThread,
       deleteChannel,
       dispatch,
-      // history,
     } = this.props;
 
     this.setState({
@@ -155,7 +163,9 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Sorry, we weren't able to delete this community. ${err.message}`
+                `Sorry, we weren't able to delete this community. ${
+                  err.message
+                }`
               )
             );
             this.setState({
@@ -224,8 +234,10 @@ const DeleteDoubleCheckModalWithMutations = compose(
   withRouter
 )(DeleteDoubleCheckModal);
 
-const mapStateToProps = state => ({
+const map = state => ({
   isOpen: state.modals.isOpen,
   modalProps: state.modals.modalProps,
 });
-export default connect(mapStateToProps)(DeleteDoubleCheckModalWithMutations);
+
+// $FlowIssue
+export default connect(map)(DeleteDoubleCheckModalWithMutations);

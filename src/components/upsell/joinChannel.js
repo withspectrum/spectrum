@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { toggleChannelSubscriptionMutation } from '../../api/channel';
+import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
 import { NullState } from './index';
@@ -52,17 +52,23 @@ class JoinChannel extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';

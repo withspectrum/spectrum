@@ -5,7 +5,7 @@ import Link from 'src/components/link';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { displayLoadingCard } from '../../../components/loading';
-import { getPendingUsersQuery } from '../../../api/channel';
+import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import { PendingUserNotificationContainer, PendingUserCount } from './style';
 
 const PendingUsersNotificationPure = ({ data: { channel } }) => {

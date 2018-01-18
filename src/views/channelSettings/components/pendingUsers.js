@@ -5,7 +5,7 @@ import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { getPendingUsersQuery } from '../../../api/channel';
+import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import ViewError from '../../../components/viewError';
 import {
   ListContainer,

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
@@ -11,10 +12,8 @@ import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
-import {
-  CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
-  createChannelMutation,
-} from '../../../api/channel';
+import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
+import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -28,20 +27,28 @@ import {
 } from '../../formElements';
 import { Form, Actions } from './style';
 
-class CreateChannelModal extends Component {
-  state: {
-    name: string,
-    slug: string,
-    description: string,
-    isPrivate: boolean,
-    slugTaken: boolean,
-    slugError: boolean,
-    descriptionError: boolean,
-    nameError: boolean,
-    createError: boolean,
-    loading: boolean,
-  };
+type State = {
+  name: string,
+  slug: string,
+  description: string,
+  isPrivate: boolean,
+  slugTaken: boolean,
+  slugError: boolean,
+  descriptionError: boolean,
+  nameError: boolean,
+  createError: boolean,
+  loading: boolean,
+};
 
+type Props = {
+  client: Object,
+  dispatch: Function,
+  isOpen: boolean,
+  modalProps: any,
+  createChannel: Function,
+};
+
+class CreateChannelModal extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -125,7 +132,7 @@ class CreateChannelModal extends Component {
       // check the db to see if this channel slug exists
       this.props.client
         .query({
-          query: CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
+          query: getChannelBySlugAndCommunitySlugQuery,
           variables: {
             channelSlug: slug,
             communitySlug,
@@ -376,6 +383,7 @@ const mapStateToProps = state => ({
   modalProps: state.modals.modalProps,
 });
 
+// $FlowIssue
 const CreateChannelModalWithState = connect(mapStateToProps)(
   CreateChannelModalWithMutation
 );

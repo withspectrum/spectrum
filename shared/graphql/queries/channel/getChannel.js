@@ -34,7 +34,7 @@ export const getChannelById = graphql(
   Used to check for duplicate channel names during channel creation, and can
   be used as a way to get a channel based on url params.
 */
-const getChannelBySlugAndCommunitySlugQuery = gql`
+export const getChannelBySlugAndCommunitySlugQuery = gql`
   query getChannel($channelSlug: String, $communitySlug: String) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo

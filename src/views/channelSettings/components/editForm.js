@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import { track } from '../../../helpers/events';
-import {
-  editChannelMutation,
-  deleteChannelMutation,
-} from '../../../api/channel';
+import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
+import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Notice } from '../../../components/listItems/style';

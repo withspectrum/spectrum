@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { UserListItem } from '../../../components/listItems';
 import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
-import { getChannelMembersQuery } from '../../../api/channel';
+import getChannelMembersQuery from 'shared/graphql/queries/channel/getChannelMemberConnection';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
 import ViewError from '../../../components/viewError';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';

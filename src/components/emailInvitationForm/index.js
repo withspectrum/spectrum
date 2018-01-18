@@ -7,7 +7,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Icon from '../icons';
 import isEmail from 'validator/lib/isEmail';
 import { sendCommunityEmailInvitationsMutation } from '../../api/community';
-import { sendChannelEmailInvitationMutation } from '../../api/channel';
+// import { sendChannelEmailInvitationMutation } from '../../api/channel';
 import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from '../settingsViews/style';
@@ -322,8 +322,8 @@ export const CommunityInvitationForm = compose(
   sendCommunityEmailInvitationsMutation
 )(EmailInvitationForm);
 
-export const ChannelInvitationForm = compose(
-  // $FlowIssue
-  connect(map),
-  sendChannelEmailInvitationMutation
-)(EmailInvitationForm);
+// export const ChannelInvitationForm = compose(
+//   // $FlowIssue
+//   connect(map),
+//   sendChannelEmailInvitationMutation
+// )(EmailInvitationForm);

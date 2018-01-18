@@ -19,9 +19,9 @@ export const GET_USER_PROFILE_QUERY = gql`
 `;
 
 export const GET_USER_PROFILE_OPTIONS = {
-  options: ({ match: { params: { username } } }) => ({
+  options: ({ match }: { match: { params: { username: string } } }) => ({
     variables: {
-      username,
+      username: match.params.username,
     },
     fetchPolicy: 'network-only',
   }),

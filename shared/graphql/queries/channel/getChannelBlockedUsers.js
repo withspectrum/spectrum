@@ -1,9 +1,9 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
-import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
-import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
+import userInfoFragment from '../../fragments/user/userInfo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import channelInfoFragment from '../../fragments/channel/channelInfo';
 
 export const getChannelBlockedUsersQuery = gql`
   query getChannelBlockedUsers($id: ID) {

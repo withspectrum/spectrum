@@ -1,6 +1,7 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { getChannelById } from '../../../api/channel';
+import { getChannelById } from 'shared/graphql/queries/channel/getChannel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
 import Icon from '../../../components/icons';
@@ -23,7 +24,13 @@ const NewChannel = compose(getChannelById, displayLoadingCard)(
   NewChannelComponent
 );
 
-export const NewChannelNotification = ({ notification, currentUser }) => {
+export const NewChannelNotification = ({
+  notification,
+  currentUser,
+}: {
+  notification: Object,
+  currentUser: Object,
+}) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
   const newChannelCount =

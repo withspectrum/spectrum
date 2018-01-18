@@ -9,10 +9,8 @@ import { Loading } from '../../components/loading';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Upsell404Channel } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
-import {
-  togglePendingUserInChannelMutation,
-  unblockUserInChannelMutation,
-} from '../../api/channel';
+import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
+import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import Titlebar from '../titlebar';
 import ViewError from '../../components/viewError';
 import { View } from '../../components/settingsViews/style';

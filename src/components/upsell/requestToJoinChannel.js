@@ -1,13 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { track } from '../../helpers/events';
-import { toggleChannelSubscriptionMutation } from '../../api/channel';
+import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Button, OutlineButton } from '../buttons';
 import { Actions } from './style';
@@ -60,10 +57,12 @@ class RequestToJoinChannel extends Component<Props, State> {
         }
 
         const str = isPending
-          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-              .community.name}!`
-          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-              .community.name}.`;
+          ? `Requested to join ${toggleChannelSubscription.name} in ${
+              toggleChannelSubscription.community.name
+            }!`
+          : `Canceled request to join ${toggleChannelSubscription.name} in ${
+              toggleChannelSubscription.community.name
+            }.`;
 
         const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));

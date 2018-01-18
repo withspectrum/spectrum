@@ -1,11 +1,11 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
-import channelMetaDataFragment from 'shared/graphql/fragments/channel/channelMetaData';
-import channelMemberConnectionFragment from 'shared/graphql/fragments/channel/channelMemberConnection';
+import channelInfoFragment from '../../fragments/channel/channelInfo';
+import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
+import channelMemberConnectionFragment from '../../fragments/channel/channelMemberConnection';
 
-const getChannelMemberConnectionQuery = gql`
+export const getChannelMemberConnectionQuery = gql`
   query getChannelMemberConnection($id: ID, $after: String) {
     channel(id: $id) {
       ...channelInfo
