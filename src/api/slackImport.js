@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 
 const getSlackImportOptions = {
   options: ({ id }) => ({

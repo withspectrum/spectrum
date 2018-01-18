@@ -1,6 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withApollo } from 'react-apollo';
 import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
@@ -11,7 +12,7 @@ import Head from '../../components/head';
 import ChatInput from '../../components/chatInput';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
-import { getThread } from './queries';
+import { getThread, GET_THREAD_QUERY } from './queries';
 import { NullState, UpsellSignIn } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
 import LoadingView from './components/loading';
@@ -72,6 +73,39 @@ class ThreadContainer extends React.Component<Props, State> {
     });
   };
 
+  // Locally update thread.currentUserLastSeen
+  updateThreadLastSeen = threadId => {
+    const { currentUser, client } = this.props;
+    // No currentUser, no reason to update currentUserLastSeen
+    if (!currentUser) return;
+
+    try {
+      const threadData = client.readQuery({
+        query: GET_THREAD_QUERY,
+        variables: {
+          id: threadId,
+        },
+      });
+
+      client.writeQuery({
+        query: GET_THREAD_QUERY,
+        variables: {
+          id: threadId,
+        },
+        data: {
+          ...threadData,
+          thread: {
+            ...threadData.thread,
+            currentUserLastSeen: new Date(),
+          },
+        },
+      });
+    } catch (err) {
+      // Errors that happen with this shouldn't crash the app
+      console.log(err);
+    }
+  };
+
   componentDidMount() {
     const elem = document.getElementById('scroller-for-inbox-thread-view');
     this.setState({
@@ -101,6 +135,8 @@ class ThreadContainer extends React.Component<Props, State> {
         addCommunityToOnboarding(this.props.data.thread.community)
       );
 
+      // Update thread.currentUserLastSeen for the last thread when we switch away from it
+      this.updateThreadLastSeen(prevProps.threadId);
       this.forceScrollToTop();
     }
 
@@ -447,6 +483,6 @@ class ThreadContainer extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getThread, viewNetworkHandler)(
+export default compose(connect(map), getThread, viewNetworkHandler, withApollo)(
   ThreadContainer
 );

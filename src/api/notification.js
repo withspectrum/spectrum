@@ -1,4 +1,6 @@
-import { graphql, gql } from 'react-apollo';
+// @flow
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import notificationInfoFragment from 'shared/graphql/fragments/notification/notificationInfo';
 import {
   subscribeToNewNotifications,

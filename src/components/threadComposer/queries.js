@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 
 export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`

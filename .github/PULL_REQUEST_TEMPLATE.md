@@ -1,18 +1,14 @@
-### Deployment notes
-- 
+### Deploy after merge (delete what needn't be deployed)
+- iris
+- hyperion
+- athena
+- vulcan
+- mercury
+- hermes
+- chronos
 
-### Will deploy
-- [ ] iris
-- [ ] hyperion
-- [ ] athena
-- [ ] vulcan
-- [ ] mercury
-- [ ] hermes
-- [ ] chronos
-
-### Run database migration?
-- [ ] yes
-- [ ] no
+### Run database migrations (delete if not)
+YES
 
 ## Release notes
 -

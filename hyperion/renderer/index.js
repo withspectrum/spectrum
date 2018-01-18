@@ -4,19 +4,22 @@ const debug = require('debug')('hyperion:renderer');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
+import { ApolloProvider, renderToStringWithData } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
 import {
-  ApolloClient,
-  createNetworkInterface,
-  ApolloProvider,
-  renderToStringWithData,
-} from 'react-apollo';
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
 import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import Raven from 'shared/raven';
+import introspectionQueryResultData from 'src/api/schema.json';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
@@ -37,24 +40,30 @@ if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 const renderer = (req, res) => {
   debug(`server-side render ${req.url}`);
   debug(`querying API at https://${req.hostname}/api`);
+  // HTTP Link for queries and mutations including file uploads
+  const httpLink = createHttpLink({
+    uri:
+      IS_PROD && !FORCE_DEV
+        ? `https://${req.hostname}/api`
+        : 'http://localhost:3001/api',
+    credentials: 'include',
+    headers: {
+      cookie: req.headers.cookie,
+    },
+  });
+
+  const cache = new InMemoryCache({
+    fragmentMatcher: new IntrospectionFragmentMatcher({
+      introspectionQueryResultData,
+    }),
+    ...getSharedApolloClientOptions(),
+  });
+
   // Create an Apollo Client with a local network interface
   const client = new ApolloClient({
     ssrMode: true,
-    networkInterface: createNetworkInterface({
-      uri:
-        IS_PROD && !FORCE_DEV
-          ? `https://${req.hostname}/api`
-          : 'http://localhost:3001/api',
-      opts: {
-        // Send credentials on
-        credentials: 'include',
-        // Forward the cookies to the API so it can authenticate the user
-        headers: {
-          cookie: req.headers.cookie,
-        },
-      },
-    }),
-    ...getSharedApolloClientOptions(),
+    link: httpLink,
+    cache,
   });
   // Define the initial redux state
   const initialReduxState = {
@@ -63,13 +72,7 @@ const renderer = (req, res) => {
     },
   };
   // Create the Redux store
-  const store = initStore(initialReduxState, {
-    // Inject the server-side client's middleware and reducer
-    middleware: [client.middleware()],
-    reducers: {
-      apollo: client.reducer(),
-    },
-  });
+  const store = initStore(initialReduxState);
   let modules = [];
   const report = moduleName => {
     debug(`codesplitted module ${moduleName} used`);
@@ -79,10 +82,12 @@ const renderer = (req, res) => {
   // The client-side app will instead use <BrowserRouter>
   const frontend = (
     <Loadable.Capture report={report}>
-      <ApolloProvider store={store} client={client}>
-        <StaticRouter location={req.url} context={context}>
-          <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
-        </StaticRouter>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
+          <StaticRouter location={req.url} context={context}>
+            <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
+          </StaticRouter>
+        </Provider>
       </ApolloProvider>
     </Loadable.Capture>
   );
@@ -99,6 +104,7 @@ const renderer = (req, res) => {
       }
       // Get the resulting data
       const state = store.getState();
+      const data = client.extract();
       const helmet = Helmet.renderStatic();
       if (IN_MAINTENANCE_MODE) {
         debug('maintainance mode enabled, sending 503');
@@ -122,6 +128,7 @@ const renderer = (req, res) => {
         getHTML({
           content,
           state,
+          data,
           styleTags: sheet.getStyleTags(),
           metaTags:
             helmet.title.toString() +

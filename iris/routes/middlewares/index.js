@@ -10,8 +10,6 @@ if (process.env.NODE_ENV === 'development') {
 // Start apollo engine
 if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   const engine = require('./engine').default;
-  console.log('Apollo Engine starting...');
-  engine.start();
   middlewares.use(engine.expressMiddleware());
 }
 

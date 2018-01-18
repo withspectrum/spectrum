@@ -1,4 +1,4 @@
-// flow-typed signature: 8d643cefdd2917c770f3dabfbb1704b8
+// flow-typed signature: b0bfc7ad422a668138c6bcf1dbb6bb65
 // flow-typed version: <<STUB>>/raven_v^2.0.2/flow_v0.63.1
 
 /**
@@ -54,6 +54,10 @@ declare module 'raven/lib/utils' {
   declare module.exports: any;
 }
 
+declare module 'raven/vendor/json-stringify-safe' {
+  declare module.exports: any;
+}
+
 // Filename aliases
 declare module 'raven/index' {
   declare module.exports: $Exports<'raven'>;
@@ -84,4 +88,7 @@ declare module 'raven/lib/transports.js' {
 }
 declare module 'raven/lib/utils.js' {
   declare module.exports: $Exports<'raven/lib/utils'>;
+}
+declare module 'raven/vendor/json-stringify-safe.js' {
+  declare module.exports: $Exports<'raven/vendor/json-stringify-safe'>;
 }

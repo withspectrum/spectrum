@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
@@ -127,7 +127,7 @@ const SEND_MESSAGE_OPTIONS = {
             __typename: 'Message',
           },
         },
-        update: (store, { data: { addMessage }, data: object }) => {
+        update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
             query: GET_THREAD_MESSAGES_QUERY,
             variables: {

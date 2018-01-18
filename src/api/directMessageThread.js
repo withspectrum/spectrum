@@ -1,5 +1,6 @@
 // @flow
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
 import userDirectMessageThreadConnectionFragment from 'shared/graphql/fragments/user/userDirectMessageThreadConnection';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
