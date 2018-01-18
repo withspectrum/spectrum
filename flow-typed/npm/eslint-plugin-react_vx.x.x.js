@@ -1,4 +1,4 @@
-// flow-typed signature: 86454336a06470d85f4b189830de42e0
+// flow-typed signature: 3ccbf28017415bcdadf41280ba832f48
 // flow-typed version: <<STUB>>/eslint-plugin-react_v^7.4.0/flow_v0.63.1
 
 /**
@@ -26,7 +26,15 @@ declare module 'eslint-plugin-react/lib/rules/boolean-prop-naming' {
   declare module.exports: any;
 }
 
+declare module 'eslint-plugin-react/lib/rules/button-has-type' {
+  declare module.exports: any;
+}
+
 declare module 'eslint-plugin-react/lib/rules/default-props-match-prop-types' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-react/lib/rules/destructuring-assignment' {
   declare module.exports: any;
 }
 
@@ -126,6 +134,10 @@ declare module 'eslint-plugin-react/lib/rules/jsx-no-undef' {
   declare module.exports: any;
 }
 
+declare module 'eslint-plugin-react/lib/rules/jsx-one-expression-per-line' {
+  declare module.exports: any;
+}
+
 declare module 'eslint-plugin-react/lib/rules/jsx-pascal-case' {
   declare module.exports: any;
 }
@@ -151,6 +163,10 @@ declare module 'eslint-plugin-react/lib/rules/jsx-uses-vars' {
 }
 
 declare module 'eslint-plugin-react/lib/rules/jsx-wrap-multilines' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-react/lib/rules/no-access-state-in-setstate' {
   declare module.exports: any;
 }
 
@@ -290,6 +306,10 @@ declare module 'eslint-plugin-react/lib/util/annotations' {
   declare module.exports: any;
 }
 
+declare module 'eslint-plugin-react/lib/util/ast' {
+  declare module.exports: any;
+}
+
 declare module 'eslint-plugin-react/lib/util/Components' {
   declare module.exports: any;
 }
@@ -303,6 +323,10 @@ declare module 'eslint-plugin-react/lib/util/makeNoMethodSetStateRule' {
 }
 
 declare module 'eslint-plugin-react/lib/util/pragma' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-react/lib/util/props' {
   declare module.exports: any;
 }
 
@@ -324,8 +348,14 @@ declare module 'eslint-plugin-react/index.js' {
 declare module 'eslint-plugin-react/lib/rules/boolean-prop-naming.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/boolean-prop-naming'>;
 }
+declare module 'eslint-plugin-react/lib/rules/button-has-type.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/rules/button-has-type'>;
+}
 declare module 'eslint-plugin-react/lib/rules/default-props-match-prop-types.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/default-props-match-prop-types'>;
+}
+declare module 'eslint-plugin-react/lib/rules/destructuring-assignment.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/rules/destructuring-assignment'>;
 }
 declare module 'eslint-plugin-react/lib/rules/display-name.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/display-name'>;
@@ -399,6 +429,9 @@ declare module 'eslint-plugin-react/lib/rules/jsx-no-target-blank.js' {
 declare module 'eslint-plugin-react/lib/rules/jsx-no-undef.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/jsx-no-undef'>;
 }
+declare module 'eslint-plugin-react/lib/rules/jsx-one-expression-per-line.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/rules/jsx-one-expression-per-line'>;
+}
 declare module 'eslint-plugin-react/lib/rules/jsx-pascal-case.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/jsx-pascal-case'>;
 }
@@ -419,6 +452,9 @@ declare module 'eslint-plugin-react/lib/rules/jsx-uses-vars.js' {
 }
 declare module 'eslint-plugin-react/lib/rules/jsx-wrap-multilines.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/jsx-wrap-multilines'>;
+}
+declare module 'eslint-plugin-react/lib/rules/no-access-state-in-setstate.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/rules/no-access-state-in-setstate'>;
 }
 declare module 'eslint-plugin-react/lib/rules/no-array-index-key.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/rules/no-array-index-key'>;
@@ -522,6 +558,9 @@ declare module 'eslint-plugin-react/lib/rules/void-dom-elements-no-children.js' 
 declare module 'eslint-plugin-react/lib/util/annotations.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/util/annotations'>;
 }
+declare module 'eslint-plugin-react/lib/util/ast.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/util/ast'>;
+}
 declare module 'eslint-plugin-react/lib/util/Components.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/util/Components'>;
 }
@@ -533,6 +572,9 @@ declare module 'eslint-plugin-react/lib/util/makeNoMethodSetStateRule.js' {
 }
 declare module 'eslint-plugin-react/lib/util/pragma.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/util/pragma'>;
+}
+declare module 'eslint-plugin-react/lib/util/props.js' {
+  declare module.exports: $Exports<'eslint-plugin-react/lib/util/props'>;
 }
 declare module 'eslint-plugin-react/lib/util/variable.js' {
   declare module.exports: $Exports<'eslint-plugin-react/lib/util/variable'>;

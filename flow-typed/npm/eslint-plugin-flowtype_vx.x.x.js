@@ -1,4 +1,4 @@
-// flow-typed signature: 6bd51709716818b1d60eb453102ac774
+// flow-typed signature: c3cb37e9b55ed2805f019e8055f34df6
 // flow-typed version: <<STUB>>/eslint-plugin-flowtype_v^2.39.1/flow_v0.63.1
 
 /**
@@ -47,6 +47,10 @@ declare module 'eslint-plugin-flowtype/dist/rules/genericSpacing' {
 }
 
 declare module 'eslint-plugin-flowtype/dist/rules/noDupeKeys' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/noFlowFixMeComments' {
   declare module.exports: any;
 }
 
@@ -223,6 +227,9 @@ declare module 'eslint-plugin-flowtype/dist/rules/genericSpacing.js' {
 }
 declare module 'eslint-plugin-flowtype/dist/rules/noDupeKeys.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/noDupeKeys'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/noFlowFixMeComments.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/noFlowFixMeComments'>;
 }
 declare module 'eslint-plugin-flowtype/dist/rules/noMutableArray.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/noMutableArray'>;

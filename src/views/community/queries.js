@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
@@ -122,8 +123,8 @@ const threadsQueryOptions = {
 
 export const getCommunityThreads = graphql(
   gql`
-		query communityThreads($slug: String, $after: String, $id: ID) {
-			community(slug: $slug, id: $id) {
+    query communityThreads($slug: String, $after: String, $id: ID) {
+      community(slug: $slug, id: $id) {
         ...communityInfo
         pinnedThread {
           ...threadInfo
@@ -133,11 +134,11 @@ export const getCommunityThreads = graphql(
         }
         ...communityThreads
       }
-		}
+    }
     ${communityThreadsFragment}
     ${communityInfoFragment}
     ${threadInfoFragment}
-	`,
+  `,
   threadsQueryOptions
 );
 

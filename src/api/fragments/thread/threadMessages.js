@@ -1,6 +1,5 @@
-// @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
+
 import { messageInfoFragment } from '../message/messageInfo';
 
 export const threadMessagesFragment = gql`

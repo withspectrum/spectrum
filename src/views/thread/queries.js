@@ -1,4 +1,6 @@
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import { graphql } from 'react-apollo';
 import queryString from 'query-string';
 import { subscribeToNewMessages } from '../../api/subscriptions';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';

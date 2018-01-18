@@ -1,4 +1,4 @@
-// flow-typed signature: a7b4e7710ba097bafacc3d123a573fca
+// flow-typed signature: bdb9f3ca85cda6553a28a4491f6d9c9e
 // flow-typed version: <<STUB>>/offline-plugin_v^4.8.4/flow_v0.63.1
 
 /**
@@ -23,6 +23,10 @@ declare module 'offline-plugin' {
  * needed.
  */
 declare module 'offline-plugin/lib/app-cache' {
+  declare module.exports: any;
+}
+
+declare module 'offline-plugin/lib/default-options' {
   declare module.exports: any;
 }
 
@@ -81,6 +85,9 @@ declare module 'offline-plugin/tpls/runtime-template' {
 // Filename aliases
 declare module 'offline-plugin/lib/app-cache.js' {
   declare module.exports: $Exports<'offline-plugin/lib/app-cache'>;
+}
+declare module 'offline-plugin/lib/default-options.js' {
+  declare module.exports: $Exports<'offline-plugin/lib/default-options'>;
 }
 declare module 'offline-plugin/lib/index.js' {
   declare module.exports: $Exports<'offline-plugin/lib/index'>;

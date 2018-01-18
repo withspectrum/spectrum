@@ -1,17 +1,19 @@
+import gql from 'graphql-tag';
+
 //@flow
 // $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 
 export const getCommunity = graphql(
   gql`
-		query getCommunity($slug: String) {
-			community(slug: $slug) {
+    query getCommunity($slug: String) {
+      community(slug: $slug) {
         ...communityInfo
       }
-		}
+    }
     ${communityInfoFragment}
-	`,
+  `,
   {
     options: ({ slug }) => ({
       variables: {
@@ -27,13 +29,13 @@ export const getCommunity = graphql(
 */
 export const getTopCommunities = graphql(
   gql`
-		{
-		  topCommunities {
+    {
+      topCommunities {
         ...communityInfo
       }
     }
     ${communityInfoFragment}
-	`,
+  `,
   {
     props: ({ data: { error, loading, topCommunities } }) => ({
       data: {

@@ -1,4 +1,4 @@
-// flow-typed signature: 5d7bcbe4a1c6ff5db33caf7534c7b869
+// flow-typed signature: 1854eaa5800e7e55189897b137fe7841
 // flow-typed version: <<STUB>>/prismjs_v^1.8.1/flow_v0.63.1
 
 /**
@@ -298,6 +298,14 @@ declare module 'prismjs/components/prism-erlang.min' {
   declare module.exports: any;
 }
 
+declare module 'prismjs/components/prism-flow' {
+  declare module.exports: any;
+}
+
+declare module 'prismjs/components/prism-flow.min' {
+  declare module.exports: any;
+}
+
 declare module 'prismjs/components/prism-fortran' {
   declare module.exports: any;
 }
@@ -431,14 +439,6 @@ declare module 'prismjs/components/prism-j' {
 }
 
 declare module 'prismjs/components/prism-j.min' {
-  declare module.exports: any;
-}
-
-declare module 'prismjs/components/prism-jade' {
-  declare module.exports: any;
-}
-
-declare module 'prismjs/components/prism-jade.min' {
   declare module.exports: any;
 }
 
@@ -767,6 +767,14 @@ declare module 'prismjs/components/prism-protobuf' {
 }
 
 declare module 'prismjs/components/prism-protobuf.min' {
+  declare module.exports: any;
+}
+
+declare module 'prismjs/components/prism-pug' {
+  declare module.exports: any;
+}
+
+declare module 'prismjs/components/prism-pug.min' {
   declare module.exports: any;
 }
 
@@ -1534,6 +1542,12 @@ declare module 'prismjs/components/prism-erlang.js' {
 declare module 'prismjs/components/prism-erlang.min.js' {
   declare module.exports: $Exports<'prismjs/components/prism-erlang.min'>;
 }
+declare module 'prismjs/components/prism-flow.js' {
+  declare module.exports: $Exports<'prismjs/components/prism-flow'>;
+}
+declare module 'prismjs/components/prism-flow.min.js' {
+  declare module.exports: $Exports<'prismjs/components/prism-flow.min'>;
+}
 declare module 'prismjs/components/prism-fortran.js' {
   declare module.exports: $Exports<'prismjs/components/prism-fortran'>;
 }
@@ -1635,12 +1649,6 @@ declare module 'prismjs/components/prism-j.js' {
 }
 declare module 'prismjs/components/prism-j.min.js' {
   declare module.exports: $Exports<'prismjs/components/prism-j.min'>;
-}
-declare module 'prismjs/components/prism-jade.js' {
-  declare module.exports: $Exports<'prismjs/components/prism-jade'>;
-}
-declare module 'prismjs/components/prism-jade.min.js' {
-  declare module.exports: $Exports<'prismjs/components/prism-jade.min'>;
 }
 declare module 'prismjs/components/prism-java.js' {
   declare module.exports: $Exports<'prismjs/components/prism-java'>;
@@ -1887,6 +1895,12 @@ declare module 'prismjs/components/prism-protobuf.js' {
 }
 declare module 'prismjs/components/prism-protobuf.min.js' {
   declare module.exports: $Exports<'prismjs/components/prism-protobuf.min'>;
+}
+declare module 'prismjs/components/prism-pug.js' {
+  declare module.exports: $Exports<'prismjs/components/prism-pug'>;
+}
+declare module 'prismjs/components/prism-pug.min.js' {
+  declare module.exports: $Exports<'prismjs/components/prism-pug.min'>;
 }
 declare module 'prismjs/components/prism-puppet.js' {
   declare module.exports: $Exports<'prismjs/components/prism-puppet'>;
