@@ -1,10 +1,10 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import userInfoFragment from '../../../../shared/graphql/fragments/user/userInfo';
-import userThreadConnectionFragment from '../../../../shared/graphql/fragments/user/userThreadConnection';
-import { subscribeToUpdatedThreads } from '../../../../shared/graphql/subscriptions';
-import { parseRealtimeThreads } from '../../../../shared/graphql/subscriptions/utils';
+import userInfoFragment from '../../fragments/user/userInfo';
+import userThreadConnectionFragment from '../../fragments/user/userThreadConnection';
+import { subscribeToUpdatedThreads } from '../../subscriptions';
+import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads(
@@ -21,8 +21,12 @@ const LoadMoreThreads = gql`
   ${userThreadConnectionFragment}
 `;
 
-const getUserThreadsQuery = gql`
-  query getUserThreads($id: ID, $after: String, $kind: ThreadConnectionType) {
+const getUserThreadConnectionQuery = gql`
+  query getUserThreadConnection(
+    $id: ID
+    $after: String
+    $kind: ThreadConnectionType
+  ) {
     user(id: $id) {
       ...userInfo
       ...userThreadConnection
@@ -32,7 +36,7 @@ const getUserThreadsQuery = gql`
   ${userThreadConnectionFragment}
 `;
 
-const getUserThreadsOptions = {
+const getUserThreadConnectionOptions = {
   props: ({
     ownProps,
     data: { fetchMore, error, loading, user, networkStatus, subscribeToMore },
@@ -123,4 +127,7 @@ const getUserThreadsOptions = {
   }),
 };
 
-export default graphql(getUserThreadsQuery, getUserThreadsOptions);
+export default graphql(
+  getUserThreadConnectionQuery,
+  getUserThreadConnectionOptions
+);

@@ -1,11 +1,11 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import threadInfoFragment from '../../../../shared/graphql/fragments/thread/threadInfo';
-import communityInfoFragment from '../../../../shared/graphql/fragments/community/communityInfo';
-import communityThreadConnectionFragment from '../../../../shared/graphql/fragments/community/communityThreadConnection';
-import { subscribeToUpdatedThreads } from '../../../../shared/graphql/subscriptions';
-import { parseRealtimeThreads } from '../../../../shared/graphql/subscriptions/utils';
+import threadInfoFragment from '../../fragments/thread/threadInfo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import communityThreadConnectionFragment from '../../fragments/community/communityThreadConnection';
+import { subscribeToUpdatedThreads } from '../../subscriptions';
+import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($after: String, $id: ID) {
@@ -19,8 +19,8 @@ const LoadMoreThreads = gql`
   ${communityThreadConnectionFragment}
 `;
 
-const getCommunityThreadsQuery = gql`
-  query getCommunityThreads($id: ID, $after: String) {
+const getCommunityThreadConnectionQuery = gql`
+  query getCommunityThreadConnection($id: ID, $after: String) {
     community(id: $id) {
       ...communityInfo
       ...communityThreadConnection
@@ -31,7 +31,7 @@ const getCommunityThreadsQuery = gql`
   ${communityThreadConnectionFragment}
 `;
 
-const getCommunityThreadsOptions = {
+const getCommunityThreadConnectionOptions = {
   props: ({
     ownProps,
     data: {
@@ -132,4 +132,7 @@ const getCommunityThreadsOptions = {
   }),
 };
 
-export default graphql(getCommunityThreadsQuery, getCommunityThreadsOptions);
+export default graphql(
+  getCommunityThreadConnectionQuery,
+  getCommunityThreadConnectionOptions
+);

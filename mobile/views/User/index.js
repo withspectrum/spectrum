@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Text, View, FlatList, Button, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
-import getUserById from '../../gql/user/queries/getUserById';
-import getUserThreads from '../../gql/user/queries/getUserThreads';
+import { getUserById } from '../../../shared/graphql/queries/user/getUser';
+import getUserThreadConnection from '../../../shared/graphql/queries/user/getUserThreadConnection';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import ThreadFeed from '../../components/ThreadFeed';
@@ -38,7 +38,7 @@ type State = {
   feed: string,
 };
 
-const UserThreadFeed = compose(getUserThreads)(ThreadFeed);
+const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 
 class User extends React.Component<Props, State> {
   state = { feed: 'participant' };
