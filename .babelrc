@@ -23,6 +23,8 @@
     "syntax-dynamic-import",
     "syntax-async-generators",
     "transform-async-generator-functions",
-    "react-loadable/babel"
+    "react-loadable/babel",
+    "graphql-tag",
+    "babel-plugin-inline-import-graphql-ast"
   ]
 }

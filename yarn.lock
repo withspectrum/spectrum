@@ -832,6 +832,14 @@ babel-jest@^22.1.0:
     babel-plugin-istanbul "^4.1.5"
     babel-preset-jest "^22.1.0"
 
+babel-literal-to-ast@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/babel-literal-to-ast/-/babel-literal-to-ast-0.1.2.tgz#f50aa963711935adf19da0d5a4defc827ad5f403"
+  dependencies:
+    babel-traverse "^6.0.20"
+    babel-types "^6.0.19"
+    babylon "^6.0.18"
+
 babel-loader@7.1.2, babel-loader@^7.1.0:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-7.1.2.tgz#f6cbe122710f1aa2af4d881c6d5b54358ca24126"
@@ -860,9 +868,26 @@ babel-plugin-dynamic-import-node@1.1.0:
     babel-template "^6.26.0"
     babel-types "^6.26.0"
 
+babel-plugin-graphql-tag@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-graphql-tag/-/babel-plugin-graphql-tag-1.3.0.tgz#492200a3634ac7fe1e6ccef3c023a4aa369323d0"
+  dependencies:
+    babel-literal-to-ast "^0.1.2"
+    babel-types "^6.24.1"
+    debug "^2.6.8"
+    graphql "^0.10.1"
+    graphql-tag "^2.2.0"
+
 babel-plugin-import-inspector@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-import-inspector/-/babel-plugin-import-inspector-2.0.0.tgz#6d422309f4f192313310cfde1556f7875cae5d07"
+
+babel-plugin-inline-import-graphql-ast@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-inline-import-graphql-ast/-/babel-plugin-inline-import-graphql-ast-2.0.4.tgz#64db0dcb94c18d88ac6de089f786bcb04ec12551"
+  dependencies:
+    babylon "^6.17.0"
+    graphql-tag "^2.0.0"
 
 babel-plugin-istanbul@^4.0.0, babel-plugin-istanbul@^4.1.5:
   version "4.1.5"
@@ -1335,7 +1360,7 @@ babel-template@^6.16.0, babel-template@^6.24.1, babel-template@^6.26.0:
     babylon "^6.18.0"
     lodash "^4.17.4"
 
-babel-traverse@^6.18.0, babel-traverse@^6.23.1, babel-traverse@^6.24.1, babel-traverse@^6.26.0:
+babel-traverse@^6.0.20, babel-traverse@^6.18.0, babel-traverse@^6.23.1, babel-traverse@^6.24.1, babel-traverse@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-traverse/-/babel-traverse-6.26.0.tgz#46a9cbd7edcc62c8e5c064e2d2d8d0f4035766ee"
   dependencies:
@@ -1349,7 +1374,7 @@ babel-traverse@^6.18.0, babel-traverse@^6.23.1, babel-traverse@^6.24.1, babel-tr
     invariant "^2.2.2"
     lodash "^4.17.4"
 
-babel-types@^6.18.0, babel-types@^6.19.0, babel-types@^6.23.0, babel-types@^6.24.1, babel-types@^6.26.0:
+babel-types@^6.0.19, babel-types@^6.18.0, babel-types@^6.19.0, babel-types@^6.23.0, babel-types@^6.24.1, babel-types@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-6.26.0.tgz#a3b073f94ab49eb6fa55cd65227a334380632497"
   dependencies:
@@ -1362,7 +1387,7 @@ babylon@7.0.0-beta.36:
   version "7.0.0-beta.36"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-7.0.0-beta.36.tgz#3a3683ba6a9a1e02b0aa507c8e63435e39305b9e"
 
-babylon@^6.17.0, babylon@^6.18.0:
+babylon@^6.0.18, babylon@^6.17.0, babylon@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
@@ -2982,7 +3007,7 @@ draft-js-prism-plugin@0.1.1, draft-js-prism-plugin@^0.1.1:
     draft-js-prism ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb
     react "*"
 
-"draft-js-prism@github:ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb":
+draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
   version "1.0.3"
   resolved "https://codeload.github.com/ngs/draft-js-prism/tar.gz/6edb31c3805dd1de3fb897cc27fced6bac1bafbb"
   dependencies:
@@ -4388,7 +4413,7 @@ graphql-subscriptions@^0.4.4:
     es6-promise "^4.0.5"
     iterall "^1.1.1"
 
-graphql-tag@^2.0.0, graphql-tag@^2.4.2:
+graphql-tag@^2.0.0, graphql-tag@^2.2.0, graphql-tag@^2.4.2:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.6.1.tgz#4788d509f6e29607d947fc47a40c4e18f736d34a"
 
@@ -4411,7 +4436,7 @@ graphql-tools@1.2.3:
     graphql-subscriptions "^0.5.6"
     uuid "^3.1.0"
 
-graphql@0.10, graphql@^0.10.0, graphql@^0.10.3:
+graphql@0.10, graphql@^0.10.0, graphql@^0.10.1, graphql@^0.10.3:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.10.5.tgz#c9be17ca2bdfdbd134077ffd9bbaa48b8becd298"
   dependencies:
