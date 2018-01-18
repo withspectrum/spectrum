@@ -11,11 +11,6 @@ import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 
-// import {
-//   SubscriptionClient,
-//   addGraphQLSubscriptions,
-// } from 'subscriptions-transport-ws';
-
 const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port
 const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
@@ -55,9 +50,7 @@ const link = split(
 
 const client = new ApolloClient({
   link,
-  cache: window.__SERVER_STATE__
-    ? cache.restore(window.__SERVER_STATE__.apollo)
-    : cache,
+  cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
   ssrForceFetchDelay: 100,
   queryDeduplication: true,
 });

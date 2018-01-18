@@ -23,6 +23,7 @@ type Arguments = {
   styleTags: string,
   metaTags: string,
   state: Object,
+  data: Object,
   content: string,
   scriptTags: string,
 };
@@ -40,6 +41,7 @@ export const getHTML = ({
   styleTags,
   metaTags,
   state,
+  data,
   content,
   scriptTags,
 }: Arguments) => {
@@ -51,7 +53,11 @@ export const getHTML = ({
         '<div id="root"></div>',
         `<script>window.__SERVER_STATE__=${serialize(
           state
-        )}</script><div id="root">${content}</div><script type="text/javascript" src="/./static/js/bootstrap.js"></script>${sentry}${polyfill}${scriptTags}`
+        )}</script><script>window.__DATA__=${serialize(
+          data
+        )}</script><div id="root">${content}</div><script type="text/javascript" src="/./static/js/bootstrap.js"></script>${
+          process.env.NODE_ENV === 'production' ? sentry : ''
+        }${polyfill}${scriptTags}`
       )
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)
