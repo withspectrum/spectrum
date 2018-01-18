@@ -180,28 +180,28 @@ apollo-client@^1.9.1:
   optionalDependencies:
     "@types/graphql" "0.10.2"
 
-apollo-engine-binary-darwin@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.1-1-gc024df504.tgz#e19859a082bcff80fd8671ca1cb752c22bdb3619"
+apollo-engine-binary-darwin@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.1-17-g9c203510f.tgz#0a920de1af104a02a3d095baa49c01c2d18f60e4"
 
-apollo-engine-binary-linux@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.1-1-gc024df504.tgz#42a95d32ee495003e621c2355cdbe0de9cdf8457"
+apollo-engine-binary-linux@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.1-17-g9c203510f.tgz#745b29887904f1a5e28cf68606817d8d723eac27"
 
-apollo-engine-binary-windows@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.1-1-gc024df504.tgz#b09200fa7ae46e86df7567a7a8afd1a985db1c4b"
+apollo-engine-binary-windows@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.1-17-g9c203510f.tgz#89cde03a7d714c6f283310853b8bd2b81733ce0a"
 
-apollo-engine@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-0.8.3.tgz#394e87488d0e9d997e35e73276d70432f15ba202"
+apollo-engine@0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-0.8.4.tgz#90dddd0b03958487aa2344a6fe84c76a62c15b0c"
   dependencies:
     request "^2.81.0"
     stream-json "^0.5.2"
   optionalDependencies:
-    apollo-engine-binary-darwin "0.2018.01-1-gc024df504"
-    apollo-engine-binary-linux "0.2018.01-1-gc024df504"
-    apollo-engine-binary-windows "0.2018.01-1-gc024df504"
+    apollo-engine-binary-darwin "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-linux "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-windows "0.2018.01-17-g9c203510f"
 
 apollo-link-core@^0.5.0:
   version "0.5.4"
