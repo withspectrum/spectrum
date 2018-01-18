@@ -9,7 +9,7 @@ import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
-import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
+import getSharedApolloClientOptions from './apollo-client-options';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port

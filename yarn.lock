@@ -39,14 +39,7 @@
     core-js "^2.4.0"
     regenerator-runtime "^0.11.1"
 
-"@babel/runtime@^7.0.0-beta.32":
-  version "7.0.0-beta.38"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.38.tgz#8b7f16245b1f86fc168a1846ab6d77a238f6d16c"
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.1"
-
-"@babel/runtime@^7.0.0-beta.37":
+"@babel/runtime@^7.0.0-beta.32", "@babel/runtime@^7.0.0-beta.37":
   version "7.0.0-beta.38"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.38.tgz#8b7f16245b1f86fc168a1846ab6d77a238f6d16c"
   dependencies:
@@ -332,8 +325,6 @@ apollo-engine@^0.8.3:
     apollo-engine-binary-darwin "0.2018.01-17-g9c203510f"
     apollo-engine-binary-linux "0.2018.01-17-g9c203510f"
     apollo-engine-binary-windows "0.2018.01-17-g9c203510f"
-<<<<<<< HEAD
-=======
 
 apollo-link-dedup@^1.0.0:
   version "1.0.5"
@@ -346,7 +337,6 @@ apollo-link-http@^1.3.2:
   resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.3.2.tgz#63537ee5ecf9c004efb0317f1222b7dbc6f21559"
   dependencies:
     apollo-link "^1.0.7"
->>>>>>> e38e0c9b308c12d8bfcb39a8ad3f7edbcf2be4fb
 
 apollo-link-ws@^1.0.4:
   version "1.0.4"
@@ -3048,7 +3038,7 @@ draft-js-prism-plugin@0.1.1, draft-js-prism-plugin@^0.1.1:
     draft-js-prism ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb
     react "*"
 
-draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
+"draft-js-prism@github:ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb":
   version "1.0.3"
   resolved "https://codeload.github.com/ngs/draft-js-prism/tar.gz/6edb31c3805dd1de3fb897cc27fced6bac1bafbb"
   dependencies:
@@ -4428,19 +4418,7 @@ graphql-subscriptions@0.5.6, graphql-subscriptions@^0.5.6:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
 
-<<<<<<< HEAD
-graphql-subscriptions@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.4.tgz#39cff32d08dd3c990113864bab77154403727e9b"
-  dependencies:
-    "@types/graphql" "^0.9.1"
-    es6-promise "^4.0.5"
-    iterall "^1.1.1"
-
-graphql-tag@^2.0.0, graphql-tag@^2.2.0, graphql-tag@^2.4.2:
-=======
-graphql-tag@^2.6.1:
->>>>>>> e38e0c9b308c12d8bfcb39a8ad3f7edbcf2be4fb
+graphql-tag@^2.0.0, graphql-tag@^2.2.0, graphql-tag@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.6.1.tgz#4788d509f6e29607d947fc47a40c4e18f736d34a"
 
@@ -4463,17 +4441,17 @@ graphql-tools@1.2.3:
     graphql-subscriptions "^0.5.6"
     uuid "^3.1.0"
 
-<<<<<<< HEAD
-graphql@0.10, graphql@^0.10.0, graphql@^0.10.1, graphql@^0.10.3:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.10.5.tgz#c9be17ca2bdfdbd134077ffd9bbaa48b8becd298"
-=======
 graphql@0.11.x:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.11.7.tgz#e5abaa9cb7b7cccb84e9f0836bf4370d268750c6"
->>>>>>> e38e0c9b308c12d8bfcb39a8ad3f7edbcf2be4fb
   dependencies:
     iterall "1.1.3"
+
+graphql@^0.10.1:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.10.5.tgz#c9be17ca2bdfdbd134077ffd9bbaa48b8becd298"
+  dependencies:
+    iterall "^1.1.0"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -5433,7 +5411,7 @@ items@2.x.x:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/items/-/items-2.1.1.tgz#8bd16d9c83b19529de5aea321acaada78364a198"
 
-iterall@1.1.3, iterall@^1.1.1, iterall@^1.1.3:
+iterall@1.1.3, iterall@^1.1.0, iterall@^1.1.1, iterall@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
 
@@ -5522,9 +5500,9 @@ jest-cli@^21.2.1:
     worker-farm "^1.3.1"
     yargs "^9.0.0"
 
-jest-cli@^22.1.2:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-22.1.2.tgz#89497932d7befb8a6952f2712473695c4bbef43f"
+jest-cli@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-22.1.3.tgz#b4fe4a66f476672924a2093d8ca01f1c227970fc"
   dependencies:
     ansi-escapes "^3.0.0"
     chalk "^2.0.1"
@@ -5538,15 +5516,15 @@ jest-cli@^22.1.2:
     istanbul-lib-instrument "^1.8.0"
     istanbul-lib-source-maps "^1.2.1"
     jest-changed-files "^22.1.0"
-    jest-config "^22.1.2"
+    jest-config "^22.1.3"
     jest-environment-jsdom "^22.1.2"
     jest-get-type "^22.1.0"
     jest-haste-map "^22.1.0"
     jest-message-util "^22.1.0"
     jest-regex-util "^22.1.0"
     jest-resolve-dependencies "^22.1.0"
-    jest-runner "^22.1.2"
-    jest-runtime "^22.1.2"
+    jest-runner "^22.1.3"
+    jest-runtime "^22.1.3"
     jest-snapshot "^22.1.2"
     jest-util "^22.1.2"
     jest-worker "^22.1.0"
@@ -5591,16 +5569,16 @@ jest-config@^21.2.1:
     jest-validate "^21.2.1"
     pretty-format "^21.2.1"
 
-jest-config@^22.1.2:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest-config/-/jest-config-22.1.2.tgz#d3aee5c1df0997f0e2ae5c707eee04a7c87f1653"
+jest-config@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest-config/-/jest-config-22.1.3.tgz#1572e214b75a3592c66841db371862ab080662d1"
   dependencies:
     chalk "^2.0.1"
     glob "^7.1.1"
     jest-environment-jsdom "^22.1.2"
     jest-environment-node "^22.1.2"
     jest-get-type "^22.1.0"
-    jest-jasmine2 "^22.1.2"
+    jest-jasmine2 "^22.1.3"
     jest-regex-util "^22.1.0"
     jest-resolve "^22.1.0"
     jest-util "^22.1.2"
@@ -5761,9 +5739,9 @@ jest-jasmine2@^21.2.1:
     jest-snapshot "^21.2.1"
     p-cancelable "^0.3.0"
 
-jest-jasmine2@^22.1.2:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest-jasmine2/-/jest-jasmine2-22.1.2.tgz#dee4ba04fb2cf462e4c7cfb499426e82e8fde5ac"
+jest-jasmine2@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest-jasmine2/-/jest-jasmine2-22.1.3.tgz#35429cd22e9aed2d234aee48b73734eefc140f96"
   dependencies:
     callsites "^2.0.0"
     chalk "^2.0.1"
@@ -5921,18 +5899,18 @@ jest-runner@^21.2.1:
     throat "^4.0.0"
     worker-farm "^1.3.1"
 
-jest-runner@^22.1.2:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest-runner/-/jest-runner-22.1.2.tgz#e8565e4eb56c27219352b8486338ced9ceb462da"
+jest-runner@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest-runner/-/jest-runner-22.1.3.tgz#8fdd2da200d95a486e5d4b001add061ac4253261"
   dependencies:
     exit "^0.1.2"
-    jest-config "^22.1.2"
+    jest-config "^22.1.3"
     jest-docblock "^22.1.0"
     jest-haste-map "^22.1.0"
-    jest-jasmine2 "^22.1.2"
+    jest-jasmine2 "^22.1.3"
     jest-leak-detector "^22.1.0"
     jest-message-util "^22.1.0"
-    jest-runtime "^22.1.2"
+    jest-runtime "^22.1.3"
     jest-util "^22.1.2"
     jest-worker "^22.1.0"
     throat "^4.0.0"
@@ -5979,9 +5957,9 @@ jest-runtime@^21.2.1:
     write-file-atomic "^2.1.0"
     yargs "^9.0.0"
 
-jest-runtime@^22.1.2:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest-runtime/-/jest-runtime-22.1.2.tgz#42755d7cea2ffc7cdaa7f2dfa8736264a6057bf9"
+jest-runtime@^22.1.3:
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest-runtime/-/jest-runtime-22.1.3.tgz#c807fa91655121e719f51caf01eb4b08b714cb23"
   dependencies:
     babel-core "^6.0.0"
     babel-jest "^22.1.0"
@@ -5990,7 +5968,7 @@ jest-runtime@^22.1.2:
     convert-source-map "^1.4.0"
     exit "^0.1.2"
     graceful-fs "^4.1.11"
-    jest-config "^22.1.2"
+    jest-config "^22.1.3"
     jest-haste-map "^22.1.0"
     jest-regex-util "^22.1.0"
     jest-resolve "^22.1.0"
@@ -6118,10 +6096,10 @@ jest@^21.1.0:
     jest-cli "^21.2.1"
 
 jest@^22.1.0:
-  version "22.1.2"
-  resolved "https://registry.yarnpkg.com/jest/-/jest-22.1.2.tgz#54dce0f4946a089a00d5fdac8291d5926e24f6ab"
+  version "22.1.3"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-22.1.3.tgz#59bd66af5e9cd6367cbeeead9de6c3cfdd6d4204"
   dependencies:
-    jest-cli "^22.1.2"
+    jest-cli "^22.1.3"
 
 joi@^10.6.0:
   version "10.6.0"
@@ -7053,8 +7031,8 @@ multicast-dns-service-types@^1.1.0:
   resolved "https://registry.yarnpkg.com/multicast-dns-service-types/-/multicast-dns-service-types-1.1.0.tgz#899f11d9686e5e05cb91b35d5f0e63b773cfc901"
 
 multicast-dns@^6.0.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/multicast-dns/-/multicast-dns-6.2.1.tgz#c5035defa9219d30640558a49298067352098060"
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/multicast-dns/-/multicast-dns-6.2.2.tgz#300b6133361f8aaaf2b8d1248e85c363fe5b95a0"
   dependencies:
     dns-packet "^1.0.1"
     thunky "^0.1.0"
@@ -8153,8 +8131,8 @@ pretty-format@^22.1.0:
     ansi-styles "^3.2.0"
 
 prismjs@^1.5.0, prismjs@^1.6.0, prismjs@^1.8.1:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.9.0.tgz#fa3e2d9edc3c3887c1f1f3095d41f1f9b4200f0f"
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.10.0.tgz#77e5187c2ae6b3253fcc313029cf25fe53778721"
   optionalDependencies:
     clipboard "^1.7.1"
 
@@ -10371,17 +10349,7 @@ uuid@^2.0.1, uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
-<<<<<<< HEAD
 uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
-=======
-uuid@^3.0.0, uuid@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
->>>>>>> e38e0c9b308c12d8bfcb39a8ad3f7edbcf2be4fb
-
-uuid@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 

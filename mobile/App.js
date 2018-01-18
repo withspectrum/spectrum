@@ -4,10 +4,8 @@ import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
 
 import theme from './components/theme';
-import client from './apollo';
+import { client } from '../shared/graphql';
 import TabBar from './views/TabBar';
-
-console.log(client);
 
 const App = () => (
   <ApolloProvider client={client}>
