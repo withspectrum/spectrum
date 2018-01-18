@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads } from './queries';
 import { getCommunityThreads } from '../../views/community/queries';
 import { getChannelThreads } from '../../views/channel/queries';
 import { getCurrentUserProfile } from '../../api/user';
-import { searchThreadsQuery } from '../../api/thread';
+import searchThreadsQuery from '../../api/search/searchThreads';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -52,18 +50,40 @@ const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
 
 const DashboardWrapper = props => <Wrapper {...props} />;
 
-class Dashboard extends Component {
-  state: {
-    isHovered: boolean,
+type State = {
+  isHovered: boolean,
+};
+
+type CommunityType = {
+  node: {
+    id: string,
+    pinnedThreadId: ?string,
+    slug: string,
+  },
+};
+
+type Props = {
+  data: {
+    user?: {
+      id: string,
+      communityConnection: {
+        edges: Array<?CommunityType>,
+      },
+    },
+  },
+  newActivityIndicator: boolean,
+  activeThread: ?string,
+  activeCommunity: ?string,
+  activeChannel: ?string,
+  isLoading: boolean,
+  hasError: boolean,
+  searchQueryString: ?string,
+};
+
+class Dashboard extends React.Component<Props, State> {
+  state = {
+    isHovered: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isHovered: false,
-    };
-  }
 
   setHover = () => {
     setTimeout(() => {
@@ -88,7 +108,6 @@ class Dashboard extends Component {
       activeChannel,
       isLoading,
       hasError,
-
       searchQueryString,
     } = this.props;
 
@@ -96,15 +115,18 @@ class Dashboard extends Component {
     if (activeChannel) {
       searchFilter.everythingFeed = false;
       searchFilter.communityId = null;
+      searchFilter.creatorId = null;
       searchFilter.channelId = activeChannel;
     } else if (activeCommunity) {
       searchFilter.everythingFeed = false;
       searchFilter.channelId = null;
+      searchFilter.creatorId = null;
       searchFilter.communityId = activeCommunity;
     } else {
       searchFilter.channelId = null;
       searchFilter.communityId = null;
-      searchFilter.everythingFeed = true;
+      searchFilter.creatorId = null;
+      searchFilter.everythingFeed = false;
     }
     const { title, description } = generateMetaInfo();
 
@@ -121,9 +143,9 @@ class Dashboard extends Component {
       }
 
       // at this point we have succesfully validated a user, and the user has both a username and joined communities - we can show their thread feed!
-      const communities = user.communityConnection.edges.map(c => c.node);
+      const communities = user.communityConnection.edges.map(c => c && c.node);
       const activeCommunityObject = communities.filter(
-        c => c.id === activeCommunity
+        c => c && c.id === activeCommunity
       )[0];
 
       return (
@@ -261,6 +283,9 @@ const map = state => ({
   activeChannel: state.dashboardFeed.activeChannel,
   searchQueryString: state.dashboardFeed.search.queryString,
 });
-export default compose(connect(map), getCurrentUserProfile, viewNetworkHandler)(
-  Dashboard
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getCurrentUserProfile,
+  viewNetworkHandler
+)(Dashboard);

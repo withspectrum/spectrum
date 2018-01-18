@@ -336,17 +336,6 @@ export const sendCommunityEmailInvitationsMutation = graphql(
   SEND_EMAIL_INVITATIONS_OPTIONS
 );
 
-export const SEARCH_COMMUNITIES_QUERY = gql`
-  query searchCommunities($string: String, $amount: Int) {
-    searchCommunities(string: $string, amount: $amount) {
-      ...communityInfo
-      ...communityMetaData
-    }
-  }
-  ${communityInfoFragment}
-  ${communityMetaDataFragment}
-`;
-
 const GET_COMMUNITY_INVOICES_OPTIONS = {
   options: ({ id }) => ({
     variables: {
@@ -423,46 +412,6 @@ const PIN_THREAD_OPTIONS = {
 export const pinThreadMutation = graphql(
   PIN_THREAD_MUTATION,
   PIN_THREAD_OPTIONS
-);
-
-export const SEARCH_THREADS_IN_COMMUNITY_QUERY = gql`
-  query searchCommunityThreads($communityId: ID!, $searchString: String!) {
-    searchCommunityThreads(
-      communityId: $communityId
-      searchString: $searchString
-    ) {
-      ...threadInfo
-    }
-  }
-  ${threadInfoFragment}
-`;
-
-const SEARCH_THREADS_IN_COMMUNITY_OPTIONS = {
-  props: ({
-    data: { fetchMore, error, loading, searchCommunityThreads, networkStatus },
-  }) => ({
-    data: {
-      error,
-      loading,
-      networkStatus,
-      fetchMore: () => {},
-      threads: searchCommunityThreads
-        ? searchCommunityThreads.map(thread => ({ node: { ...thread } }))
-        : [],
-    },
-  }),
-  options: ({ communityId, searchString }) => ({
-    variables: {
-      communityId,
-      searchString,
-    },
-    fetchPolicy: 'cache-and-network',
-  }),
-};
-
-export const searchCommunityThreadsQuery = graphql(
-  SEARCH_THREADS_IN_COMMUNITY_QUERY,
-  SEARCH_THREADS_IN_COMMUNITY_OPTIONS
 );
 
 /*

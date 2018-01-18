@@ -62,51 +62,14 @@ const getThreadByIdOptions = {
 
 export const getThreadById = graphql(
   gql`
-		query getThread($id: ID!) {
-			thread(id: $id) {
+    query getThread($id: ID!) {
+      thread(id: $id) {
         ...threadInfo
       }
-		}
-    ${threadInfoFragment}
-	`,
-  getThreadByIdOptions
-);
-
-export const SEARCH_THREADS_QUERY = gql`
-  query searchThreads($queryString: String!, $filter: SearchThreadsFilter) {
-    searchThreads(queryString: $queryString, filter: $filter) {
-      ...threadInfo
     }
-  }
-  ${threadInfoFragment}
-`;
-
-const SEARCH_THREADS_OPTIONS = {
-  props: ({
-    data: { fetchMore, error, loading, searchThreads, networkStatus },
-  }) => ({
-    data: {
-      error,
-      loading,
-      networkStatus,
-      fetchMore: () => {},
-      threads: searchThreads
-        ? searchThreads.map(thread => ({ node: { ...thread } }))
-        : [],
-    },
-  }),
-  options: ({ queryString, filter }) => ({
-    variables: {
-      queryString,
-      filter,
-    },
-    fetchPolicy: 'cache-and-network',
-  }),
-};
-
-export const searchThreadsQuery = graphql(
-  SEARCH_THREADS_QUERY,
-  SEARCH_THREADS_OPTIONS
+    ${threadInfoFragment}
+  `,
+  getThreadByIdOptions
 );
 
 const MOVE_THREAD_MUTATION = gql`

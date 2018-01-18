@@ -84,7 +84,7 @@ class ThreadSearch extends React.Component<Props, State> {
       ? 'Search this community...'
       : filter.channelId
         ? 'Search this channel...'
-        : 'Search your communities...';
+        : 'Search for conversations...';
 
     return (
       <SearchForm
@@ -115,4 +115,5 @@ const map = state => ({
   isOpen: state.dashboardFeed.search.isOpen,
   queryString: state.dashboardFeed.search.queryString,
 });
+// $FlowIssue
 export default compose(connect(map))(ThreadSearch);

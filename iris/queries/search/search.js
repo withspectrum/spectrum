@@ -13,7 +13,7 @@ type Input = {
 };
 
 export default (_: any, input: Input, ctx: GraphQLContext) => {
-  const { type, first, after, last, before, queryString, searchFilter } = input;
+  const { type, first, after, last, before, queryString, filter } = input;
   if (!queryString) throw new UserError('Please provide a search term.');
   const args = {
     first,
@@ -21,7 +21,7 @@ export default (_: any, input: Input, ctx: GraphQLContext) => {
     last,
     before,
     queryString,
-    searchFilter,
+    filter,
   };
   switch (type) {
     case 'COMMUNITIES': {
