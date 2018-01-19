@@ -1,5 +1,5 @@
-// flow-typed signature: 107cf7068b8835594e97f938e8848244
-// flow-typed version: 8b4dd96654/jest_v21.x.x/flow_>=v0.39.x
+// flow-typed signature: 6e1fc0a644aa956f79029fec0709e597
+// flow-typed version: 07ebad4796/jest_v22.x.x/flow_>=v0.39.x
 
 type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   (...args: TArguments): TReturn,
@@ -310,6 +310,10 @@ type JestObjectType = {
    * mocked function.
    */
   resetAllMocks(): JestObjectType,
+  /**
+   * Restores all mocks back to their original value.
+   */
+  restoreAllMocks(): JestObjectType,
   /**
    * Removes any pending timers from the timer system.
    */

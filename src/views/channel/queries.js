@@ -1,5 +1,7 @@
+import gql from 'graphql-tag';
+
 // @flow
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
@@ -122,14 +124,14 @@ const threadsQueryOptions = {
 export const getChannelThreads = graphql(
   gql`
     query getChannelThreads($id: ID, $after: String) {
-			channel(id: $id) {
+      channel(id: $id) {
         ...channelInfo
         ...channelThreads
       }
     }
     ${channelInfoFragment}
     ${channelThreadsFragment}
-	`,
+  `,
   threadsQueryOptions
 );
 
@@ -151,8 +153,8 @@ const profileQueryOptions = {
 
 export const getChannel = graphql(
   gql`
-		query getChannel($channelSlug: String, $communitySlug: String) {
-			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
+    query getChannel($channelSlug: String, $communitySlug: String) {
+      channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
         community {
@@ -160,11 +162,11 @@ export const getChannel = graphql(
           ...communityMetaData
         }
       }
-		}
+    }
     ${channelInfoFragment}
     ${communityInfoFragment}
     ${communityMetaDataFragment}
     ${channelMetaDataFragment}
-	`,
+  `,
   profileQueryOptions
 );

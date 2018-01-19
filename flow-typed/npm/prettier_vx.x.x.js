@@ -1,4 +1,4 @@
-// flow-typed signature: ce36a3cb67cd81818cbb1cd2fccf0637
+// flow-typed signature: 473fe27fad2867e94b13c46f743c5945
 // flow-typed version: <<STUB>>/prettier_v^1.0.0/flow_v0.63.1
 
 /**
@@ -22,7 +22,7 @@ declare module 'prettier' {
  * require those files directly. Feel free to delete any files that aren't
  * needed.
  */
-declare module 'prettier/bin/prettier' {
+declare module 'prettier/bin-prettier' {
   declare module.exports: any;
 }
 
@@ -34,7 +34,15 @@ declare module 'prettier/parser-flow' {
   declare module.exports: any;
 }
 
+declare module 'prettier/parser-glimmer' {
+  declare module.exports: any;
+}
+
 declare module 'prettier/parser-graphql' {
+  declare module.exports: any;
+}
+
+declare module 'prettier/parser-markdown' {
   declare module.exports: any;
 }
 
@@ -50,9 +58,17 @@ declare module 'prettier/parser-typescript' {
   declare module.exports: any;
 }
 
+declare module 'prettier/parser-vue' {
+  declare module.exports: any;
+}
+
+declare module 'prettier/third-party' {
+  declare module.exports: any;
+}
+
 // Filename aliases
-declare module 'prettier/bin/prettier.js' {
-  declare module.exports: $Exports<'prettier/bin/prettier'>;
+declare module 'prettier/bin-prettier.js' {
+  declare module.exports: $Exports<'prettier/bin-prettier'>;
 }
 declare module 'prettier/index' {
   declare module.exports: $Exports<'prettier'>;
@@ -66,8 +82,14 @@ declare module 'prettier/parser-babylon.js' {
 declare module 'prettier/parser-flow.js' {
   declare module.exports: $Exports<'prettier/parser-flow'>;
 }
+declare module 'prettier/parser-glimmer.js' {
+  declare module.exports: $Exports<'prettier/parser-glimmer'>;
+}
 declare module 'prettier/parser-graphql.js' {
   declare module.exports: $Exports<'prettier/parser-graphql'>;
+}
+declare module 'prettier/parser-markdown.js' {
+  declare module.exports: $Exports<'prettier/parser-markdown'>;
 }
 declare module 'prettier/parser-parse5.js' {
   declare module.exports: $Exports<'prettier/parser-parse5'>;
@@ -77,4 +99,10 @@ declare module 'prettier/parser-postcss.js' {
 }
 declare module 'prettier/parser-typescript.js' {
   declare module.exports: $Exports<'prettier/parser-typescript'>;
+}
+declare module 'prettier/parser-vue.js' {
+  declare module.exports: $Exports<'prettier/parser-vue'>;
+}
+declare module 'prettier/third-party.js' {
+  declare module.exports: $Exports<'prettier/third-party'>;
 }

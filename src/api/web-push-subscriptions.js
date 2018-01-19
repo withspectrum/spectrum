@@ -1,5 +1,7 @@
+import gql from 'graphql-tag';
+
 // @flow
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 
 const SUBSCRIBE_TO_WEB_PUSH_MUTATION = gql`
   mutation subscribeToWebPush($subscription: WebPushSubscription!) {

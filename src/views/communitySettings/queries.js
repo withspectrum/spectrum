@@ -1,4 +1,5 @@
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { communityMetaDataFragment } from '../../api/fragments/community/communityMetaData';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
@@ -6,7 +7,7 @@ import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 export const getThisCommunity = graphql(
   gql`
     query thisCommunity($slug: String) {
-			community(slug: $slug) {
+      community(slug: $slug) {
         ...communityInfo
         ...communityMetaData
         recurringPayments {
@@ -16,10 +17,10 @@ export const getThisCommunity = graphql(
           status
         }
       }
-		}
+    }
     ${communityInfoFragment}
     ${communityMetaDataFragment}
-	`,
+  `,
   {
     options: props => ({
       variables: {

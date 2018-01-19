@@ -1,4 +1,4 @@
-// flow-typed signature: 26416878509a5db3108dd0716d80bcb4
+// flow-typed signature: 9a7eda6fe4d82c7dd052862424d0702c
 // flow-typed version: <<STUB>>/babel-plugin-styled-components_v^1.1.7/flow_v0.63.1
 
 /**
@@ -66,6 +66,10 @@ declare module 'babel-plugin-styled-components/lib/utils/options' {
   declare module.exports: any;
 }
 
+declare module 'babel-plugin-styled-components/lib/visitors/assignStyledRequired' {
+  declare module.exports: any;
+}
+
 declare module 'babel-plugin-styled-components/lib/visitors/displayNameAndId' {
   declare module.exports: any;
 }
@@ -123,6 +127,9 @@ declare module 'babel-plugin-styled-components/lib/utils/hash.js' {
 }
 declare module 'babel-plugin-styled-components/lib/utils/options.js' {
   declare module.exports: $Exports<'babel-plugin-styled-components/lib/utils/options'>;
+}
+declare module 'babel-plugin-styled-components/lib/visitors/assignStyledRequired.js' {
+  declare module.exports: $Exports<'babel-plugin-styled-components/lib/visitors/assignStyledRequired'>;
 }
 declare module 'babel-plugin-styled-components/lib/visitors/displayNameAndId.js' {
   declare module.exports: $Exports<'babel-plugin-styled-components/lib/visitors/displayNameAndId'>;

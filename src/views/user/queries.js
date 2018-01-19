@@ -1,6 +1,8 @@
+import gql from 'graphql-tag';
+
 // @flow
 // $FlowFixMe
-import { graphql, gql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
@@ -8,7 +10,11 @@ import { subscribeToUpdatedThreads } from '../../api/subscriptions';
 import parseRealtimeThreads from '../../helpers/realtimeThreads';
 
 const LoadMoreThreads = gql`
-  query loadMoreUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
+  query loadMoreUserThreads(
+    $username: String
+    $after: String
+    $kind: ThreadConnectionType
+  ) {
     user(username: $username) {
       ...userInfo
       ...userThreads
@@ -112,15 +118,19 @@ const threadsQueryOptions = {
 
 export const getUserThreads = graphql(
   gql`
-		query getUserThreads($username: String, $after: String, $kind: ThreadConnectionType) {
-			user(username: $username) {
+    query getUserThreads(
+      $username: String
+      $after: String
+      $kind: ThreadConnectionType
+    ) {
+      user(username: $username) {
         ...userInfo
         ...userThreads
       }
-		}
+    }
     ${userInfoFragment}
     ${userThreadsFragment}
-	`,
+  `,
   threadsQueryOptions
 );
 
@@ -141,16 +151,16 @@ const profileQueryOptions = {
 
 export const getUser = graphql(
   gql`
-		query getUser($username: String) {
-			user(username: $username) {
+    query getUser($username: String) {
+      user(username: $username) {
         ...userInfo
         isPro
         totalReputation
         ...userCommunities
       }
-		}
+    }
     ${userInfoFragment}
     ${userCommunitiesFragment}
-	`,
+  `,
   profileQueryOptions
 );

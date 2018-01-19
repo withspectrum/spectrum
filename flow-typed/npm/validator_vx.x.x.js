@@ -1,4 +1,4 @@
-// flow-typed signature: bd227e9f7936c9b6b55475b808dde1c6
+// flow-typed signature: 2543968ea7a2e981f4fb402676366238
 // flow-typed version: <<STUB>>/validator_v^9.0.0/flow_v0.63.1
 
 /**
@@ -154,6 +154,10 @@ declare module 'validator/lib/isISIN' {
   declare module.exports: any;
 }
 
+declare module 'validator/lib/isISO31661Alpha2' {
+  declare module.exports: any;
+}
+
 declare module 'validator/lib/isISO8601' {
   declare module.exports: any;
 }
@@ -187,6 +191,10 @@ declare module 'validator/lib/isMACAddress' {
 }
 
 declare module 'validator/lib/isMD5' {
+  declare module.exports: any;
+}
+
+declare module 'validator/lib/isMimeType' {
   declare module.exports: any;
 }
 
@@ -412,6 +420,9 @@ declare module 'validator/lib/isISBN.js' {
 declare module 'validator/lib/isISIN.js' {
   declare module.exports: $Exports<'validator/lib/isISIN'>;
 }
+declare module 'validator/lib/isISO31661Alpha2.js' {
+  declare module.exports: $Exports<'validator/lib/isISO31661Alpha2'>;
+}
 declare module 'validator/lib/isISO8601.js' {
   declare module.exports: $Exports<'validator/lib/isISO8601'>;
 }
@@ -438,6 +449,9 @@ declare module 'validator/lib/isMACAddress.js' {
 }
 declare module 'validator/lib/isMD5.js' {
   declare module.exports: $Exports<'validator/lib/isMD5'>;
+}
+declare module 'validator/lib/isMimeType.js' {
+  declare module.exports: $Exports<'validator/lib/isMimeType'>;
 }
 declare module 'validator/lib/isMobilePhone.js' {
   declare module.exports: $Exports<'validator/lib/isMobilePhone'>;

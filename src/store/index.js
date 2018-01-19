@@ -13,7 +13,10 @@ const composeEnhancers =
 
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
 // Allow dependency injection of extra reducers and middleware, we need this for SSR
-export const initStore = (initialState, { middleware, reducers }) => {
+export const initStore = (
+  initialState,
+  { middleware = [], reducers = {} } = {}
+) => {
   if (initialState) {
     return createStore(
       getReducers(reducers),

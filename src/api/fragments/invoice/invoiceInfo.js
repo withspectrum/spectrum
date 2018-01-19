@@ -1,6 +1,4 @@
-// @flow
-// $FlowFixMe
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 export const invoiceInfoFragment = gql`
   fragment invoiceInfo on Invoice {
