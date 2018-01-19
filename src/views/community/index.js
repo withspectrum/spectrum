@@ -149,7 +149,7 @@ class CommunityView extends React.Component<Props, State> {
     } = this.props;
     const { communitySlug } = params;
 
-    if (community) {
+    if (community && community.id) {
       // at this point the community exists and was fetched
       const { title, description } = generateMetaInfo({
         type: 'community',

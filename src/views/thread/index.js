@@ -97,6 +97,7 @@ class ThreadContainer extends React.Component<Props, State> {
           thread: {
             ...threadData.thread,
             currentUserLastSeen: new Date(),
+            __typename: 'Thread',
           },
         },
       });
@@ -197,7 +198,7 @@ class ThreadContainer extends React.Component<Props, State> {
     const { isEditing } = this.state;
     const isLoggedIn = currentUser;
 
-    if (thread) {
+    if (thread && thread.id) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
         type: 'thread',
@@ -250,8 +251,9 @@ class ThreadContainer extends React.Component<Props, State> {
             <ThreadContentView slider={slider}>
               <Head
                 title={`The Watercooler · ${thread.community.name}`}
-                description={`Watercooler chat for the ${thread.community
-                  .name} community`}
+                description={`Watercooler chat for the ${
+                  thread.community.name
+                } community`}
                 image={thread.community.profilePhoto}
               />
               <Titlebar
