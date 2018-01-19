@@ -56,11 +56,10 @@ type State = {
 
 type Props = {
   client: Object,
-  dispatch: Function,
-  communityCreated: Function,
   createCommunity: Function,
+  communityCreated: Function,
+  dispatch: Function,
 };
-
 class CreateCommunityForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
@@ -211,11 +210,25 @@ class CreateCommunityForm extends React.Component<Props, State> {
           // TODO: @BRIAN SWITCH THIS AFTER SEARCH IS MERGED IN
           query: getCommunityBySlugQuery,
           variables: {
-            string: slug,
-            amount: 10,
+            queryString: slug,
+            type: 'COMMUNITIES',
           },
         })
-        .then(({ data: { searchCommunities: communitySuggestions } }) => {
+        .then(({ data: { search } }) => {
+          if (
+            !search ||
+            !search.searchResultsConnection ||
+            search.searchResultsConnection.edges.length === 0
+          ) {
+            return this.setState({
+              communitySuggestions: null,
+            });
+          }
+
+          const communitySuggestions = search.searchResultsConnection.edges.map(
+            c => c.node
+          );
+
           const filtered =
             communitySuggestions &&
             communitySuggestions

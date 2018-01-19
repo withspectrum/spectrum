@@ -13,7 +13,7 @@ import { findDOMNode } from 'react-dom';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { track } from '../../../helpers/events';
-import { SEARCH_USERS_QUERY } from '../../../api/user';
+import { SEARCH_USERS_QUERY } from '../../../api/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
@@ -128,46 +128,51 @@ class NewThread extends Component {
       .query({
         query: SEARCH_USERS_QUERY,
         variables: {
-          string,
+          queryString: string,
+          type: 'USERS',
         },
       })
-      .then(({ data: { searchUsers } }) => {
-        // if we return users from the search query, stop the loading
-        // spinner, populate the searchResults array, and focus the first
-        // result
-        if (searchUsers.length > 0) {
-          // create an array of user ids if the user has already selected people
-          // for the thread
-          const selectedUsersIds =
-            selectedUsersForNewThread &&
-            selectedUsersForNewThread.map(user => user.id);
-
-          // filter the search results to only show users who aren't already selected
-          // then filter that list to remove the currentUser so you can't message yourself
-
-          let searchResults = selectedUsersForNewThread
-            ? searchUsers
-                .filter(user => selectedUsersIds.indexOf(user.id) < 0)
-                .filter(user => user.id !== currentUser.id)
-            : searchUsers.filter(user => user.id !== currentUser.id);
-
-          this.setState({
-            // if the search results are totally filtered out of the selectedUsers,
-            // return an empty array
-            searchResults: searchResults.length > 0 ? searchResults : [],
-            searchIsLoading: false,
-            // if all results are filtered, clear the focused search result
-            focusedSearchResult:
-              searchResults.length > 0 ? searchResults[0].id : '',
-          });
-          // otherwise if no results are found, clear the above
-        } else {
+      .then(({ data: { search } }) => {
+        if (
+          !search ||
+          !search.searchResultsConnection ||
+          search.searchResultsConnection.edges.length === 0
+        ) {
           this.setState({
             searchResults: [],
             searchIsLoading: false,
             focusedSearchResult: '',
           });
         }
+        // if we return users from the search query, stop the loading
+        // spinner, populate the searchResults array, and focus the first
+        // result
+        // create an array of user ids if the user has already selected people
+        // for the thread
+        const selectedUsersIds =
+          selectedUsersForNewThread &&
+          selectedUsersForNewThread.map(user => user.id);
+
+        let searchUsers = search.searchResultsConnection.edges.map(s => s.node);
+
+        // filter the search results to only show users who aren't already selected
+        // then filter that list to remove the currentUser so you can't message yourself
+
+        let searchResults = selectedUsersForNewThread
+          ? searchUsers
+              .filter(user => selectedUsersIds.indexOf(user.id) < 0)
+              .filter(user => user.id !== currentUser.id)
+          : searchUsers.filter(user => user.id !== currentUser.id);
+
+        this.setState({
+          // if the search results are totally filtered out of the selectedUsers,
+          // return an empty array
+          searchResults: searchResults.length > 0 ? searchResults : [],
+          searchIsLoading: false,
+          // if all results are filtered, clear the focused search result
+          focusedSearchResult:
+            searchResults.length > 0 ? searchResults[0].id : '',
+        });
       });
   };
 

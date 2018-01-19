@@ -99,9 +99,6 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
   // $FlowFixMe
   props: props => ({
     ...props,
-    hasNextPage: props.data.user
-      ? props.data.user.directMessageThreadsConnection.pageInfo.hasNextPage
-      : false,
     fetchMore: () =>
       props.data.fetchMore({
         query: LoadMoreDirectMessageThreads,

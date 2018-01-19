@@ -1,8 +1,8 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import { throttle } from '../../../helpers/utils';
-import { searchThreadsQuery } from '../../../api/thread';
+import searchThreadsQuery from '../../../api/search/searchThreads';
 import ThreadFeed from '../../../components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
 
@@ -10,6 +10,7 @@ const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);
 
 type Props = {
   community: Object,
+  user: Object,
 };
 
 type State = {

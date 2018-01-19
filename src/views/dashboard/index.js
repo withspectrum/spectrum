@@ -8,7 +8,7 @@ import { getEverythingThreads } from './queries';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserProfile } from '../../api/user';
-import { searchThreadsQuery } from '../../api/thread';
+import searchThreadsQuery from '../../api/search/searchThreads';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -55,7 +55,7 @@ type State = {
   isHovered: boolean,
 };
 
-type EdgeType = {
+type CommunityType = {
   node: {
     id: string,
     pinnedThreadId: ?string,
@@ -68,7 +68,7 @@ type Props = {
     user?: {
       id: string,
       communityConnection: {
-        edges: Array<?EdgeType>,
+        edges: Array<?CommunityType>,
       },
     },
   },
@@ -116,15 +116,18 @@ class Dashboard extends React.Component<Props, State> {
     if (activeChannel) {
       searchFilter.everythingFeed = false;
       searchFilter.communityId = null;
+      searchFilter.creatorId = null;
       searchFilter.channelId = activeChannel;
     } else if (activeCommunity) {
       searchFilter.everythingFeed = false;
       searchFilter.channelId = null;
+      searchFilter.creatorId = null;
       searchFilter.communityId = activeCommunity;
     } else {
       searchFilter.channelId = null;
       searchFilter.communityId = null;
-      searchFilter.everythingFeed = true;
+      searchFilter.creatorId = null;
+      searchFilter.everythingFeed = false;
     }
     const { title, description } = generateMetaInfo();
 

@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import Link from 'src/components/link';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../../helpers/events';
 import { addToastWithTimeout } from '../../../../actions/toasts';
@@ -15,7 +11,7 @@ import { Button, OutlineButton } from '../../../../components/buttons';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/community';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/search/searchCommunities';
 import { Spinner } from '../../../../components/globals';
 import {
   SearchWrapper,
@@ -33,16 +29,23 @@ import {
   SearchResultDescription,
 } from './style';
 
-class Search extends Component {
-  state: {
-    searchString: string,
-    searchResults: Array<any>,
-    searchIsLoading: boolean,
-    focusedSearchResult: string,
-    isFocused: boolean,
-    loading: string,
-  };
+type State = {
+  searchString: string,
+  searchResults: Array<any>,
+  searchIsLoading: boolean,
+  focusedSearchResult: string,
+  isFocused: boolean,
+  loading: string,
+};
 
+type Props = {
+  toggleCommunityMembership: Function,
+  joinedCommunity: Function,
+  dispatch: Function,
+  client: Object,
+};
+
+class Search extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -129,10 +132,24 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString, amount: 30 },
+        variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
-      .then(({ data: { searchCommunities } }) => {
-        const searchResults = searchCommunities;
+      .then(({ data: { search } }) => {
+        if (
+          !search ||
+          !search.searchResultsConnection ||
+          search.searchResultsConnection.edges.length === 0
+        ) {
+          return this.setState({
+            searchResults: [],
+            searchIsLoading: false,
+            focusedSearchResult: '',
+          });
+        }
+
+        const searchResults = search.searchResultsConnection.edges.map(
+          c => c.node
+        );
         // sort by membership count
         const sorted = searchResults
           .slice()
@@ -176,7 +193,8 @@ class Search extends Component {
         searchString: '',
       });
 
-      input.focus();
+      // $FlowFixMe
+      input && input.focus();
       return;
     }
 

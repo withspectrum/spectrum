@@ -71,7 +71,7 @@ class ChannelView extends React.Component<Props> {
     const { communitySlug, channelSlug } = match.params;
     const isLoggedIn = currentUser;
 
-    if (channel) {
+    if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a community record
       const {
         isBlocked,
@@ -130,10 +130,12 @@ class ChannelView extends React.Component<Props> {
               }
               subheading={
                 isPending
-                  ? `Return to the ${channel.community
-                      .name} community until you hear back.`
-                  : `Request to join this channel and the admins of ${channel
-                      .community.name} will be notified.`
+                  ? `Return to the ${
+                      channel.community.name
+                    } community until you hear back.`
+                  : `Request to join this channel and the admins of ${
+                      channel.community.name
+                    } will be notified.`
               }
             >
               <RequestToJoinChannel

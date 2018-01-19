@@ -43,7 +43,7 @@ class CommunitySettings extends React.Component<Props> {
     const activeTab = pathname.substr(lastIndex + 1);
     const communitySlug = community && community.slug;
 
-    if (community) {
+    if (community && community.id) {
       if (!community.communityPermissions.isOwner) {
         return (
           <AppViewWrapper>

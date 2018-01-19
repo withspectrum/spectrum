@@ -94,7 +94,7 @@ class UserView extends React.Component<Props, State> {
       return <LoadingScreen />;
     }
 
-    if (user) {
+    if (user && user.id) {
       const { title, description } = generateMetaInfo({
         type: 'user',
         data: {
@@ -109,11 +109,11 @@ class UserView extends React.Component<Props, State> {
           ? user.communityConnection.edges.map(c => c.node)
           : [];
 
-      const nullHeading = `${user.firstName
-        ? user.firstName
-        : user.name} hasn’t ${selectedView === 'creator'
-        ? 'created'
-        : 'joined'} any conversations yet.`;
+      const nullHeading = `${
+        user.firstName ? user.firstName : user.name
+      } hasn’t ${
+        selectedView === 'creator' ? 'created' : 'joined'
+      } any conversations yet.`;
 
       const Feed =
         selectedView === 'creator'

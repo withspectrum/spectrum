@@ -22,7 +22,8 @@ import {
 const threadsSearchIndex = initIndex('threads_and_messages');
 
 export default async (args: Args, { loaders, user }: GraphQLContext) => {
-  const { queryString, searchFilter } = args;
+  const { queryString, filter } = args;
+  const searchFilter = filter;
 
   let getSearchResultThreads = (filters: string) =>
     threadsSearchIndex
@@ -79,11 +80,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
   }
 
   // searching a community
-  if (
-    searchFilter &&
-    searchFilter.communityId &&
-    typeof searchFilter.communityId === String
-  ) {
+  if (searchFilter && searchFilter.communityId) {
     const { communityId } = searchFilter;
     const filters = `communityId:"${communityId}"`;
     let searchResultThreads = await getSearchResultThreads(filters);

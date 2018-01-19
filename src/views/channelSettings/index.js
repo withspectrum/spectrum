@@ -96,7 +96,7 @@ class ChannelSettings extends React.Component<Props> {
     const lastIndex = pathname.lastIndexOf('/');
     const activeTab = pathname.substr(lastIndex + 1);
 
-    if (channel) {
+    if (channel && channel.id) {
       const { isModerator, isOwner } = channel.channelPermissions;
       const userHasPermissions =
         isOwner ||
