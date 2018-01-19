@@ -1,3 +1,4 @@
+// flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
@@ -10,7 +11,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import Editor from '../../draftjs-editor';
 import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
 import { getComposerCommunitiesAndChannels } from '../queries';
-import { publishThread } from '../mutations';
+import publishThread from 'shared/graphql/mutations/thread/publishThread';
 import { getLinkPreviewFromUrl } from '../../../helpers/utils';
 import isURL from 'validator/lib/isURL';
 import { URLS, ENDS_IN_WHITESPACE } from '../../../helpers/regexps';
@@ -460,19 +461,17 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
+    const thread = {
+      channelId,
+      communityId,
+      type: 'DRAFTJS',
+      content,
+      attachments,
+      filesToUpload,
+    };
+
     this.props
-      .mutate({
-        variables: {
-          thread: {
-            channelId,
-            communityId,
-            type: 'DRAFTJS',
-            content,
-            attachments,
-            filesToUpload,
-          },
-        },
-      })
+      .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
       .then(({ data }) => {

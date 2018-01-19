@@ -10,7 +10,7 @@ import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
 import { track } from '../../../helpers/events';
-import { toggleThreadNotificationsMutation } from '../mutations';
+import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import {
   FollowButton,
   ShareButtons,
@@ -197,8 +197,9 @@ class ActionBar extends React.Component<Props, State> {
                 tipLocation={'top-right'}
               >
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${thread.id}&t=${thread
-                    .content.title}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
+                    thread.id
+                  }&t=${thread.content.title}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -212,8 +213,11 @@ class ActionBar extends React.Component<Props, State> {
                 tipLocation={'top-right'}
               >
                 <a
-                  href={`https://twitter.com/share?text=${thread.content
-                    .title} on @withspectrum&url=https://spectrum.chat/thread/${thread.id}`}
+                  href={`https://twitter.com/share?text=${
+                    thread.content.title
+                  } on @withspectrum&url=https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -223,11 +227,14 @@ class ActionBar extends React.Component<Props, State> {
 
               <Clipboard
                 style={{ background: 'none' }}
-                data-clipboard-text={`https://spectrum.chat/thread/${thread.id}`}
+                data-clipboard-text={`https://spectrum.chat/thread/${
+                  thread.id
+                }`}
                 onSuccess={() =>
                   this.props.dispatch(
                     addToastWithTimeout('success', 'Copied to clipboard')
-                  )}
+                  )
+                }
               >
                 <ShareButton tipText={'Copy link'} tipLocation={'top-right'}>
                   <a>
@@ -312,38 +319,38 @@ class ActionBar extends React.Component<Props, State> {
                     </FlyoutRow>
 
                     {(isChannelOwner || isCommunityOwner) && (
-                        <FlyoutRow>
-                          <TextButton
-                            icon="freeze"
-                            hoverColor="space.alt"
-                            tipText={
-                              thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                            }
-                            tipLocation="top-left"
-                            onClick={this.props.threadLock}
-                          >
-                            <Label>
-                              {thread.isLocked ? 'Unfreeze' : 'Freeze'}
-                            </Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
+                      <FlyoutRow>
+                        <TextButton
+                          icon="freeze"
+                          hoverColor="space.alt"
+                          tipText={
+                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                          }
+                          tipLocation="top-left"
+                          onClick={this.props.threadLock}
+                        >
+                          <Label>
+                            {thread.isLocked ? 'Unfreeze' : 'Freeze'}
+                          </Label>
+                        </TextButton>
+                      </FlyoutRow>
+                    )}
 
                     {(thread.isCreator ||
                       isChannelOwner ||
                       isCommunityOwner) && (
-                        <FlyoutRow>
-                          <TextButton
-                            icon="delete"
-                            hoverColor="warn.alt"
-                            tipText="Delete thread"
-                            tipLocation="top-left"
-                            onClick={this.props.triggerDelete}
-                          >
-                            <Label>Delete</Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
+                      <FlyoutRow>
+                        <TextButton
+                          icon="delete"
+                          hoverColor="warn.alt"
+                          tipText="Delete thread"
+                          tipLocation="top-left"
+                          onClick={this.props.triggerDelete}
+                        >
+                          <Label>Delete</Label>
+                        </TextButton>
+                      </FlyoutRow>
+                    )}
                   </Flyout>
                 </DropWrap>
               )}
@@ -362,7 +369,8 @@ class ActionBar extends React.Component<Props, State> {
               onClick={() =>
                 setTimeout(() => {
                   this.toggleFlyout(false);
-                })}
+                })
+              }
             />
           )}
         </ActionBarContainer>

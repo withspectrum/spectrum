@@ -3,7 +3,7 @@ import * as React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { ActorsRow } from './actorsRow';
-import { getThreadById } from '../../../api/thread';
+import getThreadById from 'shared/graphql/queries/thread/getThreadById';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';

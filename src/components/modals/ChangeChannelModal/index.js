@@ -6,7 +6,7 @@ import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
 import { TextButton, Button } from '../../buttons';
-import { moveThreadMutation } from '../../../api/thread';
+import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
 import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../icons';

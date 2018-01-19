@@ -1,0 +1,48 @@
+// @flow
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
+import threadInfoFragment from '../../fragments/thread/threadInfo';
+
+type File = {
+  name: string,
+  type: string,
+  size: number,
+  path: string,
+};
+
+type Attachment = {
+  attachmentType: string,
+  data: string,
+};
+
+export type EditThreadInput = {
+  threadId: string,
+  content: {
+    title: string,
+    body: ?string,
+  },
+  attachments?: ?Array<Attachment>,
+  filesToUpload?: ?Array<File>,
+};
+
+const editThreadMutation = gql`
+  mutation editThread($input: EditThreadInput!) {
+    editThread(input: $input) {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
+`;
+
+const editThreadOptions = {
+  props: ({ input, mutate }) => ({
+    editThread: (input: EditThreadInput) =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export default graphql(editThreadMutation, editThreadOptions);

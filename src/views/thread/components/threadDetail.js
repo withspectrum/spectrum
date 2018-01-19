@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,10 +13,11 @@ import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { setThreadLockMutation } from '../mutations';
+import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import ThreadByline from './threadByline';
-import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
-import { pinThreadMutation } from '../../../api/community';
+import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
+import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
+import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
@@ -32,23 +34,86 @@ import {
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
-class ThreadDetailPure extends Component {
-  state: {
-    isEditing: boolean,
-    body: any,
-    title: string,
-    linkPreview: Object,
-    linkPreviewTrueUrl: string,
-    linkPreviewLength: number,
-    fetchingLinkPreview: boolean,
-    receiveNotifications: boolean,
-    isSavingEdit: boolean,
-  };
+type State = {
+  isEditing?: boolean,
+  body?: any,
+  title?: string,
+  linkPreview?: ?Object,
+  linkPreviewTrueUrl?: string,
+  linkPreviewLength?: number,
+  fetchingLinkPreview?: boolean,
+  receiveNotifications?: boolean,
+  isSavingEdit?: boolean,
+  flyoutOpen?: ?boolean,
+  error?: ?string,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+type Attachment = {
+  attachmentType: string,
+  data: string,
+  trueUrl: string,
+};
+
+type Props = {
+  thread: {
+    id: string,
+    modifiedAt: Date,
+    createdAt: Date,
+    isLocked: boolean,
+    community: {
+      id: string,
+      name: string,
+      slug: string,
+      pinnedThreadId: string,
+      communityPermissions: {
+        isMember: true,
+        isBlocked: true,
+        isOwner: true,
+        isPending: true,
+      },
+    },
+    channel: {
+      id: string,
+      name: string,
+      slug: string,
+      channelPermissions: {
+        isMember: true,
+        isBlocked: true,
+        isOwner: true,
+        isPending: true,
+      },
+    },
+    creator: {
+      profilePhoto: string,
+      username: string,
+      name: string,
+      isOnline: boolean,
+      isPro: boolean,
+      contextPermissions: {
+        reputation: number,
+        isOwner: boolean,
+        isModeratoer: boolean,
+      },
+    },
+    attachments?: Array<?Attachment>,
+    content: {
+      title: string,
+      body: string,
+    },
+    receiveNotifications: boolean,
+  },
+  setThreadLock: Function,
+  pinThread: Function,
+  editThread: Function,
+  dispatch: Function,
+  currentUser: ?Object,
+  toggleEdit: Function,
+};
+
+class ThreadDetailPure extends React.Component<Props, State> {
+  state = {};
+  // $FlowFixMe
+  bodyEditor: any;
 
   setThreadState() {
     const { thread } = this.props;
@@ -56,7 +121,8 @@ class ThreadDetailPure extends Component {
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
         ? thread.attachments.filter(
-            attachment => attachment.attachmentType === 'linkPreview'
+            attachment =>
+              attachment && attachment.attachmentType === 'linkPreview'
           )[0]
         : null;
 
@@ -69,10 +135,16 @@ class ThreadDetailPure extends Component {
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
+      // $FlowFixMe
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
-        thread.attachments.length > 0 ? thread.attachments[0].trueUrl : '',
-      linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
+        thread.attachments &&
+        thread.attachments.length > 0 &&
+        thread.attachments[0]
+          ? thread.attachments[0].trueUrl
+          : '',
+      linkPreviewLength:
+        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
@@ -130,11 +202,13 @@ class ThreadDetailPure extends Component {
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread
-        .community
-        .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.community.name
+      } community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.channel.name
+      } channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
     } else {
@@ -377,6 +451,7 @@ class ThreadDetailPure extends Component {
             )}
           </Link>
 
+          {/* $FlowFixMe */}
           <Editor
             readOnly={!this.state.isEditing}
             state={body}
@@ -419,8 +494,11 @@ const ThreadDetail = compose(
   pinThreadMutation,
   withRouter
 )(ThreadDetailPure);
-const mapStateToProps = state => ({
+
+const map = state => ({
   currentUser: state.users.currentUser,
   flyoutOpen: state.flyoutOpen,
 });
-export default connect(mapStateToProps)(ThreadDetail);
+
+// $FlowIssue
+export default connect(map)(ThreadDetail);

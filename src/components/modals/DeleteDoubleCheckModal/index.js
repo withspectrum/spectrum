@@ -9,7 +9,7 @@ import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
-import { deleteThreadMutation } from '../../../api/thread';
+import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import { deleteMessage } from '../../../api/message';
 
 import ModalContainer from '../modalContainer';
