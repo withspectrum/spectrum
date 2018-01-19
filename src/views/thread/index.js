@@ -77,8 +77,7 @@ class ThreadContainer extends React.Component<Props, State> {
   updateThreadLastSeen = threadId => {
     const { currentUser, client } = this.props;
     // No currentUser, no reason to update currentUserLastSeen
-    if (!currentUser) return;
-
+    if (!currentUser || !threadId) return;
     try {
       const threadData = client.readQuery({
         query: GET_THREAD_QUERY,
@@ -137,7 +136,9 @@ class ThreadContainer extends React.Component<Props, State> {
       );
 
       // Update thread.currentUserLastSeen for the last thread when we switch away from it
-      this.updateThreadLastSeen(prevProps.threadId);
+      if (prevProps.threadId) {
+        this.updateThreadLastSeen(prevProps.threadId);
+      }
       this.forceScrollToTop();
     }
 
