@@ -39,7 +39,7 @@ export default function dashboardFeed(state = initialState, action) {
       return Object.assign({}, state, {
         search: {
           ...state.search,
-          value: action.value,
+          queryString: action.value,
         },
       });
     }
