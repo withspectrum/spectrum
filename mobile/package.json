@@ -29,6 +29,8 @@
   },
   "scripts": {
     "dev": "exp start .",
+    "open:ios": "exp ios .",
+    "open:android": "exp android .",
     "setup": "curl https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xf - -C ./expo/Exponent.app",
     "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
     "test:unit": "jest .",
