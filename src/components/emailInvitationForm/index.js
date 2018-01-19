@@ -6,7 +6,7 @@ import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Icon from '../icons';
 import isEmail from 'validator/lib/isEmail';
-import { sendCommunityEmailInvitationsMutation } from '../../api/community';
+import sendCommunityEmailInvitationsMutation from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
 // import { sendChannelEmailInvitationMutation } from '../../api/channel';
 import { Button } from '../buttons';
 import { Error } from '../formElements';

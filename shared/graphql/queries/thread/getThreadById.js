@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 
-const getThreadByIdQuery = gql`
+export const getThreadByIdQuery = gql`
   query getThread($id: ID!) {
     thread(id: $id) {
       ...threadInfo

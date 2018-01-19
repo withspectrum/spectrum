@@ -15,7 +15,7 @@ import {
   CollectionWrapper,
   LoadingContainer,
 } from './style';
-import { getCommunitiesCollectionQuery } from './queries';
+import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 
@@ -64,7 +64,8 @@ class CollectionSwitcher extends React.Component<Props, State> {
             <ThisSegment
               key={i}
               onClick={() =>
-                this.handleSegmentClick(collection.curatedContentType)}
+                this.handleSegmentClick(collection.curatedContentType)
+              }
               selected={
                 collection.curatedContentType === this.state.selectedView
               }
@@ -188,6 +189,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export const Category = compose(
   // $FlowIssue
   connect(map),
-  getCommunitiesCollectionQuery,
+  getCommunitiesByCuratedContentType,
   viewNetworkHandler
 )(CategoryList);

@@ -91,7 +91,7 @@ const getUserThreadConnectionOptions = {
               user.threadConnection.edges[
                 user.threadConnection.edges.length - 1
               ].cursor,
-            slug: user.slug,
+            username: user.username,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.user) {

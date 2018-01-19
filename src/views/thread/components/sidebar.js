@@ -8,9 +8,9 @@ import {
   LoadingListThreadDetail,
 } from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { toggleCommunityMembershipMutation } from '../../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import Link from 'src/components/link';
-import { getCommunityThreads } from '../../community/queries';
+import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import {

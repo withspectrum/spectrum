@@ -16,7 +16,7 @@ import Titlebar from '../titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
 import { Login } from '../../views/login';
-import { getCommunityByIdQuery } from '../../api/community';
+import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
 import {
   Actions,
   Container,

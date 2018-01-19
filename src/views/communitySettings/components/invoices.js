@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getCommunityInvoices } from '../../../api/community';
+import getCommunityInvoices from 'shared/graphql/queries/community/getCommunityInvoices';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';

@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { deleteCommunityMutation } from '../../../api/community';
+import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import { deleteThreadMutation } from '../../../api/thread';
 import { deleteMessage } from '../../../api/message';

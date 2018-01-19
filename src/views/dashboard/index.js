@@ -5,7 +5,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads } from './queries';
-import { getCommunityThreads } from '../../views/community/queries';
+import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserProfile } from '../../api/user';
 import { searchThreadsQuery } from '../../api/thread';

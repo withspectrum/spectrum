@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getThisChannel } from './queries';
+import { getChannelBySlugAndCommunitySlug } from 'shared/graphql/queries/channel/getChannel';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Loading } from '../../components/loading';
@@ -221,7 +221,7 @@ class ChannelSettings extends React.Component<Props> {
 export default compose(
   // $FlowIssue
   connect(),
-  getThisChannel,
+  getChannelBySlugAndCommunitySlug,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
   viewNetworkHandler

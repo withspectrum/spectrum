@@ -10,9 +10,17 @@ export default gql`
         hasPreviousPage
       }
       edges {
+        cursor
         node {
           ...userInfo
           isPro
+          totalReputation
+          contextPermissions {
+            communityId
+            reputation
+            isOwner
+            isModerator
+          }
         }
       }
     }

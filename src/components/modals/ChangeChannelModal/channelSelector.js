@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { getCommunityChannels } from '../../../views/community/queries';
+import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import viewNetworkHandler from '../../viewNetworkHandler';
 import ViewError from '../../viewError';
 import { LoadingSelect } from '../../loading';
