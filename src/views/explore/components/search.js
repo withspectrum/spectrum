@@ -57,6 +57,7 @@ class Search extends React.Component<Props, State> {
 
   search = (searchString: string) => {
     const { client } = this.props;
+    if (!searchString || searchString.length === 0) return;
 
     // start the input loading spinner
     this.setState({
@@ -157,6 +158,12 @@ class Search extends React.Component<Props, State> {
 
   handleChange = (e: any) => {
     const string = e.target.value.toLowerCase().trim();
+
+    if (e.target.value.length === 0) {
+      this.setState({
+        searchIsLoading: false,
+      });
+    }
 
     // set the searchstring to state
     this.setState({
