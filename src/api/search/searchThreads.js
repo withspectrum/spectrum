@@ -1,5 +1,6 @@
 // @flow
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import { threadInfoFragment } from '../fragments/thread/threadInfo';
 
 const SEARCH_THREADS_QUERY = gql`

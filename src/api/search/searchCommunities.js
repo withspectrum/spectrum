@@ -1,5 +1,6 @@
 // @flow
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import { communityInfoFragment } from '../fragments/community/communityInfo';
 import { communityMetaDataFragment } from '../fragments/community/communityMetaData';
 
