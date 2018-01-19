@@ -94,14 +94,8 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
 `;
 
 export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
-  options: {
-    fetchPolicy: 'cache-and-network',
-  },
   props: props => ({
     ...props,
-    hasNextPage: props.data.user
-      ? props.data.user.directMessageThreadsConnection.pageInfo.hasNextPage
-      : false,
     fetchMore: () =>
       props.data.fetchMore({
         query: LoadMoreDirectMessageThreads,

@@ -22,11 +22,13 @@ type Props = {
   match: Object,
   currentUser?: Object,
   hasError: boolean,
-  hasNextPage: boolean,
   fetchMore: Function,
   data: {
     user: {
       directMessageThreadsConnection: {
+        pageInfo: {
+          hasNextPage: boolean,
+        },
         edges: Array<Object>,
       },
     },
@@ -85,14 +87,7 @@ class DirectMessages extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      match,
-      currentUser,
-      data,
-      hasError,
-      fetchMore,
-      hasNextPage,
-    } = this.props;
+    const { match, currentUser, data, hasError, fetchMore } = this.props;
 
     // Only logged-in users can view DM threads
     if (!currentUser) return null;
@@ -117,6 +112,12 @@ class DirectMessages extends React.Component<Props, State> {
         : null;
 
     if (hasError) return <ViewError />;
+
+    const hasNextPage =
+      data.user &&
+      data.user.directMessageThreadsConnection &&
+      data.user.directMessageThreadsConnection.pageInfo &&
+      data.user.directMessageThreadsConnection.pageInfo.hasNextPage;
 
     return (
       <View>
