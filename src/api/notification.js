@@ -57,7 +57,7 @@ export const GET_NOTIFICATIONS_OPTIONS = {
       refetch,
       networkStatus,
     },
-  }) => ({
+  }: any) => ({
     data: {
       networkStatus,
       error,
@@ -160,7 +160,7 @@ export const MARK_NOTIFICATIONS_READ_MUTATION = gql`
 `;
 
 export const MARK_NOTIFICATIONS_READ_OPTIONS = {
-  props: ({ mutate }) => ({
+  props: ({ mutate }: { mutate: Function }) => ({
     markAllNotificationsRead: () => mutate(),
   }),
 };
@@ -177,7 +177,7 @@ export const MARK_NOTIFICATIONS_SEEN_MUTATION = gql`
 `;
 
 export const MARK_NOTIFICATIONS_SEEN_OPTIONS = {
-  props: ({ mutate }) => ({
+  props: ({ mutate }: { mutate: Function }) => ({
     markAllNotificationsSeen: () =>
       mutate({
         update: store => {
@@ -209,7 +209,7 @@ export const MARK_DM_NOTIFICATIONS_SEEN_MUTATION = gql`
 `;
 
 export const MARK_DM_NOTIFICATIONS_SEEN_OPTIONS = {
-  props: ({ mutate }) => ({
+  props: ({ mutate }: { mutate: Function }) => ({
     markDirectMessageNotificationsSeen: () => mutate(),
   }),
 };
@@ -226,10 +226,10 @@ export const MARK_SINGLE_NOTIFICATION_SEEN_MUTATION = gql`
 `;
 
 export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
-  props: ({ mutate }) => ({
+  props: ({ mutate }: { mutate: Function }) => ({
     markSingleNotificationSeen: () => mutate(),
   }),
-  options: ({ notification: { id } }) => ({
+  options: ({ notification: { id } }: { notification: { id: string } }) => ({
     variables: {
       id,
     },
@@ -263,7 +263,7 @@ export const GET_UNREAD_DMS_OPTIONS = {
   options: {
     fetchPolicy: 'network-only',
   },
-  props: props => ({
+  props: (props: any) => ({
     ...props,
     refetch: () => props.data.refetch(),
     subscribeToDMs: () => {

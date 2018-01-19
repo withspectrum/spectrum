@@ -1,9 +1,10 @@
+// @flow
 import * as React from 'react';
 import { UserListItem } from '../../../components/listItems';
 import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
-import { getCommunityMembersQuery } from '../../../api/community';
+import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
 import { ListContainer } from '../../../components/listItems/style';
 import {
@@ -12,14 +13,37 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 
-type Props = {};
+type MemberType = {
+  node: {
+    id: string,
+  },
+};
+
+type Props = {
+  data: {
+    error: ?string,
+    networkStatus: number,
+    fetchMore: Function,
+    community: {
+      metaData: {
+        members: number,
+      },
+      memberConnection: {
+        pageInfo: {
+          hasNextPage: boolean,
+        },
+        edges: Array<?MemberType>,
+      },
+    },
+  },
+};
 class CommunityMembers extends React.Component<Props> {
   render() {
     const { data: { error, community, networkStatus, fetchMore } } = this.props;
     const members =
       community &&
       community.memberConnection &&
-      community.memberConnection.edges.map(member => member.node);
+      community.memberConnection.edges.map(member => member && member.node);
     const totalCount =
       community && community.metaData && community.metaData.members;
 
@@ -43,6 +67,7 @@ class CommunityMembers extends React.Component<Props> {
           <ListContainer>
             {members &&
               members.map(user => {
+                if (!user) return;
                 return (
                   <section key={user.id}>
                     <UserListItem

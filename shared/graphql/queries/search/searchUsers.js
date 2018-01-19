@@ -1,9 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { userInfoFragment } from '../fragments/user/userInfo';
+import userInfoFragment from '../../fragments/user/userInfo';
 
-export const SEARCH_USERS_QUERY = gql`
+export const searchUsersQuery = gql`
   query search($queryString: String!, $type: SearchType!) {
     search(queryString: $queryString, type: $type) {
       searchResultsConnection {
@@ -20,7 +20,7 @@ export const SEARCH_USERS_QUERY = gql`
   ${userInfoFragment}
 `;
 
-const SEARCH_USERS_OPTIONS = {
+const searchUsersOptions = {
   options: ({ queryString }) => ({
     variables: {
       queryString,
@@ -30,4 +30,4 @@ const SEARCH_USERS_OPTIONS = {
   }),
 };
 
-export default graphql(SEARCH_USERS_QUERY, SEARCH_USERS_OPTIONS);
+export default graphql(searchUsersQuery, searchUsersOptions);

@@ -5,7 +5,7 @@ import channelInfoFragment from '../../fragments/channel/channelInfo';
 import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
 
 export default gql`
-  fragment communityChannelEconntion on Community {
+  fragment communityChannelConnection on Community {
     channelConnection {
       edges {
         node {

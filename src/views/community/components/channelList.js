@@ -1,9 +1,7 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import Link from 'src/components/link';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
@@ -12,7 +10,7 @@ import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { LoadingCard } from '../../../components/loading';
-import { getCommunityChannels } from '../queries';
+import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import {
   StyledCard,
   ListHeader,
@@ -68,7 +66,8 @@ class ChannelList extends React.Component<Props> {
                 glyph="plus"
                 color="text.placeholder"
                 onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
+                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                }
               />
             )}
           </ListHeader>
@@ -79,26 +78,26 @@ class ChannelList extends React.Component<Props> {
             user is logged in but hasn't joined this community, channel list is used for navigation
           */}
           {(!currentUser || (currentUser && !isMember)) && (
-              <ListContainer>
-                {channels.map(channel => {
-                  return (
-                    <Link
-                      key={channel.id}
-                      to={`/${communitySlug}/${channel.slug}`}
+            <ListContainer>
+              {channels.map(channel => {
+                return (
+                  <Link
+                    key={channel.id}
+                    to={`/${communitySlug}/${channel.slug}`}
+                  >
+                    <ChannelListItem
+                      clickable
+                      contents={channel}
+                      withDescription={false}
+                      channelIcon
                     >
-                      <ChannelListItem
-                        clickable
-                        contents={channel}
-                        withDescription={false}
-                        channelIcon
-                      >
-                        <Icon glyph="view-forward" />
-                      </ChannelListItem>
-                    </Link>
-                  );
-                })}
-              </ListContainer>
-            )}
+                      <Icon glyph="view-forward" />
+                    </ChannelListItem>
+                  </Link>
+                );
+              })}
+            </ListContainer>
+          )}
 
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
           {joinedChannels &&
@@ -159,6 +158,9 @@ class ChannelList extends React.Component<Props> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getCommunityChannels, viewNetworkHandler)(
-  ChannelList
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getCommunityChannels,
+  viewNetworkHandler
+)(ChannelList);

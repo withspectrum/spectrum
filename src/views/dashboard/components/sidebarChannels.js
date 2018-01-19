@@ -1,6 +1,7 @@
+// @flow
 import * as React from 'react';
 import Link from 'src/components/link';
-import { getCommunityChannels } from '../../community/queries';
+import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
 import Icon from '../../../components/icons';
 import {
@@ -19,7 +20,44 @@ import {
   SectionTitle,
 } from '../style';
 
-type Props = {};
+type ChannelType = {
+  node: {
+    id: string,
+    name: string,
+    slug: string,
+    channelPermissions: {
+      isOwner: boolean,
+      isMember: boolean,
+      isBlocked: boolean,
+    },
+  },
+};
+
+type Props = {
+  dispatch: Function,
+  isLoading: boolean,
+  queryVarIsChanging: boolean,
+  activeChannel: ?string,
+  thisCommunity: {
+    slug: string,
+    communityPermissions: {
+      isOwner: boolean,
+    },
+  },
+  data: {
+    community: {
+      slug: string,
+      isPro: boolean,
+      communityPermissions: {
+        isOwner: boolean,
+        isMember: boolean,
+      },
+      channelConnection: {
+        edges: Array<ChannelType>,
+      },
+    },
+  },
+};
 class SidebarChannels extends React.Component<Props> {
   changeChannel = id => {
     this.props.dispatch(changeActiveThread(''));
@@ -49,7 +87,7 @@ class SidebarChannels extends React.Component<Props> {
           return channel;
         })
         .filter(channel => {
-          if (channel.isPrivate && !channel.community.isPro) {
+          if (channel.isPrivate && !community.isPro) {
             return null;
           }
           return channel;

@@ -1,10 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { communityInfoFragment } from '../fragments/community/communityInfo';
-import { communityMetaDataFragment } from '../fragments/community/communityMetaData';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import communityMetaDataFragment from '../../fragments/community/communityMetaData';
 
-export const SEARCH_COMMUNITIES_QUERY = gql`
+export const searchCommunitiesQuery = gql`
   query search($queryString: String!, $type: SearchType!) {
     search(queryString: $queryString, type: $type) {
       searchResultsConnection {
@@ -23,7 +23,7 @@ export const SEARCH_COMMUNITIES_QUERY = gql`
   ${communityMetaDataFragment}
 `;
 
-const SEARCH_COMMUNITIES_OPTIONS = {
+const searchCommunitiesOptions = {
   options: ({ queryString }) => ({
     variables: {
       queryString,
@@ -33,4 +33,4 @@ const SEARCH_COMMUNITIES_OPTIONS = {
   }),
 };
 
-export default graphql(SEARCH_COMMUNITIES_QUERY, SEARCH_COMMUNITIES_OPTIONS);
+export default graphql(searchCommunitiesQuery, searchCommunitiesOptions);

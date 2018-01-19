@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -13,10 +14,13 @@ import { findDOMNode } from 'react-dom';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { track } from '../../../helpers/events';
-import { SEARCH_USERS_QUERY } from '../../../api/search/searchUsers';
+import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
+import {
+  clearDirectMessagesComposer,
+  initNewThreadWithUser,
+} from '../../../actions/directMessageThreads';
 import { createDirectMessageThreadMutation } from '../../../api/directMessageThread';
 import {
   ComposerInputWrapper,
@@ -34,20 +38,36 @@ import {
   SearchResultImage,
 } from '../components/style';
 
-class NewThread extends Component {
-  state: {
-    searchString: string,
-    searchResults: Array<any>,
-    searchIsLoading: boolean,
-    selectedUsersForNewThread: Array<any>,
-    focusedSearchResult: string, // id
-    focusedSelectedUser: string, // id
-    existingThreadBasedOnSelectedUsers: string, // id
-    existingThreadWithMessages: Object,
-    loadingExistingThreadMessages: boolean,
-    chatInputIsFocused: boolean,
-    threadIsBeingCreated: boolean,
-  };
+type State = {
+  searchString: string,
+  searchResults: Array<any>,
+  searchIsLoading: boolean,
+  selectedUsersForNewThread: Array<any>,
+  focusedSearchResult: string, // id
+  focusedSelectedUser: string, // id
+  existingThreadBasedOnSelectedUsers: string, // id
+  existingThreadWithMessages: Object,
+  loadingExistingThreadMessages: boolean,
+  chatInputIsFocused: boolean,
+  threadIsBeingCreated: boolean,
+};
+
+type Props = {
+  client: Object,
+  currentUser: Object,
+  initNewThreadWithUser: Array<?any>,
+  threads: Array<Object>,
+  hideOnMobile: boolean,
+  dispatch: Function,
+  createDirectMessageThread: Function,
+  threadSliderIsOpen: boolean,
+  history: Object,
+  setActiveThread: Function,
+};
+
+class NewThread extends React.Component<Props, State> {
+  chatInput: React.ElementProps<typeof ChatInput>;
+  scrollBody: ?HTMLDivElement;
 
   constructor(props) {
     super(props);
@@ -126,7 +146,7 @@ class NewThread extends Component {
     // trigger the query
     client
       .query({
-        query: SEARCH_USERS_QUERY,
+        query: searchUsersQuery,
         variables: {
           queryString: string,
           type: 'USERS',
@@ -236,7 +256,8 @@ class NewThread extends Component {
         this.getMessagesForExistingDirectMessageThread();
 
         // focus the search input
-        input.focus();
+        // $FlowFixMe
+        input && input.focus();
 
         return;
       }
@@ -264,7 +285,8 @@ class NewThread extends Component {
       }
 
       // 4
-      input.focus();
+      // $FlowFixMe
+      input && input.focus();
       return;
     }
 
@@ -284,7 +306,7 @@ class NewThread extends Component {
         focusedSelectedUser: '',
       });
 
-      input.focus();
+      // $FlowFixMe      input && input.focus();
       return;
     }
 
@@ -554,7 +576,8 @@ class NewThread extends Component {
     // focus the composer input if no users were already in the composer
     if (initNewThreadWithUser.length === 0) {
       const input = findDOMNode(this.refs.input);
-      return input.focus();
+      // $FlowFixMe
+      return input && input.focus();
     }
 
     this.chatInput.triggerFocus();
@@ -823,5 +846,6 @@ export default compose(
   withApollo,
   withRouter,
   createDirectMessageThreadMutation,
+  // $FlowIssue
   connect(mapStateToProps)
 )(NewThread);

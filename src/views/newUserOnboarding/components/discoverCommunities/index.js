@@ -1,22 +1,30 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-import { getTopCommunities } from '../../../../api/community';
+import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
 import { displayLoadingState } from '../../../../components/loading';
 import { Row } from './style';
 import { CommunityProfile } from '../../../../components/profile';
 
-class TopCommunitiesPure extends Component {
+type Props = {
+  data: {
+    communities: any,
+    error: ?string,
+  },
+  hasJoined: number,
+  joinedCommunity: Function,
+};
+
+class TopCommunitiesPure extends React.Component<Props> {
   render() {
     const {
-      data: { topCommunities, error },
+      data: { communities, error },
       hasJoined,
       joinedCommunity,
     } = this.props;
     // don't display communities where the user is blocked
-    const filteredCommunities = topCommunities.filter(
+    const filteredCommunities = communities.filter(
       community => !community.communityPermissions.isBlocked
     );
 
@@ -40,7 +48,7 @@ class TopCommunitiesPure extends Component {
 }
 
 const TopCommunities = compose(
-  getTopCommunities,
+  getCommunitiesByCuratedContentType,
   displayLoadingState,
   connect()
 )(TopCommunitiesPure);

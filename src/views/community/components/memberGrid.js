@@ -1,8 +1,7 @@
-//$FlowFixMe
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-import { getCommunityMembersQuery } from '../../../api/community';
+import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
 import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';

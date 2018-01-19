@@ -1,7 +1,7 @@
+// @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-import { getThreadById } from '../../../api/thread';
+import getThreadById from 'shared/graphql/queries/thread/getThreadById';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
@@ -20,9 +20,9 @@ import {
 type Props = {
   notification: Object,
   currentUser: Object,
-  history: Object,
-  markSingleNotificationSeen: Function,
-  markSingleNotificationAsSeenInState: Function,
+  history?: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
 };
 type State = {
   communityName: string,
@@ -132,8 +132,9 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
       markSingleNotificationAsSeenInState,
     } = this.props;
     if (notification.isSeen) return;
-    markSingleNotificationAsSeenInState(notification.id);
-    markSingleNotificationSeen(notification.id);
+    markSingleNotificationAsSeenInState &&
+      markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen && markSingleNotificationSeen(notification.id);
   };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });

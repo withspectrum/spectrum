@@ -1,9 +1,7 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
@@ -14,7 +12,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import { toggleCommunityMembershipMutation } from '../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
@@ -35,8 +33,8 @@ import {
   MobileSegment,
 } from '../../components/segmentedControl';
 import { CoverRow, CoverColumn, LogoutButton } from './style';
-import { getCommunityThreads } from './queries';
-import { getCommunity } from '../../api/community';
+import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
@@ -355,8 +353,9 @@ const map = state => ({
 });
 
 export default compose(
+  // $FlowIssue
   connect(map),
   toggleCommunityMembershipMutation,
-  getCommunity,
+  getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);

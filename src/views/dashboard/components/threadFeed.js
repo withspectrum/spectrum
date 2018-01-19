@@ -177,8 +177,11 @@ class ThreadFeed extends React.Component<Props, State> {
       selectedId,
       activeCommunity,
       queryString,
+      data,
     } = this.props;
     const { scrollElement } = this.state;
+
+    console.log(data);
 
     // loading state
     if (networkStatus !== 7 && networkStatus !== 3)
@@ -196,6 +199,7 @@ class ThreadFeed extends React.Component<Props, State> {
     const threadNodes = threads.slice().map(thread => thread.node);
 
     let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
+
     if (activeCommunity) {
       sortedThreadNodes = sortedThreadNodes.filter(t => !t.watercooler);
     }

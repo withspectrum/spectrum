@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { throttle } from '../../../helpers/utils';
-import searchThreads from '../../../api/search/searchThreads';
+import searchThreads from 'shared/graphql/queries/search/searchThreads';
 import ThreadFeed from '../../../components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
 

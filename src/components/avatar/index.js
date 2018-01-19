@@ -17,7 +17,7 @@ type AvatarProps = {
   src: string,
   community?: any,
   user?: any,
-  size: string,
+  size?: string,
   link?: ?string,
   noLink?: boolean,
   showProfile?: boolean,
@@ -33,7 +33,7 @@ export default class Avatar extends Component<AvatarProps, State> {
     this.setState(({ isHovering }) => ({ isHovering: !isHovering }));
 
   render() {
-    const { src, community, user, size, showProfile } = this.props;
+    const { src, community, user, size = '32', showProfile } = this.props;
     const { isHovering } = this.state;
 
     const optimizedAvatar =
@@ -56,7 +56,7 @@ export default class Avatar extends Component<AvatarProps, State> {
 
     return (
       <Status
-        size={size || 32}
+        size={size}
         {...this.props}
         onMouseEnter={this.hover}
         onMouseLeave={this.hover}

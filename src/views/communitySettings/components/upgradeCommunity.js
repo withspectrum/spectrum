@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import StripeCheckout from 'react-stripe-checkout';
 import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
-import { upgradeCommunityMutation } from '../../../api/community';
+import upgradeCommunityMutation from 'shared/graphql/mutations/community/upgradeCommunity';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
 import { NullCard } from '../../../components/upsell';
@@ -13,20 +12,28 @@ import { Button } from '../../../components/buttons';
 import { Pitch, PitchItem, Cost, CostNumber, CostSubtext } from '../style';
 import { SectionTitle } from '../../../components/settingsViews/style';
 
-class UpsellUpgradeCommunityPure extends Component {
-  state: {
-    upgradeError: string,
-    isLoading: boolean,
+type State = {
+  upgradeError: string,
+  isLoading: boolean,
+};
+
+type Props = {
+  community: {
+    id: string,
+    metaData: {
+      members: number,
+    },
+  },
+  upgradeCommunity: Function,
+  complete: Function,
+  dispatch: Function,
+};
+
+class UpsellUpgradeCommunityPure extends React.Component<Props, State> {
+  state = {
+    upgradeError: '',
+    isLoading: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      upgradeError: '',
-      isLoading: false,
-    };
-  }
 
   upgradeToPro = token => {
     this.setState({
@@ -135,7 +142,20 @@ export const UpsellUpgradeCommunity = compose(
   connect()
 )(UpsellUpgradeCommunityPure);
 
-class UpsellUpgradeCommunityPrivateChannelPure extends Component {
+type PrivateProps = {
+  currentUser: ?Object,
+  community: {
+    name: string,
+    communityPermissions: {
+      isOwner: boolean,
+      isMember: boolean,
+    },
+  },
+  dispatch: Function,
+};
+class UpsellUpgradeCommunityPrivateChannelPure extends React.Component<
+  PrivateProps
+> {
   openCommunityUpgradeModal = () => {
     const { currentUser, community } = this.props;
 
@@ -167,5 +187,6 @@ class UpsellUpgradeCommunityPrivateChannelPure extends Component {
 
 const mapUpgrade = state => ({ currentUser: state.users.currentUser });
 export const UpsellUpgradeCommunityPrivateChannel = compose(
+  // $FlowIssue
   connect(mapUpgrade)
 )(UpsellUpgradeCommunityPrivateChannelPure);

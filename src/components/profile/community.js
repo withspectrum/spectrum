@@ -1,15 +1,12 @@
+// @flow
 import React, { Component } from 'react';
-// $FlowFixMe
 import replace from 'string-replace-to-array';
 import Card from '../card';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import Link from 'src/components/link';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import { toggleCommunityMembershipMutation } from '../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
 import { CLIENT_URL } from '../../api/constants';
@@ -35,18 +32,42 @@ import {
   ButtonContainer,
 } from './style';
 
-class CommunityWithData extends Component {
-  state: {
-    isLoading: boolean,
+type State = {
+  isLoading: boolean,
+};
+
+type Props = {
+  toggleCommunityMembership: Function,
+  joinedCommunity: Function,
+  dispatch: Function,
+  data: {
+    community: {
+      id: string,
+      coverPhoto: string,
+      name: string,
+      slug: string,
+      profilePhoto: string,
+      description: string,
+      website: ?string,
+      communityPermissions: {
+        isOwner: boolean,
+        isMember: boolean,
+      },
+      metaData: {
+        members: number,
+      },
+    },
+    loading: boolean,
+    error: ?string,
+  },
+  profileSize: ?string,
+  currentUser: ?Object,
+};
+
+class CommunityWithData extends React.Component<Props, State> {
+  state = {
+    isLoading: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-    };
-  }
 
   toggleMembership = communityId => {
     this.setState({
@@ -119,7 +140,7 @@ class CommunityWithData extends Component {
               <Avatar
                 src={community.profilePhoto}
                 community={community}
-                size={64}
+                size={'64'}
                 style={{
                   boxShadow: '0 0 0 2px #fff',
                   flex: '0 0 64px',
@@ -174,7 +195,7 @@ class CommunityWithData extends Component {
             <ProfileHeader>
               <Avatar
                 community={community}
-                size={40}
+                size={'40'}
                 src={community.profilePhoto}
                 style={{ marginRight: '16px' }}
               />
@@ -363,4 +384,5 @@ const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
 
+// $FlowIssue
 export default connect(mapStateToProps)(Community);

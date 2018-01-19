@@ -1,9 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { threadInfoFragment } from '../fragments/thread/threadInfo';
+import threadInfoFragment from '../../fragments/thread/threadInfo';
 
-const SEARCH_THREADS_QUERY = gql`
+const searchThreadsQuery = gql`
   query search(
     $queryString: String!
     $type: SearchType!
@@ -24,7 +24,7 @@ const SEARCH_THREADS_QUERY = gql`
   ${threadInfoFragment}
 `;
 
-const SEARCH_THREADS_OPTIONS = {
+const searchThreadsOptions = {
   props: ({ data: { fetchMore, error, loading, search, networkStatus } }) => ({
     data: {
       error,
@@ -44,4 +44,4 @@ const SEARCH_THREADS_OPTIONS = {
   }),
 };
 
-export default graphql(SEARCH_THREADS_QUERY, SEARCH_THREADS_OPTIONS);
+export default graphql(searchThreadsQuery, searchThreadsOptions);

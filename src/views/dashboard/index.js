@@ -8,7 +8,7 @@ import { getEverythingThreads } from './queries';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserProfile } from '../../api/user';
-import searchThreadsQuery from '../../api/search/searchThreads';
+import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';

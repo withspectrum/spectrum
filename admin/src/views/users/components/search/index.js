@@ -1,18 +1,14 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { findDOMNode } from 'react-dom';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
-import { SEARCH_USERS_QUERY } from '../../../../api/queries';
+import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
@@ -26,14 +22,19 @@ import {
   SearchResultImage,
 } from './style';
 
-class Search extends Component {
-  state: {
-    searchString: string,
-    searchResults: Array<any>,
-    searchIsLoading: boolean,
-    focusedSearchResult: string,
-  };
+type State = {
+  searchString: string,
+  searchResults: Array<any>,
+  searchIsLoading: boolean,
+  focusedSearchResult: string,
+};
 
+type Props = {
+  client: Object,
+  history: Object,
+};
+
+class Search extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -48,7 +49,7 @@ class Search extends Component {
     this.search = throttle(this.search, 200);
   }
 
-  search = (string: string) => {
+  search = (queryString: string) => {
     const { client } = this.props;
 
     this.setState({
@@ -57,9 +58,9 @@ class Search extends Component {
 
     client
       .query({
-        query: SEARCH_USERS_QUERY,
+        query: searchUsersQuery,
         variables: {
-          string,
+          queryString,
         },
       })
       .then(({ data: { searchUsers } }) => {
@@ -108,7 +109,8 @@ class Search extends Component {
     // backspace
     if (e.keyCode === 8) {
       if (searchString.length > 0) return;
-      return input.focus();
+      // $FlowFixMe
+      return input && input.focus();
     }
 
     //escape
@@ -118,7 +120,8 @@ class Search extends Component {
         searchIsLoading: false,
       });
 
-      return input.focus();
+      // $FlowFixMe
+      return input && input.focus();
     }
 
     // down

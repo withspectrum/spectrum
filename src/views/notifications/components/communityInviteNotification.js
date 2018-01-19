@@ -1,6 +1,7 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { getCommunityById } from '../../../api/community';
+import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import { markSingleNotificationSeenMutation } from '../../../api/notification';
@@ -23,7 +24,13 @@ const CommunityInvite = compose(getCommunityById, displayLoadingCard)(
   CommunityInviteComponent
 );
 
-export const CommunityInviteNotification = ({ notification, currentUser }) => {
+export const CommunityInviteNotification = ({
+  notification,
+  currentUser,
+}: {
+  notification: Object,
+  currentUser: Object,
+}) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
   const actors = parseActors(notification.actors, currentUser, true);

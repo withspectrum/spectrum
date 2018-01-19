@@ -7,7 +7,7 @@ import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../api/search/searchCommunities';
+import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../components/globals';
 import {
   SearchWrapper,
@@ -67,7 +67,7 @@ class Search extends React.Component<Props, State> {
     // trigger the query
     client
       .query({
-        query: SEARCH_COMMUNITIES_QUERY,
+        query: searchCommunitiesQuery,
         variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
       .then(({ data: { search }, data }) => {

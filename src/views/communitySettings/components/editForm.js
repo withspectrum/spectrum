@@ -1,12 +1,11 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { track } from '../../../helpers/events';
-import {
-  editCommunityMutation,
-  deleteCommunityMutation,
-} from '../../../api/community';
+import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
+import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Button, IconButton } from '../../../components/buttons';
@@ -32,24 +31,37 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 
-type Props = {};
-class EditForm extends React.Component<Props> {
-  state: {
+type State = {
+  name: string,
+  slug: string,
+  description: string,
+  communityId: string,
+  website: string,
+  image: string,
+  coverPhoto: string,
+  file: ?Object,
+  coverFile: ?Object,
+  communityData: Object,
+  photoSizeError: boolean,
+  nameError: boolean,
+  isLoading: boolean,
+};
+
+type Props = {
+  community: {
     name: string,
     slug: string,
     description: string,
-    communityId: string,
-    website: string,
-    image: string,
+    id: string,
+    profilePhoto: string,
     coverPhoto: string,
-    file: ?Object,
-    coverFile: ?Object,
-    communityData: Object,
-    photoSizeError: boolean,
-    nameError: boolean,
-    isLoading: boolean,
-  };
+    website: ?string,
+  },
+  dispatch: Function,
+  editCommunity: Function,
+};
 
+class EditForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -59,7 +71,7 @@ class EditForm extends React.Component<Props> {
       slug: community.slug,
       description: community.description,
       communityId: community.id,
-      website: community.website,
+      website: community.website ? community.website : '',
       image: community.profilePhoto,
       coverPhoto: community.coverPhoto,
       file: null,
@@ -130,6 +142,7 @@ class EditForm extends React.Component<Props> {
 
       this.setState({
         file: file,
+        // $FlowFixMe
         image: reader.result,
         photoSizeError: false,
         isLoading: false,
@@ -161,6 +174,7 @@ class EditForm extends React.Component<Props> {
 
       this.setState({
         coverFile: file,
+        // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: false,
         isLoading: false,

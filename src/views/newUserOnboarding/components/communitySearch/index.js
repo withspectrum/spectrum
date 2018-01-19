@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
 import { track } from '../../../../helpers/events';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Button, OutlineButton } from '../../../../components/buttons';
-import { toggleCommunityMembershipMutation } from '../../../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/search/searchCommunities';
+import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../../components/globals';
 import {
   SearchWrapper,
@@ -131,7 +131,7 @@ class Search extends React.Component<Props, State> {
     // trigger the query
     client
       .query({
-        query: SEARCH_COMMUNITIES_QUERY,
+        query: searchCommunitiesQuery,
         variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
       .then(({ data: { search } }) => {

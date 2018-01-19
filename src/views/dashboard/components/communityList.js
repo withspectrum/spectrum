@@ -107,6 +107,7 @@ class CommunityList extends Component {
               activeCommunity={activeCommunity}
               communities={communities}
               handleOnClick={this.handleOnClick}
+              curatedContentType={'top-communities-by-members'}
             />
           )}
         </Fixed>
