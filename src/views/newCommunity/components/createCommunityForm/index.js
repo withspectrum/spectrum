@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -14,8 +15,8 @@ import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
-  SEARCH_COMMUNITIES_QUERY,
 } from '../../../../api/community';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/search/searchCommunities';
 import { Button } from '../../../../components/buttons';
 import {
   Input,
@@ -35,27 +36,33 @@ import {
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
 
-class CreateCommunityForm extends Component {
-  state: {
-    name: ?string,
-    slug: string,
-    description: string,
-    website: string,
-    image: string,
-    coverPhoto: string,
-    file: ?Object,
-    coverFile: ?Object,
-    slugTaken: boolean,
-    slugError: boolean,
-    descriptionError: boolean,
-    nameError: boolean,
-    createError: boolean,
-    isLoading: boolean,
-    agreeCoC: boolean,
-    photoSizeError: boolean,
-    communitySuggestions: ?Array<Object>,
-  };
+type State = {
+  name: ?string,
+  slug: string,
+  description: string,
+  website: string,
+  image: string,
+  coverPhoto: string,
+  file: ?Object,
+  coverFile: ?Object,
+  slugTaken: boolean,
+  slugError: boolean,
+  descriptionError: boolean,
+  nameError: boolean,
+  createError: boolean,
+  isLoading: boolean,
+  agreeCoC: boolean,
+  photoSizeError: boolean,
+  communitySuggestions: ?Array<Object>,
+};
 
+type Props = {
+  client: Object,
+  createCommunity: Function,
+  communityCreated: Function,
+  dispatch: Function,
+};
+class CreateCommunityForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -204,11 +211,25 @@ class CreateCommunityForm extends Component {
         .query({
           query: SEARCH_COMMUNITIES_QUERY,
           variables: {
-            string: slug,
-            amount: 10,
+            queryString: slug,
+            type: 'COMMUNITIES',
           },
         })
-        .then(({ data: { searchCommunities: communitySuggestions } }) => {
+        .then(({ data: { search } }) => {
+          if (
+            !search ||
+            !search.searchResultsConnection ||
+            search.searchResultsConnection.edges.length === 0
+          ) {
+            return this.setState({
+              communitySuggestions: null,
+            });
+          }
+
+          const communitySuggestions = search.searchResultsConnection.edges.map(
+            c => c.node
+          );
+
           const filtered =
             communitySuggestions &&
             communitySuggestions
@@ -272,6 +293,7 @@ class CreateCommunityForm extends Component {
       track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
+        // $FlowFixMe
         image: reader.result,
         photoSizeError: false,
       });
@@ -294,6 +316,7 @@ class CreateCommunityForm extends Component {
       track('community', 'cover photo uploaded', null);
       this.setState({
         coverFile: file,
+        // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: false,
       });
@@ -475,7 +498,7 @@ class CreateCommunityForm extends Component {
                   <Link to={`/${suggestion.slug}`} key={suggestion.id}>
                     <CommunitySuggestion>
                       <Avatar
-                        size={20}
+                        size={'20'}
                         radius={4}
                         community={suggestion}
                         src={suggestion.profilePhoto}

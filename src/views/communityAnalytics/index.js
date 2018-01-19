@@ -45,7 +45,7 @@ class CommunityAnalytics extends React.Component<Props, State> {
   render() {
     const { data: { community }, isLoading } = this.props;
 
-    if (community) {
+    if (community && community.id) {
       if (!community.isPro) {
         return (
           <ViewError

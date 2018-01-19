@@ -373,8 +373,7 @@ export const InboxThreadItem = styled.div`
 
   &:last-of-type {
     border-bottom: 1px solid
-      ${props =>
-        props.active ? props.theme.brand.alt : props.theme.bg.border};
+      ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   }
 `;
 
@@ -687,7 +686,9 @@ export const NullHeading = styled.p`
   margin-bottom: 8px;
 `;
 
-export const Lock = styled.span`margin-right: 4px;`;
+export const Lock = styled.span`
+  margin-right: 4px;
+`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
@@ -702,14 +703,19 @@ export const UpsellExploreDivider = styled.div`
   margin: 16px 0 16px;
 `;
 
-export const SearchInput = styled.input`
+export const SearchInputDiv = styled.div`
   align-self: stretch;
   height: 100%;
+  justify-self: stretch;
+`;
+
+export const SearchInput = styled.input`
   font-size: 14px;
+  width: 100%;
+  height: 100%;
   color: ${props =>
     props.darkContext ? props.theme.text.placeholder : props.theme.text.alt};
   background-color: transparent;
-  justify-self: stretch;
   border: none;
 
   &:placeholder {

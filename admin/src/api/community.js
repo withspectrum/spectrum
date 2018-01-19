@@ -13,15 +13,6 @@ const COMMUNITY_INFORMATION_QUERY = gql`
 
 export const communitiesQuery = graphql(COMMUNITY_INFORMATION_QUERY);
 
-export const SEARCH_COMMUNITIES_QUERY = gql`
-  query searchCommunities($string: String) {
-    searchCommunities(string: $string) {
-      ...communityInfo
-    }
-  }
-  ${communityInfoFragment}
-`;
-
 export const GET_COMMUNITY_BY_SLUG_QUERY = gql`
   query community($slug: String) {
     community(slug: $slug) {
@@ -50,13 +41,13 @@ export const getCommunityBySlug = graphql(
 */
 export const topCommunitiesQuery = graphql(
   gql`
-		{
-		  topCommunities {
+    {
+      topCommunities {
         ...communityInfo
       }
     }
     ${communityInfoFragment}
-	`,
+  `,
   {
     name: 'top',
   }
@@ -64,13 +55,13 @@ export const topCommunitiesQuery = graphql(
 
 export const recentCommunitiesQuery = graphql(
   gql`
-		{
-		  recentCommunities {
+    {
+      recentCommunities {
         ...communityInfo
       }
     }
     ${communityInfoFragment}
-	`,
+  `,
   {
     name: 'recent',
   }

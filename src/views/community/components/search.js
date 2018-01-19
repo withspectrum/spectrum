@@ -1,12 +1,12 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import { throttle } from '../../../helpers/utils';
-import { searchCommunityThreadsQuery } from '../../../api/community';
+import searchThreads from '../../../api/search/searchThreads';
 import ThreadFeed from '../../../components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
 
-const SearchThreadFeed = compose(searchCommunityThreadsQuery)(ThreadFeed);
+const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 
 type Props = {
   community: Object,
@@ -71,7 +71,8 @@ class Search extends React.Component<Props, State> {
             <SearchThreadFeed
               viewContext="community"
               communityId={community.id}
-              searchString={sendStringToServer}
+              queryString={sendStringToServer}
+              filter={{ communityId: community.id }}
               community={community}
               pinnedThreadId={community.pinnedThreadId}
             />

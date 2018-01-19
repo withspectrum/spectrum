@@ -1,7 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { SearchInput, SearchForm } from '../style';
+import { SearchInput, SearchForm, SearchInputDiv } from '../style';
 import Icon from '../../../components/icons';
 import {
   closeSearch,
@@ -84,7 +84,7 @@ class ThreadSearch extends React.Component<Props, State> {
       ? 'Search this community...'
       : filter.channelId
         ? 'Search this channel...'
-        : 'Search your communities...';
+        : 'Search for conversations...';
 
     return (
       <SearchForm
@@ -93,18 +93,20 @@ class ThreadSearch extends React.Component<Props, State> {
         darkContext={darkContext}
       >
         <Icon glyph={'search'} size={24} />
-        <SearchInput
-          onFocus={this.open}
-          onBlur={this.close}
-          isOpen={true}
-          onChange={this.onChange}
-          value={value}
-          placeholder={placeholder}
-          innerRef={input => {
-            this.searchInput = input;
-          }}
-          darkContext={darkContext}
-        />
+        <SearchInputDiv>
+          <SearchInput
+            onFocus={this.open}
+            onBlur={this.close}
+            isOpen={true}
+            onChange={this.onChange}
+            value={value}
+            placeholder={placeholder}
+            innerRef={input => {
+              this.searchInput = input;
+            }}
+            darkContext={darkContext}
+          />
+        </SearchInputDiv>
         <Icon glyph="view-close" size={16} onClick={this.clearClose} />
       </SearchForm>
     );
@@ -115,4 +117,5 @@ const map = state => ({
   isOpen: state.dashboardFeed.search.isOpen,
   queryString: state.dashboardFeed.search.queryString,
 });
+// $FlowIssue
 export default compose(connect(map))(ThreadSearch);

@@ -64,7 +64,7 @@ class UserSettings extends React.Component<Props> {
     }
 
     // if no data was found but the user is logged in, it means the person was trying to view a user settings page for a user that doesn't exist in the db
-    if (currentUser && !user) {
+    if (currentUser && !user && !user.id) {
       return (
         <FlexCol style={{ flex: 'auto' }}>
           <Titlebar

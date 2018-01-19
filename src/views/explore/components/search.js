@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../api/community';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../api/search/searchCommunities';
 import { Spinner } from '../../../components/globals';
 import {
   SearchWrapper,
@@ -29,15 +26,20 @@ import {
   SearchIcon,
 } from '../style';
 
-class Search extends Component {
-  state: {
-    searchString: string,
-    searchResults: Array<any>,
-    searchIsLoading: boolean,
-    focusedSearchResult: string,
-    isFocused: boolean,
-  };
+type State = {
+  searchString: string,
+  searchResults: Array<any>,
+  searchIsLoading: boolean,
+  focusedSearchResult: string,
+  isFocused: boolean,
+};
 
+type Props = {
+  client: Object,
+  history: Object,
+};
+
+class Search extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -55,6 +57,7 @@ class Search extends Component {
 
   search = (searchString: string) => {
     const { client } = this.props;
+    if (!searchString || searchString.length === 0) return;
 
     // start the input loading spinner
     this.setState({
@@ -65,27 +68,35 @@ class Search extends Component {
     client
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
-        variables: { string: searchString, amount: 30 },
+        variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
-      .then(({ data: { searchCommunities } }) => {
-        const searchResults = searchCommunities;
-        const sorted = searchResults.slice().sort((a, b) => {
-          return b.metaData.members - a.metaData.members;
-        });
-
-        if (!sorted || sorted.length === 0) {
+      .then(({ data: { search }, data }) => {
+        if (
+          !search ||
+          !search.searchResultsConnection ||
+          search.searchResultsConnection.edges.length === 0
+        ) {
           return this.setState({
             searchResults: [],
             searchIsLoading: false,
             focusedSearchResult: '',
           });
-        } else {
-          return this.setState({
-            searchResults: sorted,
-            searchIsLoading: false,
-            focusedSearchResult: sorted[0].id,
-          });
         }
+
+        const searchResults = search.searchResultsConnection.edges;
+
+        const sorted = searchResults
+          .slice()
+          .map(c => c.node)
+          .sort((a, b) => {
+            return b.metaData.members - a.metaData.members;
+          });
+
+        return this.setState({
+          searchResults: sorted,
+          searchIsLoading: false,
+          focusedSearchResult: sorted[0].id,
+        });
       });
   };
 
@@ -108,7 +119,8 @@ class Search extends Component {
         searchString: '',
       });
 
-      input.focus();
+      // $FlowFixMe
+      input && input.focus();
       return;
     }
 
@@ -146,6 +158,12 @@ class Search extends Component {
 
   handleChange = (e: any) => {
     const string = e.target.value.toLowerCase().trim();
+
+    if (e.target.value.length === 0) {
+      this.setState({
+        searchIsLoading: false,
+      });
+    }
 
     // set the searchstring to state
     this.setState({

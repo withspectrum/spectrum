@@ -21,7 +21,7 @@ const Search = /* GraphQL */ `
   input SearchFilter {
     communityId: ID
     channelId: ID
-    userId: ID
+    creatorId: ID
     everythingFeed: Boolean
   }
 

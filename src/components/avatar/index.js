@@ -36,11 +36,13 @@ export default class Avatar extends Component<AvatarProps, State> {
     const { src, community, user, size, showProfile } = this.props;
     const { isHovering } = this.state;
 
-    const optimizedAvatar = optimize(src, {
-      w: size,
-      dpr: '2',
-      format: 'png',
-    });
+    const optimizedAvatar =
+      src &&
+      optimize(src, {
+        w: size,
+        dpr: '2',
+        format: 'png',
+      });
     const communityFallback = '/img/default_community.svg';
     const userFallback = '/img/default_avatar.svg';
 

@@ -189,15 +189,6 @@ const USER_INFORMATION_QUERY = gql`
 
 export const usersQuery = graphql(USER_INFORMATION_QUERY);
 
-export const SEARCH_USERS_QUERY = gql`
-  query searchUsers($string: String) {
-    searchUsers(string: $string) {
-      ...userInfo
-    }
-  }
-  ${userInfoFragment}
-`;
-
 export const GET_USER_BY_USERNAME_QUERY = gql`
   query user($username: String) {
     user(username: $username) {
