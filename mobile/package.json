@@ -17,6 +17,7 @@
     "react-navigation": "^1.0.0-beta.26",
     "react-navigation-props-mapper": "^0.1.2",
     "recompose": "^0.26.0",
+    "sentry-expo": "^1.7.0",
     "styled-components": "^2.3.3"
   },
   "devDependencies": {
