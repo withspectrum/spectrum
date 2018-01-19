@@ -36,7 +36,7 @@ describe('messageConnection', () => {
     const query = /* GraphQL */ `
       {
         directMessageThread(id: "first-dm-thread-asdf123") {
-          messageConnection(first: 999999) {
+          messageConnection(first: 100) {
             edges {
               node {
                 id
