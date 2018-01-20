@@ -238,8 +238,6 @@ class CreateChannelModal extends Component {
   render() {
     const { isOpen, modalProps } = this.props;
 
-    console.log(modalProps);
-
     const {
       name,
       slug,
