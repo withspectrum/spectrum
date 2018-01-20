@@ -2,7 +2,7 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getThisCommunity } from './queries';
+import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Upsell404Community } from '../../components/upsell';
@@ -167,6 +167,6 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getThisCommunity, viewNetworkHandler)(
+export default compose(connect(), getCommunityByMatch, viewNetworkHandler)(
   CommunitySettings
 );

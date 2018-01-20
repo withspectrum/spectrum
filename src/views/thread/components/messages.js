@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
@@ -13,14 +13,50 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
-import { getThreadMessages } from '../queries';
+import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { toggleReactionMutation } from '../mutations';
 
-class MessagesWithData extends Component {
-  state: {
-    subscription: ?Object,
-  };
+type State = {
+  subscription: ?Function,
+};
 
+type MessageType = {
+  cursor: string,
+  node: {
+    id: string,
+  },
+};
+
+type Props = {
+  toggleReaction: Function,
+  isLoading: boolean,
+  location: Object,
+  forceScrollToBottom: Function,
+  forceScrollToTop: Function,
+  contextualScrollToBottom: Function,
+  hasMessagesToLoad: boolean,
+  id: string,
+  isModerator: boolean,
+  isFetchingMore: boolean,
+  loadPreviousPage: Function,
+  loadNextPage: Function,
+  scrollContainer: any,
+  subscribeToNewMessages: Function,
+  data: {
+    thread: {
+      id: string,
+      currentUserLastSeen: Date,
+      messageConnection: {
+        pageInfo: {
+          hasNextPage: boolean,
+        },
+        edges: Array<MessageType>,
+      },
+    },
+  },
+};
+
+class MessagesWithData extends React.Component<Props, State> {
   state = {
     subscription: null,
   };
@@ -69,6 +105,7 @@ class MessagesWithData extends Component {
       curr.data.thread &&
       prev.data.thread.id !== curr.data.thread.id
     ) {
+      // $FlowFixMe
       this.unsubscribe().then(() => this.subscribe());
     }
   }

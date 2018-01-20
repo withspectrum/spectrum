@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import compose from 'recompose/compose';
-import getThreadById from '../../../shared/graphql/queries/thread/getThreadById';
+import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 

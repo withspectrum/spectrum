@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
-import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
+import { getThreadMessageConnectionQuery } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
 const DELETE_MESSAGE_MUTATION = gql`
@@ -26,7 +26,7 @@ const DELETE_MESSAGE_OPTIONS = {
           if (ownProps.threadType === 'story') {
             // Read the data from our cache for this query.
             const data = store.readQuery({
-              query: GET_THREAD_MESSAGES_QUERY,
+              query: getThreadMessageConnectionQuery,
               variables: {
                 id: ownProps.threadId,
               },
@@ -38,7 +38,7 @@ const DELETE_MESSAGE_OPTIONS = {
 
             // Write our data back to the cache.
             store.writeQuery({
-              query: GET_THREAD_MESSAGES_QUERY,
+              query: getThreadMessageConnectionQuery,
               data,
               variables: {
                 id: ownProps.threadId,
@@ -129,7 +129,7 @@ const SEND_MESSAGE_OPTIONS = {
         },
         update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
-            query: GET_THREAD_MESSAGES_QUERY,
+            query: getThreadMessageConnectionQuery,
             variables: {
               id: ownProps.thread,
             },
@@ -143,7 +143,7 @@ const SEND_MESSAGE_OPTIONS = {
 
           // Write our data back to the cache.
           store.writeQuery({
-            query: GET_THREAD_MESSAGES_QUERY,
+            query: getThreadMessageConnectionQuery,
             data,
             variables: {
               id: ownProps.thread,

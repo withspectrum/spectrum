@@ -12,7 +12,7 @@ import { ChannelListItem } from '../../../components/listItems';
 import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
-import { getCommunityChannels } from '../queries';
+import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { ListContainer } from '../style';
 import {
   SectionCard,

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import getThreadById from 'shared/graphql/queries/thread/getThreadById';
+import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';

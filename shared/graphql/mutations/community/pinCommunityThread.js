@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import communityInfoFragment from '../../fragments/community/communityInfo';
-import { getThreadByIdQuery } from '../../queries/thread/getThreadById';
+import { getThreadByIdQuery } from '../../queries/thread/getThread';
 
 const pinThreadMutation = gql`
   mutation pinThread($threadId: ID!, $communityId: ID!, $value: String) {
