@@ -12,6 +12,8 @@ export const userCommunitiesFragment = gql`
       edges {
         node {
           ...communityInfo
+          hasPrivateChannels
+          hasAnalytics
           contextPermissions {
             communityId
             isOwner

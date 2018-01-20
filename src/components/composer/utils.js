@@ -27,7 +27,7 @@ export const sortChannels = (channels: Channel[]): Channel[] => {
     if (!channel.isPrivate) return true;
     // If it's a private channel, but the community has downgraded don't give
     // users the option to post there
-    if (!channel.community.isPro) return false;
+    if (!channel.community.hasPrivateChannels) return false;
     return true;
   });
 };

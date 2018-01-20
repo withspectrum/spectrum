@@ -47,6 +47,7 @@ export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`
             community {
               id
               isPro
+              hasPrivateChannels
             }
             channelPermissions {
               isMember
