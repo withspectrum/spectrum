@@ -38,7 +38,7 @@ class ChannelList extends React.Component<Props> {
       data: { community },
     } = this.props;
 
-    if (community) {
+    if (community && community.id) {
       const { isMember, isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel.node)

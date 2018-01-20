@@ -6,6 +6,7 @@ import type { GraphQLError } from 'graphql';
 const createGraphQLErrorFormatter = (req?: express$Request) => (
   error: GraphQLError
 ) => {
+  console.log(error);
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
     : false;

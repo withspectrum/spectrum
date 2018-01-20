@@ -181,8 +181,6 @@ class ThreadFeed extends React.Component<Props, State> {
     } = this.props;
     const { scrollElement } = this.state;
 
-    console.log(data);
-
     // loading state
     if (networkStatus !== 7 && networkStatus !== 3)
       return <LoadingThreadFeed />;

@@ -1,29 +1,32 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
 import communityMetaDataFragment from '../../fragments/community/communityMetaData';
 import communityMemberConnectionFragment from '../../fragments/community/communityMemberConnection';
 
 const LoadMoreMembers = gql`
   query loadMoreCommunityMembers($id: ID, $after: String) {
     community(id: $id) {
-      id
+      ...communityInfo
       ...communityMetaData
       ...communityMemberConnection
     }
   }
+  ${communityInfoFragment}
   ${communityMetaDataFragment}
   ${communityMemberConnectionFragment}
 `;
 
 const getCommunityMemberConnectionQuery = gql`
-  query getCommunityMembers($id: ID) {
+  query getCommunityMembers($id: ID, $after: String) {
     community(id: $id) {
-      id
+      ...communityInfo
       ...communityMetaData
       ...communityMemberConnection
     }
   }
+  ${communityInfoFragment}
   ${communityMetaDataFragment}
   ${communityMemberConnectionFragment}
 `;
@@ -76,9 +79,10 @@ const getCommunityMemberConnectionOptions = {
         }),
     },
   }),
-  options: ({ id }: { id: string }) => ({
+  options: ({ id, after }: { id: string, after?: string }) => ({
     variables: {
       id,
+      after: after || null,
     },
     fetchPolicy: 'cache-and-network',
   }),

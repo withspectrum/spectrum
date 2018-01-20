@@ -4,7 +4,7 @@ import userInfoFragment from '../user/userInfo';
 
 export default gql`
   fragment communityMemberConnection on Community {
-    memberConnection {
+    memberConnection(after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage

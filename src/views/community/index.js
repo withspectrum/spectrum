@@ -201,7 +201,10 @@ class CommunityView extends React.Component<Props, State> {
                       Leave {community.name}
                     </LogoutButton>
                   )}
-                <ChannelList communitySlug={communitySlug.toLowerCase()} />
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
               </Column>
 
               <Column type="primary">
@@ -284,6 +287,7 @@ class CommunityView extends React.Component<Props, State> {
                   <CommunityThreadFeed
                     viewContext="community"
                     slug={communitySlug}
+                    id={community.id}
                     currentUser={isLoggedIn}
                     setThreadsStatus={
                       !this.showComposerUpsell && this.setComposerUpsell

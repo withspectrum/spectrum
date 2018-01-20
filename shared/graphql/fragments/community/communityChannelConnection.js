@@ -10,13 +10,9 @@ export default gql`
       edges {
         node {
           ...channelInfo
-          ...channelMetaData
-          pendingUsers {
-            ...userInfo
-          }
         }
       }
     }
   }
-  ${userInfoFragment}
+  ${channelInfoFragment}
 `;

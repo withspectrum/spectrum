@@ -88,6 +88,7 @@ class CommunityList extends Component {
                   activeChannel={activeChannel}
                   communitySlug={c.slug}
                   thisCommunity={c}
+                  id={c.id}
                 />
               )}
             </CommunityListItem>

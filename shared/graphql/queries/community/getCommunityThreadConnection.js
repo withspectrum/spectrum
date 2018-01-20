@@ -48,9 +48,7 @@ const getCommunityThreadConnectionOptions = {
       loading,
       networkStatus,
       community,
-      threads: community
-        ? community.threadConnection.edges.map(t => t.node)
-        : [],
+      threads: community ? community.threadConnection.edges : [],
       hasNextPage: community
         ? community.threadConnection.pageInfo.hasNextPage
         : false,
@@ -97,7 +95,7 @@ const getCommunityThreadConnectionOptions = {
               community.threadConnection.edges[
                 community.threadConnection.edges.length - 1
               ].cursor,
-            slug: community.slug,
+            id: community.id,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.community) {
@@ -124,9 +122,10 @@ const getCommunityThreadConnectionOptions = {
         }),
     },
   }),
-  options: ({ id }) => ({
+  options: ({ id, after }: { id: string, after?: ?string }) => ({
     variables: {
       id,
+      after: after || null,
     },
     fetchPolicy: 'cache-and-network',
   }),
