@@ -476,6 +476,8 @@ const UPGRADE_COMMUNITY_MUTATION = gql`
   mutation upgradeCommunity($input: UpgradeCommunityInput!) {
     upgradeCommunity(input: $input) {
       ...communityInfo
+      hasPrivateChannels
+      hasAnalytics
       recurringPayments {
         plan
         amount
@@ -510,6 +512,8 @@ const DOWNGRADE_COMMUNITY_MUTATION = gql`
   mutation downgradeCommunity($input: DowngradeCommunityInput!) {
     downgradeCommunity(input: $input) {
       ...communityInfo
+      hasPrivateChannels
+      hasAnalytics
       recurringPayments {
         plan
         amount

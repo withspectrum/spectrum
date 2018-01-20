@@ -27,7 +27,11 @@ export default (
     const communitySubscriptions =
       rPayments &&
       rPayments.length > 0 &&
-      rPayments.filter(obj => obj.planId === 'community-standard');
+      rPayments.filter(
+        obj =>
+          obj.planId === 'community-standard' ||
+          obj.planId === 'community-project'
+      );
 
     if (!communitySubscriptions || communitySubscriptions.length === 0) return;
     return communitySubscriptions.map(subscription => ({

@@ -34,7 +34,7 @@ export const PlanSelector = props => {
         </FeatureList>
       </Plan>
       <Plan currentPlan>
-        <Title>Standard</Title>
+        <Title>Business</Title>
         <Cost>
           <CostNumber per="month">10</CostNumber>
           <CostSubtext>
@@ -78,7 +78,7 @@ export const CommunityPricingGrid = props => {
         </FeatureList>
       </Plan>
       <Plan highlighted>
-        <Title>Standard</Title>
+        <Title>Business</Title>
         <Cost>
           <CostNumber per="month">10</CostNumber>
           <CostSubtext>

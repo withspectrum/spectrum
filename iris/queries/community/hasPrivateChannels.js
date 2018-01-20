@@ -1,12 +1,4 @@
 // @flow
-/*
-*
-*
-*   NOTE: This field resolver is deprecated. Use hasAnalytics or hasPrivateChannels instead
-*
-*
-*/
-
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 

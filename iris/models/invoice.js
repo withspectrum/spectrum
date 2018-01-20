@@ -54,7 +54,8 @@ export const createInvoice = (
     .then(result => {
       // in the future if we have more plans we can check for each plan name individually to return the correct queue name
       const queueName =
-        subscription.plan.id === 'community-standard'
+        subscription.plan.id === 'community-standard' ||
+        subscription.plan.id === 'community-project'
           ? 'community invoice paid notification'
           : 'pro invoice paid notification';
 

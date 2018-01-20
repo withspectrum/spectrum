@@ -140,7 +140,9 @@ export const Overview = (props: Props) => {
     }
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`font-size: 16px;`;
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    font-size: 16px;
+  `;
 
   const Img = styled.img`
     position: absolute;
@@ -318,7 +320,9 @@ export const CommunitySearch = (props: Props) => {
     }
   `;
 
-  const ThisTagline = styled(Tagline)`margin-bottom: 16px;`;
+  const ThisTagline = styled(Tagline)`
+    margin-bottom: 16px;
+  `;
 
   const ThisCopy = styled(Copy)`
     font-size: 18px;
@@ -433,7 +437,9 @@ export const Sell = (props: Props) => {
     justify-content: center;
   `;
 
-  const ThisSection = styled(Section)`margin-bottom: 40px;`;
+  const ThisSection = styled(Section)`
+    margin-bottom: 40px;
+  `;
 
   return (
     <ThisSection goop={2} background="dark" color={'bg.reverse'}>
@@ -818,7 +824,7 @@ export const Plans = (props: Props) => {
                 </PlanFooter>
               </Free>
               <Paid>
-                <Title>Standard</Title>
+                <Title>Business</Title>
                 <Cost>
                   <CostNumber per="month">100</CostNumber>
                   <CostSubtext>per 1,000 members</CostSubtext>

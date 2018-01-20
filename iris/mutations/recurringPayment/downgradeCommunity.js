@@ -55,7 +55,11 @@ export default (
       rPayments &&
       rPayments
         .filter(pmt => pmt.communityId === input.id)
-        .filter(pmt => pmt.planId === 'community-standard');
+        .filter(
+          pmt =>
+            pmt.planId === 'community-standard' ||
+            pmt.planId === 'community-project'
+        );
 
     const recurringPaymentToEvaluate =
       proSubscriptions && proSubscriptions.length > 0
@@ -79,7 +83,9 @@ export default (
 
     // a customer record from stripe returns all of their subscriptions - we need to ensure we are only deleting the subscription for their community upgrade
     const subscriptionId = customer.subscriptions.data.filter(
-      pmt => pmt.plan.id === 'community-standard'
+      pmt =>
+        pmt.plan.id === 'community-standard' ||
+        pmt.plan.id === 'community-project'
     )[0].id;
 
     // delete the subscription

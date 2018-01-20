@@ -32,7 +32,7 @@ export default (
 
   if (!currentUser.email) {
     return new UserError(
-      'Please add an email address in your settings before upgrading to Pro'
+      'Please add an email address in your user settings before upgrading this community.'
     );
   }
 
@@ -64,7 +64,7 @@ export default (
       rPayments &&
       rPayments
         .filter(pmt => pmt.communityId === communityId)
-        .filter(pmt => pmt.planId === 'community-standard');
+        .filter(pmt => pmt.planId === plan);
 
     const recurringPaymentToEvaluate =
       proSubscriptions && proSubscriptions.length > 0
@@ -74,17 +74,20 @@ export default (
     // we still want to know globally if a user has a customerId already so that we avoid create duplicate customers in Stripe
     const hasCustomerId = (await rPayments) && rPayments.length > 0;
 
+    // create the subscription in stripe
+    const quantity =
+      plan === 'community-standard' ? Math.ceil(memberCount / 1000) : 1;
+
     // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
     if (!recurringPaymentToEvaluate && currentUser.email) {
       const customer = hasCustomerId
         ? await getStripeCustomer(rPayments[0].customerId)
         : await createStripeCustomer(currentUser.email, token.id);
 
-      // create the subscription in stripe
       const subscription = await createStripeSubscription(
         customer.id,
         plan,
-        Math.ceil(memberCount / 1000) // round up from the nearest 1,000 members
+        quantity // round up from the nearest 1,000 members
       );
 
       // create a recurringPayment record in the database
@@ -115,7 +118,7 @@ export default (
       const subscription = await createStripeSubscription(
         customer.id,
         plan,
-        Math.ceil(memberCount / 1000) // round up from the nearest 1,000 members
+        quantity
       );
 
       return await updateRecurringPayment({

@@ -21,6 +21,8 @@ import conversationGrowth from './conversationGrowth';
 import topMembers from './topMembers';
 import topAndNewThreads from './topAndNewThreads';
 import isPro from './isPro';
+import hasAnalytics from './hasAnalytics';
+import hasPrivateChannels from './hasPrivateChannels';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
 
@@ -48,6 +50,8 @@ module.exports = {
     topMembers,
     topAndNewThreads,
     isPro,
+    hasAnalytics,
+    hasPrivateChannels,
     contextPermissions,
     watercooler,
   },

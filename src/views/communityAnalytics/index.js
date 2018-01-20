@@ -46,17 +46,28 @@ class CommunityAnalytics extends React.Component<Props, State> {
     const { data: { community }, isLoading } = this.props;
 
     if (community && community.id) {
-      if (!community.isPro) {
+      if (!community.hasAnalytics) {
+        const subheading = community.hasPrivateChannels
+          ? // if they have private channels, they are on the project plan
+            `To explore analytics for your community, first downgrade from the Project plan and then upgrade to the Business plan.`
+          : // otherwise they are upgrading for the first time
+            `To explore analytics for your community, unlock private channels, add multiple moderators, and more, please upgrade to the Business plan.`;
         return (
           <ViewError
             emoji={'💪'}
             heading={`Supercharge your community with Spectrum Analytics.`}
-            subheading={`To explore analytics for your community, unlock private channels, add multiple moderators, and more, please upgrade to the standard plan.`}
+            subheading={subheading}
           >
             <ButtonRow>
-              <Button onClick={this.upgrade} large>
-                Upgrade to Standard
-              </Button>
+              {community.hasPrivateChannels ? (
+                <Link to={`/${community.slug}/settings`}>
+                  <Button large>Go to community settings</Button>
+                </Link>
+              ) : (
+                <Button onClick={this.upgrade} large>
+                  Upgrade to Business
+                </Button>
+              )}
             </ButtonRow>
           </ViewError>
         );

@@ -13,6 +13,8 @@ export const getThisCommunity = graphql(
       community(slug: $slug) {
         ...communityInfo
         ...communityMetaData
+        hasAnalytics
+        hasPrivateChannels
       }
     }
     ${communityInfoFragment}

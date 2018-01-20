@@ -98,7 +98,9 @@ const Community = /* GraphQL */ `
 		slackImport: SlackImport
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
-		isPro: Boolean
+		isPro: Boolean @deprecated(reason:"Use more granular permission checks from now on like hasAnalytics and hasPrivateChannels")
+		hasAnalytics: Boolean
+		hasPrivateChannels: Boolean
 		memberGrowth: GrowthData
 		conversationGrowth: GrowthData
 		topMembers: [User]
