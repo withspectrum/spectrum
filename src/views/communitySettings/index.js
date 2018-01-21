@@ -18,6 +18,7 @@ import { View } from './style';
 type Props = {
   data: {
     community: {
+      id: string,
       name: string,
       slug: string,
       profilePhoto: string,
