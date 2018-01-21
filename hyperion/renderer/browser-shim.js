@@ -17,5 +17,5 @@ global.navigator = {
   userAgent: '',
 };
 global.CSS = {
-  escape: require('./css-escape-polyfill'),
+  escape: require('css.escape'),
 };
