@@ -2,7 +2,19 @@
 import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
-import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
+
+type Edge = {
+  node: {
+    ...$Exact<ChannelInfoType>,
+  },
+};
+
+export type CommunityChannelConnectionType = {
+  channelConnection: {
+    edges: Array<?Edge>,
+  },
+};
 
 export default gql`
   fragment communityChannelConnection on Community {

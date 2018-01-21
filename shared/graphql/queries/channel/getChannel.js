@@ -2,7 +2,14 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
+import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaData';
+
+export type GetChannelType = {
+  ...$Exact<ChannelInfoType>,
+  ...$Exact<ChannelMetaDataType>,
+};
 
 const getChannelByIdQuery = gql`
   query getChannel($id: ID) {

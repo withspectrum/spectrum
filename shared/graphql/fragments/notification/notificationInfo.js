@@ -1,6 +1,24 @@
 // @flow
 import gql from 'graphql-tag';
 
+type Node = {
+  id: string,
+  type: string,
+  payload: string,
+};
+
+export type NotificationInfoType = {
+  id: string,
+  createdAt: Date,
+  modifiedAt: ?Date,
+  actors: Array<Node>,
+  context: Array<Node>,
+  entities: Array<Node>,
+  event: string,
+  isRead: boolean,
+  isSeen: boolean,
+};
+
 export default gql`
   fragment notificationInfo on Notification {
     id

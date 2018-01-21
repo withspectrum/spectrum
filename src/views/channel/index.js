@@ -16,6 +16,7 @@ import PendingUsersNotification from './components/pendingUsersNotification';
 import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
@@ -35,7 +36,7 @@ type Props = {
     },
   },
   data: {
-    channel: Object,
+    channel: GetChannelType,
   },
   currentUser: Object,
   isLoading: boolean,

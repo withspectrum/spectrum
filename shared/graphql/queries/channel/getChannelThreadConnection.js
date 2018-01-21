@@ -2,9 +2,16 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 import channelThreadConnectionFragment from '../../fragments/channel/channelThreadConnection';
+import type { ChannelThreadConnectionType } from '../../fragments/channel/channelThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
+
+export type GetChannelThreadConnectionType = {
+  ...$Exact<ChannelInfoType>,
+  ...$Exact<ChannelThreadConnectionType>,
+};
 
 export const getChannelThreadConnectionQuery = gql`
   query getChannelThreadConnection($id: ID, $after: String) {
