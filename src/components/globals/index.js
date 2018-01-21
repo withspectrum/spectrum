@@ -343,9 +343,9 @@ const returnTooltip = props => {
             right: 0;
             transform: translateX(-100%);
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+      	    border-top-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'top-right':
@@ -359,9 +359,9 @@ const returnTooltip = props => {
             left: 0;
             transform: translateX(100%);
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+      	    border-top-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'top':
@@ -376,9 +376,9 @@ const returnTooltip = props => {
             left: 50%;
             transform: translateX(-50%);
             border-bottom-width: 0;
-            border-top-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+            border-top-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'right':
@@ -393,9 +393,9 @@ const returnTooltip = props => {
             top: calc(50% - 5px);
             left: 100%;
             border-left-width: 0;
-            border-right-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+            border-right-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'bottom-left':
@@ -409,9 +409,9 @@ const returnTooltip = props => {
             right: 0;
             transform: translateX(-100%);
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+      	    border-bottom-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'bottom-right':
@@ -425,9 +425,9 @@ const returnTooltip = props => {
             left: 0;
             transform: translateX(100%);
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+      	    border-bottom-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
     case 'bottom':
@@ -442,9 +442,9 @@ const returnTooltip = props => {
           left: 50%;
           transform: translateX(-50%);
           border-bottom-width: 0;
-          border-top-color: ${props.onboarding
-            ? props.theme.brand.alt
-            : props.theme.bg.reverse};
+          border-top-color: ${
+            props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+          };
         }
       `;
     case 'left':
@@ -458,9 +458,9 @@ const returnTooltip = props => {
             right: 100%;
             top: calc(50% - 5px);
             border-right-width: 0;
-            border-left-color: ${props.onboarding
-              ? props.theme.brand.alt
-              : props.theme.bg.reverse};
+            border-left-color: ${
+              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
+            };
           }
       `;
   }
@@ -488,7 +488,7 @@ export const Tooltip = props => css`
 
   &:after {
     content: ${props.tipText && !props.onboarding
-      ? `'${props.tipText}'`
+      ? `'${CSS.escape(props.tipText)}'`
       : `''`};
     z-index: ${zIndex.tooltip};
     ${fontStack};
