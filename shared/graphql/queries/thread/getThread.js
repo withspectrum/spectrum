@@ -2,6 +2,11 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+
+export type GetThreadType = {
+  ...$Exact<ThreadInfoType>,
+};
 
 export const getThreadByIdQuery = gql`
   query getThread($id: ID!) {

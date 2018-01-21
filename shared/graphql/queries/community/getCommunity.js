@@ -2,7 +2,14 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from '../../fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communityMetaDataFragment from '../../fragments/community/communityMetaData';
+import type { CommunityMetaDataType } from '../../fragments/community/communityMetaData';
+
+export type GetCommunityType = {
+  ...$Exact<CommunityInfoType>,
+  ...$Exact<CommunityMetaDataType>,
+};
 
 export const getCommunityByIdQuery = gql`
   query getCommunity($id: ID) {

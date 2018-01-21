@@ -2,6 +2,23 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+
+type Growth = {
+  growth: number,
+  currentPeriodCount: number,
+  prevPeriodCount: number,
+};
+
+export type GetCommunityMemberGrowthType = {
+  ...$Exact<CommunityInfoType>,
+  memberGrowth: {
+    count: number,
+    weeklyGrowth: Growth,
+    monthlyGrowth: Growth,
+    quarterlyGrowth: Growth,
+  },
+};
 
 const getCommunityMemberGrowthQuery = gql`
   query getCommunityMemberGrowth($id: ID) {

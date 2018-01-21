@@ -2,7 +2,24 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import type { UserInfoType } from '../../fragments/user/userInfo';
+
+type User = {
+  ...$Exact<UserInfoType>,
+  isPro: boolean,
+  contextPermissions: {
+    reputation: number,
+    isOwner: boolean,
+    isModerator: boolean,
+  },
+};
+
+export type GetCommunityMembersType = {
+  ...$Exact<CommunityInfoType>,
+  topMembers: Array<?User>,
+};
 
 const getCommunityTopMembersQuery = gql`
   query getCommunityTopMembers($id: ID) {

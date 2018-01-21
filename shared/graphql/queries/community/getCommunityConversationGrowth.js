@@ -1,7 +1,24 @@
 // @flow
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+
+type Growth = {
+  growth: number,
+  currentPeriodCount: number,
+  prevPeriodCount: number,
+};
+
+export type GetCommunityConversationGrowthType = {
+  ...$Exact<CommunityInfoType>,
+  conversationGrowth: {
+    count: number,
+    weeklyGrowth: Growth,
+    monthlyGrowth: Growth,
+    quarterlyGrowth: Growth,
+  },
+};
 
 const getCommunityConversationGrowthQuery = gql`
   query getCommunityConversationGrowth($id: ID) {

@@ -3,8 +3,15 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
 import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
-import threadMessageConnectionFragment from 'shared/graphql/fragments/thread/threadMessageConnection';
+import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+import threadMessageConnectionFragment from '../../fragments/thread/threadMessageConnection';
+import type { ThreadMessageConnectionType } from '../../fragments/thread/threadMessageConnection';
+
+export type GetThreadMessageConnectionType = {
+  ...$Exact<ThreadInfoType>,
+  ...$Exact<ThreadMessageConnectionType>,
+};
 
 export const getThreadMessageConnectionQuery = gql`
   query getThreadMessages(

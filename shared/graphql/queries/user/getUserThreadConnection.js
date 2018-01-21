@@ -2,9 +2,16 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
+import type { UserInfoType } from '../../fragments/user/userInfo';
 import userThreadConnectionFragment from '../../fragments/user/userThreadConnection';
+import type { UserThreadConnectionType } from '../../fragments/user/userThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
+
+export type GetUserThreadConnectionType = {
+  ...$Exact<UserInfoType>,
+  ...$Exact<UserThreadConnectionType>,
+};
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads(

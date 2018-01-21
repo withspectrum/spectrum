@@ -2,7 +2,18 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
+import type { UserInfoType } from '../../fragments/user/userInfo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
+
+type Node = {
+  ...$Exact<UserInfoType>,
+};
+
+export type GetChannelBlockedUsersType = {
+  ...$Exact<ChannelInfoType>,
+  pendingUsers: Array<?Node>,
+};
 
 const getChannelPendingUsersQuery = gql`
   query getChannelPendingUsers($id: ID) {

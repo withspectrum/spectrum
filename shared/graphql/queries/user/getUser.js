@@ -2,6 +2,11 @@
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
+import type { UserInfoType } from '../../fragments/user/userInfo';
+
+export type GetUserType = {
+  ...$Exact<UserInfoType>,
+};
 
 export const getUserByIdQuery = gql`
   query getUser($id: ID) {

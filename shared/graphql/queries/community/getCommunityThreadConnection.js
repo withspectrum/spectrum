@@ -3,9 +3,16 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import communityInfoFragment from '../../fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communityThreadConnectionFragment from '../../fragments/community/communityThreadConnection';
+import type { CommunityThreadConnectionType } from '../../fragments/community/communityThreadConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
+
+export type GetCommunityThreadConnectionType = {
+  ...$Exact<CommunityInfoType>,
+  ...$Exact<CommunityThreadConnectionType>,
+};
 
 const LoadMoreThreads = gql`
   query loadMoreCommunityThreads($after: String, $id: ID) {

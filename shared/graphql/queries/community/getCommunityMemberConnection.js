@@ -1,9 +1,18 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import communityInfoFragment from '../../fragments/community/communityInfo';
 import communityMetaDataFragment from '../../fragments/community/communityMetaData';
+import type { CommunityMetaDataType } from '../../fragments/community/communityMetaData';
+import communityInfoFragment from '../../fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communityMemberConnectionFragment from '../../fragments/community/communityMemberConnection';
+import type { CommunityMemberConnectionType } from '../../fragments/community/communityMemberConnection';
+
+export type GetCommunityMemberConnectionType = {
+  ...$Exact<CommunityInfoType>,
+  ...$Exact<CommunityMetaDataType>,
+  ...$Exact<CommunityMemberConnectionType>,
+};
 
 const LoadMoreMembers = gql`
   query loadMoreCommunityMembers($id: ID, $after: String) {

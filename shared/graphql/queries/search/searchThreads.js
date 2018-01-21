@@ -2,6 +2,19 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+
+type Node = {
+  node: {
+    ...$Exact<ThreadInfoType>,
+  },
+};
+
+export type SearchThreadsType = {
+  searchResultsConnection: {
+    edges: Array<?Node>,
+  },
+};
 
 const searchThreadsQuery = gql`
   query search(
