@@ -14,7 +14,7 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import { getCommunityTopMembers } from '../queries';
+import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 
 type User = {
   id: string,

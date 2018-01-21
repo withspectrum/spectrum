@@ -1,8 +1,9 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { getThisCommunity } from './queries';
+import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
 import { openModal } from '../../actions/modals';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
@@ -18,16 +19,20 @@ import {
 import { Loading } from '../../components/loading';
 
 type Props = {
-  community: {
-    name: string,
-    profilePhoto: string,
-    slug: string,
-    isPro: boolean,
+  currentUser: Object,
+  data: {
+    community: {
+      name: string,
+      profilePhoto: string,
+      slug: string,
+      isPro: boolean,
+    },
   },
   communitySlug: string,
   isLoading: boolean,
   hasError: boolean,
   dispatch: Function,
+  match: Object,
 };
 
 type State = {
@@ -43,6 +48,7 @@ class CommunityAnalytics extends React.Component<Props, State> {
   };
 
   render() {
+    console.log(this.props.match);
     const { data: { community }, isLoading } = this.props;
 
     if (community && community.id) {
@@ -65,12 +71,12 @@ class CommunityAnalytics extends React.Component<Props, State> {
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth communitySlug={community.slug} />
-            <TopMembers communitySlug={community.slug} />
+            <MemberGrowth id={community.id} />
+            <TopMembers id={community.id} />
           </Column>
           <Column>
-            <ConversationGrowth communitySlug={community.slug} />
-            <TopAndNewThreads communitySlug={community.slug} />
+            <ConversationGrowth id={community.id} />
+            <TopAndNewThreads id={community.id} />
           </Column>
         </SectionsContainer>
       );
@@ -100,6 +106,9 @@ class CommunityAnalytics extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getThisCommunity, viewNetworkHandler)(
-  CommunityAnalytics
-);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getCommunityById,
+  viewNetworkHandler
+)(CommunityAnalytics);

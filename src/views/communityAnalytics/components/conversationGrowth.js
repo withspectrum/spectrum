@@ -8,7 +8,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import { getCommunityConversationGrowth } from '../queries';
+import getCommunityConversationGrowth from 'shared/graphql/queries/community/getCommunityConversationGrowth';
 import { parseGrowth } from '../utils';
 
 type GrowthType = {

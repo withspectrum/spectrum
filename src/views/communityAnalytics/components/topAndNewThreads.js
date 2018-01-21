@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -8,7 +9,7 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import { getCommunityTopAndNewThreads } from '../queries';
+import getCommunityTopAndNewThreads from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 
 type Thread = {
   id: string,
