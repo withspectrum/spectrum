@@ -50,7 +50,7 @@ class Splash extends React.Component<Props> {
             title={'thread'}
             onPress={() =>
               this.props.navigation.navigate(`Thread`, {
-                id: '315a4943-8357-46a9-a369-15906338e02b',
+                id: '7daace3e-ed88-4853-a293-e2a02f887869',
               })
             }
           />

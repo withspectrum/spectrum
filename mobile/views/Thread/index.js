@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import compose from 'recompose/compose';
 import { getThreadById } from '../../../shared/graphql/queries/thread/getThread';
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
+import Text from '../../components/Text';
+import threadRenderer from '../../utils/thread-content-renderer';
 
 import { Wrapper } from './style';
 
@@ -14,6 +16,10 @@ type Props = {
   data: {
     thread?: {
       id: string,
+      content: {
+        body?: string,
+        title: string,
+      },
       creator: {
         name: string,
       },
@@ -27,11 +33,16 @@ class Thread extends React.Component<Props> {
     if (data.thread) {
       return (
         <Wrapper>
-          <View testID="e2e-thread">
-            <Text>
-              Now viewing thread {data.thread.id} by {data.thread.creator.name}
+          <ScrollView testID="e2e-thread">
+            <Text type="title1">
+              {data.thread.content.title} by {data.thread.creator.name}
             </Text>
-          </View>
+            {data.thread.content.body && (
+              <View>
+                {threadRenderer(JSON.parse(data.thread.content.body))}
+              </View>
+            )}
+          </ScrollView>
         </Wrapper>
       );
     }
@@ -40,7 +51,7 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <View testID="e2e-thread">
-            <Text>Loading...</Text>
+            <Text type="body">Loading...</Text>
           </View>
         </Wrapper>
       );
@@ -50,7 +61,7 @@ class Thread extends React.Component<Props> {
       return (
         <Wrapper>
           <View testID="e2e-thread">
-            <Text>Error!</Text>
+            <Text type="body">Error!</Text>
           </View>
         </Wrapper>
       );
