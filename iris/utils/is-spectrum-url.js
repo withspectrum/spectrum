@@ -5,6 +5,8 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 const EXPO_URL = /^https:\/\/auth\.expo\.io\/@(mxstbr|uberbryn|brianlovin)\//;
 
+export const isExpoUrl = (url: string): boolean => EXPO_URL.test(url);
+
 /**
  * Make a URL string is a spectrum.chat URL
  */

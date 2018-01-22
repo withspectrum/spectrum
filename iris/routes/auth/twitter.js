@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { URL } from 'url';
-import isSpectrumUrl from '../../utils/is-spectrum-url';
+import isSpectrumUrl, { isExpoUrl } from '../../utils/is-spectrum-url';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -38,6 +38,19 @@ twitterAuthRouter.get(
 
     const redirectUrl = new URL(req.session.redirectUrl);
     redirectUrl.searchParams.append('authed', 'true');
+
+    // Add the session cookies to the query params if authenticating from mobile
+    if (
+      isExpoUrl(req.session.redirectUrl) &&
+      req.cookies &&
+      req.cookies.session
+    ) {
+      redirectUrl.searchParams.append('session', req.cookies.session);
+      redirectUrl.searchParams.append(
+        'session.sig',
+        req.cookies['session.sig']
+      );
+    }
 
     // Delete the redirectURL from the session again so we don't redirect
     // to the old URL the next time around
