@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Checkbox } from '../../../components/formElements';
@@ -17,7 +17,19 @@ import {
 } from '../../../components/listItems/style';
 import { EmailListItem } from '../style';
 
-class NotificationSettings extends Component {
+type State = {
+  webPushBlocked: boolean,
+  subscription: ?any,
+};
+
+type Props = {
+  subscribeToWebPush: Function,
+  dispatch: Function,
+  smallOnly?: boolean,
+  largeOnly?: boolean,
+};
+
+class NotificationSettings extends React.Component<Props, State> {
   state = {
     webPushBlocked: false,
     subscription: null,

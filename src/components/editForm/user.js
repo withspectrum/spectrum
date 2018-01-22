@@ -1,15 +1,10 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import slugg from 'slugg';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-//$FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { throttle } from '../../helpers/utils';
@@ -32,7 +27,10 @@ import {
   Loading,
 } from './style';
 import { Spinner } from '../../components/globals';
-import { editUserMutation, CHECK_UNIQUE_USERNAME_QUERY } from '../../api/user';
+import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import editUserMutation from 'shared/graphql/mutations/user/editUser';
+import type { EditUserType } from 'shared/graphql/mutations/user/editUser';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
@@ -42,26 +40,33 @@ import {
 } from '../../helpers/images';
 import { Notice } from '../../components/listItems/style';
 
-class UserWithData extends Component {
-  state: {
-    website: string,
-    name: string,
-    username: string,
-    description: string,
-    image: string,
-    coverPhoto: string,
-    file: ?Object,
-    coverFile: ?Object,
-    descriptionError: boolean,
-    nameError: boolean,
-    createError: boolean,
-    isLoading: boolean,
-    photoSizeError: string,
-    proGifError: boolean,
-    usernameError: string,
-    isUsernameSearching: boolean,
-  };
+type State = {
+  website: ?string,
+  name: string,
+  username: string,
+  description: ?string,
+  image: string,
+  coverPhoto: string,
+  file: ?Object,
+  coverFile: ?Object,
+  descriptionError: boolean,
+  nameError: boolean,
+  createError: boolean,
+  isLoading: boolean,
+  photoSizeError: string,
+  proGifError: boolean,
+  usernameError: string,
+  isUsernameSearching: boolean,
+};
 
+type Props = {
+  currentUser: Object,
+  dispatch: Function,
+  client: Object,
+  editUser: Function,
+};
+
+class UserWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -171,6 +176,7 @@ class UserWithData extends Component {
 
       this.setState({
         file: file,
+        // $FlowFixMe
         image: reader.result,
         photoSizeError: '',
         proGifError: false,
@@ -225,6 +231,7 @@ class UserWithData extends Component {
 
       this.setState({
         coverFile: file,
+        // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: '',
         proGifError: false,
@@ -270,7 +277,7 @@ class UserWithData extends Component {
 
     this.props
       .editUser(input)
-      .then(({ data: { editUser } }) => {
+      .then(({ data: { editUser } }: { data: { editUser: EditUserType } }) => {
         const user = editUser;
 
         this.setState({
@@ -341,7 +348,7 @@ class UserWithData extends Component {
       // check the db to see if this channel slug exists
       this.props.client
         .query({
-          query: CHECK_UNIQUE_USERNAME_QUERY,
+          query: getUserByUsernameQuery,
           variables: {
             username,
           },
@@ -490,6 +497,7 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
+  // $FlowIssue
   connect(map)
 )(UserWithData);
 export default UserSettings;

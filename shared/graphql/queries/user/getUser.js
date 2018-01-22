@@ -9,7 +9,7 @@ export type GetUserType = {
 };
 
 export const getUserByIdQuery = gql`
-  query getUser($id: ID) {
+  query getUserById($id: ID) {
     user(id: $id) {
       ...userInfo
     }
@@ -25,10 +25,8 @@ const getUserByIdOptions = {
   }),
 };
 
-export const getUserById = graphql(getUserByIdQuery, getUserByIdOptions);
-
 export const getUserByUsernameQuery = gql`
-  query getUser($username: String) {
+  query getUserById($username: String) {
     user(username: $username) {
       ...userInfo
     }
@@ -44,7 +42,31 @@ const getUserByUsernameOptions = {
   }),
 };
 
+const getUserByMatchOptions = {
+  options: ({ match: { params: { username } } }) => ({
+    variables: {
+      username,
+    },
+  }),
+};
+
+export const getUserById = graphql(getUserByIdQuery, getUserByIdOptions);
 export const getUserByUsername = graphql(
   getUserByUsernameQuery,
   getUserByUsernameOptions
 );
+export const getUserByMatch = graphql(
+  getUserByUsernameQuery,
+  getUserByMatchOptions
+);
+
+export const getCurrentUserQuery = gql`
+  query getCurrentUser {
+    user: currentUser {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
+
+export const getCurrentUser = graphql(getCurrentUserQuery);

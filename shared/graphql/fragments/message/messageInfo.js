@@ -2,12 +2,6 @@
 import gql from 'graphql-tag';
 import userInfoFragment from '../user/userInfo';
 import type { UserInfoType } from '../user/userInfo';
-import reactionInfoFragment from '../reaction/reactionInfo';
-import type { ReactionInfoType } from '../reaction/reactionInfo';
-
-type Reaction = {
-  ...$Exact<ReactionInfoType>,
-};
 
 export type MessageInfoType = {
   id: string,
@@ -23,7 +17,10 @@ export type MessageInfoType = {
       isModerator: boolean,
     },
   },
-  reactions: Array<?Reaction>,
+  reactions: {
+    count: number,
+    hasReacted: boolean,
+  },
   content: {
     body: string,
   },
@@ -45,12 +42,12 @@ export default gql`
       }
     }
     reactions {
-      ...reactionInfo
+      count
+      hasReacted
     }
     content {
       body
     }
   }
   ${userInfoFragment}
-  ${reactionInfoFragment}
 `;

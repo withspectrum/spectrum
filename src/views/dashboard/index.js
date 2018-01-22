@@ -7,7 +7,8 @@ import { removeItemFromStorage } from '../../helpers/localStorage';
 import { getEverythingThreads } from './queries';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
-import { getCurrentUserProfile } from '../../api/user';
+import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
+import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -65,12 +66,7 @@ type CommunityType = {
 
 type Props = {
   data: {
-    user?: {
-      id: string,
-      communityConnection: {
-        edges: Array<?CommunityType>,
-      },
-    },
+    user?: GetUserCommunityConnectionType,
   },
   newActivityIndicator: boolean,
   activeThread: ?string,
@@ -287,6 +283,6 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  getCurrentUserProfile,
+  getCurrentUserCommunityConnection,
   viewNetworkHandler
 )(Dashboard);

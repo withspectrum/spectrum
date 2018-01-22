@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -14,7 +15,10 @@ import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
 import Search from './components/search';
-import { getUserThreads, getUser } from './queries';
+import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
+import type { GetUserThreadConnectionType } from 'shared/graphql/queries/user/getUserThreadConnection';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
@@ -37,7 +41,7 @@ type Props = {
   },
   currentUser: Object,
   data: {
-    user: Object,
+    user: GetUserType,
   },
   isLoading: boolean,
   hasError: boolean,
@@ -46,14 +50,16 @@ type Props = {
 
 type State = {
   hasNoThreads: boolean,
-  selectedView: 'participant' | 'creator',
+  selectedView: string,
+  hasThreads: boolean,
 };
 
 class UserView extends React.Component<Props, State> {
-  constructor() {
-    super();
-    this.state = { hasThreads: true, selectedView: 'participant' };
-  }
+  state = {
+    hasNoThreads: false,
+    selectedView: 'participant',
+    hasThreads: true,
+  };
 
   componentDidMount() {
     track('user', 'profile viewed', null);
@@ -70,7 +76,7 @@ class UserView extends React.Component<Props, State> {
   hasNoThreads = () => this.setState({ hasThreads: false });
   hasThreads = () => this.setState({ hasThreads: true });
 
-  handleSegmentClick = label => {
+  handleSegmentClick = (label: string) => {
     if (this.state.selectedView === label) return;
 
     return this.setState({
@@ -89,7 +95,8 @@ class UserView extends React.Component<Props, State> {
       currentUser,
     } = this.props;
     const { hasThreads, selectedView } = this.state;
-
+    console.log(this.props);
+    console.log(this.state);
     if (queryVarIsChanging) {
       return <LoadingScreen />;
     }
@@ -103,11 +110,6 @@ class UserView extends React.Component<Props, State> {
           description: user.description,
         },
       });
-
-      const communities =
-        user.communityConnection.edges.length > 0
-          ? user.communityConnection.edges.map(c => c.node)
-          : [];
 
       const nullHeading = `${
         user.firstName ? user.firstName : user.name
@@ -140,11 +142,7 @@ class UserView extends React.Component<Props, State> {
               username={username}
               profileSize="full"
             />
-            <CommunityList
-              currentUser={currentUser}
-              user={user}
-              communities={communities}
-            />
+            <CommunityList currentUser={currentUser} user={user} id={user.id} />
           </Column>
 
           <Column type="primary" alignItems="center">
@@ -205,6 +203,7 @@ class UserView extends React.Component<Props, State> {
                   hasNoThreads={this.hasNoThreads}
                   hasThreads={this.hasThreads}
                   kind={selectedView}
+                  id={user.id}
                 />
               )}
 
@@ -260,4 +259,9 @@ class UserView extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(connect(map), getUser, viewNetworkHandler)(UserView);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getUserByMatch,
+  viewNetworkHandler
+)(UserView);
