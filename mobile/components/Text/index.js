@@ -28,6 +28,9 @@ const Text: ComponentType<Props> = styled.Text`
   ${(props: Props) => props.bold && 'font-weight: bold;'}
   ${(props: Props) => props.italic && 'font-style: italic;'}
   ${(props: Props) => props.underline && 'text-decoration-line: underline;'}
+  ${(props: Props) =>
+    props.type &&
+    `margin-top: ${human[`${props.type}Object`].lineHeight * 0.35};`}
 `;
 
 // NOTE(@mxstbr): For some reason we have to set the style prop here instead of via .attrs
