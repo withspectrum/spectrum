@@ -95,8 +95,7 @@ class UserView extends React.Component<Props, State> {
       currentUser,
     } = this.props;
     const { hasThreads, selectedView } = this.state;
-    console.log(this.props);
-    console.log(this.state);
+
     if (queryVarIsChanging) {
       return <LoadingScreen />;
     }
