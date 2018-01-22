@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+export type DeleteCommunityType = boolean;
+
 const deleteCommunityMutation = gql`
   mutation deleteCommunity($communityId: ID!) {
     deleteCommunity(communityId: $communityId)

@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+
+export type EditThreadType = {
+  ...$Exact<ThreadInfoType>,
+};
 
 type File = {
   name: string,

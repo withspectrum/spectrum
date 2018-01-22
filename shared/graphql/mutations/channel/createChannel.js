@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
 type CreateChannelInput = {
   communityId: string,
@@ -10,6 +11,10 @@ type CreateChannelInput = {
   slug: string,
   isPrivate: boolean,
   isDefault: boolean,
+};
+
+export type CreateChannelType = {
+  ...$Exact<ChannelInfoType>,
 };
 
 const createChannelMutation = gql`

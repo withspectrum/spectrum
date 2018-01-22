@@ -2,6 +2,19 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+
+export type PublishThreadType = {
+  ...$Exact<ThreadInfoType>,
+  channel: {
+    id: string,
+    slug: string,
+    community: {
+      id: string,
+      slug: string,
+    },
+  },
+};
 
 type Attachment = {
   attachmentType: string,

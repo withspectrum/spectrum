@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
+import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+
+export type EditCommunityType = {
+  ...$Exact<CommunityInfoType>,
+};
 
 type EditCommunityInput = {
   name: string,

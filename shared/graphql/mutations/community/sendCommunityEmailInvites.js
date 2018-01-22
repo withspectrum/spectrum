@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+export type SendCommunityEmailInvitesType = boolean;
+
 type Contact = {
   email: string,
   firstName?: ?string,

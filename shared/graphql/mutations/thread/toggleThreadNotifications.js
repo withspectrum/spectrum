@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+export type ToggleThreadNotificationsType = {
+  id: string,
+  receiveNotifications: boolean,
+};
+
 const toggleThreadNotificationsMutation = gql`
   mutation toggleThreadNotifications($threadId: ID!) {
     toggleThreadNotifications(threadId: $threadId) {

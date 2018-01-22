@@ -14,6 +14,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
+import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -225,14 +226,20 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     this.props
       .createChannel(input)
-      .then(({ data: { createChannel } }) => {
-        track('channel', 'created', null);
-        window.location.href = `/${modalProps.slug}/${createChannel.slug}`;
-        this.close();
-        this.props.dispatch(
-          addToastWithTimeout('success', 'Channel successfully created!')
-        );
-      })
+      .then(
+        ({
+          data: { createChannel: channel },
+        }: {
+          data: { createChannel: CreateChannelType },
+        }) => {
+          track('channel', 'created', null);
+          window.location.href = `/${modalProps.slug}/${channel.slug}`;
+          this.close();
+          this.props.dispatch(
+            addToastWithTimeout('success', 'Channel successfully created!')
+          );
+        }
+      )
       .catch(err => {
         this.setState({
           loading: false,

@@ -1,7 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import threadInfoFragment from '../../fragments/thread/threadInfo';
+
+export type DeleteThreadType = boolean;
 
 const deleteThreadMutation = gql`
   mutation deleteThread($threadId: ID!) {

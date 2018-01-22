@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
+export type LockThreadType = {
+  id: string,
+  isLocked: boolean,
+};
+
 const lockThreadMutation = gql`
   mutation setThreadLock($threadId: ID!, $value: Boolean!) {
     setThreadLock(threadId: $threadId, value: $value) {

@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
+
+export type DeleteChannelType = {
+  ...$Exact<ChannelInfoType>,
+};
 
 const deleteChannelMutation = gql`
   mutation deleteChannel($channelId: ID!) {

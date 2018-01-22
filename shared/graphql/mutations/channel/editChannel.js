@@ -2,6 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
+import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
+
+export type EditChannelType = {
+  ...$Exact<ChannelInfoType>,
+};
 
 type EditChannelInput = {
   channelId: string,
