@@ -10,8 +10,6 @@ export const getThisCommunity = graphql(
       community(slug: $slug) {
         ...communityInfo
         ...communityMetaData
-        hasPrivateChannels
-        hasAnalytics
         recurringPayments {
           plan
           amount

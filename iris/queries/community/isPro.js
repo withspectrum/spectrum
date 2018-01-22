@@ -2,7 +2,7 @@
 /*
 *
 *
-*   NOTE: This field resolver is deprecated. Use hasAnalytics or hasPrivateChannels instead
+*   NOTE: This field resolver is deprecated. Use features instead.
 *
 *
 */

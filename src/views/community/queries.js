@@ -146,8 +146,6 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   query getCommunityChannels($slug: String) {
     community(slug: $slug) {
       ...communityInfo
-      hasAnalytics
-      hasPrivateChannels
       channelConnection {
         edges {
           node {

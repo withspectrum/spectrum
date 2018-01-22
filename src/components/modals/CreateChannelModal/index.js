@@ -311,12 +311,12 @@ class CreateChannelModal extends Component {
               id="isPrivate"
               checked={isPrivate}
               onChange={this.changePrivate}
-              disabled={!modalProps.hasPrivateChannels}
+              disabled={!modalProps.features.privateChannels}
             >
               Private channel
             </Checkbox>
 
-            {!modalProps.hasPrivateChannels && (
+            {!modalProps.features.privateChannels && (
               <UpsellDescription>
                 Communities on the business can create private channels to
                 protect threads, messages, and manually approve all new members.
@@ -326,7 +326,7 @@ class CreateChannelModal extends Component {
               </UpsellDescription>
             )}
 
-            {modalProps.hasPrivateChannels &&
+            {modalProps.features.privateChannels &&
               isPrivate && (
                 <Description>
                   Only approved people on Spectrum can see the threads,
@@ -335,7 +335,7 @@ class CreateChannelModal extends Component {
                 </Description>
               )}
 
-            {modalProps.hasPrivateChannels &&
+            {modalProps.features.privateChannels &&
               !isPrivate && (
                 <Description>
                   Anyone on Spectrum can join this channel, post threads and

@@ -78,6 +78,11 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+  type Features {
+    analytics: Boolean!
+    privateChannels: Boolean!
+  }
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -98,9 +103,8 @@ const Community = /* GraphQL */ `
 		slackImport: SlackImport
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
-		isPro: Boolean @deprecated(reason:"Use more granular permission checks from now on like hasAnalytics and hasPrivateChannels")
-		hasAnalytics: Boolean
-		hasPrivateChannels: Boolean
+		isPro: Boolean @deprecated(reason:"Use the more granular 'features' field from now on")
+    features: Features!
 		memberGrowth: GrowthData
 		conversationGrowth: GrowthData
 		topMembers: [User]

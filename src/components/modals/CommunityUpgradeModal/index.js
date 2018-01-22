@@ -94,7 +94,7 @@ class CommunityUpgradeModal extends React.Component {
       <Modal
         isOpen={isOpen}
         contentLabel={
-          !community.hasPrivateChannels
+          !community.features.privateChannels
             ? 'Upgrade your community'
             : 'Manage your subscription'
         }
@@ -108,7 +108,7 @@ class CommunityUpgradeModal extends React.Component {
           title={null}
           closeModal={this.closeModal}
         >
-          {community.hasPrivateChannels && (
+          {community.features.privateChannels && (
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want to
@@ -152,7 +152,7 @@ class CommunityUpgradeModal extends React.Component {
             </Section>
           )}
 
-          {!community.hasPrivateChannels && (
+          {!community.features.privateChannels && (
             <div style={{ padding: '16px' }}>
               <UpsellUpgradeCommunity
                 community={community}

@@ -160,7 +160,6 @@ export const getChannel = graphql(
         community {
           ...communityInfo
           ...communityMetaData
-          hasPrivateChannels
         }
       }
     }

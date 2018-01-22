@@ -203,7 +203,7 @@ class ChannelView extends React.Component<Props> {
             {isLoggedIn &&
               userHasPermissions &&
               channel.isPrivate &&
-              !channel.community.hasPrivateChannels && (
+              !channel.community.features.privateChannels && (
                 <UpsellUpgradeCommunityPrivateChannel
                   community={channel.community}
                 />
@@ -212,7 +212,8 @@ class ChannelView extends React.Component<Props> {
             {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
             {isLoggedIn &&
               userHasPermissions &&
-              ((channel.isPrivate && channel.community.hasPrivateChannels) ||
+              ((channel.isPrivate &&
+                channel.community.features.privateChannels) ||
                 !channel.isPrivate) && (
                 <ThreadComposer
                   activeCommunity={communitySlug}

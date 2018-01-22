@@ -46,8 +46,8 @@ class CommunityAnalytics extends React.Component<Props, State> {
     const { data: { community }, isLoading } = this.props;
 
     if (community && community.id) {
-      if (!community.hasAnalytics) {
-        const subheading = community.hasPrivateChannels
+      if (!community.features.analytics) {
+        const subheading = community.features.privateChannels
           ? // if they have private channels, they are on the project plan
             `To explore analytics for your community, first downgrade from the Project plan and then upgrade to the Business plan.`
           : // otherwise they are upgrading for the first time
@@ -59,7 +59,7 @@ class CommunityAnalytics extends React.Component<Props, State> {
             subheading={subheading}
           >
             <ButtonRow>
-              {community.hasPrivateChannels ? (
+              {community.features.privateChannels ? (
                 <Link to={`/${community.slug}/settings`}>
                   <Button large>Go to community settings</Button>
                 </Link>

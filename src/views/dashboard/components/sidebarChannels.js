@@ -78,7 +78,7 @@ class SidebarChannels extends React.Component<Props> {
           )}
 
           {isOwner &&
-            community.hasAnalytics && (
+            community.features.analytics && (
               <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />
@@ -137,7 +137,7 @@ class SidebarChannels extends React.Component<Props> {
           )}
 
           {isOwner &&
-            thisCommunity.hasAnalytics && (
+            community.features.analytics && (
               <Link to={`/${thisCommunity.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />
