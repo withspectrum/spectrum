@@ -27,6 +27,7 @@ const getChannelByIdOptions = {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 
@@ -58,6 +59,7 @@ const getChannelBySlugAndCommunitySlugOptions = {
       channelSlug: channelSlug.toLowerCase(),
       communitySlug: communitySlug.toLowerCase(),
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 
@@ -72,6 +74,7 @@ const getChannelByMatchOptions = {
       channelSlug: channelSlug.toLowerCase(),
       communitySlug: communitySlug.toLowerCase(),
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 

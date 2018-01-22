@@ -34,8 +34,6 @@ class Nav extends Component {
 
   toggleMenu() {
     this.setState({ menuIsOpen: !this.state.menuIsOpen });
-
-    console.log('toggled', this.state.menuIsOpen);
   }
 
   render() {

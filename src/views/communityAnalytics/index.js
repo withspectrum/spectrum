@@ -48,7 +48,6 @@ class CommunityAnalytics extends React.Component<Props, State> {
   };
 
   render() {
-    console.log(this.props.match);
     const { data: { community }, isLoading } = this.props;
 
     if (community && community.id) {

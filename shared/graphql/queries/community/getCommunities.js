@@ -27,6 +27,7 @@ const getCommunitiesByIdOptions = {
     variables: {
       ids,
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 
@@ -51,6 +52,7 @@ const getCommunitiesBySlugOptions = {
     variables: {
       slugs: slugs.map(s => s.toLowerCase()),
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 
@@ -74,7 +76,7 @@ const getCommunitiesByCuratedContentTypeOptions = {
     variables: {
       curatedContentType,
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 

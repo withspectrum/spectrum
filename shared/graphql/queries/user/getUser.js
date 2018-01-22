@@ -69,4 +69,6 @@ export const getCurrentUserQuery = gql`
   ${userInfoFragment}
 `;
 
-export const getCurrentUser = graphql(getCurrentUserQuery);
+export const getCurrentUser = graphql(getCurrentUserQuery, {
+  options: { fetchPolicy: 'cache-first' },
+});

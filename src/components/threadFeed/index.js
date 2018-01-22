@@ -131,7 +131,6 @@ class ThreadFeedPure extends Component {
       }
 
       if (this.props.hasNoThreads) {
-        console.log('saying there are no threadas');
         this.props.hasNoThreads();
       }
     }
@@ -143,8 +142,6 @@ class ThreadFeedPure extends Component {
       viewContext,
       newActivityIndicator,
     } = this.props;
-
-    console.log('thread feed props', this.props.data);
 
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
