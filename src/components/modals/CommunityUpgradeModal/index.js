@@ -92,6 +92,8 @@ class CommunityUpgradeModal extends React.Component {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={
           !community.isPro
