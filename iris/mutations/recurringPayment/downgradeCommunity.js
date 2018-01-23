@@ -82,23 +82,42 @@ export default (
       return new UserError("We couln't find a record of this subscription.");
     }
 
-    // a customer record from stripe returns all of their subscriptions - we need to ensure we are only deleting the subscription for their community upgrade
-    const subscriptionId = customer.subscriptions.data.filter(
-      pmt => pmt.plan.id === proSubscriptions[0].planId
-    )[0].id;
+    // if a community is being downgraded, they should never have a lingering
+    // community subbscription (although they might have a 'pro user' subscriptio)
+    // this function finds all active community-related subs and downgrades them all
 
-    // delete the subscription
-    const stripeData = await deleteStripeSubscription(subscriptionId);
+    const activeCommunitySubscriptionIds = customer.subscriptions.data
+      .filter(pmt => {
+        if (
+          pmt.status === 'active' &&
+          (pmt.plan.id === 'community-standard' ||
+            pmt.plan.id === 'community-project')
+        ) {
+          return pmt.id;
+        }
 
-    // update the recurringPayment record in the database to reflect the new canceled status
-    return await updateRecurringPayment({
-      id: recurringPaymentToEvaluate.id,
-      stripeData: {
-        ...stripeData,
-        sourceBrand: customer.sources.data[0].brand,
-        sourceLast4: customer.sources.data[0].last4,
-      },
-    });
+        return null;
+      })
+      .filter(Boolean);
+
+    const deleteSubscriptionPromises = activeCommunitySubscriptionIds.map(
+      async subscriptionId => {
+        // delete the subscription
+        const stripeData = await deleteStripeSubscription(subscriptionId);
+
+        // update the recurringPayment record in the database to reflect the new canceled status
+        return await updateRecurringPayment({
+          id: recurringPaymentToEvaluate.id,
+          stripeData: {
+            ...stripeData,
+            sourceBrand: customer.sources.data[0].brand,
+            sourceLast4: customer.sources.data[0].last4,
+          },
+        });
+      }
+    );
+
+    return Promise.all([deleteSubscriptionPromises]);
   };
 
   // handle the entire downgrade flow
