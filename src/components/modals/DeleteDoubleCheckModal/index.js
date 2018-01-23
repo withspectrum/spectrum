@@ -155,7 +155,9 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Sorry, we weren't able to delete this community. ${err.message}`
+                `Sorry, we weren't able to delete this community. ${
+                  err.message
+                }`
               )
             );
             this.setState({
@@ -184,6 +186,8 @@ class DeleteDoubleCheckModal extends Component {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={'Are you sure?'}
         onRequestClose={this.close}

@@ -74,6 +74,8 @@ class ChangeChannelModal extends React.Component<Props, State> {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={'Reputation'}
         onRequestClose={this.closeModal}

@@ -64,6 +64,8 @@ class UserProfileModal extends Component {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={user.name}
         onRequestClose={this.close}
