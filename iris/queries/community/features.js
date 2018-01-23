@@ -42,11 +42,19 @@ export default (
     if (subs.every(sub => sub.status !== 'active')) return FEATURE_MAP.default;
 
     // A community-standard subscription?
-    if (subs.find(sub => sub.planId === 'community-standard'))
+    if (
+      subs.find(
+        sub => sub.planId === 'community-standard' && sub.status === 'active'
+      )
+    )
       return FEATURE_MAP['community-standard'];
 
     // A community-project subscription?
-    if (subs.find(sub => sub.planId === 'community-project'))
+    if (
+      subs.find(
+        sub => sub.planId === 'community-project' && sub.status === 'active'
+      )
+    )
       return FEATURE_MAP['community-project'];
 
     return FEATURE_MAP.default;
