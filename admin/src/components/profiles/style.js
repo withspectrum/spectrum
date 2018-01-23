@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import Link from '../../../src/components/link';
 import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
 import { Avatar } from '../avatar';
 
@@ -11,7 +11,9 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const CommunityAvatar = styled(Avatar)`margin-right: 8px;`;
+export const CommunityAvatar = styled(Avatar)`
+  margin-right: 8px;
+`;
 
 export const ProfileHeaderLink = styled(Link)`
   display: flex;

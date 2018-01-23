@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 export const communityInfoFragment = gql`
   fragment communityInfo on Community {

@@ -14,7 +14,7 @@ export const ComposerInput = styled.input`
   font-size: 16px;
   padding: 15px 16px;
   width: 100%;
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   position: relative;
   z-index: 2;
 
@@ -35,7 +35,7 @@ export const SearchSpinnerContainer = styled.span`
 export const SearchResultsDropdown = styled.ul`
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: absolute;
   top: ${props => (props.moved ? '104px' : '60px')};
   left: 8px;
@@ -55,11 +55,10 @@ export const SearchResultsDropdown = styled.ul`
 export const SearchResult = styled.li`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
   width: 100%;
-  ${Truncate()}
-  padding: 8px 16px 8px 8px;
+  ${Truncate()} padding: 8px 16px 8px 8px;
 
   &:only-child {
     border-bottom: none;

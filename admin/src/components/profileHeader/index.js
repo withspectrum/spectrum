@@ -1,11 +1,10 @@
 import React from 'react';
-// $FlowFixMe
-import Link from 'src/components/link';
+import Link from '../../../src/components/link';
 import { Avatar } from '../avatar';
 import { Container, Row, Column, Name, Username } from './style';
 import { OutlineButton } from '../buttons';
 
-export const ProfileHeader = ({ user }) => {
+export const ProfileHeader = ({ user }: any) => {
   return (
     <Container>
       <Row>

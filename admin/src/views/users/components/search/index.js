@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
@@ -59,24 +54,32 @@ class Search extends Component {
       .query({
         query: SEARCH_USERS_QUERY,
         variables: {
-          string,
+          queryString: string,
+          type: 'USERS',
         },
       })
-      .then(({ data: { searchUsers } }) => {
-        if (searchUsers.length > 0) {
-          this.setState({
-            searchResults: searchUsers.length > 0 ? searchUsers : [],
-            searchIsLoading: false,
-            focusedSearchResult:
-              searchUsers.length > 0 ? searchUsers[0].id : '',
-          });
-        } else {
-          this.setState({
+      .then(({ data: { search } }) => {
+        const hasSearchResults =
+          search &&
+          search.searchResultsConnection &&
+          search.searchResultsConnection.edges.length > 0;
+        if (!hasSearchResults) {
+          return this.setState({
             searchResults: [],
             searchIsLoading: false,
             focusedSearchResult: '',
           });
         }
+
+        const searchResults = search.searchResultsConnection.edges.map(
+          e => e.node
+        );
+
+        return this.setState({
+          searchResults: searchResults,
+          searchIsLoading: false,
+          focusedSearchResult: searchResults[0],
+        });
       });
   };
 

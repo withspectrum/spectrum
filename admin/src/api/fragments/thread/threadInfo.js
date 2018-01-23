@@ -1,4 +1,4 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { userInfoFragment } from '../user/userInfo';
 
 export const threadInfoFragment = gql`
@@ -26,7 +26,7 @@ export const threadInfoFragment = gql`
     isPublished
     isLocked
     isCreator
-		type
+    type
     participants {
       ...userInfo
     }

@@ -496,7 +496,7 @@ export const HorizontalRule = styled(FlexRow)`
   align-items: center;
   align-self: stretch;
   margin: 0 32px;
-  color: ${props => props.theme.border.default};
+  color: ${props => props.theme.bg.border};
 
   hr {
     display: inline-block;

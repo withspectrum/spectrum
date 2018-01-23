@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/community';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/queries';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
@@ -59,25 +54,32 @@ class Search extends Component {
       .query({
         query: SEARCH_COMMUNITIES_QUERY,
         variables: {
-          string,
+          queryString: string,
+          type: 'COMMUNITIES',
         },
       })
-      .then(({ data: { searchCommunities } }) => {
-        if (searchCommunities.length > 0) {
-          this.setState({
-            searchResults:
-              searchCommunities.length > 0 ? searchCommunities : [],
-            searchIsLoading: false,
-            focusedSearchResult:
-              searchCommunities.length > 0 ? searchCommunities[0].id : '',
-          });
-        } else {
-          this.setState({
+      .then(({ data: { search } }) => {
+        const hasSearchResults =
+          search &&
+          search.searchResultsConnection &&
+          search.searchResultsConnection.edges.length > 0;
+        if (!hasSearchResults) {
+          return this.setState({
             searchResults: [],
             searchIsLoading: false,
             focusedSearchResult: '',
           });
         }
+
+        const searchResults = search.searchResultsConnection.edges.map(
+          e => e.node
+        );
+
+        return this.setState({
+          searchResults: searchResults,
+          searchIsLoading: false,
+          focusedSearchResult: searchResults[0],
+        });
       });
   };
 
@@ -109,7 +111,7 @@ class Search extends Component {
     // backspace
     if (e.keyCode === 8) {
       if (searchString.length > 0) return;
-      return input.focus();
+      return input && input.focus();
     }
 
     //escape
@@ -119,7 +121,7 @@ class Search extends Component {
         searchIsLoading: false,
       });
 
-      return input.focus();
+      return input && input.focus();
     }
 
     // down
