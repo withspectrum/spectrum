@@ -14,7 +14,7 @@ import {
 import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import Helmet from 'react-helmet';
+import { HelmetProvider } from 'react-helmet-async';
 import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
@@ -78,16 +78,19 @@ const renderer = (req, res) => {
     debug(`codesplitted module ${moduleName} used`);
     modules.push(moduleName);
   };
-  const context = {};
+  let routerContext = {};
+  let helmetContext = {};
   // The client-side app will instead use <BrowserRouter>
   const frontend = (
     <Loadable.Capture report={report}>
       <ApolloProvider client={client}>
-        <Provider store={store}>
-          <StaticRouter location={req.url} context={context}>
-            <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
-          </StaticRouter>
-        </Provider>
+        <HelmetProvider context={helmetContext}>
+          <Provider store={store}>
+            <StaticRouter location={req.url} context={routerContext}>
+              <Routes maintenanceMode={IN_MAINTENANCE_MODE} />
+            </StaticRouter>
+          </Provider>
+        </HelmetProvider>
       </ApolloProvider>
     </Loadable.Capture>
   );
@@ -96,16 +99,16 @@ const renderer = (req, res) => {
   debug(`render frontend`);
   renderToStringWithData(sheet.collectStyles(frontend))
     .then(content => {
-      if (context.url) {
+      if (routerContext.url) {
         debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
-        res.redirect(301, context.url);
+        res.redirect(301, routerContext.url);
         return;
       }
       // Get the resulting data
       const state = store.getState();
       const data = client.extract();
-      const helmet = Helmet.renderStatic();
+      const { helmet } = helmetContext;
       if (IN_MAINTENANCE_MODE) {
         debug('maintainance mode enabled, sending 503');
         res.status(503);
