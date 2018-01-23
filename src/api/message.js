@@ -4,7 +4,7 @@ import { graphql } from 'react-apollo';
 import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
 import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
 import { getThreadMessageConnectionQuery } from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
+import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 
 const DELETE_MESSAGE_MUTATION = gql`
   mutation deleteMessage($id: ID!) {
@@ -47,7 +47,7 @@ const DELETE_MESSAGE_OPTIONS = {
           } else if (ownProps.threadType === 'directMessageThread') {
             // Read the data from our cache for this query.
             const data = store.readQuery({
-              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              query: getDirectMessageThreadQuery,
               variables: {
                 id: ownProps.threadId,
               },
@@ -58,7 +58,7 @@ const DELETE_MESSAGE_OPTIONS = {
             );
             // Write our data back to the cache.
             store.writeQuery({
-              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+              query: getDirectMessageThreadQuery,
               data,
               variables: {
                 id: ownProps.threadId,
@@ -218,7 +218,7 @@ const SEND_DIRECT_MESSAGE_OPTIONS = {
 
           // Read the data from our cache for this query.
           const data = store.readQuery({
-            query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            query: getDirectMessageThreadQuery,
             variables: {
               id: ownProps.thread,
             },
@@ -232,7 +232,7 @@ const SEND_DIRECT_MESSAGE_OPTIONS = {
 
           // Write our data back to the cache.
           store.writeQuery({
-            query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            query: getDirectMessageThreadQuery,
             data,
             variables: {
               id: ownProps.thread,

@@ -11,7 +11,7 @@ import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
-import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
+import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
 import { track } from '../../../helpers/events';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
@@ -21,7 +21,7 @@ import {
   clearDirectMessagesComposer,
   initNewThreadWithUser,
 } from '../../../actions/directMessageThreads';
-import { createDirectMessageThreadMutation } from '../../../api/directMessageThread';
+import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDMThread';
 import {
   ComposerInputWrapper,
   Grow,
@@ -521,7 +521,7 @@ class NewThread extends React.Component<Props, State> {
 
       client
         .query({
-          query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+          query: getDirectMessageThreadQuery,
           variables: {
             id: existingThread[0].id,
           },

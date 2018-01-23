@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { getCurrentUserDirectMessageThreads } from '../../api/directMessageThread';
+import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import { markDirectMessageNotificationsSeenMutation } from '../../api/notification';
 import Icon from '../../components/icons';
 import ThreadsList from './components/threadsList';

@@ -1,55 +1,40 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
-import messageInfoFragment from 'shared/graphql/fragments/message/messageInfo';
-import directMessageThreadInfoFragment from 'shared/graphql/fragments/directMessageThread/directMessageThreadInfo';
+import { subscribeToNewMessages } from '../../subscriptions';
+import directMessageThreadMessageConnectionFragment from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
+import type { DirectMessageThreadMessageConnectionType } from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
+import directMessageThreadInfoFragment from '../../fragments/directMessageThread/directMessageThreadInfo';
+import type { DirectMessageThreadInfoType } from '../../fragments/directMessageThread/directMessageThreadInfo';
+
+export type GetDirectMessageThreadMessageConnectionType = {
+  ...$Exact<DirectMessageThreadInfoType>,
+  ...$Exact<DirectMessageThreadMessageConnectionType>,
+};
 
 const LoadMoreMessages = gql`
   query loadMoreMessages($id: ID!, $after: String) {
     directMessageThread(id: $id) {
       ...directMessageThreadInfo
-      messageConnection(after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...messageInfo
-          }
-        }
-      }
+      ...directMessageThreadMessageConnection
     }
   }
   ${directMessageThreadInfoFragment}
-  ${messageInfoFragment}
+  ${directMessageThreadMessageConnectionFragment}
 `;
 
-export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
-  query getDirectMessageThreadMessages($id: ID!) {
+export const getDMThreadMessageConnectionQuery = gql`
+  query getDirectMessageThreadMessages($id: ID!, $after: String) {
     directMessageThread(id: $id) {
       ...directMessageThreadInfo
-      messageConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...messageInfo
-          }
-        }
-      }
+      ...directMessageThreadMessageConnection
     }
   }
   ${directMessageThreadInfoFragment}
-  ${messageInfoFragment}
+  ${directMessageThreadMessageConnectionFragment}
 `;
 
-export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
+export const getDMThreadMessageConnectionOptions = {
   options: ({ id }: { id: string }) => ({
     variables: {
       id,
@@ -139,7 +124,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
   }),
 };
 
-export const getDirectMessageThreadMessages = graphql(
-  GET_DIRECT_MESSAGE_THREAD_QUERY,
-  GET_DIRECT_MESSAGE_THREAD_OPTIONS
+export default graphql(
+  getDMThreadMessageConnectionQuery,
+  getDMThreadMessageConnectionOptions
 );

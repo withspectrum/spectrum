@@ -10,7 +10,7 @@ type Edge = {
   },
 };
 
-export type UserDirectMessageThreadConnectionType = {
+export type UserDirectMessageThreadsConnectionType = {
   directMessageThreadsConnection: {
     pageInfo: {
       hasNextPage: boolean,
