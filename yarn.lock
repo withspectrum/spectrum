@@ -8455,9 +8455,11 @@ react-helmet@5.x:
     prop-types "^15.5.4"
     react-side-effect "^1.1.0"
 
-react-infinite-scroller-with-scroll-element@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-1.0.4.tgz#b2b724b06fe27e46af62d23759a21237a7d156d9"
+react-infinite-scroller-with-scroll-element@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-2.0.2.tgz#1a59ee022cd798260593c1322794ed809cd5e2a5"
+  dependencies:
+    prop-types "^15.5.8"
 
 react-loadable@5.2.2:
   version "5.2.2"

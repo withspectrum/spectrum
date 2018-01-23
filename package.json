@@ -121,7 +121,7 @@
     "react-dom": "16.x",
     "react-flip-move": "^2.10.1",
     "react-helmet": "5.x",
-    "react-infinite-scroller-with-scroll-element": "^1.0.4",
+    "react-infinite-scroller-with-scroll-element": "2.0.2",
     "react-loadable": "5.2.2",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.2",
