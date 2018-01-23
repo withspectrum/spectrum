@@ -92,8 +92,8 @@ const Community = /* GraphQL */ `
 		pinnedThread: Thread
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
-		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
-		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
+		memberConnection(first: Amount = 10, after: String): CommunityMembersConnection!
+		threadConnection(first: Amount = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
 		invoices: [Invoice]
@@ -110,9 +110,9 @@ const Community = /* GraphQL */ `
 	extend type Query {
 		community(id: ID, slug: String): Community
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
-		topCommunities(amount: Int = 20): [Community!]
+		topCommunities(amount: Amount = 20): [Community!]
 		recentCommunities: [Community!]
-		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
+		searchCommunities(string: String, amount: Amount = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 

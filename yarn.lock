@@ -4390,6 +4390,10 @@ graphql-extensions@^0.0.x:
     core-js "^2.5.1"
     source-map-support "^0.5.0"
 
+graphql-input-number@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/graphql-input-number/-/graphql-input-number-0.0.10.tgz#509b1c1fb5baeef8ab516a7c82c40dcebb8f8358"
+
 graphql-log@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/graphql-log/-/graphql-log-0.1.2.tgz#d733fc58b14cbb336effa2bb355274d13683c6b5"
