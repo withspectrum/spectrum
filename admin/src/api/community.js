@@ -41,7 +41,7 @@ export const getCommunityBySlug = graphql(
 
 export const recentCommunitiesQuery = graphql(
   gql`
-    query recentCommunities($role: String) {
+    query recentCommunities($filter: MemberConnectionFilter) {
       recentCommunities {
         ...communityInfo
         ...communityMembers
@@ -54,7 +54,7 @@ export const recentCommunitiesQuery = graphql(
     name: 'recent',
     options: () => ({
       variables: {
-        role: 'isOwner',
+        filter: { isOwner: true, isMember: true },
       },
       fetchPolicy: 'cache-and-network',
     }),

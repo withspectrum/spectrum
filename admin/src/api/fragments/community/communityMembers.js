@@ -3,7 +3,7 @@ import { userInfoFragment } from '../user/userInfo';
 
 export const communityMemberConnectionFragment = gql`
   fragment communityMembers on Community {
-    memberConnection(role: $role) {
+    memberConnection(filter: $filter) {
       pageInfo {
         hasNextPage
         hasPreviousPage
