@@ -10,7 +10,7 @@ export type UpdateUserEmailType = {
   pendingEmail: ?string,
 };
 
-const updateUserEmailMutation = gql`
+export const updateUserEmailMutation = gql`
   mutation updateUserEmail($email: String!) {
     updateUserEmail(email: $email) {
       ...userInfo

@@ -18,7 +18,7 @@ type EditCommunityInput = {
   communityId: string,
 };
 
-const editCommunityMutation = gql`
+export const editCommunityMutation = gql`
   mutation editCommunity($input: EditCommunityInput!) {
     editCommunity(input: $input) {
       ...communityInfo

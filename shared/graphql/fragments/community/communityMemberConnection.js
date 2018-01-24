@@ -7,8 +7,6 @@ type Edge = {
   cursor: string,
   node: {
     ...$Exact<UserInfoType>,
-    isPro: boolean,
-    totalReputation: number,
     contextPermissions: {
       communityId: string,
       reputation: number,
@@ -39,8 +37,6 @@ export default gql`
         cursor
         node {
           ...userInfo
-          isPro
-          totalReputation
           contextPermissions {
             communityId
             reputation

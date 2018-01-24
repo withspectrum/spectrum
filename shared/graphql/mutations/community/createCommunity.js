@@ -17,7 +17,7 @@ type CreateCommunityInput = {
   coverFile: Object,
 };
 
-const createCommunityMutation = gql`
+export const createCommunityMutation = gql`
   mutation createCommunity($input: CreateCommunityInput!) {
     createCommunity(input: $input) {
       ...communityInfo

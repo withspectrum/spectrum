@@ -11,7 +11,7 @@ export type DowngradeFromProType = {
   ...$Exact<UserRecurringPaymentsType>,
 };
 
-const downgradeFromProMutation = gql`
+export const downgradeFromProMutation = gql`
   mutation downgradeFromPro {
     downgradeFromPro {
       ...userInfo

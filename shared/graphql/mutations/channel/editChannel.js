@@ -16,7 +16,7 @@ type EditChannelInput = {
   isPrivate: Boolean,
 };
 
-const editChannelMutation = gql`
+export const editChannelMutation = gql`
   mutation editChannel($input: EditChannelInput!) {
     editChannel(input: $input) {
       ...channelInfo

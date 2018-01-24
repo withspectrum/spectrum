@@ -15,7 +15,7 @@ export type GetChannelBlockedUsersType = {
   pendingUsers: Array<?Node>,
 };
 
-const getChannelPendingUsersQuery = gql`
+export const getChannelPendingUsersQuery = gql`
   query getChannelPendingUsers($id: ID) {
     channel(id: $id) {
       ...channelInfo

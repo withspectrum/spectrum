@@ -6,12 +6,14 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communityMetaDataFragment from '../../fragments/community/communityMetaData';
 import type { CommunityMetaDataType } from '../../fragments/community/communityMetaData';
 
-export type GetCommunitiesType = {
+type Node = {
   ...$Exact<CommunityInfoType>,
   ...$Exact<CommunityMetaDataType>,
 };
 
-export const getCommunitiesByIdQuery = gql`
+export type GetCommunitiesType = Array<?Node>;
+
+export const getCommunitiesByIdsQuery = gql`
   query getCommunity($ids: [ID]) {
     community(ids: $ids) {
       ...communityInfo
@@ -22,7 +24,7 @@ export const getCommunitiesByIdQuery = gql`
   ${communityMetaDataFragment}
 `;
 
-const getCommunitiesByIdOptions = {
+const getCommunitiesByIdsOptions = {
   options: ({ ids }: { ids: Array<string> }) => ({
     variables: {
       ids,
@@ -31,12 +33,12 @@ const getCommunitiesByIdOptions = {
   }),
 };
 
-export const getCommunitiesById = graphql(
-  getCommunitiesByIdQuery,
-  getCommunitiesByIdOptions
+export const getCommunitiesByIds = graphql(
+  getCommunitiesByIdsQuery,
+  getCommunitiesByIdsOptions
 );
 
-export const getCommunitiesBySlugQuery = gql`
+export const getCommunitiesBySlugsQuery = gql`
   query getCommunities($slugs: [String]) {
     community(slugs: $slugs) {
       ...communityInfo
@@ -57,7 +59,7 @@ const getCommunitiesBySlugOptions = {
 };
 
 export const getCommunitiesBySlug = graphql(
-  getCommunitiesBySlugQuery,
+  getCommunitiesBySlugsQuery,
   getCommunitiesBySlugOptions
 );
 

@@ -7,7 +7,6 @@ type Edge = {
   cursor: string,
   node: {
     ...$Exact<UserInfoType>,
-    isPro: boolean,
     contextPermissions: {
       communityId: string,
       reputation: number,
@@ -21,7 +20,7 @@ export type ChannelMemberConnectionType = {
       hasNextPage: boolean,
       hasPreviousPage: boolean,
     },
-    edges: Array<Edge>,
+    edges: Array<?Edge>,
   },
 };
 

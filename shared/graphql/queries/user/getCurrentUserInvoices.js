@@ -13,7 +13,7 @@ export type GetCurrentUserInvoicesType = {
   invoices: Array<?Invoice>,
 };
 
-const getCurrentUserInvoicesQuery = gql`
+export const getCurrentUserInvoicesQuery = gql`
   query getUserInvoices {
     user: currentUser {
       id

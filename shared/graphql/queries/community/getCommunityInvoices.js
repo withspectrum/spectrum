@@ -15,7 +15,7 @@ export type GetCommunityInvoicesType = {
   invoices: Array<?Invoice>,
 };
 
-const getCommunityInvoicesQuery = gql`
+export const getCommunityInvoicesQuery = gql`
   query getCommunityInvoices($id: ID) {
     community(id: $id) {
       ...communityInfo

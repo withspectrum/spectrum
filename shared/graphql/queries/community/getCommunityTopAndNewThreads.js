@@ -18,7 +18,7 @@ export type GetCommunityTopAndNewThreadsType = {
   },
 };
 
-const getCommunityTopAndNewThreadsQuery = gql`
+export const getCommunityTopAndNewThreadsQuery = gql`
   query getCommunityTopAndNewThreads($id: ID) {
     community(id: $id) {
       ...communityInfo

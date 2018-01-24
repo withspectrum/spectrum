@@ -20,7 +20,7 @@ type DowngradeInput = {
   id: string,
 };
 
-const downgradeCommunityMutation = gql`
+export const downgradeCommunityMutation = gql`
   mutation downgradeCommunity($input: DowngradeCommunityInput!) {
     downgradeCommunity(input: $input) {
       ...communityInfo

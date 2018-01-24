@@ -20,7 +20,7 @@ type Attachment = {
   data: string,
 };
 
-export type EditThreadInput = {
+type EditThreadInput = {
   threadId: string,
   content: {
     title: string,
@@ -30,7 +30,7 @@ export type EditThreadInput = {
   filesToUpload?: ?Array<File>,
 };
 
-const editThreadMutation = gql`
+export const editThreadMutation = gql`
   mutation editThread($input: EditThreadInput!) {
     editThread(input: $input) {
       ...threadInfo

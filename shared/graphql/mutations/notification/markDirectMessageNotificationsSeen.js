@@ -10,7 +10,7 @@ export const markDirectMessageNotificationsSeenMutation = gql`
   }
 `;
 
-export const markDirectMessageNotificationsSeenOptions = {
+const markDirectMessageNotificationsSeenOptions = {
   props: ({ mutate }: { mutate: Function }) => ({
     markDirectMessageNotificationsSeen: () => mutate(),
   }),

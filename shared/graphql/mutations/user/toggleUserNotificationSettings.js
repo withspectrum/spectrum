@@ -11,7 +11,7 @@ export type ToggleUserNotificationSettingsType = {
   ...$Exact<UserSettingsType>,
 };
 
-const toggleNotificationSettingsMutation = gql`
+export const toggleNotificationSettingsMutation = gql`
   mutation toggleNotificationSettings($input: ToggleNotificationSettingsInput) {
     toggleNotificationSettings(input: $input) {
       ...userInfo

@@ -7,7 +7,7 @@ export type ToggleThreadNotificationsType = {
   receiveNotifications: boolean,
 };
 
-const toggleThreadNotificationsMutation = gql`
+export const toggleThreadNotificationsMutation = gql`
   mutation toggleThreadNotifications($threadId: ID!) {
     toggleThreadNotifications(threadId: $threadId) {
       id

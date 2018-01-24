@@ -17,7 +17,7 @@ export type CreateChannelType = {
   ...$Exact<ChannelInfoType>,
 };
 
-const createChannelMutation = gql`
+export const createChannelMutation = gql`
   mutation createChannel($input: CreateChannelInput!) {
     createChannel(input: $input) {
       ...channelInfo

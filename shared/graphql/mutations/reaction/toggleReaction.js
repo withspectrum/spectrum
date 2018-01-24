@@ -9,7 +9,7 @@ export type ToggleReactionType = {
   __typename: string,
 };
 
-const toggleReactionMutation = gql`
+export const toggleReactionMutation = gql`
   mutation toggleReaction($reaction: ReactionInput!) {
     toggleReaction(reaction: $reaction) {
       ...messageInfo
@@ -21,9 +21,6 @@ const toggleReactionMutation = gql`
 
 const toggleReactionOptions = {
   props: ({ mutate }) => ({
-    // renames the mutate method to 'toggleReaction' and accepts an argument
-    // of the reaction object. This helps us keep the mutation logic out of
-    // the component
     toggleReaction: reaction =>
       mutate({
         variables: {

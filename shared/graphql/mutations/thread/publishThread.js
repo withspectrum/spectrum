@@ -40,7 +40,7 @@ type PublishThreadInput = {
   filesToUpload?: ?Array<File>,
 };
 
-const publishThreadMutation = gql`
+export const publishThreadMutation = gql`
   mutation publishThread($thread: ThreadInput!) {
     publishThread(thread: $thread) {
       ...threadInfo

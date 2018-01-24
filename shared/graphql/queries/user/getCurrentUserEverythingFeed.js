@@ -15,7 +15,7 @@ const LoadMoreThreads = gql`
   ${userEverythingConnectionFragment}
 `;
 
-const getCurrentUserEverythingQuery = gql`
+export const getCurrentUserEverythingQuery = gql`
   query getEverythingThreads($after: String) {
     user: currentUser {
       id

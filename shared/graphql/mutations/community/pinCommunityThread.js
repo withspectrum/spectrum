@@ -9,7 +9,7 @@ export type PinCommunityThreadType = {
   ...$Exact<CommunityInfoType>,
 };
 
-const pinThreadMutation = gql`
+export const pinThreadMutation = gql`
   mutation pinThread($threadId: ID!, $communityId: ID!, $value: String) {
     pinThread(threadId: $threadId, communityId: $communityId, value: $value) {
       ...communityInfo
@@ -17,6 +17,7 @@ const pinThreadMutation = gql`
   }
   ${communityInfoFragment}
 `;
+
 const pinThreadOptions = {
   props: ({ mutate }) => ({
     pinThread: ({ threadId, communityId, value }) =>

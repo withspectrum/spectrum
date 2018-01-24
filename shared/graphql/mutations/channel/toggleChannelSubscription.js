@@ -8,7 +8,7 @@ export type ToggleChannelSubscriptionType = {
   ...$Exact<ChannelInfoType>,
 };
 
-const toggleChannelSubscriptionMutation = gql`
+export const toggleChannelSubscriptionMutation = gql`
   mutation toggleChannelSubscription($channelId: ID!) {
     toggleChannelSubscription(channelId: $channelId) {
       ...channelInfo

@@ -16,11 +16,12 @@ type EmailInvitesInput = {
   customMessage?: ?string,
 };
 
-const sendCommunityEmailInvitesMutation = gql`
+export const sendCommunityEmailInvitesMutation = gql`
   mutation sendEmailInvites($input: EmailInvitesInput!) {
     sendEmailInvites(input: $input)
   }
 `;
+
 const sendCommunityEmailInvitesOptions = {
   props: ({ input, mutate }) => ({
     sendEmailInvites: (input: EmailInvitesInput) =>

@@ -11,7 +11,7 @@ export type GetChannelType = {
   ...$Exact<ChannelMetaDataType>,
 };
 
-const getChannelByIdQuery = gql`
+export const getChannelByIdQuery = gql`
   query getChannel($id: ID) {
     channel(id: $id) {
       ...channelInfo

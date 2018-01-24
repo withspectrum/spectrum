@@ -12,7 +12,7 @@ export type SendSlackInvitationsType = {
   },
 };
 
-const sendSlackInvitationsMutation = gql`
+export const sendSlackInvitationsMutation = gql`
   mutation sendSlackInvites($input: SendSlackInvitesInput!) {
     sendSlackInvites(input: $input) {
       id
@@ -25,6 +25,7 @@ const sendSlackInvitationsMutation = gql`
     }
   }
 `;
+
 const sendSlackInvitationsOptions = {
   props: ({ input, mutate }) => ({
     sendSlackInvites: input =>

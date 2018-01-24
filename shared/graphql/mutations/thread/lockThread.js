@@ -7,7 +7,7 @@ export type LockThreadType = {
   isLocked: boolean,
 };
 
-const lockThreadMutation = gql`
+export const lockThreadMutation = gql`
   mutation setThreadLock($threadId: ID!, $value: Boolean!) {
     setThreadLock(threadId: $threadId, value: $value) {
       id

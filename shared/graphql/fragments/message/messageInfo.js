@@ -9,7 +9,6 @@ export type MessageInfoType = {
   messageType: string,
   sender: {
     ...$Exact<UserInfoType>,
-    isPro: boolean,
     contextPermissions: {
       communityId: string,
       reputation: number,
@@ -33,7 +32,6 @@ export default gql`
     messageType
     sender {
       ...userInfo
-      isPro
       contextPermissions {
         communityId
         reputation

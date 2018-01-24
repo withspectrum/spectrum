@@ -21,7 +21,7 @@ import {
   clearDirectMessagesComposer,
   initNewThreadWithUser,
 } from '../../../actions/directMessageThreads';
-import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDMThread';
+import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import {
   ComposerInputWrapper,
   Grow,

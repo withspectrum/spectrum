@@ -11,7 +11,7 @@ export type GetCurrentUserRecurringPaymentsType = {
   ...$Exact<UserRecurringPaymentsType>,
 };
 
-const getCurrentUserRecurringPayemntsQuery = gql`
+export const getCurrentUserRecurringPayemntsQuery = gql`
   query getCurrentUserRecurringPayments {
     user: currentUser {
       ...userInfo

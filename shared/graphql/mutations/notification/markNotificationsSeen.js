@@ -11,7 +11,7 @@ export const markNotificationsSeenMutation = gql`
   }
 `;
 
-export const markNotificationsSeenOptions = {
+const markNotificationsSeenOptions = {
   props: ({ mutate }: { mutate: Function }) => ({
     markAllNotificationsSeen: () =>
       mutate({

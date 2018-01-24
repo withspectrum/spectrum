@@ -4,11 +4,9 @@ import { graphql } from 'react-apollo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
-export type DeleteChannelType = {
-  ...$Exact<ChannelInfoType>,
-};
+export type DeleteChannelType = boolean;
 
-const deleteChannelMutation = gql`
+export const deleteChannelMutation = gql`
   mutation deleteChannel($channelId: ID!) {
     deleteChannel(channelId: $channelId)
   }

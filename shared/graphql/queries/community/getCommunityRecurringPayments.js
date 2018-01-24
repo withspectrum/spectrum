@@ -14,7 +14,7 @@ export type GetCommunityRecurringPaymentsType = {
   },
 };
 
-const getCommunityRecurringPaymentsQuery = gql`
+export const getCommunityRecurringPaymentsQuery = gql`
   query getCommunityRecurringPayments($id: ID!) {
     community(id: $id) {
       ...communityInfo

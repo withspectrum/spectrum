@@ -26,7 +26,7 @@ type UnblockInput = {
   userId: string,
 };
 
-const unblockChannelBlockedUserMutation = gql`
+export const unblockChannelBlockedUserMutation = gql`
   mutation unblockUser($input: UnblockUserInput!) {
     unblockUser(input: $input) {
       ...channelInfo

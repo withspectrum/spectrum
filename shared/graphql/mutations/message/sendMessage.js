@@ -9,7 +9,7 @@ export type SendMessageType = {
   ...$Exact<MessageInfoType>,
 };
 
-const sendMessageMutation = gql`
+export const sendMessageMutation = gql`
   mutation sendMessage($message: MessageInput!) {
     addMessage(message: $message) {
       ...messageInfo
@@ -17,6 +17,7 @@ const sendMessageMutation = gql`
   }
   ${messageInfoFragment}
 `;
+
 const sendMessageOptions = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: message => {

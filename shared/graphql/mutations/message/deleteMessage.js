@@ -6,7 +6,7 @@ import { getDirectMessageThreadQuery } from '../../queries/directMessageThread/g
 
 export type DeleteMessageType = boolean;
 
-const deleteMessageMutation = gql`
+export const deleteMessageMutation = gql`
   mutation deleteMessage($id: ID!) {
     deleteMessage(id: $id)
   }

@@ -22,7 +22,7 @@ type UpgradeInput = {
   communityId: string,
 };
 
-const upgradeCommunityMutation = gql`
+export const upgradeCommunityMutation = gql`
   mutation upgradeCommunity($input: UpgradeCommunityInput!) {
     upgradeCommunity(input: $input) {
       ...communityInfo

@@ -26,7 +26,7 @@ const LoadMoreThreads = gql`
   ${communityThreadConnectionFragment}
 `;
 
-const getCommunityThreadConnectionQuery = gql`
+export const getCommunityThreadConnectionQuery = gql`
   query getCommunityThreadConnection($id: ID, $after: String) {
     community(id: $id) {
       ...communityInfo

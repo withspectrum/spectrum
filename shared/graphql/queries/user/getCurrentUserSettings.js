@@ -13,7 +13,7 @@ export type GetCurrentUserSettingsType = {
   ...$Exact<UserSettingsType>,
 };
 
-const getCurrentUserSettings = gql`
+export const getCurrentUserSettings = gql`
   query getCurrentUserSettings {
     user: currentUser {
       ...userInfo

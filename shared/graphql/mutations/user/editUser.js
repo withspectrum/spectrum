@@ -8,7 +8,7 @@ export type EditUserType = {
   ...$Exact<UserInfoType>,
 };
 
-const editUserMutation = gql`
+export const editUserMutation = gql`
   mutation editUser($input: EditUserInput!) {
     editUser(input: $input) {
       ...userInfo

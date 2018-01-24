@@ -14,7 +14,7 @@ type User = {
   ...$Exact<UserInfoType>,
 };
 
-export type DeleteChannelType = {
+export type ToggleChannelPendingUsersType = {
   ...$Exact<ChannelInfoType>,
   pendingUsers: Array<?User>,
   blockedUsers: Array<?User>,
@@ -29,7 +29,7 @@ type TogglePendingInput = {
   action: 'approve' | 'block',
 };
 
-const toggleChannelPendingUserMutation = gql`
+export const toggleChannelPendingUserMutation = gql`
   mutation togglePendingUser($input: TogglePendingUserInput!) {
     togglePendingUser(input: $input) {
       ...channelInfo

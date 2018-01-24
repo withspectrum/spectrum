@@ -8,7 +8,7 @@ export type SetDMLastSeenType = {
   ...$Exact<DirectMessageThreadInfoType>,
 };
 
-const setLastSeenMutation = gql`
+export const setLastSeenMutation = gql`
   mutation setLastSeen($id: ID!) {
     setLastSeen(id: $id) {
       ...directMessageThreadInfo

@@ -21,7 +21,7 @@ export type GetCommunityMembersType = {
   topMembers: Array<?User>,
 };
 
-const getCommunityTopMembersQuery = gql`
+export const getCommunityTopMembersQuery = gql`
   query getCommunityTopMembers($id: ID) {
     community(id: $id) {
       ...communityInfo

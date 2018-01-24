@@ -8,7 +8,7 @@ export type MoveThreadType = {
   ...$Exact<ThreadInfoType>,
 };
 
-const moveThreadMutation = gql`
+export const moveThreadMutation = gql`
   mutation moveThread($threadId: ID!, $channelId: ID!) {
     moveThread(threadId: $threadId, channelId: $channelId) {
       ...threadInfo

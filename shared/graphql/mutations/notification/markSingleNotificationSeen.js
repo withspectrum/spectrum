@@ -8,7 +8,7 @@ export const markSingleNotificationSeenMutation = gql`
   }
 `;
 
-export const markSingleNotificationSeenOptions = {
+const markSingleNotificationSeenOptions = {
   props: ({ mutate }: { mutate: Function }) => ({
     markSingleNotificationSeen: () => mutate(),
   }),

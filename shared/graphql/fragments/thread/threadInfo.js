@@ -26,7 +26,6 @@ export type ThreadInfoType = {
   currentUserLastSeen: ?Date,
   creator: {
     ...$Exact<UserInfoType>,
-    isPro: boolean,
     contextPermissions: {
       communityId: string,
       reputation: number,
@@ -64,7 +63,6 @@ export default gql`
     currentUserLastSeen
     creator {
       ...userInfo
-      isPro
       contextPermissions {
         communityId
         reputation

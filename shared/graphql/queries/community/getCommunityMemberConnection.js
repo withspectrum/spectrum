@@ -27,7 +27,7 @@ const LoadMoreMembers = gql`
   ${communityMemberConnectionFragment}
 `;
 
-const getCommunityMemberConnectionQuery = gql`
+export const getCommunityMemberConnectionQuery = gql`
   query getCommunityMembers($id: ID, $after: String) {
     community(id: $id) {
       ...communityInfo

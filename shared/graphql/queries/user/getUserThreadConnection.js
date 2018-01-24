@@ -28,7 +28,7 @@ const LoadMoreThreads = gql`
   ${userThreadConnectionFragment}
 `;
 
-const getUserThreadConnectionQuery = gql`
+export const getUserThreadConnectionQuery = gql`
   query getUserThreadConnection(
     $id: ID
     $after: String

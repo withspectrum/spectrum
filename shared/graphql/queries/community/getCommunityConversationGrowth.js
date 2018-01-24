@@ -20,7 +20,7 @@ export type GetCommunityConversationGrowthType = {
   },
 };
 
-const getCommunityConversationGrowthQuery = gql`
+export const getCommunityConversationGrowthQuery = gql`
   query getCommunityConversationGrowth($id: ID) {
     community(id: $id) {
       ...communityInfo

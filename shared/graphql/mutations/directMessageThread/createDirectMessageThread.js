@@ -8,11 +8,11 @@ import userInfoFragment from '../../fragments/user/userInfo';
 import { subscribeToUpdatedDirectMessageThreads } from '../../subscriptions';
 import { getCurrentUserDMThreadConnectionQuery } from '../../queries/directMessageThread/getCurrentUserDMThreadConnection';
 
-export type CreateDMThreadType = {
+export type CreateDirectMessageThreadType = {
   ...$Exact<DirectMessageThreadInfoType>,
 };
 
-const createDMThreadMutation = gql`
+export const createDirectMessageThreadMutation = gql`
   mutation createDirectMessageThread($input: DirectMessageThreadInput!) {
     createDirectMessageThread(input: $input) {
       ...directMessageThreadInfo
@@ -20,7 +20,7 @@ const createDMThreadMutation = gql`
   }
   ${directMessageThreadInfoFragment}
 `;
-const createDMThreadOptions = {
+const createDirectMessageThreadOptions = {
   options: {
     refetchQueries: ['currentUserDirectMessageThreads'],
   },
@@ -52,4 +52,7 @@ const createDMThreadOptions = {
   }),
 };
 
-export default graphql(createDMThreadMutation, createDMThreadOptions);
+export default graphql(
+  createDirectMessageThreadMutation,
+  createDirectMessageThreadOptions
+);

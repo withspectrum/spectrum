@@ -14,7 +14,7 @@ export type GetSlackImportType = {
   },
 };
 
-const getSlackImportQuery = gql`
+export const getSlackImportQuery = gql`
   query getSlackImport($id: ID!) {
     community(id: $id) {
       id

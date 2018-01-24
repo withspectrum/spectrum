@@ -9,7 +9,7 @@ export type SendDirectMessageType = {
   ...$Exact<MessageInfoType>,
 };
 
-const sendDirectMessageMutation = gql`
+export const sendDirectMessageMutation = gql`
   mutation sendDirectMessage($message: MessageInput!) {
     addMessage(message: $message) {
       ...messageInfo

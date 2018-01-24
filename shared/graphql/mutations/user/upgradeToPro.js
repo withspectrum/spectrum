@@ -11,7 +11,7 @@ export type UpgradeToProType = {
   ...$Exact<UserRecurringPaymentsType>,
 };
 
-const upgradeToProMutation = gql`
+export const upgradeToProMutation = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
     upgradeToPro(input: $input) {
       ...userInfo

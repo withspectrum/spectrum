@@ -14,7 +14,7 @@ export type ToggleCommunityMembershipType = {
   ...$Exact<CommunityChannelConnectionType>,
 };
 
-const toggleCommunityMembershipQuery = gql`
+export const toggleCommunityMembershipQuery = gql`
   mutation toggleCommunityMembership($communityId: ID!) {
     toggleCommunityMembership(communityId: $communityId) {
       ...communityInfo

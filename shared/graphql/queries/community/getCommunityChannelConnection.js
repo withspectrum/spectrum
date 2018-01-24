@@ -11,7 +11,7 @@ export type GetCommunityType = {
   ...$Exact<CommunityChannelConnectionType>,
 };
 
-const getCommunityChannelConnectionQuery = gql`
+export const getCommunityChannelConnectionQuery = gql`
   query getCommunityChannels($id: ID) {
     community(id: $id) {
       ...communityInfo
