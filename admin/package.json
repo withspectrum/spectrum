@@ -5,8 +5,6 @@
   "devDependencies": {
     "add": "^2.0.6",
     "flow-bin": "^0.57.3",
-    "react-app-rewire-graphql-tag": "^1.1.0",
-    "react-app-rewired": "^1.4.0",
     "react-scripts": "1.1.0",
     "recompose": "^0.26.0",
     "styled-components": "^3.0.1",
@@ -30,18 +28,25 @@
     "apollo-upload-server": "^2.0.4",
     "apollo-utilities": "^1.0.4",
     "d3-array": "^1.2.0",
+    "graphql": "^0.12.3",
     "graphql-tag": "^2.6.1",
+    "moment": "^2.20.1",
     "react": "16.x",
     "react-apollo": "2.x",
     "react-dom": "16.x",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
-    "recharts": "^1.0.0-alpha.6"
+    "react-router-dom": "^4.2.2",
+    "react-trend": "^1.2.4",
+    "recharts": "^1.0.0-alpha.6",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "subscriptions-transport-ws": "^0.9.5"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "now build"
