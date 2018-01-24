@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 import { userInfoFragment } from '../user/userInfo';
 
-export const communityMembersFragment = gql`
+export const communityMemberConnectionFragment = gql`
   fragment communityMembers on Community {
-    memberConnection {
+    memberConnection(role: $role) {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -11,6 +11,8 @@ export const communityMembersFragment = gql`
       edges {
         node {
           ...userInfo
+          isPro
+          email
         }
       }
     }

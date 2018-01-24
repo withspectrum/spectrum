@@ -20,7 +20,7 @@ export const ProfileHeader = ({ user }: any) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <OutlineButton>View Profile</OutlineButton>
+        <OutlineButton>View User</OutlineButton>
       </Link>
     </Container>
   );

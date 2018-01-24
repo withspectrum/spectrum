@@ -255,13 +255,18 @@ const removeModeratorInCommunity = (
 
 const getMembersInCommunity = (
   communityId: string,
-  { first, after }: { first: number, after: number }
+  { first, after }: { first: number, after: number },
+  role: ?string
 ): Promise<Array<string>> => {
+  let filter = { isMember: true };
+
+  if (role) filter[role] = true;
+
   return (
     db
       .table('usersCommunities')
       .getAll(communityId, { index: 'communityId' })
-      .filter({ isMember: true })
+      .filter(filter)
       .orderBy(db.desc('reputation'))
       .skip(after || 0)
       .limit(first || 999999)

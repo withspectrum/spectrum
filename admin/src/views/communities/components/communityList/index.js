@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { CommunityProfile } from '../../../../components/profiles';
+import {
+  CommunityProfile,
+  MiniUserProfile,
+} from '../../../../components/profiles';
 import { ListCard, Label, CommunityItem } from './style';
 
 class CommunityList extends Component {
   render() {
     const { data, label } = this.props;
 
-    let sorted = data;
-
-    if (label === 'Popular') {
-      sorted = data.slice().sort((a, b) => {
-        return b.metaData.members - a.metaData.members;
-      });
-    }
+    const sorted = data.map(community => {
+      return {
+        ...community,
+        creator: {
+          ...community.memberConnection.edges[0].node,
+        },
+      };
+    });
 
     return (
       <ListCard>
@@ -21,6 +25,7 @@ class CommunityList extends Component {
           return (
             <CommunityItem key={community.id}>
               <CommunityProfile community={community} />
+              <MiniUserProfile user={community.creator} />
             </CommunityItem>
           );
         })}

@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import pure from 'recompose/pure';
 import { View, ListWrapper } from './style';
-import {
-  recentCommunitiesQuery,
-  topCommunitiesQuery,
-} from '../../api/community';
+import { recentCommunitiesQuery } from '../../api/community';
 import { Loading } from '../../components/loading';
 import Search from './components/search';
 import CommunityList from './components/communityList';
@@ -15,18 +10,14 @@ import CommunityContainer from './containers/community';
 
 class CommunitiesViewIndex extends Component {
   render() {
-    const { top, recent, match } = this.props;
-    const dataExists =
-      top.networkStatus === 7 &&
-      recent.networkStatus === 7 &&
-      top.topCommunities &&
-      recent.recentCommunities;
+    const { recent, match } = this.props;
+    const dataExists = recent.networkStatus === 7 && recent.recentCommunities;
 
-    if (top.loading || recent.loading) {
+    if (recent.loading) {
       return <Loading />;
     }
 
-    if (top.error || recent.error) {
+    if (recent.error) {
       return <div>Error</div>;
     }
 
@@ -44,8 +35,10 @@ class CommunitiesViewIndex extends Component {
 
           {dataExists && (
             <ListWrapper>
-              <CommunityList data={top.topCommunities} label="Popular" />
-              <CommunityList data={recent.recentCommunities} label="Recent" />
+              <CommunityList
+                data={recent.recentCommunities}
+                label="Recently created"
+              />
             </ListWrapper>
           )}
         </View>
@@ -54,6 +47,4 @@ class CommunitiesViewIndex extends Component {
   }
 }
 
-export default compose(recentCommunitiesQuery, topCommunitiesQuery, pure)(
-  CommunitiesViewIndex
-);
+export default compose(recentCommunitiesQuery, pure)(CommunitiesViewIndex);
