@@ -88,6 +88,7 @@ class DirectMessages extends React.Component<Props, State> {
 
   render() {
     const { match, currentUser, data, hasError, fetchMore } = this.props;
+    console.log('data', data);
 
     // Only logged-in users can view DM threads
     if (!currentUser) return null;

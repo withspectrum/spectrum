@@ -18,7 +18,7 @@ const LoadMoreDirectMessageThreads = gql`
   query loadMoreDirectMessageThreads($after: String) {
     user: currentUser {
       ...userInfo
-      ...directMessageThreadsConnection
+      ...userDirectMessageThreadConnection
     }
   }
   ${userInfoFragment}
@@ -26,7 +26,7 @@ const LoadMoreDirectMessageThreads = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionQuery = gql`
-  query currentUserDirectMessageThreads {
+  query currentUserDirectMessageThreads($after: String) {
     user: currentUser {
       ...userInfo
       ...userDirectMessageThreadConnection
@@ -38,6 +38,9 @@ export const getCurrentUserDMThreadConnectionQuery = gql`
 
 export const getCurrentUserDMThreadConnectionOptions = {
   options: {
+    variables: {
+      after: '',
+    },
     fetchPolicy: 'cache-and-network',
   },
   // $FlowFixMe
@@ -53,6 +56,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
             ].cursor,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          console.log(fetchMoreResult);
           if (!fetchMoreResult.user) {
             return prev;
           }

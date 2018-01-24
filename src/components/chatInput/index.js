@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
@@ -16,10 +17,8 @@ import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
-import {
-  sendMessageMutation,
-  sendDirectMessageMutation,
-} from '../../api/message';
+import sendMessageMutation from 'shared/graphql/mutations/message/sendMessage';
+import sendDirectMessageMutation from 'shared/graphql/mutations/message/sendDirectMessage';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -28,21 +27,37 @@ import {
 } from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
-class ChatInput extends Component {
-  state: {
-    isFocused: boolean,
-    photoSizeError: string,
+type State = {
+  isFocused: boolean,
+  photoSizeError: string,
+  code: boolean,
+};
+
+type Props = {
+  onRef: Function,
+  currentUser: Object,
+  dispatch: Function,
+  onChange: Function,
+  state: Object,
+  createThread: Function,
+  sendMessage: Function,
+  sendDirectMessage: Function,
+  forceScrollToBottom: Function,
+  threadType: string,
+  thread: string,
+  clear: Function,
+  onBlur: Function,
+  onFocus: Function,
+};
+
+class ChatInput extends React.Component<Props, State> {
+  state = {
+    isFocused: false,
+    photoSizeError: '',
+    code: false,
   };
 
-  constructor() {
-    super();
-
-    this.state = {
-      isFocused: false,
-      photoSizeError: '',
-      code: false,
-    };
-  }
+  editor: any;
 
   componentDidMount() {
     this.props.onRef(this);
@@ -325,7 +340,8 @@ class ChatInput extends Component {
               onClick={() =>
                 this.props.dispatch(
                   openModal('UPGRADE_MODAL', { user: currentUser })
-                )}
+                )
+              }
             >
               {photoSizeError}
             </p>
@@ -375,6 +391,7 @@ const map = state => ({
 export default compose(
   sendMessageMutation,
   sendDirectMessageMutation,
+  // $FlowIssue
   connect(map),
   withState(
     'state',

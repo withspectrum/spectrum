@@ -10,7 +10,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
-import { deleteMessage } from '../../../api/message';
+import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
