@@ -13,11 +13,15 @@ type User = {
 };
 
 export type UnblockChannelBlockedUserType = {
-  ...$Exact<ChannelInfoType>,
-  pendingUsers: Array<?User>,
-  blockedUsers: Array<?User>,
-  channelMetaData: {
-    ...$Exact<ChannelMetaDataType>,
+  data: {
+    unblockUser: {
+      ...$Exact<ChannelInfoType>,
+      pendingUsers: Array<?User>,
+      blockedUsers: Array<?User>,
+      channelMetaData: {
+        ...$Exact<ChannelMetaDataType>,
+      },
+    },
   },
 };
 
@@ -45,7 +49,7 @@ export const unblockChannelBlockedUserMutation = gql`
 `;
 
 const unblockChannelBlockedUserOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     unblockUser: (input: UnblockInput) =>
       mutate({
         variables: {

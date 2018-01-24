@@ -7,6 +7,7 @@ import { closeModal } from '../../../actions/modals';
 import { connect } from 'react-redux';
 import { TextButton, Button } from '../../buttons';
 import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
+import type { MoveThreadType } from 'shared/graphql/mutations/thread/moveThread';
 import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../icons';
@@ -41,12 +42,14 @@ class ChangeChannelModal extends React.Component<Props, State> {
 
   saveNewChannel = () => {
     const { activeChannel } = this.state;
-    const { thread: { id }, dispatch, moveThread } = this.props;
+    const { thread: { id }, dispatch } = this.props;
     this.setState({
       isLoading: true,
     });
-    return moveThread({ threadId: id, channelId: activeChannel })
-      .then(({ data: { moveThread } }) => {
+    return this.props
+      .moveThread({ threadId: id, channelId: activeChannel })
+      .then(({ data }: MoveThreadType) => {
+        const { moveThread } = data;
         if (moveThread) {
           track('thread', 'moved', null);
           dispatch(
@@ -57,6 +60,7 @@ class ChangeChannelModal extends React.Component<Props, State> {
           });
           this.closeModal();
         }
+        return;
       })
       .catch(err => {
         dispatch(

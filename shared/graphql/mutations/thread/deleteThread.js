@@ -2,7 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-export type DeleteThreadType = boolean;
+export type DeleteThreadType = {
+  data: {
+    deleteThread: boolean,
+  },
+};
 
 export const deleteThreadMutation = gql`
   mutation deleteThread($threadId: ID!) {
@@ -11,7 +15,7 @@ export const deleteThreadMutation = gql`
 `;
 
 const deleteThreadOptions = {
-  props: ({ threadId, mutate }) => ({
+  props: ({ mutate }) => ({
     deleteThread: (threadId: string) =>
       mutate({
         variables: {

@@ -14,7 +14,11 @@ type CreateChannelInput = {
 };
 
 export type CreateChannelType = {
-  ...$Exact<ChannelInfoType>,
+  data: {
+    createChannel: {
+      ...$Exact<ChannelInfoType>,
+    },
+  },
 };
 
 export const createChannelMutation = gql`
@@ -27,7 +31,7 @@ export const createChannelMutation = gql`
 `;
 
 const createChannelOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     createChannel: (input: CreateChannelInput) =>
       mutate({
         variables: {

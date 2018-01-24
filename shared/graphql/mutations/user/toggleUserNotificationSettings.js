@@ -28,7 +28,7 @@ type InputType = {
 };
 
 const toggleNotificationSettingsOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     toggleNotificationSettings: (input: InputType) =>
       mutate({
         variables: {

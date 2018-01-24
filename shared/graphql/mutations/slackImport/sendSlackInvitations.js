@@ -27,7 +27,7 @@ export const sendSlackInvitationsMutation = gql`
 `;
 
 const sendSlackInvitationsOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     sendSlackInvites: input =>
       mutate({
         variables: {

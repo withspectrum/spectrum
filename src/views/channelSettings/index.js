@@ -3,6 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getChannelBySlugAndCommunitySlug } from 'shared/graphql/queries/channel/getChannel';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Loading } from '../../components/loading';
@@ -10,7 +11,9 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { Upsell404Channel } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
+import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
+import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import Titlebar from '../titlebar';
 import ViewError from '../../components/viewError';
 import { View } from '../../components/settingsViews/style';
@@ -20,7 +23,7 @@ import Subnav from '../../components/settingsViews/subnav';
 
 type Props = {
   data: {
-    channel: Object,
+    channel: GetChannelType,
   },
   location: Object,
   match: Object,
@@ -33,16 +36,18 @@ type Props = {
 
 class ChannelSettings extends React.Component<Props> {
   togglePending = (userId, action) => {
-    const { data: { channel }, togglePendingUser, dispatch } = this.props;
+    const { data: { channel }, dispatch } = this.props;
     const input = {
       channelId: channel.id,
       userId,
       action,
     };
 
-    togglePendingUser(input)
-      .then(({ data: { togglePendingUser } }) => {
+    this.props
+      .togglePendingUser(input)
+      .then(({ data }: ToggleChannelPendingUserType) => {
         // the mutation returns a channel object. if it exists,
+        const { togglePendingUser } = data;
         if (togglePendingUser !== undefined) {
           if (action === 'block') {
             track('channel', 'blocked pending user', null);
@@ -54,6 +59,7 @@ class ChannelSettings extends React.Component<Props> {
 
           dispatch(addToastWithTimeout('success', 'Saved!'));
         }
+        return;
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -61,20 +67,23 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   unblock = (userId: string) => {
-    const { data: { channel }, unblockUser, dispatch } = this.props;
+    const { data: { channel }, dispatch } = this.props;
 
     const input = {
       channelId: channel.id,
       userId,
     };
 
-    unblockUser(input)
-      .then(({ data: { unblockUser } }) => {
+    this.props
+      .unblockUser(input)
+      .then(({ data }: UnblockChannelBlockedUserType) => {
+        const { unblockUser } = data;
         // the mutation returns a channel object. if it exists,
         if (unblockUser !== undefined) {
           track('channel', 'unblocked user', null);
           dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
         }
+        return;
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -108,13 +117,13 @@ class ChannelSettings extends React.Component<Props> {
         return (
           <AppViewWrapper>
             <Titlebar
-              title={`Channel settings`}
+              title={'Channel settings'}
               provideBack={true}
               backRoute={`/${communitySlug}`}
               noComposer
             />
             <ViewError
-              heading={`You don’t have permission to manage this channel.`}
+              heading={'You don’t have permission to manage this channel.'}
               subheading={`Head back to the ${
                 channel.community.name
               } community to get back on track.`}
@@ -202,13 +211,13 @@ class ChannelSettings extends React.Component<Props> {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`Channel not found`}
+          title={'Channel not found'}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
         <ViewError
-          heading={`We couldn’t find a channel with this name.`}
+          heading={'We couldn’t find a channel with this name.'}
           subheading={`Head back to the ${communitySlug} community to get back on track.`}
         >
           <Upsell404Channel community={communitySlug} />

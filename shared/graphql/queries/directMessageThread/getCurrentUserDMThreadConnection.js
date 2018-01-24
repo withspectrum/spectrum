@@ -1,8 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import directMessageThreadInfoFragment from '../../fragments/directMessageThread/directMessageThreadInfo';
-import type { DirectMessageThreadInfoType } from '../../fragments/directMessageThread/directMessageThreadInfo';
 import userDirectMessageThreadsConnectionFragment from '../../fragments/user/userDirectMessageThreadConnection';
 import type { UserDirectMessageThreadsConnectionType } from '../../fragments/user/userDirectMessageThreadConnection';
 import userInfoFragment from '../../fragments/user/userInfo';

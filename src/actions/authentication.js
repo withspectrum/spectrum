@@ -3,7 +3,7 @@ import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
 export const logout = dispatch => {
-  track(`user`, `sign out`, null);
+  track('user', 'sign out', null);
   // clear localStorage
   removeItemFromStorage('spectrum');
   import('shared/graphql')

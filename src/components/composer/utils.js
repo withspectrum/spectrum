@@ -15,7 +15,7 @@ const sortByRep = (a, b) => {
   return bc <= ac ? -1 : 1;
 };
 
-export const sortCommunities = (communities: Community[]): Community[] => {
+export const sortCommunities = (communities: Array<Community>): Community[] => {
   return communities.filter(hasCommunityPermissions).sort(sortByRep);
 };
 

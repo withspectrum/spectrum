@@ -1,4 +1,4 @@
-// Flow
+// @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import messageInfoFragment from '../../fragments/message/messageInfo';

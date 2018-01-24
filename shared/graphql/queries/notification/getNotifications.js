@@ -2,10 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import notificationInfoFragment from '../../fragments/notification/notificationInfo';
-import {
-  subscribeToNewNotifications,
-  subscribeToDirectMessageNotifications,
-} from '../../subscriptions';
+import { subscribeToNewNotifications } from '../../subscriptions';
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {

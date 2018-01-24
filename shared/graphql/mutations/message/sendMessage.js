@@ -6,7 +6,11 @@ import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
 
 export type SendMessageType = {
-  ...$Exact<MessageInfoType>,
+  data: {
+    addMessage: {
+      ...$Exact<MessageInfoType>,
+    },
+  },
 };
 
 export const sendMessageMutation = gql`
@@ -70,6 +74,7 @@ const sendMessageOptions = {
 
           data.thread.messageConnection.edges.push({
             __typename: 'ThreadMessageEdge',
+            // eslint-disable-next-line
             cursor: window.btoa(addMessage.id),
             node: addMessage,
           });

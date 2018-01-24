@@ -1,8 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import communityInfoFragment from '../../fragments/community/communityInfo';
-import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 
 export type GetSlackImportType = {
   id: string,

@@ -2,7 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-export type DeleteCommunityType = boolean;
+export type DeleteCommunityType = {
+  data: {
+    deleteCommunity: boolean,
+  },
+};
 
 export const deleteCommunityMutation = gql`
   mutation deleteCommunity($communityId: ID!) {
@@ -11,7 +15,7 @@ export const deleteCommunityMutation = gql`
 `;
 
 const deleteCommunityOptions = {
-  props: ({ communityId, mutate }) => ({
+  props: ({ mutate }) => ({
     deleteCommunity: (communityId: string) =>
       mutate({
         variables: {

@@ -4,8 +4,12 @@ import { graphql } from 'react-apollo';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
-export type ToggleChannelNotificationType = {
-  ...$Exact<ChannelInfoType>,
+export type ToggleChannelNotificationsType = {
+  data: {
+    toggleChannelNotifications: {
+      ...$Exact<ChannelInfoType>,
+    },
+  },
 };
 
 export const toggleChannelNotificationsMutation = gql`

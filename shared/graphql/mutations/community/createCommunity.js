@@ -5,7 +5,11 @@ import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 
 export type CreateCommunityType = {
-  ...$Exact<CommunityInfoType>,
+  data: {
+    createCommunity: {
+      ...$Exact<CommunityInfoType>,
+    },
+  },
 };
 
 type CreateCommunityInput = {
@@ -27,7 +31,7 @@ export const createCommunityMutation = gql`
 `;
 
 const createCommunityOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     createCommunity: (input: CreateCommunityInput) =>
       mutate({
         variables: {

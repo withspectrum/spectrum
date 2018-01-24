@@ -8,7 +8,7 @@ import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaDat
 import channelMemberConnectionFragment from '../../fragments/channel/channelMemberConnection';
 import type { ChannelMemberConnectionType } from '../../fragments/channel/channelMemberConnection';
 
-export type GetChannelMembeConnectionType = {
+export type GetChannelMemberConnectionType = {
   ...$Exact<ChannelInfoType>,
   ...$Exact<ChannelMetaDataType>,
   ...$Exact<ChannelMemberConnectionType>,

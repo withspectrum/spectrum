@@ -23,7 +23,7 @@ export const upgradeToProMutation = gql`
 `;
 
 const upgradeToProOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     upgradeToPro: input =>
       mutate({
         variables: {

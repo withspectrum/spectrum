@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
 import communityInfoFragment from '../../fragments/community/communityInfo';
-import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 

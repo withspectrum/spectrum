@@ -3,9 +3,6 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import directMessageThreadInfoFragment from '../../fragments/directMessageThread/directMessageThreadInfo';
 import type { DirectMessageThreadInfoType } from '../../fragments/directMessageThread/directMessageThreadInfo';
-import userDirectMessageThreadsFragment from '../../fragments/user/userDirectMessageThreadConnection';
-import userInfoFragment from '../../fragments/user/userInfo';
-import { subscribeToUpdatedDirectMessageThreads } from '../../subscriptions';
 import { getCurrentUserDMThreadConnectionQuery } from '../../queries/directMessageThread/getCurrentUserDMThreadConnection';
 
 export type CreateDirectMessageThreadType = {
@@ -24,7 +21,7 @@ const createDirectMessageThreadOptions = {
   options: {
     refetchQueries: ['currentUserDirectMessageThreads'],
   },
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     createDirectMessageThread: input =>
       mutate({
         variables: {

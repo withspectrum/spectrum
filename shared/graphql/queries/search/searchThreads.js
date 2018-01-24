@@ -38,7 +38,7 @@ const searchThreadsQuery = gql`
 `;
 
 const searchThreadsOptions = {
-  props: ({ data: { fetchMore, error, loading, search, networkStatus } }) => ({
+  props: ({ data: { error, loading, search, networkStatus } }) => ({
     data: {
       error,
       loading,

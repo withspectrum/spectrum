@@ -18,7 +18,7 @@ export const editUserMutation = gql`
 `;
 
 const editUserOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     editUser: input =>
       mutate({
         variables: {

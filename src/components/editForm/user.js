@@ -292,6 +292,8 @@ class UserWithData extends React.Component<Props, State> {
           });
           window.location.href = `/users/${user.username}`;
         }
+
+        return;
       })
       .catch(err => {
         this.setState({
@@ -353,7 +355,7 @@ class UserWithData extends React.Component<Props, State> {
             username,
           },
         })
-        .then(({ data, data: { user } }) => {
+        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
           if (this.state.username.length > 20) {
             return this.setState({
               usernameError: 'Usernames can be up to 20 characters',
@@ -370,7 +372,10 @@ class UserWithData extends React.Component<Props, State> {
               isUsernameSearching: false,
             });
           }
-        });
+        })
+        .catch(err =>
+          this.props.dispatch(addToastWithTimeout('error', err.message))
+        );
     }
   };
 

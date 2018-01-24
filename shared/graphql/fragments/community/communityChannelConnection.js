@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import userInfoFragment from '../../fragments/user/userInfo';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 

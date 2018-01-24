@@ -6,7 +6,7 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communityChannelConnectionFragment from '../../fragments/community/communityChannelConnection';
 import type { CommunityChannelConnectionType } from '../../fragments/community/communityChannelConnection';
 
-export type GetCommunityType = {
+export type GetCommunityChannelConnectionType = {
   ...$Exact<CommunityInfoType>,
   ...$Exact<CommunityChannelConnectionType>,
 };

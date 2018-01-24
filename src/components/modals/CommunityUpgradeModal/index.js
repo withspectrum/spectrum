@@ -6,8 +6,8 @@ import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
 import downgradeCommunityMutation from 'shared/graphql/mutations/community/downgradeCommunity';
+import type { DowngradeCommunityType } from 'shared/graphql/mutations/community/downgradeCommunity';
 import { addToastWithTimeout } from '../../../actions/toasts';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeCommunity } from '../../../views/communitySettings/components/upgradeCommunity';
@@ -73,7 +73,7 @@ class CommunityUpgradeModal extends React.Component<Props, State> {
 
     this.props
       .downgradeCommunity(input)
-      .then(({ data: { downgradeCommunity } }) => {
+      .then(({ data }: DowngradeCommunityType) => {
         track('community pro', 'downgraded', null);
 
         this.props.dispatch(
@@ -82,11 +82,15 @@ class CommunityUpgradeModal extends React.Component<Props, State> {
             'Your subscription has been cancelled - sorry to see you go!'
           )
         );
+
         this.setState({
           isLoading: false,
           upgradeError: '',
         });
+
         this.closeModal();
+
+        return;
       })
       .catch(err => {
         this.setState({

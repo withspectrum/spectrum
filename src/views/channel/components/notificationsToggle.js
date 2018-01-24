@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import toggleChannelNotificationsMutation from 'shared/graphql/mutations/channel/toggleChannelNotifications';
+import type { ToggleChannelNotificationsType } from 'shared/graphql/mutations/channel/toggleChannelNotifications';
 import { Checkbox } from '../../../components/formElements';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
@@ -51,7 +50,8 @@ class NotificationsTogglePure extends React.Component<Props, State> {
 
     this.props
       .toggleChannelNotifications(id)
-      .then(({ data: { toggleChannelNotifications } }) => {
+      .then(({ data }: ToggleChannelNotificationsType) => {
+        const { toggleChannelNotifications } = data;
         const value =
           toggleChannelNotifications.channelPermissions.receiveNotifications;
         const type = value ? 'success' : 'neutral';
@@ -59,6 +59,7 @@ class NotificationsTogglePure extends React.Component<Props, State> {
           ? 'Notifications activated!'
           : 'Notifications turned off.';
         this.props.dispatch(addToastWithTimeout(type, str));
+        return;
       })
       .catch(err => {
         this.props.dispatch(addToastWithTimeout('error', err.message));

@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
 import { NullState } from './index';
@@ -32,14 +31,17 @@ class JoinChannel extends React.Component<Props, State> {
   }
 
   toggleSubscription = () => {
-    const { channel, dispatch, toggleChannelSubscription } = this.props;
+    const { channel, dispatch } = this.props;
 
     this.setState({
       isLoading: true,
     });
 
-    toggleChannelSubscription({ channelId: channel.id })
-      .then(({ data: { toggleChannelSubscription } }) => {
+    this.props
+      .toggleChannelSubscription({ channelId: channel.id })
+      .then(({ data }: ToggleChannelSubscriptionType) => {
+        const { toggleChannelSubscription } = data;
+
         this.setState({
           isLoading: false,
         });
@@ -73,6 +75,7 @@ class JoinChannel extends React.Component<Props, State> {
 
         const type = isMember || isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
+        return;
       })
       .catch(err => {
         this.setState({

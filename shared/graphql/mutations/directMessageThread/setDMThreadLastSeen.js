@@ -17,7 +17,7 @@ export const setLastSeenMutation = gql`
   ${directMessageThreadInfoFragment}
 `;
 const SsetLastSeenOptions = {
-  props: ({ id, mutate }) => ({
+  props: ({ mutate }) => ({
     setLastSeen: id =>
       mutate({
         variables: {

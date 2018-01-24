@@ -5,7 +5,11 @@ import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
 export type ToggleChannelSubscriptionType = {
-  ...$Exact<ChannelInfoType>,
+  data: {
+    toggleChannelSubscription: {
+      ...$Exact<ChannelInfoType>,
+    },
+  },
 };
 
 export const toggleChannelSubscriptionMutation = gql`
@@ -21,7 +25,7 @@ const toggleChannelSubscriptionOptions = {
   options: {
     refetchQueries: ['getCurrentUserProfile', 'getEverythingThreads'],
   },
-  props: ({ channelId, mutate }) => ({
+  props: ({ mutate }) => ({
     toggleChannelSubscription: ({ channelId }: { channelId: string }) =>
       mutate({
         variables: {

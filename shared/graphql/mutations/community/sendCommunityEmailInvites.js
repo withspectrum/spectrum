@@ -2,7 +2,11 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-export type SendCommunityEmailInvitesType = boolean;
+export type SendCommunityEmailInvitesType = {
+  data: {
+    sendEmailInvites: boolean,
+  },
+};
 
 type Contact = {
   email: string,
@@ -23,7 +27,7 @@ export const sendCommunityEmailInvitesMutation = gql`
 `;
 
 const sendCommunityEmailInvitesOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     sendEmailInvites: (input: EmailInvitesInput) =>
       mutate({
         variables: {

@@ -30,7 +30,6 @@ import {
 } from './style';
 import StripeCheckout from 'react-stripe-checkout';
 import upgradeToProMutation from 'shared/graphql/mutations/user/upgradeToPro';
-import type { UpgradeToProType } from 'shared/graphql/mutations/user/upgradeToPro';
 
 type NullCardProps = {
   noShadow?: boolean,
@@ -221,11 +220,11 @@ export const Upsell404Community = () => {
   // we should return the user back to homepage
   return (
     <Actions>
-      <Link to={`/`}>
+      <Link to={'/'}>
         <OutlineButton large>Take me back</OutlineButton>
       </Link>
 
-      <Link to={`/new/community`}>
+      <Link to={'/new/community'}>
         <Button large>Create a community</Button>
       </Link>
     </Actions>
@@ -288,7 +287,7 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => (window.location.href = `/home`)}>
+      <Button onClick={() => (window.location.href = '/home')}>
         Take me home
       </Button>
     </NullCard>
@@ -360,23 +359,15 @@ class UpsellUpgradeToProPure extends React.Component<
 
     this.props
       .upgradeToPro(input)
-      .then(
-        ({
-          data: { upgradeToPro },
-        }: {
-          data: { upgradeToPro: UpgradeToProType },
-        }) => {
-          this.props.dispatch(
-            addToastWithTimeout('success', 'Upgraded to Pro!')
-          );
-          this.setState({
-            isLoading: false,
-            upgradeError: '',
-          });
-          // if the upgrade is triggered from a modal, close the modal
-          this.props.complete && this.props.complete();
-        }
-      )
+      .then(() => {
+        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
+        this.setState({
+          isLoading: false,
+          upgradeError: '',
+        });
+        // if the upgrade is triggered from a modal, close the modal
+        return this.props.complete && this.props.complete();
+      })
       .catch(err => {
         this.setState({
           isLoading: false,
@@ -473,8 +464,8 @@ export const UpsellNullNotifications = () => {
 export const UpsellReload = () => (
   <NullCard
     bg="error"
-    heading={`Whoops!`}
-    copy={`Something went wrong on our end... Mind reloading?`}
+    heading={'Whoops!'}
+    copy={'Something went wrong on our end... Mind reloading?'}
   >
     <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload

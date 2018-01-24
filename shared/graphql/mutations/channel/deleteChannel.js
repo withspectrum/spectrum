@@ -1,10 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import channelInfoFragment from '../../fragments/channel/channelInfo';
-import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
-export type DeleteChannelType = boolean;
+export type DeleteChannelType = {
+  data: {
+    deleteChannel: boolean,
+  },
+};
 
 export const deleteChannelMutation = gql`
   mutation deleteChannel($channelId: ID!) {
@@ -13,7 +15,7 @@ export const deleteChannelMutation = gql`
 `;
 
 const deleteChannelOptions = {
-  props: ({ channelId, mutate }) => ({
+  props: ({ mutate }) => ({
     deleteChannel: (channelId: string) =>
       mutate({
         variables: {

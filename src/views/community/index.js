@@ -19,6 +19,7 @@ import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import { LoadingScreen } from '../../components/loading';
 import {
@@ -36,13 +37,15 @@ import { CoverRow, CoverColumn, LogoutButton } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
+import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
   dispatch: Function,
-  toggleCommunityMembership: Function,
-  isLoading: boolean,
-  hasError: boolean,
+  toggleCommunityMembership: ({
+    communityId: string,
+  }) => ToggleCommunityMembershipType,
   currentUser: Object,
   match: {
     params: {
@@ -86,17 +89,19 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   toggleMembership = (communityId: string) => {
-    const { toggleCommunityMembership, dispatch } = this.props;
+    const { dispatch } = this.props;
 
     this.setState({
       isLeavingCommunity: true,
     });
 
-    toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
+    this.props
+      .toggleCommunityMembership({ communityId })
+      .then(({ data }: ToggleCommunityMembershipType) => {
+        const { toggleCommunityMembership } = data;
+
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
-
         track('community', isMember ? 'joined' : 'unjoined', null);
 
         const str = isMember
@@ -106,7 +111,7 @@ class CommunityView extends React.Component<Props, State> {
         const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
 
-        this.setState({
+        return this.setState({
           isLeavingCommunity: false,
         });
       })
@@ -176,7 +181,7 @@ class CommunityView extends React.Component<Props, State> {
           <Titlebar
             title={community.name}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
           />
 
@@ -320,13 +325,13 @@ class CommunityView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={`Community not found`}
+            title={'Community not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <ViewError
-            heading={`We weren’t able to load this community.`}
+            heading={'We weren’t able to load this community.'}
             refresh
           />
         </AppViewWrapper>
@@ -336,13 +341,13 @@ class CommunityView extends React.Component<Props, State> {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`Community not found`}
+          title={'Community not found'}
           provideBack={true}
-          backRoute={`/`}
+          backRoute={'/'}
           noComposer
         />
         <ViewError
-          heading={`We weren’t able to find this community.`}
+          heading={'We weren’t able to find this community.'}
           subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
         >
           <Upsell404Community />

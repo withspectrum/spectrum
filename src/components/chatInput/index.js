@@ -17,8 +17,8 @@ import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
-import sendMessageMutation from 'shared/graphql/mutations/message/sendMessage';
-import sendDirectMessageMutation from 'shared/graphql/mutations/message/sendDirectMessage';
+import sendMessage from 'shared/graphql/mutations/message/sendMessage';
+import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -159,8 +159,8 @@ class ChatInput extends React.Component<Props, State> {
           body: JSON.stringify(toJSON(state)),
         },
       })
-        .then(({ data: { addMessage } }) => {
-          track(`${threadType} message`, 'text message created', null);
+        .then(() => {
+          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -174,9 +174,9 @@ class ChatInput extends React.Component<Props, State> {
           body: JSON.stringify(toJSON(state)),
         },
       })
-        .then(({ data: { addMessage } }) => {
+        .then(() => {
           dispatch(clearChatInput());
-          track(`${threadType} message`, 'text message created', null);
+          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -207,6 +207,7 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   sendMediaMessage = e => {
+    // eslint-disable-next-line
     let reader = new FileReader();
     const file = e.target.files[0];
     const {
@@ -269,9 +270,13 @@ class ChatInput extends React.Component<Props, State> {
           },
           file,
         })
-          .then(({ addMessage }) => {
+          .then(() => {
             dispatch(clearChatInput());
-            track(`${threadType} message`, 'media message created', null);
+            return track(
+              `${threadType} message`,
+              'media message created',
+              null
+            );
           })
           .catch(err => {
             dispatch(addToastWithTimeout('error', err.message));
@@ -286,8 +291,12 @@ class ChatInput extends React.Component<Props, State> {
           },
           file,
         })
-          .then(({ addMessage }) => {
-            track(`${threadType} message`, 'media message created', null);
+          .then(() => {
+            return track(
+              `${threadType} message`,
+              'media message created',
+              null
+            );
           })
           .catch(err => {
             dispatch(addToastWithTimeout('error', err.message));
@@ -389,8 +398,8 @@ const map = state => ({
   chatInputRedux: state.composer.chatInput,
 });
 export default compose(
-  sendMessageMutation,
-  sendDirectMessageMutation,
+  sendMessage,
+  sendDirectMessage,
   // $FlowIssue
   connect(map),
   withState(

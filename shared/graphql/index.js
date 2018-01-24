@@ -31,6 +31,7 @@ const httpLink = createUploadLink({
 // Websocket link for subscriptions
 const wsLink = new WebSocketLink({
   uri: `${
+    // eslint-disable-next-line
     IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
   }/websocket`,
   options: {
@@ -50,6 +51,7 @@ const link = split(
 
 const client = new ApolloClient({
   link,
+  // eslint-disable-next-line
   cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
   ssrForceFetchDelay: 100,
   queryDeduplication: true,

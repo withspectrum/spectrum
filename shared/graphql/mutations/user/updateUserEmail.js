@@ -22,7 +22,7 @@ export const updateUserEmailMutation = gql`
 `;
 
 const updateUserEmailOptions = {
-  props: ({ email, mutate }) => ({
+  props: ({ mutate }) => ({
     updateUserEmail: (email: string) =>
       mutate({
         variables: {

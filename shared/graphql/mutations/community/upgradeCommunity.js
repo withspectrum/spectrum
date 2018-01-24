@@ -12,8 +12,12 @@ type RP = {
 };
 
 export type UpgradeCommunityType = {
-  ...$Exact<CommunityInfoType>,
-  recurringPayments: Array<?RP>,
+  data: {
+    upgradeCommunity: {
+      ...$Exact<CommunityInfoType>,
+      recurringPayments: Array<?RP>,
+    },
+  },
 };
 
 type UpgradeInput = {
@@ -38,7 +42,7 @@ export const upgradeCommunityMutation = gql`
 `;
 
 const upgradeCommunityOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     upgradeCommunity: (input: UpgradeInput) =>
       mutate({
         variables: {

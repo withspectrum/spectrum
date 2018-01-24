@@ -6,7 +6,6 @@ import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
 import downgradeFromProMutation from 'shared/graphql/mutations/user/downgradeFromPro';
-import type { DowngradeFromProType } from 'shared/graphql/mutations/user/downgradeFromPro';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
@@ -64,27 +63,22 @@ class UpgradeModal extends React.Component<Props, State> {
 
     this.props
       .downgradeFromPro()
-      .then(
-        ({
-          data: { downgradeFromPro },
-        }: {
-          data: { downgradeFromPro: DowngradeFromProType },
-        }) => {
-          track('pro', 'downgraded', null);
+      .then(() => {
+        track('pro', 'downgraded', null);
 
-          this.props.dispatch(
-            addToastWithTimeout(
-              'neutral',
-              'Your subscription has been cancelled - sorry to see you go!'
-            )
-          );
-          this.setState({
-            isLoading: false,
-            upgradeError: '',
-          });
-          this.closeModal();
-        }
-      )
+        this.props.dispatch(
+          addToastWithTimeout(
+            'neutral',
+            'Your subscription has been cancelled - sorry to see you go!'
+          )
+        );
+        this.setState({
+          isLoading: false,
+          upgradeError: '',
+        });
+        this.closeModal();
+        return;
+      })
       .catch(err => {
         this.setState({
           isLoading: false,
@@ -134,6 +128,7 @@ class UpgradeModal extends React.Component<Props, State> {
                 </OutlineButton>
 
                 <Button
+                  // eslint-disable-next-line
                   onClick={() => (window.location.href = '/spectrum/support')}
                 >
                   Get Support

@@ -5,7 +5,11 @@ import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
 export type EditChannelType = {
-  ...$Exact<ChannelInfoType>,
+  data: {
+    editChannel: {
+      ...$Exact<ChannelInfoType>,
+    },
+  },
 };
 
 type EditChannelInput = {
@@ -26,7 +30,7 @@ export const editChannelMutation = gql`
 `;
 
 const editChannelOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     editChannel: (input: EditChannelInput) =>
       mutate({
         variables: {

@@ -6,7 +6,11 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import { getThreadByIdQuery } from '../../queries/thread/getThread';
 
 export type PinCommunityThreadType = {
-  ...$Exact<CommunityInfoType>,
+  data: {
+    pinThread: {
+      ...$Exact<CommunityInfoType>,
+    },
+  },
 };
 
 export const pinThreadMutation = gql`

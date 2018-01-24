@@ -8,18 +8,21 @@ import type { UserInfoType } from '../../fragments/user/userInfo';
 import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
 import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaData';
 import getChannelMemberConnectionQuery from '../../queries/channel/getChannelMemberConnection';
-import type { ChannelMemberConnectionType } from '../../fragments/channel/channelMemberConnection';
 
 type User = {
   ...$Exact<UserInfoType>,
 };
 
-export type ToggleChannelPendingUsersType = {
-  ...$Exact<ChannelInfoType>,
-  pendingUsers: Array<?User>,
-  blockedUsers: Array<?User>,
-  channelMetaData: {
-    ...$Exact<ChannelMetaDataType>,
+export type ToggleChannelPendingUserType = {
+  data: {
+    togglePendingUser: {
+      ...$Exact<ChannelInfoType>,
+      pendingUsers: Array<?User>,
+      blockedUsers: Array<?User>,
+      channelMetaData: {
+        ...$Exact<ChannelMetaDataType>,
+      },
+    },
   },
 };
 
@@ -48,7 +51,7 @@ export const toggleChannelPendingUserMutation = gql`
 `;
 
 const toggleChannelPendingUserOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     togglePendingUser: (input: TogglePendingInput) =>
       mutate({
         variables: {

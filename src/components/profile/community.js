@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import replace from 'string-replace-to-array';
 import Card from '../card';
 import compose from 'recompose/compose';
@@ -7,6 +7,8 @@ import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
 import { CLIENT_URL } from '../../api/constants';
@@ -41,22 +43,7 @@ type Props = {
   joinedCommunity: Function,
   dispatch: Function,
   data: {
-    community: {
-      id: string,
-      coverPhoto: string,
-      name: string,
-      slug: string,
-      profilePhoto: string,
-      description: string,
-      website: ?string,
-      communityPermissions: {
-        isOwner: boolean,
-        isMember: boolean,
-      },
-      metaData: {
-        members: number,
-      },
-    },
+    community: GetCommunityType,
     loading: boolean,
     error: ?string,
   },
@@ -76,10 +63,12 @@ class CommunityWithData extends React.Component<Props, State> {
 
     this.props
       .toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
+      .then(({ data }: ToggleCommunityMembershipType) => {
         this.setState({
           isLoading: false,
         });
+
+        const { toggleCommunityMembership } = data;
 
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
@@ -97,6 +86,7 @@ class CommunityWithData extends React.Component<Props, State> {
 
         const type = isMember ? 'success' : 'neutral';
         this.props.dispatch(addToastWithTimeout(type, str));
+        return;
       })
       .catch(err => {
         this.setState({
@@ -353,7 +343,7 @@ class CommunityWithData extends React.Component<Props, State> {
                     }
                     tipText={
                       community.communityPermissions.isMember
-                        ? `Leave community`
+                        ? 'Leave community'
                         : 'Join community'
                     }
                     tipLocation="top-left"

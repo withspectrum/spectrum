@@ -10,7 +10,7 @@ type Node = {
   ...$Exact<UserInfoType>,
 };
 
-export type GetChannelBlockedUsersType = {
+export type GetChannelPendingUsersType = {
   ...$Exact<ChannelInfoType>,
   pendingUsers: Array<?Node>,
 };

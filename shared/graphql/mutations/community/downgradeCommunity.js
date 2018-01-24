@@ -12,8 +12,12 @@ type RP = {
 };
 
 export type DowngradeCommunityType = {
-  ...$Exact<CommunityInfoType>,
-  recurringPayments: Array<?RP>,
+  data: {
+    downgradeCommunity: {
+      ...$Exact<CommunityInfoType>,
+      recurringPayments: Array<?RP>,
+    },
+  },
 };
 
 type DowngradeInput = {
@@ -36,7 +40,7 @@ export const downgradeCommunityMutation = gql`
 `;
 
 const downgradeCommunityOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     downgradeCommunity: (input: DowngradeInput) =>
       mutate({
         variables: {

@@ -40,7 +40,7 @@ export const editThreadMutation = gql`
 `;
 
 const editThreadOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     editThread: (input: EditThreadInput) =>
       mutate({
         variables: {

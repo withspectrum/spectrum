@@ -5,13 +5,17 @@ import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 
 export type PublishThreadType = {
-  ...$Exact<ThreadInfoType>,
-  channel: {
-    id: string,
-    slug: string,
-    community: {
-      id: string,
-      slug: string,
+  data: {
+    publishThread: {
+      ...$Exact<ThreadInfoType>,
+      channel: {
+        id: string,
+        slug: string,
+        community: {
+          id: string,
+          slug: string,
+        },
+      },
     },
   },
 };
@@ -58,7 +62,7 @@ export const publishThreadMutation = gql`
 `;
 
 const publishThreadOptions = {
-  props: ({ thread, mutate }) => ({
+  props: ({ mutate }) => ({
     publishThread: (thread: PublishThreadInput) =>
       mutate({
         variables: {

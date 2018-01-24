@@ -4,7 +4,11 @@ import { graphql } from 'react-apollo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
 import { getDirectMessageThreadQuery } from '../../queries/directMessageThread/getDirectMessageThread';
 
-export type DeleteMessageType = boolean;
+export type DeleteMessageType = {
+  data: {
+    deleteMessage: boolean,
+  },
+};
 
 export const deleteMessageMutation = gql`
   mutation deleteMessage($id: ID!) {

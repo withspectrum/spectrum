@@ -5,7 +5,11 @@ import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 
 export type MoveThreadType = {
-  ...$Exact<ThreadInfoType>,
+  data: {
+    moveThread: {
+      ...$Exact<ThreadInfoType>,
+    },
+  },
 };
 
 export const moveThreadMutation = gql`

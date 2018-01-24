@@ -59,6 +59,7 @@ export const getThreadMessageConnectionOptions = {
           new Date(props.lastSeen).getTime() <
           new Date(props.lastActive).getTime()
         ) {
+          // eslint-disable-next-line
           variables.after = window.btoa(new Date(props.lastSeen).getTime());
           // Otherwise load the last 50 messages
         } else {
@@ -193,6 +194,7 @@ export const getThreadMessageConnectionOptions = {
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
                   {
                     node: newMessage,
+                    // eslint-disable-next-line
                     cursor: window.btoa(newMessage.id),
                     __typename: 'ThreadMessageEdge',
                   },

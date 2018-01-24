@@ -9,9 +9,13 @@ import communityChannelConnectionFragment from '../../fragments/community/commun
 import type { CommunityChannelConnectionType } from '../../fragments/community/communityChannelConnection';
 
 export type ToggleCommunityMembershipType = {
-  ...$Exact<CommunityInfoType>,
-  ...$Exact<CommunityMetaDataType>,
-  ...$Exact<CommunityChannelConnectionType>,
+  data: {
+    toggleCommunityMembership: {
+      ...$Exact<CommunityInfoType>,
+      ...$Exact<CommunityMetaDataType>,
+      ...$Exact<CommunityChannelConnectionType>,
+    },
+  },
 };
 
 export const toggleCommunityMembershipQuery = gql`
@@ -28,7 +32,7 @@ export const toggleCommunityMembershipQuery = gql`
 `;
 
 const toggleCommunityMemershipOptions = {
-  props: ({ communityId, mutate }) => ({
+  props: ({ mutate }) => ({
     toggleCommunityMembership: ({ communityId }: { communityId: string }) =>
       mutate({
         variables: {

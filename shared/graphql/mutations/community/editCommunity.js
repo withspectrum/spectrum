@@ -5,7 +5,11 @@ import communityInfoFragment from 'shared/graphql/fragments/community/communityI
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 
 export type EditCommunityType = {
-  ...$Exact<CommunityInfoType>,
+  data: {
+    editCommunity: {
+      ...$Exact<CommunityInfoType>,
+    },
+  },
 };
 
 type EditCommunityInput = {
@@ -28,7 +32,7 @@ export const editCommunityMutation = gql`
 `;
 
 const editCommunityOptions = {
-  props: ({ input, mutate }) => ({
+  props: ({ mutate }) => ({
     editCommunity: (input: EditCommunityInput) =>
       mutate({
         variables: {
