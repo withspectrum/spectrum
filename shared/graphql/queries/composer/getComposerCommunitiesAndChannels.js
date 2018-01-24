@@ -1,20 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import userInfoFragment from 'shared/graphql/fragments/user/userInfo';
+import userInfoFragment from '../../fragments/user/userInfo';
 
-export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`
+export const getComposerCommunitiesAndChannelsQuery = gql`
   query getComposerCommunitiesAndChannels {
-    # Not using the communityConnection or channelConnection fragments here
-    # because for this particular scenario I'm only trying to return much
-    # deeper nested data in order to handle channel + community selection in
-    # the composer
-    #
-    # TODO: Eventually we should run one query at app initialization for all of
-    # a user's communities + channels, save that in the thread somewhere, and
-    # use it to hydrate the composer here, as well as use the data to handle
-    # join/leave, follow/unfollow buttons, etc. as the user browsers around
-    # to different threads, channels, and users.
     user: currentUser {
       ...userInfo
       communityConnection {
@@ -23,11 +13,13 @@ export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`
             id
             name
             slug
+            profilePhoto
             communityPermissions {
               isMember
               isBlocked
               isOwner
               isModerator
+              reputation
             }
           }
         }
@@ -59,7 +51,11 @@ export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`
   ${userInfoFragment}
 `;
 
-export const getComposerCommunitiesAndChannels = graphql(
-  GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY,
-  { options: { fetchPolicy: 'cache-first' } }
+const getComposerCommunitiesAndChannelsOptions = {
+  options: { fetchPolicy: 'cache-first' },
+};
+
+export default graphql(
+  getComposerCommunitiesAndChannelsQuery,
+  getComposerCommunitiesAndChannelsOptions
 );

@@ -13,7 +13,7 @@ import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
 import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
-import { getComposerCommunitiesAndChannels } from './queries';
+import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { TextButton, Button } from '../buttons';

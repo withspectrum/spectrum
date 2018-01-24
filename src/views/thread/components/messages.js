@@ -14,7 +14,7 @@ import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
 import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import { toggleReactionMutation } from '../mutations';
+import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 
 type State = {
   subscription: ?Function,

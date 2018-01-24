@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
-import { getEverythingThreads } from './queries';
+import getEverythingThreads from 'shared/graphql/queries/user/getCurrentUserEverythingFeed';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';

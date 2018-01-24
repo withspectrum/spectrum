@@ -1,9 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import userEverythingConnectionFragment from 'shared/graphql/fragments/user/userEverythingConnection';
-import { subscribeToUpdatedThreads } from 'shared/graphql/subscriptions';
-import { parseRealtimeThreads } from 'shared/graphql/subscriptions/utils';
+import userEverythingConnectionFragment from '../../fragments/user/userEverythingConnection';
+import { subscribeToUpdatedThreads } from '../../subscriptions';
+import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
@@ -15,7 +15,17 @@ const LoadMoreThreads = gql`
   ${userEverythingConnectionFragment}
 `;
 
-const threadsQueryOptions = {
+const getCurrentUserEverythingQuery = gql`
+  query getEverythingThreads($after: String) {
+    user: currentUser {
+      id
+      ...userEverythingConnection
+    }
+  }
+  ${userEverythingConnectionFragment}
+`;
+
+const getCurrentUserEverythingOptions = {
   props: ({
     ownProps,
     data: {
@@ -98,15 +108,7 @@ const threadsQueryOptions = {
   }),
 };
 
-export const getEverythingThreads = graphql(
-  gql`
-    query getEverythingThreads($after: String) {
-      user: currentUser {
-        id
-        ...userEverythingConnection
-      }
-    }
-    ${userEverythingConnectionFragment}
-  `,
-  threadsQueryOptions
+export default graphql(
+  getCurrentUserEverythingQuery,
+  getCurrentUserEverythingOptions
 );
