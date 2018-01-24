@@ -5,7 +5,7 @@ import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
-import { markSingleNotificationSeenMutation } from '../../../api/notification';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import Icon from '../../../components/icons';
 import { ThreadProfile } from '../../../components/profile';
 import {

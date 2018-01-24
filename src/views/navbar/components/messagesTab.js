@@ -5,10 +5,8 @@ import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
-import {
-  getUnreadDMQuery,
-  markDirectMessageNotificationsSeenMutation,
-} from '../../../api/notification';
+import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
+import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { Tab, Label } from '../style';
 
 type Props = {

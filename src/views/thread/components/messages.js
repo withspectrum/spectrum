@@ -64,6 +64,8 @@ class MessagesWithData extends React.Component<Props, State> {
   componentDidUpdate(prev = {}) {
     const curr = this.props;
 
+    if (!curr.data.thread) return;
+
     const isDifferentThread =
       prev.data &&
       prev.data.thread &&

@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
-import { markDirectMessageNotificationsSeenMutation } from '../../api/notification';
+import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import Icon from '../../components/icons';
 import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';

@@ -14,7 +14,7 @@ import {
   ContentWash,
 } from '../style';
 import { ChannelProfile } from '../../../components/profile';
-import { markSingleNotificationSeenMutation } from '../../../api/notification';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 
 const NewChannelComponent = ({ data }) => {
   return <ChannelProfile profileSize="miniWithAction" data={data} />;
@@ -24,47 +24,45 @@ const NewChannel = compose(getChannelById, displayLoadingCard)(
   NewChannelComponent
 );
 
-export const NewChannelNotification = ({
-  notification,
-  currentUser,
-}: {
-  notification: Object,
-  currentUser: Object,
-}) => {
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
-  const newChannelCount =
-    notification.entities.length > 1
-      ? `${notification.entities.length} new channels were`
-      : 'A new channel was';
-
-  return (
-    <SegmentedNotificationCard>
-      <CreatedContext>
-        <Icon glyph="community" />
-        <TextContent pointer={true}>
-          {newChannelCount} created in {context.asString} {date}
-        </TextContent>
-      </CreatedContext>
-      <ContentWash>
-        <AttachmentsWash>
-          {notification.entities.map(channel => {
-            return (
-              <NewChannel key={channel.payload.id} id={channel.payload.id} />
-            );
-          })}
-        </AttachmentsWash>
-      </ContentWash>
-    </SegmentedNotificationCard>
-  );
-};
-
 type Props = {
   notification: Object,
-  currentUsre: Object,
-  markSingleNotificationSeen: Function,
-  markSingleNotificationAsSeenInState: Function,
+  currentUser: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
 };
+
+export class NewChannelNotification extends React.Component<Props> {
+  render() {
+    const { notification, currentUser } = this.props;
+
+    const date = parseNotificationDate(notification.modifiedAt);
+    const context = parseContext(notification.context);
+    const newChannelCount =
+      notification.entities.length > 1
+        ? `${notification.entities.length} new channels were`
+        : 'A new channel was';
+
+    return (
+      <SegmentedNotificationCard>
+        <CreatedContext>
+          <Icon glyph="community" />
+          <TextContent pointer={true}>
+            {newChannelCount} created in {context.asString} {date}
+          </TextContent>
+        </CreatedContext>
+        <ContentWash>
+          <AttachmentsWash>
+            {notification.entities.map(channel => {
+              return (
+                <NewChannel key={channel.payload.id} id={channel.payload.id} />
+              );
+            })}
+          </AttachmentsWash>
+        </ContentWash>
+      </SegmentedNotificationCard>
+    );
+  }
+}
 
 class MiniNewChannelNotificationWithMutation extends React.Component<Props> {
   markAsSeen = () => {
@@ -74,8 +72,9 @@ class MiniNewChannelNotificationWithMutation extends React.Component<Props> {
       markSingleNotificationAsSeenInState,
     } = this.props;
     if (notification.isSeen) return;
-    markSingleNotificationAsSeenInState(notification.id);
-    markSingleNotificationSeen(notification.id);
+    markSingleNotificationAsSeenInState &&
+      markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen && markSingleNotificationSeen(notification.id);
   };
 
   render() {

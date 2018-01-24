@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import {
   parseActors,
   parseEvent,
@@ -19,42 +20,42 @@ import {
   CardContent,
 } from '../../../components/threadFeedCard/style';
 import compose from 'recompose/compose';
-import { markSingleNotificationSeenMutation } from '../../../api/notification';
-
-export const NewUserInCommunityNotification = ({
-  notification,
-  currentUser,
-}) => {
-  const actors = parseActors(notification.actors, currentUser, true);
-  const event = parseEvent(notification.event);
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
-
-  return (
-    <NotificationCard>
-      <CardLink to={`/${notification.context.payload.slug}`} />
-      <CardContent>
-        <JoinContext>
-          <Icon glyph="member-add" />
-          <ActorsRow actors={actors.asObjects} />
-        </JoinContext>
-      </CardContent>
-      <Content>
-        <TextContent pointer={true}>
-          {' '}
-          {actors.asString} {event} {context.asString} {date}{' '}
-        </TextContent>
-      </Content>
-    </NotificationCard>
-  );
-};
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 
 type Props = {
   notification: Object,
-  currentUsre: Object,
-  markSingleNotificationSeen: Function,
-  markSingleNotificationAsSeenInState: Function,
+  currentUser: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
 };
+export class NewUserInCommunityNotification extends React.Component<Props> {
+  render() {
+    const { notification, currentUser } = this.props;
+
+    const actors = parseActors(notification.actors, currentUser, true);
+    const event = parseEvent(notification.event);
+    const date = parseNotificationDate(notification.modifiedAt);
+    const context = parseContext(notification.context);
+
+    return (
+      <NotificationCard>
+        <CardLink to={`/${notification.context.payload.slug}`} />
+        <CardContent>
+          <JoinContext>
+            <Icon glyph="member-add" />
+            <ActorsRow actors={actors.asObjects} />
+          </JoinContext>
+        </CardContent>
+        <Content>
+          <TextContent pointer={true}>
+            {' '}
+            {actors.asString} {event} {context.asString} {date}{' '}
+          </TextContent>
+        </Content>
+      </NotificationCard>
+    );
+  }
+}
 
 class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
   Props
@@ -66,8 +67,9 @@ class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
       markSingleNotificationAsSeenInState,
     } = this.props;
     if (notification.isSeen) return;
-    markSingleNotificationAsSeenInState(notification.id);
-    markSingleNotificationSeen(notification.id);
+    markSingleNotificationAsSeenInState &&
+      markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen && markSingleNotificationSeen(notification.id);
   };
 
   render() {

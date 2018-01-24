@@ -35,10 +35,8 @@ import {
 import WebPushManager from '../../helpers/web-push-manager';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
-import {
-  getNotifications,
-  markNotificationsSeenMutation,
-} from '../../api/notification';
+import getNotifications from 'shared/graphql/queries/notification/getNotifications';
+import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
 import ViewError from '../../components/viewError';
@@ -46,7 +44,7 @@ import BrowserNotificationRequest from './components/browserNotificationRequest'
 import generateMetaInfo from 'shared/generate-meta-info';
 
 type Props = {
-  markAllNotificationsSeen: Function,
+  markAllNotificationsSeen?: Function,
   subscribeToWebPush: Function,
   dispatch: Function,
   currentUser: Object,
@@ -77,14 +75,15 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   markAllNotificationsSeen = () => {
-    this.props
-      .markAllNotificationsSeen()
-      .then(({ data: { markAllNotificationsSeen } }) => {
-        // notifs were marked as seen
-      })
-      .catch(err => {
-        // error
-      });
+    this.props.markAllNotificationsSeen &&
+      this.props
+        .markAllNotificationsSeen()
+        .then(({ data: { markAllNotificationsSeen } }) => {
+          // notifs were marked as seen
+        })
+        .catch(err => {
+          // error
+        });
   };
 
   componentDidMount() {
