@@ -1,10 +1,11 @@
+// @flow
 // Server-side renderer for our React code
 import fs from 'fs';
 const debug = require('debug')('hyperion:renderer');
 import React from 'react';
-import ReactDOM from 'react-dom/server';
+import { renderToNodeStream } from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
-import { ApolloProvider, renderToStringWithData } from 'react-apollo';
+import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import {
@@ -20,10 +21,11 @@ import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import Raven from 'shared/raven';
 import introspectionQueryResultData from 'shared/graphql/schema.json';
+// $FlowIssue
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import { getHTML, createScriptTag } from './get-html';
+import { getFooter, getHeader, createScriptTag } from './get-html';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
@@ -37,7 +39,7 @@ const FORCE_DEV = process.env.FORCE_DEV;
 
 if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 
-const renderer = (req, res) => {
+const renderer = (req: express$Request, res: express$Response) => {
   debug(`server-side render ${req.url}`);
   debug(`querying API at https://${req.hostname}/api`);
   // HTTP Link for queries and mutations including file uploads
@@ -68,7 +70,7 @@ const renderer = (req, res) => {
   // Define the initial redux state
   const initialReduxState = {
     users: {
-      currentUser: req.user,
+      currentUser: req.user ? req.user : null,
     },
   };
   // Create the Redux store
@@ -80,8 +82,9 @@ const renderer = (req, res) => {
   };
   let routerContext = {};
   let helmetContext = {};
-  // The client-side app will instead use <BrowserRouter>
-  const frontend = (
+  // Initialise the styled-components stylesheet and wrap the app with it
+  const sheet = new ServerStyleSheet();
+  const frontend = sheet.collectStyles(
     <Loadable.Capture report={report}>
       <ApolloProvider client={client}>
         <HelmetProvider context={helmetContext}>
@@ -94,28 +97,36 @@ const renderer = (req, res) => {
       </ApolloProvider>
     </Loadable.Capture>
   );
-  // Initialise the styled-components stylesheet and wrap the app with it
-  const sheet = new ServerStyleSheet();
-  debug(`render frontend`);
-  renderToStringWithData(sheet.collectStyles(frontend))
-    .then(content => {
+
+  debug('get data from tree');
+  getDataFromTree(frontend)
+    .then(() => {
       if (routerContext.url) {
         debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
         res.redirect(301, routerContext.url);
         return;
       }
-      // Get the resulting data
-      const state = store.getState();
-      const data = client.extract();
-      const { helmet } = helmetContext;
+      // maintainance mode
       if (IN_MAINTENANCE_MODE) {
         debug('maintainance mode enabled, sending 503');
         res.status(503);
-        res.set('Retry-After', 3600);
+        res.set('Retry-After', '3600');
       } else {
         res.status(200);
       }
+      const state = store.getState();
+      const data = client.extract();
+      const { helmet } = helmetContext;
+      debug('write header');
+      res.write(
+        getHeader({
+          metaTags:
+            helmet.title.toString() +
+            helmet.meta.toString() +
+            helmet.link.toString(),
+        })
+      );
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
         .map(bundle =>
@@ -124,29 +135,34 @@ const renderer = (req, res) => {
         // Make sure only unique bundles are included
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('compile and send html');
-      const scriptTags = [...bundles].join('\n');
-      debug(`script tags: ${scriptTags}`);
-      // Compile the HTML and send it down
-      res.send(
-        getHTML({
-          content,
-          state,
-          data,
-          styleTags: sheet.getStyleTags(),
-          metaTags:
-            helmet.title.toString() +
-            helmet.meta.toString() +
-            helmet.link.toString(),
-          scriptTags,
-        })
+      const bundleScriptTags = [...bundles].join('\n');
+
+      const stream = sheet.interleaveWithNodeStream(
+        renderToNodeStream(frontend)
       );
-      res.end();
+
+      stream.pipe(res, { end: false });
+
+      stream.on('end', () =>
+        res.end(
+          getFooter({
+            state,
+            data,
+            bundleScriptTags,
+          })
+        )
+      );
     })
     .catch(err => {
       console.error(err);
-      Raven.captureException(err);
+      const sentryId =
+        process.env.NODE_ENV === 'production'
+          ? Raven.captureException(err)
+          : 'Only output in production.';
       res.status(500);
-      res.send('Oops, something went wrong. Please try again!');
+      res.send(
+        `Oops, something went wrong. Please try again! (Error ID: ${sentryId})`
+      );
     });
 };
 

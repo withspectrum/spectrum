@@ -7,6 +7,7 @@ import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import { consolidateStreamedStyles } from 'styled-components';
 import { HelmetProvider } from 'react-helmet-async';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
@@ -56,8 +57,14 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
+const renderMethod = !!window.__SERVER_STATE__
+  ? ReactDOM.hydrate
+  : ReactDOM.render;
+
 function render() {
-  return ReactDOM.render(
+  consolidateStreamedStyles();
+
+  return renderMethod(
     <Provider store={store}>
       <HelmetProvider>
         <ApolloProvider client={client}>
