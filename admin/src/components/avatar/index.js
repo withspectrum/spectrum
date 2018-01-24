@@ -45,7 +45,7 @@ const StyledAvatarContainer = styled.object`
       props.onlineSize === 'large'
         ? '10px'
         : props.onlineSize === 'small' ? '4px' : '6px'};
-    background: ${props => props.theme.pro.alt};
+    background: ${props => props.theme.special.default};
     border-radius: ${props =>
       props.onlineSize === 'large'
         ? '10px'
@@ -57,10 +57,11 @@ const StyledAvatarContainer = styled.object`
   }
 `;
 
-const AvatarPure = (props: Object): React$Element<any> =>
+const AvatarPure = (props: Object): React$Element<any> => (
   <StyledAvatarContainer {...props}>
     <StyledAvatar {...props} />
-  </StyledAvatarContainer>;
+  </StyledAvatarContainer>
+);
 
 // TODO: handle fallback/loading images more gracefully, like so (make StyledAvatar an object tag)
 // <StyledAvatar {...props}>

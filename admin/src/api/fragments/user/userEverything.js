@@ -1,11 +1,9 @@
-import { gql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { threadInfoFragment } from '../thread/threadInfo';
-// import { channelInfoFragment } from '../channel/channelInfo';
-// import { communityInfoFragment } from '../community/communityInfo';
 
 export const userEverythingFragment = gql`
   fragment userEverything on User {
-    everything(first: 10, after: $after){
+    everything(first: 10, after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage

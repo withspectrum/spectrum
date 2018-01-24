@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import pure from 'recompose/pure';
 import { getCommunityBySlug } from '../../../api/community';
 import { displayLoadingState } from '../../../components/loading';

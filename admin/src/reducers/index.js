@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
-import { client } from '../api';
 import modals from './modals';
 import toasts from './toasts';
 
-const apollo = client.reducer();
+// Allow dependency injection of extra reducers, we need this for SSR
+const getReducers = extraReducers => {
+  return combineReducers({
+    modals,
+    toasts,
+    ...extraReducers,
+  });
+};
 
-export default combineReducers({
-  modals,
-  toasts,
-  apollo,
-});
+export default getReducers;

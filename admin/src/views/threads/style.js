@@ -16,7 +16,7 @@ export const SectionHeader = styled.h1`
 
 export const SectionCard = styled.div`
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.border.default};
+  border: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   margin-bottom: 16px;
   padding: 16px;
@@ -34,7 +34,7 @@ export const SectionTitle = styled.h3`
 
 export const StyledThreadListItem = styled.div`
   display: flex;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   padding: 16px 0;
   flex-direction: column;
 
@@ -80,8 +80,7 @@ export const FilterOption = styled.li`
   background: ${props =>
     props.active ? props.theme.brand.alt : props.theme.bg.wash};
   border: 1px solid
-    ${props =>
-      props.active ? props.theme.brand.alt : props.theme.border.default};
+    ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   display: flex;
   padding: 4px 16px;
   cursor: pointer;

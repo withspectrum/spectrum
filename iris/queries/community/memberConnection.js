@@ -7,7 +7,7 @@ const { getMembersInCommunity } = require('../../models/usersCommunities');
 
 export default (
   { id }: DBCommunity,
-  { first = 10, after }: PaginationOptions,
+  { first = 10, after, role }: { ...$Exact<PaginationOptions>, role: string },
   { loaders }: GraphQLContext
 ) => {
   const cursor = decode(after);
@@ -17,7 +17,7 @@ export default (
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
 
   // $FlowFixMe
-  return getMembersInCommunity(id, { first, after: lastUserIndex })
+  return getMembersInCommunity(id, { first, after: lastUserIndex }, role)
     .then(users => loaders.user.loadMany(users))
     .then(result => ({
       pageInfo: {

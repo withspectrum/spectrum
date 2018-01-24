@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import { Section, Nav, LogoLink, Logo, IconLink, Label } from './style';
