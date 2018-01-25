@@ -54,7 +54,6 @@ export const getCurrentUserDMThreadConnectionOptions = {
             ].cursor,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          console.log(fetchMoreResult);
           if (!fetchMoreResult.user) {
             return prev;
           }

@@ -19,8 +19,9 @@ export const sendDirectMessageMutation = gql`
 `;
 const sendDirectMessageOptions = {
   props: ({ ownProps, mutate }) => ({
-    sendDirectMessage: message =>
-      mutate({
+    sendDirectMessage: message => {
+      const fakeId = Math.round(Math.random() * -1000000);
+      return mutate({
         variables: {
           message: {
             ...message,
@@ -32,9 +33,12 @@ const sendDirectMessageOptions = {
         optimisticResponse: {
           __typename: 'Mutation',
           addMessage: {
-            __typename: 'Message',
+            id: fakeId,
+            timestamp: JSON.parse(JSON.stringify(new Date())),
+            messageType: message.messageType,
             sender: {
               ...ownProps.currentUser,
+              totalReputation: 0,
               contextPermissions: {
                 communityId: null,
                 reputation: 0,
@@ -44,27 +48,19 @@ const sendDirectMessageOptions = {
               },
               __typename: 'User',
             },
-            timestamp: +new Date(),
             content: {
               ...message.content,
               __typename: 'MessageContent',
             },
-            id: Math.round(Math.random() * -1000000),
             reactions: {
               count: 0,
               hasReacted: false,
               __typename: 'ReactionData',
             },
-            messageType: message.messageType,
+            __typename: 'Message',
           },
         },
         update: (store, { data: { addMessage } }) => {
-          // ignore the addMessage from the server, apollo will automatically
-          // override the optimistic object
-          if (!addMessage || typeof addMessage.id === 'string') {
-            return;
-          }
-
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: getDMThreadMessageConnectionQuery,
@@ -74,10 +70,15 @@ const sendDirectMessageOptions = {
           });
 
           data.directMessageThread.messageConnection.edges.push({
-            cursor: addMessage.id,
-            node: addMessage,
             __typename: 'DirectMessageEdge',
+            cursor: window.btoa(addMessage.id),
+            node: addMessage,
           });
+
+          console.log(
+            'output data',
+            data.directMessageThread.messageConnection.edges
+          );
 
           // Write our data back to the cache.
           store.writeQuery({
@@ -88,7 +89,8 @@ const sendDirectMessageOptions = {
             },
           });
         },
-      }),
+      });
+    },
   }),
 };
 

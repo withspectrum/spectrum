@@ -36,6 +36,7 @@ const sendMessageOptions = {
           },
         },
         optimisticResponse: {
+          __typename: 'Mutation',
           addMessage: {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
@@ -74,7 +75,6 @@ const sendMessageOptions = {
 
           data.thread.messageConnection.edges.push({
             __typename: 'ThreadMessageEdge',
-            // eslint-disable-next-line
             cursor: window.btoa(addMessage.id),
             node: addMessage,
           });

@@ -103,13 +103,12 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
+        return dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
         this.setState({
           isLoading: false,
         });
-        console.log('error toggling channel subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };

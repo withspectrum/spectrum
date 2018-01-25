@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';

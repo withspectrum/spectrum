@@ -121,6 +121,8 @@ class MessagesWithData extends React.Component<Props, State> {
       const uniqueMessages = unique(unsortedMessages);
       const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
+      console.log('sortedMessages', sortedMessages);
+
       return (
         <MessagesScrollWrapper>
           {hasNextPage && (

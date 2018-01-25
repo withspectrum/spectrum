@@ -201,7 +201,7 @@
     "postbuild:hyperion": "cp now.json build-hyperion/now.json",
     "build:client": "cross-env NODE_PATH=./ react-app-rewired build",
     "jest": "cross-env NODE_PATH=./ jest",
-    "test": "npm run jest -- --watch",
+    "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit",
     "db:migrate": "npm run rethinkdb:migrate -- up",
     "db:drop": "npm run rethinkdb:migrate -- down",
