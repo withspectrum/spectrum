@@ -39,7 +39,9 @@ type State = {
 };
 
 type Props = {
-  toggleCommunityMembership: Function,
+  toggleCommunityMembership: ({ communityId: string }) => Promise<
+    ToggleCommunityMembershipType
+  >,
   joinedCommunity: Function,
   dispatch: Function,
   data: {

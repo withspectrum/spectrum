@@ -52,7 +52,7 @@ class CommunityMembers extends React.Component<Props> {
           <ListContainer>
             {members &&
               members.map(user => {
-                if (!user) return;
+                if (!user) return null;
                 return (
                   <section key={user.id}>
                     <UserListItem

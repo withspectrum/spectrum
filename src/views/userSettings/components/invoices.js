@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getUserInvoices from 'shared/graphql/queries/user/getCurrentUserInvoices';

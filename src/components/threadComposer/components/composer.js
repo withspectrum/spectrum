@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
@@ -120,13 +121,15 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       community
     */
     const availableChannels = props.data.user.channelConnection.edges
-      .map(edge => edge.node)
+      .map(edge => edge && edge.node)
       .filter(
         channel =>
-          channel.channelPermissions.isMember ||
-          channel.channelPermissions.isOwner
+          channel &&
+          (channel.channelPermissions.isMember ||
+            channel.channelPermissions.isOwner)
       )
       .filter(channel => {
+        if (!channel) return null;
         if (!channel.isPrivate) return channel;
         if (!channel.community.isPro) return null;
         return channel;
@@ -146,6 +149,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       availableCommunities &&
       (activeCommunityFromPropsOrState
         ? availableCommunities.filter(community => {
+            if (!community) return null;
             return (
               community.slug.toLowerCase() ===
               activeCommunityFromPropsOrState.toLowerCase()
@@ -179,7 +183,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     if (!isMounted) return;
     // get the channels for the proper community
     const activeCommunityChannels = availableChannels.filter(
-      channel => channel.community.id === activeCommunity
+      channel => channel && channel.community.id === activeCommunity
     );
     let activeChannel = [];
 
@@ -187,19 +191,20 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
         channel =>
+          channel &&
           channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
       );
     } else {
       // Try and get the default channel for the active community
       activeChannel = activeCommunityChannels.filter(
-        channel => channel.isDefault
+        channel => channel && channel.isDefault
       );
       // If there is no default channel capitulate and take the first one
       if (activeChannel.length === 0) {
         activeChannel = activeCommunityChannels;
       } else if (activeChannel.length > 1) {
         const generalChannel = activeChannel.filter(
-          channel => channel.slug === 'general'
+          channel => channel && channel.slug === 'general'
         );
         if (generalChannel.length > 0) activeChannel = generalChannel;
       }
@@ -382,7 +387,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     );
     const newActiveChannel =
       activeCommunityChannels.find(channel => {
-        if (channel) return;
+        if (channel) return null;
         // If there is an active channel and we're switching back to the currently open community
         // select that channel
         if (

@@ -107,7 +107,7 @@ class DirectMessages extends React.Component<Props, State> {
                 b &&
                 b.threadLastActive &&
                 new Date(b.threadLastActive).getTime();
-              const val = parseInt(y) - parseInt(x);
+              const val = parseInt(y, 10) - parseInt(x, 10);
               return val;
             })
         : null;

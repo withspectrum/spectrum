@@ -123,7 +123,6 @@ class ThreadContainer extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
-    const { scrollElement } = this.state;
     if (
       prevProps.data &&
       prevProps.data.thread &&

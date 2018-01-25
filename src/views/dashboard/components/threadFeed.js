@@ -177,7 +177,6 @@ class ThreadFeed extends React.Component<Props, State> {
       selectedId,
       activeCommunity,
       queryString,
-      data,
     } = this.props;
     const { scrollElement } = this.state;
 

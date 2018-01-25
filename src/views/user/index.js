@@ -18,7 +18,6 @@ import Search from './components/search';
 import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
-import type { GetUserThreadConnectionType } from 'shared/graphql/queries/user/getUserThreadConnection';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
@@ -132,7 +131,7 @@ class UserView extends React.Component<Props, State> {
             title={user.name}
             subtitle={'Posts By'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <Column type="secondary">
@@ -222,13 +221,13 @@ class UserView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={`User not found`}
+            title={'User not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <ViewError
-            heading={`We ran into an error loading this user.`}
+            heading={'We ran into an error loading this user.'}
             refresh
           />
         </AppViewWrapper>
@@ -239,14 +238,14 @@ class UserView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={`User not found`}
+            title={'User not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
-          <ViewError heading={`We couldn’t find anyone with this username.`}>
+          <ViewError heading={'We couldn’t find anyone with this username.'}>
             <ButtonRow>
-              <Link to={`/`}>
+              <Link to={'/'}>
                 <Button large>Take me home</Button>
               </Link>
             </ButtonRow>

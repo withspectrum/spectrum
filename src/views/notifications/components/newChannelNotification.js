@@ -33,7 +33,7 @@ type Props = {
 
 export class NewChannelNotification extends React.Component<Props> {
   render() {
-    const { notification, currentUser } = this.props;
+    const { notification } = this.props;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
