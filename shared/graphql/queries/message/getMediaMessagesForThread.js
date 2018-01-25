@@ -12,7 +12,7 @@ type Message = {
 export type GetMediaMessagesForThreadType = Array<?Message>;
 
 export const getMediaMessagesForThreadQuery = gql`
-  query getMediaMessagesForThread($threadId: String) {
+  query getMediaMessagesForThread($threadId: ID!) {
     getMediaMessagesForThread(threadId: $threadId) {
       id
       content {
