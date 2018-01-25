@@ -61,23 +61,31 @@ class Search extends React.Component<Props, State> {
         query: searchUsersQuery,
         variables: {
           queryString,
+          type: 'USERS',
         },
       })
-      .then(({ data: { searchUsers } }) => {
-        if (searchUsers.length > 0) {
-          this.setState({
-            searchResults: searchUsers.length > 0 ? searchUsers : [],
-            searchIsLoading: false,
-            focusedSearchResult:
-              searchUsers.length > 0 ? searchUsers[0].id : '',
-          });
-        } else {
-          this.setState({
+      .then(({ data: { search } }) => {
+        const hasSearchResults =
+          search &&
+          search.searchResultsConnection &&
+          search.searchResultsConnection.edges.length > 0;
+        if (!hasSearchResults) {
+          return this.setState({
             searchResults: [],
             searchIsLoading: false,
             focusedSearchResult: '',
           });
         }
+
+        const searchResults = search.searchResultsConnection.edges.map(
+          e => e.node
+        );
+
+        return this.setState({
+          searchResults: searchResults,
+          searchIsLoading: false,
+          focusedSearchResult: searchResults[0],
+        });
       });
   };
 

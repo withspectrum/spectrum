@@ -1,9 +1,12 @@
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 const SAVE_USER_COMMUNITY_PERMISSIONS_MUTATION = gql`
-  mutation saveUserCommunityPermissions($input: SaveUserCommunityPermissionsInput!) {
+  mutation saveUserCommunityPermissions(
+    $input: SaveUserCommunityPermissionsInput!
+  ) {
     saveUserCommunityPermissions(input: $input) {
       ...userInfo
       ...userCommunities

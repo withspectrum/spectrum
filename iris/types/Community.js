@@ -78,6 +78,14 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+	input MemberConnectionFilter {
+		isOwner: Boolean
+		isMember: Boolean
+		isBlocked: Boolean
+		isPending: Boolean
+		isModerator: Boolean
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -92,7 +100,7 @@ const Community = /* GraphQL */ `
 		pinnedThread: Thread
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
-		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
+		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport

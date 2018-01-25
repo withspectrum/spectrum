@@ -23,5 +23,5 @@ export const SectionHeader = styled.h1`
 
 export const ListWrapper = styled.div`
   display: flex;
-  flex: 0 1 auto;
+  flex: 1 0 auto;
 `;

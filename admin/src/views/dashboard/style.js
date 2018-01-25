@@ -25,7 +25,7 @@ export const SectionTitle = styled.h2`
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid ${props => props.theme.border.default};
+  border: 1px solid ${props => props.theme.bg.border};
   background: ${props => props.theme.bg.default};
   margin: 8px 4px 0;
   border-radius: 4px;
@@ -60,7 +60,7 @@ export const HeaderZoneBoy = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   align-items: center;
   padding: 32px;
   background: ${props => props.theme.bg.default};
@@ -89,14 +89,14 @@ export const RangeItem = styled.li`
   background: ${props =>
     props.active ? props.theme.brand.default : props.theme.bg.wash};
   color: ${props => (props.active ? '#fff' : props.theme.text.default)};
-  box-shadow: inset -1px 0 ${props => props.theme.border.default};
+  box-shadow: inset -1px 0 ${props => props.theme.bg.border};
   font-size: 14px;
   font-weight: ${props => (props.active ? 600 : 500)};
   text-align: center;
 
   &:hover {
     background: ${props =>
-      props.active ? props.theme.brand.default : props.theme.border.default};
+      props.active ? props.theme.brand.default : props.theme.bg.border};
     cursor: pointer;
   }
 
@@ -116,7 +116,7 @@ export const RangeItem = styled.li`
 
 export const Growth = styled.div`
   padding: 8px;
-  border-top: 1px solid ${props => props.theme.border.default};
+  border-top: 1px solid ${props => props.theme.bg.border};
   display: flex;
   font-size: 14px;
   color: ${props => props.theme.text.alt};
@@ -143,14 +143,18 @@ export const Neutral = styled.div`
   color: ${props => props.theme.text.alt};
 `;
 
-export const Label = styled.div`margin-right: 8px;`;
+export const Label = styled.div`
+  margin-right: 8px;
+`;
 
 export const RangeLabel = styled.div`
   color: ${props => props.theme.text.default};
   font-weight: 600;
 `;
 
-export const Row = styled.div`display: flex;`;
+export const Row = styled.div`
+  display: flex;
+`;
 
 export const CoreMetricsContainer = styled.div`
   display: flex;
@@ -160,7 +164,7 @@ export const CoreMetricsContainer = styled.div`
   background: ${props => props.theme.bg.default};
   padding: 32px;
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.border.default};
+  border: 1px solid ${props => props.theme.bg.border};
   margin: 16px 4px 4px;
 `;
 export const ChartContainer = styled.div`

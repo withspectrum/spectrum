@@ -28,6 +28,8 @@ class RepExplainerModal extends React.Component<Props> {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={'Reputation'}
         onRequestClose={this.closeModal}

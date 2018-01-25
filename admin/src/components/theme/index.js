@@ -4,45 +4,23 @@
 // Or using import { withTheme } from 'styled-components';
 
 export const theme = {
-  brand: {
-    default: '#3818E5',
-    alt: '#7B16FF',
-  },
-  space: {
-    dark: '#0F015E',
-    light: '#1CD2F2',
-    soft: '#ACC7FF',
-  },
-  pro: {
-    default: '#1CD2F2',
-    alt: '#00D6A9',
-  },
-  warn: {
-    default: '#E3353C',
-    alt: '#E2197A',
-  },
-  success: {
-    default: '#00C383',
-    alt: '#00D5BD',
-  },
   bg: {
     default: '#FFFFFF',
-    reverse: '#171A21',
-    wash: '#F2F5F9',
+    reverse: '#16171A',
+    wash: '#F5F8FC',
+    border: '#DFE7EF',
+    inactive: '#DFE7EF',
   },
-  text: {
-    default: '#171A21',
-    alt: '#747E8D',
-    reverse: '#FFFFFF',
-    placeholder: '#B2B9C6',
+  brand: {
+    default: '#4400CC',
+    alt: '#7B16FF',
+    wash: '#E8E5FF',
+    border: '#DDD9FF',
+    dark: '#2A0080',
   },
   generic: {
     default: '#E6ECF7',
-    alt: '#F6FBFF',
-  },
-  inactive: '#D6E0EE',
-  border: {
-    default: '#DFE7EF',
+    alt: '#F6FBFC',
   },
   social: {
     facebook: {
@@ -53,5 +31,51 @@ export const theme = {
       default: '#00ACED',
       alt: '#53D0FF',
     },
+    google: {
+      default: '#ea4335',
+      alt: '#ea4335',
+    },
+    github: {
+      default: '#1475DA',
+      alt: '#1475DA',
+    },
+    ph: {
+      default: '#D85537',
+      alt: '#D85537',
+    },
+  },
+  space: {
+    default: '#0062D6',
+    alt: '#1CD2F2',
+    wash: '#E5F0FF',
+    border: '#BDD8FF',
+    dark: '#0F015E',
+  },
+  special: {
+    default: '#E58306',
+    alt: '#F1C742',
+    dark: '#7D4A00',
+    wash: '#FFF5E5',
+    border: '#FFE6BF',
+  },
+  success: {
+    default: '#00B88B',
+    alt: '#00D5BD',
+    dark: '#00663C',
+    wash: '#D9FFF2',
+    border: '#9FF5D9',
+  },
+  text: {
+    default: '#16171A',
+    alt: '#828C99',
+    reverse: '#FFFFFF',
+    placeholder: '#A3AFBF',
+  },
+  warn: {
+    default: '#C21F3A',
+    alt: '#E2197A',
+    dark: '#85000C',
+    wash: '#FFEDF6',
+    border: '#FFCCE5',
   },
 };

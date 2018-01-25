@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: ${props => props.theme.bg.default};
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   padding: 16px;
   position: relative;
   justify-content: space-between;
@@ -45,7 +45,7 @@ export const Username = styled.h3`
 
 export const EditForm = styled.div`
   border-radius: 4px;
-  border-top: 1px solid ${props => props.theme.border.default};
+  border-top: 1px solid ${props => props.theme.bg.border};
   padding: 16px 0;
   padding-bottom: 0;
   display: flex;
@@ -57,7 +57,9 @@ export const EditForm = styled.div`
   align-items: flex-start;
 `;
 
-export const List = styled.ul`list-style-type: none;`;
+export const List = styled.ul`
+  list-style-type: none;
+`;
 
 export const Save = styled.span`
   align-self: flex-start;

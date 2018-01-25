@@ -541,7 +541,7 @@ export const getRecentCommunities = (): Array<DBCommunity> => {
     .table('communities')
     .orderBy({ index: db.desc('createdAt') })
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(10)
+    .limit(100)
     .run();
 };
 

@@ -1,5 +1,7 @@
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { communityInfoFragment } from './fragments/community/communityInfo';
 import { threadInfoFragment } from './fragments/thread/threadInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
@@ -244,3 +246,37 @@ export const IS_ADMIN_QUERY = gql`
   }
 `;
 export const isAdmin = graphql(IS_ADMIN_QUERY);
+
+export const SEARCH_USERS_QUERY = gql`
+  query search($queryString: String!, $type: SearchType!) {
+    search(queryString: $queryString, type: $type) {
+      searchResultsConnection {
+        edges {
+          node {
+            ... on User {
+              ...userInfo
+            }
+          }
+        }
+      }
+    }
+  }
+  ${userInfoFragment}
+`;
+
+export const SEARCH_COMMUNITIES_QUERY = gql`
+  query search($queryString: String!, $type: SearchType!) {
+    search(queryString: $queryString, type: $type) {
+      searchResultsConnection {
+        edges {
+          node {
+            ... on Community {
+              ...communityInfo
+            }
+          }
+        }
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;

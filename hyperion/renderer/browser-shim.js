@@ -16,3 +16,6 @@ global.localStorage = {
 global.navigator = {
   userAgent: '',
 };
+global.CSS = {
+  escape: require('css.escape'),
+};

@@ -208,6 +208,8 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={'Are you sure?'}
         onRequestClose={this.close}

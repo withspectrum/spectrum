@@ -94,6 +94,8 @@ class UpgradeModal extends React.Component<Props, State> {
 
     return (
       <Modal
+        /* TODO(@mxstbr): Fix this */
+        ariaHideApp={false}
         isOpen={isOpen}
         contentLabel={
           !user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'

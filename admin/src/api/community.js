@@ -1,5 +1,8 @@
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
+import { communityMemberConnectionFragment } from './fragments/community/communityMembers';
+import { userInfoFragment } from './fragments/user/userInfo';
 
 const COMMUNITY_INFORMATION_QUERY = gql`
   query {
@@ -36,33 +39,24 @@ export const getCommunityBySlug = graphql(
   GET_COMMUNITY_BY_SLUG_OPTIONS
 );
 
-/*
-  Gets top communities for the onboarding flow.
-*/
-export const topCommunitiesQuery = graphql(
-  gql`
-    {
-      topCommunities {
-        ...communityInfo
-      }
-    }
-    ${communityInfoFragment}
-  `,
-  {
-    name: 'top',
-  }
-);
-
 export const recentCommunitiesQuery = graphql(
   gql`
-    {
+    query recentCommunities($filter: MemberConnectionFilter) {
       recentCommunities {
         ...communityInfo
+        ...communityMembers
       }
     }
     ${communityInfoFragment}
+    ${communityMemberConnectionFragment}
   `,
   {
     name: 'recent',
+    options: () => ({
+      variables: {
+        filter: { isOwner: true, isMember: true },
+      },
+      fetchPolicy: 'cache-and-network',
+    }),
   }
 );

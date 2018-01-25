@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: ${props => props.theme.bg.default};
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
   padding: 16px;
   position: relative;
   justify-content: space-between;
@@ -45,12 +45,12 @@ export const Username = styled.h3`
 
 export const EditForm = styled.div`
   border-radius: 4px;
-  border-top: 1px solid ${props => props.theme.border.default};
+  border-top: 1px solid ${props => props.theme.bg.border};
   padding: 16px 0;
   padding-bottom: 0;
   display: flex;
   width: 100%;
-  justify-content: flex-start;  
+  justify-content: flex-start;
   margin-top: 16px;
   margin-bottom: 8px;
   flex-direction: column;
