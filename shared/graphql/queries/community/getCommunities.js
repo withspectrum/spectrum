@@ -71,6 +71,7 @@ const getCommunitiesByCuratedContentTypeQuery = gql`
     }
   }
   ${communityInfoFragment}
+  ${communityMetaDataFragment}
 `;
 
 const getCommunitiesByCuratedContentTypeOptions = {
