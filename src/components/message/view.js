@@ -45,12 +45,11 @@ export const Body = props => {
     default:
       return <Text me={me}>{message.body}</Text>;
     case 'media':
-      return (
-        <Image
-          onClick={openGallery}
-          src={`${message.body}?max-w=${window.innerWidth * 0.6}`}
-        />
-      );
+      // don't apply imgix url params to optimistic image messages
+      const src = props.id
+        ? message.body
+        : `${message.body}?max-w=${window.innerWidth * 0.6}`;
+      return <Image onClick={openGallery} src={src} />;
     case 'emoji':
       return <Emoji>{message}</Emoji>;
     case 'draftjs':

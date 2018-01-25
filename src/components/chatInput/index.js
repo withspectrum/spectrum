@@ -222,8 +222,6 @@ class ChatInput extends React.Component<Props, State> {
 
     if (!file) return;
 
-    reader.readAsDataURL(file);
-
     if (
       file &&
       file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
@@ -303,6 +301,8 @@ class ChatInput extends React.Component<Props, State> {
           });
       }
     };
+
+    reader.readAsDataURL(file);
   };
 
   onFocus = () => {

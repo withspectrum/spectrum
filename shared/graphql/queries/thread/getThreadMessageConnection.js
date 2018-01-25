@@ -173,7 +173,6 @@ export const getThreadMessageConnectionOptions = {
           thread: props.ownProps.id,
         },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log('subscriptionData', subscriptionData);
           const newMessage = subscriptionData.data.messageAdded;
           const existingMessage = prev.thread.messageConnection.edges.find(
             ({ node }) => node.id === newMessage.id
