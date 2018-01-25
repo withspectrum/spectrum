@@ -12,7 +12,7 @@ export type NotificationInfoType = {
   createdAt: Date,
   modifiedAt: ?Date,
   actors: Array<Node>,
-  context: Array<Node>,
+  context: Node,
   entities: Array<Node>,
   event: string,
   isRead: boolean,

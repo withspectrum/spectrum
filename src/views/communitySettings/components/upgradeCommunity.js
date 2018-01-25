@@ -48,14 +48,14 @@ class UpsellUpgradeCommunityPure extends React.Component<Props, State> {
 
     this.props
       .upgradeCommunity(input)
-      .then(({ data: { upgradeCommunity }, data }) => {
+      .then(() => {
         this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
         this.setState({
           isLoading: false,
           upgradeError: '',
         });
         // if the upgrade is triggered from a modal, close the modal
-        this.props.complete && this.props.complete();
+        return this.props.complete && this.props.complete();
       })
       .catch(err => {
         this.setState({
@@ -168,7 +168,7 @@ class UpsellUpgradeCommunityPrivateChannelPure extends React.Component<
     const { community } = this.props;
 
     const str = community.communityPermissions.isOwner
-      ? `Private channels are only available to communities on the Standard plan. Upgrade your community to re-activate this channel.`
+      ? 'Private channels are only available to communities on the Standard plan. Upgrade your community to re-activate this channel.'
       : `Private channels are only available to communities on the Standard plan. The owner of the ${
           community.name
         } community can upgrade it from the community settings page.`;

@@ -11,6 +11,7 @@ import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { LoadingCard } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import {
   StyledCard,
   ListHeader,
@@ -20,7 +21,7 @@ import {
 
 type Props = {
   data: {
-    community: Object,
+    community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
   dispatch: Function,
@@ -41,21 +42,22 @@ class ChannelList extends React.Component<Props> {
     if (community && community.id) {
       const { isMember, isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
-        .map(channel => channel.node)
+        .map(channel => channel && channel.node)
         .filter(channel => {
+          if (!channel) return null;
           if (channel.isPrivate && !channel.channelPermissions.isMember)
             return null;
 
           return channel;
         })
-        .filter(channel => !channel.channelPermissions.isBlocked);
+        .filter(channel => channel && !channel.channelPermissions.isBlocked);
 
       const joinedChannels = channels
         .slice()
-        .filter(channel => channel.channelPermissions.isMember);
+        .filter(channel => channel && channel.channelPermissions.isMember);
       const nonJoinedChannels = channels
         .slice()
-        .filter(channel => !channel.channelPermissions.isMember);
+        .filter(channel => channel && !channel.channelPermissions.isMember);
 
       return (
         <StyledCard largeOnly>
@@ -80,6 +82,7 @@ class ChannelList extends React.Component<Props> {
           {(!currentUser || (currentUser && !isMember)) && (
             <ListContainer>
               {channels.map(channel => {
+                if (!channel) return null;
                 return (
                   <Link
                     key={channel.id}
@@ -104,6 +107,7 @@ class ChannelList extends React.Component<Props> {
             isMember && (
               <ListContainer>
                 {joinedChannels.map(channel => {
+                  if (!channel) return null;
                   return (
                     <Link
                       key={channel.id}
@@ -133,6 +137,7 @@ class ChannelList extends React.Component<Props> {
                 <ListContainer>
                   <ul>
                     {nonJoinedChannels.map(channel => {
+                      if (!channel) return null;
                       return (
                         <ChannelProfile
                           key={channel.id}

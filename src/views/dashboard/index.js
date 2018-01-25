@@ -32,7 +32,6 @@ import {
   SearchStringHeader,
   Sidebar,
 } from './style';
-import newActivityIndicator from './components/newActivityIndicator';
 
 const EverythingThreadFeed = compose(connect(), getEverythingThreads)(
   DashboardThreadFeed
@@ -54,14 +53,6 @@ const DashboardWrapper = props => <Wrapper {...props} />;
 
 type State = {
   isHovered: boolean,
-};
-
-type CommunityType = {
-  node: {
-    id: string,
-    pinnedThreadId: ?string,
-    slug: string,
-  },
 };
 
 type Props = {

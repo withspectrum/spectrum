@@ -2,13 +2,16 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
 import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
+import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../components/globals';
+import { addToastWithTimeout } from '../../../actions/toasts';
 import {
   SearchWrapper,
   SearchInput,
@@ -30,13 +33,14 @@ type State = {
   searchString: string,
   searchResults: Array<any>,
   searchIsLoading: boolean,
-  focusedSearchResult: string,
+  focusedSearchResult: ?string,
   isFocused: boolean,
 };
 
 type Props = {
   client: Object,
   history: Object,
+  dispatch: Function,
 };
 
 class Search extends React.Component<Props, State> {
@@ -70,34 +74,41 @@ class Search extends React.Component<Props, State> {
         query: searchCommunitiesQuery,
         variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
-      .then(({ data: { search }, data }) => {
-        if (
-          !search ||
-          !search.searchResultsConnection ||
-          search.searchResultsConnection.edges.length === 0
-        ) {
+      .then(
+        ({ data: { search } }: { data: { search: SearchCommunitiesType } }) => {
+          if (
+            !search ||
+            !search.searchResultsConnection ||
+            search.searchResultsConnection.edges.length === 0
+          ) {
+            return this.setState({
+              searchResults: [],
+              searchIsLoading: false,
+              focusedSearchResult: '',
+            });
+          }
+
+          const searchResults = search.searchResultsConnection.edges;
+
+          const sorted = searchResults
+            .slice()
+            .map(c => c && c.node)
+            .sort((a, b) => {
+              if (!b) return 0;
+              if (!a) return 0;
+              return b.metaData.members - a.metaData.members;
+            });
+
           return this.setState({
-            searchResults: [],
+            searchResults: sorted,
             searchIsLoading: false,
-            focusedSearchResult: '',
+            focusedSearchResult: sorted && sorted[0] ? sorted[0].id : null,
           });
         }
-
-        const searchResults = search.searchResultsConnection.edges;
-
-        const sorted = searchResults
-          .slice()
-          .map(c => c.node)
-          .sort((a, b) => {
-            return b.metaData.members - a.metaData.members;
-          });
-
-        return this.setState({
-          searchResults: sorted,
-          searchIsLoading: false,
-          focusedSearchResult: sorted[0].id,
-        });
-      });
+      )
+      .catch(err =>
+        this.props.dispatch(addToastWithTimeout('error', err.message))
+      );
   };
 
   handleKeyPress = (e: any) => {
@@ -272,4 +283,4 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, withRouter)(Search);
+export default compose(connect(), withApollo, withRouter)(Search);

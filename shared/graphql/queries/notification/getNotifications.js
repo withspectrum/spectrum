@@ -2,7 +2,23 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import notificationInfoFragment from '../../fragments/notification/notificationInfo';
+import type { NotificationInfoType } from '../../fragments/notification/notificationInfo';
 import { subscribeToNewNotifications } from '../../subscriptions';
+
+type Edge = {
+  cursor: string,
+  node: {
+    ...$Exact<NotificationInfoType>,
+  },
+};
+
+export type GetNotificationsType = {
+  pageInfo: {
+    hasNextPage: boolean,
+    hasPreviousPage: boolean,
+  },
+  edges: Array<?Edge>,
+};
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {

@@ -16,6 +16,7 @@ import {
   LoadingContainer,
 } from './style';
 import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
+import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 
@@ -99,7 +100,7 @@ type CategoryListProps = {
   currentUser?: Object,
   slugs: Array<string>,
   data: {
-    communities?: Array<Object>,
+    communities?: GetCommunitiesType,
   },
   isLoading: boolean,
   categories?: Array<any>,
@@ -119,6 +120,7 @@ class CategoryList extends React.Component<CategoryListProps> {
       let filteredCommunities = communities;
       if (slugs) {
         filteredCommunities = communities.filter(c => {
+          if (!c) return null;
           if (slugs.indexOf(c.slug) > -1) return c;
           return null;
         });
@@ -148,6 +150,7 @@ class CategoryList extends React.Component<CategoryListProps> {
           {categories.map((cat, i) => {
             if (cat.communities) {
               filteredCommunities = communities.filter(c => {
+                if (!c) return null;
                 if (cat.communities.indexOf(c.slug) > -1) return c;
                 return null;
               });

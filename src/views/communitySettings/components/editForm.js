@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { track } from '../../../helpers/events';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
-import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
+import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Button, IconButton } from '../../../components/buttons';
@@ -214,8 +214,8 @@ class EditForm extends React.Component<Props, State> {
 
     this.props
       .editCommunity(input)
-      .then(({ data: { editCommunity } }) => {
-        const community = editCommunity;
+      .then(({ data }: EditCommunityType) => {
+        const { editCommunity: community } = data;
 
         this.setState({
           isLoading: false,
@@ -230,6 +230,7 @@ class EditForm extends React.Component<Props, State> {
           );
           window.location.href = `/${this.props.community.slug}`;
         }
+        return;
       })
       .catch(err => {
         this.setState({
@@ -378,9 +379,4 @@ class EditForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  connect(),
-  deleteCommunityMutation,
-  editCommunityMutation,
-  withRouter
-)(EditForm);
+export default compose(connect(), editCommunityMutation, withRouter)(EditForm);

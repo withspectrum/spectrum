@@ -43,9 +43,7 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
   dispatch: Function,
-  toggleCommunityMembership: ({
-    communityId: string,
-  }) => ToggleCommunityMembershipType,
+  toggleCommunityMembership: Function,
   currentUser: Object,
   match: {
     params: {

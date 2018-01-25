@@ -13,8 +13,8 @@ import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
+import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
-// import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/community';
 import { Button } from '../../../../components/buttons';
 import {
   Input,
@@ -59,6 +59,7 @@ type Props = {
   createCommunity: Function,
   communityCreated: Function,
   dispatch: Function,
+  name: string,
 };
 class CreateCommunityForm extends React.Component<Props, State> {
   constructor(props) {
@@ -194,10 +195,13 @@ class CreateCommunityForm extends React.Component<Props, State> {
             slugTaken: true,
           });
         } else {
-          this.setState({
+          return this.setState({
             slugTaken: false,
           });
         }
+      })
+      .catch(err => {
+        return this.props.dispatch(addToastWithTimeout('success', err.message));
       });
   };
 
@@ -237,14 +241,19 @@ class CreateCommunityForm extends React.Component<Props, State> {
               .slice(0, 5);
 
           if (filtered && filtered.length > 0) {
-            this.setState({
+            return this.setState({
               communitySuggestions: filtered,
             });
           } else {
-            this.setState({
+            return this.setState({
               communitySuggestions: null,
             });
           }
+        })
+        .catch(err => {
+          return this.props.dispatch(
+            addToastWithTimeout('success', err.message)
+          );
         });
     }
   };
@@ -379,12 +388,14 @@ class CreateCommunityForm extends React.Component<Props, State> {
     // create the community
     this.props
       .createCommunity(input)
-      .then(({ data: { createCommunity } }) => {
+      .then(({ data }: CreateCommunityType) => {
         track('community', 'created', null);
+        const { createCommunity } = data;
         this.props.communityCreated(createCommunity);
         this.props.dispatch(
           addToastWithTimeout('success', 'Community created!')
         );
+        return;
       })
       .catch(err => {
         this.setState({
@@ -415,9 +426,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
     const suggestionString = slugTaken
       ? communitySuggestions && communitySuggestions.length > 0
-        ? `Were you looking for one of these communities?`
+        ? 'Were you looking for one of these communities?'
         : null
-      : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
+      : "This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!";
 
     return (
       <FormContainer>

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Link from 'src/components/link';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
 import Icon from '../../../components/icons';
 import {
@@ -20,19 +21,6 @@ import {
   SectionTitle,
 } from '../style';
 
-type ChannelType = {
-  node: {
-    id: string,
-    name: string,
-    slug: string,
-    channelPermissions: {
-      isOwner: boolean,
-      isMember: boolean,
-      isBlocked: boolean,
-    },
-  },
-};
-
 type Props = {
   dispatch: Function,
   isLoading: boolean,
@@ -45,17 +33,7 @@ type Props = {
     },
   },
   data: {
-    community: {
-      slug: string,
-      isPro: boolean,
-      communityPermissions: {
-        isOwner: boolean,
-        isMember: boolean,
-      },
-      channelConnection: {
-        edges: Array<ChannelType>,
-      },
-    },
+    community: GetCommunityChannelConnectionType,
   },
 };
 class SidebarChannels extends React.Component<Props> {
@@ -78,8 +56,9 @@ class SidebarChannels extends React.Component<Props> {
     if (community) {
       const { isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
-        .map(channel => channel.node)
+        .map(channel => channel && channel.node)
         .filter(channel => {
+          if (!channel) return null;
           if (channel.isPrivate && !channel.channelPermissions.isMember) {
             return null;
           }
@@ -87,13 +66,14 @@ class SidebarChannels extends React.Component<Props> {
           return channel;
         })
         .filter(channel => {
+          if (!channel) return null;
           if (channel.isPrivate && !community.isPro) {
             return null;
           }
           return channel;
         })
-        .filter(channel => channel.channelPermissions.isMember)
-        .filter(channel => !channel.channelPermissions.isBlocked);
+        .filter(channel => channel && channel.channelPermissions.isMember)
+        .filter(channel => channel && !channel.channelPermissions.isBlocked);
 
       const sortedChannels = sortByTitle(channels);
 

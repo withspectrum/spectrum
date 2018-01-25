@@ -12,15 +12,13 @@ import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
 import { track } from '../../../helpers/events';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  clearDirectMessagesComposer,
-  initNewThreadWithUser,
-} from '../../../actions/directMessageThreads';
+import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import {
   ComposerInputWrapper,
@@ -526,25 +524,31 @@ class NewThread extends React.Component<Props, State> {
             id: existingThread[0].id,
           },
         })
-        .then(({ data: { directMessageThread } }) => {
-          // stop loading
-          this.setState({
-            loadingExistingThreadMessages: false,
-          });
+        .then(
+          ({
+            data: { directMessageThread },
+          }: {
+            data: { directMessageThread: GetDirectMessageThreadType },
+          }) => {
+            // stop loading
+            this.setState({
+              loadingExistingThreadMessages: false,
+            });
 
-          // if messages were found
-          if (directMessageThread.id) {
-            this.setState({
-              existingThreadWithMessages: directMessageThread,
-            });
-            // if no messages were found
-          } else {
-            this.setState({
-              existingThreadWithMessages: {},
-              existingThreadBasedOnSelectedUsers: '',
-            });
+            // if messages were found
+            if (directMessageThread.id) {
+              this.setState({
+                existingThreadWithMessages: directMessageThread,
+              });
+              // if no messages were found
+            } else {
+              this.setState({
+                existingThreadWithMessages: {},
+                existingThreadBasedOnSelectedUsers: '',
+              });
+            }
           }
-        });
+        );
     }
   };
 

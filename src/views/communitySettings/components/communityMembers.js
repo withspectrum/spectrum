@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
+import type { GetCommunityMemberConnectionType } from 'shared/graphql/queries/community/getCommunityMemberConnection';
 import { FetchMoreButton } from '../../../components/threadFeed/style';
 import { ListContainer } from '../../../components/listItems/style';
 import {
@@ -13,28 +14,12 @@ import {
   SectionTitle,
 } from '../../../components/settingsViews/style';
 
-type MemberType = {
-  node: {
-    id: string,
-  },
-};
-
 type Props = {
   data: {
     error: ?string,
     networkStatus: number,
     fetchMore: Function,
-    community: {
-      metaData: {
-        members: number,
-      },
-      memberConnection: {
-        pageInfo: {
-          hasNextPage: boolean,
-        },
-        edges: Array<?MemberType>,
-      },
-    },
+    community: GetCommunityMemberConnectionType,
   },
 };
 class CommunityMembers extends React.Component<Props> {

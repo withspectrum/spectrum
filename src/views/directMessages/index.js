@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import getCurrentUserDirectMessageThreads from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
+import type { GetCurrentUserDMThreadConnectionType } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import Icon from '../../components/icons';
 import ThreadsList from './components/threadsList';
@@ -24,14 +25,7 @@ type Props = {
   hasError: boolean,
   fetchMore: Function,
   data: {
-    user: {
-      directMessageThreadsConnection: {
-        pageInfo: {
-          hasNextPage: boolean,
-        },
-        edges: Array<Object>,
-      },
-    },
+    user: GetCurrentUserDMThreadConnectionType,
   },
 };
 type State = {
@@ -103,11 +97,17 @@ class DirectMessages extends React.Component<Props, State> {
       data.user.directMessageThreadsConnection.edges &&
       data.user.directMessageThreadsConnection.edges.length > 0
         ? data.user.directMessageThreadsConnection.edges
-            .map(thread => thread.node)
+            .map(thread => thread && thread.node)
             .sort((a, b) => {
-              const x = new Date(a.threadLastActive).getTime();
-              const y = new Date(b.threadLastActive).getTime();
-              const val = y - x;
+              const x =
+                a &&
+                a.threadLastActive &&
+                new Date(a.threadLastActive).getTime();
+              const y =
+                b &&
+                b.threadLastActive &&
+                new Date(b.threadLastActive).getTime();
+              const val = parseInt(y) - parseInt(x);
               return val;
             })
         : null;
@@ -125,7 +125,7 @@ class DirectMessages extends React.Component<Props, State> {
         <Titlebar
           title={isComposing ? 'New Message' : 'Messages'}
           provideBack={isComposing || isViewingThread}
-          backRoute={`/messages`}
+          backRoute={'/messages'}
           noComposer={isComposing || isViewingThread}
           messageComposer={!isComposing && !isViewingThread}
         />

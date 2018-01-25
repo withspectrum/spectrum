@@ -9,6 +9,7 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
+import type { GetNotificationsType } from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
@@ -24,9 +25,7 @@ type Props = {
   activeInboxThread: ?string,
   location: Object,
   data: {
-    notifications?: {
-      edges: Array<any>,
-    },
+    notifications: GetNotificationsType,
     subscribeToNewNotifications: Function,
     refetch: Function,
   },
@@ -117,7 +116,7 @@ class NotificationsTab extends React.Component<Props, State> {
     return false;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const {
       data: prevData,
       location: prevLocation,
@@ -207,7 +206,7 @@ class NotificationsTab extends React.Component<Props, State> {
     )
       return [];
 
-    return notifications.edges.map(n => n.node);
+    return notifications.edges.map(n => n && n.node);
   };
 
   markAllAsSeen = () => {

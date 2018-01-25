@@ -16,7 +16,7 @@ type User = {
   },
 };
 
-export type GetCommunityMembersType = {
+export type GetCommunityTopMembersType = {
   ...$Exact<CommunityInfoType>,
   topMembers: Array<?User>,
 };

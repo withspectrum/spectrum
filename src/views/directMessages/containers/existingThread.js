@@ -22,6 +22,7 @@ type Props = {
   match: Object,
   id: ?string,
   currentUser: Object,
+  threadSliderIsOpen: boolean,
 };
 class ExistingThread extends React.Component<Props> {
   scrollBody: ?HTMLDivElement;

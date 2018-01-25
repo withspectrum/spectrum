@@ -210,6 +210,7 @@ class CommunityWithData extends React.Component<Props, State> {
           );
           this.props.communityUpdated(community);
         }
+        return;
       })
       .catch(err => {
         this.setState({
