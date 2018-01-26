@@ -1,12 +1,22 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { ThreadListItem } from '../listItems';
 import { ProfileCard } from './style';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 
-class ThreadWithData extends Component {
+type Props = {
+  data: {
+    thread: GetThreadType,
+    error: ?string,
+  },
+  setName: Function,
+};
+
+class ThreadWithData extends React.Component<Props> {
   componentWillMount() {
     const { data: { thread }, setName } = this.props;
     if (setName && thread) {
@@ -29,9 +39,9 @@ class ThreadWithData extends Component {
           <ThreadListItem
             contents={thread}
             withDescription={false}
-            meta={`${thread.messageCount} message${thread.messageCount === 1
-              ? ''
-              : 's'}`}
+            meta={`${thread.messageCount} message${
+              thread.messageCount === 1 ? '' : 's'
+            }`}
           />
         </Link>
       </ProfileCard>

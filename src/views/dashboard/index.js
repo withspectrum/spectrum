@@ -173,7 +173,7 @@ class Dashboard extends React.Component<Props, State> {
             {searchQueryString &&
               searchQueryString.length > 0 && (
                 <SearchStringHeader>
-                  Search results for "{searchQueryString}"
+                  Search results for “{searchQueryString}”
                 </SearchStringHeader>
               )}
             <InboxScroller id="scroller-for-inbox">

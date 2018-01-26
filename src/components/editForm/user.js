@@ -327,10 +327,11 @@ class UserWithData extends React.Component<Props, State> {
       });
     }
 
+    // $FlowIssue
     this.search(username);
   };
 
-  search = username => {
+  search = (username: string) => {
     if (username.length > 20) {
       return this.setState({
         usernameError: 'Usernames can be up to 20 characters',

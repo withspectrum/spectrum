@@ -18,6 +18,7 @@ import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
@@ -48,60 +49,8 @@ type State = {
   error?: ?string,
 };
 
-type Attachment = {
-  attachmentType: string,
-  data: string,
-  trueUrl: string,
-};
-
 type Props = {
-  thread: {
-    id: string,
-    modifiedAt: Date,
-    createdAt: Date,
-    isLocked: boolean,
-    community: {
-      id: string,
-      name: string,
-      slug: string,
-      pinnedThreadId: string,
-      communityPermissions: {
-        isMember: true,
-        isBlocked: true,
-        isOwner: true,
-        isPending: true,
-      },
-    },
-    channel: {
-      id: string,
-      name: string,
-      slug: string,
-      channelPermissions: {
-        isMember: true,
-        isBlocked: true,
-        isOwner: true,
-        isPending: true,
-      },
-    },
-    creator: {
-      profilePhoto: string,
-      username: string,
-      name: string,
-      isOnline: boolean,
-      isPro: boolean,
-      contextPermissions: {
-        reputation: number,
-        isOwner: boolean,
-        isModeratoer: boolean,
-      },
-    },
-    attachments?: Array<?Attachment>,
-    content: {
-      title: string,
-      body: string,
-    },
-    receiveNotifications: boolean,
-  },
+  thread: GetThreadType,
   setThreadLock: Function,
   pinThread: Function,
   editThread: Function,
@@ -114,6 +63,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   state = {};
   // $FlowFixMe
   bodyEditor: any;
+  titleTextarea: React.Node;
 
   setThreadState() {
     const { thread } = this.props;
@@ -178,10 +128,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
       .then(({ data: { setThreadLock } }) => {
         if (setThreadLock.isLocked) {
           track('thread', 'locked', null);
-          dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
+          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
           track('thread', 'unlocked', null);
-          dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
+          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
       .catch(err => {
@@ -292,9 +242,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
         if (editThread && editThread !== null) {
           this.toggleEdit();
-          dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          return dispatch(addToastWithTimeout('success', 'Thread saved!'));
         } else {
-          dispatch(
+          return dispatch(
             addToastWithTimeout(
               'error',
               "We weren't able to save these changes. Try again?"
@@ -361,7 +311,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          this.setState(prevState => ({
+          return this.setState(prevState => ({
             linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
@@ -369,7 +319,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             error: null,
           }));
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             error:
               "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
@@ -418,14 +368,13 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isSavingEdit,
     } = this.state;
 
-    const isEdited = thread.modifiedAt;
-    const editedTimestamp = isEdited
-      ? new Date(thread.modifiedAt).getTime()
-      : null;
+    const editedTimestamp =
+      thread.modifiedAt && new Date(thread.modifiedAt).getTime();
 
     return (
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
+          {/* $FlowFixMe */}
           <ThreadByline creator={thread.creator} />
 
           {isEditing ? (
@@ -434,7 +383,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
               style={ThreadTitle}
               value={this.state.title}
               placeholder={'A title for your thread...'}
-              ref="titleTextarea"
+              ref={c => {
+                this.titleTextarea = c;
+              }}
               autoFocus
             />
           ) : (

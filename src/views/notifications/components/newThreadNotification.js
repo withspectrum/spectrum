@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { getThreadById } from 'shared/graphql/queries/thread/getThread';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
@@ -43,7 +44,12 @@ const sortThreads = (entities, currentUser) => {
   return threads;
 };
 
-const ThreadCreatedComponent = ({ data, ...rest }) => {
+const ThreadCreatedComponent = ({
+  data,
+  ...rest
+}: {
+  data: { thread: GetThreadType },
+}) => {
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
@@ -80,7 +86,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
     const threads = sortThreads(notification.entities, currentUser);
 
     const newThreadCount =
-      threads.length > 1 ? `New threads were` : 'A new thread was';
+      threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (
@@ -149,7 +155,7 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
     const threads = sortThreads(notification.entities, currentUser);
 
     const newThreadCount =
-      threads.length > 1 ? `New threads were` : 'A new thread was';
+      threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (

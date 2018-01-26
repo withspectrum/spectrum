@@ -10,6 +10,7 @@ import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Flyout from '../../../components/flyout';
 import { track } from '../../../helpers/events';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import {
   FollowButton,
@@ -23,35 +24,7 @@ import {
 } from '../style';
 
 type Props = {
-  thread: {
-    id: string,
-    isCreator: boolean,
-    content: {
-      title: string,
-    },
-    creator: {
-      contextPermissions: {
-        reputation: number,
-        isMember: boolean,
-        isOwner: boolean,
-      },
-    },
-    channel: {
-      channelPermissions: {
-        isMember: boolean,
-        isOwner: boolean,
-        isModerator: boolean,
-      },
-    },
-    community: {
-      name: string,
-      pinnedThreadId: string,
-      communityPermissions: {
-        isMember: boolean,
-        isOwner: boolean,
-      },
-    },
-  },
+  thread: GetThreadType,
   currentUser: Object,
   isEditing: boolean,
   dispatch: Function,
@@ -110,10 +83,14 @@ class ActionBar extends React.Component<Props, State> {
 
         if (toggleThreadNotifications.receiveNotifications) {
           track('thread', 'notifications turned on', null);
-          dispatch(addToastWithTimeout('success', 'Notifications activated!'));
+          return dispatch(
+            addToastWithTimeout('success', 'Notifications activated!')
+          );
         } else {
           track('thread', 'notifications turned off', null);
-          dispatch(addToastWithTimeout('neutral', 'Notifications turned off'));
+          return dispatch(
+            addToastWithTimeout('neutral', 'Notifications turned off')
+          );
         }
       })
       .catch(err => {

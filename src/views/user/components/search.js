@@ -49,6 +49,7 @@ class Search extends React.Component<Props, State> {
     });
 
     // trigger a new search based on the search input
+    // $FlowIssue
     this.search(searchString);
   };
 

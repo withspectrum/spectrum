@@ -14,6 +14,7 @@ type Participant = {
 type Attachment = {
   attachmentType: string,
   data: string,
+  trueUrl: string,
 };
 
 export type ThreadInfoType = {

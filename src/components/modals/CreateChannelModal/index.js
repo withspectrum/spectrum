@@ -93,6 +93,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError: false,
     });
 
+    // $FlowIssue
     this.checkSlug(slug);
   };
 
@@ -119,10 +120,11 @@ class CreateChannelModal extends React.Component<Props, State> {
       slugError: false,
     });
 
+    // $FlowIssue
     this.checkSlug(slug);
   };
 
-  checkSlug = slug => {
+  checkSlug = (slug: string) => {
     const communitySlug = this.props.modalProps.slug;
 
     if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
@@ -307,7 +309,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
             {slugTaken && (
               <Error>
-                This url is already taken - feel free to change it if you're set
+                This url is already taken - feel free to change it if you’re set
                 on the name {name}!
               </Error>
             )}
@@ -324,7 +326,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
             {descriptionError && (
               <Error>
-                Oop, that's more than 140 characters - try trimming that up.
+                Oop, that’s more than 140 characters - try trimming that up.
               </Error>
             )}
 

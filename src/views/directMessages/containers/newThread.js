@@ -10,7 +10,6 @@ import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
-import { findDOMNode } from 'react-dom';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
@@ -66,6 +65,7 @@ type Props = {
 class NewThread extends React.Component<Props, State> {
   chatInput: React.ElementProps<typeof ChatInput>;
   scrollBody: ?HTMLDivElement;
+  input: React.Node;
 
   constructor(props) {
     super(props);
@@ -191,6 +191,10 @@ class NewThread extends React.Component<Props, State> {
           focusedSearchResult:
             searchResults.length > 0 ? searchResults[0].id : '',
         });
+        return;
+      })
+      .catch(err => {
+        console.log('Error searching users', err);
       });
   };
 
@@ -210,7 +214,7 @@ class NewThread extends React.Component<Props, State> {
 
     // create a reference to the input - we will use this to call .focus()
     // after certain events (like pressing backspace or enter)
-    const input = findDOMNode(this.refs.input);
+    const input = this.input;
 
     // create temporary arrays of IDs from the searchResults and selectedUsers
     // to more easily manipulate the ids
@@ -424,6 +428,7 @@ class NewThread extends React.Component<Props, State> {
     });
 
     // trigger a new search based on the search input
+    // $FlowIssue
     this.search(string);
   };
 
@@ -537,18 +542,21 @@ class NewThread extends React.Component<Props, State> {
 
             // if messages were found
             if (directMessageThread.id) {
-              this.setState({
+              return this.setState({
                 existingThreadWithMessages: directMessageThread,
               });
               // if no messages were found
             } else {
-              this.setState({
+              return this.setState({
                 existingThreadWithMessages: {},
                 existingThreadBasedOnSelectedUsers: '',
               });
             }
           }
-        );
+        )
+        .catch(err => {
+          console.log('Error finding existing conversation: ', err);
+        });
     }
   };
 
@@ -579,7 +587,7 @@ class NewThread extends React.Component<Props, State> {
 
     // focus the composer input if no users were already in the composer
     if (initNewThreadWithUser.length === 0) {
-      const input = findDOMNode(this.refs.input);
+      const input = this.input;
       // $FlowFixMe
       return input && input.focus();
     }
@@ -669,6 +677,7 @@ class NewThread extends React.Component<Props, State> {
 
           this.props.setActiveThread(createDirectMessageThread.id);
           this.props.history.push(`/messages/${createDirectMessageThread.id}`);
+          return;
         })
         .catch(err => {
           // if an error happened, the user can try to resend the message to
@@ -744,7 +753,9 @@ class NewThread extends React.Component<Props, State> {
           )}
 
           <ComposerInput
-            ref="input"
+            ref={c => {
+              this.input = c;
+            }}
             type="text"
             value={searchString}
             placeholder="Search for people..."
@@ -789,7 +800,7 @@ class NewThread extends React.Component<Props, State> {
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
-                      No users found matching "{searchString}"
+                      No users found matching “{searchString}”
                     </SearchResultNull>
                   </SearchResultTextContainer>
                 </SearchResult>

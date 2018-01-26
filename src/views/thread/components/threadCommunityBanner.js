@@ -6,6 +6,7 @@ import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
 import { track } from '../../../helpers/events';
@@ -26,25 +27,7 @@ type Props = {
   currentUser: Object,
   hide: boolean,
   watercooler: boolean,
-  thread: {
-    id: string,
-    watercooler?: boolean,
-    community: {
-      name: string,
-      slug: string,
-      profilePhoto: string,
-      id: string,
-    },
-    channel: {
-      id: string,
-      slug: string,
-      name: string,
-      isPrivate: boolean,
-      channelPermissions: {
-        isMember: boolean,
-      },
-    },
-  },
+  thread: GetThreadType,
 };
 type State = {
   isLoading: boolean,

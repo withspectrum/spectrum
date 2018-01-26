@@ -19,6 +19,7 @@ type Props = {
   editUser: Function,
   save: Function,
   dispatch: Function,
+  user: ?Object,
 };
 
 type State = {
@@ -58,6 +59,8 @@ class SetUsername extends React.Component<Props, State> {
     // if no username was able to be suggested, don't kick off a search
     // with an empty string
     if (username.length === 0) return;
+
+    // $FlowIssue
     this.search(username);
   }
 
@@ -86,6 +89,7 @@ class SetUsername extends React.Component<Props, State> {
       });
     }
 
+    // $FlowIssue
     return this.search(username);
   };
 
@@ -137,6 +141,9 @@ class SetUsername extends React.Component<Props, State> {
               success: 'That username is available!',
             });
           }
+        })
+        .catch(err => {
+          console.log('Error looking up username: ', err);
         });
     }
   };
@@ -155,7 +162,7 @@ class SetUsername extends React.Component<Props, State> {
 
     this.props
       .editUser(input)
-      .then(({ data: { editUser } }) => {
+      .then(() => {
         this.setState({
           isLoading: false,
           success: '',
@@ -164,7 +171,7 @@ class SetUsername extends React.Component<Props, State> {
         // trigger a method in the newUserOnboarding component class
         // to determine what to do next with this user - either push them
         // to community discovery or close the onboarding completely
-        this.props.save();
+        return this.props.save();
       })
       .catch(err => {
         this.setState({

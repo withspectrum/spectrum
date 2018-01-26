@@ -109,7 +109,9 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.thread.id !== curr.data.thread.id
     ) {
       // $FlowFixMe
-      this.unsubscribe().then(() => this.subscribe());
+      this.unsubscribe()
+        .then(() => this.subscribe())
+        .catch(err => console.log('Error unsubscribing: ', err));
     }
   }
 
@@ -242,7 +244,7 @@ class MessagesWithData extends React.Component<Props, State> {
         <NullMessagesWrapper>
           <Icon glyph={'emoji'} size={64} />
           <NullCopy>
-            No messages have been sent in this conversation yet - why don't you
+            No messages have been sent in this conversation yet - why don’t you
             kick things off below?
           </NullCopy>
         </NullMessagesWrapper>

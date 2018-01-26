@@ -9,7 +9,7 @@ import { track } from '../../../../helpers/events';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Button, OutlineButton } from '../../../../components/buttons';
 import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import { findDOMNode } from 'react-dom';
+import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import { throttle } from '../../../../helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../../components/globals';
@@ -46,6 +46,8 @@ type Props = {
 };
 
 class Search extends React.Component<Props, State> {
+  input: React.Node;
+
   constructor() {
     super();
 
@@ -69,10 +71,12 @@ class Search extends React.Component<Props, State> {
 
     this.props
       .toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
+      .then(({ data }: ToggleCommunityMembershipType) => {
         this.setState({
           loading: '',
         });
+
+        const { toggleCommunityMembership } = data;
 
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
@@ -111,6 +115,8 @@ class Search extends React.Component<Props, State> {
         this.setState({
           searchResults: newSearchResults,
         });
+
+        return;
       })
       .catch(err => {
         this.setState({
@@ -172,13 +178,16 @@ class Search extends React.Component<Props, State> {
             focusedSearchResult: sorted[0].id,
           });
         }
+      })
+      .catch(err => {
+        console.log('Error searching for communities: ', err);
       });
   };
 
   handleKeyPress = (e: any) => {
     const { searchResults, focusedSearchResult } = this.state;
 
-    const input = findDOMNode(this.refs.input);
+    const input = this.input;
     const searchResultIds =
       searchResults && searchResults.map(community => community.id);
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
@@ -241,6 +250,7 @@ class Search extends React.Component<Props, State> {
     });
 
     // trigger a new search based on the search input
+    // $FlowIssue
     this.search(string);
   };
 
@@ -257,6 +267,8 @@ class Search extends React.Component<Props, State> {
     if (!val || val.length === 0) return;
 
     const string = val.toLowerCase().trim();
+
+    // $FlowIssue
     this.search(string);
 
     return this.setState({
@@ -284,7 +296,9 @@ class Search extends React.Component<Props, State> {
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
-            ref="input"
+            ref={c => {
+              this.input = c;
+            }}
             type="text"
             value={searchString}
             placeholder="Search for communities or topics..."
@@ -352,7 +366,7 @@ class Search extends React.Component<Props, State> {
               isFocused && (
                 <SearchResult>
                   <SearchResultNull>
-                    <p>No communities found matching "{searchString}"</p>
+                    <p>No communities found matching “{searchString}”</p>
                     <Link to={'/new/community'}>
                       <Button>Create a Community</Button>
                     </Link>

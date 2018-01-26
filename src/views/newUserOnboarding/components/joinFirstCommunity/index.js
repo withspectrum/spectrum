@@ -67,6 +67,8 @@ class JoinFirstCommunityPure extends React.Component<Props, State> {
 
         this.props.dispatch(addToastWithTimeout(type, str));
         this.props.joinedFirstCommunity();
+
+        return;
       })
       .catch(err => {
         this.setState({

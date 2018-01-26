@@ -15,8 +15,13 @@ import {
 } from '../style';
 import { ChannelProfile } from '../../../components/profile';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 
-const NewChannelComponent = ({ data }) => {
+const NewChannelComponent = ({
+  data,
+}: {
+  data: { channel: GetChannelType },
+}) => {
   return <ChannelProfile profileSize="miniWithAction" data={data} />;
 };
 

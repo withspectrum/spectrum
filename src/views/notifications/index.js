@@ -76,14 +76,9 @@ class NotificationsPure extends React.Component<Props, State> {
 
   markAllNotificationsSeen = () => {
     this.props.markAllNotificationsSeen &&
-      this.props
-        .markAllNotificationsSeen()
-        .then(({ data: { markAllNotificationsSeen } }) => {
-          // notifs were marked as seen
-        })
-        .catch(err => {
-          // error
-        });
+      this.props.markAllNotificationsSeen().catch(err => {
+        console.log('Error marking all notifications seen: ', err);
+      });
   };
 
   componentDidMount() {
@@ -100,14 +95,19 @@ class NotificationsPure extends React.Component<Props, State> {
       });
     }
 
-    WebPushManager.getPermissionState().then(result => {
-      if (result === 'prompt') {
-        track('browser push notifications', 'prompted');
-        this.setState({
-          showWebPushPrompt: true,
-        });
-      }
-    });
+    WebPushManager.getPermissionState()
+      .then(result => {
+        if (result === 'prompt') {
+          track('browser push notifications', 'prompted');
+          this.setState({
+            showWebPushPrompt: true,
+          });
+        }
+        return;
+      })
+      .catch(err => {
+        console.log('Error getting permission state: ', err);
+      });
   }
 
   shouldComponentUpdate(nextProps) {
@@ -133,7 +133,7 @@ class NotificationsPure extends React.Component<Props, State> {
         });
         return this.props.subscribeToWebPush(subscription);
       })
-      .catch(err => {
+      .catch(() => {
         track('browser push notifications', 'blocked');
         this.setState({
           webPushPromptLoading: false,

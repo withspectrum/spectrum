@@ -44,9 +44,9 @@ class UserSettings extends React.Component<Props> {
       return (
         <FlexCol style={{ flex: 'auto' }}>
           <Titlebar
-            title={`No User Found`}
+            title={'No User Found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <AppViewWrapper>
@@ -68,9 +68,9 @@ class UserSettings extends React.Component<Props> {
       return (
         <FlexCol style={{ flex: 'auto' }}>
           <Titlebar
-            title={`User not found`}
+            title={'User not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <AppViewWrapper>
@@ -87,15 +87,17 @@ class UserSettings extends React.Component<Props> {
       return (
         <FlexCol style={{ flex: 'auto' }}>
           <Titlebar
-            title={`No Permission`}
+            title={'No Permission'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <AppViewWrapper>
             <ViewError
-              heading={`These aren’t the settings you’re looking for.`}
-              subheading={`You can only view your own user settings. Head on back.`}
+              heading={'These aren’t the settings you’re looking for.'}
+              subheading={
+                'You can only view your own user settings. Head on back.'
+              }
             />
           </AppViewWrapper>
         </FlexCol>

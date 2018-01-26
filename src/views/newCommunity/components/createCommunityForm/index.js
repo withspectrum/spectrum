@@ -15,6 +15,7 @@ import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
+import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Button } from '../../../../components/buttons';
 import {
   Input,
@@ -133,6 +134,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
         slugTaken: false,
       });
 
+      // $FlowIssue
       this.checkSlug(slug);
     }
   };
@@ -170,6 +172,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
         slugTaken: false,
       });
 
+      // $FlowIssue
       this.checkSlug(slug);
     }
   };
@@ -212,7 +215,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       this.props.client
         .query({
           // TODO: @BRIAN SWITCH THIS AFTER SEARCH IS MERGED IN
-          query: getCommunityBySlugQuery,
+          query: searchCommunitiesQuery,
           variables: {
             queryString: slug,
             type: 'COMMUNITIES',
@@ -481,7 +484,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
           {slugTaken && (
             <Error>
-              This url is already taken - feel free to change it if you're set
+              This url is already taken - feel free to change it if you’re set
               on the name {name}!
             </Error>
           )}
@@ -530,12 +533,12 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
           {descriptionError && (
             <Error>
-              Oop, that's more than 140 characters - try trimming that up.
+              Oop, that’s more than 140 characters - try trimming that up.
             </Error>
           )}
 
           <Input defaultValue={website} onChange={this.changeWebsite}>
-            Optional: Add your community's website
+            Optional: Add your community’s website
           </Input>
 
           <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>

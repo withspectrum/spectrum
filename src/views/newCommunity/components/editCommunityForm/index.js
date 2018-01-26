@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { track } from '../../../../helpers/events';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Button } from '../../../../components/buttons';
 import { Notice } from '../../../../components/listItems/style';
@@ -37,7 +38,7 @@ type State = {
 };
 
 type Props = {
-  community: Object,
+  community: GetCommunityType,
   dispatch: Function,
   communityUpdated: Function,
   editCommunity: Function,
@@ -51,9 +52,9 @@ class CommunityWithData extends React.Component<Props, State> {
     this.state = {
       name: community.name,
       slug: community.slug,
-      description: community.description,
+      description: community.description ? community.description : '',
       communityId: community.id,
-      website: community.website,
+      website: community.website ? community.website : '',
       image: community.profilePhoto,
       coverPhoto: community.coverPhoto,
       file: null,
@@ -280,7 +281,7 @@ class CommunityWithData extends React.Component<Props, State> {
             onChange={this.changeWebsite}
             autoFocus={true}
           >
-            Optional: Add your community's website
+            Optional: Add your community’s website
           </Input>
 
           {photoSizeError && (
