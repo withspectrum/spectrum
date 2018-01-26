@@ -31,6 +31,7 @@ const createDirectMessageThreadOptions = {
           if (!createDirectMessageThread) return;
           const data = store.readQuery({
             query: getCurrentUserDMThreadConnectionQuery,
+            variables: { after: '' },
           });
 
           data.user.directMessageThreadsConnection.edges.push({
