@@ -1,7 +1,9 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import Link from 'src/components/link';
+// $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import { storeItem } from '../../helpers/localStorage';
@@ -28,20 +30,11 @@ import {
   SignupFooter,
   SigninLink,
 } from './style';
+// $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
-import upgradeToProMutation from 'shared/graphql/mutations/user/upgradeToPro';
+import { upgradeToProMutation } from '../../api/user';
 
-type NullCardProps = {
-  noShadow?: boolean,
-  noPadding?: boolean,
-  bg?: ?string,
-  heading?: string,
-  copy?: string,
-  children?: React.Node,
-  repeat?: boolean,
-  emoji?: string,
-};
-export const NullCard = (props: NullCardProps) => {
+export const NullCard = props => {
   return (
     <Card noShadow={props.noShadow}>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
@@ -53,7 +46,7 @@ export const NullCard = (props: NullCardProps) => {
   );
 };
 
-export const MiniNullCard = (props: NullCardProps) => {
+export const MiniNullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
@@ -72,13 +65,7 @@ export const MiniNullCard = (props: NullCardProps) => {
   );
 };
 
-type NullStateProps = {
-  bg?: ?string,
-  heading?: string,
-  copy?: string,
-  children?: React.Node,
-};
-export const NullState = (props: NullStateProps) => (
+export const NullState = props => (
   <NullCol bg={props.bg}>
     {props.heading && <Title>{props.heading}</Title>}
     {props.copy && <Subtitle>{props.copy}</Subtitle>}
@@ -106,7 +93,7 @@ export const UpsellMiniCreateCommunity = () => {
 // to create a community rather than joining communities - if they choose
 // to go down the path of creating a community, clicking on the 'get started'
 // button will close the new user onboarding
-export const UpsellCreateCommunity = ({ close }: { close: Function }) => {
+export const UpsellCreateCommunity = ({ close }) => {
   const title = 'Create a community';
   const subtitle = 'Building communities on Spectrum is easy and free forever';
 
@@ -123,26 +110,22 @@ export const UpsellCreateCommunity = ({ close }: { close: Function }) => {
   );
 };
 
-type SigninState = {
-  isSigningIn: boolean,
-  signinType: string,
-};
-
-type SigninProps = {
-  view?: Object,
-  noShadow?: boolean,
-  title?: string,
-  glyph?: string,
-  redirectPath?: string,
-};
-
-export class UpsellSignIn extends React.Component<SigninProps, SigninState> {
-  state = {
-    isSigningIn: false,
-    signinType: '',
+export class UpsellSignIn extends Component {
+  state: {
+    isSigningIn: Boolean,
+    signinType: string,
   };
 
-  toggleSigningIn = (type: string) => {
+  constructor() {
+    super();
+
+    this.state = {
+      isSigningIn: false,
+      signinType: '',
+    };
+  }
+
+  toggleSigningIn = type => {
     const { isSigningIn } = this.state;
     this.setState({
       isSigningIn: !isSigningIn,
@@ -150,7 +133,7 @@ export class UpsellSignIn extends React.Component<SigninProps, SigninState> {
     });
   };
 
-  trackSignin = (type: string, method: string) => {
+  trackSignin = (type, method) => {
     storeItem('preferred_signin_method', method);
   };
 
@@ -169,12 +152,10 @@ export class UpsellSignIn extends React.Component<SigninProps, SigninState> {
     } else {
       const subtitle = view
         ? view.type === 'community'
-          ? `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${
-              view.data.name
-            } community and get in on the conversation.`
-          : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${
-              view.data.community.name
-            } community and get in on the conversation.`
+          ? `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.name} community and get in on the conversation.`
+          : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.community.name} community and get in on the conversation.`
         : 'Spectrum is a place where communities can share, discuss, and grow together. Sign up below to get in on the conversation.';
 
       return (
@@ -220,11 +201,11 @@ export const Upsell404Community = () => {
   // we should return the user back to homepage
   return (
     <Actions>
-      <Link to={'/'}>
+      <Link to={`/`}>
         <OutlineButton large>Take me back</OutlineButton>
       </Link>
 
-      <Link to={'/new/community'}>
+      <Link to={`/new/community`}>
         <Button large>Create a community</Button>
       </Link>
     </Actions>
@@ -238,7 +219,6 @@ export const UpsellJoinCommunity = ({
 }: {
   community: Object,
   join: Function,
-  loading: boolean,
 }) => {
   return (
     <NullCard
@@ -253,12 +233,7 @@ export const UpsellJoinCommunity = ({
   );
 };
 
-type NewUserProps = {
-  user: {
-    name: string,
-  },
-};
-export class UpsellNewUser extends React.Component<NewUserProps> {
+export class UpsellNewUser extends Component {
   render() {
     const { user } = this.props;
 
@@ -271,7 +246,7 @@ export class UpsellNewUser extends React.Component<NewUserProps> {
         </LargeEmoji>
         <Title>Howdy, {user.name}!</Title>
         <Subtitle>
-          Spectrum is a place where communities live. It’s easy to follow the
+          Spectrum is a place where communities live. It's easy to follow the
           things that you care about most, or even create your own community to
           share with the world.
         </Subtitle>
@@ -287,18 +262,14 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => (window.location.href = '/home')}>
+      <Button onClick={() => (window.location.href = `/home`)}>
         Take me home
       </Button>
     </NullCard>
   );
 };
 
-type MiniUpgradeProps = {
-  currentUser: Object,
-  dispatch: Function,
-};
-class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
+class UpsellMiniUpgradePure extends Component {
   render() {
     const { currentUser, dispatch } = this.props;
 
@@ -311,9 +282,9 @@ class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
       >
         <Button
           icon="payment"
+          label
           onClick={() =>
-            dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))
-          }
+            dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))}
         >
           Upgrade
         </Button>
@@ -323,28 +294,22 @@ class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-// $FlowIssue
 export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
 
-type UpgradeProProps = {
-  upgradeToPro: Function,
-  complete: Function,
-  dispatch: Function,
-  currentUser: Object,
-};
-
-type UpgradeProState = {
-  upgradeError: string,
-  isLoading: boolean,
-};
-class UpsellUpgradeToProPure extends React.Component<
-  UpgradeProProps,
-  UpgradeProState
-> {
-  state = {
-    upgradeError: '',
-    isLoading: false,
+class UpsellUpgradeToProPure extends Component {
+  state: {
+    upgradeError: string,
+    isLoading: boolean,
   };
+
+  constructor() {
+    super();
+
+    this.state = {
+      upgradeError: '',
+      isLoading: false,
+    };
+  }
 
   upgradeToPro = token => {
     this.setState({
@@ -358,14 +323,14 @@ class UpsellUpgradeToProPure extends React.Component<
 
     this.props
       .upgradeToPro(input)
-      .then(() => {
+      .then(({ data: { upgradeToPro }, data }) => {
         this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
         this.setState({
           isLoading: false,
           upgradeError: '',
         });
         // if the upgrade is triggered from a modal, close the modal
-        return this.props.complete && this.props.complete();
+        this.props.complete && this.props.complete();
       })
       .catch(err => {
         this.setState({
@@ -388,9 +353,9 @@ class UpsellUpgradeToProPure extends React.Component<
         </Profile>
         <Title>Upgrade to Pro</Title>
         <Subtitle>
-          We’re hard at work building features for Spectrum Pro. Your early
-          support helps us get there faster – thank you! In the meantime, here’s
-          what’s unlocked on Pro:
+          We're hard at work building features for Spectrum Pro. Your early
+          support helps us get there faster – thank you! In the meantime, here's
+          what's unlocked on Pro:
         </Subtitle>
         <Subtitle>
           <ul>
@@ -446,7 +411,6 @@ const mapStateToProps = state => ({
 });
 export const UpsellUpgradeToPro = compose(
   upgradeToProMutation,
-  // $FlowIssue
   connect(mapStateToProps)
 )(UpsellUpgradeToProPure);
 
@@ -463,8 +427,8 @@ export const UpsellNullNotifications = () => {
 export const UpsellReload = () => (
   <NullCard
     bg="error"
-    heading={'Whoops!'}
-    copy={'Something went wrong on our end... Mind reloading?'}
+    heading={`Whoops!`}
+    copy={`Something went wrong on our end... Mind reloading?`}
   >
     <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload

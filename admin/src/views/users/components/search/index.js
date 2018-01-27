@@ -1,5 +1,4 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import compose from 'recompose/compose';
 import pure from 'recompose/pure';
@@ -8,7 +7,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
-import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
+import { SEARCH_USERS_QUERY } from '../../../../api/queries';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
@@ -22,19 +21,14 @@ import {
   SearchResultImage,
 } from './style';
 
-type State = {
-  searchString: string,
-  searchResults: Array<any>,
-  searchIsLoading: boolean,
-  focusedSearchResult: string,
-};
+class Search extends Component {
+  state: {
+    searchString: string,
+    searchResults: Array<any>,
+    searchIsLoading: boolean,
+    focusedSearchResult: string,
+  };
 
-type Props = {
-  client: Object,
-  history: Object,
-};
-
-class Search extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -49,7 +43,7 @@ class Search extends React.Component<Props, State> {
     this.search = throttle(this.search, 200);
   }
 
-  search = (queryString: string) => {
+  search = (string: string) => {
     const { client } = this.props;
 
     this.setState({
@@ -58,9 +52,9 @@ class Search extends React.Component<Props, State> {
 
     client
       .query({
-        query: searchUsersQuery,
+        query: SEARCH_USERS_QUERY,
         variables: {
-          queryString,
+          queryString: string,
           type: 'USERS',
         },
       })
@@ -117,8 +111,7 @@ class Search extends React.Component<Props, State> {
     // backspace
     if (e.keyCode === 8) {
       if (searchString.length > 0) return;
-      // $FlowFixMe
-      return input && input.focus();
+      return input.focus();
     }
 
     //escape
@@ -128,8 +121,7 @@ class Search extends React.Component<Props, State> {
         searchIsLoading: false,
       });
 
-      // $FlowFixMe
-      return input && input.focus();
+      return input.focus();
     }
 
     // down

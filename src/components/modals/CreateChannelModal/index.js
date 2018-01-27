@@ -1,5 +1,4 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
@@ -12,10 +11,10 @@ import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
-import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
-import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
+import {
+  CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
+  createChannelMutation,
+} from '../../../api/channel';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -29,28 +28,20 @@ import {
 } from '../../formElements';
 import { Form, Actions } from './style';
 
-type State = {
-  name: string,
-  slug: string,
-  description: string,
-  isPrivate: boolean,
-  slugTaken: boolean,
-  slugError: boolean,
-  descriptionError: boolean,
-  nameError: boolean,
-  createError: boolean,
-  loading: boolean,
-};
+class CreateChannelModal extends Component {
+  state: {
+    name: string,
+    slug: string,
+    description: string,
+    isPrivate: boolean,
+    slugTaken: boolean,
+    slugError: boolean,
+    descriptionError: boolean,
+    nameError: boolean,
+    createError: boolean,
+    loading: boolean,
+  };
 
-type Props = {
-  client: Object,
-  dispatch: Function,
-  isOpen: boolean,
-  modalProps: any,
-  createChannel: Function,
-};
-
-class CreateChannelModal extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -93,7 +84,6 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError: false,
     });
 
-    // $FlowIssue
     this.checkSlug(slug);
   };
 
@@ -120,11 +110,10 @@ class CreateChannelModal extends React.Component<Props, State> {
       slugError: false,
     });
 
-    // $FlowIssue
     this.checkSlug(slug);
   };
 
-  checkSlug = (slug: string) => {
+  checkSlug = slug => {
     const communitySlug = this.props.modalProps.slug;
 
     if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
@@ -136,13 +125,13 @@ class CreateChannelModal extends React.Component<Props, State> {
       // check the db to see if this channel slug exists
       this.props.client
         .query({
-          query: getChannelBySlugAndCommunitySlugQuery,
+          query: CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
           variables: {
             channelSlug: slug,
             communitySlug,
           },
         })
-        .then(({ data }: { data: { channel: GetChannelType } }) => {
+        .then(({ data }) => {
           if (CHANNEL_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
             return this.setState({
               slugTaken: true,
@@ -150,19 +139,14 @@ class CreateChannelModal extends React.Component<Props, State> {
           }
 
           if (!data.loading && data && data.channel && data.channel.id) {
-            return this.setState({
+            this.setState({
               slugTaken: true,
             });
           } else {
-            return this.setState({
+            this.setState({
               slugTaken: false,
             });
           }
-        })
-        .catch(err => {
-          return this.props.dispatch(
-            addToastWithTimeout('error', err.toString())
-          );
         });
     }
   };
@@ -234,17 +218,13 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     this.props
       .createChannel(input)
-      .then(({ data }: CreateChannelType) => {
+      .then(({ data: { createChannel } }) => {
         track('channel', 'created', null);
-
-        const { createChannel: channel } = data;
-        // eslint-disable-next-line
-        window.location.href = `/${modalProps.slug}/${channel.slug}`;
+        window.location.href = `/${modalProps.slug}/${createChannel.slug}`;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')
         );
-        return;
       })
       .catch(err => {
         this.setState({
@@ -270,7 +250,6 @@ class CreateChannelModal extends React.Component<Props, State> {
       createError,
       loading,
     } = this.state;
-
     const styles = modalStyles();
 
     return (
@@ -309,7 +288,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
             {slugTaken && (
               <Error>
-                This url is already taken - feel free to change it if you’re set
+                This url is already taken - feel free to change it if you're set
                 on the name {name}!
               </Error>
             )}
@@ -326,7 +305,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
             {descriptionError && (
               <Error>
-                Oop, that’s more than 140 characters - try trimming that up.
+                Oop, that's more than 140 characters - try trimming that up.
               </Error>
             )}
 
@@ -399,7 +378,6 @@ const mapStateToProps = state => ({
   modalProps: state.modals.modalProps,
 });
 
-// $FlowIssue
 const CreateChannelModalWithState = connect(mapStateToProps)(
   CreateChannelModalWithMutation
 );

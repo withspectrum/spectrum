@@ -1,11 +1,11 @@
-// @flow
+//@flow
 import * as React from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
-import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
-import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
+import { getBlockedUsersQuery } from '../../../api/channel';
 import {
   SectionCard,
   SectionTitle,
@@ -20,7 +20,9 @@ import {
 
 type Props = {
   data: {
-    channel: GetChannelBlockedUsersType,
+    channel: {
+      blockedUsers: Array<Object>,
+    },
   },
   unblock: Function,
   isLoading: boolean,
@@ -32,7 +34,6 @@ class BlockedUsers extends React.Component<Props> {
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
-
       return (
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
@@ -56,13 +57,12 @@ class BlockedUsers extends React.Component<Props> {
           <ListContainer>
             {blockedUsers &&
               blockedUsers.map(user => {
-                if (!user || !user.id) return null;
-
                 return (
                   <section key={user.id}>
                     <UserListItem user={user}>
                       <TextButton
-                        onClick={() => user && unblock(user.id)}
+                        onClick={() => unblock(user.id)}
+                        label
                         hoverColor={'warn.alt'}
                       >
                         Unblock

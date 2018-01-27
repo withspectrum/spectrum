@@ -43,9 +43,7 @@ export default async (
     );
   if (message.messageType !== 'media' && message.file)
     throw new UserError(
-      `To send an image, please use messageType: "media" instead of "${
-        message.messageType
-      }".`
+      `To send an image, please use messageType: "media" instead of "${message.messageType}".`
     );
 
   const thread = await loaders.thread.load(message.threadId);

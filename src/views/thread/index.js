@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -13,10 +12,7 @@ import Head from '../../components/head';
 import ChatInput from '../../components/chatInput';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
-import {
-  getThreadByMatch,
-  getThreadByMatchQuery,
-} from 'shared/graphql/queries/thread/getThread';
+import { getThread, GET_THREAD_QUERY } from './queries';
 import { NullState, UpsellSignIn } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
 import LoadingView from './components/loading';
@@ -45,24 +41,23 @@ type Props = {
   dispatch: Function,
   slider: boolean,
   threadViewContext: 'slider' | 'fullscreen' | 'inbox',
-  threadSliderIsOpen: boolean,
-  client: Object,
 };
 
 type State = {
   scrollElement: any,
   isEditing: boolean,
-  messagesContainer: any,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
-  chatInput: any;
+  constructor() {
+    super();
 
-  state = {
-    messagesContainer: null,
-    scrollElement: null,
-    isEditing: false,
-  };
+    this.state = {
+      messagesContainer: null,
+      scrollElement: null,
+      isEditing: false,
+    };
+  }
 
   toggleEdit = () => {
     const { isEditing } = this.state;
@@ -85,14 +80,14 @@ class ThreadContainer extends React.Component<Props, State> {
     if (!currentUser || !threadId) return;
     try {
       const threadData = client.readQuery({
-        query: getThreadByMatchQuery,
+        query: GET_THREAD_QUERY,
         variables: {
           id: threadId,
         },
       });
 
       client.writeQuery({
-        query: getThreadByMatchQuery,
+        query: GET_THREAD_QUERY,
         variables: {
           id: threadId,
         },
@@ -123,6 +118,7 @@ class ThreadContainer extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     // if the user is in the inbox and changes threads, it should initially scroll
     // to the top before continuing with logic to force scroll to the bottom
+    const { scrollElement } = this.state;
     if (
       prevProps.data &&
       prevProps.data.thread &&
@@ -489,10 +485,6 @@ class ThreadContainer extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  // $FlowIssue
-  connect(map),
-  getThreadByMatch,
-  viewNetworkHandler,
-  withApollo
-)(ThreadContainer);
+export default compose(connect(map), getThread, viewNetworkHandler, withApollo)(
+  ThreadContainer
+);

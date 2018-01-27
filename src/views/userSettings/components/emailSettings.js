@@ -1,10 +1,13 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+//$FlowFixMe
 import { connect } from 'react-redux';
+//$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
-import toggleUserNotificationSettingsMutation from 'shared/graphql/mutations/user/toggleUserNotificationSettings';
+import {
+  toggleNotificationSettingsMutation,
+  updateUserEmailMutation,
+} from '../../../api/user';
 import { Checkbox, Input, Error } from '../../../components/formElements';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
@@ -19,7 +22,6 @@ import {
   Description,
 } from '../../../components/listItems/style';
 import { EmailListItem, CheckboxContent, EmailForm } from '../style';
-import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -81,25 +83,20 @@ const parseNotificationTypes = notifications => {
   });
 };
 
-type Props = {
-  updateUserEmail: Function,
-  dispatch: Function,
-  toggleNotificationSettings: Function,
-  smallOnly: boolean,
-  largeOnly: boolean,
-  currentUser: GetCurrentUserSettingsType,
-};
-
-type State = {
-  email: string,
-  emailError: string,
-};
-
-class EmailSettings extends React.Component<Props, State> {
-  state = {
-    email: '',
-    emailError: '',
+class EmailSettings extends Component {
+  state: {
+    email: string,
+    emailError: string,
   };
+
+  constructor() {
+    super();
+
+    this.state = {
+      email: '',
+      emailError: '',
+    };
+  }
 
   handleEmailChange = e => {
     this.setState({
@@ -120,7 +117,7 @@ class EmailSettings extends React.Component<Props, State> {
     }
 
     return updateUserEmail(email)
-      .then(() => {
+      .then(({ data: { updateUserEmail } }) => {
         this.props.dispatch(
           addToastWithTimeout(
             'success',
@@ -146,10 +143,8 @@ class EmailSettings extends React.Component<Props, State> {
 
     this.props
       .toggleNotificationSettings(input)
-      .then(() => {
-        return this.props.dispatch(
-          addToastWithTimeout('success', 'Settings saved!')
-        );
+      .then(({ data: { toggleNotificationSettings } }) => {
+        this.props.dispatch(addToastWithTimeout('success', 'Settings saved!'));
       })
       .catch(err => {
         this.props.dispatch(addToastWithTimeout('error', err.message));
@@ -161,11 +156,10 @@ class EmailSettings extends React.Component<Props, State> {
       currentUser: { settings: { notifications } },
       currentUser,
     } = this.props;
-
     const { emailError } = this.state;
-    const settings = parseNotificationTypes(notifications).filter(
-      notification => notification.hasOwnProperty('emailValue')
-    );
+    const settings = parseNotificationTypes(
+      notifications
+    ).filter(notification => notification.hasOwnProperty('emailValue'));
 
     if (!currentUser.email) {
       return (
@@ -179,8 +173,8 @@ class EmailSettings extends React.Component<Props, State> {
           <ListContainer>
             <Description>
               You can customize your email notifications to keep up to date on
-              what’s important to you on Spectrum. Enter your email below and
-              we’ll send you a confirmation link.
+              what's important to you on Spectrum. Enter your email below and
+              we'll send you a confirmation link.
             </Description>
 
             {currentUser.pendingEmail && (
@@ -233,7 +227,9 @@ class EmailSettings extends React.Component<Props, State> {
                     {setting.label}
                     {setting.type === 'newMessageInThreads' && (
                       <Notice>
-                        <strong>Trying to mute a specific conversation?</strong>{' '}
+                        <strong>
+                          Trying to mute a specific conversation?
+                        </strong>{' '}
                         You can turn off email notifications for individual
                         threads by clicking on the notification icon{' '}
                         <InlineIcon>
@@ -247,7 +243,7 @@ class EmailSettings extends React.Component<Props, State> {
                       <Notice>
                         You can turn off email notifications for individual
                         channels by turning thread notifications off on in the
-                        sidebar of the individual channel’s page.
+                        sidebar of the individual channel's page.
                       </Notice>
                     )}
 
@@ -269,7 +265,7 @@ class EmailSettings extends React.Component<Props, State> {
 }
 
 export default compose(
-  toggleUserNotificationSettingsMutation,
+  toggleNotificationSettingsMutation,
   updateUserEmailMutation,
   connect()
 )(EmailSettings);

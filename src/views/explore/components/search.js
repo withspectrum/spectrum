@@ -2,15 +2,13 @@
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { Button } from '../../../components/buttons';
+import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
-import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../api/search/searchCommunities';
 import { Spinner } from '../../../components/globals';
-import { addToastWithTimeout } from '../../../actions/toasts';
 import {
   SearchWrapper,
   SearchInput,
@@ -32,19 +30,16 @@ type State = {
   searchString: string,
   searchResults: Array<any>,
   searchIsLoading: boolean,
-  focusedSearchResult: ?string,
+  focusedSearchResult: string,
   isFocused: boolean,
 };
 
 type Props = {
   client: Object,
   history: Object,
-  dispatch: Function,
 };
 
 class Search extends React.Component<Props, State> {
-  input: React.Node;
-
   constructor() {
     super();
 
@@ -72,51 +67,44 @@ class Search extends React.Component<Props, State> {
     // trigger the query
     client
       .query({
-        query: searchCommunitiesQuery,
+        query: SEARCH_COMMUNITIES_QUERY,
         variables: { queryString: searchString, type: 'COMMUNITIES' },
       })
-      .then(
-        ({ data: { search } }: { data: { search: SearchCommunitiesType } }) => {
-          if (
-            !search ||
-            !search.searchResultsConnection ||
-            search.searchResultsConnection.edges.length === 0
-          ) {
-            return this.setState({
-              searchResults: [],
-              searchIsLoading: false,
-              focusedSearchResult: '',
-            });
-          }
-
-          const searchResults = search.searchResultsConnection.edges;
-
-          const sorted = searchResults
-            .slice()
-            .map(c => c && c.node)
-            .sort((a, b) => {
-              if (!b) return 0;
-              if (!a) return 0;
-              return b.metaData.members - a.metaData.members;
-            });
-
+      .then(({ data: { search }, data }) => {
+        if (
+          !search ||
+          !search.searchResultsConnection ||
+          search.searchResultsConnection.edges.length === 0
+        ) {
           return this.setState({
-            searchResults: sorted,
+            searchResults: [],
             searchIsLoading: false,
-            focusedSearchResult: sorted && sorted[0] ? sorted[0].id : null,
+            focusedSearchResult: '',
           });
         }
-      )
-      .catch(err =>
-        this.props.dispatch(addToastWithTimeout('error', err.message))
-      );
+
+        const searchResults = search.searchResultsConnection.edges;
+
+        const sorted = searchResults
+          .slice()
+          .map(c => c.node)
+          .sort((a, b) => {
+            return b.metaData.members - a.metaData.members;
+          });
+
+        return this.setState({
+          searchResults: sorted,
+          searchIsLoading: false,
+          focusedSearchResult: sorted[0].id,
+        });
+      });
   };
 
   handleKeyPress = (e: any) => {
     // destructure the whole state object
     const { searchResults, focusedSearchResult } = this.state;
 
-    const input = this.input;
+    const input = findDOMNode(this.refs.input);
     const searchResultIds =
       searchResults && searchResults.map(community => community.id);
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
@@ -183,7 +171,6 @@ class Search extends React.Component<Props, State> {
     });
 
     // trigger a new search based on the search input
-    // $FlowIssue
     this.search(string);
   };
 
@@ -200,8 +187,6 @@ class Search extends React.Component<Props, State> {
     if (!val || val.length === 0) return;
 
     const string = val.toLowerCase().trim();
-
-    // $FlowIssue
     this.search(string);
 
     return this.setState({
@@ -228,9 +213,7 @@ class Search extends React.Component<Props, State> {
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
-            innerRef={c => {
-              this.input = c;
-            }}
+            ref="input"
             type="text"
             value={searchString}
             placeholder="Search for communities or topics..."
@@ -274,7 +257,7 @@ class Search extends React.Component<Props, State> {
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
-                      <p>No communities found matching “{searchString}”</p>
+                      <p>No communities found matching "{searchString}"</p>
                       <Link to={'/new/community'}>
                         <Button>Create a Community</Button>
                       </Link>
@@ -289,4 +272,4 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), withApollo, withRouter)(Search);
+export default compose(withApollo, withRouter)(Search);

@@ -1,5 +1,4 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -22,20 +21,11 @@ import {
   changeActiveThread,
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
-type Props = {
-  dispatch: Function,
-  history: Object,
-  activeCommunity: ?string,
-  activeChannel: ?string,
-  communities: Array<GetCommunityType>,
-};
-
-class CommunityList extends React.Component<Props> {
+class CommunityList extends Component {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
-    this.props.history.replace('/');
+    this.props.history.replace(`/`);
     this.props.dispatch(changeActiveThread(''));
 
     if (id !== this.props.activeCommunity) {
@@ -54,24 +44,6 @@ class CommunityList extends React.Component<Props> {
       this.changeCommunity(id);
     }
   };
-
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-
-    const changedActiveCommunity =
-      curr.activeCommunity !== nextProps.activeCommunity;
-    const changedActiveChannel = curr.activeChannel !== nextProps.activeChannel;
-    const changedCommunitiesAmount =
-      curr.communities.length !== nextProps.communities.length;
-
-    if (
-      changedActiveCommunity ||
-      changedActiveChannel ||
-      changedCommunitiesAmount
-    )
-      return true;
-    return false;
-  }
 
   render() {
     const { activeCommunity, activeChannel, communities } = this.props;
@@ -116,7 +88,6 @@ class CommunityList extends React.Component<Props> {
                   activeChannel={activeChannel}
                   communitySlug={c.slug}
                   thisCommunity={c}
-                  id={c.id}
                 />
               )}
             </CommunityListItem>
@@ -136,7 +107,6 @@ class CommunityList extends React.Component<Props> {
               activeCommunity={activeCommunity}
               communities={communities}
               handleOnClick={this.handleOnClick}
-              curatedContentType={'top-communities-by-members'}
             />
           )}
         </Fixed>

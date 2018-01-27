@@ -1,5 +1,5 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+//$FlowFixMe
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Checkbox } from '../../../components/formElements';
@@ -7,7 +7,7 @@ import WebPushManager from '../../../helpers/web-push-manager';
 import { removeItemFromStorage } from '../../../helpers/localStorage';
 import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { subscribeToWebPush } from 'shared/graphql/subscriptions';
+import { subscribeToWebPush } from '../../../api/web-push-subscriptions';
 import {
   StyledCard,
   LargeListHeading,
@@ -17,19 +17,7 @@ import {
 } from '../../../components/listItems/style';
 import { EmailListItem } from '../style';
 
-type State = {
-  webPushBlocked: boolean,
-  subscription: ?any,
-};
-
-type Props = {
-  subscribeToWebPush: Function,
-  dispatch: Function,
-  smallOnly?: boolean,
-  largeOnly?: boolean,
-};
-
-class NotificationSettings extends React.Component<Props, State> {
+class NotificationSettings extends Component {
   state = {
     webPushBlocked: false,
     subscription: null,
@@ -64,6 +52,7 @@ class NotificationSettings extends React.Component<Props, State> {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
+        console.log('error subscribing to browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -91,7 +80,8 @@ class NotificationSettings extends React.Component<Props, State> {
           );
         }
       })
-      .catch(() => {
+      .catch(err => {
+        console.log('error unsubscribing from browser notifications', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',

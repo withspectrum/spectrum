@@ -13,9 +13,8 @@ import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
 import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
-import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
-import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
-import publishThread from 'shared/graphql/mutations/thread/publishThread';
+import { getComposerCommunitiesAndChannels } from './queries';
+import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
@@ -54,22 +53,15 @@ type State = {
 };
 
 type Props = {
-  data: {
-    user: GetComposerType,
-    refetch: Function,
-    loading: boolean,
-  },
+  data: Object, // TODO(@mxstbr): Maybe Apollo Client exports flow types?
   isOpen: boolean,
   dispatch: Function,
-  publishThread: Function,
+  mutate: Function,
   history: Object,
   location: Object,
   activeCommunity?: string,
   activeChannel?: string,
   threadSliderIsOpen?: boolean,
-  title: ?string,
-  body: ?string,
-  isInbox: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
@@ -99,31 +91,12 @@ class ComposerWithData extends Component<Props, State> {
     // if the user doesn't exist, bust outta here
     if (!user || !user.id) return;
 
-    const hasCommunities =
-      user.communityConnection.edges &&
-      user.communityConnection.edges.length > 0;
-    const hasChannels =
-      user.channelConnection.edges && user.channelConnection.edges.length > 0;
-
-    if (!hasCommunities || !hasChannels) {
-      return this.setState({
-        availableCommunities: [],
-        availableChannels: [],
-        activeCommunity: null,
-        activeChannel: null,
-      });
-    }
-
     const communities = sortCommunities(
-      user.communityConnection.edges
-        .map(edge => edge && edge.node)
-        .filter(Boolean)
+      user.communityConnection.edges.map(edge => edge.node)
     );
 
     const channels = sortChannels(
-      user.channelConnection.edges
-        .map(edge => edge && edge.node)
-        .filter(Boolean)
+      user.channelConnection.edges.map(edge => edge.node)
     );
 
     const activeSlug = props.activeCommunity || this.state.activeCommunity;
@@ -322,17 +295,19 @@ class ComposerWithData extends Component<Props, State> {
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
-    const thread = {
-      channelId,
-      communityId,
-      type: 'DRAFTJS',
-      content,
-      attachments,
-      filesToUpload,
-    };
-
     this.props
-      .publishThread(thread)
+      .mutate({
+        variables: {
+          thread: {
+            channelId,
+            communityId,
+            type: 'DRAFTJS',
+            content,
+            attachments,
+            filesToUpload,
+          },
+        },
+      })
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
       .then(({ data }) => {
@@ -361,7 +336,6 @@ class ComposerWithData extends Component<Props, State> {
           this.props.history.push(`?thread=${id}`);
           this.props.dispatch(changeActiveThread(null));
         }
-        return;
       })
       .catch(err => {
         this.setState({
@@ -404,15 +378,15 @@ class ComposerWithData extends Component<Props, State> {
       this.setState({ fetchingLinkPreview: true });
 
       getLinkPreviewFromUrl(urlToCheck)
-        .then(data =>
+        .then(data => {
           this.setState(prevState => ({
             linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
-          }))
-        )
-        .catch(() => {
+          }));
+        })
+        .catch(err => {
           this.setState({
             fetchingLinkPreview: false,
           });
@@ -451,7 +425,7 @@ class ComposerWithData extends Component<Props, State> {
 
     return (
       <Container>
-        <Titlebar provideBack title={'New conversation'} noComposer />
+        <Titlebar provideBack title={`New conversation`} noComposer />
         <Dropdowns>
           <span>To:</span>
           {!dataExists ? (
@@ -479,7 +453,7 @@ class ComposerWithData extends Component<Props, State> {
             >
               {availableChannels
                 .filter(channel => channel.community.id === activeCommunity)
-                .map(channel => {
+                .map((channel, i) => {
                   return (
                     <option key={channel.id} value={channel.id}>
                       {channel.name}
@@ -494,8 +468,8 @@ class ComposerWithData extends Component<Props, State> {
             onChange={this.changeTitle}
             style={ThreadTitle}
             value={this.state.title}
-            placeholder={"What's up?"}
-            ref={'titleTextarea'}
+            placeholder={`What's up?`}
+            ref="titleTextarea"
             autoFocus={!threadSliderIsOpen}
           />
 
@@ -506,7 +480,7 @@ class ComposerWithData extends Component<Props, State> {
             style={ThreadDescription}
             editorRef={editor => (this.bodyEditor = editor)}
             editorKey="thread-composer"
-            placeholder={'Write more thoughts here...'}
+            placeholder={`Write more thoughts here...`}
             className={'threadComposer'}
             showLinkPreview={true}
             linkPreview={{

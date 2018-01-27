@@ -21,7 +21,7 @@ import {
   CardContent,
 } from '../../../components/threadFeedCard/style';
 import compose from 'recompose/compose';
-import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
+import { markSingleNotificationSeenMutation } from '../../../api/notification';
 
 type Props = {
   notification: Object,

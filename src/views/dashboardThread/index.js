@@ -32,7 +32,6 @@ class DashboardThread extends Component {
             threadSliderIsOpen={threadSliderIsOpen}
             threadViewContext={'inbox'}
             threadId={threadId}
-            id={threadId}
           />
         </Thread>
       </Container>

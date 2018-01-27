@@ -67,40 +67,42 @@ export default async (
   }
 
   // for each member on the invite record, send a community invitation
+  return (
+    inviteRecord.members
+      .filter(user => isEmail(user.email))
+      .filter(user => user.email !== currentUser.email)
+      .map(user => {
+        return addQueue('community invite notification', {
+          recipient: {
+            email: user.email,
+            firstName: user.firstName ? user.firstName : null,
+            lastName: user.lastName ? user.lastName : null,
+          },
+          communityId: inviteRecord.communityId,
+          senderId: inviteRecord.senderId,
+          customMessage: input.customMessage,
+        });
+      })
+      // send the community record back to the client
+      .then(async () => {
+        const [{ members, teamName }, community, user] = await Promise.all([
+          getSlackImport(input.id),
+          getCommunityById(input.id),
+          getUserById(currentUser.id),
+        ]);
 
-  inviteRecord.members
-    .filter(user => user && user.email && isEmail(user.email))
-    .filter(user => user.email !== currentUser.email)
-    .map(user => {
-      return addQueue('community invite notification', {
-        recipient: {
-          email: user.email,
-          firstName: user.firstName ? user.firstName : null,
-          lastName: user.lastName ? user.lastName : null,
-        },
-        communityId: inviteRecord.communityId,
-        senderId: inviteRecord.senderId,
-        customMessage: input.customMessage,
-      });
-    });
+        const invitedCount = members
+          .filter(user => !!user.email)
+          .filter(user => user.email !== currentUser.email).length;
 
-  // send the community record back to the client
-  const [{ members, teamName }, community, thisUser] = await Promise.all([
-    getSlackImport(input.id),
-    getCommunityById(input.id),
-    getUserById(currentUser.id),
-  ]);
+        addQueue('admin slack import processed email', {
+          user,
+          community,
+          invitedCount,
+          teamName,
+        });
 
-  const invitedCount = members
-    .filter(user => !!user.email)
-    .filter(user => user.email !== thisUser.email).length;
-
-  addQueue('admin slack import processed email', {
-    thisUser,
-    community,
-    invitedCount,
-    teamName,
-  });
-
-  return community;
+        return community;
+      })
+  );
 };

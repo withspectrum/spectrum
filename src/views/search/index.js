@@ -1,10 +1,9 @@
-// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Titlebar from '../titlebar';
 import { View } from './style';
-import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
+import searchThreadsQuery from '../../api/search/searchThreads';
 import DashboardThreadFeed from '../dashboard/components/threadFeed';
 import { InboxScroller } from '../dashboard/style';
 import SearchInput from './searchInput';

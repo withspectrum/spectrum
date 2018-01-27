@@ -1,8 +1,8 @@
-// @flow
+//$FlowFixMe
 import * as React from 'react';
+//$FlowFixMe
 import compose from 'recompose/compose';
-import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
-import type { GetCommunityMemberConnectionType } from 'shared/graphql/queries/community/getCommunityMemberConnection';
+import { getCommunityMembersQuery } from '../../../api/community';
 import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
@@ -14,7 +14,9 @@ import { StyledButton } from '../style';
 
 type Props = {
   data: {
-    community: GetCommunityMemberConnectionType,
+    community: {
+      memberConnection: Object,
+    },
     fetchMore: Function,
   },
   isLoading: boolean,
@@ -31,12 +33,12 @@ class CommunityMemberGrid extends React.Component<Props> {
 
     if (community) {
       const { edges: members } = community.memberConnection;
-      const nodes = members.map(member => member && member.node);
+
       return (
         <FlexCol>
           <Grid>
-            {nodes.map(user => {
-              if (!user) return null;
+            {members.map(member => {
+              const user = member.node;
               return (
                 <UserProfile
                   key={user.id}
@@ -64,7 +66,7 @@ class CommunityMemberGrid extends React.Component<Props> {
       <Card>
         <ViewError
           refresh
-          heading={'We weren’t able to fetch the members of this community.'}
+          heading={`We weren’t able to fetch the members of this community.`}
         />
       </Card>
     );

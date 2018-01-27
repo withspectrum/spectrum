@@ -1,14 +1,15 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import replace from 'string-replace-to-array';
 import Card from '../card';
+//$FlowFixMe
 import compose from 'recompose/compose';
+//$FlowFixMe
 import Link from 'src/components/link';
+//$FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
 import { CLIENT_URL } from '../../api/constants';
@@ -34,29 +35,18 @@ import {
   ButtonContainer,
 } from './style';
 
-type State = {
-  isLoading: boolean,
-};
-
-type Props = {
-  toggleCommunityMembership: ({ communityId: string }) => Promise<
-    ToggleCommunityMembershipType
-  >,
-  joinedCommunity: Function,
-  dispatch: Function,
-  data: {
-    community: GetCommunityType,
-    loading: boolean,
-    error: ?string,
-  },
-  profileSize: ?string,
-  currentUser: ?Object,
-};
-
-class CommunityWithData extends React.Component<Props, State> {
-  state = {
-    isLoading: false,
+class CommunityWithData extends Component {
+  state: {
+    isLoading: boolean,
   };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
 
   toggleMembership = communityId => {
     this.setState({
@@ -65,12 +55,10 @@ class CommunityWithData extends React.Component<Props, State> {
 
     this.props
       .toggleCommunityMembership({ communityId })
-      .then(({ data }: ToggleCommunityMembershipType) => {
+      .then(({ data: { toggleCommunityMembership } }) => {
         this.setState({
           isLoading: false,
         });
-
-        const { toggleCommunityMembership } = data;
 
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
@@ -88,7 +76,6 @@ class CommunityWithData extends React.Component<Props, State> {
 
         const type = isMember ? 'success' : 'neutral';
         this.props.dispatch(addToastWithTimeout(type, str));
-        return;
       })
       .catch(err => {
         this.setState({
@@ -132,7 +119,7 @@ class CommunityWithData extends React.Component<Props, State> {
               <Avatar
                 src={community.profilePhoto}
                 community={community}
-                size={'64'}
+                size={64}
                 style={{
                   boxShadow: '0 0 0 2px #fff',
                   flex: '0 0 64px',
@@ -187,7 +174,7 @@ class CommunityWithData extends React.Component<Props, State> {
             <ProfileHeader>
               <Avatar
                 community={community}
-                size={'40'}
+                size={40}
                 src={community.profilePhoto}
                 style={{ marginRight: '16px' }}
               />
@@ -345,7 +332,7 @@ class CommunityWithData extends React.Component<Props, State> {
                     }
                     tipText={
                       community.communityPermissions.isMember
-                        ? 'Leave community'
+                        ? `Leave community`
                         : 'Join community'
                     }
                     tipLocation="top-left"
@@ -376,5 +363,4 @@ const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
 
-// $FlowIssue
 export default connect(mapStateToProps)(Community);

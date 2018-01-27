@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -15,9 +14,7 @@ import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
 import Search from './components/search';
-import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
+import { getUserThreads, getUser } from './queries';
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
@@ -40,7 +37,7 @@ type Props = {
   },
   currentUser: Object,
   data: {
-    user: GetUserType,
+    user: Object,
   },
   isLoading: boolean,
   hasError: boolean,
@@ -49,16 +46,14 @@ type Props = {
 
 type State = {
   hasNoThreads: boolean,
-  selectedView: string,
-  hasThreads: boolean,
+  selectedView: 'participant' | 'creator',
 };
 
 class UserView extends React.Component<Props, State> {
-  state = {
-    hasNoThreads: false,
-    selectedView: 'participant',
-    hasThreads: true,
-  };
+  constructor() {
+    super();
+    this.state = { hasThreads: true, selectedView: 'participant' };
+  }
 
   componentDidMount() {
     track('user', 'profile viewed', null);
@@ -75,7 +70,7 @@ class UserView extends React.Component<Props, State> {
   hasNoThreads = () => this.setState({ hasThreads: false });
   hasThreads = () => this.setState({ hasThreads: true });
 
-  handleSegmentClick = (label: string) => {
+  handleSegmentClick = label => {
     if (this.state.selectedView === label) return;
 
     return this.setState({
@@ -109,6 +104,11 @@ class UserView extends React.Component<Props, State> {
         },
       });
 
+      const communities =
+        user.communityConnection.edges.length > 0
+          ? user.communityConnection.edges.map(c => c.node)
+          : [];
+
       const nullHeading = `${
         user.firstName ? user.firstName : user.name
       } hasn’t ${
@@ -131,7 +131,7 @@ class UserView extends React.Component<Props, State> {
             title={user.name}
             subtitle={'Posts By'}
             provideBack={true}
-            backRoute={'/'}
+            backRoute={`/`}
             noComposer
           />
           <Column type="secondary">
@@ -140,7 +140,11 @@ class UserView extends React.Component<Props, State> {
               username={username}
               profileSize="full"
             />
-            <CommunityList currentUser={currentUser} user={user} id={user.id} />
+            <CommunityList
+              currentUser={currentUser}
+              user={user}
+              communities={communities}
+            />
           </Column>
 
           <Column type="primary" alignItems="center">
@@ -201,7 +205,6 @@ class UserView extends React.Component<Props, State> {
                   hasNoThreads={this.hasNoThreads}
                   hasThreads={this.hasThreads}
                   kind={selectedView}
-                  id={user.id}
                 />
               )}
 
@@ -221,13 +224,13 @@ class UserView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={'User not found'}
+            title={`User not found`}
             provideBack={true}
-            backRoute={'/'}
+            backRoute={`/`}
             noComposer
           />
           <ViewError
-            heading={'We ran into an error loading this user.'}
+            heading={`We ran into an error loading this user.`}
             refresh
           />
         </AppViewWrapper>
@@ -238,14 +241,14 @@ class UserView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={'User not found'}
+            title={`User not found`}
             provideBack={true}
-            backRoute={'/'}
+            backRoute={`/`}
             noComposer
           />
-          <ViewError heading={'We couldn’t find anyone with this username.'}>
+          <ViewError heading={`We couldn’t find anyone with this username.`}>
             <ButtonRow>
-              <Link to={'/'}>
+              <Link to={`/`}>
                 <Button large>Take me home</Button>
               </Link>
             </ButtonRow>
@@ -257,9 +260,4 @@ class UserView extends React.Component<Props, State> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  // $FlowIssue
-  connect(map),
-  getUserByMatch,
-  viewNetworkHandler
-)(UserView);
+export default compose(connect(map), getUser, viewNetworkHandler)(UserView);

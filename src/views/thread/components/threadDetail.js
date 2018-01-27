@@ -1,5 +1,4 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -13,12 +12,10 @@ import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
+import { setThreadLockMutation } from '../mutations';
 import ThreadByline from './threadByline';
-import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
-import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
-import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
-import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
+import { pinThreadMutation } from '../../../api/community';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
@@ -35,35 +32,23 @@ import {
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
-type State = {
-  isEditing?: boolean,
-  body?: any,
-  title?: string,
-  linkPreview?: ?Object,
-  linkPreviewTrueUrl?: string,
-  linkPreviewLength?: number,
-  fetchingLinkPreview?: boolean,
-  receiveNotifications?: boolean,
-  isSavingEdit?: boolean,
-  flyoutOpen?: ?boolean,
-  error?: ?string,
-};
+class ThreadDetailPure extends Component {
+  state: {
+    isEditing: boolean,
+    body: any,
+    title: string,
+    linkPreview: Object,
+    linkPreviewTrueUrl: string,
+    linkPreviewLength: number,
+    fetchingLinkPreview: boolean,
+    receiveNotifications: boolean,
+    isSavingEdit: boolean,
+  };
 
-type Props = {
-  thread: GetThreadType,
-  setThreadLock: Function,
-  pinThread: Function,
-  editThread: Function,
-  dispatch: Function,
-  currentUser: ?Object,
-  toggleEdit: Function,
-};
-
-class ThreadDetailPure extends React.Component<Props, State> {
-  state = {};
-  // $FlowFixMe
-  bodyEditor: any;
-  titleTextarea: React.Node;
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   setThreadState() {
     const { thread } = this.props;
@@ -71,8 +56,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
         ? thread.attachments.filter(
-            attachment =>
-              attachment && attachment.attachmentType === 'linkPreview'
+            attachment => attachment.attachmentType === 'linkPreview'
           )[0]
         : null;
 
@@ -85,16 +69,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
-      // $FlowFixMe
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
-        thread.attachments &&
-        thread.attachments.length > 0 &&
-        thread.attachments[0]
-          ? thread.attachments[0].trueUrl
-          : '',
-      linkPreviewLength:
-        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
+        thread.attachments.length > 0 ? thread.attachments[0].trueUrl : '',
+      linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
@@ -128,10 +106,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
       .then(({ data: { setThreadLock } }) => {
         if (setThreadLock.isLocked) {
           track('thread', 'locked', null);
-          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
+          dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
           track('thread', 'unlocked', null);
-          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
+          dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
       .catch(err => {
@@ -152,13 +130,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.community.name
-      } community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${thread
+        .community
+        .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.channel.name
-      } channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
     } else {
@@ -242,9 +218,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
         if (editThread && editThread !== null) {
           this.toggleEdit();
-          return dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          dispatch(addToastWithTimeout('success', 'Thread saved!'));
         } else {
-          return dispatch(
+          dispatch(
             addToastWithTimeout(
               'error',
               "We weren't able to save these changes. Try again?"
@@ -311,7 +287,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          return this.setState(prevState => ({
+          this.setState(prevState => ({
             linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
@@ -319,7 +295,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
             error: null,
           }));
         })
-        .catch(() => {
+        .catch(err => {
           this.setState({
             error:
               "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
@@ -368,13 +344,14 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isSavingEdit,
     } = this.state;
 
-    const editedTimestamp =
-      thread.modifiedAt && new Date(thread.modifiedAt).getTime();
+    const isEdited = thread.modifiedAt;
+    const editedTimestamp = isEdited
+      ? new Date(thread.modifiedAt).getTime()
+      : null;
 
     return (
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
-          {/* $FlowFixMe */}
           <ThreadByline creator={thread.creator} />
 
           {isEditing ? (
@@ -383,9 +360,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
               style={ThreadTitle}
               value={this.state.title}
               placeholder={'A title for your thread...'}
-              ref={c => {
-                this.titleTextarea = c;
-              }}
+              ref="titleTextarea"
               autoFocus
             />
           ) : (
@@ -402,7 +377,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
             )}
           </Link>
 
-          {/* $FlowFixMe */}
           <Editor
             readOnly={!this.state.isEditing}
             state={body}
@@ -445,11 +419,8 @@ const ThreadDetail = compose(
   pinThreadMutation,
   withRouter
 )(ThreadDetailPure);
-
-const map = state => ({
+const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   flyoutOpen: state.flyoutOpen,
 });
-
-// $FlowIssue
-export default connect(map)(ThreadDetail);
+export default connect(mapStateToProps)(ThreadDetail);

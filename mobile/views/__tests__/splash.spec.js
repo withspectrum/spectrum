@@ -2,7 +2,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-import Splash from '../Splash';
+import Splash from '../splash';
 
 describe('Splash', () => {
   it('should render all its children', () => {

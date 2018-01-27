@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import { getCommunityChannels } from '../../../views/community/queries';
 import viewNetworkHandler from '../../viewNetworkHandler';
 import ViewError from '../../viewError';
 import { LoadingSelect } from '../../loading';
@@ -9,13 +8,29 @@ import compose from 'recompose/compose';
 import { SelectorContainer } from './style';
 import { RequiredSelector } from '../../composer/style';
 
+type ChannelType = {
+  node: {
+    id: string,
+    name: string,
+    channelPermissions: {
+      isMember: boolean,
+      isOwner: boolean,
+      isBlocked: boolean,
+      isModerator: boolean,
+    },
+  },
+};
 type Props = {
   currentChannel: string,
   communitySlug: string,
   setActiveChannel: Function,
   isLoading: boolean,
   data: {
-    community: GetCommunityChannelConnectionType,
+    community: {
+      channelConnection: {
+        edges: Array<ChannelType>,
+      },
+    },
   },
 };
 class ChannelSelector extends React.Component<Props> {
@@ -29,23 +44,21 @@ class ChannelSelector extends React.Component<Props> {
       data.community.channelConnection.edges.length > 0
     ) {
       const availableChannels = data.community.channelConnection.edges.map(
-        n => n && n.node
+        n => n.node
       );
       const channels = availableChannels
         .filter(channel => {
-          if (!channel) return null;
           if (channel.isPrivate && !channel.channelPermissions.isMember)
             return null;
 
           return channel;
         })
-        .filter(channel => channel && !channel.channelPermissions.isBlocked);
+        .filter(channel => !channel.channelPermissions.isBlocked);
 
       return (
         <SelectorContainer>
           <RequiredSelector onChange={setActiveChannel} value={currentChannel}>
             {channels.map(channel => {
-              if (!channel) return null;
               return (
                 <option key={channel.id} value={channel.id}>
                   {channel.name}

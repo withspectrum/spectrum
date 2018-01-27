@@ -3,15 +3,14 @@ import * as React from 'react';
 import replace from 'string-replace-to-array';
 import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
-import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
 } from '../../../components/loading';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import { toggleCommunityMembershipMutation } from '../../../api/community';
 import Link from 'src/components/link';
-import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import { getCommunityThreads } from '../../community/queries';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import {
@@ -32,10 +31,47 @@ import {
 } from '../style';
 
 type RecommendedThread = {
-  node: GetThreadType,
+  node: {
+    content: {
+      title: string,
+    },
+    id: string,
+    createdAt: string,
+    creator: {
+      username: string,
+      name: string,
+    },
+    messageCount: number,
+  },
 };
 type Props = {
-  thread: GetThreadType,
+  thread: {
+    id: string,
+    community: {
+      id: string,
+      name: string,
+      coverPhoto: string,
+      profilePhoto: string,
+      description: string,
+      slug: string,
+      pinnedThreadId: string,
+      communityPermissions: {
+        isOwner: boolean,
+        isModerator: boolean,
+        isMember: boolean,
+      },
+    },
+    channel: {
+      name: string,
+      slug: string,
+      isPrivate: boolean,
+      channelPermissions: {
+        isOwner: boolean,
+        isModerator: boolean,
+        isMember: boolean,
+      },
+    },
+  },
   currentUser: Object,
   data: {
     threads: Array<RecommendedThread>,
@@ -72,7 +108,7 @@ class Sidebar extends React.Component<Props, State> {
         const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
 
-        return this.setState({
+        this.setState({
           isJoining: false,
         });
       })

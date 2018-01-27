@@ -1,10 +1,15 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+//$FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
 import slugg from 'slugg';
+// $FlowFixMe
 import { withApollo } from 'react-apollo';
+//$FlowFixMe
 import compose from 'recompose/compose';
+//$FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import { throttle } from '../../helpers/utils';
@@ -27,10 +32,7 @@ import {
   Loading,
 } from './style';
 import { Spinner } from '../../components/globals';
-import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import editUserMutation from 'shared/graphql/mutations/user/editUser';
-import type { EditUserType } from 'shared/graphql/mutations/user/editUser';
+import { editUserMutation, CHECK_UNIQUE_USERNAME_QUERY } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
@@ -40,33 +42,26 @@ import {
 } from '../../helpers/images';
 import { Notice } from '../../components/listItems/style';
 
-type State = {
-  website: ?string,
-  name: string,
-  username: string,
-  description: ?string,
-  image: string,
-  coverPhoto: string,
-  file: ?Object,
-  coverFile: ?Object,
-  descriptionError: boolean,
-  nameError: boolean,
-  createError: boolean,
-  isLoading: boolean,
-  photoSizeError: string,
-  proGifError: boolean,
-  usernameError: string,
-  isUsernameSearching: boolean,
-};
+class UserWithData extends Component {
+  state: {
+    website: string,
+    name: string,
+    username: string,
+    description: string,
+    image: string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
+    descriptionError: boolean,
+    nameError: boolean,
+    createError: boolean,
+    isLoading: boolean,
+    photoSizeError: string,
+    proGifError: boolean,
+    usernameError: string,
+    isUsernameSearching: boolean,
+  };
 
-type Props = {
-  currentUser: Object,
-  dispatch: Function,
-  client: Object,
-  editUser: Function,
-};
-
-class UserWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -176,7 +171,6 @@ class UserWithData extends React.Component<Props, State> {
 
       this.setState({
         file: file,
-        // $FlowFixMe
         image: reader.result,
         photoSizeError: '',
         proGifError: false,
@@ -231,7 +225,6 @@ class UserWithData extends React.Component<Props, State> {
 
       this.setState({
         coverFile: file,
-        // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: '',
         proGifError: false,
@@ -277,7 +270,7 @@ class UserWithData extends React.Component<Props, State> {
 
     this.props
       .editUser(input)
-      .then(({ data: { editUser } }: { data: { editUser: EditUserType } }) => {
+      .then(({ data: { editUser } }) => {
         const user = editUser;
 
         this.setState({
@@ -292,8 +285,6 @@ class UserWithData extends React.Component<Props, State> {
           });
           window.location.href = `/users/${user.username}`;
         }
-
-        return;
       })
       .catch(err => {
         this.setState({
@@ -327,11 +318,10 @@ class UserWithData extends React.Component<Props, State> {
       });
     }
 
-    // $FlowIssue
     this.search(username);
   };
 
-  search = (username: string) => {
+  search = username => {
     if (username.length > 20) {
       return this.setState({
         usernameError: 'Usernames can be up to 20 characters',
@@ -351,12 +341,12 @@ class UserWithData extends React.Component<Props, State> {
       // check the db to see if this channel slug exists
       this.props.client
         .query({
-          query: getUserByUsernameQuery,
+          query: CHECK_UNIQUE_USERNAME_QUERY,
           variables: {
             username,
           },
         })
-        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
+        .then(({ data, data: { user } }) => {
           if (this.state.username.length > 20) {
             return this.setState({
               usernameError: 'Usernames can be up to 20 characters',
@@ -373,10 +363,7 @@ class UserWithData extends React.Component<Props, State> {
               isUsernameSearching: false,
             });
           }
-        })
-        .catch(err =>
-          this.props.dispatch(addToastWithTimeout('error', err.message))
-        );
+        });
     }
   };
 
@@ -503,7 +490,6 @@ const UserSettings = compose(
   editUserMutation,
   withRouter,
   withApollo,
-  // $FlowIssue
   connect(map)
 )(UserWithData);
 export default UserSettings;

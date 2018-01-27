@@ -5,8 +5,7 @@ import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
-import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
+import { getPendingUsersQuery } from '../../../api/channel';
 import ViewError from '../../../components/viewError';
 import {
   ListContainer,
@@ -19,7 +18,9 @@ import {
 
 type Props = {
   data: {
-    channel: GetChannelPendingUsersType,
+    channel: {
+      pendingUsers: Array<Object>,
+    },
   },
   togglePending: Function,
   isLoading: boolean,
@@ -46,15 +47,13 @@ class PendingUsers extends React.Component<Props> {
           <ListContainer>
             {pendingUsers &&
               pendingUsers.map(user => {
-                if (!user) return null;
                 return (
                   <section key={user.id}>
                     <UserListItem user={user}>
                       <div style={{ display: 'flex' }}>
                         <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'block')
-                          }
+                          onClick={() => togglePending(user.id, 'block')}
+                          label
                           hoverColor={'warn.alt'}
                           icon="minus"
                         >
@@ -62,9 +61,8 @@ class PendingUsers extends React.Component<Props> {
                         </TextButton>
 
                         <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'approve')
-                          }
+                          onClick={() => togglePending(user.id, 'approve')}
+                          label
                           hoverColor={'brand.default'}
                           icon="plus"
                         >

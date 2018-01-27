@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import { ActorsRow } from './actorsRow';
-import { getThreadById } from 'shared/graphql/queries/thread/getThread';
-import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { getThreadById } from '../../../api/thread';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import Icon from '../../../components/icons';
@@ -32,12 +32,7 @@ type State = {
   communityName: string,
 };
 
-const ThreadComponent = ({
-  data,
-  ...rest
-}: {
-  data: { thread: GetThreadType },
-}) => {
+const ThreadComponent = ({ data, ...rest }) => {
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 

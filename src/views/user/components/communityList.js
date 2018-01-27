@@ -6,8 +6,6 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from '../../../components/listItems';
 import Icon from '../../../components/icons';
-import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
 import {
   StyledCard,
@@ -17,36 +15,22 @@ import {
 } from '../../../components/listItems/style';
 
 type Props = {
-  data: {
-    user: GetUserCommunityConnectionType,
-  },
+  communities: Array<Object>,
   currentUser: Object,
   user: Object,
 };
 
 class CommunityList extends React.Component<Props> {
   render() {
-    const { data, user, currentUser } = this.props;
+    const { communities, user, currentUser } = this.props;
 
-    if (
-      !data.user ||
-      !data.user.communityConnection ||
-      !data.user.communityConnection.edges ||
-      data.user.communityConnection.edges.length === 0
-    ) {
+    if (!communities || communities.length === 0) {
       return null;
     }
 
-    const communities = data.user.communityConnection.edges.map(
-      c => c && c.node
-    );
-
     let sortedCommunities = communities;
-
-    if (sortedCommunities[0] && sortedCommunities[0].contextPermissions) {
+    if (sortedCommunities[0].contextPermissions) {
       sortedCommunities = communities.slice().sort((a, b) => {
-        if (!a || !b) return 0;
-
         const bc = parseInt(b.contextPermissions.reputation, 10);
         const ac = parseInt(a.contextPermissions.reputation, 10);
         return bc <= ac ? -1 : 1;
@@ -64,7 +48,6 @@ class CommunityList extends React.Component<Props> {
         </ListHeader>
         <ListContainer>
           {sortedCommunities.map(community => {
-            if (!community) return null;
             return (
               <Link key={community.id} to={`/${community.slug}`}>
                 <CommunityListItem
@@ -87,6 +70,4 @@ class CommunityList extends React.Component<Props> {
   }
 }
 
-export default compose(withRouter, getUserCommunityConnection, connect())(
-  CommunityList
-);
+export default compose(withRouter, connect())(CommunityList);

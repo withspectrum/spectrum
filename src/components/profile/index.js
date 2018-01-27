@@ -28,13 +28,7 @@ const ProfilePure = (props: Object): React$Element<any> => {
   }
 };
 
-export type ProfileSizeProps =
-  | 'mini'
-  | 'full'
-  | 'miniWithAction'
-  | 'upsell'
-  | 'simple'
-  | 'listItemWithAction';
+export type ProfileSizeProps = 'mini' | 'full';
 
 type ProfileProps = {
   data: Object,
