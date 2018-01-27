@@ -107,8 +107,6 @@ class NotificationSettings extends React.Component<Props, State> {
       ? this.subscribeToWebPush
       : this.unsubscribeFromWebPush;
 
-    console.log(subscription);
-
     return (
       <StyledCard
         smallOnly={this.props.smallOnly}
