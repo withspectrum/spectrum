@@ -10,6 +10,7 @@ import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
+import Members from '../communityMembers';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
@@ -66,6 +67,8 @@ class CommunitySettings extends React.Component<Props> {
             );
           case 'analytics':
             return <Analytics community={community} id={community.id} />;
+          case 'members':
+            return <Members id={community.id} />;
           default:
             return null;
         }
@@ -76,6 +79,11 @@ class CommunitySettings extends React.Component<Props> {
           to: `/${community.slug}/settings`,
           label: 'Overview',
           activeLabel: 'settings',
+        },
+        {
+          to: `/${community.slug}/settings/members`,
+          label: 'Members',
+          activeLabel: 'members',
         },
         {
           to: `/${community.slug}/settings/analytics`,
