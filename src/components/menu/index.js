@@ -17,12 +17,13 @@ class Menu extends Component {
 
   render() {
     const { hasNavBar, darkContext, hasTabBar } = this.props;
+    const { menuIsOpen } = this.state;
     return (
       <Wrapper darkContext={darkContext}>
         <IconButton glyph={'menu'} onClick={() => this.toggleMenu()} />
         <Absolute open={this.state.menuIsOpen} hasNavBar={hasNavBar}>
           <MenuContainer hasNavBar={hasNavBar} hasTabBar={hasTabBar}>
-            {this.props.children}
+            {menuIsOpen && this.props.children}
           </MenuContainer>
           <IconButton
             glyph={'view-close'}

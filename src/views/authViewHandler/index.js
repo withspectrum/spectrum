@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { userAuthQuery, editUserMutation } from '../../api/user';
+import { getCurrentUser } from 'shared/graphql/queries/user/getUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { removeItemFromStorage } from '../../helpers/localStorage';
 import NewUserOnboarding from '../../views/newUserOnboarding';
@@ -14,9 +16,7 @@ type Props = {
   history: Object,
   editUser: Function,
   data: {
-    user: {
-      id: string,
-    },
+    user: GetUserType,
   },
 };
 
@@ -88,6 +88,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  userAuthQuery,
+  getCurrentUser,
   editUserMutation
 )(AuthViewHandler);

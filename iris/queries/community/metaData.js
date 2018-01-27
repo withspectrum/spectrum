@@ -12,9 +12,10 @@ export default ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
     loaders.communityChannelCount.load(id),
     loaders.communityMemberCount.load(id),
   ]).then(
-    (
-      [channelCount, memberCount]: [MemberOrChannelCount, MemberOrChannelCount]
-    ) => ({
+    ([channelCount, memberCount]: [
+      MemberOrChannelCount,
+      MemberOrChannelCount,
+    ]) => ({
       channels: channelCount ? channelCount.reduction : 0,
       members: memberCount ? memberCount.reduction : 0,
     })

@@ -2,9 +2,24 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
-    "expo": "^24.0.0",
-    "react": "16.0.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "apollo-cache-inmemory": "^1.1.5",
+    "apollo-client": "^2.2.0",
+    "apollo-link": "^1.0.7",
+    "apollo-link-error": "^1.0.3",
+    "apollo-link-http": "^1.3.2",
+    "expo": "^25.0.0",
+    "graphql": "^0.11.0",
+    "graphql-tag": "^2.6.1",
+    "metro-bundler": "^0.22.1",
+    "react": "16.2.0",
+    "react-apollo": "^2.0.4",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native-typography": "^1.2.1",
+    "react-navigation": "^1.0.0-beta.27",
+    "react-navigation-props-mapper": "^0.1.2",
+    "recompose": "^0.26.0",
+    "redraft": "^0.9.0",
+    "sentry-expo": "^1.7.0",
     "styled-components": "^2.3.3"
   },
   "devDependencies": {
@@ -16,11 +31,14 @@
     "react-test-renderer": "^16.2.0"
   },
   "scripts": {
-    "dev": "exp start ios",
+    "dev": "exp start .",
+    "open:ios": "exp ios .",
+    "open:android": "exp android .",
     "setup": "curl https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xf - -C ./expo/Exponent.app",
     "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
     "test:unit": "jest .",
-    "test": "yarn test:unit && yarn test:e2e"
+    "test": "yarn test:unit && yarn test:e2e",
+    "clean": "rm -rf yarn.lock node_modules && yarn && watchman watch-del-all && rm -fr $TMPDIR/react-*"
   },
   "detox": {
     "test-runner": "jest",

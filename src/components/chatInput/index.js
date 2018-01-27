@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
@@ -16,10 +17,8 @@ import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
-import {
-  sendMessageMutation,
-  sendDirectMessageMutation,
-} from '../../api/message';
+import sendMessage from 'shared/graphql/mutations/message/sendMessage';
+import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -28,21 +27,37 @@ import {
 } from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
-class ChatInput extends Component {
-  state: {
-    isFocused: boolean,
-    photoSizeError: string,
+type State = {
+  isFocused: boolean,
+  photoSizeError: string,
+  code: boolean,
+};
+
+type Props = {
+  onRef: Function,
+  currentUser: Object,
+  dispatch: Function,
+  onChange: Function,
+  state: Object,
+  createThread: Function,
+  sendMessage: Function,
+  sendDirectMessage: Function,
+  forceScrollToBottom: Function,
+  threadType: string,
+  thread: string,
+  clear: Function,
+  onBlur: Function,
+  onFocus: Function,
+};
+
+class ChatInput extends React.Component<Props, State> {
+  state = {
+    isFocused: false,
+    photoSizeError: '',
+    code: false,
   };
 
-  constructor() {
-    super();
-
-    this.state = {
-      isFocused: false,
-      photoSizeError: '',
-      code: false,
-    };
-  }
+  editor: any;
 
   componentDidMount() {
     this.props.onRef(this);
@@ -144,8 +159,8 @@ class ChatInput extends Component {
           body: JSON.stringify(toJSON(state)),
         },
       })
-        .then(({ data: { addMessage } }) => {
-          track(`${threadType} message`, 'text message created', null);
+        .then(() => {
+          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -159,9 +174,9 @@ class ChatInput extends Component {
           body: JSON.stringify(toJSON(state)),
         },
       })
-        .then(({ data: { addMessage } }) => {
+        .then(() => {
           dispatch(clearChatInput());
-          track(`${threadType} message`, 'text message created', null);
+          return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
           dispatch(addToastWithTimeout('error', err.message));
@@ -192,6 +207,7 @@ class ChatInput extends Component {
   };
 
   sendMediaMessage = e => {
+    // eslint-disable-next-line
     let reader = new FileReader();
     const file = e.target.files[0];
     const {
@@ -205,8 +221,6 @@ class ChatInput extends Component {
     } = this.props;
 
     if (!file) return;
-
-    reader.readAsDataURL(file);
 
     if (
       file &&
@@ -254,9 +268,13 @@ class ChatInput extends Component {
           },
           file,
         })
-          .then(({ addMessage }) => {
+          .then(() => {
             dispatch(clearChatInput());
-            track(`${threadType} message`, 'media message created', null);
+            return track(
+              `${threadType} message`,
+              'media message created',
+              null
+            );
           })
           .catch(err => {
             dispatch(addToastWithTimeout('error', err.message));
@@ -271,14 +289,20 @@ class ChatInput extends Component {
           },
           file,
         })
-          .then(({ addMessage }) => {
-            track(`${threadType} message`, 'media message created', null);
+          .then(() => {
+            return track(
+              `${threadType} message`,
+              'media message created',
+              null
+            );
           })
           .catch(err => {
             dispatch(addToastWithTimeout('error', err.message));
           });
       }
     };
+
+    reader.readAsDataURL(file);
   };
 
   onFocus = () => {
@@ -325,7 +349,8 @@ class ChatInput extends Component {
               onClick={() =>
                 this.props.dispatch(
                   openModal('UPGRADE_MODAL', { user: currentUser })
-                )}
+                )
+              }
             >
               {photoSizeError}
             </p>
@@ -373,8 +398,9 @@ const map = state => ({
   chatInputRedux: state.composer.chatInput,
 });
 export default compose(
-  sendMessageMutation,
-  sendDirectMessageMutation,
+  sendMessage,
+  sendDirectMessage,
+  // $FlowIssue
   connect(map),
   withState(
     'state',

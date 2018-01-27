@@ -1,32 +1,36 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import slugg from 'slugg';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withApollo } from 'react-apollo';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import { Error, Success } from '../../../../components/formElements';
 import { Spinner } from '../../../../components/globals';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Form, Input, Loading, Row, InputLabel, InputSubLabel } from './style';
 import { throttle } from '../../../../helpers/utils';
-import {
-  CHECK_UNIQUE_USERNAME_QUERY,
-  editUserMutation,
-} from '../../../../api/user';
+import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
 
-class SetUsername extends Component {
-  state: {
-    username: string,
-    error: string,
-    success: string,
-    isSearching: boolean,
-    isLoading: boolean,
-  };
+type Props = {
+  client: Object,
+  editUser: Function,
+  save: Function,
+  dispatch: Function,
+  user: ?Object,
+};
 
+type State = {
+  username: string,
+  error: string,
+  success: string,
+  isSearching: boolean,
+  isLoading: boolean,
+};
+
+class SetUsername extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     const { user } = props;
@@ -55,6 +59,8 @@ class SetUsername extends Component {
     // if no username was able to be suggested, don't kick off a search
     // with an empty string
     if (username.length === 0) return;
+
+    // $FlowIssue
     this.search(username);
   }
 
@@ -83,6 +89,7 @@ class SetUsername extends Component {
       });
     }
 
+    // $FlowIssue
     return this.search(username);
   };
 
@@ -108,12 +115,12 @@ class SetUsername extends Component {
       // check the db to see if this channel slug exists
       this.props.client
         .query({
-          query: CHECK_UNIQUE_USERNAME_QUERY,
+          query: getUserByUsernameQuery,
           variables: {
             username,
           },
         })
-        .then(({ data: { user } }) => {
+        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
           if (this.state.username.length > 20) {
             return this.setState({
               error: 'Usernames can be up to 20 characters because of reasons.',
@@ -134,6 +141,9 @@ class SetUsername extends Component {
               success: 'That username is available!',
             });
           }
+        })
+        .catch(err => {
+          console.log('Error looking up username: ', err);
         });
     }
   };
@@ -152,7 +162,7 @@ class SetUsername extends Component {
 
     this.props
       .editUser(input)
-      .then(({ data: { editUser } }) => {
+      .then(() => {
         this.setState({
           isLoading: false,
           success: '',
@@ -161,7 +171,7 @@ class SetUsername extends Component {
         // trigger a method in the newUserOnboarding component class
         // to determine what to do next with this user - either push them
         // to community discovery or close the onboarding completely
-        this.props.save();
+        return this.props.save();
       })
       .catch(err => {
         this.setState({

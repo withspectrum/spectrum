@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../../../helpers/events';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { ContinueButton } from '../../style';
-import { toggleCommunityMembershipMutation } from '../../../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import {
   Row,
   CoverPhoto,
@@ -17,18 +16,27 @@ import {
 } from '../discoverCommunities/style';
 import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 
-class JoinFirstCommunityPure extends Component {
-  state: {
-    isLoading: boolean,
-  };
+type State = {
+  isLoading: boolean,
+};
 
-  constructor() {
-    super();
+type Props = {
+  toggleCommunityMembership: Function,
+  dispatch: Function,
+  joinedFirstCommunity: Function,
+  community: {
+    id: string,
+    slug: string,
+    coverPhoto: string,
+    profilePhoto: string,
+    name: string,
+    description: string,
+  },
+};
 
-    this.state = {
-      isLoading: false,
-    };
-  }
+class JoinFirstCommunityPure extends React.Component<Props, State> {
+  state = { isLoading: false };
+
   toggleMembership = communityId => {
     this.setState({
       isLoading: true,
@@ -59,6 +67,8 @@ class JoinFirstCommunityPure extends Component {
 
         this.props.dispatch(addToastWithTimeout(type, str));
         this.props.joinedFirstCommunity();
+
+        return;
       })
       .catch(err => {
         this.setState({
@@ -116,6 +126,7 @@ const map = state => ({
 
 const JoinFirstCommunity = compose(
   toggleCommunityMembershipMutation,
+  // $FlowIssue
   connect(map)
 )(JoinFirstCommunityPure);
 export default JoinFirstCommunity;

@@ -2,7 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getCommunityInvoices } from '../../../api/community';
+import getCommunityInvoices from 'shared/graphql/queries/community/getCommunityInvoices';
+import type { GetCommunityInvoicesType } from 'shared/graphql/queries/community/getCommunityInvoices';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { InvoiceListItem } from '../../../components/listItems';
@@ -13,20 +14,9 @@ import {
 } from '../../../components/settingsViews/style';
 import { ListContainer } from '../../../components/listItems/style';
 
-type InvoiceType = {
-  id: string,
-  paidAt: string,
-  amount: number,
-  sourceBrand: string,
-  sourceLast4: string,
-  planName: string,
-};
-
 type Props = {
   data: {
-    community: {
-      invoices: Array<InvoiceType>,
-    },
+    community: GetCommunityInvoicesType,
   },
   isLoading: boolean,
 };

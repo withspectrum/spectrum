@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import { getThread } from '../../models/thread';
 import { getChannelById } from '../../models/channel';
-import { getCommunitiesBySlug } from '../../models/community';
+import { getCommunities } from '../../models/community';
 
 export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
   // in some cases we fetch this upstream - e.g. in the case of querying for usersThreads, we need to fetch contextPermissions before we hit this step as threadIds are not included in the query variables
@@ -69,9 +69,7 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         };
       }
       case 'getCommunityTopMembers': {
-        const communities = await getCommunitiesBySlug([
-          info.variableValues.slug,
-        ]);
+        const communities = await getCommunities([info.variableValues.id]);
         const { id } = communities[0];
         const {
           reputation,

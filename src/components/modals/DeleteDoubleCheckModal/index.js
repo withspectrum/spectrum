@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { deleteCommunityMutation } from '../../../api/community';
-import { deleteChannelMutation } from '../../../api/channel';
-import { deleteThreadMutation } from '../../../api/thread';
-import { deleteMessage } from '../../../api/message';
+import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
+import type { DeleteCommunityType } from 'shared/graphql/mutations/community/deleteCommunity';
+import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
+import type { DeleteChannelType } from 'shared/graphql/mutations/channel/deleteChannel';
+import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
+import type { DeleteThreadType } from 'shared/graphql/mutations/thread/deleteThread';
+import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
+import type { DeleteMessageType } from 'shared/graphql/mutations/message/deleteMessage';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -34,33 +35,37 @@ import { Actions, Message } from './style';
   redirect => optional => string which represents the path a user should return
   too after deleting a thing (e.g. '/foo/bar')
 */
-class DeleteDoubleCheckModal extends Component {
-  state: {
-    isLoading: boolean,
+type State = {
+  isLoading: boolean,
+};
+
+type Props = {
+  dispatch: Function,
+  modalProps: {
+    id: string,
+    entity: string,
+    redirect?: ?string,
+    message?: ?string,
+  },
+  deleteMessage: Function,
+  deleteCommunity: Function,
+  deleteThread: Function,
+  deleteChannel: Function,
+  dispatch: Function,
+  isOpen: boolean,
+};
+
+class DeleteDoubleCheckModal extends React.Component<Props, State> {
+  state = {
+    isLoading: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-    };
-  }
 
   close = () => {
     this.props.dispatch(closeModal());
   };
 
   triggerDelete = () => {
-    const {
-      modalProps: { id, entity, redirect },
-      deleteMessage,
-      deleteCommunity,
-      deleteThread,
-      deleteChannel,
-      dispatch,
-      // history,
-    } = this.props;
+    const { modalProps: { id, entity, redirect }, dispatch } = this.props;
 
     this.setState({
       isLoading: true,
@@ -68,8 +73,10 @@ class DeleteDoubleCheckModal extends Component {
 
     switch (entity) {
       case 'message':
-        return deleteMessage(id)
-          .then(({ data: { deleteMessage } }) => {
+        return this.props
+          .deleteMessage(id)
+          .then(({ data }: DeleteMessageType) => {
+            const { deleteMessage } = data;
             if (deleteMessage) {
               track('message', 'deleted', null);
               dispatch(addToastWithTimeout('neutral', 'Message deleted.'));
@@ -78,6 +85,7 @@ class DeleteDoubleCheckModal extends Component {
               });
               this.close();
             }
+            return;
           })
           .catch(err => {
             dispatch(
@@ -88,12 +96,15 @@ class DeleteDoubleCheckModal extends Component {
             );
           });
       case 'thread': {
-        return deleteThread(id)
-          .then(({ data: { deleteThread } }) => {
+        return this.props
+          .deleteThread(id)
+          .then(({ data }: DeleteThreadType) => {
+            const { deleteThread } = data;
             if (deleteThread) {
               track('thread', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
+              // eslint-disable-next-line
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
@@ -102,6 +113,7 @@ class DeleteDoubleCheckModal extends Component {
               });
               this.close();
             }
+            return;
           })
           .catch(err => {
             dispatch(
@@ -113,18 +125,24 @@ class DeleteDoubleCheckModal extends Component {
           });
       }
       case 'channel': {
-        return deleteChannel(id)
-          .then(({ data: { deleteChannel } }) => {
-            track('channel', 'deleted', null);
-            // TODO: When we figure out the mutation reducers in apollo
-            // client we can just history push and trust the store to update
-            window.location.href = redirect ? redirect : '/';
-            // history.push(redirect ? redirect : '/');
-            dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
-            this.setState({
-              isLoading: false,
-            });
-            this.close();
+        return this.props
+          .deleteChannel(id)
+          .then(({ data }: DeleteChannelType) => {
+            const { deleteChannel } = data;
+            if (deleteChannel) {
+              track('channel', 'deleted', null);
+              // TODO: When we figure out the mutation reducers in apollo
+              // client we can just history push and trust the store to update
+              // eslint-disable-next-line
+              window.location.href = redirect ? redirect : '/';
+              // history.push(redirect ? redirect : '/');
+              dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
+              this.setState({
+                isLoading: false,
+              });
+              this.close();
+            }
+            return;
           })
           .catch(err => {
             dispatch(
@@ -136,12 +154,15 @@ class DeleteDoubleCheckModal extends Component {
           });
       }
       case 'community': {
-        return deleteCommunity(id)
-          .then(({ data: { deleteCommunity } }) => {
+        return this.props
+          .deleteCommunity(id)
+          .then(({ data }: DeleteCommunityType) => {
+            const { deleteCommunity } = data;
             if (deleteCommunity) {
               track('community', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
+              // eslint-disable-next-line
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Community deleted.'));
@@ -150,6 +171,7 @@ class DeleteDoubleCheckModal extends Component {
               });
               this.close();
             }
+            return;
           })
           .catch(err => {
             dispatch(
@@ -228,8 +250,10 @@ const DeleteDoubleCheckModalWithMutations = compose(
   withRouter
 )(DeleteDoubleCheckModal);
 
-const mapStateToProps = state => ({
+const map = state => ({
   isOpen: state.modals.isOpen,
   modalProps: state.modals.modalProps,
 });
-export default connect(mapStateToProps)(DeleteDoubleCheckModalWithMutations);
+
+// $FlowIssue
+export default connect(map)(DeleteDoubleCheckModalWithMutations);

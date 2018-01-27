@@ -4,10 +4,9 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  getSlackImport,
-  sendSlackInvitationsMutation,
-} from '../../../api/slackImport';
+import getSlackImport from 'shared/graphql/queries/slackImport/getSlackImport';
+import type { GetSlackImportType } from 'shared/graphql/queries/slackImport/getSlackImport';
+import sendSlackInvitationsMutation from 'shared/graphql/mutations/slackImport/sendSlackInvitations';
 import { Loading } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
@@ -23,7 +22,7 @@ import { Error } from '../../../components/formElements';
 
 type Props = {
   data: {
-    community: Object,
+    community: GetSlackImportType,
     startPolling: Function,
     stopPolling: Function,
   },
@@ -31,6 +30,7 @@ type Props = {
   sendSlackInvites: Function,
   dispatch: Function,
   isLoading: boolean,
+  isOnboarding: boolean,
 };
 
 type State = {
@@ -74,7 +74,7 @@ class ImportSlack extends React.Component<Props, State> {
         id: community.id,
         customMessage,
       })
-      .then(({ data: { sendSlackInvites } }) => {
+      .then(() => {
         this.setState({
           isSendingInvites: false,
           hasCustomMessage: false,
@@ -82,6 +82,7 @@ class ImportSlack extends React.Component<Props, State> {
         this.props.dispatch(
           addToastWithTimeout('success', 'Your invitations are being sent!')
         );
+        return;
       })
       .catch(err => {
         this.setState({
@@ -118,6 +119,7 @@ class ImportSlack extends React.Component<Props, State> {
       data: { community, startPolling, stopPolling },
       isLoading,
     } = this.props;
+
     const {
       isSendingInvites,
       customMessageString,

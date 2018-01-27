@@ -5,7 +5,8 @@ import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import { Button } from '../../../components/buttons';
-import { toggleChannelSubscriptionMutation } from '../../../api/channel';
+import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
 import { track } from '../../../helpers/events';
@@ -26,25 +27,7 @@ type Props = {
   currentUser: Object,
   hide: boolean,
   watercooler: boolean,
-  thread: {
-    id: string,
-    watercooler?: boolean,
-    community: {
-      name: string,
-      slug: string,
-      profilePhoto: string,
-      id: string,
-    },
-    channel: {
-      id: string,
-      slug: string,
-      name: string,
-      isPrivate: boolean,
-      channelPermissions: {
-        isMember: boolean,
-      },
-    },
-  },
+  thread: GetThreadType,
 };
 type State = {
   isLoading: boolean,
@@ -81,30 +64,34 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Your request to join the ${toggleChannelSubscription.name} channel in ${toggleChannelSubscription
-            .community.name} has been sent.`;
+          str = `Your request to join the ${
+            toggleChannelSubscription.name
+          } channel in ${
+            toggleChannelSubscription.community.name
+          } has been sent.`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined the ${toggleChannelSubscription.community
-            .name} community!`;
+          str = `Joined the ${
+            toggleChannelSubscription.community.name
+          } community!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
+        return dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
         this.setState({
           isLoading: false,
         });
-        console.log('error toggling channel subscription', err);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };

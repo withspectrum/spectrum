@@ -21,7 +21,8 @@ module.exports = {
       resolve: (notification: any) => notification,
       subscribe: withFilter(
         listenToNewDirectMessageNotifications,
-        (notification, _, { user }) => user.id === notification.userId
+        (notification, _, { user }) =>
+          notification && user.id === notification.userId
       ),
     },
   },

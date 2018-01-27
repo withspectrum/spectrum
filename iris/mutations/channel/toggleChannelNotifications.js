@@ -34,13 +34,11 @@ export default async (
 
   // pass in the oppositve value of the current user's subscriptions
   const value = !permissions.receiveNotifications;
-  return toggleUserChannelNotifications(
-    currentUser.id,
-    channelId,
-    value
-  ).then(async () => {
-    // return the channel being evaluated
-    const channels = await getChannels([channelId]);
-    return channels[0];
-  });
+  return toggleUserChannelNotifications(currentUser.id, channelId, value).then(
+    async () => {
+      // return the channel being evaluated
+      const channels = await getChannels([channelId]);
+      return channels[0];
+    }
+  );
 };

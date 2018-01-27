@@ -49,9 +49,11 @@ export default (
       ]);
     })
     .then(
-      (
-        [thread, currentUserChannelPermissions, currentUserCommunityPermissions]
-      ) => {
+      ([
+        thread,
+        currentUserChannelPermissions,
+        currentUserCommunityPermissions,
+      ]) => {
         // user owns the community or the channel, they can lock the thread
         if (
           currentUserChannelPermissions.isOwner ||

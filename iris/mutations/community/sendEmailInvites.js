@@ -45,7 +45,7 @@ export default async (
   } else {
     return input.contacts
       .filter(user => user.email !== currentUser.email)
-      .filter(user => isEmail(user.email))
+      .filter(user => user && user.email && isEmail(user.email))
       .map(user => {
         return addQueue('community invite notification', {
           recipient: {

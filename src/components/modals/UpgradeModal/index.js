@@ -1,14 +1,12 @@
-import React from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
-import { downgradeFromProMutation } from '../../../api/user';
+import downgradeFromProMutation from 'shared/graphql/mutations/user/downgradeFromPro';
 import { addToastWithTimeout } from '../../../actions/toasts';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeToPro } from '../../upsell';
@@ -21,13 +19,20 @@ import {
   Padding,
 } from './style';
 
-class UpgradeModal extends React.Component {
-  state: {
-    isOpen: boolean,
-    upgradeError: string,
-    isLoading: boolean,
-  };
+type Props = {
+  dispatch: Function,
+  downgradeFromPro: Function,
+  isOpen: boolean,
+  user: Object,
+};
 
+type State = {
+  isOpen: boolean,
+  upgradeError: string,
+  isLoading: boolean,
+};
+
+class UpgradeModal extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -58,7 +63,7 @@ class UpgradeModal extends React.Component {
 
     this.props
       .downgradeFromPro()
-      .then(({ data: { downgradeFromPro } }) => {
+      .then(() => {
         track('pro', 'downgraded', null);
 
         this.props.dispatch(
@@ -72,6 +77,7 @@ class UpgradeModal extends React.Component {
           upgradeError: '',
         });
         this.closeModal();
+        return;
       })
       .catch(err => {
         this.setState({
@@ -124,6 +130,7 @@ class UpgradeModal extends React.Component {
                 </OutlineButton>
 
                 <Button
+                  // eslint-disable-next-line
                   onClick={() => (window.location.href = '/spectrum/support')}
                 >
                   Get Support
@@ -152,6 +159,8 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default compose(downgradeFromProMutation, connect(mapStateToProps))(
-  UpgradeModal
-);
+export default compose(
+  downgradeFromProMutation,
+  // $FlowIssue
+  connect(mapStateToProps)
+)(UpgradeModal);

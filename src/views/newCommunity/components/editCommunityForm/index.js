@@ -1,15 +1,12 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import { track } from '../../../../helpers/events';
-import {
-  editCommunityMutation,
-  deleteCommunityMutation,
-} from '../../../../api/community';
+import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
+import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Button } from '../../../../components/buttons';
 import { Notice } from '../../../../components/listItems/style';
@@ -24,22 +21,30 @@ import {
 import { ImageInputWrapper } from '../../../../components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
 
-class CommunityWithData extends Component {
-  state: {
-    name: string,
-    slug: string,
-    description: string,
-    communityId: string,
-    website: string,
-    image: string,
-    coverPhoto: string,
-    file: ?Object,
-    coverFile: ?Object,
-    communityData: Object,
-    photoSizeError: boolean,
-    nameError: boolean,
-    isLoading: boolean,
-  };
+type State = {
+  name: string,
+  slug: string,
+  description: string,
+  communityId: string,
+  website: string,
+  image: string,
+  coverPhoto: string,
+  file: ?Object,
+  coverFile: ?Object,
+  communityData: Object,
+  photoSizeError: boolean,
+  nameError: boolean,
+  isLoading: boolean,
+};
+
+type Props = {
+  community: GetCommunityType,
+  dispatch: Function,
+  communityUpdated: Function,
+  editCommunity: Function,
+};
+
+class CommunityWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -47,9 +52,9 @@ class CommunityWithData extends Component {
     this.state = {
       name: community.name,
       slug: community.slug,
-      description: community.description,
+      description: community.description ? community.description : '',
       communityId: community.id,
-      website: community.website,
+      website: community.website ? community.website : '',
       image: community.profilePhoto,
       coverPhoto: community.coverPhoto,
       file: null,
@@ -120,6 +125,7 @@ class CommunityWithData extends Component {
 
       this.setState({
         file: file,
+        // $FlowFixMe
         image: reader.result,
         photoSizeError: false,
         isLoading: false,
@@ -149,6 +155,7 @@ class CommunityWithData extends Component {
 
       this.setState({
         coverFile: file,
+        // $FlowFixMe
         coverPhoto: reader.result,
         photoSizeError: false,
         isLoading: false,
@@ -204,6 +211,7 @@ class CommunityWithData extends Component {
           );
           this.props.communityUpdated(community);
         }
+        return;
       })
       .catch(err => {
         this.setState({
@@ -273,7 +281,7 @@ class CommunityWithData extends Component {
             onChange={this.changeWebsite}
             autoFocus={true}
           >
-            Optional: Add your community's website
+            Optional: Add your community’s website
           </Input>
 
           {photoSizeError && (

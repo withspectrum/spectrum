@@ -8,11 +8,10 @@ import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
 import { NotificationDropdown } from './notificationDropdown';
-import {
-  getNotifications,
-  markNotificationsSeenMutation,
-  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
-} from '../../../api/notification';
+import getNotifications from 'shared/graphql/queries/notification/getNotifications';
+import type { GetNotificationsType } from 'shared/graphql/queries/notification/getNotifications';
+import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
+import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { Tab, NotificationTab, Label } from '../style';
 import { getDistinctNotifications } from '../../notifications/utils';
 
@@ -26,9 +25,7 @@ type Props = {
   activeInboxThread: ?string,
   location: Object,
   data: {
-    notifications?: {
-      edges: Array<any>,
-    },
+    notifications: GetNotificationsType,
     subscribeToNewNotifications: Function,
     refetch: Function,
   },
@@ -119,7 +116,7 @@ class NotificationsTab extends React.Component<Props, State> {
     return false;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const {
       data: prevData,
       location: prevLocation,
@@ -209,7 +206,7 @@ class NotificationsTab extends React.Component<Props, State> {
     )
       return [];
 
-    return notifications.edges.map(n => n.node);
+    return notifications.edges.map(n => n && n.node);
   };
 
   markAllAsSeen = () => {
@@ -311,7 +308,7 @@ class NotificationsTab extends React.Component<Props, State> {
 
         // and then mark it as seen on the server
         client.mutate({
-          mutation: MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+          mutation: markSingleNotificationSeenMutation,
           variables: {
             id: n.id,
           },

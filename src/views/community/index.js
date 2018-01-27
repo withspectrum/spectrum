@@ -1,9 +1,7 @@
+// @flow
 import * as React from 'react';
-//$FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
@@ -14,13 +12,14 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import { toggleCommunityMembershipMutation } from '../../api/community';
+import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import { LoadingScreen } from '../../components/loading';
 import {
@@ -35,16 +34,16 @@ import {
   MobileSegment,
 } from '../../components/segmentedControl';
 import { CoverRow, CoverColumn, LogoutButton } from './style';
-import { getCommunityThreads } from './queries';
-import { getCommunity } from '../../api/community';
+import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
+import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
+import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
   dispatch: Function,
   toggleCommunityMembership: Function,
-  isLoading: boolean,
-  hasError: boolean,
   currentUser: Object,
   match: {
     params: {
@@ -88,17 +87,19 @@ class CommunityView extends React.Component<Props, State> {
   }
 
   toggleMembership = (communityId: string) => {
-    const { toggleCommunityMembership, dispatch } = this.props;
+    const { dispatch } = this.props;
 
     this.setState({
       isLeavingCommunity: true,
     });
 
-    toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
+    this.props
+      .toggleCommunityMembership({ communityId })
+      .then(({ data }: ToggleCommunityMembershipType) => {
+        const { toggleCommunityMembership } = data;
+
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
-
         track('community', isMember ? 'joined' : 'unjoined', null);
 
         const str = isMember
@@ -108,7 +109,7 @@ class CommunityView extends React.Component<Props, State> {
         const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
 
-        this.setState({
+        return this.setState({
           isLeavingCommunity: false,
         });
       })
@@ -178,7 +179,7 @@ class CommunityView extends React.Component<Props, State> {
           <Titlebar
             title={community.name}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
           />
 
@@ -203,7 +204,10 @@ class CommunityView extends React.Component<Props, State> {
                       Leave {community.name}
                     </LogoutButton>
                   )}
-                <ChannelList communitySlug={communitySlug.toLowerCase()} />
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
               </Column>
 
               <Column type="primary">
@@ -230,7 +234,9 @@ class CommunityView extends React.Component<Props, State> {
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
-                    Members ({community.metaData.members.toLocaleString()})
+                    Members ({community.metaData &&
+                      community.metaData.members &&
+                      community.metaData.members.toLocaleString()})
                   </DesktopSegment>
                   <MobileSegment
                     segmentLabel="members"
@@ -266,7 +272,7 @@ class CommunityView extends React.Component<Props, State> {
                   !userHasPermissions && (
                     <UpsellJoinCommunity
                       community={community}
-                      loading={isLoading}
+                      loading={isLeavingCommunity}
                       join={this.toggleMembership}
                     />
                   )}
@@ -286,6 +292,7 @@ class CommunityView extends React.Component<Props, State> {
                   <CommunityThreadFeed
                     viewContext="community"
                     slug={communitySlug}
+                    id={community.id}
                     currentUser={isLoggedIn}
                     setThreadsStatus={
                       !this.showComposerUpsell && this.setComposerUpsell
@@ -318,13 +325,13 @@ class CommunityView extends React.Component<Props, State> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={`Community not found`}
+            title={'Community not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={'/'}
             noComposer
           />
           <ViewError
-            heading={`We weren’t able to load this community.`}
+            heading={'We weren’t able to load this community.'}
             refresh
           />
         </AppViewWrapper>
@@ -334,13 +341,13 @@ class CommunityView extends React.Component<Props, State> {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`Community not found`}
+          title={'Community not found'}
           provideBack={true}
-          backRoute={`/`}
+          backRoute={'/'}
           noComposer
         />
         <ViewError
-          heading={`We weren’t able to find this community.`}
+          heading={'We weren’t able to find this community.'}
           subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
         >
           <Upsell404Community />
@@ -355,8 +362,9 @@ const map = state => ({
 });
 
 export default compose(
+  // $FlowIssue
   connect(map),
   toggleCommunityMembershipMutation,
-  getCommunity,
+  getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);

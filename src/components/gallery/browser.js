@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { closeGallery } from '../../actions/gallery';
+import type { GetMediaMessagesForThreadType } from 'shared/graphql/queries/message/getMediaMessagesForThread';
 import {
   Overlay,
   ActiveImage,
@@ -18,18 +19,12 @@ type State = {
   index: ?number,
 };
 
-type MessageType = {
-  id: string,
-  content: {
-    body: string,
-  },
-};
-
 type Props = {
   dispatch: Function,
   data: {
-    messages?: Array<?MessageType>,
+    messages?: GetMediaMessagesForThreadType,
   },
+  activeMessageId: string,
 };
 
 class Browser extends React.Component<Props, State> {

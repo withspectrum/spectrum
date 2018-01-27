@@ -15,7 +15,8 @@ import {
   CollectionWrapper,
   LoadingContainer,
 } from './style';
-import { getCommunitiesCollectionQuery } from './queries';
+import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
+import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { Loading } from '../../components/loading';
 import { SegmentedControl, Segment } from '../../components/segmentedControl';
 
@@ -64,7 +65,8 @@ class CollectionSwitcher extends React.Component<Props, State> {
             <ThisSegment
               key={i}
               onClick={() =>
-                this.handleSegmentClick(collection.curatedContentType)}
+                this.handleSegmentClick(collection.curatedContentType)
+              }
               selected={
                 collection.curatedContentType === this.state.selectedView
               }
@@ -98,7 +100,7 @@ type CategoryListProps = {
   currentUser?: Object,
   slugs: Array<string>,
   data: {
-    communities?: Array<Object>,
+    communities?: GetCommunitiesType,
   },
   isLoading: boolean,
   categories?: Array<any>,
@@ -118,6 +120,7 @@ class CategoryList extends React.Component<CategoryListProps> {
       let filteredCommunities = communities;
       if (slugs) {
         filteredCommunities = communities.filter(c => {
+          if (!c) return null;
           if (slugs.indexOf(c.slug) > -1) return c;
           return null;
         });
@@ -147,6 +150,7 @@ class CategoryList extends React.Component<CategoryListProps> {
           {categories.map((cat, i) => {
             if (cat.communities) {
               filteredCommunities = communities.filter(c => {
+                if (!c) return null;
                 if (cat.communities.indexOf(c.slug) > -1) return c;
                 return null;
               });
@@ -188,6 +192,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export const Category = compose(
   // $FlowIssue
   connect(map),
-  getCommunitiesCollectionQuery,
+  getCommunitiesByCuratedContentType,
   viewNetworkHandler
 )(CategoryList);

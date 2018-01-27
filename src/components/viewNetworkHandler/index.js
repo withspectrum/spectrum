@@ -1,5 +1,5 @@
+// @flow
 import React from 'react';
-// $FlowFixMe
 import hoistStatics from 'hoist-non-react-statics';
 
 /*
@@ -39,8 +39,19 @@ Apollo NetworkStatus indicators:
 
 */
 
+export type ViewNetworkHandlerType = {
+  isLoading: boolean,
+  queryVarIsChanging: boolean,
+  isFetchingMore: boolean,
+  isRefetching: boolean,
+  isPolling: boolean,
+  hasError: boolean,
+};
+
+// $FlowFixMe
 const viewNetworkHandler = Component => {
   const C = props => {
+    // $FlowFixMe
     const { data, wrappedComponentRef, ...remainingProps } = props;
 
     // safety check against the data prop not existing

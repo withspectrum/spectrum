@@ -5,10 +5,9 @@ import compose from 'recompose/compose';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
-import {
-  getUnreadDMQuery,
-  markDirectMessageNotificationsSeenMutation,
-} from '../../../api/notification';
+import getUnreadDMQuery from 'shared/graphql/queries/notification/getDirectMessageNotifications';
+import type { GetDirectMessageNotificationsType } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
+import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { Tab, Label } from '../style';
 
 type Props = {
@@ -18,9 +17,7 @@ type Props = {
   isRefetching: boolean,
   markDirectMessageNotificationsSeen: Function,
   data: {
-    directMessageNotifications?: {
-      edges: Array<any>,
-    },
+    directMessageNotifications: GetDirectMessageNotificationsType,
   },
   subscribeToDMs: Function,
   refetch: Function,
@@ -37,7 +34,7 @@ class MessagesTab extends React.Component<Props, State> {
     subscription: null,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const prevProps = this.props;
 
     // if a refetch completes
@@ -106,7 +103,9 @@ class MessagesTab extends React.Component<Props, State> {
     if (
       curr.data.directMessageNotifications &&
       curr.data.directMessageNotifications.edges.length > 0 &&
-      curr.data.directMessageNotifications.edges.some(n => !n.isSeen)
+      curr.data.directMessageNotifications.edges.some(
+        n => n && n.node && !n.node.isSeen
+      )
     ) {
       return this.setCount(this.props);
     }
@@ -138,7 +137,7 @@ class MessagesTab extends React.Component<Props, State> {
     )
       return [];
 
-    return notifications.edges.map(n => n.node);
+    return notifications.edges.map(n => n && n.node);
   };
 
   setCount(props) {
@@ -155,7 +154,8 @@ class MessagesTab extends React.Component<Props, State> {
 
     // bundle dm notifications
     const obj = {};
-    nodes.filter(n => !n.isSeen).map(o => {
+    nodes.filter(n => n && !n.isSeen).map(o => {
+      if (!o) return null;
       if (obj[o.context.id]) return null;
       obj[o.context.id] = o;
       return null;
@@ -189,10 +189,11 @@ class MessagesTab extends React.Component<Props, State> {
       .then(() => {
         // notifs were marked as seen
         // refetch to make sure we're keeping up with the server's state
-        return refetch().then(() => this.setCount(this.props));
+        return refetch();
       })
+      .then(() => this.setCount(this.props))
       .catch(err => {
-        // err
+        console.log('error marking dm notifications seen', err);
       });
   };
 

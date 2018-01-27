@@ -2,7 +2,8 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getThisCommunity } from './queries';
+import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Upsell404Community } from '../../components/upsell';
@@ -17,16 +18,7 @@ import { View } from './style';
 
 type Props = {
   data: {
-    community: {
-      name: string,
-      slug: string,
-      profilePhoto: string,
-      communityPermissions: {
-        isMember: boolean,
-        isOwner: boolean,
-        isModerator: boolean,
-      },
-    },
+    community: GetCommunityType,
   },
   location: Object,
   isLoading: boolean,
@@ -48,15 +40,17 @@ class CommunitySettings extends React.Component<Props> {
         return (
           <AppViewWrapper>
             <Titlebar
-              title={`No Permission`}
+              title={'No Permission'}
               provideBack={true}
               backRoute={`/${communitySlug}`}
               noComposer
             />
 
             <ViewError
-              heading={`You don’t have permission to manage this community.`}
-              subheading={`If you want to create your own community, you can get started below.`}
+              heading={'You don’t have permission to manage this community.'}
+              subheading={
+                'If you want to create your own community, you can get started below.'
+              }
             >
               <Upsell404Community />
             </ViewError>
@@ -71,9 +65,7 @@ class CommunitySettings extends React.Component<Props> {
               <Overview community={community} communitySlug={communitySlug} />
             );
           case 'analytics':
-            return (
-              <Analytics community={community} communitySlug={communitySlug} />
-            );
+            return <Analytics community={community} id={community.id} />;
           default:
             return null;
         }
@@ -134,7 +126,7 @@ class CommunitySettings extends React.Component<Props> {
       return (
         <AppViewWrapper>
           <Titlebar
-            title={`Error fetching community`}
+            title={'Error fetching community'}
             provideBack={true}
             backRoute={`/${communitySlug}`}
             noComposer
@@ -151,13 +143,13 @@ class CommunitySettings extends React.Component<Props> {
     return (
       <AppViewWrapper>
         <Titlebar
-          title={`No Community Found`}
+          title={'No Community Found'}
           provideBack={true}
           backRoute={`/${communitySlug}`}
           noComposer
         />
         <ViewError
-          heading={`We weren’t able to find this community.`}
+          heading={'We weren’t able to find this community.'}
           subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
         >
           <Upsell404Community />
@@ -167,6 +159,6 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getThisCommunity, viewNetworkHandler)(
+export default compose(connect(), getCommunityByMatch, viewNetworkHandler)(
   CommunitySettings
 );

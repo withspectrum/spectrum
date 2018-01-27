@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
@@ -8,32 +9,13 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import { getCommunityTopAndNewThreads } from '../queries';
-
-type Thread = {
-  id: string,
-  content: {
-    title: string,
-  },
-  messageCount: number,
-  createdAt: string,
-  creator: {
-    id: string,
-    username: string,
-    name: string,
-    profilePhoto: string,
-  },
-};
+import getCommunityTopAndNewThreads from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
+import type { GetCommunityTopAndNewThreadsType } from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 
 type Props = {
   isLoading: boolean,
   data: {
-    community: {
-      topAndNewThreads: {
-        topThreads: Array<Thread>,
-        newThreads: Array<Thread>,
-      },
-    },
+    community: GetCommunityTopAndNewThreadsType,
   },
 };
 
@@ -45,9 +27,9 @@ class TopAndNewThreads extends React.Component<Props> {
       const { topAndNewThreads: { topThreads, newThreads } } = community;
       // resort on the client because while the server *did* technically return the top threads, they get unsorted during the 'getThreads' model query
       const sortedTopThreads = topThreads.slice().sort((a, b) => {
-        const bc = parseInt(b.messageCount, 10);
-        const ac = parseInt(a.messageCount, 10);
-        return bc <= ac ? -1 : 1;
+        const bc = b && parseInt(b.messageCount, 10);
+        const ac = a && parseInt(a.messageCount, 10);
+        return bc && ac && bc <= ac ? -1 : 1;
       });
 
       return (
@@ -56,14 +38,17 @@ class TopAndNewThreads extends React.Component<Props> {
             <SectionTitle>Top conversations this week</SectionTitle>
             {sortedTopThreads.length > 0 ? (
               sortedTopThreads.map(thread => {
+                if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;
               })
             ) : (
               <ViewError
                 small
                 emoji={'😴'}
-                heading={`It’s been a bit quiet this week.`}
-                subheading={`Top conversations will show up here when people start chatting.`}
+                heading={'It’s been a bit quiet this week.'}
+                subheading={
+                  'Top conversations will show up here when people start chatting.'
+                }
               />
             )}
           </SectionCard>
@@ -71,14 +56,17 @@ class TopAndNewThreads extends React.Component<Props> {
             <SectionTitle>Unanswered conversations this week</SectionTitle>
             {newThreads.length > 0 ? (
               newThreads.map(thread => {
+                if (!thread) return null;
                 return <ThreadListItem key={thread.id} thread={thread} />;
               })
             ) : (
               <ViewError
                 small
                 emoji={'✌️'}
-                heading={`All caught up!.`}
-                subheading={`It looks like everyone is getting responses in their conversations - nice work!`}
+                heading={'All caught up!.'}
+                subheading={
+                  'It looks like everyone is getting responses in their conversations - nice work!'
+                }
               />
             )}
           </SectionCard>

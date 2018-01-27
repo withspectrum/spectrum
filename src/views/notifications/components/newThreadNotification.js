@@ -1,11 +1,12 @@
+// @flow
 import * as React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-import { getThreadById } from '../../../api/thread';
+import { getThreadById } from 'shared/graphql/queries/thread/getThread';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
-import { markSingleNotificationSeenMutation } from '../../../api/notification';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import Icon from '../../../components/icons';
 import { ThreadProfile } from '../../../components/profile';
 import {
@@ -20,9 +21,9 @@ import {
 type Props = {
   notification: Object,
   currentUser: Object,
-  history: Object,
-  markSingleNotificationSeen: Function,
-  markSingleNotificationAsSeenInState: Function,
+  history?: Object,
+  markSingleNotificationSeen?: Function,
+  markSingleNotificationAsSeenInState?: Function,
 };
 type State = {
   communityName: string,
@@ -43,7 +44,12 @@ const sortThreads = (entities, currentUser) => {
   return threads;
 };
 
-const ThreadCreatedComponent = ({ data, ...rest }) => {
+const ThreadCreatedComponent = ({
+  data,
+  ...rest
+}: {
+  data: { thread: GetThreadType },
+}) => {
   return <ThreadProfile profileSize="mini" data={data} {...rest} />;
 };
 
@@ -80,7 +86,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
     const threads = sortThreads(notification.entities, currentUser);
 
     const newThreadCount =
-      threads.length > 1 ? `New threads were` : 'A new thread was';
+      threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (
@@ -132,8 +138,9 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
       markSingleNotificationAsSeenInState,
     } = this.props;
     if (notification.isSeen) return;
-    markSingleNotificationAsSeenInState(notification.id);
-    markSingleNotificationSeen(notification.id);
+    markSingleNotificationAsSeenInState &&
+      markSingleNotificationAsSeenInState(notification.id);
+    markSingleNotificationSeen && markSingleNotificationSeen(notification.id);
   };
 
   setCommunityName = (name: string) => this.setState({ communityName: name });
@@ -148,7 +155,7 @@ class MiniNewThreadNotificationWithMutation extends React.Component<
     const threads = sortThreads(notification.entities, currentUser);
 
     const newThreadCount =
-      threads.length > 1 ? `New threads were` : 'A new thread was';
+      threads.length > 1 ? 'New threads were' : 'A new thread was';
 
     if (threads && threads.length > 0) {
       return (

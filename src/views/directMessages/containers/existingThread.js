@@ -4,12 +4,12 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
-import { setLastSeenMutation } from '../../../api/directMessageThread';
+import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { getDirectMessageThread } from '../../../api/directMessageThread';
+import getDirectMessageThread from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { MessagesContainer, ViewContent } from '../style';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
@@ -22,6 +22,7 @@ type Props = {
   match: Object,
   id: ?string,
   currentUser: Object,
+  threadSliderIsOpen: boolean,
 };
 class ExistingThread extends React.Component<Props> {
   scrollBody: ?HTMLDivElement;

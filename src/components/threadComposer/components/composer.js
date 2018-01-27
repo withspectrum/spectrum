@@ -9,8 +9,9 @@ import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Editor from '../../draftjs-editor';
 import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
-import { getComposerCommunitiesAndChannels } from '../queries';
-import { publishThread } from '../mutations';
+import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
+import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
+import publishThread from 'shared/graphql/mutations/thread/publishThread';
 import { getLinkPreviewFromUrl } from '../../../helpers/utils';
 import isURL from 'validator/lib/isURL';
 import { URLS, ENDS_IN_WHITESPACE } from '../../../helpers/regexps';
@@ -18,6 +19,7 @@ import { TextButton, Button } from '../../buttons';
 import { FlexRow } from '../../../components/globals';
 import { LoadingComposer } from '../../loading';
 import viewNetworkHandler from '../../viewNetworkHandler';
+import type { PublishThreadType } from 'shared/graphql/mutations/thread/publishThread';
 import {
   Container,
   Composer,
@@ -40,16 +42,10 @@ type Props = {
   isInbox: boolean,
   mutate: Function,
   history: Object,
+  publishThread: Function,
   data: {
     refetch: Function,
-    user: {
-      channelConnection: {
-        edges: Array<any>,
-      },
-      communityConnection: {
-        edges: Array<any>,
-      },
-    },
+    user: GetComposerType,
   },
 };
 
@@ -102,16 +98,17 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     if (!props.data.user || props.data.user === undefined) return;
 
     const availableCommunities = props.data.user.communityConnection.edges
-      .map(edge => edge.node)
+      .map(edge => edge && edge.node)
       .filter(
         community =>
-          community.communityPermissions.isMember ||
-          community.communityPermissions.isOwner
+          community &&
+          (community.communityPermissions.isMember ||
+            community.communityPermissions.isOwner)
       )
       .sort((a, b) => {
-        const bc = parseInt(b.communityPermissions.reputation, 10);
-        const ac = parseInt(a.communityPermissions.reputation, 10);
-        return bc <= ac ? -1 : 1;
+        const bc = b && parseInt(b.communityPermissions.reputation, 10);
+        const ac = a && parseInt(a.communityPermissions.reputation, 10);
+        return bc && ac && bc <= ac ? -1 : 1;
       });
 
     /*
@@ -123,13 +120,15 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       community
     */
     const availableChannels = props.data.user.channelConnection.edges
-      .map(edge => edge.node)
+      .map(edge => edge && edge.node)
       .filter(
         channel =>
-          channel.channelPermissions.isMember ||
-          channel.channelPermissions.isOwner
+          channel &&
+          (channel.channelPermissions.isMember ||
+            channel.channelPermissions.isOwner)
       )
       .filter(channel => {
+        if (!channel) return null;
         if (!channel.isPrivate) return channel;
         if (!channel.community.isPro) return null;
         return channel;
@@ -149,6 +148,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       availableCommunities &&
       (activeCommunityFromPropsOrState
         ? availableCommunities.filter(community => {
+            if (!community) return null;
             return (
               community.slug.toLowerCase() ===
               activeCommunityFromPropsOrState.toLowerCase()
@@ -182,7 +182,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     if (!isMounted) return;
     // get the channels for the proper community
     const activeCommunityChannels = availableChannels.filter(
-      channel => channel.community.id === activeCommunity
+      channel => channel && channel.community.id === activeCommunity
     );
     let activeChannel = [];
 
@@ -190,19 +190,20 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
         channel =>
+          channel &&
           channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
       );
     } else {
       // Try and get the default channel for the active community
       activeChannel = activeCommunityChannels.filter(
-        channel => channel.isDefault
+        channel => channel && channel.isDefault
       );
       // If there is no default channel capitulate and take the first one
       if (activeChannel.length === 0) {
         activeChannel = activeCommunityChannels;
       } else if (activeChannel.length > 1) {
         const generalChannel = activeChannel.filter(
-          channel => channel.slug === 'general'
+          channel => channel && channel.slug === 'general'
         );
         if (generalChannel.length > 0) activeChannel = generalChannel;
       }
@@ -229,22 +230,28 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState({ isMounted: true });
-    this.props.data.refetch().then(result => {
-      // we have to rebuild a new props object to pass to `this.handleIncomingProps`
-      // in order to retain all the previous props passed in from the parent
-      // component and the initial data functions provided by apollo
-      const newProps = Object.assign({}, this.props, {
-        ...this.props,
-        data: {
-          ...this.props.data,
-          user: {
-            ...this.props.data.user,
-            ...result.data.user,
+    this.props.data
+      .refetch()
+      .then(result => {
+        // we have to rebuild a new props object to pass to `this.handleIncomingProps`
+        // in order to retain all the previous props passed in from the parent
+        // component and the initial data functions provided by apollo
+        const newProps = Object.assign({}, this.props, {
+          ...this.props,
+          data: {
+            ...this.props.data,
+            user: {
+              ...this.props.data.user,
+              ...result.data.user,
+            },
           },
-        },
-      });
-      this.handleIncomingProps(newProps);
-    });
+        });
+        return this.handleIncomingProps(newProps);
+      })
+      .catch(err =>
+        this.props.dispatch(addToastWithTimeout('error', err.message))
+      );
+
     this.refs.titleTextarea.focus();
   }
 
@@ -372,13 +379,14 @@ class ThreadComposerWithData extends React.Component<Props, State> {
   setActiveCommunity = e => {
     const newActiveCommunity = e.target.value;
     const activeCommunityChannels = this.state.availableChannels.filter(
-      channel => channel.community.id === newActiveCommunity
+      channel => channel && channel.community.id === newActiveCommunity
     );
     const newActiveCommunityData = this.state.availableCommunities.find(
-      community => community.id === newActiveCommunity
+      community => community && community.id === newActiveCommunity
     );
     const newActiveChannel =
       activeCommunityChannels.find(channel => {
+        if (channel) return null;
         // If there is an active channel and we're switching back to the currently open community
         // select that channel
         if (
@@ -460,22 +468,20 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
+    const thread = {
+      channelId,
+      communityId,
+      type: 'DRAFTJS',
+      content,
+      attachments,
+      filesToUpload,
+    };
+
     this.props
-      .mutate({
-        variables: {
-          thread: {
-            channelId,
-            communityId,
-            type: 'DRAFTJS',
-            content,
-            attachments,
-            filesToUpload,
-          },
-        },
-      })
+      .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
-      .then(({ data }) => {
+      .then(({ data }: PublishThreadType) => {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
@@ -498,6 +504,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         );
 
         this.props.dispatch(closeComposer('', ''));
+
+        return;
       })
       .catch(err => {
         this.setState({
@@ -539,16 +547,16 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       this.setState({ fetchingLinkPreview: true });
 
       getLinkPreviewFromUrl(urlToCheck)
-        .then(data => {
+        .then(data =>
           this.setState(prevState => ({
             linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
             error: null,
-          }));
-        })
-        .catch(err => {
+          }))
+        )
+        .catch(() => {
           this.setState({
             error:
               "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",

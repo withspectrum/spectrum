@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
-//$FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-//$FlowFixMe
 import Link from 'src/components/link';
-//$FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import { toggleChannelSubscriptionMutation } from '../../api/channel';
+import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
-
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import { NullCard } from '../upsell';
 import { ChannelListItem, ChannelListItemLi } from '../listItems';
 import Icon from '../icons';
@@ -18,18 +17,26 @@ import { MetaData } from './metaData';
 
 import { ProfileHeaderAction, ProfileCard } from './style';
 
-class ChannelWithData extends Component {
-  state: {
-    isLoading: boolean,
+type State = {
+  isLoading: boolean,
+};
+
+type Props = {
+  dispatch: Function,
+  toggleChannelSubscription: Function,
+  profileSize: string,
+  currentUser: Object,
+  data: {
+    channel: GetChannelType,
+    loading: boolean,
+    error: boolean,
+  },
+};
+
+class ChannelWithData extends React.Component<Props, State> {
+  state = {
+    isLoading: false,
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      isLoading: false,
-    };
-  }
 
   toggleSubscription = (channelId: string) => {
     this.setState({
@@ -38,10 +45,12 @@ class ChannelWithData extends Component {
 
     this.props
       .toggleChannelSubscription({ channelId })
-      .then(({ data: { toggleChannelSubscription } }) => {
+      .then(({ data }: ToggleChannelSubscriptionType) => {
         this.setState({
           isLoading: false,
         });
+
+        const { toggleChannelSubscription } = data;
 
         const isMember = toggleChannelSubscription.channelPermissions.isMember;
         const isPending =
@@ -49,24 +58,28 @@ class ChannelWithData extends Component {
         let str;
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-            .community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${
+            toggleChannelSubscription.community.name
+          }.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
         this.props.dispatch(addToastWithTimeout(type, str));
+        return;
       })
       .catch(err => {
         this.setState({
@@ -126,7 +139,7 @@ class ChannelWithData extends Component {
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
             <ProfileHeaderAction
               glyph="settings"
-              tipText={`Channel settings`}
+              tipText={'Channel settings'}
               tipLocation="top-left"
             />
           </Link>
@@ -269,4 +282,5 @@ const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
 
+// $FlowIssue
 export default connect(mapStateToProps)(Channel);

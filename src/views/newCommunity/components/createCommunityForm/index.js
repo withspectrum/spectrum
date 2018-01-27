@@ -12,11 +12,10 @@ import Avatar from '../../../../components/avatar';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
-import {
-  createCommunityMutation,
-  CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
-} from '../../../../api/community';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/search/searchCommunities';
+import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
+import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
+import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
+import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Button } from '../../../../components/buttons';
 import {
   Input,
@@ -61,6 +60,7 @@ type Props = {
   createCommunity: Function,
   communityCreated: Function,
   dispatch: Function,
+  name: string,
 };
 class CreateCommunityForm extends React.Component<Props, State> {
   constructor(props) {
@@ -134,6 +134,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
         slugTaken: false,
       });
 
+      // $FlowIssue
       this.checkSlug(slug);
     }
   };
@@ -171,6 +172,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
         slugTaken: false,
       });
 
+      // $FlowIssue
       this.checkSlug(slug);
     }
   };
@@ -179,7 +181,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
     // check the db to see if this channel slug exists
     this.props.client
       .query({
-        query: CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
+        query: getCommunityBySlugQuery,
         variables: {
           slug,
         },
@@ -196,10 +198,13 @@ class CreateCommunityForm extends React.Component<Props, State> {
             slugTaken: true,
           });
         } else {
-          this.setState({
+          return this.setState({
             slugTaken: false,
           });
         }
+      })
+      .catch(err => {
+        return this.props.dispatch(addToastWithTimeout('success', err.message));
       });
   };
 
@@ -209,7 +214,8 @@ class CreateCommunityForm extends React.Component<Props, State> {
       // if the user has found a valid url, do a community search to see if they might be creating a duplicate community
       this.props.client
         .query({
-          query: SEARCH_COMMUNITIES_QUERY,
+          // TODO: @BRIAN SWITCH THIS AFTER SEARCH IS MERGED IN
+          query: searchCommunitiesQuery,
           variables: {
             queryString: slug,
             type: 'COMMUNITIES',
@@ -238,14 +244,19 @@ class CreateCommunityForm extends React.Component<Props, State> {
               .slice(0, 5);
 
           if (filtered && filtered.length > 0) {
-            this.setState({
+            return this.setState({
               communitySuggestions: filtered,
             });
           } else {
-            this.setState({
+            return this.setState({
               communitySuggestions: null,
             });
           }
+        })
+        .catch(err => {
+          return this.props.dispatch(
+            addToastWithTimeout('success', err.message)
+          );
         });
     }
   };
@@ -380,12 +391,14 @@ class CreateCommunityForm extends React.Component<Props, State> {
     // create the community
     this.props
       .createCommunity(input)
-      .then(({ data: { createCommunity } }) => {
+      .then(({ data }: CreateCommunityType) => {
         track('community', 'created', null);
+        const { createCommunity } = data;
         this.props.communityCreated(createCommunity);
         this.props.dispatch(
           addToastWithTimeout('success', 'Community created!')
         );
+        return;
       })
       .catch(err => {
         this.setState({
@@ -416,9 +429,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
     const suggestionString = slugTaken
       ? communitySuggestions && communitySuggestions.length > 0
-        ? `Were you looking for one of these communities?`
+        ? 'Were you looking for one of these communities?'
         : null
-      : `This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!`;
+      : "This community name and url are available! We also found communities that might be similar to what you're trying to create, just in case you would rather join an existing community instead!";
 
     return (
       <FormContainer>
@@ -471,7 +484,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
           {slugTaken && (
             <Error>
-              This url is already taken - feel free to change it if you're set
+              This url is already taken - feel free to change it if you’re set
               on the name {name}!
             </Error>
           )}
@@ -520,12 +533,12 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
           {descriptionError && (
             <Error>
-              Oop, that's more than 140 characters - try trimming that up.
+              Oop, that’s more than 140 characters - try trimming that up.
             </Error>
           )}
 
           <Input defaultValue={website} onChange={this.changeWebsite}>
-            Optional: Add your community's website
+            Optional: Add your community’s website
           </Input>
 
           <Checkbox id="isPrivate" checked={agreeCoC} onChange={this.changeCoC}>

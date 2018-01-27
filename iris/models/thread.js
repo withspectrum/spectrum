@@ -496,7 +496,9 @@ export const moveThread = (id: string, channelId: string) => {
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
 export const listenToUpdatedThreads = (cb: Function): Function => {
@@ -505,15 +507,13 @@ export const listenToUpdatedThreads = (cb: Function): Function => {
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val').run(
-    { cursor: true },
-    (err, cursor) => {
+    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
+    .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
         if (err) throw err;
         // Call the passed callback with the notification
         cb(data);
       });
-    }
-  );
+    });
 };

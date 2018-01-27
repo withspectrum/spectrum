@@ -20,7 +20,9 @@ import linksDecorator from 'src/components/draftjs-editor/links-decorator';
 const codeRenderer = {
   blocks: {
     'code-block': (children, { keys }) => (
-      <Line key={keys[0]}>{children.map(child => [child, <br />])}</Line>
+      <Line key={keys[0]}>
+        {children.map((child, i) => [child, <br key={i} />])}
+      </Line>
     ),
   },
 };
@@ -43,12 +45,11 @@ export const Body = props => {
     default:
       return <Text me={me}>{message.body}</Text>;
     case 'media':
-      return (
-        <Image
-          onClick={openGallery}
-          src={`${message.body}?max-w=${window.innerWidth * 0.6}`}
-        />
-      );
+      // don't apply imgix url params to optimistic image messages
+      const src = props.id
+        ? message.body
+        : `${message.body}?max-w=${window.innerWidth * 0.6}`;
+      return <Image onClick={openGallery} src={src} />;
     case 'emoji':
       return <Emoji>{message}</Emoji>;
     case 'draftjs':
@@ -71,7 +72,7 @@ const Action = props => {
     default:
       return (
         <ActionWrapper>
-          <Icon glyph="share" tipText={`Share`} tipLocation={'top'} size={20} />
+          <Icon glyph="share" tipText={'Share'} tipLocation={'top'} size={20} />
         </ActionWrapper>
       );
     case 'delete':
@@ -79,7 +80,7 @@ const Action = props => {
         <ModActionWrapper me={me}>
           <Icon
             glyph="delete"
-            tipText={`Delete`}
+            tipText={'Delete'}
             tipLocation={'top'}
             size={20}
             onClick={deleteMessage}
@@ -93,11 +94,8 @@ export const Actions = props => {
   const {
     me,
     reaction,
-    // toggleReaction,
-    // shareable,
     canModerate,
     deleteMessage,
-    hideIndicator,
     isOptimisticMessage,
   } = props;
 

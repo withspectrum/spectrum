@@ -1,0 +1,35 @@
+// @flow
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import userInfoFragment from '../../fragments/user/userInfo';
+import type { UserInfoType } from '../../fragments/user/userInfo';
+
+export type UpdateUserEmailType = {
+  ...$Exact<UserInfoType>,
+  email: ?string,
+  pendingEmail: ?string,
+};
+
+export const updateUserEmailMutation = gql`
+  mutation updateUserEmail($email: String!) {
+    updateUserEmail(email: $email) {
+      ...userInfo
+      email
+      pendingEmail
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const updateUserEmailOptions = {
+  props: ({ mutate }) => ({
+    updateUserEmail: (email: string) =>
+      mutate({
+        variables: {
+          email,
+        },
+      }),
+  }),
+};
+
+export default graphql(updateUserEmailMutation, updateUserEmailOptions);

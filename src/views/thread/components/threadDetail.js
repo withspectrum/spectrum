@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,10 +13,12 @@ import isURL from 'validator/lib/isURL';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { setThreadLockMutation } from '../mutations';
+import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import ThreadByline from './threadByline';
-import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
-import { pinThreadMutation } from '../../../api/community';
+import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
+import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
+import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { track } from '../../../helpers/events';
 import Editor from '../../../components/draftjs-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
@@ -32,23 +35,35 @@ import {
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
-class ThreadDetailPure extends Component {
-  state: {
-    isEditing: boolean,
-    body: any,
-    title: string,
-    linkPreview: Object,
-    linkPreviewTrueUrl: string,
-    linkPreviewLength: number,
-    fetchingLinkPreview: boolean,
-    receiveNotifications: boolean,
-    isSavingEdit: boolean,
-  };
+type State = {
+  isEditing?: boolean,
+  body?: any,
+  title?: string,
+  linkPreview?: ?Object,
+  linkPreviewTrueUrl?: string,
+  linkPreviewLength?: number,
+  fetchingLinkPreview?: boolean,
+  receiveNotifications?: boolean,
+  isSavingEdit?: boolean,
+  flyoutOpen?: ?boolean,
+  error?: ?string,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+type Props = {
+  thread: GetThreadType,
+  setThreadLock: Function,
+  pinThread: Function,
+  editThread: Function,
+  dispatch: Function,
+  currentUser: ?Object,
+  toggleEdit: Function,
+};
+
+class ThreadDetailPure extends React.Component<Props, State> {
+  state = {};
+  // $FlowFixMe
+  bodyEditor: any;
+  titleTextarea: React.Node;
 
   setThreadState() {
     const { thread } = this.props;
@@ -56,7 +71,8 @@ class ThreadDetailPure extends Component {
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
         ? thread.attachments.filter(
-            attachment => attachment.attachmentType === 'linkPreview'
+            attachment =>
+              attachment && attachment.attachmentType === 'linkPreview'
           )[0]
         : null;
 
@@ -69,10 +85,16 @@ class ThreadDetailPure extends Component {
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
+      // $FlowFixMe
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
-        thread.attachments.length > 0 ? thread.attachments[0].trueUrl : '',
-      linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
+        thread.attachments &&
+        thread.attachments.length > 0 &&
+        thread.attachments[0]
+          ? thread.attachments[0].trueUrl
+          : '',
+      linkPreviewLength:
+        thread.attachments && thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
@@ -106,10 +128,10 @@ class ThreadDetailPure extends Component {
       .then(({ data: { setThreadLock } }) => {
         if (setThreadLock.isLocked) {
           track('thread', 'locked', null);
-          dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
+          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
           track('thread', 'unlocked', null);
-          dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
+          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
       .catch(err => {
@@ -130,11 +152,13 @@ class ThreadDetailPure extends Component {
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread
-        .community
-        .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.community.name
+      } community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.channel.name
+      } channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
     } else {
@@ -218,9 +242,9 @@ class ThreadDetailPure extends Component {
 
         if (editThread && editThread !== null) {
           this.toggleEdit();
-          dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          return dispatch(addToastWithTimeout('success', 'Thread saved!'));
         } else {
-          dispatch(
+          return dispatch(
             addToastWithTimeout(
               'error',
               "We weren't able to save these changes. Try again?"
@@ -287,7 +311,7 @@ class ThreadDetailPure extends Component {
 
       getLinkPreviewFromUrl(urlToCheck)
         .then(data => {
-          this.setState(prevState => ({
+          return this.setState(prevState => ({
             linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
@@ -295,7 +319,7 @@ class ThreadDetailPure extends Component {
             error: null,
           }));
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({
             error:
               "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
@@ -344,14 +368,13 @@ class ThreadDetailPure extends Component {
       isSavingEdit,
     } = this.state;
 
-    const isEdited = thread.modifiedAt;
-    const editedTimestamp = isEdited
-      ? new Date(thread.modifiedAt).getTime()
-      : null;
+    const editedTimestamp =
+      thread.modifiedAt && new Date(thread.modifiedAt).getTime();
 
     return (
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
+          {/* $FlowFixMe */}
           <ThreadByline creator={thread.creator} />
 
           {isEditing ? (
@@ -360,7 +383,9 @@ class ThreadDetailPure extends Component {
               style={ThreadTitle}
               value={this.state.title}
               placeholder={'A title for your thread...'}
-              ref="titleTextarea"
+              ref={c => {
+                this.titleTextarea = c;
+              }}
               autoFocus
             />
           ) : (
@@ -377,6 +402,7 @@ class ThreadDetailPure extends Component {
             )}
           </Link>
 
+          {/* $FlowFixMe */}
           <Editor
             readOnly={!this.state.isEditing}
             state={body}
@@ -419,8 +445,11 @@ const ThreadDetail = compose(
   pinThreadMutation,
   withRouter
 )(ThreadDetailPure);
-const mapStateToProps = state => ({
+
+const map = state => ({
   currentUser: state.users.currentUser,
   flyoutOpen: state.flyoutOpen,
 });
-export default connect(mapStateToProps)(ThreadDetail);
+
+// $FlowIssue
+export default connect(map)(ThreadDetail);

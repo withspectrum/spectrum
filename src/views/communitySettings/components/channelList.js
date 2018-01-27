@@ -1,10 +1,7 @@
-//@flow
+// @flow
 import React from 'react';
-//$FlowFixMe
 import Link from 'src/components/link';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import { openModal } from '../../../actions/modals';
 import { Loading } from '../../../components/loading';
@@ -12,7 +9,8 @@ import { ChannelListItem } from '../../../components/listItems';
 import { IconButton, Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
-import { getCommunityChannels } from '../queries';
+import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { ListContainer } from '../style';
 import {
   SectionCard,
@@ -22,7 +20,7 @@ import {
 
 type Props = {
   data: {
-    community: Object,
+    community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
   dispatch: Function,
@@ -39,7 +37,7 @@ class ChannelList extends React.Component<Props> {
     } = this.props;
 
     if (community) {
-      const channels = community.channelConnection.edges.map(c => c.node);
+      const channels = community.channelConnection.edges.map(c => c && c.node);
 
       return (
         <SectionCard>
@@ -48,6 +46,7 @@ class ChannelList extends React.Component<Props> {
           <ListContainer>
             {channels.length > 0 &&
               channels.map(item => {
+                if (!item) return null;
                 return (
                   <Link
                     key={item.id}
@@ -89,7 +88,7 @@ class ChannelList extends React.Component<Props> {
         <ViewError
           refresh
           small
-          heading={`We couldn’t load the channels for this community.`}
+          heading={'We couldn’t load the channels for this community.'}
         />
       </SectionCard>
     );

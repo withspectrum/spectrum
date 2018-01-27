@@ -6,7 +6,7 @@ import { LoadingDM } from '../../../components/loading';
 import { ThreadsListScrollContainer } from './style';
 
 type Props = {
-  threads: ?Array<Object>,
+  threads: ?Array<?Object>,
   currentUser: ?Object,
   active: string,
   fetchMore: Function,
@@ -51,6 +51,7 @@ class ThreadsList extends React.Component<Props, State> {
           threshold={30}
         >
           {threads.map(thread => {
+            if (!thread) return null;
             return (
               <ListCardItemDirectMessageThread
                 thread={thread}

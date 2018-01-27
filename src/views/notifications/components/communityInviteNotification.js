@@ -1,9 +1,11 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { getCommunityById } from '../../../api/community';
+import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
-import { markSingleNotificationSeenMutation } from '../../../api/notification';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import Icon from '../../../components/icons';
 import {
   SegmentedNotificationCard,
@@ -15,7 +17,11 @@ import {
 } from '../style';
 import { CommunityProfile } from '../../../components/profile';
 
-const CommunityInviteComponent = ({ data }) => {
+const CommunityInviteComponent = ({
+  data,
+}: {
+  data: { community: GetCommunityType },
+}) => {
   return <CommunityProfile profileSize={'miniWithAction'} data={data} />;
 };
 
@@ -23,7 +29,13 @@ const CommunityInvite = compose(getCommunityById, displayLoadingCard)(
   CommunityInviteComponent
 );
 
-export const CommunityInviteNotification = ({ notification, currentUser }) => {
+export const CommunityInviteNotification = ({
+  notification,
+  currentUser,
+}: {
+  notification: Object,
+  currentUser: Object,
+}) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
   const actors = parseActors(notification.actors, currentUser, true);

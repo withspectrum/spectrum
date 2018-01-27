@@ -3,7 +3,7 @@
     "name": "spectrum",
     "slug": "spectrum",
     "privacy": "unlisted",
-    "sdkVersion": "24.0.0",
+    "sdkVersion": "25.0.0",
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,6 +16,22 @@
     "ios": {
 			"supportsTablet": true,
 			"bundleIdentifier": "com.spectrum.mobile"
+    },
+    "packagerOpts": {
+      "projectRoots": "",
+      "config": "rn-cli.config.js"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "space-program",
+            "project": "spectrum",
+            "authToken": "8f7c6317a1024bbf9d7fd4806c7b7f73913bc1b3fd9142ddaa21e51aa4b3b9fb"
+          }
+        }
+      ]
     }
   }
 }

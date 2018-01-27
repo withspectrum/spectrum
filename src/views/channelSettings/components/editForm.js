@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Link from 'src/components/link';
 import { track } from '../../../helpers/events';
-import {
-  editChannelMutation,
-  deleteChannelMutation,
-} from '../../../api/channel';
+import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
+import type { EditChannelType } from 'shared/graphql/mutations/channel/editChannel';
+import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Notice } from '../../../components/listItems/style';
@@ -115,8 +114,8 @@ class ChannelWithData extends React.Component<Props, State> {
 
     this.props
       .editChannel(input)
-      .then(({ data: { editChannel } }) => {
-        const channel = editChannel;
+      .then(({ data }: EditChannelType) => {
+        const { editChannel: channel } = data;
 
         track('channel', 'edited', null);
 
@@ -128,6 +127,7 @@ class ChannelWithData extends React.Component<Props, State> {
         if (channel !== undefined) {
           this.props.dispatch(addToastWithTimeout('success', 'Channel saved!'));
         }
+        return;
       })
       .catch(err => {
         this.setState({
@@ -185,8 +185,8 @@ class ChannelWithData extends React.Component<Props, State> {
       return (
         <NullCard
           bg="channel"
-          heading={`This channel doesn't exist yet.`}
-          copy={`Want to make it?`}
+          heading={"This channel doesn't exist yet."}
+          copy={'Want to make it?'}
         >
           {/* TODO: wire up button */}
           <Button>Create</Button>

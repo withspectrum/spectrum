@@ -32,7 +32,7 @@ class Reputation extends React.Component<Props> {
 
     if (reputation === undefined || reputation === null) return null;
 
-    const renderedReputation = reputation > 0 ? reputation : '0';
+    const renderedReputation = reputation > 0 ? reputation : 0;
 
     return (
       <ReputationWrapper

@@ -158,7 +158,7 @@ export const HeaderText = styled.div`
   justify-content: space-around;
 `;
 
-export const GrowthText = styled.h5`
+export const GrowthText = styled.span`
   color: ${props =>
     props.positive
       ? props.theme.success.default

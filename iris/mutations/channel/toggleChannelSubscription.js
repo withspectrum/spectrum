@@ -15,6 +15,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { addQueue } from '../../utils/workerQueue';
 
 export default async (
   _: any,
@@ -118,6 +119,10 @@ export default async (
     // community - those actions will instead be handled when the channel
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
+      addQueue('private channel request sent', {
+        userId: currentUser.id,
+        channel: channelToEvaluate,
+      });
       return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
     }
 
@@ -141,9 +146,11 @@ export default async (
     return (
       Promise.all([channelToEvaluate, join, currentUserCommunityPermissions])
         .then(
-          (
-            [channelToEvaluate, joinedChannel, currentUserCommunityPermissions]
-          ) => {
+          ([
+            channelToEvaluate,
+            joinedChannel,
+            currentUserCommunityPermissions,
+          ]) => {
             // if the user is a member of the parent community, we can return
             if (currentUserCommunityPermissions.isMember) {
               return Promise.all([joinedChannel]);

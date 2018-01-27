@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -9,15 +10,15 @@ import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
-import { findDOMNode } from 'react-dom';
-import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
+import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { throttle } from '../../../helpers/utils';
 import { track } from '../../../helpers/events';
-import { SEARCH_USERS_QUERY } from '../../../api/search/searchUsers';
+import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
-import { createDirectMessageThreadMutation } from '../../../api/directMessageThread';
+import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import {
   ComposerInputWrapper,
   Grow,
@@ -34,20 +35,37 @@ import {
   SearchResultImage,
 } from '../components/style';
 
-class NewThread extends Component {
-  state: {
-    searchString: string,
-    searchResults: Array<any>,
-    searchIsLoading: boolean,
-    selectedUsersForNewThread: Array<any>,
-    focusedSearchResult: string, // id
-    focusedSelectedUser: string, // id
-    existingThreadBasedOnSelectedUsers: string, // id
-    existingThreadWithMessages: Object,
-    loadingExistingThreadMessages: boolean,
-    chatInputIsFocused: boolean,
-    threadIsBeingCreated: boolean,
-  };
+type State = {
+  searchString: string,
+  searchResults: Array<any>,
+  searchIsLoading: boolean,
+  selectedUsersForNewThread: Array<any>,
+  focusedSearchResult: string, // id
+  focusedSelectedUser: string, // id
+  existingThreadBasedOnSelectedUsers: string, // id
+  existingThreadWithMessages: Object,
+  loadingExistingThreadMessages: boolean,
+  chatInputIsFocused: boolean,
+  threadIsBeingCreated: boolean,
+};
+
+type Props = {
+  client: Object,
+  currentUser: Object,
+  initNewThreadWithUser: Array<?any>,
+  threads: Array<Object>,
+  hideOnMobile: boolean,
+  dispatch: Function,
+  createDirectMessageThread: Function,
+  threadSliderIsOpen: boolean,
+  history: Object,
+  setActiveThread: Function,
+};
+
+class NewThread extends React.Component<Props, State> {
+  chatInput: React.ElementProps<typeof ChatInput>;
+  scrollBody: ?HTMLDivElement;
+  input: React.Node;
 
   constructor(props) {
     super(props);
@@ -126,7 +144,7 @@ class NewThread extends Component {
     // trigger the query
     client
       .query({
-        query: SEARCH_USERS_QUERY,
+        query: searchUsersQuery,
         variables: {
           queryString: string,
           type: 'USERS',
@@ -173,6 +191,10 @@ class NewThread extends Component {
           focusedSearchResult:
             searchResults.length > 0 ? searchResults[0].id : '',
         });
+        return;
+      })
+      .catch(err => {
+        console.log('Error searching users', err);
       });
   };
 
@@ -192,7 +214,7 @@ class NewThread extends Component {
 
     // create a reference to the input - we will use this to call .focus()
     // after certain events (like pressing backspace or enter)
-    const input = findDOMNode(this.refs.input);
+    const input = this.input;
 
     // create temporary arrays of IDs from the searchResults and selectedUsers
     // to more easily manipulate the ids
@@ -236,7 +258,8 @@ class NewThread extends Component {
         this.getMessagesForExistingDirectMessageThread();
 
         // focus the search input
-        input.focus();
+        // $FlowFixMe
+        input && input.focus();
 
         return;
       }
@@ -264,7 +287,8 @@ class NewThread extends Component {
       }
 
       // 4
-      input.focus();
+      // $FlowFixMe
+      input && input.focus();
       return;
     }
 
@@ -284,7 +308,7 @@ class NewThread extends Component {
         focusedSelectedUser: '',
       });
 
-      input.focus();
+      // $FlowFixMe      input && input.focus();
       return;
     }
 
@@ -404,6 +428,7 @@ class NewThread extends Component {
     });
 
     // trigger a new search based on the search input
+    // $FlowIssue
     this.search(string);
   };
 
@@ -499,29 +524,38 @@ class NewThread extends Component {
 
       client
         .query({
-          query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+          query: getDirectMessageThreadQuery,
           variables: {
             id: existingThread[0].id,
           },
         })
-        .then(({ data: { directMessageThread } }) => {
-          // stop loading
-          this.setState({
-            loadingExistingThreadMessages: false,
-          });
+        .then(
+          ({
+            data: { directMessageThread },
+          }: {
+            data: { directMessageThread: GetDirectMessageThreadType },
+          }) => {
+            // stop loading
+            this.setState({
+              loadingExistingThreadMessages: false,
+            });
 
-          // if messages were found
-          if (directMessageThread.id) {
-            this.setState({
-              existingThreadWithMessages: directMessageThread,
-            });
-            // if no messages were found
-          } else {
-            this.setState({
-              existingThreadWithMessages: {},
-              existingThreadBasedOnSelectedUsers: '',
-            });
+            // if messages were found
+            if (directMessageThread.id) {
+              return this.setState({
+                existingThreadWithMessages: directMessageThread,
+              });
+              // if no messages were found
+            } else {
+              return this.setState({
+                existingThreadWithMessages: {},
+                existingThreadBasedOnSelectedUsers: '',
+              });
+            }
           }
+        )
+        .catch(err => {
+          console.log('Error finding existing conversation: ', err);
         });
     }
   };
@@ -553,8 +587,9 @@ class NewThread extends Component {
 
     // focus the composer input if no users were already in the composer
     if (initNewThreadWithUser.length === 0) {
-      const input = findDOMNode(this.refs.input);
-      return input.focus();
+      const input = this.input;
+      // $FlowFixMe
+      return input && input.focus();
     }
 
     this.chatInput.triggerFocus();
@@ -642,6 +677,7 @@ class NewThread extends Component {
 
           this.props.setActiveThread(createDirectMessageThread.id);
           this.props.history.push(`/messages/${createDirectMessageThread.id}`);
+          return;
         })
         .catch(err => {
           // if an error happened, the user can try to resend the message to
@@ -717,7 +753,9 @@ class NewThread extends Component {
           )}
 
           <ComposerInput
-            ref="input"
+            innerRef={c => {
+              this.input = c;
+            }}
             type="text"
             value={searchString}
             placeholder="Search for people..."
@@ -762,7 +800,7 @@ class NewThread extends Component {
                 <SearchResult>
                   <SearchResultTextContainer>
                     <SearchResultNull>
-                      No users found matching "{searchString}"
+                      No users found matching “{searchString}”
                     </SearchResultNull>
                   </SearchResultTextContainer>
                 </SearchResult>
@@ -823,5 +861,6 @@ export default compose(
   withApollo,
   withRouter,
   createDirectMessageThreadMutation,
+  // $FlowIssue
   connect(mapStateToProps)
 )(NewThread);
