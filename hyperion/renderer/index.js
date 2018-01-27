@@ -19,7 +19,7 @@ import * as graphql from 'graphql';
 import Loadable from 'react-loadable';
 import { getBundles } from 'react-loadable/webpack';
 import Raven from 'shared/raven';
-import introspectionQueryResultData from 'src/api/schema.json';
+import introspectionQueryResultData from 'shared/graphql/schema.json';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
