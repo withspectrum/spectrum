@@ -6,8 +6,8 @@ import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Icon from '../icons';
 import isEmail from 'validator/lib/isEmail';
-import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-// import sendChannelEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
+import { sendCommunityEmailInvitationsMutation } from '../../api/community';
+import { sendChannelEmailInvitationMutation } from '../../api/channel';
 import { Button } from '../buttons';
 import { Error } from '../formElements';
 import { SectionCardFooter } from '../settingsViews/style';
@@ -91,7 +91,6 @@ class EmailInvitationForm extends React.Component<Props, State> {
       .filter(contact => contact.email !== currentUser.email)
       .filter(contact => contact.email.length > 0)
       .filter(contact => isEmail(contact.email))
-      // eslint-disable-next-line
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
@@ -117,7 +116,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
       contacts: validContacts,
       customMessage,
     })
-      .then(() => {
+      .then(({ data: { sendEmailInvites } }) => {
         this.setState({
           isLoading: false,
           contacts: [
@@ -145,7 +144,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
           customMessageError: false,
         });
 
-        return dispatch(
+        dispatch(
           addToastWithTimeout(
             'success',
             `Invitations sent to ${
@@ -320,11 +319,11 @@ const map = state => ({ currentUser: state.users.currentUser });
 export const CommunityInvitationForm = compose(
   // $FlowIssue
   connect(map),
-  sendCommunityEmailInvitations
+  sendCommunityEmailInvitationsMutation
 )(EmailInvitationForm);
 
-// export const ChannelInvitationForm = compose(
-//   // $FlowIssue
-//   connect(map),
-//   sendChannelEmailInvitations
-// )(EmailInvitationForm);
+export const ChannelInvitationForm = compose(
+  // $FlowIssue
+  connect(map),
+  sendChannelEmailInvitationMutation
+)(EmailInvitationForm);

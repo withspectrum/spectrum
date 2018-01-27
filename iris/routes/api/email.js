@@ -72,9 +72,16 @@ emailRouter.get('/unsubscribe', (req, res) => {
         );
       case 'muteCommunity':
         return getChannelsByCommunity(dataId)
-          .then(channels => channels.map(c => c.id))
+          .then(
+            channels =>
+              console.log('got channels', channels) || channels.map(c => c.id)
+          )
           .then(channels =>
-            channels.map(c => toggleUserChannelNotifications(userId, c, false))
+            channels.map(
+              c =>
+                console.log('muting channel', c) ||
+                toggleUserChannelNotifications(userId, c, false)
+            )
           )
           .then(() =>
             res

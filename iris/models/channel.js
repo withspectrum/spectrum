@@ -67,7 +67,6 @@ const getChannelsByUserAndCommunity = async (
     .filter(usersChannel =>
       db.expr(channelIds).contains(usersChannel('channelId'))
     )
-    .filter({ isMember: true })
     .run();
 
   const usersChannelsIds = usersChannels.map(c => c.channelId);

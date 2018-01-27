@@ -1,5 +1,5 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
@@ -13,59 +13,20 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import Head from '../../../components/head';
 import NextPageButton from '../../../components/nextPageButton';
 import { ChatWrapper, NullMessagesWrapper, NullCopy } from '../style';
-import getThreadMessages from 'shared/graphql/queries/thread/getThreadMessageConnection';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
+import { getThreadMessages } from '../queries';
+import { toggleReactionMutation } from '../mutations';
 
-type State = {
-  subscription: ?Function,
-};
+class MessagesWithData extends Component {
+  state: {
+    subscription: ?Object,
+  };
 
-type MessageType = {
-  cursor: string,
-  node: {
-    id: string,
-  },
-};
-
-type Props = {
-  toggleReaction: Function,
-  isLoading: boolean,
-  location: Object,
-  forceScrollToBottom: Function,
-  forceScrollToTop: Function,
-  contextualScrollToBottom: Function,
-  hasMessagesToLoad: boolean,
-  id: string,
-  isModerator: boolean,
-  isFetchingMore: boolean,
-  loadPreviousPage: Function,
-  loadNextPage: Function,
-  scrollContainer: any,
-  subscribeToNewMessages: Function,
-  data: {
-    thread: {
-      id: string,
-      currentUserLastSeen: Date,
-      messageConnection: {
-        pageInfo: {
-          hasNextPage: boolean,
-        },
-        edges: Array<MessageType>,
-      },
-    },
-  },
-};
-
-class MessagesWithData extends React.Component<Props, State> {
   state = {
     subscription: null,
   };
 
   componentDidUpdate(prev = {}) {
     const curr = this.props;
-
-    if (!curr.data.thread) return;
-
     const isDifferentThread =
       prev.data &&
       prev.data.thread &&
@@ -108,10 +69,7 @@ class MessagesWithData extends React.Component<Props, State> {
       curr.data.thread &&
       prev.data.thread.id !== curr.data.thread.id
     ) {
-      // $FlowFixMe
-      this.unsubscribe()
-        .then(() => this.subscribe())
-        .catch(err => console.log('Error unsubscribing: ', err));
+      this.unsubscribe().then(() => this.subscribe());
     }
   }
 
@@ -244,7 +202,7 @@ class MessagesWithData extends React.Component<Props, State> {
         <NullMessagesWrapper>
           <Icon glyph={'emoji'} size={64} />
           <NullCopy>
-            No messages have been sent in this conversation yet - why don’t you
+            No messages have been sent in this conversation yet - why don't you
             kick things off below?
           </NullCopy>
         </NullMessagesWrapper>

@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -9,7 +8,7 @@ import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
-import { client } from 'shared/graphql';
+import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
@@ -68,7 +67,6 @@ function render() {
         </Router>
       </ApolloProvider>
     </Provider>,
-    // $FlowIssue
     document.querySelector('#root')
   );
 }
@@ -85,7 +83,6 @@ OfflinePluginRuntime.install({
 });
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  // $FlowIssue
   navigator.serviceWorker.ready.then(registration => {
     webPushManager.set(registration.pushManager);
   });

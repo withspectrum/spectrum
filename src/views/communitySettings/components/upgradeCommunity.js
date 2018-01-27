@@ -1,11 +1,11 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import StripeCheckout from 'react-stripe-checkout';
 import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
-import upgradeCommunityMutation from 'shared/graphql/mutations/community/upgradeCommunity';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import { upgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
 import { NullCard } from '../../../components/upsell';
@@ -13,23 +13,20 @@ import { Button } from '../../../components/buttons';
 import { Pitch, PitchItem, Cost, CostNumber, CostSubtext } from '../style';
 import { SectionTitle } from '../../../components/settingsViews/style';
 
-type State = {
-  upgradeError: string,
-  isLoading: boolean,
-};
-
-type Props = {
-  community: GetCommunityType,
-  upgradeCommunity: Function,
-  complete: Function,
-  dispatch: Function,
-};
-
-class UpsellUpgradeCommunityPure extends React.Component<Props, State> {
-  state = {
-    upgradeError: '',
-    isLoading: false,
+class UpsellUpgradeCommunityPure extends Component {
+  state: {
+    upgradeError: string,
+    isLoading: boolean,
   };
+
+  constructor() {
+    super();
+
+    this.state = {
+      upgradeError: '',
+      isLoading: false,
+    };
+  }
 
   upgradeToPro = token => {
     this.setState({
@@ -44,14 +41,14 @@ class UpsellUpgradeCommunityPure extends React.Component<Props, State> {
 
     this.props
       .upgradeCommunity(input)
-      .then(() => {
+      .then(({ data: { upgradeCommunity }, data }) => {
         this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
         this.setState({
           isLoading: false,
           upgradeError: '',
         });
         // if the upgrade is triggered from a modal, close the modal
-        return this.props.complete && this.props.complete();
+        this.props.complete && this.props.complete();
       })
       .catch(err => {
         this.setState({
@@ -138,20 +135,7 @@ export const UpsellUpgradeCommunity = compose(
   connect()
 )(UpsellUpgradeCommunityPure);
 
-type PrivateProps = {
-  currentUser: ?Object,
-  community: {
-    name: string,
-    communityPermissions: {
-      isOwner: boolean,
-      isMember: boolean,
-    },
-  },
-  dispatch: Function,
-};
-class UpsellUpgradeCommunityPrivateChannelPure extends React.Component<
-  PrivateProps
-> {
+class UpsellUpgradeCommunityPrivateChannelPure extends Component {
   openCommunityUpgradeModal = () => {
     const { currentUser, community } = this.props;
 
@@ -164,7 +148,7 @@ class UpsellUpgradeCommunityPrivateChannelPure extends React.Component<
     const { community } = this.props;
 
     const str = community.communityPermissions.isOwner
-      ? 'Private channels are only available to communities on the Standard plan. Upgrade your community to re-activate this channel.'
+      ? `Private channels are only available to communities on the Standard plan. Upgrade your community to re-activate this channel.`
       : `Private channels are only available to communities on the Standard plan. The owner of the ${
           community.name
         } community can upgrade it from the community settings page.`;
@@ -183,6 +167,5 @@ class UpsellUpgradeCommunityPrivateChannelPure extends React.Component<
 
 const mapUpgrade = state => ({ currentUser: state.users.currentUser });
 export const UpsellUpgradeCommunityPrivateChannel = compose(
-  // $FlowIssue
   connect(mapUpgrade)
 )(UpsellUpgradeCommunityPrivateChannelPure);

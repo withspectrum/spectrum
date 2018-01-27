@@ -4,12 +4,12 @@ import compose from 'recompose/compose';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
+import { Spinner } from '../../../components/globals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import NextPageButton from '../../../components/nextPageButton';
-import getDirectMessageThreadMessages from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
-import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
-import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
+import { getDirectMessageThreadMessages } from '../queries';
+import { setLastSeenMutation } from '../../../api/directMessageThread';
+import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper } from './style';
 
 type Props = {
@@ -17,8 +17,9 @@ type Props = {
   forceScrollToBottom: Function,
   contextualScrollToBottom: Function,
   data: {
-    loading: boolean,
-    directMessageThread: GetDirectMessageThreadMessageConnectionType,
+    directMessageThread: {
+      id: string,
+    },
     messages: Array<Object>,
     hasNextPage: boolean,
     fetchMore: Function,

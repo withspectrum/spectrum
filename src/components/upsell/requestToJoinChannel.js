@@ -1,11 +1,13 @@
 // @flow
 import React, { Component } from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import Link from 'src/components/link';
 import { track } from '../../helpers/events';
-import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
-import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Button, OutlineButton } from '../buttons';
 import { Actions } from './style';
@@ -36,21 +38,18 @@ class RequestToJoinChannel extends Component<Props, State> {
   }
 
   toggleRequest = () => {
-    const { dispatch, channel } = this.props;
+    const { toggleChannelSubscription, dispatch, channel } = this.props;
     const channelId = channel.id;
 
     this.setState({
       isLoading: true,
     });
 
-    this.props
-      .toggleChannelSubscription({ channelId })
-      .then(({ data }: ToggleChannelSubscriptionType) => {
+    toggleChannelSubscription({ channelId })
+      .then(({ data: { toggleChannelSubscription } }) => {
         this.setState({
           isLoading: false,
         });
-
-        const { toggleChannelSubscription } = data;
 
         const { isPending } = toggleChannelSubscription.channelPermissions;
 
@@ -61,16 +60,13 @@ class RequestToJoinChannel extends Component<Props, State> {
         }
 
         const str = isPending
-          ? `Requested to join ${toggleChannelSubscription.name} in ${
-              toggleChannelSubscription.community.name
-            }!`
-          : `Canceled request to join ${toggleChannelSubscription.name} in ${
-              toggleChannelSubscription.community.name
-            }.`;
+          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}!`
+          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}.`;
 
         const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
-        return;
       })
       .catch(err => {
         this.setState({
@@ -93,6 +89,7 @@ class RequestToJoinChannel extends Component<Props, State> {
             onClick={this.toggleRequest}
             icon="minus"
             loading={isLoading}
+            label
           >
             Cancel request
           </OutlineButton>
@@ -110,6 +107,7 @@ class RequestToJoinChannel extends Component<Props, State> {
             onClick={this.toggleRequest}
             icon="private-unlocked"
             loading={isLoading}
+            label
           >
             Request to join {channel.name}
           </Button>

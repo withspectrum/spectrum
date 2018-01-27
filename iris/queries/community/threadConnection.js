@@ -10,7 +10,7 @@ import {
 import { getThreadsByChannels } from '../../models/thread';
 
 export default async (
-  { id }: DBCommunity,
+  { id, ..._ }: DBCommunity,
   { first = 10, after }: PaginationOptions,
   { user }: GraphQLContext
 ) => {

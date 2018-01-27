@@ -1,6 +1,7 @@
-// @flow
 import React from 'react';
+// $FlowFixMe
 import { connect } from 'react-redux';
+import UserProfileModal from './UserProfileModal';
 import CreateChannelModal from './CreateChannelModal';
 import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import UpgradeModal from './UpgradeModal';
@@ -9,6 +10,7 @@ import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 
 const MODAL_COMPONENTS = {
+  USER_PROFILE_MODAL: UserProfileModal,
   CREATE_CHANNEL_MODAL: CreateChannelModal,
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
   UPGRADE_MODAL: UpgradeModal,
@@ -35,5 +37,4 @@ const mapStateToProps = state => ({
   modalType: state.modals.modalType,
 });
 
-// $FlowIssue
 export default connect(mapStateToProps)(modalRoot);

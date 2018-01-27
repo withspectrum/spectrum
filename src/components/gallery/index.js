@@ -1,8 +1,9 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import compose from 'recompose/compose';
-import getMediaMessagesForThread from 'shared/graphql/queries/message/getMediaMessagesForThread';
+import { getMediaMessagesForThread } from '../../api/message';
 import { displayLoadingGallery } from '../../components/loading';
 import Browser from './browser';
 
@@ -11,13 +12,7 @@ const GalleryWithMedia = compose(
   displayLoadingGallery
 )(Browser);
 
-type Props = {
-  isOpen: boolean,
-  threadId: string,
-  activeMessageId: string,
-};
-
-class Gallery extends React.Component<Props> {
+class Gallery extends Component {
   render() {
     const { isOpen, threadId, activeMessageId } = this.props;
 
@@ -40,7 +35,4 @@ const mapStateToProps = state => ({
   isOpen: state.gallery.isOpen,
 });
 
-export default compose(
-  // $FlowIssue
-  connect(mapStateToProps)
-)(Gallery);
+export default compose(connect(mapStateToProps))(Gallery);

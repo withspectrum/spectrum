@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
@@ -7,7 +6,7 @@ import createEmojiRegex from 'emoji-regex';
 
 import replace from 'string-replace-to-array';
 
-export const convertTimestampToDate = (timestamp: number) => {
+export const convertTimestampToDate = (timestamp: Date) => {
   let monthNames = [
     'January',
     'February',
@@ -63,7 +62,7 @@ const regex = new RegExp(
 );
 export const onlyContainsEmoji = (text: string) => regex.test(text);
 
-export const draftOnlyContainsEmoji = (raw: Object) =>
+export const draftOnlyContainsEmoji = (raw: object) =>
   raw.blocks.length === 1 &&
   raw.blocks[0].type === 'unstyled' &&
   onlyContainsEmoji(raw.blocks[0].text);
@@ -94,9 +93,7 @@ export function isMobile() {
   return false;
 }
 
-export function timeDifference(current: number, previous: ?number): string {
-  if (!previous) return '';
-
+export function timeDifference(current: Date, previous: Date) {
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;
   const msPerDay = msPerHour * 24;
@@ -110,21 +107,21 @@ export function timeDifference(current: number, previous: ?number): string {
   } else if (elapsed < msPerHour) {
     const now = Math.round(elapsed / msPerMinute);
     if (now === 1) {
-      return '1 minute ago';
+      return `1 minute ago`;
     } else {
       return `${now} minutes ago`;
     }
   } else if (elapsed < msPerDay) {
     const now = Math.round(elapsed / msPerHour);
     if (now === 1) {
-      return '1 hour ago';
+      return `1 hour ago`;
     } else {
       return `${now} hours ago`;
     }
   } else if (elapsed < msPerMonth) {
     const now = Math.round(elapsed / msPerDay);
     if (now === 1) {
-      return 'Yesterday';
+      return `Yesterday`;
     } else if (now >= 7 && now <= 13) {
       return '1 week ago';
     } else if (now >= 14 && now <= 20) {
@@ -137,14 +134,14 @@ export function timeDifference(current: number, previous: ?number): string {
   } else if (elapsed < msPerYear) {
     const now = Math.round(elapsed / msPerMonth);
     if (now === 1) {
-      return '1 month ago';
+      return `1 month ago`;
     } else {
       return `${now} months ago`;
     }
   } else {
     const now = Math.round(elapsed / msPerYear);
     if (now === 1) {
-      return '1 year ago';
+      return `1 year ago`;
     } else {
       return `${now} years ago`;
     }
@@ -178,7 +175,7 @@ export function timeDifferenceShort(current: Date, previous: Date) {
   }
 }
 
-export const debounce = (func: Function, wait: number, immediate: boolean) => {
+export const debounce = (func, wait, immediate) => {
   let timeout;
   return function() {
     let context = this,
@@ -188,14 +185,13 @@ export const debounce = (func: Function, wait: number, immediate: boolean) => {
       if (!immediate) func.apply(context, args);
     };
     let callNow = immediate && !timeout;
-    // $FlowFixMe
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
 };
 
-export const throttle = (func: Function, threshhold: number, scope: any) => {
+export const throttle = (func, threshhold, scope) => {
   threshhold || (threshhold = 250);
   let last, deferTimer;
   return function() {
@@ -217,17 +213,13 @@ export const throttle = (func: Function, threshhold: number, scope: any) => {
   };
 };
 
-export const getLinkPreviewFromUrl = (url: string) =>
-  fetch(`https://links.spectrum.chat/?url=${url}`)
-    .then(response => {
-      return response.json();
-    })
-    .catch(err => {
-      console.log('Error getting link preview: ', err);
-    });
+export const getLinkPreviewFromUrl = url =>
+  fetch(`https://links.spectrum.chat/?url=${url}`).then(response => {
+    return response.json();
+  });
 
 // Truncate a string nicely to a certain length
-export const truncate = (str: string, length: number) => {
+export const truncate = (str, length) => {
   if (str.length <= length) {
     return str;
   }
@@ -237,7 +229,7 @@ export const truncate = (str: string, length: number) => {
 
 // takes a number like 1,480 and returns a truncated number: 1.5k
 // takes an option 'places' argument to round - default to 1 (e.g. 1 = 1.5k. 2 = 1.48k)
-export const truncateNumber = (number: number, places: number = 1) => {
+export const truncateNumber = (number: number, places = 1) => {
   const truncated =
     number > 999 ? (number / 1000).toFixed(places) + 'k' : number;
   // if the last number is 0 and we are rounding to one place, just ommit
@@ -250,7 +242,7 @@ export const truncateNumber = (number: number, places: number = 1) => {
   }
 };
 
-export const hasProtocol = (url: string) => {
+export const hasProtocol = url => {
   const PROTOCOL = /(http(s?)):\/\//gi;
   const hasProtocol = url.match(PROTOCOL);
   if (hasProtocol) {
@@ -259,7 +251,7 @@ export const hasProtocol = (url: string) => {
   return false;
 };
 
-export const addProtocolToString = (string: string) => {
+export const addProtocolToString = string => {
   // if the string starts with http or https, we are good
   if (hasProtocol(string)) {
     return string;
@@ -269,7 +261,7 @@ export const addProtocolToString = (string: string) => {
   }
 };
 
-export const sortByDate = (array: Array<any>, key: string, order: string) => {
+export const sortByDate = (array, key, order) => {
   return array.sort((a, b) => {
     const x = new Date(a[key]).getTime();
     const y = new Date(b[key]).getTime();
@@ -279,7 +271,7 @@ export const sortByDate = (array: Array<any>, key: string, order: string) => {
   });
 };
 
-export const sortByTitle = (array: Array<any>) => {
+export const sortByTitle = array => {
   return array.sort((a, b) => {
     const x = a['name'];
     const y = b['name'];
@@ -292,7 +284,7 @@ export const sortByTitle = (array: Array<any>) => {
   });
 };
 
-export const renderMarkdownLinks = (text: string) => {
+export const renderMarkdownLinks = text => {
   const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
   return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
@@ -305,7 +297,7 @@ export const renderMarkdownLinks = (text: string) => {
 // eslint-disable-next-line
 const URL = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/g;
 
-export const renderLinks = (text: string) => {
+export const renderLinks = text => {
   if (typeof text !== 'string') return text;
   return replace(text, URL, (url, _, __, ____, _____, offset) => (
     <a

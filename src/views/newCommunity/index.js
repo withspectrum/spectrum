@@ -16,8 +16,7 @@ import Titlebar from '../titlebar';
 import Stepper from './components/stepper';
 import Share from './components/share';
 import { Login } from '../../views/login';
-import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import { getCommunityByIdQuery } from '../../api/community';
 import {
   Actions,
   Container,
@@ -73,18 +72,12 @@ class NewCommunity extends React.Component<Props, State> {
           id: existingId,
         },
       })
-      .then(
-        ({
-          data: { community },
-        }: {
-          data: { community: GetCommunityType },
-        }) => {
-          if (!community) return;
-          return this.setState({
-            community,
-          });
-        }
-      )
+      .then(({ data: { community } }) => {
+        if (!community) return;
+        return this.setState({
+          community,
+        });
+      })
       .catch(err => {
         console.log('error creating community', err);
       });
@@ -173,7 +166,7 @@ class NewCommunity extends React.Component<Props, State> {
           <Titlebar
             title={'Create a Community'}
             provideBack={true}
-            backRoute={'/'}
+            backRoute={`/`}
             noComposer
           />
 

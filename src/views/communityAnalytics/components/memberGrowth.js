@@ -8,14 +8,26 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import getCommunityMemberGrowth from 'shared/graphql/queries/community/getCommunityMemberGrowth';
-import type { GetCommunityMemberGrowthType } from 'shared/graphql/queries/community/getCommunityMemberGrowth';
+import { getCommunityMemberGrowth } from '../queries';
 import { parseGrowth } from '../utils';
+
+type GrowthType = {
+  growth: number,
+  currentPeriodCount: number,
+  prevPeriodCount: number,
+};
 
 type Props = {
   isLoading: boolean,
   data: {
-    community: GetCommunityMemberGrowthType,
+    community: {
+      memberGrowth: {
+        count: number,
+        weeklyGrowth: GrowthType,
+        monthlyGrowth: GrowthType,
+        quarterlyGrowth: GrowthType,
+      },
+    },
   },
 };
 

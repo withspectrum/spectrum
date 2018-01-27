@@ -1,13 +1,14 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
+// $FlowFixMe
 import Modal from 'react-modal';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
-import downgradeCommunityMutation from 'shared/graphql/mutations/community/downgradeCommunity';
-import type { DowngradeCommunityType } from 'shared/graphql/mutations/community/downgradeCommunity';
+import { downgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
+// $FlowFixMe
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeCommunity } from '../../../views/communitySettings/components/upgradeCommunity';
@@ -20,25 +21,13 @@ import {
   Padding,
 } from './style';
 
-type State = {
-  isOpen: boolean,
-  upgradeError: string,
-  isLoading: boolean,
-};
+class CommunityUpgradeModal extends React.Component {
+  state: {
+    isOpen: boolean,
+    upgradeError: string,
+    isLoading: boolean,
+  };
 
-type Props = {
-  isOpen: boolean,
-  user: {
-    isPro: boolean,
-  },
-  community: {
-    id: string,
-  },
-  dispatch: Function,
-  downgradeCommunity: Function,
-};
-
-class CommunityUpgradeModal extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -73,7 +62,7 @@ class CommunityUpgradeModal extends React.Component<Props, State> {
 
     this.props
       .downgradeCommunity(input)
-      .then(({ data }: DowngradeCommunityType) => {
+      .then(({ data: { downgradeCommunity } }) => {
         track('community pro', 'downgraded', null);
 
         this.props.dispatch(
@@ -82,15 +71,11 @@ class CommunityUpgradeModal extends React.Component<Props, State> {
             'Your subscription has been cancelled - sorry to see you go!'
           )
         );
-
         this.setState({
           isLoading: false,
           upgradeError: '',
         });
-
         this.closeModal();
-
-        return;
       })
       .catch(err => {
         this.setState({
@@ -183,12 +168,10 @@ class CommunityUpgradeModal extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({
+const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default compose(
-  downgradeCommunityMutation,
-  // $FlowIssue
-  connect(map)
-)(CommunityUpgradeModal);
+export default compose(downgradeCommunityMutation, connect(mapStateToProps))(
+  CommunityUpgradeModal
+);

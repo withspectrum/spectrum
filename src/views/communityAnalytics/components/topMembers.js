@@ -14,13 +14,27 @@ import {
   SectionCard,
   SectionTitle,
 } from '../../../components/settingsViews/style';
-import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
-import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
+import { getCommunityTopMembers } from '../queries';
+
+type User = {
+  id: string,
+  profilePhoto: string,
+  name: string,
+  username: string,
+  contextPermissions: {
+    isOwner: boolean,
+    isMember: boolean,
+    isModerator: boolean,
+    reputation: number,
+  },
+};
 
 type Props = {
   isLoading: boolean,
   data: {
-    community: GetCommunityTopMembersType,
+    community: {
+      topMembers: Array<User>,
+    },
   },
   dispatch: Function,
   history: Object,
@@ -37,15 +51,14 @@ class ConversationGrowth extends React.Component<Props> {
 
     if (community && community.topMembers.length > 0) {
       const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
-        const bc = b && parseInt(b.contextPermissions.reputation, 10);
-        const ac = a && parseInt(a.contextPermissions.reputation, 10);
-        return bc && ac && bc <= ac ? -1 : 1;
+        const bc = parseInt(b.contextPermissions.reputation, 10);
+        const ac = parseInt(a.contextPermissions.reputation, 10);
+        return bc <= ac ? -1 : 1;
       });
       return (
         <SectionCard>
           <SectionTitle>Top members this week</SectionTitle>
           {sortedTopMembers.map(user => {
-            if (!user) return null;
             return (
               <UserListItem key={user.id} user={user}>
                 <MessageIcon
@@ -76,10 +89,8 @@ class ConversationGrowth extends React.Component<Props> {
         <ViewError
           small
           emoji={'😭'}
-          heading={'Your community has been quiet this week'}
-          subheading={
-            'When people are posting new threads and joining conversations, the most active people will appear here.'
-          }
+          heading={`Your community has been quiet this week`}
+          subheading={`When people are posting new threads and joining conversations, the most active people will appear here.`}
         />
       </SectionCard>
     );

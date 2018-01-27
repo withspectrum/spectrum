@@ -13,6 +13,5 @@ export const userInfoFragment = gql`
     isAdmin
     isPro
     isOnline
-    totalReputation
   }
 `;

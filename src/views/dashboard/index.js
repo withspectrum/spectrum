@@ -4,12 +4,11 @@ import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { connect } from 'react-redux';
 import { removeItemFromStorage } from '../../helpers/localStorage';
-import getEverythingThreads from 'shared/graphql/queries/user/getCurrentUserEverythingFeed';
-import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
-import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
+import { getEverythingThreads } from './queries';
+import { getCommunityThreads } from '../../views/community/queries';
+import { getChannelThreads } from '../../views/channel/queries';
+import { getCurrentUserProfile } from '../../api/user';
+import searchThreadsQuery from '../../api/search/searchThreads';
 import Titlebar from '../../views/titlebar';
 import NewUserOnboarding from '../../views/newUserOnboarding';
 import DashboardThreadFeed from './components/threadFeed';
@@ -41,7 +40,7 @@ const CommunityThreadFeed = compose(connect(), getCommunityThreads)(
   DashboardThreadFeed
 );
 
-const ChannelThreadFeed = compose(connect(), getChannelThreadConnection)(
+const ChannelThreadFeed = compose(connect(), getChannelThreads)(
   DashboardThreadFeed
 );
 
@@ -55,9 +54,22 @@ type State = {
   isHovered: boolean,
 };
 
+type CommunityType = {
+  node: {
+    id: string,
+    pinnedThreadId: ?string,
+    slug: string,
+  },
+};
+
 type Props = {
   data: {
-    user?: GetUserCommunityConnectionType,
+    user?: {
+      id: string,
+      communityConnection: {
+        edges: Array<?CommunityType>,
+      },
+    },
   },
   newActivityIndicator: boolean,
   activeThread: ?string,
@@ -173,7 +185,7 @@ class Dashboard extends React.Component<Props, State> {
             {searchQueryString &&
               searchQueryString.length > 0 && (
                 <SearchStringHeader>
-                  Search results for “{searchQueryString}”
+                  Search results for "{searchQueryString}"
                 </SearchStringHeader>
               )}
             <InboxScroller id="scroller-for-inbox">
@@ -274,6 +286,6 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  getCurrentUserCommunityConnection,
+  getCurrentUserProfile,
   viewNetworkHandler
 )(Dashboard);

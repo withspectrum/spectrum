@@ -1,7 +1,9 @@
-// @flow
 import * as React from 'react';
+//$FlowFixMe
 import Link from 'src/components/link';
+//$FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
@@ -10,8 +12,7 @@ import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { LoadingCard } from '../../../components/loading';
-import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import { getCommunityChannels } from '../queries';
 import {
   StyledCard,
   ListHeader,
@@ -21,7 +22,7 @@ import {
 
 type Props = {
   data: {
-    community: GetCommunityChannelConnectionType,
+    community: Object,
   },
   isLoading: boolean,
   dispatch: Function,
@@ -39,25 +40,24 @@ class ChannelList extends React.Component<Props> {
       data: { community },
     } = this.props;
 
-    if (community && community.id) {
+    if (community) {
       const { isMember, isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
-        .map(channel => channel && channel.node)
+        .map(channel => channel.node)
         .filter(channel => {
-          if (!channel) return null;
           if (channel.isPrivate && !channel.channelPermissions.isMember)
             return null;
 
           return channel;
         })
-        .filter(channel => channel && !channel.channelPermissions.isBlocked);
+        .filter(channel => !channel.channelPermissions.isBlocked);
 
       const joinedChannels = channels
         .slice()
-        .filter(channel => channel && channel.channelPermissions.isMember);
+        .filter(channel => channel.channelPermissions.isMember);
       const nonJoinedChannels = channels
         .slice()
-        .filter(channel => channel && !channel.channelPermissions.isMember);
+        .filter(channel => !channel.channelPermissions.isMember);
 
       return (
         <StyledCard largeOnly>
@@ -68,8 +68,7 @@ class ChannelList extends React.Component<Props> {
                 glyph="plus"
                 color="text.placeholder"
                 onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
-                }
+                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))}
               />
             )}
           </ListHeader>
@@ -80,34 +79,32 @@ class ChannelList extends React.Component<Props> {
             user is logged in but hasn't joined this community, channel list is used for navigation
           */}
           {(!currentUser || (currentUser && !isMember)) && (
-            <ListContainer>
-              {channels.map(channel => {
-                if (!channel) return null;
-                return (
-                  <Link
-                    key={channel.id}
-                    to={`/${communitySlug}/${channel.slug}`}
-                  >
-                    <ChannelListItem
-                      clickable
-                      contents={channel}
-                      withDescription={false}
-                      channelIcon
+              <ListContainer>
+                {channels.map(channel => {
+                  return (
+                    <Link
+                      key={channel.id}
+                      to={`/${communitySlug}/${channel.slug}`}
                     >
-                      <Icon glyph="view-forward" />
-                    </ChannelListItem>
-                  </Link>
-                );
-              })}
-            </ListContainer>
-          )}
+                      <ChannelListItem
+                        clickable
+                        contents={channel}
+                        withDescription={false}
+                        channelIcon
+                      >
+                        <Icon glyph="view-forward" />
+                      </ChannelListItem>
+                    </Link>
+                  );
+                })}
+              </ListContainer>
+            )}
 
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
           {joinedChannels &&
             isMember && (
               <ListContainer>
                 {joinedChannels.map(channel => {
-                  if (!channel) return null;
                   return (
                     <Link
                       key={channel.id}
@@ -137,7 +134,6 @@ class ChannelList extends React.Component<Props> {
                 <ListContainer>
                   <ul>
                     {nonJoinedChannels.map(channel => {
-                      if (!channel) return null;
                       return (
                         <ChannelProfile
                           key={channel.id}
@@ -163,9 +159,6 @@ class ChannelList extends React.Component<Props> {
 }
 
 const map = state => ({ currentUser: state.users.currentUser });
-export default compose(
-  // $FlowIssue
-  connect(map),
-  getCommunityChannels,
-  viewNetworkHandler
-)(ChannelList);
+export default compose(connect(map), getCommunityChannels, viewNetworkHandler)(
+  ChannelList
+);

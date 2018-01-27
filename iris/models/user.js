@@ -161,19 +161,20 @@ const createOrFindUser = (
     promise = getUser({ id: user.id });
   } else {
     if (user[providerMethod]) {
-      promise = getUserByIndex(providerMethod, user[providerMethod]).then(
-        storedUser => {
-          if (storedUser) {
-            return storedUser;
-          }
-
-          if (user.email) {
-            return getUserByEmail(user.email);
-          } else {
-            return Promise.resolve({});
-          }
+      promise = getUserByIndex(
+        providerMethod,
+        user[providerMethod]
+      ).then(storedUser => {
+        if (storedUser) {
+          return storedUser;
         }
-      );
+
+        if (user.email) {
+          return getUserByEmail(user.email);
+        } else {
+          return Promise.resolve({});
+        }
+      });
     } else {
       if (user.email) {
         promise = getUserByEmail(user.email);

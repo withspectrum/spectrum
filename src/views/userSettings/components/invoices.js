@@ -1,9 +1,9 @@
-// @flow
-import * as React from 'react';
+import React, { Component } from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
 import { connect } from 'react-redux';
-import getUserInvoices from 'shared/graphql/queries/user/getCurrentUserInvoices';
-import type { GetCurrentUserInvoicesType } from 'shared/graphql/queries/user/getCurrentUserInvoices';
+import { getUserInvoices } from '../../../api/user';
 import { displayLoadingCard } from '../../../components/loading';
 import { InvoiceListItem } from '../../../components/listItems';
 import { sortByDate } from '../../../helpers/utils';
@@ -13,14 +13,7 @@ import {
   ListContainer,
 } from '../../../components/listItems/style';
 
-type Props = {
-  data: {
-    user: GetCurrentUserInvoicesType,
-    error: boolean,
-  },
-};
-
-class InvoicesPure extends React.Component<Props> {
+class InvoicesPure extends Component {
   render() {
     const { data: { error, user } } = this.props;
 
