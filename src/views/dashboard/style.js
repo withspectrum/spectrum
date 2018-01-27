@@ -1,7 +1,5 @@
 // @flow
-// $FlowFixMe
 import styled, { css, keyframes } from 'styled-components';
-// $FlowFixMe
 import Link from 'src/components/link';
 import {
   zIndex,
@@ -275,6 +273,7 @@ export const CommunityListAvatar = styled.img`
   display: inline-block;
   border-radius: 4px;
   box-shadow: ${props => (props.active ? '0' : '0 1px 2px rgba(0, 0, 0, 0.1)')};
+  ${Tooltip};
 `;
 
 export const FeedHeaderContainer = styled.div`
@@ -829,4 +828,10 @@ export const NarrowOnly = styled.div`
     flex: none;
     grid-area: left;
   }
+`;
+
+export const UpsellRow = styled.div`
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
 `;

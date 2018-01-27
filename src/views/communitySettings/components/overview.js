@@ -26,7 +26,7 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <EditForm community={community} />
-          <RecurringPaymentsList community={community} />
+          <RecurringPaymentsList community={community} id={community.id} />
           <Invoices id={community.id} />
         </Column>
         <Column>

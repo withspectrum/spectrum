@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { connect } from 'react-redux';
+import Link from '../../../components/link';
 import compose from 'recompose/compose';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { CommunityListAvatar } from '../style';
-import { FlexRow } from '../../../components/globals';
+import { CommunityListAvatar, UpsellRow } from '../style';
 
 const getRandom = (arr, n) => {
   let result = new Array(n),
@@ -25,6 +26,7 @@ type Props = {
   data: {
     communities: GetCommunitiesType,
   },
+  communities: Array<GetCommunityType>,
   activeCommunity: ?string,
 };
 
@@ -54,16 +56,19 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
         this.props.data.communities.length > 0) ||
       (this.props.data.communities && this.state.communitiesToJoin.length === 0)
     ) {
-      const joinedCommunityIds = this.props.data.communities.map(
-        c => c && c.id
-      );
+      const joinedCommunityIds = this.props.communities.map(c => c && c.id);
 
       // don't upsell communities the user has already joined
       const filteredTopCommunities = this.props.data.communities.filter(
         c => c && joinedCommunityIds.indexOf(c.id) < 0
       );
+
+      const uniqueFiltered = filteredTopCommunities.filter(
+        (x, i, a) => a.indexOf(x) === i
+      );
+
       // get five random ones
-      const randomTopCommunities = getRandom(filteredTopCommunities, 5);
+      const randomTopCommunities = getRandom(uniqueFiltered, 5);
 
       return this.setState({
         communitiesToJoin: randomTopCommunities,
@@ -71,6 +76,8 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
     }
 
     if (
+      prevProps.data &&
+      prevProps.data.communities &&
       prevProps.data.communities.length !== this.props.data.communities.length
     ) {
       const joinedCommunityIds = this.props.data.communities.map(
@@ -82,7 +89,10 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
       const filteredTopCommunities = this.props.data.communities.filter(
         c => c && joinedCommunityIds.indexOf(c.id) < 0
       );
-      const newRandom = getRandom(filteredTopCommunities, 1);
+      const uniqueFiltered = filteredTopCommunities.filter(
+        (x, i, a) => a.indexOf(x) === i
+      );
+      const newRandom = getRandom(uniqueFiltered, 1);
       const newArr = [...filteredStateCommunities, newRandom[0]];
       return this.setState({
         communitiesToJoin: newArr,
@@ -96,18 +106,19 @@ class UpsellExploreCommunities extends React.Component<Props, State> {
 
     if (communitiesToJoin && communitiesToJoin.length > 0) {
       return (
-        <FlexRow>
+        <UpsellRow>
           {communitiesToJoin.map(c => {
             if (!c) return null;
             return (
-              <CommunityListAvatar
-                active={c.id === activeCommunity}
-                src={c.profilePhoto}
-                key={c.id}
-              />
+              <Link to={`/${c.slug}`} key={c.id}>
+                <CommunityListAvatar
+                  active={c.id === activeCommunity}
+                  src={c.profilePhoto}
+                />
+              </Link>
             );
           })}
-        </FlexRow>
+        </UpsellRow>
       );
     }
 

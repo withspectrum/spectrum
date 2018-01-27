@@ -270,7 +270,7 @@ class CommunityView extends React.Component<Props, State> {
                   !userHasPermissions && (
                     <UpsellJoinCommunity
                       community={community}
-                      loading={isLoading}
+                      loading={isLeavingCommunity}
                       join={this.toggleMembership}
                     />
                   )}

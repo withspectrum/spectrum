@@ -63,7 +63,6 @@ class BlockedUsers extends React.Component<Props> {
                     <UserListItem user={user}>
                       <TextButton
                         onClick={() => user && unblock(user.id)}
-                        label
                         hoverColor={'warn.alt'}
                       >
                         Unblock

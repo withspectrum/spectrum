@@ -15,6 +15,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { addQueue } from '../../utils/workerQueue';
 
 export default async (
   _: any,
@@ -118,6 +119,10 @@ export default async (
     // community - those actions will instead be handled when the channel
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
+      addQueue('private channel request sent', {
+        userId: currentUser.id,
+        channel: channelToEvaluate,
+      });
       return createOrUpdatePendingUserInChannel(channelId, currentUser.id);
     }
 

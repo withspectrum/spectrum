@@ -139,7 +139,7 @@ class Dashboard extends React.Component<Props, State> {
       return (
         <DashboardWrapper data-e2e-id="inbox-view">
           <Head title={title} description={description} />
-          <Titlebar hasChildren hasSearch filter={searchFilter}>
+          {/*<Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
               <CommunityList
                 communities={communities}
@@ -148,7 +148,7 @@ class Dashboard extends React.Component<Props, State> {
                 activeChannel={activeChannel}
               />
             </Menu>
-          </Titlebar>
+      </Titlebar>*/}
           <Sidebar>
             <CommunityList
               communities={communities}

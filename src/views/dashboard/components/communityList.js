@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
@@ -21,11 +22,20 @@ import {
   changeActiveThread,
   changeActiveChannel,
 } from '../../../actions/dashboardFeed';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
-class CommunityList extends Component {
+type Props = {
+  dispatch: Function,
+  history: Object,
+  activeCommunity: ?string,
+  activeChannel: ?string,
+  communities: Array<GetCommunityType>,
+};
+
+class CommunityList extends React.Component<Props> {
   changeCommunity = id => {
     this.props.dispatch(changeActiveCommunity(id));
-    this.props.history.replace(`/`);
+    this.props.history.replace('/');
     this.props.dispatch(changeActiveThread(''));
 
     if (id !== this.props.activeCommunity) {
@@ -44,6 +54,24 @@ class CommunityList extends Component {
       this.changeCommunity(id);
     }
   };
+
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+
+    const changedActiveCommunity =
+      curr.activeCommunity !== nextProps.activeCommunity;
+    const changedActiveChannel = curr.activeChannel !== nextProps.activeChannel;
+    const changedCommunitiesAmount =
+      curr.communities.length !== nextProps.communities.length;
+
+    if (
+      changedActiveCommunity ||
+      changedActiveChannel ||
+      changedCommunitiesAmount
+    )
+      return true;
+    return false;
+  }
 
   render() {
     const { activeCommunity, activeChannel, communities } = this.props;

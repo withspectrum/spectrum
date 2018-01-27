@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import StripeCheckout from 'react-stripe-checkout';
 import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
 import upgradeCommunityMutation from 'shared/graphql/mutations/community/upgradeCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
 import { NullCard } from '../../../components/upsell';
@@ -18,12 +19,7 @@ type State = {
 };
 
 type Props = {
-  community: {
-    id: string,
-    metaData: {
-      members: number,
-    },
-  },
+  community: GetCommunityType,
   upgradeCommunity: Function,
   complete: Function,
   dispatch: Function,

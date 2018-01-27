@@ -7,7 +7,7 @@ import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
 import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
 import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaData';
-import getChannelMemberConnectionQuery from '../../queries/channel/getChannelMemberConnection';
+import { getChannelMemberConnectionQuery } from '../../queries/channel/getChannelMemberConnection';
 
 type User = {
   ...$Exact<UserInfoType>,

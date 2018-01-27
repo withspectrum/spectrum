@@ -271,7 +271,7 @@ export class UpsellNewUser extends React.Component<NewUserProps> {
         </LargeEmoji>
         <Title>Howdy, {user.name}!</Title>
         <Subtitle>
-          Spectrum is a place where communities live. It's easy to follow the
+          Spectrum is a place where communities live. It’s easy to follow the
           things that you care about most, or even create your own community to
           share with the world.
         </Subtitle>
@@ -311,7 +311,6 @@ class UpsellMiniUpgradePure extends React.Component<MiniUpgradeProps> {
       >
         <Button
           icon="payment"
-          label
           onClick={() =>
             dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))
           }
@@ -389,9 +388,9 @@ class UpsellUpgradeToProPure extends React.Component<
         </Profile>
         <Title>Upgrade to Pro</Title>
         <Subtitle>
-          We're hard at work building features for Spectrum Pro. Your early
-          support helps us get there faster – thank you! In the meantime, here's
-          what's unlocked on Pro:
+          We’re hard at work building features for Spectrum Pro. Your early
+          support helps us get there faster – thank you! In the meantime, here’s
+          what’s unlocked on Pro:
         </Subtitle>
         <Subtitle>
           <ul>

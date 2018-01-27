@@ -34,7 +34,6 @@ class RecurringPaymentsList extends React.Component<Props> {
 
   render() {
     const { data: { user } } = this.props;
-
     if (!user || user === undefined) return null;
 
     // make sure to only display active subs for now

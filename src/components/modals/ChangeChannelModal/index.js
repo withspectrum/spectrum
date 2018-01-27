@@ -115,6 +115,7 @@ class ChangeChannelModal extends React.Component<Props, State> {
                 currentChannel={activeChannel}
                 communitySlug={thread.community.slug}
                 setActiveChannel={this.setActiveChannel}
+                id={thread.community.id}
               />
 
               <Actions>

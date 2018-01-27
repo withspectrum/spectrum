@@ -753,7 +753,7 @@ class NewThread extends React.Component<Props, State> {
           )}
 
           <ComposerInput
-            ref={c => {
+            innerRef={c => {
               this.input = c;
             }}
             type="text"

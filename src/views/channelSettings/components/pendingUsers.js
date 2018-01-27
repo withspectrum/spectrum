@@ -55,7 +55,6 @@ class PendingUsers extends React.Component<Props> {
                           onClick={() =>
                             user && togglePending(user.id, 'block')
                           }
-                          label
                           hoverColor={'warn.alt'}
                           icon="minus"
                         >
@@ -66,7 +65,6 @@ class PendingUsers extends React.Component<Props> {
                           onClick={() =>
                             user && togglePending(user.id, 'approve')
                           }
-                          label
                           hoverColor={'brand.default'}
                           icon="plus"
                         >

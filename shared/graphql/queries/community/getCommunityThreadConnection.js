@@ -55,10 +55,14 @@ const getCommunityThreadConnectionOptions = {
       loading,
       networkStatus,
       community,
-      threads: community ? community.threadConnection.edges : [],
-      hasNextPage: community
-        ? community.threadConnection.pageInfo.hasNextPage
-        : false,
+      threads:
+        community && community.threadConnection
+          ? community.threadConnection.edges
+          : [],
+      hasNextPage:
+        community && community.threadConnection
+          ? community.threadConnection.pageInfo.hasNextPage
+          : false,
       feed: community && community.id,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({

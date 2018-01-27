@@ -129,6 +129,12 @@ class Search extends React.Component<Props, State> {
   search = (searchString: string) => {
     const { client } = this.props;
 
+    if (!searchString || searchString.length === 0) {
+      return this.setState({
+        searchIsLoading: false,
+      });
+    }
+
     // start the input loading spinner
     this.setState({
       searchIsLoading: true,
@@ -296,7 +302,7 @@ class Search extends React.Component<Props, State> {
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
-            ref={c => {
+            innerRef={c => {
               this.input = c;
             }}
             type="text"

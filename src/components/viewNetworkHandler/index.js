@@ -1,5 +1,5 @@
+// @flow
 import React from 'react';
-// $FlowFixMe
 import hoistStatics from 'hoist-non-react-statics';
 
 /*
@@ -48,8 +48,10 @@ export type ViewNetworkHandlerType = {
   hasError: boolean,
 };
 
+// $FlowFixMe
 const viewNetworkHandler = Component => {
   const C = props => {
+    // $FlowFixMe
     const { data, wrappedComponentRef, ...remainingProps } = props;
 
     // safety check against the data prop not existing

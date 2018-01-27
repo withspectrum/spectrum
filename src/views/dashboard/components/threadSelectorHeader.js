@@ -19,14 +19,14 @@ const Header = ({
 }) => (
   <HeaderWrapper>
     <NarrowOnly>
-      <Menu hasNavBar>
+      {/*<Menu hasNavBar>
         <CommunityList
           communities={communities}
           user={user}
           activeCommunity={activeCommunity}
           activeChannel={activeChannel}
         />
-      </Menu>
+      </Menu>*/}
     </NarrowOnly>
     <ThreadSearch filter={filter} />
     <IconButton

@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
@@ -15,10 +16,36 @@ import EmptyThreadFeed from './emptyThreadFeed';
 import EmptySearchFeed from './emptySearchFeed';
 import InboxThread, { WatercoolerThread } from './inboxThread';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import type { GetCommunityThreadConnectionType } from 'shared/graphql/queries/community/getCommunityThreadConnection';
+
+type Node = {
+  node: {
+    ...$Exact<GetThreadType>,
+  },
+};
 
 type Props = {
   mountedWithActiveThread: ?string,
   queryString?: ?string,
+  ...$Exact<ViewNetworkHandlerType>,
+  data: {
+    subscribeToUpdatedThreads: ?Function,
+    threads: Array<?Node>,
+    fetchMore: Function,
+    loading: boolean,
+    community?: GetCommunityThreadConnectionType,
+    networkStatus: number,
+    hasNextPage: boolean,
+    feed: string,
+  },
+  history: Function,
+  dispatch: Function,
+  selectedId: string,
+  activeCommunity: ?string,
+  hasActiveCommunity: boolean,
+  hasActiveChannel: boolean,
 };
 
 type State = {
@@ -27,6 +54,8 @@ type State = {
 };
 
 class ThreadFeed extends React.Component<Props, State> {
+  innerScrollElement: any;
+
   constructor() {
     super();
 
@@ -45,6 +74,13 @@ class ThreadFeed extends React.Component<Props, State> {
         this.props.data.subscribeToUpdatedThreads(),
     });
   };
+
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.isFetchingMore) return false;
+    return true;
+  }
 
   unsubscribe = () => {
     const { subscription } = this.state;
@@ -124,7 +160,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
       const threadNodes = this.props.data.threads
         .slice()
-        .map(thread => thread.node);
+        .map(thread => thread && thread.node);
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
@@ -141,7 +177,7 @@ class ThreadFeed extends React.Component<Props, State> {
     ) {
       const threadNodes = this.props.data.threads
         .slice()
-        .map(thread => thread.node);
+        .map(thread => thread && thread.node);
       const sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
       const hasFirstThread = sortedThreadNodes.length > 0;
       const firstThreadId = hasFirstThread ? sortedThreadNodes[0].id : '';
@@ -154,7 +190,10 @@ class ThreadFeed extends React.Component<Props, State> {
         scrollElement.scrollTop = 0;
       }
 
-      this.unsubscribe().then(() => this.subscribe());
+      // $FlowFixMe
+      this.unsubscribe()
+        .then(() => this.subscribe())
+        .catch(err => console.log('Error unsubscribing: ', err));
     }
   }
 
@@ -193,7 +232,7 @@ class ThreadFeed extends React.Component<Props, State> {
     if (threads.length === 0 && queryString)
       return <EmptySearchFeed queryString={queryString} />;
 
-    const threadNodes = threads.slice().map(thread => thread.node);
+    const threadNodes = threads.slice().map(thread => thread && thread.node);
 
     let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 
@@ -208,7 +247,9 @@ class ThreadFeed extends React.Component<Props, State> {
       this.props.data.community.watercooler.id
     ) {
       filteredThreads = filteredThreads.filter(
-        t => t.id !== this.props.data.community.watercooler.id
+        t =>
+          this.props.data.community &&
+          t.id !== this.props.data.community.watercooler.id
       );
     }
 
@@ -218,7 +259,9 @@ class ThreadFeed extends React.Component<Props, State> {
       this.props.data.community.pinnedThread.id
     ) {
       filteredThreads = filteredThreads.filter(
-        t => t.id !== this.props.data.community.pinnedThread.id
+        t =>
+          this.props.data.community &&
+          t.id !== this.props.data.community.pinnedThread.id
       );
     }
 
@@ -279,6 +322,9 @@ const map = state => ({
   mountedWithActiveThread: state.dashboardFeed.mountedWithActiveThread,
   activeCommunity: state.dashboardFeed.activeCommunity,
 });
-export default compose(withRouter, connect(map), viewNetworkHandler)(
-  ThreadFeed
-);
+export default compose(
+  withRouter,
+  // $FlowIssue
+  connect(map),
+  viewNetworkHandler
+)(ThreadFeed);
