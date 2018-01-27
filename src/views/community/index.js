@@ -234,7 +234,9 @@ class CommunityView extends React.Component<Props, State> {
                     onClick={() => this.handleSegmentClick('members')}
                     selected={selectedView === 'members'}
                   >
-                    Members ({community.metaData.members.toLocaleString()})
+                    Members ({community.metaData &&
+                      community.metaData.members &&
+                      community.metaData.members.toLocaleString()})
                   </DesktopSegment>
                   <MobileSegment
                     segmentLabel="members"
