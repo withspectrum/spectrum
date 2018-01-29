@@ -262,11 +262,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "MemberConnectionFilter",
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "CommunityMembersConnection",
         "possibleTypes": null
@@ -375,46 +370,6 @@
         "kind": "OBJECT",
         "name": "CoreMetrics",
         "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "SearchType",
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "SearchFilter",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SearchResults",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SearchResultsConnection",
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "SearchResultEdge",
-        "possibleTypes": null
-      },
-      {
-        "kind": "UNION",
-        "name": "SearchResultNode",
-        "possibleTypes": [
-          {
-            "name": "Community"
-          },
-          {
-            "name": "Thread"
-          },
-          {
-            "name": "User"
-          }
-        ]
       },
       {
         "kind": "OBJECT",
