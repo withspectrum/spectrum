@@ -4,20 +4,13 @@ import path from 'path';
 import serialize from 'serialize-javascript';
 
 const getIndex = () => {
-  return (
-    fs
-      .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
-      .toString()
-      .replace(
-        '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
-        ''
-      )
-      // This automatically gets injected without the defer tag in development by create-react-app, gotta get rid of it for dev to work!
-      .replace(
-        '<script type="text/javascript" src="/static/js/bundle.js"></script>',
-        ''
-      )
-  );
+  return fs
+    .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+    .toString()
+    .replace(
+      '<script type="text/javascript" src="/./static/js/bootstrap.js"></script>',
+      ''
+    );
 };
 
 let html = getIndex();
@@ -45,10 +38,6 @@ export const getHeader = ({ metaTags }: { metaTags: string }) => {
 };
 
 const sentryScript = process.env.NODE_ENV === 'production' ? sentry : '';
-const devBundleScript =
-  process.env.NODE_ENV === 'development'
-    ? '<script type="text/javascript" src="/static/js/bundle.js" defer="defer"></script>'
-    : '';
 export const getFooter = ({
   state,
   data,
@@ -69,7 +58,6 @@ export const getFooter = ({
     ${polyfill}
     <script type="text/javascript" src="/./static/js/bootstrap.js"></script>
     ${bundleScriptTags}
-    ${devBundleScript}
     ${footer.replace('</div>', '')}
   `;
 };
