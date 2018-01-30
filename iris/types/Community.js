@@ -124,6 +124,34 @@ const Community = /* GraphQL */ `
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
+	input AddCommunityMemberInput {
+		communityId: ID!
+	}
+
+	input RemoveCommunityMemberInput {
+		communityId: ID!
+	}
+
+	input AddCommunityModeratorInput {
+		userId: ID!
+		communityId: ID!
+	}
+
+	input RemoveCommunityModeratorInput {
+		userId: ID!
+		communityId: ID!
+	}
+
+	input BlockCommunityMemberInput {
+		userId: ID!
+		communityId: ID!
+	}
+
+	input UnblockCommunityMemberInput {
+		userId: ID!
+		communityId: ID!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -134,6 +162,12 @@ const Community = /* GraphQL */ `
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		addCommunityMember(input: AddCommunityMemberInput!): Community
+		removeCommunityMember(input: RemoveCommunityMemberInput!): Community
+		addCommunityModerator(input: AddCommunityModeratorInput!): Community
+		removeCommunityModerator(input: RemoveCommunityModeratorInput!): Community
+		blockCommunityMember(input: BlockCommunityMemberInput!): Community
+		unblockCommunityMember(input: UnblockCommunityMemberInput!): Community
 	}
 `;
 
