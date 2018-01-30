@@ -53,11 +53,9 @@ const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 server.listen(PORT);
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 
-if (process.env.NODE_ENV === 'production') {
-  // Start Apollo Engine
-  console.log('Apollo Engine starting...');
-  engine.start();
-}
+// Start Apollo Engine
+console.log('Apollo Engine running');
+engine.start();
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
