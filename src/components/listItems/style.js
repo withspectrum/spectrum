@@ -104,10 +104,6 @@ export const ListHeading = styled(H3)`
 export const ListContainer = styled(FlexCol)`
   align-items: stretch;
   width: 100%;
-
-  a + a {
-    border-top: 2px solid ${({ theme }) => theme.bg.wash};
-  }
 `;
 
 export const MoreLink = styled(Link)`

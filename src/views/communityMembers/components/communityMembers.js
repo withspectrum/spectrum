@@ -21,10 +21,9 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import { throttle } from '../../../helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { ListContainer } from '../../../components/listItems/style';
-import { UserListItem } from '../../../components/listItems';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import { MessageIcon } from '../../../components/settingsViews/style';
 import ViewError from '../../../components/viewError';
+import GranularUserProfile from './granularUserProfile';
 
 type Props = {
   id: string,
@@ -190,25 +189,34 @@ class CommunityMembers extends React.Component<Props, State> {
           searchResults.map(user => {
             if (!user) return null;
 
+            const badge =
+              user.contextPermissions && user.contextPermissions.isOwner
+                ? 'Admin'
+                : user.contextPermissions && user.contextPermissions.isModerator
+                  ? 'Moderator'
+                  : null;
+
+            const reputation =
+              user.contextPermissions && user.contextPermissions.reputation;
+
             return (
-              <section key={user.id}>
-                <UserListItem
-                  user={user}
-                  reputationTipText={'Rep in this community'}
-                  hideRep
-                >
-                  {// don't message yourself
-                  user.id !== currentUser.id && (
-                    <MessageIcon
-                      tipText={`Message ${user.name}`}
-                      tipLocation={'top-left'}
-                      onClick={() => this.initMessage(user)}
-                    >
-                      <Icon glyph="message-new" size={32} />
-                    </MessageIcon>
-                  )}
-                </UserListItem>
-              </section>
+              <GranularUserProfile
+                key={user.id}
+                id={user.id}
+                name={user.name}
+                username={user.username}
+                description={user.description}
+                website={user.website}
+                isCurrentUser={user.id === currentUser.id}
+                isOnline={user.isOnline}
+                onlineSize={'small'}
+                profilePhoto={user.profilePhoto}
+                avatarSize={'40'}
+                isPro={user.isPro}
+                badge={badge}
+                messageButton={user.id !== currentUser.id}
+                reputation={reputation}
+              />
             );
           })}
       </ListContainer>

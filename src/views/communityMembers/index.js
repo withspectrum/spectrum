@@ -39,7 +39,7 @@ class CommunityMembersSettings extends React.Component<Props> {
     if (community && community.id) {
       return (
         <SectionsContainer>
-          <Column double>
+          <Column>
             <CommunityMembers history={history} id={community.id} />
           </Column>
 
