@@ -3,6 +3,7 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
+import Anchor from '../components/Anchor';
 import Text from '../components/Text';
 
 const renderer = {
@@ -77,19 +78,4 @@ const renderer = {
   },
 };
 
-// Filter any string from a nested array
-const filterStrings = (array: Array<mixed>) => {
-  const items = [];
-
-  array.forEach(item => {
-    if (typeof item === 'string') return;
-    if (Array.isArray(item)) return items.push(filterStrings(item));
-
-    items.push(item);
-  });
-
-  return items;
-};
-
-export default (rawContentState: Object) =>
-  filterStrings(redraft(rawContentState, renderer));
+export default (rawContentState: Object) => redraft(rawContentState, renderer);
