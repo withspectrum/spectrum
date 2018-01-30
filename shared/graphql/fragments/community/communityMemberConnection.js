@@ -28,7 +28,7 @@ export type CommunityMemberConnectionType = {
 
 export default gql`
   fragment communityMemberConnection on Community {
-    memberConnection(after: $after) {
+    memberConnection(after: $after, filter: $filter) {
       pageInfo {
         hasNextPage
         hasPreviousPage

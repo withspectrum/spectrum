@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { connect } from 'react-redux';
-import { ImportSlackWithoutCard } from '../../views/communitySettings/components/importSlack';
+import { ImportSlackWithoutCard } from '../../views/communityMembers/components/importSlack';
 import { CommunityInvitationForm } from '../emailInvitationForm';
 import Share from '../../views/newCommunity/components/share';
 import ThreadFeedCard from '../threadFeedCard';
@@ -21,8 +21,8 @@ import ViewError from '../viewError';
 const NullState = () => (
   <NullCard
     bg="post"
-    heading={`Sorry, no threads here yet...`}
-    copy={`But you could start one!`}
+    heading={'Sorry, no threads here yet...'}
+    copy={'But you could start one!'}
   />
 );
 

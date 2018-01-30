@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Tooltip } from '../globals';
 
 export const View = styled.div`
@@ -31,7 +31,12 @@ export const Column = styled.div`
   flex: 1 0 33%;
   max-width: 600px;
 
-  @media (max-width: 768px) {
+  ${props =>
+    props.double &&
+    css`
+      flex: 1 0 66%;
+      max-width: none;
+    `} @media (max-width: 768px) {
     flex: 1 0 100%;
     padding: 0;
 

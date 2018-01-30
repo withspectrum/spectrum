@@ -111,31 +111,6 @@ export const RemoveRow = styled.div`
   }
 `;
 
-export const CustomMessageToggle = styled.h4`
-  font-size: 14px;
-  color: ${props => props.theme.text.alt};
-  margin-top: 16px;
-
-  &:hover {
-    color: ${props => props.theme.brand.default};
-    cursor: pointer;
-  }
-
-  div {
-    position: relative;
-    top: 5px;
-    margin-right: 4px;
-  }
-`;
-
-export const CustomMessageTextAreaStyles = {
-  width: '100%',
-  borderRadius: '8px',
-  padding: '16px',
-  marginTop: '8px',
-  fontSize: '14px',
-};
-
 export const Title = styled(H1)`
   font-size: 20px;
 `;
@@ -198,7 +173,7 @@ export const CostNumber = styled(H2)`
   }
 
   &:after {
-    content: ${props => (props.per ? `'/ ${props.per}'` : `''`)};
+    content: ${props => (props.per ? `'/ ${props.per}'` : "''")};
     color: ${({ theme }) => theme.text.alt};
     position: absolute;
     font-size: 14px;

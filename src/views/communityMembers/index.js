@@ -10,7 +10,8 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
-import ImportSlack from '../communitySettings/components/importSlack';
+import ImportSlack from './components/importSlack';
+import CommunityMembers from './components/communityMembers';
 import {
   SectionsContainer,
   SectionCard,
@@ -28,15 +29,20 @@ type Props = {
   id: string,
   dispatch: Function,
   match: Object,
+  history: Object,
 };
 
-class CommunityMembers extends React.Component<Props> {
+class CommunityMembersSettings extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading, history } = this.props;
 
     if (community && community.id) {
       return (
         <SectionsContainer>
+          <Column double>
+            <CommunityMembers history={history} id={community.id} />
+          </Column>
+
           <Column>
             <ImportSlack community={community} id={community.id} />
             <SectionCard>
@@ -44,7 +50,6 @@ class CommunityMembers extends React.Component<Props> {
               <CommunityInvitationForm id={community.id} />
             </SectionCard>
           </Column>
-          <Column />
         </SectionsContainer>
       );
     }
@@ -80,4 +85,4 @@ export default compose(
   connect(map),
   getCommunityMemberConnection,
   viewNetworkHandler
-)(CommunityMembers);
+)(CommunityMembersSettings);

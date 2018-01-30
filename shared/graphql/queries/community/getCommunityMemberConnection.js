@@ -15,7 +15,11 @@ export type GetCommunityMemberConnectionType = {
 };
 
 const LoadMoreMembers = gql`
-  query loadMoreCommunityMembers($id: ID, $after: String) {
+  query loadMoreCommunityMembers(
+    $id: ID
+    $after: String
+    $filter: MemberConnectionFilter
+  ) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
@@ -28,7 +32,11 @@ const LoadMoreMembers = gql`
 `;
 
 export const getCommunityMemberConnectionQuery = gql`
-  query getCommunityMembers($id: ID, $after: String) {
+  query getCommunityMembers(
+    $id: ID
+    $after: String
+    $filter: MemberConnectionFilter
+  ) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
@@ -88,10 +96,19 @@ const getCommunityMemberConnectionOptions = {
         }),
     },
   }),
-  options: ({ id, after }: { id: string, after?: string }) => ({
+  options: ({
+    id,
+    filter,
+    after,
+  }: {
+    id: string,
+    filter: ?Object,
+    after?: string,
+  }) => ({
     variables: {
       id,
       after: after || null,
+      filter,
     },
     fetchPolicy: 'cache-and-network',
   }),

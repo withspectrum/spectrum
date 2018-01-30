@@ -24,11 +24,18 @@ type Props = {
   location: Object,
   isLoading: boolean,
   hasError: boolean,
+  history: Object,
 };
 
 class CommunitySettings extends React.Component<Props> {
   render() {
-    const { data: { community }, location, isLoading, hasError } = this.props;
+    const {
+      data: { community },
+      location,
+      isLoading,
+      hasError,
+      history,
+    } = this.props;
 
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;
@@ -68,7 +75,7 @@ class CommunitySettings extends React.Component<Props> {
           case 'analytics':
             return <Analytics community={community} id={community.id} />;
           case 'members':
-            return <Members id={community.id} />;
+            return <Members id={community.id} history={history} />;
           default:
             return null;
         }

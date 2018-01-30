@@ -46,7 +46,9 @@ export const WrapperLi = styled.li`
   }
 `;
 
-export const Col = styled(FlexCol)`flex: auto;`;
+export const Col = styled(FlexCol)`
+  flex: auto;
+`;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
@@ -62,7 +64,7 @@ export const Heading = styled(H3)`
   font-weight: 500;
   transition: ${Transition.hover.off};
   line-height: 1.2;
-  margin-top: 6px;
+  display: flex;
 `;
 
 export const Meta = styled(H4)`
