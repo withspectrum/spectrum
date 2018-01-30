@@ -3,6 +3,7 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { addQueue } from '../utils/workerQueue';
+import type { DBUsersCommunities } from 'shared/types';
 
 /*
 ===========================================================
@@ -321,6 +322,7 @@ const DEFAULT_PERMISSIONS = {
   reputation: 0,
 };
 
+// NOTE @BRIAN: DEPRECATED - DONT USE IN THE FUTURE
 const getUserPermissionsInCommunity = (
   communityId: string,
   userId: string
@@ -345,6 +347,16 @@ const getUserPermissionsInCommunity = (
         };
       }
     });
+};
+
+const checkUserPermissionsInCommunity = (
+  communityId: string,
+  userId: string
+): Promise<DBUsersCommunities> => {
+  return db
+    .table('usersCommunities')
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+    .run();
 };
 
 type UserIdAndCommunityId = [string, string];
@@ -427,6 +439,7 @@ module.exports = {
   getModeratorsInCommunity,
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
+  checkUserPermissionsInCommunity,
   getReputationByUser,
   getUsersTotalReputation,
   getUsersPermissionsInCommunities,
