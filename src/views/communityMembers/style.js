@@ -1,5 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
+import { TextButton } from '../../components/buttons';
 
 export const Heading = styled.h1`
   margin-left: 16px;
@@ -164,5 +165,20 @@ export const SearchInput = styled.input`
 
   &:focus {
     border-bottom: 1px solid ${props => props.theme.brand.alt};
+  }
+`;
+
+export const FetchMore = styled(TextButton)`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 8px 16px;
+  align-items: center;
+  font-size: 14px;
+  color: ${props => props.theme.text.alt};
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
   }
 `;

@@ -23,7 +23,7 @@ import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
-import GranularUserProfile from './granularUserProfile';
+import GranularUserProfile from '../../../components/granularUserProfile';
 
 type Props = {
   id: string,
@@ -196,9 +196,6 @@ class CommunityMembers extends React.Component<Props, State> {
                   ? 'Moderator'
                   : null;
 
-            const reputation =
-              user.contextPermissions && user.contextPermissions.reputation;
-
             return (
               <GranularUserProfile
                 key={user.id}
@@ -206,7 +203,6 @@ class CommunityMembers extends React.Component<Props, State> {
                 name={user.name}
                 username={user.username}
                 description={user.description}
-                website={user.website}
                 isCurrentUser={user.id === currentUser.id}
                 isOnline={user.isOnline}
                 onlineSize={'small'}
@@ -215,7 +211,6 @@ class CommunityMembers extends React.Component<Props, State> {
                 isPro={user.isPro}
                 badge={badge}
                 messageButton={user.id !== currentUser.id}
-                reputation={reputation}
               />
             );
           })}

@@ -1,17 +1,23 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip } from '../../../components/globals';
-
-export const Row = styled.div`
-  background: ${props => props.theme.bg.default};
-  width: 100%;
-`;
+import { Tooltip } from '../globals';
 
 export const Content = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};
   padding: 12px 0;
   display: flex;
   align-items: center;
+`;
+
+export const Row = styled.div`
+  background: ${props => props.theme.bg.default};
+  width: 100%;
+
+  &:last-of-type {
+    > ${Content} {
+      border-bottom: 0;
+    }
+  }
 `;
 
 export const AvatarContent = styled.div`
@@ -55,16 +61,6 @@ export const Username = styled.h4`
   font-weight: 400;
   margin-right: 8px;
   line-height: 1.1;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
-`;
-
-export const Edit = styled.p`
-  display: inline-block;
-  color: ${props => props.theme.text.alt};
-  font-size: 14px;
 
   &:hover {
     color: ${props => props.theme.text.default};

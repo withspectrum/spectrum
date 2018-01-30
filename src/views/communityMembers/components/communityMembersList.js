@@ -8,11 +8,11 @@ import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
 import type { GetCommunityMemberConnectionType } from 'shared/graphql/queries/community/getCommunityMemberConnection';
-import { FetchMoreButton } from '../../../components/threadFeed/style';
 import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import { SectionCardFooter } from '../../../components/settingsViews/style';
-import GranularUserProfile from './granularUserProfile';
+import GranularUserProfile from '../../../components/granularUserProfile';
+import { FetchMore } from '../style';
 
 type Props = {
   data: {
@@ -75,7 +75,8 @@ class CommunityMembers extends React.Component<Props> {
                       : null;
 
                 const reputation =
-                  user.contextPermissions && user.contextPermissions.reputation;
+                  user.contextPermissions &&
+                  user.contextPermissions.reputation.toString();
 
                 return (
                   <GranularUserProfile
@@ -84,7 +85,6 @@ class CommunityMembers extends React.Component<Props> {
                     name={user.name}
                     username={user.username}
                     description={user.description}
-                    website={user.website}
                     isCurrentUser={user.id === currentUser.id}
                     isOnline={user.isOnline}
                     onlineSize={'small'}
@@ -101,13 +101,13 @@ class CommunityMembers extends React.Component<Props> {
 
           {community.memberConnection.pageInfo.hasNextPage && (
             <SectionCardFooter>
-              <FetchMoreButton
+              <FetchMore
                 color={'brand.default'}
                 loading={isFetchingMore}
                 onClick={() => fetchMore()}
               >
                 Load more
-              </FetchMoreButton>
+              </FetchMore>
             </SectionCardFooter>
           )}
         </React.Fragment>

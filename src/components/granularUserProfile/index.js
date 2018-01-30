@@ -3,13 +3,13 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Avatar from '../../../components/avatar';
-import Link from '../../../components/link';
-import Reputation from '../../../components/reputation';
-import Badge from '../../../components/badges';
-import Icon from '../../../components/icons';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import { addProtocolToString } from '../../../helpers/utils';
+import Avatar from '../avatar';
+import Link from '../link';
+import Reputation from '../reputation';
+import Badge from '../badges';
+import Icon from '../icons';
+import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import { addProtocolToString } from '../../helpers/utils';
 import {
   Row,
   Content,
@@ -18,7 +18,6 @@ import {
   NameContent,
   Name,
   Username,
-  Edit,
   BadgeContent,
   Description,
   Website,
