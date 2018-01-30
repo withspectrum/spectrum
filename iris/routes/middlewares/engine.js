@@ -13,6 +13,17 @@ export default new Engine({
   graphqlPort: 3001,
   endpoint: '/api',
   engineConfig: {
+    stores: [
+      {
+        name: 'pq',
+        inMemory: {
+          cacheSize: '5000000',
+        },
+      },
+    ],
+    persistedQueries: {
+      store: 'pq',
+    },
     logging: {
       level: 'WARN',
     },

@@ -8,8 +8,11 @@ import {
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
+
+console.log('wat');
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port
@@ -23,10 +26,12 @@ const cache = new InMemoryCache({
 });
 
 // HTTP Link for queries and mutations including file uploads
-const httpLink = createUploadLink({
-  uri: API_URI,
-  credentials: 'include',
-});
+const httpLink = createPersistedQueryLink().concat(
+  createUploadLink({
+    uri: API_URI,
+    credentials: 'include',
+  })
+);
 
 // Websocket link for subscriptions
 const wsLink = new WebSocketLink({
