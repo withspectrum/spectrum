@@ -25,6 +25,14 @@ const renderer = {
     ),
     // CODE: (children, { key }) =>
   },
+  entities: {
+    // key is the entity key value from raw
+    LINK: (children, data, { key }) => (
+      <Anchor key={key} href={data.url}>
+        {children}
+      </Anchor>
+    ),
+  },
   blocks: {
     unstyled: (children, { keys }) =>
       children.map((child, index) => (
