@@ -1,30 +1,33 @@
 // @flow
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, WebView } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../components/Anchor';
 import Text from '../components/Text';
 import Codeblock from '../components/Codeblock';
+import IFrame from '../components/IFrame';
 
 const renderer = {
   inline: {
     BOLD: (children, { key }) => (
-      <Text bold key={key}>
+      <Text bold key={`bold-${key}`}>
         {children}
       </Text>
     ),
     ITALIC: (children, { key }) => (
-      <Text italic key={key}>
+      <Text italic key={`italic-${key}`}>
         {children}
       </Text>
     ),
     UNDERLINE: (children, { key }) => (
-      <Text underline key={key}>
+      <Text underline key={`underline-${key}`}>
         {children}
       </Text>
     ),
-    CODE: (children, { key }) => <Codeblock key={key}>{children}</Codeblock>,
+    CODE: (children, { key }) => (
+      <Codeblock key={`codeblock-${key}`}>{children}</Codeblock>
+    ),
   },
   entities: {
     // key is the entity key value from raw
@@ -33,6 +36,9 @@ const renderer = {
         {children}
       </Anchor>
     ),
+    embed: (children, { src }, { key }) => {
+      return <IFrame key={key} src={src} />;
+    },
   },
   blocks: {
     unstyled: (children, { keys }) =>
@@ -63,8 +69,9 @@ const renderer = {
         <FlatList
           data={children}
           key={keys[keys.length - 1]}
+          keyExtractor={(_, index) => keys[index]}
           renderItem={({ item, index }) => (
-            <Text type="body" key={keys[index] || index}>
+            <Text type="body">
               {'\u2022'} {item}
             </Text>
           )}
@@ -76,8 +83,9 @@ const renderer = {
         <FlatList
           data={children}
           key={keys.join('|')}
+          keyExtractor={(_, index) => keys[index]}
           renderItem={({ item, index }) => (
-            <Text type="body" key={keys[index] || index}>
+            <Text type="body">
               {index}. {item}
             </Text>
           )}
