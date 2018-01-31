@@ -12,7 +12,7 @@ type Input = {
   communityId: string,
 };
 
-export default async (_: any, input: Input, { user }: GraphQLContext) => {
+export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   const currentUser = user;
   const { communityId } = input;
 
@@ -25,8 +25,12 @@ export default async (_: any, input: Input, { user }: GraphQLContext) => {
     getCommunityById(communityId),
   ]);
 
+  if (!community || community.deletedAt) {
+    return new UserError("We couldn't find that community.");
+  }
+
   // if no permissions exist, join them to the community!
-  if (!permissions) {
+  if (!permissions || permissions.length === 0) {
     return await Promise.all([
       createMemberInCommunity(communityId, currentUser.id),
       createMemberInDefaultChannels(communityId, currentUser.id),
@@ -35,25 +39,27 @@ export default async (_: any, input: Input, { user }: GraphQLContext) => {
       .then(() => community);
   }
 
-  if (permissions.isBlocked) {
+  const permission = permissions[0];
+
+  if (permission.isBlocked) {
     return new UserError("You aren't able to join this community.");
   }
 
-  if (permissions.isOwner) {
+  if (permission.isOwner) {
     return new UserError("You're already the owner of this community.");
   }
 
-  if (permissions.isModerator) {
+  if (permission.isModerator) {
     return new UserError("You're already a moderator in this community.");
   }
 
-  if (!community || community.deletedAt) {
-    return new UserError("We couldn't find that community.");
+  if (permission.isMember) {
+    return new UserError('You are already a member of this community.');
   }
 
   // if the user has previously joined the community, but is not a member,
   // they are trying to re-join the community.
-  if (!permissions.isMember) {
+  if (!permission.isMember) {
     return await Promise.all([
       createMemberInCommunity(communityId, currentUser.id),
       createMemberInDefaultChannels(communityId, currentUser.id),
