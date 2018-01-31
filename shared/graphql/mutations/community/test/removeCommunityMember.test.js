@@ -48,8 +48,8 @@ afterAll(
 
 it('should fail if user is not authenticated', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -65,13 +65,13 @@ it('should fail if user is not authenticated', async () => {
   expect.assertions(2);
   const result = await request(query, { variables });
   expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(result.data.removeCommunityMember).toEqual(null);
 });
 
 it('should fail if user is blocked in the community', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -91,13 +91,13 @@ it('should fail if user is blocked in the community', async () => {
   expect.assertions(2);
   const result = await request(query, { context, variables });
   expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(result.data.removeCommunityMember).toEqual(null);
 });
 
 it('should fail if user owns the community', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -117,13 +117,13 @@ it('should fail if user owns the community', async () => {
   expect.assertions(2);
   const result = await request(query, { context, variables });
   expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(result.data.removeCommunityMember).toEqual(null);
 });
 
-it('should fail if user is moderator in the community', async () => {
+it('should remove moderators from the community', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -142,14 +142,18 @@ it('should fail if user is moderator in the community', async () => {
 
   expect.assertions(2);
   const result = await request(query, { context, variables });
-  expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(
+    result.data.removeCommunityMember.communityPermissions.isMember
+  ).toEqual(false);
+  expect(
+    result.data.removeCommunityMember.communityPermissions.isModerator
+  ).toEqual(false);
 });
 
 it("should fail if the community doesn't exist", async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -175,13 +179,13 @@ it("should fail if the community doesn't exist", async () => {
   expect.assertions(2);
   const result = await request(query, { context, variables: thisVariables });
   expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(result.data.removeCommunityMember).toEqual(null);
 });
 
-it('should fail if user is already a member in the community', async () => {
+it('should fail if user has already left the community', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -195,19 +199,19 @@ it('should fail if user is already a member in the community', async () => {
   `;
 
   const context = {
-    user: member,
+    user: nonMember,
   };
 
   expect.assertions(2);
   const result = await request(query, { context, variables });
   expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityMember).toEqual(null);
+  expect(result.data.removeCommunityMember).toEqual(null);
 });
 
-it('should create a member in the community', async () => {
+it('should remove a member in the community', async () => {
   const query = /* GraphQL */ `
-    mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+    mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+      removeCommunityMember (input: $input) {
         id
         communityPermissions {
           isMember
@@ -220,7 +224,7 @@ it('should create a member in the community', async () => {
     }
   `;
 
-  const context = { user: nonMember };
+  const context = { user: member };
 
   const getUsersCommunities = (userId, communityId) =>
     db
@@ -228,16 +232,31 @@ it('should create a member in the community', async () => {
       .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
       .run();
 
-  expect.assertions(3);
+  expect.assertions(4);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
-  expect(result.data.addCommunityMember.communityPermissions.isMember).toEqual(
-    true
-  );
+  expect(
+    result.data.removeCommunityMember.communityPermissions.isMember
+  ).toEqual(false);
 
   const communityConnections = await getUsersCommunities(
-    nonMember.id,
+    member.id,
     input.communityId
   );
+
   expect(communityConnections).toHaveLength(1);
+
+  // ensure that all the usersChannels records are marked as non-member
+  const channels = await db
+    .table('channels')
+    .getAll(input.communityId, { index: 'communityId' })
+    .run();
+  const channelIds = channels.map(channel => channel.id);
+  const usersChannels = await db
+    .table('usersChannels')
+    .getAll(...channelIds, { index: 'channelId' })
+    .filter({ userId: member.id })
+    .run();
+
+  expect(usersChannels.every(channel => !channel.isMemer)).toEqual(true);
 });

@@ -32,13 +32,21 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError("We couldn't find that community.");
   }
 
-  // if no permissions exist, join them to the community!
   if (!permissions || permissions.length === 0) {
     return new UserError("You're not a member of this community.");
   }
 
   const permission = permissions[0];
 
+  // they've already left the community
+  if (!permission.isMember) {
+    return new UserError("You're not a member of this community.");
+  }
+
+  // in theory this should only get triggered if someone is trying to manually
+  // send graphql queries; blocked users should never see controls in a community
+  // anyways, but we protect this regardless because we want to retain the
+  // usersCommunities record forever that indicates this user is blocked
   if (permission.isBlocked) {
     return new UserError("You aren't able to leave this community.");
   }
@@ -48,7 +56,7 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   }
 
   // account for both moderators or members leaving a community
-  if (permission.isMember || permission.isMember) {
+  if (permission.isMember || permission.isModerator) {
     const allChannelsInCommunity = await getChannelsByUserAndCommunity(
       communityId,
       currentUser.id
