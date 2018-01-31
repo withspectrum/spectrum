@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
@@ -66,34 +66,19 @@ const renderer = {
         </Text>
       )),
     // blockquote: (children, { keys }) =>
-    // 'code-block': (children, { keys }) =>
     'unordered-list-item': (children, { depth, keys }) => {
-      return (
-        <FlatList
-          data={children}
-          key={keys[keys.length - 1]}
-          keyExtractor={(_, index) => keys[index]}
-          renderItem={({ item, index }) => (
-            <Text type="body">
-              {'\u2022'} {item}
-            </Text>
-          )}
-        />
-      );
+      return children.map((item, index) => (
+        <Text key={keys[index] || index} type="body">
+          {'\u2022'} {item}
+        </Text>
+      ));
     },
     'ordered-list-item': (children, { depth, keys }) => {
-      return (
-        <FlatList
-          data={children}
-          key={keys.join('|')}
-          keyExtractor={(_, index) => keys[index]}
-          renderItem={({ item, index }) => (
-            <Text type="body">
-              {index}. {item}
-            </Text>
-          )}
-        />
-      );
+      return children.map((item, index) => (
+        <Text key={keys[index] || index} type="body">
+          {index}. {item}
+        </Text>
+      ));
     },
     'code-block': (children, { keys }) => (
       <Codeblock key={keys.join('|')}>{children}</Codeblock>
