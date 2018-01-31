@@ -139,7 +139,7 @@ const removeMembersInCommunity = (communityId: string): Promise<Object> => {
 const blockUserInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -430,6 +430,7 @@ module.exports = {
   createMemberInCommunity,
   removeMemberInCommunity,
   removeMembersInCommunity,
+  blockUserInCommunity,
   approveBlockedUserInCommunity,
   createModeratorInCommunity,
   makeMemberModeratorInCommunity,
