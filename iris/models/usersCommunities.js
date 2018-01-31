@@ -160,10 +160,10 @@ const blockUserInCommunity = (
 // unblocks a blocked user in a community. invoked by a community or community
 // owner when managing a private community. this *does* add the user
 // as a member
-const approveBlockedUserInCommunity = (
+const unblockUserInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -431,7 +431,7 @@ module.exports = {
   removeMemberInCommunity,
   removeMembersInCommunity,
   blockUserInCommunity,
-  approveBlockedUserInCommunity,
+  unblockUserInCommunity,
   createModeratorInCommunity,
   makeMemberModeratorInCommunity,
   removeModeratorInCommunity,
