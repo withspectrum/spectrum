@@ -33,8 +33,7 @@ type Props = {
   username?: ?string,
   description?: ?string,
   website?: ?string,
-  badge?: string,
-  isPro?: boolean,
+  badges?: Array<string>,
   isCurrentUser?: boolean,
   reputation?: number,
   messageButton?: boolean,
@@ -70,8 +69,7 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       website,
-      badge,
-      isPro,
+      badges,
       reputation,
       children,
       messageButton,
@@ -106,10 +104,9 @@ class GranularUserProfile extends React.Component<Props> {
                   </LinkHandler>
                 )}
 
-                {(badge || isPro) && (
+                {badges && (
                   <BadgeContent>
-                    {badge && <Badge type={badge} />}
-                    {isPro && <Badge type={'pro'} />}
+                    {badges.map((b, i) => <Badge key={i} type={b} />)}
                   </BadgeContent>
                 )}
               </NameContent>

@@ -67,17 +67,33 @@ class CommunityMembers extends React.Component<Props> {
               members.map(user => {
                 if (!user) return null;
 
-                const badge =
-                  user.contextPermissions && user.contextPermissions.isOwner
-                    ? 'Admin'
-                    : user.contextPermissions &&
-                      user.contextPermissions.isModerator
-                      ? 'Moderator'
-                      : null;
+                const roles = Object.keys(user.contextPermissions)
+                  .filter(r => r !== 'reputation')
+                  .filter(r => r !== 'isMember')
+                  .filter(r => r !== '__typename')
+                  .filter(r => user && user.contextPermissions[r])
+                  .map(r => {
+                    switch (r) {
+                      case 'isOwner':
+                        return 'Admin';
+                      case 'isBlocked':
+                        return 'Blocked';
+                      case 'isModerator':
+                        return 'Moderator';
+                      default:
+                        return null;
+                    }
+                  })
+                  .filter(Boolean);
+
+                if (user.isPro) {
+                  roles.push('pro');
+                }
 
                 const reputation =
-                  user.contextPermissions &&
-                  user.contextPermissions.reputation.toString();
+                  (user.contextPermissions &&
+                    user.contextPermissions.reputation.toString()) ||
+                  '0';
 
                 return (
                   <GranularUserProfile
@@ -91,8 +107,7 @@ class CommunityMembers extends React.Component<Props> {
                     onlineSize={'small'}
                     profilePhoto={user.profilePhoto}
                     avatarSize={'40'}
-                    isPro={user.isPro}
-                    badge={badge}
+                    badges={roles}
                     reputation={reputation}
                   >
                     <Button>Edit user</Button>
