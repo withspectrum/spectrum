@@ -226,18 +226,19 @@ it('should remove a member in the community', async () => {
 
   const context = { user: member };
 
-  const getUsersCommunities = (userId, communityId) =>
-    db
-      .table('usersCommunities')
-      .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
-      .run();
-
   expect.assertions(4);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
   expect(
     result.data.removeCommunityMember.communityPermissions.isMember
   ).toEqual(false);
+
+  // ensure only one record still exists
+  const getUsersCommunities = (userId, communityId) =>
+    db
+      .table('usersCommunities')
+      .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+      .run();
 
   const communityConnections = await getUsersCommunities(
     member.id,
@@ -258,5 +259,5 @@ it('should remove a member in the community', async () => {
     .filter({ userId: member.id })
     .run();
 
-  expect(usersChannels.every(channel => !channel.isMemer)).toEqual(true);
+  expect(usersChannels.every(channel => !channel.isMember)).toEqual(true);
 });

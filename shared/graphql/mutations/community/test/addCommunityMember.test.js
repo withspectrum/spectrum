@@ -222,18 +222,19 @@ it('should create a member in the community', async () => {
 
   const context = { user: nonMember };
 
-  const getUsersCommunities = (userId, communityId) =>
-    db
-      .table('usersCommunities')
-      .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
-      .run();
-
   expect.assertions(3);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
   expect(result.data.addCommunityMember.communityPermissions.isMember).toEqual(
     true
   );
+
+  // ensure that only one record is created
+  const getUsersCommunities = (userId, communityId) =>
+    db
+      .table('usersCommunities')
+      .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+      .run();
 
   const communityConnections = await getUsersCommunities(
     nonMember.id,
