@@ -73,6 +73,14 @@ const sendMessageOptions = {
             },
           });
 
+          const hasMessageInStore = data.thread.messageConnection.edges.find(
+            ({ node }) => node.id === addMessage.id
+          );
+
+          // If the message is in the state because the subscription already
+          // added it, don't add it another time
+          if (hasMessageInStore) return;
+
           data.thread.messageConnection.edges.push({
             __typename: 'ThreadMessageEdge',
             cursor: window.btoa(addMessage.id),
