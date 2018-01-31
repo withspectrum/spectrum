@@ -13,9 +13,6 @@ import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communi
 type Props = {
   community: {
     ...$Exact<GetCommunityType>,
-    communityPermissions: {
-      isMember: boolean,
-    },
   },
   removeCommunityMember: Function,
   addCommunityMember: Function,
