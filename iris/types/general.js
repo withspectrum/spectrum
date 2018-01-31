@@ -46,6 +46,8 @@ const general = /* GraphQL */ `
 		reputation: Int
 		isModerator: Boolean
 		isOwner: Boolean
+		isMember: Boolean
+		isBlocked: Boolean
 	}
 
 	type GrowthDataCounts {

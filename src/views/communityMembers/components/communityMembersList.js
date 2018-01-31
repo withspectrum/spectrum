@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
+import { Button } from '../../../components/buttons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
@@ -92,9 +93,11 @@ class CommunityMembers extends React.Component<Props> {
                     avatarSize={'40'}
                     isPro={user.isPro}
                     badge={badge}
-                    messageButton={user.id !== currentUser.id}
                     reputation={reputation}
-                  />
+                  >
+                    <Button>Edit user</Button>
+                    <Button>Message user</Button>
+                  </GranularUserProfile>
                 );
               })}
           </ListContainer>

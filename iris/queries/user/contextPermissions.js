@@ -83,6 +83,28 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           isOwner,
         };
       }
+      case 'search': {
+        const communityId = info.variableValues.filter.communityId;
+        if (!communityId) return null;
+        const {
+          reputation,
+          isModerator,
+          isMember,
+          isBlocked,
+          isOwner,
+        } = await loaders.userPermissionsInCommunity.load([
+          user.id,
+          communityId,
+        ]);
+        return {
+          communityId,
+          reputation: reputation || 0,
+          isModerator,
+          isMember,
+          isBlocked,
+          isOwner,
+        };
+      }
     }
   };
 

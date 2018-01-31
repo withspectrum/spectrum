@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import MembersList from './communityMembersList';
+import { Button } from '../../../components/buttons';
 import {
   SectionCard,
   SectionTitle,
@@ -19,7 +20,7 @@ import {
 } from '../style';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import { throttle } from '../../../helpers/utils';
-import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
+import { searchCommunityMembersQuery } from 'shared/graphql/queries/search/searchCommunityMembers';
 import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
@@ -33,6 +34,17 @@ type Props = {
   history: Object,
 };
 
+type Node = {
+  ...$Exact<GetUserType>,
+  contextPermissions: {
+    isMember: boolean,
+    isOwner: boolean,
+    isModerator: boolean,
+    isBlocked: boolean,
+    reputation: number,
+  },
+};
+
 type State = {
   filter: ?{
     isMember?: boolean,
@@ -42,7 +54,7 @@ type State = {
   totalCount: ?number,
   searchIsFocused: boolean,
   searchIsLoading: boolean,
-  searchResults: Array<?GetUserType>,
+  searchResults: Array<?Node>,
   searchString: string,
 };
 
@@ -123,7 +135,7 @@ class CommunityMembers extends React.Component<Props, State> {
     // trigger the query
     client
       .query({
-        query: searchUsersQuery,
+        query: searchCommunityMembersQuery,
         variables: {
           queryString,
           type: 'USERS',
@@ -196,6 +208,11 @@ class CommunityMembers extends React.Component<Props, State> {
                   ? 'Moderator'
                   : null;
 
+            const reputation =
+              user.contextPermissions &&
+              user.contextPermissions.reputation &&
+              user.contextPermissions.reputation.toString();
+
             return (
               <GranularUserProfile
                 key={user.id}
@@ -206,12 +223,15 @@ class CommunityMembers extends React.Component<Props, State> {
                 isCurrentUser={user.id === currentUser.id}
                 isOnline={user.isOnline}
                 onlineSize={'small'}
+                reputation={reputation}
                 profilePhoto={user.profilePhoto}
                 avatarSize={'40'}
                 isPro={user.isPro}
                 badge={badge}
-                messageButton={user.id !== currentUser.id}
-              />
+              >
+                <Button>Edit user</Button>
+                <Button>Message user</Button>
+              </GranularUserProfile>
             );
           })}
       </ListContainer>
