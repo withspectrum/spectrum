@@ -75,11 +75,6 @@ const sendDirectMessageOptions = {
             node: addMessage,
           });
 
-          console.log(
-            'output data',
-            data.directMessageThread.messageConnection.edges
-          );
-
           // Write our data back to the cache.
           store.writeQuery({
             query: getDMThreadMessageConnectionQuery,

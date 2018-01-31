@@ -98,12 +98,10 @@ export const getDMThreadMessageConnectionOptions = {
           thread: ownProps.id,
         },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log('subscriptionData', subscriptionData);
           const newMessage = subscriptionData.data.messageAdded;
           const existingMessage = prev.directMessageThread.messageConnection.edges.find(
             ({ node }) => node.id === newMessage.id
           );
-          console.log('existing message', existingMessage);
           if (existingMessage) return prev;
           // Add the new message to the data
           return Object.assign({}, prev, {
