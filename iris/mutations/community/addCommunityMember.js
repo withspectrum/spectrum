@@ -9,7 +9,9 @@ import {
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
 
 type Input = {
-  communityId: string,
+  input: {
+    communityId: string,
+  },
 };
 
 export default async (_: any, { input }: Input, { user }: GraphQLContext) => {

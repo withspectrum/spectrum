@@ -99,6 +99,7 @@ const removeMemberInChannel = (
     .filter({ userId })
     .update(
       {
+        isModerator: false,
         isMember: false,
         isPending: false,
         receiveNotifications: false,

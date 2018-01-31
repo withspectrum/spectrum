@@ -108,6 +108,7 @@ const removeMemberInCommunity = (
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
     .update({
+      isModerator: false,
       isMember: false,
       receiveNotifications: false,
     })
