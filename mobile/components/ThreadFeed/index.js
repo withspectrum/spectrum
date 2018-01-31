@@ -151,8 +151,8 @@ class ThreadFeed extends React.Component<Props, State> {
             renderItem={({ item }) => (
               <ThreadItem navigation={navigation} thread={item.node} />
             )}
-            keyExtractor={edge => edge.node.id}
-            separator={Separator}
+            separator={<Separator />}
+            loader={<Text>Loading...</Text>}
             fetchMore={this.props.data.fetchMore}
             // TODO(@mxstbr): FIXME
             hasNextPage={false}
