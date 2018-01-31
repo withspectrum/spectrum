@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { FlatList, WebView } from 'react-native';
+import { FlatList, View } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../Anchor';
@@ -41,6 +41,9 @@ const renderer = {
     },
   },
   blocks: {
+    fallback: (children, { keys }) => (
+      <View key={keys.join('|')}>{children}</View>
+    ),
     unstyled: (children, { keys }) =>
       children.map((child, index) => (
         <Text type="body" key={keys[index] || index}>
@@ -98,4 +101,7 @@ const renderer = {
   },
 };
 
-export default (rawContentState: Object) => redraft(rawContentState, renderer);
+export default (rawContentState: Object) =>
+  redraft(rawContentState, renderer, {
+    blockFallback: 'fallback',
+  });
