@@ -33,7 +33,7 @@ class Thread extends React.Component<Props> {
     if (data.thread) {
       return (
         <Wrapper>
-          <ScrollView testID="e2e-thread">
+          <ScrollView style={{ flex: 1 }} testID="e2e-thread">
             <Text type="title1">
               {data.thread.content.title} by {data.thread.creator.name}
             </Text>
