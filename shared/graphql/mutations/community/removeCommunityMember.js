@@ -1,39 +1,29 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import communityMetaDataFragment from '../../fragments/community/communityMetaData';
-import type { CommunityMetaDataType } from '../../fragments/community/communityMetaData';
 import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import communityChannelConnectionFragment from '../../fragments/community/communityChannelConnection';
-import type { CommunityChannelConnectionType } from '../../fragments/community/communityChannelConnection';
 
-export type RemoveCommunityMemberType = {
+export type RemoveCommunityModeratorType = {
   data: {
-    removeCommunityMember: {
+    removeCommunityModerator: {
       ...$Exact<CommunityInfoType>,
-      ...$Exact<CommunityMetaDataType>,
-      ...$Exact<CommunityChannelConnectionType>,
     },
   },
 };
 
-export const removeCommunityMemberQuery = gql`
-  mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
-    removeCommunityMember(input: $input) {
+export const removeCommunityModeratorQuery = gql`
+  mutation removeCommunityModerator($input: RemoveCommunityModeratorInput!) {
+    removeCommunityModerator(input: $input) {
       ...communityInfo
-      ...communityMetaData
-      ...communityChannelConnection
     }
   }
   ${communityInfoFragment}
-  ${communityMetaDataFragment}
-  ${communityChannelConnectionFragment}
 `;
 
-const removeCommunityMemberOptions = {
+const removeCommunityModeratorOptions = {
   props: ({ mutate }) => ({
-    removeCommunityMember: ({ input }) =>
+    removeCommunityModerator: ({ input }) =>
       mutate({
         variables: {
           input,
@@ -43,6 +33,6 @@ const removeCommunityMemberOptions = {
 };
 
 export default graphql(
-  removeCommunityMemberQuery,
-  removeCommunityMemberOptions
+  removeCommunityModeratorQuery,
+  removeCommunityModeratorOptions
 );
