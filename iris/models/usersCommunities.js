@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 import { addQueue } from '../utils/workerQueue';
 import type { DBUsersCommunities } from 'shared/types';
 
@@ -188,7 +186,7 @@ const approveBlockedUserInCommunity = (
 const createModeratorInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .insert(
@@ -212,13 +210,15 @@ const createModeratorInCommunity = (
 const makeMemberModeratorInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
     .update(
       {
+        isBlocked: false,
+        isMember: true,
         isModerator: true,
         receiveNotifications: true,
       },
