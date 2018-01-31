@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import redraft from 'redraft';
 import Anchor from '../components/Anchor';
 import Text from '../components/Text';
+import Codeblock from '../components/Codeblock';
 
 const renderer = {
   inline: {
@@ -23,7 +24,7 @@ const renderer = {
         {children}
       </Text>
     ),
-    // CODE: (children, { key }) =>
+    CODE: (children, { key }) => <Codeblock key={key}>{children}</Codeblock>,
   },
   entities: {
     // key is the entity key value from raw
@@ -83,6 +84,9 @@ const renderer = {
         />
       );
     },
+    'code-block': (children, { keys }) => (
+      <Codeblock key={keys.join('|')}>{children}</Codeblock>
+    ),
   },
 };
 
