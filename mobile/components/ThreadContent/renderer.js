@@ -3,10 +3,10 @@ import React from 'react';
 import { FlatList, WebView } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
-import Anchor from '../components/Anchor';
-import Text from '../components/Text';
-import Codeblock from '../components/Codeblock';
-import IFrame from '../components/IFrame';
+import Anchor from '../Anchor';
+import Text from '../Text';
+import Codeblock from '../Codeblock';
+import IFrame from '../IFrame';
 
 const renderer = {
   inline: {
