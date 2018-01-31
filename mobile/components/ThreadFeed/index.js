@@ -5,6 +5,7 @@ import { View, Text, FlatList } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import Separator from './Separator';
 import ThreadItem from '../ThreadItem';
+import InfiniteList from '../InfiniteList';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -145,16 +146,16 @@ class ThreadFeed extends React.Component<Props, State> {
               />
             )*/}
 
-          <FlatList
+          <InfiniteList
             data={filteredThreads}
             renderItem={({ item }) => (
-              <ThreadItem navigation={navigation} thread={item} />
+              <ThreadItem navigation={navigation} thread={item.node} />
             )}
-            keyExtractor={item => item.id}
-            ItemSeparatorComponent={Separator}
-            onEndReached={() => this.props.data.fetchMore()}
-            onEndReachedThreshold={0.5}
-            removeClippedSubviews={true}
+            keyExtractor={edge => edge.node.id}
+            separator={Separator}
+            fetchMore={this.props.data.fetchMore}
+            // TODO(@mxstbr): FIXME
+            hasNextPage={false}
           />
         </View>
       );
