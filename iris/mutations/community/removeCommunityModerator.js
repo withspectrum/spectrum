@@ -6,6 +6,8 @@ import {
   removeModeratorInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
+import { removeModeratorInChannel } from '../../models/usersChannels';
+import { getChannelsByUserAndCommunity } from '../../models/channel';
 
 type Input = {
   input: {
@@ -69,9 +71,20 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks pass
   if (currentUserPermission.isOwner && userToEvaluatePermission.isModerator) {
-    return await removeModeratorInCommunity(communityId, userToEvaluateId).then(
-      () => community
+    // remove as moderator in community and all channels, this should be expected UX
+    const allChannelsInCommunity = await getChannelsByUserAndCommunity(
+      communityId,
+      userToEvaluateId
     );
+
+    const removeChannelModeratorPromises = allChannelsInCommunity.map(channel =>
+      removeModeratorInChannel(channel, userToEvaluateId)
+    );
+
+    return await Promise.all([
+      removeModeratorInCommunity(communityId, userToEvaluateId),
+      removeChannelModeratorPromises,
+    ]).then(() => community);
   }
 
   return new UserError(

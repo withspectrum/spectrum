@@ -7,9 +7,6 @@ const owner = data.users.find(({ username }) => username === 'mxstbr');
 const moderator = data.users.find(({ username }) => username === 'brian');
 const member = data.users.find(({ username }) => username === 'bryn');
 const nonMember = data.users.find(({ username }) => username === 'bad-boy');
-const previousMember = data.users.find(
-  ({ username }) => username === 'previous-boy'
-);
 const blockedMember = data.users.find(
   ({ username }) => username === 'blocked-boy'
 );
@@ -187,6 +184,7 @@ it('should fail if evaluated user is blocked in the community', async () => {
 });
 
 it('should remove a moderator in the community', async () => {
+  // ensure user is removed as moderator from all channels
   const query = /* GraphQL */ `
     mutation removeCommunityModerator($input: RemoveCommunityModeratorInput!) {
       removeCommunityModerator (input: $input) {
@@ -197,12 +195,12 @@ it('should remove a moderator in the community', async () => {
 
   const context = { user: owner };
 
-  expect.assertions(4);
+  expect.assertions(6);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
   expect(result.data.removeCommunityModerator.id).toEqual(input.communityId);
 
-  // ensure that only one record exists for the moderator
+  // ensure user is removed as moderator from community
   const getUsersCommunities = () =>
     db
       .table('usersCommunities')
@@ -214,4 +212,25 @@ it('should remove a moderator in the community', async () => {
   const communityConnections = await getUsersCommunities();
   expect(communityConnections).toHaveLength(1);
   expect(communityConnections[0].isModerator).toEqual(false);
+
+  // ensure user is removed as moderator from all channels
+  const getUsersChannels = async () => {
+    const channelIds = await db
+      .table('channels')
+      .getAll(input.communityId, { index: 'communityId' })
+      .map(row => row('id'))
+      .run();
+
+    return await db
+      .table('usersChannels')
+      .getAll(...channelIds, { index: 'channelId' })
+      .filter({ userId: input.userId })
+      .run();
+  };
+
+  const channelConnections = await getUsersChannels();
+  expect(channelConnections).toHaveLength(1);
+  expect(channelConnections.every(channel => !channel.isModerator)).toEqual(
+    true
+  );
 });
