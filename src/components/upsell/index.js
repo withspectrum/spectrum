@@ -10,8 +10,10 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import Avatar from '../avatar';
 import Card from '../card';
+import ToggleCommunityMembership from '../toggleCommunityMembership';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import {
   Title,
   MiniTitle,
@@ -233,12 +235,8 @@ export const Upsell404Community = () => {
 
 export const UpsellJoinCommunity = ({
   community,
-  join,
-  loading,
 }: {
-  community: Object,
-  join: Function,
-  loading: boolean,
+  community: GetCommunityType,
 }) => {
   return (
     <NullCard
@@ -246,9 +244,14 @@ export const UpsellJoinCommunity = ({
       heading="Want to be a part of the conversation?"
       copy={`Join ${community.name} to get involved!`}
     >
-      <Button loading={loading} onClick={() => join(community.id)} icon="plus">
-        Join {community.name}
-      </Button>
+      <ToggleCommunityMembership
+        community={community}
+        render={({ isLoading }) => (
+          <Button loading={isLoading} icon="plus">
+            Join {community.name}
+          </Button>
+        )}
+      />
     </NullCard>
   );
 };

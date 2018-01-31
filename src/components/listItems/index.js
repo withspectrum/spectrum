@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';

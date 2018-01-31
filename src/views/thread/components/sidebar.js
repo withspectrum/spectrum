@@ -1,15 +1,13 @@
 // @flow
 import * as React from 'react';
 import replace from 'string-replace-to-array';
-import { track } from '../../../helpers/events';
 import { Button, TextButton } from '../../../components/buttons';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
 } from '../../../components/loading';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import ToggleCommunityMembership from '../../../components/toggleCommunityMembership';
 import Link from 'src/components/link';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
@@ -44,47 +42,8 @@ type Props = {
   dispatch: Function,
   threadViewLoading?: boolean,
 };
-type State = {
-  isJoining: boolean,
-};
-class Sidebar extends React.Component<Props, State> {
-  state = {
-    isJoining: false,
-  };
 
-  toggleMembership = (communityId: string) => {
-    const { toggleCommunityMembership, dispatch } = this.props;
-    this.setState({
-      isJoining: true,
-    });
-
-    toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-
-        track('community', isMember ? 'joined' : 'unjoined', null);
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
-
-        return this.setState({
-          isJoining: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isJoining: false,
-        });
-
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
+class Sidebar extends React.Component<Props> {
   render() {
     const {
       threadViewLoading,
@@ -168,13 +127,18 @@ class Sidebar extends React.Component<Props, State> {
                 <TextButton>View community</TextButton>
               </Link>
             ) : currentUser ? (
-              <Button
-                gradientTheme={'success'}
-                color={'success.default'}
-                onClick={() => this.toggleMembership(thread.community.id)}
-              >
-                Join community
-              </Button>
+              <ToggleCommunityMembership
+                community={thread.community}
+                render={({ isLoading }) => (
+                  <Button
+                    gradientTheme={'success'}
+                    color={'success.default'}
+                    loading={isLoading}
+                  >
+                    Join community
+                  </Button>
+                )}
+              />
             ) : (
               <Link to={`/login?r=${window.location}`}>
                 <Button gradientTheme={'success'} color={'success.default'}>
@@ -216,8 +180,4 @@ class Sidebar extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  connect(),
-  toggleCommunityMembershipMutation,
-  getCommunityThreads
-)(Sidebar);
+export default compose(connect(), getCommunityThreads)(Sidebar);

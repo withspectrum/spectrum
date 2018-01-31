@@ -33,7 +33,7 @@ export const addCommunityMemberQuery = gql`
 
 const addCommunityMemberOptions = {
   props: ({ mutate }) => ({
-    addCommunityMember: input =>
+    addCommunityMember: ({ input }) =>
       mutate({
         variables: {
           input,

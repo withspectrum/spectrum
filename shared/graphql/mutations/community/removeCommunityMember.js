@@ -8,7 +8,7 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communityChannelConnectionFragment from '../../fragments/community/communityChannelConnection';
 import type { CommunityChannelConnectionType } from '../../fragments/community/communityChannelConnection';
 
-export type removeCommunityMemberType = {
+export type RemoveCommunityMemberType = {
   data: {
     removeCommunityMember: {
       ...$Exact<CommunityInfoType>,
@@ -33,7 +33,7 @@ export const removeCommunityMemberQuery = gql`
 
 const removeCommunityMemberOptions = {
   props: ({ mutate }) => ({
-    removeCommunityMember: input =>
+    removeCommunityMember: ({ input }) =>
       mutate({
         variables: {
           input,

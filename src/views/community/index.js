@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import Icon from '../../components/icons';
@@ -12,8 +11,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import { addToastWithTimeout } from '../../actions/toasts';
+import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
@@ -37,7 +35,6 @@ import { CoverRow, CoverColumn, LogoutButton } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
-import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -85,42 +82,6 @@ class CommunityView extends React.Component<Props, State> {
       this.props.dispatch(addCommunityToOnboarding(this.props.data.community));
     }
   }
-
-  toggleMembership = (communityId: string) => {
-    const { dispatch } = this.props;
-
-    this.setState({
-      isLeavingCommunity: true,
-    });
-
-    this.props
-      .toggleCommunityMembership({ communityId })
-      .then(({ data }: ToggleCommunityMembershipType) => {
-        const { toggleCommunityMembership } = data;
-
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-        track('community', isMember ? 'joined' : 'unjoined', null);
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
-
-        return this.setState({
-          isLeavingCommunity: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isLeavingCommunity: false,
-        });
-
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
 
   setComposerUpsell = () => {
     const { data: { community } } = this.props;
@@ -197,12 +158,14 @@ class CommunityView extends React.Component<Props, State> {
                 {isLoggedIn &&
                   (!community.communityPermissions.isOwner &&
                     community.communityPermissions.isMember) && (
-                    <LogoutButton
-                      onClick={() => this.toggleMembership(community.id)}
-                      loading={isLeavingCommunity}
-                    >
-                      Leave {community.name}
-                    </LogoutButton>
+                    <ToggleCommunityMembership
+                      community={community}
+                      render={state => (
+                        <LogoutButton loading={state.isLoading}>
+                          Leave {community.name}
+                        </LogoutButton>
+                      )}
+                    />
                   )}
                 <ChannelList
                   id={community.id}
@@ -273,7 +236,6 @@ class CommunityView extends React.Component<Props, State> {
                     <UpsellJoinCommunity
                       community={community}
                       loading={isLeavingCommunity}
-                      join={this.toggleMembership}
                     />
                   )}
 
@@ -364,7 +326,6 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  toggleCommunityMembershipMutation,
   getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);
