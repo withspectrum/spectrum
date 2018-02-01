@@ -36,6 +36,12 @@ type Props = {
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 class Community extends React.Component<Props> {
+  componentDidUpdate() {
+    const { data: { community }, navigation } = this.props;
+    if (!community || navigation.state.params.title) return;
+    navigation.setParams({ title: community.name });
+  }
+
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
 
@@ -43,9 +49,6 @@ class Community extends React.Component<Props> {
       return (
         <Wrapper>
           <View>
-            <View testID="e2e-commmunity">
-              <Text>Now viewing community {data.community.name}!</Text>
-            </View>
             <CommunityThreadFeed
               navigation={navigation}
               id={data.community.id}

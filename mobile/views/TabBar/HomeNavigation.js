@@ -24,9 +24,9 @@ const Routes = StackNavigator(
     },
     Community: {
       screen: withMappedNavigationProps(Community),
-      navigationOptions: {
-        headerTitle: 'Community',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'Community',
+      }),
     },
     Channel: {
       screen: withMappedNavigationProps(Channel),
