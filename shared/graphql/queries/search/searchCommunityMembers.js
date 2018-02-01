@@ -29,7 +29,8 @@ export const searchCommunityMembersQuery = gql`
     $type: SearchType!
     $filter: SearchFilter
   ) {
-    search(queryString: $queryString, type: $type, filter: $filter) {
+    search(queryString: $queryString, type: $type, filter: $filter)
+      @connection(key: "search", filter: ["type"]) {
       searchResultsConnection {
         edges {
           node {

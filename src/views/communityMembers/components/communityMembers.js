@@ -6,6 +6,7 @@ import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import MembersList from './communityMembersList';
 import EditDropdown from './editDropdown';
+import Search from './search';
 import {
   SectionCard,
   SectionTitle,
@@ -18,9 +19,6 @@ import {
   SearchInput,
   SearchForm,
 } from '../style';
-import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import { throttle } from '../../../helpers/utils';
-import { searchCommunityMembersQuery } from 'shared/graphql/queries/search/searchCommunityMembers';
 import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
@@ -35,17 +33,6 @@ type Props = {
   community: Object,
 };
 
-type Node = {
-  ...$Exact<GetUserType>,
-  contextPermissions: {
-    isMember: boolean,
-    isOwner: boolean,
-    isModerator: boolean,
-    isBlocked: boolean,
-    reputation: number,
-  },
-};
-
 type State = {
   filter: ?{
     isMember?: boolean,
@@ -54,9 +41,10 @@ type State = {
   },
   totalCount: ?number,
   searchIsFocused: boolean,
-  searchIsLoading: boolean,
-  searchResults: Array<?Node>,
+  // what the user types in
   searchString: string,
+  // what gets sent to the server when hits enter
+  queryString: string,
 };
 
 class CommunityMembers extends React.Component<Props, State> {
@@ -64,192 +52,66 @@ class CommunityMembers extends React.Component<Props, State> {
     filter: { isMember: true },
     totalCount: null,
     searchIsFocused: false,
-    searchResults: [],
-    searchIsLoading: false,
     searchString: '',
+    queryString: '',
   };
 
   state = this.initialState;
 
-  constructor() {
-    super();
-    // only kick off search query every 200ms
-    this.search = throttle(this.search, 200);
-  }
-
-  reset = () =>
-    this.setState({
-      filter: this.initialState.filter,
+  viewMembers = () => {
+    return this.setState({
+      filter: { isMember: true },
       searchIsFocused: false,
     });
+  };
 
-  viewModerators = () =>
-    this.setState({
+  viewModerators = () => {
+    return this.setState({
       filter: {
         isModerator: true,
       },
       searchIsFocused: false,
     });
+  };
 
-  viewBlocked = () =>
-    this.setState({
+  viewBlocked = () => {
+    return this.setState({
       filter: {
         isBlocked: true,
       },
       searchIsFocused: false,
     });
+  };
 
   setTotalCount = (totalCount: number) => this.setState({ totalCount });
 
   handleChange = (e: any) => {
     const searchString = e.target && e.target.value;
-    // if the user has cleared the search input, make sure there are no search
-    // results or focused users
+
     if (!searchString || searchString.length === 0) {
       return this.setState({
-        searchResults: [],
-        searchIsLoading: false,
+        searchString: '',
+        queryString: '',
       });
     }
 
-    this.setState({
+    return this.setState({
       searchString: searchString,
     });
-
-    // $FlowIssue
-    return this.search();
-  };
-
-  search = () => {
-    const { searchString: queryString } = this.state;
-    const { client, id: communityId } = this.props;
-
-    if (!queryString || queryString.length === 0) {
-      return this.setState({ searchResults: [], searchIsLoading: false });
-    }
-
-    // start the input loading spinner
-    if (this.state.searchResults.length === 0) {
-      this.setState({ searchIsLoading: true });
-    }
-
-    // trigger the query
-    client
-      .query({
-        query: searchCommunityMembersQuery,
-        variables: {
-          queryString,
-          type: 'USERS',
-          filter: { communityId },
-        },
-      })
-      .then(({ data: { search } }) => {
-        if (
-          !search ||
-          !search.searchResultsConnection ||
-          search.searchResultsConnection.edges.length === 0
-        ) {
-          this.setState({
-            searchResults: [],
-            searchIsLoading: false,
-          });
-        }
-
-        return this.setState({
-          searchResults: search.searchResultsConnection.edges.map(
-            e => e && e.node
-          ),
-          searchIsLoading: false,
-        });
-      })
-      .catch(err => {
-        console.log('Error searching users', err);
-      });
   };
 
   initSearch = () => this.setState({ filter: null, searchIsFocused: true });
 
+  search = e => {
+    e.preventDefault();
+    const { searchString } = this.state;
+    if (!searchString || searchString.length === 0) return;
+    return this.setState({ queryString: searchString });
+  };
+
   initMessage = user => {
     this.props.dispatch(initNewThreadWithUser(user));
     this.props.history.push('/messages/new');
-  };
-
-  renderSearchResults = () => {
-    const { searchResults, searchString } = this.state;
-    const { currentUser } = this.props;
-
-    if (searchResults.length === 0) {
-      const emoji = ' ';
-
-      const heading =
-        searchString.length > 1
-          ? `We couldn't find anyone matching "${searchString}"`
-          : 'Search for people in your community';
-
-      const subheading =
-        searchString.length > 1
-          ? 'Grow your community by inviting people via email, or by importing a Slack team'
-          : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
-
-      return (
-        <ViewError emoji={emoji} heading={heading} subheading={subheading} />
-      );
-    }
-
-    return (
-      <ListContainer>
-        {searchResults &&
-          searchResults.map(user => {
-            if (!user) return null;
-            const roles = Object.keys(user.contextPermissions)
-              .filter(r => r !== 'reputation')
-              .filter(r => r !== 'isMember')
-              .filter(r => r !== '__typename')
-              .filter(r => user && user.contextPermissions[r])
-              .map(r => {
-                switch (r) {
-                  case 'isOwner':
-                    return 'admin';
-                  case 'isBlocked':
-                    return 'blocked';
-                  case 'isModerator':
-                    return 'moderator';
-                }
-              });
-
-            if (user.isPro) {
-              roles.push('pro');
-            }
-
-            const reputation =
-              (user.contextPermissions &&
-                user.contextPermissions.reputation &&
-                user.contextPermissions.reputation.toString()) ||
-              '0';
-
-            return (
-              <GranularUserProfile
-                key={user.id}
-                id={user.id}
-                name={user.name}
-                username={user.username}
-                description={user.description}
-                isCurrentUser={user.id === currentUser.id}
-                isOnline={user.isOnline}
-                onlineSize={'small'}
-                reputation={reputation}
-                profilePhoto={user.profilePhoto}
-                avatarSize={'40'}
-                badges={roles}
-              >
-                {user.id !== currentUser.id && (
-                  <EditDropdown user={user} community={this.props.community} />
-                )}
-              </GranularUserProfile>
-            );
-          })}
-      </ListContainer>
-    );
   };
 
   render() {
@@ -257,10 +119,10 @@ class CommunityMembers extends React.Component<Props, State> {
       filter,
       totalCount,
       searchIsFocused,
-      searchIsLoading,
-      searchResults,
+      searchString,
+      queryString,
     } = this.state;
-    const { id } = this.props;
+    const { id, currentUser } = this.props;
 
     return (
       <SectionCard>
@@ -270,7 +132,7 @@ class CommunityMembers extends React.Component<Props, State> {
 
         <Filters>
           <Filter
-            onClick={this.reset}
+            onClick={this.viewMembers}
             active={filter && filter.isMember ? true : false}
           >
             Members
@@ -289,24 +151,127 @@ class CommunityMembers extends React.Component<Props, State> {
           </Filter>
 
           <SearchFilter onClick={this.initSearch}>
-            <SearchForm onSubmit={e => e.preventDefault()}>
+            <SearchForm onSubmit={this.search}>
               <Icon glyph={'search'} size={28} />
               <SearchInput
                 onChange={this.handleChange}
                 type={'text'}
                 placeholder={'Search'}
               />
+              {searchString &&
+                searchIsFocused && (
+                  <Icon glyph={'send-fill'} size={28} onClick={this.search} />
+                )}
             </SearchForm>
           </SearchFilter>
         </Filters>
 
-        {searchIsFocused ? (
-          searchIsLoading ? (
-            searchResults.length === 0 && <Loading />
-          ) : (
-            this.renderSearchResults()
-          )
-        ) : (
+        {searchIsFocused &&
+          queryString && (
+            <Search
+              queryString={queryString}
+              filter={{ communityId: this.props.id }}
+              render={({ searchResults, isLoading }) => {
+                if (isLoading) {
+                  return <Loading />;
+                }
+
+                if (!searchResults || searchResults.length === 0) {
+                  const emoji = ' ';
+
+                  const heading =
+                    searchString.length > 1
+                      ? `We couldn't find anyone matching "${searchString}"`
+                      : 'Search for people in your community';
+
+                  const subheading =
+                    searchString.length > 1
+                      ? 'Grow your community by inviting people via email, or by importing a Slack team'
+                      : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
+
+                  return (
+                    <ViewError
+                      emoji={emoji}
+                      heading={heading}
+                      subheading={subheading}
+                    />
+                  );
+                }
+
+                return (
+                  <ListContainer>
+                    {searchResults.map(user => {
+                      if (!user) return null;
+                      const roles = Object.keys(user.contextPermissions)
+                        .filter(r => r !== 'reputation')
+                        .filter(r => r !== 'isMember')
+                        .filter(r => r !== '__typename')
+                        .filter(r => user && user.contextPermissions[r])
+                        .map(r => {
+                          switch (r) {
+                            case 'isOwner':
+                              return 'admin';
+                            case 'isBlocked':
+                              return 'blocked';
+                            case 'isModerator':
+                              return 'moderator';
+                            default:
+                              return null;
+                          }
+                        });
+
+                      if (user.isPro) {
+                        roles.push('pro');
+                      }
+
+                      const reputation =
+                        (user.contextPermissions &&
+                          user.contextPermissions.reputation &&
+                          user.contextPermissions.reputation.toString()) ||
+                        '0';
+
+                      return (
+                        <GranularUserProfile
+                          key={user.id}
+                          id={user.id}
+                          name={user.name}
+                          username={user.username}
+                          description={user.description}
+                          isCurrentUser={user.id === currentUser.id}
+                          isOnline={user.isOnline}
+                          onlineSize={'small'}
+                          reputation={reputation}
+                          profilePhoto={user.profilePhoto}
+                          avatarSize={'40'}
+                          badges={roles}
+                        >
+                          {user.id !== currentUser.id && (
+                            <EditDropdown
+                              user={user}
+                              community={this.props.community}
+                            />
+                          )}
+                        </GranularUserProfile>
+                      );
+                    })}
+                  </ListContainer>
+                );
+              }}
+            />
+          )}
+
+        {searchIsFocused &&
+          !queryString && (
+            <ViewError
+              emoji={' '}
+              heading={'Search for community members'}
+              subheading={
+                'Find people by name or description - try searching for "designer"!'
+              }
+            />
+          )}
+
+        {!searchIsFocused && (
           <MembersList
             filter={filter}
             id={id}

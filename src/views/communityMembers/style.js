@@ -132,12 +132,21 @@ export const SearchForm = styled.form`
   position: relative;
   margin-left: 4px;
   flex: auto;
+  color: ${props => props.theme.brand.alt};
 
-  .icon {
+  .icon:first-of-type {
     position: absolute;
     left: -6px;
     top: 0px;
     pointer-events: none;
+    color: ${props => props.theme.text.alt};
+  }
+
+  .icon:last-of-type {
+    position: absolute;
+    right: 0;
+    top: 0;
+    point-events: none;
   }
 `;
 
@@ -159,6 +168,7 @@ export const SearchInput = styled.input`
   font-size: 16px;
   padding: 5px;
   padding-left: 24px;
+  padding-right: 24px;
   border-bottom: 1px solid transparent;
   flex: 1;
   padding-top: 4px;
