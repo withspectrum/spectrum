@@ -73,11 +73,41 @@ const sendMessageOptions = {
             },
           });
 
-          data.thread.messageConnection.edges.push({
-            __typename: 'ThreadMessageEdge',
-            cursor: window.btoa(addMessage.id),
-            node: addMessage,
-          });
+          const messageInStore = data.thread.messageConnection.edges.find(
+            // Check whether we have a node with the same ID or an optimistic response
+            // with the same content
+            // NOTE(@mxstbr): Checking for equality in the content is very brittle, what if we change the content on the server?
+            // I couldn't find a better way to do this for now, ref withspectrum/spectrum#2328
+            ({ node }) =>
+              node.id === addMessage.id ||
+              (typeof node.id === 'number' &&
+                node.content.body === addMessage.content.body)
+          );
+
+          // Replace the optimistic reponse with the actual db message
+          if (messageInStore && typeof messageInStore.id === 'number') {
+            data.thread.messageConnection.edges = data.thread.messageConnection.edges.map(
+              edge => {
+                if (edge.node.id === messageInStore.id)
+                  return {
+                    ...edge,
+                    cursor: window.btoa(addMessage.id),
+                    node: addMessage,
+                  };
+                return edge;
+              }
+            );
+            // If it's an actual duplicate because the subscription already added the message to the store then ignore
+          } else if (messageInStore) {
+            return;
+            // If it's a totally new message (i.e. the optimstic response) then insert it at the end
+          } else {
+            data.thread.messageConnection.edges.push({
+              __typename: 'ThreadMessageEdge',
+              cursor: window.btoa(addMessage.id),
+              node: addMessage,
+            });
+          }
 
           // Write our data back to the cache.
           store.writeQuery({
