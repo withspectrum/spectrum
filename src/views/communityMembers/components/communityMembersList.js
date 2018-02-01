@@ -25,6 +25,7 @@ type Props = {
   ...$Exact<ViewNetworkHandlerType>,
   dispatch: Function,
   history: Object,
+  filter: Object,
 };
 
 class CommunityMembers extends React.Component<Props> {
@@ -48,6 +49,7 @@ class CommunityMembers extends React.Component<Props> {
       currentUser,
       isLoading,
       isFetchingMore,
+      filter,
     } = this.props;
 
     const members =
@@ -57,6 +59,18 @@ class CommunityMembers extends React.Component<Props> {
 
     if (isLoading) {
       return <Loading />;
+    }
+
+    if (members && members.length === 0) {
+      if (filter.isBlocked) {
+        return (
+          <ViewError
+            emoji={' '}
+            heading={'Nobody is blocked - nice job!'}
+            subheading={'So far so good - nobody in your community is blocked.'}
+          />
+        );
+      }
     }
 
     if (community && community.id) {

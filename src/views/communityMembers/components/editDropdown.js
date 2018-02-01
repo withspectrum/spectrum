@@ -64,8 +64,9 @@ class EditDropdown extends React.Component<Props, State> {
     },
     moderator: {
       title: 'Moderator',
-      subtitle:
-        "Can edit and delete conversations and messages. They will not see private channels where they aren't approved",
+      // subtitle:
+      //   "Can edit and delete conversations and messages. They will not see private channels where they aren't approved",
+      subtitle: 'Moderator roles are coming soon!',
       selected: false,
     },
     blocked: {
@@ -91,7 +92,12 @@ class EditDropdown extends React.Component<Props, State> {
     const { user: { contextPermissions } } = this.props;
 
     if (contextPermissions.isOwner) {
-      return [this.permissionConfigurations.owner];
+      return [
+        {
+          ...this.permissionConfigurations.owner,
+          selected: true,
+        },
+      ];
     }
 
     if (contextPermissions.isModerator) {
@@ -103,7 +109,8 @@ class EditDropdown extends React.Component<Props, State> {
         },
         {
           ...this.permissionConfigurations.member,
-          mutation: this.props.removeCommunityModerator,
+          // mutation: this.props.removeCommunityModerator,
+          mutation: null,
         },
         {
           ...this.permissionConfigurations.blocked,
@@ -116,7 +123,8 @@ class EditDropdown extends React.Component<Props, State> {
       return [
         {
           ...this.permissionConfigurations.moderator,
-          mutation: this.props.addCommunityModerator,
+          // mutation: this.props.addCommunityModerator,
+          mutation: null,
         },
         {
           ...this.permissionConfigurations.member,

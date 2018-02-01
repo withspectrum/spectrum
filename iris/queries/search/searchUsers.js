@@ -21,7 +21,9 @@ export default (args: Args, { loaders }: GraphQLContext) => {
         const input = userIds.map(userId => [userId, searchFilter.communityId]);
         return getUsersPermissionsInCommunities(input).then(results => {
           if (results && results.length > 0) {
-            const memberUsers = results.filter(user => user.isMember);
+            const memberUsers = results.filter(
+              user => user.isMember || user.isBlocked
+            );
             if (memberUsers.length > 0) {
               return loaders.user.loadMany(
                 memberUsers.map(user => user.userId)

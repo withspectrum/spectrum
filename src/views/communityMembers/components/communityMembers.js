@@ -201,7 +201,6 @@ class CommunityMembers extends React.Component<Props, State> {
         {searchResults &&
           searchResults.map(user => {
             if (!user) return null;
-
             const roles = Object.keys(user.contextPermissions)
               .filter(r => r !== 'reputation')
               .filter(r => r !== 'isMember')
@@ -243,7 +242,9 @@ class CommunityMembers extends React.Component<Props, State> {
                 avatarSize={'40'}
                 badges={roles}
               >
-                <EditDropdown user={user} community={this.props.community} />
+                {user.id !== currentUser.id && (
+                  <EditDropdown user={user} community={this.props.community} />
+                )}
               </GranularUserProfile>
             );
           })}
@@ -274,12 +275,12 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Members
           </Filter>
-          <Filter
+          {/*<Filter
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
             Moderators
-          </Filter>
+          </Filter>*/}
           <Filter
             onClick={this.viewBlocked}
             active={filter && filter.isBlocked ? true : false}
