@@ -27,7 +27,7 @@ type Props = {
 class InfiniteList extends React.Component<Props> {
   static defaultProps = {
     refreshing: false,
-    threshold: 0.75,
+    threshold: 0.5,
     keyExtractor: (item: Item, index: number) => {
       const key = item.id || (item.node && item.node.id);
 

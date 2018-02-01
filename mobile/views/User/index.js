@@ -59,25 +59,23 @@ class User extends React.Component<Props, State> {
     if (data.user) {
       return (
         <Wrapper>
-          <ScrollView>
-            <Button
-              title={'View active conversations'}
-              onPress={() => this.toggleFeed('participant')}
-            />
+          <Button
+            title={'View active conversations'}
+            onPress={() => this.toggleFeed('participant')}
+          />
 
-            <Button
-              title={'View created conversations'}
-              onPress={() => this.toggleFeed('creator')}
-            />
+          <Button
+            title={'View created conversations'}
+            onPress={() => this.toggleFeed('creator')}
+          />
 
-            <Text>Viewing {this.state.feed} thread feed</Text>
+          <Text>Viewing {this.state.feed} thread feed</Text>
 
-            <UserThreadFeed
-              navigation={navigation}
-              kind={this.state.feed}
-              id={data.user.id}
-            />
-          </ScrollView>
+          <UserThreadFeed
+            navigation={navigation}
+            kind={this.state.feed}
+            id={data.user.id}
+          />
         </Wrapper>
       );
     }

@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { View, Text, FlatList } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import Separator from './Separator';
 import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
 import type { GetCommunityThreadConnectionType } from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
@@ -24,6 +23,7 @@ type State = {
 type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
+  isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
   data: {
@@ -67,8 +67,20 @@ class ThreadFeed extends React.Component<Props, State> {
   };
 
   fetchMore = () => {
-    const { isFetchingMore, data: { fetchMore } } = this.props;
-    if (!isFetchingMore) {
+    const {
+      isFetchingMore,
+      isLoading,
+      hasError,
+      isRefetching,
+      data: { fetchMore, threadConnection },
+    } = this.props;
+    if (
+      !isFetchingMore &&
+      !isLoading &&
+      !hasError &&
+      !isRefetching &&
+      threadConnection.pageInfo.hasNextPage
+    ) {
       console.log('actually fetch more!');
       fetchMore();
     }
@@ -138,7 +150,6 @@ class ThreadFeed extends React.Component<Props, State> {
             renderItem={({ item }) => (
               <ThreadItem navigation={navigation} thread={item.node} />
             )}
-            separator={Separator}
             loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.fetchMore}
             hasNextPage={threadConnection.pageInfo.hasNextPage}
