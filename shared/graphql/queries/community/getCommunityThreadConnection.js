@@ -55,6 +55,7 @@ const getCommunityThreadConnectionOptions = {
       loading,
       networkStatus,
       community,
+      threadConnection: community && community.threadConnection,
       threads:
         community && community.threadConnection
           ? community.threadConnection.edges
