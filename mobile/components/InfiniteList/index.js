@@ -1,5 +1,5 @@
 // @flow
-import React, { type Node } from 'react';
+import React, { type Node, type ElementType } from 'react';
 import { FlatList } from 'react-native';
 
 type ID = number | string;
@@ -16,12 +16,12 @@ type Props = {
   renderItem: Function,
   hasNextPage: boolean,
   fetchMore: Function,
-  loader: Node,
+  loadingIndicator: Node,
   keyExtractor?: (item: any, index: number) => ID,
   refetching?: boolean,
   refetch?: Function,
   threshold?: number,
-  separator?: Node,
+  separator?: ElementType,
 };
 
 class InfiniteList extends React.Component<Props> {
@@ -57,7 +57,7 @@ class InfiniteList extends React.Component<Props> {
       data,
       threshold,
       hasNextPage,
-      loader,
+      loadingIndicator,
       keyExtractor,
       separator,
     } = this.props;
@@ -71,7 +71,7 @@ class InfiniteList extends React.Component<Props> {
         renderItem={renderItem}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={threshold}
-        ListFooterComponent={hasNextPage ? loader : null}
+        ListFooterComponent={hasNextPage ? loadingIndicator : null}
         ItemSeparatorComponent={separator}
         removeClippedSubviews={true}
       />
