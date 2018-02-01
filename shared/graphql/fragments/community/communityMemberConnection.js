@@ -12,6 +12,8 @@ type Edge = {
       reputation: number,
       isOwner: boolean,
       isModerator: boolean,
+      isBlocked: boolean,
+      isMember: boolean,
     },
   },
 };
@@ -28,7 +30,8 @@ export type CommunityMemberConnectionType = {
 
 export default gql`
   fragment communityMemberConnection on Community {
-    memberConnection(after: $after, filter: $filter) {
+    memberConnection(after: $after, filter: $filter)
+      @connection(key: "communityMemberConnection") {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -42,6 +45,8 @@ export default gql`
             reputation
             isOwner
             isModerator
+            isBlocked
+            isMember
           }
         }
       }

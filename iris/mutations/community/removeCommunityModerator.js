@@ -53,16 +53,20 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   const currentUserPermission = currentUserPermissions[0];
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
-  if (!userToEvaluatePermission.isMember) {
+  // it's possible for a member to be moving from blocked -> moderator
+  // in this situation, they are isMember: false, but they are technically a
+  // member of the community - just blocked. By checking to ensure if isMember
+  // and isBlocked are both false, we ensure that the user is not in any way
+  // in a relationship with the community
+  if (
+    !userToEvaluatePermission.isMember &&
+    !userToEvaluatePermission.isBlocked
+  ) {
     return new UserError('This person is not a member of your community.');
   }
 
   if (!userToEvaluatePermission.isModerator) {
     return new UserError('This person is not a moderator in your community.');
-  }
-
-  if (userToEvaluatePermission.isBlocked) {
-    return new UserError('This person is currently blocked in your community.');
   }
 
   if (!currentUserPermission.isOwner) {
@@ -84,7 +88,9 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return await Promise.all([
       removeModeratorInCommunity(communityId, userToEvaluateId),
       removeChannelModeratorPromises,
-    ]).then(() => community);
+    ])
+      .then(() => true)
+      .catch(err => new UserError(err));
   }
 
   return new UserError(

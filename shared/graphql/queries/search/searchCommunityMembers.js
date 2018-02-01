@@ -11,6 +11,7 @@ type Node = {
       isMember: boolean,
       isBlocked: boolean,
       isModerator: boolean,
+      isOwner: boolean,
       reputation: number,
     },
   },

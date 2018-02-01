@@ -39,9 +39,7 @@ afterAll(
 it('should fail if current user is not authenticated', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -54,9 +52,7 @@ it('should fail if current user is not authenticated', async () => {
 it('should fail if current user is not a member of the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -73,9 +69,7 @@ it('should fail if current user is not a member of the community', async () => {
 it('should fail if evaluated user is not a member of the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -98,9 +92,7 @@ it('should fail if evaluated user is not a member of the community', async () =>
 it('should fail if evaluated user used to be a member but is not any more', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -123,9 +115,7 @@ it('should fail if evaluated user used to be a member but is not any more', asyn
 it("should fail if the community doesn't exist", async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -145,9 +135,7 @@ it("should fail if the community doesn't exist", async () => {
 it('should fail if evaluated user is already a moderator in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -167,37 +155,10 @@ it('should fail if evaluated user is already a moderator in the community', asyn
   expect(result.data.addCommunityModerator).toEqual(null);
 });
 
-it('should fail if evaluated user is blocked in the community', async () => {
-  const query = /* GraphQL */ `
-    mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
-    }
-  `;
-
-  const thisInput = {
-    communityId: data.communities[0].id,
-    userId: blockedMember.id,
-  };
-  const thisVariables = { input: thisInput };
-
-  const context = {
-    user: owner,
-  };
-
-  expect.assertions(2);
-  const result = await request(query, { context, variables: thisVariables });
-  expect(result.errors).toHaveLength(1);
-  expect(result.data.addCommunityModerator).toEqual(null);
-});
-
 it('should fail if current user is not an owner of the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -214,9 +175,7 @@ it('should fail if current user is not an owner of the community', async () => {
 it('should create a moderator in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityModerator($input: AddCommunityModeratorInput!) {
-      addCommunityModerator (input: $input) {
-        id
-      }
+      addCommunityModerator (input: $input)
     }
   `;
 
@@ -225,7 +184,7 @@ it('should create a moderator in the community', async () => {
   expect.assertions(4);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
-  expect(result.data.addCommunityModerator.id).toEqual(input.communityId);
+  expect(result.data.addCommunityModerator).toEqual(true);
 
   // ensure that only one record exists for the moderator
   const getUsersCommunities = () =>

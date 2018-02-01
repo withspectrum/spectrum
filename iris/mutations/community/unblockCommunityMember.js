@@ -61,9 +61,9 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks passed
   if (userToEvaluatePermission.isBlocked) {
-    return await unblockUserInCommunity(communityId, userToEvaluateId).then(
-      () => community
-    );
+    return await unblockUserInCommunity(communityId, userToEvaluateId)
+      .then(() => true)
+      .catch(err => new UserError(err));
   }
 
   return new UserError(

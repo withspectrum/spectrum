@@ -1,32 +1,63 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import communityInfoFragment from '../../fragments/community/communityInfo';
-import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+import { getCommunityMemberConnectionQuery } from '../../queries/community/getCommunityMemberConnection';
 
 export type RemoveCommunityModeratorType = {
   data: {
-    removeCommunityModerator: {
-      ...$Exact<CommunityInfoType>,
-    },
+    removeCommunityModerator: boolean,
   },
 };
 
 export const removeCommunityModeratorQuery = gql`
   mutation removeCommunityModerator($input: RemoveCommunityModeratorInput!) {
-    removeCommunityModerator(input: $input) {
-      ...communityInfo
-    }
+    removeCommunityModerator(input: $input)
   }
-  ${communityInfoFragment}
 `;
 
 const removeCommunityModeratorOptions = {
-  props: ({ mutate }) => ({
+  props: ({ mutate, ownProps }) => ({
     removeCommunityModerator: ({ input }) =>
       mutate({
         variables: {
           input,
+        },
+        update: store => {
+          const data = store.readQuery({
+            query: getCommunityMemberConnectionQuery,
+            variables: {
+              id: ownProps.community.id,
+            },
+          });
+
+          data.community.memberConnection.edges = data.community.memberConnection.edges.map(
+            edge => {
+              if (edge.node.id === input.userId) {
+                return {
+                  ...edge,
+                  node: {
+                    ...edge.node,
+                    contextPermissions: {
+                      ...edge.node.contextPermissions,
+                      isModerator: false,
+                      isMember: true,
+                      isBlocked: false,
+                    },
+                  },
+                };
+              }
+              return edge;
+            }
+          );
+
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: getCommunityMemberConnectionQuery,
+            data,
+            variables: {
+              id: ownProps.community.id,
+            },
+          });
         },
       }),
   }),

@@ -40,7 +40,11 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer>
           <Column>
-            <CommunityMembers history={history} id={community.id} />
+            <CommunityMembers
+              history={history}
+              id={community.id}
+              community={community}
+            />
           </Column>
 
           <Column>

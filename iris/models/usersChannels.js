@@ -376,14 +376,10 @@ const removeModeratorInChannel = (
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .update(
-      {
-        isModerator: false,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .update({
+      isModerator: false,
+    })
+    .run();
 };
 
 // creates a new relationship between the user and all of a community's

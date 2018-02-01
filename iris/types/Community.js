@@ -164,10 +164,10 @@ const Community = /* GraphQL */ `
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
 		addCommunityMember(input: AddCommunityMemberInput!): Community
 		removeCommunityMember(input: RemoveCommunityMemberInput!): Community
-		addCommunityModerator(input: AddCommunityModeratorInput!): Community
-		removeCommunityModerator(input: RemoveCommunityModeratorInput!): Community
-		blockCommunityMember(input: BlockCommunityMemberInput!): Community
-		unblockCommunityMember(input: UnblockCommunityMemberInput!): Community
+		addCommunityModerator(input: AddCommunityModeratorInput!): Boolean
+		removeCommunityModerator(input: RemoveCommunityModeratorInput!): Boolean
+		blockCommunityMember(input: BlockCommunityMemberInput!): Boolean
+		unblockCommunityMember(input: UnblockCommunityMemberInput!): Boolean
 	}
 `;
 

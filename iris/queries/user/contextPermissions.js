@@ -35,14 +35,18 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         const communityId = info.variableValues.id;
         const {
           reputation,
-          isModerator,
           isOwner,
+          isBlocked,
+          isModerator,
+          isMember,
         } = await loaders.userPermissionsInCommunity.load([
           user.id,
           communityId,
         ]);
         return {
           communityId,
+          isMember,
+          isBlocked,
           reputation,
           isModerator,
           isOwner,

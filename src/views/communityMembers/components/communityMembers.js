@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
 import MembersList from './communityMembersList';
-import { Button } from '../../../components/buttons';
+import EditDropdown from './editDropdown';
 import {
   SectionCard,
   SectionTitle,
@@ -32,6 +32,7 @@ type Props = {
   currentUser: Object,
   dispatch: Function,
   history: Object,
+  community: Object,
 };
 
 type Node = {
@@ -209,11 +210,11 @@ class CommunityMembers extends React.Component<Props, State> {
               .map(r => {
                 switch (r) {
                   case 'isOwner':
-                    return 'Admin';
+                    return 'admin';
                   case 'isBlocked':
-                    return 'Blocked';
+                    return 'blocked';
                   case 'isModerator':
-                    return 'Moderator';
+                    return 'moderator';
                 }
               });
 
@@ -242,8 +243,7 @@ class CommunityMembers extends React.Component<Props, State> {
                 avatarSize={'40'}
                 badges={roles}
               >
-                <Button>Edit user</Button>
-                <Button>Message user</Button>
+                <EditDropdown user={user} community={this.props.community} />
               </GranularUserProfile>
             );
           })}
@@ -272,7 +272,7 @@ class CommunityMembers extends React.Component<Props, State> {
             onClick={this.reset}
             active={filter && filter.isMember ? true : false}
           >
-            All
+            Members
           </Filter>
           <Filter
             onClick={this.viewModerators}
@@ -312,28 +312,6 @@ class CommunityMembers extends React.Component<Props, State> {
             setTotalCount={this.setTotalCount}
           />
         )}
-
-        {filter &&
-          filter.isModerator && (
-            <ViewError
-              emoji={' '}
-              heading={'Moderator roles are coming soon!'}
-              subheading={
-                'Check back here later to manage moderation roles within your community'
-              }
-            />
-          )}
-
-        {filter &&
-          filter.isBlocked && (
-            <ViewError
-              emoji={' '}
-              heading={'User permissions are coming soon!'}
-              subheading={
-                'Check back later to easily manage roles and permissions for members in your community'
-              }
-            />
-          )}
       </SectionCard>
     );
   }

@@ -149,6 +149,7 @@ const blockUserInCommunity = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        isModerator: false,
         receiveNotifications: false,
       },
       { returnChanges: true }
@@ -170,6 +171,7 @@ const unblockUserInCommunity = (
     .filter({ userId, isBlocked: true })
     .update(
       {
+        isModerator: false,
         isMember: true,
         isBlocked: false,
         receiveNotifications: true,

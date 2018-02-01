@@ -12,6 +12,15 @@ export const Content = styled.div`
 export const Row = styled.div`
   background: ${props => props.theme.bg.default};
   width: 100%;
+  margin-left: -16px;
+  margin-right: -16px;
+  width: calc(100% + 32px);
+  padding-left: 16px;
+  padding-right: 16px;
+
+  &:hover {
+    background: ${props => props.theme.bg.wash};
+  }
 
   &:last-of-type {
     > ${Content} {

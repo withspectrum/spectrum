@@ -1,32 +1,63 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import communityInfoFragment from '../../fragments/community/communityInfo';
-import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+import { getCommunityMemberConnectionQuery } from '../../queries/community/getCommunityMemberConnection';
 
 export type UnblockCommunityMemberType = {
   data: {
-    unblockCommunityMember: {
-      ...$Exact<CommunityInfoType>,
-    },
+    unblockCommunityMember: boolean,
   },
 };
 
 export const unblockCommunityMemberQuery = gql`
   mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-    unblockCommunityMember(input: $input) {
-      ...communityInfo
-    }
+    unblockCommunityMember(input: $input)
   }
-  ${communityInfoFragment}
 `;
 
 const unblockCommunityMemberOptions = {
-  props: ({ mutate }) => ({
+  props: ({ mutate, ownProps }) => ({
     unblockCommunityMember: ({ input }) =>
       mutate({
         variables: {
           input,
+        },
+        update: store => {
+          const data = store.readQuery({
+            query: getCommunityMemberConnectionQuery,
+            variables: {
+              id: ownProps.community.id,
+            },
+          });
+
+          data.community.memberConnection.edges = data.community.memberConnection.edges.map(
+            edge => {
+              if (edge.node.id === input.userId) {
+                return {
+                  ...edge,
+                  node: {
+                    ...edge.node,
+                    contextPermissions: {
+                      ...edge.node.contextPermissions,
+                      isModerator: false,
+                      isMember: true,
+                      isBlocked: false,
+                    },
+                  },
+                };
+              }
+              return edge;
+            }
+          );
+
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: getCommunityMemberConnectionQuery,
+            data,
+            variables: {
+              id: ownProps.community.id,
+            },
+          });
         },
       }),
   }),

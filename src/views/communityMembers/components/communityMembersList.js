@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Loading } from '../../../components/loading';
 import ViewError from '../../../components/viewError';
-import { Button } from '../../../components/buttons';
+import EditDropdown from './editDropdown';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
@@ -75,11 +75,11 @@ class CommunityMembers extends React.Component<Props> {
                   .map(r => {
                     switch (r) {
                       case 'isOwner':
-                        return 'Admin';
+                        return 'admin';
                       case 'isBlocked':
-                        return 'Blocked';
+                        return 'blocked';
                       case 'isModerator':
-                        return 'Moderator';
+                        return 'moderator';
                       default:
                         return null;
                     }
@@ -110,8 +110,9 @@ class CommunityMembers extends React.Component<Props> {
                     badges={roles}
                     reputation={reputation}
                   >
-                    <Button>Edit user</Button>
-                    <Button>Message user</Button>
+                    {user.id !== currentUser.id && (
+                      <EditDropdown user={user} community={community} />
+                    )}
                   </GranularUserProfile>
                 );
               })}

@@ -53,7 +53,15 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   const currentUserPermission = currentUserPermissions[0];
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
-  if (!userToEvaluatePermission.isMember) {
+  // it's possible for a member to be moving from blocked -> moderator
+  // in this situation, they are isMember: false, but they are technically a
+  // member of the community - just blocked. By checking to ensure if isMember
+  // and isBlocked are both false, we ensure that the user is not in any way
+  // in a relationship with the community
+  if (
+    !userToEvaluatePermission.isMember &&
+    !userToEvaluatePermission.isBlocked
+  ) {
     return new UserError(
       'This person must be a member of the community before becoming a moderator.'
     );
@@ -65,22 +73,15 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     );
   }
 
-  if (userToEvaluatePermission.isBlocked) {
-    return new UserError(
-      'This person is currently in your community. Unblock them first before making them a moderator.'
-    );
-  }
-
   if (!currentUserPermission.isOwner) {
     return new UserError('You must own this community to manage moderators.');
   }
 
   // all checks pass
   if (currentUserPermission.isOwner) {
-    return await makeMemberModeratorInCommunity(
-      communityId,
-      userToEvaluateId
-    ).then(() => community);
+    return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
+      .then(() => true)
+      .catch(err => new UserError(err));
   }
 
   return new UserError(

@@ -55,12 +55,6 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError('This person is not a member of your community.');
   }
 
-  if (userToEvaluatePermission.isModerator) {
-    return new UserError(
-      'This person is a moderator in your community. To block them, please remove them as a moderator first.'
-    );
-  }
-
   if (userToEvaluatePermission.isBlocked) {
     return new UserError('This person is already blocked in your community.');
   }
@@ -71,9 +65,9 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks pass
   if (currentUserPermission.isOwner) {
-    return await blockUserInCommunity(communityId, userToEvaluateId).then(
-      () => community
-    );
+    return await blockUserInCommunity(communityId, userToEvaluateId)
+      .then(() => true)
+      .catch(err => new UserError(err));
   }
 
   return new UserError(

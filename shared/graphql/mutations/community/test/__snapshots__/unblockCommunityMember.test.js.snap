@@ -3,9 +3,7 @@
 exports[`should block a member in the community 1`] = `
 Object {
   "data": Object {
-    "unblockCommunityMember": Object {
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
-    },
+    "unblockCommunityMember": true,
   },
 }
 `;
