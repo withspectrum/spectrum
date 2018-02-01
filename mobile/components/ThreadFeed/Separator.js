@@ -1,18 +1,9 @@
 // @flow
-import * as React from 'react';
-import { View } from 'react-native';
+import styled from 'styled-components/native';
 
-export default class Separator extends React.Component<{}> {
-  render() {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '86%',
-          backgroundColor: '#CED0CE',
-          marginLeft: '14%',
-        }}
-      />
-    );
-  }
-}
+export default styled.View`
+  height: 1;
+  width: 86%;
+  margin-left: 14%;
+  background-color: #ced0ce;
+`;
