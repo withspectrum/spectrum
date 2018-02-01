@@ -6,7 +6,7 @@ import { getThreadById } from '../../../shared/graphql/queries/thread/getThread'
 import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import Text from '../../components/Text';
-import threadRenderer from '../../utils/thread-content-renderer';
+import ThreadContent from '../../components/ThreadContent';
 
 import { Wrapper } from './style';
 
@@ -33,14 +33,14 @@ class Thread extends React.Component<Props> {
     if (data.thread) {
       return (
         <Wrapper>
-          <ScrollView testID="e2e-thread">
+          <ScrollView style={{ flex: 1 }} testID="e2e-thread">
             <Text type="title1">
               {data.thread.content.title} by {data.thread.creator.name}
             </Text>
             {data.thread.content.body && (
-              <View>
-                {threadRenderer(JSON.parse(data.thread.content.body))}
-              </View>
+              <ThreadContent
+                rawContentState={JSON.parse(data.thread.content.body)}
+              />
             )}
           </ScrollView>
         </Wrapper>
