@@ -30,9 +30,9 @@ const Routes = StackNavigator(
     },
     Channel: {
       screen: withMappedNavigationProps(Channel),
-      navigationOptions: {
-        headerTitle: 'Channel',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'Channel',
+      }),
     },
     User: {
       screen: withMappedNavigationProps(User),
