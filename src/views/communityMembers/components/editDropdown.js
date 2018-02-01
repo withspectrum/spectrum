@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import {
   EditDropdownContainer,
@@ -15,6 +16,7 @@ import {
 } from '../style';
 import Icon from '../../../components/icons';
 import { Spinner } from '../../../components/globals';
+import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import OutsideClickHandler from './outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/community/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/community/removeCommunityModerator';
@@ -30,6 +32,7 @@ type Props = {
   removeCommunityModerator: Function,
   dispatch: Function,
   community: GetCommunityType,
+  history: Object,
   user: {
     ...$Exact<GetUserType>,
     contextPermissions: {
@@ -77,6 +80,11 @@ class EditDropdown extends React.Component<Props, State> {
         "Can start new conversations and reply to anyone else's conversations",
       selected: false,
     },
+  };
+
+  initMessage = () => {
+    this.props.dispatch(initNewThreadWithUser(this.props.user));
+    return this.props.history.push('/messages/new');
   };
 
   getRolesConfiguration = () => {
@@ -155,7 +163,7 @@ class EditDropdown extends React.Component<Props, State> {
         {isOpen && (
           <OutsideClickHandler onOutsideClick={this.close}>
             <Dropdown>
-              <DropdownSection>
+              <DropdownSection onClick={this.initMessage}>
                 <DropdownAction>
                   <Icon glyph={'message'} size={'32'} />
                 </DropdownAction>
@@ -211,6 +219,7 @@ class EditDropdown extends React.Component<Props, State> {
 
 export default compose(
   connect(),
+  withRouter,
   addCommunityModerator,
   removeCommunityModerator,
   blockCommunityMember,
