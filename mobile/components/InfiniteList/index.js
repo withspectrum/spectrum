@@ -26,8 +26,8 @@ type Props = {
 
 class InfiniteList extends React.Component<Props> {
   static defaultProps = {
-    threshold: 0.5,
     refreshing: false,
+    threshold: 0.75,
     keyExtractor: (item: Item, index: number) => {
       const key = item.id || (item.node && item.node.id);
 
@@ -44,7 +44,7 @@ class InfiniteList extends React.Component<Props> {
   };
 
   onEndReached = () => {
-    if (this.props.hasNextPage && this.props.fetchMore) {
+    if (this.props.hasNextPage) {
       this.props.fetchMore();
     }
   };

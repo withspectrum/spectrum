@@ -42,7 +42,7 @@ class Community extends React.Component<Props> {
     if (data.community) {
       return (
         <Wrapper>
-          <ScrollView>
+          <View>
             <View testID="e2e-commmunity">
               <Text>Now viewing community {data.community.name}!</Text>
             </View>
@@ -50,7 +50,7 @@ class Community extends React.Component<Props> {
               navigation={navigation}
               id={data.community.id}
             />
-          </ScrollView>
+          </View>
         </Wrapper>
       );
     }

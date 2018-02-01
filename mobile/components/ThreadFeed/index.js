@@ -42,6 +42,14 @@ class ThreadFeed extends React.Component<Props, State> {
     };
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  componentDidMount() {
+    this.subscribe();
+  }
+
   subscribe = () => {
     this.setState({
       subscription:
@@ -58,20 +66,13 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    // component is fetching more, don't re-render the whole list
-    if (!curr.isLoading && nextProps.isFetchingMore) return false;
-    return true;
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  componentDidMount() {
-    this.subscribe();
-  }
+  fetchMore = () => {
+    const { isFetchingMore, data: { fetchMore } } = this.props;
+    if (!isFetchingMore) {
+      console.log('actually fetch more!');
+      fetchMore();
+    }
+  };
 
   render() {
     const {
@@ -139,9 +140,8 @@ class ThreadFeed extends React.Component<Props, State> {
             )}
             separator={Separator}
             loadingIndicator={<Text>Loading...</Text>}
-            fetchMore={this.props.data.fetchMore}
-            // TODO(@mxstbr): FIXME
-            hasNextPage={false}
+            fetchMore={this.fetchMore}
+            hasNextPage={threadConnection.pageInfo.hasNextPage}
           />
         </View>
       );
