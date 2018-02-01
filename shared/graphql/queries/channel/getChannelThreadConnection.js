@@ -52,6 +52,7 @@ const getChannelThreadConnectionOptions = {
       loading,
       networkStatus,
       channel,
+      threadConnection: channel && channel.threadConnection,
       threads: channel ? channel.threadConnection.edges : [],
       feed: channel && channel.id,
       hasNextPage: channel
