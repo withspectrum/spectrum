@@ -5,7 +5,6 @@ import { View, Text, FlatList } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
-import type { GetCommunityThreadConnectionType } from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
 import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 
 /*
@@ -30,7 +29,6 @@ type Props = {
     subscribeToUpdatedThreads: Function,
     fetchMore: Function,
     threadConnection: ThreadConnectionType,
-    community?: GetCommunityThreadConnectionType,
   },
 };
 
@@ -88,46 +86,14 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
-      data: { threadConnection, community },
+      data: { threadConnection },
       isLoading,
       isFetchingMore,
       hasError,
       navigation,
     } = this.props;
 
-    const hasThreads = threadConnection && threadConnection.edges.length > 0;
-
-    let filteredThreads = hasThreads ? threadConnection.edges : [];
-
-    const hasWatercooler =
-      community && community.watercooler && community.watercooler.id;
-
-    const hasPinnedThread =
-      community && community.pinnedThread && community.pinnedThread.id;
-
-    // pull out the watercooler
-    if (hasWatercooler) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          community &&
-          community.watercooler &&
-          t &&
-          t.node.id !== community.watercooler.id
-      );
-    }
-
-    // pull out the pinned thread
-    if (hasPinnedThread) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          community &&
-          community.pinnedThread &&
-          t &&
-          t.node.id !== community.pinnedThread.id
-      );
-    }
-
-    if (hasThreads) {
+    if (threadConnection && threadConnection.edges.length > 0) {
       return (
         <View data-e2e-id="thread-feed">
           {/*hasPinnedThread && (
@@ -146,7 +112,7 @@ class ThreadFeed extends React.Component<Props, State> {
             )*/}
 
           <InfiniteList
-            data={filteredThreads}
+            data={threadConnection.edges}
             renderItem={({ item }) => (
               <ThreadItem navigation={navigation} thread={item.node} />
             )}
