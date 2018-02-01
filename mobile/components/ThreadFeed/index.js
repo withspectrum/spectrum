@@ -6,6 +6,8 @@ import ViewNetworkHandler from '../ViewNetworkHandler';
 import Separator from './Separator';
 import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
+import type { GetCommunityThreadConnectionType } from '../../../shared/graphql/queries/community/getCommunityThreadConnection';
+import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -19,10 +21,6 @@ type State = {
   subscription: ?Function,
 };
 
-type ThreadType = {
-  id: string,
-};
-
 type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
@@ -31,20 +29,8 @@ type Props = {
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: Function,
-    threads: Array<ThreadType>,
-    community: {
-      communityPermissions: {
-        isMember: boolean,
-        isOwner: boolean,
-        isBlocked: boolean,
-      },
-      watercooler?: {
-        id: string,
-      },
-      pinnedThread?: {
-        id: string,
-      },
-    },
+    threadConnection: ThreadConnectionType,
+    community?: GetCommunityThreadConnectionType,
   },
 };
 
@@ -89,33 +75,31 @@ class ThreadFeed extends React.Component<Props, State> {
 
   render() {
     const {
-      data: { threads },
+      data: { threadConnection, community },
       isLoading,
       isFetchingMore,
       hasError,
       navigation,
     } = this.props;
 
-    const hasThreads = threads && threads.length > 0;
+    const hasThreads = threadConnection && threadConnection.edges.length > 0;
 
-    let filteredThreads = hasThreads ? threads : [];
+    let filteredThreads = hasThreads ? threadConnection.edges : [];
 
     const hasWatercooler =
-      this.props.data.community &&
-      this.props.data.community.watercooler &&
-      this.props.data.community.watercooler.id;
+      community && community.watercooler && community.watercooler.id;
 
     const hasPinnedThread =
-      this.props.data.community &&
-      this.props.data.community.pinnedThread &&
-      this.props.data.community.pinnedThread.id;
+      community && community.pinnedThread && community.pinnedThread.id;
 
     // pull out the watercooler
     if (hasWatercooler) {
       filteredThreads = filteredThreads.filter(
         t =>
-          this.props.data.community.watercooler &&
-          t.id !== this.props.data.community.watercooler.id
+          community &&
+          community.watercooler &&
+          t &&
+          t.node.id !== community.watercooler.id
       );
     }
 
@@ -123,8 +107,10 @@ class ThreadFeed extends React.Component<Props, State> {
     if (hasPinnedThread) {
       filteredThreads = filteredThreads.filter(
         t =>
-          this.props.data.community.pinnedThread &&
-          t.id !== this.props.data.community.pinnedThread.id
+          community &&
+          community.pinnedThread &&
+          t &&
+          t.node.id !== community.pinnedThread.id
       );
     }
 
@@ -151,8 +137,8 @@ class ThreadFeed extends React.Component<Props, State> {
             renderItem={({ item }) => (
               <ThreadItem navigation={navigation} thread={item.node} />
             )}
-            separator={<Separator />}
-            loader={<Text>Loading...</Text>}
+            separator={Separator}
+            loadingIndicator={<Text>Loading...</Text>}
             fetchMore={this.props.data.fetchMore}
             // TODO(@mxstbr): FIXME
             hasNextPage={false}
