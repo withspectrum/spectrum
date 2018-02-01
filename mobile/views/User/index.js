@@ -13,6 +13,7 @@ import { Wrapper } from './style';
 type UserType = {
   id: string,
   name: string,
+  username: string,
   threadConnection: {
     pageInfo: {
       hasNextPage: boolean,
@@ -43,6 +44,12 @@ const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 class User extends React.Component<Props, State> {
   state = { feed: 'participant' };
 
+  componentDidUpdate() {
+    const { data: { user }, navigation } = this.props;
+    if (!user || navigation.state.params.title) return;
+    navigation.setParams({ title: `${user.name} (@${user.username})` });
+  }
+
   toggleFeed = (feed: string) => this.setState({ feed });
 
   render() {
@@ -53,10 +60,6 @@ class User extends React.Component<Props, State> {
       return (
         <Wrapper>
           <ScrollView>
-            <View testID="e2e-commmunity">
-              <Text>Now viewing User {data.user.name}!</Text>
-            </View>
-
             <Button
               title={'View active conversations'}
               onPress={() => this.toggleFeed('participant')}

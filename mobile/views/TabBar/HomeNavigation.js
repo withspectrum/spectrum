@@ -36,9 +36,9 @@ const Routes = StackNavigator(
     },
     User: {
       screen: withMappedNavigationProps(User),
-      navigationOptions: {
-        headerTitle: 'User',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'User',
+      }),
     },
   },
   {
