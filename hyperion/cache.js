@@ -1,35 +1,20 @@
 // @flow
 // Cache unauthenticated requests in Redis
-import createRedis from 'shared/bull/create-redis';
+import redis from './redis';
 const debug = require('debug')('hyperion:cache');
 
-if (process.env.DISABLE_CACHE || process.env.NODE_ENV === 'development') {
+if (process.env.DISABLE_CACHE) {
   console.log(
     'Cache disabled, either unset DISABLE_CACHE env variable or run in production mode to enable.'
   );
 }
-
-const config =
-  process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
-    ? {
-        port: process.env.REDIS_CACHE_PORT,
-        host: process.env.REDIS_CACHE_URL,
-        password: process.env.REDIS_CACHE_PASSWORD,
-      }
-    : undefined;
-
-const redis = createRedis({
-  keyPrefix: 'cache:',
-  ...config,
-});
 
 const cache = (
   req: express$Request,
   res: express$Response,
   next: express$NextFunction
 ) => {
-  if (process.env.DISABLE_CACHE || process.env.NODE_ENV === 'development')
-    return next();
+  if (process.env.DISABLE_CACHE) return next();
   if (req.method !== 'GET') {
     debug(`${req.method} request came in, not caching`);
     return next();
@@ -48,27 +33,11 @@ const cache = (
   redis.get(key).then(result => {
     if (result) {
       debug(`cached html found, sending to user`);
-      return res.send(result);
+      res.send(result);
+    } else {
+      debug(`no result in cache found, forwarding to renderer`);
+      next();
     }
-
-    debug(`no result in cache found, monkey-patching res.send`);
-    // $FlowFixMe
-    res.originalSend = res.send;
-    // $FlowFixMe
-    res.send = (...args) => {
-      debug(`monkey-patched res.send called`);
-      if (res.statusCode > 199 && res.statusCode < 300) {
-        debug(`successful render, caching at ${req.path}`);
-        redis.set(key, ...args, 'ex', 3600);
-      } else {
-        debug(
-          `unsuccessful render (status code: ${res.statusCode}), not caching`
-        );
-      }
-      // $FlowFixMe
-      res.originalSend(...args);
-    };
-    next();
   });
 };
 

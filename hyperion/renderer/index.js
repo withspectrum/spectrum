@@ -27,6 +27,7 @@ import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import { getFooter, getHeader, createScriptTag } from './html-template';
+import createCacheStream from '../create-cache-stream';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
@@ -120,7 +121,13 @@ const renderer = (req: express$Request, res: express$Response) => {
       const data = client.extract();
       const { helmet } = helmetContext;
       debug('write header');
-      res.write(
+      let response = res;
+      if (!req.user) {
+        response = createCacheStream(req.path);
+        response.pipe(res);
+      }
+
+      response.write(
         getHeader({
           metaTags:
             helmet.title.toString() +
@@ -128,21 +135,21 @@ const renderer = (req: express$Request, res: express$Response) => {
             helmet.link.toString(),
         })
       );
+
+      const stream = sheet.interleaveWithNodeStream(
+        renderToNodeStream(frontend)
+      );
+
+      stream.pipe(response, { end: false });
+
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
         .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
         // Make sure only unique bundles are included
         .filter((value, index, self) => self.indexOf(value) === index);
       debug('bundles used:', bundles.join(','));
-
-      const stream = sheet.interleaveWithNodeStream(
-        renderToNodeStream(frontend)
-      );
-
-      stream.pipe(res, { end: false });
-
       stream.on('end', () =>
-        res.end(
+        response.end(
           getFooter({
             state,
             data,
