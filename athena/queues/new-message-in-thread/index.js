@@ -126,7 +126,7 @@ export default async (job: JobData) => {
   const recipientsWithoutMentions = permissionedRecipients
     // strip any falsy values from our permission checks above
     .filter(Boolean)
-    .filter(r => mentions.indexOf(r.username) < 0);
+    .filter(r => r && mentions.indexOf(r.username) < 0);
 
   // if no more receipients are valid, escape the function
   if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0) {
@@ -143,6 +143,8 @@ export default async (job: JobData) => {
 
   // send each recipient a notification
   const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
+    if (!recipient) return;
+
     formatData(recipient, thread, sender, message, notification);
 
     // store or update the notification in the db to trigger a ui update in app

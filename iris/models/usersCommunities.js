@@ -316,7 +316,7 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
-export const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
+const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
   isOwner: false,
   isMember: false,
   isModerator: false,
@@ -438,6 +438,7 @@ module.exports = {
   makeMemberModeratorInCommunity,
   removeModeratorInCommunity,
   // get
+  DEFAULT_USER_COMMUNITY_PERMISSIONS,
   getMembersInCommunity,
   getBlockedUsersInCommunity,
   getModeratorsInCommunity,
