@@ -11,6 +11,6 @@ module.exports = {
   globalTeardown: path.resolve(__dirname, './shared/testing/teardown'),
   testPathIgnorePatterns:
     process.env.E2E || process.env.CI
-      ? ['/node_modules/', 'iris/*/mutations/', '/mobile/']
-      : ['/node_modules/', 'iris/*/mutations/', '/mobile/', '/test-e2e/'],
+      ? ['/node_modules/', '/mutations/', '/mobile/']
+      : ['/node_modules/', '/mutations/', '/mobile/', '/test-e2e/'],
 };
