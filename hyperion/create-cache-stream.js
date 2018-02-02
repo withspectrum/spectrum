@@ -8,12 +8,11 @@ const createCacheStream = (key: string) => {
   const buffer: Array<Buffer> = [];
   return new Transform({
     transform(data, enc, cb) {
-      debug('new data', data);
       buffer.push(data);
       cb(null, data);
     },
     flush(cb) {
-      debug('stream ended, writing to redis');
+      debug('stream ended, caching result to redis');
       redis.set(key, Buffer.concat(buffer), 'ex', 3600);
       cb();
     },

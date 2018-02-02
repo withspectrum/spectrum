@@ -55,6 +55,7 @@ if (t && (!existingUser || !existingUser.currentUser)) {
   }
 }
 
+consolidateStreamedStyles();
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
 const renderMethod = !!window.__SERVER_STATE__
@@ -63,8 +64,6 @@ const renderMethod = !!window.__SERVER_STATE__
   : ReactDOM.render;
 
 function render() {
-  consolidateStreamedStyles();
-
   return renderMethod(
     <Provider store={store}>
       <HelmetProvider>
