@@ -72,7 +72,7 @@ class EditDropdown extends React.Component<Props, State> {
     blocked: {
       title: 'Blocked',
       subtitle:
-        'Can not be see any content, and will not receive any notifications about activity',
+        'Can not start or join conversations, and will not receive any notifications about community activity',
       selected: false,
     },
     member: {

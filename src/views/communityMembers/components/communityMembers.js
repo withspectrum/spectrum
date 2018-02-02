@@ -25,6 +25,7 @@ import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import ViewError from '../../../components/viewError';
 import GranularUserProfile from '../../../components/granularUserProfile';
+import { Notice } from '../../../components/listItems/style';
 
 type Props = {
   id: string,
@@ -128,7 +129,7 @@ class CommunityMembers extends React.Component<Props, State> {
           case 'isModerator':
             return 'moderator';
           default:
-            return;
+            return null;
         }
       });
 
@@ -289,19 +290,46 @@ class CommunityMembers extends React.Component<Props, State> {
                 );
 
               if (!members || members.length === 0) {
-                return (
-                  <ViewError
-                    emoji={' '}
-                    heading={'No members found'}
-                    subheading={
-                      "We couldn't find any members in your community that match this role"
-                    }
-                  />
-                );
+                if (filter && filter.isBlocked) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No blocked members found'}
+                      subheading={
+                        'Nobody has been blocked yet - nice! When someone is blocked, they will appear here'
+                      }
+                    />
+                  );
+                }
+
+                if (filter && filter.isMember) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No members found'}
+                      subheading={
+                        "We couldn't find any members in your community. That's strange..."
+                      }
+                    />
+                  );
+                }
               }
 
               return (
                 <ListContainer>
+                  {filter &&
+                    filter.isBlocked && (
+                      <Notice>
+                        <strong>A note about blocked users:</strong> Your
+                        community is publicly viewable (except for private
+                        channels). This means that a blocked user may be able to
+                        see the content and conversations in your community.
+                        However, they will be prevented from creating new
+                        conversations, or leaving messages in existing
+                        conversations.
+                      </Notice>
+                    )}
+
                   {members.map(user => {
                     if (!user) return null;
                     const { roles, reputation } = this.parseUser(user);
