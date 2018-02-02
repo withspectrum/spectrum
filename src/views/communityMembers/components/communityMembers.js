@@ -4,12 +4,13 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { Loading } from '../../../components/loading';
-import MembersList from './communityMembersList';
+import GetMembers from './getMembers';
 import EditDropdown from './editDropdown';
 import Search from './search';
 import {
   SectionCard,
   SectionTitle,
+  SectionCardFooter,
 } from '../../../components/settingsViews/style';
 import Icon from '../../../components/icons';
 import {
@@ -18,6 +19,7 @@ import {
   SearchFilter,
   SearchInput,
   SearchForm,
+  FetchMore,
 } from '../style';
 import { ListContainer } from '../../../components/listItems/style';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
@@ -39,7 +41,6 @@ type State = {
     isModerator?: boolean,
     isBlocked?: boolean,
   },
-  totalCount: ?number,
   searchIsFocused: boolean,
   // what the user types in
   searchString: string,
@@ -50,7 +51,6 @@ type State = {
 class CommunityMembers extends React.Component<Props, State> {
   initialState = {
     filter: { isMember: true },
-    totalCount: null,
     searchIsFocused: false,
     searchString: '',
     queryString: '',
@@ -83,8 +83,6 @@ class CommunityMembers extends React.Component<Props, State> {
     });
   };
 
-  setTotalCount = (totalCount: number) => this.setState({ totalCount });
-
   handleChange = (e: any) => {
     const searchString = e.target && e.target.value;
 
@@ -114,20 +112,72 @@ class CommunityMembers extends React.Component<Props, State> {
     this.props.history.push('/messages/new');
   };
 
+  parseUser = user => {
+    const roles = Object.keys(user.contextPermissions)
+      .filter(r => r !== 'reputation')
+      .filter(r => r !== 'isMember')
+      .filter(r => r !== 'communityId')
+      .filter(r => r !== '__typename')
+      .filter(r => user && user.contextPermissions[r])
+      .map(r => {
+        switch (r) {
+          case 'isOwner':
+            return 'admin';
+          case 'isBlocked':
+            return 'blocked';
+          case 'isModerator':
+            return 'moderator';
+          default:
+            return;
+        }
+      });
+
+    if (user.isPro) {
+      roles.push('pro');
+    }
+
+    roles.filter(Boolean);
+
+    const reputation =
+      (user.contextPermissions &&
+        user.contextPermissions.reputation &&
+        user.contextPermissions.reputation.toString()) ||
+      '0';
+
+    return { roles, reputation };
+  };
+
+  generateUserProfile = (user, reputation, roles) => {
+    return (
+      <GranularUserProfile
+        key={user.id}
+        id={user.id}
+        name={user.name}
+        username={user.username}
+        description={user.description}
+        isCurrentUser={user.id === this.props.currentUser.id}
+        isOnline={user.isOnline}
+        onlineSize={'small'}
+        reputation={reputation}
+        profilePhoto={user.profilePhoto}
+        avatarSize={'40'}
+        badges={roles}
+      >
+        {user.id !== this.props.currentUser.id && (
+          <EditDropdown user={user} community={this.props.community} />
+        )}
+      </GranularUserProfile>
+    );
+  };
+
   render() {
-    const {
-      filter,
-      totalCount,
-      searchIsFocused,
-      searchString,
-      queryString,
-    } = this.state;
-    const { id, currentUser } = this.props;
+    const { filter, searchIsFocused, searchString, queryString } = this.state;
+    const { id, community } = this.props;
 
     return (
       <SectionCard>
         <SectionTitle>
-          Community Members {totalCount && ` · ${totalCount}`}
+          Community Members · {community.metaData.members.toLocaleString()}
         </SectionTitle>
 
         <Filters>
@@ -202,57 +252,8 @@ class CommunityMembers extends React.Component<Props, State> {
                   <ListContainer>
                     {searchResults.map(user => {
                       if (!user) return null;
-                      const roles = Object.keys(user.contextPermissions)
-                        .filter(r => r !== 'reputation')
-                        .filter(r => r !== 'isMember')
-                        .filter(r => r !== '__typename')
-                        .filter(r => user && user.contextPermissions[r])
-                        .map(r => {
-                          switch (r) {
-                            case 'isOwner':
-                              return 'admin';
-                            case 'isBlocked':
-                              return 'blocked';
-                            case 'isModerator':
-                              return 'moderator';
-                            default:
-                              return null;
-                          }
-                        });
-
-                      if (user.isPro) {
-                        roles.push('pro');
-                      }
-
-                      const reputation =
-                        (user.contextPermissions &&
-                          user.contextPermissions.reputation &&
-                          user.contextPermissions.reputation.toString()) ||
-                        '0';
-
-                      return (
-                        <GranularUserProfile
-                          key={user.id}
-                          id={user.id}
-                          name={user.name}
-                          username={user.username}
-                          description={user.description}
-                          isCurrentUser={user.id === currentUser.id}
-                          isOnline={user.isOnline}
-                          onlineSize={'small'}
-                          reputation={reputation}
-                          profilePhoto={user.profilePhoto}
-                          avatarSize={'40'}
-                          badges={roles}
-                        >
-                          {user.id !== currentUser.id && (
-                            <EditDropdown
-                              user={user}
-                              community={this.props.community}
-                            />
-                          )}
-                        </GranularUserProfile>
-                      );
+                      const { roles, reputation } = this.parseUser(user);
+                      return this.generateUserProfile(user, reputation, roles);
                     })}
                   </ListContainer>
                 );
@@ -272,10 +273,56 @@ class CommunityMembers extends React.Component<Props, State> {
           )}
 
         {!searchIsFocused && (
-          <MembersList
+          <GetMembers
             filter={filter}
             id={id}
-            setTotalCount={this.setTotalCount}
+            render={({ isLoading, community, isFetchingMore, fetchMore }) => {
+              if (isLoading) {
+                return <Loading />;
+              }
+
+              const members =
+                community &&
+                community.memberConnection &&
+                community.memberConnection.edges.map(
+                  member => member && member.node
+                );
+
+              if (!members || members.length === 0) {
+                return (
+                  <ViewError
+                    emoji={' '}
+                    heading={'No members found'}
+                    subheading={
+                      "We couldn't find any members in your community that match this role"
+                    }
+                  />
+                );
+              }
+
+              return (
+                <ListContainer>
+                  {members.map(user => {
+                    if (!user) return null;
+                    const { roles, reputation } = this.parseUser(user);
+                    return this.generateUserProfile(user, reputation, roles);
+                  })}
+
+                  {community &&
+                    community.memberConnection.pageInfo.hasNextPage && (
+                      <SectionCardFooter>
+                        <FetchMore
+                          color={'brand.default'}
+                          loading={isFetchingMore}
+                          onClick={fetchMore}
+                        >
+                          Load more
+                        </FetchMore>
+                      </SectionCardFooter>
+                    )}
+                </ListContainer>
+              );
+            }}
           />
         )}
       </SectionCard>
