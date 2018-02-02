@@ -7,6 +7,8 @@ import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import { consolidateStreamedStyles } from 'styled-components';
+import { HelmetProvider } from 'react-helmet-async';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
 import { client } from 'shared/graphql';
@@ -53,20 +55,28 @@ if (t && (!existingUser || !existingUser.currentUser)) {
   }
 }
 
+consolidateStreamedStyles();
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
+const renderMethod = !!window.__SERVER_STATE__
+  ? // $FlowIssue
+    ReactDOM.hydrate
+  : ReactDOM.render;
+
 function render() {
-  return ReactDOM.render(
+  return renderMethod(
     <Provider store={store}>
-      <ApolloProvider client={client}>
-        <Router history={history}>
-          <Routes
-            maintenanceMode={
-              process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
-            }
-          />
-        </Router>
-      </ApolloProvider>
+      <HelmetProvider>
+        <ApolloProvider client={client}>
+          <Router history={history}>
+            <Routes
+              maintenanceMode={
+                process.env.REACT_APP_MAINTENANCE_MODE === 'enabled'
+              }
+            />
+          </Router>
+        </ApolloProvider>
+      </HelmetProvider>
     </Provider>,
     // $FlowIssue
     document.querySelector('#root')

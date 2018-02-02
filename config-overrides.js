@@ -72,12 +72,6 @@ const transpileShared = config => {
 module.exports = function override(config, env) {
   if (process.env.NODE_ENV === 'development') {
     config.output.path = path.join(__dirname, './build');
-    config.plugins.push(
-      WriteFilePlugin({
-        // Don't match hot-update files
-        test: /^((?!(hot-update)).)*$/g,
-      })
-    );
   }
   config.plugins.push(
     new ReactLoadablePlugin({
@@ -142,6 +136,14 @@ module.exports = function override(config, env) {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         openAnalyzer: false,
+      })
+    );
+  }
+  if (process.env.NODE_ENV === 'development') {
+    config.plugins.push(
+      WriteFilePlugin({
+        // Don't match hot-update files
+        test: /^((?!(hot-update)).)*$/g,
       })
     );
   }

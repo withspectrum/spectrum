@@ -9,10 +9,6 @@ export default cors({
           /spectrum-(\w|-)+\.now\.sh/g,
           /spectrum\.chat$/,
         ]
-      : [
-          'http://localhost:3000',
-          'http://localhost:3006',
-          'http://localhost:4000',
-        ],
+      : [/localhost/],
   credentials: true,
 });
