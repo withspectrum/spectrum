@@ -3,7 +3,10 @@ import type { GraphQLContext } from '../../';
 import type { Args } from './types';
 import { intersection } from 'lodash';
 import initIndex from 'shared/algolia';
-
+import {
+  getUserPermissionsInCommunity,
+  DEFAULT_USER_COMMUNITY_PERMISSIONS,
+} from '../../models/usersCommunities';
 import {
   getUserPermissionsInChannel,
   DEFAULT_USER_CHANNEL_PERMISSIONS,
@@ -64,6 +67,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
 
     // channel doesn't exist
     if (!channel) return [];
+    if (permissions.isBlocked) return [];
 
     // if the channel is private and the user isn't a member
     if (channel.isPrivate && !permissions.isMember) {
@@ -96,21 +100,27 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     const getCurrentUsersChannelIds = IS_AUTHED_USER
       ? getUsersJoinedPrivateChannelIds(user.id)
       : [];
+    const getCurrentUsersPermissionInCommunity = IS_AUTHED_USER
+      ? getUserPermissionsInCommunity(communityId, user.id)
+      : DEFAULT_USER_COMMUNITY_PERMISSIONS;
 
     const [
       community,
       publicChannels,
       privateChannels,
       currentUsersPrivateChannels,
+      currentUserPermissionInCommunity,
     ] = await Promise.all([
       getCommunity,
       getPublicChannelIds,
       getPrivateChannelIds,
       getCurrentUsersChannelIds,
+      getCurrentUsersPermissionInCommunity,
     ]);
 
     // community is deleted or not found
     if (!community || community.deletedAt) return [];
+    if (currentUserPermissionInCommunity.isBlocked) return [];
 
     const privateChannelsWhereUserIsMember = intersection(
       privateChannels,

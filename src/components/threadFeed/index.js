@@ -153,7 +153,14 @@ class ThreadFeedPure extends Component {
       !this.props.community.communityPermissions.isBlocked;
 
     const threadNodes = dataExists
-      ? threads.slice().map(thread => thread.node)
+      ? threads
+          .slice()
+          .map(thread => thread.node)
+          .filter(
+            thread =>
+              !thread.channel.channelPermissions.isBlocked &&
+              !thread.community.communityPermissions.isBlocked
+          )
       : [];
 
     let filteredThreads = threadNodes;

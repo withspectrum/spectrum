@@ -247,8 +247,7 @@ const blockUserInChannel = (
       },
       { returnChanges: true }
     )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .run();
 };
 
 // toggles a pending user to member in a channel. invoked by a channel or community
@@ -314,8 +313,7 @@ const approveBlockedUserInChannel = (
       },
       { returnChanges: true }
     )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .run();
 };
 
 // adds a *new* user to a channel as both a moderator and member. this will be invoked

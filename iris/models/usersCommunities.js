@@ -316,7 +316,7 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
-const DEFAULT_PERMISSIONS = {
+export const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
   isOwner: false,
   isMember: false,
   isModerator: false,
@@ -344,7 +344,7 @@ const getUserPermissionsInCommunity = (
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
         return {
-          ...DEFAULT_PERMISSIONS,
+          ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
           userId,
           communityId,
         };
@@ -374,7 +374,7 @@ const getUsersPermissionsInCommunities = (
     .then(data => {
       if (!data)
         return Array.from({ length: input.length }, (_, index) => ({
-          ...DEFAULT_PERMISSIONS,
+          ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
           userId: input[index][0],
           communityId: input[index][1],
         }));
@@ -384,7 +384,7 @@ const getUsersPermissionsInCommunities = (
           rec
             ? rec
             : {
-                ...DEFAULT_PERMISSIONS,
+                ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
                 userId: input[index][0],
                 communityId: input[index][1],
               }

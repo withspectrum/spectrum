@@ -2,6 +2,8 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getCommunityById } from '../../models/community';
+import { blockUserInChannel } from '../../models/usersChannels';
+import { getChannelsByCommunity } from '../../models/channel';
 import {
   blockUserInCommunity,
   checkUserPermissionsInCommunity,
@@ -65,7 +67,16 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks pass
   if (currentUserPermission.isOwner) {
-    return await blockUserInCommunity(communityId, userToEvaluateId)
+    const channels = await getChannelsByCommunity(community.id);
+    const channelIds = channels.map(c => c.id);
+    const blockInChannelPromises = channelIds.map(
+      async channelId => await blockUserInChannel(channelId, userToEvaluateId)
+    );
+
+    return await Promise.all([
+      blockUserInCommunity(communityId, userToEvaluateId),
+      blockInChannelPromises,
+    ])
       .then(() => true)
       .catch(err => new UserError(err));
   }
