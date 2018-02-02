@@ -116,25 +116,35 @@ class Messages extends Component<MessageGroupProps, State> {
     const newSelection =
       nextState.selectedMessage !== this.state.selectedMessage;
 
-    if (newSelection) return newSelection;
+    if (newSelection) return true;
 
     // If it's a different thread, let's re-render
     const diffThread = next.threadId !== current.threadId;
-    if (diffThread) return diffThread;
+    if (diffThread) return true;
 
     // If we don't have any message groups in the next props, return if we have
     // message groups in the current props
     if (!next.messages) return !current.messages;
 
-    // Check if any message group has more or less messages than last time
-    const diffMessages = next.messages.some(
-      (group, index) =>
-        !current.messages ||
-        !current.messages[index] ||
-        group.length !== current.messages[index].length
-    );
+    // If a message group was added
+    if (next.messages.length !== current.messages.length) return true;
 
-    return diffMessages;
+    // Check if any message group has different messages than last time
+    const hasNewMessages = next.messages.some((nextGroup, groupIndex) => {
+      const currGroup = current.messages[groupIndex];
+      // New group or more messages in group
+      if (!currGroup || nextGroup.length !== currGroup.length) return true;
+
+      return nextGroup.some((nextMessage, messageIndex) => {
+        const currMessage = current.messages[groupIndex][messageIndex];
+        // A new message was added
+        if (!currMessage) return false;
+
+        return currMessage.id !== nextMessage.id;
+      });
+    });
+
+    return hasNewMessages;
   }
 
   toggleSelectedMessage = messageId => {
