@@ -3,8 +3,10 @@
 import createRedis from 'shared/bull/create-redis';
 const debug = require('debug')('hyperion:cache');
 
-if (process.env.DISABLE_CACHE) {
-  console.log('Cache disabled, unset DISABLE_CACHE env variable to enable.');
+if (process.env.DISABLE_CACHE || process.env.NODE_ENV === 'development') {
+  console.log(
+    'Cache disabled, either unset DISABLE_CACHE env variable or run in production mode to enable.'
+  );
 }
 
 const config =
@@ -26,7 +28,8 @@ const cache = (
   res: express$Response,
   next: express$NextFunction
 ) => {
-  if (process.env.DISABLE_CACHE) return next();
+  if (process.env.DISABLE_CACHE || process.env.NODE_ENV === 'development')
+    return next();
   if (req.method !== 'GET') {
     debug(`${req.method} request came in, not caching`);
     return next();
