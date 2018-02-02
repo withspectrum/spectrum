@@ -2,7 +2,7 @@
 import Redis from 'ioredis';
 
 const config =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
     ? {
         port: process.env.COMPOSE_REDIS_PORT,
         host: process.env.COMPOSE_REDIS_URL,

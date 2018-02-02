@@ -140,7 +140,9 @@ export const Overview = (props: Props) => {
     }
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`font-size: 16px;`;
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    font-size: 16px;
+  `;
 
   const Img = styled.img`
     position: absolute;
@@ -318,7 +320,9 @@ export const CommunitySearch = (props: Props) => {
     }
   `;
 
-  const ThisTagline = styled(Tagline)`margin-bottom: 16px;`;
+  const ThisTagline = styled(Tagline)`
+    margin-bottom: 16px;
+  `;
 
   const ThisCopy = styled(Copy)`
     font-size: 18px;
@@ -433,7 +437,9 @@ export const Sell = (props: Props) => {
     justify-content: center;
   `;
 
-  const ThisSection = styled(Section)`margin-bottom: 40px;`;
+  const ThisSection = styled(Section)`
+    margin-bottom: 40px;
+  `;
 
   return (
     <ThisSection goop={2} background="dark" color={'bg.reverse'}>
@@ -635,7 +641,7 @@ export const Yours = (props: Props) => {
                 okay, honestly Spectrum is the best thing that happened to me
                 regarding social interaction in 2017
               </Pullquote>
-              <Signature to="https://spectrum.chat/users/Traykov">
+              <Signature to="/users/Traykov">
                 <Avatar
                   size={'40'}
                   src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
@@ -653,7 +659,7 @@ export const Yours = (props: Props) => {
                 time ago for communities (especially tech) to freely share ideas
                 and interact. Except realtime and trolling-free
               </Pullquote>
-              <Signature to="https://spectrum.chat/users/rauchg">
+              <Signature to="/users/rauchg">
                 <Avatar
                   size={'40'}
                   src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F871555682608136205%2FyMs8Gnot_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=cc42ed724e75265fbb959ec43c910be2"
@@ -670,7 +676,7 @@ export const Yours = (props: Props) => {
                 Spectrum is definitely a product worth looking out for. Huge fan
                 and been lovely to be a part of the unique communities.
               </Pullquote>
-              <Signature to="https://www.spectrum.chat/users/tayler-m-odea">
+              <Signature to="/users/tayler-m-odea">
                 <Avatar
                   size={'40'}
                   src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"

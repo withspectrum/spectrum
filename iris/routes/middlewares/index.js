@@ -31,6 +31,7 @@ middlewares.use((req, res, next) => {
 // Cross origin request support
 import cors from 'shared/middlewares/cors';
 middlewares.use(cors);
+middlewares.options('*', cors);
 
 import cookieParser from 'cookie-parser';
 middlewares.use(cookieParser());
