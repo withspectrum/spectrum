@@ -119,7 +119,7 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     ]);
 
     // community is deleted or not found
-    if (!community || community.deletedAt) return [];
+    if (!community) return [];
     if (currentUserPermissionInCommunity.isBlocked) return [];
 
     const privateChannelsWhereUserIsMember = intersection(

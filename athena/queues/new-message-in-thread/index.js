@@ -88,18 +88,19 @@ export default async (job: JobData) => {
   );
 
   const thread = JSON.parse(context.payload);
-  const permissionPromises = await filteredRecipients.map(async user => {
-    const [channelPermissions, communityPermissions] = await Promise.all([
-      getUserPermissionsInChannel(user.userId, thread.channelId),
-      getUserPermissionsInCommunity(thread.communityId, user.userId),
-    ]);
-    const isNotBlocked =
-      !channelPermissions.isBlocked && !communityPermissions.isBlocked;
-    // only return the user if they aren't blocked in both the community & channel
-    return isNotBlocked && user;
-  });
 
-  const permissionedRecipients = await Promise.all(permissionPromises);
+  const permissionedRecipients = await Promise.all(
+    filteredRecipients.map(async user => {
+      const [channelPermissions, communityPermissions] = await Promise.all([
+        getUserPermissionsInChannel(user.userId, thread.channelId),
+        getUserPermissionsInCommunity(thread.communityId, user.userId),
+      ]);
+      const isNotBlocked =
+        !channelPermissions.isBlocked && !communityPermissions.isBlocked;
+      // only return the user if they aren't blocked in both the community & channel
+      return isNotBlocked ? user : null;
+    })
+  );
 
   // convert the message body to be checked for mentions
   const body =

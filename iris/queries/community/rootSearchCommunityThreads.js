@@ -66,7 +66,7 @@ export default async (
   ]);
 
   // community is deleted or not found
-  if (!community || community.deletedAt) return [];
+  if (!community) return [];
 
   const privateChannelsWhereUserIsMember = intersection(
     privateChannels,

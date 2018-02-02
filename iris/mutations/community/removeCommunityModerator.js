@@ -36,7 +36,7 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     getCommunityById(communityId),
   ]);
 
-  if (!community || community.deletedAt) {
+  if (!community) {
     return new UserError("We couldn't find that community.");
   }
 
@@ -87,7 +87,7 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
     return await Promise.all([
       removeModeratorInCommunity(communityId, userToEvaluateId),
-      removeChannelModeratorPromises,
+      ...removeChannelModeratorPromises,
     ])
       .then(() => true)
       .catch(err => new UserError(err));
