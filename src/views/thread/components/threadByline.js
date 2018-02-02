@@ -49,6 +49,11 @@ class ThreadByline extends React.Component<Props> {
               {creator &&
                 creator.contextPermissions &&
                 creator.contextPermissions.isOwner && <Badge type="admin" />}
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isBlocked && (
+                  <Badge type="blocked" />
+                )}
             </AuthorNameLink>
           ) : (
             <AuthorNameNoLink>
@@ -56,6 +61,11 @@ class ThreadByline extends React.Component<Props> {
               {creator &&
                 creator.contextPermissions &&
                 creator.contextPermissions.isOwner && <Badge type="admin" />}
+              {creator &&
+                creator.contextPermissions &&
+                creator.contextPermissions.isBlocked && (
+                  <Badge type="blocked" />
+                )}
             </AuthorNameNoLink>
           )}
 

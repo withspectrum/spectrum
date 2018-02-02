@@ -69,6 +69,7 @@ export default gql`
         reputation
         isOwner
         isModerator
+        isBlocked
       }
     }
     channel {

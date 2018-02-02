@@ -60,6 +60,8 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
         sender.contextPermissions.isOwner && <Badge type="admin" />}
       {sender.contextPermissions &&
         sender.contextPermissions.isModerator && <Badge type="moderator" />}
+      {sender.contextPermissions &&
+        sender.contextPermissions.isBlocked && <Badge type="blocked" />}
       {sender.isPro && <Badge type="pro" />}
     </Byline>
   );

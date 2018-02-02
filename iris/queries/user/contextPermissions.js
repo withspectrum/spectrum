@@ -19,11 +19,13 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           reputation,
           isModerator,
           isOwner,
+          isBlocked,
         } = await loaders.userPermissionsInCommunity.load([
           user.id,
           communityId,
         ]);
         return {
+          isBlocked,
           communityId,
           reputation,
           isModerator,
@@ -61,11 +63,13 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           reputation,
           isModerator,
           isOwner,
+          isBlocked,
         } = await loaders.userPermissionsInCommunity.load([
           user.id,
           communityId,
         ]);
         return {
+          isBlocked,
           communityId,
           reputation,
           isModerator,
@@ -79,12 +83,14 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           reputation,
           isModerator,
           isOwner,
+          isBlocked,
         } = await loaders.userPermissionsInCommunity.load([user.id, id]);
         return {
           communityId: id,
           reputation: reputation || 0,
           isModerator,
           isOwner,
+          isBlocked,
         };
       }
       case 'search': {

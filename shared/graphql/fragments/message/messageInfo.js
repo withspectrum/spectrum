@@ -37,6 +37,7 @@ export default gql`
         reputation
         isOwner
         isModerator
+        isBlocked
       }
     }
     reactions {
