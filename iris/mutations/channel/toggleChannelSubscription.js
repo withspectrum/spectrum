@@ -58,6 +58,19 @@ export default async (
     );
   }
 
+  // get the current user's permissions in the community
+  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+    channelToEvaluate.communityId,
+    currentUser.id
+  );
+
+  if (
+    currentUserCommunityPermissions &&
+    currentUserCommunityPermissions.isBlocked
+  ) {
+    return new UserError('You have been blocked in this community');
+  }
+
   // if the user is a member of the channel, it means they are trying
   // to leave the channel
   if (currentUserChannelPermissions.isMember) {
@@ -137,40 +150,28 @@ export default async (
     // as create relationships between the user and all the default
     // channels in that community
 
-    // get the current user's permissions in the community
-    const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-      channelToEvaluate.communityId,
-      currentUser.id
-    );
-
     return (
-      Promise.all([channelToEvaluate, join, currentUserCommunityPermissions])
-        .then(
-          ([
-            channelToEvaluate,
-            joinedChannel,
-            currentUserCommunityPermissions,
-          ]) => {
-            // if the user is a member of the parent community, we can return
-            if (currentUserCommunityPermissions.isMember) {
-              return Promise.all([joinedChannel]);
-            } else {
-              // if the user is not a member of the parent community,
-              // join the community and the community's default channels
-              return Promise.all([
-                joinedChannel,
-                createMemberInCommunity(
-                  joinedChannel.communityId,
-                  currentUser.id
-                ),
-                createMemberInDefaultChannels(
-                  joinedChannel.communityId,
-                  currentUser.id
-                ),
-              ]);
-            }
+      Promise.all([channelToEvaluate, join])
+        .then(([channelToEvaluate, joinedChannel]) => {
+          // if the user is a member of the parent community, we can return
+          if (currentUserCommunityPermissions.isMember) {
+            return Promise.all([joinedChannel]);
+          } else {
+            // if the user is not a member of the parent community,
+            // join the community and the community's default channels
+            return Promise.all([
+              joinedChannel,
+              createMemberInCommunity(
+                joinedChannel.communityId,
+                currentUser.id
+              ),
+              createMemberInDefaultChannels(
+                joinedChannel.communityId,
+                currentUser.id
+              ),
+            ]);
           }
-        )
+        })
         // return the channel being evaluated in the first place
         .then(data => data[0])
     );
