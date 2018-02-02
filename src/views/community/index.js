@@ -2,6 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import Link from '../../components/link';
+import { Button } from '../../components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
@@ -120,14 +122,51 @@ class CommunityView extends React.Component<Props, State> {
           description: community.description,
         },
       });
+
       const {
         showComposerUpsell,
         selectedView,
         isLeavingCommunity,
       } = this.state;
-      const { isMember, isOwner, isModerator } = community.communityPermissions;
+      const {
+        isMember,
+        isOwner,
+        isModerator,
+        isBlocked,
+      } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
+
+      if (isBlocked) {
+        return (
+          <AppViewWrapper data-e2e-id="community-view">
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={'/'}
+              noComposer={!community.communityPermissions.isMember}
+            />
+
+            <Head
+              title={title}
+              description={description}
+              image={community.profilePhoto}
+            />
+
+            <ViewError
+              emoji={'✋'}
+              heading={`You are blocked from ${community.name}`}
+              subheading={
+                'You have been blocked from joining and viewing conversations in this community.'
+              }
+            >
+              <Link to={'/'}>
+                <Button large>Take me home</Button>
+              </Link>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream

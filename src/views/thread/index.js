@@ -219,7 +219,11 @@ class ThreadContainer extends React.Component<Props, State> {
       const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked, isCreator, participants } = thread;
-      const canSendMessages = isLoggedIn && channelPermissions.isMember;
+      const canSendMessages =
+        isLoggedIn &&
+        channelPermissions.isMember &&
+        !channelPermissions.isBlocked &&
+        !communityPermissions.isBlocked;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
       const isModerator = isChannelOwner || isCommunityOwner;
@@ -233,6 +237,28 @@ class ThreadContainer extends React.Component<Props, State> {
             )));
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
+
+      if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
+        return (
+          <ThreadViewContainer
+            threadViewContext={threadViewContext}
+            constrain={
+              threadViewContext === 'slider' ||
+              threadViewContext === 'fullscreen'
+            }
+          >
+            <ThreadContentView slider={slider}>
+              <ViewError
+                emoji={'✋'}
+                heading={'You have been blocked'}
+                subheading={`You are blocked from viewing all conversations in the ${
+                  thread.community.name
+                } community`}
+              />
+            </ThreadContentView>
+          </ThreadViewContainer>
+        );
+      }
 
       if (thread.watercooler)
         return (
@@ -265,7 +291,7 @@ class ThreadContainer extends React.Component<Props, State> {
                 title={thread.content.title}
                 subtitle={`${thread.community.name} / ${thread.channel.name}`}
                 provideBack={true}
-                backRoute={`/`}
+                backRoute={'/'}
                 noComposer
                 style={{ gridArea: 'header' }}
               />
@@ -379,7 +405,7 @@ class ThreadContainer extends React.Component<Props, State> {
               title={thread.content.title}
               subtitle={`${thread.community.name} / ${thread.channel.name}`}
               provideBack={true}
-              backRoute={`/`}
+              backRoute={'/'}
               noComposer
               style={{ gridArea: 'header' }}
             />
@@ -474,10 +500,10 @@ class ThreadContainer extends React.Component<Props, State> {
           slider={slider}
         >
           <ViewError
-            heading={`We had trouble loading this thread.`}
+            heading={'We had trouble loading this thread.'}
             subheading={
               !hasError
-                ? `It may be private, or may have been deleted by an author or moderator.`
+                ? 'It may be private, or may have been deleted by an author or moderator.'
                 : ''
             }
             refresh={hasError}
