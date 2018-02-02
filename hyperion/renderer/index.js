@@ -25,7 +25,7 @@ import introspectionQueryResultData from 'shared/graphql/schema.json';
 import stats from '../../build/react-loadable.json';
 
 import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
-import { getFooter, getHeader, createScriptTag } from './get-html';
+import { getFooter, getHeader, createScriptTag } from './html-template';
 
 // Browser shim has to come before any client imports
 import './browser-shim';
@@ -77,7 +77,6 @@ const renderer = (req: express$Request, res: express$Response) => {
   const store = initStore(initialReduxState);
   let modules = [];
   const report = moduleName => {
-    debug(`codesplitted module ${moduleName} used`);
     modules.push(moduleName);
   };
   let routerContext = {};
@@ -101,6 +100,7 @@ const renderer = (req: express$Request, res: express$Response) => {
   debug('get data from tree');
   getDataFromTree(frontend)
     .then(() => {
+      debug('got data from tree');
       if (routerContext.url) {
         debug('found redirect on frontend, redirecting');
         // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
@@ -129,13 +129,10 @@ const renderer = (req: express$Request, res: express$Response) => {
       );
       const bundles = getBundles(stats, modules)
         // Create <script defer> tags from bundle objects
-        .map(bundle =>
-          createScriptTag({ src: `/${bundle.file.replace(/\.map$/, '')}` })
-        )
+        .map(bundle => `/${bundle.file.replace(/\.map$/, '')}`)
         // Make sure only unique bundles are included
         .filter((value, index, self) => self.indexOf(value) === index);
-      debug('compile and send html');
-      const bundleScriptTags = [...bundles].join('\n');
+      debug('bundles used:', bundles.join(','));
 
       const stream = sheet.interleaveWithNodeStream(
         renderToNodeStream(frontend)
@@ -148,7 +145,7 @@ const renderer = (req: express$Request, res: express$Response) => {
           getFooter({
             state,
             data,
-            bundleScriptTags,
+            bundles,
           })
         )
       );
