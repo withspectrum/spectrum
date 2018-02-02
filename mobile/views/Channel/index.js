@@ -37,15 +37,18 @@ type Props = {
 const ChannelThreadFeed = compose(getChannelThreadConnection)(ThreadFeed);
 
 class Channel extends React.Component<Props> {
+  componentDidUpdate() {
+    const { data: { channel }, navigation } = this.props;
+    if (!channel || navigation.state.params.title) return;
+    navigation.setParams({ title: channel.name });
+  }
+
   render() {
     const { data, isLoading, hasError, navigation } = this.props;
 
     if (data.channel) {
       return (
         <Wrapper>
-          <View testID="e2e-commmunity">
-            <Text>Now viewing channel {data.channel.name}!</Text>
-          </View>
           <ChannelThreadFeed navigation={navigation} id={data.channel.id} />
         </Wrapper>
       );
