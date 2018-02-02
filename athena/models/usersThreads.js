@@ -2,9 +2,7 @@
 const { db } = require('./db');
 import type { DBUsersThreads } from 'shared/types';
 
-export const getThreadNotificationUsers = (
-  id: string
-): Promise<Array<Object>> => {
+export const getThreadNotificationUsers = (id: string): Array<Object> => {
   return db
     .table('usersThreads')
     .getAll(id, { index: 'threadId' })
