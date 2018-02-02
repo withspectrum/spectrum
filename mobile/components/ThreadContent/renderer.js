@@ -1,30 +1,49 @@
 // @flow
 import React from 'react';
-import { FlatList } from 'react-native';
+import { View } from 'react-native';
 import styled from 'styled-components/native';
 import redraft from 'redraft';
-import Text from '../components/Text';
+import Anchor from '../Anchor';
+import Text from '../Text';
+import Codeblock from '../Codeblock';
+import IFrame from '../IFrame';
 
 const renderer = {
   inline: {
     BOLD: (children, { key }) => (
-      <Text bold key={key}>
+      <Text bold key={`bold-${key}`}>
         {children}
       </Text>
     ),
     ITALIC: (children, { key }) => (
-      <Text italic key={key}>
+      <Text italic key={`italic-${key}`}>
         {children}
       </Text>
     ),
     UNDERLINE: (children, { key }) => (
-      <Text underline key={key}>
+      <Text underline key={`underline-${key}`}>
         {children}
       </Text>
     ),
-    // CODE: (children, { key }) =>
+    CODE: (children, { key }) => (
+      <Codeblock key={`codeblock-${key}`}>{children}</Codeblock>
+    ),
+  },
+  entities: {
+    // key is the entity key value from raw
+    LINK: (children, data, { key }) => (
+      <Anchor key={key} href={data.url}>
+        {children}
+      </Anchor>
+    ),
+    embed: (children, { src }, { key }) => {
+      return <IFrame key={key} src={src} />;
+    },
   },
   blocks: {
+    fallback: (children, { keys }) => (
+      <View key={keys.join('|')}>{children}</View>
+    ),
     unstyled: (children, { keys }) =>
       children.map((child, index) => (
         <Text type="body" key={keys[index] || index}>
@@ -47,49 +66,27 @@ const renderer = {
         </Text>
       )),
     // blockquote: (children, { keys }) =>
-    // 'code-block': (children, { keys }) =>
     'unordered-list-item': (children, { depth, keys }) => {
-      return (
-        <FlatList
-          data={children}
-          key={keys[keys.length - 1]}
-          renderItem={({ item, index }) => (
-            <Text type="body" key={keys[index] || index}>
-              {'\u2022'} {item}
-            </Text>
-          )}
-        />
-      );
+      return children.map((item, index) => (
+        <Text key={keys[index] || index} type="body">
+          {'\u2022'} {item}
+        </Text>
+      ));
     },
     'ordered-list-item': (children, { depth, keys }) => {
-      return (
-        <FlatList
-          data={children}
-          key={keys.join('|')}
-          renderItem={({ item, index }) => (
-            <Text type="body" key={keys[index] || index}>
-              {index}. {item}
-            </Text>
-          )}
-        />
-      );
+      return children.map((item, index) => (
+        <Text key={keys[index] || index} type="body">
+          {index}. {item}
+        </Text>
+      ));
     },
+    'code-block': (children, { keys }) => (
+      <Codeblock key={keys.join('|')}>{children}</Codeblock>
+    ),
   },
 };
 
-// Filter any string from a nested array
-const filterStrings = (array: Array<mixed>) => {
-  const items = [];
-
-  array.forEach(item => {
-    if (typeof item === 'string') return;
-    if (Array.isArray(item)) return items.push(filterStrings(item));
-
-    items.push(item);
-  });
-
-  return items;
-};
-
 export default (rawContentState: Object) =>
-  filterStrings(redraft(rawContentState, renderer));
+  redraft(rawContentState, renderer, {
+    blockFallback: 'fallback',
+  });
