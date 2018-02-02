@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should block a member in the community 1`] = `
+exports[`should unblock a member in the community 1`] = `
 Object {
   "data": Object {
     "unblockCommunityMember": true,

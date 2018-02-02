@@ -171,7 +171,7 @@ it('should fail if current user is not an owner of the community', async () => {
   expect(result.data.unblockCommunityMember).toEqual(null);
 });
 
-it('should block a member in the community', async () => {
+it('should unblock a member in the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
       unblockCommunityMember (input: $input)
@@ -180,7 +180,7 @@ it('should block a member in the community', async () => {
 
   const context = { user: owner };
 
-  expect.assertions(6);
+  expect.assertions(8);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
   expect(result.data.unblockCommunityMember).toEqual(true);
@@ -199,4 +199,18 @@ it('should block a member in the community', async () => {
   expect(communityConnections[0].isBlocked).toEqual(false);
   expect(communityConnections[0].isMember).toEqual(true);
   expect(communityConnections[0].receiveNotifications).toEqual(true);
+
+  const channelsInCommunity = await db
+    .table('channels')
+    .getAll(input.communityId, { index: 'communityId' })
+    .map(row => row('id'))
+    .run();
+
+  const usersChannels = await db
+    .table('usersChannels')
+    .getAll(...channelsInCommunity, { index: 'channelId' })
+    .run();
+
+  expect(usersChannels[0].isBlocked).toEqual(false);
+  expect(usersChannels[0].isMember).toEqual(true);
 });

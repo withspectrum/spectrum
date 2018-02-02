@@ -4,7 +4,6 @@ import db from 'shared/testing/db';
 import data from 'shared/testing/data';
 
 const owner = data.users.find(({ username }) => username === 'mxstbr');
-const moderator = data.users.find(({ username }) => username === 'brian');
 const member = data.users.find(({ username }) => username === 'bryn');
 const nonMember = data.users.find(({ username }) => username === 'bad-boy');
 const previousMember = data.users.find(
@@ -181,7 +180,7 @@ it('should block a member in the community', async () => {
 
   const context = { user: owner };
 
-  expect.assertions(6);
+  expect.assertions(9);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
   expect(result.data.blockCommunityMember).toEqual(true);
@@ -200,4 +199,19 @@ it('should block a member in the community', async () => {
   expect(communityConnections[0].isBlocked).toEqual(true);
   expect(communityConnections[0].isMember).toEqual(false);
   expect(communityConnections[0].receiveNotifications).toEqual(false);
+
+  const channelsInCommunity = await db
+    .table('channels')
+    .getAll(input.communityId, { index: 'communityId' })
+    .map(row => row('id'))
+    .run();
+  const usersChannels = await db
+    .table('usersChannels')
+    .getAll(...channelsInCommunity, { index: 'channelId' })
+    .filter({ userId: input.userId })
+    .run();
+
+  expect(usersChannels[0].isBlocked).toEqual(true);
+  expect(usersChannels[0].isMember).toEqual(false);
+  expect(usersChannels[0].receiveNotifications).toEqual(false);
 });

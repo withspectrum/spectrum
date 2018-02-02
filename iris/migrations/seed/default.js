@@ -393,7 +393,7 @@ const DEFAULT_USERS_CHANNELS = [
     receiveNotifications: true,
   },
   {
-    id: '7411906b-54a0-4c18-b26c-2522ad59c7f9',
+    id: '7411906b-54a0-4c18-b26c-2522ad59c719',
     createdAt: new Date(DATE),
     userId: BLOCKED_USER,
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
