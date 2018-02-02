@@ -3,6 +3,7 @@
 import fs from 'fs';
 const debug = require('debug')('hyperion:renderer');
 import React from 'react';
+// $FlowIssue
 import { renderToNodeStream } from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';

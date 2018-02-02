@@ -9877,9 +9877,9 @@ styled-components@^2.0.0:
     stylis "^3.4.0"
     supports-color "^3.2.3"
 
-styled-components@^3.1.0-3:
-  version "3.1.0-3"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.1.0-3.tgz#477bcd7ddd116c88723d5a8639f56c095321beb8"
+styled-components@^3.1.6-1:
+  version "3.1.6-1"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.1.6-1.tgz#d5faaf1496a5a26d4a5f5a1457cb96791210f381"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
@@ -9888,7 +9888,12 @@ styled-components@^3.1.0-3:
     is-plain-object "^2.0.1"
     prop-types "^15.5.4"
     stylis "^3.4.0"
+    stylis-rule-sheet "^0.0.7"
     supports-color "^3.2.3"
+
+stylis-rule-sheet@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/stylis-rule-sheet/-/stylis-rule-sheet-0.0.7.tgz#5c51dc879141a61821c2094ba91d2cbcf2469c6c"
 
 stylis@^3.0.0, stylis@^3.4.0:
   version "3.4.8"
