@@ -10,8 +10,21 @@ const config =
       }
     : undefined;
 
+// Have to replace : with nothing as that's what redis uses to group
+// keys into folders. https://spectrum-asdf123.now.sh -> https//spectrum-asdf123.now.sh
+const deploymentId =
+  process.env.NOW_URL && process.env.NOW_URL.replace(':', '');
+// Locally key the cache only with "cache:", when deployed key the cache with the
+// deployment's NOW_URL to avoid serving HTML that refers to non-existant scripts.
+// e.g. "cache:asdf123.now.sh:"
+const getKeyPrefix = () => {
+  if (!deploymentId) return 'cache:';
+
+  return `cache:${deploymentId}:`;
+};
+
 const redis = createRedis({
-  keyPrefix: 'cache:',
+  keyPrefix: getKeyPrefix(),
   ...config,
 });
 
