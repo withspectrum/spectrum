@@ -1,4 +1,6 @@
 // @flow
+// This needs to be imported before everything else
+import './helpers/consolidate-streamed-styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -7,7 +9,6 @@ import { Router } from 'react-router';
 import queryString from 'query-string';
 import Loadable from 'react-loadable';
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
-import { consolidateStreamedStyles } from 'styled-components';
 import { HelmetProvider } from 'react-helmet-async';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
@@ -55,7 +56,6 @@ if (t && (!existingUser || !existingUser.currentUser)) {
   }
 }
 
-consolidateStreamedStyles();
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
 const renderMethod = !!window.__SERVER_STATE__
