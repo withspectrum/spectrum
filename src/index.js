@@ -1,7 +1,7 @@
 // @flow
 // This needs to be imported before everything else
 import './helpers/consolidate-streamed-styles';
-require('css.escape');
+import 'css.escape';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
