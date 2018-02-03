@@ -12,8 +12,10 @@ const createCacheStream = (key: string) => {
       cb(null, data);
     },
     flush(cb) {
-      debug('stream ended, caching result to redis');
-      redis.set(key, Buffer.concat(buffer), 'ex', 3600);
+      if (!process.env.DISABLE_CACHE) {
+        debug('stream ended, caching result to redis');
+        redis.set(key, Buffer.concat(buffer), 'ex', 3600);
+      }
       cb();
     },
   });
