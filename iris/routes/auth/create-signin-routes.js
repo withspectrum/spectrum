@@ -31,9 +31,13 @@ export const createSigninRoutes = (
         url = req.query.r;
       }
 
-      // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
+      // Attach the redirectURL and authType to the session so we have it in the /auth/twitter/callback route
       // $FlowIssue
       req.session.redirectUrl = url;
+      if (req.query.authType === 'token') {
+        // $FlowIssue
+        req.session.authType = 'token';
+      }
 
       return passport.authenticate(strategy, strategyOptions)(req, ...rest);
     },
@@ -44,20 +48,19 @@ export const createSigninRoutes = (
         failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
       }),
       (req: express$Request, res: express$Response) => {
-        // req.session.redirectURL is set in the /auth/twitter route
-        if (!req.session || !req.session.redirectUrl)
-          return res.redirect(FALLBACK_URL);
-
         // $FlowIssue
-        const redirectUrl = new URL(req.session.redirectUrl);
+        const redirectUrl = req.session.redirectUrl
+          ? new URL(req.session.redirectUrl)
+          : new URL(FALLBACK_URL);
         redirectUrl.searchParams.append('authed', 'true');
 
-        // Add the session cookies to the query params if authenticating from mobile
+        // Add the session cookies to the query params if token authentication
         if (
           // $FlowIssue
-          isExpoUrl(req.session.redirectUrl) &&
+          req.session.authType === 'token' &&
           req.cookies &&
-          req.cookies.session
+          req.cookies.session &&
+          req.cookies['session.sig']
         ) {
           redirectUrl.searchParams.append(
             'access_token',
@@ -65,6 +68,8 @@ export const createSigninRoutes = (
               req.cookies['session.sig']
             }`
           );
+          // $FlowIssue
+          req.session.authType = undefined;
         }
 
         // Delete the redirectURL from the session again so we don't redirect
