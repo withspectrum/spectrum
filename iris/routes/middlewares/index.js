@@ -20,10 +20,8 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 }
 
 middlewares.use((req, res, next) => {
-  if (req.headers && req.headers.session && req.headers['session.sig']) {
-    req.headers.cookie = `session=${req.headers.session}; session.sig=${
-      req.headers['session.sig']
-    }`;
+  if (req.headers && !req.headers.cookie && req.headers.authorization) {
+    req.headers.cookie = req.headers.authorization.replace(/^\s*Bearer\s*/, '');
   }
   next();
 });
