@@ -9877,9 +9877,9 @@ styled-components@^2.0.0:
     stylis "^3.4.0"
     supports-color "^3.2.3"
 
-styled-components@^3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.1.5.tgz#7aaf0a97f8c5cd49791e924887f9d8f428fb010c"
+styled-components@^3.1.6-2:
+  version "3.1.6-2"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.1.6-2.tgz#c725df8302688857cb94081130db6a37bd379eb4"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"

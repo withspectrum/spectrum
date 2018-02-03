@@ -10,6 +10,14 @@ type Edge = {
   },
 };
 
+export type ThreadConnectionType = {
+  pageInfo: {
+    hasNextPage: boolean,
+    hasPreviousPage: boolean,
+  },
+  edges: Array<?Edge>,
+};
+
 export type CommunityThreadConnectionType = {
   pinnedThread: {
     ...$Exact<ThreadInfoType>,
@@ -17,13 +25,7 @@ export type CommunityThreadConnectionType = {
   watercooler: {
     ...$Exact<ThreadInfoType>,
   },
-  threadConnection: {
-    pageInfo: {
-      hasNextPage: boolean,
-      hasPreviousPage: boolean,
-    },
-    edges: Array<?Edge>,
-  },
+  threadConnection: ThreadConnectionType,
 };
 
 export default gql`

@@ -53,6 +53,7 @@ const getUserThreadConnectionOptions = {
       loading,
       user,
       networkStatus,
+      threadConnection: user && user.threadConnection,
       threads: user ? user.threadConnection.edges : '',
       hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
       subscribeToUpdatedThreads: () => {

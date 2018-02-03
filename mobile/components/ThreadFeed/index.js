@@ -3,8 +3,9 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { View, Text, FlatList } from 'react-native';
 import ViewNetworkHandler from '../ViewNetworkHandler';
-import Separator from './Separator';
 import ThreadItem from '../ThreadItem';
+import InfiniteList from '../InfiniteList';
+import type { ThreadConnectionType } from '../../../shared/graphql/fragments/community/communityThreadConnection';
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -18,32 +19,16 @@ type State = {
   subscription: ?Function,
 };
 
-type ThreadType = {
-  id: string,
-};
-
 type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
+  isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: Function,
-    threads: Array<ThreadType>,
-    community: {
-      communityPermissions: {
-        isMember: boolean,
-        isOwner: boolean,
-        isBlocked: boolean,
-      },
-      watercooler?: {
-        id: string,
-      },
-      pinnedThread?: {
-        id: string,
-      },
-    },
+    threadConnection: ThreadConnectionType,
   },
 };
 
@@ -53,6 +38,14 @@ class ThreadFeed extends React.Component<Props, State> {
     this.state = {
       subscription: null,
     };
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  componentDidMount() {
+    this.subscribe();
   }
 
   subscribe = () => {
@@ -71,63 +64,36 @@ class ThreadFeed extends React.Component<Props, State> {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    // component is fetching more, don't re-render the whole list
-    if (!curr.isLoading && nextProps.isFetchingMore) return false;
-    return true;
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  componentDidMount() {
-    this.subscribe();
-  }
+  fetchMore = () => {
+    const {
+      isFetchingMore,
+      isLoading,
+      hasError,
+      isRefetching,
+      data: { fetchMore, threadConnection },
+    } = this.props;
+    if (
+      !isFetchingMore &&
+      !isLoading &&
+      !hasError &&
+      !isRefetching &&
+      threadConnection.pageInfo.hasNextPage
+    ) {
+      console.log('actually fetch more!');
+      fetchMore();
+    }
+  };
 
   render() {
     const {
-      data: { threads },
+      data: { threadConnection },
       isLoading,
       isFetchingMore,
       hasError,
       navigation,
     } = this.props;
 
-    const hasThreads = threads && threads.length > 0;
-
-    let filteredThreads = hasThreads ? threads : [];
-
-    const hasWatercooler =
-      this.props.data.community &&
-      this.props.data.community.watercooler &&
-      this.props.data.community.watercooler.id;
-
-    const hasPinnedThread =
-      this.props.data.community &&
-      this.props.data.community.pinnedThread &&
-      this.props.data.community.pinnedThread.id;
-
-    // pull out the watercooler
-    if (hasWatercooler) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          this.props.data.community.watercooler &&
-          t.id !== this.props.data.community.watercooler.id
-      );
-    }
-
-    // pull out the pinned thread
-    if (hasPinnedThread) {
-      filteredThreads = filteredThreads.filter(
-        t =>
-          this.props.data.community.pinnedThread &&
-          t.id !== this.props.data.community.pinnedThread.id
-      );
-    }
-
-    if (hasThreads) {
+    if (threadConnection && threadConnection.edges.length > 0) {
       return (
         <View data-e2e-id="thread-feed">
           {/*hasPinnedThread && (
@@ -145,16 +111,14 @@ class ThreadFeed extends React.Component<Props, State> {
               />
             )*/}
 
-          <FlatList
-            data={filteredThreads}
+          <InfiniteList
+            data={threadConnection.edges}
             renderItem={({ item }) => (
-              <ThreadItem navigation={navigation} thread={item} />
+              <ThreadItem navigation={navigation} thread={item.node} />
             )}
-            keyExtractor={item => item.id}
-            ItemSeparatorComponent={Separator}
-            onEndReached={() => this.props.data.fetchMore()}
-            onEndReachedThreshold={0.5}
-            removeClippedSubviews={true}
+            loadingIndicator={<Text>Loading...</Text>}
+            fetchMore={this.fetchMore}
+            hasNextPage={threadConnection.pageInfo.hasNextPage}
           />
         </View>
       );

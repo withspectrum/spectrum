@@ -13,6 +13,7 @@ import { Wrapper } from './style';
 type UserType = {
   id: string,
   name: string,
+  username: string,
   threadConnection: {
     pageInfo: {
       hasNextPage: boolean,
@@ -43,6 +44,12 @@ const UserThreadFeed = compose(getUserThreadConnection)(ThreadFeed);
 class User extends React.Component<Props, State> {
   state = { feed: 'participant' };
 
+  componentDidUpdate() {
+    const { data: { user }, navigation } = this.props;
+    if (!user || navigation.state.params.title) return;
+    navigation.setParams({ title: `${user.name} (@${user.username})` });
+  }
+
   toggleFeed = (feed: string) => this.setState({ feed });
 
   render() {
@@ -52,29 +59,23 @@ class User extends React.Component<Props, State> {
     if (data.user) {
       return (
         <Wrapper>
-          <ScrollView>
-            <View testID="e2e-commmunity">
-              <Text>Now viewing User {data.user.name}!</Text>
-            </View>
+          <Button
+            title={'View active conversations'}
+            onPress={() => this.toggleFeed('participant')}
+          />
 
-            <Button
-              title={'View active conversations'}
-              onPress={() => this.toggleFeed('participant')}
-            />
+          <Button
+            title={'View created conversations'}
+            onPress={() => this.toggleFeed('creator')}
+          />
 
-            <Button
-              title={'View created conversations'}
-              onPress={() => this.toggleFeed('creator')}
-            />
+          <Text>Viewing {this.state.feed} thread feed</Text>
 
-            <Text>Viewing {this.state.feed} thread feed</Text>
-
-            <UserThreadFeed
-              navigation={navigation}
-              kind={this.state.feed}
-              id={data.user.id}
-            />
-          </ScrollView>
+          <UserThreadFeed
+            navigation={navigation}
+            kind={this.state.feed}
+            id={data.user.id}
+          />
         </Wrapper>
       );
     }
