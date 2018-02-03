@@ -1,6 +1,7 @@
 // @flow
 // This needs to be imported before everything else
 import './helpers/consolidate-streamed-styles';
+require('css.escape');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -58,6 +59,7 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
+// eslint-disable-next-line
 const renderMethod = !!window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
