@@ -6,9 +6,9 @@ export default cors({
     process.env.NODE_ENV === 'production'
       ? [
           'https://spectrum.chat',
-          /spectrum-(\w|-)+\.now\.sh/g,
+          process.env.NOW_URL || undefined,
           /spectrum\.chat$/,
-        ]
+        ].filter(Boolean)
       : [/localhost/],
   credentials: true,
 });
