@@ -1,4 +1,5 @@
 // @flow
+require('css.escape');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -58,7 +59,7 @@ if (t && (!existingUser || !existingUser.currentUser)) {
 consolidateStreamedStyles();
 const store = initStore(window.__SERVER_STATE__ || initialState);
 
-const renderMethod = !!window.__SERVER_STATE__
+const renderMethod = window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
   : ReactDOM.render;
