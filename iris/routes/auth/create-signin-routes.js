@@ -63,7 +63,7 @@ export const createSigninRoutes = (
           req.cookies['session.sig']
         ) {
           redirectUrl.searchParams.append(
-            'access_token',
+            'accessToken',
             `session=${req.cookies.session}; session.sig=${
               req.cookies['session.sig']
             }`
