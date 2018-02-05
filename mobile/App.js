@@ -6,9 +6,10 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
+import { type ApolloClient } from 'apollo-client';
 
 import theme from './components/theme';
-import { client, createLink } from '../shared/graphql';
+import { createClient } from '../shared/graphql';
 import TabBar from './views/TabBar';
 import reducers from './reducers';
 import { authenticate } from './actions/authentication';
@@ -25,14 +26,14 @@ const store = createStore(reducers);
 type State = {
   authLoaded: ?boolean,
   token: ?string,
-  client: typeof client,
+  client: ApolloClient,
 };
 
 class App extends React.Component<{}, State> {
   state = {
     authLoaded: null,
     token: null,
-    client,
+    client: createClient(),
   };
 
   componentDidMount = async () => {
@@ -59,22 +60,15 @@ class App extends React.Component<{}, State> {
 
   listen = () => {
     const { authentication } = store.getState();
-    const { token, client } = this.state;
-    if (authentication.token !== this.state.token) {
-      // Override the client.link to pass the Authorization header
-      client.link = createLink({
-        httpClientOptions: {
-          headers: {
-            authorization:
-              typeof authentication.token === 'string'
-                ? `Bearer ${authentication.token}`
-                : null,
-          },
-        },
-      });
+    const { token: oldToken } = this.state;
+    if (authentication.token !== oldToken) {
       this.setState({
         token: authentication.token,
-        client: client,
+        // Create a new Apollo Client with the token
+        // NOTE(@mxstbr): This wipes out the cache as this creates an entirely new client
+        // Ideally this would only change link.headers.authorization, but that doesn't seem possible currently
+        // Ref apollographql/apollo-link#461
+        client: createClient({ token: authentication.token }),
       });
     }
   };

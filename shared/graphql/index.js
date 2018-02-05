@@ -15,25 +15,32 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 // In production the API is at the same URL, in development it's at a different port
 const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
 
-const cache = new InMemoryCache({
-  fragmentMatcher: new IntrospectionFragmentMatcher({
-    introspectionQueryResultData,
-  }),
-  ...getSharedApolloClientOptions(),
-});
-
-type CreateLinkOptions = {
-  httpLinkOptions?: Object,
+type CreateClientOptions = {
+  token?: ?string,
 };
 
-// Need to export this factory in order for mobile to pass in tokens once the user is authenticated
-export const createLink = (options?: CreateLinkOptions) => {
-  const { httpLinkOptions } = options || {};
+// NOTE(@mxstbr): Use the exported client instance from below instead of using this factory!
+// Only use this factory if you need to create a new instance of the client with the Authorization token,
+// i.e. only use this factory on mobile
+export const createClient = (options?: CreateClientOptions = {}) => {
+  const cache = new InMemoryCache({
+    fragmentMatcher: new IntrospectionFragmentMatcher({
+      introspectionQueryResultData,
+    }),
+    ...getSharedApolloClientOptions(),
+  });
+
+  const headers = options.token
+    ? {
+        authorization: `Bearer ${options.token}`,
+      }
+    : undefined;
+
   // HTTP Link for queries and mutations including file uploads
   const httpLink = createUploadLink({
-    ...httpLinkOptions,
     uri: API_URI,
     credentials: 'include',
+    headers,
   });
 
   // Websocket link for subscriptions
@@ -57,16 +64,16 @@ export const createLink = (options?: CreateLinkOptions) => {
     httpLink
   );
 
-  return link;
+  return new ApolloClient({
+    link,
+    // eslint-disable-next-line
+    cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
+    ssrForceFetchDelay: 100,
+    queryDeduplication: true,
+  });
 };
 
-const client = new ApolloClient({
-  link: createLink(),
-  // eslint-disable-next-line
-  cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
-  ssrForceFetchDelay: 100,
-  queryDeduplication: true,
-});
+const client = createClient();
 
 export { client };
 
