@@ -8,18 +8,17 @@ const API_URL =
     ? 'https://spectrum.chat'
     : 'http://localhost:3001';
 
-class Login extends React.Component<
-  {},
-  { session: string, 'session.sig': string }
-> {
+type State = { token?: string };
+
+class Login extends React.Component<{}, State> {
   state = {
-    session: '',
-    'session.sig': '',
+    token: '',
   };
+
   authenticate = (provider: 'twitter' | 'facebook' | 'google') => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
-      authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}`,
+      authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
     });
     if (result.type === 'error') {
       // Do something with result.errorCode and result.event
@@ -27,30 +26,11 @@ class Login extends React.Component<
     if (result.type === 'success') {
       const { params } = result;
       this.setState({
-        session: params.session,
-        'session.sig': params['session.sig'],
+        token: params.accessToken,
       });
-      await Promise.all([
-        SecureStore.setItemAsync('session', params.session),
-        SecureStore.setItemAsync('session.sig', params['session.sig']),
-      ]);
+      await SecureStore.setItemAsync('token', params.accessToken);
     }
     // The request was cancelled by the user
-  };
-
-  fetch = () => {
-    const headers = new Headers({
-      session: this.state.session,
-      'session.sig': this.state['session.sig'],
-      'Content-Type': 'application/json',
-    });
-    fetch('http://localhost:3001/api', {
-      method: 'POST',
-      body: JSON.stringify({
-        query: '{ community(slug: "spectrum") { id } }',
-      }),
-      headers,
-    }).then(res => console.log(res));
   };
 
   render() {
@@ -68,11 +48,6 @@ class Login extends React.Component<
           title="Login/Signup with Facebook"
           onPress={this.authenticate('facebook')}
         />
-        {this.state.session ? (
-          <View>
-            <Button title="Fetch" onPress={this.fetch} />
-          </View>
-        ) : null}
       </View>
     );
   }
