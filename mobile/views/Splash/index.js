@@ -1,21 +1,31 @@
 // @flow
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
+import { View, Button } from 'react-native';
 import compose from 'recompose/compose';
 import withSafeView from '../../components/SafeAreaView';
 import Login from '../../components/Login';
+import Text from '../../components/Text';
+import {
+  getCurrentUser,
+  type GetUserType,
+} from '../../../shared/graphql/queries/user/getUser';
 
 import { Wrapper } from './style';
 
 type Props = {
   navigation: Object,
+  data: {
+    user: GetUserType,
+  },
 };
 class Splash extends React.Component<Props> {
   render() {
+    const { user } = this.props.data;
     return (
       <Wrapper>
         <View testID="welcome">
-          <Login />
+          {!user && <Login />}
+          {user && <Text type="body">{user.username} is logged in</Text>}
           <Button
             title={'thread'}
             onPress={() =>
@@ -54,4 +64,4 @@ class Splash extends React.Component<Props> {
   }
 }
 
-export default compose(withSafeView)(Splash);
+export default compose(withSafeView, getCurrentUser)(Splash);

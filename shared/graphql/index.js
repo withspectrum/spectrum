@@ -22,35 +22,46 @@ const cache = new InMemoryCache({
   ...getSharedApolloClientOptions(),
 });
 
-// HTTP Link for queries and mutations including file uploads
-const httpLink = createUploadLink({
-  uri: API_URI,
-  credentials: 'include',
-});
+type CreateLinkOptions = {
+  httpLinkOptions?: Object,
+};
 
-// Websocket link for subscriptions
-const wsLink = new WebSocketLink({
-  uri: `${
-    // eslint-disable-next-line
-    IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
-  }/websocket`,
-  options: {
-    reconnect: true,
-  },
-});
+// Need to export this factory in order for mobile to pass in tokens once the user is authenticated
+export const createLink = (options?: CreateLinkOptions) => {
+  const { httpLinkOptions } = options || {};
+  // HTTP Link for queries and mutations including file uploads
+  const httpLink = createUploadLink({
+    ...httpLinkOptions,
+    uri: API_URI,
+    credentials: 'include',
+  });
 
-// Switch between the two links based on operation
-const link = split(
-  ({ query }) => {
-    const { kind, operation } = getMainDefinition(query);
-    return kind === 'OperationDefinition' && operation === 'subscription';
-  },
-  wsLink,
-  httpLink
-);
+  // Websocket link for subscriptions
+  const wsLink = new WebSocketLink({
+    uri: `${
+      // eslint-disable-next-line
+      IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
+    }/websocket`,
+    options: {
+      reconnect: true,
+    },
+  });
+
+  // Switch between the two links based on operation
+  const link = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query);
+      return kind === 'OperationDefinition' && operation === 'subscription';
+    },
+    wsLink,
+    httpLink
+  );
+
+  return link;
+};
 
 const client = new ApolloClient({
-  link,
+  link: createLink(),
   // eslint-disable-next-line
   cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
   ssrForceFetchDelay: 100,

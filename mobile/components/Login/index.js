@@ -1,36 +1,36 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
+import { authenticate } from '../../actions/authentication';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
     : 'http://localhost:3001';
 
-type State = { token?: string };
+type Props = {
+  dispatch: Function,
+};
 
-class Login extends React.Component<{}, State> {
-  state = {
-    token: '',
-  };
-
+class Login extends React.Component<Props> {
   authenticate = (provider: 'twitter' | 'facebook' | 'google') => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
       authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
     });
-    if (result.type === 'error') {
-      // Do something with result.errorCode and result.event
-    }
     if (result.type === 'success') {
       const { params } = result;
-      this.setState({
-        token: params.accessToken,
-      });
+      this.props.dispatch(authenticate(params.accessToken));
       await SecureStore.setItemAsync('token', params.accessToken);
     }
-    // The request was cancelled by the user
+    if (result.type === 'error') {
+      // Some error happened
+      // TODO(@mxstbr): Error UI
+    }
+    // User cancelled the login request
+    // TODO(@mxstbr): Cancel UI
   };
 
   render() {
@@ -53,4 +53,4 @@ class Login extends React.Component<{}, State> {
   }
 }
 
-export default Login;
+export default connect()(Login);
