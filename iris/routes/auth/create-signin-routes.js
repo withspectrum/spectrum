@@ -9,7 +9,7 @@
  */
 import passport from 'passport';
 import { URL } from 'url';
-import isSpectrumUrl, { isExpoUrl } from '../../utils/is-spectrum-url';
+import isSpectrumUrl from '../../utils/is-spectrum-url';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
