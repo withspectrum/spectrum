@@ -1,9 +1,16 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import userEverythingConnectionFragment from '../../fragments/user/userEverythingConnection';
+import userEverythingConnectionFragment, {
+  type UserEverythingConnectionType,
+} from '../../fragments/user/userEverythingConnection';
 import { subscribeToUpdatedThreads } from '../../subscriptions';
 import { parseRealtimeThreads } from '../../subscriptions/utils';
+
+export type GetCurrentUserEverythingFeedType = {
+  id: string,
+  ...$Exact<UserEverythingConnectionType>,
+};
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
@@ -46,6 +53,7 @@ const getCurrentUserEverythingOptions = {
       refetch,
       threads: user ? user.everything.edges : '',
       feed: 'everything',
+      threadConnection: user ? user.everything : null,
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
