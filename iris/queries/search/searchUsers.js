@@ -17,25 +17,6 @@ export default (args: Args, { loaders }: GraphQLContext) => {
     .then(content => {
       if (!content.hits || content.hits.length === 0) return [];
       const userIds = content.hits.map(o => o.objectID);
-      if (searchFilter && searchFilter.communityId) {
-        const input = userIds.map(userId => [userId, searchFilter.communityId]);
-        return getUsersPermissionsInCommunities(input).then(results => {
-          if (results && results.length > 0) {
-            const memberUsers = results.filter(
-              user => user.isMember || user.isBlocked
-            );
-            if (memberUsers.length > 0) {
-              return loaders.user.loadMany(
-                memberUsers.map(user => user.userId)
-              );
-            }
-
-            return [];
-          }
-          return [];
-        });
-      }
-
       return loaders.user.loadMany(userIds);
     })
     .then(data => data.filter(Boolean))

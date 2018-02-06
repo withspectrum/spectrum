@@ -32,6 +32,7 @@ export default (
   return getMembersInCommunity(id, { first, after: lastUserIndex }, filter)
     .then(users => {
       const permissionsArray = users.map(userId => [userId, id]);
+      // $FlowIssue
       return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
     })
     .then(result => ({

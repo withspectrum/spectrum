@@ -113,41 +113,6 @@ class CommunityMembers extends React.Component<Props, State> {
     this.props.history.push('/messages/new');
   };
 
-  parseUser = user => {
-    const roles = Object.keys(user.contextPermissions)
-      .filter(r => r !== 'reputation')
-      .filter(r => r !== 'isMember')
-      .filter(r => r !== 'communityId')
-      .filter(r => r !== '__typename')
-      .filter(r => user && user.contextPermissions[r])
-      .map(r => {
-        switch (r) {
-          case 'isOwner':
-            return 'admin';
-          case 'isBlocked':
-            return 'blocked';
-          case 'isModerator':
-            return 'moderator';
-          default:
-            return null;
-        }
-      });
-
-    if (user.isPro) {
-      roles.push('pro');
-    }
-
-    roles.filter(Boolean);
-
-    const reputation =
-      (user.contextPermissions &&
-        user.contextPermissions.reputation &&
-        user.contextPermissions.reputation.toString()) ||
-      '0';
-
-    return { roles, reputation };
-  };
-
   generateUserProfile = communityMember => {
     const { user, roles, reputation, ...permissions } = communityMember;
     return (

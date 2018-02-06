@@ -35,8 +35,9 @@ class CommunityMemberGrid extends React.Component<Props> {
       return (
         <FlexCol>
           <Grid>
-            {nodes.map(({ user }) => {
-              if (!user) return null;
+            {nodes.map(node => {
+              if (!node) return null;
+              const { user } = node;
               return (
                 <UserProfile
                   key={user.id}

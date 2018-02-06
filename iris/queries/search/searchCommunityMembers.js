@@ -19,7 +19,10 @@ export default (args: Args, { loaders }: GraphQLContext) => {
       // community members
       if (searchFilter && !searchFilter.communityId) return [];
       const userIds = content.hits.map(o => o.objectID);
-      const input = userIds.map(userId => [userId, searchFilter.communityId]);
+      const input = userIds.map(userId => {
+        if (!searchFilter || !searchFilter.communityId) return null;
+        return [userId, searchFilter.communityId];
+      });
       return loaders.userPermissionsInCommunity.loadMany(input);
     })
     .then(results =>
