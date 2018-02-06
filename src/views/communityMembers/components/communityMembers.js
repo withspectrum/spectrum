@@ -249,10 +249,8 @@ class CommunityMembers extends React.Component<Props, State> {
 
               const members =
                 community &&
-                community.memberConnection &&
-                community.memberConnection.edges.map(
-                  member => member && member.node
-                );
+                community.members &&
+                community.members.edges.map(member => member && member.node);
 
               if (!members || members.length === 0) {
                 if (filter && filter.isBlocked) {
@@ -301,7 +299,7 @@ class CommunityMembers extends React.Component<Props, State> {
                   })}
 
                   {community &&
-                    community.memberConnection.pageInfo.hasNextPage && (
+                    community.members.pageInfo.hasNextPage && (
                       <SectionCardFooter>
                         <FetchMore
                           color={'brand.default'}

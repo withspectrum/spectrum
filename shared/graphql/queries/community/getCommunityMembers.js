@@ -5,50 +5,47 @@ import communityMetaDataFragment from '../../fragments/community/communityMetaDa
 import type { CommunityMetaDataType } from '../../fragments/community/communityMetaData';
 import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import communityMemberConnectionFragment from '../../fragments/community/communityMemberConnection';
-import type { CommunityMemberConnectionType } from '../../fragments/community/communityMemberConnection';
+import communityMembersFragment, {
+  type CommunityMembersType,
+} from '../../fragments/community/communityMembers';
 
-export type GetCommunityMemberConnectionType = {
+export type GetCommunityMembersType = {
   ...$Exact<CommunityInfoType>,
   ...$Exact<CommunityMetaDataType>,
-  ...$Exact<CommunityMemberConnectionType>,
+  ...$Exact<CommunityMembersType>,
 };
 
 const LoadMoreMembers = gql`
   query loadMoreCommunityMembers(
     $id: ID
     $after: String
-    $filter: MemberConnectionFilter
+    $filter: MembersFilter
   ) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
-      ...communityMemberConnection
+      ...communityMembers
     }
   }
   ${communityInfoFragment}
   ${communityMetaDataFragment}
-  ${communityMemberConnectionFragment}
+  ${communityMembersFragment}
 `;
 
-export const getCommunityMemberConnectionQuery = gql`
-  query getCommunityMembers(
-    $id: ID
-    $after: String
-    $filter: MemberConnectionFilter
-  ) {
+export const getcommunityMembersQuery = gql`
+  query getCommunityMembers($id: ID, $after: String, $filter: MembersFilter) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
-      ...communityMemberConnection
+      ...communityMembers
     }
   }
   ${communityInfoFragment}
   ${communityMetaDataFragment}
-  ${communityMemberConnectionFragment}
+  ${communityMembersFragment}
 `;
 
-const getCommunityMemberConnectionOptions = {
+const getcommunityMembersOptions = {
   props: ({
     data: { fetchMore, error, loading, community, networkStatus },
   }) => ({
@@ -57,18 +54,15 @@ const getCommunityMemberConnectionOptions = {
       loading,
       community,
       networkStatus: networkStatus,
-      hasNextPage: community
-        ? community.memberConnection.pageInfo.hasNextPage
-        : false,
+      hasNextPage: community ? community.members.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreMembers,
           variables: {
             id: community.id,
             after:
-              community.memberConnection.edges[
-                community.memberConnection.edges.length - 1
-              ].cursor,
+              community.members.edges[community.members.edges.length - 1]
+                .cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.community) {
@@ -79,15 +73,15 @@ const getCommunityMemberConnectionOptions = {
               ...prev,
               community: {
                 ...prev.community,
-                memberConnection: {
-                  ...prev.community.memberConnection,
+                members: {
+                  ...prev.community.members,
                   pageInfo: {
-                    ...prev.community.memberConnection.pageInfo,
-                    ...fetchMoreResult.community.memberConnection.pageInfo,
+                    ...prev.community.members.pageInfo,
+                    ...fetchMoreResult.community.members.pageInfo,
                   },
                   edges: [
-                    ...prev.community.memberConnection.edges,
-                    ...fetchMoreResult.community.memberConnection.edges,
+                    ...prev.community.members.edges,
+                    ...fetchMoreResult.community.members.edges,
                   ],
                 },
               },
@@ -114,7 +108,4 @@ const getCommunityMemberConnectionOptions = {
   }),
 };
 
-export default graphql(
-  getCommunityMemberConnectionQuery,
-  getCommunityMemberConnectionOptions
-);
+export default graphql(getcommunityMembersQuery, getcommunityMembersOptions);

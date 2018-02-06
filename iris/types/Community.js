@@ -9,12 +9,24 @@ const Community = /* GraphQL */ `
 		node: Channel!
 	}
 
+	# Deprecated - use Community.members field
 	type CommunityMembersConnection {
 		pageInfo: PageInfo!
 		edges: [CommunityMemberEdge!]
 	}
 
+	# Deprecated - use Community.members field
 	type CommunityMemberEdge {
+		cursor: String!
+		node: User!
+	}
+
+	type CommunityMembers {
+		pageInfo: PageInfo!
+		edges: [CommunityMembersEdge!]
+	}
+
+	type CommunityMembersEdge {
 		cursor: String!
 		node: CommunityMember!
 	}
@@ -59,7 +71,7 @@ const Community = /* GraphQL */ `
 		pinnedThread: Thread
 		communityPermissions: CommunityPermissions
 		channelConnection: CommunityChannelsConnection!
-		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection!
+		members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
@@ -70,8 +82,10 @@ const Community = /* GraphQL */ `
 		conversationGrowth: GrowthData
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
-		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
 		watercooler: Thread
+
+		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
+		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
 	}
 
 	extend type Query {
@@ -80,11 +94,20 @@ const Community = /* GraphQL */ `
 		communityMember(userId: String, communityId: String): CommunityMember		
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
+
 		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
-	input MemberConnectionFilter {
+	input MembersFilter {
+		isOwner: Boolean
+		isMember: Boolean
+		isBlocked: Boolean
+		isPending: Boolean
+		isModerator: Boolean
+	}
+
+	input MemberConnectionFilter @deprecated(reason: "Use the new MembersFilter input type") {
 		isOwner: Boolean
 		isMember: Boolean
 		isBlocked: Boolean

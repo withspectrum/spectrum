@@ -1,15 +1,17 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../../components/viewNetworkHandler';
-import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMemberConnection';
-import type { GetCommunityMemberConnectionType } from 'shared/graphql/queries/community/getCommunityMemberConnection';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from '../../../components/viewNetworkHandler';
+import getCommunityMembersQuery, {
+  type GetCommunityMembersType,
+} from 'shared/graphql/queries/community/getCommunityMembers';
 
 type Props = {
   data: {
     fetchMore: Function,
-    community: GetCommunityMemberConnectionType,
+    community: GetCommunityMembersType,
   },
   ...$Exact<ViewNetworkHandlerType>,
   render: Function,

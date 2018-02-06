@@ -1,16 +1,11 @@
 // @flow
-/*
-
-    DEPRECATED 2/3/2018 by @brian
-
-*/
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
 const { getMembersInCommunity } = require('../../models/usersCommunities');
 
-type MemberConnectionFilterType = {
+type MembersFilterType = {
   isMember?: boolean,
   isOwner?: boolean,
   isModerator?: boolean,
@@ -24,7 +19,7 @@ export default (
     first = 10,
     after,
     filter,
-  }: { ...$Exact<PaginationOptions>, filter: MemberConnectionFilterType },
+  }: { ...$Exact<PaginationOptions>, filter: MembersFilterType },
   { loaders }: GraphQLContext
 ) => {
   const cursor = decode(after);
@@ -35,13 +30,17 @@ export default (
 
   // $FlowFixMe
   return getMembersInCommunity(id, { first, after: lastUserIndex }, filter)
-    .then(users => loaders.user.loadMany(users))
+    .then(users => {
+      const permissionsArray = users.map(userId => [userId, id]);
+      // $FlowIssue
+      return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
+    })
     .then(result => ({
       pageInfo: {
         hasNextPage: result && result.length >= first,
       },
       edges: result.filter(Boolean).map((user, index) => ({
-        cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
+        cursor: encode(`${user.userId}-${lastUserIndex + index + 1}`),
         node: user,
       })),
     }));

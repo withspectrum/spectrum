@@ -11,8 +11,8 @@ type Edge = {
   },
 };
 
-export type CommunityMemberConnectionType = {
-  memberConnection: {
+export type CommunityMembersType = {
+  members: {
     pageInfo: {
       hasNextPage: boolean,
       hasPreviousPage: boolean,
@@ -22,9 +22,9 @@ export type CommunityMemberConnectionType = {
 };
 
 export default gql`
-  fragment communityMemberConnection on Community {
-    memberConnection(after: $after, filter: $filter)
-      @connection(key: "communityMemberConnection") {
+  fragment communityMembers on Community {
+    members(after: $after, filter: $filter)
+      @connection(key: "communityMembers") {
       pageInfo {
         hasNextPage
         hasPreviousPage
