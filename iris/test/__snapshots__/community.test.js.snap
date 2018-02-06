@@ -74,7 +74,7 @@ Object {
   "data": Object {
     "community": Object {
       "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
-      "memberConnection": Object {
+      "members": Object {
         "edges": Array [
           Object {
             "cursor": "VlRvS2NkZTE2ZFJFZ0RrWGNEbDNoaGNyRk4zMy0x",
