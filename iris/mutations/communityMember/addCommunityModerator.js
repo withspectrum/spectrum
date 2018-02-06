@@ -79,9 +79,10 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
 
   // all checks pass
   if (currentUserPermission.isOwner) {
-    return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
-      .then(([newPermissions]) => newPermissions)
-      .catch(err => new UserError(err));
+    return await makeMemberModeratorInCommunity(
+      communityId,
+      userToEvaluateId
+    ).catch(err => new UserError(err));
   }
 
   return new UserError(

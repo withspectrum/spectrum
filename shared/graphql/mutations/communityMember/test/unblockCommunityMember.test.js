@@ -38,7 +38,9 @@ afterAll(
 it('should fail if current user is not authenticated', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -51,7 +53,9 @@ it('should fail if current user is not authenticated', async () => {
 it('should fail if current user is not a member of the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -68,7 +72,9 @@ it('should fail if current user is not a member of the community', async () => {
 it('should fail if evaluated user is not a member of the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -91,7 +97,9 @@ it('should fail if evaluated user is not a member of the community', async () =>
 it('should fail if evaluated user used to be a member but is not any more', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -114,7 +122,9 @@ it('should fail if evaluated user used to be a member but is not any more', asyn
 it("should fail if the community doesn't exist", async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -134,7 +144,9 @@ it("should fail if the community doesn't exist", async () => {
 it('should fail if evaluated user is not blocked in the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -157,7 +169,9 @@ it('should fail if evaluated user is not blocked in the community', async () => 
 it('should fail if current user is not an owner of the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
@@ -174,16 +188,17 @@ it('should fail if current user is not an owner of the community', async () => {
 it('should unblock a member in the community', async () => {
   const query = /* GraphQL */ `
     mutation unblockCommunityMember($input: UnblockCommunityMemberInput!) {
-      unblockCommunityMember (input: $input)
+      unblockCommunityMember (input: $input) {
+        id
+      }
     }
   `;
 
   const context = { user: owner };
 
-  expect.assertions(8);
+  expect.assertions(7);
   const result = await request(query, { context, variables });
   expect(result).toMatchSnapshot();
-  expect(result.data.unblockCommunityMember).toEqual(true);
 
   // ensure that only one record exists for the moderator
   const getUsersCommunities = () =>
