@@ -5,8 +5,6 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 const EXPO_URL = /^https:\/\/auth\.expo\.io\/@(mxstbr|uberbryn|brianlovin)\//;
 
-export const isExpoUrl = (url: string): boolean => EXPO_URL.test(url);
-
 /**
  * Make a URL string is a spectrum.chat URL
  */
@@ -15,13 +13,14 @@ export default (url: string): boolean => {
   if (EXPO_URL.test(url)) return true;
 
   try {
-    const { hostname } = new URL(url);
+    const { hostname, protocol } = new URL(url);
     // hostname might be spectrum.chat or subdomain.spectrum.chat, so we use .endsWith
     // We don't just check .contains because otherwise folks could make spectrum.chat.mydomain.com
     const IS_SPECTRUM_URL = hostname.endsWith('spectrum.chat');
     const IS_LOCALHOST = hostname === 'localhost';
+    const IS_HTTP = protocol === 'https:' || protocol === 'http:';
     // Make sure the passed redirect URL is a spectrum.chat one or (in development) localhost
-    if (IS_SPECTRUM_URL || (!IS_PROD && IS_LOCALHOST)) {
+    if (IS_HTTP && (IS_SPECTRUM_URL || (!IS_PROD && IS_LOCALHOST))) {
       return true;
     }
   } catch (err) {

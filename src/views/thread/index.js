@@ -430,6 +430,7 @@ class ThreadContainer extends React.Component<Props, State> {
                     scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
                     lastSeen={thread.currentUserLastSeen}
+                    lastActive={thread.lastActive}
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}
