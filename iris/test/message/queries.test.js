@@ -29,7 +29,9 @@ describe('sender', () => {
         message(id: "${data.messages[0].id}") {
           sender {
             id
-            username
+            user { 
+              username
+            }
           }
         }
       }
