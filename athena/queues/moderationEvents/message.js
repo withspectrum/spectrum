@@ -42,8 +42,11 @@ export default async (job: JobData) => {
     joinedCommunityAt: permissions.createdAt,
     joinedSpectrumAt: user.createdAt,
     reputation: permissions.reputation,
-    communityRole:
-      permissions.isOwner || permissions.isModerator || permissions.isMember,
+    communityRole: permissions.isOwner
+      ? 'owner'
+      : permissions.isModerator
+        ? 'moderator'
+        : permissions.isMember ? 'member' : null,
   };
 
   const scores = await Promise.all([
