@@ -9,14 +9,12 @@ const Community = /* GraphQL */ `
 		node: Channel!
 	}
 
-	# Deprecated - use Community.members field
-	type CommunityMembersConnection {
+	type CommunityMembersConnection @deprecated(reason:"Use the new Community.members type") {
 		pageInfo: PageInfo!
 		edges: [CommunityMemberEdge!]
 	}
 
-	# Deprecated - use Community.members field
-	type CommunityMemberEdge {
+	type CommunityMemberEdge @deprecated(reason:"Use the new Community.members type") {
 		cursor: String!
 		node: User!
 	}
