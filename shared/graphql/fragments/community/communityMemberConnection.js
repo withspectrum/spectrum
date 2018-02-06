@@ -1,20 +1,13 @@
 // @flow
 import gql from 'graphql-tag';
-import userInfoFragment from '../user/userInfo';
-import type { UserInfoType } from '../user/userInfo';
+import communityMemberInfoFragment, {
+  type CommunityMemberInfoType,
+} from '../communityMember/communityMemberInfo';
 
 type Edge = {
   cursor: string,
   node: {
-    ...$Exact<UserInfoType>,
-    contextPermissions: {
-      communityId: string,
-      reputation: number,
-      isOwner: boolean,
-      isModerator: boolean,
-      isBlocked: boolean,
-      isMember: boolean,
-    },
+    ...$Exact<CommunityMemberInfoType>,
   },
 };
 
@@ -39,18 +32,10 @@ export default gql`
       edges {
         cursor
         node {
-          ...userInfo
-          contextPermissions {
-            communityId
-            reputation
-            isOwner
-            isModerator
-            isBlocked
-            isMember
-          }
+          ...communityMemberInfo
         }
       }
     }
   }
-  ${userInfoFragment}
+  ${communityMemberInfoFragment}
 `;

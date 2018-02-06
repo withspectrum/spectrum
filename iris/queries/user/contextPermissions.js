@@ -1,4 +1,9 @@
 // @flow
+/*
+
+    DEPRECATED 2/3/2018 by @brian
+
+*/
 import type { GraphQLContext } from '../../';
 import { getThread } from '../../models/thread';
 import { getChannelById } from '../../models/channel';

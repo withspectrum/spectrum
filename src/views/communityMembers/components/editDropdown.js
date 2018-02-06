@@ -18,10 +18,10 @@ import Icon from '../../../components/icons';
 import { Spinner } from '../../../components/globals';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import OutsideClickHandler from './outsideClickHandler';
-import addCommunityModerator from 'shared/graphql/mutations/community/addCommunityModerator';
-import removeCommunityModerator from 'shared/graphql/mutations/community/removeCommunityModerator';
-import blockCommunityMember from 'shared/graphql/mutations/community/blockCommunityMember';
-import unblockCommunityMember from 'shared/graphql/mutations/community/unblockCommunityMember';
+import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
+import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
+import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';
+import unblockCommunityMember from 'shared/graphql/mutations/communityMember/unblockCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import MutationWrapper from './mutationWrapper';
 
@@ -35,12 +35,12 @@ type Props = {
   history: Object,
   user: {
     ...$Exact<GetUserType>,
-    contextPermissions: {
-      isMember: boolean,
-      isOwner: boolean,
-      isModerator: boolean,
-      isBlocked: boolean,
-    },
+  },
+  permissions: {
+    isMember: boolean,
+    isBlocked: boolean,
+    isModerator: boolean,
+    isOwner: boolean,
   },
 };
 
@@ -89,9 +89,9 @@ class EditDropdown extends React.Component<Props, State> {
   };
 
   getRolesConfiguration = () => {
-    const { user: { contextPermissions } } = this.props;
+    const { permissions } = this.props;
 
-    if (contextPermissions.isOwner) {
+    if (permissions.isOwner) {
       return [
         {
           ...this.permissionConfigurations.owner,
@@ -100,7 +100,7 @@ class EditDropdown extends React.Component<Props, State> {
       ];
     }
 
-    if (contextPermissions.isModerator) {
+    if (permissions.isModerator) {
       return [
         {
           ...this.permissionConfigurations.moderator,
@@ -119,7 +119,7 @@ class EditDropdown extends React.Component<Props, State> {
       ];
     }
 
-    if (contextPermissions.isMember) {
+    if (permissions.isMember) {
       return [
         {
           ...this.permissionConfigurations.moderator,
@@ -138,7 +138,7 @@ class EditDropdown extends React.Component<Props, State> {
       ];
     }
 
-    if (contextPermissions.isBlocked) {
+    if (permissions.isBlocked) {
       return [
         {
           ...this.permissionConfigurations.moderator,

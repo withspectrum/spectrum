@@ -11,7 +11,6 @@ const Message = /* GraphQL */ `
 		directMessageThread
 	}
 
-	# The content and type of a message
 	type MessageContent {
 		body: String!
 	}
@@ -21,7 +20,6 @@ const Message = /* GraphQL */ `
 		hasReacted: Boolean
 	}
 
-	# A message
 	type Message {
 		id: ID!
 		timestamp: Date!
@@ -45,16 +43,14 @@ const Message = /* GraphQL */ `
 	}
 
 	extend type Query {
-		message(
-			id: ID!
-		): Message
+		message(id: ID!): Message
 		getMediaMessagesForThread(threadId: ID!): [Message]
 	}
 
 
 	extend type Mutation {
 		addMessage(message: MessageInput!): Message
-        deleteMessage(id: ID!): Boolean
+		deleteMessage(id: ID!): Boolean
 	}
 
 	extend type Subscription {

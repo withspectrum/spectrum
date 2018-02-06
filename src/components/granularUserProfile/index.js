@@ -112,7 +112,9 @@ class GranularUserProfile extends React.Component<Props> {
               </NameContent>
             )}
 
-            {reputation && <Reputation reputation={reputation} />}
+            {typeof reputation === 'number' && (
+              <Reputation reputation={reputation} />
+            )}
 
             {description && <Description>{description}</Description>}
 

@@ -9,6 +9,16 @@ const general = /* GraphQL */ `
 		hasPreviousPage: Boolean
 	}
 
+	# ThreadParticipant type accounts for both channel and community permissions
+	type ThreadParticipant {
+		user: User
+		roles: [String]
+		isModerator: Boolean
+		isOwner: Boolean
+		isBlocked: Boolean
+		reputation: Int
+	}
+
 	type ChannelPermissions {
 		isMember: Boolean
 		isBlocked: Boolean
@@ -41,7 +51,7 @@ const general = /* GraphQL */ `
 		status: String
 	}
 
-	type ContextPermissions {
+	type ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions") {
 		communityId: String
 		reputation: Int
 		isModerator: Boolean

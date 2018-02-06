@@ -148,7 +148,8 @@ class CommunityMembers extends React.Component<Props, State> {
     return { roles, reputation };
   };
 
-  generateUserProfile = (user, reputation, roles) => {
+  generateUserProfile = communityMember => {
+    const { user, roles, reputation, ...permissions } = communityMember;
     return (
       <GranularUserProfile
         key={user.id}
@@ -165,7 +166,11 @@ class CommunityMembers extends React.Component<Props, State> {
         badges={roles}
       >
         {user.id !== this.props.currentUser.id && (
-          <EditDropdown user={user} community={this.props.community} />
+          <EditDropdown
+            user={user}
+            permissions={permissions}
+            community={this.props.community}
+          />
         )}
       </GranularUserProfile>
     );
@@ -251,10 +256,9 @@ class CommunityMembers extends React.Component<Props, State> {
 
                 return (
                   <ListContainer>
-                    {searchResults.map(user => {
-                      if (!user) return null;
-                      const { roles, reputation } = this.parseUser(user);
-                      return this.generateUserProfile(user, reputation, roles);
+                    {searchResults.map(communityMember => {
+                      if (!communityMember) return null;
+                      return this.generateUserProfile(communityMember);
                     })}
                   </ListContainer>
                 );
@@ -330,10 +334,9 @@ class CommunityMembers extends React.Component<Props, State> {
                       </Notice>
                     )}
 
-                  {members.map(user => {
-                    if (!user) return null;
-                    const { roles, reputation } = this.parseUser(user);
-                    return this.generateUserProfile(user, reputation, roles);
+                  {members.map(communityMember => {
+                    if (!communityMember) return null;
+                    return this.generateUserProfile(communityMember);
                   })}
 
                   {community &&

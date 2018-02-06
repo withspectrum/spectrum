@@ -3,9 +3,11 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getCommunityById } from '../../models/community';
 import {
-  makeMemberModeratorInCommunity,
+  removeModeratorInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
+import { removeModeratorInChannel } from '../../models/usersChannels';
+import { getChannelsByUserAndCommunity } from '../../models/channel';
 
 type Input = {
   input: {
@@ -45,9 +47,7 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   }
 
   if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
-    return new UserError(
-      'This person must be a member of the community before becoming a moderator.'
-    );
+    return new UserError('This person is not a member of the community.');
   }
 
   const currentUserPermission = currentUserPermissions[0];
@@ -62,15 +62,11 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     !userToEvaluatePermission.isMember &&
     !userToEvaluatePermission.isBlocked
   ) {
-    return new UserError(
-      'This person must be a member of the community before becoming a moderator.'
-    );
+    return new UserError('This person is not a member of your community.');
   }
 
-  if (userToEvaluatePermission.isModerator) {
-    return new UserError(
-      'This person is already a moderator in your community.'
-    );
+  if (!userToEvaluatePermission.isModerator) {
+    return new UserError('This person is not a moderator in your community.');
   }
 
   if (!currentUserPermission.isOwner) {
@@ -78,13 +74,26 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner) {
-    return await makeMemberModeratorInCommunity(communityId, userToEvaluateId)
-      .then(() => true)
+  if (currentUserPermission.isOwner && userToEvaluatePermission.isModerator) {
+    // remove as moderator in community and all channels, this should be expected UX
+    const allChannelsInCommunity = await getChannelsByUserAndCommunity(
+      communityId,
+      userToEvaluateId
+    );
+
+    const removeChannelModeratorPromises = allChannelsInCommunity.map(channel =>
+      removeModeratorInChannel(channel, userToEvaluateId)
+    );
+
+    return await Promise.all([
+      removeModeratorInCommunity(communityId, userToEvaluateId),
+      ...removeChannelModeratorPromises,
+    ])
+      .then(([newPermissions]) => newPermissions)
       .catch(err => new UserError(err));
   }
 
   return new UserError(
-    "We weren't able to process your request to add a moderator to this community."
+    "We weren't able to process your request to remove a moderator in this community."
   );
 };

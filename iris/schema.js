@@ -29,6 +29,7 @@ const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
 const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
+const CommunityMember = require('./types/CommunityMember');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -40,6 +41,7 @@ const directMessageThreadQueries = require('./queries/directMessageThread');
 const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
 const searchQueries = require('./queries/search');
+const communityMemberQueries = require('./queries/communityMember');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
@@ -51,6 +53,7 @@ const directMessageThreadMutations = require('./mutations/directMessageThread');
 const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
+const communityMemberMutations = require('./mutations/communityMember');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
@@ -95,6 +98,7 @@ const resolvers = merge(
   notificationQueries,
   metaQueries,
   searchQueries,
+  communityMemberQueries,
   // mutations
   messageMutations,
   threadMutations,
@@ -106,6 +110,7 @@ const resolvers = merge(
   notificationMutations,
   userMutations,
   metaMutations,
+  communityMemberMutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
@@ -125,6 +130,7 @@ const schema = makeExecutableSchema({
     generalTypes,
     Root,
     Community,
+    CommunityMember,
     Channel,
     Thread,
     Message,

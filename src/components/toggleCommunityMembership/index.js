@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import addCommunityMemberMutation from 'shared/graphql/mutations/community/addCommunityMember';
-import removeCommunityMemberMutation from 'shared/graphql/mutations/community/removeCommunityMember';
+import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember/addCommunityMember';
+import removeCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
-import type { AddCommunityMemberType } from 'shared/graphql/mutations/community/addCommunityMember';
-import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/community/removeCommunityMember';
+import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
+import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 
 type Props = {
   community: {

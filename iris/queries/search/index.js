@@ -20,6 +20,9 @@ module.exports = {
       if (root.username) {
         return 'User';
       }
+      if (root.reputation) {
+        return 'CommunityMember';
+      }
       return null;
     },
   },

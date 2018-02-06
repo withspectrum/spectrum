@@ -30,13 +30,16 @@ export default (
 
   // $FlowFixMe
   return getMembersInCommunity(id, { first, after: lastUserIndex }, filter)
-    .then(users => loaders.user.loadMany(users))
+    .then(users => {
+      const permissionsArray = users.map(userId => [userId, id]);
+      return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
+    })
     .then(result => ({
       pageInfo: {
         hasNextPage: result && result.length >= first,
       },
       edges: result.filter(Boolean).map((user, index) => ({
-        cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
+        cursor: encode(`${user.userId}-${lastUserIndex + index + 1}`),
         node: user,
       })),
     }));

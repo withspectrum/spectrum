@@ -6,12 +6,6 @@ import toggleCommunityMembership from './toggleCommunityMembership';
 import sendSlackInvites from './sendSlackInvites';
 import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
-import addCommunityMember from './addCommunityMember';
-import removeCommunityMember from './removeCommunityMember';
-import addCommunityModerator from './addCommunityModerator';
-import removeCommunityModerator from './removeCommunityModerator';
-import blockCommunityMember from './blockCommunityMember';
-import unblockCommunityMember from './unblockCommunityMember';
 
 module.exports = {
   Mutation: {
@@ -22,11 +16,5 @@ module.exports = {
     sendSlackInvites,
     sendEmailInvites,
     pinThread,
-    addCommunityMember,
-    removeCommunityMember,
-    addCommunityModerator,
-    removeCommunityModerator,
-    blockCommunityMember,
-    unblockCommunityMember,
   },
 };

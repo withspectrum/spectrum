@@ -1,19 +1,13 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import userInfoFragment from '../../fragments/user/userInfo';
-import type { UserInfoType } from '../../fragments/user/userInfo';
+import communityMemberInfoFragment, {
+  type CommunityMemberInfoType,
+} from '../../fragments/communityMember/communityMemberInfo';
 
 type Node = {
   node: {
-    ...$Exact<UserInfoType>,
-    contextPermissions: {
-      isMember: boolean,
-      isBlocked: boolean,
-      isModerator: boolean,
-      isOwner: boolean,
-      reputation: number,
-    },
+    ...$Exact<CommunityMemberInfoType>,
   },
 };
 
@@ -29,34 +23,26 @@ export const searchCommunityMembersQuery = gql`
     $type: SearchType!
     $filter: SearchFilter
   ) {
-    search(queryString: $queryString, type: $type, filter: $filter)
-      @connection(key: "search", filter: ["type"]) {
+    search(queryString: $queryString, type: $type, filter: $filter) {
       searchResultsConnection {
         edges {
           node {
-            ... on User {
-              ...userInfo
-              contextPermissions {
-                isMember
-                isModerator
-                isOwner
-                isBlocked
-                reputation
-              }
+            ... on CommunityMember {
+              ...communityMemberInfo
             }
           }
         }
       }
     }
   }
-  ${userInfoFragment}
+  ${communityMemberInfoFragment}
 `;
 
 const searchCommunityMembersOptions = {
   options: ({ queryString, filter = {} }) => ({
     variables: {
       queryString,
-      type: 'USERS',
+      type: 'COMMUNITY_MEMBERS',
       filter,
     },
     fetchPolicy: 'cache-and-network',

@@ -74,7 +74,7 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
       unblockUserInCommunity(communityId, userToEvaluateId),
       ...unblockInDefaultChannelPromises,
     ])
-      .then(() => true)
+      .then(([newPermissions]) => newPermissions)
       .catch(err => new UserError(err));
   }
 

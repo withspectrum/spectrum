@@ -2,12 +2,12 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getCommunityById } from '../../models/community';
+import { blockUserInChannel } from '../../models/usersChannels';
+import { getChannelsByCommunity } from '../../models/channel';
 import {
-  removeModeratorInCommunity,
+  blockUserInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
-import { removeModeratorInChannel } from '../../models/usersChannels';
-import { getChannelsByUserAndCommunity } from '../../models/channel';
 
 type Input = {
   input: {
@@ -43,57 +43,45 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
   // if no permissions exist, the user performing this mutation isn't even
   // a member of this community
   if (!currentUserPermissions || currentUserPermissions.length === 0) {
-    return new UserError('You must own this community to manage moderators.');
+    return new UserError('You must own this community to manage members.');
   }
 
   if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
-    return new UserError('This person is not a member of the community.');
+    return new UserError('This person is not a member of your community.');
   }
 
   const currentUserPermission = currentUserPermissions[0];
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
-  // it's possible for a member to be moving from blocked -> moderator
-  // in this situation, they are isMember: false, but they are technically a
-  // member of the community - just blocked. By checking to ensure if isMember
-  // and isBlocked are both false, we ensure that the user is not in any way
-  // in a relationship with the community
-  if (
-    !userToEvaluatePermission.isMember &&
-    !userToEvaluatePermission.isBlocked
-  ) {
+  if (!userToEvaluatePermission.isMember) {
     return new UserError('This person is not a member of your community.');
   }
 
-  if (!userToEvaluatePermission.isModerator) {
-    return new UserError('This person is not a moderator in your community.');
+  if (userToEvaluatePermission.isBlocked) {
+    return new UserError('This person is already blocked in your community.');
   }
 
   if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage moderators.');
+    return new UserError('You must own this community to manage members.');
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner && userToEvaluatePermission.isModerator) {
-    // remove as moderator in community and all channels, this should be expected UX
-    const allChannelsInCommunity = await getChannelsByUserAndCommunity(
-      communityId,
-      userToEvaluateId
-    );
-
-    const removeChannelModeratorPromises = allChannelsInCommunity.map(channel =>
-      removeModeratorInChannel(channel, userToEvaluateId)
+  if (currentUserPermission.isOwner) {
+    const channels = await getChannelsByCommunity(community.id);
+    const channelIds = channels.map(c => c.id);
+    const blockInChannelPromises = channelIds.map(
+      async channelId => await blockUserInChannel(channelId, userToEvaluateId)
     );
 
     return await Promise.all([
-      removeModeratorInCommunity(communityId, userToEvaluateId),
-      ...removeChannelModeratorPromises,
+      blockUserInCommunity(communityId, userToEvaluateId),
+      ...blockInChannelPromises,
     ])
-      .then(() => true)
+      .then(([newPermissions]) => newPermissions)
       .catch(err => new UserError(err));
   }
 
   return new UserError(
-    "We weren't able to process your request to remove a moderator in this community."
+    "We weren't able to process your request to block a member in this community."
   );
 };

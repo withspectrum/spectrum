@@ -80,14 +80,14 @@ it('should fetch a list of community members', async () => {
           edges {
             cursor
             node {
-              id
-              totalReputation
-              contextPermissions {
-                communityId
-                reputation
-                isOwner
-                isModerator
+              user {
+                id
               }
+              reputation
+              isOwner
+              isModerator
+              isMember
+              isBlocked
             }
           }
         }
