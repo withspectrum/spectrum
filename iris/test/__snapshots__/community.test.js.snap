@@ -79,25 +79,40 @@ Object {
           Object {
             "cursor": "VlRvS2NkZTE2ZFJFZ0RrWGNEbDNoaGNyRk4zMy0x",
             "node": Object {
-              "contextPermissions": null,
-              "id": "VToKcde16dREgDkXcDl3hhcrFN33",
-              "totalReputation": 101,
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 102,
+              "user": Object {
+                "id": "VToKcde16dREgDkXcDl3hhcrFN33",
+              },
             },
           },
           Object {
             "cursor": "MDFwMkE3a0RDV1VqR2o2elFMbE1RVU9TUUw0Mi0y",
             "node": Object {
-              "contextPermissions": null,
-              "id": "01p2A7kDCWUjGj6zQLlMQUOSQL42",
-              "totalReputation": 102,
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": true,
+              "isOwner": false,
+              "reputation": 101,
+              "user": Object {
+                "id": "01p2A7kDCWUjGj6zQLlMQUOSQL42",
+              },
             },
           },
           Object {
             "cursor": "Z1ZrNW1Zd2NjVU9FS2lONXZ0T291cXJvR0tvMS0z",
             "node": Object {
-              "contextPermissions": null,
-              "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
-              "totalReputation": 100,
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": true,
+              "reputation": 100,
+              "user": Object {
+                "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+              },
             },
           },
         ],
