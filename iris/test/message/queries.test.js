@@ -27,7 +27,7 @@ describe('sender', () => {
     const query = /* GraphQL */ `
       {
         message(id: "${data.messages[0].id}") {
-          sender {
+          author {
             id
             user { 
               username

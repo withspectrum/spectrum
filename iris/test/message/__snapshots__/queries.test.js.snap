@@ -4,7 +4,7 @@ exports[`sender should fetch a user 1`] = `
 Object {
   "data": Object {
     "message": Object {
-      "sender": Object {
+      "author": Object {
         "id": "6a942fe5-ee63-478d-afd6-ff19ad2d4677",
         "user": Object {
           "username": "mxstbr",
