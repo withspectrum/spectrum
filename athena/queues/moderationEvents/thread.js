@@ -3,6 +3,7 @@ const debug = require('debug')('athena:queue:channel-notification');
 import { getUserById } from '../../models/user';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { addQueue } from '../../utils/addQueue';
 import type { DBThread } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
@@ -20,6 +21,13 @@ export default async (job: JobData) => {
 
   const { data: { thread } } = job;
 
+  const [user, community, channel, permissions] = await Promise.all([
+    getUserById(thread.creatorId),
+    getCommunityById(thread.communityId),
+    getChannelById(thread.channelId),
+    getUserPermissionsInCommunity(thread.communityId, thread.creatorId),
+  ]);
+
   const body =
     thread.type === 'DRAFTJS'
       ? thread.content.body
@@ -30,8 +38,16 @@ export default async (job: JobData) => {
   const title = thread.content.title;
   const text = `${title} ${body}`;
 
+  const meta = {
+    authorId: thread.creatorId,
+    communityId: community.id,
+    joinedCommunityAt: permissions.createdAt,
+    joinedSpectrumAt: user.createdAt,
+    reputation: permissions.reputation,
+  };
+
   const scores = await Promise.all([
-    getSpectrumScore(text, thread.id, thread.creatorId),
+    getSpectrumScore(text, thread.id, meta),
     getPerspectiveScore(text),
   ]).catch(err =>
     console.log('Error getting thread moderation scores from providers', err)
@@ -42,12 +58,6 @@ export default async (job: JobData) => {
 
   // if neither models returned results
   if (!spectrumScore && !perspectiveScore) return;
-
-  const [user, community, channel] = await Promise.all([
-    getUserById(thread.creatorId),
-    getCommunityById(thread.communityId),
-    getChannelById(thread.channelId),
-  ]);
 
   try {
     return addQueue('admin toxic content email', {

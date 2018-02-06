@@ -9,6 +9,7 @@ import type { DBMessage } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
 type JobData = {
   data: {
@@ -19,13 +20,32 @@ export default async (job: JobData) => {
   debug('new job for admin message moderation');
   const { data: { message } } = job;
 
+  const [user, thread] = await Promise.all([
+    getUserById(message.senderId),
+    getThreadById(message.threadId),
+  ]);
+
+  const [community, channel, permissions] = await Promise.all([
+    getCommunityById(thread.communityId),
+    getChannelById(thread.channelId),
+    getUserPermissionsInCommunity(thread.communityId, user.id),
+  ]);
+
   const text =
     message.messageType === 'draftjs'
       ? toPlainText(toState(JSON.parse(message.content.body)))
       : message.content.body;
 
+  const meta = {
+    authorId: message.senderId,
+    communityId: community.id,
+    joinedCommunityAt: permissions.createdAt,
+    joinedSpectrumAt: user.createdAt,
+    reputation: permissions.reputation,
+  };
+
   const scores = await Promise.all([
-    getSpectrumScore(text, message.id, message.senderId),
+    getSpectrumScore(text, message.id, meta),
     getPerspectiveScore(text),
   ]).catch(err =>
     console.log('Error getting message moderation scores from providers', err)
@@ -36,16 +56,6 @@ export default async (job: JobData) => {
 
   // if neither models returned results
   if (!spectrumScore && !perspectiveScore) return;
-
-  const [user, thread] = await Promise.all([
-    getUserById(message.senderId),
-    getThreadById(message.threadId),
-  ]);
-
-  const [community, channel] = await Promise.all([
-    getCommunityById(thread.communityId),
-    getChannelById(thread.channelId),
-  ]);
 
   try {
     return addQueue('admin toxic content email', {
