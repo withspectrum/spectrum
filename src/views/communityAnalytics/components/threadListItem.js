@@ -1,29 +1,15 @@
 // @flow
 import * as React from 'react';
 import Link from 'src/components/link';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   StyledThreadListItem,
   ThreadListItemTitle,
   ThreadListItemSubtitle,
 } from '../style';
 
-type ThreadProps = {
-  id: string,
-  author: {
-    user: {
-      name: string,
-      username: string,
-    },
-  },
-  content: {
-    title: string,
-  },
-  createdAt: Date,
-  messageCount: number,
-};
-
 type Props = {
-  thread: ThreadProps,
+  thread: GetThreadType,
 };
 
 class ThreadListItem extends React.Component<Props> {
