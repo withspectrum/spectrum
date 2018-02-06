@@ -96,9 +96,7 @@ export const UpsellMiniCreateCommunity = () => {
       copy="Building communities on Spectrum is easy and free forever"
     >
       <Link to="/new/community">
-        <Button icon="plus" label>
-          Get Started
-        </Button>
+        <Button icon="plus">Get Started</Button>
       </Link>
     </MiniNullCard>
   );

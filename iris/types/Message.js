@@ -25,9 +25,11 @@ const Message = /* GraphQL */ `
 		timestamp: Date!
 		thread: Thread
 		content: MessageContent!
-		sender: ThreadParticipant!
+		author: ThreadParticipant!
 		reactions: ReactionData
 		messageType: MessageTypes!
+
+		sender: User! @deprecated(reason:"Use Message.author field instead")
 	}
 
 	input MessageContentInput {

@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import Link from 'src/components/link';
 import {
@@ -8,9 +9,11 @@ import {
 
 type ThreadProps = {
   id: string,
-  creator: {
-    name: string,
-    username: string,
+  author: {
+    user: {
+      name: string,
+      username: string,
+    },
   },
   content: {
     title: string,
@@ -28,7 +31,7 @@ class ThreadListItem extends React.Component<Props> {
     const {
       thread: {
         id,
-        creator: { name, username },
+        author: { user: { name, username } },
         content: { title },
         messageCount,
       },
@@ -46,7 +49,7 @@ class ThreadListItem extends React.Component<Props> {
         </Link>
         {messageCount > 0 && (
           <ThreadListItemSubtitle>
-            {messageCount > 1 ? `${messageCount} messages` : `1 message`}
+            {messageCount > 1 ? `${messageCount} messages` : '1 message'}
           </ThreadListItemSubtitle>
         )}
         <ThreadListItemSubtitle>

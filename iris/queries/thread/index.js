@@ -9,6 +9,7 @@ import participants from './participants';
 import isCreator from './isCreator';
 import receiveNotifications from './receiveNotifications';
 import messageConnection from './messageConnection';
+import author from './author';
 import creator from './creator';
 import messageCount from './messageCount';
 import currentUserLastSeen from './currentUserLastSeen';
@@ -26,7 +27,8 @@ module.exports = {
     isCreator,
     receiveNotifications,
     messageConnection,
-    creator,
+    author,
+    creator, // deprecated
     messageCount,
     currentUserLastSeen,
   },

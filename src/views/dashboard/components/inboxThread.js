@@ -24,7 +24,7 @@ import {
 class InboxThread extends Component {
   render() {
     const {
-      data: { attachments, participants, creator },
+      data: { attachments, participants, author },
       data,
       active,
       hasActiveCommunity,
@@ -84,11 +84,11 @@ class InboxThread extends Component {
               })}
 
           <ThreadMeta>
-            {(participantsExist || creator) && (
+            {(participantsExist || author) && (
               <Facepile
                 active={active}
                 participants={participants}
-                creator={data.creator.user}
+                author={data.author.user}
               />
             )}
 
@@ -115,7 +115,7 @@ export default compose(connect(), withRouter)(InboxThread);
 class WatercoolerThreadPure extends React.Component {
   render() {
     const {
-      data: { participants, creator, community, messageCount, id },
+      data: { participants, author, community, messageCount, id },
       active,
     } = this.props;
     const participantsExist = participants && participants.length > 0;
@@ -139,11 +139,11 @@ class WatercoolerThreadPure extends React.Component {
           </ThreadTitle>
 
           <ThreadMeta>
-            {(participantsExist || creator) && (
+            {(participantsExist || author) && (
               <Facepile
                 active={active}
                 participants={participants}
-                creator={creator}
+                author={author}
               />
             )}
 

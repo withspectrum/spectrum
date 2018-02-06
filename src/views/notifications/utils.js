@@ -147,8 +147,8 @@ export const parseNotificationDate = date => {
 };
 
 const threadToString = (context, currentUser) => {
-  const isCreator = context.payload.creatorId === currentUser.id;
-  const str = isCreator ? 'in your thread' : 'in';
+  const isAuthor = context.payload.creatorId === currentUser.id;
+  const str = isAuthor ? 'in your thread' : 'in';
   return (
     <span>
       {' '}
@@ -165,7 +165,7 @@ const threadToString = (context, currentUser) => {
   );
 };
 
-const messageToString = context => {
+const messageToString = () => {
   return <span> your reply</span>;
 };
 

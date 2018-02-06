@@ -7,7 +7,7 @@ export type MessageInfoType = {
   id: string,
   timestamp: Date,
   messageType: string,
-  sender: {
+  author: {
     ...$Exact<ThreadParticipantType>,
   },
   reactions: {
@@ -24,7 +24,7 @@ export default gql`
     id
     timestamp
     messageType
-    sender {
+    author {
       ...threadParticipant
     }
     reactions {

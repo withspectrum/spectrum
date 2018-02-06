@@ -7,7 +7,7 @@ export type DirectMessageInfoType = {
   id: string,
   timestamp: Date,
   messageType: string,
-  sender: {
+  author: {
     user: {
       ...$Exact<UserInfoType>,
     },
@@ -26,7 +26,7 @@ export default gql`
     id
     timestamp
     messageType
-    sender {
+    author {
       user {
         ...userInfo
       }

@@ -18,7 +18,6 @@ export type ThreadParticipantType = {
 
 export default gql`
   fragment threadParticipant on ThreadParticipant {
-    id
     user {
       ...userInfo
     }

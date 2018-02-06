@@ -19,7 +19,7 @@ export const sortAndGroupMessages = (
     // on the first message, get the user id and set it to be checked against
     const robo = [
       {
-        sender: {
+        author: {
           id: 'robo',
         },
         timestamp: messages[i].timestamp,
@@ -32,7 +32,7 @@ export const sortAndGroupMessages = (
 
     const unseenRobo = [
       {
-        sender: {
+        author: {
           id: 'robo',
         },
         timestamp: lastSeen,
@@ -44,7 +44,7 @@ export const sortAndGroupMessages = (
     ];
 
     if (i === 0) {
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.id;
 
       if (messages[0].timestamp > lastSeen) {
         masterArray.push(unseenRobo);
@@ -54,7 +54,7 @@ export const sortAndGroupMessages = (
     }
 
     const sameUser =
-      messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
+      messages[i].author.id !== 'robo' && messages[i].author.id === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -108,7 +108,7 @@ export const sortAndGroupMessages = (
         }
       }
       // and maintain the checkid
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.id;
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
@@ -131,7 +131,7 @@ export const sortAndGroupMessages = (
       }
 
       // set a new checkid for the next user
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.id;
     }
   }
 

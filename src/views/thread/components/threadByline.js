@@ -15,14 +15,14 @@ import {
 } from '../style';
 
 type Props = {
-  creator: {
+  author: {
     ...$Exact<ThreadParticipantType>,
   },
 };
 class ThreadByline extends React.Component<Props> {
   render() {
-    const { creator } = this.props;
-    const { user, reputation, roles } = creator;
+    const { author } = this.props;
+    const { user, reputation, roles } = author;
 
     return (
       <Byline>

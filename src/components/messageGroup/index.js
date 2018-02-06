@@ -14,27 +14,26 @@ import {
   Wrapper,
   Timestamp,
   Time,
-  Sender,
+  Author,
   MessageGroup,
   UnseenRobotext,
   UnseenTime,
 } from './style';
-import type { ThreadParticipantType } from 'shared/graphql/fragments/thread/threadParticipant';
 
 export const AuthorAvatar = ({
-  sender: { user: sender },
+  user,
   showProfile = false,
 }: {
-  sender: ThreadParticipantType,
+  user: Object,
   showProfile?: boolean,
 }) => {
   return (
     <Avatar
-      user={sender}
-      isOnline={sender.isOnline}
-      src={sender.profilePhoto}
-      username={sender.username}
-      link={sender.username ? `/users/${sender.username}` : null}
+      user={user}
+      isOnline={user.isOnline}
+      src={user.profilePhoto}
+      username={user.username}
+      link={user.username ? `/users/${user.username}` : null}
       size="24"
       showProfile={showProfile}
     />
@@ -43,18 +42,18 @@ export const AuthorAvatar = ({
 
 export const AuthorByline = (props: {
   me: boolean,
-  sender: ThreadParticipantType,
+  user: Object,
+  roles?: Array<string>,
 }) => {
-  const { sender: { user: sender, roles } } = props;
-
+  const { user, roles } = props;
   return (
     <Byline>
-      <Link to={`/users/${sender.username}`}>
-        <Name>{sender.name}</Name>{' '}
-        <Username>{sender.username && `@${sender.username}`}</Username>
+      <Link to={`/users/${user.username}`}>
+        <Name>{user.name}</Name>{' '}
+        <Username>{user.username && `@${user.username}`}</Username>
       </Link>
       {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
-      {sender.isPro && <Badge type="pro" />}
+      {user.isPro && <Badge type="pro" />}
     </Byline>
   );
 };
@@ -167,14 +166,14 @@ class Messages extends Component<MessageGroupProps, State> {
       <Wrapper data-e2e-id="message-group">
         {messages.map((group, i) => {
           if (group.length === 0) return null;
-          // Since all messages in the group have the same sender and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
+          // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
           if (group.length === 0) return null;
           const initialMessage = group[0];
-          const { sender } = initialMessage;
+          const { author } = initialMessage;
 
-          const roboText = sender.id === 'robo';
+          const roboText = author.id === 'robo';
           const me = currentUser
-            ? sender.user && sender.user.id === currentUser.id
+            ? author.user && author.user.id === currentUser.id
             : false;
           const canModerate =
             threadType !== 'directMessageThread' && (me || isModerator);
@@ -194,7 +193,7 @@ class Messages extends Component<MessageGroupProps, State> {
               initialMessage.message.type === 'unseen-messages-below' &&
               messages[i + 1] &&
               messages[i + 1].length > 0 &&
-              messages[i + 1][0].sender.id !== currentUser.id
+              messages[i + 1][0].author.id !== currentUser.id
             ) {
               return (
                 <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
@@ -210,10 +209,17 @@ class Messages extends Component<MessageGroupProps, State> {
           }
 
           return (
-            <Sender key={initialMessage.id} me={me}>
-              {!me && !roboText && <AuthorAvatar sender={sender} showProfile />}
+            <Author key={initialMessage.id} me={me}>
+              {!me &&
+                !roboText && (
+                  <AuthorAvatar
+                    user={author.user}
+                    roles={author.roles}
+                    showProfile
+                  />
+                )}
               <MessageGroup me={me}>
-                <AuthorByline sender={sender} me={me} />
+                <AuthorByline user={author.user} roles={author.roles} me={me} />
                 {group.map(message => {
                   return (
                     <Message
@@ -233,7 +239,7 @@ class Messages extends Component<MessageGroupProps, State> {
                   );
                 })}
               </MessageGroup>
-            </Sender>
+            </Author>
           );
         })}
       </Wrapper>

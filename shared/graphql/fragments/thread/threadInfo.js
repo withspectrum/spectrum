@@ -27,7 +27,7 @@ export type ThreadInfoType = {
   lastActive: ?Date,
   receiveNotifications: boolean,
   currentUserLastSeen: ?Date,
-  creator: {
+  author: {
     ...$Exact<ThreadParticipantType>,
   },
   channel: {
@@ -38,7 +38,7 @@ export type ThreadInfoType = {
   },
   isPublished: boolean,
   isLocked: boolean,
-  isCreator: boolean,
+  isAuthor: boolean,
   type: string,
   participants: Array<?Participant>,
   content: {
@@ -58,7 +58,7 @@ export default gql`
     lastActive
     receiveNotifications
     currentUserLastSeen
-    creator {
+    author {
       ...threadParticipant
     }
     channel {
@@ -69,7 +69,7 @@ export default gql`
     }
     isPublished
     isLocked
-    isCreator
+    isAuthor
     type
     participants {
       ...userInfo

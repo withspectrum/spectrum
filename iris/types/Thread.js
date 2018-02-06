@@ -41,7 +41,7 @@ const Thread = /* GraphQL */ `
 		isPublished: Boolean!
 		content: ThreadContent!
 		isLocked: Boolean
-		isCreator: Boolean
+		isAuthor: Boolean
 		receiveNotifications: Boolean
 		lastActive: Date
 		type: ThreadType
@@ -49,12 +49,13 @@ const Thread = /* GraphQL */ `
 		participants: [User]
 		messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection!
 		messageCount: Int
-		creator: ThreadParticipant!
+		author: ThreadParticipant!
 		attachments: [Attachment]
 		watercooler: Boolean
 
-		# Logged-in users only
 		currentUserLastSeen: Date
+		isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
+		creator: User! @deprecated(reason:"Use Thread.author instead")
 	}
 
 	input SearchThreadsFilter {
