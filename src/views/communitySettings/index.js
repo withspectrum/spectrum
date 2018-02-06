@@ -75,7 +75,7 @@ class CommunitySettings extends React.Component<Props> {
           case 'analytics':
             return <Analytics community={community} id={community.id} />;
           case 'members':
-            return <Members id={community.id} history={history} />;
+            return <Members community={community} history={history} />;
           default:
             return null;
         }

@@ -68,18 +68,14 @@ class CommunityMembers extends React.Component<Props, State> {
 
   viewModerators = () => {
     return this.setState({
-      filter: {
-        isModerator: true,
-      },
+      filter: { isModerator: true },
       searchIsFocused: false,
     });
   };
 
   viewBlocked = () => {
     return this.setState({
-      filter: {
-        isBlocked: true,
-      },
+      filter: { isBlocked: true },
       searchIsFocused: false,
     });
   };

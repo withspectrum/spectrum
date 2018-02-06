@@ -102,11 +102,11 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isModerator) {
       return [
-        {
-          ...this.permissionConfigurations.moderator,
-          mutation: null,
-          selected: true,
-        },
+        // {
+        //   ...this.permissionConfigurations.moderator,
+        //   mutation: null,
+        //   selected: true,
+        // },
         {
           ...this.permissionConfigurations.member,
           // mutation: this.props.removeCommunityModerator,
@@ -121,11 +121,11 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isMember) {
       return [
-        {
-          ...this.permissionConfigurations.moderator,
-          // mutation: this.props.addCommunityModerator,
-          mutation: null,
-        },
+        // {
+        //   ...this.permissionConfigurations.moderator,
+        //   // mutation: this.props.addCommunityModerator,
+        //   mutation: null,
+        // },
         {
           ...this.permissionConfigurations.member,
           mutation: null,
@@ -140,10 +140,10 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isBlocked) {
       return [
-        {
-          ...this.permissionConfigurations.moderator,
-          mutation: this.props.addCommunityModerator,
-        },
+        // {
+        //   ...this.permissionConfigurations.moderator,
+        //   mutation: this.props.addCommunityModerator,
+        // },
         {
           ...this.permissionConfigurations.member,
           mutation: this.props.unblockCommunityMember,

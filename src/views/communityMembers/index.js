@@ -3,11 +3,8 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import getCommunityMemberConnection from 'shared/graphql/queries/community/getCommunityMemberConnection';
-import type { GetCommunityMemberConnectionType } from 'shared/graphql/queries/community/getCommunityMemberConnection';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import ViewError from '../../components/viewError';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import ImportSlack from './components/importSlack';
@@ -18,15 +15,10 @@ import {
   SectionTitle,
   Column,
 } from '../../components/settingsViews/style';
-import { Loading } from '../../components/loading';
 
 type Props = {
-  ...$Exact<ViewNetworkHandlerType>,
   currentUser: Object,
-  data: {
-    community: GetCommunityMemberConnectionType,
-  },
-  id: string,
+  community: GetCommunityType,
   dispatch: Function,
   match: Object,
   history: Object,
@@ -34,7 +26,7 @@ type Props = {
 
 class CommunityMembersSettings extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading, history } = this.props;
+    const { community, history } = this.props;
 
     if (community && community.id) {
       return (
@@ -56,10 +48,6 @@ class CommunityMembersSettings extends React.Component<Props> {
           </Column>
         </SectionsContainer>
       );
-    }
-
-    if (isLoading) {
-      return <Loading />;
     }
 
     return (
@@ -86,7 +74,5 @@ class CommunityMembersSettings extends React.Component<Props> {
 const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
-  connect(map),
-  getCommunityMemberConnection,
-  viewNetworkHandler
+  connect(map)
 )(CommunityMembersSettings);
