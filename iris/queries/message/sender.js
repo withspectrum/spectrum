@@ -10,29 +10,50 @@ export default async (
   // there will be no community to resolve in direct message threads, so we can escape early
   // and only return the sender
   if (threadType === 'directMessageThread') {
-    return loaders.user.load(senderId);
+    const user = loaders.user.load(senderId);
+    return {
+      user,
+    };
   }
 
-  const [thread, sender] = await Promise.all([
+  const [thread, user] = await Promise.all([
     loaders.thread.load(threadId),
     loaders.user.load(senderId),
   ]);
 
-  if (!thread || !sender) return null;
+  if (!thread || !user) return null;
 
-  const permissions = await loaders.userPermissionsInCommunity.load([
-    senderId,
+  const communityPermissions = await loaders.userPermissionsInCommunity.load([
+    user.id,
     thread.communityId,
   ]);
 
+  const channelPermissions = await loaders.userPermissionsInChannel.load([
+    user.id,
+    thread.channelId,
+  ]);
+
+  const isMember = communityPermissions.isMember || channelPermissions.isMember;
+  const isOwner = communityPermissions.isOwner;
+  const isModerator =
+    communityPermissions.isModerator || channelPermissions.isModerator;
+  const isBlocked =
+    channelPermissions.isBlocked || communityPermissions.isBlocked;
+  const reputation = communityPermissions.reputation;
+
+  const roles = [];
+  if (isModerator) roles.push('moderator');
+  if (isOwner) roles.push('admin');
+  if (isBlocked) roles.push('blocked');
+
   return {
-    ...sender,
-    contextPermissions: {
-      communityId: thread.communityId,
-      reputation: permissions ? permissions.reputation : 0,
-      isModerator: permissions ? permissions.isModerator : false,
-      isOwner: permissions ? permissions.isOwner : false,
-      isBlocked: permissions ? permissions.isBlocked : false,
-    },
+    id: communityPermissions.id,
+    user,
+    isOwner,
+    isModerator,
+    isBlocked,
+    isMember,
+    reputation,
+    roles,
   };
 };

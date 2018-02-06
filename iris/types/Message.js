@@ -25,7 +25,7 @@ const Message = /* GraphQL */ `
 		timestamp: Date!
 		thread: Thread
 		content: MessageContent!
-		sender: User!
+		sender: ThreadParticipant!
 		reactions: ReactionData
 		messageType: MessageTypes!
 	}

@@ -30,6 +30,7 @@ const Meta = require('./types/Meta');
 const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
 const CommunityMember = require('./types/CommunityMember');
+const ThreadParticipant = require('./types/ThreadParticipant');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -133,6 +134,7 @@ const schema = makeExecutableSchema({
     CommunityMember,
     Channel,
     Thread,
+    ThreadParticipant,
     Message,
     Reaction,
     User,

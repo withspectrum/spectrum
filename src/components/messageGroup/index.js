@@ -19,19 +19,13 @@ import {
   UnseenRobotext,
   UnseenTime,
 } from './style';
-
-type SenderType = {
-  isOnline: boolean,
-  profilePhoto: string,
-  username: string,
-  name: string,
-};
+import type { ThreadParticipantType } from 'shared/graphql/fragments/thread/threadParticipant';
 
 export const AuthorAvatar = ({
-  sender,
+  sender: { user: sender },
   showProfile = false,
 }: {
-  sender: SenderType,
+  sender: ThreadParticipantType,
   showProfile?: boolean,
 }) => {
   return (
@@ -47,8 +41,11 @@ export const AuthorAvatar = ({
   );
 };
 
-export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
-  const { sender } = props;
+export const AuthorByline = (props: {
+  me: boolean,
+  sender: ThreadParticipantType,
+}) => {
+  const { sender: { user: sender, roles } } = props;
 
   return (
     <Byline>
@@ -56,12 +53,7 @@ export const AuthorByline = (props: { me: boolean, sender: SenderType }) => {
         <Name>{sender.name}</Name>{' '}
         <Username>{sender.username && `@${sender.username}`}</Username>
       </Link>
-      {sender.contextPermissions &&
-        sender.contextPermissions.isOwner && <Badge type="admin" />}
-      {sender.contextPermissions &&
-        sender.contextPermissions.isModerator && <Badge type="moderator" />}
-      {sender.contextPermissions &&
-        sender.contextPermissions.isBlocked && <Badge type="blocked" />}
+      {roles && roles.map((role, index) => <Badge type={role} key={index} />)}
       {sender.isPro && <Badge type="pro" />}
     </Byline>
   );
@@ -181,7 +173,9 @@ class Messages extends Component<MessageGroupProps, State> {
           const { sender } = initialMessage;
 
           const roboText = sender.id === 'robo';
-          const me = currentUser ? sender.id === currentUser.id : false;
+          const me = currentUser
+            ? sender.user && sender.user.id === currentUser.id
+            : false;
           const canModerate =
             threadType !== 'directMessageThread' && (me || isModerator);
 

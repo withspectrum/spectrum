@@ -1,8 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
-import userInfoFragment, { type UserInfoType } from '../user/userInfo';
+import userInfoFragment from '../user/userInfo';
+import type { UserInfoType } from '../user/userInfo';
 
-export type CommunityMemberInfoType = {
+export type ThreadParticipantType = {
+  id: string,
   user: {
     ...$Exact<UserInfoType>,
   },
@@ -15,7 +17,7 @@ export type CommunityMemberInfoType = {
 };
 
 export default gql`
-  fragment communityMemberInfo on CommunityMember {
+  fragment threadParticipant on ThreadParticipant {
     id
     user {
       ...userInfo

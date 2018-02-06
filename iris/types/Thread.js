@@ -49,12 +49,12 @@ const Thread = /* GraphQL */ `
 		participants: [User]
 		messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection!
 		messageCount: Int
-		creator: User!
+		creator: ThreadParticipant!
 		attachments: [Attachment]
 		watercooler: Boolean
 
-        # Logged-in users only
-        currentUserLastSeen: Date
+		# Logged-in users only
+		currentUserLastSeen: Date
 	}
 
 	input SearchThreadsFilter {

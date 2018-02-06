@@ -6,6 +6,8 @@ import communityInfoFragment from '../community/communityInfo';
 import type { CommunityInfoType } from '../community/communityInfo';
 import channelInfoFragment from '../channel/channelInfo';
 import type { ChannelInfoType } from '../channel/channelInfo';
+import threadParticipantFragment from './threadParticipant';
+import type { ThreadParticipantType } from './threadParticipant';
 
 type Participant = {
   ...$Exact<UserInfoType>,
@@ -26,13 +28,7 @@ export type ThreadInfoType = {
   receiveNotifications: boolean,
   currentUserLastSeen: ?Date,
   creator: {
-    ...$Exact<UserInfoType>,
-    contextPermissions: {
-      communityId: string,
-      reputation: number,
-      isOwner: boolean,
-      isModerator: boolean,
-    },
+    ...$Exact<ThreadParticipantType>,
   },
   channel: {
     ...$Exact<ChannelInfoType>,
@@ -63,14 +59,7 @@ export default gql`
     receiveNotifications
     currentUserLastSeen
     creator {
-      ...userInfo
-      contextPermissions {
-        communityId
-        reputation
-        isOwner
-        isModerator
-        isBlocked
-      }
+      ...threadParticipant
     }
     channel {
       ...channelInfo
@@ -95,6 +84,7 @@ export default gql`
     }
     watercooler
   }
+  ${threadParticipantFragment}
   ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}

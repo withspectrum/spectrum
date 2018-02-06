@@ -1,14 +1,16 @@
 // @flow
 import gql from 'graphql-tag';
-import threadParticipantFragment from '../thread/threadParticipant';
-import type { ThreadParticipantType } from '../thread/threadParticipant';
+import userInfoFragment from '../user/userInfo';
+import type { UserInfoType } from '../user/userInfo';
 
-export type MessageInfoType = {
+export type DirectMessageInfoType = {
   id: string,
   timestamp: Date,
   messageType: string,
   sender: {
-    ...$Exact<ThreadParticipantType>,
+    user: {
+      ...$Exact<UserInfoType>,
+    },
   },
   reactions: {
     count: number,
@@ -20,12 +22,14 @@ export type MessageInfoType = {
 };
 
 export default gql`
-  fragment messageInfo on Message {
+  fragment directMessageInfo on Message {
     id
     timestamp
     messageType
     sender {
-      ...threadParticipant
+      user {
+        ...userInfo
+      }
     }
     reactions {
       count
@@ -35,5 +39,5 @@ export default gql`
       body
     }
   }
-  ${threadParticipantFragment}
+  ${userInfoFragment}
 `;

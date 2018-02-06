@@ -21,7 +21,7 @@ const messageAvatars = list => {
 const FacePile = props => {
   const { data: { creator, participants } } = props;
   const participantList = participants.filter(
-    participant => participant.id !== creator.id
+    participant => participant.id !== creator.user.id
   );
   const participantCount = participants.length;
 
@@ -30,12 +30,14 @@ const FacePile = props => {
       <Creator role="presentation">
         <Avatar
           size={32}
-          user={creator}
-          isOnline={creator.isOnline}
-          link={creator.username ? `/users/${creator.username}` : null}
-          src={creator.profilePhoto}
+          user={creator.user}
+          isOnline={creator.user.isOnline}
+          link={
+            creator.user.username ? `/users/${creator.user.username}` : null
+          }
+          src={creator.user.profilePhoto}
           role="presentation"
-          key={creator.id}
+          key={creator.user.id}
         />
       </Creator>
       {messageAvatars(participantList)}
