@@ -6,6 +6,7 @@ import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
 import Privacy from '../../components/privacy';
 import Terms from '../../components/terms';
+import { PlanSelector } from './components/planSelector';
 import {
   hexa,
   Shadow,
@@ -14,6 +15,7 @@ import {
   FlexRow,
   Transition,
   HorizontalRule,
+  zIndex,
 } from '../../components/globals';
 import { Button } from '../../components/buttons';
 import Search from '../explore/components/search';
@@ -44,20 +46,6 @@ import {
   PrimaryCTA,
   SecondaryCTA,
   Content,
-  FeatureList,
-  Feature,
-  Layout,
-  PricingGrid,
-  Free,
-  Title,
-  Cost,
-  CostNumber,
-  CostSubtext,
-  Description,
-  PlanFooter,
-  FreePrimaryCTA,
-  Paid,
-  PaidPrimaryCTA,
 } from './style';
 import Nav from './nav';
 
@@ -760,111 +748,6 @@ export const UserPricing = (props: Props) => {
   );
 };
 
-export const Plans = (props: Props) => {
-  const Text = styled(FlexCol)`
-    margin: 48px 16px;
-    text-align: left;
-    align-items: start;
-    z-index: 2;
-
-    ${Copy} {
-      margin-top: 16px;
-      margin-left: 32px;
-    }
-
-    @media (max-width: 768px) {
-      margin: 0;
-      z-index: 1;
-    }
-  `;
-
-  return (
-    <Section background="illustrated" goop={1} color="space.dark">
-      <Nav location={'pricing'} />
-      <Content>
-        <Text>
-          <Layout>
-            <PricingGrid>
-              <Free>
-                <Title>Open</Title>
-                <Cost>
-                  <CostNumber>Free</CostNumber>
-                  <CostSubtext>forever</CostSubtext>
-                </Cost>
-                <Description>
-                  Build your community on a platform purpose-built for
-                  constructive public communities.
-                </Description>
-                <FeatureList>
-                  <Feature>
-                    Never lose a thing. Spectrum gives you{' '}
-                    <b>
-                      unlimited members, channels, messages, and file uploads
-                    </b>{' '}
-                    by default.
-                  </Feature>
-                  <Feature>
-                    Find that conversation you're looking for with{' '}
-                    <b>permalinked, search-indexed chat threads</b>.
-                  </Feature>
-                  <Feature>
-                    <b>Simple, powerful moderation</b> with automated toxicity
-                    monitoring and clear guidelines set by our open source{' '}
-                    <a href="https://github.com/withspectrum/code-of-conduct">
-                      Code of Conduct
-                    </a>.
-                  </Feature>
-                </FeatureList>
-                <PlanFooter>
-                  <Link to="/new/community">
-                    <FreePrimaryCTA icon="plus-fill">
-                      Create my community
-                    </FreePrimaryCTA>
-                  </Link>
-                </PlanFooter>
-              </Free>
-              <Paid>
-                <Title>Standard</Title>
-                <Cost>
-                  <CostNumber per="month">100</CostNumber>
-                  <CostSubtext>per 1,000 members</CostSubtext>
-                </Cost>
-                <Description>
-                  Take your community to the next level with top-tier moderation
-                  and support tools.
-                </Description>
-                <FeatureList>
-                  <Feature>
-                    Keep team conversations confidential with{' '}
-                    <b>invite-only, private channels</b>.
-                  </Feature>
-                  <Feature>
-                    <b>Community analytics</b> provide a bird's-eye view of
-                    community behavior and ROI.
-                  </Feature>
-                  <Feature>
-                    Empower your team with <b>additional moderators</b>.
-                  </Feature>
-                  <Feature>
-                    <b>Priority support</b> for moderation and technical issues.
-                  </Feature>
-                </FeatureList>
-                <PlanFooter>
-                  <Link to="/new/community">
-                    <PaidPrimaryCTA icon="plus-fill">
-                      Create my community
-                    </PaidPrimaryCTA>
-                  </Link>
-                </PlanFooter>
-              </Paid>
-            </PricingGrid>
-          </Layout>
-        </Text>
-      </Content>
-    </Section>
-  );
-};
-
 export const ContactInfo = () => {
   const ThisContent = styled(Content)`
     flex-direction: column;
@@ -1078,5 +961,288 @@ export const TermsSection = () => {
         </Copy>
       </ThisContent>
     </Section>
+  );
+};
+
+export const Plans = (props: Props) => {
+  const Layout = styled.div`
+    flex: auto;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'grid' 'copy';
+    width: 100%;
+    justify-items: stretch;
+    z-index: ${zIndex.background + 1};
+  `;
+
+  const Copy = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    font-size: 18px;
+    width: calc(100% - 96px);
+    max-width: 640px;
+    line-height: 1.5;
+    margin: 64px 32px;
+    align-content: center;
+
+    p {
+      font-weight: 500;
+      text-align: center;
+      text-shadow: 0 0 8px ${props => props.theme.bg.default};
+    }
+
+    p + p {
+      margin-top: 24px;
+    }
+
+    > a {
+      display: inline-block;
+      align-self: center;
+    }
+
+    @media (max-width: 768px) {
+      margin: 64px 16px 0;
+    }
+  `;
+
+  const Title = styled.h1`
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 24px;
+  `;
+
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    background-color: ${props => props.theme.brand.alt};
+    background-image: ${props =>
+      Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    color: ${props => props.theme.text.reverse};
+
+    &:hover {
+      color: ${props => props.theme.text.reverse};
+    }
+  `;
+
+  return (
+    <ViewSegment background="illustrated" goop={1} color="space.dark">
+      <Content>
+        <Layout>
+          <PlanSelector />
+          <Copy>
+            <Title>Ready to get started?</Title>
+            <Link to="/new/community">
+              <ThisPrimaryCTA icon="plus-fill">
+                Create your community
+              </ThisPrimaryCTA>
+            </Link>
+          </Copy>
+        </Layout>
+      </Content>
+    </ViewSegment>
+  );
+};
+
+export const FeatureUpsell = (props: Props) => {
+  const Layout = styled.div`
+    flex: auto;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'ethos' 'grid' 'packages';
+    width: 100%;
+    justify-items: stretch;
+    z-index: ${zIndex.background + 1};
+
+    @media (max-width: 768px) {
+      margin: 32px 0 -32px;
+    }
+  `;
+
+  const Copy = styled.div`
+    justify-self: center;
+    font-size: 18px;
+    width: calc(100% - 96px);
+    max-width: 640px;
+    line-height: 1.5;
+    margin: 64px 32px;
+
+    p + p {
+      margin-top: 24px;
+    }
+  `;
+
+  const BottomCopy = styled(Copy)`
+    margin-bottom: 0;
+  `;
+
+  const Title = styled.h1`
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 24px;
+  `;
+
+  const Features = styled.div`
+    grid-area: grid;
+    display: grid;
+    grid: auto / repeat(2, 1fr);
+    grid-row-gap: 32px;
+    grid-column-gap: 32px;
+    margin: 32px;
+
+    @media (max-width: 768px) {
+      grid: auto / 1fr;
+    }
+  `;
+
+  const Listing = styled.div`
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: 'icon title' 'icon price' '. description';
+    align-items: flex-start;
+
+    > div {
+      grid-area: icon;
+      margin-right: 8px;
+    }
+  `;
+
+  const ListingTitle = styled.h2`
+    grid-area: title;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    margin-top: 4px;
+  `;
+
+  const ListingDescription = styled.p`
+    grid-area: description;
+    color: ${props => props.theme.text.default};
+  `;
+
+  const ListingPrice = styled.span`
+    grid-area: price;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    color: ${props => props.theme.text.alt};
+  `;
+
+  const ModListing = styled(Listing)`
+    color: ${props => props.theme.space.default};
+
+    ${ListingTitle} {
+      color: ${props => props.theme.space.dark};
+    }
+  `;
+
+  const PrivateListing = styled(Listing)`
+    color: ${props => props.theme.special.default};
+
+    ${ListingTitle} {
+      color: ${props => props.theme.special.dark};
+    }
+  `;
+
+  const AnalyticsListing = styled(Listing)`
+    color: ${props => props.theme.success.default};
+
+    ${ListingTitle} {
+      color: ${props => props.theme.success.dark};
+    }
+  `;
+
+  const SupportListing = styled(Listing)`
+    color: ${props => props.theme.warn.alt};
+
+    ${ListingTitle} {
+      color: ${props => props.theme.warn.default};
+    }
+  `;
+
+  return (
+    <ViewSegment background="white" goop={1} color="bg.default">
+      <Nav location={'pricing'} />
+      <Content>
+        <Layout>
+          <Copy>
+            <Title>Only pay for what you need.</Title>
+            <p>
+              Anyone can create a public community on Spectrum for free. That
+              includes automated moderation support, SEO-optimized chat threads,
+              and unlimited public channels. There are no membership size limits
+              and we'll never sell your data.
+            </p>
+            <p>
+              If you want to take your community to the next level, we offer
+              features to empower your team and make effectively managing a
+              large online community a breeze.
+            </p>
+          </Copy>
+          <Features>
+            <ModListing>
+              <Icon glyph={'member-add'} size={48} />
+              <ListingTitle>Moderator seats</ListingTitle>
+              <ListingPrice>$10/mo.</ListingPrice>
+              <ListingDescription>
+                Initially, each community gets a single administrator. As your
+                community grows, get your team involved in building the
+                community or empower helpful community members to support
+                others.
+              </ListingDescription>
+            </ModListing>
+            <PrivateListing>
+              <Icon glyph={'private-outline'} size={48} />
+              <ListingTitle>Private channels</ListingTitle>
+              <ListingPrice>$10/mo.</ListingPrice>
+              <ListingDescription>
+                Turning on private channels for your community enables you to
+                create invite-only spaces for specific members of your
+                community. Private channels are great for beta tests, team chat,
+                organizing conference speakers, or private customer support.
+              </ListingDescription>
+            </PrivateListing>
+            <AnalyticsListing>
+              <Icon glyph={'analytics'} size={48} />
+              <ListingTitle>Community Analytics</ListingTitle>
+              <ListingPrice>$50/mo.</ListingPrice>
+              <ListingDescription>
+                One of the hardest parts of community management is tracking
+                usage, behavior, and ROI in order to figure out where to focus
+                your effort. We've built best-in-class community analytics to
+                help you be effective and show stakeholders the value of your
+                community.
+              </ListingDescription>
+            </AnalyticsListing>
+            <SupportListing>
+              <Icon glyph={'support'} size={48} />
+              <ListingTitle>Priority support</ListingTitle>
+              <ListingPrice>$20/mo.</ListingPrice>
+              <ListingDescription>
+                We'll set up a private channel in the Spectrum Support community
+                just for you. Get speedy personal support from the Spectrum team
+                so you never need to leave an incident to chance or worry about
+                lost data.
+              </ListingDescription>
+            </SupportListing>
+          </Features>
+          <BottomCopy>
+            <Title>Looking to get started quickly?</Title>
+            <p>
+              We've put together a few common packages to help you kick things
+              off strong. Both the Indie and Business plans come at a discount
+              over the a la carte feature prices and you can always add the
+              features you need when you're ready for them and keep the
+              discount.
+            </p>
+          </BottomCopy>
+        </Layout>
+      </Content>
+    </ViewSegment>
   );
 };
