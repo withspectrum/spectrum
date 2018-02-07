@@ -36,6 +36,16 @@ Object {
 }
 `;
 
+exports[`should format a message mention notification 1`] = `
+Object {
+  "body": "\\"Test @mxstbr\\"",
+  "data": Object {
+    "href": "/thread/2182d960-5970-46e0-801f-ab0b8e02cfbc",
+  },
+  "title": "Max Stoiber mentioned you in in Show us your Dangerfile",
+}
+`;
+
 exports[`should format a reaction creation notification 1`] = `
 Object {
   "body": "Test 1",
@@ -53,6 +63,16 @@ Object {
     "href": "/thread/4fbdc540-2ad9-4d6b-8404-736e658be9f9",
   },
   "title": "A new thread was published in General",
+}
+`;
+
+exports[`should format a thread mention notification 1`] = `
+Object {
+  "body": "\\"Testing\\"",
+  "data": Object {
+    "href": "/thread/f40e1d78-10e4-484a-b07d-7e7c88afd167",
+  },
+  "title": "Max Stoiber mentioned you in in your thread Testing",
 }
 `;
 

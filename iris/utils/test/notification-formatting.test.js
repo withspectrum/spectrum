@@ -7,6 +7,8 @@ import DIRECT_MESSAGE_CREATED_FIXTURE from './fixtures/DIRECT_MESSAGE_CREATED.js
 import REACTION_CREATED_FIXTURE from './fixtures/REACTION_CREATED.json';
 import THREAD_CREATED_FIXTURE from './fixtures/THREAD_CREATED.json';
 import USER_JOINED_COMMUNITY_FIXTURE from './fixtures/USER_JOINED_COMMUNITY.json';
+import MENTION_MESSAGE_FIXTURE from './fixtures/MENTION_MESSAGE';
+import MENTION_THREAD_FIXTURE from './fixtures/MENTION_THREAD';
 
 const USER_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
 
@@ -54,6 +56,20 @@ it('should format a thread creation notification', () => {
 
 it('should format a user joined community notification', () => {
   let result = formatNotification(USER_JOINED_COMMUNITY_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a message mention notification', () => {
+  let result = formatNotification(MENTION_MESSAGE_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a thread mention notification', () => {
+  let result = formatNotification(MENTION_THREAD_FIXTURE, USER_ID);
   expect(result.raw).toBeDefined();
   delete result.raw; // Don't need raw data
   expect(result).toMatchSnapshot();

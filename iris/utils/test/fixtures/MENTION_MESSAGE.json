@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:47:24.617Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "2182d960-5970-46e0-801f-ab0b8e02cfbc",
+    "payload": "{\"attachments\":[{\"attachmentType\":\"linkPreview\",\"data\":{\"author\":\"Styled Components\",\"date\":null,\"description\":\"styled-components - Visual primitives for the component age 💅\",\"image\":\"https://avatars0.githubusercontent.com/u/20658825?s=400&v=4\",\"publisher\":\"GitHub\",\"title\":\"styled-components/styled-components\",\"trueUrl\":\"https://github.com/styled-components/styled-components/blob/master/dangerfile.js\",\"url\":\"https://github.com/styled-components/styled-components\"}}],\"channelId\":\"dabab876-d870-40d4-83e7-594cc30d9c72\",\"communityId\":\"4e54a41d-bcde-4e7e-8df6-ec00fb235830\",\"content\":{\"body\":\"{\\\"entityMap\\\":{},\\\"blocks\\\":[{\\\"key\\\":\\\"foo\\\",\\\"text\\\":\\\"As the title says, show us your Dangerfile and walk us through what it does!\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"6h49g\\\",\\\"text\\\":\\\"\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"2thjo\\\",\\\"text\\\":\\\"Here's ours: https://github.com/styled-components/styled-components/blob/master/dangerfile.js\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"dakk2\\\",\\\"text\\\":\\\"\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"7vjf1\\\",\\\"text\\\":\\\"It does a couple of small things which make our lives much easier:\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"8pg27\\\",\\\"text\\\":\\\"Forces PR submitters to add a CHANGELOG entry (this is huge)\\\",\\\"type\\\":\\\"unordered-list-item\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"4ca04\\\",\\\"text\\\":\\\"Warns from big PRs\\\",\\\"type\\\":\\\"unordered-list-item\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"8r8fh\\\",\\\"text\\\":\\\"Adds comment with test failures if there are any so people don't have to click through to slow-loading Travis\\\",\\\"type\\\":\\\"unordered-list-item\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"25b9h\\\",\\\"text\\\":\\\"Makes sure that tests were added\\\",\\\"type\\\":\\\"unordered-list-item\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}},{\\\"key\\\":\\\"2aueq\\\",\\\"text\\\":\\\"Makes sure that styled-components native and the web version stay in sync with their changes\\\",\\\"type\\\":\\\"unordered-list-item\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}]}\",\"title\":\"Show us your Dangerfile\"},\"createdAt\":\"2017-10-30T12:42:05.545Z\",\"creatorId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"edits\":[],\"id\":\"2182d960-5970-46e0-801f-ab0b8e02cfbc\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2018-02-07T11:18:57.824Z\",\"modifiedAt\":null,\"type\":\"DRAFTJS\"}",
+    "type": "THREAD"
+  },
+  "createdAt": "2018-02-07T11:18:58.027Z",
+  "entities": [
+    {
+      "id": "72ef51ce-23d3-4f1f-b7f6-e7bad89f68f4",
+      "payload": "{\"content\":{\"body\":\"{\\\"blocks\\\":[{\\\"key\\\":\\\"foo\\\",\\\"text\\\":\\\"Test @mxstbr\\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}],\\\"entityMap\\\":{}}\"},\"id\":\"72ef51ce-23d3-4f1f-b7f6-e7bad89f68f4\",\"messageType\":\"draftjs\",\"senderId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"threadId\":\"2182d960-5970-46e0-801f-ab0b8e02cfbc\",\"threadType\":\"story\",\"timestamp\":\"2018-02-07T11:18:57.824Z\"}",
+      "type": "MESSAGE"
+    }
+  ],
+  "event": "MENTION_MESSAGE",
+  "id": "5ab87783-d54e-411c-9522-9f009ab6cb6f",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2018-02-07T11:18:58.027Z",
+  "userId": "35732c47-eda0-491f-b434-9a6cfef17c4f"
+}

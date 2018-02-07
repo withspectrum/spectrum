@@ -99,6 +99,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
   let href, body;
 
   switch (notification.event) {
+    case 'MENTION_MESSAGE':
     case 'MESSAGE_CREATED': {
       const entities = notification.entities.filter(
         ({ payload }) => payload.senderId !== currentUserId
@@ -147,6 +148,18 @@ const formatNotification = (incomingNotification, currentUserId) => {
     case 'USER_JOINED_COMMUNITY': {
       href = `/${notification.context.payload.slug}`;
       title = `${actors} ${event} ${context}`;
+      break;
+    }
+    case 'MENTION_THREAD': {
+      // sort and order the threads
+      const threads = sortThreads(notification.entities, { id: currentUserId });
+      const urlBase =
+        notification.context.type === 'DIRECT_MESSAGE_THREAD'
+          ? 'messages'
+          : 'thread';
+
+      href = `/${urlBase}/${threads[0].id}`;
+      body = sentencify(threads.map(thread => `"${thread.content.title}"`));
       break;
     }
     case 'THREAD_CREATED': {
