@@ -1,11 +1,11 @@
 // @flow
 import type { Subscription } from './subscription';
 
-export type SubscriptionDeleted = {
+export type CustomerSubscriptionCreated = {
   id: string,
   created: Date,
   data: {
     object: Subscription,
   },
-  type: 'customer.subscription.deleted',
+  type: 'customer.subscription.created',
 };
