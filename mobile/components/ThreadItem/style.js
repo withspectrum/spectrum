@@ -9,14 +9,10 @@ export const InboxThreadItem = styled.View`
   border-bottom-width: 1px;
   background: ${props => props.theme.bg.default};
   position: relative;
+  padding: 16px;
 `;
 
-export const InboxThreadContent = styled.View`
-  align-self: flex-start;
-  position: relative;
-  align-items: flex-start;
-  width: 100%;
-`;
+export const InboxThreadContent = styled.View``;
 
 export const ThreadTitle = styled.Text`
   font-size: 16px;
@@ -29,7 +25,6 @@ export const ThreadTitle = styled.Text`
 
 export const ThreadMeta = styled.View`
   display: flex;
-  margin: 10px 16px 16px;
   justify-content: space-between;
 `;
 
@@ -38,7 +33,6 @@ export const MetaText = styled.Text`
   color: ${props => (props.new ? props.theme.warn.alt : props.theme.text.alt)};
   font-weight: ${props => (props.new ? 600 : 400)};
   position: relative;
-  top: 4px;
 `;
 
 export const MetaTextPill = styled(MetaText)`

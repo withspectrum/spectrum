@@ -79,7 +79,6 @@ class ThreadFeed extends React.Component<Props, State> {
       !isRefetching &&
       threadConnection.pageInfo.hasNextPage
     ) {
-      console.log('actually fetch more!');
       fetchMore();
     }
   };

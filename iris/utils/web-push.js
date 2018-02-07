@@ -24,6 +24,10 @@ export const sendWebPushNotification = (subscription, payload, options) => {
       );
     return Promise.resolve({});
   }
+  if (process.env.NODE_ENV === 'development') {
+    debug('not sending web push notification in development');
+    return Promise.resolve({});
+  }
   const pl =
     typeof payload === 'string'
       ? payload
