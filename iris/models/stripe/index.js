@@ -39,7 +39,7 @@ class StripeClass {
     sources: null,
   };
 
-  constructor({ customerId }: { customerId: ?string }) {
+  constructor({ customerId }: { customerId?: ?string }) {
     // if the class is initialized with a customerId, save it in class State
     if (customerId) {
       this.state = Object.assign({}, this.state, { customerId });
@@ -134,9 +134,13 @@ class StripeClass {
   */
 
   createCustomer = async (input: CreateCustomerInput): Promise<?Customer> => {
+    if (!input) {
+      throw new Error('No input provided to createCustomer');
+    }
+
     const { email, source } = input;
 
-    if (!email || !source) {
+    if (!email) {
       throw new Error('No email or source provided to create a customer');
     }
 
@@ -144,7 +148,7 @@ class StripeClass {
       const result = await stripe.customers.create(
         {
           email,
-          source,
+          // source,
         },
         {
           idempotency_key: uuid(),
@@ -153,6 +157,7 @@ class StripeClass {
 
       if (result) {
         this.setState({ customer: result, sources: result.sources.data });
+        return result;
       }
 
       return null;
@@ -410,10 +415,7 @@ class StripeClass {
   };
 }
 
-export const StripeCustomer = ({
-  customerId,
-}: {
-  customerId: string,
-}): StripeClass => {
-  return new StripeClass({ customerId });
+type StripeCustomerInput = { customerId?: ?string };
+export const StripeCustomer = {
+  init: (args: ?StripeCustomerInput) => new StripeClass(args || {}),
 };
