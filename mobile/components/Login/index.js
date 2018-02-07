@@ -1,56 +1,36 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import { Text, View, Button } from 'react-native';
 import { AuthSession, SecureStore } from 'expo';
+import { authenticate } from '../../actions/authentication';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
     ? 'https://spectrum.chat'
     : 'http://localhost:3001';
 
-class Login extends React.Component<
-  {},
-  { session: string, 'session.sig': string }
-> {
-  state = {
-    session: '',
-    'session.sig': '',
-  };
+type Props = {
+  dispatch: Function,
+};
+
+class Login extends React.Component<Props> {
   authenticate = (provider: 'twitter' | 'facebook' | 'google') => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
-      authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}`,
+      authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
     });
-    if (result.type === 'error') {
-      // Do something with result.errorCode and result.event
-    }
     if (result.type === 'success') {
       const { params } = result;
-      this.setState({
-        session: params.session,
-        'session.sig': params['session.sig'],
-      });
-      await Promise.all([
-        SecureStore.setItemAsync('session', params.session),
-        SecureStore.setItemAsync('session.sig', params['session.sig']),
-      ]);
+      this.props.dispatch(authenticate(params.accessToken));
+      await SecureStore.setItemAsync('token', params.accessToken);
     }
-    // The request was cancelled by the user
-  };
-
-  fetch = () => {
-    const headers = new Headers({
-      session: this.state.session,
-      'session.sig': this.state['session.sig'],
-      'Content-Type': 'application/json',
-    });
-    fetch('http://localhost:3001/api', {
-      method: 'POST',
-      body: JSON.stringify({
-        query: '{ community(slug: "spectrum") { id } }',
-      }),
-      headers,
-    }).then(res => console.log(res));
+    if (result.type === 'error') {
+      // Some error happened
+      // TODO(@mxstbr): Error UI
+    }
+    // User cancelled the login request
+    // TODO(@mxstbr): Cancel UI
   };
 
   render() {
@@ -68,14 +48,9 @@ class Login extends React.Component<
           title="Login/Signup with Facebook"
           onPress={this.authenticate('facebook')}
         />
-        {this.state.session ? (
-          <View>
-            <Button title="Fetch" onPress={this.fetch} />
-          </View>
-        ) : null}
       </View>
     );
   }
 }
 
-export default Login;
+export default connect()(Login);

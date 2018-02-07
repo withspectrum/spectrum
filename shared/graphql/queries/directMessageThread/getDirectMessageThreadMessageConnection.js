@@ -98,13 +98,47 @@ export const getDMThreadMessageConnectionOptions = {
           thread: ownProps.id,
         },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log('subscriptionData', subscriptionData);
           const newMessage = subscriptionData.data.messageAdded;
           const existingMessage = prev.directMessageThread.messageConnection.edges.find(
-            ({ node }) => node.id === newMessage.id
+            // Check whether we have a node with the same ID or an optimistic response
+            // with the same content
+            // NOTE(@mxstbr): Checking for equality in the content is very brittle, what if we change the content on the server?
+            // I couldn't find a better way to do this for now, ref withspectrum/spectrum#2328
+            ({ node }) =>
+              node.id === newMessage.id ||
+              (typeof node.id === 'number' &&
+                node.content.body === newMessage.content.body)
           );
-          console.log('existing message', existingMessage);
-          if (existingMessage) return prev;
+          // If there is an optimstic update with the same content that wasn't replaced yet, replace it
+          if (existingMessage && typeof existingMessage.node.id === 'number') {
+            return {
+              ...prev,
+              thread: {
+                ...prev.directMessageThread,
+                messageConnection: {
+                  ...prev.directMessageThread.messageConnection,
+                  edges: prev.directMessageThread.messageConnection.edges.map(
+                    edge => {
+                      // Replace the optimstic update with the actual db message
+                      if (edge.node.id === existingMessage.id)
+                        return {
+                          ...edge,
+                          cursor: window.btoa(newMessage.id),
+                          node: newMessage,
+                        };
+
+                      return edge;
+                    }
+                  ),
+                },
+              },
+            };
+            // If the message is already in the state because the mutation already
+            // added it, ignore it and don't duplicate it
+          } else if (existingMessage) {
+            return prev;
+          }
+
           // Add the new message to the data
           return Object.assign({}, prev, {
             ...prev,

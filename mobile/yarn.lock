@@ -5490,9 +5490,9 @@ recompose@^0.26.0:
     hoist-non-react-statics "^2.3.1"
     symbol-observable "^1.0.4"
 
-redraft@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/redraft/-/redraft-0.9.0.tgz#3ecf1f7a2e3bdb408603a7d3594c5b36eaef7194"
+redraft@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/redraft/-/redraft-0.10.0.tgz#d7d72c2db00e86bdc125a552e97653e8c778c270"
   dependencies:
     punycode "^2.1.0"
 

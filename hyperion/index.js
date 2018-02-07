@@ -9,6 +9,7 @@ import Loadable from 'react-loadable';
 import path from 'path';
 import { getUser } from 'iris/models/user';
 import Raven from 'shared/raven';
+import toobusy from 'toobusy-js';
 
 const PORT = process.env.PORT || 3006;
 
@@ -27,6 +28,20 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   const raven = require('shared/middlewares/raven').default;
   app.use(raven);
 }
+
+// middleware which blocks requests when we're too busy
+app.use(
+  (req: express$Request, res: express$Response, next: express$NextFunction) => {
+    if (toobusy()) {
+      res.status(503);
+      res.send(
+        'It looks like Spectrum is very busy right now, please try again in a minute.'
+      );
+    } else {
+      next();
+    }
+  }
+);
 
 // Cross origin request support
 import cors from 'shared/middlewares/cors';

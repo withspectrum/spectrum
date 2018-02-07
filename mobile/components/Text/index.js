@@ -1,5 +1,6 @@
 // @flow
-import React from 'react';
+import React, { type Node } from 'react';
+import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { human } from 'react-native-typography';
 import type { ComponentType } from 'react';
@@ -17,27 +18,28 @@ type TextTypes =
   | 'caption1'
   | 'caption2';
 
-type Props = {
+export type Props = {
   type?: TextTypes,
   bold?: boolean,
   italic?: boolean,
   underline?: boolean,
+  fontFamily?: 'monospace',
+  children: Node,
 };
 
+const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
+
 const Text: ComponentType<Props> = styled.Text`
+  flex: 1;
   ${(props: Props) => props.bold && 'font-weight: bold;'}
   ${(props: Props) => props.italic && 'font-style: italic;'}
   ${(props: Props) => props.underline && 'text-decoration-line: underline;'}
+  ${(props: Props) => props.type && human[`${props.type}Object`]}
   ${(props: Props) =>
     props.type &&
     `margin-top: ${human[`${props.type}Object`].lineHeight * 0.35};`}
+  ${(props: Props) =>
+    props.fontFamily === 'monospace' && `font-family: ${monospaceFont};`}
 `;
 
-// NOTE(@mxstbr): For some reason we have to set the style prop here instead of via .attrs
-// no clue why :shrugging:
-export default (props: Props) => (
-  <Text
-    {...props}
-    style={props.type ? human[`${props.type}Object`] || {} : {}}
-  />
-);
+export default Text;

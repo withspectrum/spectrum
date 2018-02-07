@@ -24,21 +24,21 @@ const Routes = StackNavigator(
     },
     Community: {
       screen: withMappedNavigationProps(Community),
-      navigationOptions: {
-        headerTitle: 'Community',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'Community',
+      }),
     },
     Channel: {
       screen: withMappedNavigationProps(Channel),
-      navigationOptions: {
-        headerTitle: 'Channel',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'Channel',
+      }),
     },
     User: {
       screen: withMappedNavigationProps(User),
-      navigationOptions: {
-        headerTitle: 'User',
-      },
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: navigation.state.params.title || 'User',
+      }),
     },
   },
   {

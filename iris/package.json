@@ -110,7 +110,7 @@
     "stripe": "^4.15.0",
     "striptags": "2.x",
     "styled-components": "2.1.2",
-    "subscriptions-transport-ws": "0.8",
+    "subscriptions-transport-ws": "^0.9.5",
     "sw-precache-webpack-plugin": "^0.11.4",
     "then-queue": "^1.3.0",
     "validator": "^9.0.0",

@@ -5,8 +5,8 @@ import { Stylesheet } from 'react-native';
 export const InboxThreadItem = styled.View`
   display: flex;
   flex-direction: column;
-  borderbottomcolor: ${props => props.theme.bg.border};
-  borderbottomwidth: 1px;
+  border-bottom-color: ${props => props.theme.bg.border};
+  border-bottom-width: 1px;
   background: ${props => props.theme.bg.default};
   position: relative;
 `;
@@ -47,7 +47,6 @@ export const MetaTextPill = styled(MetaText)`
   border-radius: 20px;
   padding: 0 12px;
   font-size: 11px;
-  text-transform: uppercase;
   font-weight: 700;
   display: flex;
   align-items: center;
