@@ -51,7 +51,7 @@ class App extends React.Component<{}, State> {
       });
     }
 
-    store.dispatch(authenticate(token));
+    if (token) store.dispatch(authenticate(token));
     this.setState({
       authLoaded: true,
       token,
