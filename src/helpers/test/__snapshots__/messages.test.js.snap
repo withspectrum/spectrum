@@ -5,7 +5,9 @@ Array [
   Array [
     Object {
       "author": Object {
-        "id": "robo",
+        "user": Object {
+          "id": "robo",
+        },
       },
       "message": Object {
         "content": 2016-12-31T23:00:00.000Z,
@@ -17,7 +19,9 @@ Array [
   Array [
     Object {
       "author": Object {
-        "id": "asdf123",
+        "user": Object {
+          "id": "asdf123",
+        },
       },
       "content": Object {
         "body": "Hey",

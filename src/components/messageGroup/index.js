@@ -171,7 +171,7 @@ class Messages extends Component<MessageGroupProps, State> {
           const initialMessage = group[0];
           const { author } = initialMessage;
 
-          const roboText = author.id === 'robo';
+          const roboText = author.user.id === 'robo';
           const me = currentUser
             ? author.user && author.user.id === currentUser.id
             : false;

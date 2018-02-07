@@ -22,13 +22,15 @@ const createMessage = ({
     body: body || 'Hey',
   },
   author: {
-    id: authorId || 'asdf123',
+    user: {
+      id: authorId || 'asdf123',
+    },
   },
   messageType: 'text',
 });
 
 const filterRobo = messageGroups =>
-  messageGroups.filter(group => group[0].author.id !== 'robo');
+  messageGroups.filter(group => group[0].author.user.id !== 'robo');
 
 it('should sort messages by timestamp', () => {
   const one = createMessage({
@@ -90,7 +92,7 @@ it("should add a timestamp between two messages if there's more than six hours b
   // Should have three message groups, two robo texts + two groups
   expect(result).toHaveLength(4);
   // Expect a robo text timestamp to be between the message groups
-  expect(result[2][0].author.id).toEqual('robo');
+  expect(result[2][0].author.user.id).toEqual('robo');
 });
 
 describe('lastSeen', () => {
@@ -111,7 +113,7 @@ describe('lastSeen', () => {
     const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
 
     // Between the two messages should be an unseen timestamp
-    expect(result[2][0].author.id).toEqual('robo');
+    expect(result[2][0].author.user.id).toEqual('robo');
     expect(result[2][0].message.type).toEqual('unseen-messages-below');
   });
 
@@ -137,7 +139,7 @@ describe('lastSeen', () => {
     // Even though there's two unseen messages there should only be one robotext
     const robotexts = result.filter(
       group =>
-        group[0].author.id === 'robo' &&
+        group[0].author.user.id === 'robo' &&
         group[0].message.type === 'unseen-messages-below'
     );
     expect(robotexts).toHaveLength(1);
@@ -158,7 +160,7 @@ describe('lastSeen', () => {
     const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
 
     // Between the two messages should be an unseen timestamp
-    expect(result[2][0].author.id).toEqual('robo');
+    expect(result[2][0].author.user.id).toEqual('robo');
     expect(result[2][0].message.type).toEqual('unseen-messages-below');
   });
 
@@ -182,7 +184,7 @@ describe('lastSeen', () => {
     // Even though there's two unseen messages there should only be one robotext
     const robotexts = result.filter(
       group =>
-        group[0].author.id === 'robo' &&
+        group[0].author.user.id === 'robo' &&
         group[0].message.type === 'unseen-messages-below'
     );
     expect(robotexts).toHaveLength(1);
