@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:47:24.617Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "f40e1d78-10e4-484a-b07d-7e7c88afd167",
+    "payload": "{\"attachments\":[],\"channelId\":\"-Kenmw8GUeJYnxXNc0WS\",\"communityId\":\"-Kh6RfPYjmSaIWbkck8i\",\"content\":{\"body\":\"{\\\"blocks\\\":[{\\\"key\\\":\\\"foo\\\",\\\"text\\\":\\\"Test @mxstbr \\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}],\\\"entityMap\\\":{}}\",\"title\":\"Testing\"},\"createdAt\":\"2018-02-07T11:20:26.669Z\",\"creatorId\":\"gVk5mYwccUOEKiN5vtOouqroGKo1\",\"edits\":[],\"id\":\"f40e1d78-10e4-484a-b07d-7e7c88afd167\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2018-02-07T11:20:26.669Z\",\"modifiedAt\":null,\"type\":\"DRAFTJS\"}",
+    "type": "THREAD"
+  },
+  "createdAt": "2018-02-07T11:20:44.689Z",
+  "entities": [
+    {
+      "id": "f40e1d78-10e4-484a-b07d-7e7c88afd167",
+      "payload": "{\"attachments\":[],\"channelId\":\"-Kenmw8GUeJYnxXNc0WS\",\"communityId\":\"-Kh6RfPYjmSaIWbkck8i\",\"content\":{\"body\":\"{\\\"blocks\\\":[{\\\"key\\\":\\\"foo\\\",\\\"text\\\":\\\"Test @mxstbr \\\",\\\"type\\\":\\\"unstyled\\\",\\\"depth\\\":0,\\\"inlineStyleRanges\\\":[],\\\"entityRanges\\\":[],\\\"data\\\":{}}],\\\"entityMap\\\":{}}\",\"title\":\"Testing\"},\"createdAt\":\"2018-02-07T11:20:26.669Z\",\"creatorId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"edits\":[],\"id\":\"f40e1d78-10e4-484a-b07d-7e7c88afd167\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2018-02-07T11:20:26.669Z\",\"modifiedAt\":null,\"type\":\"DRAFTJS\"}",
+      "type": "THREAD"
+    }
+  ],
+  "event": "MENTION_THREAD",
+  "id": "a176f386-c0b9-4c0b-a1b6-0fc4490bca32",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2018-02-07T11:20:44.689Z",
+  "userId": "35732c47-eda0-491f-b434-9a6cfef17c4f"
+}
