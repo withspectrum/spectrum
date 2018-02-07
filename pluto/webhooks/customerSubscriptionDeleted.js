@@ -1,10 +1,8 @@
 // @flow
-import type { CustomerSubscriptionDeleted } from '../types/customerSubscriptionDeleted';
+import type { SubscriptionEvent } from '../types/subscriptionEvent';
 
 export const CustomerSubscriptionDeletedHandler = {};
-CustomerSubscriptionDeletedHandler.handle = (
-  event: CustomerSubscriptionDeleted
-) => {
+CustomerSubscriptionDeletedHandler.handle = (event: SubscriptionEvent) => {
   // do things here
   return new Promise(res => res());
 };

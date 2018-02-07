@@ -1,8 +1,8 @@
 // @flow
-import type { CustomerUpdated } from '../types/customerUpdated';
+import type { CustomerEvent } from '../types/customerEvent';
 
 export const CustomerUpdatedHandler = {};
-CustomerUpdatedHandler.handle = (event: CustomerUpdated) => {
+CustomerUpdatedHandler.handle = (event: CustomerEvent) => {
   // do things here
   return new Promise(res => res());
 };

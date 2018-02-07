@@ -1,8 +1,8 @@
 // @flow
-import type { InvoicePaymentSucceeded } from '../types/invoicePaymentSucceeded';
+import type { InvoiceEvent } from '../types/invoiceEvent';
 
 export const InvoicePaymentSucceededHandler = {};
-InvoicePaymentSucceededHandler.handle = (event: InvoicePaymentSucceeded) => {
+InvoicePaymentSucceededHandler.handle = (event: InvoiceEvent) => {
   // do things here
   return new Promise(res => res());
 };

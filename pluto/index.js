@@ -31,6 +31,7 @@ console.log(`🚀  Pluto server running at http://localhost:${PORT}`);
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
   try {
+    // eslint-disable-next-line
     await new Promise(resolve => Raven.captureException(err, resolve));
   } catch (err) {
     console.error('Raven error', err);
@@ -42,6 +43,7 @@ process.on('unhandledRejection', async err => {
 process.on('uncaughtException', async err => {
   console.error('Uncaught exception', err);
   try {
+    // eslint-disable-next-line
     await new Promise(resolve => Raven.captureException(err, resolve));
   } catch (err) {
     console.error('Raven error', err);
