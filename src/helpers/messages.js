@@ -58,7 +58,9 @@ export const sortAndGroupMessages = (
       }
     }
 
-    const sameUser = messages[i].author.user.id === checkId; //=> boolean
+    const sameUser =
+      messages[i].author.user.id !== 'robo' &&
+      messages[i].author.user.id === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
