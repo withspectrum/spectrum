@@ -410,6 +410,10 @@ class StripeClass {
   };
 }
 
-export const StripeCustomer = ({ customerId }: { customerId: string }) => {
+export const StripeCustomer = ({
+  customerId,
+}: {
+  customerId: string,
+}): StripeClass => {
   return new StripeClass({ customerId });
 };
