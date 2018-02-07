@@ -1,0 +1,18 @@
+{
+  "name": "pluto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "http": "^0.0.0",
+    "node-env-file": "^0.1.8",
+    "now-env": "^3.0.3",
+    "raven": "^2.4.0",
+    "rethinkdbdash": "^2.3.31",
+    "stripe": "^5.4.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node main.js"
+  }
+}
