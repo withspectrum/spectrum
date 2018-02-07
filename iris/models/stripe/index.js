@@ -26,7 +26,7 @@ const communityPlans = [
   'community-standard',
 ];
 
-export class Stripe {
+class StripeClass {
   /*
   ================= CLASS UTILS =================
   */
@@ -409,3 +409,7 @@ export class Stripe {
     }
   };
 }
+
+export const StripeCustomer = ({ customerId }: { customerId: string }) => {
+  return new StripeClass({ customerId });
+};
