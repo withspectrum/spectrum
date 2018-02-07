@@ -1,5 +1,6 @@
 // @flow
 require('now-env');
+import fs from 'fs';
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 const STRIPE_WEBHOOK_SIGNING_SECRET = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 const stripe = require('stripe')(STRIPE_TOKEN);
@@ -9,6 +10,7 @@ import { CustomerCreatedHandler } from './customerCreatedHandler';
 
 const WebhookHandler = {};
 WebhookHandler.for = event => {
+  fs.writeFileSync(`event-${event.type}.js`, JSON.stringify(event, null, 2));
   const handler = {
     'customer.created': CustomerCreatedHandler,
     // 'customer.updated': CustomerUpdatedHandler,
