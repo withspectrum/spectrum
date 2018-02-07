@@ -27,11 +27,6 @@ import {
 } from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
-import {
-  storeItem,
-  getItemFromStorage,
-  removeItemFromStorage,
-} from '../../helpers/localStorage';
 import WebPushManager from '../../helpers/web-push-manager';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -89,24 +84,33 @@ class NotificationsPure extends React.Component<Props, State> {
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
 
-    if (getItemFromStorage('webPushPromptDismissed')) {
-      return this.setState({
-        showWebPushPrompt: false,
-      });
-    }
-
     WebPushManager.getPermissionState()
       .then(result => {
-        if (result === 'prompt') {
-          track('browser push notifications', 'prompted');
+        // If it's denied, forgetabboutit
+        if (
+          result === 'denied' ||
+          (result !== 'prompt' && result !== 'granted')
+        ) {
           this.setState({
-            showWebPushPrompt: true,
+            showWebPushPrompt: false,
           });
+          return;
         }
-        return;
+
+        WebPushManager.getSubscription()
+          .then(subscription => {
+            if (!subscription) track('browser push notifications', 'prompted');
+            this.setState({
+              showWebPushPrompt: !subscription,
+            });
+            return;
+          })
+          .catch(err => {
+            console.log('Error getting subscription:', err);
+          });
       })
       .catch(err => {
-        console.log('Error getting permission state: ', err);
+        console.log('Error getting permission state:', err);
       });
   }
 
@@ -126,18 +130,18 @@ class NotificationsPure extends React.Component<Props, State> {
     WebPushManager.subscribe()
       .then(subscription => {
         track('browser push notifications', 'subscribed');
-        removeItemFromStorage('webPushPromptDismissed');
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
         });
         return this.props.subscribeToWebPush(subscription);
       })
-      .catch(() => {
+      .catch(err => {
         track('browser push notifications', 'blocked');
         this.setState({
           webPushPromptLoading: false,
         });
+        console.error(err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -152,7 +156,6 @@ class NotificationsPure extends React.Component<Props, State> {
       showWebPushPrompt: false,
     });
     track('browser push notifications', 'dismissed');
-    storeItem('webPushPromptDismissed', { timestamp: Date.now() });
   };
 
   render() {

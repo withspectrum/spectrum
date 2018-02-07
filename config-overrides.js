@@ -94,42 +94,41 @@ module.exports = function override(config, env) {
   config.plugins = config.plugins.filter(
     plugin => !isServiceWorkerPlugin(plugin)
   );
-  if (process.env.NODE_ENV === 'production') {
-    // Get all public files so they're cached by the SW
-    let externals = ['./public/install-raven.js'];
-    walkFolder('./public/img/', file => {
-      externals.push(file.replace(/public/, ''));
-    });
-    config.plugins.push(
-      new OfflinePlugin({
-        caches: 'all',
-        updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
-        externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
-        excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
-        autoUpdate: true, // Automatically check for updates every hour
-        rewrites: arg => arg,
-        cacheMaps: [
-          {
-            match: url => {
-              // Don't return the cached index.html for API requests or /auth pages
-              if (url.pathname.indexOf('/api') === 0) return;
-              if (url.pathname.indexOf('/auth') === 0) return;
-              return new URL('/index.html', url);
-            },
-            requestType: ['navigate'],
+  // Get all public files so they're cached by the SW
+  let externals = ['./public/install-raven.js'];
+  walkFolder('./public/img/', file => {
+    externals.push(file.replace(/public/, ''));
+  });
+  config.plugins.push(
+    new OfflinePlugin({
+      // Don't cache anything in dev
+      caches: process.env.NODE_ENV === 'development' ? {} : 'all',
+      updateStrategy: 'all', // Update all files on update, seems safer than trying to only update changed files since we didn't write the webpack config
+      externals, // These files should be cached, but they're not emitted by webpack, so we gotta tell OfflinePlugin about 'em.
+      excludes: ['**/*.map'], // Don't cache any source maps, they're huge and unnecessary for clients
+      autoUpdate: true, // Automatically check for updates every hour
+      rewrites: arg => arg,
+      cacheMaps: [
+        {
+          match: url => {
+            // Don't return the cached index.html for API requests or /auth pages
+            if (url.pathname.indexOf('/api') === 0) return;
+            if (url.pathname.indexOf('/auth') === 0) return;
+            return new URL('/index.html', url);
           },
-        ],
-        ServiceWorker: {
-          entry: './public/push-sw.js', // Add the push notification ServiceWorker
-          events: true, // Emit events from the ServiceWorker
-          prefetchRequest: {
-            credentials: 'include', // Include credentials when fetching files, just to make sure we don't get into any issues
-          },
+          requestType: ['navigate'],
         },
-        AppCache: false, // Don't cache using AppCache, too buggy that thing
-      })
-    );
-  }
+      ],
+      ServiceWorker: {
+        entry: './public/push-sw.js', // Add the push notification ServiceWorker
+        events: true, // Emit events from the ServiceWorker
+        prefetchRequest: {
+          credentials: 'include', // Include credentials when fetching files, just to make sure we don't get into any issues
+        },
+      },
+      AppCache: false, // Don't cache using AppCache, too buggy that thing
+    })
+  );
   if (process.env.ANALYZE_BUNDLE === 'true') {
     console.log('Bundle analyzer enabled');
     config.plugins.push(

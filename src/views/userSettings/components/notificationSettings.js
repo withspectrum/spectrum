@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Checkbox } from '../../../components/formElements';
 import WebPushManager from '../../../helpers/web-push-manager';
-import { removeItemFromStorage } from '../../../helpers/localStorage';
 import { track } from '../../../helpers/events';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
@@ -55,7 +54,6 @@ class NotificationSettings extends React.Component<Props, State> {
     WebPushManager.subscribe()
       .then(subscription => {
         track('browser push notifications', 'subscribed');
-        removeItemFromStorage('webPushPromptDismissed');
         this.setState({
           subscription,
           webPushBlocked: false,
