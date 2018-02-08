@@ -1,7 +1,6 @@
 // @flow
 const { db } = require('./db');
-import intersection from 'lodash.intersection';
-import { getActiveThreadsInTimeframe } from './thread';
+import { getCoreMetricsActiveThreads } from './thread';
 import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
 
 export const saveCoreMetrics = (data: Object): Promise<Object> => {
@@ -49,48 +48,24 @@ export const getAu = (range: string) => {
 export const getAc = async (range: string) => {
   // constants
   const RANGE = parseRange(range);
-  const MIN_THREAD_COUNT = 5;
-  const MIN_MEMBER_COUNT = 50;
+  const MIN_THREAD_COUNT = 1;
 
   // get threads posted in the range
-  const threadsPostedInRange = await getActiveThreadsInTimeframe(range);
+  const threadsPostedInRange = await getCoreMetricsActiveThreads(RANGE);
+  // returns an array of community ids
+  const activeCommunitiesByThreads = threadsPostedInRange
+    .filter(t => t.reduction.length > MIN_THREAD_COUNT)
+    .map(t => t.group);
 
-  // we will iterate through each thread and accumulate the counts of threads posted in each community
-  const threadCountPerCommunity = {};
-  // accumulate threads posted in the last month keyed by communityid
-  // returns an object where keys === communityIds and values === number of threads posted in this time frame
-  threadsPostedInRange.map(c => {
-    threadCountPerCommunity[c.communityId] = threadCountPerCommunity[
-      c.communityId
-    ]
-      ? threadCountPerCommunity[c.communityId] + 1
-      : 1;
-  });
-
-  // filters out all communities who have less than the minimum number of required active threads
-  const activeCommunitiesByThreads = Object.keys(
-    threadCountPerCommunity
-  ).filter(o => threadCountPerCommunity[o] >= MIN_THREAD_COUNT);
-
-  // communities that meet a minimum membership threshold
-  let activeCommunitiesByMembership = await getCommunitiesWithMinimumMembers(
-    MIN_MEMBER_COUNT,
-    RANGE
+  // for each active community by thread count, only return communities with at least 2 members
+  const activeCommunitiesByMember = await getCommunitiesWithMinimumMembers(
+    2,
+    activeCommunitiesByThreads
   );
-  activeCommunitiesByMembership = activeCommunitiesByMembership.map(c => c.id);
-
-  // find communities that met both thread and membership criteria based on
-  // overlapping ids
-  const activeCommunities = intersection(
-    activeCommunitiesByThreads,
-    activeCommunitiesByMembership
-  );
-
-  //
 
   return {
-    count: activeCommunities.length,
-    communities: await getCommunities(activeCommunities),
+    count: activeCommunitiesByMember.length,
+    communities: await getCommunities(activeCommunitiesByMember),
   };
 };
 

@@ -29,7 +29,7 @@ import {
 export default async () => {
   debug('\nprocessing daily core metrics');
 
-  // 1
+  // 1;
   const dau = await getAu('daily');
 
   // 2

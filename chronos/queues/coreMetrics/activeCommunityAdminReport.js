@@ -21,6 +21,7 @@ export default async () => {
     wacSlugs: thisWacSlugs,
     macSlugs: thisMacSlugs,
   } = thisCoreMetrics;
+
   const {
     dacSlugs: prevDacSlugs,
     wacSlugs: prevWacSlugs,
