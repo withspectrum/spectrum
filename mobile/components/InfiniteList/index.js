@@ -27,7 +27,7 @@ type Props = {
 class InfiniteList extends React.Component<Props> {
   static defaultProps = {
     refreshing: false,
-    threshold: 0.5,
+    threshold: 0.75,
     keyExtractor: (item: Item, index: number) => {
       const key = item.id || (item.node && item.node.id);
 
@@ -43,8 +43,14 @@ class InfiniteList extends React.Component<Props> {
     },
   };
 
-  onEndReached = () => {
-    if (this.props.hasNextPage) {
+  onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+    // NOTE(@mxstbr): FlatList calls onEndReached 5 times synchronously on first render with a negative
+    // distanceFromEnd for reasons I don't fully understand. This makes sure we don't overfetch.
+    if (
+      this.props.hasNextPage &&
+      this.props.refetching !== true &&
+      distanceFromEnd > 0
+    ) {
       this.props.fetchMore();
     }
   };

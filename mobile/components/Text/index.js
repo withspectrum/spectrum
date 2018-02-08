@@ -30,7 +30,6 @@ export type Props = {
 const monospaceFont = Platform.OS === 'android' ? 'monospace' : 'Menlo';
 
 const Text: ComponentType<Props> = styled.Text`
-  flex: 1;
   ${(props: Props) => props.bold && 'font-weight: bold;'}
   ${(props: Props) => props.italic && 'font-style: italic;'}
   ${(props: Props) => props.underline && 'text-decoration-line: underline;'}

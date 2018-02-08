@@ -27,7 +27,7 @@ type Props = {
   navigation: Object,
   data: {
     subscribeToUpdatedThreads: Function,
-    fetchMore: Function,
+    fetchMore: () => Promise<any>,
     threadConnection: ThreadConnectionType,
   },
 };
@@ -95,21 +95,6 @@ class ThreadFeed extends React.Component<Props, State> {
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
         <View data-e2e-id="thread-feed">
-          {/*hasPinnedThread && (
-              <ThreadFeedCard
-                data={this.props.data.community.pinnedThread}
-                viewContext={viewContext}
-                isPinned={true}
-              />
-            )*/}
-
-          {/*hasWatercooler && (
-              <ThreadFeedCard
-                data={this.props.data.community.watercooler}
-                viewContext={viewContext}
-              />
-            )*/}
-
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (
