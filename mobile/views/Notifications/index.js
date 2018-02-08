@@ -20,13 +20,58 @@ type Props = {
   },
 };
 
-class Notifications extends React.Component<Props> {
+type State = {
+  subscription: ?Function,
+};
+
+class Notifications extends React.Component<Props, State> {
+  constructor() {
+    super();
+    this.state = {
+      subscription: null,
+    };
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  componentDidMount() {
+    this.subscribe();
+  }
+
+  subscribe = () => {
+    this.setState({
+      subscription:
+        this.props.data.subscribeToNewNotifications &&
+        this.props.data.subscribeToNewNotifications(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
+
+  fetchMore = () => {
+    const {
+      isFetchingMore,
+      isLoading,
+      hasError,
+      isRefetching,
+      data: { fetchMore, notifications },
+    } = this.props;
+    if (!isFetchingMore && !isLoading && !hasError && !isRefetching) {
+      fetchMore();
+    }
+  };
+
   render() {
     const { isLoading, hasError, data: { notifications } } = this.props;
     if (notifications) {
-      if (!notifications.edges || notifications.edges.length === 0)
-        return <Text type="body">No notifications yet!</Text>;
-
       return (
         <Wrapper>
           <View>
@@ -37,7 +82,7 @@ class Notifications extends React.Component<Props> {
               )}
               loadingIndicator={<Text>Loading...</Text>}
               hasNextPage={notifications.pageInfo.hasNextPage}
-              fetchMore={this.props.data.fetchMore}
+              fetchMore={this.fetchMore}
               refetching={this.props.isRefetching}
               refetch={this.props.data.refetch}
             />

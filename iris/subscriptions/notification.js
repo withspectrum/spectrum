@@ -14,7 +14,7 @@ module.exports = {
       subscribe: withFilter(
         listenToNewNotifications,
         (notification, _, { user }) =>
-          notification && user.id === notification.userId
+          notification && user && user.id === notification.userId
       ),
     },
     dmNotificationAdded: {

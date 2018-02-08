@@ -1,6 +1,8 @@
 // @flow
 import React, { type Node, type ElementType } from 'react';
 import { FlatList } from 'react-native';
+import Text from '../Text';
+import type { FlatListProps } from 'react-native';
 
 type ID = number | string;
 
@@ -12,16 +14,19 @@ type Item = {
 };
 
 type Props = {
-  data: mixed,
+  data: Array<mixed>,
   renderItem: Function,
   hasNextPage: boolean,
   fetchMore: Function,
   loadingIndicator: Node,
-  keyExtractor?: (item: any, index: number) => ID,
+  keyExtractor?: (item: any, index: number) => ID, // This defaults to using item.id or item.node.id. If your data doesn't have either of those you need to pass a custom keyExtractor function
   refetching?: boolean,
   refetch?: Function,
-  threshold?: number,
+  style?: Object,
   separator?: ElementType,
+  emptyState?: ElementType,
+  threshold?: number,
+  ...$Exact<FlatListProps>,
 };
 
 class InfiniteList extends React.Component<Props> {
@@ -66,20 +71,28 @@ class InfiniteList extends React.Component<Props> {
       loadingIndicator,
       keyExtractor,
       separator,
+      style = {},
+      emptyState,
+      ...rest
     } = this.props;
 
     return (
       <FlatList
+        {...rest}
         refreshing={refetching}
         keyExtractor={keyExtractor}
         onRefresh={refetch}
         data={data}
+        // Need to pass this to make sure the list re-renders when new items are added
+        extraData={{ length: data ? data.length : 0 }}
         renderItem={renderItem}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={threshold}
         ListFooterComponent={hasNextPage ? loadingIndicator : null}
         ItemSeparatorComponent={separator}
+        ListEmptyComponent={emptyState || <Text type="body">Nothing here</Text>}
         removeClippedSubviews={true}
+        style={{ flex: 1, ...style }}
       />
     );
   }
