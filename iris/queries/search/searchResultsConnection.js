@@ -7,9 +7,12 @@ export default (results: Array<any>) => {
       hasNextPage: false,
       hasPreviousPage: false,
     },
-    edges: results.map(result => ({
-      cursor: encode(result.id),
-      node: result,
-    })),
+    edges: results.map(
+      result =>
+        result && {
+          cursor: encode(result.id),
+          node: result,
+        }
+    ),
   };
 };

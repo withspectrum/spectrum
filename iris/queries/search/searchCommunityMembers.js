@@ -20,7 +20,7 @@ export default (args: Args, { loaders }: GraphQLContext) => {
       if (searchFilter && !searchFilter.communityId) return [];
       const userIds = content.hits.map(o => o.objectID);
       const input = userIds.map(userId => {
-        if (!searchFilter || !searchFilter.communityId) return null;
+        if (!searchFilter || !searchFilter.communityId) return;
         return [userId, searchFilter.communityId];
       });
       return loaders.userPermissionsInCommunity.loadMany(input);
