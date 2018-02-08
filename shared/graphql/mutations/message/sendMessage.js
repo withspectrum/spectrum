@@ -44,6 +44,7 @@ const sendMessageOptions = {
             author: {
               user: {
                 ...ownProps.currentUser,
+                __typename: 'User',
               },
               isMember: true,
               isModerator: false,
