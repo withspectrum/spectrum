@@ -1,10 +1,11 @@
 // @flow
-import type { SubscriptionEvent } from '../types/subscriptionEvent';
+import type { RawSubscription, CleanSubscription } from '../types/subscription';
 
-export const TransformSubscription = (event: SubscriptionEvent) => {
-  const subscription = event.data.object;
-
+export const TransformSubscription = (
+  subscription: RawSubscription
+): CleanSubscription => {
   return Object.assign({}, subscription, {
     customerId: subscription.customer,
+    subscriptionId: subscription.id,
   });
 };

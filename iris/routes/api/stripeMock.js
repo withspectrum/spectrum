@@ -13,11 +13,11 @@ stripeMockRouter.get('/', async (req, res) => {
 
   console.log('hasAnalytics', hasAnalytics);
 
-  const newCustomer = await StripeCustomer.init()
-    .createCustomer({ email: 'briandlovin+test2@gmail.com ' })
-    .catch(err => console.log('Error', err.message));
+  // const newCustomer = await StripeCustomer.init()
+  //   .createCustomer({ email: 'briandlovin+test2@gmail.com ' })
+  //   .catch(err => console.log('Error', err.message));
 
-  console.log('newCustomer', newCustomer);
+  // console.log('newCustomer', newCustomer);
 
   res.send('Ok');
 });

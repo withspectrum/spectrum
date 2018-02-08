@@ -1,7 +1,8 @@
 // @flow
 import type { List } from './list';
 
-export type Invoice = {
+// comes in from stripe
+export type RawInvoice = {
   id: string,
   amount_due: number,
   attempt_count: number,
@@ -26,4 +27,11 @@ export type Invoice = {
   tax: number,
   tax_percent: number,
   total: number,
+};
+
+// saved in db
+export type CleanInvoice = {
+  ...$Exact<RawInvoice>,
+  customerId: string,
+  invoiceId: string,
 };

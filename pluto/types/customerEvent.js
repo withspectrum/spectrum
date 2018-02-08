@@ -1,11 +1,11 @@
 // @flow
-import type { Customer } from './customer';
+import type { RawCustomer } from './customer';
 
 export type CustomerEvent = {
   id: string,
   created: Date,
   data: {
-    object: Customer,
+    object: RawCustomer,
   },
   type: string,
 };

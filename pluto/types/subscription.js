@@ -1,7 +1,8 @@
 // @flow
 import type { SubscriptionItem } from './subscriptionItem';
 
-export type Subscription = {
+// comes in from stripe
+export type RawSubscription = {
   id: string,
   billing: string,
   billing_cycle_anchor: Date,
@@ -29,4 +30,11 @@ export type Subscription = {
   quantity: number,
   start: Date,
   status: 'active' | 'canceled',
+};
+
+// saved in db
+export type CleanSubscription = {
+  ...$Exact<RawSubscription>,
+  customerId: string,
+  subscriptionId: string,
 };

@@ -1,11 +1,11 @@
 // @flow
-import type { Invoice } from './invoice';
+import type { RawInvoice } from './invoice';
 
 export type InvoiceEvent = {
   id: string,
   created: Date,
   data: {
-    object: Invoice,
+    object: RawInvoice,
   },
   type: string,
 };

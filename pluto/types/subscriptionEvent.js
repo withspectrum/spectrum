@@ -1,11 +1,11 @@
 // @flow
-import type { Subscription } from './subscription';
+import type { RawSubscription } from './subscription';
 
 export type SubscriptionEvent = {
   id: string,
   created: Date,
   data: {
-    object: Subscription,
+    object: RawSubscription,
   },
   type: string,
 };

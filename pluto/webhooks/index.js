@@ -6,37 +6,37 @@ const stripe = require('stripe')(STRIPE_TOKEN);
 const endpointSecret = STRIPE_WEBHOOK_SIGNING_SECRET;
 import Raven from 'shared/raven';
 
-import { CustomerCreatedHandler } from './customerCreated';
-import { CustomerUpdatedHandler } from './customerUpdated';
-import { CustomerSourceUpdatedHandler } from './customerSourceUpdated';
-import { CustomerSubscriptionCreatedHandler } from './customerSubscriptionCreated';
-import { CustomerSubscriptionDeletedHandler } from './customerSubscriptionDeleted';
-import { InvoiceCreatedHandler } from './invoiceCreated';
-import { InvoicePaymentSucceededHandler } from './invoicePaymentSucceeded';
+import { CustomerEventHandler } from './customerEvent';
+import { SourceEventHandler } from './sourceEvent';
+import { SubscriptionEventHandler } from './subscriptionEvent';
+import { InvoiceEventHandler } from './invoiceEvent';
 
-const WebhookHandler = {};
-WebhookHandler.for = event => {
-  const handler = {
-    'customer.created': CustomerCreatedHandler,
-    'customer.updated': CustomerUpdatedHandler,
-    // 'customer.source.created': CustomerSourceCreatedHandler,
-    // 'customer.source.deleted': CustomerSourceDeletedHandler,
-    // 'customer.source.expiring': CustomerSourceExpiringHandler,
-    'customer.source.updated': CustomerSourceUpdatedHandler,
-    'customer.subscription.created': CustomerSubscriptionCreatedHandler,
-    'customer.subscription.deleted': CustomerSubscriptionDeletedHandler,
-    // 'customer.subscription.updated': CustomerSubscriptionUpdatedHandler,
-    'invoice.created': InvoiceCreatedHandler,
-    // 'invoice.payment_failed': InvoicePaymentFailedHandler,
-    'invoice.payment_succeeded': InvoicePaymentSucceededHandler,
-  }[event.type];
+const WebhookHandler = {
+  for: async (event: Object): Promise<any> => {
+    const handler = {
+      // 'customer.created': CustomerEventHandler,
+      // 'customer.updated': CustomerEventHandler,
+      // 'customer.source.created': CustomerSourceCreatedHandler,
+      // 'customer.source.deleted': CustomerSourceDeletedHandler,
+      // 'customer.source.expiring': CustomerSourceExpiringHandler,
+      // 'customer.source.updated': SourceEventHandler,
+      // 'customer.subscription.created': SubscriptionEventHandler,
+      // 'customer.subscription.deleted': SubscriptionEventHandler,
+      // 'customer.subscription.updated': CustomerSubscriptionUpdatedHandler,
+      'invoice.created': InvoiceEventHandler,
+      // 'invoice.payment_failed': InvoicePaymentFailedHandler,
+      'invoice.payment_succeeded': InvoiceEventHandler,
+    }[event.type];
 
-  if (!handler) {
-    console.log(`Unhandled event type: ${event.type}`);
-    throw new Error(`Unhandled event type: ${event.type}`);
-  }
+    if (!handler || handler === undefined) {
+      console.log(`❌  Unhandled event type: ${event.type}`);
+      return;
+      // throw new Error(`Unhandled event type: ${event.type}`);
+    }
 
-  return handler;
+    console.log('✅ Got event handler for:', event.type, event.data.object.id);
+    return await handler.handle(event).catch(err => new Error(err));
+  },
 };
 
 export const handleWebhooks = (req: any, res: any) => {
@@ -52,16 +52,20 @@ export const handleWebhooks = (req: any, res: any) => {
   // if signature isn't verifiable or if event can't be parsed
   if (!event) {
     try {
-      console.log('No event found!');
-      // $FlowIssue
-      return new Promise(resolve => Raven.captureException(err, resolve));
+      console.log('❌ No event found!');
     } catch (err) {
-      console.error('Raven error', err);
+      console.error('❌ Raven error', err);
     }
   }
 
-  return WebhookHandler.for(event)
-    .handle(event)
-    .then(() => res.status(200).send('Webhook received: ' + event.id))
-    .catch(err => new Promise(resolve => Raven.captureException(err, resolve)));
+  console.log('🕒 About to process event:', event.type);
+
+  return (
+    WebhookHandler.for(event)
+      .then(() => res.status(200).send('Webhook received: ' + event.id))
+      // eslint-disable-next-line
+      .catch(
+        err => new Promise(resolve => Raven.captureException(err, resolve))
+      )
+  );
 };

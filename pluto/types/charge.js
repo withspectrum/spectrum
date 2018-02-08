@@ -1,6 +1,8 @@
 // @flow
-import type { Source } from './source';
-export type Charge = {
+import type { RawSource } from './source';
+
+// comes in from stripe
+export type RawCharge = {
   id: string,
   amount: number,
   amount_refunded: number,
@@ -15,6 +17,13 @@ export type Charge = {
   receipt_email: ?string,
   receipt_number: ?string,
   refunded: boolean,
-  source: Source,
+  source: RawSource,
   status: 'succeeded' | 'pending' | 'failed',
+};
+
+// saved in our db
+export type CleanCharge = {
+  ...$Exact<RawCharge>,
+  customerId: string,
+  chargeId: string,
 };

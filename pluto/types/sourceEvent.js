@@ -1,11 +1,11 @@
 // @flow
-import type { Source } from './source';
+import type { RawSource } from './source';
 
 export type SourceEvent = {
   id: string,
   created: Date,
   data: {
-    object: Source,
+    object: RawSource,
   },
   type: string,
 };

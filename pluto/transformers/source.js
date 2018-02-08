@@ -1,10 +1,9 @@
 // @flow
-import type { SourceEvent } from '../types/sourceEvent';
+import type { RawSource, CleanSource } from '../types/source';
 
-export const TransformSource = (event: SourceEvent) => {
-  const source = event.data.object;
-
+export const TransformSource = (source: RawSource): CleanSource => {
   return Object.assign({}, source, {
     customerId: source.customer,
+    sourceId: source.id,
   });
 };

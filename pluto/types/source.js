@@ -1,5 +1,7 @@
 // @flow
-export type Source = {
+
+// comes in from stripe
+export type RawSource = {
   id: string,
   brand: string,
   country: string,
@@ -13,4 +15,11 @@ export type Source = {
   last4: string,
   name: ?string,
   tokenization_method: ?string,
+};
+
+// saved in db
+export type CleanSource = {
+  ...$Exact<RawSource>,
+  customerId: string,
+  sourceId: string,
 };

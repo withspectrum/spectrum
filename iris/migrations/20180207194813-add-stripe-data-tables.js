@@ -3,20 +3,16 @@ require('now-env');
 exports.up = function(r, conn) {
   const createCustomersTable = () =>
     r.tableCreate('stripeCustomers', { primaryKey: 'customerId' }).run(conn);
-
   const createSubscriptionsTable = () =>
     r
-      .tableCreate('stripeSubscriptions', { primaryKey: 'customerId' })
+      .tableCreate('stripeSubscriptions', { primaryKey: 'subscriptionId' })
       .run(conn);
-
   const createChargesTable = () =>
-    r.tableCreate('stripeCharges', { primaryKey: 'customerId' }).run(conn);
-
+    r.tableCreate('stripeCharges', { primaryKey: 'chargeId' }).run(conn);
   const createInvoicesTable = () =>
-    r.tableCreate('stripeInvoices', { primaryKey: 'customerId' }).run(conn);
-
+    r.tableCreate('stripeInvoices', { primaryKey: 'invoiceId' }).run(conn);
   const createSourcesTable = () =>
-    r.tableCreate('stripeSources', { primaryKey: 'customerId' }).run(conn);
+    r.tableCreate('stripeSources', { primaryKey: 'sourceId' }).run(conn);
 
   return Promise.all([
     createCustomersTable(),
@@ -24,7 +20,28 @@ exports.up = function(r, conn) {
     createChargesTable(),
     createInvoicesTable(),
     createSourcesTable(),
-  ]).catch(err => console.log(err));
+  ])
+    .then(() =>
+      Promise.all([
+        r
+          .table('stripeSubscriptions')
+          .indexCreate('customerId')
+          .run(conn),
+        r
+          .table('stripeCharges')
+          .indexCreate('customerId')
+          .run(conn),
+        r
+          .table('stripeInvoices')
+          .indexCreate('customerId')
+          .run(conn),
+        r
+          .table('stripeSources')
+          .indexCreate('customerId')
+          .run(conn),
+      ])
+    )
+    .catch(err => console.log(err));
 };
 
 exports.down = function(r, conn) {
