@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 import { getCoreMetricsActiveThreads } from './thread';
-import { getCommunities } from './community';
+import { getCommunitiesWithMinimumMembers, getCommunities } from './community';
 
 export const saveCoreMetrics = (data: Object): Promise<Object> => {
   return db
@@ -48,7 +48,7 @@ export const getAu = (range: string) => {
 export const getAc = async (range: string) => {
   // constants
   const RANGE = parseRange(range);
-  const MIN_THREAD_COUNT = 5;
+  const MIN_THREAD_COUNT = 1;
 
   // get threads posted in the range
   const threadsPostedInRange = await getCoreMetricsActiveThreads(RANGE);
@@ -57,9 +57,15 @@ export const getAc = async (range: string) => {
     .filter(t => t.reduction.length > MIN_THREAD_COUNT)
     .map(t => t.group);
 
+  // for each active community by thread count, only return communities with at least 2 members
+  const activeCommunitiesByMember = await getCommunitiesWithMinimumMembers(
+    2,
+    activeCommunitiesByThreads
+  );
+
   return {
-    count: activeCommunitiesByThreads.length,
-    communities: await getCommunities(activeCommunitiesByThreads),
+    count: activeCommunitiesByMember.length,
+    communities: await getCommunities(activeCommunitiesByMember),
   };
 };
 
