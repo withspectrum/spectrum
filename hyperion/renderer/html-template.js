@@ -14,7 +14,7 @@ try {
   bundles = fs.readdirSync(path.join(__dirname, '../../build/static/js'));
 } catch (err) {
   throw new Error(
-    'It looks like you didn\'t run "yarn run dev:client" or "yarn run build:client" before starting hyperion. Please wait until either of them completes before starting hyperion.'
+    'It looks like you didn\'t run "yarn run dev:web" or "yarn run build:web" before starting hyperion. Please wait until either of them completes before starting hyperion.'
   );
 }
 
@@ -22,7 +22,7 @@ try {
 const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle));
 if (!mainBundle) {
   throw new Error(
-    'It looks like you didn\'t run "yarn run dev:client" or "yarn run build:client" before starting hyperion. Please wait until either of them completes before starting hyperion.'
+    'It looks like you didn\'t run "yarn run dev:web" or "yarn run build:web" before starting hyperion. Please wait until either of them completes before starting hyperion.'
   );
 }
 
