@@ -41,11 +41,13 @@ const general = /* GraphQL */ `
 		status: String
 	}
 
-	type ContextPermissions {
+	type ContextPermissions @deprecated(reason:"Use the CommunityMember or ThreadParticipant type to get permissions") {
 		communityId: String
 		reputation: Int
 		isModerator: Boolean
 		isOwner: Boolean
+		isMember: Boolean
+		isBlocked: Boolean
 	}
 
 	type GrowthDataCounts {

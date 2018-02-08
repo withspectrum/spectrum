@@ -11,7 +11,11 @@ export const getCommunityById = (id: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(id)
-    .run();
+    .run()
+    .then(result => {
+      if (result && result.deletedAt) return null;
+      return result;
+    });
 };
 
 export const getCommunities = (

@@ -1,3 +1,4 @@
+// @flow
 type Toasts = 'success' | 'error' | 'neutral';
 
 const addToast = (
@@ -22,10 +23,9 @@ const removeToast = (id: number) => {
 };
 
 let nextToastId = 0;
-export const addToastWithTimeout = (
-  kind: Toasts,
-  message: string
-) => dispatch => {
+export const addToastWithTimeout = (kind: Toasts, message: string) => (
+  dispatch: Function
+) => {
   const timeout = kind === 'success' ? 2000 : 4000;
   const id = nextToastId++;
   dispatch(addToast(id, kind, message, timeout));

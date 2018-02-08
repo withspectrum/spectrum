@@ -30,7 +30,7 @@ const messageAvatars = (list, active) => {
   ));
 };
 
-const Facepile = ({ participants, creator, active }) => {
+const Facepile = ({ participants, author, active }) => {
   if (!participants || participants.length === 0) {
     return (
       <FacepileContainer>
@@ -38,16 +38,16 @@ const Facepile = ({ participants, creator, active }) => {
           active={active}
           offset={0}
           role="presentation"
-          key={creator.id}
-          tipText={`Posted by ${creator.name}`}
+          key={author.id}
+          tipText={`Posted by ${author.name}`}
           tipLocation={'top-right'}
         >
           <Avatar
-            user={creator}
+            user={author}
             size={24}
             isOnline={false}
-            link={creator.username ? `/users/${creator.username}` : null}
-            src={creator.profilePhoto}
+            link={author.username ? `/users/${author.username}` : null}
+            src={author.profilePhoto}
             role="presentation"
           />
         </ParticipantHead>
@@ -56,7 +56,7 @@ const Facepile = ({ participants, creator, active }) => {
   }
 
   const participantList = participants.filter(
-    participant => participant.id !== creator.id
+    participant => participant.id !== author.id
   );
   const participantCount = participants.length;
 
@@ -72,16 +72,16 @@ const Facepile = ({ participants, creator, active }) => {
         active={active}
         offset={0}
         role="presentation"
-        key={creator.id}
-        tipText={`Posted by ${creator.name}`}
+        key={author.id}
+        tipText={`Posted by ${author.name}`}
         tipLocation={'top-right'}
       >
         <Avatar
-          user={creator}
+          user={author}
           size={24}
           isOnline={false}
-          link={creator.username ? `/users/${creator.username}` : null}
-          src={creator.profilePhoto}
+          link={author.username ? `/users/${author.username}` : null}
+          src={author.profilePhoto}
           role="presentation"
         />
       </ParticipantHead>

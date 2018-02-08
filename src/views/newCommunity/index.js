@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { ImportSlackWithoutCard } from '../communitySettings/components/importSlack';
+import { ImportSlackWithoutCard } from '../communityMembers/components/importSlack';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';

@@ -24,7 +24,7 @@ import {
 class InboxThread extends Component {
   render() {
     const {
-      data: { attachments, participants, creator },
+      data: { attachments, participants, author },
       data,
       active,
       hasActiveCommunity,
@@ -49,7 +49,8 @@ class InboxThread extends Component {
           onClick={e =>
             window.innerWidth > 768 &&
             !e.metaKey &&
-            this.props.dispatch(changeActiveThread(data.id))}
+            this.props.dispatch(changeActiveThread(data.id))
+          }
         />
         <InboxThreadContent>
           <ThreadCommunityInfo
@@ -83,13 +84,13 @@ class InboxThread extends Component {
               })}
 
           <ThreadMeta>
-            {(participantsExist || creator) && (
-                <Facepile
-                  active={active}
-                  participants={participants}
-                  creator={data.creator}
-                />
-              )}
+            {(participantsExist || author) && (
+              <Facepile
+                active={active}
+                participants={participants}
+                author={data.author.user}
+              />
+            )}
 
             {data.messageCount > 0 ? (
               <MetaText offset={participants.length} active={active}>
@@ -114,7 +115,7 @@ export default compose(connect(), withRouter)(InboxThread);
 class WatercoolerThreadPure extends React.Component {
   render() {
     const {
-      data: { participants, creator, community, messageCount, id },
+      data: { participants, author, community, messageCount, id },
       active,
     } = this.props;
     const participantsExist = participants && participants.length > 0;
@@ -128,7 +129,8 @@ class WatercoolerThreadPure extends React.Component {
           }}
           onClick={() =>
             window.innerWidth > 768 &&
-            this.props.dispatch(changeActiveThread(id))}
+            this.props.dispatch(changeActiveThread(id))
+          }
         />
         <InboxThreadContent>
           <WaterCoolerPill active={active} />
@@ -137,13 +139,13 @@ class WatercoolerThreadPure extends React.Component {
           </ThreadTitle>
 
           <ThreadMeta>
-            {(participantsExist || creator) && (
-                <Facepile
-                  active={active}
-                  participants={participants}
-                  creator={creator}
-                />
-              )}
+            {(participantsExist || author) && (
+              <Facepile
+                active={active}
+                participants={participants}
+                author={author}
+              />
+            )}
 
             {messageCount > 0 && (
               <MetaText offset={participants.length} active={active}>

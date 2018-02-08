@@ -84,7 +84,7 @@ export const Attachments = styled(FlexRow)`
   margin-top: 8px;
 `;
 
-export const CreatorName = styled.span`
+export const AuthorName = styled.span`
   font-weight: 500;
   font-size: 13px;
   color: ${props => props.theme.text.alt};
@@ -208,7 +208,7 @@ export const ParticipantCount = styled.span`
   text-overflow: clip;
 `;
 
-export const Creator = styled.div`
+export const Author = styled.div`
   padding: 2px;
   border-radius: 100%;
   border: 2px solid ${({ theme }) => theme.brand.alt};

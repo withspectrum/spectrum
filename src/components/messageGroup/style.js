@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Sender = styled.div`
+export const Author = styled.div`
   display: flex;
   flex: none;
   margin: 16px 16px 0;
@@ -28,8 +28,8 @@ export const MessageGroup = styled.div`
   flex: auto;
   flex-direction: column;
   max-width: 100%;
-  margin-left: ${props => (props.me ? `0` : `8px`)};
-  align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
+  margin-left: ${props => (props.me ? '0' : '8px')};
+  align-items: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;
 
 export const Byline = styled.span`

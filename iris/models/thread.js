@@ -184,10 +184,7 @@ export const getPublicThreadsByUser = (
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first || 10)
-    .run()
-    .then(res => {
-      return res;
-    });
+    .run();
 };
 
 export const getViewableParticipantThreadsByUser = async (

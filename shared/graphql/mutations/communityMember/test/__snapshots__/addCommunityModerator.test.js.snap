@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create a moderator in the community 1`] = `
+Object {
+  "data": Object {
+    "addCommunityModerator": Object {
+      "id": "80b16afe-8576-4970-99ab-240b1a975b99",
+    },
+  },
+}
+`;

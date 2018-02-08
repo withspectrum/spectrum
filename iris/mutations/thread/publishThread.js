@@ -3,6 +3,7 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/s3';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getCommunityRecurringPayments } from '../../models/recurringPayment';
 import { getChannels } from '../../models/channel';
 import { publishThread, editThread } from '../../models/thread';
@@ -58,6 +59,11 @@ export default async (
     currentUser.id
   );
 
+  const getCurrentUserCommunityPermissions = getUserPermissionsInCommunity(
+    thread.communityId,
+    currentUser.id
+  );
+
   const getParentCommunityIsPro = getCommunityRecurringPayments(
     thread.communityId
   ).then(subs => {
@@ -67,10 +73,12 @@ export default async (
 
   const [
     currentUserChannelPermissions,
+    currentUserCommunityPermissions,
     parentCommunityIsPro,
     channels,
   ] = await Promise.all([
     getCurrentUserChannelPermissions,
+    getCurrentUserCommunityPermissions,
     getParentCommunityIsPro,
     getChannels([thread.channelId]),
   ]);
@@ -84,7 +92,11 @@ export default async (
   }
 
   // if user isn't a channel member
-  if (!currentUserChannelPermissions.isMember) {
+  if (
+    !currentUserChannelPermissions.isMember ||
+    currentUserChannelPermissions.isBlocked ||
+    currentUserCommunityPermissions.isBlocked
+  ) {
     return new UserError(
       "You don't have permission to create threads in this channel."
     );

@@ -5,11 +5,8 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { track } from '../../../../helpers/events';
-import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Button, OutlineButton } from '../../../../components/buttons';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
 import { throttle } from '../../../../helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { Spinner } from '../../../../components/globals';
@@ -35,14 +32,13 @@ type State = {
   searchIsLoading: boolean,
   focusedSearchResult: string,
   isFocused: boolean,
-  loading: string,
 };
 
 type Props = {
   toggleCommunityMembership: Function,
-  joinedCommunity: Function,
   dispatch: Function,
   client: Object,
+  joinedCommunity: Function,
 };
 
 class Search extends React.Component<Props, State> {
@@ -57,73 +53,46 @@ class Search extends React.Component<Props, State> {
       searchIsLoading: false,
       focusedSearchResult: '',
       isFocused: true,
-      loading: '',
     };
 
     // only kick off search query every 200ms
     this.search = throttle(this.search, 500);
   }
 
-  toggleMembership = communityId => {
-    this.setState({
-      loading: communityId,
+  onJoinComplete = result => {
+    const { searchResults } = this.state;
+
+    // because we are using state to display the search results,
+    // we can't rely on the apollo cache to automatically update the
+    // display of the join/leave buttons in the search results dropdown
+    // so we update the state manually with the new membership boolean
+    // returned from the mutation
+    const isMember = result.communityPermissions.isMember;
+
+    if (isMember) {
+      this.props.joinedCommunity(1, false);
+    } else {
+      this.props.joinedCommunity(-1, false);
+    }
+
+    const newSearchResults = searchResults.map(community => {
+      if (community.id === result.id) {
+        const newObj = Object.assign({}, ...community, {
+          ...community,
+          communityPermissions: {
+            ...community.communityPermissions,
+            isMember,
+          },
+        });
+
+        return newObj;
+      }
+      return community;
     });
 
-    this.props
-      .toggleCommunityMembership({ communityId })
-      .then(({ data }: ToggleCommunityMembershipType) => {
-        this.setState({
-          loading: '',
-        });
-
-        const { toggleCommunityMembership } = data;
-
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-
-        track('community', isMember ? 'joined' : 'unjoined', null);
-        track(
-          'onboarding',
-          isMember ? 'community joined' : 'community unjoined',
-          null
-        );
-
-        this.props.joinedCommunity(isMember ? 1 : -1, false);
-
-        const { searchResults } = this.state;
-
-        // because we are using state to display the search results,
-        // we can't rely on the apollo cache to automatically update the
-        // display of the join/leave buttons in the search results dropdown
-        // so we update the state manually with the new membership boolean
-        // returned from the mutation
-        const newSearchResults = searchResults.map(community => {
-          if (community.id === toggleCommunityMembership.id) {
-            const newObj = Object.assign({}, ...community, {
-              ...community,
-              communityPermissions: {
-                ...community.communityPermissions,
-                isMember: isMember,
-              },
-            });
-
-            return newObj;
-          }
-          return community;
-        });
-
-        this.setState({
-          searchResults: newSearchResults,
-        });
-
-        return;
-      })
-      .catch(err => {
-        this.setState({
-          loading: '',
-        });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
+    return this.setState({
+      searchResults: newSearchResults,
+    });
   };
 
   search = (searchString: string) => {
@@ -213,19 +182,6 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // if user presses enter
-    if (e.keyCode === 13) {
-      if (
-        !searchResults[indexOfFocusedSearchResult] ||
-        searchResults[indexOfFocusedSearchResult] === undefined
-      ) {
-        return;
-      }
-
-      const id = searchResults[indexOfFocusedSearchResult].id;
-      return this.toggleMembership(id);
-    }
-
     // if person presses down
     if (e.keyCode === 40) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
@@ -289,7 +245,6 @@ class Search extends React.Component<Props, State> {
       searchResults,
       focusedSearchResult,
       isFocused,
-      loading,
     } = this.state;
 
     return (
@@ -343,25 +298,37 @@ class Search extends React.Component<Props, State> {
 
                     <div>
                       {community.communityPermissions.isMember ? (
-                        <OutlineButton
-                          onClick={() => this.toggleMembership(community.id)}
-                          gradientTheme="none"
-                          color={'success.alt'}
-                          hoverColor={'success.default'}
-                          loading={loading === community.id}
-                        >
-                          Joined!
-                        </OutlineButton>
+                        <ToggleCommunityMembership
+                          onJoin={this.onJoinComplete}
+                          onLeave={this.onJoinComplete}
+                          community={community}
+                          render={({ isLoading }) => (
+                            <OutlineButton
+                              gradientTheme="none"
+                              color={'success.alt'}
+                              hoverColor={'success.default'}
+                              loading={isLoading}
+                            >
+                              Joined!
+                            </OutlineButton>
+                          )}
+                        />
                       ) : (
-                        <Button
-                          onClick={() => this.toggleMembership(community.id)}
-                          loading={loading === community.id}
-                          gradientTheme={'success'}
-                          style={{ fontSize: '16px' }}
-                          icon={'plus'}
-                        >
-                          Join
-                        </Button>
+                        <ToggleCommunityMembership
+                          onJoin={this.onJoinComplete}
+                          onLeave={this.onJoinComplete}
+                          community={community}
+                          render={({ isLoading }) => (
+                            <Button
+                              loading={isLoading}
+                              gradientTheme={'success'}
+                              style={{ fontSize: '16px' }}
+                              icon={'plus'}
+                            >
+                              Join
+                            </Button>
+                          )}
+                        />
                       )}
                     </div>
                   </SearchResult>
@@ -386,9 +353,4 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  withApollo,
-  withRouter,
-  toggleCommunityMembershipMutation,
-  connect()
-)(Search);
+export default compose(withApollo, withRouter, connect())(Search);

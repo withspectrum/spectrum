@@ -27,7 +27,7 @@ class Message extends Component {
   };
 
   deleteMessage = () => {
-    const message = `Are you sure you want to delete this message?`;
+    const message = 'Are you sure you want to delete this message?';
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
@@ -62,7 +62,6 @@ class Message extends Component {
     const emojiOnly = parsedMessage && onlyContainsEmoji(parsedMessage);
     const actionable = context !== 'notification';
     const shareable = message.threadType !== 'directMessageThread';
-
     return (
       <Wrapper
         me={me}

@@ -1,26 +1,15 @@
+// @flow
 import * as React from 'react';
 import Link from 'src/components/link';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   StyledThreadListItem,
   ThreadListItemTitle,
   ThreadListItemSubtitle,
 } from '../style';
 
-type ThreadProps = {
-  id: string,
-  creator: {
-    name: string,
-    username: string,
-  },
-  content: {
-    title: string,
-  },
-  createdAt: Date,
-  messageCount: number,
-};
-
 type Props = {
-  thread: ThreadProps,
+  thread: GetThreadType,
 };
 
 class ThreadListItem extends React.Component<Props> {
@@ -28,7 +17,7 @@ class ThreadListItem extends React.Component<Props> {
     const {
       thread: {
         id,
-        creator: { name, username },
+        author: { user: { name, username } },
         content: { title },
         messageCount,
       },
@@ -46,7 +35,7 @@ class ThreadListItem extends React.Component<Props> {
         </Link>
         {messageCount > 0 && (
           <ThreadListItemSubtitle>
-            {messageCount > 1 ? `${messageCount} messages` : `1 message`}
+            {messageCount > 1 ? `${messageCount} messages` : '1 message'}
           </ThreadListItemSubtitle>
         )}
         <ThreadListItemSubtitle>

@@ -10,25 +10,27 @@ const FIRST_JAN = 1483225200000;
 const createMessage = ({
   timestamp,
   body,
-  senderId,
+  authorId,
 }: {
   timestamp?: Date,
   body?: string,
-  senderId?: string,
+  authorId?: string,
 }): Message => ({
   id: 'whatever',
   timestamp: timestamp || new Date(FIRST_JAN),
   content: {
     body: body || 'Hey',
   },
-  sender: {
-    id: senderId || 'asdf123',
+  author: {
+    user: {
+      id: authorId || 'asdf123',
+    },
   },
   messageType: 'text',
 });
 
 const filterRobo = messageGroups =>
-  messageGroups.filter(group => group[0].sender.id !== 'robo');
+  messageGroups.filter(group => group[0].author.user.id !== 'robo');
 
 it('should sort messages by timestamp', () => {
   const one = createMessage({
@@ -44,18 +46,18 @@ it('should sort messages by timestamp', () => {
   expect(filterRobo(sortAndGroupMessages(messages))).toEqual([[one, two]]);
 });
 
-it('should group messages by sender', () => {
+it('should group messages by author', () => {
   const one = createMessage({
-    senderId: 'first',
+    authorId: 'first',
   });
   const two = createMessage({
-    senderId: 'first',
+    authorId: 'first',
   });
   const three = createMessage({
-    senderId: 'second',
+    authorId: 'second',
   });
   const four = createMessage({
-    senderId: 'first',
+    authorId: 'first',
   });
 
   const messages = [one, two, three, four];
@@ -88,21 +90,21 @@ it("should add a timestamp between two messages if there's more than six hours b
   const result = sortAndGroupMessages(messages);
 
   // Should have three message groups, two robo texts + two groups
-  expect(result.length).toEqual(4);
+  expect(result).toHaveLength(4);
   // Expect a robo text timestamp to be between the message groups
-  expect(result[2][0].sender.id).toEqual('robo');
+  expect(result[2][0].author.user.id).toEqual('robo');
 });
 
 describe('lastSeen', () => {
   it('should insert a last seen timestamp between two messages from different users', () => {
     const first = createMessage({
       timestamp: new Date(FIRST_JAN),
-      senderId: 'first',
+      authorId: 'first',
     });
     const second = createMessage({
       // Second one is 5000ms after first one
       timestamp: new Date(FIRST_JAN + 5000),
-      senderId: 'second',
+      authorId: 'second',
     });
 
     const messages = [first, second];
@@ -111,40 +113,37 @@ describe('lastSeen', () => {
     const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
 
     // Between the two messages should be an unseen timestamp
-    expect(result[2][0].sender.id).toEqual('robo');
+    expect(result[2][0].author.user.id).toEqual('robo');
     expect(result[2][0].message.type).toEqual('unseen-messages-below');
   });
 
   // NOTE(@mxstbr): This is a bug, is fixed in #2192, can remove the .skip here after that's merged
-  it.skip(
-    'should only insert one last seen robotext between messages from different users',
-    () => {
-      const first = createMessage({
-        timestamp: new Date(FIRST_JAN),
-        senderId: 'first',
-      });
-      const second = createMessage({
-        timestamp: new Date(FIRST_JAN + 5000),
-        senderId: 'second',
-      });
-      const third = createMessage({
-        timestamp: new Date(FIRST_JAN + 6000),
-        senderId: 'second',
-      });
+  it.skip('should only insert one last seen robotext between messages from different users', () => {
+    const first = createMessage({
+      timestamp: new Date(FIRST_JAN),
+      authorId: 'first',
+    });
+    const second = createMessage({
+      timestamp: new Date(FIRST_JAN + 5000),
+      authorId: 'second',
+    });
+    const third = createMessage({
+      timestamp: new Date(FIRST_JAN + 6000),
+      authorId: 'second',
+    });
 
-      const messages = [first, second, third];
+    const messages = [first, second, third];
 
-      const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
+    const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
 
-      // Even though there's two unseen messages there should only be one robotext
-      const robotexts = result.filter(
-        group =>
-          group[0].sender.id === 'robo' &&
-          group[0].message.type === 'unseen-messages-below'
-      );
-      expect(robotexts.length).toEqual(1);
-    }
-  );
+    // Even though there's two unseen messages there should only be one robotext
+    const robotexts = result.filter(
+      group =>
+        group[0].author.user.id === 'robo' &&
+        group[0].message.type === 'unseen-messages-below'
+    );
+    expect(robotexts).toHaveLength(1);
+  });
 
   it('should insert a last seen robotext between messages from the same user', () => {
     const first = createMessage({
@@ -161,7 +160,7 @@ describe('lastSeen', () => {
     const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
 
     // Between the two messages should be an unseen timestamp
-    expect(result[2][0].sender.id).toEqual('robo');
+    expect(result[2][0].author.user.id).toEqual('robo');
     expect(result[2][0].message.type).toEqual('unseen-messages-below');
   });
 
@@ -185,9 +184,9 @@ describe('lastSeen', () => {
     // Even though there's two unseen messages there should only be one robotext
     const robotexts = result.filter(
       group =>
-        group[0].sender.id === 'robo' &&
+        group[0].author.user.id === 'robo' &&
         group[0].message.type === 'unseen-messages-below'
     );
-    expect(robotexts.length).toEqual(1);
+    expect(robotexts).toHaveLength(1);
   });
 });

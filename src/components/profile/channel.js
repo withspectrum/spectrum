@@ -55,7 +55,7 @@ class ChannelWithData extends React.Component<Props, State> {
         const isMember = toggleChannelSubscription.channelPermissions.isMember;
         const isPending =
           toggleChannelSubscription.channelPermissions.isPending;
-        let str;
+        let str = '';
         if (isPending) {
           track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${

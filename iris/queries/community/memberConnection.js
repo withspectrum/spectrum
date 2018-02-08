@@ -1,13 +1,30 @@
 // @flow
+/*
+
+    DEPRECATED 2/3/2018 by @brian
+
+*/
 import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import { encode, decode } from '../../utils/base64';
 const { getMembersInCommunity } = require('../../models/usersCommunities');
 
+type MemberConnectionFilterType = {
+  isMember?: boolean,
+  isOwner?: boolean,
+  isModerator?: boolean,
+  isPending?: boolean,
+  isBlocked?: boolean,
+};
+
 export default (
   { id }: DBCommunity,
-  { first = 10, after, role }: { ...$Exact<PaginationOptions>, role: string },
+  {
+    first = 10,
+    after,
+    filter,
+  }: { ...$Exact<PaginationOptions>, filter: MemberConnectionFilterType },
   { loaders }: GraphQLContext
 ) => {
   const cursor = decode(after);
@@ -17,7 +34,7 @@ export default (
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
 
   // $FlowFixMe
-  return getMembersInCommunity(id, { first, after: lastUserIndex }, role)
+  return getMembersInCommunity(id, { first, after: lastUserIndex }, filter)
     .then(users => loaders.user.loadMany(users))
     .then(result => ({
       pageInfo: {

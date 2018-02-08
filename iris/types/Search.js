@@ -4,9 +4,10 @@ const Search = /* GraphQL */ `
     COMMUNITIES
     USERS
     THREADS
+    COMMUNITY_MEMBERS
   }
 
-  union SearchResultNode = Community | Thread | User
+  union SearchResultNode = Community | Thread | User | CommunityMember
 
   type SearchResultEdge {
     cursor: String!

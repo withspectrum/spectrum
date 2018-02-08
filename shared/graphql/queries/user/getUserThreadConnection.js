@@ -65,14 +65,14 @@ const getUserThreadConnectionOptions = {
 
             const thisUserId = ownProps.userId;
             const updatedThreadShouldAppearInContext =
-              thisUserId === updatedThread.creator.id;
+              thisUserId === updatedThread.author.user.id;
 
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.user.threadConnection.edges,
                   updatedThread,
                   ownProps.dispatch
-                ).filter(thread => thread.node.creator.id === thisUserId)
+                ).filter(thread => thread.node.author.user.id === thisUserId)
               : [...prev.user.threadConnection.edges];
 
             return {

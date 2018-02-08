@@ -1,6 +1,6 @@
 import React from 'react';
 import Avatar from '../../components/avatar';
-import { ParticipantHeads, ParticipantCount, Creator } from './style';
+import { ParticipantHeads, ParticipantCount, Author } from './style';
 
 const messageAvatars = list => {
   const avatarList = list.slice(0, 5);
@@ -19,25 +19,25 @@ const messageAvatars = list => {
 };
 
 const FacePile = props => {
-  const { data: { creator, participants } } = props;
+  const { data: { author, participants } } = props;
   const participantList = participants.filter(
-    participant => participant.id !== creator.id
+    participant => participant.id !== author.user.id
   );
   const participantCount = participants.length;
 
   return (
     <ParticipantHeads>
-      <Creator role="presentation">
+      <Author role="presentation">
         <Avatar
           size={32}
-          user={creator}
-          isOnline={creator.isOnline}
-          link={creator.username ? `/users/${creator.username}` : null}
-          src={creator.profilePhoto}
+          user={author.user}
+          isOnline={author.user.isOnline}
+          link={author.user.username ? `/users/${author.user.username}` : null}
+          src={author.user.profilePhoto}
           role="presentation"
-          key={creator.id}
+          key={author.user.id}
         />
-      </Creator>
+      </Author>
       {messageAvatars(participantList)}
       {participantCount > 6 && (
         <ParticipantCount>{`+${participantCount - 6}`}</ParticipantCount>

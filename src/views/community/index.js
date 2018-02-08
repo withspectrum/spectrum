@@ -2,8 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import Link from '../../components/link';
+import { Button } from '../../components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import Icon from '../../components/icons';
@@ -12,8 +13,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import { addToastWithTimeout } from '../../actions/toasts';
+import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
@@ -37,7 +37,6 @@ import { CoverRow, CoverColumn, LogoutButton } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
-import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -86,42 +85,6 @@ class CommunityView extends React.Component<Props, State> {
     }
   }
 
-  toggleMembership = (communityId: string) => {
-    const { dispatch } = this.props;
-
-    this.setState({
-      isLeavingCommunity: true,
-    });
-
-    this.props
-      .toggleCommunityMembership({ communityId })
-      .then(({ data }: ToggleCommunityMembershipType) => {
-        const { toggleCommunityMembership } = data;
-
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-        track('community', isMember ? 'joined' : 'unjoined', null);
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
-
-        return this.setState({
-          isLeavingCommunity: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isLeavingCommunity: false,
-        });
-
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   setComposerUpsell = () => {
     const { data: { community } } = this.props;
     const communityExists = community && community.communityPermissions;
@@ -159,14 +122,51 @@ class CommunityView extends React.Component<Props, State> {
           description: community.description,
         },
       });
+
       const {
         showComposerUpsell,
         selectedView,
         isLeavingCommunity,
       } = this.state;
-      const { isMember, isOwner, isModerator } = community.communityPermissions;
+      const {
+        isMember,
+        isOwner,
+        isModerator,
+        isBlocked,
+      } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
+
+      if (isBlocked) {
+        return (
+          <AppViewWrapper data-e2e-id="community-view">
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={'/'}
+              noComposer={!community.communityPermissions.isMember}
+            />
+
+            <Head
+              title={title}
+              description={description}
+              image={community.profilePhoto}
+            />
+
+            <ViewError
+              emoji={'✋'}
+              heading={`You are blocked from ${community.name}`}
+              subheading={
+                'You have been blocked from joining and viewing conversations in this community.'
+              }
+            >
+              <Link to={'/'}>
+                <Button large>Take me home</Button>
+              </Link>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
@@ -197,12 +197,14 @@ class CommunityView extends React.Component<Props, State> {
                 {isLoggedIn &&
                   (!community.communityPermissions.isOwner &&
                     community.communityPermissions.isMember) && (
-                    <LogoutButton
-                      onClick={() => this.toggleMembership(community.id)}
-                      loading={isLeavingCommunity}
-                    >
-                      Leave {community.name}
-                    </LogoutButton>
+                    <ToggleCommunityMembership
+                      community={community}
+                      render={state => (
+                        <LogoutButton loading={state.isLoading}>
+                          Leave {community.name}
+                        </LogoutButton>
+                      )}
+                    />
                   )}
                 <ChannelList
                   id={community.id}
@@ -273,7 +275,6 @@ class CommunityView extends React.Component<Props, State> {
                     <UpsellJoinCommunity
                       community={community}
                       loading={isLeavingCommunity}
-                      join={this.toggleMembership}
                     />
                   )}
 
@@ -364,7 +365,6 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  toggleCommunityMembershipMutation,
   getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);

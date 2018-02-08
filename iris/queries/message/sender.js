@@ -1,4 +1,9 @@
 // @flow
+/*
+
+    DEPRECATED 2/3/2018 by @brian
+
+*/
 import type { DBMessage } from 'shared/types';
 import type { GraphQLContext } from '../../';
 
@@ -27,11 +32,12 @@ export default async (
 
   return {
     ...sender,
-    contextPermissions: {
+    contextPermission: {
       communityId: thread.communityId,
       reputation: permissions ? permissions.reputation : 0,
       isModerator: permissions ? permissions.isModerator : false,
       isOwner: permissions ? permissions.isOwner : false,
+      isBlocked: permissions ? permissions.isBlocked : false,
     },
   };
 };

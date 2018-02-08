@@ -92,7 +92,7 @@ class ChannelView extends React.Component<Props> {
       }
 
       // user has explicitly been blocked from this channel
-      if (isBlocked) {
+      if (isBlocked || channel.community.communityPermissions.isBlocked) {
         return (
           <AppViewWrapper>
             <Titlebar
@@ -102,6 +102,7 @@ class ChannelView extends React.Component<Props> {
               noComposer
             />
             <ViewError
+              emoji={'✋'}
               heading={'You don’t have permission to view this channel.'}
               subheading={`Head back to the ${communitySlug} community to get back on track.`}
             >

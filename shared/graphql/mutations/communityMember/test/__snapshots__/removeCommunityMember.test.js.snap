@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should remove a member in the community 1`] = `
+Object {
+  "data": Object {
+    "removeCommunityMember": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": false,
+        "isModerator": false,
+        "isOwner": false,
+        "reputation": 102,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;

@@ -104,7 +104,7 @@ const User = /* GraphQL */ `
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
-		contextPermissions: ContextPermissions
+		contextPermissions: ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions")
 	}
 
 	extend type Query {
