@@ -108,7 +108,7 @@ class ActionBar extends React.Component<Props, State> {
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
     const isPinned = thread.community.pinnedThreadId === thread.id;
-    console.log(thread);
+
     if (isEditing) {
       return (
         <ActionBarContainer>
