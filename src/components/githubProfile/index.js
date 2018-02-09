@@ -21,11 +21,13 @@ class GithubProfile extends React.Component<Props> {
   render() {
     const { data: { user }, render } = this.props;
 
-    if (user && user.githubProfile && user.githubProfile.id) {
+    if (user) {
+      if (!user.githubProfile || !user.githubProfile.username)
+        return render(null);
       return render(user.githubProfile);
     }
 
-    return render(null);
+    return null;
   }
 }
 
