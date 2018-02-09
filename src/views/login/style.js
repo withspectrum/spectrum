@@ -32,7 +32,9 @@ export const LargeTitle = styled(Title)`
   margin-bottom: 16px;
 `;
 
-export const SmallTitle = styled(Title)`font-size: 18px;`;
+export const SmallTitle = styled(Title)`
+  font-size: 18px;
+`;
 
 export const MiniTitle = styled(Title)`
   font-weight: 700;
@@ -74,7 +76,9 @@ export const Subtitle = styled.h2`
   }
 `;
 
-export const LargeSubtitle = styled(Subtitle)`font-size: 20px;`;
+export const LargeSubtitle = styled(Subtitle)`
+  font-size: 20px;
+`;
 
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
@@ -83,7 +87,9 @@ export const MiniSubtitle = styled(Subtitle)`
   line-height: 1.4;
 `;
 
-export const SmallSubtitle = styled(Subtitle)`font-size: 15px;`;
+export const SmallSubtitle = styled(Subtitle)`
+  font-size: 15px;
+`;
 
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
@@ -366,5 +372,21 @@ export const ButtonGoogle = styled(SigninButton)`
   &:hover {
     color: ${props =>
       props.whitebg ? props.theme.social.google.default : '#fff'};
+  }
+`;
+
+export const ButtonGithub = styled(SigninButton)`
+  background: ${props => (props.preferred ? props.theme.text.default : 'none')};
+  color: ${props =>
+    props.whitebg
+      ? props.theme.text.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+  &:after {
+    color: ${props => props.theme.text.default};
+  }
+
+  &:hover {
+    color: ${props => (props.whitebg ? props.theme.text.default : '#fff')};
   }
 `;

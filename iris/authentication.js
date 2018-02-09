@@ -5,7 +5,11 @@ const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
-const { getUser, createOrFindUser } = require('./models/user');
+const {
+  getUser,
+  createOrFindUser,
+  saveUserProvider,
+} = require('./models/user');
 
 let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
 let FACEBOOK_OAUTH_CLIENT_ID = process.env.FACEBOOK_OAUTH_CLIENT_ID;
@@ -234,8 +238,21 @@ const init = () => {
         clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
         callbackURL: '/auth/github/callback',
         scope: ['user'],
+        passReqToCallback: true,
       },
-      (token, tokenSecret, profile, done) => {
+      (req, token, tokenSecret, profile, done) => {
+        if (req.user) {
+          return saveUserProvider(req.user.id, 'githubProviderId', profile.id)
+            .then(user => {
+              done(null, user);
+              return user;
+            })
+            .catch(err => {
+              done(err);
+              return null;
+            });
+        }
+
         const user = {
           providerId: null,
           fbProviderId: null,
@@ -243,6 +260,8 @@ const init = () => {
           githubProviderId: profile.id,
           username: null,
           name: profile.displayName || null,
+          description: profile._json.bio,
+          website: profile._json.blog,
           email:
             (profile.emails &&
               profile.emails.length > 0 &&

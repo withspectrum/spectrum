@@ -14,6 +14,7 @@ import {
   ButtonTwitter,
   ButtonFacebook,
   ButtonGoogle,
+  ButtonGithub,
   Col,
 } from './style';
 
@@ -118,6 +119,16 @@ export class Login extends Component {
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
                 </ButtonGoogle>
+
+                <ButtonGithub
+                  preferred={preferredSigninMethod === 'github'}
+                  after={preferredSigninMethod === 'github'}
+                  whitebg={preferredSigninMethod !== 'github'}
+                  href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                  onClick={() => this.trackSignin('secondary cta', 'github')}
+                >
+                  <Icon glyph="github" /> <span>{verb} with GitHub</span>
+                </ButtonGithub>
               </Col>
             )}
 
@@ -149,6 +160,15 @@ export class Login extends Component {
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
                 </ButtonGoogle>
+
+                <ButtonGithub
+                  preferred
+                  href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                  after={preferredSigninMethod === 'github'}
+                  onClick={() => this.trackSignin('secondary cta', 'github')}
+                >
+                  <Icon glyph="github" /> <span>{verb} with GitHub</span>
+                </ButtonGithub>
               </Col>
             )}
           </SigninButtonsContainer>

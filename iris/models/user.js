@@ -477,6 +477,7 @@ module.exports = {
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,
+  saveUserProvider,
   createOrFindUser,
   storeUser,
   editUser,

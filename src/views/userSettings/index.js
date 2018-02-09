@@ -17,6 +17,9 @@ import { FlexCol } from '../../components/globals';
 import ViewError from '../../components/viewError';
 import Titlebar from '../titlebar';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { SERVER_URL, CLIENT_URL } from '../../api/constants';
+import { ButtonGithub } from './style';
+import Icon from '../../components/icons';
 
 type Props = {
   currentUser: Object,
@@ -104,6 +107,10 @@ class UserSettings extends React.Component<Props> {
       );
     }
 
+    const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${
+      user.username
+    }/settings`;
+
     return (
       <FlexCol style={{ flex: 'auto' }}>
         <Titlebar
@@ -117,6 +124,13 @@ class UserSettings extends React.Component<Props> {
           <Column type="secondary">
             <UserEditForm user={data} />
             <EmailSettings smallOnly currentUser={user} />
+
+            <ButtonGithub
+              preferred
+              href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+            >
+              <Icon glyph="github" /> <span>Connect to GitHub</span>
+            </ButtonGithub>
           </Column>
 
           <Column type="primary">
