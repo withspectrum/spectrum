@@ -6,7 +6,8 @@ import attachments from './attachments';
 import channel from './channel';
 import community from './community';
 import participants from './participants';
-import isCreator from './isCreator';
+import isAuthor from './isAuthor';
+import isCreator from './isCreator'; // deprecated
 import receiveNotifications from './receiveNotifications';
 import messageConnection from './messageConnection';
 import author from './author';
@@ -24,7 +25,8 @@ module.exports = {
     channel,
     community,
     participants,
-    isCreator,
+    isAuthor,
+    isCreator, // deprcated
     receiveNotifications,
     messageConnection,
     author,
