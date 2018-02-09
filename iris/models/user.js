@@ -117,7 +117,11 @@ const storeUser = (user: Object): Promise<DBUser> => {
     .then(([user]) => user);
 };
 
-const saveUserProvider = (userId, providerMethod, providerId) => {
+const saveUserProvider = (
+  userId: string,
+  providerMethod: string,
+  providerId: number
+) => {
   return db
     .table('users')
     .get(userId)
@@ -477,6 +481,7 @@ module.exports = {
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,
+  getUserByIndex,
   saveUserProvider,
   createOrFindUser,
   storeUser,
