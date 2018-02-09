@@ -290,7 +290,12 @@ const init = () => {
           // 2
           // if no user exists with this provider id, it's safe to save on the req.user's object
           if (!existingUserWithProviderId) {
-            return saveUserProvider(req.user.id, 'githubProviderId', profile.id)
+            return saveUserProvider(
+              req.user.id,
+              'githubProviderId',
+              profile.id,
+              { githubUsername: profile.username }
+            )
               .then(user => {
                 done(null, user);
                 return user;
@@ -312,6 +317,7 @@ const init = () => {
           fbProviderId: null,
           googleProviderId: null,
           githubProviderId: profile.id,
+          githubUsername: profile.login,
           username: null,
           name: profile.displayName || null,
           description: profile._json.bio,

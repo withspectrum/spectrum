@@ -120,8 +120,10 @@ const storeUser = (user: Object): Promise<DBUser> => {
 const saveUserProvider = (
   userId: string,
   providerMethod: string,
-  providerId: number
+  providerId: number,
+  extraFields?: Object
 ) => {
+  console.log('extra fields', extraFields);
   return db
     .table('users')
     .get(userId)
@@ -138,6 +140,7 @@ const saveUserProvider = (
         .update(
           {
             ...user,
+            ...extraFields,
           },
           { returnChanges: true }
         )

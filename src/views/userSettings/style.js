@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-import { zIndex, Transition } from '../../components/globals';
 
 export const EmailListItem = styled.div`
   padding: 8px 0 16px;

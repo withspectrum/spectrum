@@ -5,7 +5,6 @@ import {
   FlexRow,
   FlexCol,
   Gradient,
-  Transition,
   Shadow,
   hexa,
   zIndex,

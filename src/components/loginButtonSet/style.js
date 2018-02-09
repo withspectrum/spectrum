@@ -27,7 +27,7 @@ export const SigninButton = styled.div`
   font-size: 15px;
   font-weight: 600;
   position: relative;
-  margin: 8px;
+  margin: 8px 0;
   width: 100%;
   margin-top: ${props => (props.showAfter ? '40px' : '8px')};
 

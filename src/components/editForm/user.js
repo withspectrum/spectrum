@@ -11,6 +11,7 @@ import { throttle } from '../../helpers/utils';
 import { Button } from '../buttons';
 import Icon from '../../components/icons';
 import { SERVER_URL, CLIENT_URL } from '../../api/constants';
+import GithubProfile from '../../components/githubProfile';
 import { GithubSigninButton } from '../../components/loginButtonSet/github';
 import {
   Input,
@@ -19,6 +20,7 @@ import {
   PhotoInput,
   CoverInput,
 } from '../formElements';
+import { StyledLabel } from '../formElements/style';
 import {
   StyledCard,
   Form,
@@ -27,6 +29,7 @@ import {
   ImageInputWrapper,
   Location,
   Loading,
+  GithubSignin,
 } from './style';
 import { Spinner } from '../../components/globals';
 import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
@@ -383,6 +386,7 @@ class UserWithData extends React.Component<Props, State> {
   };
 
   render() {
+    const { currentUser } = this.props;
     const {
       name,
       username,
@@ -480,12 +484,33 @@ class UserWithData extends React.Component<Props, State> {
             Optional: Add your website
           </Input>
 
-          <GithubSigninButton
-            href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
-            preferred={true}
-            showAfter={false}
-            onClickHandler={null}
-            verb={'Connect'}
+          <GithubProfile
+            id={currentUser.id}
+            render={profile => {
+              if (!profile) {
+                return (
+                  <GithubSignin>
+                    <StyledLabel>Connect your GitHub Profile</StyledLabel>
+                    <GithubSigninButton
+                      href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                      preferred={true}
+                      showAfter={false}
+                      onClickHandler={null}
+                      verb={'Connect'}
+                    />
+                  </GithubSignin>
+                );
+              } else {
+                return (
+                  <Input
+                    disabled
+                    defaultValue={`github.com/${profile.username}`}
+                  >
+                    Your GitHub Profile
+                  </Input>
+                );
+              }
+            }}
           />
 
           <Actions>
