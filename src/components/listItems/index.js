@@ -71,15 +71,10 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Col>
           <Heading>
-            {props.contents.isPrivate && (
-              <Lock>
-                <Icon
-                  glyph={'private'}
-                  tipText={'Private channel'}
-                  tipLocation="top-right"
-                  size={16}
-                />
-              </Lock>
+            {props.contents.isPrivate ? (
+              <Icon glyph={'channel-private'} size={32} />
+            ) : (
+              <Icon glyph={'channel'} size={32} />
             )}
             {props.contents.name}
           </Heading>

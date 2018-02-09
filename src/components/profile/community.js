@@ -19,8 +19,11 @@ import {
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
+  FullTitle,
+  FullProfile,
   Subtitle,
   Description,
+  FullDescription,
   ExtLink,
   ProfileCard,
   Container,
@@ -149,31 +152,17 @@ class CommunityWithData extends React.Component<Props> {
         );
       case 'full':
         return (
-          <Card style={{ paddingBottom: '16px' }}>
-            <ProfileHeader>
-              <Avatar
-                community={community}
-                size={'40'}
-                src={community.profilePhoto}
-                style={{ marginRight: '16px' }}
-              />
-              <ProfileHeaderLink to={`/${community.slug}`}>
-                <ProfileHeaderMeta>
-                  <Title>{community.name}</Title>
-                </ProfileHeaderMeta>
-              </ProfileHeaderLink>
-              {currentUser &&
-                community.communityPermissions.isOwner && (
-                  <Link to={`/${community.slug}/settings`}>
-                    <ProfileHeaderAction
-                      glyph="settings"
-                      tipText="Edit community"
-                      tipLocation="top-left"
-                    />
-                  </Link>
-                )}
-            </ProfileHeader>
-            <Description>
+          <FullProfile>
+            <Avatar
+              community={community}
+              size={'128'}
+              src={community.profilePhoto}
+              style={{ marginRight: '16px', boxShadow: '0 0 0 2px #fff' }}
+            />
+            <ProfileHeaderMeta>
+              <FullTitle>{community.name}</FullTitle>
+            </ProfileHeaderMeta>
+            <FullDescription>
               {renderDescriptionWithLinks(community.description)}
 
               {community.website && (
@@ -184,8 +173,8 @@ class CommunityWithData extends React.Component<Props> {
                   </a>
                 </ExtLink>
               )}
-            </Description>
-          </Card>
+            </FullDescription>
+          </FullProfile>
         );
       case 'listItemWithAction':
         return (

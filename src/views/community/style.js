@@ -10,6 +10,7 @@ import {
   hexa,
   zIndex,
 } from '../../components/globals';
+import { DesktopSegment } from '../../components/segmentedControl';
 
 export const LogoutButton = styled(Button)`
   width: 100%;
@@ -27,44 +28,6 @@ export const LogoutButton = styled(Button)`
   }
 `;
 
-export const CoverRow = styled(FlexRow)`
-  align-items: flex-start;
-  ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ ''} > .inset {
-    position: relative;
-    top: -64px;
-
-    @media (max-width: 768px) {
-      top: auto;
-      flex: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-
-    > div {
-      margin-top: 0;
-      padding-top: 2px;
-    }
-  }
-`;
-
-export const CoverColumn = styled(FlexCol)`
-  width: 90%;
-  max-width: 1024px;
-  padding-top: 32px;
-
-  ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''} > .flexy {
-    display: flex;
-  }
-
-  @media (max-width: 768px) {
-    padding-top: 0;
-    width: 100%;
-    overflow-y: scroll;
-  }
-`;
-
 export const CoverButton = styled(IconButton)`
   position: absolute;
   right: 16px;
@@ -74,21 +37,6 @@ export const CoverButton = styled(IconButton)`
   @media (max-width: 768px) {
     bottom: 16px;
     top: auto;
-  }
-`;
-
-export const SegmentedControl = styled(FlexRow)`
-  align-self: flex-end;
-  margin-top: 24px;
-  margin-bottom: 8px;
-  padding: 8px 4px;
-
-  @media (max-width: 768px) {
-    background-color: ${props => props.theme.bg.default};
-    align-self: stretch;
-    margin: 0;
-    padding: 16px 8px;
-    margin-bottom: 2px;
   }
 `;
 
@@ -142,6 +90,12 @@ export const SearchContainer = styled(Card)`
   }
 `;
 
+export const MidSegment = styled(DesktopSegment)`
+  @media (min-width: 1028px) {
+    display: none;
+  }
+`;
+
 export const SearchInput = styled.input`
   justify-content: flex-start;
   align-items: center;
@@ -170,14 +124,29 @@ export const StyledButton = styled(Button)`
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: 320px 1fr auto;
-  grid-template-rows: 320px 1fr;
+  grid-template-rows: 240px 1fr;
   grid-template-areas: 'cover cover cover' 'meta content extras';
+  grid-column-gap: 32px;
   width: 100%;
   min-width: 100%;
   max-width: 100%;
   height: 100%:
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
+
+  @media (max-width: 960px) {
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 160px 1fr;
+    grid-template-areas: 'cover cover' 'meta content';
+  }
+
+  @media (max-width: 768px) {
+    grid-template-rows: 80px 1fr auto;
+    grid-template-columns: 100%;
+    grid-column-gap: 0;
+    grid-row-gap: 16px;
+    grid-template-areas: 'cover' 'meta' 'content';
+  }
 `;
 
 const Column = styled.div`

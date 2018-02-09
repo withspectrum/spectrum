@@ -66,6 +66,16 @@ export const Title = styled.h3`
   transition: ${Transition.hover.off};
 `;
 
+export const FullTitle = styled(Title)`
+  font-size: 24px;
+  margin-top: 8px;
+`;
+
+export const FullProfile = styled.div`
+  margin-left: 32px;
+  margin-top: -64px;
+`;
+
 export const Subtitle = styled.div`
   display: flex;
   align-items: center;
@@ -93,6 +103,11 @@ export const Description = styled.div`
       text-decoration: underline;
     }
   }
+`;
+
+export const FullDescription = styled.div`
+  padding: 0;
+  margin-top: 8px;
 `;
 
 export const ExtLink = styled(FlexRow)`
@@ -179,7 +194,9 @@ export const Label = styled.span`
   }
 `;
 
-export const Count = styled.span`font-weight: 700;`;
+export const Count = styled.span`
+  font-weight: 700;
+`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
   flex: none;

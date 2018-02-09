@@ -9,13 +9,13 @@ import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { connect } from 'react-redux';
 import { ImportSlackWithoutCard } from '../../views/communityMembers/components/importSlack';
 import { CommunityInvitationForm } from '../emailInvitationForm';
-import Share from '../../views/newCommunity/components/share';
-import ThreadFeedCard from '../threadFeedCard';
+import Share from 'src/views/newCommunity/components/share';
+import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { Card } from '../card';
 import { NullCard } from '../upsell';
-import { LoadingThread } from '../loading';
+import { LoadingInboxThread } from '../loading';
 import { Divider } from './style';
-import NewActivityIndicator from '../../components/newActivityIndicator';
+import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 
 const NullState = () => (
@@ -46,15 +46,9 @@ const UpsellState = ({ community }) => {
 };
 
 const Threads = styled.div`
-  min-width: 100%;
-
-  button {
-    align-self: center;
-    margin: auto;
-  }
-
-  @media (max-width: 768px) {
-  }
+  align-self: stretch;
+  width: 100%;
+  padding: 0;
 `;
 
 /*
@@ -193,19 +187,25 @@ class ThreadFeedPure extends Component {
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <ThreadFeedCard
+              <InboxThread
                 data={this.props.data.community.pinnedThread}
                 viewContext={viewContext}
-                isPinned={true}
+                pinnedThreadId={this.props.data.community.pinnedThread.id}
+                hasActiveCommunity={
+                  viewContext === 'community' && this.props.data.community
+                }
               />
             )}
 
           {this.props.data.community &&
             this.props.data.community.watercooler &&
             this.props.data.community.watercooler.id && (
-              <ThreadFeedCard
+              <InboxThread
                 data={this.props.data.community.watercooler}
                 viewContext={viewContext}
+                hasActiveCommunity={
+                  viewContext === 'community' && this.props.data.community
+                }
               />
             )}
 
@@ -213,7 +213,7 @@ class ThreadFeedPure extends Component {
             pageStart={0}
             loadMore={this.props.data.fetchMore}
             hasMore={this.props.data.hasNextPage}
-            loader={<LoadingThread />}
+            loader={<LoadingInboxThread />}
             useWindow={false}
             initialLoad={false}
             scrollElement={scrollElement}
@@ -221,10 +221,13 @@ class ThreadFeedPure extends Component {
           >
             {filteredThreads.map(thread => {
               return (
-                <ThreadFeedCard
+                <InboxThread
                   key={thread.id}
                   data={thread}
                   viewContext={viewContext}
+                  hasActiveCommunity={
+                    viewContext === 'community' && this.props.data.community
+                  }
                 />
               );
             })}
@@ -236,16 +239,16 @@ class ThreadFeedPure extends Component {
     if (networkStatus <= 2) {
       return (
         <Threads>
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
+          <LoadingInboxThread />
         </Threads>
       );
     }

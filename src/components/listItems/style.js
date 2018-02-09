@@ -62,9 +62,17 @@ export const Row = styled(FlexRow)`
 
 export const Heading = styled(H3)`
   font-weight: 500;
+  font-size: 14px;
   transition: ${Transition.hover.off};
-  line-height: 1.2;
+  line-height: 1;
   display: flex;
+  align-items: center;
+  ${Truncate};
+
+  > div {
+    color: ${props => props.theme.text.alt};
+    margin-right: 4px;
+  }
 `;
 
 export const Meta = styled(H4)`
@@ -86,8 +94,10 @@ export const ActionContainer = styled(FlexCol)`
   transition: ${Transition.hover.off};
 `;
 
-export const StyledCard = styled(Card)`
-  padding: 12px 16px 12px 20px;
+export const StyledCard = styled.div`
+  flex-direction: column;
+  margin-top: 32px;
+  margin-left: 32px;
   display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
