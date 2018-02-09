@@ -79,7 +79,7 @@ export const CoverButton = styled(IconButton)`
 
 export const SegmentedControl = styled(FlexRow)`
   align-self: flex-end;
-  margin-top: -24px;
+  margin-top: 24px;
   margin-bottom: 8px;
   padding: 8px 4px;
 
@@ -166,3 +166,27 @@ export const StyledButton = styled(Button)`
     border-radius: 0;
   }
 `;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 320px 1fr auto;
+  grid-template-rows: 320px 1fr;
+  grid-template-areas: 'cover cover cover' 'meta content extras';
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100%:
+  min-height: 100vh;
+  background-color: ${props => props.theme.bg.default};
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Meta = styled(Column)``;
+
+export const Content = styled(Column)``;
+
+export const Extras = styled(Column)``;
