@@ -9,6 +9,7 @@ const {
   getUser,
   createOrFindUser,
   saveUserProvider,
+  getUserByIndex,
 } = require('./models/user');
 
 let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
@@ -240,17 +241,43 @@ const init = () => {
         scope: ['user'],
         passReqToCallback: true,
       },
-      (req, token, tokenSecret, profile, done) => {
+      async (req, token, tokenSecret, profile, done) => {
         if (req.user) {
-          return saveUserProvider(req.user.id, 'githubProviderId', profile.id)
-            .then(user => {
-              done(null, user);
-              return user;
-            })
-            .catch(err => {
-              done(err);
-              return null;
-            });
+          // if a user exists in the request body, it means the user is already
+          // authed and is trying to connect a github account. Before we do so
+          // we need to make sure that:
+          // 1. The user doesn't have an existing githubProviderId on their user
+          // 2. The providerId returned from GitHub isnt' being used by another user
+
+          // 1
+          // if the user already has a githubProviderId, don't override it
+          if (req.user.githubProviderId) {
+            return done(null, req.user);
+          }
+
+          const existingUserWithProviderId = await getUserByIndex(
+            'githubProviderId',
+            profile.id
+          );
+
+          // 2
+          // if no user exists with this provider id, it's safe to save on the req.user's object
+          if (!existingUserWithProviderId) {
+            return saveUserProvider(req.user.id, 'githubProviderId', profile.id)
+              .then(user => {
+                done(null, user);
+                return user;
+              })
+              .catch(err => {
+                done(err);
+                return null;
+              });
+          }
+
+          // if a user exists with this provider id, don't do anything and return
+          if (existingUserWithProviderId) {
+            return done(null, req.user);
+          }
         }
 
         const user = {
