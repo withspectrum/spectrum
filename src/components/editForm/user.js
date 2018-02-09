@@ -10,6 +10,8 @@ import { track } from '../../helpers/events';
 import { throttle } from '../../helpers/utils';
 import { Button } from '../buttons';
 import Icon from '../../components/icons';
+import { SERVER_URL, CLIENT_URL } from '../../api/constants';
+import { GithubSigninButton } from '../../components/loginButtonSet/github';
 import {
   Input,
   TextArea,
@@ -398,6 +400,8 @@ class UserWithData extends React.Component<Props, State> {
       isUsernameSearching,
     } = this.state;
 
+    const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
+
     return (
       <StyledCard>
         <Location>
@@ -475,6 +479,14 @@ class UserWithData extends React.Component<Props, State> {
           <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your website
           </Input>
+
+          <GithubSigninButton
+            href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+            preferred={true}
+            showAfter={false}
+            onClickHandler={null}
+            verb={'Connect'}
+          />
 
           <Actions>
             <Button

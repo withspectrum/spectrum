@@ -13,7 +13,7 @@ import {
 
 type Props = {
   redirectPath: ?string,
-  signinType: ?string,
+  signinType?: ?string,
 };
 
 export class Login extends React.Component<Props> {

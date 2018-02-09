@@ -4,20 +4,24 @@ import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { SERVER_URL, CLIENT_URL } from '../../api/constants';
-import Icon from '../icons';
-import {
-  Container,
-  TwitterButton,
-  GoogleButton,
-  FacebookButton,
-  GithubButton,
-  Label,
-} from './style';
+import { Container } from './style';
+import { TwitterSigninButton } from './twitter';
+import { FacebookSigninButton } from './facebook';
+import { GoogleSigninButton } from './google';
+import { GithubSigninButton } from './github';
 
 type Props = {
   redirectPath: ?string,
   location: Object,
   signinType: string,
+};
+
+export type ButtonProps = {
+  onClickHandler?: ?Function,
+  href: string,
+  preferred: boolean,
+  showAfter: boolean,
+  verb: ?string,
 };
 
 class LoginButtonSet extends React.Component<Props> {
@@ -50,65 +54,39 @@ class LoginButtonSet extends React.Component<Props> {
 
     return (
       <Container>
-        <a
-          onClick={() => this.saveLoginMethod('twitter')}
+        <TwitterSigninButton
+          onClickHandler={this.saveLoginMethod}
           href={`${SERVER_URL}/auth/twitter${postAuthRedirectPath}`}
-        >
-          <TwitterButton
-            showAfter={preferredSigninMethod === 'twitter'}
-            preferred={
-              nonePreferred ? true : preferredSigninMethod === 'twitter'
-            }
-          >
-            <Icon glyph={'twitter'} />
-            <Label>{verb} with Twitter</Label>
-          </TwitterButton>
-        </a>
+          preferred={nonePreferred ? true : preferredSigninMethod === 'twitter'}
+          showAfter={preferredSigninMethod === 'twitter'}
+          verb={verb}
+        />
 
-        <a
-          onClick={() => this.saveLoginMethod('facebook')}
+        <FacebookSigninButton
+          onClickHandler={this.saveLoginMethod}
           href={`${SERVER_URL}/auth/facebook${postAuthRedirectPath}`}
-        >
-          <FacebookButton
-            showAfter={preferredSigninMethod === 'facebook'}
-            preferred={
-              nonePreferred ? true : preferredSigninMethod === 'facebook'
-            }
-          >
-            <Icon glyph={'facebook'} />
-            <Label>{verb} with Facebook</Label>
-          </FacebookButton>
-        </a>
+          preferred={
+            nonePreferred ? true : preferredSigninMethod === 'facebook'
+          }
+          showAfter={preferredSigninMethod === 'facebook'}
+          verb={verb}
+        />
 
-        <a
-          onClick={() => this.saveLoginMethod('google')}
+        <GoogleSigninButton
+          onClickHandler={this.saveLoginMethod}
           href={`${SERVER_URL}/auth/google${postAuthRedirectPath}`}
-        >
-          <GoogleButton
-            showAfter={preferredSigninMethod === 'google'}
-            preferred={
-              nonePreferred ? true : preferredSigninMethod === 'google'
-            }
-          >
-            <Icon glyph={'google'} />
-            <Label>{verb} with Google</Label>
-          </GoogleButton>
-        </a>
+          preferred={nonePreferred ? true : preferredSigninMethod === 'google'}
+          showAfter={preferredSigninMethod === 'google'}
+          verb={verb}
+        />
 
-        <a
-          onClick={() => this.saveLoginMethod('github')}
+        <GithubSigninButton
+          onClickHandler={this.saveLoginMethod}
           href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
-        >
-          <GithubButton
-            showAfter={preferredSigninMethod === 'github'}
-            preferred={
-              nonePreferred ? true : preferredSigninMethod === 'github'
-            }
-          >
-            <Icon glyph={'github'} />
-            <Label>{verb} with GitHub</Label>
-          </GithubButton>
-        </a>
+          preferred={nonePreferred ? true : preferredSigninMethod === 'github'}
+          showAfter={preferredSigninMethod === 'github'}
+          verb={verb}
+        />
       </Container>
     );
   }
