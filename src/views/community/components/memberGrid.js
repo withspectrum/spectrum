@@ -8,7 +8,7 @@ import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
 import { LoadingProfileGrid } from '../../../components/loading';
-import { UserProfile } from '../../../components/profile';
+import { UserListItem } from '../../../components/listItems';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
 import { StyledButton } from '../style';
@@ -34,24 +34,17 @@ class CommunityMemberGrid extends React.Component<Props> {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
       return (
-        <FlexCol>
-          <Grid>
-            {nodes.map(node => {
-              if (!node) return null;
-              const { user } = node;
-              return (
-                <UserProfile
-                  key={user.id}
-                  data={{ user }}
-                  username={user.username}
-                  profileSize="simple"
-                />
-              );
-            })}
-          </Grid>
+        <FlexCol
+          style={{ padding: '0 16px', flex: 'none', backgroundColor: '#fff' }}
+        >
+          {nodes.map(node => {
+            if (!node) return null;
+            const { user } = node;
+            return <UserListItem key={user.id} user={user} />;
+          })}
           {community.members.pageInfo.hasNextPage && (
             <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-              Load more...
+              View more...
             </StyledButton>
           )}
         </FlexCol>

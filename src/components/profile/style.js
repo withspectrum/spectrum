@@ -74,6 +74,10 @@ export const FullTitle = styled(Title)`
 export const FullProfile = styled.div`
   margin-left: 32px;
   margin-top: -64px;
+
+  @media (max-width: 768px) {
+    margin-top: -48px;
+  }
 `;
 
 export const Subtitle = styled.div`

@@ -156,6 +156,7 @@ class CommunityWithData extends React.Component<Props> {
             <Avatar
               community={community}
               size={'128'}
+              mobileSize={'64'}
               src={community.profilePhoto}
               style={{ marginRight: '16px', boxShadow: '0 0 0 2px #fff' }}
             />

@@ -9,19 +9,30 @@ import {
   Shadow,
   hexa,
   zIndex,
+  Gradient,
 } from '../../components/globals';
-import { DesktopSegment } from '../../components/segmentedControl';
+import {
+  DesktopSegment,
+  SegmentedControl,
+} from '../../components/segmentedControl';
 
 export const LogoutButton = styled(Button)`
-  width: 100%;
-  margin: 16px 0;
-  padding: 16px 0;
-  background-image: none;
+  align-self: stretch;
+  font-size: 14px;
+  font-weight: 700;
   background-color: ${props => props.theme.text.alt};
+  background-image: ${props =>
+    Gradient(props.theme.text.placeholder, props.theme.text.alt)};
 
-  &:hover {
-    background-color: ${props => props.theme.warn.default};
+  @media (max-width: 768px) {
+    display: none;
   }
+`;
+
+export const LoginButton = styled(LogoutButton)`
+  background-color: ${props => props.theme.success.default};
+  background-image: ${props =>
+    Gradient(props.theme.success.alt, props.theme.success.default)};
 
   @media (max-width: 768px) {
     display: none;
@@ -37,33 +48,6 @@ export const CoverButton = styled(IconButton)`
   @media (max-width: 768px) {
     bottom: 16px;
     top: auto;
-  }
-`;
-
-export const Segment = styled(FlexRow)`
-  padding: 4px 16px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  line-height: 1;
-  font-size: 14px;
-  font-weight: ${props => (props.selected ? '900' : '500')};
-  color: ${props =>
-    props.selected ? props.theme.text.default : props.theme.text.alt};
-  cursor: pointer;
-
-  + div {
-    border-left: 2px solid ${props => props.theme.bg.border};
-  }
-
-  &:hover {
-    color: ${props =>
-      props.selected ? props.theme.text.default : props.theme.text.default};
-  }
-
-  @media (max-width: 768px) {
-    flex: auto;
-    justify-content: space-around;
   }
 `;
 
@@ -112,6 +96,21 @@ export const SearchInput = styled.input`
 
 export const StyledButton = styled(Button)`
   flex: none;
+  align-self: flex-start;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin: 24px 0;
+  border-radius: 0;
+  background-image: none;
+  color: ${props => props.theme.text.alt};
+
+  &:hover {
+    background-color: transparent;
+    color: ${props => props.theme.brand.alt};
+    box-shadow: none;
+  }
 
   @media (max-width: 768px) {
     margin: 2px 0;
@@ -123,25 +122,25 @@ export const StyledButton = styled(Button)`
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: 320px 1fr auto;
+  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
   grid-template-rows: 240px 1fr;
   grid-template-areas: 'cover cover cover' 'meta content extras';
   grid-column-gap: 32px;
   width: 100%;
   min-width: 100%;
   max-width: 100%;
-  height: 100%:
+  height: 100%;
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
-  @media (max-width: 960px) {
+  @media (max-width: 1028px) {
     grid-template-columns: 240px 1fr;
     grid-template-rows: 160px 1fr;
     grid-template-areas: 'cover cover' 'meta content';
   }
 
   @media (max-width: 768px) {
-    grid-template-rows: 80px 1fr auto;
+    grid-template-rows: 80px auto 1fr;
     grid-template-columns: 100%;
     grid-column-gap: 0;
     grid-row-gap: 16px;
@@ -154,8 +153,63 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
-export const Meta = styled(Column)``;
+export const Meta = styled(Column)`
+  grid-area: meta;
 
-export const Content = styled(Column)``;
+  > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    margin: 16px 0 0 32px;
+  }
 
-export const Extras = styled(Column)``;
+  > div:last-of-type {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+`;
+
+export const Content = styled(Column)`
+  grid-area: content;
+
+  @media (max-width: 1028px) and (min-width: 768px) {
+    padding-right: 32px;
+  }
+
+  @media (max-width: 768px) {
+    > ${SegmentedControl} > div {
+      margin-top: 0;
+    }
+  }
+`;
+
+export const Extras = styled(Column)`
+  grid-area: extras;
+
+  > ${FlexCol} > div {
+    border-top: 0;
+    padding: 0;
+    padding-top: 24px;
+
+    h3 {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 1028px) {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    padding-right: 32px;
+  }
+`;
+
+export const ColumnHeading = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  padding: 16px;
+  padding-top: 24px;
+  border-bottom: 2px solid ${props => props.theme.bg.border};
+`;

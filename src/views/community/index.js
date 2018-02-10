@@ -34,14 +34,14 @@ import {
   MobileSegment,
 } from '../../components/segmentedControl';
 import {
-  CoverRow,
-  CoverColumn,
   LogoutButton,
+  LoginButton,
   Grid,
   Meta,
   Content,
   Extras,
   MidSegment,
+  ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
@@ -67,6 +67,45 @@ type State = {
   showComposerUpsell: boolean,
   selectedView: 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
+};
+
+const CommunityAuthButton = ({ community, state, isLoggedIn }) => {
+  if (
+    !isLoggedIn ||
+    (isLoggedIn &&
+      !community.communityPermissions.isOwner &&
+      !community.communityPermissions.isMember)
+  ) {
+    return (
+      <ToggleCommunityMembership
+        community={community}
+        render={state => (
+          <LoginButton loading={state.isLoading}>
+            Join {community.name}
+          </LoginButton>
+        )}
+      />
+    );
+  }
+
+  if (
+    isLoggedIn &&
+    (!community.communityPermissions.isOwner &&
+      community.communityPermissions.isMember)
+  ) {
+    return (
+      <ToggleCommunityMembership
+        community={community}
+        render={state => (
+          <LogoutButton icon={'checkmark'} loading={state.isLoading}>
+            Member
+          </LogoutButton>
+        )}
+      />
+    );
+  }
+
+  return null;
 };
 
 class CommunityView extends React.Component<Props, State> {
@@ -201,18 +240,10 @@ class CommunityView extends React.Component<Props, State> {
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <CommunityProfile data={{ community }} profileSize="full" />
-              {isLoggedIn &&
-                (!community.communityPermissions.isOwner &&
-                  community.communityPermissions.isMember) && (
-                  <ToggleCommunityMembership
-                    community={community}
-                    render={state => (
-                      <LogoutButton loading={state.isLoading}>
-                        Leave {community.name}
-                      </LogoutButton>
-                    )}
-                  />
-                )}
+              <CommunityAuthButton
+                community={community}
+                isLoggedIn={isLoggedIn}
+              />
               <ChannelList
                 id={community.id}
                 communitySlug={communitySlug.toLowerCase()}
@@ -318,7 +349,10 @@ class CommunityView extends React.Component<Props, State> {
               {//search
               selectedView === 'search' && <Search community={community} />}
             </Content>
-            <Extras />
+            <Extras>
+              <ColumnHeading>Members</ColumnHeading>
+              <CommunityMemberGrid id={community.id} />
+            </Extras>
           </Grid>
         </AppViewWrapper>
       );

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
@@ -27,6 +27,15 @@ export const Status = styled.div`
   border-radius: ${props => (props.community ? `25%` : '100%')};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 
   &:after {
     content: '';
@@ -80,6 +89,15 @@ export const Img = styled.img`
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props => (props.community ? `25%` : '100%')};
   object-fit: cover;
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 `;
 
 export const ImgPlaceholder = styled.div`
@@ -89,4 +107,13 @@ export const ImgPlaceholder = styled.div`
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props => (props.community ? `25%` : '100%')};
   object-fit: cover;
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 `;
