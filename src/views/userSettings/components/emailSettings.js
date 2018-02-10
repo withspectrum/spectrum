@@ -136,7 +136,7 @@ class EmailSettings extends React.Component<Props> {
               we’ll send you a confirmation link.
             </Description>
 
-            <UserEmailConfirmation currentUser={currentUser} />
+            <UserEmailConfirmation user={currentUser} />
           </ListContainer>
         </StyledCard>
       );

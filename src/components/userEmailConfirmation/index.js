@@ -13,7 +13,7 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 
 type Props = {
   render: Function,
-  currentUser: GetUserType,
+  user: GetUserType,
   updateUserEmail: Function,
   dispatch: Function,
 };
@@ -79,7 +79,7 @@ class UserEmailConfirmation extends React.Component<Props, State> {
 
   render() {
     const { emailError, email, isLoading } = this.state;
-    const { currentUser } = this.props;
+    const { user } = this.props;
 
     return (
       <React.Fragment>
@@ -97,15 +97,15 @@ class UserEmailConfirmation extends React.Component<Props, State> {
           </Input>
 
           <Button onClick={this.init} loading={isLoading}>
-            Save
+            Send
           </Button>
         </EmailForm>
 
-        {currentUser.pendingEmail && (
+        {user.pendingEmail && (
           <Notice>
-            A confirmation link was sent to {currentUser.pendingEmail}. You can
-            resend the confirmation here, or enter a new email address to
-            confirm.
+            A confirmation link was sent to {user.pendingEmail}. Click the
+            confirmation link and then return to this page. You can resend the
+            confirmation here, or enter a new email address.
           </Notice>
         )}
 
