@@ -5,7 +5,6 @@ import {
   FlexRow,
   FlexCol,
   Gradient,
-  Transition,
   Shadow,
   hexa,
   zIndex,
@@ -32,7 +31,9 @@ export const LargeTitle = styled(Title)`
   margin-bottom: 16px;
 `;
 
-export const SmallTitle = styled(Title)`font-size: 18px;`;
+export const SmallTitle = styled(Title)`
+  font-size: 18px;
+`;
 
 export const MiniTitle = styled(Title)`
   font-weight: 700;
@@ -74,7 +75,9 @@ export const Subtitle = styled.h2`
   }
 `;
 
-export const LargeSubtitle = styled(Subtitle)`font-size: 20px;`;
+export const LargeSubtitle = styled(Subtitle)`
+  font-size: 20px;
+`;
 
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
@@ -83,7 +86,9 @@ export const MiniSubtitle = styled(Subtitle)`
   line-height: 1.4;
 `;
 
-export const SmallSubtitle = styled(Subtitle)`font-size: 15px;`;
+export const SmallSubtitle = styled(Subtitle)`
+  font-size: 15px;
+`;
 
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
@@ -228,143 +233,5 @@ export const CodeOfConduct = styled.p`
   a {
     color: ${props => props.theme.brand.default};
     font-weight: 600;
-  }
-`;
-
-export const SigninButtonsContainer = styled.div`
-  display: flex;
-  padding-top: 48px;
-  max-width: 100%;
-
-  @media (max-width: 768px) {
-    padding-top: 24px;
-  }
-`;
-
-export const Col = styled.div`
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
-`;
-
-export const SigninButton = styled.a`
-  display: flex;
-  flex-shrink: 1;
-  z-index: ${zIndex.card + 1};
-  flex-direction: flex-row;
-  align-self: flex-start;
-  align-items: center;
-  color: ${({ theme }) => theme.text.reverse};
-  border-radius: 8px;
-  padding: 8px;
-  padding-right: 16px;
-  font-size: 14px;
-  font-weight: 700;
-  transition: ${Transition.hover.off};
-  position: relative;
-  margin: 16px;
-
-  ${props =>
-    props.after &&
-    `
-			&:after {
-				content: 'Previously signed in with';
-				position: absolute;
-				top: -32px;
-				font-size: 14px;
-				font-weight: 600;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 100%;
-				text-align: center;
-				color: ${props.theme.text.alt};
-			}
-		`} span {
-    display: inline-block;
-    flex: 0 0 auto;
-    margin-top: -1px;
-    margin-left: 8px;
-    line-height: 2.45;
-    word-break: keep-all;
-    white-space: nowrap;
-    color: currentColor;
-  }
-
-  svg {
-    fill: currentColor !important;
-  }
-
-  @media (max-width: 768px) {
-    margin: 16px 0;
-
-    ${props =>
-      props.after &&
-      `
-        margin: 48px 0 16px 0;
-      `};
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const ButtonTwitter = styled(SigninButton)`
-  background: ${props =>
-    props.preferred ? props.theme.social.twitter.default : 'none'};
-  color: ${props =>
-    props.whitebg
-      ? props.theme.social.twitter.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
-
-  &:after {
-    color: ${props => props.theme.social.twitter.default};
-  }
-
-  &:hover {
-    color: ${props =>
-      props.whitebg ? props.theme.social.twitter.default : '#fff'};
-  }
-`;
-
-export const ButtonFacebook = styled(SigninButton)`
-  background: ${props =>
-    props.preferred ? props.theme.social.facebook.default : 'none'};
-  color: ${props =>
-    props.whitebg
-      ? props.theme.social.facebook.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
-
-  &:after {
-    color: ${props => props.theme.social.facebook.default};
-  }
-
-  &:hover {
-    color: ${props =>
-      props.whitebg ? props.theme.social.facebook.default : '#fff'};
-  }
-`;
-
-export const ButtonGoogle = styled(SigninButton)`
-  background: ${props =>
-    props.preferred ? props.theme.social.google.default : 'none'};
-  color: ${props =>
-    props.whitebg
-      ? props.theme.social.google.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
-
-  &:after {
-    color: ${props => props.theme.social.google.default};
-  }
-
-  &:hover {
-    color: ${props =>
-      props.whitebg ? props.theme.social.google.default : '#fff'};
   }
 `;

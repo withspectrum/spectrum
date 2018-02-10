@@ -81,7 +81,7 @@ export const Subtitle = styled.div`
 export const Description = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px 16px;
+  padding: 0 16px 20px;
   line-height: 1.4;
   white-space: pre-wrap;
 
@@ -97,12 +97,16 @@ export const Description = styled.div`
 
 export const ExtLink = styled(FlexRow)`
   align-items: center;
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${({ theme }) => theme.text.default};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
   font-size: 14px;
-  padding-top: 16px;
+  padding: 8px 8px 8px 4px;
+
+  > a {
+    color: ${({ theme }) => theme.text.default};
+  }
 
   > a:hover {
     text-decoration: underline;
@@ -179,7 +183,9 @@ export const Label = styled.span`
   }
 `;
 
-export const Count = styled.span`font-weight: 700;`;
+export const Count = styled.span`
+  font-weight: 700;
+`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
   flex: none;
