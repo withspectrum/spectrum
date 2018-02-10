@@ -317,7 +317,7 @@ const init = () => {
           fbProviderId: null,
           googleProviderId: null,
           githubProviderId: profile.id,
-          githubUsername: profile.login,
+          githubUsername: profile.username,
           username: null,
           name: profile.displayName || null,
           description: profile._json.bio,
