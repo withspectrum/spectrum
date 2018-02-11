@@ -3,11 +3,8 @@ import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
 import { Button } from '../../components/buttons';
 import {
-  FlexRow,
   FlexCol,
   Transition,
-  Shadow,
-  hexa,
   zIndex,
   Gradient,
 } from '../../components/globals';
@@ -52,19 +49,17 @@ export const CoverButton = styled(IconButton)`
 `;
 
 export const SearchContainer = styled(Card)`
-  margin-bottom: 16px;
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
   display: block;
   min-height: 64px;
-  border-radius: 12px;
   transition: ${Transition.hover.off};
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high}
-      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+    border-bottom: 2px solid ${props => props.theme.brand.alt};
   }
 
   @media (max-width: 768px) {

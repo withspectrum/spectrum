@@ -9,7 +9,6 @@ import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import Icon from '../../components/icons';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
@@ -22,11 +21,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import { LoadingScreen } from '../../components/loading';
-import {
-  UpsellSignIn,
-  UpsellJoinCommunity,
-  Upsell404Community,
-} from '../../components/upsell';
+import { Upsell404Community } from '../../components/upsell';
 import {
   SegmentedControl,
   Segment,

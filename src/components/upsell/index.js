@@ -9,7 +9,6 @@ import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import Avatar from '../avatar';
-import Card from '../card';
 import ToggleCommunityMembership from '../toggleCommunityMembership';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';

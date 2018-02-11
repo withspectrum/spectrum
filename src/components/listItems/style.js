@@ -8,7 +8,6 @@ import {
   H4,
   Transition,
 } from '../../components/globals';
-import Card from '../card';
 
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;

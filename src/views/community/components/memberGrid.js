@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import Grid from '../../../components/grid';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
 import { LoadingProfileGrid } from '../../../components/loading';

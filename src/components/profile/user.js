@@ -117,22 +117,22 @@ const UserWithData = ({
           </CoverSubtitle>
 
           {(user.description || user.website) && (
-              <CoverDescription>
-                {user.description && <p>{user.description}</p>}
-                {user.website && (
-                  <ExtLink>
-                    <Icon glyph="link" size={24} />
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={addProtocolToString(user.website)}
-                    >
-                      {user.website}
-                    </a>
-                  </ExtLink>
-                )}
-              </CoverDescription>
-            )}
+            <CoverDescription>
+              {user.description && <p>{user.description}</p>}
+              {user.website && (
+                <ExtLink>
+                  <Icon glyph="link" size={24} />
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={addProtocolToString(user.website)}
+                  >
+                    {user.website}
+                  </a>
+                </ExtLink>
+              )}
+            </CoverDescription>
+          )}
 
           {!user.isPro &&
             currentUser &&
@@ -265,7 +265,7 @@ const UserWithData = ({
               <Link to={`../users/${currentUser.username}/settings`}>
                 <ProfileHeaderAction
                   glyph="settings"
-                  tipText={`Edit profile`}
+                  tipText={'Edit profile'}
                   tipLocation={'top-left'}
                 />
               </Link>

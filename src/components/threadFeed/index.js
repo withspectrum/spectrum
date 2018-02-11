@@ -11,7 +11,6 @@ import { ImportSlackWithoutCard } from '../../views/communityMembers/components/
 import { CommunityInvitationForm } from '../emailInvitationForm';
 import Share from 'src/views/newCommunity/components/share';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
-import { Card } from '../card';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
 import { Divider } from './style';
@@ -139,12 +138,6 @@ class ThreadFeedPure extends Component {
 
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
-    const isCommunityMember =
-      this.props.community &&
-      (this.props.community.communityPermissions.isMember ||
-        this.props.community.communityPermissions.isOwner ||
-        this.props.community.communityPermissions.isModerator) &&
-      !this.props.community.communityPermissions.isBlocked;
 
     const threadNodes = dataExists
       ? threads

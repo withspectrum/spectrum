@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Card } from '../card';
-import { Transition, hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
   align-self: stretch;

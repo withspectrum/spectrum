@@ -63,7 +63,7 @@ class Search extends React.Component<Props, State> {
             defaultValue={searchString}
             autoFocus={true}
             type="text"
-            placeholder={`Search in ${community.name}...`}
+            placeholder={`Search all threads in ${community.name}...`}
             onChange={this.handleChange}
           />
         </SearchContainer>

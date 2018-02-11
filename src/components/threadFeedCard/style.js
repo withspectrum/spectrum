@@ -1,15 +1,6 @@
 import styled from 'styled-components';
 import Link from 'src/components/link';
-import {
-  FlexCol,
-  FlexRow,
-  Transition,
-  Shadow,
-  hexa,
-  Gradient,
-  zIndex,
-} from '../globals';
-import Card from '../card';
+import { FlexCol, FlexRow, Transition, Gradient, zIndex } from '../globals';
 
 export const StyledThreadFeedCard = styled.div`
   padding: 16px;

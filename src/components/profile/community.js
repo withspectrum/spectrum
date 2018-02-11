@@ -22,7 +22,6 @@ import {
   FullTitle,
   FullProfile,
   Subtitle,
-  Description,
   FullDescription,
   ExtLink,
   ProfileCard,
