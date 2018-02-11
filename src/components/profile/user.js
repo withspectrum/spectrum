@@ -20,6 +20,7 @@ import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
 import Reputation from '../reputation';
 import {
+  FullProfile,
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderNoLink,
@@ -29,11 +30,12 @@ import {
   CoverTitle,
   CoverSubtitle,
   CoverDescription,
-  Title,
+  FullTitle,
   Subtitle,
+  FullDescription,
+  Title,
   ExtLink,
   ProUpgrade,
-  ReputationContainer,
 } from './style';
 
 type UserProps = {
@@ -88,37 +90,34 @@ const UserWithData = ({
   switch (componentSize) {
     case 'full':
       return (
-        <Card>
-          <CoverPhoto
+        <FullProfile>
+          <Avatar
             user={user}
-            onClick={() => initMessage()}
-            currentUser={currentUser}
+            size={128}
+            onlineSize={'large'}
+            isOnline={user.isOnline}
+            src={`${user.profilePhoto}`}
+            noLink
+            style={{
+              boxShadow: '0 0 0 2px #fff',
+              marginRight: '0',
+            }}
           />
-          <CoverLink to={`/users/${user.username}`}>
-            <Avatar
-              user={user}
-              size={64}
-              radius={64}
-              onlineSize={'large'}
-              isOnline={user.isOnline}
-              src={`${user.profilePhoto}`}
-              noLink
-              style={{
-                boxShadow: '0 0 0 2px #fff',
-                flex: '0 0 64px',
-                marginRight: '0',
-              }}
-            />
-            <CoverTitle>{user.name}</CoverTitle>
-          </CoverLink>
-          <CoverSubtitle center>
+          <FullTitle>{user.name}</FullTitle>
+          <Subtitle>
             @{user.username}
             {user.isPro && <Badge type="pro" />}
-          </CoverSubtitle>
-
+          </Subtitle>
           {(user.description || user.website) && (
-            <CoverDescription>
+            <FullDescription>
               {user.description && <p>{user.description}</p>}
+              <Reputation
+                reputation={
+                  user.contextPermissions
+                    ? user.contextPermissions.reputation
+                    : user.totalReputation
+                }
+              />
               {user.website && (
                 <ExtLink>
                   <Icon glyph="link" size={24} />
@@ -131,7 +130,7 @@ const UserWithData = ({
                   </a>
                 </ExtLink>
               )}
-            </CoverDescription>
+            </FullDescription>
           )}
 
           {!user.isPro &&
@@ -146,21 +145,7 @@ const UserWithData = ({
                 </Button>
               </ProUpgrade>
             )}
-
-          {user.totalReputation > 0 && (
-            <ReputationContainer>
-              <Reputation
-                tipText={'Total rep across all communities'}
-                size={'large'}
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
-                }
-              />
-            </ReputationContainer>
-          )}
-        </Card>
+        </FullProfile>
       );
     case 'simple':
       return (
@@ -190,26 +175,21 @@ const UserWithData = ({
           <CoverSubtitle center>
             {user.username && `@${user.username}`}
             {user.isPro && <Badge type="pro" />}
+            <Reputation
+              tipText={'Total rep across all communities'}
+              size={'large'}
+              reputation={
+                user.contextPermissions
+                  ? user.contextPermissions.reputation
+                  : user.totalReputation
+              }
+            />
           </CoverSubtitle>
 
           {user.description && (
             <CoverDescription>
               <p>{user.description}</p>
             </CoverDescription>
-          )}
-
-          {user.totalReputation > 0 && (
-            <ReputationContainer>
-              <Reputation
-                tipText={'Total rep across all communities'}
-                size={'large'}
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
-                }
-              />
-            </ReputationContainer>
           )}
         </Card>
       );
@@ -256,6 +236,15 @@ const UserWithData = ({
                     <Subtitle>
                       @{user.username}
                       {user.isPro && <Badge type="pro" />}
+                      <Reputation
+                        tipText={'Total rep across all communities'}
+                        size={'large'}
+                        reputation={
+                          user.contextPermissions
+                            ? user.contextPermissions.reputation
+                            : user.totalReputation
+                        }
+                      />
                     </Subtitle>
                   )}
                 </ProfileHeaderMeta>
@@ -280,20 +269,6 @@ const UserWithData = ({
               />
             )}
           </ProfileHeader>
-
-          {user.totalReputation > 0 && (
-            <ReputationContainer>
-              <Reputation
-                tipText={'Total rep across all communities'}
-                size={'large'}
-                reputation={
-                  user.contextPermissions
-                    ? user.contextPermissions.reputation
-                    : user.totalReputation
-                }
-              />
-            </ReputationContainer>
-          )}
         </Card>
       );
   }

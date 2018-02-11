@@ -82,11 +82,6 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </Wrapper>
   );
 };
@@ -128,11 +123,6 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </WrapperLi>
   );
 };

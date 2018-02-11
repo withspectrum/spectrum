@@ -74,7 +74,6 @@ class CommunityList extends React.Component<Props> {
                       ? community.contextPermissions.reputation
                       : null
                   }
-                  showDescription
                 >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>

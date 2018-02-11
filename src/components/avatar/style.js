@@ -24,7 +24,7 @@ export const Status = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
 
@@ -68,6 +68,8 @@ export const AvatarLink = styled(Link)`
   display: flex;
   flex: none;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   pointer-events: auto;
@@ -87,7 +89,7 @@ export const Img = styled.img`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   object-fit: cover;
 
   ${props =>
@@ -105,7 +107,7 @@ export const ImgPlaceholder = styled.div`
   background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   object-fit: cover;
 
   ${props =>

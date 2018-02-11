@@ -10,6 +10,7 @@ import {
   hexa,
 } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
+import { ReputationWrapper } from '../reputation/style';
 import Card from '../card';
 
 export const ProfileHeader = styled(FlexRow)`
@@ -74,6 +75,7 @@ export const FullTitle = styled(Title)`
 export const FullProfile = styled.div`
   margin-left: 32px;
   margin-top: -64px;
+  background-color: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
     margin-top: -48px;
@@ -83,18 +85,27 @@ export const FullProfile = styled.div`
 export const Subtitle = styled.div`
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
   color: ${props => props.theme.text.alt};
-  line-height: 1.3;
+  line-height: 1.2;
+  margin-top: 4px;
 
-  ${Truncate} div {
-    margin-right: 8px;
+  ${Truncate};
+
+  overflow: visible;
+
+  > ${ReputationWrapper} {
+    margin-left: 8px;
+
+    span {
+      font-size: 16px;
+    }
   }
 `;
 
 export const Description = styled.div`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
@@ -111,7 +122,18 @@ export const Description = styled.div`
 
 export const FullDescription = styled.div`
   padding: 0;
-  margin-top: 8px;
+  margin-top: 16px;
+  color: ${props => props.theme.text.alt};
+
+  > ${ReputationWrapper} {
+    margin-top: 16px;
+
+    span {
+      margin-left: 4px;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
 `;
 
 export const ExtLink = styled(FlexRow)`
@@ -120,8 +142,8 @@ export const ExtLink = styled(FlexRow)`
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
-  font-size: 14px;
-  padding-top: 16px;
+  font-size: 16px;
+  margin-top: 4px;
 
   > a:hover {
     text-decoration: underline;
@@ -129,9 +151,8 @@ export const ExtLink = styled(FlexRow)`
   }
 
   > div {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${({ theme }) => theme.text.alt};
     margin-right: 4px;
-    margin-left: -4px;
     margin-top: 1px;
   }
 `;
@@ -254,13 +275,13 @@ export const ProUpgrade = styled.div`
   }
 `;
 
-export const ReputationContainer = styled.div`
-  border-top: 2px solid ${props => props.theme.bg.border};
-  padding: 12px 0;
-  margin: 0 16px;
-  display: flex;
-  color: ${props => props.theme.text.alt};
-`;
+// export const ReputationContainer = styled.div`
+//   border-top: 2px solid ${props => props.theme.bg.border};
+//   padding: 12px 0;
+//   margin: 0 16px;
+//   display: flex;
+//   color: ${props => props.theme.text.alt};
+// `;
 
 export const CoverPhoto = styled.div`
   position: relative;
