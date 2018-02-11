@@ -19,20 +19,17 @@ export const Container = styled(FlexRow)`
   }
 `;
 
-export const Composer = styled(Card)`
-  margin-bottom: 16px;
+export const Composer = styled.div`
   position: relative;
   z-index: ${props => (props.isInbox ? '3001' : zIndex.composer)};
   width: 100%;
   display: block;
   min-height: 64px;
-  border-radius: 12px;
   transition: ${Transition.hover.off};
+  background-color: ${props => props.theme.bg.default};
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high}
-      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {
@@ -76,10 +73,12 @@ export const Placeholder = styled.div`
   padding: 16px;
   color: ${props => props.theme.text.alt};
   transition: ${Transition.hover.off};
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 
   &:hover {
     transition: ${Transition.hover.on};
-    color: ${props => props.theme.brand.alt};
+    background-color: ${props => props.theme.bg.wash};
+    color: ${props => props.theme.text.alt};
   }
 
   @media (max-width: 768px) {

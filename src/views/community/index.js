@@ -293,7 +293,7 @@ class CommunityView extends React.Component<Props, State> {
                 </MobileSegment>
               </SegmentedControl>
 
-              {/* {// if the user is logged in, is viewing the threads,
+              {// if the user is logged in, is viewing the threads,
               // and is a member of the community, they should see a
               // new thread composer
               isLoggedIn &&
@@ -303,7 +303,7 @@ class CommunityView extends React.Component<Props, State> {
                     activeCommunity={communitySlug}
                     showComposerUpsell={showComposerUpsell}
                   />
-                )} */}
+                )}
 
               {// if the user is logged in but doesn't own the community
               // or isn't a member yet, prompt them to join the community

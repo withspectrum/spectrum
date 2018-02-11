@@ -172,6 +172,7 @@ export const Meta = styled(Column)`
 
 export const Content = styled(Column)`
   grid-area: content;
+  overflow-x: hidden;
 
   @media (max-width: 1028px) and (min-width: 768px) {
     padding-right: 32px;
@@ -194,6 +195,7 @@ export const Extras = styled(Column)`
 
     h3 {
       font-size: 16px;
+      line-height: 1.2;
     }
   }
 
