@@ -21,8 +21,8 @@ import ViewError from '../viewError';
 const NullState = () => (
   <NullCard
     bg="post"
-    heading={'Sorry, no threads here yet...'}
-    copy={'But you could start one!'}
+    heading={"This community's just getting started..."}
+    copy={"Why don't you kick things off?"}
   />
 );
 
@@ -255,24 +255,20 @@ class ThreadFeedPure extends Component {
 
     if (networkStatus === 8 || error) {
       return (
-        <Card>
-          <ViewError
-            heading={'We ran into an issue loading the feed'}
-            subheading={
-              'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
-            }
-            refresh
-          />
-        </Card>
+        <ViewError
+          heading={'We ran into an issue loading the feed'}
+          subheading={
+            'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
+          }
+          refresh
+        />
       );
     }
 
     if (this.props.isNewAndOwned) {
       return <UpsellState community={this.props.community} />;
-    } else if (isCommunityMember || this.props.viewContext === 'channel') {
-      return <NullState />;
     } else {
-      return null;
+      return <NullState />;
     }
   }
 }

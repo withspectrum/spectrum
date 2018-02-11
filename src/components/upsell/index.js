@@ -45,32 +45,28 @@ type NullCardProps = {
 };
 export const NullCard = (props: NullCardProps) => {
   return (
-    <Card noShadow={props.noShadow}>
-      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.heading && <Title>{props.heading}</Title>}
-        {props.copy && <Subtitle>{props.copy}</Subtitle>}
-        {props.children}
-      </NullCol>
-    </Card>
+    <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.heading && <Title>{props.heading}</Title>}
+      {props.copy && <Subtitle>{props.copy}</Subtitle>}
+      {props.children}
+    </NullCol>
   );
 };
 
 export const MiniNullCard = (props: NullCardProps) => {
   return (
-    <Card>
-      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.emoji && (
-          <LargeEmoji>
-            <span role="img" aria-label="Howdy!">
-              {props.emoji}
-            </span>
-          </LargeEmoji>
-        )}
-        {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
-        {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
-        {props.children}
-      </NullCol>
-    </Card>
+    <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.emoji && (
+        <LargeEmoji>
+          <span role="img" aria-label="Howdy!">
+            {props.emoji}
+          </span>
+        </LargeEmoji>
+      )}
+      {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
+      {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
+      {props.children}
+    </NullCol>
   );
 };
 

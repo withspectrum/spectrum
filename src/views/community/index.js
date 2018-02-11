@@ -305,26 +305,6 @@ class CommunityView extends React.Component<Props, State> {
                   />
                 )}
 
-              {// if the user is logged in but doesn't own the community
-              // or isn't a member yet, prompt them to join the community
-              isLoggedIn &&
-                !userHasPermissions && (
-                  <UpsellJoinCommunity
-                    community={community}
-                    loading={isLeavingCommunity}
-                  />
-                )}
-
-              {// if the user hasn't signed up yet, show them a spectrum
-              // upsell signup prompt
-              !isLoggedIn &&
-                selectedView === 'threads' && (
-                  <UpsellSignIn
-                    title={`Join the ${community.name} community`}
-                    view={{ data: community, type: 'community' }}
-                  />
-                )}
-
               {// thread list
               selectedView === 'threads' && (
                 <CommunityThreadFeed
