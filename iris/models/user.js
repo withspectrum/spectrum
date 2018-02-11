@@ -123,7 +123,6 @@ const saveUserProvider = (
   providerId: number,
   extraFields?: Object
 ) => {
-  console.log('extra fields', extraFields);
   return db
     .table('users')
     .get(userId)

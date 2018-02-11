@@ -417,10 +417,10 @@ const getUsersTotalReputation = (
     .run()
     .then(res =>
       res.map(
-        (res, index) =>
+        res =>
           res && {
             reputation: res.reduction,
-            userId: userIds[index],
+            userId: res.group,
           }
       )
     );
