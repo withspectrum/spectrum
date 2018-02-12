@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
+import Link from 'src/components/link';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
@@ -20,6 +21,22 @@ type Props = {
 };
 
 type State = { isLoading: boolean };
+
+const SignupHandler = props => {
+  if (!props.currentUser) {
+    return (
+      <Link
+        to={`/login?r=spectrum.chat/${props.channel.community.slug}/${
+          props.channel.slug
+        }`}
+      >
+        {props.contents}
+      </Link>
+    );
+  }
+
+  return <div onClick={props.func}>{props.contents}</div>;
+};
 
 class ToggleChannelMembership extends React.Component<Props, State> {
   state = { isLoading: false };
@@ -96,7 +113,14 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <SignupHandler
+        func={this.init}
+        currentUser={this.props.isLoggedIn}
+        channel={this.props.channel}
+        contents={this.props.render(this.state)}
+      />
+    );
   }
 }
 

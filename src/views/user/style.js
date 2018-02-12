@@ -40,7 +40,7 @@ export const RowLabel = styled.span`
 `;
 
 export const SearchContainer = styled(Card)`
-  margin-bottom: 16px;
+  border-bottom: 2px solid ${props => props.theme.bg.border};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
@@ -50,8 +50,7 @@ export const SearchContainer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high}
-      ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+    border-bottom: 2px solid ${props => props.theme.brand.alt};
   }
 
   @media (max-width: 768px) {

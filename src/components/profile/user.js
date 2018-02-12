@@ -95,7 +95,6 @@ const UserWithData = ({
             user={user}
             size={128}
             onlineSize={'large'}
-            isOnline={user.isOnline}
             src={`${user.profilePhoto}`}
             noLink
             style={{

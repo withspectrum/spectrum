@@ -6,7 +6,7 @@ import getCommunityMembersQuery, {
 } from 'shared/graphql/queries/community/getCommunityMembers';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
-import { LoadingProfileGrid } from '../../../components/loading';
+import { LoadingList } from '../../../components/loading';
 import { UserListItem } from '../../../components/listItems';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import ViewError from '../../../components/viewError';
@@ -51,7 +51,7 @@ class CommunityMemberGrid extends React.Component<Props> {
     }
 
     if (isLoading) {
-      return <LoadingProfileGrid />;
+      return <LoadingList />;
     }
 
     return (

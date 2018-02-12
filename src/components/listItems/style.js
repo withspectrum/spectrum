@@ -64,7 +64,7 @@ export const Heading = styled(H3)`
   font-weight: 500;
   font-size: 14px;
   transition: ${Transition.hover.off};
-  line-height: 1;
+  line-height: 1.2;
   display: flex;
   align-items: center;
   ${Truncate};

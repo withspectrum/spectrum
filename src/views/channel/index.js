@@ -269,14 +269,6 @@ class ChannelView extends React.Component<Props> {
                 )}
             </Meta>
             <Content>
-              {!isLoggedIn && (
-                <UpsellSignIn
-                  title={`Join the ${channel.community.name} community`}
-                  view={{ data: channel, type: 'channel' }}
-                  redirectPath={window.location}
-                />
-              )}
-
               {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
               {isLoggedIn &&
                 userHasPermissions &&
