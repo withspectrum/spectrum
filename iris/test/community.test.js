@@ -72,7 +72,7 @@ it('should fetch a list of community members', async () => {
     {
       community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
         id
-        memberConnection {
+        members {
           pageInfo {
             hasNextPage
             hasPreviousPage
@@ -80,14 +80,14 @@ it('should fetch a list of community members', async () => {
           edges {
             cursor
             node {
-              id
-              totalReputation
-              contextPermissions {
-                communityId
-                reputation
-                isOwner
-                isModerator
+              user {
+                id
               }
+              reputation
+              isOwner
+              isModerator
+              isMember
+              isBlocked
             }
           }
         }

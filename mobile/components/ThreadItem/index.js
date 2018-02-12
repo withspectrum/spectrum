@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
-import { TouchableHighlight } from 'react-native';
+import { TouchableHighlight, Image, View } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import compose from 'recompose/compose';
 // import Facepile from './Facepile'
 import ThreadCommunityInfo from './ThreadCommunityInfo';
+import Text from '../Text';
 import {
   InboxThreadItem,
   InboxThreadContent,
@@ -12,43 +15,10 @@ import {
   MetaTextPill,
 } from './style';
 import { truncate } from './utils';
+import type { ThreadInfoType } from '../../../shared/graphql/fragments/thread/threadInfo';
 
-type UserType = {
-  id: string,
-  username: string,
-  name: string,
-  profilePhoto: string,
-};
-type CommunityType = {
-  id: string,
-  name: string,
-};
-type ChannelType = {
-  id: string,
-  name: string,
-};
-type ThreadType = {
-  id: string,
-  createdAt: Date,
-  modifiedAt: Date,
-  channel: ChannelType,
-  community: CommunityType,
-  content: {
-    title: string,
-    body: string,
-  },
-  isLocked: boolean,
-  isCreator: boolean,
-  receiveNotifications: boolean,
-  lastActive: Date,
-  participants: Array<?UserType>,
-  creator: UserType,
-  watercooler: boolean,
-  currentUserLastSeen: Date,
-  messageCount: number,
-};
 type Props = {
-  thread: ThreadType,
+  thread: ThreadInfoType,
   navigation: Object,
 };
 
@@ -59,23 +29,30 @@ class ThreadItem extends React.Component<Props> {
     if (!thread.id) return null;
 
     return (
-      <InboxThreadItem>
-        <TouchableHighlight
-          onPress={() =>
-            this.props.navigation.navigate(`Thread`, {
-              id: thread.id,
-            })
-          }
-        >
+      <TouchableHighlight
+        onPress={() =>
+          this.props.navigation.navigate(`Thread`, {
+            id: thread.id,
+          })
+        }
+      >
+        <InboxThreadItem>
           <InboxThreadContent>
-            <ThreadCommunityInfo
-              thread={thread}
-              // activeCommunity={hasActiveCommunity}
-              // activeChannel={hasActiveChannel}
-              // isPinned={isPinned}
-            />
-
-            <ThreadTitle>{truncate(thread.content.title, 80)}</ThreadTitle>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                source={{ uri: thread.community.profilePhoto }}
+                style={{
+                  height: 15,
+                  width: 15,
+                  marginRight: 8,
+                  borderRadius: 4,
+                }}
+              />
+              <Text type="subhead" style={{ marginTop: 0 }}>
+                {thread.community.name} / {thread.channel.name}
+              </Text>
+            </View>
+            <Text type="headline">{thread.content.title}</Text>
 
             <ThreadMeta>
               {/*<Facepile
@@ -84,11 +61,11 @@ class ThreadItem extends React.Component<Props> {
               />*/}
 
               {thread.messageCount > 0 ? (
-                <MetaText offset={thread.participants.length}>
+                <Text type="caption1">
                   {thread.messageCount > 1
                     ? `${thread.messageCount} messages`
                     : `${thread.messageCount} message`}
-                </MetaText>
+                </Text>
               ) : (
                 <MetaTextPill offset={thread.participants.length} new>
                   New thread!
@@ -96,10 +73,10 @@ class ThreadItem extends React.Component<Props> {
               )}
             </ThreadMeta>
           </InboxThreadContent>
-        </TouchableHighlight>
-      </InboxThreadItem>
+        </InboxThreadItem>
+      </TouchableHighlight>
     );
   }
 }
 
-export default ThreadItem;
+export default compose(withNavigation)(ThreadItem);

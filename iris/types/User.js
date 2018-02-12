@@ -74,6 +74,11 @@ const User = /* GraphQL */ `
 		creator
 	}
 
+	type GithubProfile {
+		id: Int
+		username: String
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -99,12 +104,14 @@ const User = /* GraphQL */ `
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 10, after: String, kind: ThreadConnectionType): UserThreadsConnection!
-		everything(first: Int = 10, after: String): EverythingThreadsConnection!
+		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
+		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
-		contextPermissions: ContextPermissions
+		githubProfile: GithubProfile
+
+		contextPermissions: ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions")
 	}
 
 	extend type Query {

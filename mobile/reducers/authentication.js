@@ -1,15 +1,19 @@
 // @flow
-
-type AuthenticationState = {
-  token: ?string,
-  userId?: string,
+import { type AuthenticateAction } from '../actions/authentication';
+export type AuthenticationState = {
+  +token?: ?string,
 };
 
 const initialState: AuthenticationState = {
   token: null,
 };
 
-export default (state: AuthenticationState = initialState, action: Object) => {
+type Actions = AuthenticateAction;
+
+export default (
+  state: AuthenticationState = initialState,
+  action: AuthenticateAction
+): AuthenticationState => {
   switch (action.type) {
     case 'AUTHENTICATE': {
       return {

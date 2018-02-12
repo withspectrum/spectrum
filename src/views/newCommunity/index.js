@@ -8,7 +8,8 @@ import queryString from 'query-string';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { ImportSlackWithoutCard } from '../communitySettings/components/importSlack';
+import { Loading } from '../../components/loading';
+import { ImportSlackWithoutCard } from '../communityMembers/components/importSlack';
 import { CommunityInvitationForm } from '../../components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
@@ -18,6 +19,10 @@ import Share from './components/share';
 import { Login } from '../../views/login';
 import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import getCurrentUserSettings, {
+  type GetCurrentUserSettingsType,
+} from 'shared/graphql/queries/user/getCurrentUserSettings';
+import UserEmailConfirmation from '../../components/userEmailConfirmation';
 import {
   Actions,
   Container,
@@ -26,6 +31,9 @@ import {
   Divider,
   ContentContainer,
 } from './style';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from '../../components/viewNetworkHandler';
 
 type State = {
   activeStep: number,
@@ -36,9 +44,12 @@ type State = {
 };
 
 type Props = {
-  currentUser: ?Object,
+  ...$Exact<ViewNetworkHandlerType>,
   client: Object,
   history: Object,
+  data: {
+    user: ?GetCurrentUserSettingsType,
+  },
 };
 
 class NewCommunity extends React.Component<Props, State> {
@@ -160,14 +171,11 @@ class NewCommunity extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentUser } = this.props;
+    const { isLoading, data: { user } } = this.props;
     const { activeStep, community, existingId, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
-
-    if (!currentUser) {
-      return <Login redirectPath={`${window.location.href}`} />;
-    } else {
+    if (user && user.email) {
       return (
         <AppViewWrapper>
           <Titlebar
@@ -247,11 +255,61 @@ class NewCommunity extends React.Component<Props, State> {
         </AppViewWrapper>
       );
     }
+
+    if (user && !user.email) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Create a Community'}
+            provideBack={true}
+            backRoute={'/'}
+            noComposer
+          />
+
+          <Column type="primary">
+            <Container bg={null}>
+              <Title>
+                {user.pendingEmail ? 'Confirm' : 'Add'} Your Email Address
+              </Title>
+              <Description>
+                Before creating a community, please{' '}
+                {user.pendingEmail ? 'confirm' : 'add'} your email address. This
+                email address will be used in the future to send you updates
+                about your community, including moderation events.
+              </Description>
+
+              <div style={{ padding: '0 24px 24px' }}>
+                <UserEmailConfirmation user={user} />
+              </div>
+            </Container>
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Create a Community'}
+            provideBack={true}
+            backRoute={'/'}
+            noComposer
+          />
+
+          <Loading />
+        </AppViewWrapper>
+      );
+    }
+
+    return <Login redirectPath={`${window.location.href}`} />;
   }
 }
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+
 export default compose(
   withApollo,
   // $FlowIssue
-  connect(mapStateToProps)
+  connect(),
+  getCurrentUserSettings,
+  viewNetworkHandler
 )(NewCommunity);

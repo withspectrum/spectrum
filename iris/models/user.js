@@ -4,7 +4,7 @@ const { db } = require('./db');
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
-import { addQueue } from '../utils/workerQueue';
+import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type DBUser = {
@@ -111,13 +111,18 @@ const storeUser = (user: Object): Promise<DBUser> => {
 
       // whenever a new user is created, create a usersSettings record
       // and send a welcome email
-      addQueue('send new user welcome email', { user });
+      sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
     .then(([user]) => user);
 };
 
-const saveUserProvider = (userId, providerMethod, providerId) => {
+const saveUserProvider = (
+  userId: string,
+  providerMethod: string,
+  providerId: number,
+  extraFields?: Object
+) => {
   return db
     .table('users')
     .get(userId)
@@ -134,6 +139,7 @@ const saveUserProvider = (userId, providerMethod, providerId) => {
         .update(
           {
             ...user,
+            ...extraFields,
           },
           { returnChanges: true }
         )
@@ -477,6 +483,8 @@ module.exports = {
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,
+  getUserByIndex,
+  saveUserProvider,
   createOrFindUser,
   storeUser,
   editUser,

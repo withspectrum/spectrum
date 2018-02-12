@@ -1,12 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
-import messageInfoFragment from '../message/messageInfo';
-import type { MessageInfoType } from '../message/messageInfo';
+import directMessageInfoFragment from '../message/directMessageInfo';
+import type { DirectMessageInfoType } from '../message/directMessageInfo';
 
 type Edge = {
   cursor: string,
   node: {
-    ...$Exact<MessageInfoType>,
+    ...$Exact<DirectMessageInfoType>,
   },
 };
 
@@ -30,10 +30,10 @@ export default gql`
       edges {
         cursor
         node {
-          ...messageInfo
+          ...directMessageInfo
         }
       }
     }
   }
-  ${messageInfoFragment}
+  ${directMessageInfoFragment}
 `;

@@ -1,8 +1,7 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
-import { addQueue } from '../utils/workerQueue';
+import { sendCommunityNotificationQueue } from 'shared/bull/queues';
+import type { DBUsersCommunities } from 'shared/types';
 
 /*
 ===========================================================
@@ -91,7 +90,7 @@ const createMemberInCommunity = (
       }
     })
     .then(result => {
-      addQueue('community notification', { communityId, userId });
+      sendCommunityNotificationQueue.add({ communityId, userId });
       return result.changes[0].new_val;
     });
 };
@@ -107,6 +106,7 @@ const removeMemberInCommunity = (
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
     .update({
+      isModerator: false,
       isMember: false,
       receiveNotifications: false,
     })
@@ -139,7 +139,7 @@ const removeMembersInCommunity = (communityId: string): Promise<Object> => {
 const blockUserInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
@@ -149,6 +149,7 @@ const blockUserInCommunity = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        isModerator: false,
         receiveNotifications: false,
       },
       { returnChanges: true }
@@ -160,16 +161,17 @@ const blockUserInCommunity = (
 // unblocks a blocked user in a community. invoked by a community or community
 // owner when managing a private community. this *does* add the user
 // as a member
-const approveBlockedUserInCommunity = (
+const unblockUserInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId, isBlocked: true })
     .update(
       {
+        isModerator: false,
         isMember: true,
         isBlocked: false,
         receiveNotifications: true,
@@ -186,7 +188,7 @@ const approveBlockedUserInCommunity = (
 const createModeratorInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .insert(
@@ -210,13 +212,15 @@ const createModeratorInCommunity = (
 const makeMemberModeratorInCommunity = (
   communityId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersCommunities> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
     .update(
       {
+        isBlocked: false,
+        isMember: true,
         isModerator: true,
         receiveNotifications: true,
       },
@@ -312,7 +316,7 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
-const DEFAULT_PERMISSIONS = {
+const DEFAULT_USER_COMMUNITY_PERMISSIONS = {
   isOwner: false,
   isMember: false,
   isModerator: false,
@@ -321,6 +325,7 @@ const DEFAULT_PERMISSIONS = {
   reputation: 0,
 };
 
+// NOTE @BRIAN: DEPRECATED - DONT USE IN THE FUTURE
 const getUserPermissionsInCommunity = (
   communityId: string,
   userId: string
@@ -339,12 +344,22 @@ const getUserPermissionsInCommunity = (
         // if a record doesn't exist, we're creating a new relationship
         // so default to false for everything
         return {
-          ...DEFAULT_PERMISSIONS,
+          ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
           userId,
           communityId,
         };
       }
     });
+};
+
+const checkUserPermissionsInCommunity = (
+  communityId: string,
+  userId: string
+): Promise<DBUsersCommunities> => {
+  return db
+    .table('usersCommunities')
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+    .run();
 };
 
 type UserIdAndCommunityId = [string, string];
@@ -359,7 +374,7 @@ const getUsersPermissionsInCommunities = (
     .then(data => {
       if (!data)
         return Array.from({ length: input.length }, (_, index) => ({
-          ...DEFAULT_PERMISSIONS,
+          ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
           userId: input[index][0],
           communityId: input[index][1],
         }));
@@ -369,7 +384,7 @@ const getUsersPermissionsInCommunities = (
           rec
             ? rec
             : {
-                ...DEFAULT_PERMISSIONS,
+                ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
                 userId: input[index][0],
                 communityId: input[index][1],
               }
@@ -402,10 +417,10 @@ const getUsersTotalReputation = (
     .run()
     .then(res =>
       res.map(
-        (res, index) =>
+        res =>
           res && {
             reputation: res.reduction,
-            userId: userIds[index],
+            userId: res.group,
           }
       )
     );
@@ -417,16 +432,19 @@ module.exports = {
   createMemberInCommunity,
   removeMemberInCommunity,
   removeMembersInCommunity,
-  approveBlockedUserInCommunity,
+  blockUserInCommunity,
+  unblockUserInCommunity,
   createModeratorInCommunity,
   makeMemberModeratorInCommunity,
   removeModeratorInCommunity,
   // get
+  DEFAULT_USER_COMMUNITY_PERMISSIONS,
   getMembersInCommunity,
   getBlockedUsersInCommunity,
   getModeratorsInCommunity,
   getOwnersInCommunity,
   getUserPermissionsInCommunity,
+  checkUserPermissionsInCommunity,
   getReputationByUser,
   getUsersTotalReputation,
   getUsersPermissionsInCommunities,

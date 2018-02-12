@@ -232,7 +232,15 @@ class ThreadFeed extends React.Component<Props, State> {
     if (threads.length === 0 && queryString)
       return <EmptySearchFeed queryString={queryString} />;
 
-    const threadNodes = threads.slice().map(thread => thread && thread.node);
+    const threadNodes = threads
+      .slice()
+      .map(thread => thread && thread.node)
+      .filter(
+        thread =>
+          thread &&
+          (!thread.channel.channelPermissions.isBlocked &&
+            !thread.community.communityPermissions.isBlocked)
+      );
 
     let sortedThreadNodes = sortByDate(threadNodes, 'lastActive', 'desc');
 

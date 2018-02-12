@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import Card from '../card';
 import { FlexRow, FlexCol, Truncate } from '../globals';
 
-export const StyledCard = styled(Card)`padding: 16px;`;
+export const StyledCard = styled(Card)`
+  padding: 16px;
+`;
 
 export const Form = styled.form`
   display: inline-block;
@@ -122,3 +124,5 @@ export const Loading = styled.span`
   right: 19px;
   top: 45px;
 `;
+
+export const GithubSignin = styled.div``;

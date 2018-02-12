@@ -17,8 +17,12 @@ export type SearchUsersType = {
 };
 
 export const searchUsersQuery = gql`
-  query search($queryString: String!, $type: SearchType!) {
-    search(queryString: $queryString, type: $type) {
+  query search(
+    $queryString: String!
+    $type: SearchType!
+    $filter: SearchFilter
+  ) {
+    search(queryString: $queryString, type: $type, filter: $filter) {
       searchResultsConnection {
         edges {
           node {
@@ -34,10 +38,11 @@ export const searchUsersQuery = gql`
 `;
 
 const searchUsersOptions = {
-  options: ({ queryString }) => ({
+  options: ({ queryString, filter = {} }) => ({
     variables: {
       queryString,
       type: 'USERS',
+      filter,
     },
     fetchPolicy: 'cache-and-network',
   }),

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should create a member in the community 1`] = `
+Object {
+  "data": Object {
+    "addCommunityMember": Object {
+      "communityPermissions": Object {
+        "isBlocked": false,
+        "isMember": true,
+        "isModerator": false,
+        "isOwner": false,
+        "reputation": 0,
+      },
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+    },
+  },
+}
+`;

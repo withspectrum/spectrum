@@ -107,7 +107,8 @@ class NewUserOnboarding extends Component {
       joinFirstCommunity: {
         // will be triggered if the user signed up via a community, channel, or thread view
         title: 'Join your first community',
-        subtitle: `You were in the middle of something. Let's get back on track and join your first community!`,
+        subtitle:
+          "You were in the middle of something. Let's get back on track and join your first community!",
         emoji: '🎉',
       },
       discoverCommunities: {
@@ -142,7 +143,7 @@ class NewUserOnboarding extends Component {
             {activeStep === 'joinFirstCommunity' && (
               <JoinFirstCommunity
                 community={community}
-                joinedFirstCommunity={() => this.joinedCommunity(1, true)}
+                joinedCommunity={this.joinedCommunity}
               />
             )}
 

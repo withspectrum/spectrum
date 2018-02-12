@@ -19,6 +19,7 @@ import invoices from './invoices';
 import totalReputation from './totalReputation';
 import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
+import githubProfile from './githubProfile';
 
 module.exports = {
   Query: {
@@ -42,6 +43,7 @@ module.exports = {
     invoices,
     totalReputation,
     isAdmin,
+    githubProfile,
     contextPermissions,
   },
 };

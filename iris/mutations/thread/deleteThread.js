@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { addQueue } from '../../utils/workerQueue';
+import { processReputationEventQueue } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
@@ -49,7 +49,7 @@ export default async (
   ) {
     // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
     if (currentUser.id !== threadToEvaluate.creatorId) {
-      addQueue('process reputation event', {
+      processReputationEventQueue.add({
         userId: currentUser.id,
         type: 'thread deleted by moderation',
         entityId: threadToEvaluate.communityId,

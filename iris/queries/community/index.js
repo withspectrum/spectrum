@@ -10,6 +10,7 @@ import searchCommunityThreads from './rootSearchCommunityThreads';
 import communityPermissions from './communityPermissions';
 import channelConnection from './channelConnection';
 import memberConnection from './memberConnection';
+import members from './members';
 import pinnedThread from './pinnedThread';
 import threadConnection from './threadConnection';
 import metaData from './metaData';
@@ -36,7 +37,8 @@ module.exports = {
   Community: {
     communityPermissions,
     channelConnection,
-    memberConnection,
+    memberConnection, // deprecated
+    members,
     pinnedThread,
     threadConnection,
     metaData,

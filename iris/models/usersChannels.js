@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+import type { DBUsersChannels, DBChannel } from 'shared/types';
 
 /*
 ===========================================================
@@ -14,7 +15,7 @@ const { db } = require('./db');
 const createOwnerInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .insert(
@@ -43,7 +44,7 @@ const createOwnerInChannel = (
 const createMemberInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -92,13 +93,14 @@ const createMemberInChannel = (
 const removeMemberInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<?DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
     .update(
       {
+        isModerator: false,
         isMember: false,
         isPending: false,
         receiveNotifications: false,
@@ -119,7 +121,7 @@ const removeMemberInChannel = (
 const unblockMemberInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<?DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -143,7 +145,9 @@ const unblockMemberInChannel = (
 // removes all the user relationships to a channel. will be invoked when a
 // channel is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted channel
-const removeMembersInChannel = (channelId: string): Promise<Object> => {
+const removeMembersInChannel = (
+  channelId: string
+): Promise<Array<?DBUsersChannels>> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -159,7 +163,7 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
 const createOrUpdatePendingUserInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -207,7 +211,7 @@ const createOrUpdatePendingUserInChannel = (
 // channel is converted into a public channel, at which point we delete all pending
 // user associations. this will allow those pending users to re-join if they
 // choose, but will not add unwanted users to the now-public channel
-const removePendingUsersInChannel = (channelId: string): Promise<Object> => {
+const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -229,7 +233,7 @@ const removePendingUsersInChannel = (channelId: string): Promise<Object> => {
 const blockUserInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -243,8 +247,7 @@ const blockUserInChannel = (
       },
       { returnChanges: true }
     )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .run();
 };
 
 // toggles a pending user to member in a channel. invoked by a channel or community
@@ -252,7 +255,7 @@ const blockUserInChannel = (
 const approvePendingUserInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -272,7 +275,9 @@ const approvePendingUserInChannel = (
 // toggles all pending users to make them a member in a channel. invoked by a
 // channel or community owner when turning a private channel into a public
 // channel
-const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
+const approvePendingUsersInChannel = (
+  channelId: string
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -295,7 +300,7 @@ const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
 const approveBlockedUserInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -308,8 +313,7 @@ const approveBlockedUserInChannel = (
       },
       { returnChanges: true }
     )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .run();
 };
 
 // adds a *new* user to a channel as both a moderator and member. this will be invoked
@@ -318,7 +322,7 @@ const approveBlockedUserInChannel = (
 const createModeratorInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .insert(
@@ -343,13 +347,15 @@ const createModeratorInChannel = (
 const makeMemberModeratorInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
     .update(
       {
+        isMember: true,
+        isBlocked: false,
         isModerator: true,
         receiveNotifications: true,
       },
@@ -363,19 +369,15 @@ const makeMemberModeratorInChannel = (
 const removeModeratorInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .update(
-      {
-        isModerator: false,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .update({
+      isModerator: false,
+    })
+    .run();
 };
 
 // creates a new relationship between the user and all of a community's
@@ -426,7 +428,7 @@ const toggleUserChannelNotifications = (
   userId: string,
   channelId: string,
   value: boolean
-) => {
+): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
@@ -533,7 +535,7 @@ const DEFAULT_USER_CHANNEL_PERMISSIONS = {
 const getUserPermissionsInChannel = (
   channelId: string,
   userId: string
-): Promise<Object> => {
+): Promise<DBUsersChannels> => {
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -552,7 +554,9 @@ const getUserPermissionsInChannel = (
 
 type UserIdAndChannelId = [string, string];
 
-const getUsersPermissionsInChannels = (input: Array<UserIdAndChannelId>) => {
+const getUsersPermissionsInChannels = (
+  input: Array<UserIdAndChannelId>
+): Promise<Array<DBUsersChannels>> => {
   return db
     .table('usersChannels')
     .getAll(...input, { index: 'userIdAndChannelId' })

@@ -8,9 +8,9 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communityChannelConnectionFragment from '../../fragments/community/communityChannelConnection';
 import type { CommunityChannelConnectionType } from '../../fragments/community/communityChannelConnection';
 
-export type ToggleCommunityMembershipType = {
+export type RemoveCommunityMemberType = {
   data: {
-    toggleCommunityMembership: {
+    removeCommunityMember: {
       ...$Exact<CommunityInfoType>,
       ...$Exact<CommunityMetaDataType>,
       ...$Exact<CommunityChannelConnectionType>,
@@ -18,9 +18,9 @@ export type ToggleCommunityMembershipType = {
   },
 };
 
-export const toggleCommunityMembershipQuery = gql`
-  mutation toggleCommunityMembership($communityId: ID!) {
-    toggleCommunityMembership(communityId: $communityId) {
+export const removeCommunityMemberQuery = gql`
+  mutation removeCommunityMember($input: RemoveCommunityMemberInput!) {
+    removeCommunityMember(input: $input) {
       ...communityInfo
       ...communityMetaData
       ...communityChannelConnection
@@ -31,18 +31,18 @@ export const toggleCommunityMembershipQuery = gql`
   ${communityChannelConnectionFragment}
 `;
 
-const toggleCommunityMemershipOptions = {
+const removeCommunityMemberOptions = {
   props: ({ mutate }) => ({
-    toggleCommunityMembership: ({ communityId }: { communityId: string }) =>
+    removeCommunityMember: ({ input }) =>
       mutate({
         variables: {
-          communityId,
+          input,
         },
       }),
   }),
 };
 
 export default graphql(
-  toggleCommunityMembershipQuery,
-  toggleCommunityMemershipOptions
+  removeCommunityMemberQuery,
+  removeCommunityMemberOptions
 );

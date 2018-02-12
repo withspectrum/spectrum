@@ -5,9 +5,13 @@ import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
 
 export type UpdateUserEmailType = {
-  ...$Exact<UserInfoType>,
-  email: ?string,
-  pendingEmail: ?string,
+  data: {
+    updateUserEmail: {
+      ...$Exact<UserInfoType>,
+      email: ?string,
+      pendingEmail: ?string,
+    },
+  },
 };
 
 export const updateUserEmailMutation = gql`

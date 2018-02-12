@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import { addQueue } from '../utils/workerQueue';
+import { sendChannelNotificationQueue } from 'shared/bull/queues';
 import UserError from '../utils/UserError';
 
 type DBChannel = {
@@ -235,7 +235,7 @@ const createChannel = (
     .then(channel => {
       // only trigger a new channel notification is the channel is public
       if (!channel.isPrivate) {
-        addQueue('channel notification', { channel, userId });
+        sendChannelNotificationQueue.add({ channel, userId });
       }
 
       return channel;

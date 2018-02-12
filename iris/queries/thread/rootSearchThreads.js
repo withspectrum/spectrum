@@ -1,4 +1,9 @@
 // @flow
+/*
+
+    DEPRECATED 2/1/2018 by @brian
+
+*/
 import type { GraphQLContext } from '../../';
 import {
   getPublicChannelIdsInCommunity,
@@ -122,7 +127,7 @@ export default async (
     ]);
 
     // community is deleted or not found
-    if (!community || community.deletedAt) return [];
+    if (!community) return [];
 
     const privateChannelsWhereUserIsMember = intersection(
       privateChannels,

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
 import { truncateNumber } from '../../helpers/utils';
@@ -14,6 +14,7 @@ type Props = {
   dispatch: Function,
   ignoreClick?: boolean,
 };
+
 class Reputation extends React.Component<Props> {
   open = e => {
     const { reputation, ignoreClick, dispatch } = this.props;

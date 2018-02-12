@@ -12,15 +12,17 @@ export const sortAndGroupMessages = (
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
   let newArray = [];
-  let hasInjectedUnreadRobo = false;
+  let hasInjectedUnseenRobo = false;
   let checkId;
 
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
     const robo = [
       {
-        sender: {
-          id: 'robo',
+        author: {
+          user: {
+            id: 'robo',
+          },
         },
         timestamp: messages[i].timestamp,
         message: {
@@ -32,8 +34,10 @@ export const sortAndGroupMessages = (
 
     const unseenRobo = [
       {
-        sender: {
-          id: 'robo',
+        author: {
+          user: {
+            id: 'robo',
+          },
         },
         timestamp: lastSeen,
         message: {
@@ -44,9 +48,10 @@ export const sortAndGroupMessages = (
     ];
 
     if (i === 0) {
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.user.id;
 
-      if (messages[0].timestamp > lastSeen) {
+      if (messages[0].timestamp > lastSeen && !hasInjectedUnseenRobo) {
+        hasInjectedUnseenRobo = true;
         masterArray.push(unseenRobo);
       } else {
         masterArray.push(robo);
@@ -54,7 +59,8 @@ export const sortAndGroupMessages = (
     }
 
     const sameUser =
-      messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
+      messages[i].author.user.id !== 'robo' &&
+      messages[i].author.user.id === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -84,8 +90,8 @@ export const sortAndGroupMessages = (
         // push the message to the array
         newArray.push(messages[i]);
       } else {
-        if (messages[i].timestamp > lastSeen && !hasInjectedUnreadRobo) {
-          hasInjectedUnreadRobo = true;
+        if (messages[i].timestamp > lastSeen && !hasInjectedUnseenRobo) {
+          hasInjectedUnseenRobo = true;
           masterArray.push(newArray);
           masterArray.push(unseenRobo);
           newArray = [];
@@ -108,13 +114,13 @@ export const sortAndGroupMessages = (
         }
       }
       // and maintain the checkid
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.user.id;
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
-      if (messages[i].timestamp > lastSeen && !hasInjectedUnreadRobo) {
-        hasInjectedUnreadRobo = true;
+      if (messages[i].timestamp > lastSeen && !hasInjectedUnseenRobo) {
+        hasInjectedUnseenRobo = true;
         masterArray.push(unseenRobo);
       }
       // if the new users message is older than our preferred variance
@@ -131,7 +137,7 @@ export const sortAndGroupMessages = (
       }
 
       // set a new checkid for the next user
-      checkId = messages[i].sender.id;
+      checkId = messages[i].author.user.id;
     }
   }
 

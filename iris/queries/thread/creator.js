@@ -1,4 +1,9 @@
 // @flow
+/*
+
+    DEPRECATED 2/3/2018 by @brian
+
+*/
 import type { GraphQLContext } from '../../';
 import type { DBThread } from 'shared/types';
 
@@ -21,6 +26,7 @@ export default async (
       reputation: permissions ? permissions.reputation : 0,
       isModerator: permissions ? permissions.isModerator : false,
       isOwner: permissions ? permissions.isOwner : false,
+      isBlocked: permissions ? permissions.isBlocked : false,
     },
   };
 };

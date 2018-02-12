@@ -1,9 +1,6 @@
 import * as React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../icons';
 import Badge from '../badges';
@@ -47,7 +44,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
             community={community}
             radius={4}
             src={`${community.profilePhoto}`}
-            size={32}
+            size={'32'}
             noLink
           />
           <Col style={{ marginLeft: '12px' }}>
@@ -149,6 +146,7 @@ export const UserListItem = ({
   user,
   children,
   reputationTipText = 'Your rep in this community',
+  hideRep = false,
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
@@ -157,6 +155,14 @@ export const UserListItem = ({
     : user.totalReputation && user.totalReputation > 0
       ? user.totalReputation
       : '0';
+
+  const role =
+    user.contextPermissions && user.contextPermissions.isOwner
+      ? 'Admin'
+      : user.contextPermissions && user.contextPermissions.isModerator
+        ? 'Moderator'
+        : null;
+
   return (
     <Wrapper border>
       <Row>
@@ -164,25 +170,35 @@ export const UserListItem = ({
           radius={20}
           user={user}
           src={`${user.profilePhoto}`}
-          size={40}
+          size={'40'}
           link={user.username ? `/users/${user.username}` : null}
         />
-        <Col style={{ marginLeft: '16px' }}>
+        <Col
+          style={{
+            marginLeft: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
           <Heading>
             {user.username ? (
               <Link to={`/users/${user.username}`}>{user.name}</Link>
             ) : (
               <span>{user.name}</span>
             )}
+            {role && <Badge type={role} />}
           </Heading>
-          <Meta>
-            {(user.totalReputation || user.contextPermissions) && (
+          {!hideRep && (
+            <Meta>
+              {(user.totalReputation || user.contextPermissions) && (
                 <Reputation
                   tipText={reputationTipText}
                   reputation={reputation}
                 />
               )}
-          </Meta>
+            </Meta>
+          )}
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>

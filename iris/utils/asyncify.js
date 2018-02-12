@@ -6,7 +6,7 @@ const asyncify = (
   listener: (...args: any[]) => any,
   onError?: Error => void
 ) => {
-  const queues = [];
+  let queues = [];
   listener((...args) => queues.map(q => q.push(...args)));
 
   return () => {
@@ -21,6 +21,8 @@ const asyncify = (
           yield await queue.pop();
         }
       } catch (err) {
+        // Remove the error'ing queue from the queues array
+        queues = queues.filter(q => q !== queue);
         onError && onError(err);
       }
     }

@@ -1,6 +1,10 @@
 // @flow
 import { combineReducers } from 'redux';
-import authentication from './authentication';
+import authentication, { type AuthenticationState } from './authentication';
+
+export type State = {
+  +authentication: $Exact<AuthenticationState>,
+};
 
 export default combineReducers({
   authentication,
