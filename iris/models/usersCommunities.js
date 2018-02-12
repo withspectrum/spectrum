@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import { addQueue } from '../utils/workerQueue';
+import { sendCommunityNotificationQueue } from 'shared/bull/queues';
 import type { DBUsersCommunities } from 'shared/types';
 
 /*
@@ -90,7 +90,7 @@ const createMemberInCommunity = (
       }
     })
     .then(result => {
-      addQueue('community notification', { communityId, userId });
+      sendCommunityNotificationQueue.add({ communityId, userId });
       return result.changes[0].new_val;
     });
 };
@@ -417,10 +417,10 @@ const getUsersTotalReputation = (
     .run()
     .then(res =>
       res.map(
-        (res, index) =>
+        res =>
           res && {
             reputation: res.reduction,
-            userId: userIds[index],
+            userId: res.group,
           }
       )
     );

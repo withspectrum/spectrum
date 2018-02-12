@@ -74,6 +74,11 @@ const User = /* GraphQL */ `
 		creator
 	}
 
+	type GithubProfile {
+		id: Int
+		username: String
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -104,6 +109,8 @@ const User = /* GraphQL */ `
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
 		settings: UserSettings
+		githubProfile: GithubProfile
+
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions")
 	}
 

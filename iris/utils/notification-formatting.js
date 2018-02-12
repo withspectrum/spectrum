@@ -99,8 +99,7 @@ const formatNotification = (incomingNotification, currentUserId) => {
   let href, body;
 
   switch (notification.event) {
-    case 'MENTION_MESSAGE':
-    case 'MESSAGE_CREATED': {
+    case 'MENTION_MESSAGE': {
       const entities = notification.entities.filter(
         ({ payload }) => payload.senderId !== currentUserId
       );
@@ -116,12 +115,50 @@ const formatNotification = (incomingNotification, currentUserId) => {
             let body = payload.content.body;
             if (typeof body === 'string')
               body = JSON.parse(payload.content.body);
-            return `"${toPlainText(toState(body))}"`;
+            return `"${toPlainText(toState(body)).replace(
+              /[ \n\r\v]+/g,
+              ' '
+            )}"`;
           }
 
-          return `"${payload.content.body}"`;
+          return `"${payload.content.body.replace(/[ \n\r\v]+/g, ' ')}"`;
         })
       );
+      break;
+    }
+    case 'MESSAGE_CREATED': {
+      const entities = notification.entities.filter(
+        ({ payload }) => payload.senderId !== currentUserId
+      );
+
+      if (notification.context.type === 'DIRECT_MESSAGE_THREAD') {
+        title = `New ${
+          entities.length > 1 ? 'replies' : 'reply'
+        } in a direct message thread`;
+        href = `/messages/${notification.context.id}`;
+      } else {
+        title = `${notification.context.payload.content.title} (${
+          entities.length
+        } new ${entities.length > 1 ? 'replies' : 'reply'})`;
+        href = `/thread/${notification.context.id}`;
+      }
+      body = entities
+        .map(({ payload }) => {
+          const sender = notification.actors.find(
+            actor => payload.senderId === actor.id
+          );
+          if (payload.messageType === 'draftjs') {
+            let body = payload.content.body;
+            if (typeof body === 'string')
+              body = JSON.parse(payload.content.body);
+            return `${sender.payload.name} (@${
+              sender.payload.username
+            }): ${toPlainText(toState(body))}`;
+          }
+
+          return `${sender.payload.name}: ${payload.content.body}`;
+        })
+        .join('\n');
       break;
     }
     case 'REACTION_CREATED': {

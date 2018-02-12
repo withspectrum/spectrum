@@ -215,6 +215,7 @@ export type DBUser = {
   profilePhoto: string,
   providerId?: ?string,
   githubProviderId?: ?string,
+  githubUsername?: ?string,
   fbProviderId?: ?string,
   googleProviderId?: ?string,
   username: ?string,
