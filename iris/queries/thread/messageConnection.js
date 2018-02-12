@@ -6,8 +6,7 @@ import type { PaginationOptions } from '../../utils/paginate-arrays';
 import UserError from '../../utils/UserError';
 import { encode, decode } from '../../utils/base64';
 import { getMessages } from '../../models/message';
-import { addQueue } from '../../utils/workerQueue';
-import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
+import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 
 export default (
   { id }: DBThread,
@@ -82,7 +81,7 @@ export default (
 
   return getMessages(id, options).then(result => {
     if (user && user.id) {
-      addQueue(TRACK_USER_THREAD_LAST_SEEN, {
+      trackUserThreadLastSeenQueue.add({
         threadId: id,
         userId: user.id,
         timestamp: Date.now(),

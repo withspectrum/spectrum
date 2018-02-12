@@ -1,6 +1,9 @@
 // @flow
 import { db } from './db';
-import { addQueue } from '../utils/workerQueue';
+import {
+  sendCommunityInvoicePaidNotificationQueue,
+  sendProInvoicePaidNotificationQueue,
+} from 'shared/bull/queues';
 
 export const getInvoice = (id: string): Promise<Array<Object>> => {
   return db
@@ -58,10 +61,15 @@ export const createInvoice = (
           ? 'community invoice paid notification'
           : 'pro invoice paid notification';
 
+      const queue =
+        subscription.plan.id === 'community-standard'
+          ? sendCommunityInvoicePaidNotificationQueue
+          : sendProInvoicePaidNotificationQueue;
+
       const invoice = result.changes[0].new_val;
 
       // trigger an email to the user for the invoice receipt
-      addQueue(queueName, { invoice });
+      queue.add({ invoice });
       return invoice;
     });
 };

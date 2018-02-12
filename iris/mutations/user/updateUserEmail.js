@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getUserByEmail, setUserPendingEmail } from '../../models/user';
-import { addQueue } from '../../utils/workerQueue';
+import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -24,7 +24,7 @@ export default async (
 
   return setUserPendingEmail(user.id, email)
     .then(user => {
-      addQueue('send email validation email', { email, userId: user.id });
+      sendEmailValidationEmailQueue.add({ email, userId: user.id });
       return user;
     })
     .catch(

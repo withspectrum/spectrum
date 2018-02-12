@@ -1,7 +1,7 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { addQueue } from '../../utils/workerQueue';
+import { sendPrivateChannelInviteNotificationQueue } from 'shared/bull/queues';
 import UserError from '../../utils/UserError';
 
 type Contact = {
@@ -46,7 +46,7 @@ export default async (
       // can't invite yourself
       .filter(contact => contact.email !== currentUser.email)
       .map(contact => {
-        return addQueue('private channel invite notification', {
+        return sendPrivateChannelInviteNotificationQueue.add({
           recipient: {
             email: contact.email,
             firstName: contact.firstName ? contact.firstName : null,

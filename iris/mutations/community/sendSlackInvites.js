@@ -8,7 +8,10 @@ import {
   markSlackImportAsSent,
 } from '../../models/slackImport';
 import { getCommunityById } from '../../models/community';
-import { addQueue } from '../../utils/workerQueue';
+import {
+  _adminProcessSlackImportQueue,
+  sendCommunityInviteNotificationQueue,
+} from 'shared/bull/queues';
 import { getUserById } from '../../models/user';
 
 type SendSlackInvitesInput = {
@@ -72,7 +75,7 @@ export default async (
     .filter(user => user && user.email && isEmail(user.email))
     .filter(user => user.email !== currentUser.email)
     .map(user => {
-      return addQueue('community invite notification', {
+      return sendCommunityInviteNotificationQueue.add({
         recipient: {
           email: user.email,
           firstName: user.firstName ? user.firstName : null,
@@ -95,7 +98,7 @@ export default async (
     .filter(user => !!user.email)
     .filter(user => user.email !== thisUser.email).length;
 
-  addQueue('admin slack import processed email', {
+  _adminProcessSlackImportQueue.add({
     thisUser,
     community,
     invitedCount,
