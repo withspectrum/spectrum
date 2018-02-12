@@ -18,6 +18,7 @@ import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
+import startNotificationsListener from './listeners/notifications';
 import {
   MESSAGE_NOTIFICATION,
   MENTION_NOTIFICATION,
@@ -61,6 +62,8 @@ const server = createWorker({
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
 });
+
+startNotificationsListener();
 
 console.log(
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&

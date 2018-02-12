@@ -13,6 +13,7 @@
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",
     "source-map-support": "^0.4.15",
-    "validator": "^9.2.0"
+    "validator": "^9.2.0",
+    "web-push": "^3.2.2"
   }
 }

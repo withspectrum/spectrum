@@ -1,5 +1,5 @@
 import webPush from 'web-push';
-const debug = require('debug')('iris:utils:web-push');
+const debug = require('debug')('athena:utils:web-push');
 import {
   getSubscriptions,
   removeSubscription,
@@ -58,8 +58,8 @@ export const sendNotificationAsWebPush = notification => {
         return Promise.resolve(false);
       }
 
+      debug('subscription(s) found, formatting notification');
       const payload = formatNotification(notification, notification.userId);
-      debug('subscriptions found: %O', subscriptions);
       return Promise.all(
         subscriptions.map(subscription =>
           sendWebPushNotification(subscription, {
