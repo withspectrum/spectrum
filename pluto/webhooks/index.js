@@ -1,9 +1,5 @@
 // @flow
-require('now-env');
-const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
-const STRIPE_WEBHOOK_SIGNING_SECRET = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
-const stripe = require('stripe')(STRIPE_TOKEN);
-const endpointSecret = STRIPE_WEBHOOK_SIGNING_SECRET;
+import { stripe, stripeWebhookSigningSecret } from 'shared/stripe';
 import Raven from 'shared/raven';
 
 import { CustomerEventHandler } from './customerEvent';
@@ -44,7 +40,11 @@ export const handleWebhooks = (req: any, res: any) => {
   let event;
   if (process.env.NODE_ENV === 'production') {
     let sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      stripeWebhookSigningSecret
+    );
   } else {
     event = JSON.parse(req.body);
   }
