@@ -23,6 +23,17 @@ import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
+import Icon from '../../components/icons';
+import Search from './components/search';
+import {
+  SegmentedControl,
+  Segment,
+  DesktopSegment,
+} from '../../components/segmentedControl';
+import { Grid, Meta, Content, Extras } from './style';
+import { CoverPhoto } from '../../components/profile/coverPhoto';
+import { LoginButton, LogoutButton } from '../community/style';
+import ToggleChannelMembership from '../../components/toggleChannelMembership';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -44,7 +55,54 @@ type Props = {
   dispatch: Function,
 };
 
+const ChannelAuthButton = ({ channel, state, isLoggedIn }) => {
+  if (
+    !isLoggedIn ||
+    (isLoggedIn &&
+      !channel.community.communityPermissions.isOwner &&
+      !channel.channelPermissions.isMember)
+  ) {
+    return (
+      <ToggleChannelMembership
+        channel={channel}
+        render={state => (
+          <LoginButton loading={state.isLoading}>
+            Join {channel.name}
+          </LoginButton>
+        )}
+      />
+    );
+  }
+
+  if (
+    isLoggedIn &&
+    (!channel.community.communityPermissions.isOwner &&
+      channel.channelPermissions.isMember)
+  ) {
+    return (
+      <ToggleChannelMembership
+        channel={channel}
+        render={state => (
+          <LogoutButton icon={'checkmark'} loading={state.isLoading}>
+            Member
+          </LogoutButton>
+        )}
+      />
+    );
+  }
+
+  return null;
+};
+
 class ChannelView extends React.Component<Props> {
+  constructor() {
+    super();
+
+    this.state = {
+      selectedView: 'threads',
+    };
+  }
+
   componentDidUpdate(prevProps) {
     // if the user is new and signed up through a channel page, push
     // the channel's community data into the store to hydrate the new user experience
@@ -61,6 +119,14 @@ class ChannelView extends React.Component<Props> {
     }
   }
 
+  handleSegmentClick = label => {
+    if (this.state.selectedView === label) return;
+
+    return this.setState({
+      selectedView: label,
+    });
+  };
+
   render() {
     const {
       match,
@@ -69,6 +135,7 @@ class ChannelView extends React.Component<Props> {
       isLoading,
       hasError,
     } = this.props;
+    const { selectedView } = this.state;
     const { communitySlug, channelSlug } = match.params;
     const isLoggedIn = currentUser;
 
@@ -174,62 +241,89 @@ class ChannelView extends React.Component<Props> {
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
           />
-          <Column type="secondary">
-            <ChannelProfile data={{ channel }} profileSize="full" />
+          <Grid>
+            <CoverPhoto src={channel.community.coverPhoto} />
+            <Meta>
+              <ChannelProfile data={{ channel }} profileSize="full" />
+              <ChannelAuthButton channel={channel} isLoggedIn={isLoggedIn} />
+              {isLoggedIn &&
+                userHasPermissions && (
+                  <NotificationsToggle
+                    value={channel.channelPermissions.receiveNotifications}
+                    channel={channel}
+                  />
+                )}
 
-            {/* user is signed in and is a member of the channel */}
-            {isLoggedIn &&
-              userHasPermissions && (
-                <NotificationsToggle
-                  value={channel.channelPermissions.receiveNotifications}
-                  channel={channel}
+              {/* user is signed in and has permissions to view pending users */}
+              {isLoggedIn &&
+                (isOwner || isGlobalOwner) && (
+                  <PendingUsersNotification channel={channel} id={channel.id} />
+                )}
+            </Meta>
+            <Content>
+              {!isLoggedIn && (
+                <UpsellSignIn
+                  title={`Join the ${channel.community.name} community`}
+                  view={{ data: channel, type: 'channel' }}
+                  redirectPath={window.location}
                 />
               )}
 
-            {/* user is signed in and has permissions to view pending users */}
-            {isLoggedIn &&
-              (isOwner || isGlobalOwner) && (
-                <PendingUsersNotification channel={channel} id={channel.id} />
-              )}
-          </Column>
+              {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
+              {isLoggedIn &&
+                userHasPermissions &&
+                channel.isPrivate &&
+                !channel.community.isPro && (
+                  <UpsellUpgradeCommunityPrivateChannel
+                    community={channel.community}
+                  />
+                )}
 
-          <Column type="primary" alignItems="center">
-            {!isLoggedIn && (
-              <UpsellSignIn
-                title={`Join the ${channel.community.name} community`}
-                view={{ data: channel, type: 'channel' }}
-                redirectPath={window.location}
-              />
-            )}
+              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+                <DesktopSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                  Search
+                </DesktopSegment>
+                <DesktopSegment
+                  segmentLabel="threads"
+                  onClick={() => this.handleSegmentClick('threads')}
+                  selected={selectedView === 'threads'}
+                >
+                  Threads
+                </DesktopSegment>
+              </SegmentedControl>
 
-            {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
-            {isLoggedIn &&
-              userHasPermissions &&
-              channel.isPrivate &&
-              !channel.community.isPro && (
-                <UpsellUpgradeCommunityPrivateChannel
-                  community={channel.community}
+              {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
+              {isLoggedIn &&
+                selectedView === 'threads' &&
+                userHasPermissions &&
+                ((channel.isPrivate && channel.community.isPro) ||
+                  !channel.isPrivate) && (
+                  <ThreadComposer
+                    activeCommunity={communitySlug}
+                    activeChannel={channelSlug}
+                  />
+                )}
+
+              {// thread list
+              selectedView === 'threads' && (
+                <ThreadFeedWithData
+                  viewContext="channel"
+                  id={channel.id}
+                  currentUser={isLoggedIn}
+                  channelId={channel.id}
                 />
               )}
 
-            {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
-            {isLoggedIn &&
-              userHasPermissions &&
-              ((channel.isPrivate && channel.community.isPro) ||
-                !channel.isPrivate) && (
-                <ThreadComposer
-                  activeCommunity={communitySlug}
-                  activeChannel={channelSlug}
-                />
-              )}
-
-            <ThreadFeedWithData
-              viewContext="channel"
-              id={channel.id}
-              currentUser={isLoggedIn}
-              channelId={channel.id}
-            />
-          </Column>
+              {//search
+              selectedView === 'search' && <Search channel={channel} />}
+            </Content>
+            <Extras />
+          </Grid>
         </AppViewWrapper>
       );
     }

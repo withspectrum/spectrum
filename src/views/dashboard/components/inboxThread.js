@@ -29,6 +29,7 @@ class InboxThread extends Component {
       active,
       hasActiveCommunity,
       hasActiveChannel,
+      viewContext,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
@@ -44,10 +45,13 @@ class InboxThread extends Component {
           to={{
             pathname: window.location.pathname,
             search:
-              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+              window.innerWidth < 768 || viewContext
+                ? `?thread=${data.id}`
+                : `?t=${data.id}`,
           }}
           onClick={e =>
             window.innerWidth > 768 &&
+            !viewContext &&
             !e.metaKey &&
             this.props.dispatch(changeActiveThread(data.id))
           }

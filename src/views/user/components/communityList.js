@@ -54,34 +54,25 @@ class CommunityList extends React.Component<Props> {
     }
 
     return (
-      <StyledCard largeOnly>
-        <ListHeader>
-          {user === currentUser ? (
-            <ListHeading>My Communities</ListHeading>
-          ) : (
-            <ListHeading>Member of</ListHeading>
-          )}
-        </ListHeader>
-        <ListContainer>
-          {sortedCommunities.map(community => {
-            if (!community) return null;
-            return (
-              <Link key={community.id} to={`/${community.slug}`}>
-                <CommunityListItem
-                  community={community}
-                  reputation={
-                    community.contextPermissions
-                      ? community.contextPermissions.reputation
-                      : null
-                  }
-                >
-                  <Icon glyph="view-forward" />
-                </CommunityListItem>
-              </Link>
-            );
-          })}
-        </ListContainer>
-      </StyledCard>
+      <ListContainer>
+        {sortedCommunities.map(community => {
+          if (!community) return null;
+          return (
+            <Link key={community.id} to={`/${community.slug}`}>
+              <CommunityListItem
+                community={community}
+                reputation={
+                  community.contextPermissions
+                    ? community.contextPermissions.reputation
+                    : null
+                }
+              >
+                <Icon glyph="view-forward" />
+              </CommunityListItem>
+            </Link>
+          );
+        })}
+      </ListContainer>
     );
   }
 }

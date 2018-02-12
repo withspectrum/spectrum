@@ -162,3 +162,18 @@ export const Extras = styled(Column)`
     padding-right: 32px;
   }
 `;
+
+export const ColumnHeading = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 500;
+  padding: 8px 16px 12px;
+  margin-top: 24px;
+  border-bottom: 2px solid ${props => props.theme.bg.border};
+
+  + div {
+    padding: 8px 16px;
+  }
+`;

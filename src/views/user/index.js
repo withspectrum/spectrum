@@ -21,7 +21,7 @@ import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { Grid, Meta, Content, Extras } from './style';
+import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -211,6 +211,7 @@ class UserView extends React.Component<Props, State> {
               {!hasThreads && <NullState bg="null" heading={nullHeading} />}
             </Content>
             <Extras>
+              <ColumnHeading>Member of</ColumnHeading>
               <CommunityList
                 currentUser={currentUser}
                 user={user}

@@ -20,20 +20,12 @@ export const LogoutButton = styled(Button)`
   background-color: ${props => props.theme.text.alt};
   background-image: ${props =>
     Gradient(props.theme.text.placeholder, props.theme.text.alt)};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const LoginButton = styled(LogoutButton)`
   background-color: ${props => props.theme.success.default};
   background-image: ${props =>
     Gradient(props.theme.success.alt, props.theme.success.default)};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const CoverButton = styled(IconButton)`
@@ -204,9 +196,12 @@ export const Extras = styled(Column)`
 `;
 
 export const ColumnHeading = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 18px;
+  line-height: 1;
   font-weight: 500;
-  padding: 16px;
-  padding-top: 24px;
+  padding: 8px 16px 12px;
+  margin-top: 24px;
   border-bottom: 2px solid ${props => props.theme.bg.border};
 `;

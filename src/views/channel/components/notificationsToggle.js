@@ -71,20 +71,15 @@ class NotificationsTogglePure extends React.Component<Props, State> {
     const { channel } = this.props;
 
     return (
-      <StyledCard largeOnly>
-        <ListHeader>
-          <ListHeading>New Thread Notifications</ListHeading>
-        </ListHeader>
-        <ListContainer>
-          <Checkbox
-            id="isPrivate"
-            checked={isReceiving}
-            onChange={this.handleChange}
-          >
-            Get notified when new threads are published in {channel.name}
-          </Checkbox>
-        </ListContainer>
-      </StyledCard>
+      <ListContainer>
+        <Checkbox
+          id="isPrivate"
+          checked={isReceiving}
+          onChange={this.handleChange}
+        >
+          Get notified when new threads are published in {channel.name}
+        </Checkbox>
+      </ListContainer>
     );
   }
 }

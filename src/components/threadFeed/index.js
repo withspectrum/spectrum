@@ -221,6 +221,9 @@ class ThreadFeedPure extends Component {
                   hasActiveCommunity={
                     viewContext === 'community' && this.props.data.community
                   }
+                  hasActiveChannel={
+                    viewContext === 'channel' && this.props.data.channel
+                  }
                 />
               );
             })}
