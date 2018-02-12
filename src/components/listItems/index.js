@@ -106,15 +106,10 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
             <Heading>
-              {props.contents.isPrivate && (
-                <Lock>
-                  <Icon
-                    glyph={'private'}
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={16}
-                  />
-                </Lock>
+              {props.contents.isPrivate ? (
+                <Icon glyph={'channel-private'} size={32} />
+              ) : (
+                <Icon glyph={'channel'} size={32} />
               )}
               {props.contents.name}
             </Heading>

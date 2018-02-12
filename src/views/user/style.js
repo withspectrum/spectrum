@@ -111,16 +111,23 @@ const Column = styled.div`
 export const Meta = styled(Column)`
   grid-area: meta;
 
-  > div:nth-of-type(2) {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    margin: 16px 0 0 32px;
+  > button,
+  > a > button {
+    margin-top: 16px;
+    margin-left: 32px;
+    width: calc(100% - 32px);
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 
-  > div:last-of-type {
-    @media (max-width: 768px) {
-      display: none;
+  @media (max-width: 768px) {
+    padding: 0 32px;
+
+    > div {
+      margin-left: 0;
     }
   }
 `;

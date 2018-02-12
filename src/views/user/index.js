@@ -8,6 +8,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import ThreadFeed from '../../components/threadFeed';
 import { track } from '../../helpers/events';
+import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { UserProfile } from '../../components/profile';
 import { LoadingScreen } from '../../components/loading';
 import { NullState } from '../../components/upsell';
@@ -21,6 +22,7 @@ import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
+import { LoginButton, LogoutButton } from '../community/style';
 import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
 import {
   SegmentedControl,
@@ -85,6 +87,11 @@ class UserView extends React.Component<Props, State> {
     });
   };
 
+  initMessage = user => {
+    this.props.dispatch(initNewThreadWithUser(user));
+    this.props.history.push('/messages/new');
+  };
+
   render() {
     const {
       data: { user },
@@ -143,6 +150,19 @@ class UserView extends React.Component<Props, State> {
                 username={username}
                 profileSize="full"
               />
+
+              {currentUser &&
+                user.id !== currentUser.id && (
+                  <LoginButton onClick={() => this.initMessage(user)}>
+                    Message {user.name}
+                  </LoginButton>
+                )}
+              {currentUser &&
+                user.id === currentUser.id && (
+                  <Link to={`/${username}/settings`}>
+                    <LogoutButton>My settings</LogoutButton>
+                  </Link>
+                )}
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>

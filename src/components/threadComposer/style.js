@@ -165,7 +165,6 @@ export const ComposerUpsell = styled.div`
   border-bottom: 2px solid ${props => props.theme.brand.alt};
   color: #fff;
   text-align: center;
-  border-radius: 12px 12px 0 0;
 
   p {
     font-size: 14px;

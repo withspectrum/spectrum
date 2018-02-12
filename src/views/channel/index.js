@@ -9,7 +9,7 @@ import Head from '../../components/head';
 import AppViewWrapper from '../../components/appViewWrapper';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
-import Column from '../../components/column';
+import Link from 'src/components/link';
 import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
@@ -252,6 +252,14 @@ class ChannelView extends React.Component<Props> {
                     value={channel.channelPermissions.receiveNotifications}
                     channel={channel}
                   />
+                )}
+              {isLoggedIn &&
+                (isOwner || isGlobalOwner) && (
+                  <Link
+                    to={`/${channel.community.slug}/${channel.slug}/settings`}
+                  >
+                    <LogoutButton>Settings</LogoutButton>
+                  </Link>
                 )}
 
               {/* user is signed in and has permissions to view pending users */}

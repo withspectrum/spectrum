@@ -70,12 +70,40 @@ export const Meta = styled(Column)`
   ${ListContainer} {
     margin: 8px 0 0 32px;
     width: auto;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
   }
 
   > div:nth-of-type(2) {
     display: flex;
     flex: none;
     margin: 16px 0 0 32px;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
+  }
+
+  > button,
+  > a > button {
+    margin-top: 16px;
+    margin-left: 32px;
+    width: calc(100% - 32px);
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 32px;
+
+    > div {
+      margin-left: 0;
+    }
   }
 `;
 

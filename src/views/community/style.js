@@ -14,7 +14,7 @@ import {
 } from '../../components/segmentedControl';
 
 export const LogoutButton = styled(Button)`
-  align-self: stretch;
+  width: 100%;
   font-size: 14px;
   font-weight: 700;
   background-color: ${props => props.theme.text.alt};
@@ -155,11 +155,29 @@ export const Meta = styled(Column)`
       display: none;
     }
   }
+
+  > a > button {
+    margin-top: 16px;
+    margin-left: 32px;
+    width: calc(100% - 32px);
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 32px;
+
+    > div {
+      margin-left: 0;
+    }
+  }
 `;
 
 export const Content = styled(Column)`
   grid-area: content;
-  overflow-x: hidden;
 
   @media (max-width: 1028px) and (min-width: 768px) {
     padding-right: 32px;
@@ -201,7 +219,7 @@ export const ColumnHeading = styled.div`
   font-size: 18px;
   line-height: 1;
   font-weight: 500;
-  padding: 8px 16px 12px;
-  margin-top: 24px;
+  padding: 16px;
+  margin-top: 16px;
   border-bottom: 2px solid ${props => props.theme.bg.border};
 `;

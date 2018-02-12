@@ -239,6 +239,12 @@ class CommunityView extends React.Component<Props, State> {
                 community={community}
                 isLoggedIn={isLoggedIn}
               />
+              {currentUser &&
+                isOwner && (
+                  <Link to={`/${community.slug}/settings`}>
+                    <LogoutButton>Settings</LogoutButton>
+                  </Link>
+                )}
               <ChannelList
                 id={community.id}
                 communitySlug={communitySlug.toLowerCase()}

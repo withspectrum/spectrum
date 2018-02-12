@@ -41,12 +41,13 @@ export const WrapperLi = styled.li`
   list-style-type: none;
 
   &:not(:first-of-type) {
-    border-top: 2px solid ${props => props.theme.bg.wash};
+    border-top: 2px solid ${props => props.theme.bg.border};
   }
 `;
 
 export const Col = styled(FlexCol)`
   flex: auto;
+  min-width: 0;
 `;
 
 export const Row = styled(FlexRow)`
@@ -105,9 +106,11 @@ export const StyledCard = styled.div`
 `;
 
 export const ListHeading = styled(H3)`
-  font-weight: 900;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text.placeholder};
+  font-weight: 500;
+  font-size: 18px;
+  padding: 16px;
+  padding-left: 0;
+  color: ${({ theme }) => theme.text.default};
 `;
 
 export const ListContainer = styled(FlexCol)`
@@ -144,8 +147,7 @@ export const ListFooter = styled(FlexRow)`
 export const ListHeader = styled(FlexRow)`
   justify-content: space-between;
   width: 100%;
-  padding-bottom: 8px;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  border-bottom: 2px solid ${({ theme }) => theme.bg.border};
   margin-top: ${props => (props.secondary ? '24px' : '0')};
 `;
 
