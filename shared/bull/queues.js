@@ -4,8 +4,6 @@
 const createQueue = require('shared/bull/create-queue.js');
 const EventEmitter = require('events');
 
-exports.TRACK_USER_THREAD_LAST_SEEN = 'track user thread last seen';
-
 type Job<JobData> = {
   data: JobData,
 };
