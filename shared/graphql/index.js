@@ -1,6 +1,7 @@
 // @flow
 import { ApolloClient } from 'apollo-client';
 import { createUploadLink } from 'apollo-upload-client';
+import { RetryLink } from 'apollo-link-retry';
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
@@ -36,12 +37,22 @@ export const createClient = (options?: CreateClientOptions = {}) => {
       }
     : undefined;
 
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = createUploadLink({
-    uri: API_URI,
-    credentials: 'include',
-    headers,
+  const retryLink = new RetryLink({
+    delay: {
+      initial: 500,
+    },
+    attempts: {
+      max: 20,
+    },
   });
+  // HTTP Link for queries and mutations including file uploads
+  const httpLink = retryLink.concat(
+    createUploadLink({
+      uri: API_URI,
+      credentials: 'include',
+      headers,
+    })
+  );
 
   // Websocket link for subscriptions
   const wsLink = new WebSocketLink({
