@@ -31,6 +31,9 @@ export type DBCommunity = {
   deletedAt?: Date,
   pinnedThreadId?: string,
   watercoolerId?: string,
+  administratorId: string,
+  administratorEmail: string,
+  stripeCustomerId: ?string,
 };
 
 export type DBCuratedContent = {
