@@ -3,7 +3,7 @@ import type { GraphQLContext } from '../../';
 import type { WebPushSubscription } from './';
 import UserError from '../../utils/UserError';
 import { storeSubscription } from '../../models/web-push-subscription';
-import { sendWebPushNotification } from '../../utils/web-push';
+import { sendWebPushNotification } from 'athena/utils/web-push';
 
 export default (
   _: any,
@@ -27,7 +27,9 @@ export default (
           TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
         }
       ).catch(err => {
-        console.log(err);
+        throw new UserError(
+          "It seems like we can't send you web push notifications. Please ping @mxstbr with your browser and OS versions and he'll take a look!"
+        );
       });
     })
     .then(() => true)
