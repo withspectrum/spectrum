@@ -247,19 +247,19 @@ class ChannelView extends React.Component<Props> {
               <ChannelProfile data={{ channel }} profileSize="full" />
               <ChannelAuthButton channel={channel} isLoggedIn={isLoggedIn} />
               {isLoggedIn &&
-                userHasPermissions && (
-                  <NotificationsToggle
-                    value={channel.channelPermissions.receiveNotifications}
-                    channel={channel}
-                  />
-                )}
-              {isLoggedIn &&
                 (isOwner || isGlobalOwner) && (
                   <Link
                     to={`/${channel.community.slug}/${channel.slug}/settings`}
                   >
                     <LogoutButton>Settings</LogoutButton>
                   </Link>
+                )}
+              {isLoggedIn &&
+                userHasPermissions && (
+                  <NotificationsToggle
+                    value={channel.channelPermissions.receiveNotifications}
+                    channel={channel}
+                  />
                 )}
 
               {/* user is signed in and has permissions to view pending users */}
