@@ -6,23 +6,7 @@ import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-
-export type DBUser = {
-  id: string,
-  email?: string,
-  createdAt: Date,
-  name: string,
-  coverPhoto: string,
-  profilePhoto: string,
-  providerId?: string,
-  githubProviderId?: string,
-  fbProviderId?: string,
-  googleProviderId?: string,
-  username?: string,
-  timezone?: number,
-  isOnline?: boolean,
-  lastSeen?: Date,
-};
+import type { DBUser } from 'shared/types';
 
 type GetUserInput = {
   id?: string,
@@ -148,7 +132,7 @@ const saveUserProvider = (
     });
 };
 
-const getUserByIndex = (indexName, indexValue) => {
+const getUserByIndex = (indexName: string, indexValue: string) => {
   return db
     .table('users')
     .getAll(indexValue, { index: indexName })
