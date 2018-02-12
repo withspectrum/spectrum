@@ -1,3 +1,4 @@
+// @flow
 import webPush from 'web-push';
 const debug = require('debug')('athena:utils:web-push');
 import {
@@ -6,6 +7,7 @@ import {
 } from '../models/web-push-subscription';
 import { markSingleNotificationSeen } from '../models/usersNotifications';
 import formatNotification from './notification-formatting';
+import type { DBNotification } from 'shared/types';
 
 try {
   webPush.setVapidDetails(
@@ -16,7 +18,11 @@ try {
   console.log('Web push notifications to enabled!');
 } catch (err) {}
 
-export const sendWebPushNotification = (subscription, payload, options) => {
+export const sendWebPushNotification = (
+  subscription: any,
+  payload: Object,
+  options?: ?Object
+): Promise<Object> => {
   if (!subscription || !payload) {
     if (process.env.NODE_ENV === 'development')
       console.log(
@@ -48,8 +54,15 @@ export const sendWebPushNotification = (subscription, payload, options) => {
     });
 };
 
+type DBUsersNotification = {
+  ...DBNotification,
+  userId: string,
+};
+
 // Send a notification as a web push notification (maybe)
-export const sendNotificationAsWebPush = notification => {
+export const sendNotificationAsWebPush = (
+  notification: DBUsersNotification
+) => {
   debug('send notification as web push notification');
   return getSubscriptions(notification.userId)
     .then(subscriptions => {
