@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
@@ -13,13 +11,10 @@ type GetUserInput = {
   username?: string,
 };
 
-const getUser = (input: GetUserInput): Promise<DBUser> => {
-  if (input.id) return getUserById(input.id);
-  if (input.username) return getUserByUsername(input.username);
-
-  throw new UserError(
-    'Please provide either id or username to your user() query.'
-  );
+const getUser = async (input: GetUserInput): Promise<?DBUser> => {
+  if (input.id) return await getUserById(input.id);
+  if (input.username) return await getUserByUsername(input.username);
+  return null;
 };
 
 const getUserById = (userId: string): Promise<DBUser> => {
@@ -42,12 +37,7 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
     .table('users')
     .getAll(username, { index: 'username' })
     .run()
-    .then(
-      result =>
-        result
-          ? result[0]
-          : new UserError(`No user found with the username ${username}`)
-    );
+    .then(result => (result ? result[0] : null));
 };
 
 const getUsersByUsername = (
@@ -195,7 +185,7 @@ const createOrFindUser = (
     .catch(err => {
       if (user.id) {
         console.log(err);
-        throw new UserError(`No user found for id ${user.id}.`);
+        return new Error(`No user found for id ${user.id}.`);
       }
       return storeUser(user);
     });
