@@ -23,6 +23,7 @@ type Props = {
 type State = { isLoading: boolean };
 
 const SignupHandler = props => {
+  console.log(props.currentUser);
   if (!props.currentUser) {
     return (
       <Link
@@ -33,9 +34,9 @@ const SignupHandler = props => {
         {props.contents}
       </Link>
     );
+  } else {
+    return <div onClick={props.func}>{props.contents}</div>;
   }
-
-  return <div onClick={props.func}>{props.contents}</div>;
 };
 
 class ToggleChannelMembership extends React.Component<Props, State> {
@@ -60,6 +61,14 @@ class ToggleChannelMembership extends React.Component<Props, State> {
       isLoading: false,
     });
   };
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.isLoggedIn !== nextProps.isLoggedIn) {
+      return true;
+    }
+
+    return false;
+  }
 
   toggleSubscription = (channelId: string) => {
     this.setState({

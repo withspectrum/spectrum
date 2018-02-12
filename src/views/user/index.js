@@ -159,7 +159,7 @@ class UserView extends React.Component<Props, State> {
                 )}
               {currentUser &&
                 user.id === currentUser.id && (
-                  <Link to={`/${username}/settings`}>
+                  <Link to={`/users/${username}/settings`}>
                     <LogoutButton>My settings</LogoutButton>
                   </Link>
                 )}

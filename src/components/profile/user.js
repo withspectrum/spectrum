@@ -14,6 +14,7 @@ import { openModal } from '../../actions/modals';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
 import { Button } from '../buttons';
+import GithubProfile from '../../components/githubProfile';
 import type { ProfileSizeProps } from './index';
 import Avatar from '../avatar';
 import Badge from '../badges';
@@ -129,6 +130,27 @@ const UserWithData = ({
                   </a>
                 </ExtLink>
               )}
+              <GithubProfile
+                id={user.id}
+                render={profile => {
+                  if (!profile) {
+                    return null;
+                  } else {
+                    return (
+                      <ExtLink>
+                        <Icon glyph="github" size={24} />
+                        <a
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={`https://github.com/${profile.username}`}
+                        >
+                          github.com/{profile.username}
+                        </a>
+                      </ExtLink>
+                    );
+                  }
+                }}
+              />
             </FullDescription>
           )}
 

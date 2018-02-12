@@ -5,10 +5,8 @@ import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
 import toggleUserNotificationSettingsMutation from 'shared/graphql/mutations/user/toggleUserNotificationSettings';
-import { Checkbox, Input, Error } from '../../../components/formElements';
+import { Checkbox } from '../../../components/formElements';
 import Icon from '../../../components/icons';
-import { Button } from '../../../components/buttons';
-import isEmail from 'validator/lib/isEmail';
 import {
   StyledCard,
   LargeListHeading,
@@ -18,8 +16,9 @@ import {
   InlineIcon,
   Description,
 } from '../../../components/listItems/style';
-import { EmailListItem, CheckboxContent, EmailForm } from '../style';
+import { EmailListItem, CheckboxContent } from '../style';
 import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
+import UserEmailConfirmation from '../../../components/userEmailConfirmation';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -90,52 +89,7 @@ type Props = {
   currentUser: GetCurrentUserSettingsType,
 };
 
-type State = {
-  email: string,
-  emailError: string,
-};
-
-class EmailSettings extends React.Component<Props, State> {
-  state = {
-    email: '',
-    emailError: '',
-  };
-
-  handleEmailChange = e => {
-    this.setState({
-      email: e.target.value,
-      emailError: '',
-    });
-  };
-
-  saveEmail = e => {
-    e.preventDefault();
-    const { email } = this.state;
-    const { updateUserEmail } = this.props;
-
-    if (!isEmail(email)) {
-      return this.setState({
-        emailError: 'Please enter a valid email address',
-      });
-    }
-
-    return updateUserEmail(email)
-      .then(() => {
-        this.props.dispatch(
-          addToastWithTimeout(
-            'success',
-            `A confirmation email has been sent to ${email}!`
-          )
-        );
-        return this.setState({
-          email: '',
-        });
-      })
-      .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
+class EmailSettings extends React.Component<Props> {
   handleChange = e => {
     let notificationType = e.target.id;
     let deliveryMethod = 'email';
@@ -162,7 +116,6 @@ class EmailSettings extends React.Component<Props, State> {
       currentUser,
     } = this.props;
 
-    const { emailError } = this.state;
     const settings = parseNotificationTypes(notifications).filter(
       notification => notification.hasOwnProperty('emailValue')
     );
@@ -183,29 +136,7 @@ class EmailSettings extends React.Component<Props, State> {
               we’ll send you a confirmation link.
             </Description>
 
-            {currentUser.pendingEmail && (
-              <Notice>
-                A confirmation link was sent to {currentUser.pendingEmail}. You
-                can resend the confirmation below, or enter a new email address.
-              </Notice>
-            )}
-
-            <EmailForm
-              onSubmit={this.saveEmail}
-              style={{ marginTop: '8px', marginBottom: '8px' }}
-            >
-              <Input
-                type="email"
-                defaultValue={null}
-                onChange={this.handleEmailChange}
-                placeholder={'Add your email address'}
-              >
-                Email Address
-              </Input>
-
-              <Button onClick={this.saveEmail}>Save</Button>
-            </EmailForm>
-            {emailError && <Error>{emailError}</Error>}
+            <UserEmailConfirmation user={currentUser} />
           </ListContainer>
         </StyledCard>
       );

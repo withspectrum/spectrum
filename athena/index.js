@@ -35,7 +35,6 @@ import {
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
 } from './queues/constants';
-import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 
 const PORT = process.env.PORT || 3003;
 
@@ -55,7 +54,7 @@ const server = createWorker({
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
   [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
-  [TRACK_USER_THREAD_LAST_SEEN]: trackUserThreadLastSeen,
+  'track user thread last seen': trackUserThreadLastSeen,
   [PROCESS_ADMIN_TOXIC_MESSAGE]: processAdminMessageModeration,
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
