@@ -115,10 +115,13 @@ const formatNotification = (incomingNotification, currentUserId) => {
             let body = payload.content.body;
             if (typeof body === 'string')
               body = JSON.parse(payload.content.body);
-            return `"${toPlainText(toState(body))}"`;
+            return `"${toPlainText(toState(body)).replace(
+              /[ \n\r\v]+/g,
+              ' '
+            )}"`;
           }
 
-          return `"${payload.content.body}"`;
+          return `"${payload.content.body.replace(/[ \n\r\v]+/g, ' ')}"`;
         })
       );
       break;
