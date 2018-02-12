@@ -2,6 +2,7 @@
 // NOTE: This file needs to be CommonJS (require/module.exports) instead of ES modules
 // so that import { queueName } from 'queues' works!
 const createQueue = require('shared/bull/create-queue.js');
+const EventEmitter = require('events');
 
 exports.TRACK_USER_THREAD_LAST_SEEN = 'track user thread last seen';
 
@@ -105,6 +106,13 @@ exports.QUEUE_NAMES = {
   _adminProcessSlackImportQueue: 'admin slack import process email',
   _adminProcessToxicThreadQueue: 'process admin toxic thread',
 };
+
+// We add one error listener per queue, so we have to set the max listeners
+// to whatever it is set to + the amount of queues passed in
+// $FlowIssue
+EventEmitter.defaultMaxListeners =
+  // $FlowIssue
+  Object.keys(exports.QUEUE_NAMES).length + EventEmitter.defaultMaxListeners;
 
 // Create all the queues, export an object with all the queues
 const queues: Queues = Object.keys(exports.QUEUE_NAMES).reduce(
