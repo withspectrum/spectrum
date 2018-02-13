@@ -197,7 +197,7 @@ class CommunityView extends React.Component<Props, State> {
                 <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
                   <LoginButton>Join {community.name}</LoginButton>
                 </Link>
-              ) : (
+              ) : !isOwner ? (
                 <ToggleCommunityMembership
                   community={community}
                   render={state => (
@@ -212,7 +212,7 @@ class CommunityView extends React.Component<Props, State> {
                     </LoginButton>
                   )}
                 />
-              )}
+              ) : null}
 
               {currentUser &&
                 isOwner && (

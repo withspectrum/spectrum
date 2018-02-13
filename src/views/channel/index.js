@@ -218,7 +218,7 @@ class ChannelView extends React.Component<Props, State> {
                 >
                   <LoginButton>Join {channel.name}</LoginButton>
                 </Link>
-              ) : (
+              ) : !isGlobalOwner ? (
                 <ToggleChannelMembership
                   channel={channel}
                   render={state => (
@@ -231,7 +231,7 @@ class ChannelView extends React.Component<Props, State> {
                     </LoginButton>
                   )}
                 />
-              )}
+              ) : null}
 
               {isLoggedIn &&
                 (isOwner || isGlobalOwner) && (
