@@ -5,12 +5,12 @@ import initIndex from 'shared/algolia';
 import Raven from 'shared/raven';
 const searchIndex = initIndex('threads_and_messages');
 import type { DBThread } from 'shared/types';
+import { dbThreadToSearchThread } from './utils';
 import {
-  dbThreadToSearchThread,
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
   listenToChangedFieldIn,
-} from './utils';
+} from 'shared/changefeed-utils';
 
 export const getThreadById = (threadId: string): Promise<DBThread> => {
   return db
@@ -20,7 +20,7 @@ export const getThreadById = (threadId: string): Promise<DBThread> => {
 };
 
 export const newThread = () =>
-  listenToNewDocumentsIn('threads', data => {
+  listenToNewDocumentsIn(db, 'threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
     return searchIndex
       .saveObject(searchableThread)
@@ -36,7 +36,7 @@ export const newThread = () =>
   });
 
 export const deletedThread = () =>
-  listenToDeletedDocumentsIn('threads', data => {
+  listenToDeletedDocumentsIn(db, 'threads', data => {
     return searchIndex
       .deleteObject(data.id)
       .then(() => {
@@ -51,7 +51,7 @@ export const deletedThread = () =>
   });
 
 export const movedThread = () =>
-  listenToChangedFieldIn('channelId')('threads', async data => {
+  listenToChangedFieldIn(db, 'channelId')('threads', async data => {
     const getAllRecordsForThreadId = data => {
       return new Promise((resolve, reject) => {
         // eslint-disable-line
@@ -99,7 +99,7 @@ export const movedThread = () =>
   });
 
 export const editedThread = () =>
-  listenToChangedFieldIn('modifiedAt')('threads', data => {
+  listenToChangedFieldIn(db, 'modifiedAt')('threads', data => {
     const searchableThread = dbThreadToSearchThread(data);
     return searchIndex
       .partialUpdateObject({

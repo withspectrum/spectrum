@@ -5,6 +5,7 @@ import express from 'express';
 import Raven from 'shared/raven';
 const PORT = process.env.PORT || 3008;
 import { handleWebhooks } from './webhooks';
+import startChangefeeds from './changefeeds';
 
 console.log('Server starting...');
 debug('logging with debug enabled!');
@@ -24,6 +25,8 @@ app.get('/', (req, res) => res.send('🚀'));
 app.post('/', (req, res) => handleWebhooks(req, res));
 
 const server = createServer(app);
+
+startChangefeeds();
 
 server.listen(PORT);
 console.log(`🚀  Pluto server running at http://localhost:${PORT}`);
