@@ -359,6 +359,8 @@ export const ComposeIconContainer = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
   border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
@@ -410,12 +412,13 @@ export const InboxClickWrapper = styled.span`
 `;
 
 export const InboxThreadContent = styled.div`
-  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   position: relative;
   z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
-  width: 100%;
 `;
 
 export const ThreadTitle = styled.h3`

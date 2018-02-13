@@ -41,9 +41,19 @@ const NullState = ({ viewContext, search }) => {
 };
 
 const Threads = styled.div`
+  display: flex;
+  flex: none;
+  flex-direction: column;
   align-self: stretch;
-  width: 100%;
-  padding: 0;
+  align-items: stretch;
+
+  > div {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: stretch;
+  }
 `;
 
 /*

@@ -117,8 +117,8 @@ export const Grid = styled.div`
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
-  @media (max-width: 1028px) {
-    grid-template-columns: 240px 1fr;
+  @media (max-width: 1280px) {
+    grid-template-columns: 320px 1fr;
     grid-template-rows: 160px 1fr;
     grid-template-areas: 'cover cover' 'meta content';
   }
@@ -175,13 +175,11 @@ export const Meta = styled(Column)`
 
 export const Content = styled(Column)`
   grid-area: content;
+  min-width: 0;
+  align-items: stretch;
 
   @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
-  }
-
-  @media (max-width: 960px) {
-    overflow: hidden;
   }
 
   @media (max-width: 768px) {
