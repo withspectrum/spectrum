@@ -19,17 +19,9 @@ import sentencify from '../utils/sentencify';
 import addQueue from '../utils/addQueue';
 import { SEND_NEW_DIRECT_MESSAGE_EMAIL } from './constants';
 import { toPlainText, toState } from 'shared/draft-utils';
+import type { Job, DirectMessageNotificationJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    message: {
-      senderId: string,
-      threadId: string,
-    },
-    userId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<DirectMessageNotificationJobData>) => {
   const { message: incomingMessage, userId: currentUserId } = job.data;
 
   debug(

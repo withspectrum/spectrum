@@ -13,14 +13,9 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
+import type { Job, CommunityNotificationJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    communityId: string,
-    userId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<CommunityNotificationJobData>) => {
   const { communityId: incomingCommunityId, userId: currentUserId } = job.data;
   debug(`new job for ${incomingCommunityId} by ${currentUserId}`);
 
