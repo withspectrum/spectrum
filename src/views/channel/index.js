@@ -26,6 +26,7 @@ import Titlebar from '../titlebar';
 import Icon from '../../components/icons';
 import Search from './components/search';
 import ChannelMemberGrid from './components/memberGrid';
+import { CLIENT_URL } from '../../api/constants';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -34,12 +35,7 @@ import {
 } from '../../components/segmentedControl';
 import { Grid, Meta, Content, Extras } from './style';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import {
-  LoginButton,
-  LogoutButton,
-  ColumnHeading,
-  MidSegment,
-} from '../community/style';
+import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
@@ -62,55 +58,14 @@ type Props = {
   dispatch: Function,
 };
 
-const ChannelAuthButton = ({ channel, state, isLoggedIn }) => {
-  if (
-    !isLoggedIn ||
-    (isLoggedIn &&
-      !channel.community.communityPermissions.isOwner &&
-      !channel.channelPermissions.isMember)
-  ) {
-    return (
-      <ToggleChannelMembership
-        isLoggedIn={isLoggedIn}
-        channel={channel}
-        render={state => (
-          <LoginButton loading={state.isLoading}>
-            Join {channel.name}
-          </LoginButton>
-        )}
-      />
-    );
-  }
-
-  if (
-    isLoggedIn &&
-    (!channel.community.communityPermissions.isOwner &&
-      channel.channelPermissions.isMember)
-  ) {
-    return (
-      <ToggleChannelMembership
-        isLoggedIn={isLoggedIn}
-        channel={channel}
-        render={state => (
-          <LogoutButton icon={'checkmark'} loading={state.isLoading}>
-            Member
-          </LogoutButton>
-        )}
-      />
-    );
-  }
-
-  return null;
+type State = {
+  selectedView: 'threads' | 'search' | 'members',
 };
 
-class ChannelView extends React.Component<Props> {
-  constructor() {
-    super();
-
-    this.state = {
-      selectedView: 'threads',
-    };
-  }
+class ChannelView extends React.Component<Props, State> {
+  state = {
+    selectedView: 'threads',
+  };
 
   componentDidUpdate(prevProps) {
     // if the user is new and signed up through a channel page, push
@@ -254,13 +209,36 @@ class ChannelView extends React.Component<Props> {
             <CoverPhoto src={channel.community.coverPhoto} />
             <Meta>
               <ChannelProfile data={{ channel }} profileSize="full" />
-              <ChannelAuthButton channel={channel} isLoggedIn={isLoggedIn} />
+
+              {!isLoggedIn ? (
+                <Link
+                  to={`/login?r=${CLIENT_URL}/${channel.community.slug}/${
+                    channel.slug
+                  }`}
+                >
+                  <LoginButton>Join {channel.name}</LoginButton>
+                </Link>
+              ) : (
+                <ToggleChannelMembership
+                  channel={channel}
+                  render={state => (
+                    <LoginButton
+                      isMember={isMember}
+                      icon={isMember ? 'checkmark' : null}
+                      loading={state.isLoading}
+                    >
+                      {isMember ? 'Joined' : `Join ${channel.name}`}
+                    </LoginButton>
+                  )}
+                />
+              )}
+
               {isLoggedIn &&
                 (isOwner || isGlobalOwner) && (
                   <Link
                     to={`/${channel.community.slug}/${channel.slug}/settings`}
                   >
-                    <LogoutButton>Settings</LogoutButton>
+                    <LoginButton isMember>Settings</LoginButton>
                   </Link>
                 )}
               {isLoggedIn &&

@@ -22,7 +22,7 @@ import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton, LogoutButton } from '../community/style';
+import { LoginButton } from '../community/style';
 import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
 import {
   SegmentedControl,
@@ -48,6 +48,8 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   queryVarIsChanging: boolean,
+  dispatch: Function,
+  history: Object,
 };
 
 type State = {
@@ -160,7 +162,7 @@ class UserView extends React.Component<Props, State> {
               {currentUser &&
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>
-                    <LogoutButton>My settings</LogoutButton>
+                    <LoginButton isMember>My settings</LoginButton>
                   </Link>
                 )}
             </Meta>

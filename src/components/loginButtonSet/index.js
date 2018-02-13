@@ -42,7 +42,8 @@ class LoginButtonSet extends React.Component<Props> {
 
     const postAuthRedirectPath =
       redirectPath !== undefined || r !== undefined
-        ? `?r=${redirectPath || r}`
+        ? // $FlowFixMe
+          `?r=${redirectPath || r}`
         : `?r=${CLIENT_URL}/home`;
 
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');

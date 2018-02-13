@@ -149,7 +149,7 @@ export const ExtLink = styled(FlexRow)`
   transition: ${Transition.hover.off};
   ${Truncate};
   font-size: 16px;
-  margin-top: 4px;
+  margin: 12px 0;
 
   > a:hover {
     text-decoration: underline;

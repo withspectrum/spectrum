@@ -13,19 +13,16 @@ import {
   SegmentedControl,
 } from '../../components/segmentedControl';
 
-export const LogoutButton = styled(Button)`
+export const LoginButton = styled(Button)`
   width: 100%;
   font-size: 14px;
   font-weight: 700;
-  background-color: ${props => props.theme.text.alt};
+  background-color: ${props =>
+    props.isMember ? props.theme.text.alt : props.theme.success.default};
   background-image: ${props =>
-    Gradient(props.theme.text.placeholder, props.theme.text.alt)};
-`;
-
-export const LoginButton = styled(LogoutButton)`
-  background-color: ${props => props.theme.success.default};
-  background-image: ${props =>
-    Gradient(props.theme.success.alt, props.theme.success.default)};
+    props.isMember
+      ? Gradient(props.theme.text.placeholder, props.theme.text.alt)
+      : Gradient(props.theme.success.alt, props.theme.success.default)};
 `;
 
 export const CoverButton = styled(IconButton)`

@@ -21,6 +21,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import { LoadingScreen } from '../../components/loading';
+import { CLIENT_URL } from '../../api/constants';
 import { Upsell404Community } from '../../components/upsell';
 import {
   SegmentedControl,
@@ -29,7 +30,6 @@ import {
   MobileSegment,
 } from '../../components/segmentedControl';
 import {
-  LogoutButton,
   LoginButton,
   Grid,
   Meta,
@@ -62,47 +62,6 @@ type State = {
   showComposerUpsell: boolean,
   selectedView: 'threads' | 'search' | 'members',
   isLeavingCommunity: boolean,
-};
-
-const CommunityAuthButton = ({ community, state, isLoggedIn }) => {
-  if (
-    !isLoggedIn ||
-    (isLoggedIn &&
-      !community.communityPermissions.isOwner &&
-      !community.communityPermissions.isMember)
-  ) {
-    return (
-      <ToggleCommunityMembership
-        isLoggedIn={isLoggedIn}
-        community={community}
-        render={state => (
-          <LoginButton loading={state.isLoading}>
-            Join {community.name}
-          </LoginButton>
-        )}
-      />
-    );
-  }
-
-  if (
-    isLoggedIn &&
-    (!community.communityPermissions.isOwner &&
-      community.communityPermissions.isMember)
-  ) {
-    return (
-      <ToggleCommunityMembership
-        isLoggedIn={isLoggedIn}
-        community={community}
-        render={state => (
-          <LogoutButton icon={'checkmark'} loading={state.isLoading}>
-            Member
-          </LogoutButton>
-        )}
-      />
-    );
-  }
-
-  return null;
 };
 
 class CommunityView extends React.Component<Props, State> {
@@ -233,14 +192,32 @@ class CommunityView extends React.Component<Props, State> {
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <CommunityProfile data={{ community }} profileSize="full" />
-              <CommunityAuthButton
-                community={community}
-                isLoggedIn={isLoggedIn}
-              />
+
+              {!isLoggedIn ? (
+                <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
+                  <LoginButton>Join {community.name}</LoginButton>
+                </Link>
+              ) : (
+                <ToggleCommunityMembership
+                  community={community}
+                  render={state => (
+                    <LoginButton
+                      isMember={isMember}
+                      gradientTheme={isMember ? null : 'success'}
+                      color={isMember ? 'text.alt' : null}
+                      icon={isMember ? 'checkmark' : null}
+                      loading={state.isLoading}
+                    >
+                      {isMember ? 'Member' : `Join ${community.name}`}
+                    </LoginButton>
+                  )}
+                />
+              )}
+
               {currentUser &&
                 isOwner && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LogoutButton>Settings</LogoutButton>
+                    <LoginButton isMember>Settings</LoginButton>
                   </Link>
                 )}
               <ChannelList

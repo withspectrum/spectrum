@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
-import Link from 'src/components/link';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
@@ -18,6 +17,7 @@ type Props = {
   render: Function,
   onJoin?: Function,
   onLeave?: Function,
+  toggleChannelSubscription: Function,
 };
 
 type State = { isLoading: boolean };
@@ -26,17 +26,11 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   state = { isLoading: false };
 
   init = () => {
-    const { channel } = this.props;
-
-    const action = this.toggleSubscription;
-
-    const input = { channelId: channel.id };
-
     this.setState({
       isLoading: true,
     });
 
-    return action(input);
+    return this.toggleSubscription();
   };
 
   terminate = () => {
@@ -45,13 +39,15 @@ class ToggleChannelMembership extends React.Component<Props, State> {
     });
   };
 
-  toggleSubscription = (channelId: string) => {
+  toggleSubscription = () => {
+    const { channel } = this.props;
+
     this.setState({
       isLoading: true,
     });
 
     this.props
-      .toggleChannelSubscription(channelId)
+      .toggleChannelSubscription({ channelId: channel.id })
       .then(({ data }: ToggleChannelSubscriptionType) => {
         this.setState({
           isLoading: false,
@@ -97,19 +93,7 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   };
 
   render() {
-    if (!this.props.isLoggedIn) {
-      return (
-        <Link
-          to={`/login?r=https://spectrum.chat/${
-            this.props.channel.community.slug
-          }/${this.props.channel.slug}`}
-        >
-          {this.props.render(this.state)}
-        </Link>
-      );
-    } else {
-      return <div onClick={this.init}>{this.props.render(this.state)}</div>;
-    }
+    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
   }
 }
 

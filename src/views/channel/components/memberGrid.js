@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import getChannelMembersQuery, {
-  type GetChannelMembersType,
+  type GetChannelMemberConnectionType,
 } from 'shared/graphql/queries/channel/getChannelMemberConnection';
 import { FlexCol } from '../../../components/globals';
 import { Card } from '../../../components/card';
@@ -14,7 +14,7 @@ import { StyledButton } from '../../community/style';
 
 type Props = {
   data: {
-    channel: GetChannelMembersType,
+    channel: GetChannelMemberConnectionType,
     fetchMore: Function,
   },
   isLoading: boolean,

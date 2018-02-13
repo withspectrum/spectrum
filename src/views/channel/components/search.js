@@ -5,11 +5,12 @@ import { throttle } from '../../../helpers/utils';
 import searchThreads from 'shared/graphql/queries/search/searchThreads';
 import ThreadFeed from '../../../components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 
 type Props = {
-  community: Object,
+  channel: GetChannelType,
 };
 
 type State = {
