@@ -3,6 +3,7 @@
 // so that import { queueName } from 'queues' works!
 const createQueue = require('shared/bull/create-queue.js');
 const EventEmitter = require('events');
+import type { DBCommunity } from 'shared/types';
 
 type Job<JobData> = {
   data: JobData,
@@ -17,6 +18,12 @@ interface BullQueue<JobData> {
 
 type Queues = {
   sendEmailValidationEmailQueue: BullQueue<{ email: string, userId: string }>,
+  sendAdministratorEmailValidationEmailQueue: BullQueue<{
+    email: string,
+    userId: string,
+    communityId: string,
+    community: DBCommunity,
+  }>,
   sendPrivateChannelRequestQueue: BullQueue<{
     userId: string,
     channel: Object,
@@ -82,6 +89,8 @@ type Queues = {
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   sendEmailValidationEmailQueue: 'send email validation email',
+  sendAdministratorEmailValidationEmailQueue:
+    'send administrator email validation email',
   sendPrivateChannelRequestQueue: 'private channel request sent',
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',

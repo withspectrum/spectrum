@@ -9,9 +9,8 @@ import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
 import { toggleUserChannelNotifications } from '../../models/usersChannels';
-import { getCommunityById } from '../../models/community';
-import { getChannelsByCommunity, getChannelById } from '../../models/channel';
-import { processInvoicePaid } from '../webhooks';
+import { updateCommunityAdministratorEmail } from '../../models/community';
+import { getChannelsByCommunity } from '../../models/channel';
 
 // $FlowIssue
 emailRouter.get('/unsubscribe', (req, res) => {
@@ -149,7 +148,7 @@ emailRouter.get('/validate', (req, res) => {
   }
 
   // once the token is verified, we can decode it to get the userId and email
-  const { userId, email } = jwt.decode(token);
+  const { userId, email, communityId } = jwt.decode(token);
 
   // if the token doesn't have the necessary info
   if (!userId || !email) {
@@ -158,6 +157,30 @@ emailRouter.get('/validate', (req, res) => {
       .send(
         'We were not able to verify this email validation. You can re-enter your email address in your user settings to resend a confirmation email.'
       );
+  }
+
+  // if there is a community id present in the token, the user is trying to
+  // validate a new administrator email address
+  if (communityId) {
+    try {
+      return updateCommunityAdministratorEmail(communityId, email).then(
+        community =>
+          IS_PROD
+            ? res.redirect(
+                `https://spectrum.chat/${community.slug}/settings/billing`
+              )
+            : res.redirect(
+                `http://localhost:3000/${community.slug}/settings/billing`
+              )
+      );
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(400)
+        .send(
+          'We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
+        );
+    }
   }
 
   // and send a database request to update the user record with this email

@@ -621,3 +621,31 @@ export const getCommunityGrowth = async (
     growth: Math.round(rate * 100),
   };
 };
+
+export const setCommunityPendingAdministratorEmail = (
+  communityId: string,
+  pendingAdministratorEmail: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      pendingAdministratorEmail,
+    })
+    .run()
+    .then(() => getCommunityById(communityId));
+};
+export const updateCommunityAdministratorEmail = (
+  communityId: string,
+  administratorEmail: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      administratorEmail,
+      pendingAdministratorEmail: db.literal(),
+    })
+    .run()
+    .then(() => getCommunityById(communityId));
+};

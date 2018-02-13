@@ -14,6 +14,8 @@ export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
 export const SEND_DIGEST_EMAIL = 'send digest email';
 export const SEND_EMAIL_VALIDATION_EMAIL = 'send email validation email';
+export const SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL =
+  'send administrator email validation email';
 export const SEND_ADMIN_COMMUNITY_CREATED_EMAIL = 'admin community created';
 export const SEND_NEW_MENTION_THREAD_EMAIL = 'send thread mention email';
 export const SEND_NEW_MENTION_MESSAGE_EMAIL = 'send message mention email';
@@ -40,6 +42,7 @@ export const NEW_THREAD_CREATED_TEMPLATE = IS_PROD ? 2713302 : 3786781;
 export const DIGEST_TEMPLATE = IS_PROD ? 3071361 : 4165801;
 export const DEBUG_TEMPLATE = 3374841;
 export const EMAIL_VALIDATION_TEMPLATE = 3578681;
+export const ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE = IS_PROD ? null : 4952721;
 export const ADMIN_COMMUNITY_CREATED_TEMPLATE = 3037441;
 export const ADMIN_TOXIC_MESSAGE_TEMPLATE = 3867921;
 export const ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE = 3934361;

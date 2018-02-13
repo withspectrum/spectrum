@@ -13,6 +13,7 @@ import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt
 import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
+import processSendAdministratorEmailValidationEmail from './queues/send-administrator-email-validation-email';
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
 import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import processSendAdminSlackImportProcessedEmail from './queues/send-admin-slack-import-email';
@@ -33,6 +34,7 @@ import {
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   SEND_DIGEST_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
+  SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
@@ -60,6 +62,7 @@ const server = createWorker({
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,
   [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,
+  [SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL]: processSendAdministratorEmailValidationEmail,
   [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
   [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,

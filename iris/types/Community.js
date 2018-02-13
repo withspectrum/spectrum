@@ -55,6 +55,12 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+	type BillingSettings {
+		pendingAdministratorEmail: String
+		administratorEmail: String
+		stripeCustomerId: String
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -81,6 +87,7 @@ const Community = /* GraphQL */ `
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
 		watercooler: Thread
+		billingSettings: BillingSettings
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
@@ -146,6 +153,11 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	input UpdateAdministratorEmailInput {
+		id: ID!
+		email: String!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -156,6 +168,7 @@ const Community = /* GraphQL */ `
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
 	}
 `;
 

@@ -8692,6 +8692,12 @@ react-stripe-checkout@^2.2.5:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/react-stripe-checkout/-/react-stripe-checkout-2.6.3.tgz#3173a870b04e5a3c321a06d24cd53c6030111c45"
 
+react-stripe-elements@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-stripe-elements/-/react-stripe-elements-1.4.1.tgz#be281cd39dd1c127b1d338c86fc93423b5eb3322"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-textarea-autosize@^4.0.5:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/react-textarea-autosize/-/react-textarea-autosize-4.3.2.tgz#962a52c68caceae408c18acecec29049b81e42fa"

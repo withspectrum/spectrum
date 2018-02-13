@@ -34,6 +34,7 @@ export type DBCommunity = {
   administratorId: string,
   administratorEmail: string,
   stripeCustomerId: ?string,
+  pendingAdministratorEmail?: string,
 };
 
 export type DBCuratedContent = {

@@ -6,6 +6,7 @@ import toggleCommunityMembership from './toggleCommunityMembership';
 import sendSlackInvites from './sendSlackInvites';
 import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
+import updateAdministratorEmail from './updateAdministratorEmail';
 
 module.exports = {
   Mutation: {
@@ -16,5 +17,6 @@ module.exports = {
     sendSlackInvites,
     sendEmailInvites,
     pinThread,
+    updateAdministratorEmail,
   },
 };
