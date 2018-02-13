@@ -7,11 +7,14 @@ import compose from 'recompose/compose';
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { connect } from 'react-redux';
+import Link from 'src/components/link';
+import Icon from 'src/components/icons';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
+import { Upsell, UpsellHeader, UpsellFooter } from './style';
 
 const NullState = ({ viewContext, search }) => {
   let hd;
@@ -39,6 +42,60 @@ const NullState = ({ viewContext, search }) => {
 
   return <NullCard bg="post" heading={hd} copy={cp} />;
 };
+
+const UpsellState = ({ community, user }) => (
+  <Upsell>
+    <UpsellHeader>
+      <Icon glyph={'welcome'} size={48} />
+      <h3>
+        Welcome to your new community,{' '}
+        {user.firstName ? user.firstName : `@${user.username}`}!
+      </h3>
+    </UpsellHeader>
+    <p>
+      You've already taken a huge step, but there's one problem - there's no one
+      here yet!
+    </p>
+    <p>
+      This is usually the hardest part for new communities, but don't worry!
+      We've got a few suggestions to help you get things started...
+    </p>
+    <p>
+      First things first, you'll want to <b>start a couple threads</b>.
+    </p>
+    <p>
+      Open-ended questions are a great start, for example:
+      <ul>
+        <li>ask new members to introduce themselves</li>
+        <li>
+          ask people about their favorite tools or what they're working on
+        </li>
+        <li>ask for suggestions on a problem you're facing</li>
+      </ul>
+    </p>
+    <p>
+      Once you've got a couple threads started, make sure to{' '}
+      <b>help people find your community</b>. Talking about your community on
+      social media like Twitter or Facebook is a great start - or you could add
+      our <a href="https://github.com/withspectrum/badge">badge</a> to a project
+      repo or your website.
+    </p>
+    <p>
+      You can also <b>invite people by email</b> or{' '}
+      <b>import your Slack team</b> in your{' '}
+      <Link to={`/${community.slug}/settings`}>settings</Link>.
+    </p>
+    <UpsellFooter>
+      <p>
+        If you've encountered an issue, want a new feature, or just need some
+        help, you can always find the Spectrum team in the{' '}
+        <Link to={'/spectrum'}>Spectrum Support</Link> community or on{' '}
+        <a href="https://twitter.com/withspectrum">Twitter</a> and we'd be more
+        than happy to give you a hand.
+      </p>
+    </UpsellFooter>
+  </Upsell>
+);
 
 const Threads = styled.div`
   display: flex;
@@ -138,6 +195,7 @@ class ThreadFeedPure extends Component {
   render() {
     const {
       data: { threads, networkStatus, error },
+      currentUser,
       viewContext,
       newActivityIndicator,
     } = this.props;
@@ -268,7 +326,9 @@ class ThreadFeedPure extends Component {
     }
 
     if (this.props.isNewAndOwned) {
-      return null;
+      return (
+        <UpsellState community={this.props.community} user={currentUser} />
+      );
     } else {
       return <NullState search={this.props.search} viewContext={viewContext} />;
     }
@@ -276,6 +336,7 @@ class ThreadFeedPure extends Component {
 }
 
 const map = state => ({
+  currentUser: state.users.currentUser,
   newActivityIndicator: state.newActivityIndicator.hasNew,
 });
 const ThreadFeed = compose(connect(map))(ThreadFeedPure);
