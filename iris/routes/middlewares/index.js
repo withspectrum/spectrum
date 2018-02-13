@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
 
 const middlewares = Router();
 
@@ -21,7 +22,11 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 
 middlewares.use((req, res, next) => {
   if (req.headers && !req.headers.cookie && req.headers.authorization) {
-    req.headers.cookie = req.headers.authorization.replace(/^\s*Bearer\s*/, '');
+    const token = req.headers.authorization.replace(/^\s*Bearer\s*/, '');
+    try {
+      const decoded = jwt.verify(token, process.env.API_TOKEN_SECRET);
+      if (decoded.cookie) req.headers.cookie = decoded.cookie;
+    } catch (err) {}
   }
   next();
 });

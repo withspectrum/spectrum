@@ -14,6 +14,8 @@ const cache = (
   res: express$Response,
   next: express$NextFunction
 ) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+
   if (process.env.DISABLE_CACHE) return next();
   if (req.method !== 'GET') {
     debug(`${req.method} request came in, not caching`);

@@ -35,6 +35,7 @@
 		"SESSION_COOKIE_SECRET": "@session-cookie-secret",
 		"ALGOLIA_APP_ID": "@algolia-app-id",
 		"ALGOLIA_API_SECRET": "@algolia-api-secret",
-		"APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key"
+		"APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key",
+    "API_TOKEN_SECRET": "@api-token-secret"
 	}
 }

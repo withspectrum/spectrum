@@ -10,6 +10,7 @@
 import passport from 'passport';
 import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
+import { signCookie } from 'shared/cookie-utils';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -64,9 +65,11 @@ export const createSigninRoutes = (
         ) {
           redirectUrl.searchParams.append(
             'accessToken',
-            `session=${req.cookies.session}; session.sig=${
-              req.cookies['session.sig']
-            }`
+            signCookie(
+              `session=${req.cookies.session}; session.sig=${
+                req.cookies['session.sig']
+              }`
+            )
           );
           // $FlowIssue
           req.session.authType = undefined;

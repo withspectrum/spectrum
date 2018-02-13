@@ -42,6 +42,8 @@ const FORCE_DEV = process.env.FORCE_DEV;
 if (!IS_PROD || FORCE_DEV) console.log('Querying API at localhost:3001/api');
 
 const renderer = (req: express$Request, res: express$Response) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+
   debug(`server-side render ${req.url}`);
   debug(`querying API at https://${req.hostname}/api`);
   // HTTP Link for queries and mutations including file uploads
