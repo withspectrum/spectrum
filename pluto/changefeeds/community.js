@@ -63,7 +63,6 @@ export const editedCommunity = () =>
         debug('Community edited, but Stripe customer hasnt been created yet');
         if (administratorEmail) {
           debug('Community edited, admin email available to create customer');
-          // 1. Email is being added for the first time
           const { id: createdStripeId } = await stripe.customers.create({
             email: administratorEmail,
             metadata: {
@@ -80,11 +79,6 @@ export const editedCommunity = () =>
             })
             .run();
         }
-
-        debug(
-          'Community edited, no Stripe customer exists, but no admin email either'
-        );
-        return;
       }
 
       debug('Editing Stripe customer metadata');
@@ -129,11 +123,6 @@ const handleAdminEmailChange = async (community: DBCommunity) => {
     id: communityId,
     name: communityName,
   } = community;
-
-  if (!administratorEmail) {
-    debug('No administrator email found in the change');
-    return;
-  }
 
   // 2. Update the existing customer
   if (stripeCustomerId) {
