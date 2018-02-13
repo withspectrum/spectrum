@@ -9,7 +9,10 @@ export default async (
 ) => {
   const user = await loaders.user.load(creatorId);
 
-  const [communityPermissions, channelPermissions] = await Promise.all([
+  const [
+    communityPermissions = {},
+    channelPermissions = {},
+  ] = await Promise.all([
     loaders.userPermissionsInCommunity.load([creatorId, communityId]),
     loaders.userPermissionsInChannel.load([creatorId, channelId]),
   ]);
