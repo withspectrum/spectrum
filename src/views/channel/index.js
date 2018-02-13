@@ -64,6 +64,7 @@ const ChannelAuthButton = ({ channel, state, isLoggedIn }) => {
   ) {
     return (
       <ToggleChannelMembership
+        isLoggedIn={isLoggedIn}
         channel={channel}
         render={state => (
           <LoginButton loading={state.isLoading}>
@@ -81,6 +82,7 @@ const ChannelAuthButton = ({ channel, state, isLoggedIn }) => {
   ) {
     return (
       <ToggleChannelMembership
+        isLoggedIn={isLoggedIn}
         channel={channel}
         render={state => (
           <LogoutButton icon={'checkmark'} loading={state.isLoading}>

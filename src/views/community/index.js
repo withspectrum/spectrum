@@ -73,6 +73,7 @@ const CommunityAuthButton = ({ community, state, isLoggedIn }) => {
   ) {
     return (
       <ToggleCommunityMembership
+        isLoggedIn={isLoggedIn}
         community={community}
         render={state => (
           <LoginButton loading={state.isLoading}>
@@ -90,6 +91,7 @@ const CommunityAuthButton = ({ community, state, isLoggedIn }) => {
   ) {
     return (
       <ToggleCommunityMembership
+        isLoggedIn={isLoggedIn}
         community={community}
         render={state => (
           <LogoutButton icon={'checkmark'} loading={state.isLoading}>

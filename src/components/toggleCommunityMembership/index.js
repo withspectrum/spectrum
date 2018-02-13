@@ -6,6 +6,7 @@ import addCommunityMemberMutation from 'shared/graphql/mutations/communityMember
 import removeCommunityMemberMutation from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { addToastWithTimeout } from '../../actions/toasts';
+import Link from 'src/components/link';
 import { track } from '../../helpers/events';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
@@ -94,7 +95,17 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    if (!this.props.isLoggedIn) {
+      return (
+        <Link
+          to={`/login?r=https://spectrum.chat/${this.props.community.slug}`}
+        >
+          {this.props.render(this.state)}
+        </Link>
+      );
+    } else {
+      return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    }
   }
 }
 

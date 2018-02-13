@@ -17,13 +17,32 @@ import { Divider } from './style';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 
-const NullState = () => (
-  <NullCard
-    bg="post"
-    heading={"This community's just getting started..."}
-    copy={"Why don't you kick things off?"}
-  />
-);
+const NullState = ({ viewContext, search }) => {
+  let hd;
+  let cp;
+
+  if (viewContext && viewContext === 'community') {
+    hd = "This community's just getting started...";
+    cp = "Why don't you kick things off?";
+  }
+
+  if (viewContext && viewContext === 'channel') {
+    hd = "There's nothing in this channel yet";
+    cp = 'But you could be the first person to post something here!';
+  }
+
+  if (viewContext && viewContext === 'profile') {
+    hd = "This user hasn't posted yet";
+    cp = 'But you could message them!';
+  }
+
+  if (search) {
+    hd = "Sorry, doesn't ring a bell";
+    cp = 'You can always try again, though!';
+  }
+
+  return <NullCard bg="post" heading={hd} copy={cp} />;
+};
 
 const UpsellState = ({ community }) => {
   return (
@@ -262,9 +281,9 @@ class ThreadFeedPure extends Component {
     }
 
     if (this.props.isNewAndOwned) {
-      return <UpsellState community={this.props.community} />;
+      return null;
     } else {
-      return <NullState />;
+      return <NullState search={this.props.search} viewContext={viewContext} />;
     }
   }
 }

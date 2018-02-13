@@ -7,7 +7,6 @@ import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Spinner, FlexCol } from '../globals';
-import Grid from '../grid';
 import { Card } from '../card';
 import { Column } from '../column';
 import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
@@ -34,6 +33,11 @@ import {
   LoadingNavbarContainer,
   LogoLink,
   Logo,
+  Grid,
+  Meta,
+  GridContent,
+  Extras,
+  LoadingCoverPhoto,
 } from './style';
 
 /*
@@ -965,21 +969,6 @@ export const LoadingProfileThreadDetail = () => (
   </ShimmerProfileLite>
 );
 
-export const LoadingProfileGrid = () => (
-  <Grid>
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-    <LoadingProfile />
-  </Grid>
-);
-
 export const LoadingSelect = () => (
   <ShimmerSelect>
     <ShimmerBase />
@@ -988,15 +977,20 @@ export const LoadingSelect = () => (
 
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
-    <Column hideOnMobile type="secondary">
-      <LoadingProfile />
-      <LoadingList />
-    </Column>
-
-    <Column type="primary" alignItems="center">
-      <LoadingComposer />
-      <LoadingFeed />
-    </Column>
+    <Grid>
+      <LoadingCoverPhoto />
+      <Meta>
+        <LoadingProfile />
+        <LoadingList />
+      </Meta>
+      <GridContent>
+        <LoadingComposer />
+        <LoadingFeed />
+      </GridContent>
+      <Extras>
+        <LoadingList />
+      </Extras>
+    </Grid>
   </LoadingScreenContainer>
 );
 

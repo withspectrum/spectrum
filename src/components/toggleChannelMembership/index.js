@@ -22,23 +22,6 @@ type Props = {
 
 type State = { isLoading: boolean };
 
-const SignupHandler = props => {
-  console.log(props.currentUser);
-  if (!props.currentUser) {
-    return (
-      <Link
-        to={`/login?r=spectrum.chat/${props.channel.community.slug}/${
-          props.channel.slug
-        }`}
-      >
-        {props.contents}
-      </Link>
-    );
-  } else {
-    return <div onClick={props.func}>{props.contents}</div>;
-  }
-};
-
 class ToggleChannelMembership extends React.Component<Props, State> {
   state = { isLoading: false };
 
@@ -61,14 +44,6 @@ class ToggleChannelMembership extends React.Component<Props, State> {
       isLoading: false,
     });
   };
-
-  shouldComponentUpdate(nextProps) {
-    if (this.props.isLoggedIn !== nextProps.isLoggedIn) {
-      return true;
-    }
-
-    return false;
-  }
 
   toggleSubscription = (channelId: string) => {
     this.setState({
@@ -122,14 +97,19 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return (
-      <SignupHandler
-        func={this.init}
-        currentUser={this.props.isLoggedIn}
-        channel={this.props.channel}
-        contents={this.props.render(this.state)}
-      />
-    );
+    if (!this.props.isLoggedIn) {
+      return (
+        <Link
+          to={`/login?r=https://spectrum.chat/${
+            this.props.channel.community.slug
+          }/${this.props.channel.slug}`}
+        >
+          {this.props.render(this.state)}
+        </Link>
+      );
+    } else {
+      return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    }
   }
 }
 
