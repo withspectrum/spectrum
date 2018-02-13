@@ -17,7 +17,6 @@ import {
   Description,
   ActionContainer,
   BadgeContainer,
-  Lock,
 } from './style';
 
 type CommunityProps = {
@@ -71,15 +70,10 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Col>
           <Heading>
-            {props.contents.isPrivate && (
-              <Lock>
-                <Icon
-                  glyph={'private'}
-                  tipText={'Private channel'}
-                  tipLocation="top-right"
-                  size={16}
-                />
-              </Lock>
+            {props.contents.isPrivate ? (
+              <Icon glyph={'channel-private'} size={32} />
+            ) : (
+              <Icon glyph={'channel'} size={32} />
             )}
             {props.contents.name}
           </Heading>
@@ -87,11 +81,6 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </Wrapper>
   );
 };
@@ -116,15 +105,10 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
             <Heading>
-              {props.contents.isPrivate && (
-                <Lock>
-                  <Icon
-                    glyph={'private'}
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={16}
-                  />
-                </Lock>
+              {props.contents.isPrivate ? (
+                <Icon glyph={'channel-private'} size={32} />
+              ) : (
+                <Icon glyph={'channel'} size={32} />
               )}
               {props.contents.name}
             </Heading>
@@ -133,11 +117,6 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </WrapperLi>
   );
 };
@@ -145,16 +124,17 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
-  reputationTipText = 'Your rep in this community',
   hideRep = false,
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
       user.contextPermissions.reputation > 0 &&
       user.contextPermissions.reputation
-    : user.totalReputation && user.totalReputation > 0
-      ? user.totalReputation
-      : '0';
+    : user.reputation && user.reputation > 0
+      ? user.reputation
+      : user.totalReputation && user.totalReputation > 0
+        ? user.totalReputation
+        : '0';
 
   const role =
     user.contextPermissions && user.contextPermissions.isOwner
@@ -192,10 +172,7 @@ export const UserListItem = ({
           {!hideRep && (
             <Meta>
               {(user.totalReputation || user.contextPermissions) && (
-                <Reputation
-                  tipText={reputationTipText}
-                  reputation={reputation}
-                />
+                <Reputation reputation={reputation} />
               )}
             </Meta>
           )}

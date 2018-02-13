@@ -14,6 +14,7 @@ import {
 type Props = {
   redirectPath: ?string,
   signinType?: ?string,
+  close?: Function,
 };
 
 export class Login extends React.Component<Props> {

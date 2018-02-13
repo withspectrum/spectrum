@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import replace from 'string-replace-to-array';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
@@ -9,13 +10,15 @@ import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/cha
 import { addToastWithTimeout } from '../../actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import { NullCard } from '../upsell';
-import { ChannelListItem, ChannelListItemLi } from '../listItems';
+import {
+  ChannelListItem,
+  ChannelListItemLi,
+  CommunityListItem,
+} from '../listItems';
 import Icon from '../icons';
 import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
-import { MetaData } from './metaData';
-
-import { ProfileHeaderAction, ProfileCard } from './style';
+import { FullTitle, FullDescription, ProfileCard, FullProfile } from './style';
 
 type State = {
   isLoading: boolean,
@@ -98,6 +101,16 @@ class ChannelWithData extends React.Component<Props, State> {
     const { isLoading } = this.state;
     const componentSize = profileSize || 'mini';
 
+    const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+
+    const renderDescriptionWithLinks = text => {
+      return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+        <a href={url} target="_blank" rel="noopener nofollower" key={url}>
+          {text}
+        </a>
+      ));
+    };
+
     if (loading) {
       return <LoadingListItem />;
     }
@@ -123,65 +136,19 @@ class ChannelWithData extends React.Component<Props, State> {
       }
     }
 
-    const communityOwner = channel.community.communityPermissions.isOwner;
-    const channelOwner = channel.channelPermissions.isOwner;
     const member = channel.channelPermissions.isMember;
-
-    const communityLink = () => {
-      return (
-        <Link to={`/${channel.community.slug}`}>{channel.community.name}</Link>
-      );
-    };
-
-    const returnAction = () => {
-      if (communityOwner || channelOwner) {
-        return (
-          <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <ProfileHeaderAction
-              glyph="settings"
-              tipText={'Channel settings'}
-              tipLocation="top-left"
-            />
-          </Link>
-        );
-      } else if (member) {
-        return (
-          <ProfileHeaderAction
-            glyph="minus"
-            color="text.placeholder"
-            hoverColor="warn.default"
-            tipText="Leave channel"
-            tipLocation="top-left"
-            onClick={() => this.toggleSubscription(channel.id)}
-          />
-        );
-      } else if (currentUser && !member) {
-        return (
-          <ProfileHeaderAction
-            glyph="plus-fill"
-            color="brand.alt"
-            hoverColor="brand.alt"
-            tipText="Join channel"
-            tipLocation="top-left"
-            onClick={() => this.toggleSubscription(channel.id)}
-          />
-        );
-      }
-    };
 
     if (componentSize === 'full') {
       return (
-        <ProfileCard>
-          <ChannelListItem
-            contents={channel}
-            withDescription={true}
-            meta={communityLink()}
-            channelIcon
-          >
-            {returnAction()}
-          </ChannelListItem>
-          <MetaData data={channel.metaData} />
-        </ProfileCard>
+        <FullProfile>
+          <Link to={`/${channel.community.slug}`}>
+            <CommunityListItem community={channel.community} />
+          </Link>
+          <FullTitle>{channel.name}</FullTitle>
+          <FullDescription>
+            {renderDescriptionWithLinks(channel.description)}
+          </FullDescription>
+        </FullProfile>
       );
     } else if (componentSize === 'mini') {
       return (

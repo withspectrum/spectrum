@@ -602,7 +602,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 onChange={this.changeTitle}
                 style={ThreadTitle}
                 value={this.state.title}
-                placeholder={'A title for your conversation...'}
+                placeholder={'What do you want to talk about?'}
                 ref="titleTextarea"
                 autoFocus
               />
@@ -613,7 +613,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                 style={ThreadDescription}
                 editorRef={editor => (this.bodyEditor = editor)}
                 editorKey="thread-composer"
-                placeholder="Write more thoughts here..."
+                placeholder="Put your text, photos, code, or embeds here..."
                 className={'threadComposer'}
                 showLinkPreview={true}
                 linkPreview={{

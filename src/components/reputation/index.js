@@ -25,7 +25,6 @@ class Reputation extends React.Component<Props> {
 
   render() {
     const {
-      size = 'default',
       tipText = 'Reputation',
       tipLocation = 'top-right',
       reputation,
@@ -43,7 +42,7 @@ class Reputation extends React.Component<Props> {
       >
         <Icon glyph="rep" size={24} />
 
-        <ReputationLabel size={size}>
+        <ReputationLabel>
           {truncateNumber(renderedReputation, 1)}
         </ReputationLabel>
       </ReputationWrapper>

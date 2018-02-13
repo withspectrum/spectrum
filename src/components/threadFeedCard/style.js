@@ -1,32 +1,17 @@
 import styled from 'styled-components';
 import Link from 'src/components/link';
-import {
-  FlexCol,
-  FlexRow,
-  Transition,
-  Shadow,
-  hexa,
-  Gradient,
-  zIndex,
-} from '../globals';
-import Card from '../card';
+import { FlexCol, FlexRow, Transition, Gradient, zIndex } from '../globals';
 
-export const StyledThreadFeedCard = styled(Card)`
-  padding: 16px 20px;
-  margin-bottom: 16px;
+export const StyledThreadFeedCard = styled.div`
+  padding: 16px;
   transition: ${Transition.hover.off};
 
-  @media (max-width: 768px) {
-    margin: 0;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-
   &:hover {
-    transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
+    background-color: ${props => props.theme.bg.wash};
+  }
+  
+  &:first-of-type {
+    border-top: 2px: ${props => props.theme.bg.default};
   }
 `;
 
@@ -154,15 +139,10 @@ export const Lock = styled.span`
 export const Pinned = styled.span`
   position: absolute;
   top: -16px;
-  right: -20px;
+  right: -16px;
   width: 64px;
   height: 64px;
   overflow: hidden;
-  border-radius: 0 12px 0 0;
-
-  @media (max-width: 768px) {
-    border-radius: 0;
-  }
 `;
 
 export const PinnedBanner = styled.span`

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { zIndex } from '../globals';
 import Link from 'src/components/link';
 import { ProfileHeaderAction } from '../profile/style';
@@ -24,9 +24,18 @@ export const Status = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   border: none;
   background-color: ${({ theme }) => theme.bg.default};
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 
   &:after {
     content: '';
@@ -59,6 +68,8 @@ export const AvatarLink = styled(Link)`
   display: flex;
   flex: none;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   pointer-events: auto;
@@ -78,8 +89,17 @@ export const Img = styled.img`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   object-fit: cover;
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 `;
 
 export const ImgPlaceholder = styled.div`
@@ -87,6 +107,15 @@ export const ImgPlaceholder = styled.div`
   background-color: ${props => props.theme.bg.border};
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? `25%` : '100%')};
+  border-radius: ${props => (props.community ? '25%' : '100%')};
   object-fit: cover;
+
+  ${props =>
+    props.mobileSize &&
+    css`
+      @media (max-width: 768px) {
+        width: ${props => `${props.mobileSize}px`};
+        height: ${props => `${props.mobileSize}px`};
+      }
+    `};
 `;
