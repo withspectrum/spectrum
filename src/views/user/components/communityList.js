@@ -38,12 +38,12 @@ class CommunityList extends React.Component<Props> {
 
     let sortedCommunities = communities;
 
-    if (sortedCommunities[0] && sortedCommunities[0].communityPermissions) {
+    if (sortedCommunities[0] && sortedCommunities[0].contextPermissions) {
       sortedCommunities = communities.slice().sort((a, b) => {
         if (!a || !b) return 0;
 
-        const bc = parseInt(b.communityPermissions.reputation, 10);
-        const ac = parseInt(a.communityPermissions.reputation, 10);
+        const bc = parseInt(b.contextPermissions.reputation, 10);
+        const ac = parseInt(a.contextPermissions.reputation, 10);
         return bc <= ac ? -1 : 1;
       });
     }
@@ -59,9 +59,7 @@ class CommunityList extends React.Component<Props> {
                 reputation={
                   community.contextPermissions
                     ? community.contextPermissions.reputation
-                    : community.communityPermissions
-                      ? community.communityPermissions.reputation
-                      : null
+                    : '0'
                 }
               >
                 <Icon glyph="view-forward" />
