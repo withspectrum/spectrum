@@ -174,7 +174,11 @@ class AvatarImage extends Component<ImageProps> {
     // if we have given up on loading, show a place holder if requested, or nothing
     /* istanbul ignore else */
     if (!this.state.isLoaded && !this.state.isLoading)
-      return this.props.unloader ? this.props.unloader : null;
+      return this.props.unloader ? (
+        this.props.unloader
+      ) : (
+        <ImgPlaceholder {...this.props} />
+      );
   }
 }
 
