@@ -98,6 +98,7 @@
     "jest": "^22.1.0",
     "json-stringify-pretty-compact": "^1.0.4",
     "jsonwebtoken": "^8.0.1",
+    "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
     "lodash.intersection": "^4.4.0",

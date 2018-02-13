@@ -115,7 +115,7 @@ EventEmitter.defaultMaxListeners =
 // Create all the queues, export an object with all the queues
 const queues: Queues = Object.keys(exports.QUEUE_NAMES).reduce(
   (queues, name) => {
-    queues[name] = createQueue(name);
+    queues[name] = createQueue(exports.QUEUE_NAMES[name]);
     return queues;
   },
   {}
