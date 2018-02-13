@@ -11,6 +11,7 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
+import Billing from '../communityBilling';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
@@ -76,6 +77,8 @@ class CommunitySettings extends React.Component<Props> {
             return <Analytics community={community} id={community.id} />;
           case 'members':
             return <Members community={community} history={history} />;
+          case 'billing':
+            return <Billing community={community} history={history} />;
           default:
             return null;
         }
@@ -96,6 +99,11 @@ class CommunitySettings extends React.Component<Props> {
           to: `/${community.slug}/settings/analytics`,
           label: 'Analytics',
           activeLabel: 'analytics',
+        },
+        {
+          to: `/${community.slug}/settings/billing`,
+          label: 'Billing',
+          activeLabel: 'billing',
         },
       ];
 
