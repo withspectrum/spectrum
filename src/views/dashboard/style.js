@@ -446,6 +446,7 @@ export const AttachmentsContainer = styled.div`
 `;
 
 export const ThreadMeta = styled.div`
+  align-self: stretch;
   display: flex;
   margin: 10px 16px 16px;
   justify-content: space-between;
