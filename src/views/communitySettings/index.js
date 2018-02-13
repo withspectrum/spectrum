@@ -100,12 +100,15 @@ class CommunitySettings extends React.Component<Props> {
           label: 'Analytics',
           activeLabel: 'analytics',
         },
-        {
+      ];
+
+      if (community.communityPermissions.isOwner) {
+        subnavItems.push({
           to: `/${community.slug}/settings/billing`,
           label: 'Billing',
           activeLabel: 'billing',
-        },
-      ];
+        });
+      }
 
       const subheading = {
         to: `/${community.slug}`,
