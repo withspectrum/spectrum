@@ -10,17 +10,17 @@ import { InvoiceEventHandler } from './invoiceEvent';
 const WebhookHandler = {
   for: async (event: Object): Promise<any> => {
     const handler = {
-      // 'customer.created': CustomerEventHandler,
-      // 'customer.updated': CustomerEventHandler,
-      // 'customer.source.created': CustomerSourceCreatedHandler,
-      // 'customer.source.deleted': CustomerSourceDeletedHandler,
-      // 'customer.source.expiring': CustomerSourceExpiringHandler,
-      // 'customer.source.updated': SourceEventHandler,
-      // 'customer.subscription.created': SubscriptionEventHandler,
-      // 'customer.subscription.deleted': SubscriptionEventHandler,
-      // 'customer.subscription.updated': CustomerSubscriptionUpdatedHandler,
+      'customer.created': CustomerEventHandler,
+      'customer.updated': CustomerEventHandler,
+      'customer.source.created': SourceEventHandler,
+      'customer.source.deleted': SourceEventHandler,
+      'customer.source.expiring': SourceEventHandler,
+      'customer.source.updated': SourceEventHandler,
+      'customer.subscription.created': SubscriptionEventHandler,
+      'customer.subscription.deleted': SubscriptionEventHandler,
+      'customer.subscription.updated': SubscriptionEventHandler,
       'invoice.created': InvoiceEventHandler,
-      // 'invoice.payment_failed': InvoicePaymentFailedHandler,
+      'invoice.payment_failed': InvoiceEventHandler,
       'invoice.payment_succeeded': InvoiceEventHandler,
     }[event.type];
 

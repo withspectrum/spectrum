@@ -1,9 +1,11 @@
 // @flow
+const debug = require('debug')('pluto:webhooks:invoiceEvent');
 import type { InvoiceEvent } from '../types/invoiceEvent';
 import type { CleanInvoice, RawInvoice } from '../types/invoice';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 
 const cleanInvoice = (invoice: RawInvoice): CleanInvoice => {
+  debug(`Cleaning invoice ${invoice.id}`);
   return Object.assign({}, invoice, {
     customerId: invoice.customer,
     invoiceId: invoice.id,
@@ -11,6 +13,7 @@ const cleanInvoice = (invoice: RawInvoice): CleanInvoice => {
 };
 
 const saveInvoice = async (invoice: CleanInvoice): Promise<CleanInvoice> => {
+  debug(`Saving invoice ${invoice.id}`);
   const table = 'stripeInvoices';
   const key = invoice.invoiceId;
   const filter = { customerId: invoice.customerId };
@@ -29,7 +32,12 @@ const InvoiceEventFactory = {
 };
 
 export const InvoiceEventHandler = {};
+
 const { clean, save } = InvoiceEventFactory;
+
 InvoiceEventHandler.handle = async (
   event: InvoiceEvent
-): Promise<CleanInvoice> => await save(clean(event.data.object));
+): Promise<CleanInvoice> => {
+  debug(`Handling invoice ${event.data.object.id}`);
+  return await save(clean(event.data.object));
+};
