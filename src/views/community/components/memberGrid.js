@@ -32,13 +32,17 @@ class CommunityMemberGrid extends React.Component<Props> {
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
+
       return (
         <FlexCol
           style={{ padding: '0 16px', flex: 'none', backgroundColor: '#fff' }}
         >
           {nodes.map(node => {
             if (!node) return null;
-            const { user } = node;
+            let { user, ...rest } = node;
+            user = Object.assign({}, user, {
+              ...rest,
+            });
             return <UserListItem key={user.id} user={user} />;
           })}
           {community.members.pageInfo.hasNextPage && (

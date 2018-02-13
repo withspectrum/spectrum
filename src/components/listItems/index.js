@@ -130,9 +130,11 @@ export const UserListItem = ({
     ? user.contextPermissions.reputation &&
       user.contextPermissions.reputation > 0 &&
       user.contextPermissions.reputation
-    : user.totalReputation && user.totalReputation > 0
-      ? user.totalReputation
-      : '0';
+    : user.reputation && user.reputation > 0
+      ? user.reputation
+      : user.totalReputation && user.totalReputation > 0
+        ? user.totalReputation
+        : '0';
 
   const role =
     user.contextPermissions && user.contextPermissions.isOwner
