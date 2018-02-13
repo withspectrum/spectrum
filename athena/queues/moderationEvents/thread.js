@@ -8,14 +8,9 @@ import type { DBThread } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
+import type { Job, AdminToxicThreadJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    thread: DBThread,
-  },
-};
-
-export default async (job: JobData) => {
+export default async (job: Job<AdminToxicThreadJobData>) => {
   debug('new job for admin thread moderation');
 
   const { data: { thread } } = job;

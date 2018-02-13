@@ -14,18 +14,9 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
+import type { Job, ReactionNotificationJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    reaction: {
-      id: string,
-      userId: string,
-      messageId: string,
-    },
-    userId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<ReactionNotificationJobData>) => {
   const incomingReaction = job.data.reaction;
   const currentUserId = job.data.userId;
 

@@ -32,6 +32,7 @@ export class Login extends React.Component<Props> {
     return (
       <FullscreenView
         hasBackground
+        // $FlowFixMe
         noCloseButton={!this.props.close}
         close={this.props.close && this.props.close}
       >
