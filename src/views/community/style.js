@@ -62,7 +62,7 @@ export const SearchContainer = styled(Card)`
 `;
 
 export const MidSegment = styled(DesktopSegment)`
-  @media (min-width: 1028px) {
+  @media (min-width: 1281px) {
     display: none;
   }
 `;
@@ -179,8 +179,12 @@ export const Meta = styled(Column)`
 export const Content = styled(Column)`
   grid-area: content;
 
-  @media (max-width: 1028px) and (min-width: 768px) {
+  @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
+  }
+
+  @media (max-width: 960px) {
+    overflow: hidden;
   }
 
   @media (max-width: 768px) {
@@ -204,7 +208,7 @@ export const Extras = styled(Column)`
     }
   }
 
-  @media (max-width: 1028px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 

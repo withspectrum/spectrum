@@ -25,14 +25,21 @@ import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/compo
 import Titlebar from '../titlebar';
 import Icon from '../../components/icons';
 import Search from './components/search';
+import ChannelMemberGrid from './components/memberGrid';
 import {
   SegmentedControl,
   Segment,
   DesktopSegment,
+  MobileSegment,
 } from '../../components/segmentedControl';
 import { Grid, Meta, Content, Extras } from './style';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton, LogoutButton } from '../community/style';
+import {
+  LoginButton,
+  LogoutButton,
+  ColumnHeading,
+  MidSegment,
+} from '../community/style';
 import ToggleChannelMembership from '../../components/toggleChannelMembership';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
@@ -297,6 +304,29 @@ class ChannelView extends React.Component<Props> {
                 >
                   Threads
                 </DesktopSegment>
+                <MidSegment
+                  segmentLabel="members"
+                  onClick={() => this.handleSegmentClick('members')}
+                  selected={selectedView === 'members'}
+                >
+                  Members ({channel.metaData &&
+                    channel.metaData.members &&
+                    channel.metaData.members.toLocaleString()})
+                </MidSegment>
+                <MobileSegment
+                  segmentLabel="members"
+                  onClick={() => this.handleSegmentClick('members')}
+                  selected={selectedView === 'members'}
+                >
+                  Members
+                </MobileSegment>
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                </MobileSegment>
               </SegmentedControl>
 
               {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
@@ -323,8 +353,16 @@ class ChannelView extends React.Component<Props> {
 
               {//search
               selectedView === 'search' && <Search channel={channel} />}
+
+              {// members grid
+              selectedView === 'members' && (
+                <ChannelMemberGrid id={channel.id} />
+              )}
             </Content>
-            <Extras />
+            <Extras>
+              <ColumnHeading>Members</ColumnHeading>
+              <ChannelMemberGrid id={channel.id} />
+            </Extras>
           </Grid>
         </AppViewWrapper>
       );

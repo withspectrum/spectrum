@@ -359,6 +359,7 @@ export const ComposeIconContainer = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   background: ${props =>
@@ -644,8 +645,8 @@ export const PillLabel = styled.span`
 `;
 
 export const MiniLinkPreview = styled.a`
-  display: inline-block;
   display: flex;
+  flex: auto;
   align-items: center;
   font-size: 14px;
   color: ${props =>
@@ -653,7 +654,7 @@ export const MiniLinkPreview = styled.a`
   font-weight: ${props => (props.active ? '500' : '400')};
   margin-bottom: 8px;
   pointer-events: auto;
-  max-width: 100%;
+  min-width: 0;
   ${Truncate};
 
   .icon {

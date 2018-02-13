@@ -109,15 +109,14 @@ export const Meta = styled(Column)`
 
 export const Content = styled(Column)`
   grid-area: content;
-  overflow-x: hidden;
 
-  @media (max-width: 1028px) and (min-width: 768px) {
+  @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
   }
 
   @media (max-width: 768px) {
-    > ${SegmentedControl} {
-      display: none;
+    > ${SegmentedControl} > div {
+      margin-top: 0;
     }
   }
 `;
@@ -136,7 +135,7 @@ export const Extras = styled(Column)`
     }
   }
 
-  @media (max-width: 1028px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 
