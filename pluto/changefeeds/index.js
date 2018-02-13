@@ -1,5 +1,10 @@
 // @flow
-import { newCommunity, editedCommunity, deletedCommunity } from './community';
+import {
+  newCommunity,
+  editedCommunity,
+  deletedCommunity,
+  newAdministratorEmail,
+} from './community';
 
 /*
 
@@ -14,4 +19,5 @@ export default () => {
   newCommunity();
   editedCommunity();
   deletedCommunity();
+  newAdministratorEmail();
 };

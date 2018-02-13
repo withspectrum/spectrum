@@ -3,6 +3,7 @@ const debug = require('debug')('pluto:changefeeds:community');
 import {
   listenToNewDocumentsIn,
   listenToChangedFieldIn,
+  listenToNewFieldIn,
   listenToDeletedDocumentsIn,
 } from 'shared/changefeed-utils';
 import { stripe } from 'shared/stripe';
@@ -53,9 +54,38 @@ export const editedCommunity = () =>
     async (community: DBCommunity) => {
       const {
         stripeCustomerId,
+        administratorEmail,
         id: communityId,
         name: communityName,
       } = community;
+
+      if (!stripeCustomerId) {
+        debug('Community edited, but Stripe customer hasnt been created yet');
+        if (administratorEmail) {
+          debug('Community edited, admin email available to create customer');
+          // 1. Email is being added for the first time
+          const { id: createdStripeId } = await stripe.customers.create({
+            email: administratorEmail,
+            metadata: {
+              communityId,
+              communityName,
+            },
+          });
+
+          return db
+            .table('communities')
+            .get(communityId)
+            .update({
+              stripeCustomerId: createdStripeId,
+            })
+            .run();
+        }
+
+        debug(
+          'Community edited, no Stripe customer exists, but no admin email either'
+        );
+        return;
+      }
 
       debug('Editing Stripe customer metadata');
 
@@ -80,5 +110,76 @@ export const deletedCommunity = () =>
       debug('Deleting Stripe customer');
 
       return await stripe.customers.del(stripeCustomerId);
+    }
+  );
+
+/* 
+  if the administratorEmail field is changed, it means that it is either
+  1. being added for the first time
+  2. being updated because the user wants receipts to go to a new location
+
+  If 1, we should create a customer
+  If 2, we should update the customer
+*/
+const handleAdminEmailChange = async (community: DBCommunity) => {
+  // make sure we never duplicate customers
+  const {
+    stripeCustomerId,
+    administratorEmail,
+    id: communityId,
+    name: communityName,
+  } = community;
+
+  if (!administratorEmail) {
+    debug('No administrator email found in the change');
+    return;
+  }
+
+  // 2. Update the existing customer
+  if (stripeCustomerId) {
+    debug('Updating email for Stripe customer');
+
+    return await stripe.customers.update(stripeCustomerId, {
+      email: administratorEmail,
+    });
+  }
+
+  debug('Creating new Stripe customer from changed administratorEmail');
+
+  // 1. Email is being added for the first time
+  const { id: createdStripeId } = await stripe.customers.create({
+    email: administratorEmail,
+    metadata: {
+      communityId,
+      communityName,
+    },
+  });
+
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      stripeCustomerId: createdStripeId,
+    })
+    .run();
+};
+
+export const changedAdministratorEmail = () =>
+  listenToChangedFieldIn(db, 'administratorEmail')(
+    'communities',
+    async (community: DBCommunity) => {
+      debug('Changed administratorEmail field');
+
+      return await handleAdminEmailChange(community);
+    }
+  );
+
+export const newAdministratorEmail = () =>
+  listenToNewFieldIn(db, 'administratorEmail')(
+    'communities',
+    async (community: DBCommunity) => {
+      debug('New administratorEmail field');
+
+      return await handleAdminEmailChange(community);
     }
   );

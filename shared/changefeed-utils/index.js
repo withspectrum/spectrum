@@ -26,6 +26,13 @@ export const hasChangedField = (db: any, field: string) =>
     .row('old_val')(field)
     .ne(db.row('new_val')(field));
 
+export const hasNewField = (db: any, field: string) =>
+  db
+    .row('old_val')
+    .hasFields(field)
+    .not()
+    .and(db.row('new_val').hasFields(field));
+
 export const listenToNewDocumentsIn = (
   db: any,
   table: string,
@@ -79,6 +86,27 @@ export const listenToChangedFieldIn = (db: any, field: string) => (
       includeInitial: false,
     })
     .filter(CHANGED_FIELD)
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the new data
+        cb(data.new_val);
+      });
+    });
+};
+
+export const listenToNewFieldIn = (db: any, field: string) => (
+  table: string,
+  cb: Function
+) => {
+  const NEW_FIELD = hasNewField(db, field);
+  return db
+    .table(table)
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_FIELD)
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {

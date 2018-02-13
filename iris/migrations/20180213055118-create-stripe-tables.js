@@ -51,6 +51,6 @@ exports.down = function(r, conn) {
     r.tableDrop('stripeSubscriptions').run(conn),
     r.tableDrop('stripeCharges').run(conn),
     r.tableDrop('stripeInvoices').run(conn),
-    r.tableDrop('stripeSources'.run(conn)),
+    r.tableDrop('stripeSources').run(conn),
   ]);
 };
