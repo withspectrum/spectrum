@@ -1,6 +1,5 @@
+// @flow
 const { db } = require('./db');
-// $FlowFixMe
-import UserError from '../utils/UserError';
 import { getUserById } from '../models/user';
 
 /*
@@ -14,9 +13,9 @@ import { getUserById } from '../models/user';
 // invoked only when a new community is being created. the user who is doing
 // the creation is automatically an owner and a member
 const saveUserCommunityPermissions = (
-  permissions,
-  userId,
-  communityId
+  permissions: any,
+  userId: string,
+  communityId: string
 ): Promise<Object> => {
   return db
     .table('usersCommunities')

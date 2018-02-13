@@ -19,22 +19,9 @@ import {
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    message: {
-      id: string,
-      messageType: string,
-      senderId: string,
-      threadId: string,
-      content: {
-        body: string,
-      },
-    },
-  },
-};
-
-export default async (job: JobData) => {
+export default async (job: Job<MessageNotificationJobData>) => {
   const { message: incomingMessage } = job.data;
   const { senderId: messageSenderId } = incomingMessage;
 
