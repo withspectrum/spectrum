@@ -1,17 +1,7 @@
 import styled from 'styled-components';
-import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
-import { Button } from '../../components/buttons';
-import {
-  FlexCol,
-  Transition,
-  zIndex,
-  Gradient,
-} from '../../components/globals';
-import {
-  DesktopSegment,
-  SegmentedControl,
-} from '../../components/segmentedControl';
+import { FlexCol, Transition, zIndex } from '../../components/globals';
+import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
 

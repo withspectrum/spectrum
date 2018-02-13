@@ -9,12 +9,7 @@ import Icon from '../../../components/icons';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
-import {
-  StyledCard,
-  ListHeading,
-  ListHeader,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 type Props = {
   data: {
@@ -26,7 +21,7 @@ type Props = {
 
 class CommunityList extends React.Component<Props> {
   render() {
-    const { data, user, currentUser } = this.props;
+    const { data } = this.props;
 
     if (
       !data.user ||

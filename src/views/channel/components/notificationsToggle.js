@@ -6,12 +6,7 @@ import toggleChannelNotificationsMutation from 'shared/graphql/mutations/channel
 import type { ToggleChannelNotificationsType } from 'shared/graphql/mutations/channel/toggleChannelNotifications';
 import { Checkbox } from '../../../components/formElements';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  StyledCard,
-  ListHeader,
-  ListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 type Props = {
   value: boolean,

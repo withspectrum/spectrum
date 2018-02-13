@@ -18,17 +18,7 @@ import {
 import Icon from '../icons';
 import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
-import { addProtocolToString } from '../../helpers/utils';
-import { MetaData } from './metaData';
-import Avatar from '../avatar';
-import {
-  Subtitle,
-  FullTitle,
-  FullDescription,
-  ProfileHeaderAction,
-  ProfileCard,
-  FullProfile,
-} from './style';
+import { FullTitle, FullDescription, ProfileCard, FullProfile } from './style';
 
 type State = {
   isLoading: boolean,
@@ -146,51 +136,7 @@ class ChannelWithData extends React.Component<Props, State> {
       }
     }
 
-    const communityOwner = channel.community.communityPermissions.isOwner;
-    const channelOwner = channel.channelPermissions.isOwner;
     const member = channel.channelPermissions.isMember;
-
-    const communityLink = () => {
-      return (
-        <Link to={`/${channel.community.slug}`}>{channel.community.name}</Link>
-      );
-    };
-
-    const returnAction = () => {
-      if (communityOwner || channelOwner) {
-        return (
-          <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <ProfileHeaderAction
-              glyph="settings"
-              tipText={'Channel settings'}
-              tipLocation="top-left"
-            />
-          </Link>
-        );
-      } else if (member) {
-        return (
-          <ProfileHeaderAction
-            glyph="minus"
-            color="text.placeholder"
-            hoverColor="warn.default"
-            tipText="Leave channel"
-            tipLocation="top-left"
-            onClick={() => this.toggleSubscription(channel.id)}
-          />
-        );
-      } else if (currentUser && !member) {
-        return (
-          <ProfileHeaderAction
-            glyph="plus-fill"
-            color="brand.alt"
-            hoverColor="brand.alt"
-            tipText="Join channel"
-            tipLocation="top-left"
-            onClick={() => this.toggleSubscription(channel.id)}
-          />
-        );
-      }
-    };
 
     if (componentSize === 'full') {
       return (

@@ -7,13 +7,9 @@ import compose from 'recompose/compose';
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { connect } from 'react-redux';
-import { ImportSlackWithoutCard } from '../../views/communityMembers/components/importSlack';
-import { CommunityInvitationForm } from '../emailInvitationForm';
-import Share from 'src/views/newCommunity/components/share';
 import InboxThread from 'src/views/dashboard/components/inboxThread';
 import { NullCard } from '../upsell';
 import { LoadingInboxThread } from '../loading';
-import { Divider } from './style';
 import NewActivityIndicator from '../newActivityIndicator';
 import ViewError from '../viewError';
 
@@ -42,25 +38,6 @@ const NullState = ({ viewContext, search }) => {
   }
 
   return <NullCard bg="post" heading={hd} copy={cp} />;
-};
-
-const UpsellState = ({ community }) => {
-  return (
-    <NullCard
-      bg="onboarding"
-      repeat
-      heading={'Every community has to start somewhere...'}
-      copy={`${
-        community.name
-      } just needs more friends - invite people to your community to get a conversation started!`}
-    >
-      <Share community={community} onboarding={false} />
-      <Divider />
-      <CommunityInvitationForm id={community.id} />
-      <Divider />
-      <ImportSlackWithoutCard community={community} id={community.id} />
-    </NullCard>
-  );
 };
 
 const Threads = styled.div`

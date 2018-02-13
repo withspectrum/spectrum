@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from '../../components/globals';
 import Card from '../../components/card';
-import { Transition, Shadow, hexa, zIndex } from '../../components/globals';
+import { Transition, zIndex } from '../../components/globals';
 import { SegmentedControl } from '../../components/segmentedControl';
 
 export const Row = styled(FlexRow)`

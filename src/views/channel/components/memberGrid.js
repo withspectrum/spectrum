@@ -34,8 +34,6 @@ class ChannelMemberGrid extends React.Component<Props> {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member && member.node);
-      const totalCount =
-        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
         <FlexCol

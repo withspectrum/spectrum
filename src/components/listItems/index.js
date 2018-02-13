@@ -17,7 +17,6 @@ import {
   Description,
   ActionContainer,
   BadgeContainer,
-  Lock,
 } from './style';
 
 type CommunityProps = {

@@ -168,11 +168,7 @@ class CommunityView extends React.Component<Props, State> {
         },
       });
 
-      const {
-        showComposerUpsell,
-        selectedView,
-        isLeavingCommunity,
-      } = this.state;
+      const { showComposerUpsell, selectedView } = this.state;
       const {
         isMember,
         isOwner,

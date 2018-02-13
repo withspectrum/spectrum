@@ -19,7 +19,7 @@ import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
-import { UpsellSignIn, Upsell404Channel } from '../../components/upsell';
+import { Upsell404Channel } from '../../components/upsell';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
@@ -28,8 +28,8 @@ import Search from './components/search';
 import ChannelMemberGrid from './components/memberGrid';
 import {
   SegmentedControl,
-  Segment,
   DesktopSegment,
+  Segment,
   MobileSegment,
 } from '../../components/segmentedControl';
 import { Grid, Meta, Content, Extras } from './style';
@@ -297,13 +297,13 @@ class ChannelView extends React.Component<Props> {
                   <Icon glyph={'search'} />
                   Search
                 </DesktopSegment>
-                <DesktopSegment
+                <Segment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
                   Threads
-                </DesktopSegment>
+                </Segment>
                 <MidSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
