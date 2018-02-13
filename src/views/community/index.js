@@ -217,7 +217,9 @@ class CommunityView extends React.Component<Props, State> {
               {currentUser &&
                 isOwner && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton isMember>Settings</LoginButton>
+                    <LoginButton icon={'settings'} isMember>
+                      Settings
+                    </LoginButton>
                   </Link>
                 )}
               <ChannelList
@@ -307,7 +309,7 @@ class CommunityView extends React.Component<Props, State> {
             </Content>
             <Extras>
               <ColumnHeading>Members</ColumnHeading>
-              <CommunityMemberGrid id={community.id} />
+              <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>
         </AppViewWrapper>

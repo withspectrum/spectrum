@@ -19,6 +19,7 @@ const LoadMoreMembers = gql`
   query loadMoreCommunityMembers(
     $id: ID
     $after: String
+    $first: Int
     $filter: MembersFilter
   ) {
     community(id: $id) {
@@ -33,7 +34,12 @@ const LoadMoreMembers = gql`
 `;
 
 export const getcommunityMembersQuery = gql`
-  query getCommunityMembers($id: ID, $after: String, $filter: MembersFilter) {
+  query getCommunityMembers(
+    $id: ID
+    $after: String
+    $first: Int
+    $filter: MembersFilter
+  ) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
@@ -94,15 +100,18 @@ const getcommunityMembersOptions = {
     id,
     filter,
     after,
+    first = 10,
   }: {
     id: string,
     filter: ?Object,
     after?: string,
+    first?: number,
   }) => ({
     variables: {
       id,
       after: after || null,
       filter,
+      first,
     },
     fetchPolicy: 'cache-and-network',
   }),

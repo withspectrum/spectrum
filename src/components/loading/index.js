@@ -591,11 +591,6 @@ export const LoadingList = () => (
     <LoadingListItem />
     <LoadingListItem />
     <LoadingListItem />
-    <LoadingListItem />
-    <LoadingListItem />
-    <LoadingListItem />
-    <LoadingListItem />
-    <LoadingListItem />
   </ShimmerList>
 );
 

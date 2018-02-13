@@ -238,7 +238,9 @@ class ChannelView extends React.Component<Props, State> {
                   <Link
                     to={`/${channel.community.slug}/${channel.slug}/settings`}
                   >
-                    <LoginButton isMember>Settings</LoginButton>
+                    <LoginButton icon={'settings'} isMember>
+                      Settings
+                    </LoginButton>
                   </Link>
                 )}
               {isLoggedIn &&
@@ -339,7 +341,7 @@ class ChannelView extends React.Component<Props, State> {
             </Content>
             <Extras>
               <ColumnHeading>Members</ColumnHeading>
-              <ChannelMemberGrid id={channel.id} />
+              <ChannelMemberGrid first={5} id={channel.id} />
             </Extras>
           </Grid>
         </AppViewWrapper>
