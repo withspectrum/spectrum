@@ -64,9 +64,7 @@ class EditDropdown extends React.Component<Props, State> {
     },
     moderator: {
       title: 'Moderator',
-      // subtitle:
-      //   "Can edit and delete conversations and messages. They will not see private channels where they aren't approved",
-      subtitle: 'Moderator roles are coming soon!',
+      subtitle: 'Can edit and delete conversations',
       selected: false,
     },
     blocked: {
@@ -102,15 +100,14 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isModerator) {
       return [
-        // {
-        //   ...this.permissionConfigurations.moderator,
-        //   mutation: null,
-        //   selected: true,
-        // },
+        {
+          ...this.permissionConfigurations.moderator,
+          mutation: null,
+          selected: true,
+        },
         {
           ...this.permissionConfigurations.member,
-          // mutation: this.props.removeCommunityModerator,
-          mutation: null,
+          mutation: this.props.removeCommunityModerator,
         },
         {
           ...this.permissionConfigurations.blocked,
@@ -121,11 +118,10 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isMember) {
       return [
-        // {
-        //   ...this.permissionConfigurations.moderator,
-        //   // mutation: this.props.addCommunityModerator,
-        //   mutation: null,
-        // },
+        {
+          ...this.permissionConfigurations.moderator,
+          mutation: this.props.addCommunityModerator,
+        },
         {
           ...this.permissionConfigurations.member,
           mutation: null,
@@ -140,10 +136,10 @@ class EditDropdown extends React.Component<Props, State> {
 
     if (permissions.isBlocked) {
       return [
-        // {
-        //   ...this.permissionConfigurations.moderator,
-        //   mutation: this.props.addCommunityModerator,
-        // },
+        {
+          ...this.permissionConfigurations.moderator,
+          mutation: this.props.addCommunityModerator,
+        },
         {
           ...this.permissionConfigurations.member,
           mutation: this.props.unblockCommunityMember,

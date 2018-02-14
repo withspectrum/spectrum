@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import Link from '../../components/link';
 import getCommunityBillingSettings, {
   type GetCommunityBillingSettingsType,
 } from 'shared/graphql/queries/community/getCommunityBillingSettings';
@@ -12,6 +12,7 @@ import {
   SectionsContainer,
   SectionCard,
   SectionTitle,
+  SectionSubtitle,
   Column,
 } from '../../components/settingsViews/style';
 import CardForm from './components/cardForm';
@@ -53,38 +54,54 @@ class CommunityMembersSettings extends React.Component<Props> {
         <SectionsContainer>
           <Column>
             <SectionCard>
-              <SectionTitle>Payment Method</SectionTitle>
-              <CardForm community={community} />
-            </SectionCard>
-          </Column>
-
-          <Column>
-            <SectionCard>
-              <SectionTitle>Payment Method</SectionTitle>
-              {community.billingSettings.sources.map(
-                source =>
-                  source && <Source key={source.sourceId} source={source} />
+              <SectionTitle>Active subscriptions</SectionTitle>
+              {community.billingSettings.subscriptions.length === 0 && (
+                <React.Fragment>
+                  <SectionSubtitle>
+                    You have no active subscriptions. As soon as you add
+                    moderators, private channels, analytics, or priority support
+                    to this community, your subscription information will appear
+                    here.
+                  </SectionSubtitle>
+                  <SectionSubtitle>
+                    <Link to={'/pricing'}>
+                      Learn more about Spectrum features
+                    </Link>
+                  </SectionSubtitle>
+                </React.Fragment>
               )}
-            </SectionCard>
-
-            <SectionCard>
-              <SectionTitle>Invoices</SectionTitle>
-              {community.billingSettings.invoices.map(
-                invoice =>
-                  invoice && (
-                    <p key={invoice.customerId}>{invoice.customerId}</p>
-                  )
-              )}
-            </SectionCard>
-
-            <SectionCard>
-              <SectionTitle>Subscriptions</SectionTitle>
               {community.billingSettings.subscriptions.map(
                 subscription =>
                   subscription && (
                     <p key={subscription.customerId}>
                       {subscription.customerId}
                     </p>
+                  )
+              )}
+            </SectionCard>
+          </Column>
+
+          <Column>
+            <SectionCard>
+              <SectionTitle>Payment method</SectionTitle>
+              {community.billingSettings.sources.map(
+                source =>
+                  source && <Source key={source.sourceId} source={source} />
+              )}
+              <CardForm community={community} />
+            </SectionCard>
+
+            <SectionCard>
+              <SectionTitle>Payment history</SectionTitle>
+              {community.billingSettings.invoices.length === 0 && (
+                <SectionSubtitle>
+                  Receipts will appear here each time a payment occurs.
+                </SectionSubtitle>
+              )}
+              {community.billingSettings.invoices.map(
+                invoice =>
+                  invoice && (
+                    <p key={invoice.customerId}>{invoice.customerId}</p>
                   )
               )}
             </SectionCard>

@@ -31,6 +31,8 @@ const getCardImage = (brand: string) => {
       return '/img/payment-methods/mastercard.svg';
     case 'American Express':
       return '/img/payment-methods/amex.svg';
+    case 'JCB':
+      return '/img/payment-methods/jcb.svg';
     default:
       return '/img/payment-methods/card-unknown.svg';
   }

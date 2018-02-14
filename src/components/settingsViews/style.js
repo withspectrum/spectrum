@@ -49,7 +49,6 @@ export const SectionCard = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
-
   @media (max-width: 768px) {
     border-radius: 0;
   }
@@ -69,6 +68,11 @@ export const SectionSubtitle = styled.h4`
   font-size: 14px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
+  margin-bottom: 4px;
+
+  a {
+    color: ${props => props.theme.brand.alt};
+  }
 `;
 
 export const SectionTitle = styled.h3`
