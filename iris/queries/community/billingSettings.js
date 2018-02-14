@@ -1,25 +1,31 @@
 // @flow
+import { getInvoicesByCustomerId } from '../../models/stripeInvoices';
+import { getSourcesByCustomerId } from '../../models/stripeSources';
+import { getSubscriptionsByCustomerId } from '../../models/stripeSubscriptions';
+import type { GraphQLContext } from '../..';
 import type { DBCommunity } from 'shared/types';
-import type { GraphQLContext } from '../../';
 
-export default (
+export default async (
   {
     id,
-    stripeCustomerId,
-    administratorEmail,
     pendingAdministratorEmail,
+    administratorEmail,
+    stripeCustomerId,
   }: DBCommunity,
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
-  if (!id || !user) return {};
-  return loaders.userPermissionsInCommunity.load([user.id, id]).then(result => {
-    if (result && result.isOwner)
-      return {
-        stripeCustomerId,
-        administratorEmail,
-        pendingAdministratorEmail,
-      };
-    return null;
-  });
+  const { isOwner } = await loaders.userPermissionsInCommunity.load([
+    user.id,
+    id,
+  ]);
+  return {
+    pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,
+    administratorEmail: isOwner ? administratorEmail : null,
+    sources: isOwner ? await getSourcesByCustomerId(stripeCustomerId) : [],
+    invoices: isOwner ? await getInvoicesByCustomerId(stripeCustomerId) : [],
+    subscriptions: isOwner
+      ? await getSubscriptionsByCustomerId(stripeCustomerId)
+      : [],
+  };
 };

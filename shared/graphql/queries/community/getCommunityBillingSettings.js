@@ -3,28 +3,23 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
+import communityBillingSettingsFragment from '../../fragments/community/communityBillingSettings';
+import type { CommunityBillingSettingsType } from '../../fragments/community/communityBillingSettings';
 
 export type GetCommunityBillingSettingsType = {
   ...$Exact<CommunityInfoType>,
-  billingSettings: {
-    administratorEmail: ?string,
-    stripeCustomerId: ?string,
-    pendingAdministratorEmail: ?string,
-  },
+  ...$Exact<CommunityBillingSettingsType>,
 };
 
 export const getCommunityBillingSettingsQuery = gql`
   query getCommunityBillingSettings($id: ID) {
     community(id: $id) {
       ...communityInfo
-      billingSettings {
-        administratorEmail
-        stripeCustomerId
-        pendingAdministratorEmail
-      }
+      ...communityBillingSettings
     }
   }
   ${communityInfoFragment}
+  ${communityBillingSettingsFragment}
 `;
 
 const getCommunityBillingSettingsOptions = {

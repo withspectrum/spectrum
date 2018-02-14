@@ -6,7 +6,7 @@ import {
   injectStripe,
   CardElement,
 } from 'react-stripe-elements';
-import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
+import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../../api/constants';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
@@ -15,6 +15,7 @@ type Props = {
 
 type FormProps = {
   stripe: Object,
+  community: GetCommunitySettingsType,
 };
 
 type State = {
@@ -44,11 +45,23 @@ class Form extends React.Component<FormProps> {
     ev.preventDefault();
 
     this.props.stripe
-      .createToken()
-      .then(({ token }) => {
-        console.log('Received Stripe token:', token);
-        return;
+      .createSource()
+      .then(({ source }) => {
+        console.log('JSON.stringify(source)', JSON.stringify(source));
+        return fetch(`${SERVER_URL}/api/stripe/updateSource`, {
+          body: JSON.stringify({
+            source: JSON.stringify(source),
+            communityId: this.props.community.id,
+          }),
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        });
       })
+      .then(response => response.json())
+      .then(json => console.log('got back something', json))
       .catch(err => {
         console.log('Error creating token', err);
       });
@@ -98,7 +111,7 @@ class CardForm extends React.Component<Props, State> {
     return (
       <StripeProvider stripe={stripe}>
         <Elements>
-          <FormWithStripe />
+          <FormWithStripe community={this.props.community} />
         </Elements>
       </StripeProvider>
     );

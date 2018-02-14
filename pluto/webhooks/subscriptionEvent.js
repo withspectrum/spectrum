@@ -3,6 +3,7 @@ const debug = require('debug')('pluto:webhooks:subscriptionEvent');
 import type { SubscriptionEvent } from '../types/SubscriptionEvent';
 import type { CleanSubscription, RawSubscription } from '../types/subscription';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
+import { resetCustomerSubscriptions } from '../models/stripeSubscriptions';
 
 const cleanSubscription = (
   subscription: RawSubscription
@@ -33,6 +34,8 @@ export const SubscriptionEventFactory = {
   clean: (raw: RawSubscription): CleanSubscription => cleanSubscription(raw),
   save: async (clean: CleanSubscription): Promise<CleanSubscription> =>
     await saveSubscription(clean),
+  resetCustomerSubscriptions: async (customerId: string) =>
+    await resetCustomerSubscriptions(customerId),
 };
 
 export const SubscriptionEventHandler = {};

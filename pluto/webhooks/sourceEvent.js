@@ -3,6 +3,7 @@ const debug = require('debug')('pluto:webhooks:sourceEvent');
 import type { SourceEvent } from '../types/SourceEvent';
 import type { CleanSource, RawSource } from '../types/source';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
+import { resetCustomerSources } from '../models/stripeSources';
 
 const cleanSource = (source: RawSource): CleanSource => {
   debug(`Cleaning source ${source.id}`);
@@ -29,6 +30,8 @@ export const SourceEventFactory = {
   clean: (raw: RawSource): CleanSource => cleanSource(raw),
   save: async (clean: CleanSource): Promise<CleanSource> =>
     await saveSource(clean),
+  resetCustomerSources: async (customerId: string) =>
+    await resetCustomerSources(customerId),
 };
 
 export const SourceEventHandler = {};

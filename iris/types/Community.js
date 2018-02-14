@@ -55,10 +55,77 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
-	type BillingSettings {
+	type StripeCard {
+		brand: String
+		exp_month: Int
+		exp_year: Int
+		last4: String
+	}
+
+	type StripeSource {
+		sourceId: ID
+		customerId: ID
+		card: StripeCard
+	}
+
+	type StripePlan {
+		id: ID
+		amount: Int
+		created: Date
+		name: String
+	}
+
+	type StripeItem {
+		id: ID
+		amount: Int
+		period_start: Date
+		period_end: Date
+		plan: StripePlan
+		quantity: Int
+	}
+
+	type StripeSubscriptionItem {
+		id: ID
+		created: Date
+		plan: StripePlan
+		quantity: Int
+		subscription: StripeSubscription
+	}
+
+	type StripeSubscription {
+		subscriptionId: ID
+		customerId: ID
+		billing_cycle_anchor: Date
+		canceled_at: Date
+		created: Date
+		current_period_end: Date
+		current_period_start: Date
+		ended_at: Date
+		items: [StripeSubscriptionItem]
+		plan: StripePlan
+		quantity: Int
+		start: Date
+		status: String
+	}
+
+	type StripeInvoice {
+		invoiceId: ID
+		customerId: ID
+		date: Date
+		items: [StripeItem]
+		paid: Boolean
+		period_end: Date
+		period_start: Date
+		subscription: StripeSubscription
+		total: Int
+	}
+
+	type CommunityBillingSettings {
 		pendingAdministratorEmail: String
 		administratorEmail: String
-		stripeCustomerId: String
+		sources: [StripeSource]
+		invoices: [StripeInvoice]
+		subscriptions: [StripeSubscription]
 	}
 
 	type Community {
@@ -87,7 +154,7 @@ const Community = /* GraphQL */ `
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
 		watercooler: Thread
-		billingSettings: BillingSettings
+		billingSettings: CommunityBillingSettings
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")

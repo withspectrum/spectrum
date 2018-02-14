@@ -10,6 +10,8 @@ import ViewError from '../../components/viewError';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import {
   SectionsContainer,
+  SectionCard,
+  SectionTitle,
   Column,
 } from '../../components/settingsViews/style';
 import CardForm from './components/cardForm';
@@ -34,7 +36,7 @@ class CommunityMembersSettings extends React.Component<Props> {
   render() {
     const { data, isLoading } = this.props;
     const { community } = data;
-
+    console.log(community);
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
         return (
@@ -49,10 +51,50 @@ class CommunityMembersSettings extends React.Component<Props> {
       return (
         <SectionsContainer>
           <Column>
-            <CardForm community={community} />
+            <SectionCard>
+              <SectionTitle>Payment Method</SectionTitle>
+              <CardForm community={community} />
+            </SectionCard>
           </Column>
 
-          <Column />
+          <Column>
+            <SectionCard>
+              <SectionTitle>Sources</SectionTitle>
+              {community.billingSettings.sources.map(
+                source =>
+                  source && (
+                    <p key={source.sourceId}>
+                      {source.sourceId} · {source.card.last4} ·{' '}
+                      {source.card.brand} · Exp {source.card.exp_month}/{
+                        source.card.exp_year
+                      }
+                    </p>
+                  )
+              )}
+            </SectionCard>
+
+            <SectionCard>
+              <SectionTitle>Invoices</SectionTitle>
+              {community.billingSettings.invoices.map(
+                invoice =>
+                  invoice && (
+                    <p key={invoice.customerId}>{invoice.customerId}</p>
+                  )
+              )}
+            </SectionCard>
+
+            <SectionCard>
+              <SectionTitle>Subscriptions</SectionTitle>
+              {community.billingSettings.subscriptions.map(
+                subscription =>
+                  subscription && (
+                    <p key={subscription.customerId}>
+                      {subscription.customerId}
+                    </p>
+                  )
+              )}
+            </SectionCard>
+          </Column>
         </SectionsContainer>
       );
     }

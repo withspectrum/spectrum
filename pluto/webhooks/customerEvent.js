@@ -50,24 +50,36 @@ CustomerEventHandler.handle = async (
 
   const cleanCustomer = clean(event.data.object);
 
-  const sourcePromises = sources.data.map(
-    async source =>
-      source &&
-      (await SourceEventFactory.save(SourceEventFactory.clean(source)))
-  );
-  const subscriptionPromises = subscriptions.data.map(
-    async subscription =>
-      subscription &&
-      (await SubscriptionEventFactory.save(
-        SubscriptionEventFactory.clean(subscription)
-      ))
-  );
+  return await Promise.all([
+    SourceEventFactory.resetCustomerSources(cleanCustomer.customerId),
+    SubscriptionEventFactory.resetCustomerSubscriptions(
+      cleanCustomer.customerId
+    ),
+  ])
+    .then(async () => {
+      const sourcePromises = sources.data.map(
+        async source =>
+          source &&
+          (await SourceEventFactory.save(SourceEventFactory.clean(source)))
+      );
 
-  const [result, _, __] = await Promise.all([
-    save(cleanCustomer),
-    sourcePromises,
-    subscriptionPromises,
-  ]);
+      const subscriptionPromises = subscriptions.data.map(
+        async subscription =>
+          subscription &&
+          (await SubscriptionEventFactory.save(
+            SubscriptionEventFactory.clean(subscription)
+          ))
+      );
 
-  return result;
+      const [result] = await Promise.all([
+        save(cleanCustomer),
+        sourcePromises,
+        subscriptionPromises,
+      ]);
+
+      return result;
+    })
+    .catch(err => {
+      console.log('Error in customer event', err);
+    });
 };
