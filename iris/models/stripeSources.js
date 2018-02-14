@@ -17,3 +17,13 @@ export const getSourcesByCustomerId = async (
     .getAll(customerId, { index: 'customerId' })
     .run();
 };
+
+export const getStripeSourcesByCustomers = (
+  customerIds: Array<string>
+): Promise<Array<Object>> => {
+  return db
+    .table('stripeSources')
+    .getAll(...customerIds, { index: 'customerId' })
+    .group('customerId')
+    .run();
+};

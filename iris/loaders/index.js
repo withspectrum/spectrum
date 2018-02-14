@@ -34,6 +34,7 @@ import {
   __createDirectMessageSnippetLoader,
 } from './directMessageThread';
 import { __createReactionLoader } from './reaction';
+import { __createStripeSourcesLoader } from './stripe';
 import type { DataLoaderOptions } from './types';
 
 // Create all the necessary loaders to be attached to the GraphQL context for each request
@@ -59,6 +60,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   community: __createCommunityLoader(options),
   communityBySlug: __createCommunityBySlugLoader(options),
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(options),
+  stripeSources: __createStripeSourcesLoader(options),
   communityChannelCount: __createCommunityChannelCountLoader(options),
   communityMemberCount: __createCommunityMemberCountLoader(options),
   directMessageThread: __createDirectMessageThreadLoader(options),

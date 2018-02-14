@@ -149,6 +149,7 @@ const Community = /* GraphQL */ `
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
 		isPro: Boolean
+		hasChargeableSource: Boolean
 		memberGrowth: GrowthData
 		conversationGrowth: GrowthData
 		topMembers: [User]

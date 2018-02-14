@@ -25,6 +25,7 @@ import isPro from './isPro';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
 import billingSettings from './billingSettings';
+import hasChargeableSource from './hasChargeableSource';
 
 module.exports = {
   Query: {
@@ -54,5 +55,6 @@ module.exports = {
     contextPermissions,
     watercooler,
     billingSettings,
+    hasChargeableSource,
   },
 };
