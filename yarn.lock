@@ -1383,7 +1383,7 @@ babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@6.26.0, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.26.0:
+babel-runtime@6.26.0, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -3692,6 +3692,14 @@ expect@^22.1.0:
     jest-matcher-utils "^22.1.0"
     jest-message-util "^22.1.0"
     jest-regex-util "^22.1.0"
+
+expo-server-sdk@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/expo-server-sdk/-/expo-server-sdk-2.3.3.tgz#6e52312274ba8e7145fb8c755d85a207c78152e8"
+  dependencies:
+    babel-runtime "^6.11.6"
+    invariant "^2.2.2"
+    node-fetch "^1.6.1"
 
 express-session@^1.15.2:
   version "1.15.6"
@@ -7195,7 +7203,7 @@ node-env-file@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/node-env-file/-/node-env-file-0.1.8.tgz#fccb7b050f735b5a33da9eb937cf6f1ab457fb69"
 
-node-fetch@^1.0.1:
+node-fetch@^1.0.1, node-fetch@^1.6.1:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
