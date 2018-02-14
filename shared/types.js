@@ -337,3 +337,9 @@ export type SearchCommunity = {
   website: ?string,
   objectID: string,
 };
+
+export type DBExpoPushSubscription = {
+  id: string,
+  token: string,
+  userId: string,
+};
