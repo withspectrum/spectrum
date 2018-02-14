@@ -19,9 +19,11 @@ const saveInvoice = async (invoice: CleanInvoice): Promise<CleanInvoice> => {
   const filter = { customerId: invoice.customerId };
 
   if (await recordExists(table, key, filter)) {
-    return replaceRecord(table, key, invoice, filter);
+    debug(`Invoice record exists, replacing ${invoice.id}`);
+    return await replaceRecord(table, key, invoice, filter);
   } else {
-    return insertRecord(table, invoice);
+    debug(`Invoice does not exist, inserting ${invoice.id}`);
+    return await insertRecord(table, invoice);
   }
 };
 
@@ -39,5 +41,8 @@ InvoiceEventHandler.handle = async (
   event: InvoiceEvent
 ): Promise<CleanInvoice> => {
   debug(`Handling invoice ${event.data.object.id}`);
-  return await save(clean(event.data.object));
+  return await save(clean(event.data.object)).catch(err => {
+    console.log(`Error handling invoice event ${event.data.object.id}`);
+    throw new Error(err);
+  });
 };

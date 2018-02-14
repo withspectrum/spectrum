@@ -87,7 +87,7 @@ class EditDropdown extends React.Component<Props, State> {
   };
 
   getRolesConfiguration = () => {
-    const { permissions } = this.props;
+    const { permissions, community } = this.props;
 
     if (permissions.isOwner) {
       return [
@@ -107,7 +107,9 @@ class EditDropdown extends React.Component<Props, State> {
         },
         {
           ...this.permissionConfigurations.member,
-          mutation: this.props.removeCommunityModerator,
+          mutation: community.hasChargeableSource
+            ? this.props.removeCommunityModerator
+            : null,
         },
         {
           ...this.permissionConfigurations.blocked,
@@ -120,7 +122,9 @@ class EditDropdown extends React.Component<Props, State> {
       return [
         {
           ...this.permissionConfigurations.moderator,
-          mutation: this.props.addCommunityModerator,
+          mutation: community.hasChargeableSource
+            ? this.props.addCommunityModerator
+            : null,
         },
         {
           ...this.permissionConfigurations.member,
@@ -138,7 +142,9 @@ class EditDropdown extends React.Component<Props, State> {
       return [
         {
           ...this.permissionConfigurations.moderator,
-          mutation: this.props.addCommunityModerator,
+          mutation: community.hasChargeableSource
+            ? this.props.addCommunityModerator
+            : null,
         },
         {
           ...this.permissionConfigurations.member,

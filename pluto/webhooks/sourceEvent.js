@@ -20,9 +20,11 @@ const saveSource = async (source: CleanSource): Promise<CleanSource> => {
   const filter = { customerId: key };
 
   if (await recordExists(table, key, filter)) {
-    return replaceRecord(table, key, source, filter);
+    debug(`Source record exists, replacing ${source.id}`);
+    return await replaceRecord(table, key, source, filter);
   } else {
-    return insertRecord(table, source);
+    debug(`Source does not exist, inserting ${source.id}`);
+    return await insertRecord(table, source);
   }
 };
 
@@ -42,5 +44,8 @@ SourceEventHandler.handle = async (
   event: SourceEvent
 ): Promise<CleanSource> => {
   debug(`Handling source ${event.data.object.id}`);
-  return await save(clean(event.data.object));
+  return await save(clean(event.data.object)).catch(err => {
+    console.log(`Error handling source event ${event.data.object.id}`);
+    throw new Error(err);
+  });
 };

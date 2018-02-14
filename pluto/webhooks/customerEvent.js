@@ -24,9 +24,11 @@ const saveCustomer = async (
   const filter = { customerId: key };
 
   if (await recordExists(table, key, filter)) {
-    return replaceRecord(table, key, customer, filter);
+    debug(`Customer record exists, replacing ${customer.id}`);
+    return await replaceRecord(table, key, customer, filter);
   } else {
-    return insertRecord(table, customer);
+    debug(`Customer record does not exist, inserting ${customer.id}`);
+    return await insertRecord(table, customer);
   }
 };
 
@@ -57,6 +59,11 @@ CustomerEventHandler.handle = async (
     ),
   ])
     .then(async () => {
+      debug(
+        `Done cleaning sources and subscriptions for ${
+          cleanCustomer.customerId
+        }`
+      );
       const sourcePromises = sources.data.map(
         async source =>
           source &&
@@ -77,9 +84,12 @@ CustomerEventHandler.handle = async (
         subscriptionPromises,
       ]);
 
+      debug(`Returning result for customer event ${cleanCustomer.customerId}`);
+
       return result;
     })
     .catch(err => {
-      console.log('Error in customer event', err);
+      console.log(`Error handling customer event ${event.data.object.id}`);
+      throw new Error(err);
     });
 };

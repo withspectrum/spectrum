@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('pluto:webhooks:index');
 import { stripe, stripeWebhookSigningSecret } from 'shared/stripe';
 import Raven from 'shared/raven';
 
@@ -25,17 +26,30 @@ const WebhookHandler = {
     }[event.type];
 
     if (!handler || handler === undefined) {
-      console.log(`❌  Unhandled event type: ${event.type}`);
+      debug(`❌  Unhandled event type: ${event.type}`);
       return;
       // throw new Error(`Unhandled event type: ${event.type}`);
     }
 
-    console.log('✅ Got event handler for:', event.type, event.data.object.id);
-    return await handler.handle(event).catch(err => new Error(err));
+    debug(
+      '\n\n✅ Got event handler for:',
+      event.type,
+      event.data.object.id,
+      '\n\n'
+    );
+    return await handler
+      .handle(event)
+      .then(() => {
+        debug(
+          `\n\n😈 JOB FINISHED for ${event.type} ${event.data.object.id}\n\n`
+        );
+        return;
+      })
+      .catch(err => new Error(err));
   },
 };
 
-export const handleWebhooks = (req: any, res: any) => {
+export const handleWebhooks = async (req: any, res: any) => {
   // in production, verify stripe event signatures
   let event;
   if (process.env.NODE_ENV === 'production') {
@@ -60,12 +74,8 @@ export const handleWebhooks = (req: any, res: any) => {
 
   console.log('🕒 About to process event:', event.type);
 
-  return (
-    WebhookHandler.for(event)
-      .then(() => res.status(200).send('Webhook received: ' + event.id))
-      // eslint-disable-next-line
-      .catch(
-        err => new Promise(resolve => Raven.captureException(err, resolve))
-      )
-  );
+  return await WebhookHandler.for(event)
+    .then(() => res.status(200).send('Webhook received: ' + event.id))
+    // eslint-disable-next-line
+    .catch(err => new Promise(resolve => Raven.captureException(err, resolve)));
 };

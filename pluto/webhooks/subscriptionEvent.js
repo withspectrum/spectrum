@@ -24,9 +24,11 @@ const saveSubscription = async (
   const filter = { customerId: key };
 
   if (await recordExists(table, key, filter)) {
-    return replaceRecord(table, key, subscription, filter);
+    debug(`Subscription record exists, replacing ${subscription.id}`);
+    return await replaceRecord(table, key, subscription, filter);
   } else {
-    return insertRecord(table, subscription);
+    debug(`Subscription record does not exist, inserting ${subscription.id}`);
+    return await insertRecord(table, subscription);
   }
 };
 
@@ -46,5 +48,8 @@ SubscriptionEventHandler.handle = async (
   event: SubscriptionEvent
 ): Promise<CleanSubscription> => {
   debug(`Handling subscription ${event.data.object.id}`);
-  return await save(clean(event.data.object));
+  return await save(clean(event.data.object)).catch(err => {
+    console.log(`Error handling subscription event ${event.data.object.id}`);
+    throw new Error(err);
+  });
 };

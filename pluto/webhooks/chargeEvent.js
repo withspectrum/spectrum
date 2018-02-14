@@ -19,9 +19,11 @@ const saveCharge = async (charge: CleanCharge): Promise<CleanCharge> => {
   const filter = { customerId: key };
 
   if (await recordExists(table, key, filter)) {
-    return replaceRecord(table, key, charge, filter);
+    debug(`Charge record exists, replacing ${charge.id}`);
+    return await replaceRecord(table, key, charge, filter);
   } else {
-    return insertRecord(table, charge);
+    debug(`Charge record does not exist, inserting ${charge.id}`);
+    return await insertRecord(table, charge);
   }
 };
 
@@ -39,5 +41,8 @@ ChargeEventHandler.handle = async (
   event: ChargeEvent
 ): Promise<CleanCharge> => {
   debug(`Handling charge ${event.data.object.id}`);
-  return await save(clean(event.data.object));
+  return await save(clean(event.data.object)).catch(err => {
+    console.log(`Error handling charge event ${event.data.object.id}`);
+    throw new Error(err);
+  });
 };
