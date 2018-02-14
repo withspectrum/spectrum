@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import { View } from 'react-native';
+import { View, Button } from 'react-native';
 import compose from 'recompose/compose';
+import { SecureStore } from 'expo';
 import Text from '../../components/Text';
 import InfiniteList from '../../components/InfiniteList';
 import withSafeView from '../../components/SafeAreaView';
@@ -12,6 +13,8 @@ import getNotifications, {
 import viewNetworkHandler, {
   type ViewNetworkHandlerProps,
 } from '../../components/ViewNetworkHandler';
+import subscribeExpoPush from '../../../shared/graphql/mutations/user/subscribeExpoPush';
+import getPushNotificationToken from '../../utils/get-push-notification-token';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
@@ -20,8 +23,14 @@ type Props = {
   },
 };
 
+type PushNotificationsDecision = {
+  decision?: boolean,
+  timestamp?: Date,
+};
+
 type State = {
   subscription: ?Function,
+  pushNotifications: ?PushNotificationsDecision,
 };
 
 class Notifications extends React.Component<Props, State> {
@@ -29,6 +38,7 @@ class Notifications extends React.Component<Props, State> {
     super();
     this.state = {
       subscription: null,
+      pushNotifications: null,
     };
   }
 
@@ -38,7 +48,37 @@ class Notifications extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
+    SecureStore.getItemAsync('pushNotificationsDecision').then(data => {
+      if (!data) {
+        this.setState({
+          pushNotifications: {},
+        });
+        return;
+      }
+
+      try {
+        const json: PushNotificationsDecision = JSON.parse(data);
+        this.setState({
+          pushNotifications: json,
+        });
+      } catch (err) {}
+    });
   }
+
+  enablePushNotifications = async () => {
+    const token = await getPushNotificationToken();
+    let data;
+    if (!token) {
+      data = { decision: false, timestamp: new Date() };
+    } else {
+      data = { decision: true, timestamp: new Date() };
+      this.props.mutate(token);
+    }
+    this.setState({
+      pushNotifications: data,
+    });
+    SecureStore.setItemAsync('pushNotificationsDecision', JSON.stringify(data));
+  };
 
   subscribe = () => {
     this.setState({
@@ -71,10 +111,18 @@ class Notifications extends React.Component<Props, State> {
 
   render() {
     const { isLoading, hasError, data: { notifications } } = this.props;
+    const { pushNotifications } = this.state;
     if (notifications) {
       return (
         <Wrapper>
           <View>
+            {pushNotifications != null &&
+              pushNotifications.decision === undefined && (
+                <Button
+                  title="Enable push notifications"
+                  onPress={this.enablePushNotifications}
+                />
+              )}
             <InfiniteList
               data={notifications.edges}
               renderItem={({ item: { node } }) => (
@@ -109,6 +157,9 @@ class Notifications extends React.Component<Props, State> {
   }
 }
 
-export default compose(withSafeView, getNotifications, viewNetworkHandler)(
-  Notifications
-);
+export default compose(
+  withSafeView,
+  getNotifications,
+  subscribeExpoPush,
+  viewNetworkHandler
+)(Notifications);
