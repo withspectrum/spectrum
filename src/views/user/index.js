@@ -14,6 +14,7 @@ import { LoadingScreen } from '../../components/loading';
 import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
+import Icon from 'src/components/icons';
 import Search from './components/search';
 import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
@@ -173,6 +174,7 @@ class UserView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
                 >
+                  <Icon glyph={'search'} />
                   Search
                 </DesktopSegment>
 
