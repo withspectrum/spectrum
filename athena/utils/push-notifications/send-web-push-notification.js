@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('athena:utils:web-push');
 import webPush from 'web-push';
-import { removeSubscription } from '../models/web-push-subscription';
+import { removeSubscription } from '../../models/web-push-subscription';
 
 try {
   webPush.setVapidDetails(
