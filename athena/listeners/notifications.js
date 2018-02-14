@@ -3,9 +3,9 @@ const {
   listenToNewNotifications,
   listenToNewDirectMessageNotifications,
 } = require('../models/notification');
-import { sendNotificationAsWebPush } from 'athena/utils/web-push';
+import sendPushNotifications from 'athena/utils/send-push-notifications';
 
 export default () => {
-  listenToNewNotifications(sendNotificationAsWebPush);
-  listenToNewDirectMessageNotifications(sendNotificationAsWebPush);
+  listenToNewNotifications(sendPushNotifications);
+  listenToNewDirectMessageNotifications(sendPushNotifications);
 };

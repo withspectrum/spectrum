@@ -3,7 +3,7 @@ import type { GraphQLContext } from '../../';
 import type { WebPushSubscription } from './';
 import UserError from '../../utils/UserError';
 import { storeSubscription } from '../../models/web-push-subscription';
-import { sendWebPushNotification } from 'athena/utils/web-push';
+import { sendWebPushNotification } from 'athena/utils/send-web-push-notification';
 
 export default (
   _: any,
