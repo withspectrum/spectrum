@@ -1,23 +1,40 @@
 // @flow
 import {
-  newCommunity,
-  editedCommunity,
-  deletedCommunity,
-  newAdministratorEmail,
+  communityCreated,
+  communityDeleted,
+  communityEdited,
+  communityAdministratorEmailChanged,
+  communityAdministratorEmailCreated,
 } from './community';
 
-/*
+import { moderatorChanged } from './moderator';
 
-  The changefeeds here are how we init conversations with Stripe from events
-  on Spectrum. The only things we want to do here are keep Stripe up to date
-  with changing community content on the platform; all other conversations
-  to Stripe will happen in Iris (e.g. adding a source)
+import {
+  privateChannelCreated,
+  privateChannelDeleted,
+  privateChannelArchived,
+  channelPrivacyChanged,
+} from './privateChannel';
 
-*/
+import { analyticsChanged } from './analytics';
+
+import { supportChanged } from './support';
 
 export default () => {
-  newCommunity();
-  editedCommunity();
-  deletedCommunity();
-  newAdministratorEmail();
+  communityCreated();
+  communityDeleted();
+  communityEdited();
+  communityAdministratorEmailChanged();
+  communityAdministratorEmailCreated();
+
+  moderatorChanged();
+
+  privateChannelCreated();
+  privateChannelDeleted();
+  privateChannelArchived();
+  channelPrivacyChanged();
+
+  analyticsChanged();
+
+  supportChanged();
 };

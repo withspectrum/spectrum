@@ -7,17 +7,46 @@ import { createServer } from 'http';
 import { handleWebhooks } from './webhooks';
 import startChangefeeds from './changefeeds';
 import {
-  PROCESS_CHARGE_EVENT,
-  PROCESS_CUSTOMER_EVENT,
-  PROCESS_INVOICE_EVENT,
-  PROCESS_SOURCE_EVENT,
-  PROCESS_SUBSCRIPTION_EVENT,
-} from './webhooks/constants';
-import { processChargeEvent } from './webhooks/chargeEvent';
-import { processCustomerEvent } from './webhooks/customerEvent';
-import { processSourceEvent } from './webhooks/sourceEvent';
-import { processSubscriptionEvent } from './webhooks/subscriptionEvent';
-import { processInvoiceEvent } from './webhooks/invoiceEvent';
+  PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT,
+  PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
+  PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED,
+  PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED,
+  PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED,
+  PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED,
+  PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED,
+  PROCESS_STRIPE_COMMUNITY_CREATED,
+  PROCESS_STRIPE_COMMUNITY_DELETED,
+  PROCESS_STRIPE_COMMUNITY_EDITED,
+} from './queues/constants';
+import processStripeChargeWebhook from './queues/processStripeChargeWebhook';
+import processStripeCustomerWebhook from './queues/processStripeCustomerWebhook';
+import processStripeSourceWebhook from './queues/processStripeSourceWebhook';
+import processStripeSubscriptionWebhook from './queues/processStripeSubscriptionWebhook';
+import processStripeInvoiceWebhook from './queues/processStripeInvoiceWebhook';
+
+import processModeratorAdded from './queues/processModeratorAdded';
+import processModeratorRemoved from './queues/processModeratorRemoved';
+
+import processAnalyticsAdded from './queues/processAnalyticsAdded';
+import processAnalyticsRemoved from './queues/processAnalyticsRemoved';
+
+import processPrioritySupportAdded from './queues/processPrioritySupportAdded';
+import processPrioritySupportRemoved from './queues/processPrioritySupportRemoved';
+
+import processPrivateChannelAdded from './queues/processPrivateChannelAdded';
+import processPrivateChannelRemoved from './queues/processPrivateChannelRemoved';
+
+import processAdministratorEmailChanged from './queues/processAdministratorEmailChanged';
+import processCommunityCreated from './queues/processCommunityCreated';
+import processCommunityDeleted from './queues/processCommunityDeleted';
+import processCommunityEdited from './queues/processCommunityEdited';
 const PORT = process.env.PORT || 3008;
 
 debug('Logging with debug enabled!');
@@ -39,11 +68,28 @@ app.post('/webhooks', (req, res) => handleWebhooks(req, res));
 
 // Queue map of all events to process
 createWorker({
-  [PROCESS_CHARGE_EVENT]: processChargeEvent,
-  [PROCESS_CUSTOMER_EVENT]: processCustomerEvent,
-  [PROCESS_INVOICE_EVENT]: processInvoiceEvent,
-  [PROCESS_SOURCE_EVENT]: processSourceEvent,
-  [PROCESS_SUBSCRIPTION_EVENT]: processSubscriptionEvent,
+  [PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT]: processStripeChargeWebhook,
+  [PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT]: processStripeCustomerWebhook,
+  [PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT]: processStripeInvoiceWebhook,
+  [PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT]: processStripeSourceWebhook,
+  [PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT]: processStripeSubscriptionWebhook,
+
+  [PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED]: processAnalyticsAdded,
+  [PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED]: processAnalyticsRemoved,
+
+  [PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED]: processModeratorAdded,
+  [PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED]: processModeratorRemoved,
+
+  [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED]: processPrioritySupportAdded,
+  [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED]: processPrioritySupportRemoved,
+
+  [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED]: processPrivateChannelAdded,
+  [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED]: processPrivateChannelRemoved,
+
+  [PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED]: processAdministratorEmailChanged,
+  [PROCESS_STRIPE_COMMUNITY_CREATED]: processCommunityCreated,
+  [PROCESS_STRIPE_COMMUNITY_DELETED]: processCommunityDeleted,
+  [PROCESS_STRIPE_COMMUNITY_EDITED]: processCommunityEdited,
 });
 
 startChangefeeds();

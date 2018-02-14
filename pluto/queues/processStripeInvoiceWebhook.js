@@ -53,8 +53,8 @@ type InvoiceJob = {
   },
 };
 
-export const processInvoiceEvent = (job: InvoiceJob) => {
+export default async (job: InvoiceJob) => {
   const { data: { record } } = job;
   debug(`New job for ${record.id}`);
-  return InvoiceEventHandler.handle(record);
+  return await InvoiceEventHandler.handle(record);
 };

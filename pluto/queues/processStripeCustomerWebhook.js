@@ -55,8 +55,8 @@ type CustomerJob = {
   },
 };
 
-export const processCustomerEvent = (job: CustomerJob) => {
+export default async (job: CustomerJob) => {
   const { data: { record } } = job;
   debug(`New job for ${record.id}`);
-  return CustomerEventHandler.handle(record);
+  return await CustomerEventHandler.handle(record);
 };

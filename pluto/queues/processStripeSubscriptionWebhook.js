@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:subscriptionEvent');
 import type { RawSubscription } from '../types/subscription';
-import { stripeCustomerEventQueue } from 'shared/bull/queues';
+import { stripeCustomerWebhookEventQueue } from 'shared/bull/queues';
 import { stripe } from 'shared/stripe';
 
 type SubscriptionJob = {
@@ -15,10 +15,10 @@ type SubscriptionJob = {
   This processor ensures that any time a subscription event occurs we grab the
   latest customer data from stripe and update that record in our database.
 */
-export const processSubscriptionEvent = async (job: SubscriptionJob) => {
+export default async (job: SubscriptionJob) => {
   const { data: { record } } = job;
   debug(`New job for subscription ${record.id}`);
 
   const customer = await stripe.customers.retrieve(record.customer);
-  return stripeCustomerEventQueue.add({ record: customer });
+  return stripeCustomerWebhookEventQueue.add({ record: customer });
 };

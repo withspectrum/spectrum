@@ -52,8 +52,8 @@ type ChargeJob = {
   },
 };
 
-export const processChargeEvent = (job: ChargeJob) => {
+export default async (job: ChargeJob) => {
   const { data: { record } } = job;
   debug(`New job for ${record.id}`);
-  return ChargeEventHandler.handle(record);
+  return await ChargeEventHandler.handle(record);
 };

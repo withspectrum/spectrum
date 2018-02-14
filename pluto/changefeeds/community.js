@@ -12,7 +12,7 @@ import { db } from '../models/db';
 
 // when a community is created, generate a new customer for that community
 // we do this pre-emptively
-export const newCommunity = () =>
+export const communityCreated = () =>
   listenToNewDocumentsIn(db, 'communities', async (community: DBCommunity) => {
     // make sure we never duplicate customers
     const {
@@ -48,8 +48,8 @@ export const newCommunity = () =>
   });
 
 // keep the name of the community in sync on stripe
-export const editedCommunity = () =>
-  listenToChangedFieldIn(db, 'modifiedAt')(
+export const communityEdited = () =>
+  listenToChangedFieldIn(db, 'name')(
     'communities',
     async (community: DBCommunity) => {
       const {
@@ -94,7 +94,7 @@ export const editedCommunity = () =>
 
 // if a community is deleted on spectrum, deleting the customer on stripe will automatically
 // close out all active subscriptions
-export const deletedCommunity = () =>
+export const communityDeleted = () =>
   listenToDeletedDocumentsIn(
     db,
     'communities',
@@ -153,7 +153,7 @@ const handleAdminEmailChange = async (community: DBCommunity) => {
     .run();
 };
 
-export const changedAdministratorEmail = () =>
+export const communityAdministratorEmailChanged = () =>
   listenToChangedFieldIn(db, 'administratorEmail')(
     'communities',
     async (community: DBCommunity) => {
@@ -163,7 +163,7 @@ export const changedAdministratorEmail = () =>
     }
   );
 
-export const newAdministratorEmail = () =>
+export const communityAdministratorEmailCreated = () =>
   listenToNewFieldIn(db, 'administratorEmail')(
     'communities',
     async (community: DBCommunity) => {

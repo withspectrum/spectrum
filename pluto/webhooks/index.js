@@ -3,39 +3,39 @@ const debug = require('debug')('pluto:webhooks:index');
 import { stripe, stripeWebhookSigningSecret } from 'shared/stripe';
 import Raven from 'shared/raven';
 import {
-  stripeChargeEventQueue,
-  stripeSubscriptionEventQueue,
-  stripeSourceEventQueue,
-  stripeCustomerEventQueue,
-  stripeInvoiceEventQueue,
+  stripeChargeWebhookEventQueue,
+  stripeSubscriptionWebhookEventQueue,
+  stripeSourceWebhookEventQueue,
+  stripeCustomerWebhookEventQueue,
+  stripeInvoiceWebhookEventQueue,
 } from 'shared/bull/queues';
 
 const WebhookHandler = {
   for: async (event: Object): Promise<any> => {
     const handler = {
-      'charge.captured': stripeChargeEventQueue,
-      'charge.failed': stripeChargeEventQueue,
-      'charge.pending': stripeChargeEventQueue,
-      'charge.refunded': stripeChargeEventQueue,
-      'charge.succeeded': stripeChargeEventQueue,
-      'charge.updated': stripeChargeEventQueue,
+      'charge.captured': stripeChargeWebhookEventQueue,
+      'charge.failed': stripeChargeWebhookEventQueue,
+      'charge.pending': stripeChargeWebhookEventQueue,
+      'charge.refunded': stripeChargeWebhookEventQueue,
+      'charge.succeeded': stripeChargeWebhookEventQueue,
+      'charge.updated': stripeChargeWebhookEventQueue,
 
-      'customer.created': stripeCustomerEventQueue,
-      'customer.updated': stripeCustomerEventQueue,
+      'customer.created': stripeCustomerWebhookEventQueue,
+      'customer.updated': stripeCustomerWebhookEventQueue,
 
-      'customer.source.created': stripeSourceEventQueue,
-      'customer.source.deleted': stripeSourceEventQueue,
-      'customer.source.expiring': stripeSourceEventQueue,
-      'customer.source.updated': stripeSourceEventQueue,
+      'customer.source.created': stripeSourceWebhookEventQueue,
+      'customer.source.deleted': stripeSourceWebhookEventQueue,
+      'customer.source.expiring': stripeSourceWebhookEventQueue,
+      'customer.source.updated': stripeSourceWebhookEventQueue,
 
-      'customer.subscription.created': stripeSubscriptionEventQueue,
-      'customer.subscription.deleted': stripeSubscriptionEventQueue,
-      'customer.subscription.updated': stripeSubscriptionEventQueue,
+      'customer.subscription.created': stripeSubscriptionWebhookEventQueue,
+      'customer.subscription.deleted': stripeSubscriptionWebhookEventQueue,
+      'customer.subscription.updated': stripeSubscriptionWebhookEventQueue,
 
-      'invoice.created': stripeInvoiceEventQueue,
-      'invoice.updated': stripeInvoiceEventQueue,
-      'invoice.payment_failed': stripeInvoiceEventQueue,
-      'invoice.payment_succeeded': stripeInvoiceEventQueue,
+      'invoice.created': stripeInvoiceWebhookEventQueue,
+      'invoice.updated': stripeInvoiceWebhookEventQueue,
+      'invoice.payment_failed': stripeInvoiceWebhookEventQueue,
+      'invoice.payment_succeeded': stripeInvoiceWebhookEventQueue,
     }[event.type];
 
     if (!handler || handler === undefined) {
