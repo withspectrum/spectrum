@@ -1,16 +1,12 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:customerEvent');
-import type { CustomerEvent } from '../types/CustomerEvent';
 import type { CleanCustomer, RawCustomer } from '../types/customer';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
-import { SourceEventFactory } from './sourceEvent';
-import { SubscriptionEventFactory } from './subscriptionEvent';
 
 const cleanCustomer = (customer: RawCustomer): CleanCustomer => {
   debug(`Cleaning customer ${customer.id}`);
   // eslint-disable-next-line
-  const { sources, subscriptions, ...rest } = customer;
-  return Object.assign({}, rest, {
+  return Object.assign({}, customer, {
     customerId: customer.id,
   });
 };
@@ -43,53 +39,24 @@ export const CustomerEventHandler = {};
 const { clean, save } = CustomerEventFactory;
 
 CustomerEventHandler.handle = async (
-  event: CustomerEvent
+  raw: RawCustomer
 ): Promise<CleanCustomer> => {
-  debug(`Handling customer ${event.data.object.id}`);
+  debug(`Handling customer ${raw.id}`);
+  const cleanCustomer = clean(raw);
+  const result = await save(cleanCustomer);
 
-  const rawCustomer = event.data.object;
-  const { sources, subscriptions } = rawCustomer;
+  debug(`Returning result for customer event ${cleanCustomer.customerId}`);
+  return result;
+};
 
-  const cleanCustomer = clean(event.data.object);
+type CustomerJob = {
+  data: {
+    record: RawCustomer,
+  },
+};
 
-  return await Promise.all([
-    SourceEventFactory.resetCustomerSources(cleanCustomer.customerId),
-    SubscriptionEventFactory.resetCustomerSubscriptions(
-      cleanCustomer.customerId
-    ),
-  ])
-    .then(async () => {
-      debug(
-        `Done cleaning sources and subscriptions for ${
-          cleanCustomer.customerId
-        }`
-      );
-      const sourcePromises = sources.data.map(
-        async source =>
-          source &&
-          (await SourceEventFactory.save(SourceEventFactory.clean(source)))
-      );
-
-      const subscriptionPromises = subscriptions.data.map(
-        async subscription =>
-          subscription &&
-          (await SubscriptionEventFactory.save(
-            SubscriptionEventFactory.clean(subscription)
-          ))
-      );
-
-      const [result] = await Promise.all([
-        save(cleanCustomer),
-        sourcePromises,
-        subscriptionPromises,
-      ]);
-
-      debug(`Returning result for customer event ${cleanCustomer.customerId}`);
-
-      return result;
-    })
-    .catch(err => {
-      console.log(`Error handling customer event ${event.data.object.id}`);
-      throw new Error(err);
-    });
+export const processCustomerEvent = (job: CustomerJob) => {
+  const { data: { record } } = job;
+  debug(`New job for ${record.id}`);
+  return CustomerEventHandler.handle(record);
 };

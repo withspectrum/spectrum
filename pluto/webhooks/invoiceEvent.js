@@ -1,6 +1,5 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:invoiceEvent');
-import type { InvoiceEvent } from '../types/invoiceEvent';
 import type { CleanInvoice, RawInvoice } from '../types/invoice';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 
@@ -17,8 +16,9 @@ const saveInvoice = async (invoice: CleanInvoice): Promise<CleanInvoice> => {
   const table = 'stripeInvoices';
   const key = invoice.invoiceId;
   const filter = { customerId: invoice.customerId };
+  const exists = await recordExists(table, key, filter);
 
-  if (await recordExists(table, key, filter)) {
+  if (exists) {
     debug(`Invoice record exists, replacing ${invoice.id}`);
     return await replaceRecord(table, key, invoice, filter);
   } else {
@@ -37,12 +37,24 @@ export const InvoiceEventHandler = {};
 
 const { clean, save } = InvoiceEventFactory;
 
-InvoiceEventHandler.handle = async (
-  event: InvoiceEvent
-): Promise<CleanInvoice> => {
-  debug(`Handling invoice ${event.data.object.id}`);
-  return await save(clean(event.data.object)).catch(err => {
-    console.log(`Error handling invoice event ${event.data.object.id}`);
+InvoiceEventHandler.handle = async (raw: RawInvoice): Promise<CleanInvoice> => {
+  debug(`Handling invoice ${raw.id}`);
+  const cleaned = clean(raw);
+  const saved = await save(cleaned);
+  return saved.catch(err => {
+    console.log(`Error handling invoice event ${raw.id}`);
     throw new Error(err);
   });
+};
+
+type InvoiceJob = {
+  data: {
+    record: RawInvoice,
+  },
+};
+
+export const processInvoiceEvent = (job: InvoiceJob) => {
+  const { data: { record } } = job;
+  debug(`New job for ${record.id}`);
+  return InvoiceEventHandler.handle(record);
 };

@@ -148,7 +148,7 @@ const saveUserProvider = (
     });
 };
 
-const getUserByIndex = (indexName, indexValue) => {
+const getUserByIndex = (indexName: string, indexValue: string) => {
   return db
     .table('users')
     .getAll(indexValue, { index: indexName })

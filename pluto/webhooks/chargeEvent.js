@@ -1,6 +1,5 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:chargeEvent');
-import type { ChargeEvent } from '../types/ChargeEvent';
 import type { CleanCharge, RawCharge } from '../types/Charge';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 
@@ -37,12 +36,24 @@ export const ChargeEventHandler = {};
 
 const { clean, save } = ChargeEventFactory;
 
-ChargeEventHandler.handle = async (
-  event: ChargeEvent
-): Promise<CleanCharge> => {
-  debug(`Handling charge ${event.data.object.id}`);
-  return await save(clean(event.data.object)).catch(err => {
-    console.log(`Error handling charge event ${event.data.object.id}`);
+ChargeEventHandler.handle = async (raw: RawCharge): Promise<CleanCharge> => {
+  debug(`Handling charge ${raw.id}`);
+  const cleaned = clean(raw);
+  const saved = await save(cleaned);
+  return saved.catch(err => {
+    console.log(`Error handling charge event ${raw.id}`);
     throw new Error(err);
   });
+};
+
+type ChargeJob = {
+  data: {
+    record: RawCharge,
+  },
+};
+
+export const processChargeEvent = (job: ChargeJob) => {
+  const { data: { record } } = job;
+  debug(`New job for ${record.id}`);
+  return ChargeEventHandler.handle(record);
 };

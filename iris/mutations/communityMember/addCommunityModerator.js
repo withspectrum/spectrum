@@ -6,8 +6,7 @@ import {
   makeMemberModeratorInCommunity,
   checkUserPermissionsInCommunity,
 } from '../../models/usersCommunities';
-import { getSourcesByCustomerId } from '../../models/stripeSources';
-import { getSubscriptionsByCustomerId } from '../../models/stripeSubscriptions';
+import { getStripeCustomer } from '../../models/stripeCustomers';
 import { stripe } from 'shared/stripe';
 
 type Input = {
@@ -69,14 +68,16 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
         subscription item
   */
 
-  const [sources, subscriptions] = await Promise.all([
-    getSourcesByCustomerId(community.stripeCustomerId),
-    getSubscriptionsByCustomerId(community.stripeCustomerId),
-  ]);
+  const customer = await getStripeCustomer(stripeCustomerId);
+
+  if (!customer) {
+    return new UserError('No customer created yet somehow...');
+  }
+
+  const sources = customer.sources.data;
+  const subscriptions = customer.subscriptions.data;
 
   // 1
-  console.log('sources', sources);
-  console.log('subscriptions', subscriptions);
   console.log('1');
   if (
     !sources ||
@@ -98,6 +99,13 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     stripe.subscriptions.create({
       customer: stripeCustomerId,
       items: [
+        // NOTE: We have to include this dummy item in order to prevent
+        // the top-level subscription from thinking it's about any
+        // specific feature
+        {
+          plan: 'community-features',
+          quantity: 1,
+        },
         {
           plan: 'moderator-seat',
           quantity: 1,

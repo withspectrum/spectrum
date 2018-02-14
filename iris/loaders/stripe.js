@@ -1,7 +1,7 @@
-import { getStripeSourcesByCustomers } from '../models/stripeSources';
+import { getStripeCustomersByCustomerIds } from '../models/stripeCustomers';
 import createLoader from './create-loader';
 
-export const __createStripeSourcesLoader = createLoader(
-  customers => getStripeSourcesByCustomers(customers),
+export const __createStripeCustomersLoader = createLoader(
+  customers => getStripeCustomersByCustomerIds(customers),
   'group'
 );

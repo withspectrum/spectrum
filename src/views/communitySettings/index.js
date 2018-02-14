@@ -38,6 +38,8 @@ class CommunitySettings extends React.Component<Props> {
       history,
     } = this.props;
 
+    console.log('community', community);
+
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');

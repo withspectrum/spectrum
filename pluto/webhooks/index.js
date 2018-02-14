@@ -2,31 +2,44 @@
 const debug = require('debug')('pluto:webhooks:index');
 import { stripe, stripeWebhookSigningSecret } from 'shared/stripe';
 import Raven from 'shared/raven';
-
-import { CustomerEventHandler } from './customerEvent';
-import { SourceEventHandler } from './sourceEvent';
-import { SubscriptionEventHandler } from './subscriptionEvent';
-import { InvoiceEventHandler } from './invoiceEvent';
+import {
+  stripeChargeEventQueue,
+  stripeSubscriptionEventQueue,
+  stripeSourceEventQueue,
+  stripeCustomerEventQueue,
+  stripeInvoiceEventQueue,
+} from 'shared/bull/queues';
 
 const WebhookHandler = {
   for: async (event: Object): Promise<any> => {
     const handler = {
-      'customer.created': CustomerEventHandler,
-      'customer.updated': CustomerEventHandler,
-      'customer.source.created': SourceEventHandler,
-      'customer.source.deleted': SourceEventHandler,
-      'customer.source.expiring': SourceEventHandler,
-      'customer.source.updated': SourceEventHandler,
-      'customer.subscription.created': SubscriptionEventHandler,
-      'customer.subscription.deleted': SubscriptionEventHandler,
-      'customer.subscription.updated': SubscriptionEventHandler,
-      'invoice.created': InvoiceEventHandler,
-      'invoice.payment_failed': InvoiceEventHandler,
-      'invoice.payment_succeeded': InvoiceEventHandler,
+      'charge.captured': stripeChargeEventQueue,
+      'charge.failed': stripeChargeEventQueue,
+      'charge.pending': stripeChargeEventQueue,
+      'charge.refunded': stripeChargeEventQueue,
+      'charge.succeeded': stripeChargeEventQueue,
+      'charge.updated': stripeChargeEventQueue,
+
+      'customer.created': stripeCustomerEventQueue,
+      'customer.updated': stripeCustomerEventQueue,
+
+      'customer.source.created': stripeSourceEventQueue,
+      'customer.source.deleted': stripeSourceEventQueue,
+      'customer.source.expiring': stripeSourceEventQueue,
+      'customer.source.updated': stripeSourceEventQueue,
+
+      'customer.subscription.created': stripeSubscriptionEventQueue,
+      'customer.subscription.deleted': stripeSubscriptionEventQueue,
+      'customer.subscription.updated': stripeSubscriptionEventQueue,
+
+      'invoice.created': stripeInvoiceEventQueue,
+      'invoice.updated': stripeInvoiceEventQueue,
+      'invoice.payment_failed': stripeInvoiceEventQueue,
+      'invoice.payment_succeeded': stripeInvoiceEventQueue,
     }[event.type];
 
     if (!handler || handler === undefined) {
-      debug(`❌  Unhandled event type: ${event.type}`);
+      debug(`◽️  Unhandled event type: ${event.type}`);
       return;
       // throw new Error(`Unhandled event type: ${event.type}`);
     }
@@ -38,7 +51,7 @@ const WebhookHandler = {
       '\n\n'
     );
     return await handler
-      .handle(event)
+      .add({ record: event.data.object })
       .then(() => {
         debug(
           `\n\n😈 JOB FINISHED for ${event.type} ${event.data.object.id}\n\n`
@@ -72,7 +85,7 @@ export const handleWebhooks = async (req: any, res: any) => {
     }
   }
 
-  console.log('🕒 About to process event:', event.type);
+  debug(`🕒 About to process event type ${event.type}`);
 
   return await WebhookHandler.for(event)
     .then(() => res.status(200).send('Webhook received: ' + event.id))

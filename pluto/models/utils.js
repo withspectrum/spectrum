@@ -1,11 +1,13 @@
 // @flow
 import { db } from './db';
+const debug = require('debug')('pluto:models:utils');
 
 export const recordExists = async (
   table: string,
   primaryIndex: string,
   filter: Object = {}
 ): Promise<boolean> => {
+  debug(`Checking for duplicate records ${primaryIndex}`);
   return await db
     .table(table)
     .getAll(primaryIndex)
@@ -13,7 +15,9 @@ export const recordExists = async (
     .run()
     .then(
       result =>
-        console.log('Record exists: ', result) || (result && result.length > 0)
+        debug(`\nRecord exists for ${primaryIndex}`) ||
+        console.log(result) ||
+        (result && result.length > 0)
     )
     .catch(err => {
       console.log('ERROR: ', err);
@@ -25,13 +29,14 @@ export const insertRecord = async (
   table: string,
   record: Object
 ): Promise<any> => {
+  debug(`Inserting ${record.id}`);
   return await db
     .table(table)
     .insert(record, { returnChanges: 'always' })
     .run()
     .then(
       result =>
-        console.log('InsertedRecord: ', result) || result.changes[0].new_val
+        debug('\nInserted') || console.log(result) || result.changes[0].new_val
     )
     .catch(err => {
       console.log('ERROR: ', err);
@@ -53,7 +58,8 @@ export const replaceRecord = async (
     .run()
     .then(
       result =>
-        console.log('Replaced record: ', result) ||
+        debug('\nReplaced') ||
+        console.log(result) ||
         result.changes[0].new_val ||
         result.changes[0].old_val
     )

@@ -15,11 +15,11 @@ export default async (
   ]);
 
   if (!isOwner) return false;
-  return loaders.stripeSources.load(stripeCustomerId).then(results => {
-    const subs = results && results.reduction;
-    if (!subs || subs.length === 0) return false;
-    if (!Array.isArray(subs)) return subs.status === 'chargeable';
-
-    return subs.some(sub => sub.status === 'chargeable');
+  return loaders.stripeCustomers.load(stripeCustomerId).then(results => {
+    const customers = results && results.reduction;
+    if (!customers || customers.length === 0) return false;
+    const customerToEvaluate = customers[0];
+    const sources = customerToEvaluate.sources.data;
+    return sources.some(source => source.status === 'chargeable');
   });
 };

@@ -1,55 +1,24 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:subscriptionEvent');
-import type { SubscriptionEvent } from '../types/SubscriptionEvent';
-import type { CleanSubscription, RawSubscription } from '../types/subscription';
-import { recordExists, insertRecord, replaceRecord } from '../models/utils';
-import { resetCustomerSubscriptions } from '../models/stripeSubscriptions';
+import type { RawSubscription } from '../types/subscription';
+import { stripeCustomerEventQueue } from 'shared/bull/queues';
+import { stripe } from 'shared/stripe';
 
-const cleanSubscription = (
-  subscription: RawSubscription
-): CleanSubscription => {
-  debug(`Cleaning subscription ${subscription.id}`);
-  return Object.assign({}, subscription, {
-    customerId: subscription.customer,
-    subscriptionId: subscription.id,
-  });
+type SubscriptionJob = {
+  data: {
+    record: RawSubscription,
+  },
 };
+/*
+  We treat the customer object on Stripe as our source of truth. When subscriptions
+  change, it might not always cause an update to the customer record in stripe.
+  This processor ensures that any time a subscription event occurs we grab the
+  latest customer data from stripe and update that record in our database.
+*/
+export const processSubscriptionEvent = async (job: SubscriptionJob) => {
+  const { data: { record } } = job;
+  debug(`New job for subscription ${record.id}`);
 
-const saveSubscription = async (
-  subscription: CleanSubscription
-): Promise<CleanSubscription> => {
-  debug(`Saving subscription ${subscription.id}`);
-  const table = 'stripeSubscriptions';
-  const key = subscription.customerId;
-  const filter = { customerId: key };
-
-  if (await recordExists(table, key, filter)) {
-    debug(`Subscription record exists, replacing ${subscription.id}`);
-    return await replaceRecord(table, key, subscription, filter);
-  } else {
-    debug(`Subscription record does not exist, inserting ${subscription.id}`);
-    return await insertRecord(table, subscription);
-  }
-};
-
-export const SubscriptionEventFactory = {
-  clean: (raw: RawSubscription): CleanSubscription => cleanSubscription(raw),
-  save: async (clean: CleanSubscription): Promise<CleanSubscription> =>
-    await saveSubscription(clean),
-  resetCustomerSubscriptions: async (customerId: string) =>
-    await resetCustomerSubscriptions(customerId),
-};
-
-export const SubscriptionEventHandler = {};
-
-const { clean, save } = SubscriptionEventFactory;
-
-SubscriptionEventHandler.handle = async (
-  event: SubscriptionEvent
-): Promise<CleanSubscription> => {
-  debug(`Handling subscription ${event.data.object.id}`);
-  return await save(clean(event.data.object)).catch(err => {
-    console.log(`Error handling subscription event ${event.data.object.id}`);
-    throw new Error(err);
-  });
+  const customer = await stripe.customers.retrieve(record.customer);
+  return stripeCustomerEventQueue.add({ record: customer });
 };
