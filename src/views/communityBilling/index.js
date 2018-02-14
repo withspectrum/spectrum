@@ -20,6 +20,7 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from '../../components/viewNetworkHandler';
 import { Loading } from '../../components/loading';
+import Source from './components/source';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -36,7 +37,7 @@ class CommunityMembersSettings extends React.Component<Props> {
   render() {
     const { data, isLoading } = this.props;
     const { community } = data;
-    console.log(community);
+
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
         return (
@@ -59,17 +60,10 @@ class CommunityMembersSettings extends React.Component<Props> {
 
           <Column>
             <SectionCard>
-              <SectionTitle>Sources</SectionTitle>
+              <SectionTitle>Payment Method</SectionTitle>
               {community.billingSettings.sources.map(
                 source =>
-                  source && (
-                    <p key={source.sourceId}>
-                      {source.sourceId} · {source.card.last4} ·{' '}
-                      {source.card.brand} · Exp {source.card.exp_month}/{
-                        source.card.exp_year
-                      }
-                    </p>
-                  )
+                  source && <Source key={source.sourceId} source={source} />
               )}
             </SectionCard>
 
