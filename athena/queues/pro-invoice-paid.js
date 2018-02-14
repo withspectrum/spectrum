@@ -6,22 +6,11 @@ import { SEND_PRO_INVOICE_RECEIPT_EMAIL } from './constants';
 import { convertTimestampToDate } from '../utils/timestamp-to-date';
 import { getUsers } from '../models/user';
 import { getRecurringPaymentFromInvoice } from '../models/recurringPayment';
+import type { Job, InvoiceJobData } from 'shared/bull/types';
 
 const sendProInvoiceReceiptQueue = createQueue(SEND_PRO_INVOICE_RECEIPT_EMAIL);
 
-type JobData = {
-  data: {
-    invoice: {
-      id: string,
-      amount: number,
-      paidAt: number,
-      sourceBrand: string,
-      sourceLast4: string,
-      planName: string,
-    },
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<InvoiceJobData>) => {
   const { invoice } = job.data;
 
   debug(`new job for pro invoice id ${invoice.id}`);

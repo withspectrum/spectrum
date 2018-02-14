@@ -2,18 +2,17 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import Link from '../../components/link';
+import { Button } from '../../components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import Icon from '../../components/icons';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import Search from './components/search';
 import CommunityMemberGrid from './components/memberGrid';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
-import { addToastWithTimeout } from '../../actions/toasts';
+import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
 import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
@@ -22,22 +21,26 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import { LoadingScreen } from '../../components/loading';
-import {
-  UpsellSignIn,
-  UpsellJoinCommunity,
-  Upsell404Community,
-} from '../../components/upsell';
+import { CLIENT_URL } from '../../api/constants';
+import { Upsell404Community } from '../../components/upsell';
 import {
   SegmentedControl,
   Segment,
   DesktopSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
-import { CoverRow, CoverColumn, LogoutButton } from './style';
+import {
+  LoginButton,
+  Grid,
+  Meta,
+  Content,
+  Extras,
+  MidSegment,
+  ColumnHeading,
+} from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
-import type { ToggleCommunityMembershipType } from 'shared/graphql/mutations/community/toggleCommunityMembership';
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -86,42 +89,6 @@ class CommunityView extends React.Component<Props, State> {
     }
   }
 
-  toggleMembership = (communityId: string) => {
-    const { dispatch } = this.props;
-
-    this.setState({
-      isLeavingCommunity: true,
-    });
-
-    this.props
-      .toggleCommunityMembership({ communityId })
-      .then(({ data }: ToggleCommunityMembershipType) => {
-        const { toggleCommunityMembership } = data;
-
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-        track('community', isMember ? 'joined' : 'unjoined', null);
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
-
-        return this.setState({
-          isLeavingCommunity: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isLeavingCommunity: false,
-        });
-
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   setComposerUpsell = () => {
     const { data: { community } } = this.props;
     const communityExists = community && community.communityPermissions;
@@ -159,14 +126,47 @@ class CommunityView extends React.Component<Props, State> {
           description: community.description,
         },
       });
+
+      const { showComposerUpsell, selectedView } = this.state;
       const {
-        showComposerUpsell,
-        selectedView,
-        isLeavingCommunity,
-      } = this.state;
-      const { isMember, isOwner, isModerator } = community.communityPermissions;
+        isMember,
+        isOwner,
+        isModerator,
+        isBlocked,
+      } = community.communityPermissions;
       const userHasPermissions = isMember || isOwner || isModerator;
       const isLoggedIn = currentUser;
+
+      if (isBlocked) {
+        return (
+          <AppViewWrapper data-e2e-id="community-view">
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={'/'}
+              noComposer={!community.communityPermissions.isMember}
+            />
+
+            <Head
+              title={title}
+              description={description}
+              image={community.profilePhoto}
+            />
+
+            <ViewError
+              emoji={'✋'}
+              heading={`You are blocked from ${community.name}`}
+              subheading={
+                'You have been blocked from joining and viewing conversations in this community.'
+              }
+            >
+              <Link to={'/'}>
+                <Button large>Take me home</Button>
+              </Link>
+            </ViewError>
+          </AppViewWrapper>
+        );
+      }
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream
@@ -188,131 +188,130 @@ class CommunityView extends React.Component<Props, State> {
             description={description}
             image={community.profilePhoto}
           />
-
-          <CoverColumn>
+          <Grid>
             <CoverPhoto src={community.coverPhoto} />
-            <CoverRow className={'flexy'}>
-              <Column type="secondary" className={'inset'}>
-                <CommunityProfile data={{ community }} profileSize="full" />
-                {isLoggedIn &&
-                  (!community.communityPermissions.isOwner &&
-                    community.communityPermissions.isMember) && (
-                    <LogoutButton
-                      onClick={() => this.toggleMembership(community.id)}
-                      loading={isLeavingCommunity}
+            <Meta>
+              <CommunityProfile data={{ community }} profileSize="full" />
+
+              {!isLoggedIn ? (
+                <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
+                  <LoginButton>Join {community.name}</LoginButton>
+                </Link>
+              ) : !isOwner ? (
+                <ToggleCommunityMembership
+                  community={community}
+                  render={state => (
+                    <LoginButton
+                      isMember={isMember}
+                      gradientTheme={isMember ? null : 'success'}
+                      color={isMember ? 'text.alt' : null}
+                      icon={isMember ? 'checkmark' : null}
+                      loading={state.isLoading}
                     >
-                      Leave {community.name}
-                    </LogoutButton>
+                      {isMember ? 'Member' : `Join ${community.name}`}
+                    </LoginButton>
                   )}
-                <ChannelList
-                  id={community.id}
-                  communitySlug={communitySlug.toLowerCase()}
                 />
-              </Column>
+              ) : null}
 
-              <Column type="primary">
-                <SegmentedControl style={{ margin: '-16px 0 16px' }}>
-                  <DesktopSegment
-                    segmentLabel="search"
-                    onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
-                  >
-                    <Icon glyph={'search'} />
-                    Search
-                  </DesktopSegment>
+              {currentUser &&
+                isOwner && (
+                  <Link to={`/${community.slug}/settings`}>
+                    <LoginButton icon={'settings'} isMember>
+                      Settings
+                    </LoginButton>
+                  </Link>
+                )}
+              <ChannelList
+                id={community.id}
+                communitySlug={communitySlug.toLowerCase()}
+              />
+            </Meta>
+            <Content>
+              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+                <DesktopSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                  Search
+                </DesktopSegment>
 
-                  <Segment
-                    segmentLabel="threads"
-                    onClick={() => this.handleSegmentClick('threads')}
-                    selected={selectedView === 'threads'}
-                  >
-                    Threads
-                  </Segment>
+                <Segment
+                  segmentLabel="threads"
+                  onClick={() => this.handleSegmentClick('threads')}
+                  selected={selectedView === 'threads'}
+                >
+                  Threads
+                </Segment>
 
-                  <DesktopSegment
-                    segmentLabel="members"
-                    onClick={() => this.handleSegmentClick('members')}
-                    selected={selectedView === 'members'}
-                  >
-                    Members ({community.metaData &&
-                      community.metaData.members &&
-                      community.metaData.members.toLocaleString()})
-                  </DesktopSegment>
-                  <MobileSegment
-                    segmentLabel="members"
-                    onClick={() => this.handleSegmentClick('members')}
-                    selected={selectedView === 'members'}
-                  >
-                    Members
-                  </MobileSegment>
-                  <MobileSegment
-                    segmentLabel="search"
-                    onClick={() => this.handleSegmentClick('search')}
-                    selected={selectedView === 'search'}
-                  >
-                    <Icon glyph={'search'} />
-                  </MobileSegment>
-                </SegmentedControl>
+                <MidSegment
+                  segmentLabel="members"
+                  onClick={() => this.handleSegmentClick('members')}
+                  selected={selectedView === 'members'}
+                >
+                  Members ({community.metaData &&
+                    community.metaData.members &&
+                    community.metaData.members.toLocaleString()})
+                </MidSegment>
+                <MobileSegment
+                  segmentLabel="members"
+                  onClick={() => this.handleSegmentClick('members')}
+                  selected={selectedView === 'members'}
+                >
+                  Members
+                </MobileSegment>
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  <Icon glyph={'search'} />
+                </MobileSegment>
+              </SegmentedControl>
 
-                {// if the user is logged in, is viewing the threads,
-                // and is a member of the community, they should see a
-                // new thread composer
-                isLoggedIn &&
-                  selectedView === 'threads' &&
-                  userHasPermissions && (
-                    <ThreadComposer
-                      activeCommunity={communitySlug}
-                      showComposerUpsell={showComposerUpsell}
-                    />
-                  )}
-
-                {// if the user is logged in but doesn't own the community
-                // or isn't a member yet, prompt them to join the community
-                isLoggedIn &&
-                  !userHasPermissions && (
-                    <UpsellJoinCommunity
-                      community={community}
-                      loading={isLeavingCommunity}
-                      join={this.toggleMembership}
-                    />
-                  )}
-
-                {// if the user hasn't signed up yet, show them a spectrum
-                // upsell signup prompt
-                !isLoggedIn &&
-                  selectedView === 'threads' && (
-                    <UpsellSignIn
-                      title={`Join the ${community.name} community`}
-                      view={{ data: community, type: 'community' }}
-                    />
-                  )}
-
-                {// thread list
-                selectedView === 'threads' && (
-                  <CommunityThreadFeed
-                    viewContext="community"
-                    slug={communitySlug}
-                    id={community.id}
-                    currentUser={isLoggedIn}
-                    setThreadsStatus={
-                      !this.showComposerUpsell && this.setComposerUpsell
-                    }
-                    isNewAndOwned={isNewAndOwned}
-                    community={community}
-                    pinnedThreadId={community.pinnedThreadId}
+              {// if the user is logged in, is viewing the threads,
+              // and is a member of the community, they should see a
+              // new thread composer
+              isLoggedIn &&
+                selectedView === 'threads' &&
+                userHasPermissions && (
+                  <ThreadComposer
+                    activeCommunity={communitySlug}
+                    showComposerUpsell={showComposerUpsell}
                   />
                 )}
 
-                {// members grid
-                selectedView === 'members' && (
-                  <CommunityMemberGrid id={community.id} />
-                )}
+              {// thread list
+              selectedView === 'threads' && (
+                <CommunityThreadFeed
+                  viewContext="community"
+                  slug={communitySlug}
+                  id={community.id}
+                  currentUser={isLoggedIn}
+                  setThreadsStatus={
+                    !this.showComposerUpsell && this.setComposerUpsell
+                  }
+                  isNewAndOwned={isNewAndOwned}
+                  community={community}
+                  pinnedThreadId={community.pinnedThreadId}
+                />
+              )}
 
-                {//search
-                selectedView === 'search' && <Search community={community} />}
-              </Column>
-            </CoverRow>
-          </CoverColumn>
+              {// members grid
+              selectedView === 'members' && (
+                <CommunityMemberGrid id={community.id} />
+              )}
+
+              {//search
+              selectedView === 'search' && <Search community={community} />}
+            </Content>
+            <Extras>
+              <ColumnHeading>Members</ColumnHeading>
+              <CommunityMemberGrid first={5} id={community.id} />
+            </Extras>
+          </Grid>
         </AppViewWrapper>
       );
     }
@@ -364,7 +363,6 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  toggleCommunityMembershipMutation,
   getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);

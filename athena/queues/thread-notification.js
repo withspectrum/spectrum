@@ -19,14 +19,9 @@ import { getUsers } from '../models/user';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
 import type { DBThread } from 'shared/types';
+import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    thread: DBThread,
-    userId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<ThreadNotificationJobData>) => {
   const { thread: incomingThread } = job.data;
   debug(`new job for a thread by ${incomingThread.creatorId}`);
 

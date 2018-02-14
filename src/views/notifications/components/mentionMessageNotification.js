@@ -11,7 +11,7 @@ import {
   NotificationListRow,
   SpecialContext,
 } from '../style';
-import { Sender, MessageGroup } from '../../../components/messageGroup/style';
+import { Author, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
 import {
@@ -39,7 +39,7 @@ export class MentionMessageNotification extends React.Component<Props, State> {
     const { notification, currentUser } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
-    const sender = actors.asObjects[0];
+    const author = actors.asObjects[0];
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
     const message =
@@ -65,10 +65,10 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         <Content>
           <AttachmentsWash>
             {message && (
-              <Sender style={{ marginTop: '0' }}>
-                <AuthorAvatar sender={sender} />
+              <Author style={{ marginTop: '0' }}>
+                <AuthorAvatar user={author} />
                 <MessageGroup me={false}>
-                  <AuthorByline sender={sender} me={false} />
+                  <AuthorByline user={author} me={false} />
 
                   <Message
                     message={message}
@@ -80,7 +80,7 @@ export class MentionMessageNotification extends React.Component<Props, State> {
                     context={'notification'}
                   />
                 </MessageGroup>
-              </Sender>
+              </Author>
             )}
           </AttachmentsWash>
         </Content>

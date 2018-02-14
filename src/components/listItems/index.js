@@ -1,9 +1,6 @@
 import * as React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
-// $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../icons';
 import Badge from '../badges';
@@ -20,7 +17,6 @@ import {
   Description,
   ActionContainer,
   BadgeContainer,
-  Lock,
 } from './style';
 
 type CommunityProps = {
@@ -47,7 +43,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
             community={community}
             radius={4}
             src={`${community.profilePhoto}`}
-            size={32}
+            size={'32'}
             noLink
           />
           <Col style={{ marginLeft: '12px' }}>
@@ -74,15 +70,10 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Col>
           <Heading>
-            {props.contents.isPrivate && (
-              <Lock>
-                <Icon
-                  glyph={'private'}
-                  tipText={'Private channel'}
-                  tipLocation="top-right"
-                  size={16}
-                />
-              </Lock>
+            {props.contents.isPrivate ? (
+              <Icon glyph={'channel-private'} size={32} />
+            ) : (
+              <Icon glyph={'channel'} size={32} />
             )}
             {props.contents.name}
           </Heading>
@@ -90,11 +81,6 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </Wrapper>
   );
 };
@@ -119,15 +105,10 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
             <Heading>
-              {props.contents.isPrivate && (
-                <Lock>
-                  <Icon
-                    glyph={'private'}
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={16}
-                  />
-                </Lock>
+              {props.contents.isPrivate ? (
+                <Icon glyph={'channel-private'} size={32} />
+              ) : (
+                <Icon glyph={'channel'} size={32} />
               )}
               {props.contents.name}
             </Heading>
@@ -136,11 +117,6 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
-      {!!props.contents.description && props.withDescription ? (
-        <Description>{props.contents.description}</Description>
-      ) : (
-        ''
-      )}
     </WrapperLi>
   );
 };
@@ -148,15 +124,25 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
 export const UserListItem = ({
   user,
   children,
-  reputationTipText = 'Your rep in this community',
+  hideRep = false,
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
       user.contextPermissions.reputation > 0 &&
       user.contextPermissions.reputation
-    : user.totalReputation && user.totalReputation > 0
-      ? user.totalReputation
-      : '0';
+    : user.reputation && user.reputation > 0
+      ? user.reputation
+      : user.totalReputation && user.totalReputation > 0
+        ? user.totalReputation
+        : '0';
+
+  const role =
+    user.contextPermissions && user.contextPermissions.isOwner
+      ? 'Admin'
+      : user.contextPermissions && user.contextPermissions.isModerator
+        ? 'Moderator'
+        : null;
+
   return (
     <Wrapper border>
       <Row>
@@ -164,25 +150,32 @@ export const UserListItem = ({
           radius={20}
           user={user}
           src={`${user.profilePhoto}`}
-          size={40}
+          size={'40'}
           link={user.username ? `/users/${user.username}` : null}
         />
-        <Col style={{ marginLeft: '16px' }}>
+        <Col
+          style={{
+            marginLeft: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
           <Heading>
             {user.username ? (
               <Link to={`/users/${user.username}`}>{user.name}</Link>
             ) : (
               <span>{user.name}</span>
             )}
+            {role && <Badge type={role} />}
           </Heading>
-          <Meta>
-            {(user.totalReputation || user.contextPermissions) && (
-                <Reputation
-                  tipText={reputationTipText}
-                  reputation={reputation}
-                />
+          {!hideRep && (
+            <Meta>
+              {(user.totalReputation || user.contextPermissions) && (
+                <Reputation reputation={reputation} />
               )}
-          </Meta>
+            </Meta>
+          )}
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>

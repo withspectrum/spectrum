@@ -11,7 +11,6 @@ const Message = /* GraphQL */ `
 		directMessageThread
 	}
 
-	# The content and type of a message
 	type MessageContent {
 		body: String!
 	}
@@ -21,15 +20,16 @@ const Message = /* GraphQL */ `
 		hasReacted: Boolean
 	}
 
-	# A message
 	type Message {
 		id: ID!
 		timestamp: Date!
 		thread: Thread
 		content: MessageContent!
-		sender: User!
+		author: ThreadParticipant!
 		reactions: ReactionData
 		messageType: MessageTypes!
+
+		sender: User! @deprecated(reason:"Use Message.author field instead")
 	}
 
 	input MessageContentInput {
@@ -45,16 +45,14 @@ const Message = /* GraphQL */ `
 	}
 
 	extend type Query {
-		message(
-			id: ID!
-		): Message
+		message(id: ID!): Message
 		getMediaMessagesForThread(threadId: ID!): [Message]
 	}
 
 
 	extend type Mutation {
 		addMessage(message: MessageInput!): Message
-        deleteMessage(id: ID!): Boolean
+		deleteMessage(id: ID!): Boolean
 	}
 
 	extend type Subscription {

@@ -9,9 +9,10 @@ import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import Avatar from '../avatar';
-import Card from '../card';
+import ToggleCommunityMembership from '../toggleCommunityMembership';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import {
   Title,
   MiniTitle,
@@ -43,32 +44,28 @@ type NullCardProps = {
 };
 export const NullCard = (props: NullCardProps) => {
   return (
-    <Card noShadow={props.noShadow}>
-      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.heading && <Title>{props.heading}</Title>}
-        {props.copy && <Subtitle>{props.copy}</Subtitle>}
-        {props.children}
-      </NullCol>
-    </Card>
+    <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.heading && <Title>{props.heading}</Title>}
+      {props.copy && <Subtitle>{props.copy}</Subtitle>}
+      {props.children}
+    </NullCol>
   );
 };
 
 export const MiniNullCard = (props: NullCardProps) => {
   return (
-    <Card>
-      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.emoji && (
-          <LargeEmoji>
-            <span role="img" aria-label="Howdy!">
-              {props.emoji}
-            </span>
-          </LargeEmoji>
-        )}
-        {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
-        {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
-        {props.children}
-      </NullCol>
-    </Card>
+    <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.emoji && (
+        <LargeEmoji>
+          <span role="img" aria-label="Howdy!">
+            {props.emoji}
+          </span>
+        </LargeEmoji>
+      )}
+      {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
+      {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
+      {props.children}
+    </NullCol>
   );
 };
 
@@ -94,9 +91,7 @@ export const UpsellMiniCreateCommunity = () => {
       copy="Building communities on Spectrum is easy and free forever"
     >
       <Link to="/new/community">
-        <Button icon="plus" label>
-          Get Started
-        </Button>
+        <Button icon="plus">Get Started</Button>
       </Link>
     </MiniNullCard>
   );
@@ -233,12 +228,8 @@ export const Upsell404Community = () => {
 
 export const UpsellJoinCommunity = ({
   community,
-  join,
-  loading,
 }: {
-  community: Object,
-  join: Function,
-  loading: boolean,
+  community: GetCommunityType,
 }) => {
   return (
     <NullCard
@@ -246,9 +237,14 @@ export const UpsellJoinCommunity = ({
       heading="Want to be a part of the conversation?"
       copy={`Join ${community.name} to get involved!`}
     >
-      <Button loading={loading} onClick={() => join(community.id)} icon="plus">
-        Join {community.name}
-      </Button>
+      <ToggleCommunityMembership
+        community={community}
+        render={({ isLoading }) => (
+          <Button loading={isLoading} icon="plus">
+            Join {community.name}
+          </Button>
+        )}
+      />
     </NullCard>
   );
 };

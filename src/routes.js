@@ -157,6 +157,9 @@ const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
 const CommunityAnalyticsFallback = signedOutFallback(CommunitySettings, () => (
   <Redirect to="/login" />
 ));
+const CommunityMembersFallback = signedOutFallback(CommunitySettings, () => (
+  <Redirect to="/login" />
+));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
   <Redirect to="/login" />
 ));
@@ -260,6 +263,10 @@ class Routes extends React.Component<{}> {
               <Route
                 path="/:communitySlug/settings/analytics"
                 component={CommunityAnalyticsFallback}
+              />
+              <Route
+                path="/:communitySlug/settings/members"
+                component={CommunityMembersFallback}
               />
               <Route
                 path="/:communitySlug/settings"

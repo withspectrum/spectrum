@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should remove a moderator in the community 1`] = `
+Object {
+  "data": Object {
+    "removeCommunityModerator": Object {
+      "id": "12803353-cb86-4109-8c4a-9abba79398d8",
+    },
+  },
+}
+`;

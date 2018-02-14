@@ -23,6 +23,11 @@
 		"FACEBOOK_OAUTH_CLIENT_SECRET": "@facebook-oauth-client-secret",
 		"GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
 		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
+		"TWITTER_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@twitter-oauth-client-secret-development",
+		"FACEBOOK_OAUTH_CLIENT_ID_DEVELOPMENT": "@facebook-oauth-client-id-development",
+		"FACEBOOK_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@facebook-oauth-client-secret-development",
+		"GOOGLE_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@google-oauth-client-secret-development",
+		"GITHUB_OAUTH_CLIENT_SECRET_DEVELOPMENT": "@github-oauth-client-secret-development",
 		"SLACK_SECRET": "@slack-secret",
 		"POSTMARK_SERVER_KEY": "@postmark-server-key",
 		"EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
@@ -30,6 +35,7 @@
 		"SESSION_COOKIE_SECRET": "@session-cookie-secret",
 		"ALGOLIA_APP_ID": "@algolia-app-id",
 		"ALGOLIA_API_SECRET": "@algolia-api-secret",
-        "APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key"
+		"APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key",
+    "API_TOKEN_SECRET": "@api-token-secret"
 	}
 }

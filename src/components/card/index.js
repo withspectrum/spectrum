@@ -4,15 +4,10 @@ import React from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexCol, Shadow, hexa } from '../globals';
+import { FlexCol } from '../globals';
 
 const StyledCard = styled(FlexCol)`
   background: ${({ theme }) => theme.bg.default};
-  border-radius: 12px;
-  box-shadow: ${props =>
-    props.noShadow
-      ? 'none'
-      : `${Shadow.low} ${hexa(props.theme.text.placeholder, 0.25)}`};
   position: relative;
   width: 100%;
   max-width: 100%;

@@ -6,6 +6,7 @@ import UserError from '../../utils/UserError';
 import searchCommunities from './searchCommunities';
 import searchUsers from './searchUsers';
 import searchThreads from './searchThreads';
+import searchCommunityMembers from './searchCommunityMembers';
 
 type Input = {
   type: SearchTypes,
@@ -32,6 +33,9 @@ export default (_: any, input: Input, ctx: GraphQLContext) => {
     }
     case 'THREADS': {
       return searchThreads(args, ctx);
+    }
+    case 'COMMUNITY_MEMBERS': {
+      return searchCommunityMembers(args, ctx);
     }
     default: {
       return new UserError('Invalid searchType supplied to Search query');

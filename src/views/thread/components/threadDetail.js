@@ -151,15 +151,15 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     let message;
 
-    if (isCommunityOwner && !thread.isCreator) {
+    if (isCommunityOwner && !thread.isAuthor) {
       message = `You are about to delete another person's thread. As the owner of the ${
         thread.community.name
-      } community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
-    } else if (isChannelOwner && !thread.isCreator) {
+      } community, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else if (isChannelOwner && !thread.isAuthor) {
       message = `You are about to delete another person's thread. As the owner of the ${
         thread.channel.name
-      } channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
-    } else if (thread.isCreator) {
+      } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else if (thread.isAuthor) {
       message = 'Are you sure you want to delete this thread?';
     } else {
       message = 'Are you sure you want to delete this thread?';
@@ -375,7 +375,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       <ThreadWrapper>
         <ThreadContent isEditing={isEditing}>
           {/* $FlowFixMe */}
-          <ThreadByline creator={thread.creator} />
+          <ThreadByline author={thread.author} />
 
           {isEditing ? (
             <Textarea

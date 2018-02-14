@@ -8,6 +8,7 @@ export const Truncate = width => css`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  min-width: 0;
 `;
 
 export const hexa = (hex, alpha) => {
@@ -489,7 +490,7 @@ export const Tooltip = props => css`
   &:after {
     content: ${props.tipText && !props.onboarding
       ? `'${CSS.escape(props.tipText)}'`
-      : `''`};
+      : "''"};
     z-index: ${zIndex.tooltip};
     ${fontStack};
     font-size: 14px;
@@ -535,7 +536,7 @@ export const Onboarding = props => css`
   }
 
   &:after {
-    content: ${props.onboarding ? `'${props.onboarding}'` : `''`};
+    content: ${props.onboarding ? `'${props.onboarding}'` : "''"};
     z-index: ${zIndex.tooltip};
     ${fontStack};
     text-align: left;

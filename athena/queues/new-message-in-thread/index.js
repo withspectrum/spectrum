@@ -17,27 +17,18 @@ import {
   markUsersNotificationsAsNew,
 } from '../../models/usersNotifications';
 import { getThreadNotificationUsers } from '../../models/usersThreads';
+import { getUserPermissionsInChannel } from '../../models/usersChannels';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    message: {
-      id: string,
-      messageType: string,
-      senderId: string,
-      threadId: string,
-      content: {
-        body: string,
-      },
-    },
-  },
-};
-
-export default async (job: JobData) => {
+export default async (job: Job<MessageNotificationJobData>) => {
   const { message: incomingMessage } = job.data;
   const { senderId: messageSenderId } = incomingMessage;
 
   debug(
-    `new job: message sent by ${messageSenderId} in thread #${incomingMessage.threadId}`
+    `new job: message sent by ${messageSenderId} in thread #${
+      incomingMessage.threadId
+    }`
   );
 
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
@@ -78,10 +69,24 @@ export default async (job: JobData) => {
 
   // determine who should get notified
   const recipients = await getThreadNotificationUsers(notification.context.id);
-
   // filter out the user who sent the message
   const filteredRecipients = recipients.filter(
     recipient => recipient.userId !== messageSenderId
+  );
+
+  const thread = JSON.parse(context.payload);
+
+  const permissionedRecipients = await Promise.all(
+    filteredRecipients.map(async user => {
+      const [channelPermissions, communityPermissions] = await Promise.all([
+        getUserPermissionsInChannel(user.userId, thread.channelId),
+        getUserPermissionsInCommunity(thread.communityId, user.userId),
+      ]);
+      const isNotBlocked =
+        !channelPermissions.isBlocked && !communityPermissions.isBlocked;
+      // only return the user if they aren't blocked in both the community & channel
+      return isNotBlocked ? user : null;
+    })
   );
 
   // convert the message body to be checked for mentions
@@ -106,9 +111,10 @@ export default async (job: JobData) => {
 
   // if a user was mentioned, they should only get the mention notification
   // and not get a new message notification, so remove them here
-  const recipientsWithoutMentions = filteredRecipients.filter(
-    r => mentions.indexOf(r.username) < 0
-  );
+  const recipientsWithoutMentions = permissionedRecipients
+    // strip any falsy values from our permission checks above
+    .filter(Boolean)
+    .filter(r => r && mentions.indexOf(r.username) < 0);
 
   // if no more receipients are valid, escape the function
   if (!recipientsWithoutMentions || recipientsWithoutMentions.length === 0) {
@@ -117,7 +123,6 @@ export default async (job: JobData) => {
   }
 
   // get raw data for the email
-  const thread = JSON.parse(context.payload);
   const message = JSON.parse(entity.payload);
   const sender = JSON.parse(actor.payload);
   const dbMethod = existing
@@ -126,6 +131,8 @@ export default async (job: JobData) => {
 
   // send each recipient a notification
   const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
+    if (!recipient) return;
+
     formatData(recipient, thread, sender, message, notification);
 
     // store or update the notification in the db to trigger a ui update in app

@@ -1,40 +1,19 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
-import styled from 'styled-components';
-// $FlowFixMe
 import { connect } from 'react-redux';
-import { Gradient, Tooltip } from '../globals';
 import { openModal } from '../../actions/modals';
+import { Span, ProBadge, BlockedBadge } from './style';
 
-const Span = styled.span`
-  color: ${({ theme }) => theme.text.reverse};
-  background-color: ${props => props.theme.text.alt};
-  background-image: 'none';
-  text-transform: uppercase;
-  padding: 2px 4px;
-  margin-left: 4px;
-  font-size: 9px;
-  font-weight: 800;
-  border-radius: 4px;
-  ${props => (props.tipText ? Tooltip(props) : '')};
-  align-self: center;
-  line-height: 1.4;
-`;
+type Props = {
+  type: string,
+  onClick?: Function,
+  tipText: string,
+  currentUser: ?Object,
+  dispatch: Function,
+};
 
-const ProBadge = styled(Span)`
-  background-color: ${props => props.theme.special.default};
-  background-image: ${props =>
-    Gradient(props.theme.special.alt, props.theme.special.default)};
-  cursor: pointer;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-class Badge extends Component {
+class Badge extends React.Component<Props> {
   triggerProModal = () => {
     // if user isn't signed in, don't trigger the modal
     // if the user is currently pro, don't trigger the modal (otherwise they'll see a downsell)
@@ -58,13 +37,23 @@ class Badge extends Component {
             {this.props.type}
           </ProBadge>
         );
+      case 'blocked':
+        return (
+          <BlockedBadge
+            type={this.props.type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+          >
+            {this.props.type}
+          </BlockedBadge>
+        );
       default:
         return (
           <Span
             type={this.props.type}
             tipText={this.props.tipText}
             tipLocation={'top-left'}
-            onClick={this.props.onClick}
+            onClick={this.props.onClick && this.props.onClick}
           >
             {this.props.type}
           </Span>
@@ -76,4 +65,8 @@ class Badge extends Component {
 const map = state => ({
   currentUser: state.users.currentUser,
 });
-export default compose(connect(map))(Badge);
+
+export default compose(
+  // $FlowIssue
+  connect(map)
+)(Badge);

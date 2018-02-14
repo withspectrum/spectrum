@@ -13,7 +13,7 @@ import {
 import { Button } from '../buttons';
 
 export const Title = styled.h1`
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   width: 100%;
   font-weight: 800;
   font-size: 24px;
@@ -88,7 +88,9 @@ export const MiniSubtitle = styled(Subtitle)`
   line-height: 1.4;
 `;
 
-export const SmallTitle = styled(Title)`font-size: 18px;`;
+export const SmallTitle = styled(Title)`
+  font-size: 18px;
+`;
 
 export const LargeTitle = styled(Title)`
   font-size: 40px;
@@ -97,9 +99,13 @@ export const LargeTitle = styled(Title)`
   margin-bottom: 16px;
 `;
 
-export const SmallSubtitle = styled(Subtitle)`font-size: 15px;`;
+export const SmallSubtitle = styled(Subtitle)`
+  font-size: 15px;
+`;
 
-export const LargeSubtitle = styled(Subtitle)`font-size: 20px;`;
+export const LargeSubtitle = styled(Subtitle)`
+  font-size: 20px;
+`;
 
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
@@ -113,8 +119,6 @@ export const CommunityUpsellCost = styled(Cost)`
 `;
 
 export const NullCol = styled(FlexCol)`
-  background-image: ${props =>
-    props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none'};
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};

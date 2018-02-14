@@ -225,7 +225,7 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }}>
             {currentUser &&
               isChannelMember &&
-              (isChannelOwner || isCommunityOwner || thread.isCreator) && (
+              (isChannelOwner || isCommunityOwner || thread.isAuthor) && (
                 <DropWrap className={flyoutOpen ? 'open' : ''}>
                   <IconButton
                     glyph="settings"
@@ -250,7 +250,7 @@ class ActionBar extends React.Component<Props, State> {
                       </TextButton>
                     </FlyoutRow>
 
-                    {thread.isCreator && (
+                    {thread.isAuthor && (
                       <FlyoutRow>
                         <TextButton
                           icon="edit"
@@ -313,7 +313,7 @@ class ActionBar extends React.Component<Props, State> {
                       </FlyoutRow>
                     )}
 
-                    {(thread.isCreator ||
+                    {(thread.isAuthor ||
                       isChannelOwner ||
                       isCommunityOwner) && (
                       <FlyoutRow>

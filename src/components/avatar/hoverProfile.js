@@ -20,7 +20,6 @@ import {
   CoverSubtitle,
   CoverDescription,
   ExtLink,
-  ReputationContainer,
   MessageButtonContainer,
 } from '../profile/style';
 import { HoverWrapper } from './style';
@@ -81,7 +80,12 @@ class HoverProfile extends Component<ProfileProps> {
           right={this.props.right ? true : this.props.left ? false : true}
           left={this.props.left}
         >
-          <Card style={{ boxShadow: '0 4px 8px rgba(18, 22, 23, .25)' }}>
+          <Card
+            style={{
+              boxShadow: '0 4px 8px rgba(18, 22, 23, .25)',
+              borderRadius: '16px',
+            }}
+          >
             <CoverPhoto url={user.coverPhoto} />
             <CoverLink to={`/users/${user.username}`}>
               <AvatarImage
@@ -94,38 +98,33 @@ class HoverProfile extends Component<ProfileProps> {
             <CoverSubtitle center>
               @{user.username}
               {user.isPro && <Badge type="pro" />}
+              <Reputation
+                tipText={'Total rep across all communities'}
+                size={'large'}
+                reputation={
+                  user.contextPermissions
+                    ? user.contextPermissions.reputation
+                    : user.totalReputation
+                }
+              />
             </CoverSubtitle>
 
             {(user.description || user.website) && (
-                <CoverDescription>
-                  {user.description && <p>{user.description}</p>}
-                  {user.website && (
-                    <ExtLink>
-                      <Icon glyph="link" size={24} />
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={addProtocolToString(user.website)}
-                      >
-                        {user.website}
-                      </a>
-                    </ExtLink>
-                  )}
-                </CoverDescription>
-              )}
-
-            {user.totalReputation > 0 && (
-              <ReputationContainer>
-                <Reputation
-                  tipText={'Total rep across all communities'}
-                  size={'large'}
-                  reputation={
-                    user.contextPermissions
-                      ? user.contextPermissions.reputation
-                      : user.totalReputation
-                  }
-                />
-              </ReputationContainer>
+              <CoverDescription>
+                {user.description && <p>{user.description}</p>}
+                {user.website && (
+                  <ExtLink>
+                    <Icon glyph="link" size={24} />
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={addProtocolToString(user.website)}
+                    >
+                      {user.website}
+                    </a>
+                  </ExtLink>
+                )}
+              </CoverDescription>
             )}
 
             {currentUser &&
@@ -133,7 +132,7 @@ class HoverProfile extends Component<ProfileProps> {
               currentUser.id !== user.id && (
                 <MessageButtonContainer>
                   <Link
-                    to={`/messages/new`}
+                    to={'/messages/new'}
                     onClick={() => this.initMessage(dispatch, user)}
                   >
                     <Button>Message</Button>

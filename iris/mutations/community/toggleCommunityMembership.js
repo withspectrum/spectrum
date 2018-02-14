@@ -1,4 +1,9 @@
 // @flow
+/*
+
+    DEPRECATED 2/1/2018 by @brian
+
+*/
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
