@@ -1,8 +1,7 @@
 // @flow
 import { db } from './db';
-import type { DBCommunity } from 'shared/types';
 
-export const getCommunityById = (communityId: string): Promise<DBCommunity> => {
+export const getCommunityById = (communityId: string) => {
   return db
     .table('communities')
     .get(communityId)
@@ -12,12 +11,22 @@ export const getCommunityById = (communityId: string): Promise<DBCommunity> => {
 export const setStripeCustomerId = (
   communityId: string,
   stripeCustomerId: string
-): Promise<DBCommunity> => {
+) => {
   return db
     .table('communities')
     .get(communityId)
     .update({
       stripeCustomerId,
+    })
+    .run();
+};
+
+export const setCommunityAnalytics = (communityId: string, value: boolean) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      hasAnalytics: value,
     })
     .run();
 };

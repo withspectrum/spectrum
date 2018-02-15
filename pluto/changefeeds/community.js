@@ -111,7 +111,7 @@ export const communityDeleted = () =>
 export const communityAdministratorEmailChanged = () =>
   listenToChangedFieldIn(db, 'administratorEmail')(
     'communities',
-    async (community: DBCommunity) => {
+    (community: DBCommunity) => {
       debug('Changed administratorEmail field');
 
       return stripeCommunityAdministratorEmailChangedQueue.add({
@@ -123,7 +123,7 @@ export const communityAdministratorEmailChanged = () =>
 export const communityAdministratorEmailCreated = () =>
   listenToNewFieldIn(db, 'administratorEmail')(
     'communities',
-    async (community: DBCommunity) => {
+    (community: DBCommunity) => {
       debug('New administratorEmail field');
 
       return stripeCommunityAdministratorEmailChangedQueue.add({

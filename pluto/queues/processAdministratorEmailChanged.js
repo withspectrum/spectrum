@@ -20,9 +20,7 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (!communityId) {
     debug(`No communityId ${communityId}`);
-    throw new Error(
-      'No communityId sent to processAdministratorEmailChanged job'
-    );
+    return;
   }
 
   const {
@@ -34,9 +32,7 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (!administratorEmail) {
     debug(`No administrator email for ${communityId}`);
-    throw new Error(
-      'No administrator email exists, aborting processAdministratorEmailChanged job'
-    );
+    return;
   }
 
   // if a stripeCustomerId doesn't exist yet, we've somehow failed to create
