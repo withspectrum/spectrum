@@ -12,7 +12,7 @@ import Icon from '../icons';
 import Avatar from '../avatar';
 import { Button, OutlineButton } from '../buttons';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import ToggleCommunityMembership from '../toggleCommunityMembership';
+import ToggleCommunityMembership from '../toggleMembership/community';
 import {
   ProfileHeader,
   ProfileHeaderLink,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { ContinueButton } from '../../style';
-import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
+import ToggleCommunityMembership from 'src/components/toggleMembership/community';
 import {
   Row,
   CoverPhoto,
@@ -12,7 +12,7 @@ import {
   CoverTitle,
   CoverDescription,
 } from '../discoverCommunities/style';
-import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
+import { CoverLink, CoverSubtitle } from 'src/components/profile/style';
 
 type Props = {
   toggleCommunityMembership: Function,

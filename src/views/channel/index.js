@@ -31,12 +31,14 @@ import {
   SegmentedControl,
   DesktopSegment,
   Segment,
+  MidSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
-import { Grid, Meta, Content, Extras } from './style';
+import { Grid, Meta, Content, Extras } from 'src/components/profileLayout';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton, ColumnHeading, MidSegment } from '../community/style';
-import ToggleChannelMembership from '../../components/toggleChannelMembership';
+import { ColumnHeading } from '../community/style';
+import ToggleChannelMembership from '../../components/toggleMembership/channel';
+import { ProfileCTA } from 'src/components/profile/style';
 
 const ThreadFeedWithData = compose(connect(), getChannelThreadConnection)(
   ThreadFeed
@@ -205,7 +207,7 @@ class ChannelView extends React.Component<Props, State> {
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
           />
-          <Grid>
+          <Grid subview>
             <CoverPhoto src={channel.community.coverPhoto} />
             <Meta>
               <ChannelProfile data={{ channel }} profileSize="full" />
@@ -216,19 +218,19 @@ class ChannelView extends React.Component<Props, State> {
                     channel.slug
                   }`}
                 >
-                  <LoginButton>Join {channel.name}</LoginButton>
+                  <ProfileCTA>Join {channel.name}</ProfileCTA>
                 </Link>
               ) : !isGlobalOwner ? (
                 <ToggleChannelMembership
                   channel={channel}
                   render={state => (
-                    <LoginButton
+                    <ProfileCTA
                       isMember={isMember}
                       icon={isMember ? 'checkmark' : null}
                       loading={state.isLoading}
                     >
                       {isMember ? 'Joined' : `Join ${channel.name}`}
-                    </LoginButton>
+                    </ProfileCTA>
                   )}
                 />
               ) : null}
@@ -238,9 +240,9 @@ class ChannelView extends React.Component<Props, State> {
                   <Link
                     to={`/${channel.community.slug}/${channel.slug}/settings`}
                   >
-                    <LoginButton icon={'settings'} isMember>
+                    <ProfileCTA icon={'settings'} isMember>
                       Settings
-                    </LoginButton>
+                    </ProfileCTA>
                   </Link>
                 )}
               {isLoggedIn &&

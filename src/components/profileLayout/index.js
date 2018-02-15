@@ -1,36 +1,10 @@
-import styled from 'styled-components';
-import { FlexCol, Transition, zIndex } from '../globals';
+import styled, { css } from 'styled-components';
+import { FlexCol } from '../globals';
 import { SegmentedControl } from '../segmentedControl';
 import { FullProfile, FullDescription } from '../profile/style';
 import { ListContainer } from '../listItems/style';
-
-export const Grid = styled.div`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: ${props => (props.subview ? '160px' : '240px')} 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  background-color: ${props => props.theme.bg.default};
-
-  @media (max-width: 1280px) {
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: ${props => (props.subview ? '80px' : '160px')} 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
-  }
-
-  @media (max-width: 768px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
-  }
-`;
+import { MembershipContainer } from '../toggleMembership/style';
+import { ProfileCTA } from 'src/components/profile/style';
 
 const Column = styled.div`
   display: flex;
@@ -48,7 +22,7 @@ export const Meta = styled(Column)`
     padding: 0 32px;
   }
 
-  ${LoginButton} {
+  ${ProfileCTA} {
     margin-top: 16px;
     margin-left: 32px;
     width: calc(100% - 32px);
@@ -79,7 +53,7 @@ export const Meta = styled(Column)`
     }
   }
 
-  > ${ToggleChannelMembership} {
+  > ${MembershipContainer} {
     display: flex;
     flex: none;
     margin: 16px 0 0 32px;
@@ -130,6 +104,44 @@ export const Extras = styled(Column)`
 
   @media (min-width: 768px) {
     padding-right: 32px;
+  }
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
+  grid-template-rows: ${props => (props.subview ? '160px' : '240px')} 1fr;
+  grid-template-areas: 'cover cover cover' 'meta content extras';
+  grid-column-gap: 32px;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: ${props => props.theme.bg.default};
+
+  ${props =>
+    !props.subview &&
+    css`
+      ${Meta} {
+        margin-top: -64px;
+
+        ${FullProfile} {
+          margin-top: 0;
+        }
+      }
+    `} @media (max-width: 1280px) {
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: ${props => (props.subview ? '80px' : '160px')} 1fr;
+    grid-template-areas: 'cover cover' 'meta content';
+  }
+
+  @media (max-width: 768px) {
+    grid-template-rows: 80px auto 1fr;
+    grid-template-columns: 100%;
+    grid-column-gap: 0;
+    grid-row-gap: 16px;
+    grid-template-areas: 'cover' 'meta' 'content';
   }
 `;
 

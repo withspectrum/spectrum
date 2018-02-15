@@ -66,6 +66,12 @@ export const DesktopSegment = styled(Segment)`
   }
 `;
 
+export const MidSegment = styled(DesktopSegment)`
+  @media (min-width: 1281px) {
+    display: none;
+  }
+`;
+
 export const MobileSegment = styled(Segment)`
   @media (min-width: 768px) {
     display: none;

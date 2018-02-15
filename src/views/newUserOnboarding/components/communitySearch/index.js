@@ -5,11 +5,11 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { Button, OutlineButton } from '../../../../components/buttons';
-import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
-import { throttle } from '../../../../helpers/utils';
+import { Button, OutlineButton } from 'src/components/buttons';
+import ToggleCommunityMembership from 'src/components/toggleMembership/community';
+import { throttle } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { Spinner } from '../../../../components/globals';
+import { Spinner } from 'src/components/globals';
 import {
   SearchWrapper,
   SearchInput,

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { MembershipContainer } from './style';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -93,7 +94,11 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <MembershipContainer onClick={this.init}>
+        {this.props.render(this.state)}
+      </MembershipContainer>
+    );
   }
 }
 

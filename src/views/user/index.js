@@ -23,8 +23,14 @@ import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton } from '../community/style';
-import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
+import { ProfileCTA } from '../../components/profile/style';
+import {
+  Grid,
+  Meta,
+  Content,
+  Extras,
+  ColumnHeading,
+} from 'src/components/profileLayout';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -156,14 +162,14 @@ class UserView extends React.Component<Props, State> {
 
               {currentUser &&
                 user.id !== currentUser.id && (
-                  <LoginButton onClick={() => this.initMessage(user)}>
+                  <ProfileCTA onClick={() => this.initMessage(user)}>
                     Message {user.name}
-                  </LoginButton>
+                  </ProfileCTA>
                 )}
               {currentUser &&
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>
-                    <LoginButton isMember>My settings</LoginButton>
+                    <ProfileCTA isMember>My settings</ProfileCTA>
                   </Link>
                 )}
             </Meta>

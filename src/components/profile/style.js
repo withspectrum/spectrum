@@ -8,6 +8,7 @@ import {
   zIndex,
   Shadow,
   hexa,
+  Gradient,
 } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import { ReputationWrapper } from '../reputation/style';
@@ -343,4 +344,16 @@ export const MessageButtonContainer = styled.div`
     justify-content: center;
     text-align: center;
   }
+`;
+
+export const ProfileCTA = styled(Button)`
+  width: 100%;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: ${props =>
+    props.isMember ? props.theme.text.alt : props.theme.success.default};
+  background-image: ${props =>
+    props.isMember
+      ? Gradient(props.theme.text.placeholder, props.theme.text.alt)
+      : Gradient(props.theme.success.alt, props.theme.success.default)};
 `;

@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import replace from 'string-replace-to-array';
-import { Button, TextButton } from '../../../components/buttons';
+import { Button, TextButton } from 'src/components/buttons';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
-} from '../../../components/loading';
-import ToggleCommunityMembership from '../../../components/toggleCommunityMembership';
+} from 'src/components/loading';
+import ToggleCommunityMembership from 'src/components/toggleMembership/community';
 import Link from 'src/components/link';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
