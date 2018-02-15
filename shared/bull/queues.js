@@ -22,6 +22,7 @@ exports.QUEUE_NAMES = {
   sendChannelNotificationQueue: 'channel notification',
   sendDirectMessageNotificationQueue: 'direct message notification',
   sendMessageNotificationQueue: 'message notification',
+  sendPushNotificationsQueue: 'push notifications',
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: 'send new user welcome email',

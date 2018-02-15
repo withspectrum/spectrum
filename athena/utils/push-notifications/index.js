@@ -6,14 +6,9 @@ import { markSingleNotificationSeen } from '../../models/usersNotifications';
 import formatNotification from './notification-formatting';
 import { sendWebPushNotification } from './send-web-push-notification';
 import { sendExpoPushNotifications } from './send-expo-push-notifications';
-import type { DBNotification } from 'shared/types';
+import type { DBNotificationsJoin } from 'shared/types';
 
-type DBUsersNotification = {
-  ...DBNotification,
-  userId: string,
-};
-
-const sendPushNotifications = async (notification: DBUsersNotification) => {
+const sendPushNotifications = async (notification: DBNotificationsJoin) => {
   debug('send notification as web push notification');
 
   const [expoSubscriptions = [], webPushSubscriptions = []] = await Promise.all(

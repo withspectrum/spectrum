@@ -7,14 +7,21 @@ import type {
   DBMessage,
   DBUser,
   DBCommunity,
+  DBNotificationsJoin,
 } from '../types';
 
 export type Job<JobData> = {
   data: JobData,
 };
 
+type JobOptions = {
+  jobId?: number | string,
+  removeOnComplete?: boolean,
+  removeOnFail?: boolean,
+};
+
 interface BullQueue<JobData> {
-  add: (data: JobData) => Promise<any>;
+  add: (data: JobData, options?: JobOptions) => Promise<any>;
   process: (
     cb: (job: Job<JobData>, done: Function) => void | Promise<any>
   ) => void;
@@ -102,6 +109,11 @@ export type AdminSlackImportJobData = {
   teamName: string,
 };
 
+export type PushNotificationsJobData = {
+  // This gets passed a join of the userNotification and the notification record
+  notification: DBNotificationsJoin,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -122,6 +134,7 @@ export type Queues = {
     DirectMessageNotificationJobData
   >,
   sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
+  sendPushNotificationsQueue: BullQueue<PushNotificationsJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
