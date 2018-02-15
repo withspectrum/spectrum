@@ -10,7 +10,7 @@ import Head from 'src/components/head';
 import Icon from 'src/components/icons';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import ThreadFeed from 'src/components/threadFeed';
-import Search from './components/search';
+import Search from 'src/components/search/communityThreads';
 import CommunityMemberGrid from './components/memberGrid';
 import ToggleCommunityMembership from 'src/components/toggleMembership/community';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
@@ -25,7 +25,6 @@ import { CLIENT_URL } from 'src/api/constants';
 import { Upsell404Community } from 'src/components/upsell';
 import {
   SegmentedControl,
-  Segment,
   DesktopSegment,
   MidSegment,
   MobileSegment,
@@ -237,14 +236,21 @@ class CommunityView extends React.Component<Props, State> {
                   Search
                 </DesktopSegment>
 
-                <Segment
+                <DesktopSegment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
                   Threads
-                </Segment>
-
+                </DesktopSegment>
+                <MobileSegment
+                  segmentLabel="threads"
+                  onClick={() => this.handleSegmentClick('threads')}
+                  selected={selectedView === 'threads'}
+                >
+                  <Icon glyph={'everything'} />
+                  {selectedView === 'threads' && 'Threads'}
+                </MobileSegment>
                 <MidSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -259,7 +265,8 @@ class CommunityView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members
+                  <Icon glyph={'person'} />
+                  {selectedView === 'members' && 'Members'}
                 </MobileSegment>
                 <MobileSegment
                   segmentLabel="search"
@@ -267,6 +274,7 @@ class CommunityView extends React.Component<Props, State> {
                   selected={selectedView === 'search'}
                 >
                   <Icon glyph={'search'} />
+                  {selectedView === 'search' && 'Search'}
                 </MobileSegment>
               </SegmentedControl>
 

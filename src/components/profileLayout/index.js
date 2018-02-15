@@ -4,7 +4,8 @@ import { SegmentedControl } from '../segmentedControl';
 import { FullProfile, FullDescription } from '../profile/style';
 import { ListContainer } from '../listItems/style';
 import { MembershipContainer } from '../toggleMembership/style';
-import { ProfileCTA } from 'src/components/profile/style';
+import { ProfileCTA } from '../profile/style';
+import { StyledCard } from '../card';
 
 const Column = styled.div`
   display: flex;
@@ -13,6 +14,7 @@ const Column = styled.div`
 
 export const Meta = styled(Column)`
   grid-area: meta;
+  padding-left: 32px;
 
   @media (max-width: 768px) {
     ${FullDescription} {
@@ -22,30 +24,28 @@ export const Meta = styled(Column)`
     padding: 0 32px;
   }
 
+  > ${StyledCard} {
+    margin-top: 8px;
+    margin-left: 0;
+  }
+
   ${ProfileCTA} {
     margin-top: 16px;
-    margin-left: 32px;
-    width: calc(100% - 32px);
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      width: 100%;
-    }
   }
 
   > ${FullProfile} {
+    margin-left: 0;
     margin-top: 16px;
     margin-bottom: 16px;
 
     @media (max-width: 768px) {
-      margin-left: 0;
       margin-top: 8px;
       margin-bottom: 8px;
     }
   }
 
   ${ListContainer} {
-    margin: 8px 0 0 32px;
+    margin-top: 8px;
     width: auto;
 
     @media (max-width: 768px) {
@@ -128,6 +128,10 @@ export const Grid = styled.div`
 
         ${FullProfile} {
           margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+          margin-top: -48px;
         }
       }
     `} @media (max-width: 1280px) {

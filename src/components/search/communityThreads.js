@@ -1,16 +1,15 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { throttle } from '../../../helpers/utils';
+import { throttle } from 'src/helpers/utils';
 import searchThreads from 'shared/graphql/queries/search/searchThreads';
-import ThreadFeed from '../../../components/threadFeed';
-import { SearchContainer, SearchInput } from '../style';
-import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
+import ThreadFeed from 'src/components/threadFeed';
+import { SearchContainer, SearchInput } from './style';
 
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 
 type Props = {
-  channel: GetChannelType,
+  community: Object,
 };
 
 type State = {
@@ -54,7 +53,7 @@ class Search extends React.Component<Props, State> {
   };
 
   render() {
-    const { channel } = this.props;
+    const { community } = this.props;
     const { searchString, sendStringToServer } = this.state;
 
     return (
@@ -64,7 +63,7 @@ class Search extends React.Component<Props, State> {
             defaultValue={searchString}
             autoFocus={true}
             type="text"
-            placeholder={`Search all threads in ${channel.name}...`}
+            placeholder={`Search all threads in ${community.name}...`}
             onChange={this.handleChange}
           />
         </SearchContainer>
@@ -72,11 +71,12 @@ class Search extends React.Component<Props, State> {
           sendStringToServer && (
             <SearchThreadFeed
               search
-              viewContext="channel"
-              channelId={channel.id}
+              viewContext="community"
+              communityId={community.id}
               queryString={sendStringToServer}
-              filter={{ channelId: channel.id }}
-              channel={channel}
+              filter={{ communityId: community.id }}
+              community={community}
+              pinnedThreadId={community.pinnedThreadId}
             />
           )}
       </div>

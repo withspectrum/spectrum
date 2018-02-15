@@ -24,13 +24,12 @@ import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
 import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 import Icon from '../../components/icons';
-import Search from './components/search';
+import Search from 'src/components/search/channelThreads';
 import ChannelMemberGrid from './components/memberGrid';
 import { CLIENT_URL } from '../../api/constants';
 import {
   SegmentedControl,
   DesktopSegment,
-  Segment,
   MidSegment,
   MobileSegment,
 } from '../../components/segmentedControl';
@@ -279,13 +278,21 @@ class ChannelView extends React.Component<Props, State> {
                   <Icon glyph={'search'} />
                   Search
                 </DesktopSegment>
-                <Segment
+                <DesktopSegment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
                   Threads
-                </Segment>
+                </DesktopSegment>
+                <MobileSegment
+                  segmentLabel="threads"
+                  onClick={() => this.handleSegmentClick('threads')}
+                  selected={selectedView === 'threads'}
+                >
+                  <Icon glyph={'everything'} />
+                  {selectedView === 'threads' && 'Threads'}
+                </MobileSegment>
                 <MidSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -300,7 +307,8 @@ class ChannelView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members
+                  <Icon glyph={'person'} />
+                  {selectedView === 'members' && 'Members'}
                 </MobileSegment>
                 <MobileSegment
                   segmentLabel="search"
@@ -308,6 +316,7 @@ class ChannelView extends React.Component<Props, State> {
                   selected={selectedView === 'search'}
                 >
                   <Icon glyph={'search'} />
+                  {selectedView === 'search' && 'Search'}
                 </MobileSegment>
               </SegmentedControl>
 

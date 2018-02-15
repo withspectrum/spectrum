@@ -15,7 +15,7 @@ import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
 import Icon from 'src/components/icons';
-import Search from './components/search';
+import Search from 'src/components/search/userThreads';
 import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
@@ -189,36 +189,30 @@ class UserView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('participant')}
                   selected={selectedView === 'participant'}
                 >
-                  Replies
+                  All threads
                 </DesktopSegment>
-
+                <MobileSegment
+                  segmentLabel="participant"
+                  onClick={() => this.handleSegmentClick('participant')}
+                  selected={selectedView === 'participant'}
+                >
+                  <Icon glyph={'everything'} />
+                  {selectedView === 'participant' && 'Threads'}
+                </MobileSegment>
                 <DesktopSegment
                   segmentLabel="creator"
                   onClick={() => this.handleSegmentClick('creator')}
                   selected={selectedView === 'creator'}
                 >
-                  Threads
+                  Authored
                 </DesktopSegment>
                 <MobileSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
                 >
-                  Search
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="participant"
-                  onClick={() => this.handleSegmentClick('participant')}
-                  selected={selectedView === 'participant'}
-                >
-                  Replies
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="creator"
-                  onClick={() => this.handleSegmentClick('creator')}
-                  selected={selectedView === 'creator'}
-                >
-                  Threads
+                  <Icon glyph={'search'} />
+                  {selectedView === 'search' && 'Search'}
                 </MobileSegment>
               </SegmentedControl>
 

@@ -1,16 +1,16 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { throttle } from '../../../helpers/utils';
-import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import ThreadFeed from '../../../components/threadFeed';
-import { SearchContainer, SearchInput } from '../style';
+import { throttle } from 'src/helpers/utils';
+import searchThreads from 'shared/graphql/queries/search/searchThreads';
+import ThreadFeed from 'src/components/threadFeed';
+import { SearchContainer, SearchInput } from './style';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 
-const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);
+const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 
 type Props = {
-  community: Object,
-  user: Object,
+  channel: GetChannelType,
 };
 
 type State = {
@@ -54,7 +54,7 @@ class Search extends React.Component<Props, State> {
   };
 
   render() {
-    const { user } = this.props;
+    const { channel } = this.props;
     const { searchString, sendStringToServer } = this.state;
 
     return (
@@ -64,7 +64,7 @@ class Search extends React.Component<Props, State> {
             defaultValue={searchString}
             autoFocus={true}
             type="text"
-            placeholder={`Search ${user.name}'s conversations...`}
+            placeholder={`Search all threads in ${channel.name}...`}
             onChange={this.handleChange}
           />
         </SearchContainer>
@@ -72,11 +72,11 @@ class Search extends React.Component<Props, State> {
           sendStringToServer && (
             <SearchThreadFeed
               search
-              viewContext="profile"
-              userId={user.id}
+              viewContext="channel"
+              channelId={channel.id}
               queryString={sendStringToServer}
-              filter={{ creatorId: user.id }}
-              user={user}
+              filter={{ channelId: channel.id }}
+              channel={channel}
             />
           )}
       </div>
