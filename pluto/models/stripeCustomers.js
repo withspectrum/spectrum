@@ -1,6 +1,7 @@
 // @flow
 import type { CleanCustomer } from '../types/customer';
 import { recordExists, insertRecord, replaceRecord } from './utils';
+import { db } from './db';
 
 export const saveCustomer = async (
   customer: CleanCustomer
@@ -13,4 +14,11 @@ export const saveCustomer = async (
   } else {
     return insertRecord(table, customer);
   }
+};
+
+export const getCustomer = (customerId: string) => {
+  return db
+    .table('stripeCustomers')
+    .get(customerId)
+    .run();
 };
