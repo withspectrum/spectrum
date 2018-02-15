@@ -12,6 +12,7 @@ import { db } from '../models/db';
 import {
   stripeCommunityAdministratorEmailChangedQueue,
   stripeCommunityCreatedQueue,
+  stripeCommunityDeletedQueue,
 } from 'shared/bull/queues';
 
 // when a community is created, generate a new customer for that community
@@ -73,17 +74,12 @@ export const communityEdited = () =>
 // if a community is deleted on spectrum, deleting the customer on stripe will automatically
 // close out all active subscriptions
 export const communityDeleted = () =>
-  listenToDeletedDocumentsIn(
-    db,
-    'communities',
-    async (community: DBCommunity) => {
-      const { stripeCustomerId } = community;
-
-      debug('Deleting Stripe customer');
-
-      return await stripe.customers.del(stripeCustomerId);
-    }
-  );
+  listenToDeletedDocumentsIn(db, 'communities', (community: DBCommunity) => {
+    debug('Community deleted');
+    return stripeCommunityDeletedQueue.add({
+      communityId: community.id,
+    });
+  });
 
 export const communityAdministratorEmailChanged = () =>
   listenToChangedFieldIn(db, 'administratorEmail')(

@@ -55,7 +55,9 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     1b. If no, abort
   */
 
+  debug(`Getting customer subscriptions for ${communityId}`);
   const { subscriptions } = await stripe.customers.retrieve(stripeCustomerId);
+  debug(`Got customer subscriptions for ${communityId}`);
 
   // 1
   if (subscriptions.data.length > 0) {

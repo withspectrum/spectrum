@@ -50,6 +50,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       },
     });
 
+    debug(`Saving stripeCustomerId in database ${communityId}`);
     return await setStripeCustomerId(communityId, createdStripeId);
   }
 

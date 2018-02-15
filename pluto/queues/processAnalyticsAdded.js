@@ -85,8 +85,9 @@ async function processJob(job: Job<StripeCommunityPaymentEventJobData>) {
       1ab. Add a subscriptionItem for analytics
     1b. If no, create a new subscription
   */
-
+  debug(`Getting customer subscriptions for ${communityId}`);
   const { subscriptions } = await stripe.customers.retrieve(stripeCustomerId);
+  debug(`Got customer subscriptions for ${communityId}`);
 
   // 1
   if (subscriptions.data.length > 0) {

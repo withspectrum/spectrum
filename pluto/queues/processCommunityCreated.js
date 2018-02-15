@@ -8,12 +8,6 @@ import Raven from 'shared/raven';
 import { stripe } from 'shared/stripe';
 import { getCommunityById, setStripeCustomerId } from '../models/community';
 
-/*
-
-  If an administrator email changes on a Spectrum community we need to reflect
-  that change on the Stripe customer
-
-*/
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
@@ -32,10 +26,11 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   } = await getCommunityById(communityId);
 
   if (stripeCustomerId) {
-    debug('Stripe customer id already exists for community');
+    debug(`Stripe customer id already exists for community ${communityId}`);
     return;
   }
 
+  debug('Creating a Stripe customer');
   const { id: createdStripeId } = await stripe.customers.create({
     email: administratorEmail,
     metadata: {
@@ -44,8 +39,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     },
   });
 
-  debug('Creating new Stripe customer');
-
+  debug(`Saving created stripeCustomerId to database for ${communityId}`);
   return await setStripeCustomerId(communityId, createdStripeId);
 };
 
