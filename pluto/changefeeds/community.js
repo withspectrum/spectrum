@@ -9,6 +9,7 @@ import {
 import { stripe } from 'shared/stripe';
 import type { DBCommunity } from 'shared/types';
 import { db } from '../models/db';
+import { stripeCommunityAdministratorEmailChangedQueue } from 'shared/bull/queues';
 
 // when a community is created, generate a new customer for that community
 // we do this pre-emptively
@@ -107,59 +108,15 @@ export const communityDeleted = () =>
     }
   );
 
-/* 
-  if the administratorEmail field is changed, it means that it is either
-  1. being added for the first time
-  2. being updated because the user wants receipts to go to a new location
-
-  If 1, we should create a customer
-  If 2, we should update the customer
-*/
-const handleAdminEmailChange = async (community: DBCommunity) => {
-  // make sure we never duplicate customers
-  const {
-    stripeCustomerId,
-    administratorEmail,
-    id: communityId,
-    name: communityName,
-  } = community;
-
-  // 2. Update the existing customer
-  if (stripeCustomerId) {
-    debug('Updating email for Stripe customer');
-
-    return await stripe.customers.update(stripeCustomerId, {
-      email: administratorEmail,
-    });
-  }
-
-  debug('Creating new Stripe customer from changed administratorEmail');
-
-  // 1. Email is being added for the first time
-  const { id: createdStripeId } = await stripe.customers.create({
-    email: administratorEmail,
-    metadata: {
-      communityId,
-      communityName,
-    },
-  });
-
-  return db
-    .table('communities')
-    .get(communityId)
-    .update({
-      stripeCustomerId: createdStripeId,
-    })
-    .run();
-};
-
 export const communityAdministratorEmailChanged = () =>
   listenToChangedFieldIn(db, 'administratorEmail')(
     'communities',
     async (community: DBCommunity) => {
       debug('Changed administratorEmail field');
 
-      return await handleAdminEmailChange(community);
+      return stripeCommunityAdministratorEmailChangedQueue.add({
+        communityId: community.id,
+      });
     }
   );
 
@@ -169,6 +126,8 @@ export const communityAdministratorEmailCreated = () =>
     async (community: DBCommunity) => {
       debug('New administratorEmail field');
 
-      return await handleAdminEmailChange(community);
+      return stripeCommunityAdministratorEmailChangedQueue.add({
+        communityId: community.id,
+      });
     }
   );

@@ -16,7 +16,6 @@ export const recordExists = async (
     .then(
       result =>
         debug(`\nRecord exists for ${primaryIndex}`) ||
-        console.log(result) ||
         (result && result.length > 0)
     )
     .catch(err => {
@@ -34,10 +33,7 @@ export const insertRecord = async (
     .table(table)
     .insert(record, { returnChanges: 'always' })
     .run()
-    .then(
-      result =>
-        debug('\nInserted') || console.log(result) || result.changes[0].new_val
-    )
+    .then(result => debug('\nInserted') || result.changes[0].new_val)
     .catch(err => {
       console.log('ERROR: ', err);
       return new Error(err);
@@ -59,7 +55,6 @@ export const replaceRecord = async (
     .then(
       result =>
         debug('\nReplaced') ||
-        console.log(result) ||
         result.changes[0].new_val ||
         result.changes[0].old_val
     )
