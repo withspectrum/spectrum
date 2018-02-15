@@ -10,6 +10,12 @@ exports.up = function(r, conn) {
         .indexCreate('userId')
         .run(conn)
     )
+    .then(() =>
+      r
+        .table('expoPushSubscriptions')
+        .indexCreate('token')
+        .run(conn)
+    )
     .catch(err => {
       throw new Error(err);
     });

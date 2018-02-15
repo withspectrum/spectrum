@@ -23,3 +23,12 @@ export const getExpoSubscriptions = (
     .getAll(userId, { index: 'userId' })
     .run();
 };
+
+export const removeExpoSubscription = (token: string) => {
+  debug(`remove subscription ${token}`);
+  return db
+    .table('expoPushSubscriptions')
+    .getAll(token, { index: 'token' })
+    .delete()
+    .run();
+};
