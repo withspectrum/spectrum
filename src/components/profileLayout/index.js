@@ -5,7 +5,6 @@ import { FullProfile, FullDescription } from '../profile/style';
 import { ListContainer } from '../listItems/style';
 import { MembershipContainer } from '../toggleMembership/style';
 import { ProfileCTA } from '../profile/style';
-import { StyledCard } from '../card';
 
 const Column = styled.div`
   display: flex;

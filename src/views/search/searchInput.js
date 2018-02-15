@@ -1,3 +1,4 @@
+//@flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from './style';
