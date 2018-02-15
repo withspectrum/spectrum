@@ -134,7 +134,7 @@ export type Queues = {
     DirectMessageNotificationJobData
   >,
   sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
-  sendPushNotificationsQueue: BullQueue<PushNotificationsJobData>,
+  sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
