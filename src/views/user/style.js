@@ -161,7 +161,7 @@ export const Extras = styled(Column)`
     }
   }
 
-  @media (max-width: 1028px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 
