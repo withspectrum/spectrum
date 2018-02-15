@@ -4,10 +4,11 @@ import type {
   Job,
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
+import Raven from 'shared/raven';
 import { stripe } from 'shared/stripe';
 import { getCommunityById, setCommunityAnalytics } from '../models/community';
 
-export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+async function processJob(job: Job<StripeCommunityPaymentEventJobData>) {
   const { data: { communityId } } = job;
 
   debug(`Processing analytics added for ${communityId}`);
@@ -133,5 +134,14 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
         },
       ],
     });
+  }
+}
+
+export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+  try {
+    await processJob(job);
+  } catch (err) {
+    console.log('❌', err);
+    Raven.captureException(err);
   }
 };

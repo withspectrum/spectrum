@@ -4,6 +4,7 @@ import type {
   Job,
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
+import Raven from 'shared/raven';
 import { stripe } from 'shared/stripe';
 import { getCommunityById, setStripeCustomerId } from '../models/community';
 
@@ -13,7 +14,7 @@ import { getCommunityById, setStripeCustomerId } from '../models/community';
   that change on the Stripe customer
 
 */
-export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
   debug(`Processing administrator email changed for ${communityId}`);
@@ -58,4 +59,13 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
   return await stripe.customers.update(stripeCustomerId, {
     email: administratorEmail,
   });
+};
+
+export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+  try {
+    await processJob(job);
+  } catch (err) {
+    console.log('❌', err);
+    Raven.captureException(err);
+  }
 };

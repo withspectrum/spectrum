@@ -67,32 +67,42 @@ app.get('/', (req, res) => res.status(200).send({ pluto: 'running' }));
 app.post('/webhooks', (req, res) => handleWebhooks(req, res));
 
 // Queue map of all events to process
-createWorker({
-  [PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT]: processStripeChargeWebhook,
-  [PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT]: processStripeCustomerWebhook,
-  [PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT]: processStripeInvoiceWebhook,
-  [PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT]: processStripeSourceWebhook,
-  [PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT]: processStripeSubscriptionWebhook,
+try {
+  createWorker({
+    [PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT]: processStripeChargeWebhook,
+    [PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT]: processStripeCustomerWebhook,
+    [PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT]: processStripeInvoiceWebhook,
+    [PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT]: processStripeSourceWebhook,
+    [PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT]: processStripeSubscriptionWebhook,
 
-  [PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED]: processAnalyticsAdded,
-  [PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED]: processAnalyticsRemoved,
+    [PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED]: processAnalyticsAdded,
+    [PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED]: processAnalyticsRemoved,
 
-  [PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED]: processModeratorAdded,
-  [PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED]: processModeratorRemoved,
+    [PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED]: processModeratorAdded,
+    [PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED]: processModeratorRemoved,
 
-  [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED]: processPrioritySupportAdded,
-  [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED]: processPrioritySupportRemoved,
+    [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED]: processPrioritySupportAdded,
+    [PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED]: processPrioritySupportRemoved,
 
-  [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED]: processPrivateChannelAdded,
-  [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED]: processPrivateChannelRemoved,
+    [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED]: processPrivateChannelAdded,
+    [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED]: processPrivateChannelRemoved,
 
-  [PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED]: processAdministratorEmailChanged,
-  [PROCESS_STRIPE_COMMUNITY_CREATED]: processCommunityCreated,
-  [PROCESS_STRIPE_COMMUNITY_DELETED]: processCommunityDeleted,
-  [PROCESS_STRIPE_COMMUNITY_EDITED]: processCommunityEdited,
-});
+    [PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED]: processAdministratorEmailChanged,
+    [PROCESS_STRIPE_COMMUNITY_CREATED]: processCommunityCreated,
+    [PROCESS_STRIPE_COMMUNITY_DELETED]: processCommunityDeleted,
+    [PROCESS_STRIPE_COMMUNITY_EDITED]: processCommunityEdited,
+  });
+} catch (err) {
+  console.log('❌ Error starting worker', err);
+  Raven.captureException(err);
+}
 
-startChangefeeds();
+try {
+  startChangefeeds();
+} catch (err) {
+  console.log('❌ Error starting changefeeds', err);
+  Raven.captureException(err);
+}
 
 const server = createServer(app);
 server.listen(PORT);

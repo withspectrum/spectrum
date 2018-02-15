@@ -4,10 +4,11 @@ import type {
   Job,
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
+import Raven from 'shared/raven';
 import { stripe } from 'shared/stripe';
 import { getCommunityById, setCommunityAnalytics } from '../models/community';
 
-export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
   debug(`Processing analytics removed for ${communityId}`);
@@ -21,8 +22,6 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
     stripeCustomerId,
     administratorEmail,
     hasAnalytics,
-    id,
-    name,
   } = await getCommunityById(communityId);
 
   // if this job somehow mistakenly runs, we double check that in fact the community
@@ -77,6 +76,7 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
       const subscriptionItem = subscriptionToEvaluate.items.data.filter(
         item => item.plan.id === 'community-analytics'
       )[0];
+
       debug(`Deleting subscriptionItem ${subscriptionItem.id}`);
       return await stripe.subscriptionItems.del(subscriptionItem.id);
     }
@@ -88,5 +88,14 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
     // 1b
     debug(`Customer does not have an existing subscription ${communityId}`);
     return;
+  }
+};
+
+export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
+  try {
+    await processJob(job);
+  } catch (err) {
+    console.log('❌', err);
+    Raven.captureException(err);
   }
 };
