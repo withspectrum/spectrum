@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('pluto:queues:processAdministratorEmailChanged');
+const debug = require('debug')('pluto:queues:processCommunityCreated');
 import type {
   Job,
   StripeCommunityPaymentEventJobData,
@@ -30,7 +30,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  debug('Creating a Stripe customer');
+  debug(`Creating a Stripe customer for ${communityId}`);
   const { id: createdStripeId } = await stripe.customers.create({
     email: administratorEmail,
     metadata: {

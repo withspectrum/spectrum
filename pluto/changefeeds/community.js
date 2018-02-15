@@ -6,13 +6,13 @@ import {
   listenToNewFieldIn,
   listenToDeletedDocumentsIn,
 } from 'shared/changefeed-utils';
-import { stripe } from 'shared/stripe';
 import type { DBCommunity } from 'shared/types';
 import { db } from '../models/db';
 import {
   stripeCommunityAdministratorEmailChangedQueue,
   stripeCommunityCreatedQueue,
   stripeCommunityDeletedQueue,
+  stripeCommunityEditedQueue,
 } from 'shared/bull/queues';
 
 // when a community is created, generate a new customer for that community
@@ -30,43 +30,9 @@ export const communityCreated = () =>
 export const communityEdited = () =>
   listenToChangedFieldIn(db, 'name')(
     'communities',
-    async (community: DBCommunity) => {
-      const {
-        stripeCustomerId,
-        administratorEmail,
-        id: communityId,
-        name: communityName,
-      } = community;
-
-      if (!stripeCustomerId) {
-        debug('Community edited, but Stripe customer hasnt been created yet');
-        if (administratorEmail) {
-          debug('Community edited, admin email available to create customer');
-          const { id: createdStripeId } = await stripe.customers.create({
-            email: administratorEmail,
-            metadata: {
-              communityId,
-              communityName,
-            },
-          });
-
-          return db
-            .table('communities')
-            .get(communityId)
-            .update({
-              stripeCustomerId: createdStripeId,
-            })
-            .run();
-        }
-      }
-
-      debug('Editing Stripe customer metadata');
-
-      return await stripe.customers.update(stripeCustomerId, {
-        metadata: {
-          communityId,
-          communityName,
-        },
+    (community: DBCommunity) => {
+      return stripeCommunityEditedQueue.add({
+        communityId: community.id,
       });
     }
   );
