@@ -9,43 +9,20 @@ import {
 import { stripe } from 'shared/stripe';
 import type { DBCommunity } from 'shared/types';
 import { db } from '../models/db';
-import { stripeCommunityAdministratorEmailChangedQueue } from 'shared/bull/queues';
+import {
+  stripeCommunityAdministratorEmailChangedQueue,
+  stripeCommunityCreatedQueue,
+} from 'shared/bull/queues';
 
 // when a community is created, generate a new customer for that community
 // we do this pre-emptively
 export const communityCreated = () =>
-  listenToNewDocumentsIn(db, 'communities', async (community: DBCommunity) => {
+  listenToNewDocumentsIn(db, 'communities', (community: DBCommunity) => {
     // make sure we never duplicate customers
-    const {
-      stripeCustomerId,
-      administratorEmail,
-      id: communityId,
-      name: communityName,
-    } = community;
-
-    if (stripeCustomerId) {
-      debug('Stripe customer id already exists for community');
-      return;
-    }
-
-    // every time a new community is created, create a stripe customer
-    const { id: createdStripeId } = await stripe.customers.create({
-      email: administratorEmail,
-      metadata: {
-        communityId,
-        communityName,
-      },
+    debug('New community created');
+    return stripeCommunityCreatedQueue.add({
+      communityId: community.id,
     });
-
-    debug('Creating new Stripe customer');
-
-    return db
-      .table('communities')
-      .get(communityId)
-      .update({
-        stripeCustomerId: createdStripeId,
-      })
-      .run();
   });
 
 // keep the name of the community in sync on stripe
