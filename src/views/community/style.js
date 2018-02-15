@@ -177,6 +177,7 @@ export const Content = styled(Column)`
   grid-area: content;
   min-width: 0;
   align-items: stretch;
+  height: 100%;
 
   @media (max-width: 1280px) and (min-width: 768px) {
     padding-right: 32px;
