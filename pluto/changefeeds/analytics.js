@@ -2,7 +2,7 @@
 const debug = require('debug')('pluto:changefeeds:analytics');
 import { listenToChangedFieldIn } from 'shared/changefeed-utils';
 import type { DBCommunity } from 'shared/types';
-import { db } from '../models/db';
+import { db } from 'iris/models/db';
 import {
   stripeCommunityAnalyticsAddedQueue,
   stripeCommunityAnalyticsRemovedQueue,

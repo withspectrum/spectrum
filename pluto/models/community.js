@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'iris/models/db';
 
 export const getCommunityById = (communityId: string) => {
   return db

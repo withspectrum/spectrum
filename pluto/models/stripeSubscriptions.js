@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'iris/models/db';
 const debug = require('debug')('pluto:models:stripeSubscriptions');
 
 export const resetCustomerSubscriptions = (customerId: string) => {

@@ -1,7 +1,7 @@
 // @flow
 import type { CleanCustomer } from '../types/customer';
 import { recordExists, insertRecord, replaceRecord } from './utils';
-import { db } from './db';
+import { db } from 'iris/models/db';
 
 export const saveCustomer = async (
   customer: CleanCustomer

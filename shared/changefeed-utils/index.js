@@ -44,13 +44,14 @@ export const listenToNewDocumentsIn = (
       includeInitial: false,
     })
     .filter(newDocuments(db))
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
+    .run({ cursor: true })
+    .then(cursor => {
       cursor.each((err, data) => {
         if (err) throw err;
-        // Call the passed callback with the new data
+        // Call the passed callback with the message directly
         cb(data.new_val);
       });
+      return cursor;
     });
 };
 

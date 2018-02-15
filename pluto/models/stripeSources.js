@@ -1,5 +1,5 @@
 // @flow
-import { db } from './db';
+import { db } from 'iris/models/db';
 const debug = require('debug')('pluto:models:stripeSources');
 
 export const resetCustomerSources = (customerId: string) => {
