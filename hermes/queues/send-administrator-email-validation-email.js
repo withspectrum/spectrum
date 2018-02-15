@@ -8,19 +8,12 @@ import {
   SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
 } from './constants';
 import { generateEmailValidationToken } from '../utils/generate-jwt';
-import type { DBCommunity } from 'shared/types';
+import type {
+  Job,
+  AdministratorEmailValidationEmailJobData,
+} from 'shared/bull/types';
 
-type SendEmailValidationJob = {
-  data: {
-    email: string,
-    userId: string,
-    communityId: string,
-    community: DBCommunity,
-  },
-  id: string,
-};
-
-export default async (job: SendEmailValidationJob) => {
+export default async (job: Job<AdministratorEmailValidationEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending email validation email to: ${job.data.email}`);
 

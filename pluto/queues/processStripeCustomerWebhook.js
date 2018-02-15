@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:customerEvent');
 import type { CleanCustomer, RawCustomer } from '../types/customer';
+import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 
 const cleanCustomer = (customer: RawCustomer): CleanCustomer => {
@@ -49,13 +50,7 @@ CustomerEventHandler.handle = async (
   return result;
 };
 
-type CustomerJob = {
-  data: {
-    record: RawCustomer,
-  },
-};
-
-export default async (job: CustomerJob) => {
+export default async (job: Job<StripeWebhookEventJobData>) => {
   const { data: { record } } = job;
   debug(`New job for ${record.id}`);
   return await CustomerEventHandler.handle(record);

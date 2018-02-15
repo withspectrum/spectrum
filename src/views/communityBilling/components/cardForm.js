@@ -7,15 +7,15 @@ import {
   CardElement,
 } from 'react-stripe-elements';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../../api/constants';
-import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
+import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
 
 type Props = {
-  community: GetCommunitySettingsType,
+  community: GetCommunityBillingSettingsType,
 };
 
 type FormProps = {
   stripe: Object,
-  community: GetCommunitySettingsType,
+  community: GetCommunityBillingSettingsType,
 };
 
 type State = {

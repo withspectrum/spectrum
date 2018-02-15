@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:chargeEvent');
 import type { CleanCharge, RawCharge } from '../types/Charge';
+import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 
 const cleanCharge = (charge: RawCharge): CleanCharge => {
@@ -46,13 +47,7 @@ ChargeEventHandler.handle = async (raw: RawCharge): Promise<CleanCharge> => {
   });
 };
 
-type ChargeJob = {
-  data: {
-    record: RawCharge,
-  },
-};
-
-export default async (job: ChargeJob) => {
+export default async (job: Job<StripeWebhookEventJobData>) => {
   const { data: { record } } = job;
   debug(`New job for ${record.id}`);
   return await ChargeEventHandler.handle(record);

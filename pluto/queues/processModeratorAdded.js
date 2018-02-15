@@ -1,3 +1,11 @@
+// @flow
+import type {
+  Job,
+  StripeCommunityPaymentEventJobData,
+} from 'shared/bull/types';
+
+export default async (job: Job<StripeCommunityPaymentEventJobData>) => {};
+
 // /*
 
 //     At this point we know the user has a stripe customer created

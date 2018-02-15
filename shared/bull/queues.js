@@ -46,6 +46,8 @@ exports.QUEUE_NAMES = {
   sendNewUserWelcomeEmailQueue: 'send new user welcome email',
   sendNewCommunityWelcomeEmailQueue: 'send new community welcome email',
   sendEmailValidationEmailQueue: 'send email validation email',
+  sendAdministratorEmailValidationEmailQueue:
+    'send administrator email validation email',
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',

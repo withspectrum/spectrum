@@ -10,6 +10,7 @@ import type {
 } from '../types';
 
 export type Job<JobData> = {
+  id: string,
   data: JobData,
 };
 
@@ -80,6 +81,13 @@ export type NewCommunityWelcomeEmailJobData = {
 
 export type EmailValidationEmailJobData = { email: string, userId: string };
 
+export type AdministratorEmailValidationEmailJobData = {
+  email: string,
+  userId: string,
+  communityId: string,
+  community: DBCommunity,
+};
+
 export type ReputationEventJobData = {
   userId: string,
   type: string, // TODO: Type this with the actual possible types
@@ -135,6 +143,9 @@ export type Queues = {
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
   sendNewCommunityWelcomeEmailQueue: BullQueue<NewCommunityWelcomeEmailJobData>,
   sendEmailValidationEmailQueue: BullQueue<EmailValidationEmailJobData>,
+  sendAdministratorEmailValidationEmailQueue: BullQueue<
+    AdministratorEmailValidationEmailJobData
+  >,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
