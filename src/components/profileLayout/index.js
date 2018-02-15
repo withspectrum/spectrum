@@ -31,11 +31,9 @@ export const Meta = styled(Column)`
   > ${FullProfile} {
     margin-left: 0;
     margin-top: 16px;
-    margin-bottom: 16px;
 
     @media (max-width: 768px) {
       margin-top: 8px;
-      margin-bottom: 8px;
     }
   }
 
