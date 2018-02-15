@@ -66,7 +66,7 @@ class NotificationsTogglePure extends React.Component<Props, State> {
     const { channel } = this.props;
 
     return (
-      <Card>
+      <Card style={{ marginTop: '8px', marginLeft: '8px' }}>
         <Checkbox
           id="isPrivate"
           checked={isReceiving}

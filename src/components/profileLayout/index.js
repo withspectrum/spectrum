@@ -17,16 +17,11 @@ export const Meta = styled(Column)`
   padding-left: 32px;
 
   @media (max-width: 768px) {
+    padding: 0 32px;
+
     ${FullDescription} {
       display: none;
     }
-
-    padding: 0 32px;
-  }
-
-  > ${StyledCard} {
-    margin-top: 8px;
-    margin-left: 0;
   }
 
   ${ProfileCTA} {
@@ -45,12 +40,9 @@ export const Meta = styled(Column)`
   }
 
   ${ListContainer} {
+    margin-left: 0;
     margin-top: 8px;
     width: auto;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
   }
 
   > ${MembershipContainer} {
