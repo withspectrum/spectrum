@@ -3,6 +3,11 @@
  * The entry point for the server, this is where everything starts
  */
 console.log('Server starting...');
+if (process.env.HONEYCOMB_WRITEKEY) {
+  require('honeycomb-nodejs-magic')({
+    dataset: process.env.NODE_ENV,
+  });
+}
 const compression = require('compression');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');

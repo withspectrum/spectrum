@@ -1,5 +1,10 @@
 // @flow
 console.log('Hyperion starting...');
+if (process.env.HONEYCOMB_WRITEKEY) {
+  require('honeycomb-nodejs-magic')({
+    dataset: process.env.NODE_ENV,
+  });
+}
 const debug = require('debug')('hyperion');
 debug('logging with debug enabled');
 // $FlowFixMe
