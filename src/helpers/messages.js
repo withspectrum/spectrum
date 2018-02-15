@@ -15,6 +15,21 @@ export const sortAndGroupMessages = (
   let hasInjectedUnseenRobo = false;
   let checkId;
 
+  const unseenRobo = [
+    {
+      author: {
+        user: {
+          id: 'robo',
+        },
+      },
+      timestamp: lastSeen,
+      message: {
+        content: '',
+        type: 'unseen-messages-below',
+      },
+    },
+  ];
+
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
     const robo = [
@@ -32,20 +47,15 @@ export const sortAndGroupMessages = (
       },
     ];
 
-    const unseenRobo = [
-      {
-        author: {
-          user: {
-            id: 'robo',
-          },
-        },
-        timestamp: lastSeen,
-        message: {
-          content: '',
-          type: 'unseen-messages-below',
-        },
-      },
-    ];
+    // If the message is an optimistic response that means the user's seen all messages
+    // so we remove any already injected lastSeen robo and make it not inject any more
+    if (typeof messages[i].id === 'number') {
+      if (hasInjectedUnseenRobo) {
+        masterArray = masterArray.filter(group => group !== unseenRobo);
+      }
+
+      hasInjectedUnseenRobo = true;
+    }
 
     if (i === 0) {
       checkId = messages[i].author.user.id;
