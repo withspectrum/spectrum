@@ -6,9 +6,9 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Link from 'src/components/link';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
-import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { track } from '../../helpers/events';
+import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { UserProfile } from '../../components/profile';
 import { LoadingScreen } from '../../components/loading';
 import { NullState } from '../../components/upsell';
@@ -21,6 +21,9 @@ import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection'
 import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
+import { CoverPhoto } from '../../components/profile/coverPhoto';
+import { LoginButton } from '../community/style';
+import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -45,6 +48,8 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   queryVarIsChanging: boolean,
+  dispatch: Function,
+  history: Object,
 };
 
 type State = {
@@ -82,6 +87,11 @@ class UserView extends React.Component<Props, State> {
       selectedView: label,
       hasThreads: true,
     });
+  };
+
+  initMessage = user => {
+    this.props.dispatch(initNewThreadWithUser(user));
+    this.props.history.push('/messages/new');
   };
 
   render() {
@@ -134,81 +144,103 @@ class UserView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer
           />
-          <Column type="secondary">
-            <UserProfile
-              data={{ user }}
-              username={username}
-              profileSize="full"
-            />
-            <CommunityList currentUser={currentUser} user={user} id={user.id} />
-          </Column>
+          <Grid>
+            <CoverPhoto src={user.coverPhoto} />
+            <Meta>
+              <UserProfile
+                data={{ user }}
+                username={username}
+                profileSize="full"
+              />
 
-          <Column type="primary" alignItems="center">
-            <SegmentedControl style={{ margin: '-16px 0 16px' }}>
-              <DesktopSegment
-                segmentLabel="search"
-                onClick={() => this.handleSegmentClick('search')}
-                selected={selectedView === 'search'}
-              >
-                Search
-              </DesktopSegment>
+              {currentUser &&
+                user.id !== currentUser.id && (
+                  <LoginButton onClick={() => this.initMessage(user)}>
+                    Message {user.name}
+                  </LoginButton>
+                )}
+              {currentUser &&
+                user.id === currentUser.id && (
+                  <Link to={`/users/${username}/settings`}>
+                    <LoginButton isMember>My settings</LoginButton>
+                  </Link>
+                )}
+            </Meta>
+            <Content>
+              <SegmentedControl style={{ margin: '16px 0 0 0' }}>
+                <DesktopSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  Search
+                </DesktopSegment>
 
-              <DesktopSegment
-                segmentLabel="participant"
-                onClick={() => this.handleSegmentClick('participant')}
-                selected={selectedView === 'participant'}
-              >
-                Replies
-              </DesktopSegment>
+                <DesktopSegment
+                  segmentLabel="participant"
+                  onClick={() => this.handleSegmentClick('participant')}
+                  selected={selectedView === 'participant'}
+                >
+                  Replies
+                </DesktopSegment>
 
-              <DesktopSegment
-                segmentLabel="creator"
-                onClick={() => this.handleSegmentClick('creator')}
-                selected={selectedView === 'creator'}
-              >
-                Threads
-              </DesktopSegment>
-              <MobileSegment
-                segmentLabel="search"
-                onClick={() => this.handleSegmentClick('search')}
-                selected={selectedView === 'search'}
-              >
-                Search
-              </MobileSegment>
-              <MobileSegment
-                segmentLabel="participant"
-                onClick={() => this.handleSegmentClick('participant')}
-                selected={selectedView === 'participant'}
-              >
-                Replies
-              </MobileSegment>
-              <MobileSegment
-                segmentLabel="creator"
-                onClick={() => this.handleSegmentClick('creator')}
-                selected={selectedView === 'creator'}
-              >
-                Threads
-              </MobileSegment>
-            </SegmentedControl>
+                <DesktopSegment
+                  segmentLabel="creator"
+                  onClick={() => this.handleSegmentClick('creator')}
+                  selected={selectedView === 'creator'}
+                >
+                  Threads
+                </DesktopSegment>
+                <MobileSegment
+                  segmentLabel="search"
+                  onClick={() => this.handleSegmentClick('search')}
+                  selected={selectedView === 'search'}
+                >
+                  Search
+                </MobileSegment>
+                <MobileSegment
+                  segmentLabel="participant"
+                  onClick={() => this.handleSegmentClick('participant')}
+                  selected={selectedView === 'participant'}
+                >
+                  Replies
+                </MobileSegment>
+                <MobileSegment
+                  segmentLabel="creator"
+                  onClick={() => this.handleSegmentClick('creator')}
+                  selected={selectedView === 'creator'}
+                >
+                  Threads
+                </MobileSegment>
+              </SegmentedControl>
 
-            {hasThreads &&
-              (selectedView === 'creator' ||
-                selectedView === 'participant') && (
-                <Feed
-                  userId={user.id}
-                  username={username}
-                  viewContext="profile"
-                  hasNoThreads={this.hasNoThreads}
-                  hasThreads={this.hasThreads}
-                  kind={selectedView}
-                  id={user.id}
-                />
-              )}
+              {hasThreads &&
+                (selectedView === 'creator' ||
+                  selectedView === 'participant') && (
+                  <Feed
+                    userId={user.id}
+                    username={username}
+                    viewContext="profile"
+                    hasNoThreads={this.hasNoThreads}
+                    hasThreads={this.hasThreads}
+                    kind={selectedView}
+                    id={user.id}
+                  />
+                )}
 
-            {selectedView === 'search' && <Search user={user} />}
+              {selectedView === 'search' && <Search user={user} />}
 
-            {!hasThreads && <NullState bg="null" heading={nullHeading} />}
-          </Column>
+              {!hasThreads && <NullState bg="null" heading={nullHeading} />}
+            </Content>
+            <Extras>
+              <ColumnHeading>Member of</ColumnHeading>
+              <CommunityList
+                currentUser={currentUser}
+                user={user}
+                id={user.id}
+              />
+            </Extras>
+          </Grid>
         </AppViewWrapper>
       );
     }

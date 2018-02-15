@@ -71,6 +71,7 @@ class Search extends React.Component<Props, State> {
         {searchString &&
           sendStringToServer && (
             <SearchThreadFeed
+              search
               viewContext="profile"
               userId={user.id}
               queryString={sendStringToServer}

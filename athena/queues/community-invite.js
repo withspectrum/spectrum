@@ -9,6 +9,10 @@ import createQueue from '../../shared/bull/create-queue';
 import { storeUsersNotifications } from '../models/usersNotifications';
 import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
 const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
+import type {
+  CommunityInviteNotificationJobData,
+  Job,
+} from 'shared/bull/types';
 
 const addToSendCommunityInviteEmailQueue = (
   recipient,
@@ -55,17 +59,7 @@ const addToSendCommunityInviteEmailQueue = (
 			3b. send an email
 */
 
-type JobData = {
-  data: {
-    recipient: {
-      email: string,
-    },
-    communityId: string,
-    senderId: string,
-    customMessage: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<CommunityInviteNotificationJobData>) => {
   const {
     recipient: inboundRecipient,
     communityId,

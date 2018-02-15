@@ -14,6 +14,7 @@ import {
 type Props = {
   redirectPath: ?string,
   signinType?: ?string,
+  close?: Function,
 };
 
 export class Login extends React.Component<Props> {
@@ -31,8 +32,9 @@ export class Login extends React.Component<Props> {
     return (
       <FullscreenView
         hasBackground
+        // $FlowFixMe
         noCloseButton={!this.props.close}
-        close={this.props.close}
+        close={this.props.close && this.props.close}
       >
         <FullscreenContent
           data-e2e-id="login-page"

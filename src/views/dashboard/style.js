@@ -359,6 +359,9 @@ export const ComposeIconContainer = styled.div`
 export const InboxThreadItem = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
   border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.border)};
   background: ${props =>
@@ -409,12 +412,13 @@ export const InboxClickWrapper = styled.span`
 `;
 
 export const InboxThreadContent = styled.div`
-  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   position: relative;
   z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
-  width: 100%;
 `;
 
 export const ThreadTitle = styled.h3`
@@ -442,6 +446,7 @@ export const AttachmentsContainer = styled.div`
 `;
 
 export const ThreadMeta = styled.div`
+  align-self: stretch;
   display: flex;
   margin: 10px 16px 16px;
   justify-content: space-between;
@@ -644,8 +649,8 @@ export const PillLabel = styled.span`
 `;
 
 export const MiniLinkPreview = styled.a`
-  display: inline-block;
   display: flex;
+  flex: auto;
   align-items: center;
   font-size: 14px;
   color: ${props =>
@@ -653,7 +658,7 @@ export const MiniLinkPreview = styled.a`
   font-weight: ${props => (props.active ? '500' : '400')};
   margin-bottom: 8px;
   pointer-events: auto;
-  max-width: 100%;
+  min-width: 0;
   ${Truncate};
 
   .icon {

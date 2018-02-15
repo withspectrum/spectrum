@@ -26,7 +26,7 @@ export type ChannelMemberConnectionType = {
 
 export default gql`
   fragment channelMemberConnection on Channel {
-    memberConnection(after: $after) {
+    memberConnection(after: $after, first: $first) {
       pageInfo {
         hasNextPage
         hasPreviousPage

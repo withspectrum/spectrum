@@ -6,27 +6,24 @@ import {
   setUserThreadLastSeen,
   createUserThread,
 } from '../models/usersThreads';
+import type { Job, UserThreadLastSeenJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    threadId: string,
-    userId: string,
-    timestamp: number,
-  },
-};
-
-export default async (job: JobData) => {
+export default async (job: Job<UserThreadLastSeenJobData>) => {
   const { userId, threadId, timestamp } = job.data;
 
   if (!userId || !threadId || !timestamp) {
     debug(
-      `missing data, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${timestamp}`
+      `missing data, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
+        timestamp
+      ).toString()}`
     );
     return;
   }
   const date = new Date(parseInt(timestamp, 10));
   debug(
-    `new job\nthreadId: ${threadId}\nuserId: ${userId}\ntimestamp: ${timestamp}`
+    `new job\nthreadId: ${threadId}\nuserId: ${userId}\ntimestamp: ${new Date(
+      timestamp
+    ).toString()}`
   );
 
   const record = await getUsersThread(userId, threadId);

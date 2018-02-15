@@ -60,7 +60,7 @@ export type DBInvoice = {
   planId: 'beta-pro' | 'community-standard',
   planName: string,
   quantity: number,
-  soruceBrand: string,
+  sourceBrand: string,
   sourceLast4: string,
   status: string,
   subscriptionId: string,

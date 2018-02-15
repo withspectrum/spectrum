@@ -25,7 +25,7 @@ class ComposerPlaceholder extends React.Component<Props> {
         >
           {!isOpen && showCommunityOwnerUpsell && <Upsell />}
           <Placeholder isOpen={isOpen}>
-            <Icon glyph="post" onboarding="foo" tipLocation="top" />
+            <Icon glyph="post" />
             <PlaceholderLabel>Start a new conversation...</PlaceholderLabel>
           </Placeholder>
         </Composer>

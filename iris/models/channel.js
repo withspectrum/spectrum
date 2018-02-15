@@ -1,7 +1,6 @@
 // @flow
 const { db } = require('./db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
-import UserError from '../utils/UserError';
 
 type DBChannel = {
   communityId: string,
@@ -315,18 +314,7 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
         nonAtomic: true,
       }
     )
-    .run()
-    .then(result => {
-      // update was successful
-      if (result.replaced >= 1) {
-        return true;
-      }
-
-      // update failed
-      return new UserError(
-        "Something went wrong and we weren't able to delete this channel."
-      );
-    });
+    .run();
 };
 
 const getChannelMemberCount = (channelId: string): number => {

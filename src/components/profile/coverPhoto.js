@@ -7,6 +7,7 @@ import { ProfileHeaderAction } from './style';
 import { optimize } from '../../helpers/images';
 
 const PhotoContainer = styled.div`
+  grid-area: cover;
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
@@ -21,7 +22,7 @@ const PhotoContainer = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+  border-radius: ${props => (props.large ? '0' : '12px 12px 0 0')};
 
   @media (max-width: 768px) {
     flex: 0 0 ${props => (props.large ? '160px' : '64px')};

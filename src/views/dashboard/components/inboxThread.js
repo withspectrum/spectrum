@@ -29,13 +29,20 @@ class InboxThread extends Component {
       active,
       hasActiveCommunity,
       hasActiveChannel,
+      viewContext,
     } = this.props;
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
 
     if (data.watercooler) {
-      return <WatercoolerThread data={data} active={active} />;
+      return (
+        <WatercoolerThread
+          data={data}
+          active={active}
+          viewContext={viewContext}
+        />
+      );
     }
 
     return (
@@ -44,10 +51,13 @@ class InboxThread extends Component {
           to={{
             pathname: window.location.pathname,
             search:
-              window.innerWidth < 768 ? `?thread=${data.id}` : `?t=${data.id}`,
+              window.innerWidth < 768 || viewContext
+                ? `?thread=${data.id}`
+                : `?t=${data.id}`,
           }}
           onClick={e =>
             window.innerWidth > 768 &&
+            !viewContext &&
             !e.metaKey &&
             this.props.dispatch(changeActiveThread(data.id))
           }
@@ -117,6 +127,7 @@ class WatercoolerThreadPure extends React.Component {
     const {
       data: { participants, author, community, messageCount, id },
       active,
+      viewContext,
     } = this.props;
     const participantsExist = participants && participants.length > 0;
 
@@ -125,7 +136,10 @@ class WatercoolerThreadPure extends React.Component {
         <InboxLinkWrapper
           to={{
             pathname: window.location.pathname,
-            search: window.innerWidth < 768 ? `?thread=${id}` : `?t=${id}`,
+            search:
+              window.innerWidth < 768 || viewContext
+                ? `?thread=${id}`
+                : `?t=${id}`,
           }}
           onClick={() =>
             window.innerWidth > 768 &&

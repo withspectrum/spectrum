@@ -9,31 +9,20 @@ import { convertTimestampToDate } from '../utils/timestamp-to-date';
 import { getCommunityById } from '../models/community';
 import { getUsers } from '../models/user';
 import { getOwnersInCommunity } from '../models/usersCommunities';
+import type { Job, InvoiceJobData } from 'shared/bull/types';
 
 const sendCommunityInvoiceReceiptQueue = createQueue(
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL
 );
 
-type JobData = {
-  data: {
-    invoice: {
-      id: string,
-      amount: number,
-      paidAt: number,
-      sourceBrand: string,
-      sourceLast4: string,
-      planName: string,
-      communityId: string,
-      quantity: number,
-    },
-  },
-};
-
-export default async (job: JobData) => {
+export default async (job: Job<InvoiceJobData>) => {
   const { invoice } = job.data;
 
   debug('processing community invoice');
+  // Note(@mxstbr): I don't know why we have to do this twice, otherwise Flow complains :roll_eyes:
+  if (typeof invoice.communityId !== 'string') return;
   const community = await getCommunityById(invoice.communityId);
+  if (typeof invoice.communityId !== 'string') return;
   const ownersIds = await getOwnersInCommunity(invoice.communityId);
   const owners = await getUsers(ownersIds);
 
@@ -55,9 +44,9 @@ export default async (job: JobData) => {
     const { id } = invoice;
 
     const memberCountString = quantity => {
-      return `${quantity <= 1 ? '1' : (quantity - 1) * 1000} - ${quantity <= 1
-        ? ''
-        : `${quantity - 1},`}999 members`;
+      return `${quantity <= 1 ? '1' : (quantity - 1) * 1000} - ${
+        quantity <= 1 ? '' : `${quantity - 1},`
+      }999 members`;
     };
 
     return sendCommunityInvoiceReceiptQueue.add(

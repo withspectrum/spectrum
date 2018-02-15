@@ -13,18 +13,9 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
+import type { Job, ChannelNotificationJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    channel: {
-      id: string,
-      communityId: string,
-      slug: string,
-    },
-    userId: string,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<ChannelNotificationJobData>) => {
   const incomingChannel = job.data.channel;
   const currentUserId = job.data.userId;
 
