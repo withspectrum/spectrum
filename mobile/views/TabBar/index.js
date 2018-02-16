@@ -1,20 +1,19 @@
 // @flow
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import theme from '../../components/theme';
-// Tab-Navigators
-import HomeNavigation from './HomeNavigation';
-// import MessagesNavigation from './MessagesNavigation'
-import NotificationsNavigation from './NotificationsNavigation';
-// import ExploreNavigation from './ExploreNavigation'
-// import ProfileNavigation from './ProfileNavigation'
+
+// Stacks for the individual views
+import HomeStack from './HomeStack';
+import NotificationsStack from './NotificationsStack';
 
 const routeConfiguration = {
-  Home: { screen: HomeNavigation },
-  Messages: { screen: HomeNavigation },
-  Explore: { screen: HomeNavigation },
-  Notifications: { screen: NotificationsNavigation },
-  Profile: { screen: HomeNavigation },
+  Home: { screen: HomeStack },
+  Messages: { screen: HomeStack },
+  Explore: { screen: HomeStack },
+  Notifications: { screen: NotificationsStack },
+  Profile: { screen: HomeStack },
 };
+
 const tabBarConfiguration = {
   tabBarComponent: TabBarBottom,
   tabBarPosition: 'bottom',

@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { StackNavigator } from 'react-navigation';
-import Thread from '../Thread';
 import Notifications from '../Notifications';
+import BaseStack from './BaseStack';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 
-const NotificationsNavigator = StackNavigator(
+const NotificationsStack = StackNavigator(
   {
     Notifications: {
       screen: Notifications,
@@ -13,16 +13,11 @@ const NotificationsNavigator = StackNavigator(
         headerTitle: 'Notifications',
       },
     },
-    Thread: {
-      screen: withMappedNavigationProps(Thread),
-      navigationOptions: {
-        headerTitle: 'Thread',
-      },
-    },
+    ...BaseStack,
   },
   {
     initialRouteName: 'Notifications',
   }
 );
 
-export default NotificationsNavigator;
+export default NotificationsStack;
