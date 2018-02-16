@@ -20,11 +20,6 @@ type UpdateCustomerInput = {
   communityName: string,
 };
 
-type FirstSubscriptionInput = {
-  customerId: string,
-  subscriptionItemType: string,
-};
-
 const getCustomer = async (customerId: string): Promise<RawCustomer> => {
   return await stripe.customers.retrieve(customerId);
 };
@@ -113,10 +108,12 @@ const updateCustomer = async (customerInput: UpdateCustomerInput) => {
   });
 };
 
-const createFirstSubscription = async (
-  subscriptionInput: FirstSubscriptionInput
-) => {
-  const { customerId, subscriptionItemType } = subscriptionInput;
+type FirstSubInput = {
+  customerId: string,
+  subscriptionItemType: string,
+};
+const createFirstSubscription = async (input: FirstSubInput) => {
+  const { customerId, subscriptionItemType } = input;
   const billingAnchor = Math.floor(new Date().getTime() / 1000);
   return await stripe.subscriptions.create({
     customer: customerId,
@@ -137,14 +134,12 @@ const createFirstSubscription = async (
   });
 };
 
-type AddSubscriptionItemInput = {
+type AddSIInput = {
   subscriptionId: string,
   subscriptionItemType: string,
 };
-const addSubscriptionItem = async (
-  addSubscriptionItemInput: AddSubscriptionItemInput
-) => {
-  const { subscriptionId, subscriptionItemType } = addSubscriptionItemInput;
+const addSubscriptionItem = async (input: AddSIInput) => {
+  const { subscriptionId, subscriptionItemType } = input;
 
   return await stripe.subscriptionItems.create({
     subscription: subscriptionId,
@@ -154,14 +149,12 @@ const addSubscriptionItem = async (
   });
 };
 
-type UpdateSubscriptionItemInput = {
+type UpdateSIInput = {
   subscriptionItemId: string,
   quantity: number,
 };
-const updateSubscriptionItem = async (
-  updateSubcriptionItemInput: UpdateSubscriptionItemInput
-) => {
-  const { subscriptionItemId, quantity } = updateSubcriptionItemInput;
+const updateSubscriptionItem = async (input: UpdateSIInput) => {
+  const { subscriptionItemId, quantity } = input;
 
   return await stripe.subscriptionItems.update(subscriptionItemId, {
     prorate: true,
