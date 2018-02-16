@@ -117,10 +117,10 @@ const createFirstSubscription = async (
   subscriptionInput: FirstSubscriptionInput
 ) => {
   const { customerId, subscriptionItemType } = subscriptionInput;
-
+  const billingAnchor = Math.floor(new Date().getTime() / 1000);
   return await stripe.subscriptions.create({
     customer: customerId,
-    billing_cycle_anchor: 1,
+    billing_cycle_anchor: billingAnchor,
     items: [
       // NOTE: We have to include this dummy item in order to prevent
       // the top-level subscription from thinking it's about any
@@ -128,12 +128,10 @@ const createFirstSubscription = async (
       {
         plan: 'community-features',
         quantity: 1,
-        prorate: true,
       },
       {
         plan: subscriptionItemType,
         quantity: 1,
-        prorate: true,
       },
     ],
   });

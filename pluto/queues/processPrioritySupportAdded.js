@@ -11,7 +11,7 @@ import { StripeUtil } from './stripe-utils';
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
-  debug(`Processing analytics added for ${communityId}`);
+  debug(`Processing priority support added for ${communityId}`);
 
   const {
     activeSubscription,
