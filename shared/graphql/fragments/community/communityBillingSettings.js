@@ -17,7 +17,8 @@ export default gql`
       administratorEmail
       pendingAdministratorEmail
       sources {
-        sourceId
+        id
+        isDefault
         card {
           brand
           last4
@@ -26,10 +27,10 @@ export default gql`
         }
       }
       invoices {
-        customerId
+        id
       }
       subscriptions {
-        customerId
+        id
       }
     }
   }

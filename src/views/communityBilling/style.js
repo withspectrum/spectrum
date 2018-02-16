@@ -15,7 +15,7 @@ export const SourceContainer = styled.div`
   display: flex;
   align-items: center;
 `;
-export const SourceText = styled.p`
+export const SourceText = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,6 +27,8 @@ export const SourceName = styled.p`
   font-size: 15px;
   font-weight: 500;
   color: ${props => props.theme.text.default};
+  display: flex;
+  align-items: center;
 `;
 export const SourceExpiration = styled.p`
   line-height: 1.3;

@@ -32,7 +32,13 @@ const getSources = (customer: RawCustomer): Array<?RawSource> => {
   if (!customer) return [];
   if (!customer.subscriptions || customer.subscriptions.data.length === 0)
     return [];
-  return customer.sources.data;
+
+  return customer.sources.data.map(source => {
+    if (!source) return;
+    return Object.assign({}, source, {
+      isDefault: source.id === customer.default_source,
+    });
+  });
 };
 
 type AttachNewSourceInput = {

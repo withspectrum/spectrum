@@ -6,6 +6,7 @@ import {
   SourceName,
   SourceExpiration,
 } from '../style';
+import Badge from '../../../components/badges';
 
 type Props = {
   source: {
@@ -44,10 +45,11 @@ class Source extends React.Component<Props> {
     const imageSrc = getCardImage(source.card.brand);
     return (
       <SourceContainer>
-        <img src={imageSrc} width={48} />
+        <img src={imageSrc} alt={'Payment method icon'} width={48} />
         <SourceText>
           <SourceName>
             {source.card.brand} ending in {source.card.last4}
+            {source.isDefault && <Badge type={'default'} />}
           </SourceName>
           <SourceExpiration>
             Expires {source.card.exp_month}/{source.card.exp_year}

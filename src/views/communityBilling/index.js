@@ -74,9 +74,7 @@ class CommunityMembersSettings extends React.Component<Props> {
               )}
               {community.billingSettings.subscriptions.map(
                 subscription =>
-                  subscription && (
-                    <p key={subscription.customerId}>{subscription.id}</p>
-                  )
+                  subscription && <p key={subscription.id}>{subscription.id}</p>
               )}
             </SectionCard>
           </Column>
@@ -85,8 +83,7 @@ class CommunityMembersSettings extends React.Component<Props> {
             <SectionCard>
               <SectionTitle>Payment method</SectionTitle>
               {community.billingSettings.sources.map(
-                source =>
-                  source && <Source key={source.sourceId} source={source} />
+                source => source && <Source key={source.id} source={source} />
               )}
               <CardForm community={community} />
             </SectionCard>
@@ -99,10 +96,7 @@ class CommunityMembersSettings extends React.Component<Props> {
                 </SectionSubtitle>
               )}
               {community.billingSettings.invoices.map(
-                invoice =>
-                  invoice && (
-                    <p key={invoice.customerId}>{invoice.customerId}</p>
-                  )
+                invoice => invoice && <p key={invoice.id}>{invoice.id}</p>
               )}
             </SectionCard>
           </Column>

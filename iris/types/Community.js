@@ -63,8 +63,7 @@ const Community = /* GraphQL */ `
 	}
 
 	type StripeSource {
-		sourceId: ID
-		customerId: ID
+		id: ID
 		card: StripeCard
 		isDefault: Boolean
 	}
@@ -94,8 +93,8 @@ const Community = /* GraphQL */ `
 	}
 
 	type StripeSubscription {
-		subscriptionId: ID
-		customerId: ID
+		id: ID
+		customer: String
 		billing_cycle_anchor: Date
 		canceled_at: Date
 		created: Date
@@ -110,8 +109,8 @@ const Community = /* GraphQL */ `
 	}
 
 	type StripeInvoice {
-		invoiceId: ID
-		customerId: ID
+		id: ID
+		customerId: String
 		date: Date
 		items: [StripeItem]
 		paid: Boolean

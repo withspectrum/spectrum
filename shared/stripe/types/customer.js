@@ -8,6 +8,7 @@ export type RawCustomer = {
   created: Date,
   currency: string,
   email: ?string,
+  default_source: ?string,
   sources: {
     data: Array<?RawSource>,
     has_more: boolean,
