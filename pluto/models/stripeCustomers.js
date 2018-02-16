@@ -1,5 +1,5 @@
 // @flow
-import type { CleanCustomer } from '../types/customer';
+import type { CleanCustomer } from 'shared/stripe/types/customer';
 import { recordExists, insertRecord, replaceRecord } from './utils';
 import { db } from 'iris/models/db';
 

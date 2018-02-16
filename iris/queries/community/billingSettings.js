@@ -1,7 +1,6 @@
 // @flow
 import { getInvoicesByCustomerId } from '../../models/stripeInvoices';
-import { getSourcesByCustomerId } from '../../models/stripeSources';
-import { getSubscriptionsByCustomerId } from '../../models/stripeSubscriptions';
+import { StripeUtil } from 'shared/stripe/utils';
 import type { GraphQLContext } from '../..';
 import type { DBCommunity } from 'shared/types';
 
@@ -15,17 +14,30 @@ export default async (
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
-  const { isOwner } = await loaders.userPermissionsInCommunity.load([
-    user.id,
-    id,
+  const defaultResult = {
+    pendingAdministratorEmail,
+    administratorEmail,
+    sources: [],
+    invoices: [],
+    subscriptions: [],
+  };
+
+  if (!stripeCustomerId) return defaultResult;
+
+  const [permissions, { reduction }] = await Promise.all([
+    loaders.userPermissionsInCommunity.load([user.id, id]),
+    loaders.stripeCustomers.load(stripeCustomerId),
   ]);
+
+  const { isOwner } = permissions;
+  const customer = reduction.length === 0 ? null : reduction[0];
+
   return {
     pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,
     administratorEmail: isOwner ? administratorEmail : null,
-    sources: isOwner ? await getSourcesByCustomerId(stripeCustomerId) : [],
+    sources: isOwner && customer ? await StripeUtil.getSources(customer) : [],
     invoices: isOwner ? await getInvoicesByCustomerId(stripeCustomerId) : [],
-    subscriptions: isOwner
-      ? await getSubscriptionsByCustomerId(stripeCustomerId)
-      : [],
+    subscriptions:
+      isOwner && customer ? await StripeUtil.getSubscriptions(customer) : [],
   };
 };

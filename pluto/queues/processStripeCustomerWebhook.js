@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:customerEvent');
-import type { CleanCustomer, RawCustomer } from '../types/customer';
+import type { CleanCustomer, RawCustomer } from 'shared/stripe/types/customer';
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 

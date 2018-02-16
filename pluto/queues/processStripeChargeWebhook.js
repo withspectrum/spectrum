@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:chargeEvent');
-import type { CleanCharge, RawCharge } from '../types/Charge';
+import type { CleanCharge, RawCharge } from 'shared/stripe/types/Charge';
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
 

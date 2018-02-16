@@ -7,6 +7,8 @@ import sendSlackInvites from './sendSlackInvites';
 import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
 import updateAdministratorEmail from './updateAdministratorEmail';
+import addPaymentSource from './addPaymentSource';
+import removePaymentSource from './removePaymentSource';
 
 module.exports = {
   Mutation: {
@@ -18,5 +20,7 @@ module.exports = {
     sendEmailInvites,
     pinThread,
     updateAdministratorEmail,
+    addPaymentSource,
+    removePaymentSource,
   },
 };

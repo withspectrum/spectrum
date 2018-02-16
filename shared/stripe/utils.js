@@ -1,24 +1,12 @@
 // @flow
 const debug = require('debug')('pluto:queues:stripe-util');
 import { stripe } from 'shared/stripe';
-import type { RawCustomer } from '../types/customer';
-import type { RawSubscription } from '../types/subscription';
+import type { RawCustomer } from 'shared/stripe/types/customer';
+import type { RawSubscription } from 'shared/stripe/types/subscription';
 import type { DBCommunity } from 'shared/types';
-import type { SubscriptionItem } from '../types/subscriptionItem';
-import { getCommunityById, setStripeCustomerId } from '../models/community';
-
-type CreateCustomerInput = {
-  administratorEmail: string,
-  communityId: string,
-  communityName: string,
-};
-
-type UpdateCustomerInput = {
-  customerId: string,
-  administratorEmail: string,
-  communityId: string,
-  communityName: string,
-};
+import type { SubscriptionItem } from 'shared/stripe/types/subscriptionItem';
+import type { RawSource } from 'shared/stripe/types/source';
+import { getCommunityById, setStripeCustomerId } from 'iris/models/community';
 
 const getCustomer = async (customerId: string): Promise<RawCustomer> => {
   return await stripe.customers.retrieve(customerId);
@@ -30,6 +18,56 @@ const hasChargeableSource = (customer: RawCustomer): boolean => {
   return customer.sources.data.some(
     source => source && source.status === 'chargeable'
   );
+};
+
+const getChargeableSource = (customer: RawCustomer): ?RawSource => {
+  if (!customer) return null;
+  if (!customer.sources || customer.sources.data.length === 0) return null;
+  return customer.sources.data.find(
+    source => source && source.status === 'chargeable'
+  );
+};
+
+const getSources = (customer: RawCustomer): Array<?RawSource> => {
+  if (!customer) return [];
+  if (!customer.subscriptions || customer.subscriptions.data.length === 0)
+    return [];
+  return customer.sources.data;
+};
+
+type AttachNewSourceInput = {
+  customerId: string,
+  sourceId: string,
+};
+const attachNewSource = async (
+  input: AttachNewSourceInput
+): Promise<RawCustomer> => {
+  const { customerId, sourceId } = input;
+  return await stripe.customers.createSource(customerId, {
+    source: sourceId,
+  });
+};
+
+type DetachSourceInput = {
+  customerId: string,
+  sourceId: string,
+};
+const detachSource = async (input: DetachSourceInput): Promise<RawCustomer> => {
+  const { customerId, sourceId } = input;
+  return await stripe.customers.deleteSource(customerId, sourceId);
+};
+
+type ChangeDefaultSourceInput = {
+  customerId: string,
+  sourceId: string,
+};
+const changeDefaultSource = async (
+  input: ChangeDefaultSourceInput
+): Promise<RawCustomer> => {
+  const { customerId, sourceId } = input;
+  return await stripe.customers.update(customerId, {
+    default_source: sourceId,
+  });
 };
 
 const hasActiveSubscription = (customer: RawCustomer): boolean => {
@@ -48,6 +86,13 @@ const getActiveSubscription = (customer: RawCustomer): ?RawSubscription => {
   return customer.subscriptions.data.find(
     sub => sub && sub.status === 'active'
   );
+};
+
+const getSubscriptions = (customer: RawCustomer): Array<?RawSubscription> => {
+  if (!customer) return [];
+  if (!customer.subscriptions || customer.subscriptions.data.length === 0)
+    return [];
+  return customer.subscriptions.data;
 };
 
 const hasSubscriptionItemOfType = (
@@ -74,7 +119,18 @@ const getSubscriptionItemOfType = (
   );
 };
 
-const createCustomer = async (customerInput: CreateCustomerInput) => {
+type CreateCustomerInput = {
+  administratorEmail: ?string,
+  communityId: string,
+  communityName: string,
+};
+type CreateCustomerOutput = {
+  customer: RawCustomer,
+  community: DBCommunity,
+};
+const createCustomer = async (
+  customerInput: CreateCustomerInput
+): Promise<CreateCustomerOutput> => {
   const customer = await stripe.customers.create({
     email: customerInput.administratorEmail,
     metadata: {
@@ -98,6 +154,12 @@ const deleteCustomer = async (customerId: string) => {
   return await stripe.customers.del(customerId);
 };
 
+type UpdateCustomerInput = {
+  customerId: string,
+  administratorEmail: ?string,
+  communityId: string,
+  communityName: string,
+};
 const updateCustomer = async (customerInput: UpdateCustomerInput) => {
   return await stripe.customers.update(customerInput.customerId, {
     email: customerInput.administratorEmail,
@@ -172,7 +234,6 @@ type PreflightCheck = {
   activeSubscription: ?RawSubscription,
   hasChargeableSource: boolean,
 };
-
 const jobPreflight = async (communityId: string): Promise<PreflightCheck> => {
   let defaultResult = {
     community: null,
@@ -221,8 +282,14 @@ const jobPreflight = async (communityId: string): Promise<PreflightCheck> => {
 export const StripeUtil = {
   getCustomer,
   hasChargeableSource,
+  getChargeableSource,
+  getSources,
+  attachNewSource,
+  detachSource,
+  changeDefaultSource,
   hasActiveSubscription,
   getActiveSubscription,
+  getSubscriptions,
   hasSubscriptionItemOfType,
   getSubscriptionItemOfType,
   createCustomer,

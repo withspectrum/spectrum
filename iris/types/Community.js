@@ -66,6 +66,7 @@ const Community = /* GraphQL */ `
 		sourceId: ID
 		customerId: ID
 		card: StripeCard
+		isDefault: Boolean
 	}
 
 	type StripePlan {
@@ -149,12 +150,15 @@ const Community = /* GraphQL */ `
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
 		isPro: Boolean
-		hasChargeableSource: Boolean
 		memberGrowth: GrowthData
 		conversationGrowth: GrowthData
 		topMembers: [User]
 		topAndNewThreads: TopAndNewThreads
 		watercooler: Thread
+
+		hasAnalytics: Boolean
+		hasPrioritySupport: Boolean
+		hasChargeableSource: Boolean
 		billingSettings: CommunityBillingSettings
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
@@ -226,6 +230,21 @@ const Community = /* GraphQL */ `
 		email: String!
 	}
 
+	input AddPaymentSourceInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
+	input RemovePaymentSourceInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
+	input MakeDefaultPaymentSourceInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -237,6 +256,9 @@ const Community = /* GraphQL */ `
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
 		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
+		addPaymentSource(input: AddPaymentSourceInput!): Community
+		removePaymentSource(input: RemovePaymentSourceInput!): Community
+		makeDefaultPaymentSource(input: MakeDefaultPaymentSourceInput!): Community
 	}
 `;
 

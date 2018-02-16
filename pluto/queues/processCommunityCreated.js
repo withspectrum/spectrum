@@ -5,7 +5,7 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { StripeUtil } from './stripe-utils';
+import { StripeUtil } from 'shared/stripe/utils';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;

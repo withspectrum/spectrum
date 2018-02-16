@@ -32,7 +32,9 @@ export type DBCommunity = {
   pinnedThreadId?: string,
   watercoolerId?: string,
   administratorId: string,
-  administratorEmail: string,
+  administratorEmail: ?string,
+  hasAnalytics: boolean,
+  hasPrioritySupport: boolean,
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
 };

@@ -39,6 +39,8 @@ class CommunityMembersSettings extends React.Component<Props> {
     const { data, isLoading } = this.props;
     const { community } = data;
 
+    console.log(community);
+
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
         return (
@@ -73,9 +75,7 @@ class CommunityMembersSettings extends React.Component<Props> {
               {community.billingSettings.subscriptions.map(
                 subscription =>
                   subscription && (
-                    <p key={subscription.customerId}>
-                      {subscription.customerId}
-                    </p>
+                    <p key={subscription.customerId}>{subscription.id}</p>
                   )
               )}
             </SectionCard>
