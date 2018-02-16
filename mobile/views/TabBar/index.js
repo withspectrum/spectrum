@@ -1,5 +1,5 @@
 // @flow
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator, TabBarBottom } from 'react-navigation';
 import theme from '../../components/theme';
 // Tab-Navigators
 import HomeNavigation from './HomeNavigation';
@@ -16,7 +16,10 @@ const routeConfiguration = {
   Profile: { screen: HomeNavigation },
 };
 const tabBarConfiguration = {
-  //...other configs
+  tabBarComponent: TabBarBottom,
+  tabBarPosition: 'bottom',
+  animationEnabled: false,
+  swipeEnabled: false,
   tabBarOptions: {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: theme.bg.default,
