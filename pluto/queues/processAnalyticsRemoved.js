@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('pluto:queues:processAnalyticsRemoved');
+const debug = require('debug')('pluto:queues:process-analytics-removed');
 import type {
   Job,
   StripeCommunityPaymentEventJobData,

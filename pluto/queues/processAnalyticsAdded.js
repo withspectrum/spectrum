@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('pluto:queues:processAnalyticsAdded');
+const debug = require('debug')('pluto:queues:process-analytics-added');
 import type {
   Job,
   StripeCommunityPaymentEventJobData,
@@ -32,6 +32,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (!community.hasAnalytics) {
     debug(`Analytics already turned off ${communityId}`);
+    return;
   }
 
   if (!hasChargeableSource) {

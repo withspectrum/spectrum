@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('pluto:queues:processCommunityEdited');
+const debug = require('debug')('pluto:queues:process-moderator-removed');
 import type {
   Job,
   StripeCommunityPaymentEventJobData,

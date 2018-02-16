@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('pluto:queues:processCommunityCreated');
+const debug = require('debug')('pluto:queues:process-community-created');
 import type {
   Job,
   StripeCommunityPaymentEventJobData,

@@ -41,3 +41,13 @@ export const setCommunityAnalytics = (communityId: string, value: boolean) => {
     })
     .run();
 };
+
+export const setPrioritySupport = (communityId: string, value: boolean) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      hasPrioritySupport: value,
+    })
+    .run();
+};
