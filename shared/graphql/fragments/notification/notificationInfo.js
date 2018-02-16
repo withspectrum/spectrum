@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import type { NotificationEventType } from 'shared/types';
 
 type Node = {
   id: string,
@@ -14,7 +15,7 @@ export type NotificationInfoType = {
   actors: Array<Node>,
   context: Node,
   entities: Array<Node>,
-  event: string,
+  event: NotificationEventType,
   isRead: boolean,
   isSeen: boolean,
 };

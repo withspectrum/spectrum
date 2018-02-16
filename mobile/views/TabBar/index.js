@@ -4,7 +4,7 @@ import theme from '../../components/theme';
 // Tab-Navigators
 import HomeNavigation from './HomeNavigation';
 // import MessagesNavigation from './MessagesNavigation'
-// import NotificationsNavigation from './NotificationsNavigation'
+import NotificationsNavigation from './NotificationsNavigation';
 // import ExploreNavigation from './ExploreNavigation'
 // import ProfileNavigation from './ProfileNavigation'
 
@@ -12,7 +12,7 @@ const routeConfiguration = {
   Home: { screen: HomeNavigation },
   Messages: { screen: HomeNavigation },
   Explore: { screen: HomeNavigation },
-  Notifications: { screen: HomeNavigation },
+  Notifications: { screen: NotificationsNavigation },
   Profile: { screen: HomeNavigation },
 };
 const tabBarConfiguration = {
