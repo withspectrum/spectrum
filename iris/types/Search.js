@@ -46,7 +46,7 @@ const Search = /* GraphQL */ `
       type: SearchType!
       # Optional ID to be used to filter search results by community, channel, user, etc.
       filter: SearchFilter
-    ): SearchResults
+    ): SearchResults @cost(complexity: 2, multiplier: "first")
 	}
 `;
 
