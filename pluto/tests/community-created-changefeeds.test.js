@@ -1,7 +1,7 @@
 // @flow
-import { communityCreated } from '../community';
+import { communityCreated } from '../changefeeds/community';
 import db from 'shared/testing/db';
-import processCommunityCreated from '../../queues/processCommunityCreated';
+import processCommunityCreated from '../queues/processCommunityCreated';
 import createQueue from 'shared/bull/create-queue';
 import { stripe } from 'shared/stripe';
 
@@ -40,7 +40,6 @@ afterAll(() => {
 });
 
 afterEach(() => {
-  // spy.clear
   return deleteTestCommunity();
 });
 

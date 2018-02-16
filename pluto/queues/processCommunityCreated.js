@@ -18,12 +18,14 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  const {
-    stripeCustomerId,
-    administratorEmail,
-    id,
-    name,
-  } = await getCommunityById(communityId);
+  const community = await getCommunityById(communityId);
+
+  if (!community || community === undefined) {
+    debug(`Couldn't fetch community in db ${communityId}`);
+    return;
+  }
+
+  const { stripeCustomerId, administratorEmail, id, name } = community;
 
   if (stripeCustomerId) {
     debug(`Stripe customer id already exists for community ${communityId}`);
