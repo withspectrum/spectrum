@@ -27,4 +27,14 @@ export type CleanCustomer = {
   created: Date,
   currency: string,
   email: ?string,
+  sources: {
+    data: Array<?RawSource>,
+    has_more: boolean,
+    total_count: number,
+  },
+  subscriptions: {
+    data: Array<?RawSubscription>,
+    has_more: boolean,
+    total_count: number,
+  },
 };

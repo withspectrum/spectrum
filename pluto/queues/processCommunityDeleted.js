@@ -5,28 +5,27 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { stripe } from 'shared/stripe';
-import { getCommunityById } from '../models/community';
+import { StripeUtil } from './stripe-utils';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
   debug(`Processing community created ${communityId}`);
 
-  if (!communityId) {
-    debug(`No communityId ${communityId}`);
+  const { community, customer } = await StripeUtil.jobPreflight(communityId);
+
+  if (!community) {
+    debug(`Error getting community in preflight ${communityId}`);
     return;
   }
 
-  const { stripeCustomerId } = await getCommunityById(communityId);
-
-  if (!stripeCustomerId) {
-    debug(`No Stripe customer to delete for ${communityId}`);
+  if (!customer) {
+    debug(`Error fetching or creating customer in preflight ${communityId}`);
     return;
   }
 
   debug(`Deleting Stripe customer for ${communityId}`);
-  return await stripe.customers.del(stripeCustomerId);
+  return await StripeUtil.deleteCustomer(customer.id);
 };
 
 export default async (job: Job<StripeCommunityPaymentEventJobData>) => {

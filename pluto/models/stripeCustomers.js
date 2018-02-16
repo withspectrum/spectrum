@@ -16,7 +16,7 @@ export const saveCustomer = async (
   }
 };
 
-export const getCustomer = (customerId: string) => {
+export const getStripeCustomer = (customerId: string) => {
   return db
     .table('stripeCustomers')
     .get(customerId)

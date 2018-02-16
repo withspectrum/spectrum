@@ -15,6 +15,7 @@ export type RawSource = {
   last4: string,
   name: ?string,
   tokenization_method: ?string,
+  status: 'canceled' | 'chargeable' | 'consumed' | 'failed' | 'pending',
 };
 
 // saved in db

@@ -5,48 +5,31 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { stripe } from 'shared/stripe';
-import { getCommunityById, setStripeCustomerId } from '../models/community';
+import { StripeUtil } from './stripe-utils';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
   debug(`Processing community edited ${communityId}`);
 
-  if (!communityId) {
-    debug(`No communityId ${communityId}`);
+  const { community, customer } = await StripeUtil.jobPreflight(communityId);
+
+  if (!community) {
+    debug(`Error getting community in preflight ${communityId}`);
     return;
   }
 
-  const {
-    stripeCustomerId,
-    administratorEmail,
-    id,
-    name,
-  } = await getCommunityById(communityId);
-
-  if (!stripeCustomerId) {
-    debug(`No Stripe customer yet for ${communityId}`);
-    debug(`Creating a Stripe customer for ${communityId}`);
-
-    const { id: createdStripeId } = await stripe.customers.create({
-      email: administratorEmail,
-      metadata: {
-        communityId: id,
-        communityName: name,
-      },
-    });
-
-    debug(`Saving created stripeCustomerId to database for ${communityId}`);
-    return await setStripeCustomerId(communityId, createdStripeId);
+  if (!customer) {
+    debug(`Error fetching or creating customer in preflight ${communityId}`);
+    return;
   }
 
   debug(`Updating Stripe customer for ${communityId}`);
-  return await stripe.customers.update(stripeCustomerId, {
-    metadata: {
-      communityId: id,
-      communityName: name,
-    },
+  return await StripeUtil.updateCustomer({
+    administratorEmail: community.administratorEmail,
+    communityId: community.id,
+    communityName: community.name,
+    customerId: customer.id,
   });
 };
 

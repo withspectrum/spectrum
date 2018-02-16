@@ -5,8 +5,7 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { stripe } from 'shared/stripe';
-import { getCommunityById, setStripeCustomerId } from '../models/community';
+import { StripeUtil } from './stripe-utils';
 
 /*
 
@@ -19,46 +18,24 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   debug(`Processing administrator email changed for ${communityId}`);
 
-  if (!communityId) {
-    debug(`No communityId ${communityId}`);
+  const { community, customer } = await StripeUtil.jobPreflight(communityId);
+
+  if (!community) {
+    debug('Error getting community in preflight');
     return;
   }
 
-  const {
-    stripeCustomerId,
-    administratorEmail,
-    id,
-    name,
-  } = await getCommunityById(job.data.communityId);
-
-  if (!administratorEmail) {
-    debug(`No administrator email for ${communityId}`);
+  if (!customer) {
+    debug('Error fetching or creating customer in preflight');
     return;
   }
 
-  // if a stripeCustomerId doesn't exist yet, we've somehow failed to create
-  // a customer for this community at some previous step; we can do it here now
-  if (!stripeCustomerId) {
-    debug(
-      `No Stripe customer exists yet, create a customer for ${communityId}`
-    );
-    const { id: createdStripeId } = await stripe.customers.create({
-      email: administratorEmail,
-      metadata: {
-        communityId: id,
-        communityName: name,
-      },
-    });
-
-    debug(`Saving stripeCustomerId in database ${communityId}`);
-    return await setStripeCustomerId(communityId, createdStripeId);
-  }
-
-  // otherwise a customer already exists on stripe, and we just need to update
-  // the email address
   debug(`Updating the email address on Stripe for ${communityId}`);
-  return await stripe.customers.update(stripeCustomerId, {
-    email: administratorEmail,
+  return await StripeUtil.updateCustomer({
+    administratorEmail: community.administratorEmail,
+    communityId: community.id,
+    communityName: community.name,
+    customerId: customer.id,
   });
 };
 
