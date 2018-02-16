@@ -38,5 +38,5 @@ export default async (
   return await StripeUtil.changeDefaultSource({
     customerId: customer.id,
     sourceId: sourceId,
-  });
+  }).then(() => community);
 };

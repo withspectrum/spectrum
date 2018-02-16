@@ -9,6 +9,7 @@ import pinThread from './pinThread';
 import updateAdministratorEmail from './updateAdministratorEmail';
 import addPaymentSource from './addPaymentSource';
 import removePaymentSource from './removePaymentSource';
+import makeDefaultPaymentSource from './makeDefaultPaymentSource';
 
 module.exports = {
   Mutation: {
@@ -22,5 +23,6 @@ module.exports = {
     updateAdministratorEmail,
     addPaymentSource,
     removePaymentSource,
+    makeDefaultPaymentSource,
   },
 };

@@ -83,7 +83,14 @@ class CommunityMembersSettings extends React.Component<Props> {
             <SectionCard>
               <SectionTitle>Payment method</SectionTitle>
               {community.billingSettings.sources.map(
-                source => source && <Source key={source.id} source={source} />
+                source =>
+                  source && (
+                    <Source
+                      key={source.id}
+                      source={source}
+                      community={community}
+                    />
+                  )
               )}
               <CardForm community={community} />
             </SectionCard>

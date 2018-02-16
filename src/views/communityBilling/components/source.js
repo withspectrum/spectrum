@@ -2,15 +2,19 @@
 import * as React from 'react';
 import {
   SourceContainer,
+  SourceContentContainer,
   SourceText,
   SourceName,
   SourceExpiration,
 } from '../style';
 import Badge from '../../../components/badges';
+import EditSource from './editSourceDropdown';
+import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
 
 type Props = {
+  community: GetCommunityBillingSettingsType,
   source: {
-    sourceId: string,
+    id: string,
     card: {
       brand: string,
       last4: string,
@@ -41,20 +45,25 @@ const getCardImage = (brand: string) => {
 
 class Source extends React.Component<Props> {
   render() {
-    const { source } = this.props;
+    const { source, community } = this.props;
     const imageSrc = getCardImage(source.card.brand);
     return (
       <SourceContainer>
-        <img src={imageSrc} alt={'Payment method icon'} width={48} />
-        <SourceText>
-          <SourceName>
-            {source.card.brand} ending in {source.card.last4}
-            {source.isDefault && <Badge type={'default'} />}
-          </SourceName>
-          <SourceExpiration>
-            Expires {source.card.exp_month}/{source.card.exp_year}
-          </SourceExpiration>
-        </SourceText>
+        <SourceContentContainer>
+          <img src={imageSrc} alt={'Payment method icon'} width={48} />
+          <SourceText>
+            <SourceName>
+              {source.card.brand} ending in {source.card.last4}
+              {source.isDefault && <Badge type={'default'} />}
+            </SourceName>
+            <SourceExpiration>
+              Expires {source.card.exp_month}/{source.card.exp_year}
+            </SourceExpiration>
+          </SourceText>
+        </SourceContentContainer>
+        <div>
+          <EditSource community={community} source={source} />
+        </div>
       </SourceContainer>
     );
   }

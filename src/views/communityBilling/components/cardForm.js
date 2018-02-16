@@ -6,7 +6,9 @@ import {
   injectStripe,
   CardElement,
 } from 'react-stripe-elements';
-import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../../api/constants';
+import compose from 'recompose/compose';
+import { PUBLIC_STRIPE_KEY } from '../../../api/constants';
+import addPaymentSourceMutation from 'shared/graphql/mutations/community/addPaymentSource';
 import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
 type FormProps = {
   stripe: Object,
   community: GetCommunityBillingSettingsType,
+  addPaymentSource: Function,
 };
 
 type State = {
@@ -41,29 +44,25 @@ const style = {
 };
 
 class Form extends React.Component<FormProps> {
-  handleSubmit = ev => {
+  createSource = async () =>
+    await this.props.stripe.createSource().then(({ source }) => source);
+
+  handleSubmit = async ev => {
     ev.preventDefault();
 
-    this.props.stripe
-      .createSource()
-      .then(({ source }) => {
-        console.log('JSON.stringify(source)', JSON.stringify(source));
-        return fetch(`${SERVER_URL}/api/stripe/updateSource`, {
-          body: JSON.stringify({
-            source: JSON.stringify(source),
-            communityId: this.props.community.id,
-          }),
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        });
+    const communityId = this.props.community.id;
+    const { id: sourceId } = await this.createSource();
+    const input = {
+      communityId,
+      sourceId,
+    };
+    return this.props
+      .addPaymentSource(input)
+      .then(() => {
+        console.log('success');
       })
-      .then(response => response.json())
-      .then(json => console.log('got back something', json))
       .catch(err => {
-        console.log('Error creating token', err);
+        console.log(err);
       });
   };
 
@@ -77,7 +76,7 @@ class Form extends React.Component<FormProps> {
   }
 }
 
-const FormWithStripe = injectStripe(Form);
+const FormWithStripe = compose(injectStripe, addPaymentSourceMutation)(Form);
 
 //
 //

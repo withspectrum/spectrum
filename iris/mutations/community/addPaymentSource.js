@@ -36,5 +36,5 @@ export default async (
   return await StripeUtil.attachNewSource({
     customerId: customer.id,
     sourceId: sourceId,
-  });
+  }).then(() => community);
 };

@@ -38,5 +38,5 @@ export default async (
   return await StripeUtil.detachSource({
     customerId: customer.id,
     sourceId: sourceId,
-  });
+  }).then(() => community);
 };

@@ -13,11 +13,11 @@ import {
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
-} from '../style';
+} from '../../../components/settingsViews/style';
 import Icon from '../../../components/icons';
 import { Spinner } from '../../../components/globals';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import OutsideClickHandler from './outsideClickHandler';
+import OutsideClickHandler from '../../../components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
 import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';

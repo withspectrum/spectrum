@@ -21,10 +21,10 @@ type AddPaymentSourceInput = {
 };
 
 export const addPaymentSourceMutation = gql`
-  mutation makeDefaultPayment($input: addPaymentSourceInput!) {
-    makeDefaultPayment(input: $input) {
+  mutation addPaymentSource($input: AddPaymentSourceInput!) {
+    addPaymentSource(input: $input) {
       ...communityInfo
-      ...communityBillingInfo
+      ...communityBillingSettings
     }
   }
   ${communityInfoFragment}
@@ -33,7 +33,8 @@ export const addPaymentSourceMutation = gql`
 
 const addPaymentSourceOptions = {
   props: ({ mutate }) => ({
-    makeDefaultPayment: (input: AddPaymentSourceInput) =>
+    addPaymentSource: (input: AddPaymentSourceInput) =>
+      console.log('input', input) ||
       mutate({
         variables: {
           input,

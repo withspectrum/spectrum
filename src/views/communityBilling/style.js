@@ -14,7 +14,20 @@ export const EmailForm = styled.form`
 export const SourceContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  padding: 12px 0;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
 `;
+
+export const SourceContentContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const SourceText = styled.div`
   display: flex;
   flex-direction: column;
