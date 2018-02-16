@@ -38,7 +38,9 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   }
 
   if (activeSubscription) {
+    debug(`Active subscription found ${communityId}`);
     if (StripeUtil.hasSubscriptionItemOfType(customer, 'moderator-seat')) {
+      debug(`Moderator seat subscription item found ${communityId}`);
       const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
         'moderator-seat'
@@ -50,18 +52,21 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
         return;
       }
 
+      debug(`Updating subscription item ${communityId}`);
       return await StripeUtil.updateSubscriptionItem({
         subscriptionItemId: subscriptionItem.id,
         quantity: subscriptionItem.quantity + 1,
       });
     }
 
+    debug(`Adding subscription item to existing subscription ${communityId}`);
     return await StripeUtil.addSubscriptionItem({
       subscriptionId: activeSubscription.id,
       subscriptionItemType: 'moderator-seat',
     });
   }
 
+  debug(`Creating first subscription ${communityId}`);
   return await StripeUtil.createFirstSubscription({
     customerId: customer.id,
     subscriptionItemType: 'moderator-seat',
