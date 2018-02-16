@@ -10,7 +10,7 @@ import { StripeUtil } from './stripe-utils';
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
-  debug(`Processing community edited ${communityId}`);
+  debug(`Processing moderator removed ${communityId}`);
 
   const {
     community,
