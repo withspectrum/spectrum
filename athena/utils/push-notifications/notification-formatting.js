@@ -1,7 +1,7 @@
-import onlyContainsEmoji from '../../shared/only-contains-emoji';
-import sentencify from '../../shared/sentencify';
-import { short as timeDifferenceShort } from '../../shared/time-difference';
-import sortByDate from '../../shared/sort-by-date';
+import onlyContainsEmoji from 'shared/only-contains-emoji';
+import sentencify from 'shared/sentencify';
+import { short as timeDifferenceShort } from 'shared/time-difference';
+import sortByDate from 'shared/sort-by-date';
 import { toState, toPlainText } from 'shared/draft-utils';
 
 const sortThreads = (entities, currentUser) => {
