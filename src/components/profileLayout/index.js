@@ -16,7 +16,7 @@ export const Meta = styled(Column)`
   padding-left: 32px;
 
   @media (max-width: 768px) {
-    padding: 0 32px;
+    padding: 0 16px;
 
     ${FullDescription} {
       display: none;
@@ -45,7 +45,7 @@ export const Meta = styled(Column)`
   > ${MembershipContainer} {
     display: flex;
     flex: none;
-    margin: 16px 0 0 32px;
+    margin-top: 16px;
 
     @media (max-width: 768px) {
       margin-left: 0;
