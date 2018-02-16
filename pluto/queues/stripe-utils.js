@@ -25,11 +25,6 @@ type FirstSubscriptionInput = {
   subscriptionItemType: string,
 };
 
-type SubscriptionItemInput = {
-  subscriptionId: string,
-  subscriptionItemType: string,
-};
-
 const getCustomer = async (customerId: string): Promise<RawCustomer> => {
   return await stripe.customers.retrieve(customerId);
 };
@@ -144,16 +139,35 @@ const createFirstSubscription = async (
   });
 };
 
+type AddSubscriptionItemInput = {
+  subscriptionId: string,
+  subscriptionItemType: string,
+};
 const addSubscriptionItem = async (
-  subscriptionItemInput: SubscriptionItemInput
+  addSubscriptionItemInput: AddSubscriptionItemInput
 ) => {
-  const { subscriptionId, subscriptionItemType } = subscriptionItemInput;
+  const { subscriptionId, subscriptionItemType } = addSubscriptionItemInput;
 
   return await stripe.subscriptionItems.create({
     subscription: subscriptionId,
     plan: subscriptionItemType,
     quantity: 1,
     prorate: true,
+  });
+};
+
+type UpdateSubscriptionItemInput = {
+  subscriptionItemId: string,
+  quantity: number,
+};
+const updateSubscriptionItem = async (
+  updateSubcriptionItemInput: UpdateSubscriptionItemInput
+) => {
+  const { subscriptionItemId, quantity } = updateSubcriptionItemInput;
+
+  return await stripe.subscriptionItems.update(subscriptionItemId, {
+    prorate: true,
+    quantity,
   });
 };
 
@@ -225,6 +239,7 @@ export const StripeUtil = {
   updateCustomer,
   createFirstSubscription,
   addSubscriptionItem,
+  updateSubscriptionItem,
   deleteSubscriptionItem,
   jobPreflight,
 };
