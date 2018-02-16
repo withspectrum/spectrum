@@ -4456,6 +4456,12 @@ graphql-date@^1.0.3:
   dependencies:
     assert-err "^1.0.0"
 
+graphql-depth-limit@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/graphql-depth-limit/-/graphql-depth-limit-1.1.0.tgz#59fe6b2acea0ab30ee7344f4c75df39cc18244e8"
+  dependencies:
+    arrify "^1.0.1"
+
 graphql-extensions@^0.0.x:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/graphql-extensions/-/graphql-extensions-0.0.7.tgz#807e7c3493da45e8f8fd02c0da771a9b3f1f2d1a"

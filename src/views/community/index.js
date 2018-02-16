@@ -176,17 +176,16 @@ class CommunityView extends React.Component<Props, State> {
 
       return (
         <AppViewWrapper data-e2e-id="community-view">
+          <Head
+            title={title}
+            description={description}
+            image={community.profilePhoto}
+          />
           <Titlebar
             title={community.name}
             provideBack={true}
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
-          />
-
-          <Head
-            title={title}
-            description={description}
-            image={community.profilePhoto}
           />
           <Grid>
             <CoverPhoto src={community.coverPhoto} />

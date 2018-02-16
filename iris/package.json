@@ -42,6 +42,7 @@
     "flow-typed": "^2.1.5",
     "graphql": "0.11.x",
     "graphql-date": "^1.0.3",
+    "graphql-depth-limit": "^1.1.0",
     "graphql-log": "0.1.2",
     "graphql-server-express": "1.3.0",
     "graphql-subscriptions": "0.4.x",
@@ -114,7 +115,8 @@
     "subscriptions-transport-ws": "^0.9.5",
     "sw-precache-webpack-plugin": "^0.11.4",
     "then-queue": "^1.3.0",
-    "validator": "^9.0.0"
+    "validator": "^9.0.0",
+    "web-push": "^3.2.5"
   },
   "scripts": {
     "start": "NODE_ENV=production node main.js"
