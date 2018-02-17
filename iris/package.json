@@ -41,6 +41,7 @@
     "find-with-regex": "^1.0.2",
     "flow-typed": "^2.1.5",
     "graphql": "0.11.x",
+    "graphql-cost-analysis": "^0.1.1",
     "graphql-date": "^1.0.3",
     "graphql-depth-limit": "^1.1.0",
     "graphql-log": "0.1.2",

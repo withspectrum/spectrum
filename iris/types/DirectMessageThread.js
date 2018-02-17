@@ -23,9 +23,9 @@ const DirectMessageThread = /* GraphQL */ `
 
 	type DirectMessageThread {
 		id: ID!
-		messageConnection(first: Int = 20, after: String): DirectMessagesConnection!
-		participants: [ParticipantInfo]!
-		snippet: String!
+    messageConnection(first: Int = 20, after: String): DirectMessagesConnection! @cost(complexity: 1, multiplier: "first")
+    participants: [ParticipantInfo]! @cost(complexity: 1)
+    snippet: String! @cost(complexity: 2)
 		threadLastActive: Date!
 	}
 

@@ -98,17 +98,17 @@ const User = /* GraphQL */ `
 		pendingEmail: String
 
 		# non-schema fields
-		threadCount: Int
+    threadCount: Int @cost(complexity: 1)
 		isAdmin: Boolean
-		isPro: Boolean!
+    isPro: Boolean! @cost(complexity: 1)
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection!
-		everything(first: Int = 20, after: String): EverythingThreadsConnection!
+		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection! @cost(complexity: 1, multiplier: "first")
+		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    everything(first: Int = 20, after: String): EverythingThreadsConnection! @cost(complexity: 1, multiplier: "first")
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
-		settings: UserSettings
+    settings: UserSettings @cost(complexity: 1)
 		githubProfile: GithubProfile
 
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions")
