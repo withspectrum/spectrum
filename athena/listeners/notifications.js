@@ -6,7 +6,6 @@ const {
 import { sendNotificationAsPushQueue } from 'shared/bull/queues';
 
 const sendDeduplicatedPushNotification = notification => {
-  console.log(notification);
   // By using notification.id and notification.userId here we make sure that even when multiple instances of athena are running
   // and are adding this job to the queue it gets deduplicated
   sendNotificationAsPushQueue.add(
