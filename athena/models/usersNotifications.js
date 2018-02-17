@@ -50,3 +50,25 @@ export const markUsersNotificationsAsNew = (
       }
     });
 };
+
+// marks one notification as read
+export const markSingleNotificationSeen = (
+  notificationId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(notificationId, { index: 'notificationId' })
+    .filter({
+      userId,
+    })
+    .update(
+      {
+        isSeen: true,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(() => true)
+    .catch(err => false);
+};

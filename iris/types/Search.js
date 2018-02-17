@@ -4,9 +4,10 @@ const Search = /* GraphQL */ `
     COMMUNITIES
     USERS
     THREADS
+    COMMUNITY_MEMBERS
   }
 
-  union SearchResultNode = Community | Thread | User
+  union SearchResultNode = Community | Thread | User | CommunityMember
 
   type SearchResultEdge {
     cursor: String!
@@ -45,7 +46,7 @@ const Search = /* GraphQL */ `
       type: SearchType!
       # Optional ID to be used to filter search results by community, channel, user, etc.
       filter: SearchFilter
-    ): SearchResults
+    ): SearchResults @cost(complexity: 2, multiplier: "first")
 	}
 `;
 

@@ -74,6 +74,11 @@ const User = /* GraphQL */ `
 		creator
 	}
 
+	type GithubProfile {
+		id: Int
+		username: String
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -93,18 +98,20 @@ const User = /* GraphQL */ `
 		pendingEmail: String
 
 		# non-schema fields
-		threadCount: Int
+    threadCount: Int @cost(complexity: 1)
 		isAdmin: Boolean
-		isPro: Boolean!
+    isPro: Boolean! @cost(complexity: 1)
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
-		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 10, after: String, kind: ThreadConnectionType): UserThreadsConnection!
-		everything(first: Int = 10, after: String): EverythingThreadsConnection!
+		directMessageThreadsConnection(first: Int = 15, after: String): UserDirectMessageThreadsConnection! @cost(complexity: 1, multiplier: "first")
+		threadConnection(first: Int = 20, after: String, kind: ThreadConnectionType): UserThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    everything(first: Int = 20, after: String): EverythingThreadsConnection! @cost(complexity: 1, multiplier: "first")
 		recurringPayments: [RecurringPayment]
 		invoices: [Invoice]
-		settings: UserSettings
-		contextPermissions: ContextPermissions
+    settings: UserSettings @cost(complexity: 1)
+		githubProfile: GithubProfile
+
+		contextPermissions: ContextPermissions @deprecated(reason:"Use the CommunityMember type to get permissions")
 	}
 
 	extend type Query {
@@ -150,6 +157,7 @@ const User = /* GraphQL */ `
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
+    subscribeExpoPush(token: String!): Boolean
 		updateUserEmail(email: String!): User
 	}
 `;

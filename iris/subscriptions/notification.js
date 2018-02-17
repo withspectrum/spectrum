@@ -1,26 +1,32 @@
+// @flow
 /**
  * Define the notification subscription resolvers
  */
 import { withFilter } from 'graphql-subscriptions';
-import {
+const {
   listenToNewNotifications,
   listenToNewDirectMessageNotifications,
-} from './listeners/notification';
+} = require('../models/notification');
+import asyncify from '../utils/asyncify';
 
 module.exports = {
   Subscription: {
     notificationAdded: {
       resolve: (notification: any) => notification,
       subscribe: withFilter(
-        listenToNewNotifications,
+        asyncify(listenToNewNotifications, err => {
+          throw new Error(err);
+        }),
         (notification, _, { user }) =>
-          notification && user.id === notification.userId
+          notification && user && user.id === notification.userId
       ),
     },
     dmNotificationAdded: {
       resolve: (notification: any) => notification,
       subscribe: withFilter(
-        listenToNewDirectMessageNotifications,
+        asyncify(listenToNewDirectMessageNotifications, err => {
+          throw new Error(err);
+        }),
         (notification, _, { user }) =>
           notification && user.id === notification.userId
       ),

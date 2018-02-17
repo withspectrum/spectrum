@@ -2,6 +2,7 @@
 const { db } = require('./db');
 import type { NotificationEventType, DBNotification } from 'shared/types';
 import { TIME_BUFFER } from '../queues/constants';
+import { NEW_DOCUMENTS } from 'iris/models/utils';
 
 /*
 	Given an event type, the context of that event, and a time range, see if an existing notification exists. If it does, we will bundle the new incoming notification on the server. If no existing notification is found, we create a new one
@@ -78,4 +79,62 @@ export const getNotifications = (notificationIds: Array<string>) => {
     .without({ right: ['id'] })
     .zip()
     .run();
+};
+
+const hasChanged = (field: string) =>
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
+
+const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
+
+export const listenToNewNotifications = (cb: Function): Function => {
+  return db
+    .table('usersNotifications')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({
+      left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
+    })
+    .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // For some reason this can be called without data, in which case
+        // we don't want to call the callback with it obviously
+        if (!data) return;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
+};
+
+export const listenToNewDirectMessageNotifications = (
+  cb: Function
+): Function => {
+  return db
+    .table('usersNotifications')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({
+      left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
+    })
+    .zip()
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
 };

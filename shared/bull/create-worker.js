@@ -1,28 +1,27 @@
+// @flow
 // Create a worker with bull and start a small webserver which responds with
 // health information
 const http = require('http');
 const EventEmitter = require('events');
 const createQueue = require('./create-queue');
+import type { Queues } from './types';
 
-/*::
 type QueueMap = {
-  [name: string]: (job: any) => Promise<any>
-}
-*/
+  [name: string]: (job: Object) => ?Promise<any>,
+};
 
 // Helper function to sum properties of an array of objects
 // e.g. [{ completed: 6 }, { completed: 2 }] => 8
-const sumArr = (
-  input /*: Array<Object> */,
-  prop /*: number */ /*: string */
-) => {
+const sumArr = (input: Array<Object>, prop: string) => {
   return input.reduce((sum, item) => sum + item[prop], 0);
 };
 
-const createWorker = (queueMap /*: QueueMap */) => {
+const createWorker = (queueMap: QueueMap) => {
   // We add one error listener per queue, so we have to set the max listeners
   // to whatever it is set to + the amount of queues passed in
+  // $FlowIssue
   EventEmitter.defaultMaxListeners =
+    // $FlowIssue
     Object.keys(queueMap).length + EventEmitter.defaultMaxListeners;
   // Start processing the queues
   const queues = Object.keys(queueMap).map(name => {
@@ -31,6 +30,7 @@ const createWorker = (queueMap /*: QueueMap */) => {
     return queue;
   });
 
+  // Return the job count when requesting anything via HTTP
   return http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
     // Summarize the data across all the queues

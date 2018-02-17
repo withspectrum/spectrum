@@ -11,7 +11,7 @@ import {
   CardContent,
 } from '../../../components/threadFeedCard/style';
 import Icon from '../../../components/icons';
-import { Sender, MessageGroup } from '../../../components/messageGroup/style';
+import { Author, MessageGroup } from '../../../components/messageGroup/style';
 import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
 import Message from '../../../components/message';
 import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
@@ -59,17 +59,17 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
             </HzRule>
             {messages.map((group, i) => {
               const initialMessage = group[0];
-              let sender = actors.asObjects.filter(
+              let author = actors.asObjects.filter(
                 user => user.id === initialMessage.senderId
               )[0];
-              const me = currentUser ? sender.id === currentUser.id : false;
+              const me = currentUser ? author.id === currentUser.id : false;
 
               return (
-                <Sender key={i}>
-                  {!me && <AuthorAvatar sender={sender} />}
+                <Author key={i}>
+                  {!me && <AuthorAvatar user={author} />}
 
                   <MessageGroup me={me}>
-                    <AuthorByline sender={sender} me={me} />
+                    <AuthorByline user={author} me={me} />
                     {group.map((message, i) => {
                       return (
                         <Message
@@ -85,7 +85,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                       );
                     })}
                   </MessageGroup>
-                </Sender>
+                </Author>
               );
             })}
           </AttachmentsWash>

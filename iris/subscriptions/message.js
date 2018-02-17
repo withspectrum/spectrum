@@ -4,8 +4,7 @@ import { getThread } from '../models/thread';
 import { userCanViewChannel, userCanViewDirectMessageThread } from './utils';
 const { listenToNewMessages } = require('../models/message');
 import asyncify from '../utils/asyncify';
-import { addQueue } from '../utils/workerQueue';
-import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
+import { trackUserThreadLastSeenQueue } from 'shared/bull/queues.js';
 import type { Message } from '../models/message';
 
 /**
@@ -35,7 +34,7 @@ module.exports = {
             user && user.id
           ).then(result => {
             if (result && user && user.id) {
-              addQueue(TRACK_USER_THREAD_LAST_SEEN, {
+              trackUserThreadLastSeenQueue.add({
                 threadId: message.threadId,
                 userId: user.id,
                 timestamp: Date.now(),

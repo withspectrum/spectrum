@@ -9,13 +9,9 @@ import type { DBMessage } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
+import type { Job, AdminToxicMessageJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    message: DBMessage,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<AdminToxicMessageJobData>) => {
   debug('new job for admin message moderation');
   const { data: { message } } = job;
 

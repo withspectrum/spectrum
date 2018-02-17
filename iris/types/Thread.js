@@ -37,24 +37,25 @@ const Thread = /* GraphQL */ `
 		createdAt: Date!
 		modifiedAt: Date
 		channel: Channel!
-		community: Community!
+    community: Community! @cost(complexity: 1)
 		isPublished: Boolean!
 		content: ThreadContent!
 		isLocked: Boolean
-		isCreator: Boolean
-		receiveNotifications: Boolean
+		isAuthor: Boolean
+    receiveNotifications: Boolean @cost(complexity: 1)
 		lastActive: Date
 		type: ThreadType
 		edits: [Edit!]
-		participants: [User]
-		messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection!
-		messageCount: Int
-		creator: User!
+    participants: [User] @cost(complexity: 1)
+    messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
+    messageCount: Int @cost(complexity: 1)
+    author: ThreadParticipant! @cost(complexity: 2)
 		attachments: [Attachment]
 		watercooler: Boolean
+    currentUserLastSeen: Date @cost(complexity: 1)
 
-        # Logged-in users only
-        currentUserLastSeen: Date
+		isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
+		creator: User! @deprecated(reason:"Use Thread.author instead")
 	}
 
 	input SearchThreadsFilter {

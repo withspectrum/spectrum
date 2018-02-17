@@ -4,6 +4,8 @@ import type { EditThreadInput } from '../../models/thread';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/s3';
 import { getThreads, editThread } from '../../models/thread';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { getUserPermissionsInChannel } from '../../models/usersChannels';
 
 export default async (
   _: any,
@@ -35,8 +37,18 @@ export default async (
     return new UserError("This thread doesn't exist");
   }
 
+  const [communityPermissions, channelPermissions] = await Promise.all([
+    getUserPermissionsInCommunity(threadToEvaluate.communityId, currentUser.id),
+    getUserPermissionsInChannel(threadToEvaluate.channelId, currentUser.id),
+  ]);
+
   // only the thread creator can edit the thread
-  if (threadToEvaluate.creatorId !== currentUser.id) {
+  // also prevent deletion if the user was blocked
+  if (
+    threadToEvaluate.creatorId !== currentUser.id ||
+    channelPermissions.isBlocked ||
+    communityPermissions.isBlocked
+  ) {
     return new UserError(
       "You don't have permission to make changes to this thread."
     );

@@ -131,7 +131,7 @@ class ChannelList extends React.Component<Props> {
             isMember && (
               <span>
                 <ListHeader secondary>
-                  <ListHeading>Additional Channels</ListHeading>
+                  <ListHeading>New channels</ListHeading>
                 </ListHeader>
 
                 <ListContainer>

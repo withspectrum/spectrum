@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should block a member in the community 1`] = `
+Object {
+  "data": Object {
+    "blockCommunityMember": Object {
+      "id": "80b16afe-8576-4970-99ab-240b1a975b99",
+    },
+  },
+}
+`;

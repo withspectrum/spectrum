@@ -6,12 +6,7 @@ import toggleChannelNotificationsMutation from 'shared/graphql/mutations/channel
 import type { ToggleChannelNotificationsType } from 'shared/graphql/mutations/channel/toggleChannelNotifications';
 import { Checkbox } from '../../../components/formElements';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  StyledCard,
-  ListHeader,
-  ListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { ListContainer } from '../../../components/listItems/style';
 
 type Props = {
   value: boolean,
@@ -71,20 +66,15 @@ class NotificationsTogglePure extends React.Component<Props, State> {
     const { channel } = this.props;
 
     return (
-      <StyledCard largeOnly>
-        <ListHeader>
-          <ListHeading>New Thread Notifications</ListHeading>
-        </ListHeader>
-        <ListContainer>
-          <Checkbox
-            id="isPrivate"
-            checked={isReceiving}
-            onChange={this.handleChange}
-          >
-            Get notified when new threads are published in {channel.name}
-          </Checkbox>
-        </ListContainer>
-      </StyledCard>
+      <ListContainer>
+        <Checkbox
+          id="isPrivate"
+          checked={isReceiving}
+          onChange={this.handleChange}
+        >
+          Get notified when new threads are published in {channel.name}
+        </Checkbox>
+      </ListContainer>
     );
   }
 }

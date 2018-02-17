@@ -39,7 +39,7 @@ export default async (
     throw new UserError('You must be signed in to send a message.');
   if (message.messageType === 'media' && !message.file)
     throw new UserError(
-      `Can't send media message without an image, please try again.`
+      "Can't send media message without an image, please try again."
     );
   if (message.messageType !== 'media' && message.file)
     throw new UserError(
@@ -64,7 +64,7 @@ export default async (
         !permissions.isModerator &&
         !permissions.isOwner)
     ) {
-      throw new UserError(`You're not allowed to post in this community.`);
+      throw new UserError("You're not allowed to post in this community.");
     }
 
     contextPermissions = {

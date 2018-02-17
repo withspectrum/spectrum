@@ -3,7 +3,10 @@ const { db } = require('./db');
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-import { addQueue } from '../utils/workerQueue';
+import {
+  sendNewCommunityWelcomeEmailQueue,
+  _adminSendCommunityCreatedEmailQueue,
+} from 'shared/bull/queues';
 import { removeMemberInChannel } from './usersChannels';
 import type { DBCommunity } from 'shared/types';
 
@@ -11,7 +14,11 @@ export const getCommunityById = (id: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(id)
-    .run();
+    .run()
+    .then(result => {
+      if (result && result.deletedAt) return null;
+      return result;
+    });
 };
 
 export const getCommunities = (
@@ -156,9 +163,9 @@ export const createCommunity = (
     .then(result => result.changes[0].new_val)
     .then(community => {
       // send a welcome email to the community creator
-      addQueue('send new community welcome email', { user, community });
+      sendNewCommunityWelcomeEmailQueue.add({ user, community });
       // email brian with info about the community and owner
-      addQueue('admin community created', { user, community });
+      _adminSendCommunityCreatedEmailQueue.add({ user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {

@@ -41,7 +41,9 @@
     "find-with-regex": "^1.0.2",
     "flow-typed": "^2.1.5",
     "graphql": "0.11.x",
+    "graphql-cost-analysis": "^0.1.1",
     "graphql-date": "^1.0.3",
+    "graphql-depth-limit": "^1.1.0",
     "graphql-log": "0.1.2",
     "graphql-server-express": "1.3.0",
     "graphql-subscriptions": "0.4.x",
@@ -55,6 +57,7 @@
     "jest": "^21.2.1",
     "json-stringify-pretty-compact": "^1.0.4",
     "jsonwebtoken": "^8.0.1",
+    "keygrip": "^1.0.2",
     "linkify-it": "^2.0.3",
     "localstorage-memory": "^1.0.2",
     "lodash": "^4.17.4",
@@ -114,7 +117,7 @@
     "sw-precache-webpack-plugin": "^0.11.4",
     "then-queue": "^1.3.0",
     "validator": "^9.0.0",
-    "web-push": "^3.2.2"
+    "web-push": "^3.2.5"
   },
   "scripts": {
     "start": "NODE_ENV=production node main.js"

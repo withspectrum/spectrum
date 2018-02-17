@@ -10,6 +10,7 @@ import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
+import Members from '../communityMembers';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
@@ -23,11 +24,18 @@ type Props = {
   location: Object,
   isLoading: boolean,
   hasError: boolean,
+  history: Object,
 };
 
 class CommunitySettings extends React.Component<Props> {
   render() {
-    const { data: { community }, location, isLoading, hasError } = this.props;
+    const {
+      data: { community },
+      location,
+      isLoading,
+      hasError,
+      history,
+    } = this.props;
 
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;
@@ -66,6 +74,8 @@ class CommunitySettings extends React.Component<Props> {
             );
           case 'analytics':
             return <Analytics community={community} id={community.id} />;
+          case 'members':
+            return <Members community={community} history={history} />;
           default:
             return null;
         }
@@ -76,6 +86,11 @@ class CommunitySettings extends React.Component<Props> {
           to: `/${community.slug}/settings`,
           label: 'Overview',
           activeLabel: 'settings',
+        },
+        {
+          to: `/${community.slug}/settings/members`,
+          label: 'Members',
+          activeLabel: 'members',
         },
         {
           to: `/${community.slug}/settings/analytics`,

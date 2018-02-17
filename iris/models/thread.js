@@ -1,7 +1,11 @@
 // @flow
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
-import { addQueue } from '../utils/workerQueue';
+import {
+  processReputationEventQueue,
+  sendThreadNotificationQueue,
+  _adminProcessToxicThreadQueue,
+} from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
@@ -184,10 +188,7 @@ export const getPublicThreadsByUser = (
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first || 10)
-    .run()
-    .then(res => {
-      return res;
-    });
+    .run();
 };
 
 export const getViewableParticipantThreadsByUser = async (
@@ -309,13 +310,13 @@ export const publishThread = (
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
-      addQueue('thread notification', { thread });
-      addQueue('process reputation event', {
+      sendThreadNotificationQueue.add({ thread });
+      processReputationEventQueue.add({
         userId,
         type: 'thread created',
         entityId: thread.id,
       });
-      addQueue('process admin toxic thread', { thread });
+      _adminProcessToxicThreadQueue.add({ thread });
 
       return thread;
     });
@@ -385,7 +386,7 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     .then(([result]) => {
       const thread = result.changes[0].new_val;
 
-      addQueue('process reputation event', {
+      processReputationEventQueue.add({
         userId: thread.creatorId,
         type: 'thread deleted',
         entityId: thread.id,

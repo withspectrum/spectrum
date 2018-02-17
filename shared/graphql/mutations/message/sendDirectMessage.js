@@ -36,17 +36,18 @@ const sendDirectMessageOptions = {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
             messageType: message.messageType,
-            sender: {
-              ...ownProps.currentUser,
-              totalReputation: 0,
-              contextPermissions: {
-                communityId: null,
-                reputation: 0,
-                isOwner: false,
-                isModerator: false,
-                __typename: 'ContextPermissions',
+            author: {
+              user: {
+                ...ownProps.currentUser,
+                __typename: 'User',
               },
-              __typename: 'User',
+              isMember: true,
+              isModerator: false,
+              isOwner: false,
+              isBlocked: false,
+              reputation: 0,
+              roles: [],
+              __typename: 'ThreadParticipant',
             },
             content: {
               ...message.content,

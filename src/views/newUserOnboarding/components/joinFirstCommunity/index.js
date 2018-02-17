@@ -2,10 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { track } from '../../../../helpers/events';
-import { addToastWithTimeout } from '../../../../actions/toasts';
 import { ContinueButton } from '../../style';
-import toggleCommunityMembershipMutation from 'shared/graphql/mutations/community/toggleCommunityMembership';
+import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
 import {
   Row,
   CoverPhoto,
@@ -15,10 +13,6 @@ import {
   CoverDescription,
 } from '../discoverCommunities/style';
 import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
-
-type State = {
-  isLoading: boolean,
-};
 
 type Props = {
   toggleCommunityMembership: Function,
@@ -34,53 +28,9 @@ type Props = {
   },
 };
 
-class JoinFirstCommunityPure extends React.Component<Props, State> {
-  state = { isLoading: false };
-
-  toggleMembership = communityId => {
-    this.setState({
-      isLoading: true,
-    });
-
-    this.props
-      .toggleCommunityMembership({ communityId })
-      .then(({ data: { toggleCommunityMembership } }) => {
-        this.setState({
-          isLoading: false,
-        });
-
-        const isMember =
-          toggleCommunityMembership.communityPermissions.isMember;
-
-        track('community', isMember ? 'joined' : 'unjoined', null);
-        track(
-          'onboarding',
-          isMember ? 'community joined' : 'community unjoined',
-          null
-        );
-
-        const str = isMember
-          ? `Joined ${toggleCommunityMembership.name}!`
-          : `Left ${toggleCommunityMembership.name}.`;
-
-        const type = isMember ? 'success' : 'neutral';
-
-        this.props.dispatch(addToastWithTimeout(type, str));
-        this.props.joinedFirstCommunity();
-
-        return;
-      })
-      .catch(err => {
-        this.setState({
-          isLoading: false,
-        });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
+class JoinFirstCommunityPure extends React.Component<Props> {
   render() {
     const { community } = this.props;
-    const { isLoading } = this.state;
 
     return (
       <Row>
@@ -108,12 +58,14 @@ class JoinFirstCommunityPure extends React.Component<Props, State> {
         </Container>
 
         <Row>
-          <ContinueButton
-            loading={isLoading}
-            onClick={() => this.toggleMembership(community.id)}
-          >
-            Join {community.name} and Continue
-          </ContinueButton>
+          <ToggleCommunityMembership
+            community={community}
+            render={({ isLoading }) => (
+              <ContinueButton loading={isLoading}>
+                Join {community.name} and Continue
+              </ContinueButton>
+            )}
+          />
         </Row>
       </Row>
     );
@@ -125,7 +77,6 @@ const map = state => ({
 });
 
 const JoinFirstCommunity = compose(
-  toggleCommunityMembershipMutation,
   // $FlowIssue
   connect(map)
 )(JoinFirstCommunityPure);

@@ -67,21 +67,22 @@ const Channel = /* GraphQL */ `
 		slug: String!
 		isPrivate: Boolean
     isDefault: Boolean
-		channelPermissions: ChannelPermissions!
+    channelPermissions: ChannelPermissions! @cost(complexity: 1)
 		communityPermissions: CommunityPermissions!
-		community: Community!
-		threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
-		memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
+    community: Community! @cost(complexity: 1)
+		threadConnection(first: Int = 10, after: String): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
 		memberCount: Int!
-		metaData: ChannelMetaData
-		pendingUsers: [User]
-		blockedUsers: [User]
-		moderators: [User]
-		owners: [User]
+    metaData: ChannelMetaData @cost(complexity: 1)
+    pendingUsers: [User] @cost(complexity: 3)
+		blockedUsers: [User] @cost(complexity: 3)
+		moderators: [User] @cost(complexity: 3)
+		owners: [User] @cost(complexity: 3)
+
 	}
 
 	extend type Query {
-		channel(id: ID, channelSlug: String, communitySlug: String): Channel
+    channel(id: ID, channelSlug: String, communitySlug: String): Channel @cost(complexity: 1)
 	}
 
 	extend type Mutation {

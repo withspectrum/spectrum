@@ -18,6 +18,8 @@ import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
+import processPushNotifications from './queues/send-push-notifications';
+import startNotificationsListener from './listeners/notifications';
 import {
   MESSAGE_NOTIFICATION,
   MENTION_NOTIFICATION,
@@ -34,8 +36,8 @@ import {
   PROCESS_ADMIN_TOXIC_THREAD,
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
+  SEND_PUSH_NOTIFICATIONS,
 } from './queues/constants';
-import { TRACK_USER_THREAD_LAST_SEEN } from 'shared/bull/queues';
 
 const PORT = process.env.PORT || 3003;
 
@@ -55,12 +57,15 @@ const server = createWorker({
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
   [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
-  [TRACK_USER_THREAD_LAST_SEEN]: trackUserThreadLastSeen,
+  'track user thread last seen': trackUserThreadLastSeen,
   [PROCESS_ADMIN_TOXIC_MESSAGE]: processAdminMessageModeration,
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
+  [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
 });
+
+startNotificationsListener();
 
 console.log(
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&

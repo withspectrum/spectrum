@@ -12,14 +12,9 @@ import { getUsers } from '../models/user';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import type { DBChannel } from 'shared/types';
+import type { Job, PrivateChannelRequestJobData } from 'shared/bull/types';
 
-type JobData = {
-  data: {
-    userId: string,
-    channel: DBChannel,
-  },
-};
-export default async (job: JobData) => {
+export default async (job: Job<PrivateChannelRequestJobData>) => {
   const { userId, channel } = job.data;
   debug(
     `new request to join a private channel from user ${userId} in channel ${

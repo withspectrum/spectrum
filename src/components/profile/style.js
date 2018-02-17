@@ -10,7 +10,9 @@ import {
   hexa,
 } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
+import { ReputationWrapper } from '../reputation/style';
 import Card from '../card';
+import { Heading } from '../listItems/style';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -66,21 +68,50 @@ export const Title = styled.h3`
   transition: ${Transition.hover.off};
 `;
 
+export const FullTitle = styled(Title)`
+  font-size: 24px;
+  margin-top: 8px;
+`;
+
+export const FullProfile = styled.div`
+  margin-left: 32px;
+  margin-top: -64px;
+  background-color: ${props => props.theme.bg.default};
+
+  ${Heading} {
+    font-size: 16px;
+    color: ${props => props.theme.text.alt};
+  }
+
+  @media (max-width: 768px) {
+    margin-top: -48px;
+  }
+`;
+
 export const Subtitle = styled.div`
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
   color: ${props => props.theme.text.alt};
-  line-height: 1.3;
+  line-height: 1.2;
+  margin-top: 4px;
 
-  ${Truncate} div {
-    margin-right: 8px;
+  ${Truncate};
+
+  overflow: visible;
+
+  > ${ReputationWrapper} {
+    margin-left: 8px;
+
+    span {
+      font-size: 16px;
+    }
   }
 `;
 
 export const Description = styled.div`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
@@ -95,14 +126,30 @@ export const Description = styled.div`
   }
 `;
 
+export const FullDescription = styled.div`
+  padding: 0;
+  margin-top: 16px;
+  color: ${props => props.theme.text.alt};
+
+  > ${ReputationWrapper} {
+    margin-top: 16px;
+
+    span {
+      margin-left: 4px;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+`;
+
 export const ExtLink = styled(FlexRow)`
   align-items: center;
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
   ${Truncate};
-  font-size: 14px;
-  padding-top: 16px;
+  font-size: 16px;
+  margin: 12px 0;
 
   > a:hover {
     text-decoration: underline;
@@ -110,9 +157,8 @@ export const ExtLink = styled(FlexRow)`
   }
 
   > div {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${({ theme }) => theme.text.alt};
     margin-right: 4px;
-    margin-left: -4px;
     margin-top: 1px;
   }
 `;
@@ -179,7 +225,9 @@ export const Label = styled.span`
   }
 `;
 
-export const Count = styled.span`font-weight: 700;`;
+export const Count = styled.span`
+  font-weight: 700;
+`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
   flex: none;
@@ -233,13 +281,13 @@ export const ProUpgrade = styled.div`
   }
 `;
 
-export const ReputationContainer = styled.div`
-  border-top: 2px solid ${props => props.theme.bg.border};
-  padding: 12px 0;
-  margin: 0 16px;
-  display: flex;
-  color: ${props => props.theme.text.alt};
-`;
+// export const ReputationContainer = styled.div`
+//   border-top: 2px solid ${props => props.theme.bg.border};
+//   padding: 12px 0;
+//   margin: 0 16px;
+//   display: flex;
+//   color: ${props => props.theme.text.alt};
+// `;
 
 export const CoverPhoto = styled.div`
   position: relative;

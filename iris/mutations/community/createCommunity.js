@@ -19,6 +19,12 @@ export default async (
     return new UserError('You must be signed in to create a new community.');
   }
 
+  if (!currentUser.email) {
+    return new UserError(
+      'You must have a working email address to create communities. Add an email address in your settings.'
+    );
+  }
+
   if (!args.input.slug || args.input.slug.length === 0) {
     return new UserError(
       'Communities must have a valid url so people can find it!'
