@@ -2,15 +2,15 @@
 import * as React from 'react';
 import { StackNavigator } from 'react-navigation';
 import Thread from '../Thread';
-import Splash from '../Splash';
+import Notifications from '../Notifications';
 import { withMappedNavigationProps } from 'react-navigation-props-mapper';
 
-const HomeNavigator = StackNavigator(
+const NotificationsNavigator = StackNavigator(
   {
-    Splash: {
-      screen: Splash,
+    Notifications: {
+      screen: Notifications,
       navigationOptions: {
-        headerTitle: 'Home',
+        headerTitle: 'Notifications',
       },
     },
     Thread: {
@@ -21,8 +21,8 @@ const HomeNavigator = StackNavigator(
     },
   },
   {
-    initialRouteName: 'Splash',
+    initialRouteName: 'Notifications',
   }
 );
 
-export default HomeNavigator;
+export default NotificationsNavigator;

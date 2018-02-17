@@ -18,7 +18,7 @@ module.exports = {
           throw new Error(err);
         }),
         (notification, _, { user }) =>
-          notification && user.id === notification.userId
+          notification && user && user.id === notification.userId
       ),
     },
     dmNotificationAdded: {

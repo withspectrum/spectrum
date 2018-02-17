@@ -128,11 +128,10 @@ export const UserListItem = ({
 }: Object): React$Element<any> => {
   const reputation = user.contextPermissions
     ? user.contextPermissions.reputation &&
-      user.contextPermissions.reputation > 0 &&
-      user.contextPermissions.reputation
-    : user.reputation && user.reputation > 0
+      typeof user.contextPermissions.reputation === 'number'
+    : user.reputation && typeof user.reputation === 'number'
       ? user.reputation
-      : user.totalReputation && user.totalReputation > 0
+      : user.totalReputation && typeof user.totalReputation === 'number'
         ? user.totalReputation
         : '0';
 

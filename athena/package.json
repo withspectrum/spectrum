@@ -8,6 +8,7 @@
     "axios": "^0.16.2",
     "bull": "3.3.1",
     "draft-js": "^0.10.3",
+    "expo-server-sdk": "^2.3.3",
     "node-env-file": "^0.1.8",
     "now-env": "^3.0.1",
     "raven": "^2.1.1",
