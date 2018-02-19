@@ -35,7 +35,7 @@
     "dev": "exp start .",
     "open:ios": "exp ios .",
     "open:android": "exp android .",
-    "setup": "curl https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xzf - -C ./expo/Exponent.app",
+    "setup": "cd .expo/Exponent.app && curl -s https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xz",
     "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
     "test:unit": "jest .",
     "test": "yarn test:unit && yarn test:e2e",
