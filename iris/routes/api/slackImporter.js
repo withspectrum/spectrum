@@ -40,8 +40,8 @@ slackRouter.get('/', (req, res) => {
     })
     .then(community => {
       return IS_PROD
-        ? res.redirect(`https://spectrum.chat/${community}/settings`)
-        : res.redirect(`http://localhost:3000/${community}/settings`);
+        ? res.redirect(`https://spectrum.chat/${community}/settings/members`)
+        : res.redirect(`http://localhost:3000/${community}/settings/members`);
     });
 });
 
