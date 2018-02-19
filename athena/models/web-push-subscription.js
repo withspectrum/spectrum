@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('iris:models:webPushSubscription');
 const { db } = require('./db');
-import type { WebPushSubscription } from '../mutations/user';
+import type { WebPushSubscription } from 'iris/mutations/user';
 
 export const storeSubscription = (
   subscription: WebPushSubscription,
