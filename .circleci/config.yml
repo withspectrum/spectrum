@@ -56,7 +56,7 @@ jobs:
     <<: *js_defaults
     steps:
       - attach_workspace:
-          at: ~/react-native
+          at: ~/spectrum
       - run: cd ./mobile && yarn test:unit
 
   # Tests native code of the mobile app
@@ -64,7 +64,7 @@ jobs:
     <<: *macos_defaults
     steps:
       - attach_workspace:
-          at: ~/react-native
+          at: ~/spectrum
       - run: cd ./mobile && yarn test:e2e
       
 workflows:
