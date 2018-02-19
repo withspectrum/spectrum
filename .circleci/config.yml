@@ -1,24 +1,81 @@
-version: 2
+# CircleCI configuration for Spectrum
+
+# Aliases
+aliases:
+
+  # Cache Management
+  - &restore-yarn-cache
+    keys:
+      - v1-yarn-{{ arch }}-{{ checksum "package.json" }}
+      - v1-yarn-{{ arch }}-
+
+  - &save-yarn-cache
+    paths:
+      - node_modules
+      - mobile/node_modules
+      - ~/.cache/yarn
+    key: v1-yarn-{{ arch }}-{{ checksum "package.json" }}
+
+  - &yarn
+    | 
+      yarn
+      cd ./mobile && yarn && yarn setup
+
+defaults: &defaults
+  working_directory: ~/spectrum
+
+js_defaults: &js_defaults
+  <<: *defaults
+  docker:
+    - image: circleci/node:8
+
+macos_defaults: &macos_defaults
+  <<: *defaults
+  macos:
+    xcode: "9.2.0"
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/spectrum
+
+  # Set up environment and install required dependencies
+  checkout_environment:
+    <<: *js_defaults
     steps:
       - checkout
+
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
+
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  # Tests js of the mobile app
+  test_mobile_js:
+    <<: *js_defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native
+      - run: cd ./mobile && yarn test:unit
+
+  # Tests native code of the mobile app
+  test_mobile_native:
+    <<: *macos_defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native
+      - run: cd ./mobile && yarn test:e2e
       
-      - restore_cache:
-          keys:
-            - spectrum-{{ .Branch }}-{{ checksum "package.json" }}
-            - spectrum-{{ .Branch }}
-            
-      # Install mobile dependencies and Expo client locally
-      - run: cd ./mobile && yarn && yarn setup
-      
-      - save_cache:
-          key: spectrum-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - ~/.cache/yarn
-            - ~/spectrum/mobile/node_modules
-            
-      - run: npm test
+workflows:
+  version: 2
+
+  # Tests mobile app
+  test_mobile:
+    jobs:
+      - checkout_environment
+      - test_mobile_js
+        requires:
+          - checkout_environment
+      - test_mobile_native
+        requires:
+          - checkout_environment
