@@ -34,6 +34,7 @@ import {
 } from './style';
 
 type Props = {
+  onJoin: Function,
   joinedCommunity?: Function,
   joinedFirstCommunity?: Function,
   dispatch: Function,
@@ -49,6 +50,7 @@ type Props = {
 class CommunityWithData extends React.Component<Props> {
   onJoin = () => {
     this.props.joinedCommunity && this.props.joinedCommunity(1, false);
+    this.props.onJoin && this.props.onJoin();
   };
 
   onLeave = () => {
