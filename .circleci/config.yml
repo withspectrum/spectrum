@@ -34,6 +34,7 @@ macos_defaults: &macos_defaults
   macos:
     xcode: "9.2.0"
 
+version: 2
 jobs:
 
   # Set up environment and install required dependencies
