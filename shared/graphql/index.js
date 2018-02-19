@@ -40,6 +40,14 @@ export const createClient = (options?: CreateClientOptions = {}) => {
 
   const retryLink = new RetryLink({
     attempts: (count, operation, error) => {
+      const isPersistedQuery =
+        operation.extensions &&
+        operation.extensions.persistedQuery &&
+        operation.extensions.persistedQuery.sha256Hash;
+      // Don't retry persisted query tries since the persisted query link will
+      // retry those will the full query text
+      if (isPersistedQuery) return false;
+
       const isMutation =
         operation &&
         operation.query &&

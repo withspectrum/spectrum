@@ -40,18 +40,11 @@
   dependencies:
     "@babel/types" "7.0.0-beta.36"
 
-"@babel/polyfill@^7.0.0-beta.32":
-  version "7.0.0-beta.38"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-beta.38.tgz#df9ca32ffe4f6de0b99ab495c197837f422bb12e"
+"@babel/runtime@^7.0.0-beta.38", "@babel/runtime@^7.0.0-beta.40":
+  version "7.0.0-beta.40"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.40.tgz#8e3b8f1d2d8639d010e991a7e99c1d9ef578f886"
   dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.1"
-
-"@babel/runtime@^7.0.0-beta.32", "@babel/runtime@^7.0.0-beta.37":
-  version "7.0.0-beta.38"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.38.tgz#8b7f16245b1f86fc168a1846ab6d77a238f6d16c"
-  dependencies:
-    core-js "^2.4.0"
+    core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
 
 "@babel/template@7.0.0-beta.36":
@@ -340,6 +333,12 @@ apollo-link-dedup@^1.0.0:
   dependencies:
     apollo-link "^1.0.7"
 
+apollo-link-http-common@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.0.0.tgz#b347db2925d9ad6cb248e165761f63d5c64f60b0"
+  dependencies:
+    apollo-link "^1.1.0"
+
 apollo-link-http@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.3.2.tgz#63537ee5ecf9c004efb0317f1222b7dbc6f21559"
@@ -407,13 +406,13 @@ apollo-tracing@^0.1.0:
   dependencies:
     graphql-extensions "^0.0.x"
 
-apollo-upload-client@6.x:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-6.0.3.tgz#9f3249910ede32b7336968b1ae9fa438ed48a247"
+apollo-upload-client@7.1.0-alpha.1:
+  version "7.1.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-7.1.0-alpha.1.tgz#738e7ff61ae66d0984371e9cffe5a9ef0f3b992c"
   dependencies:
-    "@babel/polyfill" "^7.0.0-beta.32"
-    "@babel/runtime" "^7.0.0-beta.32"
-    extract-files "^2.0.1"
+    "@babel/runtime" "^7.0.0-beta.40"
+    apollo-link-http-common "0.0.0"
+    extract-files "^3.1.0"
 
 apollo-upload-server@^2.0.4:
   version "2.0.4"
@@ -3815,11 +3814,11 @@ extglob@^2.0.2:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-extract-files@^2.0.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-2.1.1.tgz#3e76eaeeccb5789fc369bfc22bdf9c0e6c5d8b1b"
+extract-files@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-3.1.0.tgz#b70424c9d4a1a4208efe22069388f428e4ae00f1"
   dependencies:
-    "@babel/runtime" "^7.0.0-beta.37"
+    "@babel/runtime" "^7.0.0-beta.38"
 
 extract-text-webpack-plugin@3.0.2:
   version "3.0.2"
