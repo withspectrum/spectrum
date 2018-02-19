@@ -75,8 +75,8 @@ workflows:
     jobs:
       - checkout_environment
       - test_mobile_js
-        requires:
-          - checkout_environment
+          requires:
+            - checkout_environment
       - test_mobile_native
-        requires:
-          - checkout_environment
+          requires:
+            - checkout_environment
