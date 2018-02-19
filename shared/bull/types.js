@@ -85,6 +85,11 @@ export type NewCommunityWelcomeEmailJobData = {
   community: DBCommunity,
 };
 
+export type SlackImportJobData = {
+  token: string,
+  importId: string,
+};
+
 export type EmailValidationEmailJobData = { email: string, userId: string };
 
 export type ReputationEventJobData = {
@@ -135,6 +140,7 @@ export type Queues = {
   >,
   sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
+  slackImportQueue: BullQueue<SlackImportJobData>,
 
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
