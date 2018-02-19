@@ -27,6 +27,10 @@ function createQueue(name /*: string */) {
           return createRedis();
       }
     },
+    defaultJobOptions: {
+      removeOnComplete: true,
+      attempts: 1,
+    },
   });
   // NOTE(@mxstbr): This logs a "Possible event emitter memory leak" warning,
   // but that's a bug upstream in bull. Reference: OptimalBits/bull#503
