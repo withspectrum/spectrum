@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "bull": "3.3.1",
+    "bull": "3.3.10",
     "draft-js": "^0.10.3",
     "emoji-regex": "^6.5.1",
     "expo-server-sdk": "^2.3.3",

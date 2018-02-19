@@ -48,9 +48,9 @@ buffer-equal-constant-time@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
 
-bull@3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.1.tgz#6a15daf08ccfd5bf0e543eeb4544323157c0e1db"
+bull@3.3.10:
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.10.tgz#32e76281902070b4720bc37b3793f09db635f646"
   dependencies:
     bluebird "^3.5.0"
     cron-parser "^2.4.1"
