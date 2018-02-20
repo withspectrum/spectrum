@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('iris:utils:error-formatter');
-import Raven from 'raven';
+import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
 import type { GraphQLError } from 'graphql';
 
