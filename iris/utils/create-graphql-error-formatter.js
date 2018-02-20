@@ -1,15 +1,18 @@
 // @flow
-import Raven from 'raven';
+const debug = require('debug')('iris:utils:error-formatter');
+import Raven from 'shared/raven';
 import { IsUserError } from './UserError';
 import type { GraphQLError } from 'graphql';
 
 const createGraphQLErrorFormatter = (req?: express$Request) => (
   error: GraphQLError
 ) => {
-  console.log('error', error);
+  debug('---GraphQL Error---');
+  debug(error);
+  debug('-------------------\n');
   const isUserError = error.originalError
     ? error.originalError[IsUserError]
-    : false;
+    : error[IsUserError];
   let sentryId = 'ID only generated in production';
   if (!isUserError) {
     if (process.env.NODE_ENV === 'production') {
