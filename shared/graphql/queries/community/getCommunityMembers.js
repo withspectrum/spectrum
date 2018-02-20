@@ -19,7 +19,7 @@ const LoadMoreMembers = gql`
   query loadMoreCommunityMembers(
     $id: ID
     $after: String
-    $first: Int
+    $first: PaginationAmount
     $filter: MembersFilter
   ) {
     community(id: $id) {
@@ -37,7 +37,7 @@ export const getcommunityMembersQuery = gql`
   query getCommunityMembers(
     $id: ID
     $after: String
-    $first: Int
+    $first: PaginationAmount
     $filter: MembersFilter
   ) {
     community(id: $id) {

@@ -15,7 +15,11 @@ export type GetChannelMemberConnectionType = {
 };
 
 export const getChannelMemberConnectionQuery = gql`
-  query getChannelMemberConnection($id: ID, $first: Int, $after: String) {
+  query getChannelMemberConnection(
+    $id: ID
+    $first: PaginationAmount
+    $after: String
+  ) {
     channel(id: $id) {
       ...channelInfo
       ...channelMetaData
@@ -28,7 +32,11 @@ export const getChannelMemberConnectionQuery = gql`
 `;
 
 const LoadMoreMembers = gql`
-  query loadMoreChannelMembers($id: ID, $first: Int, $after: String) {
+  query loadMoreChannelMembers(
+    $id: ID
+    $first: PaginationAmount
+    $after: String
+  ) {
     channel(id: $id) {
       ...channelInfo
       ...channelMetaData

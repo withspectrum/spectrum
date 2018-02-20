@@ -17,9 +17,9 @@ export const getThreadMessageConnectionQuery = gql`
   query getThreadMessages(
     $id: ID!
     $after: String
-    $first: Int
+    $first: PaginationAmount
     $before: String
-    $last: Int
+    $last: PaginationAmount
   ) {
     thread(id: $id) {
       ...threadInfo

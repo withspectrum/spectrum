@@ -13,7 +13,7 @@ export type GetCurrentUserDMThreadConnectionType = {
 };
 
 const LoadMoreDirectMessageThreads = gql`
-  query loadMoreDirectMessageThreads($after: String) {
+  query loadMoreDirectMessageThreads($first: PaginationAmount, $after: String) {
     user: currentUser {
       ...userInfo
       ...userDirectMessageThreadConnection
@@ -24,7 +24,10 @@ const LoadMoreDirectMessageThreads = gql`
 `;
 
 export const getCurrentUserDMThreadConnectionQuery = gql`
-  query currentUserDirectMessageThreads($after: String) {
+  query currentUserDirectMessageThreads(
+    $first: PaginationAmount
+    $after: String
+  ) {
     user: currentUser {
       ...userInfo
       ...userDirectMessageThreadConnection
@@ -38,6 +41,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
   options: {
     variables: {
       after: '',
+      first: 15,
     },
     fetchPolicy: 'cache-and-network',
   },
@@ -52,6 +56,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
             props.data.user.directMessageThreadsConnection.edges[
               props.data.user.directMessageThreadsConnection.edges.length - 1
             ].cursor,
+          first: 15,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult.user) {

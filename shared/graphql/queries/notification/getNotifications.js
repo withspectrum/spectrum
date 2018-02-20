@@ -21,8 +21,8 @@ export type GetNotificationsType = {
 };
 
 const LoadMoreNotifications = gql`
-  query loadMoreNotifications($after: String) {
-    notifications(after: $after) {
+  query loadMoreNotifications($after: String, $first: PaginationAmount) {
+    notifications(after: $after, first: $first) {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -42,8 +42,9 @@ const LoadMoreNotifications = gql`
   Fetches the latest 10 notifications for the current user
 */
 export const getNotificationsQuery = gql`
-  query getNotifications {
-    notifications {
+  query getNotifications($after: String, $first: PaginationAmount) {
+    notifications(after: $after, first: $first)
+      @connection(key: "notifications") {
       pageInfo {
         hasNextPage
         hasPreviousPage
@@ -60,6 +61,12 @@ export const getNotificationsQuery = gql`
 `;
 
 export const getNotificationsOptions = {
+  options: {
+    variables: {
+      after: null,
+      first: 10,
+    },
+  },
   props: ({
     data: {
       fetchMore,
@@ -82,6 +89,7 @@ export const getNotificationsOptions = {
           query: LoadMoreNotifications,
           variables: {
             after: notifications.edges[notifications.edges.length - 1].cursor,
+            first: 10,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.notifications) {

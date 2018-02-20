@@ -4,8 +4,9 @@ import { NEW_DOCUMENTS } from './utils';
 
 export const getNotificationsByUser = (
   userId: string,
-  { first, after }: { first: number, after: Date }
+  { first = 10, after }: { first: number, after: Date }
 ) => {
+  console.log('NOT DM NOTIFS', first, after);
   return db
     .table('usersNotifications')
     .between(
@@ -24,13 +25,13 @@ export const getNotificationsByUser = (
     })
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
-    .limit(first)
+    .limit(first || 10)
     .run();
 };
 
 export const getUnreadDirectMessageNotifications = (
   userId: string,
-  { first, after }: { first: number, after: Date }
+  { first = 10, after }: { first: number, after: Date }
 ): Promise<Array<Object>> => {
   return db
     .table('usersNotifications')
@@ -51,7 +52,7 @@ export const getUnreadDirectMessageNotifications = (
     })
     .zip()
     .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
-    .limit(first)
+    .limit(first || 10)
     .run();
 };
 

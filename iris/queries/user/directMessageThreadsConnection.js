@@ -14,7 +14,8 @@ export default async (
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastThreadIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-
+  console.log('1 first', first);
+  console.log('1 after', after);
   const threads = await getDirectMessageThreadsByUser(user.id, {
     first,
     after: lastThreadIndex,
