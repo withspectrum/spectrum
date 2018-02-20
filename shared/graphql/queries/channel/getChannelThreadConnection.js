@@ -53,11 +53,15 @@ const getChannelThreadConnectionOptions = {
       networkStatus,
       channel,
       threadConnection: channel && channel.threadConnection,
-      threads: channel ? channel.threadConnection.edges : [],
+      threads:
+        channel && channel.threadConnection
+          ? channel.threadConnection.edges
+          : [],
       feed: channel && channel.id,
-      hasNextPage: channel
-        ? channel.threadConnection.pageInfo.hasNextPage
-        : false,
+      hasNextPage:
+        channel && channel.threadConnection
+          ? channel.threadConnection.pageInfo.hasNextPage
+          : false,
       subscribeToUpdatedThreads: () => {
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
