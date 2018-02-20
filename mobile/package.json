@@ -29,6 +29,7 @@
     "detox-expo-helpers": "^0.2.0",
     "exp": "^47.1.2",
     "jest": "^22.0.3",
+    "jest-expo": "^25.1.0",
     "react-test-renderer": "^16.2.0"
   },
   "scripts": {
