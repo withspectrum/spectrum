@@ -63,3 +63,58 @@ export const AddCardSection = styled.section`
   flex-direction: column;
   justify-content: center;
 `;
+
+export const LineItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0 0;
+`;
+
+export const LineItemTotal = styled(LineItem)`
+  padding: 16px 0 0;
+  margin-top: 16px;
+  border-top: 1px solid ${props => props.theme.bg.border};
+`;
+
+export const LineItemLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+export const LineItemRight = styled.div`
+  justify-content: flex-end;
+  text-align: right;
+  align-items: flex-start;
+`;
+
+export const LineItemTitle = styled.p`
+  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.default};
+  display: flex;
+  align-items: center;
+`;
+
+export const LineItemDescription = styled.p`
+  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+`;
+
+export const LineItemTitleTotal = styled.p`
+  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 700;
+  color: ${props => props.theme.text.default};
+  margin-top: 8px;
+`;
+export const LineItemPrice = styled.p`
+  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+`;

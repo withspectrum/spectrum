@@ -1,5 +1,6 @@
 // @flow
 import type { SubscriptionItem } from './subscriptionItem';
+import type { RawDiscount } from './discount';
 
 // comes in from stripe
 export type RawSubscription = {
@@ -13,6 +14,7 @@ export type RawSubscription = {
   current_period_start: Date,
   customer: string,
   ended_at: ?Date,
+  discount: ?RawDiscount,
   items: {
     data: Array<?SubscriptionItem>,
     has_more: boolean,

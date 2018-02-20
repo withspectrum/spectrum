@@ -201,6 +201,56 @@ const createFirstSubscription = async (input: FirstSubInput) => {
   });
 };
 
+// given subscriptions returned from a StripeCustomers record in our db,
+// we reformat the data to be more front-end friendly
+const cleanSubscriptions = (customer: RawCustomer): Array<?Object> => {
+  const subscriptions = getSubscriptions(customer);
+  if (!subscriptions || subscriptions.length === 0) return [];
+
+  const formatItems = (items: Array<any>) => {
+    if (!items || items.length === 0) return [];
+    return items
+      .filter(item => item && item.plan.id !== 'community-features')
+      .map(
+        item =>
+          item && {
+            created: item.created,
+            planId: item.plan.id,
+            planName: item.plan.name,
+            amount: item.plan.amount,
+            quantity: item.quantity,
+            id: item.id,
+          }
+      );
+  };
+
+  return subscriptions.map(
+    sub =>
+      sub && {
+        id: sub.id,
+        created: sub.created,
+        current_period_end: sub.current_period_end,
+        discount: sub.discount
+          ? {
+              amount_off: sub.discount.coupon.amount_off,
+              percent_off: sub.discount.coupon.percent_off,
+              id: sub.discount.coupon.id,
+            }
+          : customer.discount
+            ? {
+                amount_off: customer.discount.coupon.amount_off,
+                percent_off: customer.discount.coupon.percent_off,
+                id: customer.discount.coupon.id,
+              }
+            : null,
+        billing_cycle_anchor: sub.billing_cycle_anchor,
+        canceled_at: sub.canceled_at,
+        items: formatItems(sub.items.data),
+        status: sub.status,
+      }
+  );
+};
+
 type AddSIInput = {
   subscriptionId: string,
   subscriptionItemType: string,
@@ -297,6 +347,7 @@ export const StripeUtil = {
   getSubscriptions,
   hasSubscriptionItemOfType,
   getSubscriptionItemOfType,
+  cleanSubscriptions,
   createCustomer,
   deleteCustomer,
   updateCustomer,

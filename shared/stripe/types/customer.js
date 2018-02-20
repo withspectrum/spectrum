@@ -1,6 +1,7 @@
 // @flow
 import type { RawSource } from './source';
 import type { RawSubscription } from './subscription';
+import type { RawDiscount } from './discount';
 
 // comes in from stripe
 export type RawCustomer = {
@@ -9,6 +10,7 @@ export type RawCustomer = {
   currency: string,
   email: ?string,
   default_source: ?string,
+  discount: ?RawDiscount,
   sources: {
     data: Array<?RawSource>,
     has_more: boolean,

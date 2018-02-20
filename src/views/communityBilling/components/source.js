@@ -13,7 +13,6 @@ import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/com
 
 type Props = {
   community: GetCommunityBillingSettingsType,
-  isLastSource: boolean,
   source: {
     id: string,
     card: {
@@ -46,7 +45,7 @@ const getCardImage = (brand: string) => {
 
 class Source extends React.Component<Props> {
   render() {
-    const { source, community, isLastSource } = this.props;
+    const { source, community } = this.props;
     const imageSrc = getCardImage(source.card.brand);
     return (
       <SourceContainer>
@@ -63,11 +62,9 @@ class Source extends React.Component<Props> {
           </SourceText>
         </SourceContentContainer>
         <div>
-          <EditSource
-            isLastSource={isLastSource}
-            community={community}
-            source={source}
-          />
+          {!source.isDefault && (
+            <EditSource community={community} source={source} />
+          )}
         </div>
       </SourceContainer>
     );

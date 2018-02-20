@@ -47,6 +47,6 @@ export default async (
     .then(async newCustomer => await replaceStripeCustomer(newCustomer))
     .then(() => community)
     .catch(err => {
-      return new UserError('Error removing payment method: ', err.message);
+      return new UserError(`Error removing payment method: ${err.message}`);
     });
 };

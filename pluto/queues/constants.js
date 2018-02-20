@@ -9,6 +9,8 @@ export const PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT =
   'process stripe charge webhook event';
 export const PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT =
   'process stripe invoice webhook event';
+export const PROCESS_STRIPE_DISCOUNT_WEBHOOK_EVENT =
+  'process stripe discount webhook event';
 
 export const PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED =
   'process stripe community analytics added';

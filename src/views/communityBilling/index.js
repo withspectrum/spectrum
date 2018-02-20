@@ -17,6 +17,7 @@ import {
 } from '../../components/settingsViews/style';
 import { AddCardSection } from './style';
 import StripeCardForm from '../../components/stripeCardForm';
+import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
@@ -56,7 +57,7 @@ class CommunityMembersSettings extends React.Component<Props> {
         <SectionsContainer>
           <Column>
             <SectionCard>
-              <SectionTitle>Active subscriptions</SectionTitle>
+              <SectionTitle>Your subscription</SectionTitle>
               {community.billingSettings.subscriptions.length === 0 && (
                 <React.Fragment>
                   <SectionSubtitle>
@@ -74,7 +75,13 @@ class CommunityMembersSettings extends React.Component<Props> {
               )}
               {community.billingSettings.subscriptions.map(
                 subscription =>
-                  subscription && <p key={subscription.id}>{subscription.id}</p>
+                  subscription && (
+                    <Subscription
+                      key={subscription.id}
+                      subscription={subscription}
+                      community={community}
+                    />
+                  )
               )}
             </SectionCard>
           </Column>
@@ -86,14 +93,12 @@ class CommunityMembersSettings extends React.Component<Props> {
                 {community.billingSettings.sources.length === 0
                   ? 'Saved payment methods will appear here'
                   : `You can manage your payment information here or change your
-                  default card. If you remove all payment methods, any active
-                  subscriptions will be canceled immediately.`}
+                  default card. To remove your default payment method, you'll need to first cancel any active subscriptions.`}
               </SectionSubtitle>
               {community.billingSettings.sources.map(
-                (source, index, array) =>
+                source =>
                   source && (
                     <Source
-                      isLastSource={array.length === 1}
                       key={source.id}
                       source={source}
                       community={community}

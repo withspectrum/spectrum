@@ -156,6 +156,7 @@ export type Queues = {
   stripeSourceWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
   stripeInvoiceWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
   stripeSubscriptionWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeDiscountWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
   stripeCommunityAdministratorEmailChangedQueue: BullQueue<
     StripeCommunityPaymentEventJobData
   >,

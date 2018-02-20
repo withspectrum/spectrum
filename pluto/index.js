@@ -12,6 +12,7 @@ import {
   PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
   PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
   PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_DISCOUNT_WEBHOOK_EVENT,
   PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED,
   PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED,
   PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED,
@@ -30,6 +31,7 @@ import processStripeCustomerWebhook from './queues/processStripeCustomerWebhook'
 import processStripeSourceWebhook from './queues/processStripeSourceWebhook';
 import processStripeSubscriptionWebhook from './queues/processStripeSubscriptionWebhook';
 import processStripeInvoiceWebhook from './queues/processStripeInvoiceWebhook';
+import processStripeDiscountWebhook from './queues/processStripeDiscountWebhook';
 
 import processModeratorAdded from './queues/processModeratorAdded';
 import processModeratorRemoved from './queues/processModeratorRemoved';
@@ -74,6 +76,7 @@ try {
     [PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT]: processStripeInvoiceWebhook,
     [PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT]: processStripeSourceWebhook,
     [PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT]: processStripeSubscriptionWebhook,
+    [PROCESS_STRIPE_DISCOUNT_WEBHOOK_EVENT]: processStripeDiscountWebhook,
 
     [PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED]: processAnalyticsAdded,
     [PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED]: processAnalyticsRemoved,

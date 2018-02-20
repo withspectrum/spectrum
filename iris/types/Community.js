@@ -71,40 +71,42 @@ const Community = /* GraphQL */ `
 	type StripePlan {
 		id: ID
 		amount: Int
-		created: Date
+		created: Int
 		name: String
 	}
 
 	type StripeItem {
 		id: ID
 		amount: Int
-		period_start: Date
-		period_end: Date
+		period_start: Int
+		period_end: Int
 		plan: StripePlan
 		quantity: Int
 	}
 
 	type StripeSubscriptionItem {
-		id: ID
-		created: Date
-		plan: StripePlan
+		created: Int
+		planId: String
+		planName: String
+		amount: Int
 		quantity: Int
-		subscription: StripeSubscription
+		id: String
+	}
+
+	type StripeDiscount {
+		amount_off: Int
+		percent_off: Int
+		id: String
 	}
 
 	type StripeSubscription {
 		id: ID
-		customer: String
-		billing_cycle_anchor: Date
-		canceled_at: Date
-		created: Date
-		current_period_end: Date
-		current_period_start: Date
-		ended_at: Date
+		created: Int
+		discount: StripeDiscount
+		billing_cycle_anchor: Int
+		current_period_end: Int
+		canceled_at: Int
 		items: [StripeSubscriptionItem]
-		plan: StripePlan
-		quantity: Int
-		start: Date
 		status: String
 	}
 

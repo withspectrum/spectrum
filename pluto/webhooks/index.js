@@ -8,6 +8,7 @@ import {
   stripeSourceWebhookEventQueue,
   stripeCustomerWebhookEventQueue,
   stripeInvoiceWebhookEventQueue,
+  stripeDiscountWebhookEventQueue,
 } from 'shared/bull/queues';
 
 const WebhookHandler = {
@@ -32,6 +33,10 @@ const WebhookHandler = {
       'customer.subscription.deleted': stripeSubscriptionWebhookEventQueue,
       'customer.subscription.updated': stripeSubscriptionWebhookEventQueue,
 
+      'customer.discount.updated': stripeDiscountWebhookEventQueue,
+      'customer.discount.created': stripeDiscountWebhookEventQueue,
+      'customer.discount.deleted': stripeDiscountWebhookEventQueue,
+
       'invoice.created': stripeInvoiceWebhookEventQueue,
       'invoice.updated': stripeInvoiceWebhookEventQueue,
       'invoice.payment_failed': stripeInvoiceWebhookEventQueue,
@@ -40,6 +45,7 @@ const WebhookHandler = {
 
     if (!handler || handler === undefined) {
       debug(`◽️  Unhandled event type: ${event.type}`);
+      console.log(event);
       return;
       // throw new Error(`Unhandled event type: ${event.type}`);
     }

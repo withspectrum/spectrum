@@ -27,6 +27,7 @@ const getCommunityBillingSettingsOptions = {
     variables: {
       id,
     },
+    fetchPolicy: 'network-only',
   }),
 };
 

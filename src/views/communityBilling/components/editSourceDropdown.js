@@ -36,7 +36,6 @@ type Props = {
     },
   },
   history: Object,
-  isLastSource: boolean,
 };
 
 type State = { isOpen: boolean };
@@ -60,7 +59,6 @@ class EditDropdown extends React.Component<Props, State> {
       makeDefaultPaymentSource,
       removePaymentSource,
       source,
-      isLastSource,
     } = this.props;
 
     return (
@@ -109,13 +107,8 @@ class EditDropdown extends React.Component<Props, State> {
                     <DropdownSectionText>
                       <DropdownSectionTitle>Remove</DropdownSectionTitle>
                       <DropdownSectionSubtitle>
-                        {isLastSource
-                          ? 'Remove this payment method and cancel all active subscriptions'
-                          : `Remove this payment method. ${
-                              source.isDefault
-                                ? 'The next payment method available will become the new default'
-                                : ''
-                            }`}
+                        Remove this payment method. The next payment method
+                        available will become the new default
                       </DropdownSectionSubtitle>
                     </DropdownSectionText>
                     <DropdownAction>
