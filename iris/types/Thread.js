@@ -47,7 +47,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		edits: [Edit!]
     participants: [User] @cost(complexity: 1)
-    messageConnection(first: Int, after: String, last: Int, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
+    messageConnection(first: PaginationAmount, after: String, last: PaginationAmount, before: String): ThreadMessagesConnection! @cost(complexity: 1, multiplier: "first")
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
 		attachments: [Attachment]

@@ -58,8 +58,8 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
-		notifications(first: Int = 10, after: String): NotificationsConnection @cost(complexity: 1, multiplier: "first")
-    directMessageNotifications(first: Int = 10, after: String): NotificationsConnection @cost(complexity: 1, multiplier: "first")
+		notifications(first: PaginationAmount = 10, after: String): NotificationsConnection @cost(complexity: 1, multiplier: "first")
+    directMessageNotifications(first: PaginationAmount = 10, after: String): NotificationsConnection @cost(complexity: 1, multiplier: "first")
 	}
 
 	extend type Mutation {

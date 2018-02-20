@@ -33,11 +33,11 @@ const Search = /* GraphQL */ `
 	extend type Query {
 		search (
       # Returns the first *n* results from the list
-      first: Int,
+      first: PaginationAmount,
       # Returns the elements in the list that come after the specified ID
       after: String,
       # Returns the last *n* results from the list
-      last: Int,
+      last: PaginationAmount,
       # Returns the elements in the list that come before the specified ID
       before: String,
       # The string typed by the user to search for

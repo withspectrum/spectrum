@@ -70,8 +70,8 @@ const Channel = /* GraphQL */ `
     channelPermissions: ChannelPermissions! @cost(complexity: 1)
 		communityPermissions: CommunityPermissions!
     community: Community! @cost(complexity: 1)
-		threadConnection(first: Int = 10, after: String): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
-    memberConnection(first: Int = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
+		threadConnection(first: PaginationAmount = 10, after: String): ChannelThreadsConnection! @cost(complexity: 1, multiplier: "first")
+    memberConnection(first: PaginationAmount = 10, after: String): ChannelMembersConnection! @cost(complexity: 1, multiplier: "first")
 		memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
     pendingUsers: [User] @cost(complexity: 3)

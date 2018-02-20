@@ -69,8 +69,8 @@ const Community = /* GraphQL */ `
 		pinnedThread: Thread
     communityPermissions: CommunityPermissions @cost(complexity: 1)
     channelConnection: CommunityChannelsConnection! @cost(complexity: 1)
-    members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
-    threadConnection(first: Int = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
+    members(first: PaginationAmount = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
+    threadConnection(first: PaginationAmount = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
     metaData: CommunityMetaData @cost(complexity: 10)
     slackImport: SlackImport @cost(complexity: 2)
     invoices: [Invoice] @cost(complexity: 1)
@@ -82,7 +82,7 @@ const Community = /* GraphQL */ `
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 
-		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
+		memberConnection(first: PaginationAmount = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
 	}
 
@@ -90,10 +90,10 @@ const Community = /* GraphQL */ `
 		community(id: ID, slug: String): Community
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
 		communityMember(userId: String, communityId: String): CommunityMember
-    topCommunities(amount: Int = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
+    topCommunities(amount: PaginationAmount = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
 		recentCommunities: [Community!]
 
-		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
+		searchCommunities(string: String, amount: PaginationAmount = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
