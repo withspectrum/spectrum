@@ -15,7 +15,7 @@ export default (
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastUserIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-  const amount = first || 20;
+  const amount = first || 10;
 
   // $FlowIssue
   return getMembersInChannel(id, { first: amount, after: lastUserIndex })
