@@ -668,3 +668,14 @@ export const setStripeCustomerId = (
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
+
+export const disablePaidFeatureFlags = (communityId: string) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      hasAnalytics: false,
+      hasPrioritySupport: false,
+    })
+    .run();
+};

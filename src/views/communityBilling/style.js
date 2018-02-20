@@ -103,11 +103,17 @@ export const LineItemDescription = styled.p`
   font-size: 14px;
   font-weight: 400;
   color: ${props => props.theme.text.alt};
+
+  a {
+    display: block;
+    color: ${props => props.theme.brand.alt};
+    margin-top: 4px;
+  }
 `;
 
 export const LineItemTitleTotal = styled.p`
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: ${props => props.theme.text.default};
   margin-top: 8px;

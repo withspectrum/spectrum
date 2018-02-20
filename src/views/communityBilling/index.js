@@ -13,8 +13,10 @@ import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
+  SectionCardFooter,
   Column,
 } from '../../components/settingsViews/style';
+import { openModal } from '../../actions/modals';
 import { AddCardSection } from './style';
 import StripeCardForm from '../../components/stripeCardForm';
 import Subscription from './components/subscription';
@@ -37,10 +39,25 @@ type Props = {
 };
 
 class CommunityMembersSettings extends React.Component<Props> {
+  triggerCancel = () => {
+    const message = (
+      <div>
+        <p>Are you sure you want to cancel this subscription?</p>{' '}
+        <p>This action cannot be undone.</p>
+      </div>
+    );
+    return this.props.dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: this.props.data.community.id,
+        entity: 'community-subscription',
+        message,
+      })
+    );
+  };
+
   render() {
     const { data, isLoading } = this.props;
     const { community } = data;
-    console.log('billing community ', community);
 
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
@@ -102,6 +119,9 @@ class CommunityMembersSettings extends React.Component<Props> {
                       key={source.id}
                       source={source}
                       community={community}
+                      canRemoveDefault={
+                        community.billingSettings.subscriptions.length === 0
+                      }
                     />
                   )
               )}
@@ -127,6 +147,25 @@ class CommunityMembersSettings extends React.Component<Props> {
                 invoice => invoice && <p key={invoice.id}>{invoice.id}</p>
               )}
             </SectionCard>
+
+            {community.billingSettings.subscriptions.length > 0 && (
+              <SectionCard>
+                <SectionTitle>Cancel your subscription</SectionTitle>
+                <SectionSubtitle>
+                  Canceling your subscription will immediately remove access to
+                  all paid features, including private channels and moderator
+                  seats.
+                </SectionSubtitle>
+                <SectionSubtitle>
+                  <Link to={'/pricing'}>Learn more about canceling</Link>
+                </SectionSubtitle>
+                <SectionCardFooter>
+                  <Button gradientTheme={'warn'} onClick={this.triggerCancel}>
+                    Cancel subscription
+                  </Button>
+                </SectionCardFooter>
+              </SectionCard>
+            )}
           </Column>
         </SectionsContainer>
       );

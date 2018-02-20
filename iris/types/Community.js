@@ -246,6 +246,10 @@ const Community = /* GraphQL */ `
 		communityId: ID!
 	}
 
+	input CancelSubscriptionInput {
+		communityId: ID!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -260,6 +264,7 @@ const Community = /* GraphQL */ `
 		addPaymentSource(input: AddPaymentSourceInput!): Community
 		removePaymentSource(input: RemovePaymentSourceInput!): Community
 		makeDefaultPaymentSource(input: MakeDefaultPaymentSourceInput!): Community
+		cancelSubscription(input: CancelSubscriptionInput!): Community
 	}
 `;
 

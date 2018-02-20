@@ -20,6 +20,7 @@ import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
+import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -51,6 +52,7 @@ type Props = {
   deleteCommunity: Function,
   deleteThread: Function,
   deleteChannel: Function,
+  cancelSubscription: Function,
   dispatch: Function,
   isOpen: boolean,
 };
@@ -187,6 +189,23 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             });
           });
       }
+      case 'community-subscription': {
+        return this.props
+          .cancelSubscription({ communityId: id })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Subscription canceled'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
       default: {
         this.setState({
           isLoading: false,
@@ -247,6 +266,7 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteChannelMutation,
   deleteThreadMutation,
   deleteMessage,
+  cancelSubscription,
   withRouter
 )(DeleteDoubleCheckModal);
 

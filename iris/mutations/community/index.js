@@ -10,6 +10,7 @@ import updateAdministratorEmail from './updateAdministratorEmail';
 import addPaymentSource from './addPaymentSource';
 import removePaymentSource from './removePaymentSource';
 import makeDefaultPaymentSource from './makeDefaultPaymentSource';
+import cancelSubscription from './cancelSubscription';
 
 module.exports = {
   Mutation: {
@@ -24,5 +25,6 @@ module.exports = {
     addPaymentSource,
     removePaymentSource,
     makeDefaultPaymentSource,
+    cancelSubscription,
   },
 };

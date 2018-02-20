@@ -12,13 +12,13 @@ type SubscriptionType = {
     percent_off: ?number,
     id: string,
   },
-  items: ?{
+  items: Array<?{
     created: Date,
     planId: string,
     planName: string,
     amount: number,
     quantity: number,
-  },
+  }>,
 };
 
 export type CommunityBillingSettingsType = {

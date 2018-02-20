@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Link from '../../../components/link';
 import {
   LineItem,
   LineItemLeft,
@@ -41,7 +42,7 @@ class Subscription extends React.Component<{}> {
       return (
         <LineItemTotal key={subscription.id}>
           <LineItemLeft>
-            <LineItemTitleTotal>Total</LineItemTitleTotal>
+            <LineItemTitleTotal>Estimated Total</LineItemTitleTotal>
             <LineItemDescription>
               Your next invoice will be on {months[periodEnd.getMonth()]}{' '}
               {periodEnd.getDay()}, {periodEnd.getFullYear()}
@@ -80,7 +81,7 @@ class Subscription extends React.Component<{}> {
           <LineItemDescription>
             Discount · {subscription.discount.id}
           </LineItemDescription>
-          <LineItemTitleTotal>Total</LineItemTitleTotal>
+          <LineItemTitleTotal>Estimated Total</LineItemTitleTotal>
           <LineItemDescription>
             Your next invoice will be on `${periodEnd.getMonth()} ${periodEnd.getDay()},
             ${periodEnd.getFullYear()}`
@@ -125,7 +126,7 @@ class Subscription extends React.Component<{}> {
         <LineItemTitle>Moderator seat</LineItemTitle>
         <LineItemDescription>Quantity: {lineItem.quantity}</LineItemDescription>
         <LineItemDescription>
-          You can manage moderator in members settings
+          You can manage moderator seats in members settings
         </LineItemDescription>
       </LineItemLeft>
       <LineItemRight>
@@ -174,6 +175,15 @@ class Subscription extends React.Component<{}> {
       <div>
         {subscription.items.map(item => this.parseLineItem(item))}
         {this.totalLineItem()}
+        <LineItemDescription style={{ marginTop: '16px' }}>
+          Spectrum automatically adjusts each month's total invoice by only
+          measuring what features you used, and for how long. As a result, your
+          statements may show a total bill amount higher or lower than the
+          estimate above.
+          <Link to={'/pricing'}>
+            Learn more about our Fair Billing Standard
+          </Link>
+        </LineItemDescription>
       </div>
     );
   }

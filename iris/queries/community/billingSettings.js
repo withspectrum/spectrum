@@ -36,9 +36,11 @@ export default async (
   const invoices =
     isOwner && customer ? await getInvoicesByCustomerId(stripeCustomerId) : [];
   const subscriptions =
-    isOwner && customer ? await StripeUtil.cleanSubscriptions(customer) : [];
-
-  console.log('subscriptions', JSON.stringify(subscriptions));
+    isOwner && customer
+      ? await StripeUtil.cleanSubscriptions(customer).filter(
+          sub => sub && sub.items.length >= 1
+        )
+      : [];
 
   return {
     pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,

@@ -325,6 +325,15 @@ const getChannelMemberCount = (channelId: string): number => {
     .run();
 };
 
+const archiveAllPrivateChannels = (communityId: string) => {
+  return db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isPrivate: true })
+    .update({ isArchived: true })
+    .run();
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -341,4 +350,5 @@ module.exports = {
   getChannelsMemberCounts,
   getChannelsThreadCounts,
   getChannels,
+  archiveAllPrivateChannels,
 };

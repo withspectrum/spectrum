@@ -13,6 +13,7 @@ import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/com
 
 type Props = {
   community: GetCommunityBillingSettingsType,
+  canRemoveDefault: boolean,
   source: {
     id: string,
     card: {
@@ -45,7 +46,7 @@ const getCardImage = (brand: string) => {
 
 class Source extends React.Component<Props> {
   render() {
-    const { source, community } = this.props;
+    const { source, community, canRemoveDefault } = this.props;
     const imageSrc = getCardImage(source.card.brand);
     return (
       <SourceContainer>
@@ -61,11 +62,15 @@ class Source extends React.Component<Props> {
             </SourceExpiration>
           </SourceText>
         </SourceContentContainer>
-        <div>
+        <React.Fragment>
           {!source.isDefault && (
             <EditSource community={community} source={source} />
           )}
-        </div>
+          {source.isDefault &&
+            canRemoveDefault && (
+              <EditSource community={community} source={source} />
+            )}
+        </React.Fragment>
       </SourceContainer>
     );
   }
