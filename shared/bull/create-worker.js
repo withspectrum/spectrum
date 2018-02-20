@@ -17,7 +17,7 @@ const sumArr = (input: Array<Object>, prop: string) => {
   return input.reduce((sum, item) => sum + item[prop], 0);
 };
 
-const createWorker = (queueMap: QueueMap) => {
+const createWorker = (queueMap: QueueMap, queueOptions?: Object = {}) => {
   // We add one error listener per queue, so we have to set the max listeners
   // to whatever it is set to + the amount of queues passed in
   // $FlowIssue
@@ -26,7 +26,7 @@ const createWorker = (queueMap: QueueMap) => {
     Object.keys(queueMap).length + EventEmitter.defaultMaxListeners;
   // Start processing the queues
   const queues = Object.keys(queueMap).map(name => {
-    const queue = createQueue(name);
+    const queue = createQueue(name, queueOptions);
     queue.process(queueMap[name]);
     return queue;
   });

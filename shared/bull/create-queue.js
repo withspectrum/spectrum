@@ -5,7 +5,7 @@ import createRedis from './create-redis';
 const client = createRedis();
 const subscriber = createRedis();
 
-function createQueue(name /*: string */) {
+function createQueue(name: string, queueOptions?: Object = {}) {
   const queue = new Queue(name, {
     createClient: function(type) {
       switch (type) {
@@ -21,6 +21,7 @@ function createQueue(name /*: string */) {
       removeOnComplete: true,
       attempts: 1,
     },
+    ...queueOptions,
   });
   // NOTE(@mxstbr): This logs a "Possible event emitter memory leak" warning,
   // but that's a bug upstream in bull. Reference: OptimalBits/bull#503

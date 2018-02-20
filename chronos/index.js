@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('chronos');
-const createWorker = require('./jobs/bull/create-worker');
+import createWorker from 'shared/bull/create-worker';
 import processDataForDigest from './queues/digests';
 import processSingleDigestEmail from './queues/digests/processDigestEmail';
 import processDailyCoreMetrics from './queues/coreMetrics';
@@ -25,13 +25,22 @@ console.log('\n✉️ Chronos, the cron job worker, is starting...');
 debug('Logging with debug enabled!');
 console.log('');
 
-const server = createWorker({
-  [PROCESS_WEEKLY_DIGEST_EMAIL]: processDataForDigest,
-  [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
-  [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
-  [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
-  [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
-});
+const server = createWorker(
+  {
+    [PROCESS_WEEKLY_DIGEST_EMAIL]: processDataForDigest,
+    [PROCESS_DAILY_DIGEST_EMAIL]: processDataForDigest,
+    [PROCESS_INDIVIDUAL_DIGEST]: processSingleDigestEmail,
+    [PROCESS_DAILY_CORE_METRICS]: processDailyCoreMetrics,
+    [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
+  },
+  {
+    settings: {
+      lockDuration: 600000, // Key expiration time for job locks.
+      stalledInterval: 0, // How often check for stalled jobs (use 0 for never checking).
+      maxStalledCount: 0, // Max amount of times a stalled job will be re-processed.
+    },
+  }
+);
 
 // start the jobs
 weeklyDigest();
@@ -41,14 +50,15 @@ activeCommunityReport();
 
 // $FlowIssue
 console.log(
-  `🗄 Crons open for business ${process.env.NODE_ENV === 'production'
-    ? 'in production'
-    : 'locally'}`
+  `🗄 Crons open for business ${
+    process.env.NODE_ENV === 'production' ? 'in production' : 'locally'
+  }`
 );
 
 server.listen(PORT, 'localhost', () => {
   console.log(
-    `💉 Healthcheck server running at ${server.address()
-      .address}:${server.address().port}`
+    `💉 Healthcheck server running at ${server.address().address}:${
+      server.address().port
+    }`
   );
 });
