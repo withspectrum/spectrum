@@ -31,13 +31,18 @@ export default async (
 
   const { isOwner } = permissions;
   const customer = reduction.length === 0 ? null : reduction[0];
+  const sources =
+    isOwner && customer ? await StripeUtil.getSources(customer) : [];
+  const invoices =
+    isOwner && customer ? await getInvoicesByCustomerId(stripeCustomerId) : [];
+  const subscriptions =
+    isOwner && customer ? await StripeUtil.getSubscriptions(customer) : [];
 
   return {
     pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,
     administratorEmail: isOwner ? administratorEmail : null,
-    sources: isOwner && customer ? await StripeUtil.getSources(customer) : [],
-    invoices: isOwner ? await getInvoicesByCustomerId(stripeCustomerId) : [],
-    subscriptions:
-      isOwner && customer ? await StripeUtil.getSubscriptions(customer) : [],
+    sources: sources,
+    invoices: invoices,
+    subscriptions: subscriptions,
   };
 };

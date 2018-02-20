@@ -15,7 +15,8 @@ import {
   SectionSubtitle,
   Column,
 } from '../../components/settingsViews/style';
-import CardForm from './components/cardForm';
+import { AddCardSection } from './style';
+import StripeCardForm from '../../components/stripeCardForm';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
@@ -38,8 +39,7 @@ class CommunityMembersSettings extends React.Component<Props> {
   render() {
     const { data, isLoading } = this.props;
     const { community } = data;
-
-    console.log(community);
+    console.log('billing community ', community);
 
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
@@ -81,18 +81,32 @@ class CommunityMembersSettings extends React.Component<Props> {
 
           <Column>
             <SectionCard>
-              <SectionTitle>Payment method</SectionTitle>
+              <SectionTitle>Payment methods</SectionTitle>
+              <SectionSubtitle>
+                You can manage your payment information here or change your
+                default card. If you remove all payment methods, any active
+                subscriptions will be canceled immediately.
+              </SectionSubtitle>
               {community.billingSettings.sources.map(
-                source =>
+                (source, index, array) =>
                   source && (
                     <Source
+                      isLastSource={array.length === 1}
                       key={source.id}
                       source={source}
                       community={community}
                     />
                   )
               )}
-              <CardForm community={community} />
+              <AddCardSection>
+                <SectionTitle>Add new card</SectionTitle>
+                <StripeCardForm
+                  community={community}
+                  render={({ isLoading }) => (
+                    <Button loading={isLoading}>Save</Button>
+                  )}
+                />
+              </AddCardSection>
             </SectionCard>
 
             <SectionCard>

@@ -30,8 +30,7 @@ const getChargeableSource = (customer: RawCustomer): ?RawSource => {
 
 const getSources = (customer: RawCustomer): Array<?RawSource> => {
   if (!customer) return [];
-  if (!customer.subscriptions || customer.subscriptions.data.length === 0)
-    return [];
+  if (!customer.sources || customer.sources.data.length === 0) return [];
 
   return customer.sources.data.map(source => {
     if (!source) return;

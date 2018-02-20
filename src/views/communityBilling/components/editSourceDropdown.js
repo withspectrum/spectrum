@@ -27,6 +27,7 @@ type Props = {
   community: GetCommunityBillingSettingsType,
   source: {
     id: string,
+    isDefault: boolean,
     card: {
       brand: string,
       last4: string,
@@ -35,6 +36,7 @@ type Props = {
     },
   },
   history: Object,
+  isLastSource: boolean,
 };
 
 type State = { isOpen: boolean };
@@ -58,6 +60,7 @@ class EditDropdown extends React.Component<Props, State> {
       makeDefaultPaymentSource,
       removePaymentSource,
       source,
+      isLastSource,
     } = this.props;
 
     return (
@@ -67,30 +70,33 @@ class EditDropdown extends React.Component<Props, State> {
         {isOpen && (
           <OutsideClickHandler onOutsideClick={this.close}>
             <Dropdown>
-              <MutationWrapper
-                key={1}
-                mutation={source.isDefault ? null : makeDefaultPaymentSource}
-                variables={{ input: this.input }}
-                render={({ isLoading }) => (
-                  <DropdownSection>
-                    <DropdownSectionText>
-                      <DropdownSectionTitle>
-                        Make default source
-                      </DropdownSectionTitle>
-                      <DropdownSectionSubtitle>
-                        Make default
-                      </DropdownSectionSubtitle>
-                    </DropdownSectionText>
-                    <DropdownAction>
-                      {isLoading ? (
-                        <Spinner size={20} />
-                      ) : (
-                        <div style={{ width: '32px', height: '32px' }} />
-                      )}
-                    </DropdownAction>
-                  </DropdownSection>
-                )}
-              />
+              {!source.isDefault && (
+                <MutationWrapper
+                  key={1}
+                  mutation={source.isDefault ? null : makeDefaultPaymentSource}
+                  variables={{ input: this.input }}
+                  render={({ isLoading }) => (
+                    <DropdownSection>
+                      <DropdownSectionText>
+                        <DropdownSectionTitle>
+                          Make default
+                        </DropdownSectionTitle>
+                        <DropdownSectionSubtitle>
+                          Make this the default payment method for future
+                          billing events
+                        </DropdownSectionSubtitle>
+                      </DropdownSectionText>
+                      <DropdownAction>
+                        {isLoading ? (
+                          <Spinner size={20} />
+                        ) : (
+                          <div style={{ width: '32px', height: '32px' }} />
+                        )}
+                      </DropdownAction>
+                    </DropdownSection>
+                  )}
+                />
+              )}
 
               <MutationWrapper
                 key={2}
@@ -99,10 +105,16 @@ class EditDropdown extends React.Component<Props, State> {
                 render={({ isLoading }) => (
                   <DropdownSection>
                     <DropdownSectionText>
-                      <DropdownSectionTitle>
-                        Remove payment method
-                      </DropdownSectionTitle>
-                      <DropdownSectionSubtitle>Remove</DropdownSectionSubtitle>
+                      <DropdownSectionTitle>Remove</DropdownSectionTitle>
+                      <DropdownSectionSubtitle>
+                        {isLastSource
+                          ? 'Remove this payment method and cancel all active subscriptions'
+                          : `Remove this payment method. ${
+                              source.isDefault
+                                ? 'The next payment method available will become the new default'
+                                : ''
+                            }`}
+                      </DropdownSectionSubtitle>
                     </DropdownSectionText>
                     <DropdownAction>
                       {isLoading ? (

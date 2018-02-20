@@ -49,3 +49,17 @@ export const SourceExpiration = styled.p`
   font-weight: 400;
   color: ${props => props.theme.text.alt};
 `;
+
+export const AddCardSection = styled.section`
+  background: ${props => props.theme.bg.wash};
+  border-top: 1px solid ${props => props.theme.bg.border};
+  width: calc(100% + 32px);
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: -16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
