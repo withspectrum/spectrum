@@ -2,6 +2,7 @@
 const debug = require('debug')(
   'iris:mutations:community:remove-payment-source'
 );
+import { replaceStripeCustomer } from '../../models/stripeCustomers';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
@@ -35,8 +36,17 @@ export default async (
     );
   }
 
-  return await StripeUtil.detachSource({
-    customerId: customer.id,
-    sourceId: sourceId,
-  }).then(() => community);
+  const detachSource = async () =>
+    await StripeUtil.detachSource({
+      customerId: customer.id,
+      sourceId: sourceId,
+    });
+
+  return detachSource()
+    .then(async () => await StripeUtil.getCustomer(customer.id))
+    .then(async newCustomer => await replaceStripeCustomer(newCustomer))
+    .then(() => community)
+    .catch(err => {
+      return new UserError('Error removing payment method: ', err.message);
+    });
 };

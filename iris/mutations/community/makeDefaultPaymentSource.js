@@ -2,6 +2,7 @@
 const debug = require('debug')(
   'iris:mutations:community:change-default-payment-source'
 );
+import { replaceStripeCustomer } from '../../models/stripeCustomers';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
@@ -35,8 +36,17 @@ export default async (
     );
   }
 
-  return await StripeUtil.changeDefaultSource({
-    customerId: customer.id,
-    sourceId: sourceId,
-  }).then(() => community);
+  const changeDefaultSource = async () =>
+    await StripeUtil.changeDefaultSource({
+      customerId: customer.id,
+      sourceId: sourceId,
+    });
+
+  return changeDefaultSource()
+    .then(async () => await StripeUtil.getCustomer(customer.id))
+    .then(async newCustomer => await replaceStripeCustomer(newCustomer))
+    .then(() => community)
+    .catch(err => {
+      return new UserError('Error changing default method: ', err.message);
+    });
 };

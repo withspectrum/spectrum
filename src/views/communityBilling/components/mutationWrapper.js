@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { addToastWithTimeout } from '../../../actions/toasts';
 
 type Props = {
+  onMutationEnd: Function,
   mutation: ?Function,
   variables: any,
   dispatch: Function,
@@ -25,6 +26,7 @@ class MutationWrapper extends React.Component<Props, State> {
   };
 
   terminate = () => {
+    this.props.onMutationEnd();
     return this.setState(this.initialState);
   };
 

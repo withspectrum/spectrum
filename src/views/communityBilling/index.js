@@ -83,9 +83,11 @@ class CommunityMembersSettings extends React.Component<Props> {
             <SectionCard>
               <SectionTitle>Payment methods</SectionTitle>
               <SectionSubtitle>
-                You can manage your payment information here or change your
-                default card. If you remove all payment methods, any active
-                subscriptions will be canceled immediately.
+                {community.billingSettings.sources.length === 0
+                  ? 'Saved payment methods will appear here'
+                  : `You can manage your payment information here or change your
+                  default card. If you remove all payment methods, any active
+                  subscriptions will be canceled immediately.`}
               </SectionSubtitle>
               {community.billingSettings.sources.map(
                 (source, index, array) =>

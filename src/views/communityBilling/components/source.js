@@ -55,7 +55,7 @@ class Source extends React.Component<Props> {
           <SourceText>
             <SourceName>
               {source.card.brand} ending in {source.card.last4}
-              {source.isDefault && <Badge type={'default'} />}
+              {source.isDefault && <Badge type={'default-payment-method'} />}
             </SourceName>
             <SourceExpiration>
               Expires {source.card.exp_month}/{source.card.exp_year}

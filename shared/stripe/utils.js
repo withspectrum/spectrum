@@ -46,7 +46,7 @@ type AttachNewSourceInput = {
 };
 const attachNewSource = async (
   input: AttachNewSourceInput
-): Promise<RawCustomer> => {
+): Promise<RawSource> => {
   const { customerId, sourceId } = input;
   return await stripe.customers.createSource(customerId, {
     source: sourceId,

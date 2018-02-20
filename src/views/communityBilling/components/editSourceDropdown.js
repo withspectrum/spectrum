@@ -73,6 +73,7 @@ class EditDropdown extends React.Component<Props, State> {
               {!source.isDefault && (
                 <MutationWrapper
                   key={1}
+                  onMutationEnd={this.close}
                   mutation={source.isDefault ? null : makeDefaultPaymentSource}
                   variables={{ input: this.input }}
                   render={({ isLoading }) => (
@@ -100,6 +101,7 @@ class EditDropdown extends React.Component<Props, State> {
 
               <MutationWrapper
                 key={2}
+                onMutationEnd={this.close}
                 mutation={removePaymentSource}
                 variables={{ input: this.input }}
                 render={({ isLoading }) => (
