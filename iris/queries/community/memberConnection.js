@@ -32,13 +32,18 @@ export default (
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastUserIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
+  const amount = first || 10;
 
   // $FlowFixMe
-  return getMembersInCommunity(id, { first, after: lastUserIndex }, filter)
+  return getMembersInCommunity(
+    id,
+    { first: amount, after: lastUserIndex },
+    filter
+  )
     .then(users => loaders.user.loadMany(users))
     .then(result => ({
       pageInfo: {
-        hasNextPage: result && result.length >= first,
+        hasNextPage: result && result.length >= amount,
       },
       edges: result.filter(Boolean).map((user, index) => ({
         cursor: encode(`${user.id}-${lastUserIndex + index + 1}`),
