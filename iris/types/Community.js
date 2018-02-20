@@ -90,10 +90,10 @@ const Community = /* GraphQL */ `
 		community(id: ID, slug: String): Community
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
 		communityMember(userId: String, communityId: String): CommunityMember
-    topCommunities(amount: PaginationAmount = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
+    topCommunities(amount: PaginationAmount = 10): [Community!] @cost(complexity: 4, multiplier: "amount")
 		recentCommunities: [Community!]
 
-		searchCommunities(string: String, amount: PaginationAmount = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
+		searchCommunities(string: String, amount: PaginationAmount = 10): [Community] @deprecated(reason:"Use the new Search query endpoint")
 		searchCommunityThreads(communityId: ID!, searchString: String): [Thread] @deprecated(reason:"Use the new Search query endpoint")
 	}
 
