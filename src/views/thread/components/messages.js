@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { sortAndGroupMessages } from '../../../helpers/messages';
+import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
