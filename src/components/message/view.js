@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import redraft from 'redraft';
 import Icon from '../icons';
@@ -11,33 +12,19 @@ import {
   ModActionWrapper,
   Time,
   Code,
-  Line,
-  Paragraph,
 } from './style';
-import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
-import linksDecorator from 'shared/clients/draft-js/links-decorator';
+import {
+  codeRenderer,
+  messageRenderer,
+} from 'shared/clients/draft-js/message/renderer.web';
+import type { Node } from 'react';
 
-const codeRenderer = {
-  blocks: {
-    'code-block': (children, { keys }) => (
-      <Line key={keys[0]}>
-        {children.map((child, i) => [child, <br key={i} />])}
-      </Line>
-    ),
-  },
-};
-
-const messageRenderer = {
-  blocks: {
-    unstyled: (children, { keys }) =>
-      children.map((child, index) => (
-        <Paragraph key={keys[index] || index}>{child}</Paragraph>
-      )),
-  },
-  decorators: [mentionsDecorator, linksDecorator],
-};
-
-export const Body = props => {
+export const Body = (props: {
+  me: boolean,
+  type: 'text' | 'media' | 'emoji' | 'draftjs',
+  openGallery: Function,
+  message: Object,
+}) => {
   const { message, openGallery, type, me } = props;
   switch (type) {
     case 'text':
@@ -89,7 +76,14 @@ const Action = props => {
   }
 };
 
-export const Actions = props => {
+export const Actions = (props: {
+  me: boolean,
+  reaction: Object,
+  canModerate: boolean,
+  deleteMessage: Function,
+  isOptimisticMessage: boolean,
+  children: Node,
+}) => {
   const {
     me,
     reaction,
@@ -111,4 +105,6 @@ export const Actions = props => {
   );
 };
 
-export const Timestamp = props => <Time me={props.me}>{props.time}</Time>;
+export const Timestamp = (props: { me: boolean, time: string }) => (
+  <Time me={props.me}>{props.time}</Time>
+);
