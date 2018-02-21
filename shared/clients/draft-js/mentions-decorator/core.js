@@ -1,9 +1,9 @@
 // @flow
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
-import { Mention } from './style';
-import { MENTIONS } from 'shared/regexps';
+import { MENTIONS } from '../../../regexps';
+import type { ComponentType } from 'react';
 
-const mentionDecorator = {
+const createMentionsDecorator = (component: ComponentType<Object>) => ({
   strategy: (
     contentBlock: ContentBlock,
     callback: (...args?: Array<any>) => any
@@ -23,7 +23,7 @@ const mentionDecorator = {
       callback(start, start + mention.length);
     });
   },
-  component: Mention,
-};
+  component,
+});
 
-export default mentionDecorator;
+export default createMentionsDecorator;

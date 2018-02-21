@@ -14,8 +14,8 @@ import {
   Line,
   Paragraph,
 } from './style';
-import mentionsDecorator from 'src/components/draftjs-editor/mentions-decorator';
-import linksDecorator from 'src/components/draftjs-editor/links-decorator';
+import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import linksDecorator from 'shared/clients/draft-js/links-decorator';
 
 const codeRenderer = {
   blocks: {
