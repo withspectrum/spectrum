@@ -266,16 +266,17 @@ const cleanInvoices = (invoices: Array<?RawInvoice>) => {
     );
   };
 
-  return invoices.map(
-    invoice =>
-      invoice && {
-        id: invoice.id,
-        date: invoice.date,
-        items: cleanInvoiceItems(invoice.lines.data),
-        total: invoice.total,
-      }
-  );
-  // .filter(invoice => invoice && invoice.total > 0);
+  return invoices
+    .map(
+      invoice =>
+        invoice && {
+          id: invoice.id,
+          date: invoice.date,
+          items: cleanInvoiceItems(invoice.lines.data),
+          total: invoice.total,
+        }
+    )
+    .filter(invoice => invoice && invoice.total > 0);
 };
 
 type AddSIInput = {
