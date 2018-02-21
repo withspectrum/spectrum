@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import mentionsDecorator from '../mentions-decorator/index.web.js';
-import linksDecorator from '../links-decorator/index.web.js';
+import mentionsDecorator from '../mentions-decorator';
+import linksDecorator from '../links-decorator';
 import { Line, Paragraph } from 'src/components/message/style';
 import type { Node } from 'react';
 

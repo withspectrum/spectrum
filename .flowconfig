@@ -14,6 +14,13 @@ suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=spectrum
+module.file_ext=.ios.js
+module.file_ext=.android.js
+module.file_ext=.native.js
+module.file_ext=.web.js
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.json
 
 [lints]
 all=warn
