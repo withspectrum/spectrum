@@ -6,7 +6,7 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
+import { split, ApolloLink } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
@@ -40,14 +40,6 @@ export const createClient = (options?: CreateClientOptions = {}) => {
 
   const retryLink = new RetryLink({
     attempts: (count, operation, error) => {
-      const isPersistedQuery =
-        operation.extensions &&
-        operation.extensions.persistedQuery &&
-        operation.extensions.persistedQuery.sha256Hash;
-      // Don't retry persisted query tries since the persisted query link will
-      // retry those will the full query text
-      if (isPersistedQuery) return false;
-
       const isMutation =
         operation &&
         operation.query &&
@@ -69,16 +61,15 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     },
   });
 
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = createPersistedQueryLink().concat(
-    retryLink.concat(
-      createUploadLink({
-        uri: API_URI,
-        credentials: 'include',
-        headers,
-      })
-    )
-  );
+  const persistedQueryLink = createPersistedQueryLink();
+
+  const uploadLink = createUploadLink({
+    uri: API_URI,
+    credentials: 'include',
+    headers,
+  });
+
+  const httpLink = ApolloLink.from([persistedQueryLink, retryLink, uploadLink]);
 
   // Websocket link for subscriptions
   const wsLink = new WebSocketLink({
