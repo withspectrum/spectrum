@@ -39,9 +39,10 @@ export const recordExists = async (customerId: string): Promise<boolean> => {
 
 export const insertStripeCustomer = async (record: Object): Promise<any> => {
   debug(`Inserting ${record.id}`);
+  const expanded = Object.assign({}, record, { customerId: record.id });
   return await db
     .table('stripeCustomers')
-    .insert(record, { returnChanges: 'always' })
+    .insert(expanded, { returnChanges: 'always' })
     .run()
     .then(
       result =>
@@ -59,10 +60,11 @@ export const replaceStripeCustomer = async (
   customerId: string,
   record: Object
 ): Promise<any> => {
+  const expanded = Object.assign({}, record, { customerId: record.id });
   return await db
     .table('stripeCustomers')
     .getAll(customerId)
-    .replace(record, { returnChanges: 'always' })
+    .replace(expanded, { returnChanges: 'always' })
     .run()
     .then(
       result =>
@@ -78,12 +80,11 @@ export const replaceStripeCustomer = async (
 
 export const insertOrReplaceStripeCustomer = async (customer: RawCustomer) => {
   const exists = await recordExists(customer.id);
-  const expanded = Object.assign({}, customer, { customerId: customer.id });
   if (exists) {
     debug(`Customer record exists, replacing ${customer.id}`);
-    return await replaceStripeCustomer(customer.id, expanded);
+    return await replaceStripeCustomer(customer.id, customer);
   } else {
     debug(`Customer does not exist, inserting ${customer.id}`);
-    return await insertStripeCustomer(expanded);
+    return await insertStripeCustomer(customer);
   }
 };

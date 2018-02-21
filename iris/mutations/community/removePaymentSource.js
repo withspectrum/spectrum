@@ -46,9 +46,13 @@ export default async (
     .then(async () => await StripeUtil.getCustomer(customer.id))
     .then(
       async newCustomer =>
-        await replaceStripeCustomer(newCustomer.id, newCustomer)
+        console.log('newCustomer', newCustomer) ||
+        (await replaceStripeCustomer(newCustomer.id, newCustomer))
     )
-    .then(() => community)
+    .then(
+      replacedCustomer =>
+        console.log('replacedCustomer', replacedCustomer) || community
+    )
     .catch(err => {
       return new UserError(`Error removing payment method: ${err.message}`);
     });
