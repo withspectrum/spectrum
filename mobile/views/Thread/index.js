@@ -7,6 +7,7 @@ import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import Text from '../../components/Text';
 import ThreadContent from '../../components/ThreadContent';
+import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 
 import { Wrapper } from './style';
 
@@ -14,16 +15,7 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   data: {
-    thread?: {
-      id: string,
-      content: {
-        body?: string,
-        title: string,
-      },
-      creator: {
-        name: string,
-      },
-    },
+    thread?: GetThreadType,
   },
 };
 class Thread extends React.Component<Props> {
@@ -35,7 +27,7 @@ class Thread extends React.Component<Props> {
         <Wrapper>
           <ScrollView style={{ flex: 1 }} testID="e2e-thread">
             <Text type="title1">
-              {data.thread.content.title} by {data.thread.creator.name}
+              {data.thread.content.title} by {data.thread.author.user.name}
             </Text>
             {data.thread.content.body && (
               <ThreadContent

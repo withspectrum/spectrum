@@ -38,6 +38,16 @@ Apollo NetworkStatus indicators:
 
 */
 
+export type ViewNetworkHandlerProps = {
+  isLoading: boolean,
+  queryVarIsChanging: boolean,
+  isFetchingMore: boolean,
+  isFetching: boolean,
+  isRefetching: boolean,
+  isPolling: boolean,
+  hasError: boolean,
+};
+
 const ViewNetworkHandler = Component => {
   const C = props => {
     const { data, wrappedComponentRef, ...remainingProps } = props;

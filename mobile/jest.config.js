@@ -16,7 +16,7 @@ const E2E_DETOX_CONFIG = {
 };
 
 const CONFIG = {
-  preset: 'react-native',
+  preset: 'jest-expo',
   testPathIgnorePatterns: ['__e2e__', 'node_modules'],
 };
 

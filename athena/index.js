@@ -18,6 +18,7 @@ import processAdminMessageModeration from './queues/moderationEvents/message';
 import processAdminThreadModeration from './queues/moderationEvents/thread';
 import processUserRequestedJoinPrivateChannel from './queues/private-channel-request-sent';
 import processUserRequestPrivateChannelApproved from './queues/private-channel-request-approved';
+import processPushNotifications from './queues/send-push-notifications';
 import startNotificationsListener from './listeners/notifications';
 import {
   MESSAGE_NOTIFICATION,
@@ -35,6 +36,7 @@ import {
   PROCESS_ADMIN_TOXIC_THREAD,
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
+  SEND_PUSH_NOTIFICATIONS,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3003;
@@ -60,6 +62,7 @@ const server = createWorker({
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
   [PRIVATE_CHANNEL_REQUEST_APPROVED]: processUserRequestPrivateChannelApproved,
+  [SEND_PUSH_NOTIFICATIONS]: processPushNotifications,
 });
 
 startNotificationsListener();

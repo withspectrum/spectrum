@@ -2,22 +2,14 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { ContinueButton } from '../../style';
-import ToggleCommunityMembership from '../../../../components/toggleCommunityMembership';
-import {
-  Row,
-  CoverPhoto,
-  Container,
-  CoverAvatar,
-  CoverTitle,
-  CoverDescription,
-} from '../discoverCommunities/style';
-import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
+import { Row } from '../discoverCommunities/style';
+import { CommunityProfile } from '../../../../components/profile';
 
 type Props = {
   toggleCommunityMembership: Function,
   dispatch: Function,
   joinedFirstCommunity: Function,
+  joinedCommunity: Function,
   community: {
     id: string,
     slug: string,
@@ -30,43 +22,15 @@ type Props = {
 
 class JoinFirstCommunityPure extends React.Component<Props> {
   render() {
-    const { community } = this.props;
+    const { community, joinedCommunity } = this.props;
 
     return (
-      <Row>
-        <Container key={community.id} style={{ alignSelf: 'flex-start' }}>
-          <CoverPhoto url={community.coverPhoto}>
-            <CoverLink to={`/${community.slug}`}>
-              <CoverAvatar
-                community={community}
-                src={`${community.profilePhoto}?w=40&dpr=2`}
-              />
-              <CoverTitle>{community.name}</CoverTitle>
-            </CoverLink>
-          </CoverPhoto>
-
-          {community.metaData &&
-            community.metaData.members && (
-              <CoverSubtitle>
-                {community.metaData.members} members
-              </CoverSubtitle>
-            )}
-
-          <CoverDescription style={{ paddingBottom: '16px' }}>
-            {community.description}
-          </CoverDescription>
-        </Container>
-
-        <Row>
-          <ToggleCommunityMembership
-            community={community}
-            render={({ isLoading }) => (
-              <ContinueButton loading={isLoading}>
-                Join {community.name} and Continue
-              </ContinueButton>
-            )}
-          />
-        </Row>
+      <Row style={{ alignItems: 'flex-start' }}>
+        <CommunityProfile
+          profileSize={'upsell'}
+          data={{ community }}
+          onJoin={() => joinedCommunity(1, true)}
+        />
       </Row>
     );
   }

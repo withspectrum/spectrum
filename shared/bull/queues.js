@@ -42,6 +42,8 @@ exports.QUEUE_NAMES = {
   sendChannelNotificationQueue: 'channel notification',
   sendDirectMessageNotificationQueue: 'direct message notification',
   sendMessageNotificationQueue: 'message notification',
+  sendNotificationAsPushQueue: 'push notifications',
+  slackImportQueue: 'slack import',
 
   // hermes - emails
   sendNewUserWelcomeEmailQueue: 'send new user welcome email',

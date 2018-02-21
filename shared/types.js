@@ -279,6 +279,11 @@ export type DBUsersNotifications = {
   userId: string,
 };
 
+export type DBNotificationsJoin = {
+  ...$Exact<DBUsersNotifications>,
+  ...$Exact<DBNotification>,
+};
+
 type NotificationSetting = { email: boolean };
 export type DBUsersSettings = {
   id: string,
@@ -343,4 +348,10 @@ export type SearchCommunity = {
   slug: string,
   website: ?string,
   objectID: string,
+};
+
+export type DBExpoPushSubscription = {
+  id: string,
+  token: string,
+  userId: string,
 };

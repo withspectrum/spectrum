@@ -4,7 +4,7 @@ import { createSigninRoutes } from './create-signin-routes';
 
 const githubAuthRouter = Router();
 const { main, callbacks } = createSigninRoutes('github', {
-  scope: ['user'],
+  scope: ['read:user,user:email'],
 });
 
 githubAuthRouter.get('/', main);

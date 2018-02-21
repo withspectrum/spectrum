@@ -25,8 +25,8 @@ const Message = /* GraphQL */ `
 		timestamp: Date!
 		thread: Thread
 		content: MessageContent!
-		author: ThreadParticipant!
-		reactions: ReactionData
+    author: ThreadParticipant! @cost(complexity: 2)
+    reactions: ReactionData @cost(complexity: 1)
 		messageType: MessageTypes!
 
 		sender: User! @deprecated(reason:"Use Message.author field instead")

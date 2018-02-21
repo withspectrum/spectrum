@@ -1,3 +1,4 @@
+// @flow
 require('now-env');
 import axios from 'axios';
 const querystring = require('querystring');
@@ -10,7 +11,7 @@ if (!IS_PROD) {
   SLACK_SECRET = SLACK_SECRET || 'asdf123';
 }
 
-export const generateOAuthToken = (code, redirect_uri) => {
+export const generateOAuthToken = (code: string, redirect_uri: string) => {
   return axios
     .post(
       'https://slack.com/api/oauth.access',
@@ -38,11 +39,18 @@ export const generateOAuthToken = (code, redirect_uri) => {
     });
 };
 
-export const createSlackImportRecord = input => {
+type CreateSlackImportType = {
+  token: string,
+  teamName: string,
+  teamId: string,
+  senderId: string,
+  communityId: string,
+};
+export const createSlackImportRecord = (input: CreateSlackImportType) => {
   return db
     .table('slackImports')
     .getAll(input.communityId, { index: 'communityId' })
-    .filter({ userId: input.userId })
+    .filter({ userId: input.senderId })
     .run()
     .then(result => {
       // if a record already exists, return out
@@ -72,7 +80,7 @@ export const createSlackImportRecord = input => {
     });
 };
 
-export const getSlackImport = communityId => {
+export const getSlackImport = (communityId: string) => {
   return db
     .table('slackImports')
     .getAll(communityId, { index: 'communityId' })
@@ -83,7 +91,7 @@ export const getSlackImport = communityId => {
     });
 };
 
-export const markSlackImportAsSent = communityId => {
+export const markSlackImportAsSent = (communityId: string) => {
   return db
     .table('slackImports')
     .getAll(communityId, { index: 'communityId' })

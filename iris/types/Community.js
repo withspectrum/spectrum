@@ -134,19 +134,19 @@ const Community = /* GraphQL */ `
 		reputation: Int
 		pinnedThreadId: String
 		pinnedThread: Thread
-		communityPermissions: CommunityPermissions
-		channelConnection: CommunityChannelsConnection!
-		members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers!
-		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
-		metaData: CommunityMetaData
-		slackImport: SlackImport
-		invoices: [Invoice]
+    communityPermissions: CommunityPermissions @cost(complexity: 1)
+    channelConnection: CommunityChannelsConnection! @cost(complexity: 1)
+    members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
+    threadConnection(first: Int = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
+    metaData: CommunityMetaData @cost(complexity: 10)
+    slackImport: SlackImport @cost(complexity: 2)
+    invoices: [Invoice] @cost(complexity: 1)
 		recurringPayments: [RecurringPayment]
-		isPro: Boolean
-		memberGrowth: GrowthData
-		conversationGrowth: GrowthData
-		topMembers: [User]
-		topAndNewThreads: TopAndNewThreads
+    isPro: Boolean @cost(complexity: 1)
+    memberGrowth: GrowthData @cost(complexity: 10)
+    conversationGrowth: GrowthData @cost(complexity: 3)
+    topMembers: [User] @cost(complexity: 10)
+    topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 
 		hasFeatures: Features
@@ -160,8 +160,8 @@ const Community = /* GraphQL */ `
 	extend type Query {
 		community(id: ID, slug: String): Community
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
-		communityMember(userId: String, communityId: String): CommunityMember		
-		topCommunities(amount: Int = 20): [Community!]
+		communityMember(userId: String, communityId: String): CommunityMember
+    topCommunities(amount: Int = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
 		recentCommunities: [Community!]
 
 		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")

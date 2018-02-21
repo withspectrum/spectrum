@@ -1,22 +1,24 @@
 // @flow
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator, TabBarBottom } from 'react-navigation';
 import theme from '../../components/theme';
-// Tab-Navigators
-import HomeNavigation from './HomeNavigation';
-// import MessagesNavigation from './MessagesNavigation'
-// import NotificationsNavigation from './NotificationsNavigation'
-// import ExploreNavigation from './ExploreNavigation'
-// import ProfileNavigation from './ProfileNavigation'
+
+// Stacks for the individual views
+import HomeStack from './HomeStack';
+import NotificationsStack from './NotificationsStack';
 
 const routeConfiguration = {
-  Home: { screen: HomeNavigation },
-  Messages: { screen: HomeNavigation },
-  Explore: { screen: HomeNavigation },
-  Notifications: { screen: HomeNavigation },
-  Profile: { screen: HomeNavigation },
+  Home: { screen: HomeStack },
+  Messages: { screen: HomeStack },
+  Explore: { screen: HomeStack },
+  Notifications: { screen: NotificationsStack },
+  Profile: { screen: HomeStack },
 };
+
 const tabBarConfiguration = {
-  //...other configs
+  tabBarComponent: TabBarBottom,
+  tabBarPosition: 'bottom',
+  animationEnabled: false,
+  swipeEnabled: false,
   tabBarOptions: {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: theme.bg.default,

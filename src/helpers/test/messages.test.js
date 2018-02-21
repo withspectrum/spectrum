@@ -11,12 +11,14 @@ const createMessage = ({
   timestamp,
   body,
   authorId,
+  id,
 }: {
   timestamp?: Date,
   body?: string,
   authorId?: string,
+  id?: string | number,
 }): Message => ({
-  id: 'whatever',
+  id: id || 'whatever',
   timestamp: timestamp || new Date(FIRST_JAN),
   content: {
     body: body || 'Hey',
@@ -117,8 +119,7 @@ describe('lastSeen', () => {
     expect(result[2][0].message.type).toEqual('unseen-messages-below');
   });
 
-  // NOTE(@mxstbr): This is a bug, is fixed in #2192, can remove the .skip here after that's merged
-  it.skip('should only insert one last seen robotext between messages from different users', () => {
+  it('should only insert one last seen robotext between messages from different users', () => {
     const first = createMessage({
       timestamp: new Date(FIRST_JAN),
       authorId: 'first',
@@ -188,5 +189,63 @@ describe('lastSeen', () => {
         group[0].message.type === 'unseen-messages-below'
     );
     expect(robotexts).toHaveLength(1);
+  });
+
+  it('should not insert a last seen timestamp if the next message is an optimistic response', () => {
+    const first = createMessage({
+      timestamp: new Date(FIRST_JAN),
+      authorId: 'first',
+    });
+    const second = createMessage({
+      timestamp: new Date(FIRST_JAN + 5000),
+      authorId: 'second',
+    });
+    const third = createMessage({
+      timestamp: new Date(FIRST_JAN + 10000),
+      authorId: 'first',
+      // A numeric ID marks the message as an optimistic response
+      id: 123123,
+    });
+
+    const messages = [first, second, third];
+
+    const result = sortAndGroupMessages(messages, FIRST_JAN + 7500);
+
+    expect(
+      result.some(group =>
+        group.some(
+          ({ message }) => message && message.type === 'unseen-messages-below'
+        )
+      )
+    ).toEqual(false);
+  });
+
+  it('should not insert a last seen timestamp if one of the later messages is an optimistic response', () => {
+    const first = createMessage({
+      timestamp: new Date(FIRST_JAN),
+      authorId: 'first',
+    });
+    const second = createMessage({
+      timestamp: new Date(FIRST_JAN + 5000),
+      authorId: 'second',
+    });
+    const third = createMessage({
+      timestamp: new Date(FIRST_JAN + 10000),
+      authorId: 'first',
+      // A numeric ID marks the message as an optimistic response
+      id: 123123,
+    });
+
+    const messages = [first, second, third];
+
+    const result = sortAndGroupMessages(messages, FIRST_JAN + 2500);
+
+    expect(
+      result.some(group =>
+        group.some(
+          ({ message }) => message && message.type === 'unseen-messages-below'
+        )
+      )
+    ).toEqual(false);
   });
 });
