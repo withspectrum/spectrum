@@ -70,6 +70,12 @@ jobs:
           command: |
             brew tap wix/brew
             brew install applesimutils --HEAD
+            npm install -g detox-cli
+      - run:
+          name: Rebuild Detox frameworks
+          command: |
+            detox clean-framework-cache
+            detox build-framework-cache
       - run: cd ./mobile && yarn test:e2e
 
 workflows:
