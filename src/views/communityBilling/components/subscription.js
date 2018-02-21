@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
+import type { SubscriptionType } from 'shared/graphql/fragments/community/communitySettings';
 import Link from '../../../components/link';
 import {
   LineItem,
@@ -12,14 +14,27 @@ import {
   LineItemPrice,
 } from '../style';
 
-class Subscription extends React.Component<{}> {
-  formatAmount = amount =>
+type Props = {
+  subscription: SubscriptionType,
+  community: GetCommunitySettingsType,
+};
+type LineItemType = {
+  id: string,
+  created: Date,
+  planId: string,
+  planName: string,
+  amount: number,
+  quantity: number,
+};
+
+class Subscription extends React.Component<Props> {
+  formatAmount = (amount: number): string =>
     (amount / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 
   totalLineItem = () => {
     const { subscription } = this.props;
     const subtotal = subscription.items.reduce(
-      (sum, item) => (sum += item.amount * item.quantity),
+      (sum, item) => item && (sum += item.amount * item.quantity),
       0
     );
     const periodEnd = new Date(subscription.current_period_end * 1000);
@@ -50,7 +65,7 @@ class Subscription extends React.Component<{}> {
           </LineItemLeft>
           <LineItemRight>
             <LineItemTitleTotal>
-              ${this.formatAmount(subtotal)}
+              ${subtotal && subtotal > 0 ? this.formatAmount(subtotal) : 0}
             </LineItemTitleTotal>
           </LineItemRight>
         </LineItemTotal>
@@ -58,11 +73,13 @@ class Subscription extends React.Component<{}> {
     }
 
     const calcTotal = subtotal => {
-      if (subscription.discount.amount_off) {
+      if (!subtotal || subtotal === 0) return 0;
+
+      if (subscription.discount && subscription.discount.amount_off) {
         return subtotal - subscription.discount.amount_off;
       }
 
-      if (subscription.discount.percent_off) {
+      if (subscription.discount && subscription.discount.percent_off) {
         return subtotal - subtotal * (subscription.discount.percent_off / 100);
       }
 
@@ -70,26 +87,30 @@ class Subscription extends React.Component<{}> {
     };
 
     const total = calcTotal(subtotal);
-    const discountString = subscription.discount.amount_off
-      ? `-$${subscription.discount.amount_off}`
-      : `-${subscription.discount.percent_off}%`;
+    const discountString =
+      subscription.discount && subscription.discount.amount_off
+        ? `-$${subscription.discount.amount_off}`
+        : subscription.discount && subscription.discount.percent_off
+          ? `-${subscription.discount.percent_off}%`
+          : null;
 
     return (
       <LineItemTotal key={subscription.id}>
         <LineItemLeft>
           <LineItemDescription>Subtotal</LineItemDescription>
           <LineItemDescription>
-            Discount · {subscription.discount.id}
+            Discount · {subscription.discount && subscription.discount.id}
           </LineItemDescription>
           <LineItemTitleTotal>Estimated Total</LineItemTitleTotal>
           <LineItemDescription>
-            Your next invoice will be on `${periodEnd.getMonth()} ${periodEnd.getDay()},
-            ${periodEnd.getFullYear()}`
+            Your next invoice will be on {months[periodEnd.getMonth()]}{' '}
+            {periodEnd.getDate()},
+            {periodEnd.getFullYear()}
           </LineItemDescription>
         </LineItemLeft>
         <LineItemRight>
           <LineItemDescription>
-            ${this.formatAmount(subtotal)}
+            ${subtotal && subtotal > 0 ? this.formatAmount(subtotal) : 0}
           </LineItemDescription>
           <LineItemDescription>{discountString}</LineItemDescription>
           <LineItemTitleTotal>${this.formatAmount(total)}</LineItemTitleTotal>
@@ -98,7 +119,7 @@ class Subscription extends React.Component<{}> {
     );
   };
 
-  communityAnalytics = lineItem => (
+  communityAnalytics = (lineItem: LineItemType) => (
     <LineItem key={lineItem.id}>
       <LineItemLeft>
         <LineItemTitle>Community analytics</LineItemTitle>
@@ -109,7 +130,7 @@ class Subscription extends React.Component<{}> {
     </LineItem>
   );
 
-  prioritySupport = lineItem => (
+  prioritySupport = (lineItem: LineItemType) => (
     <LineItem key={lineItem.id}>
       <LineItemLeft>
         <LineItemTitle>Priority support</LineItemTitle>
@@ -120,7 +141,7 @@ class Subscription extends React.Component<{}> {
     </LineItem>
   );
 
-  moderatorSeat = lineItem => (
+  moderatorSeat = (lineItem: LineItemType) => (
     <LineItem key={lineItem.id}>
       <LineItemLeft>
         <LineItemTitle>Moderator seat</LineItemTitle>
@@ -137,7 +158,7 @@ class Subscription extends React.Component<{}> {
     </LineItem>
   );
 
-  privateChannel = lineItem => (
+  privateChannel = (lineItem: LineItemType) => (
     <LineItem key={lineItem.id}>
       <LineItemLeft>
         <LineItemTitle>Private channel</LineItemTitle>
@@ -155,7 +176,7 @@ class Subscription extends React.Component<{}> {
     </LineItem>
   );
 
-  parseLineItem = lineItem => {
+  parseLineItem = (lineItem: LineItemType) => {
     switch (lineItem.planId) {
       case 'community-analytics':
         return this.communityAnalytics(lineItem);
@@ -173,10 +194,10 @@ class Subscription extends React.Component<{}> {
 
     return (
       <div>
-        {subscription.items.map(item => this.parseLineItem(item))}
+        {subscription.items.map(item => item && this.parseLineItem(item))}
         {this.totalLineItem()}
         <LineItemDescription style={{ marginTop: '16px' }}>
-          Spectrum automatically adjusts each month's total invoice by only
+          Spectrum automatically adjusts each month’s total invoice by only
           measuring what features you used, and for how long. As a result, your
           statements may show a total bill amount higher or lower than the
           estimate above.

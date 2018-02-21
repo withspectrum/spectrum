@@ -10,6 +10,7 @@ import type { CommunityMetaDataType } from '../../fragments/community/communityM
 
 export type GetCommunitySettingsType = {
   ...$Exact<CommunityInfoType>,
+  ...$Exact<CommunityMetaDataType>,
   ...$Exact<CommunitySettingsType>,
 };
 

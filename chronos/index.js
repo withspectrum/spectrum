@@ -55,6 +55,7 @@ console.log(
   }`
 );
 
+// $FlowIssue
 server.listen(PORT, 'localhost', () => {
   console.log(
     `💉 Healthcheck server running at ${server.address().address}:${

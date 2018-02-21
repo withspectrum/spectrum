@@ -1,18 +1,20 @@
 // @flow
 import gql from 'graphql-tag';
 
-type SubscriptionType = {
+export type SubscriptionType = {
   id: string,
   created: Date,
   status: string,
   billing_cycle_anchor: Date,
-  canceled_at: ?Date,
+  current_period_end: Date,
+  canceled_at: Date,
   discount: ?{
     amount_off: ?number,
     percent_off: ?number,
     id: string,
   },
   items: Array<?{
+    id: string,
     created: Date,
     planId: string,
     planName: string,
