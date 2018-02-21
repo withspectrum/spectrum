@@ -68,20 +68,12 @@ const Community = /* GraphQL */ `
 		isDefault: Boolean
 	}
 
-	type StripePlan {
-		id: ID
-		amount: Int
-		created: Int
-		name: String
-	}
-
 	type StripeItem {
 		id: ID
 		amount: Int
-		period_start: Int
-		period_end: Int
-		plan: StripePlan
 		quantity: Int
+		planId: String
+		planName: String
 	}
 
 	type StripeSubscriptionItem {
@@ -112,13 +104,8 @@ const Community = /* GraphQL */ `
 
 	type StripeInvoice {
 		id: ID
-		customerId: String
-		date: Date
+		date: Int
 		items: [StripeItem]
-		paid: Boolean
-		period_end: Date
-		period_start: Date
-		subscription: StripeSubscription
 		total: Int
 	}
 

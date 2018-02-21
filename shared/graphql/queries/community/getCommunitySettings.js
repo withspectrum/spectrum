@@ -53,6 +53,7 @@ const getCommunitySettingsByMatchOptions = {
     variables: {
       slug: communitySlug.toLowerCase(),
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

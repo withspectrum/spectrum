@@ -20,6 +20,7 @@ import StripeCardForm from '../../components/stripeCardForm';
 import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
 import Source from './components/source';
+import Invoice from './components/invoice';
 
 type Props = {
   currentUser: Object,
@@ -135,7 +136,8 @@ class CommunityMembersSettings extends React.Component<Props> {
                 </SectionSubtitle>
               )}
               {community.billingSettings.invoices.map(
-                invoice => invoice && <p key={invoice.id}>{invoice.id}</p>
+                invoice =>
+                  invoice && <Invoice key={invoice.id} invoice={invoice} />
               )}
             </SectionCard>
 

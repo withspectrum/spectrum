@@ -58,6 +58,8 @@ export default gql`
       }
       invoices {
         id
+        date
+        total
       }
       subscriptions {
         id

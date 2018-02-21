@@ -26,6 +26,10 @@ export const SourceContainer = styled.div`
 export const SourceContentContainer = styled.div`
   display: flex;
   align-items: center;
+
+  img {
+    margin-right: 12px;
+  }
 `;
 
 export const SourceText = styled.div`
@@ -33,7 +37,6 @@ export const SourceText = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-left: 12px;
 `;
 export const SourceName = styled.p`
   line-height: 1.3;

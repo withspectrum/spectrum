@@ -6,6 +6,7 @@ import type { RawSubscription } from 'shared/stripe/types/subscription';
 import type { DBCommunity } from 'shared/types';
 import type { SubscriptionItem } from 'shared/stripe/types/subscriptionItem';
 import type { RawSource } from 'shared/stripe/types/source';
+import type { RawInvoice } from 'shared/stripe/types/invoice';
 import { getCommunityById, setStripeCustomerId } from 'iris/models/community';
 
 const getCustomer = async (customerId: string): Promise<RawCustomer> => {
@@ -251,6 +252,33 @@ const cleanSubscriptions = (customer: RawCustomer): Array<?Object> => {
   );
 };
 
+const cleanInvoices = (invoices: Array<?RawInvoice>) => {
+  if (!invoices || invoices.length === 0) return [];
+
+  const cleanInvoiceItems = items => {
+    return items.map(
+      item =>
+        item && {
+          id: item.id,
+          amount: item.plan.amount,
+          quantity: item.quantity,
+          planId: item.plan.id,
+          planName: item.plan.name,
+        }
+    );
+  };
+
+  return invoices.map(
+    invoice =>
+      invoice && {
+        id: invoice.id,
+        date: invoice.date,
+        items: cleanInvoiceItems(invoice.lines.data),
+        total: invoice.total,
+      }
+  );
+};
+
 type AddSIInput = {
   subscriptionId: string,
   subscriptionItemType: string,
@@ -351,6 +379,7 @@ export const StripeUtil = {
   hasSubscriptionItemOfType,
   getSubscriptionItemOfType,
   cleanSubscriptions,
+  cleanInvoices,
   createCustomer,
   deleteCustomer,
   updateCustomer,
