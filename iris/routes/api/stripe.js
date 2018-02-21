@@ -11,13 +11,7 @@ stripeRouter.get('/reset', async (req, res) => {
   const deleteCustomers = customers.data.map(
     async customer => await stripe.customers.del(customer.id)
   );
-  const stripeTables = [
-    'stripeCustomers',
-    'stripeCharges',
-    'stripeSubscriptions',
-    'stripeInvoices',
-    'stripeSources',
-  ];
+  const stripeTables = ['stripeCustomers', 'stripeInvoices'];
   const deleteDB = stripeTables.map(
     async table =>
       await db

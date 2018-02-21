@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('iris:mutations:community:add-payment-source');
 import type { GraphQLContext } from '../../';
-import { replaceStripeCustomer } from '../../models/stripeCustomers';
+import { insertOrReplaceStripeCustomer } from '../../models/stripeCustomers';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
 
@@ -45,7 +45,7 @@ export default async (
   // is in sync with stripe. Normally we defer this to webhooks, but since
   // this event needs updated data to respond to something the user is doing
   // *right now* we manually update the Stripe customer record in our db
-  return await replaceStripeCustomer(newCustomer)
+  return await insertOrReplaceStripeCustomer(newCustomer)
     .then(() => community)
     .catch(err => {
       return new UserError('We had trouble saving your card', err.message);

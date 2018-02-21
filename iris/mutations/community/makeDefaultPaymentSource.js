@@ -44,7 +44,10 @@ export default async (
 
   return changeDefaultSource()
     .then(async () => await StripeUtil.getCustomer(customer.id))
-    .then(async newCustomer => await replaceStripeCustomer(newCustomer))
+    .then(
+      async newCustomer =>
+        await replaceStripeCustomer(newCustomer.id, newCustomer)
+    )
     .then(() => community)
     .catch(err => {
       return new UserError('Error changing default method: ', err.message);

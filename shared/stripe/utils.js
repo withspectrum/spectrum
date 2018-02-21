@@ -322,6 +322,9 @@ const jobPreflight = async (communityId: string): Promise<PreflightCheck> => {
       communityName: name,
     });
     customer = createdCustomer.customer;
+    // if a customer was created in the preflight, always make sure to return
+    // the updated community with the stripeCustomerId field set
+    dbCommunity = await getCommunityById(communityId);
   }
 
   debug('Preflight check completing...');

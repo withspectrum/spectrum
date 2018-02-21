@@ -34,7 +34,6 @@ export const addPaymentSourceMutation = gql`
 const addPaymentSourceOptions = {
   props: ({ mutate }) => ({
     addPaymentSource: (input: AddPaymentSourceInput) =>
-      console.log('input', input) ||
       mutate({
         variables: {
           input,
