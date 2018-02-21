@@ -74,6 +74,7 @@ jobs:
       - run:
           name: Rebuild Detox frameworks
           command: |
+            cd ./mobile
             detox clean-framework-cache
             detox build-framework-cache
       - run: cd ./mobile && yarn test:e2e
