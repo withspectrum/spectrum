@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import enableCommunityAnalytics from 'shared/graphql/mutations/community/enableCommunityAnalytics';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import { openModal } from 'src/actions/modals';
 import {
   Container,
   Content,
@@ -48,7 +49,11 @@ class AnalyticsUpsell extends React.Component<Props, State> {
       });
   };
 
-  initAddPaymentMethod = () => {};
+  initAddPaymentMethod = () => {
+    return this.props.dispatch(
+      openModal('UPGRADE_ANALYTICS_MODAL', { community: this.props.community })
+    );
+  };
 
   render() {
     const { isLoading } = this.state;

@@ -14,6 +14,7 @@ type Props = {
   addPaymentSource: Function,
   children: Function,
   dispatch: Function,
+  onCardSaved: ?Function,
 };
 
 type State = {
@@ -48,6 +49,7 @@ class Form extends React.Component<Props, State> {
       .addPaymentSource(input)
       .then(() => {
         this.setState({ isLoading: false });
+        this.props.onCardSaved && this.props.onCardSaved();
         return this.props.dispatch(
           addToastWithTimeout('success', 'Card saved')
         );

@@ -5,6 +5,7 @@ import communityInfoFragment from 'shared/graphql/fragments/community/communityI
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communitySettingsFragment from '../../fragments/community/communitySettings';
 import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
+import { getCommunitySettingsByMatchQuery } from '../../queries/community/getCommunitySettings';
 
 export type CancelSubscriptionType = {
   data: {
@@ -31,11 +32,34 @@ export const cancelSubscriptionMutation = gql`
 `;
 
 const cancelSubscriptionOptions = {
-  props: ({ mutate }) => ({
+  props: ({ ownProps, mutate }) => ({
     cancelSubscription: (input: CancelSubscriptionInput) =>
       mutate({
         variables: {
           input,
+        },
+        update: store => {
+          console.log(ownProps);
+          const data = store.readQuery({
+            query: getCommunitySettingsByMatchQuery,
+            variables: {
+              slug: ownProps.slug,
+            },
+          });
+
+          data.community.billingSettings = {
+            ...data.community.billingSettings,
+            subscriptions: [],
+            __typename: 'BillingSettings',
+          };
+
+          store.writeQuery({
+            query: getCommunitySettingsByMatchQuery,
+            data,
+            variables: {
+              slug: ownProps.slug,
+            },
+          });
         },
       }),
   }),

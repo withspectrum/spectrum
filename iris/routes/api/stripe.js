@@ -28,6 +28,7 @@ stripeRouter.get('/reset', async (req, res) => {
         .update({
           stripeCustomerId: null,
           administratorEmail: null,
+          analyticsEnabled: false,
         })
         .run();
     })

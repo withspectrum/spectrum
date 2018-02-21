@@ -5,6 +5,7 @@ import communityInfoFragment from 'shared/graphql/fragments/community/communityI
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communitySettingsFragment from 'shared/graphql/fragments/community/communitySettings';
 import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
+import { getCommunitySettingsByMatchQuery } from '../../queries/community/getCommunitySettings';
 
 export type EnableCommunityAnalyticsType = {
   data: {
@@ -31,11 +32,35 @@ export const enableCommunityAnalyticsMutation = gql`
 `;
 
 const enableCommunityAnalyticsOptions = {
-  props: ({ mutate }) => ({
+  props: ({ mutate, ownProps }) => ({
     enableCommunityAnalytics: (input: EnableCommunityAnalyticsInput) =>
       mutate({
         variables: {
           input,
+        },
+        update: store => {
+          const data = store.readQuery({
+            query: getCommunitySettingsByMatchQuery,
+            variables: {
+              slug: ownProps.community.slug,
+            },
+          });
+
+          console.log('analytics data', data);
+
+          data.community.hasFeatures = {
+            ...data.community.hasFeatures,
+            analytics: true,
+            __typename: 'Features',
+          };
+
+          store.writeQuery({
+            query: getCommunitySettingsByMatchQuery,
+            data,
+            variables: {
+              slug: ownProps.community.slug,
+            },
+          });
         },
       }),
   }),

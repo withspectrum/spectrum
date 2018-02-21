@@ -15,7 +15,7 @@ export const Container = styled.div`
   background-size: 500px auto;
 
   @media (max-width: 1020px) {
-    padding: 32px 16px;
+    padding: 32px 24px;
     background-position: 120% 150%;
     background-size: 400px auto;
   }
@@ -74,6 +74,7 @@ export const ActionRow = styled.div`
 
     button:first-of-type {
       margin-bottom: 16px;
+      margin-right: 0;
     }
 
     button {

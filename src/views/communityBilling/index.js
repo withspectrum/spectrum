@@ -42,6 +42,7 @@ class CommunityMembersSettings extends React.Component<Props> {
         id: this.props.community.id,
         entity: 'community-subscription',
         message,
+        slug: this.props.community.slug,
       })
     );
   };

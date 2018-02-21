@@ -18,11 +18,9 @@ export default async (
     return new UserError('No communityId found');
   }
 
-  return await updateCommunityPaidFeature(
-    communityId,
-    'analyticsEnabled',
-    true
-  ).catch(err => {
-    return new UserError('We had trouble saving your card', err.message);
-  });
+  return await updateCommunityPaidFeature(communityId, 'analyticsEnabled', true)
+    .then(result => console.log(result) || result)
+    .catch(err => {
+      return new UserError('We had trouble saving your card', err.message);
+    });
 };
