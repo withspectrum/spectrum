@@ -22,8 +22,7 @@ exports.up = async (r, conn) => {
 
   // gets all the owner records in a community, figures out which one is the oldest,
   // then uses that record to populate an administratorEmail and administratorId field
-  // if they exist - Pluto should be running before this migration in order to take
-  // advantage of the customer creation changefeeds
+  // if they exist
   const oldestOwners = await r
     .table('usersCommunities')
     .filter({ isOwner: true })

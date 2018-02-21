@@ -17,12 +17,12 @@ import { Spinner } from '../../../components/globals';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
 import MutationWrapper from './mutationWrapper';
 import removePaymentSource from 'shared/graphql/mutations/community/removePaymentSource';
-import makeDefaultPaymentSource from 'shared/graphql/mutations/community/makeDefaultPaymentSource';
+import makePaymentSourceDefault from 'shared/graphql/mutations/community/makePaymentSourceDefault';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
   removePaymentSource: Function,
-  makeDefaultPaymentSource: Function,
+  makePaymentSourceDefault: Function,
   dispatch: Function,
   community: GetCommunitySettingsType,
   source: {
@@ -56,7 +56,7 @@ class EditDropdown extends React.Component<Props, State> {
   render() {
     const { isOpen } = this.state;
     const {
-      makeDefaultPaymentSource,
+      makePaymentSourceDefault,
       removePaymentSource,
       source,
     } = this.props;
@@ -72,7 +72,7 @@ class EditDropdown extends React.Component<Props, State> {
                 <MutationWrapper
                   key={1}
                   onMutationEnd={this.close}
-                  mutation={source.isDefault ? null : makeDefaultPaymentSource}
+                  mutation={source.isDefault ? null : makePaymentSourceDefault}
                   variables={{ input: this.input }}
                   render={({ isLoading }) => (
                     <DropdownSection>
@@ -132,6 +132,6 @@ class EditDropdown extends React.Component<Props, State> {
 export default compose(
   connect(),
   withRouter,
-  makeDefaultPaymentSource,
+  makePaymentSourceDefault,
   removePaymentSource
 )(EditDropdown);

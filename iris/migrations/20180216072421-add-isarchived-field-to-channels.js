@@ -1,5 +1,3 @@
-require('now-env');
-
 // creates a new field on channels which indicates it is read-only, which
 // is much easier to write logic around than our current method of always
 // checking to see a communities payments status before determining the

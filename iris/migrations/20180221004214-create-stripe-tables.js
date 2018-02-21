@@ -1,5 +1,3 @@
-require('now-env');
-
 exports.up = function(r, conn) {
   const createCustomersTable = () =>
     r.tableCreate('stripeCustomers', { primaryKey: 'customerId' }).run(conn);

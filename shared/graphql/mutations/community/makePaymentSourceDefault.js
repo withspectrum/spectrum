@@ -6,7 +6,7 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communitySettingsFragment from '../../fragments/community/communitySettings';
 import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
 
-export type MakeDefaultPaymentSourceType = {
+export type MakePaymentSourceDefaultType = {
   data: {
     MakeDefaultSource: {
       ...$Exact<CommunityInfoType>,
@@ -15,14 +15,14 @@ export type MakeDefaultPaymentSourceType = {
   },
 };
 
-type MakeDefaultPaymentSourceInput = {
+type MakePaymentSourceDefaultInput = {
   sourceId: string,
   communityId: string,
 };
 
-export const makeDefaultPaymentSourceMutation = gql`
-  mutation makeDefaultPaymentSource($input: MakeDefaultPaymentSourceInput!) {
-    makeDefaultPaymentSource(input: $input) {
+export const makePaymentSourceDefaultMutation = gql`
+  mutation makePaymentSourceDefault($input: MakePaymentSourceDefaultInput!) {
+    makePaymentSourceDefault(input: $input) {
       ...communityInfo
       ...communitySettings
     }
@@ -31,9 +31,9 @@ export const makeDefaultPaymentSourceMutation = gql`
   ${communitySettingsFragment}
 `;
 
-const makeDefaultPaymentSourceOptions = {
+const makePaymentSourceDefaultOptions = {
   props: ({ mutate }) => ({
-    makeDefaultPaymentSource: (input: MakeDefaultPaymentSourceInput) =>
+    makePaymentSourceDefault: (input: MakePaymentSourceDefaultInput) =>
       mutate({
         variables: {
           input,
@@ -43,6 +43,6 @@ const makeDefaultPaymentSourceOptions = {
 };
 
 export default graphql(
-  makeDefaultPaymentSourceMutation,
-  makeDefaultPaymentSourceOptions
+  makePaymentSourceDefaultMutation,
+  makePaymentSourceDefaultOptions
 );

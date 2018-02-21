@@ -232,7 +232,7 @@ const Community = /* GraphQL */ `
 		communityId: ID!
 	}
 
-	input MakeDefaultPaymentSourceInput {
+	input MakePaymentSourceDefaultInput {
 		sourceId: String!
 		communityId: ID!
 	}
@@ -258,7 +258,7 @@ const Community = /* GraphQL */ `
 		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
 		addPaymentSource(input: AddPaymentSourceInput!): Community
 		removePaymentSource(input: RemovePaymentSourceInput!): Community
-		makeDefaultPaymentSource(input: MakeDefaultPaymentSourceInput!): Community
+		makePaymentSourceDefault(input: MakePaymentSourceDefaultInput!): Community
 		cancelSubscription(input: CancelSubscriptionInput!): Community
 		enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
 	}

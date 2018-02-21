@@ -9,7 +9,7 @@ import pinThread from './pinThread';
 import updateAdministratorEmail from './updateAdministratorEmail';
 import addPaymentSource from './addPaymentSource';
 import removePaymentSource from './removePaymentSource';
-import makeDefaultPaymentSource from './makeDefaultPaymentSource';
+import makePaymentSourceDefault from './makePaymentSourceDefault';
 import cancelSubscription from './cancelSubscription';
 import enableCommunityAnalytics from './enableCommunityAnalytics';
 
@@ -25,7 +25,7 @@ module.exports = {
     updateAdministratorEmail,
     addPaymentSource,
     removePaymentSource,
-    makeDefaultPaymentSource,
+    makePaymentSourceDefault,
     cancelSubscription,
     enableCommunityAnalytics,
   },
