@@ -3,14 +3,14 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import communityBillingSettingsFragment from '../../fragments/community/communityBillingSettings';
-import type { CommunityBillingSettingsType } from '../../fragments/community/communityBillingSettings';
+import communitySettingsFragment from '../../fragments/community/communitySettings';
+import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
 
 export type AddPaymentSourceType = {
   data: {
     MakeDefaultSource: {
       ...$Exact<CommunityInfoType>,
-      ...$Exact<CommunityBillingSettingsType>,
+      ...$Exact<CommunitySettingsType>,
     },
   },
 };
@@ -24,11 +24,11 @@ export const addPaymentSourceMutation = gql`
   mutation addPaymentSource($input: AddPaymentSourceInput!) {
     addPaymentSource(input: $input) {
       ...communityInfo
-      ...communityBillingSettings
+      ...communitySettings
     }
   }
   ${communityInfoFragment}
-  ${communityBillingSettingsFragment}
+  ${communitySettingsFragment}
 `;
 
 const addPaymentSourceOptions = {

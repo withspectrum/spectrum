@@ -6,11 +6,11 @@ import compose from 'recompose/compose';
 import addPaymentSourceMutation from 'shared/graphql/mutations/community/addPaymentSource';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { style, Actions } from './style';
-import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
   stripe: Object,
-  community: GetCommunityBillingSettingsType,
+  community: GetCommunitySettingsType,
   addPaymentSource: Function,
   children: Function,
   dispatch: Function,

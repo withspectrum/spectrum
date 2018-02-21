@@ -30,7 +30,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  if (!community.hasAnalytics) {
+  if (!community.analyticsEnabled) {
     debug(`Analytics already turned off ${communityId}`);
     return;
   }

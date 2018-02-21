@@ -21,7 +21,12 @@ type SubscriptionType = {
   }>,
 };
 
-export type CommunityBillingSettingsType = {
+export type CommunitySettingsType = {
+  hasChargeableSource: boolean,
+  hasFeatures: {
+    analytics: boolean,
+    prioritySupport: boolean,
+  },
   billingSettings: {
     administratorEmail: ?string,
     pendingAdministratorEmail?: ?string,
@@ -32,7 +37,12 @@ export type CommunityBillingSettingsType = {
 };
 
 export default gql`
-  fragment communityBillingSettings on Community {
+  fragment communitySettings on Community {
+    hasChargeableSource
+    hasFeatures {
+      analytics
+      prioritySupport
+    }
     billingSettings {
       administratorEmail
       pendingAdministratorEmail

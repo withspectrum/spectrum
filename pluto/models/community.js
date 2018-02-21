@@ -37,7 +37,7 @@ export const setCommunityAnalytics = (communityId: string, value: boolean) => {
     .table('communities')
     .get(communityId)
     .update({
-      hasAnalytics: value,
+      analyticsEnabled: value,
     })
     .run();
 };
@@ -47,7 +47,7 @@ export const setPrioritySupport = (communityId: string, value: boolean) => {
     .table('communities')
     .get(communityId)
     .update({
-      hasPrioritySupport: value,
+      prioritySupportEnabled: value,
     })
     .run();
 };

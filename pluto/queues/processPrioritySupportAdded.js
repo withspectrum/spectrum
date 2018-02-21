@@ -30,7 +30,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  if (!community.hasPrioritySupport) {
+  if (!community.prioritySupportEnabled) {
     debug(`Priority support already turned off ${communityId}`);
     return;
   }

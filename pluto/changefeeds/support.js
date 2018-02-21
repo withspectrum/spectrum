@@ -9,11 +9,11 @@ import {
 } from 'shared/bull/queues';
 
 export const supportChanged = () =>
-  listenToChangedFieldIn(db, 'hasPrioritySupport')(
+  listenToChangedFieldIn(db, 'prioritySupportEnabled')(
     'communities',
     (community: DBCommunity) => {
-      debug('hasPrioritySupport field changed');
-      if (community.hasPrioritySupport) {
+      debug('prioritySupportEnabled field changed');
+      if (community.prioritySupportEnabled) {
         debug(`Community ${community.name} has added priority support`);
         return stripeCommunityPrioritySupportAddedQueue.add({
           communityId: community.id,

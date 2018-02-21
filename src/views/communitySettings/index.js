@@ -2,7 +2,7 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -80,7 +80,13 @@ class CommunitySettings extends React.Component<Props> {
           case 'members':
             return <Members community={community} history={history} />;
           case 'billing':
-            return <Billing id={community.id} history={history} />;
+            return (
+              <Billing
+                community={community}
+                id={community.id}
+                history={history}
+              />
+            );
           default:
             return null;
         }
@@ -187,6 +193,8 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityByMatch, viewNetworkHandler)(
-  CommunitySettings
-);
+export default compose(
+  connect(),
+  getCommunitySettingsByMatch,
+  viewNetworkHandler
+)(CommunitySettings);

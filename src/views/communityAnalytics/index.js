@@ -3,30 +3,23 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { openModal } from '../../actions/modals';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import ViewError from '../../components/viewError';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
+import AnalyticsUpsell from './components/analyticsUpsell';
 import {
   SectionsContainer,
   Column,
 } from '../../components/settingsViews/style';
-import { Loading } from '../../components/loading';
 
 type Props = {
   currentUser: Object,
-  data: {
-    community: GetCommunityType,
-  },
+  community: GetCommunitySettingsType,
   communitySlug: string,
-  isLoading: boolean,
-  hasError: boolean,
   dispatch: Function,
   match: Object,
 };
@@ -36,34 +29,12 @@ type State = {
 };
 
 class CommunityAnalytics extends React.Component<Props, State> {
-  upgrade = () => {
-    const { dispatch, currentUser, data: { community } } = this.props;
-    dispatch(
-      openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })
-    );
-  };
-
   render() {
-    const { data: { community }, isLoading } = this.props;
-    console.log(community);
+    const { community } = this.props;
 
     if (community && community.id) {
-      if (!community.isPro) {
-        return (
-          <ViewError
-            emoji={'💪'}
-            heading={'Supercharge your community with Spectrum Analytics.'}
-            subheading={
-              'To explore analytics for your community, unlock private channels, add multiple moderators, and more, please upgrade to the standard plan.'
-            }
-          >
-            <ButtonRow>
-              <Button onClick={this.upgrade} large>
-                Upgrade to Standard
-              </Button>
-            </ButtonRow>
-          </ViewError>
-        );
+      if (!community.hasFeatures || !community.hasFeatures.analytics) {
+        return <AnalyticsUpsell community={community} />;
       }
 
       return (
@@ -78,10 +49,6 @@ class CommunityAnalytics extends React.Component<Props, State> {
           </Column>
         </SectionsContainer>
       );
-    }
-
-    if (isLoading) {
-      return <Loading />;
     }
 
     return (
@@ -108,7 +75,5 @@ class CommunityAnalytics extends React.Component<Props, State> {
 const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
-  connect(map),
-  getCommunityById,
-  viewNetworkHandler
+  connect(map)
 )(CommunityAnalytics);

@@ -130,6 +130,11 @@ const Community = /* GraphQL */ `
 		subscriptions: [StripeSubscription]
 	}
 
+	type Features {
+		analytics: Boolean
+		prioritySupport: Boolean
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -157,8 +162,7 @@ const Community = /* GraphQL */ `
 		topAndNewThreads: TopAndNewThreads
 		watercooler: Thread
 
-		hasAnalytics: Boolean
-		hasPrioritySupport: Boolean
+		hasFeatures: Features
 		hasChargeableSource: Boolean
 		billingSettings: CommunityBillingSettings
 
@@ -250,6 +254,10 @@ const Community = /* GraphQL */ `
 		communityId: ID!
 	}
 
+	input EnableCommunityAnalyticsInput {
+		communityId: ID!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -265,6 +273,7 @@ const Community = /* GraphQL */ `
 		removePaymentSource(input: RemovePaymentSourceInput!): Community
 		makeDefaultPaymentSource(input: MakeDefaultPaymentSourceInput!): Community
 		cancelSubscription(input: CancelSubscriptionInput!): Community
+		enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
 	}
 `;
 

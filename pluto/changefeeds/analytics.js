@@ -9,10 +9,10 @@ import {
 } from 'shared/bull/queues';
 
 export const analyticsChanged = () =>
-  listenToChangedFieldIn(db, 'hasAnalytics')(
+  listenToChangedFieldIn(db, 'analyticsEnabled')(
     'communities',
     (community: DBCommunity) => {
-      if (community.hasAnalytics) {
+      if (community.analyticsEnabled) {
         debug(`Community ${community.name} has added analytics`);
         return stripeCommunityAnalyticsAddedQueue.add({
           communityId: community.id,

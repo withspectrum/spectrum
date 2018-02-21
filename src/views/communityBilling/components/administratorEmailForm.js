@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import { isEmail } from 'validator';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { Input, Error } from '../../../components/formElements';
@@ -19,7 +19,7 @@ import {
 type Props = {
   id: string,
   dispatch: Function,
-  community: GetCommunityBillingSettingsType,
+  community: GetCommunitySettingsType,
   updateAdministratorEmail: Function,
 };
 

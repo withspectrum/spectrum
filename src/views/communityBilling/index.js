@@ -3,9 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from '../../components/link';
-import getCommunityBillingSettings, {
-  type GetCommunityBillingSettingsType,
-} from 'shared/graphql/queries/community/getCommunityBillingSettings';
 import ViewError from '../../components/viewError';
 import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
 import {
@@ -16,23 +13,17 @@ import {
   SectionCardFooter,
   Column,
 } from '../../components/settingsViews/style';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import { openModal } from '../../actions/modals';
 import { AddCardSection } from './style';
 import StripeCardForm from '../../components/stripeCardForm';
 import Subscription from './components/subscription';
 import AdministratorEmailForm from './components/administratorEmailForm';
-import viewNetworkHandler, {
-  type ViewNetworkHandlerType,
-} from '../../components/viewNetworkHandler';
-import { Loading } from '../../components/loading';
 import Source from './components/source';
 
 type Props = {
-  ...$Exact<ViewNetworkHandlerType>,
   currentUser: Object,
-  data: {
-    community: GetCommunityBillingSettingsType,
-  },
+  community: GetCommunitySettingsType,
   dispatch: Function,
   match: Object,
   history: Object,
@@ -48,7 +39,7 @@ class CommunityMembersSettings extends React.Component<Props> {
     );
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id: this.props.data.community.id,
+        id: this.props.community.id,
         entity: 'community-subscription',
         message,
       })
@@ -56,8 +47,7 @@ class CommunityMembersSettings extends React.Component<Props> {
   };
 
   render() {
-    const { data, isLoading } = this.props;
-    const { community } = data;
+    const { community } = this.props;
 
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
@@ -171,10 +161,6 @@ class CommunityMembersSettings extends React.Component<Props> {
       );
     }
 
-    if (isLoading) {
-      return <Loading />;
-    }
-
     return (
       <ViewError
         heading={'You don’t have permission to manage this community.'}
@@ -199,7 +185,5 @@ class CommunityMembersSettings extends React.Component<Props> {
 const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
-  connect(map),
-  getCommunityBillingSettings,
-  viewNetworkHandler
+  connect(map)
 )(CommunityMembersSettings);

@@ -26,6 +26,7 @@ import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
 import billingSettings from './billingSettings';
 import hasChargeableSource from './hasChargeableSource';
+import hasFeatures from './hasFeatures';
 
 module.exports = {
   Query: {
@@ -56,5 +57,6 @@ module.exports = {
     watercooler,
     billingSettings,
     hasChargeableSource,
+    hasFeatures,
   },
 };

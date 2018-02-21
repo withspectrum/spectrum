@@ -9,10 +9,10 @@ import {
 } from '../style';
 import Badge from '../../../components/badges';
 import EditSource from './editSourceDropdown';
-import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
-  community: GetCommunityBillingSettingsType,
+  community: GetCommunitySettingsType,
   canRemoveDefault: boolean,
   source: {
     id: string,

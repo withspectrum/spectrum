@@ -28,7 +28,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  if (community.hasAnalytics) {
+  if (community.analyticsEnabled) {
     debug(`Has analytics turned on, abort ${communityId}`);
     return;
   }

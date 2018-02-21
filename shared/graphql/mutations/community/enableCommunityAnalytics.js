@@ -3,25 +3,25 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import communitySettingsFragment from '../../fragments/community/communitySettings';
+import communitySettingsFragment from 'shared/graphql/fragments/community/communitySettings';
 import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
 
-export type CancelSubscriptionType = {
+export type EnableCommunityAnalyticsType = {
   data: {
-    MakeDefaultSource: {
+    EnableCommunityAnalytics: {
       ...$Exact<CommunityInfoType>,
       ...$Exact<CommunitySettingsType>,
     },
   },
 };
 
-type CancelSubscriptionInput = {
+type EnableCommunityAnalyticsInput = {
   communityId: string,
 };
 
-export const cancelSubscriptionMutation = gql`
-  mutation cancelSubscription($input: CancelSubscriptionInput!) {
-    cancelSubscription(input: $input) {
+export const enableCommunityAnalyticsMutation = gql`
+  mutation enableCommunityAnalytics($input: EnableCommunityAnalyticsInput!) {
+    enableCommunityAnalytics(input: $input) {
       ...communityInfo
       ...communitySettings
     }
@@ -30,9 +30,9 @@ export const cancelSubscriptionMutation = gql`
   ${communitySettingsFragment}
 `;
 
-const cancelSubscriptionOptions = {
+const enableCommunityAnalyticsOptions = {
   props: ({ mutate }) => ({
-    cancelSubscription: (input: CancelSubscriptionInput) =>
+    enableCommunityAnalytics: (input: EnableCommunityAnalyticsInput) =>
       mutate({
         variables: {
           input,
@@ -41,4 +41,7 @@ const cancelSubscriptionOptions = {
   }),
 };
 
-export default graphql(cancelSubscriptionMutation, cancelSubscriptionOptions);
+export default graphql(
+  enableCommunityAnalyticsMutation,
+  enableCommunityAnalyticsOptions
+);

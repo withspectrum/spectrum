@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { StripeProvider, Elements } from 'react-stripe-elements';
 import { PUBLIC_STRIPE_KEY } from '../../api/constants';
-import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import Form from './form';
 
 type Props = {
-  community: GetCommunityBillingSettingsType,
+  community: GetCommunitySettingsType,
   render: Function,
 };
 

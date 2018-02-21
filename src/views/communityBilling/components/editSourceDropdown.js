@@ -18,13 +18,13 @@ import OutsideClickHandler from '../../../components/outsideClickHandler';
 import MutationWrapper from './mutationWrapper';
 import removePaymentSource from 'shared/graphql/mutations/community/removePaymentSource';
 import makeDefaultPaymentSource from 'shared/graphql/mutations/community/makeDefaultPaymentSource';
-import type { GetCommunityBillingSettingsType } from 'shared/graphql/queries/community/getCommunityBillingSettings';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
   removePaymentSource: Function,
   makeDefaultPaymentSource: Function,
   dispatch: Function,
-  community: GetCommunityBillingSettingsType,
+  community: GetCommunitySettingsType,
   source: {
     id: string,
     isDefault: boolean,

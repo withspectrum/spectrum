@@ -674,8 +674,27 @@ export const disablePaidFeatureFlags = (communityId: string) => {
     .table('communities')
     .get(communityId)
     .update({
-      hasAnalytics: false,
-      hasPrioritySupport: false,
+      analyticsEnabled: false,
+      prioritySupportEnabled: false,
     })
     .run();
+};
+
+export const updateCommunityPaidFeature = (
+  communityId: string,
+  feature: string,
+  value: boolean
+) => {
+  const obj = { [feature]: value };
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(obj, { returnChanges: 'always' })
+    .run()
+    .then(result => {
+      if (result && result.changes.length > 0) {
+        return result.changes[0].new_val || result.changes[0].old_val;
+      }
+      return { id: communityId };
+    });
 };
