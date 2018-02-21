@@ -93,35 +93,29 @@ export const CustomMessageTextAreaStyles = {
 
 export const Filters = styled.ul`
   display: flex;
-  padding: 8px 0 16px;
-  margin: 0 0 16px;
+  margin: 0 -16px 16px;
+  padding: 0 16px;
   flex: 1;
   border-bottom: 1px solid ${props => props.theme.bg.border};
 `;
 
 export const Filter = styled.li`
   color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.text.alt};
-  background: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.bg.default};
-  font-weight: ${props => (props.active ? 500 : 400)};
-  border-radius: 4px;
-  margin-right: 8px;
+    props.active ? props.theme.text.default : props.theme.text.alt};
+  font-weight: 400;
   font-size: 16px;
   list-style-type: none;
-  padding: 2px 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 12px 16px;
+  margin-bottom: -1px;
+  border-bottom: 1px solid
+    ${props => (props.active ? props.theme.text.default : 'transparent')};
 
   &:hover {
-    ${props =>
-      !props.active &&
-      css`
-        color: ${props => props.theme.text.default};
-        background: ${props => props.theme.bg.wash};
-      `};
+    color: ${props => props.theme.text.default};
   }
 `;
 
@@ -130,7 +124,6 @@ export const SearchForm = styled.form`
   align-items: center;
   justify-content: flex-start;
   position: relative;
-  margin-left: 4px;
   flex: auto;
   color: ${props => props.theme.brand.alt};
 
@@ -151,8 +144,7 @@ export const SearchForm = styled.form`
 `;
 
 export const SearchFilter = styled(Filter)`
-  padding: 0;
-  margin-left: 8px;
+  padding-left: 8px;
 
   &:hover {
     background: none;
@@ -164,17 +156,15 @@ export const SearchFilter = styled(Filter)`
 `;
 
 export const SearchInput = styled.input`
-  padding-left: 24px;
   font-size: 16px;
-  padding: 5px;
-  padding-left: 24px;
-  padding-right: 24px;
   border-bottom: 1px solid transparent;
   flex: 1;
-  padding-top: 4px;
+  padding: 4px 24px 15px;
+  margin-bottom: -13px;
+  background: transparent;
 
   &:focus {
-    border-bottom: 1px solid ${props => props.theme.brand.alt};
+    border-bottom: 1px solid ${props => props.theme.text.default};
   }
 `;
 

@@ -216,14 +216,6 @@ export const DropdownSection = styled.div`
     margin-right: 8px;
   }
 
-  &:first-of-type {
-    border-bottom: 0;
-  }
-
-  &:last-of-type {
-    border-bottom: 0;
-  }
-
   &:hover {
     background: ${props => props.theme.bg.wash};
   }
@@ -248,6 +240,15 @@ export const DropdownSectionSubtitle = styled.p`
   font-weight: 400;
   color: ${props => props.theme.text.alt};
   line-height: 1.2;
+`;
+
+export const DropdownSectionCardInfo = styled(DropdownSectionSubtitle)`
+  margin-top: 6px;
+  display: flex;
+  align-items: flex-start;
+  img {
+    margin-right: 6px;
+  }
 `;
 
 export const DropdownAction = styled.div`

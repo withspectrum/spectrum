@@ -9,6 +9,7 @@ import {
 } from '../style';
 import Badge from '../../../components/badges';
 import EditSource from './editSourceDropdown';
+import { getCardImage } from '../utils';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 
 type Props = {
@@ -23,25 +24,6 @@ type Props = {
       exp_year: number,
     },
   },
-};
-
-const getCardImage = (brand: string) => {
-  switch (brand) {
-    case 'Visa':
-      return '/img/payment-methods/visa.svg';
-    case 'Discover':
-      return '/img/payment-methods/discover.svg';
-    case 'Diners Club':
-      return '/img/payment-methods/diners-club.svg';
-    case 'MasterCard':
-      return '/img/payment-methods/mastercard.svg';
-    case 'American Express':
-      return '/img/payment-methods/amex.svg';
-    case 'JCB':
-      return '/img/payment-methods/jcb.svg';
-    default:
-      return '/img/payment-methods/card-unknown.svg';
-  }
 };
 
 class Source extends React.Component<Props> {

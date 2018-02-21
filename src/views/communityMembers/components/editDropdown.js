@@ -10,20 +10,23 @@ import {
   DropdownSectionDivider,
   DropdownSection,
   DropdownSectionSubtitle,
+  DropdownSectionCardInfo,
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
 } from '../../../components/settingsViews/style';
 import Icon from '../../../components/icons';
 import { Spinner } from '../../../components/globals';
+import { openModal } from 'src/actions/modals';
 import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import OutsideClickHandler from '../../../components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
 import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';
 import unblockCommunityMember from 'shared/graphql/mutations/communityMember/unblockCommunityMember';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import MutationWrapper from './mutationWrapper';
+import { getCardImage } from '../../communityBilling/utils';
 
 type Props = {
   blockCommunityMember: Function,
@@ -31,7 +34,7 @@ type Props = {
   addCommunityModerator: Function,
   removeCommunityModerator: Function,
   dispatch: Function,
-  community: GetCommunityType,
+  community: GetCommunitySettingsType,
   history: Object,
   user: {
     ...$Exact<GetUserType>,
@@ -58,22 +61,28 @@ class EditDropdown extends React.Component<Props, State> {
 
   permissionConfigurations = {
     owner: {
+      id: 'owner',
       title: 'Owner',
       subtitle: 'Can manage all members, moderators, channels, and content',
       selected: false,
     },
     moderator: {
-      title: 'Moderator',
+      id: 'moderator',
+      title: this.props.community.hasChargeableSource
+        ? 'Moderator · $10/mo'
+        : 'Moderator',
       subtitle: 'Can edit and delete conversations',
       selected: false,
     },
     blocked: {
+      id: 'blocked',
       title: 'Blocked',
       subtitle:
         'Can not start or join conversations, and will not receive any notifications about community activity',
       selected: false,
     },
     member: {
+      id: 'member',
       title: 'Member',
       subtitle:
         "Can start new conversations and reply to anyone else's conversations",
@@ -107,9 +116,7 @@ class EditDropdown extends React.Component<Props, State> {
         },
         {
           ...this.permissionConfigurations.member,
-          mutation: community.hasChargeableSource
-            ? this.props.removeCommunityModerator
-            : null,
+          mutation: this.props.removeCommunityModerator,
         },
         {
           ...this.permissionConfigurations.blocked,
@@ -125,6 +132,7 @@ class EditDropdown extends React.Component<Props, State> {
           mutation: community.hasChargeableSource
             ? this.props.addCommunityModerator
             : null,
+          onClick: this.initUpgrade,
         },
         {
           ...this.permissionConfigurations.member,
@@ -145,6 +153,7 @@ class EditDropdown extends React.Component<Props, State> {
           mutation: community.hasChargeableSource
             ? this.props.addCommunityModerator
             : null,
+          onClick: this.initUpgrade,
         },
         {
           ...this.permissionConfigurations.member,
@@ -161,6 +170,31 @@ class EditDropdown extends React.Component<Props, State> {
 
   toggleOpen = () => this.setState({ isOpen: true });
   close = () => this.setState({ isOpen: false });
+  initUpgrade = () => {
+    return this.props.dispatch(
+      openModal('UPGRADE_MODERATOR_SEAT_MODAL', {
+        input: this.input,
+        community: this.props.community,
+      })
+    );
+  };
+
+  getDefaultCardInfo = () => {
+    const { community } = this.props;
+    const sources = community.billingSettings.sources;
+    if (!sources || sources.length === 0) return null;
+    const defaultSource = sources.find(source => source.isDefault);
+    if (!defaultSource) return null;
+    return (
+      <DropdownSectionCardInfo>
+        <img src={getCardImage(defaultSource.card.brand)} width={24} />
+        <p>
+          Pay with {defaultSource.card.brand} ending in{' '}
+          {defaultSource.card.last4}
+        </p>
+      </DropdownSectionCardInfo>
+    );
+  };
 
   render() {
     const { isOpen } = this.state;
@@ -173,7 +207,10 @@ class EditDropdown extends React.Component<Props, State> {
         {isOpen && (
           <OutsideClickHandler onOutsideClick={this.close}>
             <Dropdown>
-              <DropdownSection onClick={this.initMessage}>
+              <DropdownSection
+                style={{ borderBottom: '0' }}
+                onClick={this.initMessage}
+              >
                 <DropdownAction>
                   <Icon glyph={'message'} size={'32'} />
                 </DropdownAction>
@@ -188,7 +225,7 @@ class EditDropdown extends React.Component<Props, State> {
 
               {configuration &&
                 configuration.map((role, i) => {
-                  return (
+                  return role.mutation ? (
                     <MutationWrapper
                       key={i}
                       mutation={role.mutation && role.mutation}
@@ -213,10 +250,33 @@ class EditDropdown extends React.Component<Props, State> {
                             <DropdownSectionSubtitle>
                               {role.subtitle}
                             </DropdownSectionSubtitle>
+
+                            {role.id === 'moderator' &&
+                              this.getDefaultCardInfo()}
                           </DropdownSectionText>
                         </DropdownSection>
                       )}
                     />
+                  ) : (
+                    <DropdownSection key={i} onClick={role.onClick}>
+                      <DropdownAction>
+                        <Icon
+                          glyph={role.selected ? 'checkmark' : 'checkbox'}
+                          size={'32'}
+                        />
+                      </DropdownAction>
+
+                      <DropdownSectionText>
+                        <DropdownSectionTitle>
+                          {role.title}
+                        </DropdownSectionTitle>
+                        <DropdownSectionSubtitle>
+                          {role.subtitle}
+                        </DropdownSectionSubtitle>
+
+                        {role.id === 'moderator' && this.getDefaultCardInfo()}
+                      </DropdownSectionText>
+                    </DropdownSection>
                   );
                 })}
             </Dropdown>

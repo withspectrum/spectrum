@@ -154,12 +154,12 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Members
           </Filter>
-          {/*<Filter
+          <Filter
             onClick={this.viewModerators}
             active={filter && filter.isModerator ? true : false}
           >
             Moderators
-          </Filter>*/}
+          </Filter>
           <Filter
             onClick={this.viewBlocked}
             active={filter && filter.isBlocked ? true : false}
@@ -272,6 +272,18 @@ class CommunityMembers extends React.Component<Props, State> {
                       heading={'No members found'}
                       subheading={
                         "We couldn't find any members in your community. That's strange..."
+                      }
+                    />
+                  );
+                }
+
+                if (filter && filter.isModerator) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No moderators found'}
+                      subheading={
+                        "We couldn't find any moderators in your community."
                       }
                     />
                   );

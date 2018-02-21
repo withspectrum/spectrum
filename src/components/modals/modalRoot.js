@@ -8,6 +8,7 @@ import CommunityUpgradeModal from './CommunityUpgradeModal';
 import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import UpgradeAnalyticsModal from './UpgradeAnalyticsModal';
+import UpgradeModeratorSeatModal from './UpgradeModeratorSeatModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -17,6 +18,7 @@ const MODAL_COMPONENTS = {
   REP_EXPLAINER_MODAL: RepExplainerModal,
   CHANGE_CHANNEL: ChangeChannelModal,
   UPGRADE_ANALYTICS_MODAL: UpgradeAnalyticsModal,
+  UPGRADE_MODERATOR_SEAT_MODAL: UpgradeModeratorSeatModal,
 };
 
 /*
