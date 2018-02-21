@@ -38,7 +38,7 @@
     "open:android": "exp android .",
     "setup": "cd .expo/Exponent.app && curl -s https://dpq5q02fu5f55.cloudfront.net/Exponent-2.2.0.tar.gz | tar -xz",
     "test:e2e": "cross-env E2E=true detox test -c ios.sim --platform ios",
-    "test:unit": "jest .",
+    "test:unit": "jest . --passWithNoTests",
     "test": "yarn test:unit && yarn test:e2e",
     "clean": "rm -rf yarn.lock node_modules && yarn && watchman watch-del-all && rm -fr $TMPDIR/react-*"
   },
