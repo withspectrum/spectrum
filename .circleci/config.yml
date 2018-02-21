@@ -66,6 +66,9 @@ jobs:
       - attach_workspace:
           at: ~/spectrum
       - run:
+          name: Install Expo CLI
+          command: npm install -g exp
+      - run:
           name: Install Detox dependencies
           command: |
             brew tap wix/brew
@@ -77,6 +80,10 @@ jobs:
             cd ./mobile
             detox clean-framework-cache
             detox build-framework-cache
+      - run:
+          name: Start Packager in the background
+          command: cd ./mobile && exp start
+          background: true
       - run: cd ./mobile && yarn test:e2e
 
 workflows:
