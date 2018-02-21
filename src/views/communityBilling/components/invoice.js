@@ -38,7 +38,7 @@ class Source extends React.Component<Props> {
       'December',
     ];
     const paidOnString = `Paid on ${months[invoiceDate.getMonth()]}${' '}
-    ${invoiceDate.getDay()}, ${invoiceDate.getFullYear()}`;
+    ${invoiceDate.getDate()}, ${invoiceDate.getFullYear()}`;
 
     return (
       <SourceContainer>

@@ -45,7 +45,7 @@ class Subscription extends React.Component<{}> {
             <LineItemTitleTotal>Estimated Total</LineItemTitleTotal>
             <LineItemDescription>
               Your next invoice will be on {months[periodEnd.getMonth()]}{' '}
-              {periodEnd.getDay()}, {periodEnd.getFullYear()}
+              {periodEnd.getDate()}, {periodEnd.getFullYear()}
             </LineItemDescription>
           </LineItemLeft>
           <LineItemRight>
