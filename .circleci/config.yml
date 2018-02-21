@@ -17,7 +17,7 @@ aliases:
     key: v1-yarn-{{ arch }}-{{ checksum "package.json" }}
 
   - &yarn
-    | 
+    |
       yarn
       cd ./mobile && yarn && yarn setup
 
@@ -65,8 +65,13 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
+      - run:
+          name: Install Detox dependencies
+          command: |
+            brew tap wix/brew
+            brew install applesimutils --HEAD
       - run: cd ./mobile && yarn test:e2e
-      
+
 workflows:
   version: 2
 
