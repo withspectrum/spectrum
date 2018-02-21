@@ -31,7 +31,7 @@ export type DBCommunity = {
   deletedAt?: Date,
   pinnedThreadId?: string,
   watercoolerId?: string,
-  administratorId: string,
+  creatorId: string,
   administratorEmail: ?string,
   hasAnalytics: boolean,
   hasPrioritySupport: boolean,

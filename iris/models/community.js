@@ -156,7 +156,7 @@ export const createCommunity = (
         coverPhoto: null,
         slug,
         modifiedAt: null,
-        administratorId: user.id,
+        creatorId: user.id,
         administratorEmail: user.email,
         stripeCustomerId: null,
       },

@@ -8,7 +8,7 @@ exports.up = async (r, conn) => {
       administratorEmail: null,
       // references the actual creator of the community, discrete from the 'owner'
       // role
-      administratorId: null,
+      creatorId: null,
       // will be used to fetch records from the stripeCustomers and stripeInvoices
       // tables in order to populate the billing area and resolve query fields
       // for community features
@@ -21,7 +21,7 @@ exports.up = async (r, conn) => {
     .run(conn);
 
   // gets all the owner records in a community, figures out which one is the oldest,
-  // then uses that record to populate an administratorEmail and administratorId field
+  // then uses that record to populate an administratorEmail and creatorId field
   // if they exist
   const oldestOwners = await r
     .table('usersCommunities')
@@ -42,7 +42,7 @@ exports.up = async (r, conn) => {
       .get(owner.communityId)
       .update({
         administratorEmail: owner.email,
-        administratorId: owner.userId,
+        creatorId: owner.userId,
       })
       .run(conn);
   });
@@ -57,7 +57,7 @@ exports.down = function(r, conn) {
     .table('communities')
     .update({
       administratorEmail: r.literal(),
-      administratorId: r.literal(),
+      creatorId: r.literal(),
       stripeCustomerId: r.literal(),
       analyticsEnabled: r.literal(),
       prioritySupportEnabled: r.literal(),
