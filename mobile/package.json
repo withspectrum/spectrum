@@ -48,7 +48,7 @@
     "specs": ".",
     "configurations": {
       "ios.sim": {
-        "binaryPath": "./.expo/bin/Exponent.app",
+        "binaryPath": "./.expo/Exponent.app",
         "type": "ios.simulator",
         "name": "iPhone 8"
       }
