@@ -26,7 +26,6 @@ export default graphqlExpress(req => ({
         const err = new UserError(
           `GraphQL query exceeds maximum complexity, please remove some nesting or fields and try again. (max: ${max}, actual: ${actual})`
         );
-        Raven.captureException(err);
         return err;
       },
     }),
