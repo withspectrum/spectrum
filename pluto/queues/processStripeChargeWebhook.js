@@ -1,54 +1,19 @@
 // @flow
-const debug = require('debug')('pluto:webhooks:chargeEvent');
-import type { CleanCharge, RawCharge } from 'shared/stripe/types/Charge';
+const debug = require('debug')('pluto:webhooks:sourceEvent');
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
-import { recordExists, insertRecord, replaceRecord } from '../models/utils';
+import { stripeCustomerWebhookEventQueue } from 'shared/bull/queues';
+import { stripe } from 'shared/stripe';
 
-const cleanCharge = (charge: RawCharge): CleanCharge => {
-  debug(`Cleaning charge ${charge.id}`);
-  return Object.assign({}, charge, {
-    customerId: charge.customer,
-    chargeId: charge.id,
-  });
-};
-
-const saveCharge = async (charge: CleanCharge): Promise<CleanCharge> => {
-  debug(`Saving charge ${charge.id}`);
-  const table = 'stripeCharges';
-  const key = charge.customerId;
-  const filter = { customerId: key };
-
-  if (await recordExists(table, key, filter)) {
-    debug(`Charge record exists, replacing ${charge.id}`);
-    return await replaceRecord(table, key, charge, filter);
-  } else {
-    debug(`Charge record does not exist, inserting ${charge.id}`);
-    return await insertRecord(table, charge);
-  }
-};
-
-export const ChargeEventFactory = {
-  clean: (raw: RawCharge): CleanCharge => cleanCharge(raw),
-  save: async (clean: CleanCharge): Promise<CleanCharge> =>
-    await saveCharge(clean),
-};
-
-export const ChargeEventHandler = {};
-
-const { clean, save } = ChargeEventFactory;
-
-ChargeEventHandler.handle = async (raw: RawCharge): Promise<CleanCharge> => {
-  debug(`Handling charge ${raw.id}`);
-  const cleaned = clean(raw);
-  const saved = await save(cleaned);
-  return saved.catch(err => {
-    console.log(`Error handling charge event ${raw.id}`);
-    throw new Error(err);
-  });
-};
-
+/*
+  We treat the customer object on Stripe as our source of truth. When charges
+  change, it might not always cause an update to the customer record in stripe.
+  This processor ensures that any time a Charge event occurs we grab the
+  latest customer data from stripe and update that record in our database.
+*/
 export default async (job: Job<StripeWebhookEventJobData>) => {
   const { data: { record } } = job;
-  debug(`New job for ${record.id}`);
-  return await ChargeEventHandler.handle(record);
+  debug(`New job for source ${record.id}`);
+
+  const customer = await stripe.customers.retrieve(record.customer);
+  return stripeCustomerWebhookEventQueue.add({ record: customer });
 };
