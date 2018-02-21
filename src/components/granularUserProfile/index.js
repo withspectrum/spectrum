@@ -9,7 +9,7 @@ import Reputation from '../reputation';
 import Badge from '../badges';
 import Icon from '../icons';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 import {
   Row,
   Content,

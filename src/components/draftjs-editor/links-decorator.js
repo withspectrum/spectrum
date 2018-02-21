@@ -3,7 +3,7 @@ import React from 'react';
 import findWithRegex from 'find-with-regex';
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
 import { URL } from 'shared/regexps';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 
 let i = 0;
 const linksDecorator = {
