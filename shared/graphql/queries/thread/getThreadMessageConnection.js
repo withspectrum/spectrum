@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
-import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
+import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 import threadMessageConnectionFragment from '../../fragments/thread/threadMessageConnection';
@@ -75,7 +75,12 @@ export const getThreadMessageConnectionOptions = {
   },
   // $FlowFixMe
   props: props => ({
-    data: props.data,
+    data: {
+      ...props.data,
+      messageConnection: props.data.thread
+        ? props.data.thread.messageConnection
+        : null,
+    },
     loadNextPage: () => {
       let cursor;
       const { thread } = props.data;

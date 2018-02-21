@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { View, Text, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
+import Text from '../Text';
 import ViewNetworkHandler from '../ViewNetworkHandler';
 import ThreadItem from '../ThreadItem';
 import InfiniteList from '../InfiniteList';
@@ -111,7 +112,7 @@ class ThreadFeed extends React.Component<Props, State> {
     if (isLoading) {
       return (
         <View>
-          <Text>Loading...</Text>
+          <Text type="body">Loading...</Text>
         </View>
       );
     }
@@ -119,12 +120,16 @@ class ThreadFeed extends React.Component<Props, State> {
     if (hasError) {
       return (
         <View>
-          <Text>Error!</Text>
+          <Text type="body">Error!</Text>
         </View>
       );
     }
 
-    return null;
+    return (
+      <View>
+        <Text type="body">Nothing here yet!</Text>
+      </View>
+    );
   }
 }
 
