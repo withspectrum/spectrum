@@ -182,10 +182,8 @@ type FirstSubInput = {
 };
 const createFirstSubscription = async (input: FirstSubInput) => {
   const { customerId, subscriptionItemType } = input;
-  const billingAnchor = Math.floor(new Date().getTime() / 1000);
   return await stripe.subscriptions.create({
     customer: customerId,
-    billing_cycle_anchor: billingAnchor,
     items: [
       // NOTE: We have to include this dummy item in order to prevent
       // the top-level subscription from thinking it's about any
@@ -277,6 +275,7 @@ const cleanInvoices = (invoices: Array<?RawInvoice>) => {
         total: invoice.total,
       }
   );
+  // .filter(invoice => invoice && invoice.total > 0);
 };
 
 type AddSIInput = {

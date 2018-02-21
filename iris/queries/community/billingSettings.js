@@ -24,24 +24,27 @@ export default async (
 
   if (!stripeCustomerId) return defaultResult;
 
-  const [permissions, { reduction }] = await Promise.all([
+  const [permissions, stripeCustomer] = await Promise.all([
     loaders.userPermissionsInCommunity.load([user.id, id]),
     loaders.stripeCustomers.load(stripeCustomerId),
   ]);
 
   const { isOwner } = permissions;
-  const customer = reduction.length === 0 ? null : reduction[0];
+  const customer =
+    stripeCustomer && stripeCustomer.reduction.length > 0
+      ? stripeCustomer.reduction[0]
+      : null;
   const sources =
     isOwner && customer ? await StripeUtil.getSources(customer) : [];
   const invoices =
     isOwner && customer ? await getInvoicesByCustomerId(stripeCustomerId) : [];
   const cleanInvoices = StripeUtil.cleanInvoices(invoices);
-  const subscriptions =
-    isOwner && customer
-      ? await StripeUtil.cleanSubscriptions(customer).filter(
-          sub => sub && sub.items.length >= 1
-        )
-      : [];
+  let subscriptions =
+    isOwner && customer ? await StripeUtil.cleanSubscriptions(customer) : [];
+  subscriptions =
+    subscriptions.length > 0
+      ? subscriptions.filter(sub => sub && sub.items.length >= 1)
+      : subscriptions;
 
   return {
     pendingAdministratorEmail: isOwner ? pendingAdministratorEmail : null,
