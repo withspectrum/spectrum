@@ -85,7 +85,8 @@ jobs:
           at: ~/spectrum
       - run: cd ./mobile && yarn test:unit
 
-  test_js:
+  # Test the web JS
+  test_web_js:
     <<: *servers
     steps:
       - attach_workspace:
@@ -139,6 +140,6 @@ workflows:
   test_web:
     jobs:
       - checkout_environment
-      - test_js:
-        requires:
-          - checkout_environment
+      - test_web_js:
+          requires:
+            - checkout_environment
