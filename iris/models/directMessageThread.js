@@ -75,10 +75,14 @@ const setDirectMessageThreadLastActive = (
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
-const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+const listenToUpdatedDirectMessageThreads = (userId: string) => (
+  cb: Function
+): Function => {
   return db
     .table('directMessageThreads')
     .changes({
@@ -86,6 +90,7 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
     .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
+    .filter({ right: { userId } })
     .without({
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
