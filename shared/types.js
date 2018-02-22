@@ -17,6 +17,7 @@ export type DBChannel = {
   isPrivate: boolean,
   name: string,
   slug: string,
+  archivedAt?: Date,
 };
 
 export type DBCommunity = {

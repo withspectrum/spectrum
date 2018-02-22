@@ -54,7 +54,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       return await StripeUtil.deleteSubscriptionItem(subscriptionItem.id);
     }
 
-    debug(`More than one private channel is left, decremtn ${communityId}`);
+    debug(`More than one private channel is left, decrement ${communityId}`);
     return await StripeUtil.updateSubscriptionItem({
       subscriptionItemId: subscriptionItem.id,
       quantity: subscriptionItem.quantity - 1,

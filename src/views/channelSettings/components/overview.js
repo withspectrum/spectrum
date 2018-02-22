@@ -8,6 +8,7 @@ import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
+import ArchiveForm from './archiveForm';
 // import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
 
 type Props = {
@@ -25,6 +26,7 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <EditForm channel={channel} />
+          <ArchiveForm channel={channel} />
         </Column>
 
         {/*channel.isPrivate && (

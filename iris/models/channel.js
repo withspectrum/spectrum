@@ -1,18 +1,7 @@
 // @flow
 const { db } = require('./db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
-
-type DBChannel = {
-  communityId: string,
-  createdAt: Date,
-  deletedAt?: Date,
-  description: string,
-  id: string,
-  isDefault: boolean,
-  isPrivate: boolean,
-  name: string,
-  slug: string,
-};
+import type { DBChannel } from 'shared/types';
 
 const getChannelsByCommunity = (
   communityId: string
@@ -325,12 +314,26 @@ const getChannelMemberCount = (channelId: string): number => {
     .run();
 };
 
+const archiveChannel = (channelId: string) => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({ archivedAt: new Date() }, { returnChanges: 'always' })
+    .run()
+    .then(
+      result =>
+        console.log('result', result) ||
+        result.changes[0].new_val ||
+        result.changes[0].old_val
+    );
+};
+
 const archiveAllPrivateChannels = (communityId: string) => {
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
     .filter({ isPrivate: true })
-    .update({ isArchived: true })
+    .update({ archivedAt: new Date() })
     .run();
 };
 
@@ -350,5 +353,6 @@ module.exports = {
   getChannelsMemberCounts,
   getChannelsThreadCounts,
   getChannels,
+  archiveChannel,
   archiveAllPrivateChannels,
 };

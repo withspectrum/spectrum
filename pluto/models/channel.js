@@ -6,5 +6,5 @@ export const archiveAllCommunityPrivateChannels = (communityId: string) => {
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
     .filter({ isPrivate: true })
-    .update({ isArchived: true });
+    .update({ archivedAt: new Date() });
 };

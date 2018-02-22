@@ -4,6 +4,7 @@ import {
   listenToNewDocumentsIn,
   listenToChangedFieldIn,
   listenToDeletedDocumentsIn,
+  listenToNewFieldIn,
 } from 'shared/changefeed-utils';
 import type { DBChannel } from 'shared/types';
 import { db } from 'iris/models/db';
@@ -14,7 +15,8 @@ import {
 
 export const privateChannelCreated = () =>
   listenToNewDocumentsIn(db, 'channels', (channel: DBChannel) => {
-    if (channel.isPrivate) {
+    // an unarchived private channel is deleted
+    if (channel.isPrivate && !channel.archivedAt) {
       debug(`Private channel ${channel.name} created`);
       return stripeCommunityPrivateChannelAddedQueue.add({
         communityId: channel.communityId,
@@ -26,7 +28,8 @@ export const privateChannelCreated = () =>
 
 export const privateChannelDeleted = () =>
   listenToDeletedDocumentsIn(db, 'channels', (channel: DBChannel) => {
-    if (channel.isPrivate) {
+    // an unarchived private channel is deleted
+    if (channel.isPrivate && !channel.archivedAt) {
       debug(`Private channel ${channel.name} deleted`);
       return stripeCommunityPrivateChannelRemovedQueue.add({
         communityId: channel.communityId,
@@ -72,4 +75,26 @@ export const channelPrivacyChanged = () =>
         communityId: channel.communityId,
       });
     }
+  });
+
+export const channelArchivedAtFieldAdded = () =>
+  listenToNewFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
+    debug('Channel archived');
+
+    if (channel.isPrivate && channel.archivedAt) {
+      debug(`Private channel ${channel.name} archived`);
+      return stripeCommunityPrivateChannelRemovedQueue.add({
+        communityId: channel.communityId,
+      });
+    }
+
+    // a private channel was archived
+    if (channel.isPrivate && !channel.archivedAt) {
+      debug(`Private channel ${channel.name} unarchived`);
+      return stripeCommunityPrivateChannelAddedQueue.add({
+        communityId: channel.communityId,
+      });
+    }
+
+    return;
   });

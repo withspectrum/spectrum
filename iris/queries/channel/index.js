@@ -12,6 +12,7 @@ import pendingUsers from './pendingUsers';
 import blockedUsers from './blockedUsers';
 import moderators from './moderators';
 import owners from './owners';
+import isArchived from './isArchived';
 
 module.exports = {
   Query: {
@@ -29,5 +30,6 @@ module.exports = {
     blockedUsers,
     moderators,
     owners,
+    isArchived,
   },
 };
