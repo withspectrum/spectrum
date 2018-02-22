@@ -243,14 +243,51 @@ class CommunityMembers extends React.Component<Props, State> {
             filter={filter}
             id={id}
             render={({ isLoading, community, isFetchingMore, fetchMore }) => {
-              if (isLoading) {
-                return <Loading />;
-              }
-
               const members =
                 community &&
                 community.members &&
                 community.members.edges.map(member => member && member.node);
+
+              if (members && members.length > 0) {
+                return (
+                  <ListContainer>
+                    {filter &&
+                      filter.isBlocked && (
+                        <Notice>
+                          <strong>A note about blocked users:</strong> Your
+                          community is publicly viewable (except for private
+                          channels). This means that a blocked user may be able
+                          to see the content and conversations in your
+                          community. However, they will be prevented from
+                          creating new conversations, or leaving messages in
+                          existing conversations.
+                        </Notice>
+                      )}
+
+                    {members.map(communityMember => {
+                      if (!communityMember) return null;
+                      return this.generateUserProfile(communityMember);
+                    })}
+
+                    {community &&
+                      community.members.pageInfo.hasNextPage && (
+                        <SectionCardFooter>
+                          <FetchMore
+                            color={'brand.default'}
+                            loading={isFetchingMore}
+                            onClick={fetchMore}
+                          >
+                            Load more
+                          </FetchMore>
+                        </SectionCardFooter>
+                      )}
+                  </ListContainer>
+                );
+              }
+
+              if (isLoading) {
+                return <Loading />;
+              }
 
               if (!members || members.length === 0) {
                 if (filter && filter.isBlocked) {
@@ -290,40 +327,7 @@ class CommunityMembers extends React.Component<Props, State> {
                 }
               }
 
-              return (
-                <ListContainer>
-                  {filter &&
-                    filter.isBlocked && (
-                      <Notice>
-                        <strong>A note about blocked users:</strong> Your
-                        community is publicly viewable (except for private
-                        channels). This means that a blocked user may be able to
-                        see the content and conversations in your community.
-                        However, they will be prevented from creating new
-                        conversations, or leaving messages in existing
-                        conversations.
-                      </Notice>
-                    )}
-
-                  {members.map(communityMember => {
-                    if (!communityMember) return null;
-                    return this.generateUserProfile(communityMember);
-                  })}
-
-                  {community &&
-                    community.members.pageInfo.hasNextPage && (
-                      <SectionCardFooter>
-                        <FetchMore
-                          color={'brand.default'}
-                          loading={isFetchingMore}
-                          onClick={fetchMore}
-                        >
-                          Load more
-                        </FetchMore>
-                      </SectionCardFooter>
-                    )}
-                </ListContainer>
-              );
+              return null;
             }}
           />
         )}
