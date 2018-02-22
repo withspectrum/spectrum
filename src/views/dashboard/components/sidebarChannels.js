@@ -67,7 +67,7 @@ class SidebarChannels extends React.Component<Props> {
         })
         .filter(channel => {
           if (!channel) return null;
-          if (channel.isPrivate && !community.isPro) {
+          if (channel.isPrivate && channel.isArchived) {
             return null;
           }
           return channel;
@@ -96,7 +96,7 @@ class SidebarChannels extends React.Component<Props> {
           )}
 
           {isOwner &&
-            community.isPro && (
+            community.hasFeatures.analytics && (
               <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />
@@ -155,7 +155,7 @@ class SidebarChannels extends React.Component<Props> {
           )}
 
           {isOwner &&
-            thisCommunity.isPro && (
+            thisCommunity.hasFeatures.analytics && (
               <Link to={`/${thisCommunity.slug}/settings/analytics`}>
                 <ChannelListItem>
                   <Icon glyph={'link'} size={24} />

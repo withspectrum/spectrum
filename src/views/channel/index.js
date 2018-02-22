@@ -262,7 +262,7 @@ class ChannelView extends React.Component<Props, State> {
               {isLoggedIn &&
                 userHasPermissions &&
                 channel.isPrivate &&
-                !channel.community.isPro && (
+                channel.isArchived && (
                   <UpsellUpgradeCommunityPrivateChannel
                     community={channel.community}
                   />
@@ -313,7 +313,7 @@ class ChannelView extends React.Component<Props, State> {
               {isLoggedIn &&
                 selectedView === 'threads' &&
                 userHasPermissions &&
-                ((channel.isPrivate && channel.community.isPro) ||
+                ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
                   <ThreadComposer
                     activeCommunity={communitySlug}
