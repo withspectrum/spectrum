@@ -14,7 +14,7 @@ import {
   privateChannelDeleted,
   privateChannelArchived,
   channelPrivacyChanged,
-  channelArchivedAtFieldAdded,
+  privateChannelRestored,
 } from './privateChannel';
 
 import { analyticsChanged } from './analytics';
@@ -34,7 +34,7 @@ export default () => {
   privateChannelDeleted();
   privateChannelArchived();
   channelPrivacyChanged();
-  channelArchivedAtFieldAdded();
+  privateChannelRestored();
 
   analyticsChanged();
 

@@ -3,7 +3,7 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getChannelById, archiveChannel } from '../../models/channel';
+import { getChannelById, restoreChannel } from '../../models/channel';
 
 export default async (
   _: any,
@@ -32,12 +32,8 @@ export default async (
     return new UserError("Channel doesn't exist");
   }
 
-  if (channelToEvaluate.archivedAt) {
-    return new UserError('Channel already archived');
-  }
-
-  if (channelToEvaluate.slug === 'general') {
-    return new UserError("The general channel can't be archived");
+  if (!channelToEvaluate.archivedAt) {
+    return new UserError('Channel already restored');
   }
 
   // get the community parent of the channel being deleted
@@ -50,7 +46,7 @@ export default async (
     currentUserCommunityPermissions.isOwner ||
     currentUserChannelPermissions.isOwner
   ) {
-    return await archiveChannel(channelId);
+    return await restoreChannel(channelId);
   }
 
   return new UserError(

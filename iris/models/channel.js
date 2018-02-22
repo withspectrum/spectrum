@@ -320,12 +320,16 @@ const archiveChannel = (channelId: string) => {
     .get(channelId)
     .update({ archivedAt: new Date() }, { returnChanges: 'always' })
     .run()
-    .then(
-      result =>
-        console.log('result', result) ||
-        result.changes[0].new_val ||
-        result.changes[0].old_val
-    );
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const restoreChannel = (channelId: string) => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update({ archivedAt: db.literal() }, { returnChanges: 'always' })
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
 const archiveAllPrivateChannels = (communityId: string) => {
@@ -354,5 +358,6 @@ module.exports = {
   getChannelsThreadCounts,
   getChannels,
   archiveChannel,
+  restoreChannel,
   archiveAllPrivateChannels,
 };

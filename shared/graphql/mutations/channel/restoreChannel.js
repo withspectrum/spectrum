@@ -4,26 +4,26 @@ import { graphql } from 'react-apollo';
 import channelInfoFragment from 'shared/graphql/fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 
-export type ArchiveChannelType = {
+export type RestoreChannelType = {
   data: {
-    archiveChannel: {
+    restoreChannel: {
       ...$Exact<ChannelInfoType>,
     },
   },
 };
 
-export const archiveChannelMutation = gql`
-  mutation archiveChannel($input: ArchiveChannelInput!) {
-    archiveChannel(input: $input) {
+export const restoreChannelMutation = gql`
+  mutation restoreChannel($input: RestoreChannelInput!) {
+    restoreChannel(input: $input) {
       ...channelInfo
     }
   }
   ${channelInfoFragment}
 `;
 
-const archiveChannelOptions = {
+const restoreChannelOptions = {
   props: ({ mutate }) => ({
-    archiveChannel: input =>
+    restoreChannel: input =>
       mutate({
         variables: {
           input,
@@ -32,4 +32,4 @@ const archiveChannelOptions = {
   }),
 };
 
-export default graphql(archiveChannelMutation, archiveChannelOptions);
+export default graphql(restoreChannelMutation, restoreChannelOptions);

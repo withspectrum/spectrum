@@ -90,6 +90,10 @@ const Channel = /* GraphQL */ `
 		channelId: ID!
 	}
 
+	input RestoreChannelInput {
+		channelId: ID!
+	}
+
 	extend type Mutation {
 		createChannel(input: CreateChannelInput!): Channel
 		editChannel(input: EditChannelInput!): Channel
@@ -100,6 +104,7 @@ const Channel = /* GraphQL */ `
 		unblockUser(input: UnblockUserInput!): Channel
 		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
 		archiveChannel(input: ArchiveChannelInput!): Channel
+		restoreChannel(input: RestoreChannelInput!): Channel
 	}
 `;
 

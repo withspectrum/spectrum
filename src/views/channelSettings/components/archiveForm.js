@@ -38,9 +38,9 @@ class Channel extends React.Component<Props> {
     );
   };
 
-  initUnarchiveChannel = () => {
+  initRestoreChannel = () => {
     return this.props.dispatch(
-      openModal('UNARCHIVE_CHANNEL_MODAL', {
+      openModal('RESTORE_CHANNEL_MODAL', {
         channel: this.props.channel,
         id: this.props.channel.community.id,
       })
@@ -76,23 +76,24 @@ class Channel extends React.Component<Props> {
     } else {
       return (
         <SectionCard>
-          <SectionTitle>Restore channel</SectionTitle>
+          <SectionTitle>
+            Restore channel {channel.isPrivate ? '· $10/mo' : ''}
+          </SectionTitle>
           {channel.isPrivate ? (
             <SectionSubtitle>
-              Archiving a private channel will automatically remove the private
-              channel item from your subscription. The channel will then become
-              read-only and community members will no longer be able to start
-              new conversations.
+              Restoring a private channel will automatically resume your
+              subscription at $10 per month. The channel will be restored and
+              channel members will be able to start new conversations.
             </SectionSubtitle>
           ) : (
             <SectionSubtitle>
-              Archiving a channel will make it read-only and community members
-              will no longer be able to start new conversations.
+              The channel will be restored and channel members will be able to
+              start new conversations.
             </SectionSubtitle>
           )}
 
           <SectionCardFooter>
-            <Button onClick={this.initUnarchiveChannel}>Archive Channel</Button>
+            <Button onClick={this.initRestoreChannel}>Restore Channel</Button>
           </SectionCardFooter>
         </SectionCard>
       );

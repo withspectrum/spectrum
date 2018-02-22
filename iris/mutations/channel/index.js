@@ -7,6 +7,7 @@ import toggleChannelNotifications from './toggleChannelNotifications';
 import togglePendingUser from './togglePendingUser';
 import unblockUser from './unblockUser';
 import archiveChannel from './archiveChannel';
+import restoreChannel from './restoreChannel';
 
 module.exports = {
   Mutation: {
@@ -18,5 +19,6 @@ module.exports = {
     togglePendingUser,
     unblockUser,
     archiveChannel,
+    restoreChannel,
   },
 };

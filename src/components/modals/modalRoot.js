@@ -9,6 +9,7 @@ import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import UpgradeAnalyticsModal from './UpgradeAnalyticsModal';
 import UpgradeModeratorSeatModal from './UpgradeModeratorSeatModal';
+import RestoreChannelModal from './RestoreChannelModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -19,6 +20,7 @@ const MODAL_COMPONENTS = {
   CHANGE_CHANNEL: ChangeChannelModal,
   UPGRADE_ANALYTICS_MODAL: UpgradeAnalyticsModal,
   UPGRADE_MODERATOR_SEAT_MODAL: UpgradeModeratorSeatModal,
+  RESTORE_CHANNEL_MODAL: RestoreChannelModal,
 };
 
 /*

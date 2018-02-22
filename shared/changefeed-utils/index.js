@@ -33,6 +33,13 @@ export const hasNewField = (db: any, field: string) =>
     .not()
     .and(db.row('new_val').hasFields(field));
 
+export const hasDeletedField = (db: any, field: string) =>
+  db
+    .row('old_val')
+    .hasFields(field)
+    .and(db.row('new_val').hasFields(field))
+    .not();
+
 export const listenToNewDocumentsIn = (
   db: any,
   table: string,
@@ -108,6 +115,27 @@ export const listenToNewFieldIn = (db: any, field: string) => (
       includeInitial: false,
     })
     .filter(NEW_FIELD)
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the new data
+        cb(data.new_val);
+      });
+    });
+};
+
+export const listenToDeletedFieldIn = (db: any, field: string) => (
+  table: string,
+  cb: Function
+) => {
+  const DELETED_FIELD = hasDeletedField(db, field);
+  return db
+    .table(table)
+    .changes({
+      includeInitial: false,
+    })
+    .filter(DELETED_FIELD)
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {

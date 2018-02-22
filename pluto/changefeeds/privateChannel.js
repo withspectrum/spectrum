@@ -5,6 +5,7 @@ import {
   listenToChangedFieldIn,
   listenToDeletedDocumentsIn,
   listenToNewFieldIn,
+  listenToDeletedFieldIn,
 } from 'shared/changefeed-utils';
 import type { DBChannel } from 'shared/types';
 import { db } from 'iris/models/db';
@@ -39,9 +40,27 @@ export const privateChannelDeleted = () =>
     return;
   });
 
+export const channelPrivacyChanged = () =>
+  listenToChangedFieldIn(db, 'isPrivate')('channels', (channel: DBChannel) => {
+    // an existing channel went from public to private
+    if (channel.isPrivate) {
+      debug(`Channel ${channel.name} went from public to private`);
+      return stripeCommunityPrivateChannelAddedQueue.add({
+        communityId: channel.communityId,
+      });
+    } else {
+      debug(`Channel ${channel.name} went from private to public`);
+      // an existing channel went from private to public
+      return stripeCommunityPrivateChannelRemovedQueue.add({
+        communityId: channel.communityId,
+      });
+    }
+  });
+
 export const privateChannelArchived = () =>
-  listenToChangedFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
-    // a private channel was archived
+  listenToNewFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
+    debug('Channel archived');
+
     if (channel.isPrivate && channel.archivedAt) {
       debug(`Private channel ${channel.name} archived`);
       return stripeCommunityPrivateChannelRemovedQueue.add({
@@ -60,25 +79,8 @@ export const privateChannelArchived = () =>
     return;
   });
 
-export const channelPrivacyChanged = () =>
-  listenToChangedFieldIn(db, 'isPrivate')('channels', (channel: DBChannel) => {
-    // an existing channel went from public to private
-    if (channel.isPrivate) {
-      debug(`Channel ${channel.name} went from public to private`);
-      return stripeCommunityPrivateChannelAddedQueue.add({
-        communityId: channel.communityId,
-      });
-    } else {
-      debug(`Channel ${channel.name} went from private to public`);
-      // an existing channel went from private to public
-      return stripeCommunityPrivateChannelRemovedQueue.add({
-        communityId: channel.communityId,
-      });
-    }
-  });
-
-export const channelArchivedAtFieldAdded = () =>
-  listenToNewFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
+export const privateChannelRestored = () =>
+  listenToDeletedFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
     debug('Channel archived');
 
     if (channel.isPrivate && channel.archivedAt) {
