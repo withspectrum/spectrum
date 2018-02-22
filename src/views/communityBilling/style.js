@@ -72,6 +72,10 @@ export const LineItem = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   padding: 8px 0 0;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
 `;
 
 export const LineItemTotal = styled(LineItem)`
