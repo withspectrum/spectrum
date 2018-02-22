@@ -29,6 +29,32 @@ js_defaults: &js_defaults
   docker:
     - image: circleci/node:8
 
+rethinkdb: &rethinkdb
+  <<: *js_defaults
+  steps:
+    - run: source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+    - run: wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+    - run: sudo apt-get update
+    - run: sudo apt-get install rethinkdb=2.3.5
+    - run:
+      - command: rethinkdb --bind all
+      - background: true
+
+servers: &servers
+  <<: *rethinkdb
+  steps:
+      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: yarn run build:web
+      - run: yarn run build:iris
+      - run:
+        - command: TEST_DB=true yarn run dev:iris
+        - background: true
+      - run:
+        - command: yarn run dev:web
+        - background: true
+      # This is about how long it takes our servers to start
+      - run: sleep 60
+
 macos_defaults: &macos_defaults
   <<: *defaults
   macos:
@@ -58,6 +84,15 @@ jobs:
       - attach_workspace:
           at: ~/spectrum
       - run: cd ./mobile && yarn test:unit
+
+  test_js:
+    <<: *servers
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run: yarn run flow
+      - run: yarn run test:ci
+
 
   # Tests native code of the mobile app
   test_mobile_native:
