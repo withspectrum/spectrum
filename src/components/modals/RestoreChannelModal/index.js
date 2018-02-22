@@ -5,35 +5,31 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import getCommunitySettings, {
-  type GetCommunitySettingsType,
-} from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import restoreChannel from 'shared/graphql/mutations/channel/restoreChannel';
-import { getCardImage } from 'src/views/communityBilling/utils';
-import StripeCardForm from 'src/components/stripeCardForm';
-
+import StripeCardWell from 'src/components/stripeCardForm/modalWell';
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
-import { Form, Actions, Well } from './style';
+import { Form, Actions } from './style';
 
 type Props = {
   dispatch: Function,
   isOpen: boolean,
   channel: GetChannelType,
+  id: string,
   restoreChannel: Function,
-  data: {
-    community: GetCommunitySettingsType,
-  },
 };
 
 type State = {
   isLoading: boolean,
+  hasChargeableSource: boolean,
 };
 
 class RestoreChannelModal extends React.Component<Props, State> {
-  state = { isLoading: false };
+  state = { isLoading: false, hasChargeableSource: false };
+
+  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
 
   close = () => {
     this.props.dispatch(closeModal());
@@ -59,17 +55,10 @@ class RestoreChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, channel, data } = this.props;
-    const { isLoading } = this.state;
+    const { isOpen, channel } = this.props;
+    const { isLoading, hasChargeableSource } = this.state;
 
     const styles = modalStyles(420);
-
-    const defaultSource =
-      data.community &&
-      data.community.billingSettings &&
-      data.community.billingSettings.sources &&
-      data.community.billingSettings.sources.length > 0 &&
-      data.community.billingSettings.sources.find(source => source.isDefault);
 
     return (
       <Modal
@@ -93,55 +82,17 @@ class RestoreChannelModal extends React.Component<Props, State> {
               subscription at $10 per month.
             </Description>
 
-            {data.community && (
-              <React.Fragment>
-                {channel.isPrivate &&
-                  data.community.hasChargeableSource &&
-                  defaultSource && (
-                    <React.Fragment>
-                      <Well>
-                        <img
-                          src={getCardImage(defaultSource.card.brand)}
-                          width={32}
-                        />
-                        <span>
-                          Pay with {defaultSource.card.brand} ending in{' '}
-                          {defaultSource.card.last4}
-                        </span>
-                      </Well>
-                    </React.Fragment>
-                  )}
-
-                {channel.isPrivate &&
-                  !data.community.hasChargeableSource && (
-                    <React.Fragment>
-                      <Well column>
-                        <p>
-                          Add your payment information below to restore this
-                          private channel. All payment information is secured
-                          and encrypted by Stripe.
-                        </p>
-                        <StripeCardForm
-                          community={data.community}
-                          render={props => (
-                            <Button
-                              disabled={props.isLoading}
-                              loading={props.isLoading}
-                            >
-                              Save Card
-                            </Button>
-                          )}
-                        />
-                      </Well>
-                    </React.Fragment>
-                  )}
-              </React.Fragment>
+            {channel.isPrivate && (
+              <StripeCardWell
+                id={this.props.id}
+                onSourceAvailable={this.onSourceAvailable}
+              />
             )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
-                disabled={channel.isPrivate && !defaultSource}
+                disabled={channel.isPrivate && !hasChargeableSource}
                 loading={isLoading}
                 onClick={this.restore}
               >
@@ -162,6 +113,5 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  getCommunitySettings,
   restoreChannel
 )(RestoreChannelModal);

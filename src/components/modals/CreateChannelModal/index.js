@@ -11,19 +11,12 @@ import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
-import getCommunitySettings, {
-  type GetCommunitySettingsType,
-} from 'shared/graphql/queries/community/getCommunitySettings';
-import viewNetworkHandler, {
-  type ViewNetworkHandlerType,
-} from 'src/components/viewNetworkHandler';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
-import { getCardImage } from 'src/views/communityBilling/utils';
-import StripeCardForm from 'src/components/stripeCardForm';
+import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
@@ -35,7 +28,7 @@ import {
   Error,
   Checkbox,
 } from '../../formElements';
-import { Form, Actions, Well } from './style';
+import { Form, Actions } from './style';
 
 type State = {
   name: string,
@@ -48,6 +41,7 @@ type State = {
   nameError: boolean,
   createError: boolean,
   loading: boolean,
+  hasChargeableSource: boolean,
 };
 
 type Props = {
@@ -56,10 +50,6 @@ type Props = {
   isOpen: boolean,
   community: GetCommunityType,
   createChannel: Function,
-  ...$Exact<ViewNetworkHandlerType>,
-  data: {
-    community: GetCommunitySettingsType,
-  },
 };
 
 class CreateChannelModal extends React.Component<Props, State> {
@@ -77,6 +67,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError: false,
       createError: false,
       loading: false,
+      hasChargeableSource: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -85,6 +76,8 @@ class CreateChannelModal extends React.Component<Props, State> {
   close = () => {
     this.props.dispatch(closeModal());
   };
+
+  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
 
   changeName = e => {
     const name = e.target.value;
@@ -268,7 +261,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, community, data } = this.props;
+    const { isOpen, community } = this.props;
 
     const {
       name,
@@ -281,16 +274,10 @@ class CreateChannelModal extends React.Component<Props, State> {
       descriptionError,
       createError,
       loading,
+      hasChargeableSource,
     } = this.state;
 
     const styles = modalStyles(420);
-
-    const defaultSource =
-      data.community &&
-      data.community.billingSettings &&
-      data.community.billingSettings.sources &&
-      data.community.billingSettings.sources.length > 0 &&
-      data.community.billingSettings.sources.find(source => source.isDefault);
 
     return (
       <Modal
@@ -349,65 +336,25 @@ class CreateChannelModal extends React.Component<Props, State> {
               </Error>
             )}
 
-            {data.community && (
-              <React.Fragment>
-                <Checkbox
-                  id="isPrivate"
-                  checked={isPrivate}
-                  onChange={this.changePrivate}
-                >
-                  Private channel · $10/mo
-                </Checkbox>
+            <Checkbox
+              id="isPrivate"
+              checked={isPrivate}
+              onChange={this.changePrivate}
+            >
+              Private channel · $10/mo
+            </Checkbox>
 
-                {!data.community.hasChargeableSource && (
-                  <UpsellDescription>
-                    Private channels protect all conversations and messages, and
-                    all new members must be manually approved.
-                  </UpsellDescription>
-                )}
-
-                {isPrivate &&
-                  data.community.hasChargeableSource &&
-                  defaultSource && (
-                    <React.Fragment>
-                      <Well>
-                        <img
-                          src={getCardImage(defaultSource.card.brand)}
-                          width={32}
-                        />
-                        <span>
-                          Pay with {defaultSource.card.brand} ending in{' '}
-                          {defaultSource.card.last4}
-                        </span>
-                      </Well>
-                    </React.Fragment>
-                  )}
-
-                {isPrivate &&
-                  !data.community.hasChargeableSource && (
-                    <React.Fragment>
-                      <Well column>
-                        <p>
-                          Add your payment information below to create a private
-                          channel. All payment information is secured and
-                          encrypted by Stripe.
-                        </p>
-                        <StripeCardForm
-                          community={data.community}
-                          render={props => (
-                            <Button
-                              disabled={props.isLoading}
-                              loading={props.isLoading}
-                            >
-                              Save Card
-                            </Button>
-                          )}
-                        />
-                      </Well>
-                    </React.Fragment>
-                  )}
-              </React.Fragment>
+            {isPrivate && (
+              <StripeModalWell
+                id={community.id}
+                onSourceAvailable={this.onSourceAvailable}
+              />
             )}
+
+            <UpsellDescription>
+              Private channels protect all conversations and messages, and all
+              new members must be manually approved.
+            </UpsellDescription>
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
@@ -417,7 +364,7 @@ class CreateChannelModal extends React.Component<Props, State> {
                   !slug ||
                   slugTaken ||
                   !description ||
-                  (isPrivate && !defaultSource)
+                  (isPrivate && !hasChargeableSource)
                 }
                 loading={loading}
                 onClick={this.create}
@@ -445,9 +392,7 @@ const map = state => ({
 export default compose(
   // $FlowIssue
   connect(map),
-  getCommunitySettings,
   withApollo,
   createChannelMutation,
-  withRouter,
-  viewNetworkHandler
+  withRouter
 )(CreateChannelModal);

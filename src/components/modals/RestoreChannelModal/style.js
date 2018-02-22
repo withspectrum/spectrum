@@ -19,30 +19,3 @@ export const Actions = styled(FlexRow)`
     margin-left: 8px;
   }
 `;
-
-export const Well = styled.div`
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: stretch;
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
-  border: 1px solid ${props => props.theme.bg.border};
-  margin-top: 4px;
-  flex-direction: ${props => (props.column ? 'column' : 'row')};
-
-  p {
-    margin-bottom: 8px;
-  }
-
-  form {
-    width: 100%;
-  }
-
-  img {
-    margin-right: 8px;
-  }
-`;
