@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
@@ -12,14 +11,23 @@ import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
+import getCommunitySettings, {
+  type GetCommunitySettingsType,
+} from 'shared/graphql/queries/community/getCommunitySettings';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
 import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
+import { getCardImage } from 'src/views/communityBilling/utils';
+import StripeCardForm from 'src/components/stripeCardForm';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
-import { modalStyles, Description, UpsellDescription } from '../styles';
+import { modalStyles, UpsellDescription } from '../styles';
 import {
   Input,
   UnderlineInput,
@@ -27,7 +35,7 @@ import {
   Error,
   Checkbox,
 } from '../../formElements';
-import { Form, Actions } from './style';
+import { Form, Actions, Well } from './style';
 
 type State = {
   name: string,
@@ -46,8 +54,12 @@ type Props = {
   client: Object,
   dispatch: Function,
   isOpen: boolean,
-  modalProps: any,
+  community: GetCommunityType,
   createChannel: Function,
+  ...$Exact<ViewNetworkHandlerType>,
+  data: {
+    community: GetCommunitySettingsType,
+  },
 };
 
 class CreateChannelModal extends React.Component<Props, State> {
@@ -125,7 +137,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   };
 
   checkSlug = (slug: string) => {
-    const communitySlug = this.props.modalProps.slug;
+    const communitySlug = this.props.community.slug;
 
     if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
       return this.setState({
@@ -202,7 +214,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError,
       descriptionError,
     } = this.state;
-    const { modalProps: { id }, modalProps } = this.props;
+    const { community } = this.props;
 
     // if an error is present, ensure the client cant submit the form
     if (slugTaken || nameError || descriptionError || slugError) {
@@ -224,7 +236,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     // create the mutation input
     const input = {
-      communityId: id,
+      communityId: community.id,
       name,
       slug,
       description,
@@ -239,7 +251,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
         const { createChannel: channel } = data;
         // eslint-disable-next-line
-        window.location.href = `/${modalProps.slug}/${channel.slug}`;
+        window.location.href = `/${community.slug}/${channel.slug}`;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')
@@ -256,7 +268,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, modalProps } = this.props;
+    const { isOpen, community, data } = this.props;
 
     const {
       name,
@@ -271,7 +283,14 @@ class CreateChannelModal extends React.Component<Props, State> {
       loading,
     } = this.state;
 
-    const styles = modalStyles();
+    const styles = modalStyles(420);
+
+    const defaultSource =
+      data.community &&
+      data.community.billingSettings &&
+      data.community.billingSettings.sources &&
+      data.community.billingSettings.sources.length > 0 &&
+      data.community.billingSettings.sources.find(source => source.isDefault);
 
     return (
       <Modal
@@ -304,7 +323,7 @@ class CreateChannelModal extends React.Component<Props, State> {
             )}
 
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-              {`/${modalProps.slug}/`}
+              {`/${community.slug}/`}
             </UnderlineInput>
 
             {slugTaken && (
@@ -330,50 +349,80 @@ class CreateChannelModal extends React.Component<Props, State> {
               </Error>
             )}
 
-            <Checkbox
-              id="isPrivate"
-              checked={isPrivate}
-              onChange={this.changePrivate}
-              disabled={!modalProps.isPro}
-            >
-              Private channel
-            </Checkbox>
+            {data.community && (
+              <React.Fragment>
+                <Checkbox
+                  id="isPrivate"
+                  checked={isPrivate}
+                  onChange={this.changePrivate}
+                >
+                  Private channel · $10/mo
+                </Checkbox>
 
-            {!modalProps.isPro && (
-              <UpsellDescription>
-                Standard communities can create private channels to protect
-                threads, messages, and manually approve all new members.
-                <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
-                  Learn more
-                </Link>
-              </UpsellDescription>
+                {!data.community.hasChargeableSource && (
+                  <UpsellDescription>
+                    Private channels protect all conversations and messages, and
+                    all new members must be manually approved.
+                  </UpsellDescription>
+                )}
+
+                {isPrivate &&
+                  data.community.hasChargeableSource &&
+                  defaultSource && (
+                    <React.Fragment>
+                      <Well>
+                        <img
+                          src={getCardImage(defaultSource.card.brand)}
+                          width={32}
+                        />
+                        <span>
+                          Pay with {defaultSource.card.brand} ending in{' '}
+                          {defaultSource.card.last4}
+                        </span>
+                      </Well>
+                    </React.Fragment>
+                  )}
+
+                {isPrivate &&
+                  !data.community.hasChargeableSource && (
+                    <React.Fragment>
+                      <Well column>
+                        <p>
+                          Add your payment information below to create a private
+                          channel. All payment information is secured and
+                          encrypted by Stripe.
+                        </p>
+                        <StripeCardForm
+                          community={data.community}
+                          render={props => (
+                            <Button
+                              disabled={props.isLoading}
+                              loading={props.isLoading}
+                            >
+                              Save Card
+                            </Button>
+                          )}
+                        />
+                      </Well>
+                    </React.Fragment>
+                  )}
+              </React.Fragment>
             )}
-
-            {modalProps.isPro &&
-              isPrivate && (
-                <Description>
-                  Only approved people on Spectrum can see the threads,
-                  messages, and members in this channel. You can manually
-                  approve users who request to join this channel.
-                </Description>
-              )}
-
-            {modalProps.isPro &&
-              !isPrivate && (
-                <Description>
-                  Anyone on Spectrum can join this channel, post threads and
-                  messages, and will be able to see other members.
-                </Description>
-              )}
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
-                disabled={!name || !slug || slugTaken || !description}
+                disabled={
+                  !name ||
+                  !slug ||
+                  slugTaken ||
+                  !description ||
+                  (isPrivate && !defaultSource)
+                }
                 loading={loading}
                 onClick={this.create}
               >
-                Save
+                Create Channel
               </Button>
             </Actions>
 
@@ -389,19 +438,16 @@ class CreateChannelModal extends React.Component<Props, State> {
   }
 }
 
-const CreateChannelModalWithMutation = compose(
-  createChannelMutation,
-  withRouter
-)(CreateChannelModal);
-
-const mapStateToProps = state => ({
+const map = state => ({
+  currentUser: state.users.currentUser,
   isOpen: state.modals.isOpen,
-  modalProps: state.modals.modalProps,
 });
-
-// $FlowIssue
-const CreateChannelModalWithState = connect(mapStateToProps)(
-  CreateChannelModalWithMutation
-);
-const CreateChannelModalWithQuery = withApollo(CreateChannelModalWithState);
-export default CreateChannelModalWithQuery;
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getCommunitySettings,
+  withApollo,
+  createChannelMutation,
+  withRouter,
+  viewNetworkHandler
+)(CreateChannelModal);

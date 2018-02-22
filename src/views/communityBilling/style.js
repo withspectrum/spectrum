@@ -102,7 +102,8 @@ export const LineItemTitle = styled.p`
 `;
 
 export const LineItemDescription = styled.p`
-  line-height: 1.6;
+  line-height: 1.4;
+  margin-top: 2px;
   font-size: 14px;
   font-weight: 400;
   color: ${props => props.theme.text.alt};

@@ -68,7 +68,12 @@ class ChannelList extends React.Component<Props> {
                 glyph="plus"
                 color="text.placeholder"
                 onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                  dispatch(
+                    openModal('CREATE_CHANNEL_MODAL', {
+                      community,
+                      id: community.id,
+                    })
+                  )
                 }
               />
             )}

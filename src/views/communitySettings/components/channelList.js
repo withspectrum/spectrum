@@ -65,7 +65,12 @@ class ChannelList extends React.Component<Props> {
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
               onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                dispatch(
+                  openModal('CREATE_CHANNEL_MODAL', {
+                    community,
+                    id: community.id,
+                  })
+                )
               }
             >
               Create Channel

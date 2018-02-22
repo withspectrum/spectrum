@@ -107,10 +107,10 @@ export const Description = styled.p`
 `;
 
 export const UpsellDescription = styled(Description)`
-  padding: 8px 16px;
+  padding: 8px 12px;
   margin: 8px 0;
-  border-radius: 8px;
-  border: 2px solid ${props => props.theme.success.border};
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.success.border};
   background: ${props => props.theme.success.wash};
   color: ${props => props.theme.success.dark};
 
