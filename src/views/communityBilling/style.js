@@ -107,6 +107,13 @@ export const LineItemDescription = styled.p`
   font-weight: 400;
   color: ${props => props.theme.text.alt};
 
+  cursor: ${props => (props.link ? 'pointer' : 'auto')};
+
+  &:hover {
+    color: ${props =>
+      props.warn ? props.theme.warn.default : props.theme.text.alt};
+  }
+
   a {
     display: block;
     color: ${props => props.theme.brand.alt};

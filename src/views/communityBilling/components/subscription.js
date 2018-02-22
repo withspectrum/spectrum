@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { SubscriptionType } from 'shared/graphql/fragments/community/communitySettings';
 import Link from '../../../components/link';
+import { formatNumbersToDollars } from '../utils';
+import { openModal } from 'src/actions/modals';
 import {
   LineItem,
   LineItemLeft,
@@ -17,6 +20,7 @@ import {
 type Props = {
   subscription: SubscriptionType,
   community: GetCommunitySettingsType,
+  dispatch: Function,
 };
 type LineItemType = {
   id: string,
@@ -28,8 +32,25 @@ type LineItemType = {
 };
 
 class Subscription extends React.Component<Props> {
-  formatAmount = (amount: number): string =>
-    (amount / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+  initRemoveAnalytics = () => {
+    const message = (
+      <div>
+        <p>
+          Are you sure you want to remove community analytics from your
+          subscription?
+        </p>
+      </div>
+    );
+
+    return this.props.dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: this.props.community.id,
+        entity: 'community-analytics',
+        message,
+        slug: this.props.community.slug,
+      })
+    );
+  };
 
   totalLineItem = () => {
     const { subscription } = this.props;
@@ -65,7 +86,7 @@ class Subscription extends React.Component<Props> {
           </LineItemLeft>
           <LineItemRight>
             <LineItemTitleTotal>
-              ${subtotal && subtotal > 0 ? this.formatAmount(subtotal) : 0}
+              ${subtotal && subtotal > 0 ? formatNumbersToDollars(subtotal) : 0}
             </LineItemTitleTotal>
           </LineItemRight>
         </LineItemTotal>
@@ -110,10 +131,12 @@ class Subscription extends React.Component<Props> {
         </LineItemLeft>
         <LineItemRight>
           <LineItemDescription>
-            ${subtotal && subtotal > 0 ? this.formatAmount(subtotal) : 0}
+            ${subtotal && subtotal > 0 ? formatNumbersToDollars(subtotal) : 0}
           </LineItemDescription>
           <LineItemDescription>{discountString}</LineItemDescription>
-          <LineItemTitleTotal>${this.formatAmount(total)}</LineItemTitleTotal>
+          <LineItemTitleTotal>
+            ${formatNumbersToDollars(total)}
+          </LineItemTitleTotal>
         </LineItemRight>
       </LineItemTotal>
     );
@@ -123,9 +146,14 @@ class Subscription extends React.Component<Props> {
     <LineItem key={lineItem.id}>
       <LineItemLeft>
         <LineItemTitle>Community analytics</LineItemTitle>
+        <LineItemDescription warn link onClick={this.initRemoveAnalytics}>
+          Remove analytics
+        </LineItemDescription>
       </LineItemLeft>
       <LineItemRight>
-        <LineItemPrice>${this.formatAmount(lineItem.amount)}</LineItemPrice>
+        <LineItemPrice>
+          ${formatNumbersToDollars(lineItem.amount)}
+        </LineItemPrice>
       </LineItemRight>
     </LineItem>
   );
@@ -136,7 +164,9 @@ class Subscription extends React.Component<Props> {
         <LineItemTitle>Priority support</LineItemTitle>
       </LineItemLeft>
       <LineItemRight>
-        <LineItemPrice>${this.formatAmount(lineItem.amount)}</LineItemPrice>
+        <LineItemPrice>
+          ${formatNumbersToDollars(lineItem.amount)}
+        </LineItemPrice>
       </LineItemRight>
     </LineItem>
   );
@@ -152,7 +182,7 @@ class Subscription extends React.Component<Props> {
       </LineItemLeft>
       <LineItemRight>
         <LineItemPrice>
-          ${this.formatAmount(lineItem.amount * lineItem.quantity)}
+          ${formatNumbersToDollars(lineItem.amount * lineItem.quantity)}
         </LineItemPrice>
       </LineItemRight>
     </LineItem>
@@ -170,7 +200,7 @@ class Subscription extends React.Component<Props> {
       </LineItemLeft>
       <LineItemRight>
         <LineItemPrice>
-          ${this.formatAmount(lineItem.amount * lineItem.quantity)}
+          ${formatNumbersToDollars(lineItem.amount * lineItem.quantity)}
         </LineItemPrice>
       </LineItemRight>
     </LineItem>
@@ -210,4 +240,4 @@ class Subscription extends React.Component<Props> {
   }
 }
 
-export default Subscription;
+export default connect()(Subscription);

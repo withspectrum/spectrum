@@ -12,6 +12,7 @@ import removePaymentSource from './removePaymentSource';
 import makePaymentSourceDefault from './makePaymentSourceDefault';
 import cancelSubscription from './cancelSubscription';
 import enableCommunityAnalytics from './enableCommunityAnalytics';
+import disableCommunityAnalytics from './disableCommunityAnalytics';
 
 module.exports = {
   Mutation: {
@@ -28,5 +29,6 @@ module.exports = {
     makePaymentSourceDefault,
     cancelSubscription,
     enableCommunityAnalytics,
+    disableCommunityAnalytics,
   },
 };

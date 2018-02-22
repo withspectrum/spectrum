@@ -21,6 +21,7 @@ import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
+import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -53,6 +54,7 @@ type Props = {
   deleteThread: Function,
   deleteChannel: Function,
   cancelSubscription: Function,
+  disableCommunityAnalytics: Function,
   dispatch: Function,
   isOpen: boolean,
 };
@@ -206,6 +208,23 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             });
           });
       }
+      case 'community-analytics': {
+        return this.props
+          .disableCommunityAnalytics({ communityId: id })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Analytics removed'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
       default: {
         this.setState({
           isLoading: false,
@@ -265,6 +284,7 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteCommunityMutation,
   deleteChannelMutation,
   deleteThreadMutation,
+  disableCommunityAnalytics,
   deleteMessage,
   cancelSubscription,
   withRouter

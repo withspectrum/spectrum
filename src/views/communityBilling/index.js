@@ -67,7 +67,10 @@ class CommunityMembersSettings extends React.Component<Props> {
           <Column>
             <SectionCard>
               <SectionTitle>Your subscription</SectionTitle>
-              {community.billingSettings.subscriptions.length === 0 && (
+              {(community.billingSettings.subscriptions.length === 0 ||
+                (community.billingSettings.subscriptions.length > 0 &&
+                  community.billingSettings.subscriptions[0].items.length ===
+                    0)) && (
                 <React.Fragment>
                   <SectionSubtitle>
                     You have no active subscriptions. As soon as you add
@@ -84,7 +87,8 @@ class CommunityMembersSettings extends React.Component<Props> {
               )}
               {community.billingSettings.subscriptions.map(
                 subscription =>
-                  subscription && (
+                  subscription &&
+                  subscription.items.length > 0 && (
                     <Subscription
                       key={subscription.id}
                       subscription={subscription}
@@ -141,24 +145,25 @@ class CommunityMembersSettings extends React.Component<Props> {
               )}
             </SectionCard>
 
-            {community.billingSettings.subscriptions.length > 0 && (
-              <SectionCard>
-                <SectionTitle>Cancel your subscription</SectionTitle>
-                <SectionSubtitle>
-                  Canceling your subscription will immediately remove access to
-                  all paid features, including private channels and moderator
-                  seats.
-                </SectionSubtitle>
-                <SectionSubtitle>
-                  <Link to={'/pricing'}>Learn more about canceling</Link>
-                </SectionSubtitle>
-                <SectionCardFooter>
-                  <Button gradientTheme={'warn'} onClick={this.triggerCancel}>
-                    Cancel subscription
-                  </Button>
-                </SectionCardFooter>
-              </SectionCard>
-            )}
+            {community.billingSettings.subscriptions.length > 0 &&
+              community.billingSettings.subscriptions[0].items.length > 0 && (
+                <SectionCard>
+                  <SectionTitle>Cancel your subscription</SectionTitle>
+                  <SectionSubtitle>
+                    Canceling your subscription will immediately remove access
+                    to all paid features, including private channels and
+                    moderator seats.
+                  </SectionSubtitle>
+                  <SectionSubtitle>
+                    <Link to={'/pricing'}>Learn more about canceling</Link>
+                  </SectionSubtitle>
+                  <SectionCardFooter>
+                    <Button gradientTheme={'warn'} onClick={this.triggerCancel}>
+                      Cancel subscription
+                    </Button>
+                  </SectionCardFooter>
+                </SectionCard>
+              )}
           </Column>
         </SectionsContainer>
       );

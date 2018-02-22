@@ -21,7 +21,7 @@ export default async (
   return await updateCommunityPaidFeature(
     communityId,
     'analyticsEnabled',
-    true
+    false
   ).catch(err => {
     return new UserError('We had trouble saving your card', err.message);
   });

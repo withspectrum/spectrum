@@ -188,10 +188,10 @@ class EditDropdown extends React.Component<Props, State> {
     return (
       <DropdownSectionCardInfo>
         <img src={getCardImage(defaultSource.card.brand)} width={24} />
-        <p>
+        <span>
           Pay with {defaultSource.card.brand} ending in{' '}
           {defaultSource.card.last4}
-        </p>
+        </span>
       </DropdownSectionCardInfo>
     );
   };

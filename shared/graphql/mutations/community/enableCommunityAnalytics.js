@@ -46,8 +46,6 @@ const enableCommunityAnalyticsOptions = {
             },
           });
 
-          console.log('analytics data', data);
-
           data.community.hasFeatures = {
             ...data.community.hasFeatures,
             analytics: true,
