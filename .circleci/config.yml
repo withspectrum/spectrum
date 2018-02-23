@@ -65,26 +65,40 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-      - run: wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-      - run: sudo apt-get update
-      - run: sudo apt-get install rethinkdb=2.3.5
       - run:
-        - command: rethinkdb --bind all
-        - background: true
-      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
-      - run: yarn run build:web
-      - run: yarn run build:iris
+          name: Install RethinkDB 2.3.5
+          command:
+            |
+              source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+              wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+              sudo apt-get update
+              sudo apt-get install rethinkdb=2.3.5
       - run:
-        - command: TEST_DB=true yarn run dev:iris
-        - background: true
+          name: Start RethinkDB
+          command: rethinkdb --bind all
+          background: true
       - run:
-        - command: yarn run dev:web
-        - background: true
-      # This is about how long it takes our servers to start
+          name: Setup and build
+          command:
+            |
+              node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+              yarn run build:web
+              yarn run build:iris
+      - run:
+          name: Start Iris in the background
+          command: TEST_DB=true yarn run dev:iris
+          background: true
+      - run:
+          name: Start web client in the background
+          command: yarn run dev:web
+          background: true
       - run: sleep 60
-      - run: yarn run flow
-      - run: yarn run test:ci
+      - run:
+          name: Run Flow
+          command: yarn run flow
+      - run:
+          name: Run Tests
+          command: yarn run test:ci
 
 
   # Tests native code of the mobile app
