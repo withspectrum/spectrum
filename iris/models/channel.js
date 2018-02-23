@@ -1,6 +1,5 @@
 // @flow
 const { db } = require('./db');
-import { sendChannelNotificationQueue } from 'shared/bull/queues';
 
 type DBChannel = {
   communityId: string,
@@ -226,19 +225,12 @@ const createChannel = (
         slug,
         isPrivate,
         isDefault: isDefault ? true : false,
+        creatorId: userId,
       },
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val)
-    .then(channel => {
-      // only trigger a new channel notification is the channel is public
-      if (!channel.isPrivate) {
-        sendChannelNotificationQueue.add({ channel, userId });
-      }
-
-      return channel;
-    });
+    .then(result => result.changes[0].new_val);
 };
 
 const createGeneralChannel = (

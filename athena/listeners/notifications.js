@@ -1,8 +1,11 @@
 // @flow
-const {
+import {
   listenToNewNotifications,
   listenToNewDirectMessageNotifications,
-} = require('../models/notification');
+} from '../models/notification';
+
+import { newChannelCreated } from '../models/channel';
+
 import { sendNotificationAsPushQueue } from 'shared/bull/queues';
 
 const sendDeduplicatedPushNotification = notification => {
@@ -21,4 +24,5 @@ const sendDeduplicatedPushNotification = notification => {
 export default () => {
   listenToNewNotifications(sendDeduplicatedPushNotification);
   listenToNewDirectMessageNotifications(sendDeduplicatedPushNotification);
+  newChannelCreated();
 };

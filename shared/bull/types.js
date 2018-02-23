@@ -27,10 +27,7 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
-export type ChannelNotificationJobData = {
-  channel: DBChannel,
-  userId: string,
-};
+export type ChannelNotificationJobData = { channel: DBChannel };
 
 export type ThreadNotificationJobData = { thread: DBThread };
 
