@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { track } from 'src/helpers/events';
-import { FeatureUpsell, Sell, PageFooter, Plans } from '../view';
 import Nav from '../components/nav';
+import Icon from 'src/components/icons';
 import { Wrapper } from '../style';
 import {
   ContentContainer,
@@ -13,6 +13,28 @@ import {
   SectionSubtitle,
   SectionDescription,
   Subsection,
+  FreeFeaturesList,
+  FreeFeature,
+  FreeFeatureContent,
+  FeatureIcon,
+  FeatureLabel,
+  FeatureDescription,
+  FreeFeatureAction,
+  FreeFeatureButton,
+  Highlight,
+  Divider,
+  ModeratorsFeatureIcon,
+  ModeratorsFeatureLabel,
+  ModeratorsPriceLabel,
+  PrivateChannelsFeatureIcon,
+  PrivateChannelsFeatureLabel,
+  PrivateChannelsPriceLabel,
+  AnalyticsFeatureIcon,
+  AnalyticsFeatureLabel,
+  AnalyticsPriceLabel,
+  ModerationToolsFeatureIcon,
+  ModerationToolsFeatureLabel,
+  ModerationToolsPriceLabel,
 } from './style';
 
 class Pricing extends React.Component<{}> {
@@ -26,7 +48,7 @@ class Pricing extends React.Component<{}> {
         <Nav location={'pricing'} />
 
         <ContentContainer>
-          <PageTitle>Pricing designed with community in mind.</PageTitle>
+          <PageTitle>Pricing designed with communities in mind.</PageTitle>
 
           <PageSubtitle>
             We know how hard it is to build a great online community. We’ve
@@ -43,8 +65,10 @@ class Pricing extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              That’s why we built Spectrum to only charge you for the things you
-              actually use in order to keep your community growing.
+              <Highlight>
+                That’s why we promise to only charge you for the features you
+                actually used to grow and manage your community each month.
+              </Highlight>
             </SectionDescription>
           </Section>
 
@@ -55,17 +79,135 @@ class Pricing extends React.Component<{}> {
               before. That’s why all communities on Spectrum can be started and
               maintained indefinitely, for free. Free communities come with:
             </SectionDescription>
-          </Section>
 
-          <Section>
-            <SectionTitle>
-              If your community gives back, we’ll giving back, too
-            </SectionTitle>
-            <SectionDescription>
-              If you’re looking for a place to grow your community for an
-              open-source project, non-profit, or education program, our paid
-              features are 50% off. [Get in touch]
-            </SectionDescription>
+            <FreeFeaturesList>
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Unlimited conversations</FeatureLabel>
+
+                  <FeatureDescription>
+                    Never worry about losing a great conversation again.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Unlimited members</FeatureLabel>
+
+                  <FeatureDescription>
+                    Never worry about growing too big.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Unlimited public channels</FeatureLabel>
+
+                  <FeatureDescription>
+                    Stay organized as your community grows.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Search engine optimized</FeatureLabel>
+
+                  <FeatureDescription>
+                    Grow organically when people discover you through search.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Reputation system</FeatureLabel>
+
+                  <FeatureDescription>
+                    Understand the way members contribute to the conversation.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>Ad free</FeatureLabel>
+
+                  <FeatureDescription>
+                    Your community’s data is never sold to advertisers or third
+                    parties.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <FeatureIcon>
+                  <Icon glyph={'checkmark'} />
+                </FeatureIcon>
+
+                <FreeFeatureContent>
+                  <FeatureLabel>A new home</FeatureLabel>
+
+                  <FeatureDescription>
+                    Create your own space for your community to thrive.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+            </FreeFeaturesList>
           </Section>
 
           <Section>
@@ -73,6 +215,112 @@ class Pricing extends React.Component<{}> {
             <SectionDescription>
               When you need it, we’ve built features that will make growing and
               managing your community easier, save you time, and save you money.
+            </SectionDescription>
+
+            <FreeFeaturesList>
+              <FreeFeature>
+                <ModeratorsFeatureIcon>
+                  <Icon glyph={'member-add'} />
+                </ModeratorsFeatureIcon>
+
+                <FreeFeatureContent>
+                  <ModeratorsFeatureLabel>
+                    Additional moderators
+                    <ModeratorsPriceLabel>$10 per month</ModeratorsPriceLabel>
+                  </ModeratorsFeatureLabel>
+
+                  <FeatureDescription>
+                    An extra set of hands to help keep conversations in your
+                    community healthy and productive.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <PrivateChannelsFeatureIcon>
+                  <Icon glyph={'private-outline'} />
+                </PrivateChannelsFeatureIcon>
+
+                <FreeFeatureContent>
+                  <PrivateChannelsFeatureLabel>
+                    Private channels
+                    <PrivateChannelsPriceLabel>
+                      $10 per month
+                    </PrivateChannelsPriceLabel>
+                  </PrivateChannelsFeatureLabel>
+
+                  <FeatureDescription>
+                    A private space for discussions, requiring all members to be
+                    approved before participating.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <AnalyticsFeatureIcon>
+                  <Icon glyph={'analytics'} />
+                </AnalyticsFeatureIcon>
+
+                <FreeFeatureContent>
+                  <AnalyticsFeatureLabel>
+                    Analytics
+                    <AnalyticsPriceLabel>$100 per month</AnalyticsPriceLabel>
+                  </AnalyticsFeatureLabel>
+
+                  <FeatureDescription>
+                    Understand who is in your community, and what they care the
+                    most about.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+
+              <FreeFeature>
+                <ModerationToolsFeatureIcon>
+                  <Icon glyph={'support'} />
+                </ModerationToolsFeatureIcon>
+
+                <FreeFeatureContent>
+                  <ModerationToolsFeatureLabel>
+                    Advanced moderation tools
+                    <ModerationToolsPriceLabel>
+                      Coming soon
+                    </ModerationToolsPriceLabel>
+                  </ModerationToolsFeatureLabel>
+
+                  <FeatureDescription>
+                    Automate away the pain of moderating spam and harrassment.
+                    Coming in 2018.
+                  </FeatureDescription>
+                </FreeFeatureContent>
+
+                <FreeFeatureAction>
+                  <FreeFeatureButton>Learn More</FreeFeatureButton>
+                </FreeFeatureAction>
+              </FreeFeature>
+            </FreeFeaturesList>
+          </Section>
+
+          <Section>
+            <SectionTitle>
+              If your community gives back, we’ll give back, too
+            </SectionTitle>
+            <SectionDescription>
+              If you’re looking for a place to grow your community for an&nbsp;
+              <Highlight>
+                open-source project, non-profit, or education program
+              </Highlight>, our paid features are 50% off. [Get in touch]
             </SectionDescription>
           </Section>
 
@@ -89,6 +337,8 @@ class Pricing extends React.Component<{}> {
               private channels, moderator seats, and community analytics.
             </SectionDescription>
           </Section>
+
+          <Divider />
 
           <Section>
             <SectionTitle>More about our Fair Price Promise</SectionTitle>
@@ -166,11 +416,14 @@ class Pricing extends React.Component<{}> {
               </SectionDescription>
 
               <SectionDescription>
-                But at the end of the day our promise is this: your community
-                will only ever be charged for the time where you’re using paid
-                features. As a result, there will often be cases where proration
-                changes the amount you’ll see on your card statement at the end
-                of each month.
+                But at the end of the day our promise is this:{' '}
+                <Highlight>
+                  your community will only ever be charged for the time where
+                  you’re using paid features.
+                </Highlight>{' '}
+                As a result, there will often be cases where proration changes
+                the amount you’ll see on your card statement at the end of each
+                month.
               </SectionDescription>
 
               <SectionDescription>
