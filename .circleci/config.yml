@@ -63,7 +63,7 @@ jobs:
   test_web_js:
     <<: *defaults
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:8-browsers
       - image: redis:3.2.7
     steps:
       - attach_workspace:
