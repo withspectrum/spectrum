@@ -1,102 +1,34 @@
 // @flow
 // Turn a callback-based listener into an async iterator
-// Based on https://github.com/apollographql/graphql-subscriptions/blob/master/src/event-emitter-to-async-iterator.ts
-const debug = require('debug')('iris:utils:asyncify');
-import { $$asyncIterator } from 'iterall';
-import Raven from 'shared/raven';
+const Queue = require('then-queue');
 
-import type { GraphQLContext } from '../';
-import type { GraphQLResolveInfo } from 'graphql';
-import type { Cursor } from 'rethinkdbdash';
+const asyncify = (
+  listener: (...args: any[]) => any,
+  onError?: Error => void
+) => {
+  let queues = [];
+  listener((...args) => queues.map(q => q.push(...args)));
 
-type Listener = ((arg: any) => void) => Promise<Cursor>;
+  return () => {
+    const queue = new Queue();
+    queues.push(queue);
 
-const asyncify = (listener: Listener, onError?: Error => void) => {
-  try {
-    let queues = [];
-    let cursor;
-    debug('starting listener');
-    // Start listener
-    listener(value => pushValue(value)).then(c => {
-      cursor = c;
-    });
-
-    function pushValue(value) {
-      queues.forEach(({ pullQueue, pushQueue }) => {
-        if (pullQueue.length !== 0) {
-          pullQueue.shift()({ value, done: false });
-        } else {
-          pushQueue.push(value);
+    // I have no idea how to type generators...
+    // $FlowFixMe
+    async function* AsyncGenerator() {
+      try {
+        while (true) {
+          yield await queue.pop();
         }
-      });
+      } catch (err) {
+        // Remove the error'ing queue from the queues array
+        queues = queues.filter(q => q !== queue);
+        onError && onError(err);
+      }
     }
 
-    return (
-      _: any,
-      __: any,
-      { user }: GraphQLContext,
-      info: GraphQLResolveInfo
-    ) => {
-      debug(
-        user ? `@${user.username || user.id}` : 'anonymous',
-        'listening to',
-        info.fieldName
-      );
-
-      // Create a new queue pair per subscriber
-      let pullQueue = [];
-      let pushQueue = [];
-      let listening = true;
-      let myQueues = { pullQueue, pushQueue };
-      queues.push(myQueues);
-
-      function emptyQueue() {
-        if (listening) {
-          listening = false;
-          // Clean up the queues
-          pullQueue.forEach(resolve =>
-            resolve({ value: undefined, done: true })
-          );
-          pullQueue = [];
-          pushQueue = [];
-          myQueues = undefined;
-          // Remove the queues from the list of queues
-          queues = queues.filter(queue => queue !== myQueues);
-        }
-      }
-
-      function pullValue() {
-        return new Promise(resolve => {
-          if (pushQueue.length !== 0) {
-            resolve({ value: pushQueue.shift(), done: false });
-          } else {
-            pullQueue.push(resolve);
-          }
-        });
-      }
-
-      return {
-        next() {
-          return listening ? pullValue() : this.return();
-        },
-        return() {
-          emptyQueue();
-          return Promise.resolve({ value: undefined, done: true });
-        },
-        throw(error) {
-          emptyQueue();
-          onError && onError(error);
-          return Promise.reject(error);
-        },
-        [$$asyncIterator]() {
-          return this;
-        },
-      };
-    };
-  } catch (err) {
-    debug(err);
-    onError && onError(err);
-  }
+    return AsyncGenerator();
+  };
 };
 
 export default asyncify;
