@@ -1,6 +1,7 @@
 // @flow
 const Queue = require('bull');
 import createRedis from './create-redis';
+import Raven from 'shared/raven';
 
 const client = createRedis();
 const subscriber = createRedis();
