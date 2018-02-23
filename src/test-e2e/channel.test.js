@@ -1,6 +1,7 @@
 // @flow
 import puppeteer from 'puppeteer';
 import data from '../../shared/testing/data';
+import { config } from './utils';
 
 let browser;
 let page;
@@ -8,18 +9,6 @@ const channel = data.channels[0];
 const community = data.communities.find(
   community => community.id === channel.communityId
 );
-
-// If DEBUG_E2E is set show a browser and run test in slow mo
-const config = process.env.DEBUG_E2E
-  ? {
-      headless: false,
-      slowMo: 100,
-    }
-  : {
-      // This is needed, otherwise tests fail in CircleCI
-      // Ref: https://github.com/GoogleChrome/puppeteer/issues/1700
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    };
 
 // Before every test suite set up a new browser and page
 beforeAll(async () => {
