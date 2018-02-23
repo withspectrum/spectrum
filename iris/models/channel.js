@@ -1,17 +1,6 @@
 // @flow
-const { db } = require('./db');
-
-type DBChannel = {
-  communityId: string,
-  createdAt: Date,
-  deletedAt?: Date,
-  description: string,
-  id: string,
-  isDefault: boolean,
-  isPrivate: boolean,
-  name: string,
-  slug: string,
-};
+import { db } from './db';
+import type { DBChannel } from 'shared/types';
 
 const getChannelsByCommunity = (
   communityId: string

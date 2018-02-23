@@ -3,7 +3,7 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getUserByEmail, setUserPendingEmail } from '../../models/user';
 import isEmail from 'validator/lib/isEmail';
-import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -29,7 +29,7 @@ export default async (
 
   return setUserPendingEmail(user.id, email)
     .then(user => {
-      sendEmailValidationEmailQueue.add({ email, userId: user.id });
+      queues.sendEmailValidationEmailQueue.add({ email, userId: user.id });
       return user;
     })
     .catch(

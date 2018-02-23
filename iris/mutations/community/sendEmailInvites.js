@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { isEmail } from 'validator';
-import { sendCommunityInviteNotificationQueue } from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
 type Contact = {
@@ -47,7 +47,7 @@ export default async (
       .filter(user => user.email !== currentUser.email)
       .filter(user => user && user.email && isEmail(user.email))
       .map(user => {
-        return sendCommunityInviteNotificationQueue.add({
+        return queues.sendCommunityInviteNotificationQueue.add({
           recipient: {
             email: user.email,
             firstName: user.firstName ? user.firstName : null,

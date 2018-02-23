@@ -1,11 +1,7 @@
 // @flow
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
-import {
-  processReputationEventQueue,
-  sendThreadNotificationQueue,
-  _adminProcessToxicThreadQueue,
-} from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
@@ -310,13 +306,13 @@ export const publishThread = (
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
-      sendThreadNotificationQueue.add({ thread });
-      processReputationEventQueue.add({
+      queues.sendThreadNotificationQueue.add({ thread });
+      queues.processReputationEventQueue.add({
         userId,
         type: 'thread created',
         entityId: thread.id,
       });
-      _adminProcessToxicThreadQueue.add({ thread });
+      queues._adminProcessToxicThreadQueue.add({ thread });
 
       return thread;
     });
@@ -386,7 +382,7 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     .then(([result]) => {
       const thread = result.changes[0].new_val;
 
-      processReputationEventQueue.add({
+      queues.processReputationEventQueue.add({
         userId: thread.creatorId,
         type: 'thread deleted',
         entityId: thread.id,

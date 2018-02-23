@@ -1,11 +1,6 @@
 //@flow
 const { db } = require('./db');
-import {
-  sendMessageNotificationQueue,
-  sendDirectMessageNotificationQueue,
-  processReputationEventQueue,
-  _adminProcessToxicMessageQueue,
-} from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 import { listenToNewDocumentsIn } from './utils';
 import { setThreadLastActive } from './thread';
 
@@ -131,13 +126,13 @@ export const storeMessage = (
     .then(result => result.changes[0].new_val)
     .then(message => {
       if (message.threadType === 'directMessageThread') {
-        sendDirectMessageNotificationQueue.add({ message, userId });
+        queues.sendDirectMessageNotificationQueue.add({ message, userId });
       }
 
       if (message.threadType === 'story') {
-        sendMessageNotificationQueue.add({ message });
-        _adminProcessToxicMessageQueue.add({ message });
-        processReputationEventQueue.add({
+        queues.sendMessageNotificationQueue.add({ message });
+        queues._adminProcessToxicMessageQueue.add({ message });
+        queues.processReputationEventQueue.add({
           userId,
           type: 'message created',
           entityId: message.threadId,
@@ -183,7 +178,7 @@ export const deleteMessage = (userId: string, id: string) => {
     })
     .run()
     .then(res => {
-      processReputationEventQueue.add({
+      queues.processReputationEventQueue.add({
         userId,
         type: 'message deleted',
         entityId: id,

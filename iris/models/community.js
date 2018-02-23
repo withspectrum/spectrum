@@ -3,10 +3,7 @@ const { db } = require('./db');
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-import {
-  sendNewCommunityWelcomeEmailQueue,
-  _adminSendCommunityCreatedEmailQueue,
-} from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 import { removeMemberInChannel } from './usersChannels';
 import type { DBCommunity } from 'shared/types';
 
@@ -163,9 +160,9 @@ export const createCommunity = (
     .then(result => result.changes[0].new_val)
     .then(community => {
       // send a welcome email to the community creator
-      sendNewCommunityWelcomeEmailQueue.add({ user, community });
+      queues.sendNewCommunityWelcomeEmailQueue.add({ user, community });
       // email brian with info about the community and owner
-      _adminSendCommunityCreatedEmailQueue.add({ user, community });
+      queues._adminSendCommunityCreatedEmailQueue.add({ user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {

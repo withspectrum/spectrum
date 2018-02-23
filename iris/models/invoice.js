@@ -1,9 +1,6 @@
 // @flow
 import { db } from './db';
-import {
-  sendCommunityInvoicePaidNotificationQueue,
-  sendProInvoicePaidNotificationQueue,
-} from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 
 export const getInvoice = (id: string): Promise<Array<Object>> => {
   return db
@@ -55,16 +52,10 @@ export const createInvoice = (
     )
     .run()
     .then(result => {
-      // in the future if we have more plans we can check for each plan name individually to return the correct queue name
-      const queueName =
-        subscription.plan.id === 'community-standard'
-          ? 'community invoice paid notification'
-          : 'pro invoice paid notification';
-
       const queue =
         subscription.plan.id === 'community-standard'
-          ? sendCommunityInvoicePaidNotificationQueue
-          : sendProInvoicePaidNotificationQueue;
+          ? queues.sendCommunityInvoicePaidNotificationQueue
+          : queues.sendProInvoicePaidNotificationQueue;
 
       const invoice = result.changes[0].new_val;
 

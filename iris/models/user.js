@@ -2,7 +2,7 @@
 const { db } = require('./db');
 import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
-import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBUser } from 'shared/types';
 
@@ -85,7 +85,7 @@ const storeUser = (user: Object): Promise<DBUser> => {
 
       // whenever a new user is created, create a usersSettings record
       // and send a welcome email
-      sendNewUserWelcomeEmailQueue.add({ user });
+      queues.sendNewUserWelcomeEmailQueue.add({ user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
     .then(([user]) => user);
