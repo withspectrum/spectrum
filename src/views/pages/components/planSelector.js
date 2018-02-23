@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { FlexCol, zIndex, hexa, Gradient } from 'src/components/globals';
@@ -67,7 +68,7 @@ export const CostNumber = styled.h2`
   }
 
   &:after {
-    content: ${props => (props.per ? `'/ ${props.per}'` : `''`)};
+    content: ${props => (props.per ? `'/ ${props.per}'` : "''")};
     position: absolute;
     font-size: 14px;
     white-space: nowrap;

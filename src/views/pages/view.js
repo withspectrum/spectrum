@@ -47,7 +47,7 @@ import {
   SecondaryCTA,
   Content,
 } from './style';
-import Nav from './nav';
+import Nav from './components/nav';
 
 type Props = Object;
 
@@ -329,7 +329,7 @@ export const CommunitySearch = (props: Props) => {
       <ThisContent>
         <ThisTagline>Find a community for you!</ThisTagline>
         <ThisCopy>
-          Try searching for topics like "crypto" or for products like "React"!
+          Try searching for topics like “crypto” or for products like “React”!
         </ThisCopy>
         <Search />
       </ThisContent>
@@ -463,7 +463,7 @@ export const Sell = (props: Props) => {
                 <BulletTitle>Tighten your feedback loop</BulletTitle>
               </BulletHeading>
               <BulletCopy>
-                There's no better feedback than the insights that come directly
+                There’s no better feedback than the insights that come directly
                 from your customers.
               </BulletCopy>
               <BulletCopy>
@@ -617,7 +617,7 @@ export const Yours = (props: Props) => {
     <Section goop={0} background={'reverse'}>
       <ThisContent>
         <FlexCol>
-          <ThisTagline>You're gonna love Spectrum.</ThisTagline>
+          <ThisTagline>You’re gonna love Spectrum.</ThisTagline>
           <Quotes>
             <Quote>
               <Rule>
@@ -668,7 +668,7 @@ export const Yours = (props: Props) => {
                 <Avatar
                   size={'40'}
                   src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
-                />Tayler O'Dea <span>@tayler-m-odea</span>
+                />Tayler O’Dea <span>@tayler-m-odea</span>
               </Signature>
             </Quote>
           </Quotes>
@@ -741,7 +741,7 @@ export const UserPricing = (props: Props) => {
         <Text>
           <Tagline>Spectrum will always be free for users.</Tagline>
           <Copy>Unlimited usage. Zero ads.</Copy>
-          <Copy>We'll never sell your data either.</Copy>
+          <Copy>We’ll never sell your data either.</Copy>
         </Text>
       </Content>
     </Section>
@@ -871,7 +871,7 @@ export const ContactInfo = () => {
           <BugCard>
             <Lede>Find a bug?</Lede>
             <Flavor>
-              Join our <b>Hugs n Bugs</b> channel to check if there's already a
+              Join our <b>Hugs n Bugs</b> channel to check if there’s already a
               fix or report a new issue!
             </Flavor>
             <Link to={'/spectrum/hugs-n-bugs'}>
@@ -891,7 +891,7 @@ export const ContactInfo = () => {
           <EmailCard>
             <Lede>Something else?</Lede>
             <Flavor>
-              Concerned about something on Spectrum? Shoot us an email and we'll
+              Concerned about something on Spectrum? Shoot us an email and we’ll
               take care of it right away.
             </Flavor>
             <a href={'mailto:support@spectrum.chat'}>
@@ -1176,7 +1176,7 @@ export const FeatureUpsell = (props: Props) => {
               Anyone can create a public community on Spectrum for free. That
               includes automated moderation support, SEO-optimized chat threads,
               and unlimited public channels. There are no membership size limits
-              and we'll never sell your data.
+              and we’ll never sell your data.
             </p>
             <p>
               If you want to take your community to the next level, we offer
@@ -1214,7 +1214,7 @@ export const FeatureUpsell = (props: Props) => {
               <ListingDescription>
                 One of the hardest parts of community management is tracking
                 usage, behavior, and ROI in order to figure out where to focus
-                your effort. We've built best-in-class community analytics to
+                your effort. We’ve built best-in-class community analytics to
                 help you be effective and show stakeholders the value of your
                 community.
               </ListingDescription>
@@ -1224,7 +1224,7 @@ export const FeatureUpsell = (props: Props) => {
               <ListingTitle>Priority support</ListingTitle>
               <ListingPrice>$20/mo.</ListingPrice>
               <ListingDescription>
-                We'll set up a private channel in the Spectrum Support community
+                We’ll set up a private channel in the Spectrum Support community
                 just for you. Get speedy personal support from the Spectrum team
                 so you never need to leave an incident to chance or worry about
                 lost data.
@@ -1234,10 +1234,10 @@ export const FeatureUpsell = (props: Props) => {
           <BottomCopy>
             <Title>Looking to get started quickly?</Title>
             <p>
-              We've put together a few common packages to help you kick things
+              We’ve put together a few common packages to help you kick things
               off strong. Both the Indie and Business plans come at a discount
               over the a la carte feature prices and you can always add the
-              features you need when you're ready for them and keep the
+              features you need when you’re ready for them and keep the
               discount.
             </p>
           </BottomCopy>

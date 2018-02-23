@@ -1,7 +1,8 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { FlexCol } from '../globals';
-import { Tagline, Copy } from '../../views/splash/style';
+import { Tagline, Copy } from 'src/views/pages/style';
 import ViewSegment from '../../components/viewSegment';
 
 const Emoji = styled.div`

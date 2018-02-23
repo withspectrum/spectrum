@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { track } from '../../helpers/events';
-import { ContactInfo, TermsSection, PageFooter } from './view';
-import { Wrapper } from './style';
+// @flow
+import * as React from 'react';
+import { track } from 'src/helpers/events';
+import { ContactInfo, TermsSection, PageFooter } from '../view';
+import { Wrapper } from '../style';
 
-class Support extends Component {
+class Support extends React.Component<{}> {
   componentDidMount() {
     track('support', 'viewed', null);
   }

@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
-import { track } from '../../helpers/events';
-import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
+// @flow
+import * as React from 'react';
+import { track } from 'src/helpers/events';
+import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
 import {
   Overview,
   Centralized,
@@ -8,14 +9,14 @@ import {
   Chat,
   Yours,
   PageFooter,
-} from './view';
-import { Wrapper } from './style';
+} from '../view';
+import { Wrapper } from '../style';
 
-class Splash extends PureComponent {
-  state: {
-    preferredSigninMethod: string,
-  };
+type State = {
+  preferredSigninMethod: string,
+};
 
+class Splash extends React.Component<{}, State> {
   constructor() {
     super();
 
@@ -30,7 +31,7 @@ class Splash extends PureComponent {
     track('homepage', 'viewed', null);
   }
 
-  trackSignin = (type, method) => {
+  trackSignin = (type: string, method: string) => {
     track('homepage', 'logged in', type);
     storeItem('preferred_signin_method', method);
   };

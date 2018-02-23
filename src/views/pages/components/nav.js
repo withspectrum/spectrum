@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { Button, IconButton } from '../../components/buttons';
-import Link from '../../components/link';
-import Icon from '../../components/icons';
-import { Logo } from '../../components/logo';
-import Avatar from '../../components/avatar';
-import Head from '../../components/head';
+import { Button, IconButton } from 'src/components/buttons';
+import Link from 'src/components/link';
+import Icon from 'src/components/icons';
+import { Logo } from 'src/components/logo';
+import Avatar from 'src/components/avatar';
+import Head from 'src/components/head';
 import {
   NavContainer,
   Tabs,
@@ -21,16 +22,18 @@ import {
   ExploreLink,
   MenuContainer,
   MenuOverlay,
-} from './style';
+} from '../style';
 
-class Nav extends Component {
-  constructor(props) {
-    super(props);
+type Props = {
+  currentUser: Object,
+};
 
-    this.state = {
-      menuIsOpen: false,
-    };
-  }
+type State = {
+  menuIsOpen: boolean,
+};
+
+class Nav extends React.Component<Props, State> {
+  state = { menuIsOpen: false };
 
   toggleMenu() {
     this.setState({ menuIsOpen: !this.state.menuIsOpen });
@@ -139,6 +142,7 @@ class Nav extends Component {
   }
 }
 
-const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const map = state => ({ currentUser: state.users.currentUser });
 
-export default connect(mapStateToProps)(Nav);
+// $FlowIssue
+export default connect(map)(Nav);

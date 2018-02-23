@@ -63,12 +63,6 @@ const ChannelView = Loadable({
 });
 
 /* prettier-ignore */
-const StyleGuide = Loadable({
-  loader: () => import('./views/pages/styleGuide'/* webpackChunkName: "StyleGuide" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
-});
-
-/* prettier-ignore */
 const Dashboard = Loadable({
   loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
   loading: ({ isLoading }) => isLoading && <LoadingDashboard />,
@@ -106,7 +100,7 @@ const NewCommunity = Loadable({
 
 /* prettier-ignore */
 const Splash = Loadable({
-  loader: () => import('./views/splash'/* webpackChunkName: "Splash" */),
+  loader: () => import('./views/pages/home'/* webpackChunkName: "Splash" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
@@ -118,13 +112,13 @@ const Search = Loadable({
 
 /* prettier-ignore */
 const Pricing = Loadable({
-  loader: () => import('./views/splash/pricing'/* webpackChunkName: "Pricing" */),
+  loader: () => import('./views/pages/pricing'/* webpackChunkName: "Pricing" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
 /* prettier-ignore */
 const Support = Loadable({
-  loader: () => import('./views/splash/support'/* webpackChunkName: "Support" */),
+  loader: () => import('./views/pages/support'/* webpackChunkName: "Support" */),
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
@@ -228,7 +222,6 @@ class Routes extends React.Component<{}> {
               <Route path="/code-of-conduct" component={Support} />
               <Route path="/pricing" component={Pricing} />
               <Route path="/support" component={Support} />
-              <Route path="/style-guide" component={StyleGuide} />
               <Route path="/new/search" component={Search} />
 
               {/* App Pages */}

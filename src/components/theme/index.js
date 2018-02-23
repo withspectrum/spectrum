@@ -70,6 +70,7 @@ export const theme = {
     alt: '#828C99',
     reverse: '#FFFFFF',
     placeholder: '#A3AFBF',
+    secondary: '#3A3C42',
   },
   warn: {
     default: '#C21F3A',
