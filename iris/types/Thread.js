@@ -106,7 +106,7 @@ const Thread = /* GraphQL */ `
 	}
 
 	extend type Subscription {
-		threadUpdated: Thread
+    threadUpdated(channelIds: [String!]): Thread
 	}
 `;
 

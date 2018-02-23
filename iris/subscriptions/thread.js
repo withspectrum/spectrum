@@ -3,7 +3,10 @@ const debug = require('debug')('iris:subscriptions:notification');
 import { withFilter } from 'graphql-subscriptions';
 import { userIsMemberOfChannel } from './utils';
 import { listenToUpdatedThreads } from '../models/thread';
-import { getUserUsersChannels } from '../models/usersChannels';
+import {
+  getUserUsersChannels,
+  getUsersPermissionsInChannels,
+} from '../models/usersChannels';
 import asyncify from '../utils/asyncify';
 import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
@@ -15,24 +18,41 @@ module.exports = {
       resolve: (thread: any) => thread,
       subscribe: async (
         _: any,
-        { thread }: { thread: string },
+        { channelIds }: { channelIds: Array<string> },
         { user }: GraphQLContext,
         info: GraphQLResolveInfo
       ) => {
-        if (!user || !user.id)
+        if (!channelIds && (!user || !user.id))
           throw new UserError(
-            'Cannot subscribe to updated threads when not signed in.'
+            'Please provide a list of channels to listen to when not signed in.'
           );
 
-        const channels = await getUserUsersChannels(user.id);
+        let ids = channelIds;
+        if (ids === undefined || ids === null) {
+          // If no specific channels were passed listen to all the users channels
+          const userChannels = await getUserUsersChannels(user.id);
+          ids = userChannels.map(({ channelId }) => channelId);
+        } else {
+          // If specific channels were passed make sure the user has permission to listen in those channels
+          const permissions = await getUsersPermissionsInChannels(
+            ids.map(id => [user.id, id])
+          );
+          ids = permissions
+            .filter(
+              ({ isMember, isOwner, isModerator }) =>
+                isMember === true || isOwner === true || isModerator === true
+            )
+            .map(({ channelId }) => channelId);
+        }
 
-        debug(`@${user.username || user.id} listening to new threads`);
-        return asyncify(
-          listenToUpdatedThreads(channels.map(({ channelId }) => channelId)),
-          err => {
-            throw new Error(err);
-          }
+        debug(
+          `@${user.username || user.id} listening to new threads in ${
+            ids.length
+          } channels`
         );
+        return asyncify(listenToUpdatedThreads(ids), err => {
+          throw new Error(err);
+        });
       },
     },
   },
