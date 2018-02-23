@@ -77,6 +77,7 @@ jobs:
           name: Start RethinkDB
           command: rethinkdb --bind all
           background: true
+      - run: sleep 10
       - run:
           name: Setup and build
           command:
