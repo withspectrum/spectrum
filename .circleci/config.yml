@@ -61,7 +61,10 @@ jobs:
 
   # Test the web JS
   test_web_js:
-    <<: *js_defaults
+    <<: *defaults
+    docker:
+      - image: circleci/node:8
+      - image: redis:3.2.7
     steps:
       - attach_workspace:
           at: ~/spectrum
