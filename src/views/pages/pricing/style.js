@@ -40,6 +40,7 @@ export const Section = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   padding: 72px 0 0;
+  width: 100%;
 `;
 
 export const Subsection = styled.div`
@@ -75,34 +76,41 @@ export const SectionDescription = styled.p`
   }
 `;
 
-export const FreeFeaturesList = styled.ul`
+export const FeaturesList = styled.ul`
   list-style-type: none;
   padding: 0;
   margin: 48px -64px 0;
+  width: calc(100% + 128px);
 `;
 
-export const FreeFeature = styled.li`
+export const Feature = styled.li`
   display: flex;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
   background: ${props => props.theme.bg.default};
-  transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  position: relative;
+  overflow: hidden;
 
   & + & {
     margin-top: 16px;
   }
 `;
 
-export const FreeFeatureContent = styled.div`
+export const FeatureContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   padding-right: 24px;
+  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 `;
 
 export const FeatureIcon = styled.div`
-  color: ${props => props.theme.success.default};
+  color: ${props =>
+    props.color
+      ? props.theme[props.color].default
+      : props.theme.success.default};
   display: flex;
   align-items: flex-start;
   margin-right: 16px;
@@ -113,6 +121,16 @@ export const FeatureLabel = styled.h5`
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: 0.6px;
+  color: ${props =>
+    props.color ? props.theme[props.color].default : props.theme.text.default};
+`;
+
+export const FeatureSublabel = styled.h6`
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+  margin-top: 16px;
   color: ${props => props.theme.text.default};
 `;
 
@@ -124,6 +142,7 @@ export const FeatureDescription = styled.p`
   margin-top: 8px;
   display: flex;
   flex: 1 0 auto;
+  max-width: ${props => (props.isExpanded ? '80%' : '100%')};
 `;
 
 export const Highlight = styled.span`
@@ -133,21 +152,25 @@ export const Highlight = styled.span`
   line-height: 1.6;
 `;
 
-export const FreeFeatureAction = styled.div`
+export const FeatureAction = styled.div`
   display: flex;
   align-items: center;
   flex: 1 0 auto;
   justify-content: flex-end;
 `;
 
-export const FreeFeatureButton = styled.button`
+export const FeatureButton = styled.button`
   -webkit-display: none;
   border-radius: 20px;
   padding: 8px 16px;
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
+  color: ${props =>
+    props.color ? props.theme[props.color].default : props.theme.text.alt};
+  background: ${props =>
+    props.color
+      ? hexa(props.theme[props.color].default, 0.08)
+      : props.theme.bg.wash};
   transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 
   &:hover {
@@ -165,63 +188,104 @@ export const Divider = styled.div`
   margin: 64px -32px 0px;
 `;
 
-const PriceLabel = styled.span`
+export const PriceLabel = styled.span`
   padding: 6px 8px;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 600;
   margin-left: 8px;
   letter-spacing: -0.2px;
+  color: ${props =>
+    props.color
+      ? props.theme[props.color].default
+      : props.theme.success.default};
+  background: ${props =>
+    props.color
+      ? hexa(props.theme[props.color].default, 0.08)
+      : hexa(props.theme.success.default, 0.08)};
 `;
 
-export const ModeratorsFeatureIcon = styled(FeatureIcon)`
-  color: ${props => props.theme.space.default};
+export const CommunityListGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
+  justify-content: center;
+  margin: 48px -64px 0;
+  width: calc(100% + 128px);
 `;
 
-export const ModeratorsFeatureLabel = styled(FeatureLabel)`
-  color: ${props => props.theme.space.default};
+export const CommunityCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px 16px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: ${props => props.theme.bg.default};
+  align-items: center;
 `;
 
-export const ModeratorsPriceLabel = styled(PriceLabel)`
-  color: ${props => props.theme.space.default};
-  background: ${props => hexa(props.theme.space.default, 0.08)};
+export const CommunityCardAvatar = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
 `;
 
-export const PrivateChannelsFeatureIcon = styled(FeatureIcon)`
-  color: ${props => props.theme.special.default};
+export const CommunityCardName = styled.h6`
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: ${props => props.theme.text.default};
 `;
 
-export const PrivateChannelsFeatureLabel = styled(FeatureLabel)`
-  color: ${props => props.theme.special.default};
+export const CommunityCardButton = styled.button`
+  -webkit-display: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+  background: ${props => props.theme.bg.wash};
+  transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  margin-bottom: 8px;
+  width: 100%;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+  }
 `;
 
-export const PrivateChannelsPriceLabel = styled(PriceLabel)`
-  color: ${props => props.theme.special.default};
-  background: ${props => hexa(props.theme.special.default, 0.08)};
+export const IlloOne = styled.img`
+  position: absolute;
+  right: -40px;
+  bottom: -40px;
+  width: 200px;
 `;
 
-export const AnalyticsFeatureIcon = styled(FeatureIcon)`
-  color: ${props => props.theme.success.default};
+export const IlloTwo = styled.img`
+  position: absolute;
+  right: -20px;
+  top: 25%;
+  width: 200px;
 `;
 
-export const AnalyticsFeatureLabel = styled(FeatureLabel)`
-  color: ${props => props.theme.success.default};
+export const IlloThree = styled.img`
+  position: absolute;
+  right: -40px;
+  bottom: -40px;
+  width: 200px;
 `;
 
-export const AnalyticsPriceLabel = styled(PriceLabel)`
-  color: ${props => props.theme.success.default};
-  background: ${props => hexa(props.theme.success.default, 0.08)};
-`;
-
-export const ModerationToolsFeatureIcon = styled(FeatureIcon)`
-  color: ${props => props.theme.warn.alt};
-`;
-
-export const ModerationToolsFeatureLabel = styled(FeatureLabel)`
-  color: ${props => props.theme.warn.alt};
-`;
-
-export const ModerationToolsPriceLabel = styled(PriceLabel)`
-  color: ${props => props.theme.warn.alt};
-  background: ${props => hexa(props.theme.warn.alt, 0.08)};
+export const ExtraContent = styled.div`
+  margin-top: 24px;
+  padding-top: 8px;
+  padding-bottom: 16px;
+  border-top: 1px solid ${props => props.theme.bg.border};
 `;

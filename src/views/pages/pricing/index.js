@@ -1,9 +1,16 @@
 // @flow
 import * as React from 'react';
+import compose from 'recompose/compose';
 import { track } from 'src/helpers/events';
 import Nav from '../components/nav';
-import Icon from 'src/components/icons';
 import { Wrapper } from '../style';
+import FreeFeaturesList from './components/freeFeaturesList';
+import PaidFeaturesList from './components/paidFeaturesList';
+import CommunityList from './components/communityList';
+import {
+  getCurrentUserCommunityConnection,
+  type GetUserCommunityConnectionType,
+} from 'shared/graphql/queries/user/getUserCommunityConnection';
 import {
   ContentContainer,
   PageTitle,
@@ -13,36 +20,42 @@ import {
   SectionSubtitle,
   SectionDescription,
   Subsection,
-  FreeFeaturesList,
-  FreeFeature,
-  FreeFeatureContent,
-  FeatureIcon,
-  FeatureLabel,
-  FeatureDescription,
-  FreeFeatureAction,
-  FreeFeatureButton,
   Highlight,
   Divider,
-  ModeratorsFeatureIcon,
-  ModeratorsFeatureLabel,
-  ModeratorsPriceLabel,
-  PrivateChannelsFeatureIcon,
-  PrivateChannelsFeatureLabel,
-  PrivateChannelsPriceLabel,
-  AnalyticsFeatureIcon,
-  AnalyticsFeatureLabel,
-  AnalyticsPriceLabel,
-  ModerationToolsFeatureIcon,
-  ModerationToolsFeatureLabel,
-  ModerationToolsPriceLabel,
 } from './style';
 
-class Pricing extends React.Component<{}> {
+type Props = {
+  data: {
+    user: GetUserCommunityConnectionType,
+  },
+};
+class Pricing extends React.Component<Props> {
   componentDidMount() {
     track('pricing', 'viewed', null);
   }
 
   render() {
+    const { data: { user } } = this.props;
+
+    const isUser = user && user.communityConnection;
+
+    const hasCommunities =
+      isUser &&
+      user.communityConnection.edges &&
+      user.communityConnection.edges.length > 0;
+
+    const ownsCommunities =
+      hasCommunities &&
+      user.communityConnection.edges.some(
+        c => c && c.node.communityPermissions.isOwner
+      );
+
+    const ownedCommunities =
+      ownsCommunities &&
+      user.communityConnection.edges
+        .filter(c => c && c.node.communityPermissions.isOwner)
+        .map(c => c.node);
+
     return (
       <Wrapper data-e2e-id="pricing-page">
         <Nav location={'pricing'} />
@@ -80,134 +93,7 @@ class Pricing extends React.Component<{}> {
               maintained indefinitely, for free. Free communities come with:
             </SectionDescription>
 
-            <FreeFeaturesList>
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Unlimited conversations</FeatureLabel>
-
-                  <FeatureDescription>
-                    Never worry about losing a great conversation again.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Unlimited members</FeatureLabel>
-
-                  <FeatureDescription>
-                    Never worry about growing too big.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Unlimited public channels</FeatureLabel>
-
-                  <FeatureDescription>
-                    Stay organized as your community grows.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Search engine optimized</FeatureLabel>
-
-                  <FeatureDescription>
-                    Grow organically when people discover you through search.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Reputation system</FeatureLabel>
-
-                  <FeatureDescription>
-                    Understand the way members contribute to the conversation.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>Ad free</FeatureLabel>
-
-                  <FeatureDescription>
-                    Your community’s data is never sold to advertisers or third
-                    parties.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <FeatureIcon>
-                  <Icon glyph={'checkmark'} />
-                </FeatureIcon>
-
-                <FreeFeatureContent>
-                  <FeatureLabel>A new home</FeatureLabel>
-
-                  <FeatureDescription>
-                    Create your own space for your community to thrive.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-            </FreeFeaturesList>
+            <FreeFeaturesList />
           </Section>
 
           <Section>
@@ -217,99 +103,7 @@ class Pricing extends React.Component<{}> {
               managing your community easier, save you time, and save you money.
             </SectionDescription>
 
-            <FreeFeaturesList>
-              <FreeFeature>
-                <ModeratorsFeatureIcon>
-                  <Icon glyph={'member-add'} />
-                </ModeratorsFeatureIcon>
-
-                <FreeFeatureContent>
-                  <ModeratorsFeatureLabel>
-                    Additional moderators
-                    <ModeratorsPriceLabel>$10 per month</ModeratorsPriceLabel>
-                  </ModeratorsFeatureLabel>
-
-                  <FeatureDescription>
-                    An extra set of hands to help keep conversations in your
-                    community healthy and productive.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <PrivateChannelsFeatureIcon>
-                  <Icon glyph={'private-outline'} />
-                </PrivateChannelsFeatureIcon>
-
-                <FreeFeatureContent>
-                  <PrivateChannelsFeatureLabel>
-                    Private channels
-                    <PrivateChannelsPriceLabel>
-                      $10 per month
-                    </PrivateChannelsPriceLabel>
-                  </PrivateChannelsFeatureLabel>
-
-                  <FeatureDescription>
-                    A private space for discussions, requiring all members to be
-                    approved before participating.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <AnalyticsFeatureIcon>
-                  <Icon glyph={'analytics'} />
-                </AnalyticsFeatureIcon>
-
-                <FreeFeatureContent>
-                  <AnalyticsFeatureLabel>
-                    Analytics
-                    <AnalyticsPriceLabel>$100 per month</AnalyticsPriceLabel>
-                  </AnalyticsFeatureLabel>
-
-                  <FeatureDescription>
-                    Understand who is in your community, and what they care the
-                    most about.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-
-              <FreeFeature>
-                <ModerationToolsFeatureIcon>
-                  <Icon glyph={'support'} />
-                </ModerationToolsFeatureIcon>
-
-                <FreeFeatureContent>
-                  <ModerationToolsFeatureLabel>
-                    Advanced moderation tools
-                    <ModerationToolsPriceLabel>
-                      Coming soon
-                    </ModerationToolsPriceLabel>
-                  </ModerationToolsFeatureLabel>
-
-                  <FeatureDescription>
-                    Automate away the pain of moderating spam and harrassment.
-                    Coming in 2018.
-                  </FeatureDescription>
-                </FreeFeatureContent>
-
-                <FreeFeatureAction>
-                  <FreeFeatureButton>Learn More</FreeFeatureButton>
-                </FreeFeatureAction>
-              </FreeFeature>
-            </FreeFeaturesList>
+            <PaidFeaturesList />
           </Section>
 
           <Section>
@@ -320,21 +114,36 @@ class Pricing extends React.Component<{}> {
               If you’re looking for a place to grow your community for an&nbsp;
               <Highlight>
                 open-source project, non-profit, or education program
-              </Highlight>, our paid features are 50% off. [Get in touch]
+              </Highlight>, our paid features are 50% off.
+            </SectionDescription>
+          </Section>
+
+          {ownedCommunities && (
+            <Section>
+              <SectionTitle>Your communities</SectionTitle>
+              <SectionDescription>
+                We found these communities that you already own - you can manage
+                them in their settings or apply directly for an open-source,
+                non-profit, or education discount.
+              </SectionDescription>
+
+              <CommunityList communities={ownedCommunities} />
+            </Section>
+          )}
+
+          <Section>
+            <SectionTitle>Creating a new community?</SectionTitle>
+            <SectionDescription>
+              Communities on Spectrum are free to create, so if you’re ready to
+              get started you can create your community now.
             </SectionDescription>
           </Section>
 
           <Section>
-            <SectionTitle>Ready to get started?</SectionTitle>
+            <SectionTitle>Have an existing community?</SectionTitle>
             <SectionDescription>
               Communities on Spectrum are free to create, so if you’re ready to
-              get started you can create your community now: [ Create ]
-            </SectionDescription>
-
-            <SectionDescription>
-              As you grow, the features listed above will all be available from
-              inside your community settings, with simple one-click flows to add
-              private channels, moderator seats, and community analytics.
+              get started you can create your community now.
             </SectionDescription>
           </Section>
 
@@ -442,4 +251,4 @@ class Pricing extends React.Component<{}> {
     );
   }
 }
-export default Pricing;
+export default compose(getCurrentUserCommunityConnection)(Pricing);

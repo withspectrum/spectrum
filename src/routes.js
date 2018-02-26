@@ -101,7 +101,7 @@ const NewCommunity = Loadable({
 /* prettier-ignore */
 const Splash = Loadable({
   loader: () => import('./views/pages/home'/* webpackChunkName: "Splash" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && null,
 });
 
 /* prettier-ignore */
@@ -113,13 +113,13 @@ const Search = Loadable({
 /* prettier-ignore */
 const Pricing = Loadable({
   loader: () => import('./views/pages/pricing'/* webpackChunkName: "Pricing" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && null,
 });
 
 /* prettier-ignore */
 const Support = Loadable({
   loader: () => import('./views/pages/support'/* webpackChunkName: "Support" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && null,
 });
 
 const Body = styled(FlexCol)`
