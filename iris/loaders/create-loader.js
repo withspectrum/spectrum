@@ -2,11 +2,16 @@
 const debug = require('debug')('iris:loaders:create-loader');
 // $FlowIssue
 import DataLoader from 'dataloader';
-import unique from 'shared/unique-elements';
 // Least-recently-used cache that evicts items based on when they were last used
 import LRU from 'lru-cache';
+import unique from 'shared/unique-elements';
 import { getLengthInBytes } from 'shared/string-byte-length';
-import type { Loader, DataLoaderOptions } from './types';
+import type { Loader, DataLoaderOptions, Key } from './types';
+
+type CreateLoaderOptionalOptions = {|
+  getKeyFromResult?: Function | string,
+  cacheExpiryTime?: number,
+|};
 
 const TWO_HUNDRED_AND_FIFTY_MEGABYTE = 2.5e8;
 
@@ -14,14 +19,8 @@ let caches: Map<Function, LRU<string, mixed>> = new Map();
 
 // Proactively evict old data every 30s instead of only when .get is called
 const interval = setInterval(() => {
-  debug('running gc');
   caches.forEach(cache => cache.prune());
 }, 30000);
-
-type CreateLoaderOptionalOptions = {|
-  getKeyFromResult?: Function | string,
-  cacheExpiryTime?: number,
-|};
 
 /**
  * Create a dataloader instance which also caches results across requests. The default caching duration is 5s.
@@ -57,8 +56,7 @@ const createLoader = (
     caches.set(batchFn, newCache).get(batchFn) ||
     newCache;
 
-  return new DataLoader(keys => {
-    debug(`fetch ${keys.length} items`);
+  return new DataLoader((keys: Array<Key>) => {
     let uncachedKeys = [];
     let cachedResults = [];
     keys.forEach(key => {
@@ -73,21 +71,15 @@ const createLoader = (
       cachedResults.push(item);
     });
 
-    debug(`cached items: ${keys.length - uncachedKeys.length}`);
     if (uncachedKeys.length === 0) {
-      debug('all items in cache, bailing out early');
+      debug(`cache hit rate: 100% (bailing early)`);
       return Promise.resolve(cachedResults);
     }
 
     const uniqueUncached = unique(uncachedKeys);
 
-    debug(`unique uncached items: ${uniqueUncached.length}`);
     return batchFn(uniqueUncached).then(results => {
-      debug(
-        `got data, merging ${results.length} new items with ${
-          cachedResults.length
-        } cached items`
-      );
+      debug(`cache hit rate: ${cachedResults.length / keys.length * 100}%`);
       const fullResults = [...results, ...cachedResults].filter(Boolean);
       const normalized = normalizeRethinkDbResults(keys, getKeyFromResult)(
         fullResults
@@ -95,7 +87,6 @@ const createLoader = (
       normalized.forEach((result, index) => {
         const key = keys[index].toString();
         if (cachedResults.indexOf(result) > -1 || cache[key]) return;
-        debug(`cache result for ${key}`);
         cache.set(key, result);
       });
       return normalized;
