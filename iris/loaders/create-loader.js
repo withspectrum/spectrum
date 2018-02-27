@@ -10,7 +10,6 @@ type CacheItem = {|
   // We need to store the time the item was last fetched from the db
   // and whether we can remove it via GC
   time: number,
-  removeable?: boolean,
 |};
 
 type Cache = {
@@ -23,17 +22,13 @@ type Cache = {
 let caches: Map<Function, Cache> = new Map();
 
 // "GC" cleanup mechanism which evicts old records from the cache every 30s
-// We block records that are needed by a db query that's currently in the air with the "removeable" key
 const interval = setInterval(() => {
   debug('running gc');
   caches.forEach(cache => {
     Object.keys(cache).forEach(itemKey => {
       if (itemKey === '__meta') return;
       const item = cache[itemKey];
-      if (
-        item.removeable !== false &&
-        item.time + cache.__meta.expiryTime < Date.now()
-      ) {
+      if (item.time + cache.__meta.expiryTime < Date.now()) {
         debug(`found outdated item ${itemKey}, removing`);
         delete cache[itemKey];
       }
@@ -75,47 +70,36 @@ const createLoader = (
 
   return new DataLoader(keys => {
     debug(`fetch ${keys.length} items`);
-    // If the item isn't in the cache or the cached version is older than 5s refetch it
-    const uncachedKeys = keys.filter(key => {
+    let uncachedKeys = [];
+    let cachedResults = [];
+    keys.forEach(key => {
       const stringKey = key.toString();
-      const item = cache[key.toString()];
-      if (!item) return true;
+      const item = cache[stringKey];
 
+      // If we don't have a result in the cache or the result is stale fetch the data again
+      if (!item) return uncachedKeys.push(key);
       if (item.time + cacheExpiryTime < Date.now()) {
         delete cache[stringKey];
-        return true;
+        return uncachedKeys.push(key);
       }
-      debug(`block item ${stringKey} from being removed`);
-      // The record might expire between now and the time the db query returns
-      // We don't want our "GC" cleanup mechanism to remove the data in that
-      // period of time, so we block ther record from being deleted
-      item.removeable = false;
-      return false;
+
+      // We need to store the cached results out here since they might expire
+      // until the database query finishes, which would break everything
+      cachedResults.push(item.data);
     });
 
     debug(`cached items: ${keys.length - uncachedKeys.length}`);
     if (uncachedKeys.length === 0) {
       debug('all items in cache, bailing out early');
-      keys.forEach(key => {
-        debug(`unblock item ${key.toString()} from being removed`);
-        delete cache[key.toString()].removeable;
-      });
-      return Promise.resolve(keys.map(key => cache[key.toString()].data));
+      return Promise.resolve(cachedResults);
     }
 
     const uniqueUncached = unique(uncachedKeys);
 
-    debug(`fetching ${uniqueUncached.length} unique uncached items`);
+    debug(`unique uncached items: ${uniqueUncached.length}`);
     return batchFn(uniqueUncached).then(results => {
-      const cachedResults = keys
-        .filter(key => !!cache[key.toString()])
-        .map(key => {
-          debug(`unblock item ${key.toString()} from being removed`);
-          delete cache[key.toString()].removeable;
-          return cache[key.toString()].data;
-        });
       debug(
-        `got results, merging ${results.length} new items with ${
+        `got data, merging ${results.length} new items with ${
           cachedResults.length
         } cached items`
       );
@@ -124,8 +108,10 @@ const createLoader = (
         fullResults
       );
       normalized.forEach((result, index) => {
-        debug(`cache result for ${keys[index].toString()}`);
-        cache[keys[index].toString()] = {
+        const key = keys[index].toString();
+        if (cachedResults.indexOf(result) > -1 || cache[key]) return;
+        debug(`cache result for ${key}`);
+        cache[key] = {
           data: result,
           time: Date.now(),
         };
