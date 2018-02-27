@@ -14,6 +14,8 @@ import { getThreadsNotificationStatusForUsers } from '../models/usersThreads';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
+const THIRTY_MINUTES = 1800000;
+
 export const __createUserLoader = createLoader(users => getUsers(users));
 
 export const __createUserByUsernameLoader = createLoader(
@@ -21,8 +23,9 @@ export const __createUserByUsernameLoader = createLoader(
   { getKeyFromResult: 'username' }
 );
 
-export const __createUserThreadCountLoader = createLoader(users =>
-  getUsersThreadCount(users)
+export const __createUserThreadCountLoader = createLoader(
+  users => getUsersThreadCount(users),
+  { cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export const __createUserRecurringPaymentsLoader = createLoader(
