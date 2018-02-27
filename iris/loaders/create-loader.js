@@ -5,8 +5,6 @@ import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
 import type { Loader, DataLoaderOptions } from './types';
 
-const CACHE_EXPIRY_TIME = 5000;
-
 type CacheItem = {|
   data: mixed,
   // We need to store the time the item was last fetched from the db
@@ -16,6 +14,9 @@ type CacheItem = {|
 |};
 
 type Cache = {
+  __meta: {
+    expiryTime: number,
+  },
   [key: string]: CacheItem,
 };
 
@@ -28,10 +29,11 @@ const interval = setInterval(() => {
   Object.keys(caches).forEach(cacheKey => {
     const cache = caches[cacheKey];
     Object.keys(cache).forEach(itemKey => {
+      if (itemKey === '__meta') return;
       const item = cache[itemKey];
       if (
         item.removeable !== false &&
-        item.time + CACHE_EXPIRY_TIME < Date.now()
+        item.time + cache.__meta.expiryTime < Date.now()
       ) {
         debug(`found outdated item ${itemKey}, removing`);
         delete caches[cacheKey][itemKey];
@@ -42,10 +44,11 @@ const interval = setInterval(() => {
 
 type CreateLoaderOptionalOptions = {|
   getKeyFromResult?: Function | string,
+  cacheExpiryTime?: number,
 |};
 
 /**
- * Create a dataloader instance which caches results for 5s
+ * Create a dataloader instance which also caches results across requests. The default caching duration is 5s.
  *
  * Usage:
  * user: createUserLoader = () => createLoader(users => getUsers(users), 'id');
@@ -53,13 +56,19 @@ type CreateLoaderOptionalOptions = {|
  */
 const createLoader = (
   batchFn: Function,
-  { getKeyFromResult }: CreateLoaderOptionalOptions = {}
+  { getKeyFromResult, cacheExpiryTime }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
   getKeyFromResult = getKeyFromResult || 'id';
+  cacheExpiryTime = cacheExpiryTime || 5000;
   // TODO(@mxstbr): fn.toString is brittle and should probably be replaced with an actual unique key somehow down the line
   const cacheKey = batchFn.toString();
-  if (!caches[cacheKey]) caches[cacheKey] = {};
+  if (!caches[cacheKey])
+    caches[cacheKey] = {
+      __meta: {
+        expiryTime: cacheExpiryTime,
+      },
+    };
   let cache = caches[cacheKey];
 
   return new DataLoader(keys => {
@@ -67,9 +76,10 @@ const createLoader = (
     // If the item isn't in the cache or the cached version is older than 5s refetch it
     const uncachedKeys = keys.filter(key => {
       const stringKey = key.toString();
-      if (!cache[stringKey]) return true;
+      const item = cache[key.toString()];
+      if (!item) return true;
 
-      if (cache[stringKey].time + CACHE_EXPIRY_TIME < Date.now()) {
+      if (item.time + cacheExpiryTime < Date.now()) {
         delete cache[stringKey];
         return true;
       }
@@ -77,7 +87,7 @@ const createLoader = (
       // The record might expire between now and the time the db query returns
       // We don't want our "GC" cleanup mechanism to remove the data in that
       // period of time, so we block ther record from being deleted
-      cache[stringKey].removeable = false;
+      item.removeable = false;
       return false;
     });
 
