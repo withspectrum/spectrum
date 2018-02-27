@@ -14,17 +14,17 @@ export const __createChannelLoader = createLoader(channels =>
 
 export const __createChannelThreadCountLoader = createLoader(
   channels => getChannelsThreadCounts(channels),
-  'group'
+  { indexField: 'group' }
 );
 
 export const __createChannelMemberCountLoader = createLoader(
   channels => getChannelsMemberCounts(channels),
-  'group'
+  { indexField: 'group' }
 );
 
 export const __createChannelPendingMembersLoader = createLoader(
   channels => getPendingUsersInChannels(channels),
-  'group'
+  { indexField: 'group' }
 );
 
 export default () => {

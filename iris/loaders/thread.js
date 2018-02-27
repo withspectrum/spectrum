@@ -11,12 +11,12 @@ export const __createThreadLoader = createLoader(threads =>
 
 export const __createThreadParticipantsLoader = createLoader(
   threadIds => getParticipantsInThreads(threadIds),
-  'group'
+  { indexField: 'group' }
 );
 
 export const __createThreadMessageCountLoader = createLoader(
   threadIds => getMessageCountInThreads(threadIds),
-  'group'
+  { indexField: 'group' }
 );
 
 export default () => {

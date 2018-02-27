@@ -40,6 +40,11 @@ const interval = setInterval(() => {
   });
 }, 10000);
 
+type CreateLoaderOptionalOptions = {
+  indexField?: Function | string,
+  cacheKeyFn?: Function,
+};
+
 /**
  * Create a dataloader instance which caches results for 5s
  *
@@ -49,9 +54,10 @@ const interval = setInterval(() => {
  */
 const createLoader = (
   batchFn: Function,
-  indexField: string | Function = 'id',
-  cacheKeyFn: Function = key => key
+  { indexField, cacheKeyFn = key => key }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
+  // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
+  indexField = indexField || 'id';
   // TODO(@mxstbr): fn.toString is brittle and should probably be replaced with an actual unique key somehow down the line
   const cacheKey = batchFn.toString();
   if (!caches[cacheKey]) caches[cacheKey] = {};
