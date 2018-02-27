@@ -3,38 +3,20 @@ const debug = require('debug')('iris:loaders:create-loader');
 // $FlowIssue
 import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
+// Least-recently-used cache that evicts items based on when they were last used
+import LRU from 'lru-cache';
+import { getLengthInBytes } from 'shared/string-byte-length';
 import type { Loader, DataLoaderOptions } from './types';
 
-type CacheItem = {|
-  data: mixed,
-  // We need to store the time the item was last fetched from the db
-  // and whether we can remove it via GC
-  time: number,
-|};
+const TWO_HUNDRED_AND_FIFTY_MEGABYTE = 2.5e8;
 
-type Cache = {
-  __meta: {
-    expiryTime: number,
-  },
-  [key: string]: CacheItem,
-};
+let caches: Map<Function, LRU<string, mixed>> = new Map();
 
-let caches: Map<Function, Cache> = new Map();
-
-// "GC" cleanup mechanism which evicts old records from the cache every 30s
+// Proactively evict old data every 30s instead of only when .get is called
 const interval = setInterval(() => {
   debug('running gc');
-  caches.forEach(cache => {
-    Object.keys(cache).forEach(itemKey => {
-      if (itemKey === '__meta') return;
-      const item = cache[itemKey];
-      if (item.time + cache.__meta.expiryTime < Date.now()) {
-        debug(`found outdated item ${itemKey}, removing`);
-        delete cache[itemKey];
-      }
-    });
-  });
-}, 10000);
+  caches.forEach(cache => cache.prune());
+}, 30000);
 
 type CreateLoaderOptionalOptions = {|
   getKeyFromResult?: Function | string,
@@ -56,14 +38,21 @@ const createLoader = (
   getKeyFromResult = getKeyFromResult || 'id';
   cacheExpiryTime = cacheExpiryTime || 5000;
   // Either create the cache or get the existing one
-  const newCache = {
-    __meta: {
-      expiryTime: cacheExpiryTime,
+  const newCache = new LRU({
+    max: TWO_HUNDRED_AND_FIFTY_MEGABYTE,
+    maxAge: cacheExpiryTime,
+    length: item => {
+      try {
+        return getLengthInBytes(JSON.stringify(item));
+      } catch (err) {
+        return 1;
+      }
     },
-  };
+  });
+
   // NOTE(@mxstbr): That || newCache part will never be hit
-  // but for some reason  Flow complains otherwise
-  let cache: Cache =
+  // but for some reason Flow complains otherwise
+  let cache =
     caches.get(batchFn) ||
     caches.set(batchFn, newCache).get(batchFn) ||
     newCache;
@@ -74,18 +63,14 @@ const createLoader = (
     let cachedResults = [];
     keys.forEach(key => {
       const stringKey = key.toString();
-      const item = cache[stringKey];
+      const item = cache.get(stringKey);
 
-      // If we don't have a result in the cache or the result is stale fetch the data again
+      // If we don't have a result in the cache fetch the data again
       if (!item) return uncachedKeys.push(key);
-      if (item.time + cacheExpiryTime < Date.now()) {
-        delete cache[stringKey];
-        return uncachedKeys.push(key);
-      }
 
       // We need to store the cached results out here since they might expire
       // until the database query finishes, which would break everything
-      cachedResults.push(item.data);
+      cachedResults.push(item);
     });
 
     debug(`cached items: ${keys.length - uncachedKeys.length}`);
@@ -111,10 +96,7 @@ const createLoader = (
         const key = keys[index].toString();
         if (cachedResults.indexOf(result) > -1 || cache[key]) return;
         debug(`cache result for ${key}`);
-        cache[key] = {
-          data: result,
-          time: Date.now(),
-        };
+        cache.set(key, result);
       });
       return normalized;
     });
