@@ -20,14 +20,13 @@ type Cache = {
   [key: string]: CacheItem,
 };
 
-let caches: { [key: string]: Cache } = {};
+let caches: Map<Function, Cache> = new Map();
 
 // "GC" cleanup mechanism which evicts old records from the cache every 30s
 // We block records that are needed by a db query that's currently in the air with the "removeable" key
 const interval = setInterval(() => {
   debug('running gc');
-  Object.keys(caches).forEach(cacheKey => {
-    const cache = caches[cacheKey];
+  caches.forEach(cache => {
     Object.keys(cache).forEach(itemKey => {
       if (itemKey === '__meta') return;
       const item = cache[itemKey];
@@ -36,7 +35,7 @@ const interval = setInterval(() => {
         item.time + cache.__meta.expiryTime < Date.now()
       ) {
         debug(`found outdated item ${itemKey}, removing`);
-        delete caches[cacheKey][itemKey];
+        delete cache[itemKey];
       }
     });
   });
@@ -61,15 +60,18 @@ const createLoader = (
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
   getKeyFromResult = getKeyFromResult || 'id';
   cacheExpiryTime = cacheExpiryTime || 5000;
-  // TODO(@mxstbr): fn.toString is brittle and should probably be replaced with an actual unique key somehow down the line
-  const cacheKey = batchFn.toString();
-  if (!caches[cacheKey])
-    caches[cacheKey] = {
-      __meta: {
-        expiryTime: cacheExpiryTime,
-      },
-    };
-  let cache = caches[cacheKey];
+  // Either create the cache or get the existing one
+  const newCache = {
+    __meta: {
+      expiryTime: cacheExpiryTime,
+    },
+  };
+  // NOTE(@mxstbr): That || newCache part will never be hit
+  // but for some reason  Flow complains otherwise
+  let cache: Cache =
+    caches.get(batchFn) ||
+    caches.set(batchFn, newCache).get(batchFn) ||
+    newCache;
 
   return new DataLoader(keys => {
     debug(`fetch ${keys.length} items`);
