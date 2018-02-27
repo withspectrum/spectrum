@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { hexa } from 'src/components/globals';
 
 export const ContentContainer = styled.div`
@@ -174,7 +174,14 @@ export const FeatureButton = styled.button`
   transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${props =>
+      props.color
+        ? props.theme[props.color].default
+        : props.theme.text.default};
+    background: ${props =>
+      props.color
+        ? hexa(props.theme[props.color].default, 0.1)
+        : props.theme.bg.wash};
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
   }
@@ -222,6 +229,16 @@ export const CommunityCard = styled.div`
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
   background: ${props => props.theme.bg.default};
   align-items: center;
+
+  a {
+    width: 100%;
+    display: block;
+    margin-bottom: 8px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 `;
 
 export const CommunityCardAvatar = styled.img`
@@ -248,12 +265,7 @@ export const CommunityCardButton = styled.button`
   color: ${props => props.theme.text.alt};
   background: ${props => props.theme.bg.wash};
   transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
-  margin-bottom: 8px;
   width: 100%;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
 
   &:hover {
     color: ${props => props.theme.text.default};
@@ -288,4 +300,164 @@ export const ExtraContent = styled.div`
   padding-top: 8px;
   padding-bottom: 16px;
   border-top: 1px solid ${props => props.theme.bg.border};
+`;
+
+export const PriceTable = styled.div`
+  margin: 0 -128px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: calc(100% + 256px);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: ${props => props.theme.bg.default};
+  border-radius: 8px;
+`;
+
+export const PlanSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px;
+  justify-content: space-between;
+
+  &:nth-of-type(2) {
+    box-shadow: inset 1px 0 0 ${props => props.theme.bg.border};
+  }
+`;
+
+export const PlanName = styled.h4`
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+`;
+
+export const PlanPrice = styled.h3`
+  font-size: 28px;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 8px;
+`;
+
+export const PlanDescription = styled.p`
+  font-size: 20px;
+  font-weight: 400;
+  color: ${props => props.theme.text.secondary};
+  line-height: 1.3;
+`;
+
+export const BusinessPlanSection = styled.div`
+  grid-column-start: span 2;
+  display: flex;
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding: 24px 32px;
+`;
+
+export const BusinessPlanAction = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 24px;
+
+  button {
+    margin-top: 0;
+  }
+`;
+
+export const BusinessPlanContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const gradient = (c1, c2) => `linear-gradient(${c1} 0%, ${c2} 100%)`;
+export const TableCardButton = styled.button`
+  display: flex;
+  flex: none;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+  word-break: keep-all;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  position: relative;
+  text-align: center;
+  padding: 12px 16px;
+  width: 100%;
+  border: ${props =>
+    props.light
+      ? `1px solid ${props.theme.bg.border}`
+      : `1px solid ${props.theme.brand.default}`};
+  color: ${props =>
+    props.light ? props.theme.text.secondary : props.theme.text.reverse};
+  background-image: ${props =>
+    props.light
+      ? gradient(props.theme.bg.default, props.theme.bg.wash)
+      : gradient(props.theme.brand.alt, props.theme.brand.default)};
+  box-shadow: ${props =>
+    props.light ? '0 1px 3px rgba(0,0,0,0.04)' : '0 2px 4px rgba(0,0,0,0.2)'};
+  margin-top: 16px;
+  transform: translateY(0);
+
+  &:hover {
+    transition: all 0.2s;
+    transform: translateY(-1px);
+    box-shadow: ${props =>
+      props.light
+        ? '0 2px 6px rgba(0,0,0,0.06)'
+        : '0 4px 12px rgba(0,0,0,0.2)'};
+  }
+`;
+
+export const PlanFeatures = styled.ul`
+  list-style-type: none;
+  margin: 24px 0 16px;
+  padding: 0;
+`;
+
+export const PlanFeatureContainer = styled.li`
+  color: ${props => props.theme[props.color].default};
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  .icon {
+    margin-right: 12px;
+  }
+`;
+
+export const PlanFeatureContent = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+export const PlanFeatureText = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PlanFeatureTitle = styled.p`
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+  margin-top: 4px;
+  color: ${props => props.theme.text.secondary};
+`;
+
+export const PlanFeatureSubtitle = styled.p`
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: ${props => props.theme.text.alt};
+  padding-right: 24px;
+  margin-top: 8px;
 `;

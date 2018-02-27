@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FeaturesList, FeatureLabel, FeatureDescription } from '../style';
+import { FeaturesList } from '../style';
 import FeatureItem from './featureItem';
 
 class PaidFeaturesList extends React.Component {

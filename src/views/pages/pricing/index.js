@@ -7,6 +7,7 @@ import { Wrapper } from '../style';
 import FreeFeaturesList from './components/freeFeaturesList';
 import PaidFeaturesList from './components/paidFeaturesList';
 import CommunityList from './components/communityList';
+import PricingPlanTable from './components/pricingPlanTable';
 import {
   getCurrentUserCommunityConnection,
   type GetUserCommunityConnectionType,
@@ -70,6 +71,10 @@ class Pricing extends React.Component<Props> {
           </PageSubtitle>
 
           <Section>
+            <PricingPlanTable />
+          </Section>
+
+          <Section>
             <SectionTitle>Our Fair Price Promise</SectionTitle>
             <SectionDescription>
               Growing and managing an active online community is hard work. The
@@ -125,6 +130,12 @@ class Pricing extends React.Component<Props> {
                 We found these communities that you already own - you can manage
                 them in their settings or apply directly for an open-source,
                 non-profit, or education discount.
+              </SectionDescription>
+
+              <SectionDescription>
+                When applying for a discount, please provide as much information
+                as possible about your project or community so that we can help
+                you as quickly as possible.
               </SectionDescription>
 
               <CommunityList communities={ownedCommunities} />

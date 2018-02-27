@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { GetCommunityType } from 'shared/graphql/queries/getCommunity';
+import Link from 'src/components/link';
 import {
   CommunityListGrid,
   CommunityCard,
@@ -25,8 +26,16 @@ class CommunityList extends React.Component<Props> {
             <CommunityCard key={community.id}>
               <CommunityCardAvatar src={community.profilePhoto} />
               <CommunityCardName>{community.name}</CommunityCardName>
-              <CommunityCardButton>Manage</CommunityCardButton>
-              <CommunityCardButton>Apply for discount</CommunityCardButton>
+              <Link to={`/${community.slug}/settings`}>
+                <CommunityCardButton>Manage</CommunityCardButton>
+              </Link>
+              <a
+                href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
+                  community.name
+                } community`}
+              >
+                <CommunityCardButton>Apply for discount</CommunityCardButton>
+              </a>
             </CommunityCard>
           );
         })}

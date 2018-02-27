@@ -25,14 +25,14 @@ class FreeFeaturesList extends React.Component {
             <ExtraContent>
               <IlloOne src={'/img/cluster-2.svg'} />
               <FeatureSublabel>Your history, saved</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 All conversations are saved, indexed, and searchable forever.
                 This makes it easy to find that one message from way-back-when,
                 without having to worry about a history limit.
               </FeatureDescription>
 
               <FeatureSublabel>A better way to talk</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 Conversations are organized inside of threads where a discrete
                 topic can be discussed over any period of time. There are no
                 limits to how many threads your community can have, or how many
@@ -58,7 +58,7 @@ class FreeFeaturesList extends React.Component {
               <IlloTwo src={'/img/planet-2.svg'} />
 
               <FeatureSublabel>Predictability is key</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 It can bbe hard to predict if your community will stay small, or
                 might someday have thousands of active members. We don’t set any
                 caps on memberships so that you’ll always have peace of mind as
@@ -66,7 +66,7 @@ class FreeFeaturesList extends React.Component {
               </FeatureDescription>
 
               <FeatureSublabel>Keep track of who’s who</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 As your community grows it’s important to know who people are
                 and the background they come from. We’ll keep you notified about
                 people as they join, and make it easy to search for the right
@@ -85,7 +85,7 @@ class FreeFeaturesList extends React.Component {
               <IlloTwo src={'/img/planet-2.svg'} />
 
               <FeatureSublabel>Keep your community organized</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 As communities grow it can be hard to keep conversations
                 organized and grouped together with the right context. Spectrum
                 channels solve this by letting your members choose where a
@@ -95,7 +95,7 @@ class FreeFeaturesList extends React.Component {
               <FeatureSublabel>
                 A unique experience for everyone
               </FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 Each channel in a community comes with its own notifications
                 settions and viewing permissions. This means that members can
                 choose to subscribe to a subset of channels, eliminating the
@@ -114,7 +114,7 @@ class FreeFeaturesList extends React.Component {
               <IlloThree src={'/img/discover.svg'} />
 
               <FeatureSublabel>Discoverable by default</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 Conversations and communities are public by default, which means
                 they can be indexed and searched from any search engine. This
                 change makes conversations more accessible and provides
@@ -122,7 +122,7 @@ class FreeFeaturesList extends React.Component {
               </FeatureDescription>
 
               <FeatureSublabel>Give it a try</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 Try searching for a topic below and see where people on Spectrum
                 are talking.
               </FeatureDescription>
@@ -141,7 +141,7 @@ class FreeFeaturesList extends React.Component {
               <IlloTwo src={'/img/planet-2.svg'} />
 
               <FeatureSublabel>Context is key</FeatureSublabel>
-              <FeatureDescription>
+              <FeatureDescription isExpanded>
                 Everyone on Spectrum earns reputation based on the quality of
                 their contributions back to communities where they are members.
                 This makes it easy for community owners and other members to
@@ -150,13 +150,13 @@ class FreeFeaturesList extends React.Component {
               </FeatureDescription>
 
               <FeatureSublabel>How it works</FeatureSublabel>
-              <FeatureDescription />
+              <FeatureDescription isExpanded />
             </ExtraContent>
           )}
         />
 
         <FeatureItem
-          title={'Ad free'}
+          title={'Ad-free'}
           subtitle={
             'Your community’s data is never sold to advertisers or third parties.'
           }
