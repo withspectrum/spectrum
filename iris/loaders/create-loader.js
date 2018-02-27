@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('iris:loaders:create-loader');
+// $FlowIssue
 import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
 import type { Loader, DataLoaderOptions } from './types';
@@ -7,24 +8,26 @@ import type { Loader, DataLoaderOptions } from './types';
 type Cache = {
   [key: string]: {
     data: mixed,
+    // We store the time something was fetched so we can expire it after 5s
     time: number,
   },
 };
 
-let caches = {};
+let caches: { [key: string]: Cache } = {};
 
 /**
- * Create a caching dataloader instance which caches results for 5s
+ * Create a dataloader instance which caches results for 5s
  *
  * Usage:
- * createUserLoader = () => createLoader(users => getUsers(users), 'id');
+ * user: createUserLoader = () => createLoader(users => getUsers(users), 'id');
+ * loaders.user.load(id).then(user => ...)
  */
 const createLoader = (
   batchFn: Function,
   indexField: string | Function = 'id',
   cacheKeyFn: Function = key => key
 ) => (options?: DataLoaderOptions): Loader => {
-  // TODO(@mxstbr): This is very brittle (fn.toString()) and should probably be replaced with something more solid down the line
+  // TODO(@mxstbr): fn.toString is brittle and should probably be replaced with an actual unique key somehow down the line
   const cacheKey = batchFn.toString();
   if (!caches[cacheKey]) caches[cacheKey] = {};
   let cache = caches[cacheKey];
@@ -42,6 +45,7 @@ const createLoader = (
       }
       return false;
     });
+
     debug(`cached items: ${keys.length - uncachedKeys.length}`);
     if (uncachedKeys.length === 0) {
       debug('all items in cache, bailing out early');
@@ -51,7 +55,6 @@ const createLoader = (
     const uniqueUncached = unique(uncachedKeys);
 
     debug(`fetching ${uniqueUncached.length} unique uncached items`);
-
     return batchFn(uniqueUncached).then(results => {
       const cachedResults = keys
         .filter(key => !!cache[key.toString()])
@@ -61,7 +64,7 @@ const createLoader = (
           cachedResults.length
         } cached items`
       );
-      const fullResults = [...results, ...cachedResults];
+      const fullResults = [...results, ...cachedResults].filter(Boolean);
       const normalized = normalizeRethinkDbResults(
         keys,
         indexField,
