@@ -18,7 +18,7 @@ export const __createUserLoader = createLoader(users => getUsers(users));
 
 export const __createUserByUsernameLoader = createLoader(
   users => getUsersByUsername(users),
-  { indexField: 'username' }
+  { getKeyFromResult: 'username' }
 );
 
 export const __createUserThreadCountLoader = createLoader(users =>
@@ -27,35 +27,32 @@ export const __createUserThreadCountLoader = createLoader(users =>
 
 export const __createUserRecurringPaymentsLoader = createLoader(
   users => getUsersRecurringPayments(users),
-  { indexField: 'group' }
+  { getKeyFromResult: 'group' }
 );
 
 export const __createUserPermissionsInCommunityLoader = createLoader(
   usersCommunities => getUsersPermissionsInCommunities(usersCommunities),
   {
-    indexField: input => `${input.userId}|${input.communityId}`,
-    cacheKeyFn: key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key),
+    getKeyFromResult: result => [result.userId, result.communityId],
   }
 );
 
 export const __createUserTotalReputationLoader = createLoader(
   users => getUsersTotalReputation(users),
-  { indexField: 'userId' }
+  { getKeyFromResult: 'userId' }
 );
 
 export const __createUserPermissionsInChannelLoader = createLoader(
   usersChannels => getUsersPermissionsInChannels(usersChannels),
   {
-    indexField: input => `${input.userId}|${input.channelId}`,
-    cacheKeyFn: key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key),
+    getKeyFromResult: result => [result.userId, result.channelId],
   }
 );
 
 export const __createUserThreadNotificationStatusLoader = createLoader(
   usersThreads => getThreadsNotificationStatusForUsers(usersThreads),
   {
-    indexField: input => `${input.userId}|${input.threadId}`,
-    cacheKeyFn: key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key),
+    getKeyFromResult: result => [result.userId, result.threadId],
   }
 );
 

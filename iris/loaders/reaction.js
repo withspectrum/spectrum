@@ -4,7 +4,7 @@ import createLoader from './create-loader';
 
 export const __createReactionLoader = createLoader(
   messageIds => getReactions(messageIds),
-  { indexField: 'group' }
+  { getKeyFromResult: 'group' }
 );
 
 export default () => {

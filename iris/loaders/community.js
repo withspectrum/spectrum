@@ -10,7 +10,7 @@ import createLoader from './create-loader';
 
 export const __createCommunityRecurringPaymentsLoader = createLoader(
   communities => getCommunitiesRecurringPayments(communities),
-  { indexField: 'group' }
+  { getKeyFromResult: 'group' }
 );
 
 export const __createCommunityLoader = createLoader(communities =>
@@ -19,17 +19,17 @@ export const __createCommunityLoader = createLoader(communities =>
 
 export const __createCommunityBySlugLoader = createLoader(
   communities => getCommunitiesBySlug(communities),
-  { indexField: 'slug' }
+  { getKeyFromResult: 'slug' }
 );
 
 export const __createCommunityMemberCountLoader = createLoader(
   communityIds => getCommunitiesMemberCounts(communityIds),
-  { indexField: 'group' }
+  { getKeyFromResult: 'group' }
 );
 
 export const __createCommunityChannelCountLoader = createLoader(
   communityIds => getCommunitiesChannelCounts(communityIds),
-  { indexField: 'group' }
+  { getKeyFromResult: 'group' }
 );
 
 export default () => {

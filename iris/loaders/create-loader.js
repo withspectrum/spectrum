@@ -40,10 +40,9 @@ const interval = setInterval(() => {
   });
 }, 10000);
 
-type CreateLoaderOptionalOptions = {
-  indexField?: Function | string,
-  cacheKeyFn?: Function,
-};
+type CreateLoaderOptionalOptions = {|
+  getKeyFromResult?: Function | string,
+|};
 
 /**
  * Create a dataloader instance which caches results for 5s
@@ -54,10 +53,10 @@ type CreateLoaderOptionalOptions = {
  */
 const createLoader = (
   batchFn: Function,
-  { indexField, cacheKeyFn = key => key }: CreateLoaderOptionalOptions = {}
+  { getKeyFromResult }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
-  indexField = indexField || 'id';
+  getKeyFromResult = getKeyFromResult || 'id';
   // TODO(@mxstbr): fn.toString is brittle and should probably be replaced with an actual unique key somehow down the line
   const cacheKey = batchFn.toString();
   if (!caches[cacheKey]) caches[cacheKey] = {};
@@ -109,11 +108,9 @@ const createLoader = (
         } cached items`
       );
       const fullResults = [...results, ...cachedResults].filter(Boolean);
-      const normalized = normalizeRethinkDbResults(
-        keys,
-        indexField,
-        cacheKeyFn
-      )(fullResults);
+      const normalized = normalizeRethinkDbResults(keys, getKeyFromResult)(
+        fullResults
+      );
       normalized.forEach((result, index) => {
         debug(`cache result for ${keys[index].toString()}`);
         cache[keys[index].toString()] = {
@@ -126,22 +123,32 @@ const createLoader = (
   }, options);
 };
 
-// These helper functions were taken from the DataLoader docs
-// https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
-function indexResults(results, indexField, cacheKeyFn) {
-  var indexedResults = new Map();
-  results.forEach(res => {
-    const key =
-      typeof indexField === 'function' ? indexField(res) : res[indexField];
-    indexedResults.set(cacheKeyFn(key), res);
-  });
-  return indexedResults;
-}
-
-function normalizeRethinkDbResults(keys, indexField, cacheKeyFn) {
+/**
+ * Map RethinkDB results back to the original keys that were passed. This is necessary because Rethink doesn't return data in order, deduplicates and does a bunch of other stuff, so we have to bring the data back into the shape DataLoader expects it to be in
+ *
+ * requested : ['id1', 'id2', 'id1', 'id3']
+ * received  : [{ id: 'id1' }, { id: 'id3' }, { id: 'id2' }]
+ * normalized: [{ id: 'id1' }, { id: 'id2' }, { id: 'id1' }, { id: 'id3' }];
+ *
+ * You can pass a custom getKeyFromResult if the index you're going for isn't the "id" field. For example:
+ *
+ * requested : ['id1', 'id1']
+ * received  : [{ group: 'id1', reduction: {...} }]
+ * normalized with getKeyFromResult = "group": [{ group: 'id1', reduction: {...} }, { group: 'id1', reduction: {...} }]
+ *
+ * Inspired by the DataLoader docs https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
+ */
+function normalizeRethinkDbResults(keys, getKeyFromResult) {
   return results => {
-    var indexedResults = indexResults(results, indexField, cacheKeyFn);
-    return keys.map(val => indexedResults.get(cacheKeyFn(val)) || null);
+    var indexedResults = new Map();
+    results.forEach(res => {
+      const key =
+        typeof getKeyFromResult === 'function'
+          ? getKeyFromResult(res)
+          : res[getKeyFromResult];
+      indexedResults.set(key.toString(), res);
+    });
+    return keys.map(val => indexedResults.get(val.toString()) || null);
   };
 }
 
