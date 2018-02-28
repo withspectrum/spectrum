@@ -16,14 +16,13 @@ export const __createCommunityRecurringPaymentsLoader = createLoader(
   { getKeyFromResult: 'group' }
 );
 
-export const __createCommunityLoader = createLoader(
-  communities => getCommunities(communities),
-  { cacheExpiryTime: FIVE_MINUTES }
+export const __createCommunityLoader = createLoader(communities =>
+  getCommunities(communities)
 );
 
 export const __createCommunityBySlugLoader = createLoader(
   communities => getCommunitiesBySlug(communities),
-  { getKeyFromResult: 'slug', cacheExpiryTime: FIVE_MINUTES }
+  { getKeyFromResult: 'slug' }
 );
 
 export const __createCommunityMemberCountLoader = createLoader(

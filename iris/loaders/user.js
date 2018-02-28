@@ -15,12 +15,13 @@ import createLoader from './create-loader';
 import type { Loader } from './types';
 
 const THIRTY_MINUTES = 1800000;
+const FIVE_MINUTES = 300000;
 
 export const __createUserLoader = createLoader(users => getUsers(users));
 
 export const __createUserByUsernameLoader = createLoader(
   users => getUsersByUsername(users),
-  { getKeyFromResult: 'username' }
+  { getKeyFromResult: 'username', cacheExpiryTime: FIVE_MINUTES }
 );
 
 export const __createUserThreadCountLoader = createLoader(

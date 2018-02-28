@@ -23,14 +23,14 @@ let caches: LRU<Function, LRU<string, mixed>> = new LRU({
   length: item => (item && item.length) || 1,
 });
 
-// Proactively evict old data every 30s instead of only when .get is called
+// Proactively evict old data every 29s instead of only when .get is called
 const interval = setInterval(() => {
   caches.prune();
   caches.forEach(cache => cache.prune());
-}, 30000);
+}, 29000);
 
 /**
- * Create a dataloader instance which also caches results across requests. The default caching duration is 5s.
+ * Create a dataloader instance which also caches results across requests. The default caching duration is one minute.
  *
  * Usage:
  * user: createUserLoader = () => createLoader(users => getUsers(users), 'id');
@@ -42,7 +42,7 @@ const createLoader = (
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
   getKeyFromResult = getKeyFromResult || 'id';
-  cacheExpiryTime = cacheExpiryTime || 5000;
+  cacheExpiryTime = cacheExpiryTime || 60000;
   // Either create the cache or get the existing one
   const newCache = new LRU({
     max: SEVEN_HUNDRED_AND_FIFTY_MEGABYTE,
