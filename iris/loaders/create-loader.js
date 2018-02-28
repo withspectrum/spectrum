@@ -9,7 +9,8 @@ import { getLengthInBytes } from 'shared/string-byte-length';
 import type { Loader, DataLoaderOptions, Key } from './types';
 
 type CreateLoaderOptionalOptions = {|
-  getKeyFromResult?: Function | string,
+  getCacheKeyFromResult?: Function | string,
+  getCacheKeyFromInput?: Function,
   cacheExpiryTime?: number,
 |};
 
@@ -38,10 +39,16 @@ const interval = setInterval(() => {
  */
 const createLoader = (
   batchFn: Function,
-  { getKeyFromResult, cacheExpiryTime }: CreateLoaderOptionalOptions = {}
+  {
+    getCacheKeyFromResult,
+    getCacheKeyFromInput,
+    cacheExpiryTime,
+  }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
-  getKeyFromResult = getKeyFromResult || 'id';
+  getCacheKeyFromResult = getCacheKeyFromResult || 'id';
+  if (typeof getCacheKeyFromInput !== 'function')
+    getCacheKeyFromInput = (input: Key) => input.toString();
   cacheExpiryTime = cacheExpiryTime || 60000;
   // Either create the cache or get the existing one
   const newCache = new LRU({
@@ -66,7 +73,8 @@ const createLoader = (
     let uncachedKeys = [];
     let cachedResults = [];
     keys.forEach(key => {
-      const stringKey = key.toString();
+      // $FlowIssue for some reason Flow thinks getCacheKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+      const stringKey = getCacheKeyFromInput(key);
       const item = cache.get(stringKey);
 
       // If we don't have a result in the cache fetch the data again
@@ -87,11 +95,14 @@ const createLoader = (
     return batchFn(uniqueUncached).then(results => {
       debug(`cache hit rate: ${cachedResults.length / keys.length * 100}%`);
       const fullResults = [...results, ...cachedResults].filter(Boolean);
-      const normalized = normalizeRethinkDbResults(keys, getKeyFromResult)(
-        fullResults
-      );
+      const normalized = normalizeRethinkDbResults(
+        keys,
+        getCacheKeyFromResult,
+        getCacheKeyFromInput
+      )(fullResults);
       normalized.forEach((result, index) => {
-        const key = keys[index].toString();
+        // $FlowIssue for some reason Flow thinks getCacheKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+        const key = getCacheKeyFromInput(keys[index]);
         if (cachedResults.indexOf(result) > -1 || cache[key]) return;
         cache.set(key, result);
       });
@@ -107,25 +118,32 @@ const createLoader = (
  * received  : [{ id: 'id1' }, { id: 'id3' }, { id: 'id2' }]
  * normalized: [{ id: 'id1' }, { id: 'id2' }, { id: 'id1' }, { id: 'id3' }];
  *
- * You can pass a custom getKeyFromResult if the index you're going for isn't the "id" field. For example:
+ * You can pass a custom getCacheKeyFromResult if the index you're going for isn't the "id" field. For example:
  *
  * requested : ['id1', 'id1']
  * received  : [{ group: 'id1', reduction: {...} }]
- * normalized with getKeyFromResult = "group": [{ group: 'id1', reduction: {...} }, { group: 'id1', reduction: {...} }]
+ * normalized with getCacheKeyFromResult = "group": [{ group: 'id1', reduction: {...} }, { group: 'id1', reduction: {...} }]
  *
  * Inspired by the DataLoader docs https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
  */
-function normalizeRethinkDbResults(keys, getKeyFromResult) {
+function normalizeRethinkDbResults(
+  keys,
+  getCacheKeyFromResult,
+  getCacheKeyFromInput
+) {
   return results => {
     var indexedResults = new Map();
     results.forEach(res => {
       const key =
-        typeof getKeyFromResult === 'function'
-          ? getKeyFromResult(res)
-          : res[getKeyFromResult];
-      indexedResults.set(key.toString(), res);
+        typeof getCacheKeyFromResult === 'function'
+          ? getCacheKeyFromResult(res)
+          : res[getCacheKeyFromResult];
+      indexedResults.set(key, res);
     });
-    return keys.map(val => indexedResults.get(val.toString()) || null);
+    // $FlowIssue for some reason Flow thinks getCacheKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+    return keys.map(
+      val => indexedResults.get(getCacheKeyFromInput(val)) || null
+    );
   };
 }
 
