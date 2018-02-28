@@ -13,12 +13,19 @@ type CreateLoaderOptionalOptions = {|
   cacheExpiryTime?: number,
 |};
 
-const TWO_HUNDRED_AND_FIFTY_MEGABYTE = 2.5e8;
+const ONE_GIGABYTE = 1e9;
+const SEVEN_HUNDRED_AND_FIFTY_MEGABYTE = 7.5e8;
 
-let caches: Map<Function, LRU<string, mixed>> = new Map();
+// We allow all caches together to maximally use 1gig of memory
+// and each individual cache can maximally use 750mb of memory
+let caches: LRU<Function, LRU<string, mixed>> = new LRU({
+  max: ONE_GIGABYTE,
+  length: item => (item && item.length) || 1,
+});
 
 // Proactively evict old data every 30s instead of only when .get is called
 const interval = setInterval(() => {
+  caches.prune();
   caches.forEach(cache => cache.prune());
 }, 30000);
 
@@ -38,7 +45,7 @@ const createLoader = (
   cacheExpiryTime = cacheExpiryTime || 5000;
   // Either create the cache or get the existing one
   const newCache = new LRU({
-    max: TWO_HUNDRED_AND_FIFTY_MEGABYTE,
+    max: SEVEN_HUNDRED_AND_FIFTY_MEGABYTE,
     maxAge: cacheExpiryTime,
     length: item => {
       try {
@@ -49,12 +56,11 @@ const createLoader = (
     },
   });
 
-  // NOTE(@mxstbr): That || newCache part will never be hit
-  // but for some reason Flow complains otherwise
-  let cache =
-    caches.get(batchFn) ||
-    caches.set(batchFn, newCache).get(batchFn) ||
-    newCache;
+  let cache = caches.get(batchFn);
+  if (!cache) {
+    caches.set(batchFn, newCache);
+    cache = caches.get(batchFn);
+  }
 
   return new DataLoader((keys: Array<Key>) => {
     let uncachedKeys = [];
