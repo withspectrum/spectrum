@@ -13,7 +13,7 @@ const THIRTY_MINUTES = 1800000;
 
 export const __createCommunityRecurringPaymentsLoader = createLoader(
   communities => getCommunitiesRecurringPayments(communities),
-  { getKeyFromResult: 'group' }
+  { getCacheKeyFromResult: 'group' }
 );
 
 export const __createCommunityLoader = createLoader(communities =>
@@ -22,17 +22,17 @@ export const __createCommunityLoader = createLoader(communities =>
 
 export const __createCommunityBySlugLoader = createLoader(
   communities => getCommunitiesBySlug(communities),
-  { getKeyFromResult: 'slug' }
+  { getCacheKeyFromResult: 'slug' }
 );
 
 export const __createCommunityMemberCountLoader = createLoader(
   communityIds => getCommunitiesMemberCounts(communityIds),
-  { getKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
+  { getCacheKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export const __createCommunityChannelCountLoader = createLoader(
   communityIds => getCommunitiesChannelCounts(communityIds),
-  { getKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
+  { getCacheKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export default () => {
