@@ -147,6 +147,7 @@ workflows:
       #     requires:
       #       - checkout_environment
 
+  # Tests web app
   test_web:
     jobs:
       - checkout_environment
