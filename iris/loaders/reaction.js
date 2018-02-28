@@ -2,9 +2,11 @@
 import { getReactions } from '../models/reaction';
 import createLoader from './create-loader';
 
+const FIVE_MINUTES = 180000;
+
 export const __createReactionLoader = createLoader(
   messageIds => getReactions(messageIds),
-  'group'
+  { getKeyFromResult: 'group', cacheExpiryTime: FIVE_MINUTES }
 );
 
 export default () => {

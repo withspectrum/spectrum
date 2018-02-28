@@ -19,7 +19,7 @@ import {
   activeCommunityReport,
 } from './jobs';
 
-const PORT = process.env.PORT || 3004;
+const PORT = parseInt(process.env.PORT, 10) || 3004;
 
 console.log('\n✉️ Chronos, the cron job worker, is starting...');
 debug('Logging with debug enabled!');
@@ -55,8 +55,9 @@ console.log(
   }`
 );
 
-// $FlowIssue
-server.listen(PORT, 'localhost', () => {
+// NOTE(@mxstbr): 511 is the default value, have to add that so flow
+// doesn't complain. Ref: https://nodejs.org/api/net.html#net_server_listen_port_host_backlog_callback
+server.listen(PORT, 'localhost', 511, () => {
   console.log(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
