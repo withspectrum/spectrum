@@ -10,6 +10,7 @@ import type { Loader, DataLoaderOptions, Key } from './types';
 
 type CreateLoaderOptionalOptions = {|
   getKeyFromResult?: Function | string,
+  getKeyFromInput?: Function,
   cacheExpiryTime?: number,
 |};
 
@@ -38,10 +39,16 @@ const interval = setInterval(() => {
  */
 const createLoader = (
   batchFn: Function,
-  { getKeyFromResult, cacheExpiryTime }: CreateLoaderOptionalOptions = {}
+  {
+    getKeyFromResult,
+    getKeyFromInput,
+    cacheExpiryTime,
+  }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
   getKeyFromResult = getKeyFromResult || 'id';
+  if (typeof getKeyFromInput !== 'function')
+    getKeyFromInput = (input: Key) => input.toString();
   cacheExpiryTime = cacheExpiryTime || 60000;
   // Either create the cache or get the existing one
   const newCache = new LRU({
@@ -66,7 +73,8 @@ const createLoader = (
     let uncachedKeys = [];
     let cachedResults = [];
     keys.forEach(key => {
-      const stringKey = key.toString();
+      // $FlowIssue for some reason Flow thinks getKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+      const stringKey = getKeyFromInput(key);
       const item = cache.get(stringKey);
 
       // If we don't have a result in the cache fetch the data again
@@ -87,11 +95,14 @@ const createLoader = (
     return batchFn(uniqueUncached).then(results => {
       debug(`cache hit rate: ${cachedResults.length / keys.length * 100}%`);
       const fullResults = [...results, ...cachedResults].filter(Boolean);
-      const normalized = normalizeRethinkDbResults(keys, getKeyFromResult)(
-        fullResults
-      );
+      const normalized = normalizeRethinkDbResults(
+        keys,
+        getKeyFromResult,
+        getKeyFromInput
+      )(fullResults);
       normalized.forEach((result, index) => {
-        const key = keys[index].toString();
+        // $FlowIssue for some reason Flow thinks getKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+        const key = getKeyFromInput(keys[index]);
         if (cachedResults.indexOf(result) > -1 || cache[key]) return;
         cache.set(key, result);
       });
@@ -115,7 +126,7 @@ const createLoader = (
  *
  * Inspired by the DataLoader docs https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
  */
-function normalizeRethinkDbResults(keys, getKeyFromResult) {
+function normalizeRethinkDbResults(keys, getKeyFromResult, getKeyFromInput) {
   return results => {
     var indexedResults = new Map();
     results.forEach(res => {
@@ -123,9 +134,10 @@ function normalizeRethinkDbResults(keys, getKeyFromResult) {
         typeof getKeyFromResult === 'function'
           ? getKeyFromResult(res)
           : res[getKeyFromResult];
-      indexedResults.set(key.toString(), res);
+      indexedResults.set(key, res);
     });
-    return keys.map(val => indexedResults.get(val.toString()) || null);
+    // $FlowIssue for some reason Flow thinks getKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
+    return keys.map(val => indexedResults.get(getKeyFromInput(val)) || null);
   };
 }
 
