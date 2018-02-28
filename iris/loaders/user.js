@@ -69,7 +69,7 @@ export const __createUserEverythingLoader = createLoader(
     Promise.all(input.map(args => getEverything(args[0], args[1]))),
   {
     getKeyFromInput: (input: EverythingLoaderArgs) => input[0],
-    getKeyFromResult: res => res.length > 0 && res[0].creatorId,
+    getKeyFromResult: 'userId',
     cacheExpiryTime: FIVE_MINUTES,
   }
 );
