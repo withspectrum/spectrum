@@ -1,8 +1,10 @@
 // @flow
 
+export type Key = string;
+
 export type Loader = {
-  load: (key: string | Array<string>) => Promise<any>,
-  loadMany: (keys: Array<string>) => Promise<any>,
+  load: (key: Key | Array<Key>) => Promise<any>,
+  loadMany: (keys: Array<Key>) => Promise<any>,
 };
 
 export type DataLoaderOptions = {
