@@ -2,8 +2,11 @@ import { getNotifications } from '../models/notification';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-export const __createNotificationLoader = createLoader(notifications =>
-  getNotifications(notifications)
+const FIVE_SECONDS = 5000;
+
+export const __createNotificationLoader = createLoader(
+  notifications => getNotifications(notifications),
+  { cacheExpiryTime: FIVE_SECONDS }
 );
 
 export default () => {
