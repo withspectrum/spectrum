@@ -1,8 +1,6 @@
 // @flow
 const debug = require('debug')('iris:loaders:create-loader');
-// $FlowIssue
 import DataLoader from 'dataloader';
-// Least-recently-used cache that evicts items based on when they were last used
 import LRU from 'lru-cache';
 import unique from 'shared/unique-elements';
 import { getLengthInBytes } from 'shared/string-byte-length';
