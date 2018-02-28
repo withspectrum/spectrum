@@ -13,12 +13,12 @@ export const __createThreadLoader = createLoader(threads =>
 
 export const __createThreadParticipantsLoader = createLoader(
   threadIds => getParticipantsInThreads(threadIds),
-  { getKeyFromResult: 'group' }
+  { getCacheKeyFromResult: 'group' }
 );
 
 export const __createThreadMessageCountLoader = createLoader(
   threadIds => getMessageCountInThreads(threadIds),
-  { getKeyFromResult: 'group', cacheExpiryTime: TEN_SECONDS }
+  { getCacheKeyFromResult: 'group', cacheExpiryTime: TEN_SECONDS }
 );
 
 export default () => {

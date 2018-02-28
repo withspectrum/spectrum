@@ -16,17 +16,17 @@ export const __createChannelLoader = createLoader(channels =>
 
 export const __createChannelThreadCountLoader = createLoader(
   channels => getChannelsThreadCounts(channels),
-  { getKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
+  { getCacheKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export const __createChannelMemberCountLoader = createLoader(
   channels => getChannelsMemberCounts(channels),
-  { getKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
+  { getCacheKeyFromResult: 'group', cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export const __createChannelPendingMembersLoader = createLoader(
   channels => getPendingUsersInChannels(channels),
-  { getKeyFromResult: 'group' }
+  { getCacheKeyFromResult: 'group' }
 );
 
 export default () => {
