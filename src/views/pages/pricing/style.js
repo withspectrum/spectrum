@@ -274,25 +274,11 @@ export const CommunityCardButton = styled.button`
   }
 `;
 
-export const IlloOne = styled.img`
+export const Illo = styled.img`
   position: absolute;
-  right: -40px;
-  bottom: -40px;
-  width: 200px;
-`;
-
-export const IlloTwo = styled.img`
-  position: absolute;
-  right: -20px;
-  top: 25%;
-  width: 200px;
-`;
-
-export const IlloThree = styled.img`
-  position: absolute;
-  right: -40px;
-  bottom: -40px;
-  width: 200px;
+  right: ${props => (props.right ? `${props.right}px` : '0')};
+  bottom: ${props => (props.bottom ? `${props.bottom}px` : '0')};
+  width: ${props => (props.width ? `${props.width}px` : '200px')};
 `;
 
 export const ExtraContent = styled.div`
@@ -305,11 +291,9 @@ export const ExtraContent = styled.div`
 export const PriceTable = styled.div`
   margin: 0 -128px;
   display: grid;
+  grid-gap: 16px;
   grid-template-columns: repeat(2, 1fr);
   width: calc(100% + 256px);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
-  background: ${props => props.theme.bg.default};
-  border-radius: 8px;
 `;
 
 export const PlanSection = styled.div`
@@ -317,22 +301,13 @@ export const PlanSection = styled.div`
   flex-direction: column;
   padding: 24px 32px;
   justify-content: space-between;
-
-  &:nth-of-type(2) {
-    box-shadow: inset 1px 0 0 ${props => props.theme.bg.border};
-  }
-`;
-
-export const PlanName = styled.h4`
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: ${props => props.theme.bg.default};
+  border-radius: 8px;
 `;
 
 export const PlanPrice = styled.h3`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: ${props => props.theme.text.default};
   margin-bottom: 8px;
@@ -348,8 +323,10 @@ export const PlanDescription = styled.p`
 export const BusinessPlanSection = styled.div`
   grid-column-start: span 2;
   display: flex;
-  border-top: 1px solid ${props => props.theme.bg.border};
   padding: 24px 32px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: ${props => props.theme.bg.default};
+  border-radius: 8px;
 `;
 
 export const BusinessPlanAction = styled.div`
@@ -400,11 +377,16 @@ export const TableCardButton = styled.button`
   box-shadow: ${props =>
     props.light ? '0 1px 3px rgba(0,0,0,0.04)' : '0 2px 4px rgba(0,0,0,0.2)'};
   margin-top: 16px;
-  transform: translateY(0);
+
+  img {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
 
   &:hover {
     transition: all 0.2s;
-    transform: translateY(-1px);
     box-shadow: ${props =>
       props.light
         ? '0 2px 6px rgba(0,0,0,0.06)'
@@ -460,4 +442,15 @@ export const PlanFeatureSubtitle = styled.p`
   color: ${props => props.theme.text.alt};
   padding-right: 24px;
   margin-top: 8px;
+`;
+
+export const SampleCommunitiesWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 90%;
+
+  a {
+    display: inline-block;
+    margin-right: 16px;
+  }
 `;

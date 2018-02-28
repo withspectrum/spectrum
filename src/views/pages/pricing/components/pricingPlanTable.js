@@ -7,20 +7,23 @@ import {
   BusinessPlanSection,
   BusinessPlanAction,
   BusinessPlanContent,
-  PlanName,
   PlanPrice,
   PlanDescription,
   PlanFeatures,
 } from '../style';
 import PricingTableFeatureRow from './pricingTableFeatureRow';
+import Link from 'src/components/link';
 
-class PricingPlanTable extends React.Component<{}> {
+type Props = {
+  scrollToPaidFeatures: Function,
+};
+
+class PricingPlanTable extends React.Component<Props> {
   render() {
     return (
       <PriceTable>
         <PlanSection>
           <div>
-            <PlanName>Open</PlanName>
             <PlanPrice>Free</PlanPrice>
             <PlanDescription>
               For growing communities that need a new home for conversations.
@@ -42,12 +45,13 @@ class PricingPlanTable extends React.Component<{}> {
             </PlanFeatures>
           </div>
 
-          <TableCardButton>Create a community</TableCardButton>
+          <Link to={'/new/community'}>
+            <TableCardButton>Create a community</TableCardButton>
+          </Link>
         </PlanSection>
 
         <PlanSection>
           <div>
-            <PlanName>On Demand</PlanName>
             <PlanPrice>Pay as you go</PlanPrice>
             <PlanDescription>
               For communities that want to understand and manage more
@@ -86,7 +90,9 @@ class PricingPlanTable extends React.Component<{}> {
             </PlanFeatures>
           </div>
 
-          <TableCardButton light>Learn more</TableCardButton>
+          <TableCardButton onClick={this.props.scrollToPaidFeatures} light>
+            Learn more
+          </TableCardButton>
         </PlanSection>
 
         <BusinessPlanSection>
@@ -98,7 +104,9 @@ class PricingPlanTable extends React.Component<{}> {
             </PlanDescription>
           </BusinessPlanContent>
           <BusinessPlanAction>
-            <TableCardButton light>Get in touch</TableCardButton>
+            <a href={'mailto:hi@spectrum.chat'}>
+              <TableCardButton light>Get in touch</TableCardButton>
+            </a>
           </BusinessPlanAction>
         </BusinessPlanSection>
       </PriceTable>

@@ -8,6 +8,7 @@ import FreeFeaturesList from './components/freeFeaturesList';
 import PaidFeaturesList from './components/paidFeaturesList';
 import CommunityList from './components/communityList';
 import PricingPlanTable from './components/pricingPlanTable';
+import Link from 'src/components/link';
 import {
   getCurrentUserCommunityConnection,
   type GetUserCommunityConnectionType,
@@ -23,6 +24,7 @@ import {
   Subsection,
   Highlight,
   Divider,
+  TableCardButton,
 } from './style';
 
 type Props = {
@@ -31,12 +33,46 @@ type Props = {
   },
 };
 class Pricing extends React.Component<Props> {
+  paidFeaturesSection: React.Node;
+  freeFeaturesSection: React.Node;
+  fairPriceFaqSection: React.Node;
+  ownedCommunitiesSection: ?React.Node;
+
   componentDidMount() {
     track('pricing', 'viewed', null);
   }
 
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    if (curr.data.user !== nextProps.data.user) return true;
+    if (curr.location.hash !== nextProps.location.hash) return true;
+    return false;
+  }
+
+  scrollToPaidFeatures = () => {
+    const node = this.paidFeaturesSection;
+    window.scrollTo(0, node.offsetTop);
+  };
+
+  scrollToFreeFeatures = () => {
+    const node = this.freeFeaturesSection;
+    window.scrollTo(0, node.offsetTop);
+  };
+
+  scrollToFairPriceFaq = () => {
+    const node = this.fairPriceFaqSection;
+    window.scrollTo(0, node.offsetTop);
+  };
+
+  scrollToOwnedCommunities = () => {
+    const node = this.ownedCommunitiesSection;
+    window.scrollTo(0, node.offsetTop);
+  };
+
   render() {
     const { data: { user } } = this.props;
+
+    console.log(this.props);
 
     const isUser = user && user.communityConnection;
 
@@ -65,13 +101,18 @@ class Pricing extends React.Component<Props> {
           <PageTitle>Pricing designed with communities in mind.</PageTitle>
 
           <PageSubtitle>
-            We know how hard it is to build a great online community. We’ve
-            designed our pricing with this in mind. The result is our{' '}
-            <strong>Fair Price Promise</strong>.
+            We know how hard it can be to build a great online community. We’ve
+            designed our pricing to make growing and managing a community
+            easier. The result is our{' '}
+            <strong onClick={this.scrollToFairPriceFaq}>
+              Fair Price Promise
+            </strong>.
           </PageSubtitle>
 
           <Section>
-            <PricingPlanTable />
+            <PricingPlanTable
+              scrollToPaidFeatures={this.scrollToPaidFeatures}
+            />
           </Section>
 
           <Section>
@@ -88,9 +129,19 @@ class Pricing extends React.Component<Props> {
                 actually used to grow and manage your community each month.
               </Highlight>
             </SectionDescription>
+
+            <TableCardButton
+              light
+              onClick={this.scrollToFairPriceFaq}
+              style={{ marginTop: '24px' }}
+            >
+              Learn more
+            </TableCardButton>
           </Section>
 
-          <Section>
+          <Section
+            innerRef={component => (this.freeFeaturesSection = component)}
+          >
             <SectionTitle>It all starts with free</SectionTitle>
             <SectionDescription>
               It takes time for a community to find its feet - we’ve been there
@@ -101,7 +152,9 @@ class Pricing extends React.Component<Props> {
             <FreeFeaturesList />
           </Section>
 
-          <Section>
+          <Section
+            innerRef={component => (this.paidFeaturesSection = component)}
+          >
             <SectionTitle>Need a hand? We’ve got your back</SectionTitle>
             <SectionDescription>
               When you need it, we’ve built features that will make growing and
@@ -121,10 +174,22 @@ class Pricing extends React.Component<Props> {
                 open-source project, non-profit, or education program
               </Highlight>, our paid features are 50% off.
             </SectionDescription>
+
+            {ownedCommunities && (
+              <TableCardButton
+                light
+                onClick={this.scrollToOwnedCommunities}
+                style={{ marginTop: '24px' }}
+              >
+                View my communities
+              </TableCardButton>
+            )}
           </Section>
 
           {ownedCommunities && (
-            <Section>
+            <Section
+              innerRef={component => (this.ownedCommunitiesSection = component)}
+            >
               <SectionTitle>Your communities</SectionTitle>
               <SectionDescription>
                 We found these communities that you already own - you can manage
@@ -148,19 +213,19 @@ class Pricing extends React.Component<Props> {
               Communities on Spectrum are free to create, so if you’re ready to
               get started you can create your community now.
             </SectionDescription>
-          </Section>
 
-          <Section>
-            <SectionTitle>Have an existing community?</SectionTitle>
-            <SectionDescription>
-              Communities on Spectrum are free to create, so if you’re ready to
-              get started you can create your community now.
-            </SectionDescription>
+            <Link style={{ width: '100%' }} to={'/new/community'}>
+              <TableCardButton style={{ marginTop: '24px' }}>
+                Create a community
+              </TableCardButton>
+            </Link>
           </Section>
 
           <Divider />
 
-          <Section>
+          <Section
+            innerRef={component => (this.fairPriceFaqSection = component)}
+          >
             <SectionTitle>More about our Fair Price Promise</SectionTitle>
             <Subsection>
               <SectionSubtitle>How it works</SectionSubtitle>

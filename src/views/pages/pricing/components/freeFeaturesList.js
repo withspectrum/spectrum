@@ -4,14 +4,13 @@ import {
   FeaturesList,
   FeatureSublabel,
   FeatureDescription,
-  IlloOne,
-  IlloTwo,
-  IlloThree,
+  Illo,
   ExtraContent,
 } from '../style';
 import FeatureItem from './featureItem';
 import Link from 'src/components/link';
 import { Button } from 'src/components/buttons';
+import SampleCommunities from './sampleCommunities';
 
 class FreeFeaturesList extends React.Component {
   render() {
@@ -23,7 +22,12 @@ class FreeFeaturesList extends React.Component {
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <IlloOne src={'/img/cluster-2.svg'} />
+              <Illo
+                right={-40}
+                bottom={-40}
+                width={300}
+                src={'/img/create.svg'}
+              />
               <FeatureSublabel>Your history, saved</FeatureSublabel>
               <FeatureDescription isExpanded>
                 All conversations are saved, indexed, and searchable forever.
@@ -33,10 +37,10 @@ class FreeFeaturesList extends React.Component {
 
               <FeatureSublabel>A better way to talk</FeatureSublabel>
               <FeatureDescription isExpanded>
-                Conversations are organized inside of threads where a discrete
-                topic can be discussed over any period of time. There are no
-                limits to how many threads your community can have, or how many
-                messages can be posted in any thread.
+                Conversations are organized inside of threads where a single
+                topic can be discussed over time. There are no limits to how
+                many threads your community can have, or how many messages can
+                be posted in a thread.
               </FeatureDescription>
 
               <Link
@@ -55,11 +59,16 @@ class FreeFeaturesList extends React.Component {
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <IlloTwo src={'/img/planet-2.svg'} />
+              <Illo
+                right={-40}
+                bottom={30}
+                width={200}
+                src={'/img/planet-2.svg'}
+              />
 
               <FeatureSublabel>Predictability is key</FeatureSublabel>
               <FeatureDescription isExpanded>
-                It can bbe hard to predict if your community will stay small, or
+                It can be hard to predict if your community will stay small, or
                 might someday have thousands of active members. We don’t set any
                 caps on memberships so that you’ll always have peace of mind as
                 you grow.
@@ -82,22 +91,28 @@ class FreeFeaturesList extends React.Component {
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <IlloTwo src={'/img/planet-2.svg'} />
+              <Illo
+                right={-90}
+                bottom={-30}
+                width={300}
+                style={{ transform: 'scaleX(-1)' }}
+                src={'/img/share.svg'}
+              />
 
               <FeatureSublabel>Keep your community organized</FeatureSublabel>
               <FeatureDescription isExpanded>
                 As communities grow it can be hard to keep conversations
-                organized and grouped together with the right context. Spectrum
-                channels solve this by letting your members choose where a
-                conversation makes the most sense.
+                organized and grouped together with the right context. Channels
+                solve this by letting your members choose where a conversation
+                makes the most sense.
               </FeatureDescription>
 
               <FeatureSublabel>
-                A unique experience for everyone
+                A unique community experience for everyone
               </FeatureSublabel>
               <FeatureDescription isExpanded>
                 Each channel in a community comes with its own notifications
-                settions and viewing permissions. This means that members can
+                settings and permissions. This means that your members can
                 choose to subscribe to a subset of channels, eliminating the
                 noise and helping people connect with what they care about most.
               </FeatureDescription>
@@ -111,20 +126,19 @@ class FreeFeaturesList extends React.Component {
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <IlloThree src={'/img/discover.svg'} />
+              <Illo
+                right={-40}
+                bottom={-90}
+                width={200}
+                src={'/img/discover.svg'}
+              />
 
               <FeatureSublabel>Discoverable by default</FeatureSublabel>
               <FeatureDescription isExpanded>
                 Conversations and communities are public by default, which means
-                they can be indexed and searched from any search engine. This
-                change makes conversations more accessible and provides
-                long-term value to the contributions your memers make every day.
-              </FeatureDescription>
-
-              <FeatureSublabel>Give it a try</FeatureSublabel>
-              <FeatureDescription isExpanded>
-                Try searching for a topic below and see where people on Spectrum
-                are talking.
+                they can be indexed and searched from anywhere on the web. This
+                makes conversations more accessible and provides long-term value
+                to the contributions your members add every day.
               </FeatureDescription>
             </ExtraContent>
           )}
@@ -138,19 +152,31 @@ class FreeFeaturesList extends React.Component {
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <IlloTwo src={'/img/planet-2.svg'} />
+              <Illo
+                right={-50}
+                bottom={10}
+                width={220}
+                src={'/img/cluster-2.svg'}
+              />
 
               <FeatureSublabel>Context is key</FeatureSublabel>
               <FeatureDescription isExpanded>
                 Everyone on Spectrum earns reputation based on the quality of
-                their contributions back to communities where they are members.
-                This makes it easy for community owners and other members to
-                find the people are most engaged and most knowledgeable about a
-                specific topic.
+                their contributions back to their communities. This makes it
+                easy for community owners and other members to find the people
+                are most engaged and most knowledgeable about a specific topic.
               </FeatureDescription>
 
               <FeatureSublabel>How it works</FeatureSublabel>
-              <FeatureDescription isExpanded />
+              <FeatureDescription isExpanded>
+                We provide a score to different kinds of interactions on
+                Spectrum. When people start or join conversations, they earn
+                reputation for adding value back to a community. But we also
+                looker deeper into the interactions that happen downstream from
+                each person’s activity in order to ensure that conversations are
+                healthy and productive, rather than sensationalist or
+                provacative.
+              </FeatureDescription>
             </ExtraContent>
           )}
         />
@@ -161,12 +187,55 @@ class FreeFeaturesList extends React.Component {
             'Your community’s data is never sold to advertisers or third parties.'
           }
           priceLabel={'Free'}
+          render={() => (
+            <ExtraContent>
+              <Illo
+                right={-20}
+                bottom={180}
+                width={200}
+                style={{ transform: 'scaleX(-1)' }}
+                src={'/img/planet-1.svg'}
+              />
+
+              <FeatureSublabel>Aligned incentives</FeatureSublabel>
+              <FeatureDescription isExpanded>
+                Ad-driven business models have misaligned community platform
+                incentives for years. The result is tools that optimize for the
+                wrong metrics, ignoring what actually matters to your community.
+                When we don’t sell your data to advertisers, we can be
+                completely focused on making sure your community is successful
+                in all the right measures.
+              </FeatureDescription>
+
+              <FeatureSublabel>Own your data</FeatureSublabel>
+              <FeatureDescription isExpanded>
+                As a result of being ad-free, there is no incentive for Spectrum
+                to ever sell or compromise the security of your community’s
+                data. Your community’s data belongs to your community.
+              </FeatureDescription>
+            </ExtraContent>
+          )}
         />
 
         <FeatureItem
           title={'A new home'}
           subtitle={'Create your own space for your community to thrive.'}
           priceLabel={'Free'}
+          render={() => (
+            <ExtraContent>
+              <FeatureSublabel>A space</FeatureSublabel>
+              <FeatureDescription isExpanded>
+                Every community on Spectrum has their own dedicated page where
+                people can discover content, explore channels, start
+                conversations, and see who else is in the community. Check out
+                some example communities:
+              </FeatureDescription>
+
+              <SampleCommunities
+                curatedContentType={'top-communities-by-members'}
+              />
+            </ExtraContent>
+          )}
         />
       </FeaturesList>
     );
