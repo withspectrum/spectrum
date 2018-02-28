@@ -14,10 +14,10 @@ export default (
   const lastDigits = cursor.match(/-(\d+)$/);
   const lastThreadIndex =
     lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
-  // $FlowIssue
   return loaders.userEverything
     .load([
       user.id,
+      // $FlowIssue
       {
         first,
         after: lastThreadIndex,
