@@ -39,6 +39,7 @@
     "write-file-webpack-plugin": "^4.1.0"
   },
   "dependencies": {
+    "abab": "^1.0.4",
     "algoliasearch": "^3.24.7",
     "apollo-cache-inmemory": "^1.1.5",
     "apollo-client": "2.x",
