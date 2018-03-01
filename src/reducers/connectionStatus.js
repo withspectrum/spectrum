@@ -1,5 +1,3 @@
-// @flow
-
 type InitialState = {
   networkOnline: boolean,
   websocketConnection:

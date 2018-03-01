@@ -39,9 +39,7 @@ class Status extends React.Component<Props, State> {
     const online = window.navigator.onLine;
     this.setState({
       online,
-      label: online
-        ? null
-        : 'Lost internet connection - check your internet connection or refresh',
+      label: online ? null : 'Lost internet connection.',
       color: online ? null : 'warn',
     });
 
@@ -57,8 +55,7 @@ class Status extends React.Component<Props, State> {
     if (websocketConnection === 'disconnected') {
       return this.setState({
         color: 'special',
-        label:
-          'Disconnected from server - we’re attempting to reconnect, or refresh this page',
+        label: 'Reconnecting to server...',
         wsConnected: false,
       });
     }
@@ -92,4 +89,5 @@ class Status extends React.Component<Props, State> {
 const map = state => ({
   websocketConnection: state.connectionStatus.websocketConnection,
 });
+// $FlowIssue
 export default connect(map)(Status);

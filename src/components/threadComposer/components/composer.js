@@ -637,7 +637,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
             <ContentContainer isOpen={isOpen}>
               {networkDisabled && (
                 <DisconnectedWarning>
-                  Lost connection to the internet or server.
+                  Lost connection to internet or server...
                 </DisconnectedWarning>
               )}
 
