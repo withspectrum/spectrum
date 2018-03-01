@@ -29,6 +29,7 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
+  DisconnectedWarning,
 } from '../style';
 
 type Props = {
@@ -47,6 +48,8 @@ type Props = {
     refetch: Function,
     user: GetComposerType,
   },
+  networkOnline: boolean,
+  websocketConnection: string,
 };
 
 type State = {
@@ -425,6 +428,29 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       isPublishing: true,
     });
 
+    const { dispatch, networkOnline, websocketConnection } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
+
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
     const {
@@ -586,7 +612,18 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, isLoading, isInbox } = this.props;
+    const {
+      isOpen,
+      isLoading,
+      isInbox,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     if (availableCommunities && availableChannels) {
       return (
@@ -598,6 +635,12 @@ class ThreadComposerWithData extends React.Component<Props, State> {
           />
           <Composer isOpen={isOpen} isInbox={isInbox}>
             <ContentContainer isOpen={isOpen}>
+              {networkDisabled && (
+                <DisconnectedWarning>
+                  Lost connection to the internet or server.
+                </DisconnectedWarning>
+              )}
+
               <Textarea
                 onChange={this.changeTitle}
                 style={ThreadTitle}
@@ -667,7 +710,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                   <Button
                     onClick={this.publishThread}
                     loading={isPublishing}
-                    disabled={!title || isPublishing}
+                    disabled={!title || isPublishing || networkDisabled}
                     color={'brand'}
                   >
                     Publish
@@ -692,6 +735,8 @@ const map = state => ({
   isOpen: state.composer.isOpen,
   title: state.composer.title,
   body: state.composer.body,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 export default compose(
   // $FlowIssue

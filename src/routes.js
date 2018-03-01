@@ -24,6 +24,7 @@ import AuthViewHandler from './views/authViewHandler';
 
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
+import Status from './views/status';
 import Login from './views/login';
 
 /* prettier-ignore */
@@ -200,6 +201,7 @@ class Routes extends React.Component<{}> {
               have a username set.
             */}
             <Route component={AuthViewHandler} />
+            <Status />
             <Route component={Navbar} />
 
             <Route component={ModalRoot} />
