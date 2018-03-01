@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { btoa } from 'abab';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getDMThreadMessageConnectionQuery } from '../../queries/directMessageThread/getDirectMessageThreadMessageConnection';
@@ -88,7 +89,7 @@ const sendDirectMessageOptions = {
                 if (edge.node.id === messageInStore.id)
                   return {
                     ...edge,
-                    cursor: window.btoa(addMessage.id),
+                    cursor: btoa(addMessage.id),
                     node: addMessage,
                   };
                 return edge;
@@ -101,14 +102,14 @@ const sendDirectMessageOptions = {
           } else {
             data.directMessageThread.messageConnection.edges.push({
               __typename: 'DirectMessageEdge',
-              cursor: window.btoa(addMessage.id),
+              cursor: btoa(addMessage.id),
               node: addMessage,
             });
           }
 
           data.directMessageThread.messageConnection.edges.push({
             __typename: 'DirectMessageEdge',
-            cursor: window.btoa(addMessage.id),
+            cursor: btoa(addMessage.id),
             node: addMessage,
           });
 

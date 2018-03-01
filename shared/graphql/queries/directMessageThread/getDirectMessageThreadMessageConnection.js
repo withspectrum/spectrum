@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { btoa } from 'abab';
 import { subscribeToNewMessages } from '../../subscriptions';
 import directMessageThreadMessageConnectionFragment from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
 import type { DirectMessageThreadMessageConnectionType } from '../../fragments/directMessageThread/directMessageThreadMessageConnection';
@@ -123,7 +124,7 @@ export const getDMThreadMessageConnectionOptions = {
                       if (edge.node.id === existingMessage.id)
                         return {
                           ...edge,
-                          cursor: window.btoa(newMessage.id),
+                          cursor: btoa(newMessage.id),
                           node: newMessage,
                         };
 
@@ -150,7 +151,7 @@ export const getDMThreadMessageConnectionOptions = {
                   ...prev.directMessageThread.messageConnection.edges,
                   {
                     node: newMessage,
-                    cursor: window.btoa(newMessage.id),
+                    cursor: btoa(newMessage.id),
                     __typename: 'DirectMessageEdge',
                   },
                 ],
