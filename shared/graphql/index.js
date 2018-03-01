@@ -6,8 +6,9 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
+import QueueLink from 'apollo-link-queue';
 import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
@@ -38,6 +39,9 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     : undefined;
 
   const retryLink = new RetryLink({
+    delay: {
+      initial: 1000,
+    },
     attempts: (count, operation, error) => {
       const isMutation =
         operation &&
@@ -60,14 +64,18 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     },
   });
 
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = retryLink.concat(
-    createUploadLink({
-      uri: API_URI,
-      credentials: 'include',
-      headers,
-    })
-  );
+  const queueLink = new QueueLink();
+
+  const onOnline = () => queueLink.open();
+  const onOffline = () => queueLink.close();
+
+  const uploadLink = createUploadLink({
+    uri: API_URI,
+    credentials: 'include',
+    headers,
+  });
+
+  const httpLink = ApolloLink.from([retryLink, queueLink, uploadLink]);
 
   // Websocket link for subscriptions
   const wsLink = new WebSocketLink({
@@ -90,18 +98,20 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     httpLink
   );
 
-  return new ApolloClient({
+  const client = new ApolloClient({
     link,
     // eslint-disable-next-line
     cache: window.__DATA__ ? cache.restore(window.__DATA__) : cache,
     ssrForceFetchDelay: 100,
     queryDeduplication: true,
   });
+
+  return { client, onOnline, onOffline };
 };
 
-const client = createClient();
+const { client, onOnline, onOffline } = createClient();
 
-export { client };
+export { client, onOnline, onOffline };
 
 export const clearApolloStore = () => {
   try {

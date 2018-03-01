@@ -338,6 +338,12 @@ apollo-link-http@^1.3.2:
   dependencies:
     apollo-link "^1.0.7"
 
+apollo-link-queue@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-link-queue/-/apollo-link-queue-2.0.0.tgz#991d7f79688dbcc7caf4192186e19aa17c257086"
+  dependencies:
+    apollo-link "^0.7.0"
+
 apollo-link-retry@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/apollo-link-retry/-/apollo-link-retry-2.1.2.tgz#ce054be5229247e1cf339f7ee4d141009745f5fc"
@@ -350,6 +356,14 @@ apollo-link-ws@^1.0.4:
   resolved "https://registry.yarnpkg.com/apollo-link-ws/-/apollo-link-ws-1.0.4.tgz#d0067aa0204470dbd3955aa5204f8dd72d389350"
   dependencies:
     apollo-link "^1.0.7"
+
+apollo-link@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-0.7.0.tgz#a8f09069b31821c27285584264356b1b6e6be6f2"
+  dependencies:
+    apollo-utilities "^0.2.0-beta.0"
+    graphql "^0.11.3"
+    zen-observable-ts "^0.5.0"
 
 apollo-link@^1.0.0, apollo-link@^1.0.7:
   version "1.0.7"
@@ -407,6 +421,10 @@ apollo-upload-server@^2.0.4:
     formidable "^1.1.1"
     mkdirp "^0.5.1"
     object-path "^0.11.4"
+
+apollo-utilities@^0.2.0-beta.0:
+  version "0.2.0-rc.3"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-0.2.0-rc.3.tgz#7bd93be0f587f20c5b46e21880272e305759fdc2"
 
 apollo-utilities@^1.0.0, apollo-utilities@^1.0.1, apollo-utilities@^1.0.4:
   version "1.0.4"
@@ -4478,7 +4496,7 @@ graphql-tools@1.2.3:
     graphql-subscriptions "^0.5.6"
     uuid "^3.1.0"
 
-graphql@0.11.x:
+graphql@0.11.x, graphql@^0.11.3:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.11.7.tgz#e5abaa9cb7b7cccb84e9f0836bf4370d268750c6"
   dependencies:
@@ -11000,6 +11018,10 @@ yauzl@2.4.1:
   resolved "https://registry.yarnpkg.com/yauzl/-/yauzl-2.4.1.tgz#9528f442dab1b2284e58b4379bb194e22e0c4005"
   dependencies:
     fd-slicer "~1.0.1"
+
+zen-observable-ts@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.5.0.tgz#c5021e7ac486fc281f6126d574673cfb6daf0069"
 
 zen-observable@^0.6.0:
   version "0.6.1"

@@ -13,7 +13,7 @@ import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 import { HelmetProvider } from 'react-helmet-async';
 import webPushManager from './helpers/web-push-manager';
 import { history } from './helpers/history';
-import { client } from 'shared/graphql';
+import { createClient } from 'shared/graphql';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
@@ -64,6 +64,11 @@ const renderMethod = !!window.__SERVER_STATE__
   ? // $FlowIssue
     ReactDOM.hydrate
   : ReactDOM.render;
+
+const { client, onOnline, onOffline } = createClient();
+
+window.addEventListener('online', onOnline);
+window.addEventListener('offline', onOffline);
 
 function render() {
   return renderMethod(

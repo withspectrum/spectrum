@@ -33,7 +33,7 @@ class App extends React.Component<{}, State> {
   state = {
     authLoaded: null,
     token: null,
-    client: createClient(),
+    client: createClient().client,
   };
 
   componentDidMount = async () => {
@@ -68,7 +68,7 @@ class App extends React.Component<{}, State> {
         // NOTE(@mxstbr): This wipes out the cache as this creates an entirely new client
         // Ideally this would only change link.headers.authorization, but that doesn't seem possible currently
         // Ref apollographql/apollo-link#461
-        client: createClient({ token: authentication.token }),
+        client: createClient({ token: authentication.token }).client,
       });
     }
   };
