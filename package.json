@@ -105,7 +105,6 @@
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
     "lodash.intersection": "^4.4.0",
-    "lru-cache": "^4.1.1",
     "moment": "^2.18.1",
     "node-env-file": "^0.1.8",
     "now-env": "^3.0.1",

@@ -11,7 +11,7 @@ import type {
   SearchCommunity,
 } from 'shared/types';
 import { getThreadById } from './thread';
-import { getLengthInBytes } from 'shared/string-byte-length';
+import { byteCount } from './text-parsing';
 import { toPlainText, toState } from 'shared/draft-utils';
 import {
   getWordCount,
@@ -35,7 +35,7 @@ export const dbThreadToSearchThread = (thread: DBThread): SearchThread => {
 
   // algolia only supports 20kb records
   // slice it down until its under 19k, leaving room for the rest of the thread data
-  while (getLengthInBytes(body) >= 19000) {
+  while (byteCount(body) >= 19000) {
     body = body.slice(0, -100);
   }
 
@@ -99,7 +99,7 @@ const filterMessageString = (message: DBMessage): ?string => {
     return null;
   }
 
-  while (getLengthInBytes(messageString) >= 19000) {
+  while (byteCount(messageString) >= 19000) {
     messageString = messageString.slice(0, -100);
   }
 
@@ -179,17 +179,11 @@ export const DELETED_DOCUMENTS = db
     db
       .row('new_val')
       .hasFields('deletedAt')
-      .and(
-        db
-          .row('new_val')('deletedAt')
-          .ne(null)
-      )
+      .and(db.row('new_val')('deletedAt').ne(null))
   );
 
 export const hasChangedField = (field: string) =>
-  db
-    .row('old_val')(field)
-    .ne(db.row('new_val')(field));
+  db.row('old_val')(field).ne(db.row('new_val')(field));
 
 export const listenToNewDocumentsIn = (table: string, cb: Function) => {
   return db
