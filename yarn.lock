@@ -4726,12 +4726,11 @@ homedir-polyfill@^1.0.1:
   dependencies:
     parse-passwd "^1.0.0"
 
-honeycomb-nodejs-magic@^1.0.0-beta1:
-  version "1.0.0-beta1"
-  resolved "https://registry.yarnpkg.com/honeycomb-nodejs-magic/-/honeycomb-nodejs-magic-1.0.0-beta1.tgz#78e0b17dfcffe466202fcdfc9b65ba83e128f981"
+honeycomb-nodejs-magic@^1.0.0-beta4:
+  version "1.0.0-beta4"
+  resolved "https://registry.yarnpkg.com/honeycomb-nodejs-magic/-/honeycomb-nodejs-magic-1.0.0-beta4.tgz#7f31234e58b1b9947b4d273aad8962fdf86e20cf"
   dependencies:
-    libhoney "^1.0.0"
-    methods "^1.1.2"
+    libhoney "^1.1.0"
     on-headers "^1.0.1"
     shimmer "^1.2.0"
     uppercamelcase "^3.0.0"
@@ -6485,9 +6484,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libhoney@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/libhoney/-/libhoney-1.0.0.tgz#c893a0c590db002b567f46d04017ed59cafd5afb"
+libhoney@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/libhoney/-/libhoney-1.1.0.tgz#0406d952ef838113963cfe2f3cfcef2d0adb648b"
   dependencies:
     superagent "^2.3.0"
     urljoin "^0.1.5"
@@ -6996,7 +6995,7 @@ mersenne-twister@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/mersenne-twister/-/mersenne-twister-1.1.0.tgz#f916618ee43d7179efcf641bec4531eb9670978a"
 
-methods@^1.1.1, methods@^1.1.2, methods@~1.1.2:
+methods@^1.1.1, methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
