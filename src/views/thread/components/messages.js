@@ -42,6 +42,7 @@ type Props = {
   loadNextPage: Function,
   scrollContainer: any,
   subscribeToNewMessages: Function,
+  threadIsLocked: boolean,
   data: {
     thread: {
       id: string,
@@ -151,6 +152,7 @@ class MessagesWithData extends React.Component<Props, State> {
       loadNextPage,
       scrollContainer,
       location,
+      threadIsLocked,
     } = this.props;
 
     const dataExists =
@@ -240,6 +242,7 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (!messagesExist) {
+      if (threadIsLocked) return null;
       return (
         <NullMessagesWrapper>
           <Icon glyph={'emoji'} size={64} />
