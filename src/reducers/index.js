@@ -10,6 +10,7 @@ import newActivityIndicator from './newActivityIndicator';
 import dashboardFeed from './dashboardFeed';
 import threadSlider from './threadSlider';
 import notifications from './notifications';
+import connectionStatus from './connectionStatus';
 
 // Allow dependency injection of extra reducers, we need this for SSR
 const getReducers = extraReducers => {
@@ -25,6 +26,7 @@ const getReducers = extraReducers => {
     dashboardFeed,
     threadSlider,
     notifications,
+    connectionStatus,
     ...extraReducers,
   });
 };
