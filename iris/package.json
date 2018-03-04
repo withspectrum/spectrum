@@ -50,7 +50,7 @@
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",
-    "honeycomb-nodejs-magic": "^1.0.0-beta1",
+    "honeycomb-nodejs-magic": "^1.0.0-beta4",
     "imgix-core-js": "^1.0.6",
     "immutability-helper": "^2.2.0",
     "isomorphic-fetch": "^2.2.1",
