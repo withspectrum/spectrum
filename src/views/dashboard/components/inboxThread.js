@@ -18,6 +18,7 @@ import {
   ThreadMeta,
   MetaText,
   MetaTextPill,
+  LockedTextPill,
   MiniLinkPreview,
 } from '../style';
 
@@ -108,6 +109,10 @@ class InboxThread extends Component {
                   ? `${data.messageCount} messages`
                   : `${data.messageCount} message`}
               </MetaText>
+            ) : data.isLocked ? (
+              <LockedTextPill offset={participants.length} active={active}>
+                Locked
+              </LockedTextPill>
             ) : (
               <MetaTextPill offset={participants.length} active={active} new>
                 New thread!
