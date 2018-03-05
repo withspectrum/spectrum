@@ -808,8 +808,8 @@ export const Plans = (props: Props) => {
                     <b>permalinked, search-indexed chat threads</b>.
                   </Feature>
                   <Feature>
-                    <b>Simple, powerful moderation</b> with automated toxicity
-                    monitoring and clear guidelines set by our open source{' '}
+                    <b>Simple, powerful moderation</b> powered by our open
+                    source{' '}
                     <a href="https://github.com/withspectrum/code-of-conduct">
                       Code of Conduct
                     </a>.

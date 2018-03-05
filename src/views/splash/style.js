@@ -689,7 +689,11 @@ export const PricingGrid = styled.div`
     transform: none;
   }
 `;
-export const Plan = styled.div`padding: 40px 32px 32px;`;
+export const Plan = styled.div`
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+`;
 
 export const CostNumber = styled.h2`
   font-weight: 900;
@@ -711,7 +715,7 @@ export const CostNumber = styled.h2`
   }
 
   &:after {
-    content: ${props => (props.per ? `'/ ${props.per}'` : `''`)};
+    content: ${props => (props.per ? `'/ ${props.per}'` : "''")};
     position: absolute;
     font-size: 14px;
     white-space: nowrap;
@@ -740,7 +744,6 @@ export const Free = styled(Plan)`
     left: 0;
     background-color: ${props => props.theme.bg.default};
     box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
-    transform: rotateX(10deg) rotateY(15deg);
 
     @media (max-width: 768px) {
       box-shadow: none;
@@ -793,7 +796,6 @@ export const Paid = styled(Plan)`
     background-image: ${props =>
       Gradient(props.theme.brand.alt, props.theme.brand.default)};
     box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.35)};
-    transform: rotateX(-10deg) rotateY(15deg);
 
     @media (max-width: 768px) {
       box-shadow: none;
@@ -864,7 +866,11 @@ export const CostSubtext = styled(FlexCol)`
   font-weight: 700;
 `;
 
-export const PlanFooter = styled(FlexRow)`justify-content: center;`;
+export const PlanFooter = styled(FlexRow)`
+  justify-content: center;
+  align-items: flex-end;
+  flex: auto;
+`;
 
 export const FreePrimaryCTA = styled(PrimaryCTA)`
   margin-top: 32px;
@@ -881,7 +887,6 @@ export const FreePrimaryCTA = styled(PrimaryCTA)`
 
 export const PaidPrimaryCTA = styled(PrimaryCTA)`
   margin-top: 32px;
-  margin-bottom: 16px;
 
   &:hover {
     color: ${props => props.theme.brand.alt};
