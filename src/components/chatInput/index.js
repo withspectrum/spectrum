@@ -88,6 +88,15 @@ class ChatInput extends React.Component<Props, State> {
     return this.props.dispatch(closeChatInput(state));
   }
 
+  onChange = (state, ...rest) => {
+    const { onChange } = this.props;
+    if (toPlainText(state).trim() === '```') {
+      this.toggleCodeMessage(false);
+    } else if (onChange) {
+      onChange(state, ...rest);
+    }
+  };
+
   triggerFocus = () => {
     // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
     // decorators that are passed to the editor are removed from the editor
@@ -97,7 +106,7 @@ class ChatInput extends React.Component<Props, State> {
     }, 0);
   };
 
-  toggleCodeMessage = () => {
+  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
     const { onChange, state } = this.props;
     const { code } = this.state;
     this.setState(
@@ -106,7 +115,11 @@ class ChatInput extends React.Component<Props, State> {
       },
       () => {
         onChange(
-          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+          changeCurrentBlockType(
+            state,
+            code ? 'unstyled' : 'code-block',
+            keepCurrentText ? toPlainText(state) : ''
+          )
         );
         setTimeout(() => this.triggerFocus());
       }
@@ -440,7 +453,7 @@ class ChatInput extends React.Component<Props, State> {
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
             editorState={state}
             handleReturn={this.handleReturn}
-            onChange={onChange}
+            onChange={this.onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             code={code}
