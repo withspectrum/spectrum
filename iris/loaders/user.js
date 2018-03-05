@@ -38,6 +38,7 @@ export const __createUserPermissionsInCommunityLoader = createLoader(
   usersCommunities => getUsersPermissionsInCommunities(usersCommunities),
   {
     getKeyFromResult: result => [result.userId, result.communityId],
+    cacheExpiryTime: 0,
   }
 );
 
@@ -50,6 +51,7 @@ export const __createUserPermissionsInChannelLoader = createLoader(
   usersChannels => getUsersPermissionsInChannels(usersChannels),
   {
     getKeyFromResult: result => [result.userId, result.channelId],
+    cacheExpiryTime: 0,
   }
 );
 
