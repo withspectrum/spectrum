@@ -18,6 +18,7 @@ import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
 import Routes from './routes';
 import { track } from './helpers/events';
+import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);
 
@@ -102,6 +103,16 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     webPushManager.set(registration.pushManager);
   });
 }
+
+wsLink.subscriptionClient.on('disconnected', () =>
+  store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'disconnected' })
+);
+wsLink.subscriptionClient.on('connected', () =>
+  store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'connected' })
+);
+wsLink.subscriptionClient.on('reconnected', () =>
+  store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'reconnected' })
+);
 
 // This fires when a user is prompted to add the app to their homescreen
 // We use it to track it happening in Google Analytics so we have those sweet metrics

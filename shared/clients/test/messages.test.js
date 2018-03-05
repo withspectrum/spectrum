@@ -1,5 +1,5 @@
 // @flow
-import { sortAndGroupMessages } from '../messages';
+import { sortAndGroupMessages } from '../group-messages';
 
 // TODO: FIXME
 type Message = Object;

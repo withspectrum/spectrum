@@ -539,6 +539,13 @@ export const MetaTextPill = styled(MetaText)`
   align-items: center;
 `;
 
+export const LockedTextPill = styled(MetaTextPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.alt};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.bg.border};
+`;
+
 export const MetaCommunityName = styled(Link)`
   padding-right: 8px;
   pointer-events: auto;
