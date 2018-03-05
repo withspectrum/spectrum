@@ -28,6 +28,7 @@ type Props = {
   code?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
+  networkDisabled: boolean,
 };
 
 type State = {
@@ -95,12 +96,13 @@ class Input extends React.Component<Props, State> {
       readOnly,
       editorRef,
       code,
+      networkDisabled,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
-      <InputWrapper code={code} focus={focus}>
+      <InputWrapper code={code} focus={focus} networkDisabled={networkDisabled}>
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

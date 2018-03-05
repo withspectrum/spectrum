@@ -48,6 +48,8 @@ type Props = {
   clear: Function,
   onBlur: Function,
   onFocus: Function,
+  websocketConnection: string,
+  networkOnline: boolean,
 };
 
 class ChatInput extends React.Component<Props, State> {
@@ -68,6 +70,9 @@ class ChatInput extends React.Component<Props, State> {
 
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
+
+    if (curr.networkOnline !== next.networkOnline) return true;
+    if (curr.websocketConnection !== next.websocketConnection) return true;
 
     // State changed
     if (curr.state !== next.state) return true;
@@ -121,7 +126,30 @@ class ChatInput extends React.Component<Props, State> {
       sendDirectMessage,
       clear,
       forceScrollToBottom,
+      networkOnline,
+      websocketConnection,
     } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
 
     // This doesn't exist if this is a new conversation
     if (forceScrollToBottom) {
@@ -218,7 +246,30 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom,
       sendDirectMessage,
       sendMessage,
+      websocketConnection,
+      networkOnline,
     } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
 
     if (!file) return;
 
@@ -338,8 +389,19 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, onChange, currentUser } = this.props;
+    const {
+      state,
+      onChange,
+      currentUser,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
     const { isFocused, photoSizeError, code } = this.state;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     return (
       <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
@@ -385,6 +447,7 @@ class ChatInput extends React.Component<Props, State> {
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
             decorators={[mentionsDecorator, linksDecorator]}
+            networkDisabled={networkDisabled}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
@@ -396,6 +459,8 @@ class ChatInput extends React.Component<Props, State> {
 const map = state => ({
   currentUser: state.users.currentUser,
   chatInputRedux: state.composer.chatInput,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 export default compose(
   sendMessage,
