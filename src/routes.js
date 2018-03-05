@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
+import ErrorBoundary from 'react-error-boundary';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import './reset.css.js';
@@ -129,6 +130,12 @@ const Support = Loadable({
   loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
+/* prettier-ignore */
+const ErrorFallback = Loadable({
+  loader: () => import('./components/error'/* webpackChunkName: "Error" */),
+  loading: ({ isLoading }) => isLoading && <Loading />
+});
+
 const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
@@ -190,98 +197,106 @@ class Routes extends React.Component<{}> {
 
     return (
       <ThemeProvider theme={theme}>
-        <ScrollManager>
-          <Body>
-            {/* Default meta tags, get overriden by anything further down the tree */}
-            <Head title={title} description={description} />
-            {/* Global navigation, notifications, message notifications, etc */}
-            {/*
-              AuthViewHandler often returns null, but is responsible for triggering
-              things like the 'set username' prompt when a user auths and doesn't
-              have a username set.
-            */}
-            <Route component={AuthViewHandler} />
-            <Status />
-            <Route component={Navbar} />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ScrollManager>
+            <Body>
+              {/* Default meta tags, get overriden by anything further down the tree */}
+              <Head title={title} description={description} />
+              {/* Global navigation, notifications, message notifications, etc */}
+              {/*
+                AuthViewHandler often returns null, but is responsible for triggering
+                things like the 'set username' prompt when a user auths and doesn't
+                have a username set.
+              */}
+              <Route component={AuthViewHandler} />
+              <Status />
+              <Route component={Navbar} />
 
-            <Route component={ModalRoot} />
-            <Route component={Toasts} />
-            <Route component={Gallery} />
-            <Route component={ThreadSlider} />
-
-            {/*
-              Switch only renders the first match. Subrouting happens downstream
-              https://reacttraining.com/react-router/web/api/Switch
-            */}
-            <Switch>
-              <Route exact path="/" component={DashboardFallback} />
-              <Route exact path="/home" component={HomeFallback} />
-
-              {/* Public Business Pages */}
-              <Route path="/about" component={Splash} />
-              <Route path="/contact" component={Support} />
-              <Route path="/terms" component={Support} />
-              <Route path="/privacy" component={Support} />
-              <Route path="/terms.html" component={Support} />
-              <Route path="/privacy.html" component={Support} />
-              <Route path="/code-of-conduct" component={Support} />
-              <Route path="/pricing" component={Pricing} />
-              <Route path="/support" component={Support} />
-              <Route path="/style-guide" component={StyleGuide} />
-              <Route path="/new/search" component={Search} />
-
-              {/* App Pages */}
-              <Route path="/new/community" component={NewCommunityFallback} />
-              <Route path="/new/thread" component={Composer} />
-              <Route
-                path="/new"
-                render={() => <Redirect to="/new/community" />}
-              />
-              <Route path="/login" component={Login} />
-              <Route path="/explore" component={Explore} />
-              <Route path="/messages/new" component={MessagesFallback} />
-              <Route path="/messages/:threadId" component={MessagesFallback} />
-              <Route path="/messages" component={MessagesFallback} />
-              <Route path="/thread/:threadId" component={Thread} />
-              <Route path="/thread" render={() => <Redirect to="/" />} />
-              <Route exact path="/users" render={() => <Redirect to="/" />} />
-              <Route exact path="/users/:username" component={UserView} />
-              <Route
-                exact
-                path="/users/:username/settings"
-                component={UserSettingsFallback}
-              />
-              <Route path="/notifications" component={NotificationsFallback} />
+              <Route component={ModalRoot} />
+              <Route component={Toasts} />
+              <Route component={Gallery} />
+              <Route component={ThreadSlider} />
 
               {/*
-              We check communitySlug last to ensure none of the above routes
-              pass. We handle null communitySlug values downstream by either
-              redirecting to home or showing a 404
-            */}
-              <Route
-                path="/:communitySlug/:channelSlug/settings"
-                component={ChannelSettingsFallback}
-              />
-              <Route
-                path="/:communitySlug/settings/analytics"
-                component={CommunityAnalyticsFallback}
-              />
-              <Route
-                path="/:communitySlug/settings/members"
-                component={CommunityMembersFallback}
-              />
-              <Route
-                path="/:communitySlug/settings"
-                component={CommunitySettingsFallback}
-              />
-              <Route
-                path="/:communitySlug/:channelSlug"
-                component={ChannelView}
-              />
-              <Route path="/:communitySlug" component={CommunityView} />
-            </Switch>
-          </Body>
-        </ScrollManager>
+                Switch only renders the first match. Subrouting happens downstream
+                https://reacttraining.com/react-router/web/api/Switch
+              */}
+              <Switch>
+                <Route exact path="/" component={DashboardFallback} />
+                <Route exact path="/home" component={HomeFallback} />
+
+                {/* Public Business Pages */}
+                <Route path="/about" component={Splash} />
+                <Route path="/contact" component={Support} />
+                <Route path="/terms" component={Support} />
+                <Route path="/privacy" component={Support} />
+                <Route path="/terms.html" component={Support} />
+                <Route path="/privacy.html" component={Support} />
+                <Route path="/code-of-conduct" component={Support} />
+                <Route path="/pricing" component={Pricing} />
+                <Route path="/support" component={Support} />
+                <Route path="/style-guide" component={StyleGuide} />
+                <Route path="/new/search" component={Search} />
+
+                {/* App Pages */}
+                <Route path="/new/community" component={NewCommunityFallback} />
+                <Route path="/new/thread" component={Composer} />
+                <Route
+                  path="/new"
+                  render={() => <Redirect to="/new/community" />}
+                />
+                <Route path="/login" component={Login} />
+                <Route path="/explore" component={Explore} />
+                <Route path="/messages/new" component={MessagesFallback} />
+                <Route
+                  path="/messages/:threadId"
+                  component={MessagesFallback}
+                />
+                <Route path="/messages" component={MessagesFallback} />
+                <Route path="/thread/:threadId" component={Thread} />
+                <Route path="/thread" render={() => <Redirect to="/" />} />
+                <Route exact path="/users" render={() => <Redirect to="/" />} />
+                <Route exact path="/users/:username" component={UserView} />
+                <Route
+                  exact
+                  path="/users/:username/settings"
+                  component={UserSettingsFallback}
+                />
+                <Route
+                  path="/notifications"
+                  component={NotificationsFallback}
+                />
+
+                {/*
+                We check communitySlug last to ensure none of the above routes
+                pass. We handle null communitySlug values downstream by either
+                redirecting to home or showing a 404
+              */}
+                <Route
+                  path="/:communitySlug/:channelSlug/settings"
+                  component={ChannelSettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/settings/analytics"
+                  component={CommunityAnalyticsFallback}
+                />
+                <Route
+                  path="/:communitySlug/settings/members"
+                  component={CommunityMembersFallback}
+                />
+                <Route
+                  path="/:communitySlug/settings"
+                  component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug"
+                  component={ChannelView}
+                />
+                <Route path="/:communitySlug" component={CommunityView} />
+              </Switch>
+            </Body>
+          </ScrollManager>
+        </ErrorBoundary>
       </ThemeProvider>
     );
   }
