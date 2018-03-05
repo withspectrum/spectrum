@@ -3187,8 +3187,8 @@ ejs@^2.3.4, ejs@^2.5.7:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
 
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
-  version "1.3.34"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.34.tgz#d93498f40391bb0c16a603d8241b9951404157ed"
+  version "1.3.35"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.35.tgz#693c17cfb93841d38cb59b8df019d17e356985f0"
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -8574,6 +8574,10 @@ react-dom@16.2.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-error-boundary@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-1.2.1.tgz#60600750bf2ec03ca22a1e933ea371f38aa20fa3"
 
 react-error-overlay@^4.0.0:
   version "4.0.0"
