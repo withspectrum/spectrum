@@ -8,12 +8,13 @@ type Props = {
   dispatch: Function,
 };
 
-type State = {
+type State = {|
   color: ?string,
   label: ?string,
   wsConnected: boolean,
   online: boolean,
-};
+  hidden: boolean,
+|};
 
 class Status extends React.Component<Props, State> {
   initialState = {
@@ -21,6 +22,7 @@ class Status extends React.Component<Props, State> {
     label: null,
     online: true,
     wsConnected: true,
+    hidden: true,
   };
 
   state = this.initialState;
@@ -28,6 +30,12 @@ class Status extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener('offline', this.handleOnlineChange);
     window.addEventListener('online', this.handleOnlineChange);
+    // Only show the bar after a five second timeout
+    setTimeout(() => {
+      this.setState({
+        hidden: false,
+      });
+    }, 5000);
   }
 
   componentWillUnmount() {
@@ -79,7 +87,8 @@ class Status extends React.Component<Props, State> {
   }
 
   render() {
-    const { color, online, wsConnected, label } = this.state;
+    const { color, online, wsConnected, label, hidden } = this.state;
+    if (hidden) return null;
     // if online and connected to the websocket, we don't need anything
     if (online && wsConnected) return null;
     return <Bar color={color}>{label}</Bar>;
