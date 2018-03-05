@@ -75,7 +75,9 @@ const setDirectMessageThreadLastActive = (
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
 const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
@@ -100,14 +102,30 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     });
 };
 
-const checkForExistingDMThread = (
+const checkForExistingDMThread = async (
   participants: Array<string>
 ): Promise<Array<any>> => {
-  return db
+  let idsToCheck = await db
     .table('usersDirectMessageThreads')
     .getAll(...participants, { index: 'userId' })
     .group('threadId')
     .map(row => row('userId'))
+    .ungroup()
+    .filter(row =>
+      row('reduction')
+        .count()
+        .eq(participants.length)
+    )
+    .pluck('group')
+    .run();
+
+  if (!idsToCheck || idsToCheck.length === 0) return [];
+  idsToCheck = idsToCheck.map(row => row.group);
+
+  return await db
+    .table('usersDirectMessageThreads')
+    .getAll(...idsToCheck, { index: 'threadId' })
+    .group('threadId')
     .ungroup()
     .filter(row =>
       row('reduction')
