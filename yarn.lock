@@ -3100,6 +3100,14 @@ draft-js@0.x, "draft-js@npm:draft-js-fork-mxstbr", draft-js@~0.10.0, draft-js@~0
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
+"draft-js@npm:draft-js-fork-mxstbr@next":
+  version "0.10.5-0"
+  resolved "https://registry.yarnpkg.com/draft-js-fork-mxstbr/-/draft-js-fork-mxstbr-0.10.5-0.tgz#d13eb31bf0ad9c27f56c365591b8f586716a2399"
+  dependencies:
+    fbjs "^0.8.15"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
 draftjs-to-markdown@^0.4.2:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/draftjs-to-markdown/-/draftjs-to-markdown-0.4.5.tgz#1cb2da90bf7790ff23e24891441882a40fca6d53"
