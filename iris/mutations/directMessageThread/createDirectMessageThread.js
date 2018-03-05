@@ -65,11 +65,10 @@ export default async (
   let threadId, threadToReturn;
 
   // check to see if a dm thread with this exact set of participants exists
-  const existingThreads = await checkForExistingDMThread(allMemberIds);
+  const existingThread = await checkForExistingDMThread(allMemberIds);
 
-  // if so, we will be evaulating the first result (should only ever be one)
-  if (existingThreads && existingThreads.length > 0) {
-    threadId = existingThreads[0].group;
+  if (existingThread) {
+    threadId = existingThread;
     threadToReturn = await getDirectMessageThread(threadId);
   } else {
     threadToReturn = await createDirectMessageThread(isGroup);
@@ -108,16 +107,16 @@ export default async (
     }
   };
 
-  if (existingThreads.length > 0) {
+  if (existingThread) {
     return await Promise.all([
-      handleStoreMessage(message),
       setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+      handleStoreMessage(message),
     ]).then(() => threadToReturn);
   }
 
   return await Promise.all([
-    handleStoreMessage(message),
     createMemberInDirectMessageThread(threadId, currentUser.id, true),
+    handleStoreMessage(message),
     participants.map(participant =>
       createMemberInDirectMessageThread(threadId, participant, false)
     ),

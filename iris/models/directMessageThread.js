@@ -104,7 +104,8 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
 
 const checkForExistingDMThread = async (
   participants: Array<string>
-): Promise<Array<any>> => {
+): Promise<?string> => {
+  // return a list of all threadIds where both participants are active
   let idsToCheck = await db
     .table('usersDirectMessageThreads')
     .getAll(...participants, { index: 'userId' })
@@ -119,9 +120,13 @@ const checkForExistingDMThread = async (
     .pluck('group')
     .run();
 
-  if (!idsToCheck || idsToCheck.length === 0) return [];
+  if (!idsToCheck || idsToCheck.length === 0) return null;
+
+  // return only the thread Ids
   idsToCheck = idsToCheck.map(row => row.group);
 
+  // given a list of threads where both users are active (includes all groups)
+  // return only threads where these exact participants are used
   return await db
     .table('usersDirectMessageThreads')
     .getAll(...idsToCheck, { index: 'threadId' })
@@ -133,7 +138,9 @@ const checkForExistingDMThread = async (
         .eq(participants.length)
     )
     .pluck('group')
-    .run();
+    .map(row => row('group'))
+    .run()
+    .then(results => (results && results.length > 0 ? results[0] : null));
 };
 
 module.exports = {
