@@ -36,11 +36,10 @@ import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
 import type { Loader } from './loaders/types';
+import createLoaders from './loaders';
 export type GraphQLContext = {
   user: DBUser,
-  loaders: {
-    [key: string]: Loader,
-  },
+  loaders: $Call<typeof createLoaders>,
 };
 
 const server = createServer(app);

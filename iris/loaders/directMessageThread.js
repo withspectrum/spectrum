@@ -11,12 +11,12 @@ export const __createDirectMessageThreadLoader = createLoader(threads =>
 
 export const __createDirectMessageParticipantsLoader = createLoader(
   threads => getMembersInDirectMessageThreads(threads),
-  'group'
+  { getKeyFromResult: 'group' }
 );
 
 export const __createDirectMessageSnippetLoader = createLoader(
   threads => getLastMessages(threads),
-  'group'
+  { getKeyFromResult: 'group' }
 );
 
 export default () => {
