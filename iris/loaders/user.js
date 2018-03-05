@@ -14,44 +14,50 @@ import { getThreadsNotificationStatusForUsers } from '../models/usersThreads';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-export const __createUserLoader = createLoader(users => getUsers(users), 'id');
+const THIRTY_MINUTES = 1800000;
+const FIVE_MINUTES = 300000;
+
+export const __createUserLoader = createLoader(users => getUsers(users));
 
 export const __createUserByUsernameLoader = createLoader(
   users => getUsersByUsername(users),
-  'username'
+  { getKeyFromResult: 'username', cacheExpiryTime: FIVE_MINUTES }
 );
 
 export const __createUserThreadCountLoader = createLoader(
   users => getUsersThreadCount(users),
-  'id'
+  { cacheExpiryTime: THIRTY_MINUTES }
 );
 
 export const __createUserRecurringPaymentsLoader = createLoader(
   users => getUsersRecurringPayments(users),
-  'group'
+  { getKeyFromResult: 'group' }
 );
 
 export const __createUserPermissionsInCommunityLoader = createLoader(
   usersCommunities => getUsersPermissionsInCommunities(usersCommunities),
-  input => `${input.userId}|${input.communityId}`,
-  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
+  {
+    getKeyFromResult: result => [result.userId, result.communityId],
+  }
 );
 
 export const __createUserTotalReputationLoader = createLoader(
   users => getUsersTotalReputation(users),
-  'userId'
+  { getKeyFromResult: 'userId' }
 );
 
 export const __createUserPermissionsInChannelLoader = createLoader(
   usersChannels => getUsersPermissionsInChannels(usersChannels),
-  input => `${input.userId}|${input.channelId}`,
-  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
+  {
+    getKeyFromResult: result => [result.userId, result.channelId],
+  }
 );
 
 export const __createUserThreadNotificationStatusLoader = createLoader(
   usersThreads => getThreadsNotificationStatusForUsers(usersThreads),
-  input => `${input.userId}|${input.threadId}`,
-  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
+  {
+    getKeyFromResult: result => [result.userId, result.threadId],
+  }
 );
 
 export default () => {

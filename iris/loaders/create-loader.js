@@ -1,43 +1,131 @@
 // @flow
-//$FlowFixMe
+const debug = require('debug')('iris:loaders:create-loader');
+// $FlowIssue
 import DataLoader from 'dataloader';
+// Least-recently-used cache that evicts items based on when they were last used
+import LRU from 'lru-cache';
 import unique from 'shared/unique-elements';
-import type { Loader, DataLoaderOptions } from './types';
+import { getLengthInBytes } from 'shared/string-byte-length';
+import type { Loader, DataLoaderOptions, Key } from './types';
+
+type CreateLoaderOptionalOptions = {|
+  getKeyFromResult?: Function | string,
+  cacheExpiryTime?: number,
+|};
+
+const ONE_GIGABYTE = 1e9;
+const SEVEN_HUNDRED_AND_FIFTY_MEGABYTE = 7.5e8;
+
+// We allow all caches together to maximally use 1gig of memory
+// and each individual cache can maximally use 750mb of memory
+let caches: LRU<Function, LRU<string, mixed>> = new LRU({
+  max: ONE_GIGABYTE,
+  length: item => (item && item.length) || 1,
+});
+
+// Proactively evict old data every 29s instead of only when .get is called
+const interval = setInterval(() => {
+  caches.prune();
+  caches.forEach(cache => cache.prune());
+}, 29000);
 
 /**
- * Create a dataloader instance for a request and type
+ * Create a dataloader instance which also caches results across requests. The default caching duration is one minute.
  *
  * Usage:
- * createUserLoader = () => createLoader(users => getUsers(users), 'id');
+ * user: createUserLoader = () => createLoader(users => getUsers(users), 'id');
+ * loaders.user.load(id).then(user => ...)
  */
 const createLoader = (
   batchFn: Function,
-  indexField: string | Function = 'id',
-  cacheKeyFn: Function = key => key
+  { getKeyFromResult, cacheExpiryTime }: CreateLoaderOptionalOptions = {}
 ) => (options?: DataLoaderOptions): Loader => {
-  return new DataLoader(keys => {
-    return batchFn(unique(keys)).then(
-      normalizeRethinkDbResults(keys, indexField, cacheKeyFn)
-    );
+  // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
+  getKeyFromResult = getKeyFromResult || 'id';
+  cacheExpiryTime = cacheExpiryTime || 60000;
+  // Either create the cache or get the existing one
+  const newCache = new LRU({
+    max: SEVEN_HUNDRED_AND_FIFTY_MEGABYTE,
+    maxAge: cacheExpiryTime,
+    length: item => {
+      try {
+        return getLengthInBytes(JSON.stringify(item));
+      } catch (err) {
+        return 1;
+      }
+    },
+  });
+
+  let cache = caches.get(batchFn);
+  if (!cache) {
+    caches.set(batchFn, newCache);
+    cache = caches.get(batchFn);
+  }
+
+  return new DataLoader((keys: Array<Key>) => {
+    let uncachedKeys = [];
+    let cachedResults = [];
+    keys.forEach(key => {
+      const stringKey = key.toString();
+      const item = cache.get(stringKey);
+
+      // If we don't have a result in the cache fetch the data again
+      if (!item) return uncachedKeys.push(key);
+
+      // We need to store the cached results out here since they might expire
+      // until the database query finishes, which would break everything
+      cachedResults.push(item);
+    });
+
+    if (uncachedKeys.length === 0) {
+      debug(`cache hit rate: 100% (bailing early)`);
+      return Promise.resolve(cachedResults);
+    }
+
+    const uniqueUncached = unique(uncachedKeys);
+
+    return batchFn(uniqueUncached).then(results => {
+      debug(`cache hit rate: ${cachedResults.length / keys.length * 100}%`);
+      const fullResults = [...results, ...cachedResults].filter(Boolean);
+      const normalized = normalizeRethinkDbResults(keys, getKeyFromResult)(
+        fullResults
+      );
+      normalized.forEach((result, index) => {
+        const key = keys[index].toString();
+        if (cachedResults.indexOf(result) > -1 || cache[key]) return;
+        cache.set(key, result);
+      });
+      return normalized;
+    });
   }, options);
 };
 
-// These helper functions were taken from the DataLoader docs
-// https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
-function indexResults(results, indexField, cacheKeyFn) {
-  var indexedResults = new Map();
-  results.forEach(res => {
-    const key =
-      typeof indexField === 'function' ? indexField(res) : res[indexField];
-    indexedResults.set(cacheKeyFn(key), res);
-  });
-  return indexedResults;
-}
-
-function normalizeRethinkDbResults(keys, indexField, cacheKeyFn) {
+/**
+ * Map RethinkDB results back to the original keys that were passed. This is necessary because Rethink doesn't return data in order, deduplicates and does a bunch of other stuff, so we have to bring the data back into the shape DataLoader expects it to be in
+ *
+ * requested : ['id1', 'id2', 'id1', 'id3']
+ * received  : [{ id: 'id1' }, { id: 'id3' }, { id: 'id2' }]
+ * normalized: [{ id: 'id1' }, { id: 'id2' }, { id: 'id1' }, { id: 'id3' }];
+ *
+ * You can pass a custom getKeyFromResult if the index you're going for isn't the "id" field. For example:
+ *
+ * requested : ['id1', 'id1']
+ * received  : [{ group: 'id1', reduction: {...} }]
+ * normalized with getKeyFromResult = "group": [{ group: 'id1', reduction: {...} }, { group: 'id1', reduction: {...} }]
+ *
+ * Inspired by the DataLoader docs https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
+ */
+function normalizeRethinkDbResults(keys, getKeyFromResult) {
   return results => {
-    var indexedResults = indexResults(results, indexField, cacheKeyFn);
-    return keys.map(val => indexedResults.get(cacheKeyFn(val)) || null);
+    var indexedResults = new Map();
+    results.forEach(res => {
+      const key =
+        typeof getKeyFromResult === 'function'
+          ? getKeyFromResult(res)
+          : res[getKeyFromResult];
+      indexedResults.set(key.toString(), res);
+    });
+    return keys.map(val => indexedResults.get(val.toString()) || null);
   };
 }
 
