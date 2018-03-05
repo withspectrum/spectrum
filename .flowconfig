@@ -23,7 +23,10 @@ module.file_ext=.jsx
 module.file_ext=.json
 
 [lints]
-all=warn
+untyped-type-import=error
+untyped-import=warn
+unclear-type=warn
+unsafe-getters-setters=error
 
 [version]
 0.66.0
