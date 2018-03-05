@@ -438,6 +438,7 @@ class ThreadContainer extends React.Component<Props, State> {
                     shouldForceScrollToTopOnMessageLoad={!isParticipantOrAuthor}
                     hasMessagesToLoad={thread.messageCount > 0}
                     isModerator={isModerator}
+                    threadIsLocked={isLocked}
                   />
                 )}
 
