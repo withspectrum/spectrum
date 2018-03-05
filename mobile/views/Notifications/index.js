@@ -18,7 +18,11 @@ import getPushNotificationToken from '../../utils/get-push-notification-token';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerProps>,
+  mutate: (token: any) => Promise<any>,
   data: {
+    subscribeToNewNotifications: Function,
+    fetchMore: Function,
+    refetch: Function,
     notifications: GetNotificationsType,
   },
 };

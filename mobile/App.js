@@ -21,7 +21,7 @@ let sentry = Sentry.config(
 // Need to guard this for HMR to work
 if (sentry && sentry.install) sentry.install();
 
-const store = createStore(reducers);
+export const store = createStore(reducers);
 
 type State = {
   authLoaded: ?boolean,

@@ -23,7 +23,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
-import mentionsDecorator from './mentions-decorator';
+import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator';
 
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';

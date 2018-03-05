@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { sortAndGroupMessages } from '../../../helpers/messages';
+import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { Loading } from '../../../components/loading';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';

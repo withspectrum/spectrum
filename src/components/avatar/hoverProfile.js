@@ -8,7 +8,7 @@ import Reputation from '../reputation';
 import Icon from '../icons';
 import Badge from '../badges';
 import { Button } from '../buttons';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 import { Card } from '../card';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import AvatarImage from './image';
