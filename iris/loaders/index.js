@@ -8,7 +8,6 @@ import {
   __createUserTotalReputationLoader,
   __createUserPermissionsInChannelLoader,
   __createUserThreadNotificationStatusLoader,
-  __createUserEverythingLoader,
 } from './user';
 import {
   __createThreadLoader,
@@ -49,7 +48,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(
     options
   ),
-  userEverything: __createUserEverythingLoader(options),
   thread: __createThreadLoader(options),
   threadParticipants: __createThreadParticipantsLoader(options),
   threadMessageCount: __createThreadMessageCountLoader(options),
