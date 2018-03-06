@@ -29,6 +29,7 @@ import {
   Actions,
   Dropdowns,
   RequiredSelector,
+  DisabledWarning,
 } from './style';
 import {
   sortCommunities,
@@ -70,6 +71,8 @@ type Props = {
   title: ?string,
   body: ?string,
   isInbox: boolean,
+  websocketConnection: string,
+  networkOnline: boolean,
 };
 
 class ComposerWithData extends Component<Props, State> {
@@ -284,6 +287,29 @@ class ComposerWithData extends Component<Props, State> {
       isPublishing: true,
     });
 
+    const { dispatch, networkOnline, websocketConnection } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
+
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
     const {
@@ -446,8 +472,18 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { data: { user }, threadSliderIsOpen } = this.props;
+    const {
+      data: { user },
+      threadSliderIsOpen,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
     const dataExists = user && availableCommunities && availableChannels;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     return (
       <Container>
@@ -517,7 +553,14 @@ class ComposerWithData extends Component<Props, State> {
             }}
           />
         </ThreadInputs>
+
         <Actions>
+          {networkDisabled && (
+            <DisabledWarning>
+              Lost connection to the internet or server...
+            </DisabledWarning>
+          )}
+
           <FlexRow>
             <TextButton
               hoverColor="warn.alt"
@@ -528,7 +571,12 @@ class ComposerWithData extends Component<Props, State> {
             <Button
               onClick={this.publishThread}
               loading={isPublishing}
-              disabled={!title || title.trim().length === 0 || isPublishing}
+              disabled={
+                !title ||
+                title.trim().length === 0 ||
+                isPublishing ||
+                networkDisabled
+              }
               color={'brand'}
             >
               Publish
@@ -551,6 +599,8 @@ const mapStateToProps = state => ({
   title: state.composer.title,
   body: state.composer.body,
   threadSliderIsOpen: state.threadSlider.isOpen,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 
 // $FlowIssue

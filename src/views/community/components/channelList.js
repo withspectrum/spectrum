@@ -30,6 +30,21 @@ type Props = {
 };
 
 class ChannelList extends React.Component<Props> {
+  sortChannels = (array: Array<any>): Array<any> => {
+    const generalChannel = array.find(channel => channel.slug === 'general');
+    const withoutGeneral = array.filter(channel => channel.slug !== 'general');
+    const sortedWithoutGeneral = withoutGeneral.sort((a, b) => {
+      if (a.slug < b.slug) return -1;
+      if (a.slug > b.slug) return 1;
+      return 0;
+    });
+    if (generalChannel) {
+      sortedWithoutGeneral.unshift(generalChannel);
+      return sortedWithoutGeneral;
+    } else {
+      return sortedWithoutGeneral;
+    }
+  };
   render() {
     const {
       isLoading,
@@ -51,13 +66,17 @@ class ChannelList extends React.Component<Props> {
           return channel;
         })
         .filter(channel => channel && !channel.channelPermissions.isBlocked);
+      const sortedChannels = this.sortChannels(channels);
 
       const joinedChannels = channels
         .slice()
         .filter(channel => channel && channel.channelPermissions.isMember);
+      const sortedJoinedChannels = this.sortChannels(joinedChannels);
+
       const nonJoinedChannels = channels
         .slice()
         .filter(channel => channel && !channel.channelPermissions.isMember);
+      const sortedNonJoinedChannels = this.sortChannels(nonJoinedChannels);
 
       return (
         <StyledCard largeOnly>
@@ -86,7 +105,7 @@ class ChannelList extends React.Component<Props> {
           */}
           {(!currentUser || (currentUser && !isMember)) && (
             <ListContainer>
-              {channels.map(channel => {
+              {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
                   <Link
@@ -108,10 +127,10 @@ class ChannelList extends React.Component<Props> {
           )}
 
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
-          {joinedChannels &&
+          {sortedJoinedChannels &&
             isMember && (
               <ListContainer>
-                {joinedChannels.map(channel => {
+                {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (
                     <Link
@@ -132,7 +151,7 @@ class ChannelList extends React.Component<Props> {
               </ListContainer>
             )}
 
-          {nonJoinedChannels.length > 0 &&
+          {sortedNonJoinedChannels.length > 0 &&
             isMember && (
               <span>
                 <ListHeader secondary>
@@ -141,7 +160,7 @@ class ChannelList extends React.Component<Props> {
 
                 <ListContainer>
                   <ul>
-                    {nonJoinedChannels.map(channel => {
+                    {sortedNonJoinedChannels.map(channel => {
                       if (!channel) return null;
                       return (
                         <ChannelProfile

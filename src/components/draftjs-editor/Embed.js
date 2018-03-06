@@ -11,7 +11,7 @@ import {
   YOUTUBE_URLS,
   VIMEO_URLS,
 } from '../../helpers/regexps';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe

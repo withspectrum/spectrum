@@ -10,8 +10,8 @@ import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
-import mentionsDecorator from '../draftjs-editor/mentions-decorator';
-import linksDecorator from '../draftjs-editor/links-decorator';
+import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
@@ -48,6 +48,8 @@ type Props = {
   clear: Function,
   onBlur: Function,
   onFocus: Function,
+  websocketConnection: string,
+  networkOnline: boolean,
 };
 
 class ChatInput extends React.Component<Props, State> {
@@ -69,6 +71,9 @@ class ChatInput extends React.Component<Props, State> {
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
 
+    if (curr.networkOnline !== next.networkOnline) return true;
+    if (curr.websocketConnection !== next.websocketConnection) return true;
+
     // State changed
     if (curr.state !== next.state) return true;
 
@@ -83,6 +88,15 @@ class ChatInput extends React.Component<Props, State> {
     return this.props.dispatch(closeChatInput(state));
   }
 
+  onChange = (state, ...rest) => {
+    const { onChange } = this.props;
+    if (toPlainText(state).trim() === '```') {
+      this.toggleCodeMessage(false);
+    } else if (onChange) {
+      onChange(state, ...rest);
+    }
+  };
+
   triggerFocus = () => {
     // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
     // decorators that are passed to the editor are removed from the editor
@@ -92,7 +106,7 @@ class ChatInput extends React.Component<Props, State> {
     }, 0);
   };
 
-  toggleCodeMessage = () => {
+  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
     const { onChange, state } = this.props;
     const { code } = this.state;
     this.setState(
@@ -101,7 +115,11 @@ class ChatInput extends React.Component<Props, State> {
       },
       () => {
         onChange(
-          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+          changeCurrentBlockType(
+            state,
+            code ? 'unstyled' : 'code-block',
+            keepCurrentText ? toPlainText(state) : ''
+          )
         );
         setTimeout(() => this.triggerFocus());
       }
@@ -121,7 +139,30 @@ class ChatInput extends React.Component<Props, State> {
       sendDirectMessage,
       clear,
       forceScrollToBottom,
+      networkOnline,
+      websocketConnection,
     } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
 
     // This doesn't exist if this is a new conversation
     if (forceScrollToBottom) {
@@ -218,7 +259,30 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom,
       sendDirectMessage,
       sendMessage,
+      websocketConnection,
+      networkOnline,
     } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
 
     if (!file) return;
 
@@ -338,8 +402,19 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { state, onChange, currentUser } = this.props;
+    const {
+      state,
+      onChange,
+      currentUser,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
     const { isFocused, photoSizeError, code } = this.state;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     return (
       <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
@@ -378,13 +453,14 @@ class ChatInput extends React.Component<Props, State> {
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
             editorState={state}
             handleReturn={this.handleReturn}
-            onChange={onChange}
+            onChange={this.onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             code={code}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
             decorators={[mentionsDecorator, linksDecorator]}
+            networkDisabled={networkDisabled}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
@@ -396,6 +472,8 @@ class ChatInput extends React.Component<Props, State> {
 const map = state => ({
   currentUser: state.users.currentUser,
   chatInputRedux: state.composer.chatInput,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 export default compose(
   sendMessage,

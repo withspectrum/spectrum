@@ -20,6 +20,17 @@ type CreateClientOptions = {
   token?: ?string,
 };
 
+// Websocket link for subscriptions
+export const wsLink = new WebSocketLink({
+  uri: `${
+    // eslint-disable-next-line
+    IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
+  }/websocket`,
+  options: {
+    reconnect: true,
+  },
+});
+
 // NOTE(@mxstbr): Use the exported client instance from below instead of using this factory!
 // Only use this factory if you need to create a new instance of the client with the Authorization token,
 // i.e. only use this factory on mobile
@@ -68,17 +79,6 @@ export const createClient = (options?: CreateClientOptions = {}) => {
       headers,
     })
   );
-
-  // Websocket link for subscriptions
-  const wsLink = new WebSocketLink({
-    uri: `${
-      // eslint-disable-next-line
-      IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'
-    }/websocket`,
-    options: {
-      reconnect: true,
-    },
-  });
 
   // Switch between the two links based on operation
   const link = split(

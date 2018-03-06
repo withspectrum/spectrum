@@ -97,6 +97,7 @@ injectGlobal`
     -moz-flex-direction: column;
     -webkit-flex-direction: column;
     height: 100%;
+    width: 100%;
   }
 
   .fade-enter {

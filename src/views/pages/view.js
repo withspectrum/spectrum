@@ -741,7 +741,7 @@ export const UserPricing = (props: Props) => {
         <Text>
           <Tagline>Spectrum will always be free for users.</Tagline>
           <Copy>Unlimited usage. Zero ads.</Copy>
-          <Copy>We’ll never sell your data either.</Copy>
+          <Copy>We'll never sell your data either.</Copy>
         </Text>
       </Content>
     </Section>
@@ -961,85 +961,6 @@ export const TermsSection = () => {
         </Copy>
       </ThisContent>
     </Section>
-  );
-};
-
-export const Plans = (props: Props) => {
-  const Layout = styled.div`
-    flex: auto;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: auto 1fr;
-    grid-template-areas: 'grid' 'copy';
-    width: 100%;
-    justify-items: stretch;
-    z-index: ${zIndex.background + 1};
-  `;
-
-  const Copy = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-    font-size: 18px;
-    width: calc(100% - 96px);
-    max-width: 640px;
-    line-height: 1.5;
-    margin: 64px 32px;
-    align-content: center;
-
-    p {
-      font-weight: 500;
-      text-align: center;
-      text-shadow: 0 0 8px ${props => props.theme.bg.default};
-    }
-
-    p + p {
-      margin-top: 24px;
-    }
-
-    > a {
-      display: inline-block;
-      align-self: center;
-    }
-
-    @media (max-width: 768px) {
-      margin: 64px 16px 0;
-    }
-  `;
-
-  const Title = styled.h1`
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 24px;
-  `;
-
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
-  `;
-
-  return (
-    <ViewSegment background="illustrated" goop={1} color="space.dark">
-      <Content>
-        <Layout>
-          <PlanSelector />
-          <Copy>
-            <Title>Ready to get started?</Title>
-            <Link to="/new/community">
-              <ThisPrimaryCTA icon="plus-fill">
-                Create your community
-              </ThisPrimaryCTA>
-            </Link>
-          </Copy>
-        </Layout>
-      </Content>
-    </ViewSegment>
   );
 };
 

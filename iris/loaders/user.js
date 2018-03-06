@@ -14,50 +14,44 @@ import { getThreadsNotificationStatusForUsers } from '../models/usersThreads';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-const THIRTY_MINUTES = 1800000;
-const FIVE_MINUTES = 300000;
-
-export const __createUserLoader = createLoader(users => getUsers(users));
+export const __createUserLoader = createLoader(users => getUsers(users), 'id');
 
 export const __createUserByUsernameLoader = createLoader(
   users => getUsersByUsername(users),
-  { getKeyFromResult: 'username', cacheExpiryTime: FIVE_MINUTES }
+  'username'
 );
 
 export const __createUserThreadCountLoader = createLoader(
   users => getUsersThreadCount(users),
-  { cacheExpiryTime: THIRTY_MINUTES }
+  'id'
 );
 
 export const __createUserRecurringPaymentsLoader = createLoader(
   users => getUsersRecurringPayments(users),
-  { getKeyFromResult: 'group' }
+  'group'
 );
 
 export const __createUserPermissionsInCommunityLoader = createLoader(
   usersCommunities => getUsersPermissionsInCommunities(usersCommunities),
-  {
-    getKeyFromResult: result => [result.userId, result.communityId],
-  }
+  input => `${input.userId}|${input.communityId}`,
+  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
 );
 
 export const __createUserTotalReputationLoader = createLoader(
   users => getUsersTotalReputation(users),
-  { getKeyFromResult: 'userId' }
+  'userId'
 );
 
 export const __createUserPermissionsInChannelLoader = createLoader(
   usersChannels => getUsersPermissionsInChannels(usersChannels),
-  {
-    getKeyFromResult: result => [result.userId, result.channelId],
-  }
+  input => `${input.userId}|${input.channelId}`,
+  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
 );
 
 export const __createUserThreadNotificationStatusLoader = createLoader(
   usersThreads => getThreadsNotificationStatusForUsers(usersThreads),
-  {
-    getKeyFromResult: result => [result.userId, result.threadId],
-  }
+  input => `${input.userId}|${input.threadId}`,
+  key => (Array.isArray(key) ? `${key[0]}|${key[1]}` : key)
 );
 
 export default () => {

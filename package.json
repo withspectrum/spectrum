@@ -39,6 +39,7 @@
     "write-file-webpack-plugin": "^4.1.0"
   },
   "dependencies": {
+    "abab": "^1.0.4",
     "algoliasearch": "^3.24.7",
     "apollo-cache-inmemory": "^1.1.5",
     "apollo-client": "2.x",
@@ -63,7 +64,7 @@
     "dataloader": "^1.3.0",
     "debounce": "^1.1.0",
     "debug": "^2.6.8",
-    "draft-js": "npm:draft-js-fork-mxstbr",
+    "draft-js": "npm:draft-js-fork-mxstbr@next",
     "draft-js-code-editor-plugin": "0.2.1",
     "draft-js-drag-n-drop-plugin": "2.0.0-rc9",
     "draft-js-embed-plugin": "^1.2.0",
@@ -104,7 +105,6 @@
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
     "lodash.intersection": "^4.4.0",
-    "lru-cache": "^4.1.1",
     "moment": "^2.18.1",
     "node-env-file": "^0.1.8",
     "now-env": "^3.0.1",
@@ -127,6 +127,7 @@
     "react-app-rewired": "^1.0.5",
     "react-clipboard.js": "^1.1.3",
     "react-dom": "16.2.0",
+    "react-error-boundary": "^1.2.1",
     "react-flip-move": "^2.10.1",
     "react-helmet-async": "^0.0.4",
     "react-infinite-scroller-with-scroll-element": "2.0.2",
