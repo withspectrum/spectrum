@@ -45,8 +45,8 @@ const createLoader = (
 ) => (options?: DataLoaderOptions): Loader => {
   // NOTE(@mxstbr): For some reason I have to set the default value like this here, no clue why. https://spectrum.chat/thread/552fc616-4da5-47a3-a118-4aaa58cb6561
   getCacheKeyFromResult = getCacheKeyFromResult || 'id';
-  if (typeof getCacheKeyFromInput !== 'function')
-    getCacheKeyFromInput = (input: Key) => input.toString();
+  getCacheKeyFromInput =
+    getCacheKeyFromInput || ((input: Key) => input.toString());
   cacheExpiryTime = cacheExpiryTime || 60000;
   // Either create the cache or get the existing one
   const newCache = new LRU({
@@ -138,8 +138,8 @@ function normalizeRethinkDbResults(
           : res[getCacheKeyFromResult];
       indexedResults.set(key, res);
     });
-    // $FlowIssue for some reason Flow thinks getCacheKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
     return keys.map(
+      // $FlowIssue for some reason Flow thinks getCacheKeyFromInput can be undefined here but not above the return new DataLoader _shrugs_
       val => indexedResults.get(getCacheKeyFromInput(val)) || null
     );
   };
