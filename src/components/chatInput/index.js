@@ -6,10 +6,16 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
+import debounce from 'debounce';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
-import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
+import {
+  toJSON,
+  toState,
+  fromPlainText,
+  toPlainText,
+} from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -52,6 +58,22 @@ type Props = {
   networkOnline: boolean,
 };
 
+const LS_KEY = 'last-chat-input-content';
+let storedContent;
+// We persist the body and title to localStorage
+// so in case the app crashes users don't loose content
+if (localStorage) {
+  try {
+    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+  } catch (err) {
+    localStorage.removeItem(LS_KEY);
+  }
+}
+
+const persistContent = debounce(content => {
+  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+}, 500);
+
 class ChatInput extends React.Component<Props, State> {
   state = {
     isFocused: false,
@@ -90,6 +112,7 @@ class ChatInput extends React.Component<Props, State> {
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
+    persistContent(state);
     if (toPlainText(state).trim() === '```') {
       this.toggleCodeMessage(false);
     } else if (onChange) {
@@ -201,6 +224,7 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -217,6 +241,7 @@ class ChatInput extends React.Component<Props, State> {
       })
         .then(() => {
           dispatch(clearChatInput());
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -484,7 +509,7 @@ export default compose(
     'state',
     'changeState',
     ({ chatInputRedux }) =>
-      chatInputRedux ? chatInputRedux : fromPlainText('')
+      chatInputRedux ? chatInputRedux : storedContent || fromPlainText('')
   ),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
