@@ -73,7 +73,8 @@ class SidebarChannels extends React.Component<Props> {
           return channel;
         })
         .filter(channel => channel && channel.channelPermissions.isMember)
-        .filter(channel => channel && !channel.channelPermissions.isBlocked);
+        .filter(channel => channel && !channel.channelPermissions.isBlocked)
+        .filter(channel => channel && !channel.isArchived);
 
       const sortedChannels = sortByTitle(channels);
 

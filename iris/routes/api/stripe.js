@@ -9,7 +9,9 @@ import { db } from '../../models/db';
 stripeRouter.get('/reset', async (req, res) => {
   const customers = await stripe.customers.list();
   const deleteCustomers = customers.data.map(
-    async customer => await stripe.customers.del(customer.id)
+    async customer =>
+      console.log('deleting customer') ||
+      (await stripe.customers.del(customer.id))
   );
   const stripeTables = ['stripeCustomers', 'stripeInvoices'];
   const deleteDB = stripeTables.map(

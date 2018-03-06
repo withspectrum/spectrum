@@ -126,6 +126,7 @@ class ComposerWithData extends Component<Props, State> {
     const channels = sortChannels(
       user.channelConnection.edges
         .map(edge => edge && edge.node)
+        .filter(channel => channel && !channel.isArchived)
         .filter(Boolean)
     );
 
@@ -144,10 +145,9 @@ class ComposerWithData extends Component<Props, State> {
     if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
-    const communityChannels = channels.filter(
-      // $FlowIssue
-      channel => channel.community.id === community.id
-    );
+    const communityChannels = channels
+      .filter(channel => channel.community.id === community.id)
+      .filter(channel => channel && !channel.isArchived);
 
     const activeChannel = getDefaultActiveChannel(
       communityChannels,

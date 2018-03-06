@@ -135,6 +135,10 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         if (!channel.isPrivate) return channel;
         if (channel.isArchived) return null;
         return channel;
+      })
+      .filter(channel => {
+        if (!channel) return null;
+        return !channel.isArchived;
       });
 
     /*
