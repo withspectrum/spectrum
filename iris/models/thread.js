@@ -324,7 +324,8 @@ export const publishThread = (
 
 export const setThreadLock = (
   threadId: string,
-  value: boolean
+  value: boolean,
+  userId: string
 ): Promise<DBThread> => {
   return (
     db
@@ -334,7 +335,7 @@ export const setThreadLock = (
       // with ReQL, I just couldn't find the API for it in a pinch
       .update(
         {
-          isLocked: value,
+          isLocked: value === false ? false : userId,
         },
         { returnChanges: true }
       )
