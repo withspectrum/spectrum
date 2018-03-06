@@ -4,7 +4,7 @@ import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBUser, DBThread } from 'shared/types';
+import type { DBUser } from 'shared/types';
 
 type GetUserInput = {
   id?: string,
@@ -194,7 +194,7 @@ const createOrFindUser = (
 const getEverything = (
   userId: string,
   { first, after }: PaginationOptions
-): Promise<{ userId: string, result: Array<DBThread> }> => {
+): Promise<Array<any>> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -217,13 +217,7 @@ const getEverything = (
           .skip(after || 0)
           .limit(first)
           .run()
-    )
-    .then(result => {
-      return {
-        userId,
-        result,
-      };
-    });
+    );
 };
 
 type UserThreadCount = {

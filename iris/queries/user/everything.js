@@ -23,7 +23,7 @@ export default (
         after: lastThreadIndex,
       },
     ])
-    .then(({ result }) => ({
+    .then(result => ({
       pageInfo: {
         hasNextPage: result && result.length >= first,
       },
