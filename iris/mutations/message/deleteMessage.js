@@ -14,7 +14,7 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 export default async (
   _: any,
   { id }: { id: string },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
   if (!currentUser)
@@ -51,7 +51,12 @@ export default async (
   return deleteMessage(currentUser.id, id)
     .then(async () => {
       // We don't need to delete participants of direct message threads
-      if (message.threadType === 'directMessageThread') return true;
+      if (message.threadType === 'directMessageThread') {
+        loaders.directMessageThread.clear(message.threadId);
+        loaders.directMessageParticipants.clear(message.threadId);
+        loaders.directMessageSnippet.clear(message.threadId);
+        return true;
+      }
 
       const hasMoreMessages = await userHasMessagesInThread(
         message.threadId,
@@ -65,5 +70,10 @@ export default async (
         message.senderId
       );
     })
-    .then(() => true);
+    .then(() => {
+      loaders.thread.clear(message.threadId);
+      loaders.threadMessageCount.clear(message.threadId);
+      loaders.threadParticipants.clear(message.threadId);
+      return true;
+    });
 };

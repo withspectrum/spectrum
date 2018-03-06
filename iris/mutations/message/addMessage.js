@@ -113,7 +113,16 @@ export default async (
 
   const dbMessage = await storeMessage(messageForDb, currentUser.id);
 
-  if (dbMessage.threadType === 'directMessageThread') return dbMessage;
+  if (dbMessage.threadType === 'directMessageThread') {
+    loaders.directMessageThread.clear(dbMessage.threadId);
+    loaders.directMessageParticipants.clear(dbMessage.threadId);
+    loaders.directMessageSnippet.clear(dbMessage.threadId);
+    return dbMessage;
+  }
+
+  loaders.thread.clear(dbMessage.threadId);
+  loaders.threadMessageCount.clear(dbMessage.threadId);
+  loaders.threadParticipants.clear(dbMessage.threadId);
 
   return {
     ...dbMessage,

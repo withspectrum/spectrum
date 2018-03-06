@@ -7,7 +7,7 @@ import { saveUserCommunityPermissions } from '../../models/meta';
 export default (
   _: any,
   { input }: { input: any },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
   if (!isAdmin(currentUser.id)) {
@@ -16,5 +16,10 @@ export default (
   const { id, ...permissions } = input;
   const userId = currentUser.id;
   const communityId = id;
-  saveUserCommunityPermissions(permissions, userId, communityId);
+  return saveUserCommunityPermissions(permissions, userId, communityId).then(
+    result => {
+      loaders.userPermissionsInCommunity.clear([userId, communityId]);
+      return result;
+    }
+  );
 };

@@ -11,7 +11,7 @@ type ToggleReactionType = {
 export default (
   _: any,
   { reaction }: ToggleReactionType,
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
   // user must be authed to send a message
@@ -19,5 +19,8 @@ export default (
     return new UserError('You must be signed in to add a reaction.');
 
   // all checks passed
-  return toggleReaction(reaction, currentUser.id);
+  return toggleReaction(reaction, currentUser.id).then(result => {
+    loaders.messageReaction.clear(reaction.messageId);
+    return result;
+  });
 };
