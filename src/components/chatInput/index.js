@@ -107,7 +107,10 @@ class ChatInput extends React.Component<Props, State> {
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
-    persistContent(state);
+    if (toPlainText(state).trim() !== '') {
+      persistContent(state);
+    }
+
     if (toPlainText(state).trim() === '```') {
       this.toggleCodeMessage(false);
     } else if (onChange) {
@@ -489,7 +492,6 @@ class ChatInput extends React.Component<Props, State> {
 
 const map = state => ({
   currentUser: state.users.currentUser,
-  chatInputRedux: state.composer.chatInput,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
 });
@@ -498,12 +500,7 @@ export default compose(
   sendDirectMessage,
   // $FlowIssue
   connect(map),
-  withState(
-    'state',
-    'changeState',
-    ({ chatInputRedux }) =>
-      chatInputRedux ? chatInputRedux : storedContent || fromPlainText('')
-  ),
+  withState('state', 'changeState', () => storedContent || fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),

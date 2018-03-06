@@ -74,8 +74,6 @@ type Props = {
   activeCommunity?: string,
   activeChannel?: string,
   threadSliderIsOpen?: boolean,
-  title: ?string,
-  body: ?string,
   isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
@@ -102,7 +100,6 @@ const persistTitle = debounce((title: string) => {
 }, 500);
 
 const persistBody = debounce(body => {
-  console.log('persisting');
   localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
 }, 500);
 
@@ -399,7 +396,6 @@ class ComposerWithData extends Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
-        console.log('removing body and title from ls');
         localStorage.removeItem(LS_BODY_KEY);
         localStorage.removeItem(LS_TITLE_KEY);
 
