@@ -372,7 +372,7 @@ const getUsersPermissionsInCommunities = (
     .getAll(...input, { index: 'userIdAndCommunityId' })
     .run()
     .then(data => {
-      if (!data)
+      if (!data || data.length === 0)
         return Array.from({ length: input.length }, (_, index) => ({
           ...DEFAULT_USER_COMMUNITY_PERMISSIONS,
           userId: input[index][0],

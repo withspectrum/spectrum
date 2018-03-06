@@ -8,7 +8,7 @@ import { getCommunities, editCommunity } from '../../models/community';
 export default async (
   _: any,
   args: EditCommunityInput,
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
 
@@ -19,15 +19,16 @@ export default async (
     );
   }
 
-  const [currentUserCommunityPermissions, communities] = await Promise.all([
-    getUserPermissionsInCommunity(args.input.communityId, currentUser.id),
-    getCommunities([args.input.communityId]),
+  const [currentUserCommunityPermissions, community] = await Promise.all([
+    loaders.userPermissionsInCommunity.load([
+      currentUser.id,
+      args.input.communityId,
+    ]),
+    loaders.community.load(args.input.communityId),
   ]);
 
-  const communityToEvaluate = communities && communities[0];
-
   // if no community was found or was deleted
-  if (!communityToEvaluate || communityToEvaluate.deletedAt) {
+  if (!community || community.deletedAt) {
     return new UserError("This community doesn't exist.");
   }
 
@@ -39,5 +40,8 @@ export default async (
   }
 
   // all checks passed
-  return editCommunity(args);
+  return editCommunity(args).then(community => {
+    loaders.community.clear(args.input.communityId);
+    return community;
+  });
 };
