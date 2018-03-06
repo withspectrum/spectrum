@@ -39,8 +39,6 @@ import {
 } from '../style';
 
 type Props = {
-  title: string,
-  body: Object,
   isOpen: boolean,
   dispatch: Function,
   isLoading: boolean,
@@ -104,8 +102,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     this.state = {
       isMounted: true,
-      title: props.title || storedTitle || '',
-      body: props.body || storedBody || fromPlainText(''),
+      title: storedTitle || '',
+      body: storedBody || fromPlainText(''),
       availableCommunities: [],
       availableChannels: [],
       activeCommunity: '',
@@ -248,8 +246,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
 
     this.setState({
-      title: props.title || storedTitle || '',
-      body: props.body || storedBody || fromPlainText(''),
+      title: storedTitle || '',
+      body: storedBody || fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
@@ -768,8 +766,6 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
 const map = state => ({
   isOpen: state.composer.isOpen,
-  title: state.composer.title,
-  body: state.composer.body,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
 });

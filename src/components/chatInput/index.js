@@ -19,7 +19,6 @@ import {
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
@@ -103,11 +102,7 @@ class ChatInput extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    const { state } = this.props;
     this.props.onRef(undefined);
-    if (toPlainText(state).trim() === '')
-      return this.props.dispatch(closeChatInput(''));
-    return this.props.dispatch(closeChatInput(state));
   }
 
   onChange = (state, ...rest) => {
@@ -240,7 +235,6 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
-          dispatch(clearChatInput());
           localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
@@ -358,7 +352,6 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
-            dispatch(clearChatInput());
             return track(
               `${threadType} message`,
               'media message created',
