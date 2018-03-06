@@ -102,9 +102,8 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     });
 };
 
-const checkForExistingDMThread = async (
-  participants: Array<string>
-): Promise<?string> => {
+// prettier-ignore
+const checkForExistingDMThread = async (participants: Array<string>): Promise<?string> => {
   // return a list of all threadIds where both participants are active
   let idsToCheck = await db
     .table('usersDirectMessageThreads')
