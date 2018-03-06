@@ -53,6 +53,10 @@ type State = {
   scrollElement: any,
   isEditing: boolean,
   messagesContainer: any,
+  // Cache lastSeen and lastActive so it doesn't jump around
+  // while looking at a live thread
+  lastSeen: ?number | ?Date,
+  lastActive: ?number | ?Date,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -62,7 +66,25 @@ class ThreadContainer extends React.Component<Props, State> {
     messagesContainer: null,
     scrollElement: null,
     isEditing: false,
+    lastSeen: null,
+    lastActive: null,
   };
+
+  componentWillReceiveProps(next: Props) {
+    const curr = this.props;
+    const newThread = !curr.data.thread && next.data.thread;
+    const threadChanged =
+      curr.data.thread &&
+      next.data.thread &&
+      curr.data.thread.id !== next.data.thread.id;
+    // Update the cached lastSeen value when switching threads
+    if (newThread || threadChanged) {
+      this.setState({
+        lastSeen: next.data.thread.currentUserLastSeen,
+        lastActive: next.data.thread.lastActive,
+      });
+    }
+  }
 
   toggleEdit = () => {
     const { isEditing } = this.state;
@@ -200,7 +222,7 @@ class ThreadContainer extends React.Component<Props, State> {
       slider,
       threadViewContext = 'fullscreen',
     } = this.props;
-    const { isEditing } = this.state;
+    const { isEditing, lastSeen, lastActive } = this.state;
     const isLoggedIn = currentUser;
 
     if (thread && thread.id) {
@@ -320,8 +342,8 @@ class ThreadContainer extends React.Component<Props, State> {
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
-                      lastSeen={thread.currentUserLastSeen}
-                      lastActive={thread.lastActive}
+                      lastSeen={lastSeen}
+                      lastActive={lastActive}
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
@@ -429,8 +451,8 @@ class ThreadContainer extends React.Component<Props, State> {
                     id={thread.id}
                     scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
-                    lastSeen={thread.currentUserLastSeen}
-                    lastActive={thread.lastActive}
+                    lastSeen={lastSeen}
+                    lastActive={lastActive}
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}
