@@ -107,9 +107,8 @@ class ChatInput extends React.Component<Props, State> {
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
-    if (toPlainText(state).trim() !== '') {
-      persistContent(state);
-    }
+
+    persistContent(state);
 
     if (toPlainText(state).trim() === '```') {
       this.toggleCodeMessage(false);
