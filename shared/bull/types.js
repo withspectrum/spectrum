@@ -27,10 +27,7 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
-export type ChannelNotificationJobData = {
-  channel: DBChannel,
-  userId: string,
-};
+export type ChannelNotificationJobData = { channel: DBChannel };
 
 export type ThreadNotificationJobData = { thread: DBThread };
 
@@ -119,7 +116,7 @@ export type PushNotificationsJobData = {
   notification: DBNotificationsJoin,
 };
 
-export type Queues = {
+export type IrisQueues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
   sendCommunityNotificationQueue: BullQueue<CommunityNotificationJobData>,
@@ -134,7 +131,6 @@ export type Queues = {
   sendCommunityInviteNotificationQueue: BullQueue<
     CommunityInviteNotificationJobData
   >,
-  sendChannelNotificationQueue: BullQueue<ChannelNotificationJobData>,
   sendDirectMessageNotificationQueue: BullQueue<
     DirectMessageNotificationJobData
   >,
@@ -157,4 +153,8 @@ export type Queues = {
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
+};
+
+export type AthenaQueues = {
+  sendChannelNotificationQueue: BullQueue<ChannelNotificationJobData>,
 };

@@ -3,7 +3,7 @@ require('now-env');
 import axios from 'axios';
 const querystring = require('querystring');
 const { db } = require('./db');
-import { slackImportQueue } from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
@@ -73,7 +73,7 @@ export const createSlackImportRecord = (input: CreateSlackImportType) => {
           const token = data.token;
           const importId = data.id;
 
-          slackImportQueue.add({ token, importId });
+          queues.slackImportQueue.add({ token, importId });
 
           return data;
         });

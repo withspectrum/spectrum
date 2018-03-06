@@ -1,9 +1,6 @@
 // @flow
 import { db } from './db';
-import {
-  sendReactionNotificationQueue,
-  processReputationEventQueue,
-} from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 
 type ReactionType = 'like';
 
@@ -52,7 +49,7 @@ export const toggleReaction = (
       if (result.length > 0) {
         const existing = result[0];
 
-        processReputationEventQueue.add({
+        queues.processReputationEventQueue.add({
           userId,
           type: 'reaction deleted',
           entityId: existing.messageId,
@@ -64,7 +61,7 @@ export const toggleReaction = (
           .delete()
           .run();
       } else {
-        processReputationEventQueue.add({
+        queues.processReputationEventQueue.add({
           userId,
           type: 'reaction created',
           entityId: reaction.messageId,
@@ -83,7 +80,7 @@ export const toggleReaction = (
           .run()
           .then(result => result.changes[0].new_val)
           .then(reaction => {
-            sendReactionNotificationQueue.add({ reaction, userId });
+            queues.sendReactionNotificationQueue.add({ reaction, userId });
 
             return reaction;
           });

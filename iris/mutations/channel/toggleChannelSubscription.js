@@ -15,7 +15,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
-import { sendPrivateChannelRequestQueue } from 'shared/bull/queues';
+import { iris as queues } from 'shared/bull/queues';
 
 export default async (
   _: any,
@@ -132,7 +132,7 @@ export default async (
     // community - those actions will instead be handled when the channel
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
-      sendPrivateChannelRequestQueue.add({
+      queues.sendPrivateChannelRequestQueue.add({
         userId: currentUser.id,
         channel: channelToEvaluate,
       });

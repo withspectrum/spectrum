@@ -3,10 +3,10 @@
 // so that import { queueName } from 'queues' works!
 const createQueue = require('shared/bull/create-queue.js');
 const EventEmitter = require('events');
-import type { Queues } from './types';
+import type { IrisQueues, AthenaQueues } from './types';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
-exports.QUEUE_NAMES = {
+exports.IRIS_QUEUE_NAMES = {
   // athena - notifications
   sendThreadNotificationQueue: 'thread notification',
   sendCommunityNotificationQueue: 'community notification',
@@ -19,7 +19,6 @@ exports.QUEUE_NAMES = {
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: 'community invite notification',
-  sendChannelNotificationQueue: 'channel notification',
   sendDirectMessageNotificationQueue: 'direct message notification',
   sendMessageNotificationQueue: 'message notification',
   sendNotificationAsPushQueue: 'push notifications',
@@ -40,17 +39,30 @@ exports.QUEUE_NAMES = {
   _adminProcessSlackImportQueue: 'admin slack import process email',
 };
 
+exports.ATHENA_QUEUE_NAMES = {
+  sendChannelNotificationQueue: 'channel notification',
+};
+
 // We add one error listener per queue, so we have to set the max listeners
 // to whatever it is set to + the amount of queues passed in
 // $FlowIssue
 EventEmitter.defaultMaxListeners =
   // $FlowIssue
-  Object.keys(exports.QUEUE_NAMES).length + EventEmitter.defaultMaxListeners;
+  Object.keys(exports.IRIS_QUEUE_NAMES).length +
+  EventEmitter.defaultMaxListeners;
 
 // Create all the queues, export an object with all the queues
-const queues: Queues = Object.keys(exports.QUEUE_NAMES).reduce(
+const iris: IrisQueues = Object.keys(exports.IRIS_QUEUE_NAMES).reduce(
   (queues, name) => {
-    queues[name] = createQueue(exports.QUEUE_NAMES[name]);
+    queues[name] = createQueue(exports.IRIS_QUEUE_NAMES[name]);
+    return queues;
+  },
+  {}
+);
+
+const athena: AthenaQueues = Object.keys(exports.ATHENA_QUEUE_NAMES).reduce(
+  (queues, name) => {
+    queues[name] = createQueue(exports.ATHENA_QUEUE_NAMES[name]);
     return queues;
   },
   {}
@@ -58,4 +70,7 @@ const queues: Queues = Object.keys(exports.QUEUE_NAMES).reduce(
 
 // Needs to be module.exports so import { sendEmailValidationEmailQueue } from 'queues' works
 // it wouldn't work with export default queues and for some reason export { ...queues } doesn't either
-module.exports = queues;
+module.exports = {
+  iris,
+  athena,
+};

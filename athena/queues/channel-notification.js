@@ -17,7 +17,7 @@ import type { Job, ChannelNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<ChannelNotificationJobData>) => {
   const incomingChannel = job.data.channel;
-  const currentUserId = job.data.userId;
+  const currentUserId = incomingChannel.creatorId;
 
   debug(`new job for ${incomingChannel.id} by ${currentUserId}`);
 
