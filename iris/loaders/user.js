@@ -61,6 +61,7 @@ export const __createUserThreadNotificationStatusLoader = createLoader(
   usersThreads => getThreadsNotificationStatusForUsers(usersThreads),
   {
     getCacheKeyFromResult: result => [result.userId, result.threadId],
+    cacheExpiryTime: 0,
   }
 );
 
