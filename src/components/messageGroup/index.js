@@ -208,13 +208,6 @@ class Messages extends Component<MessageGroupProps, State> {
             author.id !== currentUser.id &&
             !hasInjectedUnseenRobo
           ) {
-            console.log('same id?', author.id, currentUser.id);
-            console.log(
-              'last seen:',
-              lastSeen,
-              'timestamp:',
-              group[group.length - 1].timestamp
-            );
             hasInjectedUnseenRobo = true;
             unseenRobo = (
               <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
