@@ -37,8 +37,9 @@ export const __createUserRecurringPaymentsLoader = createLoader(
 export const __createUserPermissionsInCommunityLoader = createLoader(
   usersCommunities => getUsersPermissionsInCommunities(usersCommunities),
   {
-    cacheExpiryTime: 0,
-    getCacheKeyFromResult: result => [result.userId, result.communityId],
+    getCacheKeyFromInput: input => input.toString(),
+    getCacheKeyFromResult: result =>
+      [result.userId, result.communityId].toString(),
   }
 );
 
@@ -50,8 +51,9 @@ export const __createUserTotalReputationLoader = createLoader(
 export const __createUserPermissionsInChannelLoader = createLoader(
   usersChannels => getUsersPermissionsInChannels(usersChannels),
   {
-    cacheExpiryTime: 0,
-    getCacheKeyFromResult: result => [result.userId, result.channelId],
+    getCacheKeyFromInput: input => input.toString(),
+    getCacheKeyFromResult: result =>
+      [result.userId, result.channelId].toString(),
   }
 );
 
