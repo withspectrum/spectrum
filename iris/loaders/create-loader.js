@@ -49,25 +49,25 @@ const createLoader = (
     getCacheKeyFromInput || ((input: Key) => input.toString());
   cacheExpiryTime = cacheExpiryTime || 60000;
   // Either create the cache or get the existing one
-  const newCache = new LRU({
-    max: SEVEN_HUNDRED_AND_FIFTY_MEGABYTE,
-    maxAge: cacheExpiryTime,
-    length: item => {
-      try {
-        return getLengthInBytes(JSON.stringify(item));
-      } catch (err) {
-        return 1;
-      }
-    },
-  });
-
   let cache = caches.get(batchFn);
   if (!cache) {
+    const newCache = new LRU({
+      max: SEVEN_HUNDRED_AND_FIFTY_MEGABYTE,
+      maxAge: cacheExpiryTime,
+      length: item => {
+        try {
+          return getLengthInBytes(JSON.stringify(item));
+        } catch (err) {
+          return 1;
+        }
+      },
+    });
+
     caches.set(batchFn, newCache);
     cache = caches.get(batchFn);
   }
 
-  return new DataLoader((keys: Array<Key>) => {
+  const loader = new DataLoader((keys: Array<Key>) => {
     let uncachedKeys = [];
     let cachedResults = [];
     keys.forEach(key => {
@@ -107,6 +107,17 @@ const createLoader = (
       return normalized;
     });
   }, options);
+
+  // Monkey-patch dataloader.clear to also clear our cache
+  const clear = loader.clear.bind(loader);
+  loader.clear = (input: string | Array<string>) => {
+    // $FlowIssue
+    const key = getCacheKeyFromInput(input);
+    cache.del(key);
+    return clear(key);
+  };
+
+  return loader;
 };
 
 /**
