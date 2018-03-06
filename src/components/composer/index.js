@@ -6,13 +6,19 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
 import { KeyBindingUtil } from 'draft-js';
+import debounce from 'debounce';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor from '../draftjs-editor';
-import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
+import {
+  toPlainText,
+  fromPlainText,
+  toJSON,
+  toState,
+} from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
@@ -75,6 +81,30 @@ type Props = {
   networkOnline: boolean,
 };
 
+const LS_BODY_KEY = 'last-thread-composer-body';
+const LS_TITLE_KEY = 'last-thread-composer-title';
+let storedBody;
+let storedTitle;
+// We persist the body and title to localStorage
+// so in case the app crashes users don't loose content
+if (localStorage) {
+  try {
+    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
+    storedTitle = localStorage.getItem(LS_TITLE_KEY);
+  } catch (err) {
+    localStorage.removeItem(LS_BODY_KEY);
+    localStorage.removeItem(LS_TITLE_KEY);
+  }
+}
+
+const persistTitle = debounce((title: string) => {
+  localStorage.setItem(LS_TITLE_KEY, title);
+}, 500);
+
+const persistBody = debounce(body => {
+  localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+}, 500);
+
 class ComposerWithData extends Component<Props, State> {
   bodyEditor: any;
 
@@ -82,8 +112,8 @@ class ComposerWithData extends Component<Props, State> {
     super(props);
 
     this.state = {
-      title: props.title || '',
-      body: props.body || fromPlainText(''),
+      title: props.title || storedTitle || '',
+      body: props.body || storedBody || fromPlainText(''),
       availableCommunities: [],
       availableChannels: [],
       activeCommunity: '',
@@ -202,6 +232,7 @@ class ComposerWithData extends Component<Props, State> {
       this.bodyEditor.focus();
       return;
     }
+    persistTitle(title);
     this.setState({
       title,
     });
@@ -209,6 +240,7 @@ class ComposerWithData extends Component<Props, State> {
 
   changeBody = body => {
     this.listenForUrl(body);
+    persistBody(body);
     this.setState({
       body,
     });
@@ -366,6 +398,8 @@ class ComposerWithData extends Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
+        localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_TITLE_KEY);
 
         // stop the loading spinner on the publish button
         this.setState({
