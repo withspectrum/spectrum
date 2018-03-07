@@ -108,7 +108,7 @@ class InboxThread extends React.Component<Props> {
     const attachmentsExist = attachments && attachments.length > 0;
     const participantsExist = participants && participants.length > 0;
     const isPinned = data.id === this.props.pinnedThreadId;
-    console.log(data);
+
     if (data.watercooler) {
       return (
         <WatercoolerThread
