@@ -273,11 +273,7 @@ const init = () => {
       },
       async (req, token, tokenSecret, profile, done) => {
         const name =
-          profile.displayName ||
-          profile.username ||
-          profile._json.name ||
-          profile._json.name ||
-          '';
+          profile.displayName || profile.username || profile._json.name || '';
         if (req.user) {
           // if a user exists in the request body, it means the user is already
           // authed and is trying to connect a github account. Before we do so
