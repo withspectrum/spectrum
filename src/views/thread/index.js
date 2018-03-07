@@ -471,6 +471,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
                 {!isEditing &&
                   isLoggedIn &&
+                  !isLocked &&
                   !canSendMessages && (
                     <JoinChannel
                       community={thread.community}
@@ -479,7 +480,8 @@ class ThreadContainer extends React.Component<Props, State> {
                   )}
 
                 {!isEditing &&
-                  !isLoggedIn && (
+                  !isLoggedIn &&
+                  !isLocked && (
                     <UpsellSignIn
                       title={`Join the ${thread.community.name} community`}
                       glyph={'message-new'}
