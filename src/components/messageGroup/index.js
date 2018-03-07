@@ -203,9 +203,10 @@ class Messages extends Component<MessageGroupProps, State> {
           // group as last seen in the UI
           // NOTE(@mxstbr): Maybe we should split the group eventually
           if (
-            lastSeen &&
-            group[group.length - 1].timestamp > new Date(lastSeen).getTime() &&
-            author.id !== currentUser.id &&
+            !!lastSeen &&
+            new Date(group[group.length - 1].timestamp).getTime() >
+              new Date(lastSeen).getTime() &&
+            !me &&
             !hasInjectedUnseenRobo
           ) {
             hasInjectedUnseenRobo = true;
