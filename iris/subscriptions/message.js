@@ -1,11 +1,17 @@
 // @flow
-import { withFilter } from 'graphql-subscriptions';
+const debug = require('debug')('iris:subscriptions:messages');
 import { getThread } from '../models/thread';
+import { getDirectMessageThread } from '../models/directMessageThread';
 import { userCanViewChannel, userCanViewDirectMessageThread } from './utils';
-const { listenToNewMessages } = require('../models/message');
 import asyncify from '../utils/asyncify';
+import { listenToNewMessagesInThread } from '../models/message';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues.js';
+import UserError from '../utils/UserError';
+import Raven from 'shared/raven';
+
 import type { Message } from '../models/message';
+import type { GraphQLContext } from '../';
+import type { GraphQLResolveInfo } from 'graphql';
 
 /**
  * Define the message subscription resolvers
@@ -14,36 +20,53 @@ module.exports = {
   Subscription: {
     messageAdded: {
       resolve: (message: any) => message,
-      subscribe: withFilter(
-        asyncify(listenToNewMessages, err => {
-          throw new Error(err);
-        }),
-        async (message, { thread }, { user }) => {
-          // Message was sent in different thread, early return
-          if (message.threadId !== thread) return false;
-          if (message.threadType === 'directMessageThread') {
-            if (!user) return false;
-            return userCanViewDirectMessageThread(message.threadId, user.id);
-          }
+      subscribe: async (
+        _: any,
+        { thread }: { thread: string },
+        { user }: GraphQLContext,
+        info: GraphQLResolveInfo
+      ) => {
+        // Make sure the user has the permission to view the thread before
+        // subscribing them to changes
+        const [threadData, dmThreadData] = await Promise.all([
+          getThread(thread),
+          getDirectMessageThread(thread),
+        ]);
 
-          const threadData = await getThread(message.threadId);
-          if (!threadData) return false;
-
-          return await userCanViewChannel(
+        let canView = false;
+        if (dmThreadData)
+          canView = user
+            ? await userCanViewDirectMessageThread(thread, user.id)
+            : false;
+        if (threadData)
+          canView = await userCanViewChannel(
             threadData.channelId,
             user && user.id
-          ).then(result => {
-            if (result && user && user.id) {
-              trackUserThreadLastSeenQueue.add({
-                threadId: message.threadId,
-                userId: user.id,
-                timestamp: Date.now(),
-              });
-            }
-            return result;
+          );
+
+        const moniker = user ? `@${user.username || user.id}` : 'anonymous';
+        if (!canView) {
+          debug(
+            `denying listener ${moniker}, tried listening to new messages in ${thread}`
+          );
+          throw new UserError('Thread not found.');
+        }
+
+        if (user && user.id) {
+          trackUserThreadLastSeenQueue.add({
+            threadId: thread,
+            userId: user.id,
+            timestamp: Date.now(),
           });
         }
-      ),
+
+        debug(`${moniker} listening to new messages in ${thread}`);
+        return asyncify(listenToNewMessagesInThread(thread), err => {
+          // Don't crash the whole API server on error in the listener
+          console.error(err);
+          Raven.captureException(err);
+        });
+      },
     },
   },
 };
