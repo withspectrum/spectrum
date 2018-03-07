@@ -335,7 +335,9 @@ export const setThreadLock = (
       // with ReQL, I just couldn't find the API for it in a pinch
       .update(
         {
-          isLocked: value === false ? false : userId,
+          isLocked: value,
+          lockedBy: userId,
+          lockedAt: new Date(),
         },
         { returnChanges: true }
       )

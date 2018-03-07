@@ -29,12 +29,8 @@ export default async (
   // it was locked by themselves. (if a mod locks a thread an author cannot
   // unlock it anymore)
   const isAuthor = thread.creatorId === currentUser.id;
-  // NOTE(@mxstbr): thread.isLocked === true is there for historic reasons, going forward thread.isLocked
-  // will either be false or a user ID
   const authorCanLock =
-    !thread.isLocked ||
-    thread.isLocked === true ||
-    thread.isLocked === thread.creatorId;
+    !thread.isLocked || thread.lockedBy === thread.creatorId;
   if (isAuthor && authorCanLock) {
     return setThreadLock(threadId, value, currentUser.id);
   }
@@ -65,6 +61,9 @@ export default async (
   }
 
   // if the user is not a channel or community owner, the thread can't be locked
+  if (isAuthor) {
+    return new UserError('This thread was locked by a moderator.');
+  }
   return new UserError(
     "You don't have permission to make changes to this thread."
   );
