@@ -7,6 +7,7 @@ import asyncify from '../utils/asyncify';
 import { listenToNewMessagesInThread } from '../models/message';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues.js';
 import UserError from '../utils/UserError';
+import Raven from 'shared/raven';
 
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
@@ -63,6 +64,7 @@ module.exports = {
         return asyncify(listenToNewMessagesInThread(thread), err => {
           // Don't crash the whole API server on error in the listener
           console.error(err);
+          Raven.captureException(err);
         });
       },
     },
