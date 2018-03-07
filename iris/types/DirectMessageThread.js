@@ -12,9 +12,9 @@ const DirectMessageThread = /* GraphQL */ `
 
 	type ParticipantInfo {
 		id: ID!
-		name: String!
+		name: String
 		username: String
-		profilePhoto: String!
+		profilePhoto: String
 		lastActive: Date
 		lastSeen: Date
 		userId: ID!
