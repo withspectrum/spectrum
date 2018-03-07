@@ -16,9 +16,13 @@ const asyncify = (listener: Listener, onError?: Error => void) => {
     let listening = true;
     let cursor;
     // Start listener
-    listener(value => pushValue(value)).then(c => {
-      cursor = c;
-    });
+    listener(value => pushValue(value))
+      .then(c => {
+        cursor = c;
+      })
+      .catch(err => {
+        onError && onError(err);
+      });
 
     function pushValue(value) {
       if (pullQueue.length !== 0) {
