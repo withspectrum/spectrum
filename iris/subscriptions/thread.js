@@ -51,7 +51,8 @@ module.exports = {
           } channels`
         );
         return asyncify(listenToUpdatedThreads(ids), err => {
-          throw new Error(err);
+          // Don't crash the whole API server on error in the listener
+          console.error(err);
         });
       },
     },

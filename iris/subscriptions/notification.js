@@ -27,7 +27,8 @@ module.exports = {
 
         debug(`@${user.username || user.id} listening to notifications`);
         return asyncify(listenToNewNotifications(user.id), err => {
-          throw new Error(err);
+          // Don't crash the whole API server on error in the listener
+          console.error(err);
         });
       },
     },
@@ -46,7 +47,8 @@ module.exports = {
 
         debug(`@${user.username || user.id} listening to DM notifications`);
         return asyncify(listenToNewDirectMessageNotifications(user.id), err => {
-          throw new Error(err);
+          // Don't crash the whole API server on error in the listener
+          console.error(err);
         });
       },
     },

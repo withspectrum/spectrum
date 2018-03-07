@@ -61,7 +61,8 @@ module.exports = {
 
         debug(`${moniker} listening to new messages in ${thread}`);
         return asyncify(listenToNewMessagesInThread(thread), err => {
-          throw new Error(err);
+          // Don't crash the whole API server on error in the listener
+          console.error(err);
         });
       },
     },
