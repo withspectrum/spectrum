@@ -5,69 +5,52 @@ import { getThreads, setThreadLock } from '../../models/thread';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
-export default (
+export default async (
   _: any,
   { threadId, value }: { threadId: string, value: boolean },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
 
   // user must be authed to edit a thread
   if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this thread.'
-    );
+    return new UserError('You must be signed in to make changes.');
   }
 
-  // get the thread being locked
-  return getThreads([threadId])
-    .then(threads => {
-      // select the thread
-      const threadToEvaluate = threads[0];
+  const thread = await loaders.thread.load(threadId);
 
-      // if the thread doesn't exist
-      if (!threadToEvaluate || threadToEvaluate.deletedAt) {
-        return new UserError("This thread doesn't exist");
-      }
+  // if the thread doesn't exist
+  if (!thread || thread.deletedAt) {
+    return new UserError(`Could not find thread with ID '${threadId}'.`);
+  }
 
-      // get the channel permissions
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
-        threadToEvaluate.channelId,
-        currentUser.id
-      );
-      // get the community permissions
-      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-        threadToEvaluate.communityId,
-        currentUser.id
-      );
+  // get the channel permissions
+  let [
+    currentUserChannelPermissions,
+    currentUserCommunityPermissions,
+  ] = await Promise.all([
+    loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([
+      currentUser.id,
+      thread.communityId,
+    ]),
+  ]);
 
-      // return the thread, channels and communities
-      return Promise.all([
-        threadToEvaluate,
-        currentUserChannelPermissions,
-        currentUserCommunityPermissions,
-      ]);
-    })
-    .then(
-      ([
-        thread,
-        currentUserChannelPermissions,
-        currentUserCommunityPermissions,
-      ]) => {
-        // user owns the community or the channel, they can lock the thread
-        if (
-          currentUserChannelPermissions.isOwner ||
-          currentUserChannelPermissions.isModerator ||
-          currentUserCommunityPermissions.isOwner ||
-          currentUserCommunityPermissions.isModerator
-        ) {
-          return setThreadLock(threadId, value);
-        }
+  if (!currentUserChannelPermissions) currentUserChannelPermissions = {};
+  if (!currentUserCommunityPermissions) currentUserCommunityPermissions = {};
 
-        // if the user is not a channel or community owner, the thread can't be locked
-        return new UserError(
-          "You don't have permission to make changes to this thread."
-        );
-      }
-    );
+  // user owns the community or the channel, they can lock the thread
+  if (
+    currentUserChannelPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator
+  ) {
+    return setThreadLock(threadId, value);
+  }
+
+  // if the user is not a channel or community owner, the thread can't be locked
+  return new UserError(
+    "You don't have permission to make changes to this thread."
+  );
 };

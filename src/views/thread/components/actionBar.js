@@ -168,11 +168,7 @@ class ActionBar extends React.Component<Props, State> {
             )}
 
             <ShareButtons>
-              <ShareButton
-                facebook
-                tipText={'Share on Facebook'}
-                tipLocation={'top-right'}
-              >
+              <ShareButton facebook tipText={'Share'} tipLocation={'top-left'}>
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
                     thread.id
@@ -184,11 +180,7 @@ class ActionBar extends React.Component<Props, State> {
                 </a>
               </ShareButton>
 
-              <ShareButton
-                twitter
-                tipText={'Share on Twitter'}
-                tipLocation={'top-right'}
-              >
+              <ShareButton twitter tipText={'Tweet'} tipLocation={'top-left'}>
                 <a
                   href={`https://twitter.com/share?text=${
                     thread.content.title
@@ -213,7 +205,7 @@ class ActionBar extends React.Component<Props, State> {
                   )
                 }
               >
-                <ShareButton tipText={'Copy link'} tipLocation={'top-right'}>
+                <ShareButton tipText={'Copy link'} tipLocation={'top-left'}>
                   <a>
                     <Icon glyph={'link'} size={24} />
                   </a>

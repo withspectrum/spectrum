@@ -1,5 +1,8 @@
+// @flow
 import React from 'react';
 import hoistStatics from 'hoist-non-react-statics';
+
+import type { ComponentType } from 'react';
 
 /*
 
@@ -48,7 +51,9 @@ export type ViewNetworkHandlerProps = {
   hasError: boolean,
 };
 
-const ViewNetworkHandler = Component => {
+function ViewNetworkHandler<Props: {}>(
+  Component: ComponentType<Props>
+): ComponentType<$Diff<Props, ViewNetworkHandlerProps>> {
   const C = props => {
     const { data, wrappedComponentRef, ...remainingProps } = props;
 
@@ -82,6 +87,6 @@ const ViewNetworkHandler = Component => {
 
   C.WrappedComponent = Component;
   return hoistStatics(C, Component);
-};
+}
 
 export default ViewNetworkHandler;

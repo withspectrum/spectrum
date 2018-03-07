@@ -4,7 +4,6 @@ import React from 'react';
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
 // $FlowFixMe
 import createEmojiRegex from 'emoji-regex';
-
 import replace from 'string-replace-to-array';
 
 export const convertTimestampToDate = (timestamp: number) => {
@@ -250,25 +249,6 @@ export const truncateNumber = (number: number, places: number = 1) => {
   }
 };
 
-export const hasProtocol = (url: string) => {
-  const PROTOCOL = /(http(s?)):\/\//gi;
-  const hasProtocol = url.match(PROTOCOL);
-  if (hasProtocol) {
-    return true;
-  }
-  return false;
-};
-
-export const addProtocolToString = (string: string) => {
-  // if the string starts with http or https, we are good
-  if (hasProtocol(string)) {
-    return string;
-  } else {
-    // otherwise it doesn't start with a protocol, prepend http
-    return `http://${string}`;
-  }
-};
-
 export const sortByDate = (array: Array<any>, key: string, order: string) => {
   return array.sort((a, b) => {
     const x = new Date(a[key]).getTime();
@@ -298,23 +278,6 @@ export const renderMarkdownLinks = (text: string) => {
   return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
     <a href={url} target="_blank" rel="noopener nofollower">
       {text}
-    </a>
-  ));
-};
-
-// eslint-disable-next-line
-const URL = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-]*)?\??(?:[\-\+=&;%@\.\w]*)#?(?:[\.\!\/\\\w]*))?)/g;
-
-export const renderLinks = (text: string) => {
-  if (typeof text !== 'string') return text;
-  return replace(text, URL, (url, _, __, ____, _____, offset) => (
-    <a
-      href={addProtocolToString(url)}
-      target="_blank"
-      rel="noopener nofollower"
-      key={`${offset}-${url}`}
-    >
-      {url}
     </a>
   ));
 };

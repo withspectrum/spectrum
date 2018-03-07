@@ -1,5 +1,5 @@
 // @flow
-import { sortByDate } from './utils';
+import sortByDate from '../sort-by-date';
 
 // TODO: FIXME
 type Message = Object;

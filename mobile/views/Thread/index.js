@@ -7,9 +7,13 @@ import ViewNetworkHandler from '../../components/ViewNetworkHandler';
 import withSafeView from '../../components/SafeAreaView';
 import Text from '../../components/Text';
 import ThreadContent from '../../components/ThreadContent';
+import Messages from '../../components/Messages';
+import getThreadMessageConnection from '../../../shared/graphql/queries/thread/getThreadMessageConnection';
 import type { GetThreadType } from '../../../shared/graphql/queries/thread/getThread';
 
 import { Wrapper } from './style';
+
+const ThreadMessages = getThreadMessageConnection(Messages);
 
 type Props = {
   isLoading: boolean,
@@ -34,6 +38,7 @@ class Thread extends React.Component<Props> {
                 rawContentState={JSON.parse(data.thread.content.body)}
               />
             )}
+            <ThreadMessages id={data.thread.id} />
           </ScrollView>
         </Wrapper>
       );
