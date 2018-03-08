@@ -52,19 +52,29 @@ module.exports = {
           throw new UserError('Thread not found.');
         }
 
-        if (user && user.id) {
-          trackUserThreadLastSeenQueue.add({
-            threadId: thread,
-            userId: user.id,
-            timestamp: Date.now(),
-          });
-        }
-
         debug(`${moniker} listening to new messages in ${thread}`);
-        return asyncify(listenToNewMessagesInThread(thread), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return asyncify(listenToNewMessagesInThread(thread), {
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
+          onClose: cursor => {
+            // Once the user unsubscribes record a new threadLastSeen
+            if (user && user.id) {
+              trackUserThreadLastSeenQueue.add({
+                threadId: thread,
+                userId: user.id,
+                timestamp: Date.now(),
+              });
+            }
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
+          },
         });
       },
     },
