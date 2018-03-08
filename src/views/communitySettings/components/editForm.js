@@ -56,6 +56,9 @@ type Props = {
     profilePhoto: string,
     coverPhoto: string,
     website: ?string,
+    communityPermissions: {
+      isOwner: boolean,
+    },
   },
   dispatch: Function,
   editCommunity: Function,
@@ -237,12 +240,7 @@ class EditForm extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        this.props.dispatch(
-          addToastWithTimeout(
-            'error',
-            `Something went wrong and we weren’t able to save these changes. ${err}`
-          )
-        );
+        this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
@@ -357,14 +355,16 @@ class EditForm extends React.Component<Props, State> {
               Save
             </Button>
             <TertiaryActionContainer>
-              <IconButton
-                glyph="delete"
-                tipText={`Delete ${name}`}
-                tipLocation="top-right"
-                color="text.placeholder"
-                hoverColor={'warn.alt'}
-                onClick={e => this.triggerDeleteCommunity(e, community.id)}
-              />
+              {community.communityPermissions.isOwner && (
+                <IconButton
+                  glyph="delete"
+                  tipText={`Delete ${name}`}
+                  tipLocation="top-right"
+                  color="text.placeholder"
+                  hoverColor={'warn.alt'}
+                  onClick={e => this.triggerDeleteCommunity(e, community.id)}
+                />
+              )}
             </TertiaryActionContainer>
           </Actions>
 
