@@ -84,3 +84,26 @@ export const ActionRow = styled.div`
     }
   }
 `;
+
+export const CardInfo = styled.div`
+  display: flex;
+  align-items: center;
+  background: ${props => props.theme.bg.border};
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 15px;
+  margin-top: 24px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.3);
+  color: ${props => props.theme.text.secondary};
+  font-weight: 500;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  img {
+    margin-right: 12px;
+  }
+`;
