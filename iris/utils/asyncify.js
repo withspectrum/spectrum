@@ -3,7 +3,6 @@
 // Based on https://github.com/apollographql/graphql-subscriptions/blob/master/src/event-emitter-to-async-iterator.ts
 const debug = require('debug')('iris:utils:asyncify');
 import { $$asyncIterator } from 'iterall';
-import Raven from 'shared/raven';
 
 type Listener = <K>((arg: any) => void) => Promise<K>;
 
