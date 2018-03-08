@@ -75,10 +75,14 @@ const setDirectMessageThreadLastActive = (
 };
 
 const hasChanged = (field: string) =>
-  db.row('old_val')(field).ne(db.row('new_val')(field));
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
-const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+const listenToUpdatedDirectMessageThreads = (userId: string) => (
+  cb: Function
+): Function => {
   return db
     .table('directMessageThreads')
     .changes({
@@ -86,6 +90,7 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
     .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
+    .filter({ right: { userId } })
     .without({
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
@@ -100,10 +105,10 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     });
 };
 
-const checkForExistingDMThread = (
-  participants: Array<string>
-): Promise<Array<any>> => {
-  return db
+// prettier-ignore
+const checkForExistingDMThread = async (participants: Array<string>): Promise<?string> => {
+  // return a list of all threadIds where both participants are active
+  let idsToCheck = await db
     .table('usersDirectMessageThreads')
     .getAll(...participants, { index: 'userId' })
     .group('threadId')
@@ -116,6 +121,28 @@ const checkForExistingDMThread = (
     )
     .pluck('group')
     .run();
+
+  if (!idsToCheck || idsToCheck.length === 0) return null;
+
+  // return only the thread Ids
+  idsToCheck = idsToCheck.map(row => row.group);
+
+  // given a list of threads where both users are active (includes all groups)
+  // return only threads where these exact participants are used
+  return await db
+    .table('usersDirectMessageThreads')
+    .getAll(...idsToCheck, { index: 'threadId' })
+    .group('threadId')
+    .ungroup()
+    .filter(row =>
+      row('reduction')
+        .count()
+        .eq(participants.length)
+    )
+    .pluck('group')
+    .map(row => row('group'))
+    .run()
+    .then(results => (results && results.length > 0 ? results[0] : null));
 };
 
 module.exports = {

@@ -4,31 +4,12 @@ import sortByDate from '../sort-by-date';
 // TODO: FIXME
 type Message = Object;
 
-export const sortAndGroupMessages = (
-  messages: Array<Message>,
-  lastSeen?: number
-) => {
+export const sortAndGroupMessages = (messages: Array<Message>) => {
   if (messages.length === 0) return [];
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
   let newArray = [];
-  let hasInjectedUnseenRobo = false;
   let checkId;
-
-  const unseenRobo = [
-    {
-      author: {
-        user: {
-          id: 'robo',
-        },
-      },
-      timestamp: lastSeen,
-      message: {
-        content: '',
-        type: 'unseen-messages-below',
-      },
-    },
-  ];
 
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
@@ -47,25 +28,9 @@ export const sortAndGroupMessages = (
       },
     ];
 
-    // If the message is an optimistic response that means the user's seen all messages
-    // so we remove any already injected lastSeen robo and make it not inject any more
-    if (typeof messages[i].id === 'number') {
-      if (hasInjectedUnseenRobo) {
-        masterArray = masterArray.filter(group => group !== unseenRobo);
-      }
-
-      hasInjectedUnseenRobo = true;
-    }
-
     if (i === 0) {
       checkId = messages[i].author.user.id;
-
-      if (messages[0].timestamp > lastSeen && !hasInjectedUnseenRobo) {
-        hasInjectedUnseenRobo = true;
-        masterArray.push(unseenRobo);
-      } else {
-        masterArray.push(robo);
-      }
+      masterArray.push(robo);
     }
 
     const sameUser =
@@ -100,12 +65,6 @@ export const sortAndGroupMessages = (
         // push the message to the array
         newArray.push(messages[i]);
       } else {
-        if (messages[i].timestamp > lastSeen && !hasInjectedUnseenRobo) {
-          hasInjectedUnseenRobo = true;
-          masterArray.push(newArray);
-          masterArray.push(unseenRobo);
-          newArray = [];
-        }
         // if we're on to the second message, we need to evaulate the timestamp
         // if the second message is older than the first message by our variance
         if (oldMessage(messages[i], messages[i - 1])) {
@@ -129,10 +88,6 @@ export const sortAndGroupMessages = (
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
-      if (messages[i].timestamp > lastSeen && !hasInjectedUnseenRobo) {
-        hasInjectedUnseenRobo = true;
-        masterArray.push(unseenRobo);
-      }
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
         // push a robo timestamp

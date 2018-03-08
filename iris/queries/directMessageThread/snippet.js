@@ -12,7 +12,6 @@ export default async (
   if (!user || !user.id) return null;
 
   const canViewThread = await canViewDMThread(id, user.id, { loaders });
-
   if (!canViewThread) return null;
 
   return loaders.directMessageSnippet.load(id).then(results => {

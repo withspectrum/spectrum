@@ -581,6 +581,14 @@ const getUsersPermissionsInChannels = (
     });
 };
 
+const getUserUsersChannels = (userId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter({ isMember: true })
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInChannel,
@@ -608,6 +616,7 @@ module.exports = {
   getUserPermissionsInChannel,
   getUsersPermissionsInChannels,
   getPendingUsersInChannels,
+  getUserUsersChannels,
   // constants
   DEFAULT_USER_CHANNEL_PERMISSIONS,
 };

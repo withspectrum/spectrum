@@ -6,14 +6,19 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
+import debounce from 'debounce';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
-import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
+import {
+  toJSON,
+  toState,
+  fromPlainText,
+  toPlainText,
+} from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
@@ -52,6 +57,22 @@ type Props = {
   networkOnline: boolean,
 };
 
+const LS_KEY = 'last-chat-input-content';
+let storedContent;
+// We persist the body and title to localStorage
+// so in case the app crashes users don't loose content
+if (localStorage) {
+  try {
+    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+  } catch (err) {
+    localStorage.removeItem(LS_KEY);
+  }
+}
+
+const persistContent = debounce(content => {
+  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+}, 500);
+
 class ChatInput extends React.Component<Props, State> {
   state = {
     isFocused: false,
@@ -81,15 +102,14 @@ class ChatInput extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    const { state } = this.props;
     this.props.onRef(undefined);
-    if (toPlainText(state).trim() === '')
-      return this.props.dispatch(closeChatInput(''));
-    return this.props.dispatch(closeChatInput(state));
   }
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
+
+    persistContent(state);
+
     if (toPlainText(state).trim() === '```') {
       this.toggleCodeMessage(false);
     } else if (onChange) {
@@ -201,6 +221,7 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -216,7 +237,7 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
-          dispatch(clearChatInput());
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -333,7 +354,6 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
-            dispatch(clearChatInput());
             return track(
               `${threadType} message`,
               'media message created',
@@ -471,7 +491,6 @@ class ChatInput extends React.Component<Props, State> {
 
 const map = state => ({
   currentUser: state.users.currentUser,
-  chatInputRedux: state.composer.chatInput,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
 });
@@ -480,12 +499,7 @@ export default compose(
   sendDirectMessage,
   // $FlowIssue
   connect(map),
-  withState(
-    'state',
-    'changeState',
-    ({ chatInputRedux }) =>
-      chatInputRedux ? chatInputRedux : fromPlainText('')
-  ),
+  withState('state', 'changeState', () => storedContent || fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
