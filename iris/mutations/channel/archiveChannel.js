@@ -48,7 +48,9 @@ export default async (
 
   if (
     currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner
+    currentUserChannelPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator ||
+    currentUserChannelPermissions.isModerator
   ) {
     return await archiveChannel(channelId);
   }
