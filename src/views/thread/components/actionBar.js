@@ -287,7 +287,9 @@ class ActionBar extends React.Component<Props, State> {
                       </TextButton>
                     </FlyoutRow>
 
-                    {(isChannelOwner || isCommunityOwner) && (
+                    {(isChannelOwner ||
+                      isCommunityOwner ||
+                      thread.isAuthor) && (
                       <FlyoutRow>
                         <TextButton
                           icon="freeze"
