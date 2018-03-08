@@ -336,8 +336,8 @@ export const setThreadLock = (
       .update(
         {
           isLocked: value,
-          lockedBy: userId,
-          lockedAt: new Date(),
+          lockedBy: value === true ? userId : db.literal(),
+          lockedAt: value === true ? new Date() : db.literal(),
         },
         { returnChanges: true }
       )

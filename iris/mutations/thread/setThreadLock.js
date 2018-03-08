@@ -62,7 +62,9 @@ export default async (
 
   // if the user is not a channel or community owner, the thread can't be locked
   if (isAuthor) {
-    return new UserError('This thread was locked by a moderator.');
+    return new UserError(
+      "You don't have permission to unlock this thread as it was locked by a moderator."
+    );
   }
   return new UserError(
     "You don't have permission to make changes to this thread."
