@@ -1,6 +1,6 @@
 //@flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS } from './utils';
+import { NEW_DOCUMENTS, eachAsyncNewValue } from './utils';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
@@ -95,20 +95,7 @@ const listenToUpdatedDirectMessageThreads = (userId: string) => (
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
     .zip()
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        if (err) {
-          console.error(err);
-          try {
-            cursor.close();
-          } catch (err) {}
-          return;
-        }
-        // Call the passed callback with the notification
-        cb(data);
-      });
-    });
+    .run(eachAsyncNewValue(cb));
 };
 
 // prettier-ignore
