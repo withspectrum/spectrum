@@ -102,6 +102,8 @@ export const getCount = (table: string, filter: mixed) => {
 export const getCoreMetrics = () => {
   return db
     .table('coreMetrics')
+    .orderBy(db.desc('date'))
+    .limit(90)
     .orderBy('date')
     .run();
 };
