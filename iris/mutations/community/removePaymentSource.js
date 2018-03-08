@@ -6,6 +6,7 @@ import { replaceStripeCustomer } from '../../models/stripeCustomers';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
 export default async (
   _: any,
@@ -33,6 +34,17 @@ export default async (
     debug('Error creating customer in preflight');
     return new UserError(
       'We had trouble processing this request - please try again later'
+    );
+  }
+
+  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+    communityId,
+    currentUser.id
+  );
+
+  if (!currentUserCommunityPermissions.isOwner) {
+    return new UserError(
+      'You must own this community to manage payment sources'
     );
   }
 
