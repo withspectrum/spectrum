@@ -79,12 +79,14 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     );
   }
 
-  if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage moderators.');
+  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
+    return new UserError(
+      'You must own or moderate this community to manage moderators.'
+    );
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner) {
+  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
     return await makeMemberModeratorInCommunity(
       communityId,
       userToEvaluateId
