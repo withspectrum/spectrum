@@ -5,6 +5,7 @@ import { uploadImage } from '../../utils/s3';
 import { storeMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
+import { createMemberInChannel } from '../../models/usersChannels';
 import {
   createParticipantInThread,
   createParticipantWithoutNotificationsInThread,
@@ -70,88 +71,106 @@ export default async (
     });
   }
 
+  const messagePromise = async () =>
+    await storeMessage(messageForDb, currentUser.id);
+
   // handle DM thread messages up front
   if (message.threadType === 'directMessageThread') {
     setDirectMessageThreadLastActive(message.threadId);
     setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
-    return await storeMessage(messageForDb, currentUser.id);
+    return await messagePromise();
   }
 
   // at this point we are only dealing with thread messages
   const thread = await loaders.thread.load(message.threadId);
 
-  if (thread.isDeleted)
+  if (thread.isDeleted) {
     return new UserError("Can't reply in a deleted thread.");
-  if (thread.isLocked) return new UserError("Can't reply in a locked thread.");
+  }
 
-  const permissions = await loaders.userPermissionsInCommunity.load([
-    currentUser.id,
-    thread.communityId,
+  if (thread.isLocked) {
+    return new UserError("Can't reply in a locked thread.");
+  }
+
+  const [communityPermissions, channelPermissions] = await Promise.all([
+    loaders.userPermissionsInCommunity.load([
+      currentUser.id,
+      thread.communityId,
+    ]),
+    loaders.userPermissionsInChannel.load([thread.channelId, currentUser.id]),
   ]);
 
-  const participantPromise = () =>
-    thread.watercooler
-      ? createParticipantWithoutNotificationsInThread(
-          message.threadId,
-          currentUser.id
-        )
-      : createParticipantInThread(message.threadId, currentUser.id);
+  const isBlockedInCommunity =
+    communityPermissions && communityPermissions.isBlocked;
+  const isBlockedInChannel = channelPermissions && channelPermissions.isBlocked;
 
-  // if the user has never joined, or has previously joined but is not currently
-  // a member (and is not blocked), join them to the community
-  if (!permissions || (!permissions.isMember && !permissions.isBlocked)) {
-    // NOTE @brian: this is a bit hacky to re-use another graphQL resolver like this
-    // but I'm not sure the best abstraction here
-    return await addCommunityMember(
-      {},
-      { input: { communityId: thread.communityId } },
-      { user: currentUser, loaders: loaders }
-    )
-      .then(async () => await participantPromise())
-      .then(async () => {
-        const contextPermissions = {
-          communityId: thread.communityId,
-          reputation: 0,
-          isModerator: false,
-          isOwner: false,
-        };
-
-        const dbMessage = await storeMessage(messageForDb, currentUser.id);
-
-        return {
-          ...dbMessage,
-          contextPermissions,
-        };
-      })
-      .catch(err => {
-        console.log('Error sending message to newly joined community', err);
-        return new UserError(
-          'Could not join this community. Please try again.'
-        );
-      });
+  // user can't post if blocked at any level
+  if (isBlockedInCommunity || isBlockedInChannel) {
+    return new UserError(
+      "You don't have permission to post in this conversation"
+    );
   }
 
-  // if the user is blocked, or they have no membership status, they can't post
-  const hasNoRole =
-    !permissions.isMember && !permissions.isModerator && !permissions.isOwner;
-  if (permissions.isBlocked || hasNoRole) {
-    return new UserError("You're not allowed to post in this community.");
-  }
-
-  // at this point the user is a member of the community and can post
-  const contextPermissions = {
-    communityId: thread.communityId,
-    reputation: permissions.reputation || 0,
-    isModerator: permissions.isModerator || false,
-    isOwner: permissions.isOwner || false,
+  const participantPromise = async () => {
+    if (thread.watercooler) {
+      return await createParticipantWithoutNotificationsInThread(
+        message.threadId,
+        currentUser.id
+      );
+    } else {
+      return await createParticipantInThread(message.threadId, currentUser.id);
+    }
   };
 
-  return await participantPromise().then(async () => {
-    const dbMessage = await storeMessage(messageForDb, currentUser.id);
+  // dummy async function that will run if the user is already a member of the
+  // channel where the message is being sent
+  let membershipPromise = async () => await {};
 
-    return {
-      ...dbMessage,
-      contextPermissions,
-    };
-  });
+  // if the user is a member of the community, but is not a member of the channel,
+  // make sure they join the channel first
+  if (
+    communityPermissions &&
+    communityPermissions.isMember &&
+    (!channelPermissions || !channelPermissions.isMember)
+  ) {
+    membershipPromise = async () =>
+      await createMemberInChannel(thread.channelId, currentUser.id);
+  }
+
+  // if the user is not a member of the community, or has previously joined
+  // and left the community, re-join and sub to default channels
+  if (
+    !communityPermissions ||
+    (communityPermissions && !communityPermissions.isMember)
+  ) {
+    membershipPromise = async () =>
+      await addCommunityMember(
+        {},
+        { input: { communityId: thread.communityId } },
+        { user: currentUser, loaders: loaders }
+      );
+  }
+
+  return membershipPromise()
+    .then(() => participantPromise())
+    .then(() => messagePromise())
+    .then(dbMessage => {
+      const contextPermissions = {
+        communityId: thread.communityId,
+        reputation: communityPermissions ? communityPermissions.reputation : 0,
+        isModerator: communityPermissions
+          ? communityPermissions.isModerator
+          : false,
+        isOwner: communityPermissions ? communityPermissions.isOwner : false,
+      };
+
+      return {
+        ...dbMessage,
+        contextPermissions,
+      };
+    })
+    .catch(err => {
+      console.log('Error sending message', err);
+      return new UserError('Error sending message, please try again');
+    });
 };
