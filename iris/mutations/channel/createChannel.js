@@ -41,9 +41,12 @@ export default async (
     );
   }
 
-  // if the current user is not the owner of the parent community
+  // if the current user is not the owner or moderator of the parent community
   // they can not create channels
-  if (!currentUserCommunityPermissions.isOwner) {
+  if (
+    !currentUserCommunityPermissions.isOwner &&
+    !currentUserCommunityPermissions.isModerator
+  ) {
     return new UserError(
       "You don't have permission to create a channel in this community."
     );
