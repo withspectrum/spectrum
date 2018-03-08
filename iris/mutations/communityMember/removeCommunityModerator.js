@@ -69,12 +69,17 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError('This person is not a moderator in your community.');
   }
 
-  if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage moderators.');
+  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
+    return new UserError(
+      'You must own or moderate this community to manage moderators.'
+    );
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner && userToEvaluatePermission.isModerator) {
+  if (
+    (currentUserPermission.isOwner || currentUserPermission.isModerator) &&
+    userToEvaluatePermission.isModerator
+  ) {
     // remove as moderator in community and all channels, this should be expected UX
     const allChannelsInCommunity = await getChannelsByUserAndCommunity(
       communityId,
