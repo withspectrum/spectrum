@@ -234,6 +234,10 @@ class ThreadFeedPure extends Component {
       );
     }
 
+    const uniqueThreads = filteredThreads.filter(
+      (val, i, self) => self.indexOf(val) === i
+    );
+
     if (dataExists) {
       return (
         <Threads data-e2e-id="thread-feed">
@@ -276,7 +280,7 @@ class ThreadFeedPure extends Component {
             scrollElement={scrollElement}
             threshold={750}
           >
-            {filteredThreads.map(thread => {
+            {uniqueThreads.map(thread => {
               return (
                 <InboxThread
                   key={thread.id}

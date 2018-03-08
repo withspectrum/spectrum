@@ -273,6 +273,10 @@ class ThreadFeed extends React.Component<Props, State> {
       );
     }
 
+    const uniqueThreads = filteredThreads.filter(
+      (val, i, self) => self.indexOf(val) === i
+    );
+
     return (
       <div
         data-e2e-id="inbox-thread-feed"
@@ -309,7 +313,7 @@ class ThreadFeed extends React.Component<Props, State> {
           threshold={750}
         >
           <FlipMove duration={350}>
-            {filteredThreads.map(thread => {
+            {uniqueThreads.map(thread => {
               return (
                 <InboxThread
                   key={thread.id}
