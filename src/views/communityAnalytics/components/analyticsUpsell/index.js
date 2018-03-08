@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import enableCommunityAnalytics from 'shared/graphql/mutations/community/enableCommunityAnalytics';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
+import { getCardImage } from 'src/views/communityBilling/utils';
 import {
   Container,
   Content,
@@ -13,12 +14,13 @@ import {
   Title,
   Description,
   ActionRow,
+  CardInfo,
 } from './style';
 import Link from 'src/components/link';
 import { Button, TextButton } from 'src/components/buttons';
 
 type Props = {
-  community: GetCommunityType,
+  community: GetCommunitySettingsType,
   enableCommunityAnalytics: Function,
   dispatch: Function,
 };
@@ -55,6 +57,23 @@ class AnalyticsUpsell extends React.Component<Props, State> {
     );
   };
 
+  getDefaultCardInfo = () => {
+    const { community } = this.props;
+    const sources = community.billingSettings.sources;
+    if (!sources || sources.length === 0) return null;
+    const defaultSource = sources.find(source => source.isDefault);
+    if (!defaultSource) return null;
+    return (
+      <CardInfo>
+        <img src={getCardImage(defaultSource.card.brand)} width={32} />
+        <span>
+          Paying with {defaultSource.card.brand} ending in{' '}
+          {defaultSource.card.last4}
+        </span>
+      </CardInfo>
+    );
+  };
+
   render() {
     const { isLoading } = this.state;
     const action = this.props.community.hasChargeableSource
@@ -73,12 +92,14 @@ class AnalyticsUpsell extends React.Component<Props, State> {
           </Description>
           <ActionRow>
             <Button loading={isLoading} onClick={action} large>
-              Unlock Analytics · $50/mo
+              Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>
               <TextButton large>Learn more</TextButton>
             </Link>
           </ActionRow>
+          {this.props.community.hasChargeableSource &&
+            this.getDefaultCardInfo()}
         </Content>
       </Container>
     );
