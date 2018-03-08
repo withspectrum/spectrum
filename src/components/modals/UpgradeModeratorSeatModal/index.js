@@ -13,6 +13,7 @@ import { Button } from 'src/components/buttons';
 import StripeCardForm from 'src/components/stripeCardForm';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
+import PoweredByStripe from '../components/poweredByStripe';
 
 type Props = {
   dispatch: Function,
@@ -72,9 +73,7 @@ class RepExplainerModal extends React.Component<Props, State> {
           closeModal={this.closeModal}
         >
           <Section>
-            <Title>
-              {isLoading ? 'Adding moderator...' : 'Add a payment method'}
-            </Title>
+            <Title>{isLoading ? 'Adding moderator...' : 'Add a card'}</Title>
 
             {isLoading && (
               <Section>
@@ -99,6 +98,8 @@ class RepExplainerModal extends React.Component<Props, State> {
               </React.Fragment>
             )}
           </Section>
+
+          <PoweredByStripe />
         </ModalContainer>
       </Modal>
     );

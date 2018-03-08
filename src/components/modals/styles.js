@@ -130,3 +130,20 @@ export const Notice = styled(Description)`
   border: 2px solid ${props => props.theme.special.border};
   color: ${props => props.theme.special.dark};
 `;
+
+export const PoweredByStripeFooter = styled.div`
+  width: 100%;
+  background: ${props => props.theme.bg.wash};
+  border-top: 1px solid ${props => props.theme.bg.border};
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.secondary};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    margin-left: 4px;
+  }
+`;
