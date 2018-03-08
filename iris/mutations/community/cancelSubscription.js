@@ -9,6 +9,7 @@ import {
 import { archiveAllPrivateChannels } from '../../models/channel';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
+import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 
 export default async (
   _: any,
@@ -24,6 +25,17 @@ export default async (
   const { communityId } = input;
 
   const { customer, community } = await StripeUtil.jobPreflight(communityId);
+
+  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
+    communityId,
+    currentUser.id
+  );
+
+  if (!currentUserCommunityPermissions.isOwner) {
+    return new UserError(
+      'You must own this community to manage payment sources'
+    );
+  }
 
   if (!community) {
     debug('Error getting community in preflight');
