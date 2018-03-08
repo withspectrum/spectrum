@@ -12,6 +12,9 @@ import schema from '../../schema';
 export default graphqlExpress(req => ({
   schema,
   formatError: createErrorFormatter(req),
+  // Only add tracing information in production, otherwise Apollo Engine would send
+  // performance data of development machines to the remote server which is not what we want
+  tracing: process.env.NODE_ENV === 'production',
   context: {
     user: req.user,
     loaders: createLoaders(),
@@ -30,5 +33,4 @@ export default graphqlExpress(req => ({
       },
     }),
   ],
-  tracing: true,
 }));
