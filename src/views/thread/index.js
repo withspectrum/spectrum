@@ -248,7 +248,14 @@ class ThreadContainer extends React.Component<Props, State> {
         !communityPermissions.isBlocked;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
-      const isModerator = isChannelOwner || isCommunityOwner;
+      const isChannelModerator = currentUser && channelPermissions.isModerator;
+      const isCommunityModerator =
+        currentUser && communityPermissions.isModerator;
+      const isModerator =
+        isChannelOwner ||
+        isCommunityOwner ||
+        isChannelModerator ||
+        isCommunityModerator;
       const isParticipantOrAuthor =
         currentUser &&
         (isAuthor ||

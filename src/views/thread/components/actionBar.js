@@ -106,7 +106,15 @@ class ActionBar extends React.Component<Props, State> {
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
+    console.log('thread', thread);
+    console.log('isChannelOwner', isChannelOwner);
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
+    console.log('isCommunityOwner', isCommunityOwner);
+    const isCommunityModerator =
+      thread.community.communityPermissions.isModerator;
+    console.log('isCommunityModerator', isCommunityModerator);
+    const isChannelModerator = thread.channel.channelPermissions.isModerator;
+    console.log('isChannelModerator', isChannelModerator);
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     if (isEditing) {
@@ -217,7 +225,11 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }}>
             {currentUser &&
               isChannelMember &&
-              (isChannelOwner || isCommunityOwner || thread.isAuthor) && (
+              (isChannelOwner ||
+                isChannelModerator ||
+                isCommunityOwner ||
+                isCommunityModerator ||
+                thread.isAuthor) && (
                 <DropWrap className={flyoutOpen ? 'open' : ''}>
                   <IconButton
                     glyph="settings"
@@ -256,7 +268,9 @@ class ActionBar extends React.Component<Props, State> {
                       </FlyoutRow>
                     )}
 
-                    {isCommunityOwner &&
+                    {(isCommunityOwner ||
+                      isCommunityModerator ||
+                      isChannelModerator) &&
                       !thread.channel.isPrivate && (
                         <FlyoutRow>
                           <TextButton
@@ -287,7 +301,10 @@ class ActionBar extends React.Component<Props, State> {
                       </TextButton>
                     </FlyoutRow>
 
-                    {(isChannelOwner || isCommunityOwner) && (
+                    {(isChannelOwner ||
+                      isCommunityOwner ||
+                      isChannelModerator ||
+                      isCommunityModerator) && (
                       <FlyoutRow>
                         <TextButton
                           icon="freeze"
@@ -307,7 +324,9 @@ class ActionBar extends React.Component<Props, State> {
 
                     {(thread.isAuthor ||
                       isChannelOwner ||
-                      isCommunityOwner) && (
+                      isCommunityOwner ||
+                      isChannelModerator ||
+                      isCommunityModerator) && (
                       <FlyoutRow>
                         <TextButton
                           icon="delete"
