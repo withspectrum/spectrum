@@ -29,13 +29,15 @@ export default async (
     loaders.stripeCustomers.load(stripeCustomerId),
   ]);
 
-  const { isOwner } = permissions;
+  const { isOwner, isModerator } = permissions;
   const customer =
     stripeCustomer && stripeCustomer.reduction.length > 0
       ? stripeCustomer.reduction[0]
       : null;
   const sources =
-    isOwner && customer ? await StripeUtil.getSources(customer) : [];
+    (isOwner || isModerator) && customer
+      ? await StripeUtil.getSources(customer)
+      : [];
   const invoices =
     isOwner && customer ? await getInvoicesByCustomerId(stripeCustomerId) : [];
   const cleanInvoices = StripeUtil.cleanInvoices(invoices);
