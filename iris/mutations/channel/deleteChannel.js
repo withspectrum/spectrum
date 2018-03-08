@@ -51,7 +51,9 @@ export default async (
 
   if (
     currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner
+    currentUserChannelPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator ||
+    currentUserChannelPermissions.isModerator
   ) {
     // all checks passed
     // delete the channel requested from the client side user
