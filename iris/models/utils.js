@@ -5,6 +5,24 @@ export const NEW_DOCUMENTS = db
   .eq(null)
   .and(db.not(db.row('new_val').eq(null)));
 
+export const eachAsyncNewValue = (cb: Function) => (
+  err?: Error,
+  cursor: Cursor
+) => {
+  if (err) throw err;
+  cursor
+    .eachAsync(data => {
+      // Call the passed callback with the message directly
+      cb(data);
+    })
+    .catch(err => {
+      console.error(err);
+      try {
+        cursor.close();
+      } catch (err) {}
+    });
+};
+
 export const listenToNewDocumentsIn = (table, cb) => {
   return (
     db
@@ -14,20 +32,7 @@ export const listenToNewDocumentsIn = (table, cb) => {
       })
       // Filter to only include newly inserted messages in the changefeed
       .filter(NEW_DOCUMENTS)
-      .run({ cursor: true }, (err, cursor) => {
-        if (err) throw err;
-        cursor.each((err, data) => {
-          if (err) {
-            console.error(err);
-            try {
-              cursor.close();
-            } catch (err) {}
-            return;
-          }
-          // Call the passed callback with the message directly
-          cb(data.new_val);
-        });
-      })
+      .run(eachAsyncNewValue(cb))
   );
 };
 

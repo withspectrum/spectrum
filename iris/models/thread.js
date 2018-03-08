@@ -6,7 +6,7 @@ import {
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange } = require('./utils');
+const { NEW_DOCUMENTS, parseRange, eachAsyncNewValue } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -517,18 +517,5 @@ export const listenToUpdatedThreads = (channelIds: Array<string>) => (
     .filter(thread =>
       db.expr(channelIds).contains(thread('new_val')('channelId'))
     )('new_val')
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        console.error(err);
-        if (err) {
-          try {
-            cursor.close();
-          } catch (err) {}
-          return;
-        }
-        // Call the passed callback with the notification
-        cb(data);
-      });
-    });
+    .run(eachAsyncNewValue(cb));
 };
