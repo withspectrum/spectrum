@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
 import { convertTimestampToDate } from '../../helpers/utils';
@@ -73,6 +73,7 @@ type MessageGroupProps = {
   dispatch: Function,
   selectedId: string,
   changeSelection: Function,
+  lastSeen?: number | Date,
 };
 
 type State = {
@@ -160,8 +161,10 @@ class Messages extends Component<MessageGroupProps, State> {
       threadType,
       threadId,
       isModerator,
+      lastSeen,
     } = this.props;
 
+    let hasInjectedUnseenRobo;
     return (
       <Wrapper data-e2e-id="message-group">
         {messages.map((group, i) => {
@@ -189,57 +192,72 @@ class Messages extends Component<MessageGroupProps, State> {
                   <hr />
                 </Timestamp>
               );
-            } else if (
-              initialMessage.message.type === 'unseen-messages-below' &&
-              messages[i + 1] &&
-              messages[i + 1].length > 0 &&
-              messages[i + 1][0].author.id !== currentUser.id
-            ) {
-              return (
-                <UnseenRobotext key={`unseen-${initialMessage.timestamp}`}>
-                  <hr />
-                  <UnseenTime>New messages</UnseenTime>
-                  <hr />
-                </UnseenRobotext>
-              );
-              // Ignore any unknown robo type messages
             } else {
+              // Ignore unknown robo messages
               return null;
             }
           }
 
+          let unseenRobo = null;
+          // If the last message in the group was sent after the thread was seen mark the entire
+          // group as last seen in the UI
+          // NOTE(@mxstbr): Maybe we should split the group eventually
+          if (
+            !!lastSeen &&
+            new Date(group[group.length - 1].timestamp).getTime() >
+              new Date(lastSeen).getTime() &&
+            !me &&
+            !hasInjectedUnseenRobo
+          ) {
+            hasInjectedUnseenRobo = true;
+            unseenRobo = (
+              <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
+                <hr />
+                <UnseenTime>New messages</UnseenTime>
+                <hr />
+              </UnseenRobotext>
+            );
+          }
+
           return (
-            <Author key={initialMessage.id} me={me}>
-              {!me &&
-                !roboText && (
-                  <AuthorAvatar
+            <Fragment>
+              {unseenRobo}
+              <Author key={initialMessage.id} me={me}>
+                {!me &&
+                  !roboText && (
+                    <AuthorAvatar
+                      user={author.user}
+                      roles={author.roles}
+                      showProfile
+                    />
+                  )}
+                <MessageGroup me={me}>
+                  <AuthorByline
                     user={author.user}
                     roles={author.roles}
-                    showProfile
+                    me={me}
                   />
-                )}
-              <MessageGroup me={me}>
-                <AuthorByline user={author.user} roles={author.roles} me={me} />
-                {group.map(message => {
-                  return (
-                    <Message
-                      key={message.id}
-                      message={message}
-                      reaction={'like'}
-                      me={me}
-                      canModerate={canModerate}
-                      pending={message.id < 0}
-                      currentUser={currentUser}
-                      threadType={threadType}
-                      threadId={threadId}
-                      toggleReaction={toggleReaction}
-                      selectedId={this.state.selectedMessage}
-                      changeSelection={this.toggleSelectedMessage}
-                    />
-                  );
-                })}
-              </MessageGroup>
-            </Author>
+                  {group.map(message => {
+                    return (
+                      <Message
+                        key={message.id}
+                        message={message}
+                        reaction={'like'}
+                        me={me}
+                        canModerate={canModerate}
+                        pending={message.id < 0}
+                        currentUser={currentUser}
+                        threadType={threadType}
+                        threadId={threadId}
+                        toggleReaction={toggleReaction}
+                        selectedId={this.state.selectedMessage}
+                        changeSelection={this.toggleSelectedMessage}
+                      />
+                    );
+                  })}
+                </MessageGroup>
+              </Author>
+            </Fragment>
           );
         })}
       </Wrapper>

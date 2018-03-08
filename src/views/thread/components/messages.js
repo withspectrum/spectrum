@@ -43,10 +43,11 @@ type Props = {
   scrollContainer: any,
   subscribeToNewMessages: Function,
   threadIsLocked: boolean,
+  lastSeen: ?number | ?Date,
   data: {
     thread: {
       id: string,
-      currentUserLastSeen: Date,
+      currentUserLastSeen: Date | number,
       messageConnection: {
         pageInfo: {
           hasNextPage: boolean,
@@ -153,6 +154,7 @@ class MessagesWithData extends React.Component<Props, State> {
       scrollContainer,
       location,
       threadIsLocked,
+      lastSeen,
     } = this.props;
 
     const dataExists =
@@ -180,10 +182,7 @@ class MessagesWithData extends React.Component<Props, State> {
       };
 
       const uniqueMessages = unique(unsortedMessages);
-      const sortedMessages = sortAndGroupMessages(
-        uniqueMessages,
-        data.thread.currentUserLastSeen
-      );
+      const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
         <ChatWrapper>
@@ -231,6 +230,7 @@ class MessagesWithData extends React.Component<Props, State> {
               threadType={'story'}
               forceScrollToBottom={forceScrollToBottom}
               isModerator={isModerator}
+              lastSeen={lastSeen}
             />
           </InfiniteList>
         </ChatWrapper>

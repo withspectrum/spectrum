@@ -17,7 +17,7 @@ module.exports = {
       if (root.slug) {
         return 'Community';
       }
-      if (root.username) {
+      if (root.hasOwnProperty('username')) {
         return 'User';
       }
       // we want to check for the existence of the field, not the value of it
