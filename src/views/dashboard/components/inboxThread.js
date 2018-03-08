@@ -87,6 +87,8 @@ class InboxThread extends React.Component<Props> {
     }
 
     if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
+      if (active) return defaultMessageCountString;
+
       return (
         <MetaTextPill offset={participants.length} active={active} new>
           New messages!
