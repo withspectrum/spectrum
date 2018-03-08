@@ -73,14 +73,7 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@babel/polyfill@^7.0.0-beta.32":
-  version "7.0.0-beta.40"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.0.0-beta.40.tgz#90f447aa04ab54c317dcf0ccb8cb11ad4228fea0"
-  dependencies:
-    core-js "^2.5.3"
-    regenerator-runtime "^0.11.1"
-
-"@babel/runtime@^7.0.0-beta.32", "@babel/runtime@^7.0.0-beta.37":
+"@babel/runtime@^7.0.0-beta.38", "@babel/runtime@^7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.40.tgz#8e3b8f1d2d8639d010e991a7e99c1d9ef578f886"
   dependencies:
@@ -390,6 +383,13 @@ apollo-link-http@^1.3.2:
     apollo-link "^1.2.1"
     apollo-link-http-common "^0.2.3"
 
+apollo-link-persisted-queries@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/apollo-link-persisted-queries/-/apollo-link-persisted-queries-0.2.0.tgz#3f970f1f07caabf050b18d5acc1aa6d058993339"
+  dependencies:
+    apollo-link "^1.2.1"
+    hash.js "^1.1.3"
+
 apollo-link-retry@^2.1.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/apollo-link-retry/-/apollo-link-retry-2.2.2.tgz#82a5bc975228f80c476775426fb5696c336562d5"
@@ -436,13 +436,13 @@ apollo-tracing@^0.1.0:
   dependencies:
     graphql-extensions "^0.0.x"
 
-apollo-upload-client@6.x:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-6.0.3.tgz#9f3249910ede32b7336968b1ae9fa438ed48a247"
+apollo-upload-client@8.x:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-8.0.0.tgz#0067f3b426b3828f971964799bc31f8073bd0607"
   dependencies:
-    "@babel/polyfill" "^7.0.0-beta.32"
-    "@babel/runtime" "^7.0.0-beta.32"
-    extract-files "^2.0.1"
+    "@babel/runtime" "^7.0.0-beta.40"
+    apollo-link-http-common "^0.2.3"
+    extract-files "^3.1.0"
 
 apollo-upload-server@^2.0.4:
   version "2.0.4"
@@ -3825,11 +3825,11 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-extract-files@^2.0.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-2.1.1.tgz#3e76eaeeccb5789fc369bfc22bdf9c0e6c5d8b1b"
+extract-files@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-3.1.0.tgz#b70424c9d4a1a4208efe22069388f428e4ae00f1"
   dependencies:
-    "@babel/runtime" "^7.0.0-beta.37"
+    "@babel/runtime" "^7.0.0-beta.38"
 
 extract-text-webpack-plugin@3.0.2:
   version "3.0.2"
@@ -4643,7 +4643,7 @@ hash-base@^3.0.0:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-hash.js@^1.0.0, hash.js@^1.0.3:
+hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.3.tgz#340dedbe6290187151c1ea1d777a3448935df846"
   dependencies:

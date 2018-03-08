@@ -9,6 +9,7 @@ import {
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
 
@@ -71,14 +72,16 @@ export const createClient = (options?: CreateClientOptions = {}) => {
     },
   });
 
-  // HTTP Link for queries and mutations including file uploads
-  const httpLink = retryLink.concat(
+  // HTTP Upload Link for queries and mutations including file uploads
+  const uploadLink = retryLink.concat(
     createUploadLink({
       uri: API_URI,
       credentials: 'include',
       headers,
     })
   );
+
+  const httpLink = createPersistedQueryLink().concat(uploadLink);
 
   // Switch between the two links based on operation
   const link = split(
