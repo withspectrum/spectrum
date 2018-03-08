@@ -21,25 +21,19 @@ import { track } from './helpers/events';
 import { wsLink } from 'shared/graphql';
 
 const { thread, t } = queryString.parse(history.location.search);
-
 const existingUser = getItemFromStorage('spectrum');
-let initialState;
-if (existingUser) {
-  initialState = {
-    users: {
-      currentUser: existingUser.currentUser,
+const initialState = {
+  users: {
+    currentUser: existingUser ? existingUser.currentUser : null,
+  },
+  dashboardFeed: {
+    activeThread: t ? t : '',
+    mountedWithActiveThread: t ? t : '',
+    search: {
+      isOpen: false,
     },
-    dashboardFeed: {
-      activeThread: t ? t : '',
-      mountedWithActiveThread: t ? t : '',
-      search: {
-        isOpen: false,
-      },
-    },
-  };
-} else {
-  initialState = {};
-}
+  },
+};
 
 if (thread) {
   const hash = window.location.hash.substr(1);
