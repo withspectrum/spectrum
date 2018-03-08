@@ -1,4 +1,5 @@
 //@flow
+console.error(err);
 const { db } = require('./db');
 import {
   sendMessageNotificationQueue,
@@ -163,8 +164,13 @@ export const listenToNewMessagesInThread = (threadId: string) => (
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        // TODO(@mxstbr): Maybe we need to cursor.close here?
-        if (err) throw err;
+        if (err) {
+          console.error(err);
+          try {
+            cursor.close();
+          } catch (err) {}
+          return;
+        }
         // Call the passed callback with the message directly
         cb(data.new_val);
       });
