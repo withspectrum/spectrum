@@ -55,6 +55,8 @@ type Props = {
   onFocus: Function,
   websocketConnection: string,
   networkOnline: boolean,
+  threadData?: Object,
+  refetchThread?: Function,
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -164,7 +166,14 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
       currentUser,
+      threadData,
+      refetchThread,
     } = this.props;
+
+    const isSendingMessageAsNonMember =
+      threadType === 'story' &&
+      threadData &&
+      !threadData.channel.channelPermissions.isMember;
 
     if (!networkOnline) {
       return dispatch(
@@ -248,6 +257,15 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
+          // if the user sends a message as a non member of the community or
+          // channel, we need to refetch the thread to update any join buttons
+          // and update all clientside caching of community + channel permissions
+          if (isSendingMessageAsNonMember) {
+            if (refetchThread) {
+              refetchThread();
+            }
+          }
+
           localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
@@ -435,7 +453,6 @@ class ChatInput extends React.Component<Props, State> {
   render() {
     const {
       state,
-      onChange,
       currentUser,
       networkOnline,
       websocketConnection,
