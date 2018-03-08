@@ -27,10 +27,20 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to notifications`);
-        return asyncify(listenToNewNotifications(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return asyncify(listenToNewNotifications(user.id), {
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
+          onClose: cursor => {
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
+          },
         });
       },
     },
@@ -48,10 +58,20 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to DM notifications`);
-        return asyncify(listenToNewDirectMessageNotifications(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return asyncify(listenToNewDirectMessageNotifications(user.id), {
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
+          onClose: cursor => {
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
+          },
         });
       },
     },

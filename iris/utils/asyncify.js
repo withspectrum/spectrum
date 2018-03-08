@@ -3,25 +3,36 @@
 // Based on https://github.com/apollographql/graphql-subscriptions/blob/master/src/event-emitter-to-async-iterator.ts
 const debug = require('debug')('iris:utils:asyncify');
 import { $$asyncIterator } from 'iterall';
-import Raven from 'shared/raven';
 
-import type { Cursor } from 'rethinkdbdash';
+type Listener = <K>((arg: any) => void) => Promise<K>;
 
-type Listener = ((arg: any) => void) => Promise<Cursor>;
+type onError = (err: Error) => void;
 
-const asyncify = (listener: Listener, onError?: Error => void) => {
+const defaultOnError = (err: Error) => {
+  throw new Error(err);
+};
+
+type Options = {|
+  onError?: onError,
+  onClose?: Function,
+|};
+
+const asyncify = (
+  listener: Listener,
+  { onError = defaultOnError, onClose }: Options = {}
+) => {
   try {
     let pullQueue = [];
     let pushQueue = [];
     let listening = true;
-    let cursor;
+    let listenerReturnValue;
     // Start listener
     listener(value => pushValue(value))
-      .then(c => {
-        cursor = c;
+      .then(a => {
+        listenerReturnValue = a;
       })
       .catch(err => {
-        onError && onError(err);
+        onError(err);
       });
 
     function pushValue(value) {
@@ -48,7 +59,7 @@ const asyncify = (listener: Listener, onError?: Error => void) => {
         pullQueue.forEach(resolve => resolve({ value: undefined, done: true }));
         pullQueue = [];
         pushQueue = [];
-        if (cursor) cursor.close();
+        onClose && onClose(listenerReturnValue);
       }
     }
 
@@ -62,7 +73,7 @@ const asyncify = (listener: Listener, onError?: Error => void) => {
       },
       throw(error) {
         emptyQueue();
-        onError && onError(error);
+        onError(error);
         return Promise.reject(error);
       },
       [$$asyncIterator]() {
@@ -71,7 +82,7 @@ const asyncify = (listener: Listener, onError?: Error => void) => {
     }: any);
   } catch (err) {
     debug(err);
-    onError && onError(err);
+    onError(err);
   }
 };
 

@@ -324,7 +324,8 @@ export const publishThread = (
 
 export const setThreadLock = (
   threadId: string,
-  value: boolean
+  value: boolean,
+  userId: string
 ): Promise<DBThread> => {
   return (
     db
@@ -335,6 +336,8 @@ export const setThreadLock = (
       .update(
         {
           isLocked: value,
+          lockedBy: value === true ? userId : db.literal(),
+          lockedAt: value === true ? new Date() : db.literal(),
         },
         { returnChanges: true }
       )

@@ -51,10 +51,20 @@ module.exports = {
             ids.length
           } channels`
         );
-        return asyncify(listenToUpdatedThreads(ids), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return asyncify(listenToUpdatedThreads(ids), {
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
+          onClose: cursor => {
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
+          },
         });
       },
     },

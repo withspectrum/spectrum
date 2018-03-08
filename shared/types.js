@@ -198,6 +198,8 @@ export type DBThread = {
   creatorId: string,
   isPublished: boolean,
   isLocked: boolean,
+  lockedBy?: string,
+  lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
   attachments?: Array<DBThreadAttachment>,
