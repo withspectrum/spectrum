@@ -32,10 +32,20 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to updated DM threads`);
-        return asyncify(listenToUpdatedDirectMessageThreads(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return asyncify(listenToUpdatedDirectMessageThreads(user.id), {
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
+          onClose: cursor => {
+            if (cursor)
+              cursor.close(err => {
+                if (!err) return;
+                console.error(err);
+                Raven.captureException(err);
+              });
+          },
         });
       },
     },
