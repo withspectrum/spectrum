@@ -1,5 +1,4 @@
 //@flow
-console.error(err);
 const { db } = require('./db');
 import {
   sendMessageNotificationQueue,
