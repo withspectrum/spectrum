@@ -8,12 +8,6 @@ if (process.env.NODE_ENV === 'development') {
   middlewares.use(logging);
 }
 
-// Start apollo engine
-if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
-  const engine = require('./engine').default;
-  middlewares.use(engine.expressMiddleware());
-}
-
 if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   // Raven (Sentry client) needs to come before everything else
   const raven = require('shared/middlewares/raven').default;

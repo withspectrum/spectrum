@@ -9,10 +9,18 @@ debug('logging with debug enabled!');
 import { createServer } from 'http';
 import express from 'express';
 import Raven from 'shared/raven';
+import { ApolloEngine } from 'apollo-engine';
 import { init as initPassport } from './authentication.js';
-import engine from './routes/middlewares/engine';
-const PORT = 3001;
 import type { DBUser } from 'shared/types';
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+
+const engine = new ApolloEngine({
+  logging: {
+    level: 'WARN',
+  },
+  apiKey: process.env.APOLLO_ENGINE_API_KEY,
+});
 
 // Initialize authentication
 initPassport();
@@ -49,15 +57,13 @@ const server = createServer(app);
 import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
-// Start webserver
-server.listen(PORT);
+// Start API wrapped in Apollo Engine
+engine.listen({
+  port: PORT,
+  httpServer: server,
+  graphqlPaths: ['/api'],
+});
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
-
-if (process.env.NODE_ENV === 'production') {
-  // Start Apollo Engine
-  console.log('Apollo Engine starting...');
-  engine.start();
-}
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);
