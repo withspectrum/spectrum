@@ -30,6 +30,7 @@ type Props = {
     slug: string,
     communityPermissions: {
       isOwner: boolean,
+      isModerator: boolean,
     },
   },
   data: {
@@ -51,10 +52,10 @@ class SidebarChannels extends React.Component<Props> {
       activeChannel,
     } = this.props;
 
-    const { communityPermissions: { isOwner } } = thisCommunity;
+    const { communityPermissions: { isOwner, isModerator } } = thisCommunity;
 
     if (community) {
-      const { isOwner } = community.communityPermissions;
+      const { isOwner, isModerator } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
         .filter(channel => {
@@ -87,24 +88,26 @@ class SidebarChannels extends React.Component<Props> {
             </ChannelListItem>
           </Link>
 
-          {isOwner && (
-            <Link to={`/${community.slug}/settings`}>
-              <ChannelListItem>
-                <Icon glyph={'settings'} size={24} />
-                <CommunityListName>Settings</CommunityListName>
-              </ChannelListItem>
-            </Link>
-          )}
-
-          {isOwner &&
-            community.hasFeatures.analytics && (
-              <Link to={`/${community.slug}/settings/analytics`}>
+          {isOwner ||
+            (isModerator && (
+              <Link to={`/${community.slug}/settings`}>
                 <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
+                  <Icon glyph={'settings'} size={24} />
+                  <CommunityListName>Settings</CommunityListName>
                 </ChannelListItem>
               </Link>
-            )}
+            ))}
+
+          {isOwner ||
+            (isModerator &&
+              community.hasFeatures.analytics && (
+                <Link to={`/${community.slug}/settings/analytics`}>
+                  <ChannelListItem>
+                    <Icon glyph={'link'} size={24} />
+                    <CommunityListName>Analytics</CommunityListName>
+                  </ChannelListItem>
+                </Link>
+              ))}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
@@ -146,24 +149,26 @@ class SidebarChannels extends React.Component<Props> {
             </ChannelListItem>
           </Link>
 
-          {isOwner && (
-            <Link to={`/${thisCommunity.slug}/settings`}>
-              <ChannelListItem>
-                <Icon glyph={'settings'} size={24} />
-                <CommunityListName>Settings</CommunityListName>
-              </ChannelListItem>
-            </Link>
-          )}
-
-          {isOwner &&
-            thisCommunity.hasFeatures.analytics && (
-              <Link to={`/${thisCommunity.slug}/settings/analytics`}>
+          {isOwner ||
+            (isModerator && (
+              <Link to={`/${thisCommunity.slug}/settings`}>
                 <ChannelListItem>
-                  <Icon glyph={'link'} size={24} />
-                  <CommunityListName>Analytics</CommunityListName>
+                  <Icon glyph={'settings'} size={24} />
+                  <CommunityListName>Settings</CommunityListName>
                 </ChannelListItem>
               </Link>
-            )}
+            ))}
+
+          {isOwner ||
+            (isModerator &&
+              thisCommunity.hasFeatures.analytics && (
+                <Link to={`/${thisCommunity.slug}/settings/analytics`}>
+                  <ChannelListItem>
+                    <Icon glyph={'link'} size={24} />
+                    <CommunityListName>Analytics</CommunityListName>
+                  </ChannelListItem>
+                </Link>
+              ))}
           <LoadingContainer>
             <LoadingBar width={56} />
             <LoadingBar width={128} />
