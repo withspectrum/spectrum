@@ -48,13 +48,12 @@ export default async (
       }".`
     );
 
-  const thread = await loaders.thread.load(message.threadId);
-
-  if (thread.isLocked) throw new UserError("Can't reply in a locked thread.");
-
   let contextPermissions;
+  let thread;
   // Make sure that we have permission to send a message in the community
   if (message.threadType === 'story') {
+    thread = await loaders.thread.load(message.threadId);
+    if (thread.isLocked) throw new UserError("Can't reply in a locked thread.");
     const permissions = await loaders.userPermissionsInCommunity.load([
       currentUser.id,
       thread.communityId,
