@@ -34,12 +34,12 @@ module.exports = {
             Raven.captureException(err);
           },
           onClose: cursor => {
-            if (cursor)
-              cursor.close(err => {
-                if (!err) return;
-                console.error(err);
-                Raven.captureException(err);
-              });
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
           },
         });
       },
@@ -65,12 +65,12 @@ module.exports = {
             Raven.captureException(err);
           },
           onClose: cursor => {
-            if (cursor)
-              cursor.close(err => {
-                if (!err) return;
-                console.error(err);
-                Raven.captureException(err);
-              });
+            if (cursor) {
+              /* ignore errors that happen when closing the cursor */
+              try {
+                cursor.close(() => {});
+              } catch (err) {}
+            }
           },
         });
       },
