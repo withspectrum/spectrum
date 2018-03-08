@@ -6,7 +6,7 @@ import {
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
 } from 'shared/bull/queues';
-import { NEW_DOCUMENTS } from './utils';
+import { NEW_DOCUMENTS, eachAsyncNewValue } from './utils';
 import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';
@@ -159,16 +159,8 @@ export const listenToNewMessagesInThread = (threadId: string) => (
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS)
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        // TODO(@mxstbr): Maybe we need to cursor.close here?
-        if (err) throw err;
-        // Call the passed callback with the message directly
-        cb(data.new_val);
-      });
-    });
+    .filter(NEW_DOCUMENTS)('new_val')
+    .run(eachAsyncNewValue(cb));
 };
 
 export const getMessageCount = (threadId: string): Promise<number> => {
