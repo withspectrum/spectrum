@@ -174,7 +174,7 @@ class ComposerWithData extends Component<Props, State> {
 
     // get the channels for the active community
     const communityChannels = channels
-      .filter(channel => channel.community.id === community.id)
+      .filter(channel => channel && channel.community.id === community.id)
       .filter(channel => channel && !channel.isArchived);
 
     const activeChannel = getDefaultActiveChannel(
