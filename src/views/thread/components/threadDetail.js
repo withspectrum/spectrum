@@ -368,8 +368,11 @@ class ThreadDetailPure extends React.Component<Props, State> {
       isSavingEdit,
     } = this.state;
 
-    const editedTimestamp =
-      thread.modifiedAt && new Date(thread.modifiedAt).getTime();
+    const editedTimestamp = thread.modifiedAt
+      ? new Date(thread.modifiedAt).getTime()
+      : null;
+
+    const createdAtTimestamp = new Date(thread.createdAt).getTime();
 
     return (
       <ThreadWrapper>
@@ -393,7 +396,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           )}
 
           <Link to={`/thread/${thread.id}`}>
-            <Timestamp>{convertTimestampToDate(thread.createdAt)}</Timestamp>
+            <Timestamp>{convertTimestampToDate(createdAtTimestamp)}</Timestamp>
             {thread.modifiedAt && (
               <Edited>
                 (Edited{' '}

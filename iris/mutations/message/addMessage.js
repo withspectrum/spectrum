@@ -2,7 +2,6 @@
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/s3';
-import { getThread } from '../../models/thread';
 import { storeMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
@@ -81,6 +80,10 @@ export default async (
   // at this point we are only dealing with thread messages
   const thread = await loaders.thread.load(message.threadId);
 
+  if (thread.isDeleted)
+    return new UserError("Can't reply in a deleted thread.");
+  if (thread.isLocked) return new UserError("Can't reply in a locked thread.");
+
   const permissions = await loaders.userPermissionsInCommunity.load([
     currentUser.id,
     thread.communityId,
@@ -97,6 +100,8 @@ export default async (
   // if the user has never joined, or has previously joined but is not currently
   // a member (and is not blocked), join them to the community
   if (!permissions || (!permissions.isMember && !permissions.isBlocked)) {
+    // NOTE @brian: this is a bit hacky to re-use another graphQL resolver like this
+    // but I'm not sure the best abstraction here
     return await addCommunityMember(
       {},
       { input: { communityId: thread.communityId } },
