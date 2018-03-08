@@ -358,33 +358,13 @@ class ThreadContainer extends React.Component<Props, State> {
                     isLocked && (
                       <NullState copy="This conversation has been frozen by a moderator." />
                     )}
-
-                  {!isEditing &&
-                    isLoggedIn &&
-                    !canSendMessages && (
-                      <JoinChannel
-                        community={thread.community}
-                        channel={thread.channel}
-                      />
-                    )}
-
-                  {!isEditing &&
-                    !isLoggedIn && (
-                      <UpsellSignIn
-                        title={`Join the ${thread.community.name} community`}
-                        glyph={'message-new'}
-                        view={{ data: thread.community, type: 'community' }}
-                        noShadow
-                      />
-                    )}
                 </Detail>
               </Content>
 
               {!isEditing &&
-                canSendMessages &&
                 !isLocked && (
                   <Input>
-                    <ChatInputWrapper type="only">
+                    <ChatInputWrapper>
                       <ChatInput
                         threadType="story"
                         threadData={thread}
@@ -468,35 +448,13 @@ class ThreadContainer extends React.Component<Props, State> {
                   isLocked && (
                     <NullState copy="This conversation has been frozen by a moderator." />
                   )}
-
-                {!isEditing &&
-                  isLoggedIn &&
-                  !isLocked &&
-                  !canSendMessages && (
-                    <JoinChannel
-                      community={thread.community}
-                      channel={thread.channel}
-                    />
-                  )}
-
-                {!isEditing &&
-                  !isLoggedIn &&
-                  !isLocked && (
-                    <UpsellSignIn
-                      title={`Join the ${thread.community.name} community`}
-                      glyph={'message-new'}
-                      view={{ data: thread.community, type: 'community' }}
-                      noShadow
-                    />
-                  )}
               </Detail>
             </Content>
 
             {!isEditing &&
-              canSendMessages &&
               !isLocked && (
                 <Input>
-                  <ChatInputWrapper type="only">
+                  <ChatInputWrapper>
                     <ChatInput
                       threadType="story"
                       threadData={thread}
