@@ -81,7 +81,13 @@ export const listenToNewNotifications = (userId: string) => (
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        if (err) throw err;
+        if (err) {
+          console.error(err);
+          try {
+            cursor.close();
+          } catch (err) {}
+          return;
+        }
         // For some reason this can be called without data, in which case
         // we don't want to call the callback with it obviously
         if (!data) return;
@@ -110,7 +116,13 @@ export const listenToNewDirectMessageNotifications = (userId: string) => (
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        if (err) throw err;
+        if (err) {
+          console.error(err);
+          try {
+            cursor.close();
+          } catch (err) {}
+          return;
+        }
         // Call the passed callback with the notification
         cb(data);
       });

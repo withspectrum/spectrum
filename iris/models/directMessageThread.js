@@ -98,7 +98,13 @@ const listenToUpdatedDirectMessageThreads = (userId: string) => (
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        if (err) throw err;
+        if (err) {
+          console.error(err);
+          try {
+            cursor.close();
+          } catch (err) {}
+          return;
+        }
         // Call the passed callback with the notification
         cb(data);
       });
