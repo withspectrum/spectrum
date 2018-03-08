@@ -10,6 +10,7 @@ import {
   createParticipantInThread,
   createParticipantWithoutNotificationsInThread,
 } from '../../models/usersThreads';
+import addCommunityMember from '../communityMember/addCommunityMember';
 
 type AddMessageInput = {
   message: {
@@ -34,67 +35,26 @@ export default async (
   { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
-  // user must be authed to send a message
-  if (!currentUser)
-    throw new UserError('You must be signed in to send a message.');
-  if (message.messageType === 'media' && !message.file)
-    throw new UserError(
+
+  if (!currentUser) {
+    return new UserError('You must be signed in to send a message.');
+  }
+
+  if (message.messageType === 'media' && !message.file) {
+    return new UserError(
       "Can't send media message without an image, please try again."
     );
-  if (message.messageType !== 'media' && message.file)
-    throw new UserError(
+  }
+
+  if (message.messageType !== 'media' && message.file) {
+    return new UserError(
       `To send an image, please use messageType: "media" instead of "${
         message.messageType
       }".`
     );
-
-  const thread = await loaders.thread.load(message.threadId);
-
-  let contextPermissions;
-  // Make sure that we have permission to send a message in the community
-  if (message.threadType === 'story') {
-    const permissions = await loaders.userPermissionsInCommunity.load([
-      currentUser.id,
-      thread.communityId,
-    ]);
-
-    if (
-      permissions.isBlocked ||
-      (!permissions.isMember &&
-        !permissions.isModerator &&
-        !permissions.isOwner)
-    ) {
-      throw new UserError("You're not allowed to post in this community.");
-    }
-
-    contextPermissions = {
-      communityId: thread.communityId,
-      reputation: permissions ? permissions.reputation : 0,
-      isModerator: permissions ? permissions.isModerator : false,
-      isOwner: permissions ? permissions.isOwner : false,
-    };
   }
 
-  // if the message was a dm thread, set the last seen and last active times
-  if (message.threadType === 'directMessageThread') {
-    setDirectMessageThreadLastActive(message.threadId);
-    setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
-  }
-
-  // if the message was sent in a story thread, create a new participant
-  // relationship to the thread - this will enable us to query against
-  // thread.participants as well as have per-thread notifications for a user
-  if (message.threadType === 'story' && (thread && !thread.watercooler)) {
-    createParticipantInThread(message.threadId, currentUser.id);
-  }
-
-  if (thread && thread.watercooler) {
-    createParticipantWithoutNotificationsInThread(
-      message.threadId,
-      currentUser.id
-    );
-  }
-
+  // construct the shape of the object to be stored in the db
   let messageForDb = Object.assign({}, message);
   if (message.file && message.messageType === 'media') {
     const fileMetaData = {
@@ -111,12 +71,82 @@ export default async (
     });
   }
 
-  const dbMessage = await storeMessage(messageForDb, currentUser.id);
+  // handle DM thread messages up front
+  if (message.threadType === 'directMessageThread') {
+    setDirectMessageThreadLastActive(message.threadId);
+    setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
+    return await storeMessage(messageForDb, currentUser.id);
+  }
 
-  if (dbMessage.threadType === 'directMessageThread') return dbMessage;
+  // at this point we are only dealing with thread messages
+  const thread = await loaders.thread.load(message.threadId);
 
-  return {
-    ...dbMessage,
-    contextPermissions,
+  const permissions = await loaders.userPermissionsInCommunity.load([
+    currentUser.id,
+    thread.communityId,
+  ]);
+
+  const participantPromise = () =>
+    thread.watercooler
+      ? createParticipantWithoutNotificationsInThread(
+          message.threadId,
+          currentUser.id
+        )
+      : createParticipantInThread(message.threadId, currentUser.id);
+
+  // if the user has never joined, or has previously joined but is not currently
+  // a member (and is not blocked), join them to the community
+  if (!permissions || (!permissions.isMember && !permissions.isBlocked)) {
+    return await addCommunityMember(
+      {},
+      { input: { communityId: thread.communityId } },
+      { user: currentUser, loaders: loaders }
+    )
+      .then(async () => await participantPromise())
+      .then(async () => {
+        const contextPermissions = {
+          communityId: thread.communityId,
+          reputation: 0,
+          isModerator: false,
+          isOwner: false,
+        };
+
+        const dbMessage = await storeMessage(messageForDb, currentUser.id);
+
+        return {
+          ...dbMessage,
+          contextPermissions,
+        };
+      })
+      .catch(err => {
+        console.log('Error sending message to newly joined community', err);
+        return new UserError(
+          'Could not join this community. Please try again.'
+        );
+      });
+  }
+
+  // if the user is blocked, or they have no membership status, they can't post
+  const hasNoRole =
+    !permissions.isMember && !permissions.isModerator && !permissions.isOwner;
+  if (permissions.isBlocked || hasNoRole) {
+    return new UserError("You're not allowed to post in this community.");
+  }
+
+  // at this point the user is a member of the community and can post
+  const contextPermissions = {
+    communityId: thread.communityId,
+    reputation: permissions.reputation || 0,
+    isModerator: permissions.isModerator || false,
+    isOwner: permissions.isOwner || false,
   };
+
+  return await participantPromise().then(async () => {
+    const dbMessage = await storeMessage(messageForDb, currentUser.id);
+
+    return {
+      ...dbMessage,
+      contextPermissions,
+    };
+  });
 };

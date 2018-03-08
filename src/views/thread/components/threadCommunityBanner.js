@@ -39,7 +39,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
     this.state = { isLoading: false };
   }
 
-  joinCommunity = () => {
+  joinChannel = () => {
     const {
       thread: { channel },
       dispatch,
@@ -137,10 +137,10 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
         ) : currentUser ? (
           <Button
             gradientTheme={'success'}
-            onClick={this.joinCommunity}
+            onClick={this.joinChannel}
             loading={isLoading}
           >
-            Join Community
+            Join channel
           </Button>
         ) : (
           <Link to={`/login?r=${window.location}`}>
