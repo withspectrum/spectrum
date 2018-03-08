@@ -47,7 +47,11 @@ class CommunitySettings extends React.Component<Props> {
     const communitySlug = community && community.slug;
 
     if (community && community.id) {
-      if (!community.communityPermissions.isOwner) {
+      const canViewCommunitySettings =
+        community.communityPermissions.isOwner ||
+        community.communityPermissions.isModerator;
+
+      if (!canViewCommunitySettings) {
         return (
           <AppViewWrapper>
             <Titlebar
