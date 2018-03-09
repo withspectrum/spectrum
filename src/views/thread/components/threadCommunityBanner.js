@@ -10,6 +10,7 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Avatar from '../../../components/avatar';
 import { track } from '../../../helpers/events';
+import { CLIENT_URL } from 'src/api/constants';
 import {
   CommunityHeader,
   CommunityHeaderName,
@@ -98,11 +99,15 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
 
   render() {
     const {
-      thread: { channel, community, watercooler },
+      thread: { channel, community, watercooler, id },
       currentUser,
       hide,
     } = this.props;
     const { isLoading } = this.state;
+
+    const loginUrl = community.brandedLogin.isEnabled
+      ? `/${community.slug}/login?r=${CLIENT_URL}/thread/${id}`
+      : `/login?r=${CLIENT_URL}/${community.slug}/thread/${id}`;
 
     return (
       <CommunityHeader hide={hide}>
@@ -143,7 +148,7 @@ class ThreadCommunityBanner extends React.Component<Props, State> {
             Join Community
           </Button>
         ) : (
-          <Link to={`/login?r=${window.location}`}>
+          <Link to={loginUrl}>
             <Button gradientTheme={'success'}>Join Community</Button>
           </Link>
         )}
