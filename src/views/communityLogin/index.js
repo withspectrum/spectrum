@@ -36,9 +36,10 @@ export class Login extends React.Component<Props> {
   };
   render() {
     const { data: { community }, isLoading } = this.props;
-    console.log(this.props);
 
     if (community && community.id) {
+      const { brandedLogin } = community;
+
       return (
         <FullscreenView hasBackground noCloseButton={true} close={null}>
           <FullscreenContent
@@ -54,9 +55,10 @@ export class Login extends React.Component<Props> {
             </LoginImageContainer>
             <Title>Log in to the {community.name} community</Title>
             <Subtitle>
-              This is a private, secure space for your staff to share knowledge
-              and receive guidance from Red Giant. This forum cannot be viewed
-              by the general public.
+              {brandedLogin.customMessage &&
+              brandedLogin.customMessage.length > 0
+                ? brandedLogin.customMessage
+                : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'}
             </Subtitle>
 
             <LoginButtonSet signinType={'signin'} />

@@ -17,55 +17,35 @@ type Props = {
   dispatch: Function,
 };
 
-type State = {
-  isLoading: boolean,
-};
-
-class BrandedLoginToggle extends React.Component<Props, State> {
-  state = { isLoading: false };
-
+class BrandedLoginToggle extends React.Component<Props> {
   init = () => {
-    this.setState({
-      isLoading: true,
-    });
-
     return this.props.settings.isEnabled ? this.disable() : this.enable();
   };
 
   disable = () => {
     return this.props
       .disableBrandedLogin({ id: this.props.id })
-      .then(res => {
-        this.props.dispatch(
+      .then(() => {
+        return this.props.dispatch(
           addToastWithTimeout('neutral', 'Branded login disabled')
         );
-        return this.terminate();
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
-        return this.terminate();
+        return this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
   enable = () => {
     return this.props
       .enableBrandedLogin({ id: this.props.id })
-      .then(res => {
-        this.props.dispatch(
+      .then(() => {
+        return this.props.dispatch(
           addToastWithTimeout('success', 'Branded login enabled')
         );
-        return this.terminate();
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
-        return this.terminate();
+        return this.props.dispatch(addToastWithTimeout('error', err));
       });
-  };
-
-  terminate = () => {
-    return this.setState({
-      isLoading: false,
-    });
   };
 
   render() {
