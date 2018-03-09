@@ -8,7 +8,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
-import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
+// import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
