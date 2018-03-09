@@ -59,3 +59,19 @@ export const disableCommunityBrandedLogin = (id: string) => {
     .run()
     .then(async () => await getCommunityById(id));
 };
+
+export const updateCommunityBrandedLoginCustomMessage = (
+  id: string,
+  value: ?string
+) => {
+  return db
+    .table('communitySettings')
+    .getAll(id, { index: 'communityId' })
+    .update({
+      brandedLogin: {
+        customMessage: value,
+      },
+    })
+    .run()
+    .then(async () => await getCommunityById(id));
+};

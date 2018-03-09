@@ -160,6 +160,11 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	input SaveBrandedLoginCustomMessageInput {
+		id: String!
+		value: String
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -172,6 +177,7 @@ const Community = /* GraphQL */ `
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
 		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
 		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
+		saveBrandedLoginCustomMessage(input: SaveBrandedLoginCustomMessageInput!): Community
 	}
 `;
 

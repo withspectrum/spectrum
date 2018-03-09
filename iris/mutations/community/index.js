@@ -8,6 +8,7 @@ import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
 import enableBrandedLogin from './enableBrandedLogin';
 import disableBrandedLogin from './disableBrandedLogin';
+import saveBrandedLoginCustomMessage from './saveBrandedLoginCustomMessage';
 
 module.exports = {
   Mutation: {
@@ -20,5 +21,6 @@ module.exports = {
     pinThread,
     enableBrandedLogin,
     disableBrandedLogin,
+    saveBrandedLoginCustomMessage,
   },
 };
