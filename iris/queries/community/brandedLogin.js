@@ -1,12 +1,21 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
-import type { GraphQLContext } from '../../';
+import { getCommunitySettings } from '../../models/communitySettings';
 
-export default ({ id }: DBCommunity, _: any, { loaders }: GraphQLContext) => {
-  return loaders.communitySettings.load(id).then(res => {
-    if (!res || res.length === 0) return null;
+export default async ({ id }: DBCommunity) => {
+  const defaultSettings = {
+    isEnabled: false,
+    customMessage: null,
+  };
+
+  return await getCommunitySettings(id).then(res => {
+    if (!res || res.length === 0) {
+      return defaultSettings;
+    }
+
     const settings = res[0];
-    if (!settings.brandedLogin) return null;
+    if (!settings.brandedLogin) return defaultSettings;
+
     return settings.brandedLogin;
   });
 };

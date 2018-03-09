@@ -6,6 +6,8 @@ import toggleCommunityMembership from './toggleCommunityMembership';
 import sendSlackInvites from './sendSlackInvites';
 import sendEmailInvites from './sendEmailInvites';
 import pinThread from './pinThread';
+import enableBrandedLogin from './enableBrandedLogin';
+import disableBrandedLogin from './disableBrandedLogin';
 
 module.exports = {
   Mutation: {
@@ -16,5 +18,7 @@ module.exports = {
     sendSlackInvites,
     sendEmailInvites,
     pinThread,
+    enableBrandedLogin,
+    disableBrandedLogin,
   },
 };

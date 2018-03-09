@@ -6,16 +6,44 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 
 export type GetCommunityLoginType = {
   ...$Exact<CommunityInfoType>,
-  brandedLogin: ?{
+  brandedLogin: {
+    isEnabled: boolean,
     customMessage: ?string,
   },
 };
 
+export const getCommunityLoginByIdQuery = gql`
+  query getCommunityLoginById($id: ID) {
+    community(id: $id) {
+      ...communityInfo
+      brandedLogin {
+        isEnabled
+        customMessage
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const getCommunityLoginByIdOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id: id,
+    },
+  }),
+};
+
+export const getCommunityLoginById = graphql(
+  getCommunityLoginByIdQuery,
+  getCommunityLoginByIdOptions
+);
+
 export const getCommunityLoginByMatchQuery = gql`
-  query getCommunity($slug: String) {
+  query getCommunityLoginByMatch($slug: String) {
     community(slug: $slug) {
       ...communityInfo
       brandedLogin {
+        isEnabled
         customMessage
       }
     }

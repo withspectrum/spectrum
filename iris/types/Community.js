@@ -56,6 +56,7 @@ const Community = /* GraphQL */ `
 	}
 
 	type BrandedLogin {
+		isEnabled: Boolean
 		customMessage: String
 	}
 
@@ -151,6 +152,14 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	input EnableBrandedLoginInput {
+		id: String!
+	}
+
+	input DisableBrandedLoginInput {
+		id: String!
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -161,6 +170,8 @@ const Community = /* GraphQL */ `
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
+		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
 	}
 `;
 
