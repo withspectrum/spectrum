@@ -3,9 +3,9 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import {
-  getCommunityLoginById,
-  type GetCommunityLoginType,
-} from 'shared/graphql/queries/community/getCommunityLogin';
+  getCommunityById,
+  type GetCommunityType,
+} from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
@@ -25,7 +25,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 
 type Props = {
   data: {
-    community: GetCommunityLoginType,
+    community: GetCommunityType,
   },
   ...$Exact<ViewNetworkHandlerType>,
   saveBrandedLoginCustomMessage: Function,
@@ -139,7 +139,7 @@ class BrandedLogin extends React.Component<Props, State> {
 }
 
 export default compose(
-  getCommunityLoginById,
+  getCommunityById,
   viewNetworkHandler,
   saveBrandedLoginCustomMessage,
   connect()
