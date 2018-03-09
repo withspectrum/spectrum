@@ -16,14 +16,14 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import {
-  getCommunityByMatch,
-  type GetCommunityType,
-} from 'shared/graphql/queries/community/getCommunity';
+  getCommunityLoginByMatch,
+  type GetCommunityLoginType,
+} from 'shared/graphql/queries/community/getCommunityLogin';
 import ViewError from 'src/components/viewError';
 
 type Props = {
   data: {
-    community: GetCommunityType,
+    community: GetCommunityLoginType,
   },
   ...$Exact<ViewNetworkHandlerType>,
   history: Object,
@@ -98,4 +98,4 @@ export class Login extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityByMatch, viewNetworkHandler)(Login);
+export default compose(getCommunityLoginByMatch, viewNetworkHandler)(Login);
