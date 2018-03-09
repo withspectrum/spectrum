@@ -55,6 +55,10 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+	type BrandedLogin {
+		customMessage: String
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -81,6 +85,7 @@ const Community = /* GraphQL */ `
     topMembers: [User] @cost(complexity: 10)
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
+		brandedLogin: BrandedLogin
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")

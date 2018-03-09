@@ -33,6 +33,14 @@ export type DBCommunity = {
   watercoolerId?: string,
 };
 
+export type DBCommunitySettings = {
+  id: string,
+  communityId: string,
+  brandedLogin: ?{
+    customMessage: ?string,
+  },
+};
+
 export type DBCuratedContent = {
   type: string,
   id: string,
