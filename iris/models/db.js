@@ -7,7 +7,7 @@ const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 const DEFAULT_CONFIG = {
   // Connect to the test database when, well, testing
   db: !process.env.TEST_DB ? 'spectrum' : 'testing',
-  max: 100, // Maximum number of connections, default is 1000
+  max: 500, // Maximum number of connections, default is 1000
   buffer: 5, // Minimum number of connections open at any given moment, default is 50
   timeoutGb: 60 * 1000, // How long should an unused connection stick around, default is an hour, this is a minute
   pingInterval: 300, // Ping the connection every 5 minutes (300 seconds) to keep it alive and prevent rethinkdbdash#192
