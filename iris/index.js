@@ -15,18 +15,18 @@ import type { DBUser } from 'shared/types';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
-const engine = new ApolloEngine({
-  logging: {
-    level: 'WARN',
-  },
-  apiKey: process.env.APOLLO_ENGINE_API_KEY,
-  // Only send perf data to the remote server in production
-  reporting: {
-    disabled: process.env.NODE_ENV !== 'production',
-    hostname: process.env.NOW_URL || undefined,
-    privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
-  },
-});
+// const engine = new ApolloEngine({
+//   logging: {
+//     level: 'WARN',
+//   },
+//   apiKey: process.env.APOLLO_ENGINE_API_KEY,
+//   // Only send perf data to the remote server in production
+//   reporting: {
+//     disabled: process.env.NODE_ENV !== 'production',
+//     hostname: process.env.NOW_URL || undefined,
+//     privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
+//   },
+// });
 
 // Initialize authentication
 initPassport();
@@ -86,11 +86,12 @@ import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
 // Start API wrapped in Apollo Engine
-engine.listen({
-  port: PORT,
-  httpServer: server,
-  graphqlPaths: ['/api'],
-});
+// engine.listen({
+//   port: PORT,
+//   httpServer: server,
+//   graphqlPaths: ['/api'],
+// });
+server.listen(PORT);
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
 
 process.on('unhandledRejection', async err => {
