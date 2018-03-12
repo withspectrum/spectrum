@@ -122,7 +122,7 @@ module.exports = function override(config, env) {
             // Don't return the cached index.html for API requests or /auth pages
             if (url.pathname.indexOf('/api') === 0) return;
             if (url.pathname.indexOf('/auth') === 0) return;
-            return new URL('https://spectrum.chat/index.html');
+            return new URL('/index.html', url);
           },
           requestType: ['navigate'],
         },
