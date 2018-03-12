@@ -95,7 +95,7 @@ class CommunityView extends React.Component<Props, State> {
     if (!communityExists) return;
 
     const isNewAndOwned =
-      community.communityPermissions.isOwner && community.metaData.members < 5;
+      community.communityPermissions.isOwner && community.metaData.members < 2;
     return this.setState({ showComposerUpsell: isNewAndOwned ? true : false });
   };
 
