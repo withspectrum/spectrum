@@ -111,20 +111,17 @@ module.exports = function override(config, env) {
       cacheMaps: [
         {
           match: url => {
-            // Don't return the cached index.html for anything that doesn't
-            // include "spectrum" in the hostname
-            if (
-              url.hostname &&
-              url.hostname.indexOf('spectrum.chat') === -1 &&
-              url.hostname.indexOf('now.sh') === -1
-            )
-              return;
             // Don't return the cached index.html for API requests or /auth pages
             if (url.pathname.indexOf('/api') === 0) return;
             if (url.pathname.indexOf('/auth') === 0) return;
-            return new URL('/index.html', url);
+            try {
+              return new URL('/index.html', url);
+              // TODO: Fix this properly instead of ignoring errors
+            } catch (err) {
+              return;
+            }
           },
-          requestType: ['navigate'],
+          requestType: ['navigate', 'same-origin'],
         },
       ],
       ServiceWorker: {
