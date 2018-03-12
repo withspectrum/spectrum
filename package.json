@@ -146,7 +146,7 @@
     "redux-thunk": "^2.2.0",
     "rethinkdb-inspector": "^0.3.3",
     "rethinkdb-migrate": "^1.1.0",
-    "rethinkdbdash": "^2.3.29",
+    "rethinkdbdash": "mxstbr/rethinkdbdash#linkedList",
     "s3-image-uploader": "^1.0.7",
     "serialize-javascript": "^1.4.0",
     "session-rethinkdb": "^2.0.0",
