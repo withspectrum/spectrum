@@ -4,6 +4,7 @@ import EditForm from './editForm';
 import RecurringPaymentsList from './recurringPaymentsList';
 import ChannelList from './channelList';
 import Invoices from './invoices';
+import BrandedLogin from './brandedLogin';
 import {
   SectionsContainer,
   Column,
@@ -25,6 +26,7 @@ class Overview extends React.Component<Props> {
           <Invoices id={community.id} />
         </Column>
         <Column>
+          <BrandedLogin id={community.id} />
           <ChannelList id={community.id} communitySlug={communitySlug} />
         </Column>
       </SectionsContainer>

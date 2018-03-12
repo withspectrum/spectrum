@@ -5,6 +5,7 @@ import {
   getCommunitiesMemberCounts,
   getCommunitiesChannelCounts,
 } from '../models/community';
+import { getCommunitiesSettings } from '../models/communitySettings';
 import { getCommunitiesRecurringPayments } from '../models/recurringPayment';
 import createLoader from './create-loader';
 
@@ -29,6 +30,11 @@ export const __createCommunityMemberCountLoader = createLoader(
 
 export const __createCommunityChannelCountLoader = createLoader(
   communityIds => getCommunitiesChannelCounts(communityIds),
+  'group'
+);
+
+export const __createCommunitySettingsLoader = createLoader(
+  communityIds => getCommunitiesSettings(communityIds),
   'group'
 );
 

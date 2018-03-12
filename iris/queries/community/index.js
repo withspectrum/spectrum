@@ -24,6 +24,7 @@ import topAndNewThreads from './topAndNewThreads';
 import isPro from './isPro';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
+import brandedLogin from './brandedLogin';
 
 module.exports = {
   Query: {
@@ -52,5 +53,6 @@ module.exports = {
     isPro,
     contextPermissions,
     watercooler,
+    brandedLogin,
   },
 };
