@@ -113,7 +113,12 @@ module.exports = function override(config, env) {
           match: url => {
             // Don't return the cached index.html for anything that doesn't
             // include "spectrum" in the hostname
-            if (url.hostname && url.hostname.indexOf('spectrum') === -1) return;
+            if (
+              url.hostname &&
+              url.hostname.indexOf('spectrum.chat') === -1 &&
+              url.hostname.indexOf('now.sh') === -1
+            )
+              return;
             // Don't return the cached index.html for API requests or /auth pages
             if (url.pathname.indexOf('/api') === 0) return;
             if (url.pathname.indexOf('/auth') === 0) return;
