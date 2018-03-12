@@ -35,12 +35,14 @@ type Props = {
 type State = {
   messageValue: ?string,
   messageLengthError: boolean,
+  isLoading: boolean,
 };
 
 class BrandedLogin extends React.Component<Props, State> {
   state = {
     messageValue: null,
     messageLengthError: false,
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -69,17 +71,21 @@ class BrandedLogin extends React.Component<Props, State> {
       });
     }
 
+    this.setState({
+      isLoading: true,
+    });
+
     return this.props
       .saveBrandedLoginSettings({
         message: messageValue,
         id: this.props.data.community.id,
       })
       .then(() => {
-        this.setState({ messageLengthError: false });
+        this.setState({ messageLengthError: false, isLoading: false });
         return this.props.dispatch(addToastWithTimeout('success', 'Saved!'));
       })
       .catch(err => {
-        this.setState({ messageLengthError: false });
+        this.setState({ messageLengthError: false, isLoading: false });
         return this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
@@ -87,7 +93,7 @@ class BrandedLogin extends React.Component<Props, State> {
   render() {
     const { data: { community }, isLoading } = this.props;
     const { messageLengthError } = this.state;
-
+    console.log(this.state.isLoading);
     if (community) {
       const { brandedLogin } = community;
       return (
@@ -127,6 +133,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
                   disabled={messageLengthError}
+                  loading={this.state.isLoading}
                 >
                   Save
                 </Button>
