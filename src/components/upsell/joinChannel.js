@@ -7,7 +7,14 @@ import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/cha
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
 import { NullState } from './index';
-import { Title, Subtitle } from './style';
+import {
+  Title,
+  Subtitle,
+  JoinChannelContainer,
+  JoinChannelContent,
+  JoinChannelTitle,
+  JoinChannelSubtitle,
+} from './style';
 import { Button } from '../buttons';
 
 type Props = {
@@ -90,22 +97,25 @@ class JoinChannel extends React.Component<Props, State> {
     const { isLoading } = this.state;
     const { channel, community } = this.props;
     return (
-      <NullState bg={null}>
-        <Title>
-          Join the {channel.name} channel in the {community.name} community
-        </Title>
-        <Subtitle>
-          Once you join this channel you'll be able to post your replies here!
-        </Subtitle>
+      <JoinChannelContainer>
+        <JoinChannelContent>
+          <JoinChannelTitle>
+            Join the {channel.name} channel in the {community.name} community
+          </JoinChannelTitle>
+          <JoinChannelSubtitle>
+            Once you join this channel you’ll be able to post your replies here!
+          </JoinChannelSubtitle>
+        </JoinChannelContent>
+
         <Button
           loading={isLoading}
           onClick={this.toggleSubscription}
           icon="plus"
           label
         >
-          Join {channel.name}
+          Join
         </Button>
-      </NullState>
+      </JoinChannelContainer>
     );
   }
 }
