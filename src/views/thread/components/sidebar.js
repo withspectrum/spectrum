@@ -12,6 +12,7 @@ import Link from 'src/components/link';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import { CLIENT_URL } from 'src/api/constants';
 import {
   SidebarSection,
   SidebarSectionTitle,
@@ -82,6 +83,10 @@ class Sidebar extends React.Component<Props> {
       ));
     };
 
+    const loginUrl = thread.community.brandedLogin.isEnabled
+      ? `/${thread.community.slug}/login?r=${CLIENT_URL}/thread/${thread.id}`
+      : `/login?r=${CLIENT_URL}/${thread.community.slug}/thread/${thread.id}`;
+
     return (
       <ThreadSidebarView>
         {!currentUser && (
@@ -92,12 +97,12 @@ class Sidebar extends React.Component<Props> {
               communities you care about.
             </SidebarSectionBody>
             <SidebarSectionAuth>
-              <Link to={`/login?r=${window.location}`}>
+              <Link to={loginUrl}>
                 <Button gradientTheme={'brand'} color={'brand.default'}>
                   Sign up
                 </Button>
               </Link>
-              <Link to={`/login?r=${window.location}`}>
+              <Link to={loginUrl}>
                 <TextButton gradientTheme={'text'} color={'text.alt'}>
                   Log in
                 </TextButton>
@@ -140,7 +145,7 @@ class Sidebar extends React.Component<Props> {
                 )}
               />
             ) : (
-              <Link to={`/login?r=${window.location}`}>
+              <Link to={loginUrl}>
                 <Button gradientTheme={'success'} color={'success.default'}>
                   Join community
                 </Button>

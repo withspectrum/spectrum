@@ -95,7 +95,7 @@ class CommunityView extends React.Component<Props, State> {
     if (!communityExists) return;
 
     const isNewAndOwned =
-      community.communityPermissions.isOwner && community.metaData.members < 5;
+      community.communityPermissions.isOwner && community.metaData.members < 2;
     return this.setState({ showComposerUpsell: isNewAndOwned ? true : false });
   };
 
@@ -173,7 +173,9 @@ class CommunityView extends React.Component<Props, State> {
       // components to show nux upsells to create a thread or invite people
       // to the community
       const isNewAndOwned = isOwner && community.metaData.members < 5;
-
+      const loginUrl = community.brandedLogin.isEnabled
+        ? `/${community.slug}/login?r=${CLIENT_URL}/${community.slug}`
+        : `/login?r=${CLIENT_URL}/${community.slug}`;
       return (
         <AppViewWrapper data-e2e-id="community-view">
           <Head
@@ -193,7 +195,7 @@ class CommunityView extends React.Component<Props, State> {
               <CommunityProfile data={{ community }} profileSize="full" />
 
               {!isLoggedIn ? (
-                <Link to={`/login?r=${CLIENT_URL}/${community.slug}`}>
+                <Link to={loginUrl}>
                   <LoginButton>Join {community.name}</LoginButton>
                 </Link>
               ) : !isOwner ? (

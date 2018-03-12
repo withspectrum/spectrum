@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import linkStrategy from 'draft-js-linkify-plugin/lib/linkStrategy';
+import findWithRegex from 'find-with-regex';
+import { URL } from 'shared/regexps';
 import normalizeUrl from '../../../normalize-url';
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
 import type { ComponentType, Node } from 'react';
@@ -19,7 +20,10 @@ let i = 0;
 const createLinksDecorator = (
   Component: ComponentType<LinksDecoratorComponentProps>
 ) => ({
-  strategy: linkStrategy,
+  strategy: (
+    contentBlock: ContentBlock,
+    callback: (...args?: Array<any>) => any
+  ) => findWithRegex(URL, contentBlock, callback),
   component: ({ decoratedText, children }: DecoratorComponentProps) => (
     <Component
       href={normalizeUrl(decoratedText)}
