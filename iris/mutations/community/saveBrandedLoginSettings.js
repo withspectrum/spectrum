@@ -23,6 +23,12 @@ export default async (
     return new UserError('You must be signed in to manage this community.');
   }
 
+  if (message && message.length > 280) {
+    return new UserError(
+      'Custom login messages should be less than 280 characters'
+    );
+  }
+
   const [permissions, settings] = await Promise.all([
     loaders.userPermissionsInCommunity.load([currentUser.id, communityId]),
     loaders.communitySettings.load(communityId),

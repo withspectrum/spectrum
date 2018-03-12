@@ -19,7 +19,7 @@ import {
 import BrandedLoginToggle from './brandedLoginToggle';
 import Link from 'src/components/link';
 import { Button, OutlineButton } from 'src/components/buttons';
-import { TextArea } from 'src/components/formElements';
+import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import { addToastWithTimeout } from '../../../actions/toasts';
 
@@ -34,10 +34,14 @@ type Props = {
 
 type State = {
   messageValue: ?string,
+  messageLengthError: boolean,
 };
 
 class BrandedLogin extends React.Component<Props, State> {
-  state = { messageValue: null };
+  state = {
+    messageValue: null,
+    messageLengthError: false,
+  };
 
   componentDidUpdate(prevProps) {
     const curr = this.props;
@@ -51,27 +55,39 @@ class BrandedLogin extends React.Component<Props, State> {
   handleChange = e => {
     return this.setState({
       messageValue: e.target.value,
+      messageLengthError: e.target.value.length > 280 ? true : false,
     });
   };
 
   saveCustomMessage = e => {
     e.preventDefault();
     const { messageValue } = this.state;
+
+    if (messageValue && messageValue.length > 280) {
+      return this.setState({
+        messageLengthError: true,
+      });
+    }
+
     return this.props
       .saveBrandedLoginSettings({
         message: messageValue,
         id: this.props.data.community.id,
       })
       .then(() => {
+        this.setState({ messageLengthError: false });
         return this.props.dispatch(addToastWithTimeout('success', 'Saved!'));
       })
       .catch(err => {
+        this.setState({ messageLengthError: false });
         return this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
   render() {
     const { data: { community }, isLoading } = this.props;
+    const { messageLengthError } = this.state;
+
     if (community) {
       const { brandedLogin } = community;
       return (
@@ -93,6 +109,12 @@ class BrandedLogin extends React.Component<Props, State> {
               />
             )}
 
+            {messageLengthError && (
+              <Error>
+                Custom login messages should be under 280 characters.
+              </Error>
+            )}
+
             {brandedLogin.isEnabled && (
               <SectionCardFooter
                 style={{
@@ -104,6 +126,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   style={{ alignSelf: 'flex-start' }}
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
+                  disabled={messageLengthError}
                 >
                   Save
                 </Button>
