@@ -31,6 +31,7 @@ const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
+const S3 = require('./types/S3');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -55,6 +56,7 @@ const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
 const communityMemberMutations = require('./mutations/communityMember');
+const s3Mutations = require('./mutations/s3');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
@@ -112,6 +114,7 @@ const resolvers = merge(
   userMutations,
   metaMutations,
   communityMemberMutations,
+  s3Mutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
@@ -143,6 +146,7 @@ const schema = makeExecutableSchema({
     Meta,
     Invoice,
     Search,
+    S3,
   ],
   resolvers,
 });
