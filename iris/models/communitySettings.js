@@ -3,11 +3,24 @@ const { db } = require('./db');
 import type { DBCommunitySettings } from 'shared/types';
 import { getCommunityById } from './community';
 
+const defaultSettings = {
+  brandedLogin: {
+    isEnabled: false,
+    message: null,
+  },
+};
+
 export const getCommunitySettings = (id: string) => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0) {
+        return defaultSettings;
+      }
+      return data[0];
+    });
 };
 
 export const getCommunitiesSettings = (
@@ -27,7 +40,7 @@ export const createCommunitySettings = (id: string) => {
       communityId: id,
       brandedLogin: {
         isEnabled: false,
-        customMessage: null,
+        message: null,
       },
     })
     .run()
@@ -60,16 +73,16 @@ export const disableCommunityBrandedLogin = (id: string) => {
     .then(async () => await getCommunityById(id));
 };
 
-export const updateCommunityBrandedLoginCustomMessage = (
+export const updateCommunityBrandedLoginMessage = (
   id: string,
-  value: ?string
+  message: ?string
 ) => {
   return db
     .table('communitySettings')
     .getAll(id, { index: 'communityId' })
     .update({
       brandedLogin: {
-        customMessage: value,
+        message: message,
       },
     })
     .run()

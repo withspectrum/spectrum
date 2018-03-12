@@ -55,9 +55,8 @@ export class Login extends React.Component<Props> {
             </LoginImageContainer>
             <Title>Log in to the {community.name} community</Title>
             <Subtitle>
-              {brandedLogin.customMessage &&
-              brandedLogin.customMessage.length > 0
-                ? brandedLogin.customMessage
+              {brandedLogin.message && brandedLogin.message.length > 0
+                ? brandedLogin.message
                 : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'}
             </Subtitle>
 

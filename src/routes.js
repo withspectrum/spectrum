@@ -299,10 +299,6 @@ class Routes extends React.Component<{}> {
                   component={CommunityLoginView}
                 />
                 <Route
-                  path="/:communitySlug/login"
-                  component={ChannelSettingsFallback}
-                />
-                <Route
                   path="/:communitySlug/:channelSlug"
                   component={ChannelView}
                 />

@@ -3,19 +3,19 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import {
   createCommunitySettings,
-  updateCommunityBrandedLoginCustomMessage,
+  updateCommunityBrandedLoginMessage,
 } from '../../models/communitySettings';
 
 type EnableBrandedLoginInput = {
   input: {
     id: string,
-    value: string,
+    message: string,
   },
 };
 
 export default async (
   _: any,
-  { input: { id: communityId, value } }: EnableBrandedLoginInput,
+  { input: { id: communityId, message } }: EnableBrandedLoginInput,
   { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
@@ -34,11 +34,10 @@ export default async (
 
   const hasSettings = settings && settings.reduction.length > 0;
   if (hasSettings) {
-    return await updateCommunityBrandedLoginCustomMessage(communityId, value);
+    return await updateCommunityBrandedLoginMessage(communityId, message);
   } else {
     return await createCommunitySettings(communityId).then(
-      async () =>
-        await updateCommunityBrandedLoginCustomMessage(communityId, value)
+      async () => await updateCommunityBrandedLoginMessage(communityId, message)
     );
   }
 };

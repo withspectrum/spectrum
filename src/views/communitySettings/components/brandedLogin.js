@@ -19,8 +19,8 @@ import {
 import BrandedLoginToggle from './brandedLoginToggle';
 import Link from 'src/components/link';
 import { Button, OutlineButton } from 'src/components/buttons';
-import { Input } from 'src/components/formElements';
-import saveBrandedLoginCustomMessage from 'shared/graphql/mutations/community/saveBrandedLoginCustomMessage';
+import { TextArea } from 'src/components/formElements';
+import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import { addToastWithTimeout } from '../../../actions/toasts';
 
 type Props = {
@@ -28,38 +28,38 @@ type Props = {
     community: GetCommunityType,
   },
   ...$Exact<ViewNetworkHandlerType>,
-  saveBrandedLoginCustomMessage: Function,
+  saveBrandedLoginSettings: Function,
   dispatch: Function,
 };
 
 type State = {
-  customMessageValue: ?string,
+  messageValue: ?string,
 };
 
 class BrandedLogin extends React.Component<Props, State> {
-  state = { customMessageValue: null };
+  state = { messageValue: null };
 
   componentDidUpdate(prevProps) {
     const curr = this.props;
     if (!prevProps.data.community && curr.data.community) {
       return this.setState({
-        customMessageValue: curr.data.community.brandedLogin.customMessage,
+        messageValue: curr.data.community.brandedLogin.message,
       });
     }
   }
 
   handleChange = e => {
     return this.setState({
-      customMessageValue: e.target.value,
+      messageValue: e.target.value,
     });
   };
 
   saveCustomMessage = e => {
     e.preventDefault();
-    const { customMessageValue } = this.state;
+    const { messageValue } = this.state;
     return this.props
-      .saveBrandedLoginCustomMessage({
-        value: customMessageValue,
+      .saveBrandedLoginSettings({
+        message: messageValue,
         id: this.props.data.community.id,
       })
       .then(() => {
@@ -86,8 +86,8 @@ class BrandedLogin extends React.Component<Props, State> {
 
           <form onSubmit={this.saveCustomMessage}>
             {brandedLogin.isEnabled && (
-              <Input
-                defaultValue={brandedLogin.customMessage}
+              <TextArea
+                defaultValue={brandedLogin.message}
                 placeholder={'Set a custom message for the login screen'}
                 onChange={this.handleChange}
               />
@@ -141,6 +141,6 @@ class BrandedLogin extends React.Component<Props, State> {
 export default compose(
   getCommunityById,
   viewNetworkHandler,
-  saveBrandedLoginCustomMessage,
+  saveBrandedLoginSettings,
   connect()
 )(BrandedLogin);

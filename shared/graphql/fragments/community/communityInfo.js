@@ -21,7 +21,7 @@ export type CommunityInfoType = {
   },
   brandedLogin: {
     isEnabled: boolean,
-    customMessage: ?string,
+    message: ?string,
   },
 };
 
@@ -46,7 +46,7 @@ export default gql`
     }
     brandedLogin {
       isEnabled
-      customMessage
+      message
     }
   }
 `;

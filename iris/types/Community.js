@@ -57,7 +57,7 @@ const Community = /* GraphQL */ `
 
 	type BrandedLogin {
 		isEnabled: Boolean
-		customMessage: String
+		message: String
 	}
 
 	type Community {
@@ -160,9 +160,9 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
-	input SaveBrandedLoginCustomMessageInput {
+	input SaveBrandedLoginSettingsInput {
 		id: String!
-		value: String
+		message: String
 	}
 
 	extend type Mutation {
@@ -177,7 +177,7 @@ const Community = /* GraphQL */ `
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
 		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
 		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
-		saveBrandedLoginCustomMessage(input: SaveBrandedLoginCustomMessageInput!): Community
+		saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
 	}
 `;
 
