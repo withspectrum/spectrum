@@ -55,6 +55,8 @@ type Props = {
   onFocus: Function,
   websocketConnection: string,
   networkOnline: boolean,
+  threadData?: Object,
+  refetchThread?: Function,
 };
 
 const LS_KEY = 'last-chat-input-content';
@@ -69,6 +71,8 @@ if (localStorage) {
   }
 }
 
+const forcePersist = content =>
+  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 const persistContent = debounce(content => {
   localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 }, 500);
@@ -161,7 +165,15 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom,
       networkOnline,
       websocketConnection,
+      currentUser,
+      threadData,
+      refetchThread,
     } = this.props;
+
+    const isSendingMessageAsNonMember =
+      threadType === 'story' &&
+      threadData &&
+      !threadData.channel.channelPermissions.isMember;
 
     if (!networkOnline) {
       return dispatch(
@@ -184,6 +196,11 @@ class ChatInput extends React.Component<Props, State> {
       );
     }
 
+    if (!currentUser) {
+      // user is trying to send a message without being signed in
+      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+    }
+
     // This doesn't exist if this is a new conversation
     if (forceScrollToBottom) {
       // if a user sends a message, force a scroll to bottom
@@ -192,6 +209,9 @@ class ChatInput extends React.Component<Props, State> {
 
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return 'handled';
+
+    // do one last persist before sending
+    forcePersist(state);
 
     this.setState({
       code: false,
@@ -237,6 +257,15 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
+          // if the user sends a message as a non member of the community or
+          // channel, we need to refetch the thread to update any join buttons
+          // and update all clientside caching of community + channel permissions
+          if (isSendingMessageAsNonMember) {
+            if (refetchThread) {
+              refetchThread();
+            }
+          }
+
           localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
@@ -424,7 +453,6 @@ class ChatInput extends React.Component<Props, State> {
   render() {
     const {
       state,
-      onChange,
       currentUser,
       networkOnline,
       websocketConnection,
@@ -457,7 +485,7 @@ class ChatInput extends React.Component<Props, State> {
             />
           </PhotoSizeError>
         )}
-        <MediaInput onChange={this.sendMediaMessage} />
+        {currentUser && <MediaInput onChange={this.sendMediaMessage} />}
         <IconButton
           glyph={'code'}
           onClick={this.toggleCodeMessage}

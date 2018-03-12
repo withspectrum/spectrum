@@ -220,7 +220,7 @@ class Messages extends Component<MessageGroupProps, State> {
           }
 
           return (
-            <Fragment>
+            <Fragment key={initialMessage.id}>
               {unseenRobo}
               <Author key={initialMessage.id} me={me}>
                 {!me &&
