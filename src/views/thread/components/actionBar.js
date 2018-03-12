@@ -292,17 +292,17 @@ class ActionBar extends React.Component<Props, State> {
                       thread.isAuthor) && (
                       <FlyoutRow>
                         <TextButton
-                          icon="freeze"
+                          icon={
+                            thread.isLocked ? 'private' : 'private-unlocked'
+                          }
                           hoverColor="space.alt"
                           tipText={
-                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                            thread.isLocked ? 'Unlock chat' : 'Lock chat'
                           }
                           tipLocation="top-left"
                           onClick={this.props.threadLock}
                         >
-                          <Label>
-                            {thread.isLocked ? 'Unfreeze' : 'Freeze'}
-                          </Label>
+                          <Label>{thread.isLocked ? 'Unlock' : 'Lock'}</Label>
                         </TextButton>
                       </FlyoutRow>
                     )}
