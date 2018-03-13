@@ -20,7 +20,6 @@ export type ButtonProps = {
   href: string,
   preferred: boolean,
   showAfter: boolean,
-  verb: ?string,
 };
 
 class LoginButtonSet extends React.Component<Props> {
