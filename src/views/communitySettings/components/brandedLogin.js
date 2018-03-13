@@ -93,7 +93,7 @@ class BrandedLogin extends React.Component<Props, State> {
   render() {
     const { data: { community }, isLoading } = this.props;
     const { messageLengthError } = this.state;
-    console.log(this.state.isLoading);
+
     if (community) {
       const { brandedLogin } = community;
       return (
