@@ -27,3 +27,4 @@ stats.json
 iris/.env
 .expo
 mobile/.expo
+test-results.json
