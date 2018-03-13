@@ -136,6 +136,7 @@
     "react-redux": "^5.0.2",
     "react-router": "^4.0.0-beta.7",
     "react-router-dom": "^4.0.0-beta.7",
+    "react-s3-uploader": "^4.6.2",
     "react-stripe-checkout": "^2.2.5",
     "react-textarea-autosize": "^4.0.5",
     "react-transition-group": "^2.2.0",

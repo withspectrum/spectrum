@@ -10,6 +10,7 @@ import debounce from 'debounce';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
+import MediaUploader from './components/mediaUploader';
 import {
   toJSON,
   toState,
@@ -485,7 +486,10 @@ class ChatInput extends React.Component<Props, State> {
             />
           </PhotoSizeError>
         )}
-        {currentUser && <MediaInput onChange={this.sendMediaMessage} />}
+        {currentUser && (
+          // <MediaInput onChange={this.sendMediaMessage} />
+          <MediaUploader id={this.props.thread} />
+        )}
         <IconButton
           glyph={'code'}
           onClick={this.toggleCodeMessage}
