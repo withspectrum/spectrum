@@ -17,7 +17,7 @@ const APP_FOLDERS = [
   'src',
   'vulcan',
 ];
-const CHECKBOXES = /^- \[[x]] *(.*)?$/gim;
+const CHECKBOXES = /^- \[x\] *(.*)?$/gim;
 const possibleAutoLabels = {
   wip: 'WIP: Building',
   'needs testing': 'WIP: Needs Testing',
