@@ -309,7 +309,11 @@ class CommunityView extends React.Component<Props, State> {
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
-              <ColumnHeading>Members</ColumnHeading>
+              <ColumnHeading>
+                Members ({community.metaData &&
+                  community.metaData.members &&
+                  community.metaData.members.toLocaleString()})
+              </ColumnHeading>
               <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>
