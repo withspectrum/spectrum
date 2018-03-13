@@ -15,7 +15,7 @@ export default ({ id }: DBCommunity, __: any, { user }: GraphQLContext) => {
     return new UserError('You must be signed in to continue.');
   }
 
-  return getThreadsByCommunityInTimeframe(id, 'week').then(async threads => {
+  return getThreadsByCommunityInTimeframe(id, 'weekly').then(async threads => {
     if (!threads) return { topThreads: [], newThreads: [] };
 
     const messageCountPromises = threads.map(async ({ id }) => ({

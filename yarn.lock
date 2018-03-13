@@ -9629,6 +9629,12 @@ ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
 
+rethinkdb-changefeed-reconnect@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/rethinkdb-changefeed-reconnect/-/rethinkdb-changefeed-reconnect-0.3.2.tgz#2999f5313205ab35d9ac2d1b0533765ee3376923"
+  dependencies:
+    babel-runtime "^6.18.0"
+
 rethinkdb-inspector@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
