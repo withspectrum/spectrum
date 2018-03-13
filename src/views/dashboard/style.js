@@ -505,7 +505,7 @@ export const EmptyParticipantHead = styled.span`
   }
 `;
 
-export const MetaText = styled.span`
+export const StatusText = styled.span`
   font-size: 14px;
   color: ${props =>
     props.new
@@ -525,11 +525,11 @@ export const MetaText = styled.span`
   }
 `;
 
-export const MetaTextPill = styled(MetaText)`
+const StatusPill = styled(StatusText)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.reverse};
   background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+    props.active ? props.theme.text.reverse : props.theme.brand.alt};
   border-radius: 20px;
   padding: 0 12px;
   font-size: 11px;
@@ -539,11 +539,25 @@ export const MetaTextPill = styled(MetaText)`
   align-items: center;
 `;
 
-export const LockedTextPill = styled(MetaTextPill)`
+export const NewThreadPill = styled(StatusPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.reverse};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.success.alt};
+`;
+
+export const NewMessagePill = styled(StatusPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.reverse};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+`;
+
+export const LockedTextPill = styled(StatusPill)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.alt};
   background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.bg.border};
+    props.active ? props.theme.brand.wash : props.theme.bg.border};
 `;
 
 export const MetaCommunityName = styled(Link)`
