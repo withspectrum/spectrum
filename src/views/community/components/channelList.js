@@ -9,11 +9,16 @@ import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { LoadingCard } from '../../../components/loading';
+import { LoadingCard, Loading } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
-import { ColumnHeading } from '../style';
+import {
+  ColumnHeading,
+  ChannelListItemRow,
+  ToggleNotificationsContainer,
+} from '../style';
+import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 
 type Props = {
   data: {
@@ -113,19 +118,48 @@ class ChannelList extends React.Component<Props> {
                 {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (
-                    <Link
-                      key={channel.id}
-                      to={`/${communitySlug}/${channel.slug}`}
-                    >
-                      <ChannelListItem
-                        clickable
-                        contents={channel}
-                        withDescription={false}
-                        channelIcon
+                    <ChannelListItemRow key={channel.id}>
+                      <Link
+                        to={`/${communitySlug}/${channel.slug}`}
+                        style={{
+                          display: 'flex',
+                          flex: 'auto',
+                        }}
                       >
-                        <Icon glyph="view-forward" />
-                      </ChannelListItem>
-                    </Link>
+                        <ChannelListItem
+                          clickable
+                          contents={channel}
+                          withDescription={false}
+                          channelIcon
+                        />
+                      </Link>
+                      <ToggleChannelNotifications
+                        channel={channel}
+                        render={state => (
+                          <ToggleNotificationsContainer
+                            tipLocation={'top-left'}
+                            tipText={
+                              channel.channelPermissions.receiveNotifications
+                                ? 'Turn notifications off'
+                                : 'Turn notifications on'
+                            }
+                          >
+                            {state.isLoading ? (
+                              <Loading />
+                            ) : (
+                              <Icon
+                                glyph={
+                                  channel.channelPermissions
+                                    .receiveNotifications
+                                    ? 'notification-fill'
+                                    : 'notification'
+                                }
+                              />
+                            )}
+                          </ToggleNotificationsContainer>
+                        )}
+                      />
+                    </ChannelListItemRow>
                   );
                 })}
               </ListContainer>

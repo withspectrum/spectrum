@@ -62,7 +62,7 @@ export const Row = styled(FlexRow)`
 
 export const Heading = styled(H3)`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   transition: ${Transition.hover.off};
   line-height: 1.2;
   display: flex;

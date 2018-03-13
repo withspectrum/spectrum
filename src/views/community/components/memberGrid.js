@@ -10,7 +10,6 @@ import { LoadingList } from 'src/components/loading';
 import { UserListItem } from 'src/components/listItems';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import { OutlineButton } from 'src/components/buttons';
 
 type Props = {
   data: {
@@ -23,11 +22,7 @@ type Props = {
 
 class CommunityMemberGrid extends React.Component<Props> {
   render() {
-    const {
-      data: { community, fetchMore },
-      isLoading,
-      isFetchingMore,
-    } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       const { edges: members } = community.members;
