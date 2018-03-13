@@ -414,7 +414,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
                   {!isEditing &&
                     isLocked && (
-                      <NullState copy="This conversation has been frozen." />
+                      <NullState
+                        icon="private"
+                        copy="This conversation has been locked."
+                      />
                     )}
                 </Detail>
               </Content>
@@ -490,7 +493,10 @@ class ThreadContainer extends React.Component<Props, State> {
 
                 {!isEditing &&
                   isLocked && (
-                    <NullState copy="This conversation has been frozen." />
+                    <NullState
+                      icon="private"
+                      copy="This conversation has been locked."
+                    />
                   )}
               </Detail>
             </Content>

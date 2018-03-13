@@ -133,6 +133,11 @@ export const NullCol = styled(FlexCol)`
   align-items: center;
   position: relative;
   align-self: center;
+
+  > div {
+    color: ${props => props.theme.text.alt};
+    margin-bottom: 8px;
+  }
 `;
 
 export const NullRow = styled(FlexRow)`
