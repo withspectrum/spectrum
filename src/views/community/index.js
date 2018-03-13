@@ -223,10 +223,6 @@ class CommunityView extends React.Component<Props, State> {
                     </LoginButton>
                   </Link>
                 )}
-              <ChannelList
-                id={community.id}
-                communitySlug={communitySlug.toLowerCase()}
-              />
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
@@ -309,7 +305,17 @@ class CommunityView extends React.Component<Props, State> {
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
-              <ColumnHeading>Members</ColumnHeading>
+              <ChannelList
+                id={community.id}
+                communitySlug={communitySlug.toLowerCase()}
+              />
+
+              <ColumnHeading>
+                Top Members ({community.metaData &&
+                  community.metaData.members &&
+                  community.metaData.members.toLocaleString()}{' '}
+                total)
+              </ColumnHeading>
               <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>

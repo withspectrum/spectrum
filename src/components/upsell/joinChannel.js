@@ -6,10 +6,7 @@ import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
-import { NullState } from './index';
 import {
-  Title,
-  Subtitle,
   JoinChannelContainer,
   JoinChannelContent,
   JoinChannelTitle,

@@ -1,89 +1,66 @@
 // @flow
-// Turn a callback-based listener into an async iterator
-// Based on https://github.com/apollographql/graphql-subscriptions/blob/master/src/event-emitter-to-async-iterator.ts
-const debug = require('debug')('iris:utils:asyncify');
+// Turn a callback-based listener into many async iterators without buffering
 import { $$asyncIterator } from 'iterall';
 
-type Listener = <K>((arg: any) => void) => Promise<K>;
-
-type onError = (err: Error) => void;
+type Listener = ((arg: any) => void) => Promise<any>;
 
 const defaultOnError = (err: Error) => {
   throw new Error(err);
 };
 
 type Options = {|
-  onError?: onError,
-  onClose?: Function,
+  onError?: (err: Error) => void,
+  filter?: (arg: any) => boolean,
 |};
 
-const asyncify = (
-  listener: Listener,
-  { onError = defaultOnError, onClose }: Options = {}
-) => {
-  try {
-    let pullQueue = [];
-    let pushQueue = [];
-    let listening = true;
-    let listenerReturnValue;
-    // Start listener
-    listener(value => pushValue(value))
-      .then(a => {
-        listenerReturnValue = a;
-      })
-      .catch(err => {
-        onError(err);
-      });
+type Watcher = {
+  filter?: (arg: any) => boolean,
+  callback?: ({ done: boolean, value: any }) => void,
+};
 
-    function pushValue(value) {
-      if (pullQueue.length !== 0) {
-        pullQueue.shift()({ value, done: false });
-      } else {
-        pushQueue.push(value);
+const asyncify = (listener: Listener) => {
+  let watchers: Array<Watcher> = [];
+  listener(value => {
+    watchers.forEach(watcher => {
+      if (watcher.callback && (!watcher.filter || watcher.filter(value))) {
+        watcher.callback({ done: false, value });
       }
-    }
+    });
+  });
 
-    function pullValue() {
-      return new Promise(resolve => {
-        if (pushQueue.length !== 0) {
-          resolve({ value: pushQueue.shift(), done: false });
-        } else {
-          pullQueue.push(resolve);
-        }
-      });
-    }
-
-    function emptyQueue() {
-      if (listening) {
-        listening = false;
-        pullQueue.forEach(resolve => resolve({ value: undefined, done: true }));
-        pullQueue = [];
-        pushQueue = [];
-        onClose && onClose(listenerReturnValue);
+  return ({ filter, onError = defaultOnError }: Options = {}) => {
+    let watcher: Watcher = { filter };
+    let watching = true;
+    const cleanup = () => {
+      if (watching) {
+        watching = false;
+        watchers = watchers.filter(w => w !== watcher);
       }
+    };
+    try {
+      return {
+        next: () =>
+          new Promise(resolve => {
+            watcher.callback = resolve;
+            watchers.push(watcher);
+          }),
+        return: () => {
+          cleanup();
+          return Promise.resolve({ done: true });
+        },
+        throw: err => {
+          cleanup();
+          onError(err);
+          return Promise.reject(err);
+        },
+        [$$asyncIterator]() {
+          return this;
+        },
+      };
+    } catch (err) {
+      onError(err);
     }
-
-    return ({
-      next() {
-        return listening ? pullValue() : this.return();
-      },
-      return() {
-        emptyQueue();
-        return Promise.resolve({ value: undefined, done: true });
-      },
-      throw(error) {
-        emptyQueue();
-        onError(error);
-        return Promise.reject(error);
-      },
-      [$$asyncIterator]() {
-        return this;
-      },
-    }: any);
-  } catch (err) {
-    debug(err);
-    onError(err);
-  }
+  };
 };
 
 export default asyncify;

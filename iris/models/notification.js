@@ -62,16 +62,13 @@ const hasChanged = (field: string) =>
 
 const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
-export const listenToNewNotifications = (userId: string) => (
-  cb: Function
-): Function => {
+export const listenToNewNotifications = (cb: Function): Function => {
   return db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
-    .filter({ userId })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
@@ -81,16 +78,13 @@ export const listenToNewNotifications = (userId: string) => (
     .run(eachAsyncNewValue(cb));
 };
 
-export const listenToNewDirectMessageNotifications = (userId: string) => (
-  cb: Function
-) => {
+export const listenToNewDirectMessageNotifications = (cb: Function) => {
   return db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
-    .filter({ userId })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
