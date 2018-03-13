@@ -11,6 +11,11 @@ import Raven from 'shared/raven';
 import type { GraphQLContext } from '../';
 import type { GraphQLResolveInfo } from 'graphql';
 
+const addNotificationListener = asyncify(listenToNewNotifications);
+const addDMNotificationListener = asyncify(
+  listenToNewDirectMessageNotifications
+);
+
 module.exports = {
   Subscription: {
     notificationAdded: {
@@ -27,19 +32,13 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to notifications`);
-        return asyncify(listenToNewNotifications(user.id), {
+        return addNotificationListener({
+          filter: notification =>
+            notification && notification.userId === user.id,
           onError: err => {
             // Don't crash the whole API server on error in the listener
             console.error(err);
             Raven.captureException(err);
-          },
-          onClose: cursor => {
-            if (cursor) {
-              /* ignore errors that happen when closing the cursor */
-              try {
-                cursor.close(() => {});
-              } catch (err) {}
-            }
           },
         });
       },
@@ -58,19 +57,13 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to DM notifications`);
-        return asyncify(listenToNewDirectMessageNotifications(user.id), {
+        return addDMNotificationListener({
+          filter: notification =>
+            notification && notification.userId === user.id,
           onError: err => {
             // Don't crash the whole API server on error in the listener
             console.error(err);
             Raven.captureException(err);
-          },
-          onClose: cursor => {
-            if (cursor) {
-              /* ignore errors that happen when closing the cursor */
-              try {
-                cursor.close(() => {});
-              } catch (err) {}
-            }
           },
         });
       },

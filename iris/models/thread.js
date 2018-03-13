@@ -505,17 +505,12 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
-export const listenToUpdatedThreads = (channelIds: Array<string>) => (
-  cb: Function
-): Function => {
+export const listenToUpdatedThreads = (cb: Function): Function => {
   return db
     .table('threads')
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))
-    .filter(thread =>
-      db.expr(channelIds).contains(thread('new_val')('channelId'))
-    )('new_val')
+    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
     .run(eachAsyncNewValue(cb));
 };

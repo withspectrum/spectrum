@@ -149,13 +149,9 @@ export const storeMessage = (
     });
 };
 
-export const listenToNewMessagesInThread = (threadId: string) => (
-  cb: Function
-): Function => {
+export const listenToNewMessages = (cb: Function): Function => {
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
-    .filter(db.row.hasFields('deletedAt').not())
     .changes({
       includeInitial: false,
     })

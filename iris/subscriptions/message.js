@@ -2,12 +2,14 @@
 const debug = require('debug')('iris:subscriptions:messages');
 import { getThread } from '../models/thread';
 import { getDirectMessageThread } from '../models/directMessageThread';
-import { userCanViewChannel, userCanViewDirectMessageThread } from './utils';
-import asyncify from '../utils/asyncify';
-import { listenToNewMessagesInThread } from '../models/message';
-import { trackUserThreadLastSeenQueue } from 'shared/bull/queues.js';
+import { listenToNewMessages } from '../models/message';
 import UserError from '../utils/UserError';
+import asyncify from '../utils/asyncify';
+import { userCanViewChannel, userCanViewDirectMessageThread } from './utils';
+import { trackUserThreadLastSeenQueue } from 'shared/bull/queues.js';
 import Raven from 'shared/raven';
+
+const addMessageListener = asyncify(listenToNewMessages);
 
 import type { Message } from '../models/message';
 import type { GraphQLContext } from '../';
@@ -53,29 +55,19 @@ module.exports = {
         }
 
         debug(`${moniker} listening to new messages in ${thread}`);
-        return asyncify(listenToNewMessagesInThread(thread), {
-          onError: err => {
-            // Don't crash the whole API server on error in the listener
-            console.error(err);
-            Raven.captureException(err);
-          },
-          onClose: cursor => {
-            // Once the user unsubscribes record a new threadLastSeen
-            if (user && user.id) {
-              trackUserThreadLastSeenQueue.add({
-                threadId: thread,
-                userId: user.id,
-                timestamp: Date.now(),
-              });
-            }
-            if (cursor) {
-              /* ignore errors that happen when closing the cursor */
-              try {
-                cursor.close(() => {});
-              } catch (err) {}
-            }
-          },
-        });
+        try {
+          return addMessageListener({
+            filter: message => message.threadId === thread,
+            onError: err => {
+              // Don't crash the whole API server on error in the listener
+              console.error(err);
+              Raven.captureException(err);
+            },
+          });
+        } catch (err) {
+          console.error(err);
+          Raven.captureException(err);
+        }
       },
     },
   },
