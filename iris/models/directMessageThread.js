@@ -80,9 +80,7 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
-const listenToUpdatedDirectMessageThreads = (userId: string) => (
-  cb: Function
-): Function => {
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
   return db
     .table('directMessageThreads')
     .changes({
@@ -90,7 +88,6 @@ const listenToUpdatedDirectMessageThreads = (userId: string) => (
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
     .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
-    .filter({ right: { userId } })
     .without({
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
