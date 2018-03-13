@@ -150,9 +150,7 @@ class ActionBar extends React.Component<Props, State> {
                 loading={notificationStateLoading}
                 onClick={this.toggleNotification}
               >
-                {thread.receiveNotifications
-                  ? 'Following conversation'
-                  : 'Follow conversation'}
+                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
               </FollowButton>
             ) : (
               <Link to={`/login?r=${window.location}`}>
@@ -162,7 +160,7 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Get notified about replies'}
                   tipLocation={'top-right'}
                 >
-                  Follow conversation
+                  Notify me
                 </FollowButton>
               </Link>
             )}
