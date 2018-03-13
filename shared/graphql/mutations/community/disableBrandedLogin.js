@@ -9,7 +9,7 @@ export type DisableBrandedLoginType = {
       slug: string,
       brandedLogin: {
         isEnabled: boolean,
-        customMessage: ?string,
+        message: ?string,
       },
     },
   },
@@ -22,7 +22,7 @@ export const disableBrandedLoginMutation = gql`
       slug
       brandedLogin {
         isEnabled
-        customMessage
+        message
       }
     }
   }
