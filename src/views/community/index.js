@@ -311,9 +311,10 @@ class CommunityView extends React.Component<Props, State> {
               />
 
               <ColumnHeading>
-                Members ({community.metaData &&
+                Top Members ({community.metaData &&
                   community.metaData.members &&
-                  community.metaData.members.toLocaleString()})
+                  community.metaData.members.toLocaleString()}{' '}
+                total)
               </ColumnHeading>
               <CommunityMemberGrid first={5} id={community.id} />
             </Extras>

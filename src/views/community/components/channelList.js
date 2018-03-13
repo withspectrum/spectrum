@@ -5,19 +5,15 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
-import { IconButton } from '../../../components/buttons';
+import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { LoadingCard } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import {
-  StyledCard,
-  ListHeader,
-  ListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { StyledCard, ListContainer } from '../../../components/listItems/style';
+import { ColumnHeading } from '../style';
 
 type Props = {
   data: {
@@ -80,18 +76,7 @@ class ChannelList extends React.Component<Props> {
 
       return (
         <StyledCard largeOnly>
-          <ListHeader>
-            <ListHeading>Channels</ListHeading>
-            {isOwner && (
-              <IconButton
-                glyph="plus"
-                color="text.placeholder"
-                onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
-                }
-              />
-            )}
-          </ListHeader>
+          <ColumnHeading>Channels</ColumnHeading>
 
           {/*
             user isn't logged in, channel list is used for navigation
@@ -148,11 +133,8 @@ class ChannelList extends React.Component<Props> {
 
           {sortedNonJoinedChannels.length > 0 &&
             isMember && (
-              <span>
-                <ListHeader secondary>
-                  <ListHeading>New channels</ListHeading>
-                </ListHeader>
-
+              <React.Fragment>
+                <ColumnHeading>New channels</ColumnHeading>
                 <ListContainer>
                   <ul>
                     {sortedNonJoinedChannels.map(channel => {
@@ -167,8 +149,23 @@ class ChannelList extends React.Component<Props> {
                     })}
                   </ul>
                 </ListContainer>
-              </span>
+              </React.Fragment>
             )}
+
+          {isOwner && (
+            <OutlineButton
+              style={{
+                alignSelf: 'flex-end',
+                marginTop: '12px',
+              }}
+              glyph="plus"
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+              }
+            >
+              Create a channel
+            </OutlineButton>
+          )}
         </StyledCard>
       );
     }

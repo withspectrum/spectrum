@@ -96,7 +96,6 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled.div`
   flex-direction: column;
-  margin-top: 8px;
   display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {

@@ -4,13 +4,13 @@ import compose from 'recompose/compose';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import { FlexCol } from '../../../components/globals';
-import { Card } from '../../../components/card';
-import { LoadingList } from '../../../components/loading';
-import { UserListItem } from '../../../components/listItems';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
-import { StyledButton } from '../style';
+import { FlexCol } from 'src/components/globals';
+import { Card } from 'src/components/card';
+import { LoadingList } from 'src/components/loading';
+import { UserListItem } from 'src/components/listItems';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import { OutlineButton } from 'src/components/buttons';
 
 type Props = {
   data: {
@@ -45,11 +45,6 @@ class CommunityMemberGrid extends React.Component<Props> {
             });
             return <UserListItem key={user.id} user={user} />;
           })}
-          {community.members.pageInfo.hasNextPage && (
-            <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-              View more...
-            </StyledButton>
-          )}
         </FlexCol>
       );
     }
