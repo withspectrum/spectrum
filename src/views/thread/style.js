@@ -226,10 +226,18 @@ export const FlyoutRow = styled(FlexRow)`
     }
   }
 
-  ${p =>
-    p.hideBelow &&
+  ${props =>
+    props.hideBelow &&
     css`
-      @media screen and (max-width: ${p.hideBelow}px) {
+      @media (max-width: ${props.hideBelow}px) {
+        display: none;
+      }
+    `};
+
+  ${props =>
+    props.hideAbove &&
+    css`
+      @media (min-width: ${props.hideAbove}px) {
         display: none;
       }
     `};
