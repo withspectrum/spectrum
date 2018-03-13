@@ -13,7 +13,6 @@ import { GithubSigninButton } from './github';
 type Props = {
   redirectPath: ?string,
   location: Object,
-  signinType: string,
 };
 
 export type ButtonProps = {
@@ -30,7 +29,7 @@ class LoginButtonSet extends React.Component<Props> {
   };
 
   render() {
-    const { redirectPath, location, signinType } = this.props;
+    const { redirectPath, location } = this.props;
 
     let r;
     if (location) {
