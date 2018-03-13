@@ -1,6 +1,6 @@
 //@flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS, eachAsyncNewValue } from './utils';
+import { NEW_DOCUMENTS, createChangefeed } from './utils';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
@@ -80,8 +80,8 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
-const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
-  return db
+const getUpdatedDirectMessageThreadChangefeed = () =>
+  db
     .table('directMessageThreads')
     .changes({
       includeInitial: false,
@@ -92,7 +92,14 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
     .zip()
-    .run(eachAsyncNewValue(cb));
+    .run();
+
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  return createChangefeed(
+    getUpdatedDirectMessageThreadChangefeed,
+    cb,
+    'listenToUpdatedDirectMessageThreads'
+  );
 };
 
 // prettier-ignore

@@ -6,11 +6,12 @@ import {
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange, eachAsyncNewValue } = require('./utils');
+const { NEW_DOCUMENTS, parseRange, createChangefeed } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread } from 'shared/types';
+import type { Timeframe } from './utils';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -90,7 +91,7 @@ export const getThreadsByCommunity = (
 
 export const getThreadsByCommunityInTimeframe = (
   communityId: string,
-  range: string
+  range: Timeframe
 ): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
@@ -102,7 +103,7 @@ export const getThreadsByCommunityInTimeframe = (
 };
 
 export const getThreadsInTimeframe = (
-  range: string
+  range: Timeframe
 ): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
@@ -505,12 +506,19 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
-export const listenToUpdatedThreads = (cb: Function): Function => {
-  return db
+const getUpdatedThreadsChangefeed = () =>
+  db
     .table('threads')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
-    .run(eachAsyncNewValue(cb));
+    .run();
+
+export const listenToUpdatedThreads = (cb: Function): Function => {
+  return createChangefeed(
+    getUpdatedThreadsChangefeed,
+    cb,
+    'listenToUpdatedThreads'
+  );
 };
