@@ -7,6 +7,7 @@ import {
   Transition,
   zIndex,
   Gradient,
+  Tooltip,
 } from '../../components/globals';
 import {
   DesktopSegment,
@@ -221,4 +222,18 @@ export const ColumnHeading = styled.div`
   padding: 16px;
   margin-top: 16px;
   border-bottom: 2px solid ${props => props.theme.bg.border};
+`;
+
+export const ChannelListItemRow = styled.div`
+  display: flex;
+`;
+
+export const ToggleNotificationsContainer = styled.div`
+  display: flex;
+  color: ${props => props.theme.text.alt};
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  ${Tooltip};
 `;

@@ -12,7 +12,6 @@ import {
 import { Button, OutlineButton, IconButton } from '../buttons';
 import { ReputationWrapper } from '../reputation/style';
 import Card from '../card';
-import { Heading } from '../listItems/style';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -77,11 +76,6 @@ export const FullProfile = styled.div`
   margin-left: 32px;
   margin-top: -64px;
   background-color: ${props => props.theme.bg.default};
-
-  ${Heading} {
-    font-size: 16px;
-    color: ${props => props.theme.text.alt};
-  }
 
   @media (max-width: 768px) {
     margin-top: -48px;

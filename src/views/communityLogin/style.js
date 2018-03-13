@@ -24,7 +24,7 @@ export const Subtitle = styled.h2`
   margin-bottom: 16px;
   padding: 0 32px;
   text-align: center;
-  white-space: pre;
+  white-space: pre-wrap;
 
   b {
     font-weight: 700;

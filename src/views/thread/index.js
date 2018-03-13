@@ -17,7 +17,7 @@ import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
-import { NullState, UpsellSignIn } from '../../components/upsell';
+import { NullState } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
 import { toState } from 'shared/draft-utils';
 import LoadingView from './components/loading';
