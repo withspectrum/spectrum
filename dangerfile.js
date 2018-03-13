@@ -62,5 +62,5 @@ jest();
 
 // Make sure nobody does a it.only and blocks our entire test-suite from running
 noTestShortcuts({
-  predicate: filePath => filePath.endsWith('.test.js'),
+  testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
