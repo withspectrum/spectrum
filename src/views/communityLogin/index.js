@@ -53,7 +53,7 @@ export class Login extends React.Component<Props> {
                 src={community.profilePhoto}
               />
             </LoginImageContainer>
-            <Title>Log in to the {community.name} community</Title>
+            <Title>Sign in to the {community.name} community</Title>
             <Subtitle>
               {brandedLogin.message && brandedLogin.message.length > 0
                 ? brandedLogin.message

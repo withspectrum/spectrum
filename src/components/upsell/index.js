@@ -189,7 +189,7 @@ export class UpsellSignIn extends React.Component<SigninProps, SigninState> {
             Already have an account?{' '}
             <SigninLink onClick={() => this.toggleSigningIn('login')}>
               {' '}
-              Log in
+              Sign in
             </SigninLink>
           </SignupFooter>
         </NullCard>
