@@ -5,7 +5,7 @@ import Card from '../card';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 import { CLIENT_URL } from '../../api/constants';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
@@ -34,6 +34,7 @@ import {
 } from './style';
 
 type Props = {
+  onJoin: Function,
   joinedCommunity?: Function,
   joinedFirstCommunity?: Function,
   dispatch: Function,
@@ -49,6 +50,7 @@ type Props = {
 class CommunityWithData extends React.Component<Props> {
   onJoin = () => {
     this.props.joinedCommunity && this.props.joinedCommunity(1, false);
+    this.props.onJoin && this.props.onJoin();
   };
 
   onLeave = () => {

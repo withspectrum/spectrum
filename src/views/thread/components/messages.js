@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-import { sortAndGroupMessages } from '../../../helpers/messages';
+import { sortAndGroupMessages } from 'shared/clients/group-messages';
 import ChatMessages from '../../../components/messageGroup';
 import { LoadingChat } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
@@ -42,10 +42,12 @@ type Props = {
   loadNextPage: Function,
   scrollContainer: any,
   subscribeToNewMessages: Function,
+  threadIsLocked: boolean,
+  lastSeen: ?number | ?Date,
   data: {
     thread: {
       id: string,
-      currentUserLastSeen: Date,
+      currentUserLastSeen: Date | number,
       messageConnection: {
         pageInfo: {
           hasNextPage: boolean,
@@ -151,6 +153,8 @@ class MessagesWithData extends React.Component<Props, State> {
       loadNextPage,
       scrollContainer,
       location,
+      threadIsLocked,
+      lastSeen,
     } = this.props;
 
     const dataExists =
@@ -178,10 +182,7 @@ class MessagesWithData extends React.Component<Props, State> {
       };
 
       const uniqueMessages = unique(unsortedMessages);
-      const sortedMessages = sortAndGroupMessages(
-        uniqueMessages,
-        data.thread.currentUserLastSeen
-      );
+      const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
       return (
         <ChatWrapper>
@@ -229,6 +230,7 @@ class MessagesWithData extends React.Component<Props, State> {
               threadType={'story'}
               forceScrollToBottom={forceScrollToBottom}
               isModerator={isModerator}
+              lastSeen={lastSeen}
             />
           </InfiniteList>
         </ChatWrapper>
@@ -240,6 +242,7 @@ class MessagesWithData extends React.Component<Props, State> {
     }
 
     if (!messagesExist) {
+      if (threadIsLocked) return null;
       return (
         <NullMessagesWrapper>
           <Icon glyph={'emoji'} size={64} />

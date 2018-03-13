@@ -55,6 +55,11 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+	type BrandedLogin {
+		isEnabled: Boolean
+		message: String
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -67,20 +72,21 @@ const Community = /* GraphQL */ `
 		reputation: Int
 		pinnedThreadId: String
 		pinnedThread: Thread
-		communityPermissions: CommunityPermissions
-		channelConnection: CommunityChannelsConnection!
-		members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers!
-		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
-		metaData: CommunityMetaData
-		slackImport: SlackImport
-		invoices: [Invoice]
+    communityPermissions: CommunityPermissions @cost(complexity: 1)
+    channelConnection: CommunityChannelsConnection! @cost(complexity: 1)
+    members(first: Int = 10, after: String, filter: MembersFilter): CommunityMembers! @cost(complexity: 5, multiplier: "first")
+    threadConnection(first: Int = 10, after: String): CommunityThreadsConnection! @cost(complexity: 2, multiplier: "first")
+    metaData: CommunityMetaData @cost(complexity: 10)
+    slackImport: SlackImport @cost(complexity: 2)
+    invoices: [Invoice] @cost(complexity: 1)
 		recurringPayments: [RecurringPayment]
-		isPro: Boolean
-		memberGrowth: GrowthData
-		conversationGrowth: GrowthData
-		topMembers: [User]
-		topAndNewThreads: TopAndNewThreads
+    isPro: Boolean @cost(complexity: 1)
+    memberGrowth: GrowthData @cost(complexity: 10)
+    conversationGrowth: GrowthData @cost(complexity: 3)
+    topMembers: [User] @cost(complexity: 10)
+    topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
+		brandedLogin: BrandedLogin
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
@@ -89,8 +95,8 @@ const Community = /* GraphQL */ `
 	extend type Query {
 		community(id: ID, slug: String): Community
 		communities(slugs: [String], ids: [ID], curatedContentType: String): [Community]
-		communityMember(userId: String, communityId: String): CommunityMember		
-		topCommunities(amount: Int = 20): [Community!]
+		communityMember(userId: String, communityId: String): CommunityMember
+    topCommunities(amount: Int = 20): [Community!] @cost(complexity: 4, multiplier: "amount")
 		recentCommunities: [Community!]
 
 		searchCommunities(string: String, amount: Int = 20): [Community] @deprecated(reason:"Use the new Search query endpoint")
@@ -146,6 +152,19 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	input EnableBrandedLoginInput {
+		id: String!
+	}
+
+	input DisableBrandedLoginInput {
+		id: String!
+	}
+
+	input SaveBrandedLoginSettingsInput {
+		id: String!
+		message: String
+	}
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -156,6 +175,9 @@ const Community = /* GraphQL */ `
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
+		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
+		saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
 	}
 `;
 

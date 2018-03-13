@@ -16,12 +16,14 @@ export const ReactionWrapper = styled.b`
 
   ${props =>
     props.hasCount
-      ? `background-color: ${props.active
-          ? props.theme.warn.default
-          : props.theme.text.alt};
-		background-image: ${props.active
-      ? Gradient(props.theme.warn.alt, props.theme.warn.default)
-      : 'none'}
+      ? `background-color: ${
+          props.active ? props.theme.warn.default : props.theme.text.alt
+        };
+		background-image: ${
+      props.active
+        ? Gradient(props.theme.warn.alt, props.theme.warn.default)
+        : 'none'
+    }
 			`
       : `background-color: ${props.theme.bg.border};
 		background-image: none;`};
@@ -55,6 +57,10 @@ export const ReactionWrapper = styled.b`
     position: relative;
     top: 1px;
     pointer-events: none;
+  }
+
+  span: {
+    user-select: none;
   }
 
   svg,

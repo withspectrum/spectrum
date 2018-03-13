@@ -168,11 +168,7 @@ class ActionBar extends React.Component<Props, State> {
             )}
 
             <ShareButtons>
-              <ShareButton
-                facebook
-                tipText={'Share on Facebook'}
-                tipLocation={'top-right'}
-              >
+              <ShareButton facebook tipText={'Share'} tipLocation={'top-left'}>
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
                     thread.id
@@ -184,11 +180,7 @@ class ActionBar extends React.Component<Props, State> {
                 </a>
               </ShareButton>
 
-              <ShareButton
-                twitter
-                tipText={'Share on Twitter'}
-                tipLocation={'top-right'}
-              >
+              <ShareButton twitter tipText={'Tweet'} tipLocation={'top-left'}>
                 <a
                   href={`https://twitter.com/share?text=${
                     thread.content.title
@@ -213,7 +205,7 @@ class ActionBar extends React.Component<Props, State> {
                   )
                 }
               >
-                <ShareButton tipText={'Copy link'} tipLocation={'top-right'}>
+                <ShareButton tipText={'Copy link'} tipLocation={'top-left'}>
                   <a>
                     <Icon glyph={'link'} size={24} />
                   </a>
@@ -295,20 +287,22 @@ class ActionBar extends React.Component<Props, State> {
                       </TextButton>
                     </FlyoutRow>
 
-                    {(isChannelOwner || isCommunityOwner) && (
+                    {(isChannelOwner ||
+                      isCommunityOwner ||
+                      thread.isAuthor) && (
                       <FlyoutRow>
                         <TextButton
-                          icon="freeze"
+                          icon={
+                            thread.isLocked ? 'private' : 'private-unlocked'
+                          }
                           hoverColor="space.alt"
                           tipText={
-                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                            thread.isLocked ? 'Unlock chat' : 'Lock chat'
                           }
                           tipLocation="top-left"
                           onClick={this.props.threadLock}
                         >
-                          <Label>
-                            {thread.isLocked ? 'Unfreeze' : 'Freeze'}
-                          </Label>
+                          <Label>{thread.isLocked ? 'Unlock' : 'Lock'}</Label>
                         </TextButton>
                       </FlyoutRow>
                     )}

@@ -27,6 +27,7 @@ import Icon from '../../components/icons';
 import Search from 'src/components/search/channelThreads';
 import ChannelMemberGrid from './components/memberGrid';
 import { CLIENT_URL } from '../../api/constants';
+import CommunityLogin from 'src/views/communityLogin';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -118,9 +119,19 @@ class ChannelView extends React.Component<Props, State> {
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
 
+      const loginUrl = channel.community.brandedLogin.isEnabled
+        ? `/${channel.community.slug}/login?r=${CLIENT_URL}/${
+            channel.community.slug
+          }/${channel.slug}`
+        : `/login?r=${CLIENT_URL}/${channel.community.slug}/${channel.slug}`;
+
       // if the channel is private but the user isn't logged in, redirect to the login page
       if (!isLoggedIn && channel.isPrivate) {
-        return <Login redirectPath={`${window.location.href}`} />;
+        if (channel.community.brandedLogin.isEnabled) {
+          return <CommunityLogin redirectPath={loginUrl} match={match} />;
+        } else {
+          return <Login redirectPath={loginUrl} />;
+        }
       }
 
       // user has explicitly been blocked from this channel
@@ -212,12 +223,9 @@ class ChannelView extends React.Component<Props, State> {
               <ChannelProfile data={{ channel }} profileSize="full" />
 
               {!isLoggedIn ? (
-                <Link
-                  to={`/login?r=${CLIENT_URL}/${channel.community.slug}/${
-                    channel.slug
-                  }`}
-                >
-                  <ProfileCTA>Join {channel.name}</ProfileCTA>
+                <Link to={loginUrl}>
+                  <LoginButton>Join {channel.name}</LoginButton>
+
                 </Link>
               ) : !isGlobalOwner ? (
                 <ToggleChannelMembership

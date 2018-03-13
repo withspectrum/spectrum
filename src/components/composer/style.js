@@ -173,3 +173,16 @@ export const ThreadDescription = {
   overflowY: 'scroll',
   position: 'relative',
 };
+
+export const DisabledWarning = styled.div`
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  background: ${props => hexa(props.theme.warn.default, 0.1)};
+  color: ${props => props.theme.warn.default};
+`;

@@ -400,3 +400,45 @@ export const ShareInputContainer = styled.div`
   max-width: 528px;
   margin-top: 16px;
 `;
+
+export const JoinChannelContainer = styled.div`
+  display: flex;
+  border: 1px solid ${props => props.theme.bg.border};
+  border-radius: 4px;
+  padding: 16px 24px;
+  align-items: center;
+  flex: 1 0 auto;
+  width: calc(100% - 24px);
+  margin-bottom: 12px;
+  background: ${props => props.theme.bg.wash};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 16px;
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+    }
+  }
+`;
+
+export const JoinChannelContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  justify-content: center;
+  padding-right: 32px;
+`;
+
+export const JoinChannelTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
+`;
+
+export const JoinChannelSubtitle = styled.h4`
+  font-size: 16px;
+  font-weight: 400;
+  color: ${props => props.theme.text.secondary};
+`;

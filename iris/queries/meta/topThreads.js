@@ -7,7 +7,7 @@ import { getMessageCount } from '../../models/message';
 export default async (_: any, __: any, { user }: GraphQLContext) => {
   if (!isAdmin(user.id)) return null;
 
-  const threads = await getThreadsInTimeframe('week');
+  const threads = await getThreadsInTimeframe('weekly');
 
   const messageCountPromises = threads.map(async ({ id, ...thread }) => ({
     id,

@@ -5,19 +5,20 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { ChannelListItem } from '../../../components/listItems';
 import { ChannelProfile } from '../../../components/profile';
-import { IconButton } from '../../../components/buttons';
+import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { LoadingCard } from '../../../components/loading';
+import { LoadingCard, Loading } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import { StyledCard, ListContainer } from '../../../components/listItems/style';
 import {
-  StyledCard,
-  ListHeader,
-  ListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+  ColumnHeading,
+  ChannelListItemRow,
+  ToggleNotificationsContainer,
+} from '../style';
+import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 
 type Props = {
   data: {
@@ -30,6 +31,21 @@ type Props = {
 };
 
 class ChannelList extends React.Component<Props> {
+  sortChannels = (array: Array<any>): Array<any> => {
+    const generalChannel = array.find(channel => channel.slug === 'general');
+    const withoutGeneral = array.filter(channel => channel.slug !== 'general');
+    const sortedWithoutGeneral = withoutGeneral.sort((a, b) => {
+      if (a.slug < b.slug) return -1;
+      if (a.slug > b.slug) return 1;
+      return 0;
+    });
+    if (generalChannel) {
+      sortedWithoutGeneral.unshift(generalChannel);
+      return sortedWithoutGeneral;
+    } else {
+      return sortedWithoutGeneral;
+    }
+  };
   render() {
     const {
       isLoading,
@@ -51,28 +67,21 @@ class ChannelList extends React.Component<Props> {
           return channel;
         })
         .filter(channel => channel && !channel.channelPermissions.isBlocked);
+      const sortedChannels = this.sortChannels(channels);
 
       const joinedChannels = channels
         .slice()
         .filter(channel => channel && channel.channelPermissions.isMember);
+      const sortedJoinedChannels = this.sortChannels(joinedChannels);
+
       const nonJoinedChannels = channels
         .slice()
         .filter(channel => channel && !channel.channelPermissions.isMember);
+      const sortedNonJoinedChannels = this.sortChannels(nonJoinedChannels);
 
       return (
         <StyledCard largeOnly>
-          <ListHeader>
-            <ListHeading>Channels</ListHeading>
-            {isOwner && (
-              <IconButton
-                glyph="plus"
-                color="text.placeholder"
-                onClick={() =>
-                  dispatch(openModal('CREATE_CHANNEL_MODAL', community))
-                }
-              />
-            )}
-          </ListHeader>
+          <ColumnHeading>Channels</ColumnHeading>
 
           {/*
             user isn't logged in, channel list is used for navigation
@@ -81,7 +90,7 @@ class ChannelList extends React.Component<Props> {
           */}
           {(!currentUser || (currentUser && !isMember)) && (
             <ListContainer>
-              {channels.map(channel => {
+              {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
                   <Link
@@ -103,40 +112,66 @@ class ChannelList extends React.Component<Props> {
           )}
 
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
-          {joinedChannels &&
+          {sortedJoinedChannels &&
             isMember && (
               <ListContainer>
-                {joinedChannels.map(channel => {
+                {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (
-                    <Link
-                      key={channel.id}
-                      to={`/${communitySlug}/${channel.slug}`}
-                    >
-                      <ChannelListItem
-                        clickable
-                        contents={channel}
-                        withDescription={false}
-                        channelIcon
+                    <ChannelListItemRow key={channel.id}>
+                      <Link
+                        to={`/${communitySlug}/${channel.slug}`}
+                        style={{
+                          display: 'flex',
+                          flex: 'auto',
+                        }}
                       >
-                        <Icon glyph="view-forward" />
-                      </ChannelListItem>
-                    </Link>
+                        <ChannelListItem
+                          clickable
+                          contents={channel}
+                          withDescription={false}
+                          channelIcon
+                        />
+                      </Link>
+                      <ToggleChannelNotifications
+                        channel={channel}
+                        render={state => (
+                          <ToggleNotificationsContainer
+                            tipLocation={'top-left'}
+                            tipText={
+                              channel.channelPermissions.receiveNotifications
+                                ? 'Turn notifications off'
+                                : 'Turn notifications on'
+                            }
+                          >
+                            {state.isLoading ? (
+                              <Loading />
+                            ) : (
+                              <Icon
+                                glyph={
+                                  channel.channelPermissions
+                                    .receiveNotifications
+                                    ? 'notification-fill'
+                                    : 'notification'
+                                }
+                              />
+                            )}
+                          </ToggleNotificationsContainer>
+                        )}
+                      />
+                    </ChannelListItemRow>
                   );
                 })}
               </ListContainer>
             )}
 
-          {nonJoinedChannels.length > 0 &&
+          {sortedNonJoinedChannels.length > 0 &&
             isMember && (
-              <span>
-                <ListHeader secondary>
-                  <ListHeading>New channels</ListHeading>
-                </ListHeader>
-
+              <React.Fragment>
+                <ColumnHeading>New channels</ColumnHeading>
                 <ListContainer>
                   <ul>
-                    {nonJoinedChannels.map(channel => {
+                    {sortedNonJoinedChannels.map(channel => {
                       if (!channel) return null;
                       return (
                         <ChannelProfile
@@ -148,8 +183,23 @@ class ChannelList extends React.Component<Props> {
                     })}
                   </ul>
                 </ListContainer>
-              </span>
+              </React.Fragment>
             )}
+
+          {isOwner && (
+            <OutlineButton
+              style={{
+                alignSelf: 'flex-end',
+                marginTop: '12px',
+              }}
+              glyph="plus"
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+              }
+            >
+              Create a channel
+            </OutlineButton>
+          )}
         </StyledCard>
       );
     }

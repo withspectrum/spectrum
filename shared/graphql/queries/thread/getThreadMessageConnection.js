@@ -2,7 +2,8 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
-import { subscribeToNewMessages } from 'shared/graphql/subscriptions';
+import { btoa } from 'abab';
+import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 import threadMessageConnectionFragment from '../../fragments/thread/threadMessageConnection';
@@ -59,7 +60,7 @@ export const getThreadMessageConnectionOptions = {
           new Date(props.lastSeen).getTime() <
           new Date(props.lastActive).getTime()
         ) {
-          variables.after = window.btoa(new Date(props.lastSeen).getTime());
+          variables.after = btoa(new Date(props.lastSeen).getTime());
           // Otherwise load the last 50 messages
         } else {
           // $FlowFixMe
@@ -75,7 +76,12 @@ export const getThreadMessageConnectionOptions = {
   },
   // $FlowFixMe
   props: props => ({
-    data: props.data,
+    data: {
+      ...props.data,
+      messageConnection: props.data.thread
+        ? props.data.thread.messageConnection
+        : null,
+    },
     loadNextPage: () => {
       let cursor;
       const { thread } = props.data;
@@ -196,7 +202,7 @@ export const getThreadMessageConnectionOptions = {
                     if (edge.node.id === existingMessage.id)
                       return {
                         ...edge,
-                        cursor: window.btoa(newMessage.id),
+                        cursor: btoa(newMessage.id),
                         node: newMessage,
                       };
 
@@ -223,7 +229,7 @@ export const getThreadMessageConnectionOptions = {
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
                   {
                     node: newMessage,
-                    cursor: window.btoa(newMessage.id),
+                    cursor: btoa(newMessage.id),
                     __typename: 'ThreadMessageEdge',
                   },
                 ],

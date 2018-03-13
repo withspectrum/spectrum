@@ -22,11 +22,11 @@ type Attachment = {
 export type ThreadInfoType = {
   id: string,
   messageCount: number,
-  createdAt: Date,
-  modifiedAt: ?Date,
-  lastActive: ?Date,
+  createdAt: string,
+  modifiedAt: ?string,
+  lastActive: ?string,
   receiveNotifications: boolean,
-  currentUserLastSeen: ?Date,
+  currentUserLastSeen: ?string,
   author: {
     ...$Exact<ThreadParticipantType>,
   },
