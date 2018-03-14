@@ -124,12 +124,16 @@ class ChannelView extends React.Component<Props, State> {
           }/${channel.slug}`
         : `/login?r=${CLIENT_URL}/${channel.community.slug}/${channel.slug}`;
 
+      const redirectPath = `${CLIENT_URL}/${channel.community.slug}/${
+        channel.slug
+      }`;
+
       // if the channel is private but the user isn't logged in, redirect to the login page
       if (!isLoggedIn && channel.isPrivate) {
         if (channel.community.brandedLogin.isEnabled) {
-          return <CommunityLogin redirectPath={loginUrl} match={match} />;
+          return <CommunityLogin redirectPath={redirectPath} match={match} />;
         } else {
-          return <Login redirectPath={loginUrl} />;
+          return <Login redirectPath={redirectPath} />;
         }
       }
 

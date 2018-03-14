@@ -28,6 +28,7 @@ type Props = {
   ...$Exact<ViewNetworkHandlerType>,
   history: Object,
   match: Object,
+  redirectPath: ?string,
 };
 
 export class Login extends React.Component<Props> {
@@ -35,7 +36,7 @@ export class Login extends React.Component<Props> {
     this.props.history.push(`/${this.props.match.params.communitySlug}`);
   };
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading, redirectPath } = this.props;
 
     if (community && community.id) {
       const { brandedLogin } = community;
@@ -53,14 +54,17 @@ export class Login extends React.Component<Props> {
                 src={community.profilePhoto}
               />
             </LoginImageContainer>
-            <Title>Log in to the {community.name} community</Title>
+            <Title>Sign in to the {community.name} community</Title>
             <Subtitle>
               {brandedLogin.message && brandedLogin.message.length > 0
                 ? brandedLogin.message
                 : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'}
             </Subtitle>
 
-            <LoginButtonSet signinType={'signin'} />
+            <LoginButtonSet
+              redirectPath={redirectPath || null}
+              signinType={'signin'}
+            />
 
             <CodeOfConduct>
               By using Spectrum, you agree to our{' '}

@@ -26,7 +26,7 @@ export class Login extends React.Component<Props> {
 
     const viewSubtitle =
       signinType === 'login'
-        ? "We're happy to see you again - log in below to get back into the conversation!"
+        ? "We're happy to see you again - sign in below to get back into the conversation!"
         : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.';
 
     return (

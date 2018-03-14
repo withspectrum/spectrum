@@ -3,7 +3,9 @@ import path from 'path';
 import { warn, fail, message, markdown, schedule, danger } from 'danger';
 import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
+import flow from 'danger-plugin-flow';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
+import noConsole from 'danger-plugin-no-console';
 
 const APP_FOLDERS = [
   'admin',
@@ -17,7 +19,7 @@ const APP_FOLDERS = [
   'src',
   'vulcan',
 ];
-const CHECKBOXES = /^- \[x\] *(.*)?$/gim;
+const CHECKBOXES = /^\s*-\s*\[x\]\s*(.+?)$/gim;
 const possibleAutoLabels = {
   wip: 'WIP: Building',
   'needs testing': 'WIP: Needs Testing',
@@ -31,15 +33,18 @@ if (danger.github.pr.body.length < 10) {
 
 // Add automatic labels to the PR
 schedule(async () => {
-  const pr = danger.github.pr;
+  const pr = danger.github.thisPR;
   const api = danger.github.api;
-  const checkedBoxes = pr.body.match(CHECKBOXES);
+  const checkedBoxes = danger.github.pr.body.match(CHECKBOXES);
   if (!checkedBoxes || checkedBoxes.length === 0) return;
 
-  const matches = checkedBoxes.map(result => result[1]);
+  const matches = checkedBoxes
+    .map(result => new RegExp(CHECKBOXES.source, 'mi').exec(result))
+    .filter(Boolean)
+    .map(res => res[1]);
 
-  const matchingLabels = matches.filter(match =>
-    Object.keys(possibleAutoLabels).includes(match.toLowerCase())
+  const matchingLabels = matches.filter(
+    match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
   );
 
   if (!matchingLabels || matchingLabels.length === 0) return;
@@ -64,3 +69,14 @@ jest();
 noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
+
+
+schedule(noConsole({ whitelist: ['error'] }));
+
+schedule(
+  flow({
+    // Don't fail the build, only warn the submitter
+    warn: true,
+    blacklist: ['flow-typed/**/*.js', 'public/**/*.js'],
+  })
+);

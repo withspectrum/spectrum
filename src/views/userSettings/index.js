@@ -53,7 +53,7 @@ class UserSettings extends React.Component<Props> {
             <ViewError
               heading={'We ran into an error finding this user’s settings.'}
               subheading={
-                'If you are trying to view your own settings, refresh the page below to log in again.'
+                'If you are trying to view your own settings, refresh the page below to sign in again.'
               }
               clearStorage
               refresh

@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS, eachAsyncNewValue } from './utils';
+import { NEW_DOCUMENTS, createChangefeed } from './utils';
 
 export const getNotificationsByUser = (
   userId: string,
@@ -62,8 +62,8 @@ const hasChanged = (field: string) =>
 
 const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
-export const listenToNewNotifications = (cb: Function): Function => {
-  return db
+const getNewNotificationsChangefeed = () =>
+  db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
@@ -75,11 +75,18 @@ export const listenToNewNotifications = (cb: Function): Function => {
     })
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
-    .run(eachAsyncNewValue(cb));
+    .run();
+
+export const listenToNewNotifications = (cb: Function): Function => {
+  return createChangefeed(
+    getNewNotificationsChangefeed,
+    cb,
+    'listenToNewNotifications'
+  );
 };
 
-export const listenToNewDirectMessageNotifications = (cb: Function) => {
-  return db
+const getNewDirectMessageNotificationsChangefeed = () =>
+  db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
@@ -91,5 +98,12 @@ export const listenToNewDirectMessageNotifications = (cb: Function) => {
     })
     .zip()
     .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
-    .run(eachAsyncNewValue(cb));
+    .run();
+
+export const listenToNewDirectMessageNotifications = (cb: Function) => {
+  return createChangefeed(
+    getNewDirectMessageNotificationsChangefeed,
+    cb,
+    'listenToNewDirectMessageNotifications'
+  );
 };
