@@ -73,5 +73,6 @@ schedule(
   flow({
     // Don't fail the build, only warn the submitter
     warn: true,
+    blacklist: ['flow-typed/**/*.js', 'public/**/*.js'],
   })
 );
