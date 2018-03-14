@@ -3,6 +3,7 @@ import path from 'path';
 import { warn, fail, message, markdown, schedule, danger } from 'danger';
 import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
+import flow from 'danger-plugin-flow';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
 
 const APP_FOLDERS = [
@@ -64,3 +65,10 @@ jest();
 noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
+
+schedule(
+  flow({
+    // Don't fail the build, only warn the submitter
+    warn: true,
+  })
+);
