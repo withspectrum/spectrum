@@ -4,6 +4,7 @@ import { warn, fail, message, markdown, schedule, danger } from 'danger';
 import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
+import noConsole from 'danger-plugin-no-console';
 
 const APP_FOLDERS = [
   'admin',
@@ -64,3 +65,5 @@ jest();
 noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
+
+schedule(noConsole({ whitelist: ['error'] }));
