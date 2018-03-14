@@ -11,6 +11,11 @@ import Raven from 'shared/raven';
 import type { GraphQLContext } from '../';
 import type { GraphQLResolveInfo } from 'graphql';
 
+const addNotificationListener = asyncify(listenToNewNotifications);
+const addDMNotificationListener = asyncify(
+  listenToNewDirectMessageNotifications
+);
+
 module.exports = {
   Subscription: {
     notificationAdded: {
@@ -27,10 +32,14 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to notifications`);
-        return asyncify(listenToNewNotifications(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return addNotificationListener({
+          filter: notification =>
+            notification && notification.userId === user.id,
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
         });
       },
     },
@@ -48,10 +57,14 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to DM notifications`);
-        return asyncify(listenToNewDirectMessageNotifications(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return addDMNotificationListener({
+          filter: notification =>
+            notification && notification.userId === user.id,
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
         });
       },
     },

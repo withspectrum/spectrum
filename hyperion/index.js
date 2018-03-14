@@ -9,7 +9,7 @@ import Loadable from 'react-loadable';
 import path from 'path';
 import { getUser } from 'iris/models/user';
 import Raven from 'shared/raven';
-import toobusy from 'toobusy-js';
+import toobusy from 'shared/middlewares/toobusy';
 
 const PORT = process.env.PORT || 3006;
 
@@ -17,6 +17,8 @@ const app = express();
 
 // Trust the now proxy
 app.set('trust proxy', true);
+
+app.use(toobusy);
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
@@ -28,20 +30,6 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
   const raven = require('shared/middlewares/raven').default;
   app.use(raven);
 }
-
-// middleware which blocks requests when we're too busy
-app.use(
-  (req: express$Request, res: express$Response, next: express$NextFunction) => {
-    if (toobusy()) {
-      res.status(503);
-      res.send(
-        'It looks like Spectrum is very busy right now, please try again in a minute.'
-      );
-    } else {
-      next();
-    }
-  }
-);
 
 // Cross origin request support
 import cors from 'shared/middlewares/cors';

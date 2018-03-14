@@ -110,8 +110,9 @@ export const ChatInputWrapper = styled(FlexCol)`
 
 export const DetailViewWrapper = styled(FlexCol)`
   background-image: ${({ theme }) =>
-    `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg
-      .default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
+    `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${
+      theme.bg.default
+    } 85%, ${theme.bg.wash})`};
   flex: auto;
   justify-content: flex-start;
   align-items: center;
@@ -164,7 +165,9 @@ export const ContextRow = styled(FlexRow)`
   align-content: flex-start;
 `;
 
-export const EditDone = styled.div`position: relative;`;
+export const EditDone = styled.div`
+  position: relative;
+`;
 
 export const DropWrap = styled(FlexCol)`
   width: 32px;
@@ -223,10 +226,18 @@ export const FlyoutRow = styled(FlexRow)`
     }
   }
 
-  ${p =>
-    p.hideBelow &&
+  ${props =>
+    props.hideBelow &&
     css`
-      @media screen and (max-width: ${p.hideBelow}px) {
+      @media (max-width: ${props.hideBelow}px) {
+        display: none;
+      }
+    `};
+
+  ${props =>
+    props.hideAbove &&
+    css`
+      @media (min-width: ${props.hideAbove}px) {
         display: none;
       }
     `};
@@ -242,12 +253,20 @@ export const Byline = styled.div`
   font-size: 14px;
 `;
 
-export const BylineMeta = styled(FlexCol)`margin-left: 12px;`;
+export const BylineMeta = styled(FlexCol)`
+  margin-left: 12px;
+`;
 
-export const AuthorAvatar = styled(Avatar)`cursor: pointer;`;
+export const AuthorAvatar = styled(Avatar)`
+  cursor: pointer;
+`;
 
-export const AuthorNameLink = styled(Link)`display: flex;`;
-export const AuthorNameNoLink = styled.div`display: flex;`;
+export const AuthorNameLink = styled(Link)`
+  display: flex;
+`;
+export const AuthorNameNoLink = styled.div`
+  display: flex;
+`;
 export const AuthorName = styled(H3)`
   font-weight: 500;
   max-width: 100%;
@@ -319,7 +338,9 @@ export const Timestamp = styled.span`
   }
 `;
 
-export const Edited = styled(Timestamp)`margin-left: 4px;`;
+export const Edited = styled(Timestamp)`
+  margin-left: 4px;
+`;
 
 export const ChatWrapper = styled.div`
   width: 100%;
@@ -518,10 +539,16 @@ export const PillLinkPinned = styled.div`
 `;
 
 export const PillLabel = styled.span`
-  ${props => props.isPrivate && css`position: relative;`};
+  ${props =>
+    props.isPrivate &&
+    css`
+      position: relative;
+    `};
 `;
 
-export const Lock = styled.span`margin-right: 4px;`;
+export const Lock = styled.span`
+  margin-right: 4px;
+`;
 export const PinIcon = styled.span`
   margin-right: 4px;
   margin-left: -2px;
@@ -556,7 +583,7 @@ export const FollowButton = styled(Button)`
 
   &:hover {
     background: ${props => props.theme.bg.default};
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.brand.alt};
   }
 
   @media (max-width: 768px) {
@@ -696,7 +723,9 @@ export const RelatedCount = styled.p`
   color: ${props => props.theme.text.alt};
 `;
 
-export const Label = styled.p`font-size: 14px;`;
+export const Label = styled.p`
+  font-size: 14px;
+`;
 
 export const WatercoolerDescription = styled.h4`
   font-size: 18px;
@@ -727,4 +756,6 @@ export const WatercoolerTitle = styled.h3`
   margin-bottom: 8px;
 `;
 
-export const WatercoolerAvatar = styled(Avatar)`margin-bottom: 16px;`;
+export const WatercoolerAvatar = styled(Avatar)`
+  margin-bottom: 16px;
+`;

@@ -13,6 +13,8 @@ import Raven from 'shared/raven';
 import type { GraphQLContext } from '../';
 import type { GraphQLResolveInfo } from 'graphql';
 
+const addThreadListener = asyncify(listenToUpdatedThreads);
+
 module.exports = {
   Subscription: {
     threadUpdated: {
@@ -51,10 +53,13 @@ module.exports = {
             ids.length
           } channels`
         );
-        return asyncify(listenToUpdatedThreads(ids), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return addThreadListener({
+          filter: thread => thread && ids.includes(thread.channelId),
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
         });
       },
     },

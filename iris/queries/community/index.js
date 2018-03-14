@@ -27,6 +27,7 @@ import watercooler from './watercooler';
 import billingSettings from './billingSettings';
 import hasChargeableSource from './hasChargeableSource';
 import hasFeatures from './hasFeatures';
+import brandedLogin from './brandedLogin';
 
 module.exports = {
   Query: {
@@ -58,5 +59,6 @@ module.exports = {
     billingSettings,
     hasChargeableSource,
     hasFeatures,
+    brandedLogin,
   },
 };

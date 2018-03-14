@@ -1,5 +1,6 @@
 {
   "rules": [
+    { "pathname": "/robots.txt", "dest": "robots.alpha.spectrum.chat" },
     { "pathname": "/api", "dest": "api.alpha.spectrum.chat" },
     { "pathname": "/api/**", "dest": "api.alpha.spectrum.chat" },
     { "pathname": "/auth", "dest": "api.alpha.spectrum.chat" },

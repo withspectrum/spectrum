@@ -9,10 +9,12 @@ debug('logging with debug enabled!');
 import { createServer } from 'http';
 import express from 'express';
 import Raven from 'shared/raven';
+import { ApolloEngine } from 'apollo-engine';
+import toobusy from 'shared/middlewares/toobusy';
 import { init as initPassport } from './authentication.js';
-import engine from './routes/middlewares/engine';
-const PORT = 3001;
 import type { DBUser } from 'shared/types';
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 // Initialize authentication
 initPassport();
@@ -22,6 +24,9 @@ const app = express();
 
 // Trust the now proxy
 app.set('trust proxy', true);
+
+// Return the request if the server is too busy
+app.use(toobusy);
 
 // Send all responses as gzip
 app.use(compression());
@@ -34,6 +39,28 @@ app.use('/auth', authRoutes);
 
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
+
+// $FlowIssue
+app.use(
+  (
+    err: Error,
+    req: express$Request,
+    res: express$Response,
+    next: express$NextFunction
+  ) => {
+    if (err) {
+      console.error(err);
+      res
+        .status(500)
+        .send(
+          'Oops, something went wrong! Our engineers have been alerted and will fix this asap.'
+        );
+      Raven.captureException(err);
+    } else {
+      return next();
+    }
+  }
+);
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
@@ -49,15 +76,27 @@ const server = createServer(app);
 import createSubscriptionsServer from './routes/create-subscription-server';
 const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
-// Start webserver
+// Start API wrapped in Apollo Engine
+// const engine = new ApolloEngine({
+//   logging: {
+//     level: 'WARN',
+//   },
+//   apiKey: process.env.APOLLO_ENGINE_API_KEY,
+//   // Only send perf data to the remote server in production
+//   reporting: {
+//     disabled: process.env.NODE_ENV !== 'production',
+//     hostname: process.env.NOW_URL || undefined,
+//     privateHeaders: ['authorization', 'Authorization', 'AUTHORIZATION'],
+//   },
+// });
+
+// engine.listen({
+//   port: PORT,
+//   httpServer: server,
+//   graphqlPaths: ['/api'],
+// });
 server.listen(PORT);
 console.log(`GraphQL server running at http://localhost:${PORT}/api`);
-
-if (process.env.NODE_ENV === 'production') {
-  // Start Apollo Engine
-  console.log('Apollo Engine starting...');
-  engine.start();
-}
 
 process.on('unhandledRejection', async err => {
   console.error('Unhandled rejection', err);

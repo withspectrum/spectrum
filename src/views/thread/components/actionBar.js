@@ -158,9 +158,7 @@ class ActionBar extends React.Component<Props, State> {
                 loading={notificationStateLoading}
                 onClick={this.toggleNotification}
               >
-                {thread.receiveNotifications
-                  ? 'Following conversation'
-                  : 'Follow conversation'}
+                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
               </FollowButton>
             ) : (
               <Link to={`/login?r=${window.location}`}>
@@ -170,7 +168,7 @@ class ActionBar extends React.Component<Props, State> {
                   tipText={'Get notified about replies'}
                   tipLocation={'top-right'}
                 >
-                  Follow conversation
+                  Notify me
                 </FollowButton>
               </Link>
             )}
@@ -238,19 +236,19 @@ class ActionBar extends React.Component<Props, State> {
                     onClick={this.toggleFlyout}
                   />
                   <Flyout>
-                    <FlyoutRow hideBelow={1024}>
+                    <FlyoutRow hideAbove={768}>
                       <TextButton
                         icon={
                           thread.receiveNotifications
                             ? 'notification-fill'
                             : 'notification'
                         }
-                        hoverColor={'text.default'}
+                        hoverColor={'brand.alt'}
                         onClick={this.toggleNotification}
                       >
                         {thread.receiveNotifications
-                          ? 'Unfollow conversation'
-                          : 'Follow conversation'}
+                          ? 'Subscribed'
+                          : 'Notify me'}
                       </TextButton>
                     </FlyoutRow>
 
@@ -258,12 +256,10 @@ class ActionBar extends React.Component<Props, State> {
                       <FlyoutRow>
                         <TextButton
                           icon="edit"
-                          tipText="Edit"
-                          tipLocation="top-left"
                           onClick={this.props.toggleEdit}
-                          hoverColor={'text.default'}
+                          hoverColor={'space.default'}
                         >
-                          <Label>Edit</Label>
+                          <Label>Edit post</Label>
                         </TextButton>
                       </FlyoutRow>
                     )}
@@ -278,15 +274,11 @@ class ActionBar extends React.Component<Props, State> {
                             hoverColor={
                               isPinned ? 'warn.default' : 'special.default'
                             }
-                            tipText={
-                              isPinned
-                                ? 'Un-pin thread'
-                                : `Pin in ${thread.community.name}`
-                            }
-                            tipLocation="top-left"
                             onClick={this.props.togglePinThread}
                           >
-                            <Label>{isPinned ? 'Unpin' : 'Pin'}</Label>
+                            <Label>
+                              {isPinned ? 'Unpin thread' : 'Pin thread'}
+                            </Label>
                           </TextButton>
                         </FlyoutRow>
                       )}
@@ -294,33 +286,34 @@ class ActionBar extends React.Component<Props, State> {
                     <FlyoutRow hideBelow={1024}>
                       <TextButton
                         icon={'channel'}
-                        hoverColor={'text.default'}
+                        hoverColor={'special.default'}
                         onClick={this.triggerChangeChannel}
                       >
-                        Change channel
+                        Move thread
                       </TextButton>
                     </FlyoutRow>
 
-                    {(isChannelOwner ||
+                    {isChannelOwner ||
                       isCommunityOwner ||
                       isChannelModerator ||
-                      isCommunityModerator) && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon="freeze"
-                          hoverColor="space.alt"
-                          tipText={
-                            thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
-                          }
-                          tipLocation="top-left"
-                          onClick={this.props.threadLock}
-                        >
-                          <Label>
-                            {thread.isLocked ? 'Unfreeze' : 'Freeze'}
-                          </Label>
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
+                      isCommunityModerator ||
+                      (thread.isAuthor && (
+                        <FlyoutRow>
+                          <TextButton
+                            icon={
+                              thread.isLocked ? 'private' : 'private-unlocked'
+                            }
+                            hoverColor={
+                              thread.isLocked ? 'success.default' : 'warn.alt'
+                            }
+                            onClick={this.props.threadLock}
+                          >
+                            <Label>
+                              {thread.isLocked ? 'Unlock chat' : 'Lock chat'}
+                            </Label>
+                          </TextButton>
+                        </FlyoutRow>
+                      ))}
 
                     {(thread.isAuthor ||
                       isChannelOwner ||
@@ -330,9 +323,7 @@ class ActionBar extends React.Component<Props, State> {
                       <FlyoutRow>
                         <TextButton
                           icon="delete"
-                          hoverColor="warn.alt"
-                          tipText="Delete thread"
-                          tipLocation="top-left"
+                          hoverColor="warn.default"
                           onClick={this.props.triggerDelete}
                         >
                           <Label>Delete</Label>

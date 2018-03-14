@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-import { hexa } from 'src/components/globals';
 
 export const Bar = styled.div`
   display: grid;

@@ -10,6 +10,7 @@ import ChangeChannelModal from './ChangeChannelModal';
 import UpgradeAnalyticsModal from './UpgradeAnalyticsModal';
 import UpgradeModeratorSeatModal from './UpgradeModeratorSeatModal';
 import RestoreChannelModal from './RestoreChannelModal';
+import ChatInputLoginModal from './ChatInputLoginModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -21,6 +22,7 @@ const MODAL_COMPONENTS = {
   UPGRADE_ANALYTICS_MODAL: UpgradeAnalyticsModal,
   UPGRADE_MODERATOR_SEAT_MODAL: UpgradeModeratorSeatModal,
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
+  CHAT_INPUT_LOGIN_MODAL: ChatInputLoginModal,
 };
 
 /*

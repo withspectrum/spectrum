@@ -4,13 +4,12 @@ import compose from 'recompose/compose';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import { FlexCol } from '../../../components/globals';
-import { Card } from '../../../components/card';
-import { LoadingList } from '../../../components/loading';
-import { UserListItem } from '../../../components/listItems';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
-import { StyledButton } from '../style';
+import { FlexCol } from 'src/components/globals';
+import { Card } from 'src/components/card';
+import { LoadingList } from 'src/components/loading';
+import { UserListItem } from 'src/components/listItems';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
 
 type Props = {
   data: {
@@ -23,11 +22,7 @@ type Props = {
 
 class CommunityMemberGrid extends React.Component<Props> {
   render() {
-    const {
-      data: { community, fetchMore },
-      isLoading,
-      isFetchingMore,
-    } = this.props;
+    const { data: { community }, isLoading } = this.props;
 
     if (community) {
       const { edges: members } = community.members;
@@ -45,11 +40,6 @@ class CommunityMemberGrid extends React.Component<Props> {
             });
             return <UserListItem key={user.id} user={user} />;
           })}
-          {community.members.pageInfo.hasNextPage && (
-            <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-              View more...
-            </StyledButton>
-          )}
         </FlexCol>
       );
     }

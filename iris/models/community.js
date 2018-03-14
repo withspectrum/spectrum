@@ -9,6 +9,7 @@ import {
 } from 'shared/bull/queues';
 import { removeMemberInChannel } from './usersChannels';
 import type { DBCommunity } from 'shared/types';
+import type { Timeframe } from './utils';
 
 export const getCommunityById = (id: string): Promise<DBCommunity> => {
   return db
@@ -592,7 +593,7 @@ export const getThreadCount = (communityId: string) => {
 
 export const getCommunityGrowth = async (
   table: string,
-  range: string,
+  range: Timeframe,
   field: string,
   communityId: string,
   filter?: mixed

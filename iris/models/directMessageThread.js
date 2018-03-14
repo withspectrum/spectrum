@@ -1,6 +1,6 @@
 //@flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS } from './utils';
+import { NEW_DOCUMENTS, createChangefeed } from './utils';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
@@ -80,29 +80,26 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
-const listenToUpdatedDirectMessageThreads = (userId: string) => (
-  cb: Function
-): Function => {
-  return db
+const getUpdatedDirectMessageThreadChangefeed = () =>
+  db
     .table('directMessageThreads')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
     .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
-    .filter({ right: { userId } })
     .without({
       right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
     .zip()
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        if (err) throw err;
-        // Call the passed callback with the notification
-        cb(data);
-      });
-    });
+    .run();
+
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  return createChangefeed(
+    getUpdatedDirectMessageThreadChangefeed,
+    cb,
+    'listenToUpdatedDirectMessageThreads'
+  );
 };
 
 // prettier-ignore

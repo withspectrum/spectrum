@@ -13,6 +13,9 @@ import makePaymentSourceDefault from './makePaymentSourceDefault';
 import cancelSubscription from './cancelSubscription';
 import enableCommunityAnalytics from './enableCommunityAnalytics';
 import disableCommunityAnalytics from './disableCommunityAnalytics';
+import enableBrandedLogin from './enableBrandedLogin';
+import disableBrandedLogin from './disableBrandedLogin';
+import saveBrandedLoginSettings from './saveBrandedLoginSettings';
 
 module.exports = {
   Mutation: {
@@ -30,5 +33,8 @@ module.exports = {
     cancelSubscription,
     enableCommunityAnalytics,
     disableCommunityAnalytics,
+    enableBrandedLogin,
+    disableBrandedLogin,
+    saveBrandedLoginSettings,
   },
 };

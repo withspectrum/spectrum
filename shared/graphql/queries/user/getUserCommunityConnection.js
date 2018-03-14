@@ -40,12 +40,13 @@ const getUserCommunityConnectionOptions = {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
 export const getCurrentUserCommunityConnection = graphql(
   getCurrentUserCommunityConnectionQuery,
-  { options: { fetchPolicy: 'cache-first' } }
+  { options: { fetchPolicy: 'cache-and-network' } }
 );
 
 export const getUserCommunityConnection = graphql(

@@ -121,6 +121,11 @@ const Community = /* GraphQL */ `
 		analytics: Boolean
 		prioritySupport: Boolean
 	}
+	
+	type BrandedLogin {
+		isEnabled: Boolean
+		message: String
+	}
 
 	type Community {
 		id: ID!
@@ -148,6 +153,7 @@ const Community = /* GraphQL */ `
     topMembers: [User] @cost(complexity: 10)
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
+		brandedLogin: BrandedLogin
 
 		hasFeatures: Features
 		hasChargeableSource: Boolean
@@ -248,6 +254,19 @@ const Community = /* GraphQL */ `
 	input DisableCommunityAnalyticsInput {
 		communityId: ID!
 	}
+	
+	input EnableBrandedLoginInput {
+		id: String!
+	}
+
+	input DisableBrandedLoginInput {
+		id: String!
+	}
+
+	input SaveBrandedLoginSettingsInput {
+		id: String!
+		message: String
+	}
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
@@ -266,6 +285,9 @@ const Community = /* GraphQL */ `
 		cancelSubscription(input: CancelSubscriptionInput!): Community
 		enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
 		disableCommunityAnalytics(input: DisableCommunityAnalyticsInput!): Community
+		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
+		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
+		saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
 	}
 `;
 

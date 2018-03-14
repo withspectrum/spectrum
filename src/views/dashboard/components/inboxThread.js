@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-// $FlowFixMe
+// @flow
+import * as React from 'react';
 import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Icon from '../../../components/icons';
@@ -9,6 +8,7 @@ import Facepile from './facepile';
 import truncate from 'shared/truncate';
 import ThreadCommunityInfo, { WaterCoolerPill } from './threadCommunityInfo';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
+import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import {
   InboxThreadItem,
   InboxLinkWrapper,
@@ -16,13 +16,89 @@ import {
   ThreadTitle,
   AttachmentsContainer,
   ThreadMeta,
-  MetaText,
-  MetaTextPill,
+  StatusText,
+  NewThreadPill,
+  NewMessagePill,
   LockedTextPill,
   MiniLinkPreview,
 } from '../style';
 
-class InboxThread extends Component {
+type Props = {
+  active: boolean,
+  dispatch: Function,
+  hasActiveChannel: ?string,
+  hasActiveCommunity: ?string,
+  history: Object,
+  location: Object,
+  match: Object,
+  staticContext: ?string,
+  data: ThreadInfoType,
+  viewContext?: ?string,
+  pinnedThreadId?: ?string,
+};
+
+class InboxThread extends React.Component<Props> {
+  generatePillOrMessageCount = () => {
+    const {
+      data: {
+        participants,
+        isLocked,
+        currentUserLastSeen,
+        lastActive,
+        messageCount,
+        createdAt,
+      },
+      data,
+      active,
+    } = this.props;
+
+    if (!data) return null;
+
+    const defaultMessageCountString = (
+      <StatusText offset={participants.length} active={active}>
+        {messageCount === 0
+          ? `${messageCount} messages`
+          : messageCount > 1
+            ? `${messageCount} messages`
+            : `${messageCount} message`}
+      </StatusText>
+    );
+
+    if (isLocked) {
+      return (
+        <LockedTextPill offset={participants.length} active={active}>
+          Locked
+        </LockedTextPill>
+      );
+    }
+
+    if (!currentUserLastSeen) {
+      const createdAtTime = new Date(createdAt).getTime() / 1000;
+      const now = new Date().getTime() / 1000;
+
+      if (now - createdAtTime > 86400) {
+        return defaultMessageCountString;
+      }
+
+      return (
+        <NewThreadPill offset={participants.length} active={active}>
+          New thread!
+        </NewThreadPill>
+      );
+    }
+
+    if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
+      if (active) return defaultMessageCountString;
+
+      return (
+        <NewMessagePill offset={participants.length} active={active} newMessage>
+          New messages!
+        </NewMessagePill>
+      );
+    }
+
+    return defaultMessageCountString;
+  };
   render() {
     const {
       data: { attachments, participants, author },
@@ -78,8 +154,9 @@ class InboxThread extends Component {
 
           {attachmentsExist &&
             attachments
-              .filter(att => att.attachmentType === 'linkPreview')
+              .filter(att => att && att.attachmentType === 'linkPreview')
               .map(att => {
+                if (!att) return null;
                 const attData = JSON.parse(att.data);
                 const url = attData.trueUrl || attData.url;
                 if (!url) return null;
@@ -103,21 +180,7 @@ class InboxThread extends Component {
               />
             )}
 
-            {data.messageCount > 0 ? (
-              <MetaText offset={participants.length} active={active}>
-                {data.messageCount > 1
-                  ? `${data.messageCount} messages`
-                  : `${data.messageCount} message`}
-              </MetaText>
-            ) : data.isLocked ? (
-              <LockedTextPill offset={participants.length} active={active}>
-                Locked
-              </LockedTextPill>
-            ) : (
-              <MetaTextPill offset={participants.length} active={active} new>
-                New thread!
-              </MetaTextPill>
-            )}
+            {this.generatePillOrMessageCount()}
           </ThreadMeta>
         </InboxThreadContent>
       </InboxThreadItem>
@@ -127,7 +190,7 @@ class InboxThread extends Component {
 
 export default compose(connect(), withRouter)(InboxThread);
 
-class WatercoolerThreadPure extends React.Component {
+class WatercoolerThreadPure extends React.Component<Props> {
   render() {
     const {
       data: { participants, author, community, messageCount, id },
@@ -167,11 +230,11 @@ class WatercoolerThreadPure extends React.Component {
             )}
 
             {messageCount > 0 && (
-              <MetaText offset={participants.length} active={active}>
+              <StatusText offset={participants.length} active={active}>
                 {messageCount > 1
                   ? `${messageCount} messages`
                   : `${messageCount} message`}
-              </MetaText>
+              </StatusText>
             )}
           </ThreadMeta>
         </InboxThreadContent>

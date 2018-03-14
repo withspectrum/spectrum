@@ -1,6 +1,6 @@
 // @flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS } from './utils';
+import { NEW_DOCUMENTS, createChangefeed } from './utils';
 
 export const getNotificationsByUser = (
   userId: string,
@@ -62,57 +62,48 @@ const hasChanged = (field: string) =>
 
 const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
-export const listenToNewNotifications = (userId: string) => (
-  cb: Function
-): Function => {
-  return db
+const getNewNotificationsChangefeed = () =>
+  db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
-    .filter({ userId })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
     })
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        if (err) throw err;
-        // For some reason this can be called without data, in which case
-        // we don't want to call the callback with it obviously
-        if (!data) return;
-        // Call the passed callback with the notification
-        cb(data);
-      });
-    });
+    .run();
+
+export const listenToNewNotifications = (cb: Function): Function => {
+  return createChangefeed(
+    getNewNotificationsChangefeed,
+    cb,
+    'listenToNewNotifications'
+  );
 };
 
-export const listenToNewDirectMessageNotifications = (userId: string) => (
-  cb: Function
-) => {
-  return db
+const getNewDirectMessageNotificationsChangefeed = () =>
+  db
     .table('usersNotifications')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
-    .filter({ userId })
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
     })
     .zip()
     .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
-    .run({ cursor: true }, (err, cursor) => {
-      if (err) throw err;
-      cursor.each((err, data) => {
-        if (err) throw err;
-        // Call the passed callback with the notification
-        cb(data);
-      });
-    });
+    .run();
+
+export const listenToNewDirectMessageNotifications = (cb: Function) => {
+  return createChangefeed(
+    getNewDirectMessageNotificationsChangefeed,
+    cb,
+    'listenToNewDirectMessageNotifications'
+  );
 };

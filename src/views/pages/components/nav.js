@@ -83,7 +83,7 @@ class Nav extends React.Component<Props, State> {
               </Link>
             ) : (
               <Link to="/login">
-                <Button>Log In</Button>
+                <Button>Sign In</Button>
               </Link>
             )}
           </AuthTab>
@@ -126,7 +126,7 @@ class Nav extends React.Component<Props, State> {
               ) : (
                 <AuthLink to={'/login'}>
                   <Icon glyph="welcome" />
-                  <span>Log in</span>
+                  <span>Sign in</span>
                   <Icon glyph="enter" />
                 </AuthLink>
               )}

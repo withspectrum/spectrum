@@ -16,6 +16,10 @@ import type { GraphQLContext } from '../';
 import type { GraphQLResolveInfo } from 'graphql';
 import type { DBDirectMessageThread } from '../models/directMessageThread';
 
+const addNewDirectMessageThreadListener = asyncify(
+  listenToUpdatedDirectMessageThreads
+);
+
 module.exports = {
   Subscription: {
     directMessageThreadUpdated: {
@@ -32,10 +36,13 @@ module.exports = {
           );
 
         debug(`@${user.username || user.id} listening to updated DM threads`);
-        return asyncify(listenToUpdatedDirectMessageThreads(user.id), err => {
-          // Don't crash the whole API server on error in the listener
-          console.error(err);
-          Raven.captureException(err);
+        return addNewDirectMessageThreadListener({
+          filter: thread => thread.userId === user.id,
+          onError: err => {
+            // Don't crash the whole API server on error in the listener
+            console.error(err);
+            Raven.captureException(err);
+          },
         });
       },
     },

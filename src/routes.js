@@ -59,6 +59,12 @@ const CommunityView = Loadable({
 });
 
 /* prettier-ignore */
+const CommunityLoginView = Loadable({
+  loader: () => import('./views/communityLogin'/* webpackChunkName: "CommunityView" */),
+  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+});
+
+/* prettier-ignore */
 const ChannelView = Loadable({
   loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
@@ -287,6 +293,10 @@ class Routes extends React.Component<{}> {
                 <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/login"
+                  component={CommunityLoginView}
                 />
                 <Route
                   path="/:communitySlug/:channelSlug"

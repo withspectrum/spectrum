@@ -62,7 +62,7 @@ export const Row = styled(FlexRow)`
 
 export const Heading = styled(H3)`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 16px;
   transition: ${Transition.hover.off};
   line-height: 1.2;
   display: flex;
@@ -96,8 +96,6 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled.div`
   flex-direction: column;
-  margin-top: 32px;
-  margin-left: 32px;
   display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {

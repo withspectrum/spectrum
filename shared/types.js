@@ -40,6 +40,14 @@ export type DBCommunity = {
   pendingAdministratorEmail?: string,
 };
 
+export type DBCommunitySettings = {
+  id: string,
+  communityId: string,
+  brandedLogin: ?{
+    customMessage: ?string,
+  },
+};
+
 export type DBCuratedContent = {
   type: string,
   id: string,
@@ -205,6 +213,8 @@ export type DBThread = {
   creatorId: string,
   isPublished: boolean,
   isLocked: boolean,
+  lockedBy?: string,
+  lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
   attachments?: Array<DBThreadAttachment>,

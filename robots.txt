@@ -1,0 +1,3 @@
+# This robots.txt file is used to disallow robots to crawl our staging environment alpha.spectrum.chat, which has the same content as the main site
+User-agent: *
+Disallow: /
