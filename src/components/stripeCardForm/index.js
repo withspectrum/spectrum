@@ -13,12 +13,17 @@ type Props = {
 
 type State = {
   stripe: ?any,
+  isMounted: boolean,
 };
 
+let injected = false;
 class CardForm extends React.Component<Props, State> {
   constructor() {
     super();
-    this.state = { stripe: null };
+    this.state = {
+      stripe: window.Stripe ? window.Stripe(PUBLIC_STRIPE_KEY) : null,
+      isMounted: false,
+    };
   }
 
   componentDidMount() {
@@ -29,11 +34,21 @@ class CardForm extends React.Component<Props, State> {
     // or you can use the 'async' attribute on the Stripe.js v3 <script> tag.
 
     // if we've already loaded the script to the dom, dont do it again
+    if (injected || this.state.stripe) {
+      if (!this.state.stripe) {
+        this.setState({
+          stripe: window.Stripe(PUBLIC_STRIPE_KEY),
+        });
+      }
+      return;
+    }
+    injected = true;
     const stripeJs = document.createElement('script');
     stripeJs.id = 'stripe-js-script';
     stripeJs.src = 'https://js.stripe.com/v3/';
     stripeJs.async = true;
     stripeJs.onload = () => {
+      if (!this.state.isMounted) return;
       this.setState({
         stripe: window.Stripe(PUBLIC_STRIPE_KEY),
       });
@@ -42,8 +57,9 @@ class CardForm extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    const script = document.getElementById('stripe-js-script');
-    if (script) script.remove();
+    this.setState({
+      isMounted: false,
+    });
   }
 
   render() {
