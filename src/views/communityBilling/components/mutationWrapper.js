@@ -8,25 +8,39 @@ type Props = {
   mutation: ?Function,
   variables: any,
   dispatch: Function,
-  render: Function,
+  render: ({ isLoading: boolean }) => any,
 };
 
 type State = {
   isLoading: boolean,
+  isMounted?: boolean,
 };
 
 class MutationWrapper extends React.Component<Props, State> {
-  initialState = { isLoading: false };
+  initialState = { isLoading: false, isMounted: false };
   state = this.initialState;
+
+  componentDidMount() {
+    this.setState({
+      isMounted: true,
+    });
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      isMounted: false,
+    });
+  }
 
   init = () => {
     if (!this.props.mutation) return;
-    this.setState({ isLoading: true });
+    if (this.state.isMounted) this.setState({ isLoading: true });
     return this.mutate();
   };
 
   terminate = () => {
     this.props.onMutationEnd();
+    if (!this.state.isMounted) return;
     return this.setState(this.initialState);
   };
 
@@ -45,7 +59,11 @@ class MutationWrapper extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <div onClick={this.init}>
+        {this.props.render({ isLoading: this.state.isLoading })}
+      </div>
+    );
   }
 }
 
