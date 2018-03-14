@@ -18,7 +18,7 @@ const APP_FOLDERS = [
   'src',
   'vulcan',
 ];
-const CHECKBOXES = /^- \[x\] *(.*)?$/gim;
+const CHECKBOXES = /^\s*-\s*\[x\]\s*(.+?)$/gim;
 const possibleAutoLabels = {
   wip: 'WIP: Building',
   'needs testing': 'WIP: Needs Testing',
@@ -37,10 +37,13 @@ schedule(async () => {
   const checkedBoxes = pr.body.match(CHECKBOXES);
   if (!checkedBoxes || checkedBoxes.length === 0) return;
 
-  const matches = checkedBoxes.map(result => result[1]);
+  const matches = checkedBoxes
+    .map(result => new RegExp(CHECKBOXES.source, 'mi').exec(result))
+    .filter(Boolean)
+    .map(res => res[1]);
 
-  const matchingLabels = matches.filter(match =>
-    Object.keys(possibleAutoLabels).includes(match.toLowerCase())
+  const matchingLabels = matches.filter(
+    match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
   );
 
   if (!matchingLabels || matchingLabels.length === 0) return;
