@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 
 export const cookieKeygrip = new Keygrip([process.env.SESSION_COOKIE_SECRET]);
 
+console.log('danger should fail this commit');
+
 export const getCookies = ({ userId }: { userId: string }) => {
   // The value of our "session" cookie
   const session = new Buffer(
