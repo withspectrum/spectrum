@@ -67,6 +67,7 @@ class PricingPlanTable extends React.Component<Props> {
                 color={'space'}
                 icon={'member-add'}
                 priceLabel={'$10/mo'}
+                hideIconsOnMobile
               />
 
               <PricingTableFeatureRow
@@ -77,6 +78,7 @@ class PricingPlanTable extends React.Component<Props> {
                 color={'special'}
                 icon={'private-outline'}
                 priceLabel={'$10/mo'}
+                hideIconsOnMobile
               />
 
               <PricingTableFeatureRow
@@ -86,6 +88,7 @@ class PricingPlanTable extends React.Component<Props> {
                 }
                 icon={'analytics'}
                 priceLabel={'$100/mo'}
+                hideIconsOnMobile
               />
             </PlanFeatures>
           </div>

@@ -296,8 +296,14 @@ class Pricing extends React.Component<Props> {
               <SectionDescription>
                 We know it is - and our payments provider, Stripe, acknowledges
                 this as well (here’s their documentation on proration, in case
-                you’re curious
-                https://stripe.com/docs/subscriptions/upgrading-downgrading#understanding-proration).
+                you’re curious:{' '}
+                <a
+                  href="https://stripe.com/docs/subscriptions/upgrading-downgrading#understanding-proration"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Stripe proration docs
+                </a>).
               </SectionDescription>
 
               <SectionDescription>

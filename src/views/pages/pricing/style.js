@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { hexa } from 'src/components/globals';
 
 export const ContentContainer = styled.div`
@@ -12,6 +12,11 @@ export const ContentContainer = styled.div`
   align-items: flex-start;
   margin: 0 auto;
   max-width: 768px;
+
+  @media (max-width: 768px) {
+    padding-top: 0;
+    padding: 16px;
+  }
 `;
 
 export const PageTitle = styled.h1`
@@ -20,6 +25,10 @@ export const PageTitle = styled.h1`
   color: ${props => props.theme.text.default};
   line-height: 1.2;
   margin: 48px 0 24px;
+
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
 `;
 
 export const PageSubtitle = styled.h2`
@@ -31,6 +40,10 @@ export const PageSubtitle = styled.h2`
   strong {
     font-weight: 500;
     color: ${props => props.theme.text.default};
+  }
+
+  @media (max-width: 768px) {
+    font-size: 24px;
   }
 `;
 
@@ -74,6 +87,11 @@ export const SectionDescription = styled.p`
   & + & {
     margin-top: 16px;
   }
+
+  a {
+    color: ${props => props.theme.brand.alt};
+    font-weight: 500;
+  }
 `;
 
 export const FeaturesList = styled.ul`
@@ -81,6 +99,11 @@ export const FeaturesList = styled.ul`
   padding: 0;
   margin: 48px -64px 0;
   width: calc(100% + 128px);
+
+  @media (max-width: 896px) {
+    margin: 48px 0 0;
+    width: 100%;
+  }
 `;
 
 export const Feature = styled.li`
@@ -93,6 +116,10 @@ export const Feature = styled.li`
   position: relative;
   overflow: hidden;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
   & + & {
     margin-top: 16px;
   }
@@ -104,6 +131,10 @@ export const FeatureContent = styled.div`
   flex: 1 1 auto;
   padding-right: 24px;
   transition: all 0.2s cubic-bezier(0.77, 0, 0.175, 1);
+
+  @media (max-width: 768px) {
+    padding-right: 0;
+  }
 `;
 
 export const FeatureIcon = styled.div`
@@ -114,6 +145,27 @@ export const FeatureIcon = styled.div`
   display: flex;
   align-items: flex-start;
   margin-right: 16px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const PriceLabel = styled.span`
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 8px;
+  letter-spacing: -0.2px;
+  color: ${props =>
+    props.color
+      ? props.theme[props.color].default
+      : props.theme.success.default};
+  background: ${props =>
+    props.color
+      ? hexa(props.theme[props.color].default, 0.08)
+      : hexa(props.theme.success.default, 0.08)};
 `;
 
 export const FeatureLabel = styled.h5`
@@ -123,6 +175,17 @@ export const FeatureLabel = styled.h5`
   letter-spacing: 0.6px;
   color: ${props =>
     props.color ? props.theme[props.color].default : props.theme.text.default};
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+
+    ${PriceLabel} {
+      margin-left: 0;
+      text-align: center;
+      margin-top: 8px;
+    }
+  }
 `;
 
 export const FeatureSublabel = styled.h6`
@@ -143,6 +206,10 @@ export const FeatureDescription = styled.p`
   display: flex;
   flex: 1 0 auto;
   max-width: ${props => (props.isExpanded ? '80%' : '100%')};
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 export const Highlight = styled.span`
@@ -157,6 +224,15 @@ export const FeatureAction = styled.div`
   align-items: center;
   flex: 1 0 auto;
   justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    margin-top: 16px;
+    justify-content: center;
+
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 export const FeatureButton = styled.button`
@@ -193,23 +269,11 @@ export const Divider = styled.div`
   width: calc(100% + 64px);
   display: inline-block;
   margin: 64px -32px 0px;
-`;
 
-export const PriceLabel = styled.span`
-  padding: 6px 8px;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 8px;
-  letter-spacing: -0.2px;
-  color: ${props =>
-    props.color
-      ? props.theme[props.color].default
-      : props.theme.success.default};
-  background: ${props =>
-    props.color
-      ? hexa(props.theme[props.color].default, 0.08)
-      : hexa(props.theme.success.default, 0.08)};
+  @media (max-width: 832px) {
+    width: 100%;
+    margin: 64px 0 0;
+  }
 `;
 
 export const CommunityListGrid = styled.div`
@@ -219,6 +283,16 @@ export const CommunityListGrid = styled.div`
   justify-content: center;
   margin: 48px -64px 0;
   width: calc(100% + 128px);
+
+  @media (max-width: 896px) {
+    width: 100%;
+    margin: 48px 0 0;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const CommunityCard = styled.div`
@@ -279,6 +353,10 @@ export const Illo = styled.img`
   right: ${props => (props.right ? `${props.right}px` : '0')};
   bottom: ${props => (props.bottom ? `${props.bottom}px` : '0')};
   width: ${props => (props.width ? `${props.width}px` : '200px')};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const ExtraContent = styled.div`
@@ -294,6 +372,12 @@ export const PriceTable = styled.div`
   grid-gap: 16px;
   grid-template-columns: repeat(2, 1fr);
   width: calc(100% + 256px);
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    width: 100%;
+    margin: 0;
+  }
 `;
 
 export const PlanSection = styled.div`
@@ -304,6 +388,11 @@ export const PlanSection = styled.div`
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
   background: ${props => props.theme.bg.default};
   border-radius: 8px;
+
+  @media (max-width: 1024px) {
+    grid-column-start: 1;
+    padding: 18px 24px;
+  }
 `;
 
 export const PlanPrice = styled.h3`
@@ -327,6 +416,12 @@ export const BusinessPlanSection = styled.div`
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
   background: ${props => props.theme.bg.default};
   border-radius: 8px;
+
+  @media (max-width: 1024px) {
+    padding: 18px 24px;
+    grid-column-start: 1;
+    flex-direction: column;
+  }
 `;
 
 export const BusinessPlanAction = styled.div`
@@ -337,6 +432,15 @@ export const BusinessPlanAction = styled.div`
 
   button {
     margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 16px;
+    padding-left: 0;
+
+    a {
+      width: 100%;
+    }
   }
 `;
 
@@ -398,6 +502,10 @@ export const PlanFeatures = styled.ul`
   list-style-type: none;
   margin: 24px 0 16px;
   padding: 0;
+
+  @media (max-width: 768px) {
+    margin: 16px 0 8px;
+  }
 `;
 
 export const PlanFeatureContainer = styled.li`
@@ -415,11 +523,30 @@ export const PlanFeatureContainer = styled.li`
   .icon {
     margin-right: 12px;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    ${PriceLabel} {
+      margin-left: 0px;
+      margin-top: 16px;
+    }
+  }
 `;
 
 export const PlanFeatureContent = styled.div`
   display: flex;
   align-items: flex-start;
+
+  @media (max-width: 768px) {
+    ${props =>
+      props.hideIconsOnMobile &&
+      css`
+        .icon {
+          display: none;
+        }
+      `};
+  }
 `;
 
 export const PlanFeatureText = styled.div`

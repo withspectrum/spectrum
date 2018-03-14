@@ -12,10 +12,11 @@ import {
 
 type Props = {
   title: string,
-  subtitle: string,
+  subtitle?: string,
   icon?: string,
   color?: string,
   priceLabel?: string,
+  hideIconsOnMobile?: boolean,
 };
 
 class PricingTableFeatureRow extends React.Component<Props> {
@@ -26,11 +27,12 @@ class PricingTableFeatureRow extends React.Component<Props> {
       icon = 'checkmark',
       color = 'success',
       priceLabel,
+      hideIconsOnMobile = false,
     } = this.props;
 
     return (
       <PlanFeatureContainer color={color}>
-        <PlanFeatureContent>
+        <PlanFeatureContent hideIconsOnMobile={hideIconsOnMobile}>
           <Icon glyph={icon} size={24} />
           <PlanFeatureText>
             <PlanFeatureTitle>{title}</PlanFeatureTitle>
