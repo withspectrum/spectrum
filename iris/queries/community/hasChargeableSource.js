@@ -14,7 +14,7 @@ export default async (
     isModerator,
   } = await loaders.userPermissionsInCommunity.load([user.id, id]);
 
-  if (!isOwner && !isModerator) return false;
+  if (!isOwner && !isModerator) return null;
   return loaders.stripeCustomers.load(stripeCustomerId).then(results => {
     const customers = results && results.reduction;
     if (!customers || customers.length === 0) return false;
