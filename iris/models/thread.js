@@ -6,11 +6,12 @@ import {
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange, eachAsyncNewValue } = require('./utils');
+const { NEW_DOCUMENTS, parseRange, createChangefeed } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread } from 'shared/types';
+import type { Timeframe } from './utils';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -90,7 +91,7 @@ export const getThreadsByCommunity = (
 
 export const getThreadsByCommunityInTimeframe = (
   communityId: string,
-  range: string
+  range: Timeframe
 ): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
@@ -102,7 +103,7 @@ export const getThreadsByCommunityInTimeframe = (
 };
 
 export const getThreadsInTimeframe = (
-  range: string
+  range: Timeframe
 ): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
@@ -130,7 +131,7 @@ export const getViewableThreadsByUser = async (
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(currentUser, { index: 'userId' })
-    .filter({ isBlocked: false })
+    .filter({ isBlocked: false, isMember: true })
     .map(userChannel => userChannel('channelId'))
     .run();
 
@@ -200,7 +201,7 @@ export const getViewableParticipantThreadsByUser = async (
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
     .getAll(currentUser, { index: 'userId' })
-    .filter({ isBlocked: false })
+    .filter({ isBlocked: false, isMember: true })
     .map(userChannel => userChannel('channelId'))
     .run();
 
@@ -257,6 +258,7 @@ export const getPublicParticipantThreadsByUser = (
   return db
     .table('usersThreads')
     .getAll(evalUser, { index: 'userId' })
+    .filter({ isParticipant: true })
     .eqJoin('threadId', db.table('threads'))
     .without({
       left: [
@@ -505,12 +507,19 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
-export const listenToUpdatedThreads = (cb: Function): Function => {
-  return db
+const getUpdatedThreadsChangefeed = () =>
+  db
     .table('threads')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
-    .run(eachAsyncNewValue(cb));
+    .run();
+
+export const listenToUpdatedThreads = (cb: Function): Function => {
+  return createChangefeed(
+    getUpdatedThreadsChangefeed,
+    cb,
+    'listenToUpdatedThreads'
+  );
 };

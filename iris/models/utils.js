@@ -1,42 +1,45 @@
-const { db } = require('./db');
+// @flow
+const debug = require('debug')('iris:models:utils');
+import processChangefeed from 'rethinkdb-changefeed-reconnect';
+import { db } from './db';
+import Raven from 'shared/raven';
+import type { Cursor } from 'rethinkdbdash';
 
 export const NEW_DOCUMENTS = db
   .row('old_val')
   .eq(null)
   .and(db.not(db.row('new_val').eq(null)));
 
-export const eachAsyncNewValue = (cb: Function) => (
-  err?: Error,
-  cursor: Cursor
+export const createChangefeed = (
+  getChangefeed: () => Promise<Cursor>,
+  callback: (arg: any) => void,
+  name?: string
 ) => {
-  if (err) throw err;
-  cursor
-    .eachAsync(data => {
-      // Call the passed callback with the message directly
-      cb(data);
-    })
-    .catch(err => {
+  return processChangefeed(
+    getChangefeed,
+    callback,
+    err => {
       console.error(err);
-      try {
-        cursor.close();
-      } catch (err) {}
-    });
-};
-
-export const listenToNewDocumentsIn = (table, cb) => {
-  return (
-    db
-      .table(table)
-      .changes({
-        includeInitial: false,
-      })
-      // Filter to only include newly inserted messages in the changefeed
-      .filter(NEW_DOCUMENTS)
-      .run(eachAsyncNewValue(cb))
+      Raven.captureException(err);
+    },
+    {
+      changefeedName: name,
+      attemptDelay: 60000,
+      maxAttempts: Infinity,
+      logger: {
+        // Ignore log and info logs in production
+        log: debug,
+        info: debug,
+        warn: console.warn.bind(console),
+        error: console.error.bind(console),
+      },
+    }
   );
 };
 
-export const parseRange = timeframe => {
+export type Timeframe = 'daily' | 'weekly' | 'monthly' | 'quarterly';
+
+export const parseRange = (timeframe?: Timeframe) => {
   switch (timeframe) {
     case 'daily': {
       return { current: 60 * 60 * 24, previous: 60 * 60 * 24 * 2 };
@@ -56,7 +59,7 @@ export const parseRange = timeframe => {
   }
 };
 
-export const getAu = (range: string) => {
+export const getAu = (range: Timeframe) => {
   const { current } = parseRange(range);
   return db
     .table('users')
@@ -68,7 +71,7 @@ export const getAu = (range: string) => {
 
 export const getGrowth = async (
   table: string,
-  range: string,
+  range: Timeframe,
   field: string,
   filter: ?mixed
 ) => {

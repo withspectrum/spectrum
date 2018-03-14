@@ -2793,6 +2793,14 @@ damerau-levenshtein@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.4.tgz#03191c432cb6eea168bb77f3a55ffdccb8978514"
 
+danger-plugin-flow@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/danger-plugin-flow/-/danger-plugin-flow-1.2.1.tgz#0f1e77aaf82887cc60adca4bb512c6efa0c4e1bc"
+  dependencies:
+    micromatch "^3.1.9"
+  optionalDependencies:
+    esdoc "^0.5.2"
+
 danger-plugin-jest@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/danger-plugin-jest/-/danger-plugin-jest-1.1.0.tgz#9b53e14a0483e6de5a65f8d58fbb6a8121a948d4"
@@ -2800,6 +2808,12 @@ danger-plugin-jest@^1.1.0:
     strip-ansi "^4.0.0"
   optionalDependencies:
     serve "^5.1.5"
+
+danger-plugin-no-console@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/danger-plugin-no-console/-/danger-plugin-no-console-1.0.0.tgz#7ba7107cbc28cc72c0ae5d0c359056364c31cd23"
+  optionalDependencies:
+    esdoc "^0.5.2"
 
 danger-plugin-no-test-shortcuts@^2.0.0:
   version "2.0.0"
@@ -7401,7 +7415,7 @@ micromatch@^2.1.5, micromatch@^2.3.11:
     parse-glob "^3.0.4"
     regex-cache "^0.4.2"
 
-micromatch@^3.0.4, micromatch@^3.1.4:
+micromatch@^3.0.4, micromatch@^3.1.4, micromatch@^3.1.9:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-3.1.9.tgz#15dc93175ae39e52e93087847096effc73efcf89"
   dependencies:
@@ -9628,6 +9642,12 @@ restore-cursor@^2.0.0:
 ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
+
+rethinkdb-changefeed-reconnect@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/rethinkdb-changefeed-reconnect/-/rethinkdb-changefeed-reconnect-0.3.2.tgz#2999f5313205ab35d9ac2d1b0533765ee3376923"
+  dependencies:
+    babel-runtime "^6.18.0"
 
 rethinkdb-inspector@^0.3.3:
   version "0.3.3"
