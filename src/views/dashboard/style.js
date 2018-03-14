@@ -35,6 +35,11 @@ export const InboxWrapper = styled.div`
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
 
+  @media (min-resolution: 125dpi) and (max-resolution: 190dpi) {
+    max-width: 400px;
+    min-width: 400px;
+  }
+
   @media (max-width: 768px) {
     max-width: 100%;
     min-width: 100%;
