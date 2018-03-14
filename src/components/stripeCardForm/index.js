@@ -35,7 +35,7 @@ class CardForm extends React.Component<Props, State> {
 
     // if we've already loaded the script to the dom, dont do it again
     if (injected || this.state.stripe) {
-      if (!this.state.stripe) {
+      if (!this.state.stripe && window.Stripe) {
         this.setState({
           stripe: window.Stripe(PUBLIC_STRIPE_KEY),
         });
@@ -54,6 +54,12 @@ class CardForm extends React.Component<Props, State> {
       });
     };
     document.body && document.body.appendChild(stripeJs);
+  }
+
+  componentWillMount() {
+    this.setState({
+      isMounted: true,
+    });
   }
 
   componentWillUnmount() {
