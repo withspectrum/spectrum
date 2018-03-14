@@ -32,9 +32,9 @@ if (danger.github.pr.body.length < 10) {
 
 // Add automatic labels to the PR
 schedule(async () => {
-  const pr = danger.github.pr;
+  const pr = danger.github.thisPR;
   const api = danger.github.api;
-  const checkedBoxes = pr.body.match(CHECKBOXES);
+  const checkedBoxes = danger.github.pr.body.match(CHECKBOXES);
   if (!checkedBoxes || checkedBoxes.length === 0) return;
 
   const matches = checkedBoxes
