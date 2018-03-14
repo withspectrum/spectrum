@@ -8,6 +8,7 @@ import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import Head from '../../components/head';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
@@ -130,6 +131,15 @@ class CommunitySettings extends React.Component<Props> {
         community,
       };
 
+      const activeItem = subnavItems.find(
+        ({ activeLabel }) => activeLabel === activeTab
+      );
+      let title = community.name;
+      if (activeItem && activeItem.label !== 'Settings') {
+        title += ` ${activeItem.label} Settings`;
+      } else {
+        title += ' Settings';
+      }
       return (
         <AppViewWrapper>
           <Titlebar
@@ -139,6 +149,7 @@ class CommunitySettings extends React.Component<Props> {
             backRoute={`/${communitySlug}`}
             noComposer
           />
+          <Head title={title} />
 
           <View>
             <Header
