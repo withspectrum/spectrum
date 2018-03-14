@@ -5,6 +5,7 @@ import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
 import flow from 'danger-plugin-flow';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
+import noConsole from 'danger-plugin-no-console';
 
 const APP_FOLDERS = [
   'admin',
@@ -68,6 +69,9 @@ jest();
 noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
+
+
+schedule(noConsole({ whitelist: ['error'] }));
 
 schedule(
   flow({
