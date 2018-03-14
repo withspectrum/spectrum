@@ -68,8 +68,11 @@ class CommunityList extends React.Component<Props> {
       changedActiveCommunity ||
       changedActiveChannel ||
       changedCommunitiesAmount
-    )
+    ) {
+      console.log('1');
       return true;
+    }
+    console.log('2');
     return false;
   }
 
@@ -80,6 +83,8 @@ class CommunityList extends React.Component<Props> {
       const ac = parseInt(a.communityPermissions.reputation, 10);
       return bc <= ac ? -1 : 1;
     });
+
+    console.log('sorted communities render', sortedCommunities);
 
     return (
       <CommunityListWrapper data-e2e-id="inbox-community-list">
