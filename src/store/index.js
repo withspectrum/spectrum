@@ -11,8 +11,6 @@ const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
-console.log('touch an unflowed, existing file');
-
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
 // Allow dependency injection of extra reducers and middleware, we need this for SSR
 export const initStore = (
