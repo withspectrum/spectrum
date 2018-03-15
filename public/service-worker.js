@@ -1,3 +1,4 @@
+/* eslint-disable */
 // A simple, no-op service worker that takes immediate control.
 // from: https://stackoverflow.com/a/38980776
 

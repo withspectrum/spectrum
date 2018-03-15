@@ -4,7 +4,7 @@ export const getDistinctActors = (array: Array<any>): Array<any> => {
   let unique = {};
   let distinct = [];
   for (let actor of array) {
-    if (typeof unique[actor.id] == 'undefined') {
+    if (typeof unique[actor.id] === 'undefined') {
       distinct.push(actor);
     }
     unique[actor.id] = 0;
