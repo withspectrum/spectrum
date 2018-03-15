@@ -359,3 +359,10 @@ export type DBExpoPushSubscription = {
   token: string,
   userId: string,
 };
+
+export type FileUpload = {
+  filename: string,
+  mimetype: string,
+  encoding: string,
+  stream: any,
+};
