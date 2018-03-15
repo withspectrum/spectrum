@@ -70,13 +70,14 @@ noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
 
-
 schedule(noConsole({ whitelist: ['error'] }));
 
 schedule(
   flow({
-    // Don't fail the build, only warn the submitter
-    warn: true,
+    // Fail on newly created untyped files
+    created: 'fail',
+    // Warn on modified untyped files
+    modified: 'warn',
     blacklist: ['flow-typed/**/*.js', 'public/**/*.js'],
   })
 );
