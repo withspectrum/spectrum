@@ -1,5 +1,3 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return r
     .table('usersThreads')

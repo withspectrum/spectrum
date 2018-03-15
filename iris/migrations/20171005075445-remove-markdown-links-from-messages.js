@@ -1,4 +1,3 @@
-'use strict';
 const replace = require('string-replace-to-array');
 const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
