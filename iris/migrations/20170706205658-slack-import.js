@@ -1,11 +1,12 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return Promise.all([
-    r.tableCreate('slackImports').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
+    r
+      .tableCreate('slackImports')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
   ])
     .then(() =>
       Promise.all([
@@ -17,7 +18,10 @@ exports.up = function(r, conn) {
             console.log(err);
             throw err;
           }),
-        r.table('users').indexCreate('email', r.row('email')).run(conn),
+        r
+          .table('users')
+          .indexCreate('email', r.row('email'))
+          .run(conn),
       ])
     )
     .catch(err => {

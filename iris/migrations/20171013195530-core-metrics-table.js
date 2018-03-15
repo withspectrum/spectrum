@@ -1,5 +1,3 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return Promise.all([
     r
@@ -131,19 +129,17 @@ exports.up = function(r, conn) {
           threadMessages,
           dmMessages,
         ]).then(
-          (
-            [
-              cpu,
-              mpu,
-              tpu,
-              users,
-              communities,
-              threads,
-              dmThreads,
-              threadMessages,
-              dmMessages,
-            ]
-          ) => {
+          ([
+            cpu,
+            mpu,
+            tpu,
+            users,
+            communities,
+            threads,
+            dmThreads,
+            threadMessages,
+            dmMessages,
+          ]) => {
             const coreMetrics = {
               cpu: cpu || 0,
               mpu: mpu || 0,

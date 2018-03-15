@@ -1,5 +1,3 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return (
     // Create new tables, update old ones with receiveNotifications
@@ -22,18 +20,27 @@ exports.up = function(r, conn) {
           console.log(err);
           throw err;
         }),
-      r.tableCreate('notifications').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('usersThreads').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('usersNotifications').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
+      r
+        .tableCreate('notifications')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('usersThreads')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('usersNotifications')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
     ])
       // Add secondary indexes to new tables
       .then(() =>
@@ -46,10 +53,14 @@ exports.up = function(r, conn) {
               console.log(err);
               throw err;
             }),
-          r.table('usersThreads').indexCreate('userId').run(conn).catch(err => {
-            console.log(err);
-            throw err;
-          }),
+          r
+            .table('usersThreads')
+            .indexCreate('userId')
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
           r
             .table('usersThreads')
             .indexCreate('threadId')

@@ -1,5 +1,3 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return Promise.all([
     // messages#threadIdAndTimestamp
@@ -27,7 +25,10 @@ exports.up = function(r, conn) {
       ])
       .run(conn),
     // community#createdAt
-    r.table('communities').indexCreate('createdAt').run(conn),
+    r
+      .table('communities')
+      .indexCreate('createdAt')
+      .run(conn),
   ]).catch(err => {
     console.log(err);
     throw err;
