@@ -188,6 +188,20 @@ class Subscription extends React.Component<Props> {
     </LineItem>
   );
 
+  ossModeratorSeat = (lineItem: LineItemType) => (
+    <LineItem key={lineItem.id}>
+      <LineItemLeft>
+        <LineItemTitle>Open source moderator seat</LineItemTitle>
+        <LineItemDescription>Quantity: {lineItem.quantity}</LineItemDescription>
+      </LineItemLeft>
+      <LineItemRight>
+        <LineItemPrice>
+          ${formatNumbersToDollars(lineItem.amount * lineItem.quantity)}
+        </LineItemPrice>
+      </LineItemRight>
+    </LineItem>
+  );
+
   privateChannel = (lineItem: LineItemType) => (
     <LineItem key={lineItem.id}>
       <LineItemLeft>
@@ -197,6 +211,20 @@ class Subscription extends React.Component<Props> {
           You can archive private channels individually by visiting the channel
           settings.
         </LineItemDescription>
+      </LineItemLeft>
+      <LineItemRight>
+        <LineItemPrice>
+          ${formatNumbersToDollars(lineItem.amount * lineItem.quantity)}
+        </LineItemPrice>
+      </LineItemRight>
+    </LineItem>
+  );
+
+  ossPrivateChannel = (lineItem: LineItemType) => (
+    <LineItem key={lineItem.id}>
+      <LineItemLeft>
+        <LineItemTitle>Open source private channel</LineItemTitle>
+        <LineItemDescription>Quantity: {lineItem.quantity}</LineItemDescription>
       </LineItemLeft>
       <LineItemRight>
         <LineItemPrice>
@@ -216,6 +244,10 @@ class Subscription extends React.Component<Props> {
         return this.moderatorSeat(lineItem);
       case 'private-channel':
         return this.privateChannel(lineItem);
+      case 'oss-moderator-seat':
+        return this.ossModeratorSeat(lineItem);
+      case 'oss-private-channel':
+        return this.ossPrivateChannel(lineItem);
     }
   };
 
