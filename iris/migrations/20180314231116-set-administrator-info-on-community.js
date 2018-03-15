@@ -30,7 +30,7 @@ exports.up = async (r, conn) => {
     .ungroup()
     .map(row => row('reduction'))
     .map(row => row.min('createdAt'))
-    .eqJoin('userId', r.db('spectrum').table('users'))
+    .eqJoin('userId', r.table('users'))
     .zip()
     .run(conn)
     .then(cursor => cursor.toArray());
