@@ -13,7 +13,7 @@ export const getInvoices = (
 export const getInvoicesByCustomerId = async (
   customerId: ?string
 ): Promise<Array<?Object>> => {
-  if (!customerId) return await [];
+  if (!customerId) return Promise.resolve([]);
   return db
     .table('stripeInvoices')
     .getAll(customerId, { index: 'customerId' })
