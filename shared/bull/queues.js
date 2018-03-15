@@ -23,6 +23,9 @@ import {
   PROCESS_STRIPE_COMMUNITY_CREATED,
   PROCESS_STRIPE_COMMUNITY_DELETED,
   PROCESS_STRIPE_COMMUNITY_EDITED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
 } from 'pluto/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -73,6 +76,9 @@ exports.QUEUE_NAMES = {
   stripeCommunityPrioritySupportRemovedQueue: PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED,
   stripeCommunityPrivateChannelAddedQueue: PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED,
   stripeCommunityPrivateChannelRemovedQueue: PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED,
+  stripeCommunityOpenSourceStatusEnabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
+  stripeCommunityOpenSourceStatusDisabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
+  stripeCommunityOpenSourceStatusActivatedQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
 
   _adminSendCommunityCreatedEmailQueue: 'admin community created',
   _adminProcessToxicMessageQueue: 'process admin toxic message',

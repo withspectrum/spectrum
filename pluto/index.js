@@ -25,6 +25,9 @@ import {
   PROCESS_STRIPE_COMMUNITY_CREATED,
   PROCESS_STRIPE_COMMUNITY_DELETED,
   PROCESS_STRIPE_COMMUNITY_EDITED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
 } from './queues/constants';
 import processStripeChargeWebhook from './queues/processStripeChargeWebhook';
 import processStripeCustomerWebhook from './queues/processStripeCustomerWebhook';
@@ -49,6 +52,11 @@ import processAdministratorEmailChanged from './queues/processAdministratorEmail
 import processCommunityCreated from './queues/processCommunityCreated';
 import processCommunityDeleted from './queues/processCommunityDeleted';
 import processCommunityEdited from './queues/processCommunityEdited';
+
+import processOssStatusActivated from './queues/processOssStatusActivated';
+import processOssStatusEnabled from './queues/processOssStatusEnabled';
+import processOssStatusDisabled from './queues/processOssStatusDisabled';
+
 const PORT = process.env.PORT || 3008;
 
 debug('Logging with debug enabled!');
@@ -89,6 +97,10 @@ try {
 
     [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED]: processPrivateChannelAdded,
     [PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED]: processPrivateChannelRemoved,
+
+    [PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED]: processOssStatusActivated,
+    [PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED]: processOssStatusEnabled,
+    [PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED]: processOssStatusDisabled,
 
     [PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED]: processAdministratorEmailChanged,
     [PROCESS_STRIPE_COMMUNITY_CREATED]: processCommunityCreated,

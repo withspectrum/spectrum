@@ -38,6 +38,7 @@ export type DBCommunity = {
   hasPrioritySupport: boolean,
   stripeCustomerId: ?string,
   pendingAdministratorEmail?: string,
+  ossVerified?: boolean,
 };
 
 export type DBCommunitySettings = {

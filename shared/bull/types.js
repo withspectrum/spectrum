@@ -206,6 +206,15 @@ export type Queues = {
   stripeCommunityPrivateChannelRemovedQueue: BullQueue<
     StripeCommunityPaymentEventJobData
   >,
+  stripeCommunityOpenSourceStatusActivatedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityOpenSourceStatusEnabledQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityOpenSourceStatusDisabledQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<

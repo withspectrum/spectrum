@@ -32,6 +32,13 @@ export const PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED =
 export const PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED =
   'process stripe community private channel removed';
 
+export const PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED =
+  'process stripe community oss status activated';
+export const PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED =
+  'process stripe community oss status enabled';
+export const PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED =
+  'process stripe community oss status disabled';
+
 export const PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED =
   'process stripe community changed administrator email';
 export const PROCESS_STRIPE_COMMUNITY_CREATED =
