@@ -1,4 +1,3 @@
-'use strict';
 const markdownLinkify = require('../utils/markdown-linkify');
 
 exports.up = function(r, conn) {

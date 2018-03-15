@@ -1,60 +1,97 @@
-'use strict';
-
 exports.up = function(r, conn) {
   return (
     Promise.all([
-      r.tableCreate('threads').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('channels').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('communities').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('messages').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('sessions').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('reactions').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('directMessageThreads').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('users').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('recurringPayments').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('invoices').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('usersCommunities').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('usersChannels').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
-      r.tableCreate('usersDirectMessageThreads').run(conn).catch(err => {
-        console.log(err);
-        throw err;
-      }),
+      r
+        .tableCreate('threads')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('channels')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('communities')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('messages')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('sessions')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('reactions')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('directMessageThreads')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('users')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('recurringPayments')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('invoices')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('usersCommunities')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('usersChannels')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r
+        .tableCreate('usersDirectMessageThreads')
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
     ])
       // Create secondary indexes
       .then(() =>
@@ -220,58 +257,97 @@ exports.up = function(r, conn) {
 
 exports.down = function(r, conn) {
   return Promise.all([
-    r.tableDrop('threads').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('channels').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('communities').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('messages').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('sessions').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('users').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('directMessageThreads').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('reactions').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('recurringPayments').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('invoices').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('usersCommunities').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('usersChannels').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
-    r.tableDrop('usersDirectMessageThreads').run(conn).catch(err => {
-      console.log(err);
-      throw err;
-    }),
+    r
+      .tableDrop('threads')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('channels')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('communities')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('messages')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('sessions')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('users')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('directMessageThreads')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('reactions')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('recurringPayments')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('invoices')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('usersCommunities')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('usersChannels')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
+    r
+      .tableDrop('usersDirectMessageThreads')
+      .run(conn)
+      .catch(err => {
+        console.log(err);
+        throw err;
+      }),
   ]).catch(err => {
     console.log(err);
     throw err;

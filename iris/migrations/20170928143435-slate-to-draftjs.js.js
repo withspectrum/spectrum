@@ -1,4 +1,3 @@
-'use strict';
 const compose = require('redux/lib/compose').default;
 const { convertToRaw, genKey } = require('draft-js');
 const { stateFromMarkdown } = require('draft-js-import-markdown');

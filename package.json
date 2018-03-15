@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-eslint": "^8.0.1",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-import-inspector": "^2.0.0",
     "babel-plugin-inline-import-graphql-ast": "^2.0.4",
     "babel-plugin-styled-components": "^1.1.7",
@@ -22,11 +22,14 @@
     "danger-plugin-jest": "^1.1.0",
     "danger-plugin-no-console": "^1.0.0",
     "danger-plugin-yarn": "^1.2.1",
-    "eslint": "^4.15.0",
-    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint": "^4.1.1",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.34.1",
+    "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jest": "^21.6.1",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-react": "^7.1.0",
     "flow-bin": "0.66",
     "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",
@@ -221,6 +224,7 @@
     "jest": "cross-env NODE_PATH=./ jest",
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json",
+    "lint": "eslint .",
     "flow": "flow",
     "db:migrate": "npm run rethinkdb:migrate -- up",
     "db:drop": "npm run rethinkdb:migrate -- down",
@@ -233,6 +237,7 @@
   "lint-staged": {
     "*.js": [
       "prettier --write --single-quote --trailing-comma es5",
+      "eslint --fix",
       "git add"
     ]
   },
