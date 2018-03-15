@@ -113,9 +113,17 @@ const hasSubscriptionItemOfType = (
   );
 };
 
+type SubscriptionItemTypes =
+  | 'oss-moderator-seat'
+  | 'oss-private-channel'
+  | 'moderator-seat'
+  | 'private-channel'
+  | 'community-analytics'
+  | 'priority-support';
+
 const getSubscriptionItemOfType = (
   customer: RawCustomer,
-  type: string
+  type: SubscriptionItemTypes
 ): ?SubscriptionItem => {
   if (!customer) return null;
   const activeSubscription = getActiveSubscription(customer);
