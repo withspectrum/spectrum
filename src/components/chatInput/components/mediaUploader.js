@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
-import { MediaLabel, MediaInput } from './style';
+import { MediaLabel, MediaInput, Form } from './style';
 import Icon from 'src/components/icons';
+import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
@@ -13,6 +14,7 @@ type Props = {
   onValidated: Function,
   onError: Function,
   currentUser: ?Object,
+  isSendingMediaMessage: boolean,
 };
 
 class MediaUploader extends React.Component<Props> {
@@ -80,8 +82,18 @@ class MediaUploader extends React.Component<Props> {
   }
 
   render() {
+    const { isSendingMediaMessage } = this.props;
+
+    if (isSendingMediaMessage) {
+      return (
+        <MediaLabel>
+          <Loading />
+        </MediaLabel>
+      );
+    }
+
     return (
-      <form onSubmit={e => e.preventDefault()} ref={c => (this.form = c)}>
+      <Form onSubmit={e => e.preventDefault()} innerRef={c => (this.form = c)}>
         <MediaLabel>
           <MediaInput
             type="file"
@@ -95,7 +107,7 @@ class MediaUploader extends React.Component<Props> {
             tipText="Upload photo"
           />
         </MediaLabel>
-      </form>
+      </Form>
     );
   }
 }

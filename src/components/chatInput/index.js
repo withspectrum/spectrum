@@ -30,6 +30,7 @@ type State = {
   isFocused: boolean,
   photoSizeError: string,
   code: boolean,
+  isSendingMediaMessage: boolean,
 };
 
 type Props = {
@@ -76,6 +77,7 @@ class ChatInput extends React.Component<Props, State> {
     isFocused: false,
     photoSizeError: '',
     code: false,
+    isSendingMediaMessage: false,
   };
 
   editor: any;
@@ -84,8 +86,9 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(this);
   }
 
-  shouldComponentUpdate(next) {
+  shouldComponentUpdate(next, nextState) {
     const curr = this.props;
+    const currState = this.state;
 
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
@@ -95,6 +98,8 @@ class ChatInput extends React.Component<Props, State> {
 
     // State changed
     if (curr.state !== next.state) return true;
+    if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
+      return true;
 
     return false;
   }
@@ -328,6 +333,10 @@ class ChatInput extends React.Component<Props, State> {
       );
     }
 
+    this.setState({
+      isSendingMediaMessage: true,
+    });
+
     reader.onloadend = () => {
       if (forceScrollToBottom) {
         forceScrollToBottom();
@@ -351,6 +360,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -358,6 +370,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       } else {
@@ -371,6 +386,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -378,6 +396,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       }
@@ -431,7 +452,12 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
     } = this.props;
-    const { isFocused, photoSizeError, code } = this.state;
+    const {
+      isFocused,
+      photoSizeError,
+      code,
+      isSendingMediaMessage,
+    } = this.state;
 
     const networkDisabled =
       !networkOnline ||
@@ -461,6 +487,7 @@ class ChatInput extends React.Component<Props, State> {
         )}
         {currentUser && (
           <MediaUploader
+            isSendingMediaMessage={isSendingMediaMessage}
             currentUser={currentUser}
             onValidated={this.sendMediaMessage}
             onError={this.setMediaMessageError}

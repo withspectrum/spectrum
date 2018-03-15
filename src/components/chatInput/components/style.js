@@ -25,3 +25,9 @@ export const MediaLabel = styled.label`
     color: ${({ theme }) => theme.brand.alt};
   }
 `;
+
+export const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
