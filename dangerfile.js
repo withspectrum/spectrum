@@ -43,9 +43,11 @@ schedule(async () => {
     .filter(Boolean)
     .map(res => res[1]);
 
-  const matchingLabels = matches.filter(
-    match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
-  );
+  const matchingLabels = matches
+    .filter(
+      match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
+    )
+    .map(key => possibleAutoLabels[key.toLowerCase()]);
 
   if (!matchingLabels || matchingLabels.length === 0) return;
 
