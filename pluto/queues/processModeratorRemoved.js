@@ -42,29 +42,54 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       'moderator-seat'
     );
 
-    if (!subscriptionItem) {
-      // safety check
-      debug("Has subscription item, but coudln't fetch it");
+    const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+      customer,
+      'oss-moderator-seat'
+    );
+
+    if (!subscriptionItem && !ossSubscriptionItem) {
+      debug('No subscription item and no open source item');
       return;
     }
 
-    const quantity = subscriptionItem.quantity;
-    if (quantity === 1) {
-      debug(`Only one moderator seat is left, being removed ${communityId}`);
-      return await StripeUtil.deleteSubscriptionItem(subscriptionItem.id);
+    if (subscriptionItem) {
+      const quantity = subscriptionItem.quantity;
+      if (quantity === 1) {
+        debug(`Only one moderator seat is left, being removed ${communityId}`);
+        return await StripeUtil.deleteSubscriptionItem(subscriptionItem.id);
+      }
+
+      debug(`More than one moderator seat is left, decremtn ${communityId}`);
+      return await StripeUtil.updateSubscriptionItem({
+        subscriptionItemId: subscriptionItem.id,
+        quantity: subscriptionItem.quantity - 1,
+      });
     }
 
-    debug(`More than one moderator seat is left, decremtn ${communityId}`);
-    return await StripeUtil.updateSubscriptionItem({
-      subscriptionItemId: subscriptionItem.id,
-      quantity: subscriptionItem.quantity - 1,
-    });
+    if (ossSubscriptionItem) {
+      return await StripeUtil.deleteSubscriptionItem(ossSubscriptionItem.id);
+    }
+
+    debug("Couldn't fetch subscription item");
+    return;
   }
 
   debug(
-    `Active subscription found, but no moderator seat item found ${communityId}`
+    `Active subscription found, but no paid moderator seat item found ${communityId}`
   );
-  return;
+  const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+    customer,
+    'oss-moderator-seat'
+  );
+
+  if (ossSubscriptionItem) {
+    debug(`Found oss moderator seat ${communityId}`);
+    debug(`Removing oss moderator seat ${communityId}`);
+    return await StripeUtil.deleteSubscriptionItem(ossSubscriptionItem.id);
+  } else {
+    debug(`No paid or oss moderator seat subscription items ${communityId}`);
+    return;
+  }
 };
 
 export default async (job: Job<StripeCommunityPaymentEventJobData>) => {

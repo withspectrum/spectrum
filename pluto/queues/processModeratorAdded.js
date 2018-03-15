@@ -5,7 +5,7 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { removeAllCommunityModerators } from '../models/usersCommunities';
+import removeAllPaidFeatures from './removeAllPaidFeatures';
 import { StripeUtil } from 'shared/stripe/utils';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
@@ -34,7 +34,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   // file, they aren't allowed to actually have moderators - reset them
   if (!hasChargeableSource) {
     debug(`No chargeable source on file, abort ${communityId}`);
-    return removeAllCommunityModerators(communityId);
+    return await removeAllPaidFeatures(communityId);
   }
 
   if (activeSubscription) {
@@ -59,18 +59,59 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       });
     }
 
-    debug(`Adding subscription item to existing subscription ${communityId}`);
-    return await StripeUtil.addSubscriptionItem({
-      subscriptionId: activeSubscription.id,
+    debug(`No active paid moderator seat subscription item ${communityId}`);
+    if (community.ossVerified) {
+      debug(`Community is oss verified${communityId}`);
+      const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+        customer,
+        'oss-moderator-seat'
+      );
+
+      if (ossSubscriptionItem) {
+        debug(`Community already has oss moderator seat ${communityId}`);
+        debug(
+          `Adding subscription item to existing subscription ${communityId}`
+        );
+        return await StripeUtil.addSubscriptionItem({
+          subscriptionId: activeSubscription.id,
+          subscriptionItemType: 'moderator-seat',
+        });
+      } else {
+        debug(`Community does not have oss moderator seat${communityId}`);
+        debug(
+          `Adding oss subscription item to existing subscription ${communityId}`
+        );
+        return await StripeUtil.addSubscriptionItem({
+          subscriptionId: activeSubscription.id,
+          subscriptionItemType: 'oss-moderator-seat',
+        });
+      }
+    } else {
+      debug(`Community is not oss verified ${communityId}`);
+      debug(`Adding subscription item to existing subscription ${communityId}`);
+      return await StripeUtil.addSubscriptionItem({
+        subscriptionId: activeSubscription.id,
+        subscriptionItemType: 'moderator-seat',
+      });
+    }
+  }
+
+  debug(`Community does not have an active subscription${communityId}`);
+  if (community.ossVerified) {
+    debug(`Community is oss verified ${communityId}`);
+    debug(`Creating first oss subscription ${communityId}`);
+    return await StripeUtil.createFirstSubscription({
+      customerId: customer.id,
+      subscriptionItemType: 'oss-moderator-seat',
+    });
+  } else {
+    debug(`Community is not oss verified${communityId}`);
+    debug(`Creating first subscription ${communityId}`);
+    return await StripeUtil.createFirstSubscription({
+      customerId: customer.id,
       subscriptionItemType: 'moderator-seat',
     });
   }
-
-  debug(`Creating first subscription ${communityId}`);
-  return await StripeUtil.createFirstSubscription({
-    customerId: customer.id,
-    subscriptionItemType: 'moderator-seat',
-  });
 };
 
 export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
