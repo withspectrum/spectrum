@@ -5,8 +5,8 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { setPrioritySupport } from '../models/community';
 import { StripeUtil } from 'shared/stripe/utils';
+import removeAllPaidFeatures from './removeAllPaidFeatures';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -37,7 +37,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (!hasChargeableSource) {
     debug(`No chargeable source ${communityId}`);
-    return await setPrioritySupport(communityId, false);
+    return await removeAllPaidFeatures(communityId);
   }
 
   if (activeSubscription) {
