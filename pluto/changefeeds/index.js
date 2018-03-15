@@ -21,6 +21,11 @@ import { analyticsChanged } from './analytics';
 
 import { supportChanged } from './support';
 
+import {
+  openSourceStatusActivated,
+  openSourceStatusChanged,
+} from './openSourceStatus';
+
 export default () => {
   communityCreated();
   communityDeleted();
@@ -39,4 +44,7 @@ export default () => {
   analyticsChanged();
 
   supportChanged();
+
+  openSourceStatusActivated();
+  openSourceStatusChanged();
 };
