@@ -65,7 +65,7 @@
     "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.3",
     "css.escape": "^1.5.1",
-    "danger-plugin-flow": "^1.2.1",
+    "danger-plugin-flow": "^1.3.1",
     "danger-plugin-no-test-shortcuts": "^2.0.0",
     "dataloader": "^1.3.0",
     "debounce": "^1.1.0",

@@ -43,9 +43,11 @@ schedule(async () => {
     .filter(Boolean)
     .map(res => res[1]);
 
-  const matchingLabels = matches.filter(
-    match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
-  );
+  const matchingLabels = matches
+    .filter(
+      match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
+    )
+    .map(key => possibleAutoLabels[key.toLowerCase()]);
 
   if (!matchingLabels || matchingLabels.length === 0) return;
 
@@ -70,13 +72,14 @@ noTestShortcuts({
   testFilePredicate: filePath => filePath.endsWith('.test.js'),
 });
 
-
 schedule(noConsole({ whitelist: ['error'] }));
 
 schedule(
   flow({
-    // Don't fail the build, only warn the submitter
-    warn: true,
+    // Fail on newly created untyped files
+    created: 'fail',
+    // Warn on modified untyped files
+    modified: 'warn',
     blacklist: ['flow-typed/**/*.js', 'public/**/*.js'],
   })
 );
