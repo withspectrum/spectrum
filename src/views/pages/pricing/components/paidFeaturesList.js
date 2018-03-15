@@ -14,7 +14,7 @@ class PaidFeaturesList extends React.Component {
           }
           icon={'member-add'}
           color={'space'}
-          priceLabel={'$10 per month'}
+          priceLabel={'$10 per month per person'}
         />
 
         <FeatureItem
@@ -24,7 +24,7 @@ class PaidFeaturesList extends React.Component {
           }
           icon={'private-outline'}
           color={'special'}
-          priceLabel={'$10 per month'}
+          priceLabel={'$10 per month per channel'}
         />
 
         <FeatureItem

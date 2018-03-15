@@ -122,7 +122,9 @@ class FreeFeaturesList extends React.Component {
 
         <FeatureItem
           title={'Search engine optimized'}
-          subtitle={'Grow organically when people discover you through search.'}
+          subtitle={
+            'Grow organically when people discover your community through search.'
+          }
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
@@ -183,9 +185,7 @@ class FreeFeaturesList extends React.Component {
 
         <FeatureItem
           title={'Ad-free'}
-          subtitle={
-            'Your community’s data is never sold to advertisers or third parties.'
-          }
+          subtitle={'Your community’s data is never sold to advertisers.'}
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>

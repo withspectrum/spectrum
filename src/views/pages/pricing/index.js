@@ -109,9 +109,12 @@ class Pricing extends React.Component<Props> {
             We know how hard it can be to build a great online community. We’ve
             designed our pricing to make growing and managing a community
             easier. The result is our{' '}
-            <strong onClick={this.scrollToFairPriceFaq}>
+            <a
+              style={{ fontWeight: 'bold' }}
+              onClick={this.scrollToFairPriceFaq}
+            >
               Fair Price Promise
-            </strong>.
+            </a>.
           </PageSubtitle>
 
           <Section>
@@ -134,14 +137,6 @@ class Pricing extends React.Component<Props> {
                 actually used to grow and manage your community each month.
               </Highlight>
             </SectionDescription>
-
-            <TableCardButton
-              light
-              onClick={this.scrollToFairPriceFaq}
-              style={{ marginTop: '24px' }}
-            >
-              Learn more
-            </TableCardButton>
           </Section>
 
           <Section
@@ -253,10 +248,10 @@ class Pricing extends React.Component<Props> {
 
               <SectionDescription>
                 However, let’s say you only need the private channel for a week.
-                When your decide to archive that private channel, we’ll
-                calculate that it was only used for one week out of a one-month
-                billing cycle (25% of the time) and automatically prorate a
-                $7.50 credit to your account.
+                When you decide to archive that private channel, we’ll calculate
+                that it was only used for one week out of a one-month billing
+                cycle (25% of the time) and automatically prorate a $7.50 credit
+                to your account.
               </SectionDescription>
 
               <SectionDescription>
@@ -299,20 +294,7 @@ class Pricing extends React.Component<Props> {
               <SectionSubtitle>This is all a bit confusing...</SectionSubtitle>
 
               <SectionDescription>
-                We know it is - and our payments provider, Stripe, acknowledges
-                this as well (here’s their documentation on proration, in case
-                you’re curious:{' '}
-                <a
-                  href="https://stripe.com/docs/subscriptions/upgrading-downgrading#understanding-proration"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Stripe proration docs
-                </a>).
-              </SectionDescription>
-
-              <SectionDescription>
-                But at the end of the day our promise is this:{' '}
+                At the end of the day our promise is this:{' '}
                 <Highlight>
                   your community will only ever be charged for the time where
                   you’re using paid features.
@@ -324,8 +306,8 @@ class Pricing extends React.Component<Props> {
 
               <SectionDescription>
                 If you have any questions about this, or feel you’ve found an
-                error in how much you were charged, please don’t hesitate to
-                [get in touch].
+                error in how much you were charged, please don’t hesitate to{' '}
+                <a href="mailto:hi@spectrum.chat">get in touch</a>.
               </SectionDescription>
             </Subsection>
           </Section>
