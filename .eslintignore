@@ -1,0 +1,33 @@
+# Note: This is a copy of the .gitignore,
+# with flow-typed added
+flow-typed
+node_modules
+.sass-cache
+npm-debug.log
+build
+.DS_Store
+src/config/FirebaseConfig.js
+npm-debug.log
+rethinkdb_data
+debug
+now-secrets.json
+build-iris
+build-athena
+build-hermes
+build-chronos
+build-mercury
+build-vulcan
+build-hyperion
+build-pluto
+package-lock.json
+.vscode
+dump.rdb
+*.swp
+queries-by-response-size.js
+queries-by-time.js
+test-extend.js
+stats.json
+iris/.env
+.expo
+mobile/.expo
+test-results.json
