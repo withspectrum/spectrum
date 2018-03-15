@@ -26,17 +26,19 @@ import {
   Divider,
   TableCardButton,
 } from './style';
+import type { ContextRouter } from 'react-router';
 
 type Props = {
   data: {
     user: GetUserCommunityConnectionType,
   },
+  ...$Exact<ContextRouter>,
 };
 class Pricing extends React.Component<Props> {
-  paidFeaturesSection: React.Node;
-  freeFeaturesSection: React.Node;
-  fairPriceFaqSection: React.Node;
-  ownedCommunitiesSection: ?React.Node;
+  paidFeaturesSection: ?HTMLDivElement;
+  freeFeaturesSection: ?HTMLDivElement;
+  fairPriceFaqSection: ?HTMLDivElement;
+  ownedCommunitiesSection: ?HTMLDivElement;
 
   componentDidMount() {
     track('pricing', 'viewed', null);
@@ -51,28 +53,30 @@ class Pricing extends React.Component<Props> {
 
   scrollToPaidFeatures = () => {
     const node = this.paidFeaturesSection;
+    if (!node) return;
     window.scrollTo(0, node.offsetTop);
   };
 
   scrollToFreeFeatures = () => {
     const node = this.freeFeaturesSection;
+    if (!node) return;
     window.scrollTo(0, node.offsetTop);
   };
 
   scrollToFairPriceFaq = () => {
     const node = this.fairPriceFaqSection;
+    if (!node) return;
     window.scrollTo(0, node.offsetTop);
   };
 
   scrollToOwnedCommunities = () => {
     const node = this.ownedCommunitiesSection;
+    if (!node) return;
     window.scrollTo(0, node.offsetTop);
   };
 
   render() {
     const { data: { user } } = this.props;
-
-    console.log(this.props);
 
     const isUser = user && user.communityConnection;
 
@@ -91,6 +95,7 @@ class Pricing extends React.Component<Props> {
       ownsCommunities &&
       user.communityConnection.edges
         .filter(c => c && c.node.communityPermissions.isOwner)
+        .filter(Boolean)
         .map(c => c.node);
 
     return (
