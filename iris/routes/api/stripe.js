@@ -7,7 +7,7 @@ import { processInvoicePaid } from '../webhooks';
 import { db } from '../../models/db';
 
 stripeRouter.get('/reset', async (req, res) => {
-  const customers = await stripe.customers.list();
+  const customers = await stripe.customers.list({ limit: 100 });
   const deleteCustomers = customers.data.map(
     async customer =>
       console.log('deleting customer') ||
