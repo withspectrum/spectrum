@@ -42,29 +42,54 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       'private-channel'
     );
 
-    if (!subscriptionItem) {
-      // safety check
-      debug("Has subscription item, but coudln't fetch it");
+    const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+      customer,
+      'oss-private-channel'
+    );
+
+    if (!subscriptionItem && !ossSubscriptionItem) {
+      debug('No subscription item and no open source item');
       return;
     }
 
-    const quantity = subscriptionItem.quantity;
-    if (quantity === 1) {
-      debug(`Only one private channel is left, being removed ${communityId}`);
-      return await StripeUtil.deleteSubscriptionItem(subscriptionItem.id);
+    if (subscriptionItem) {
+      const quantity = subscriptionItem.quantity;
+      if (quantity === 1) {
+        debug(`Only one private channel is left, being removed ${communityId}`);
+        return await StripeUtil.deleteSubscriptionItem(subscriptionItem.id);
+      }
+
+      debug(`More than one private channel is left, decrement ${communityId}`);
+      return await StripeUtil.updateSubscriptionItem({
+        subscriptionItemId: subscriptionItem.id,
+        quantity: subscriptionItem.quantity - 1,
+      });
     }
 
-    debug(`More than one private channel is left, decrement ${communityId}`);
-    return await StripeUtil.updateSubscriptionItem({
-      subscriptionItemId: subscriptionItem.id,
-      quantity: subscriptionItem.quantity - 1,
-    });
+    if (ossSubscriptionItem) {
+      return await StripeUtil.deleteSubscriptionItem(ossSubscriptionItem.id);
+    }
+
+    debug("Couldn't fetch subscription item");
+    return;
   }
 
   debug(
-    `Active subscription found, but no private channel item found ${communityId}`
+    `Active subscription found, but no paid private channel item found ${communityId}`
   );
-  return;
+  const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+    customer,
+    'oss-private-channel'
+  );
+
+  if (ossSubscriptionItem) {
+    debug(`Found oss private channel ${communityId}`);
+    debug(`Removing oss private channel ${communityId}`);
+    return await StripeUtil.deleteSubscriptionItem(ossSubscriptionItem.id);
+  } else {
+    debug(`No paid or oss private channel subscription items ${communityId}`);
+    return;
+  }
 };
 
 export default async (job: Job<StripeCommunityPaymentEventJobData>) => {

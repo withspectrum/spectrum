@@ -5,13 +5,13 @@ import type {
   StripeCommunityPaymentEventJobData,
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
-import { archiveAllCommunityPrivateChannels } from '../models/channel';
+import removeAllPaidFeatures from './removeAllPaidFeatures';
 import { StripeUtil } from 'shared/stripe/utils';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
 
-  debug(`Processing moderator added ${communityId}`);
+  debug(`Processing private channel added ${communityId}`);
 
   const {
     community,
@@ -35,13 +35,14 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   // all their private channels in the meantime
   if (!hasChargeableSource) {
     debug(`No chargeable source on file, abort ${communityId}`);
-    return archiveAllCommunityPrivateChannels(communityId);
+    return await removeAllPaidFeatures(communityId);
   }
 
   if (activeSubscription) {
     debug(`Active subscription found ${communityId}`);
     if (StripeUtil.hasSubscriptionItemOfType(customer, 'private-channel')) {
       debug(`Private channel subscription item found ${communityId}`);
+
       const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
         'private-channel'
@@ -49,29 +50,73 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
       if (!subscriptionItem) {
         // safety check
-        debug("Has subscription item, but coudln't fetch it");
+        debug('Could not fetch private channel subscription item');
         return;
       }
 
-      debug(`Updating subscription item ${communityId}`);
+      debug(`Increase private channel quantity ${communityId}`);
       return await StripeUtil.updateSubscriptionItem({
         subscriptionItemId: subscriptionItem.id,
         quantity: subscriptionItem.quantity + 1,
       });
     }
 
-    debug(`Adding subscription item to existing subscription ${communityId}`);
-    return await StripeUtil.addSubscriptionItem({
-      subscriptionId: activeSubscription.id,
+    debug(`No paid private channels found ${communityId}`);
+    if (community.ossVerified) {
+      debug(`Community is oss verified ${communityId}`);
+      const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
+        customer,
+        'oss-private-channel'
+      );
+
+      if (ossSubscriptionItem) {
+        debug(`Community already has oss private channel ${communityId}`);
+        debug(
+          `Add a paid private channel subscription item to existing subscription ${communityId}`
+        );
+        return await StripeUtil.addSubscriptionItem({
+          subscriptionId: activeSubscription.id,
+          subscriptionItemType: 'private-channel',
+        });
+      } else {
+        debug(
+          `Community does not yet have the oss private channel ${communityId}`
+        );
+        debug(
+          `Adding oss private channel subscription item to existing subscription ${communityId}`
+        );
+        return await StripeUtil.addSubscriptionItem({
+          subscriptionId: activeSubscription.id,
+          subscriptionItemType: 'oss-private-channel',
+        });
+      }
+    } else {
+      debug(`Community is not oss verified ${communityId}`);
+      debug(
+        `Adding private channel subscription item to existing subscription ${communityId}`
+      );
+      return await StripeUtil.addSubscriptionItem({
+        subscriptionId: activeSubscription.id,
+        subscriptionItemType: 'private-channel',
+      });
+    }
+  }
+
+  debug(`Commuity does not have an active subscription ${communityId}`);
+  if (community.ossVerified) {
+    debug(`Community is oss verified ${communityId}`);
+    debug(`Creating first oss subscription ${communityId}`);
+    return await StripeUtil.createFirstSubscription({
+      customerId: customer.id,
+      subscriptionItemType: 'oss-private-channel',
+    });
+  } else {
+    debug(`Creating first subscription ${communityId}`);
+    return await StripeUtil.createFirstSubscription({
+      customerId: customer.id,
       subscriptionItemType: 'private-channel',
     });
   }
-
-  debug(`Creating first subscription ${communityId}`);
-  return await StripeUtil.createFirstSubscription({
-    customerId: customer.id,
-    subscriptionItemType: 'private-channel',
-  });
 };
 
 export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
