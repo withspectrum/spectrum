@@ -142,10 +142,8 @@ export type PushNotificationsJobData = {
 };
 
 export type PaymentSucceededEmailJobData = {
-  data: {
-    invoice: Object,
-    community: DBCommunity,
-  },
+  invoice: Object,
+  community: DBCommunity,
   to: string,
 };
 

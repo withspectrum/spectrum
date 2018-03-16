@@ -3,10 +3,7 @@ const debug = require('debug')('pluto:webhooks:invoiceEvent');
 import type { CleanInvoice, RawInvoice } from 'shared/stripe/types/invoice';
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
-import {
-  stripePaymentFailedQueue,
-  stripePaymentSucceededQueue,
-} from 'shared/bull/queues';
+import { stripePaymentSucceededQueue } from 'shared/bull/queues';
 
 const cleanInvoice = (invoice: RawInvoice): CleanInvoice => {
   debug(`Cleaning invoice ${invoice.id}`);
@@ -52,7 +49,7 @@ InvoiceEventHandler.handle = async (
 
   switch (type) {
     case 'invoice.payment_succeeded': {
-      stripePaymentSucceededQueue.add({ customerId: saved.customerId });
+      stripePaymentSucceededQueue.add({ record: raw });
       break;
     }
     default: {
