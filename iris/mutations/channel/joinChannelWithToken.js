@@ -12,6 +12,7 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
+import { getChannelSettings } from '../../models/channelSettings';
 
 type JoinChannelWithTokenInput = {
   input: {
@@ -44,6 +45,8 @@ export default async (
 
   if (!channel) return new UserError('No channel found in this community');
 
+  const settings = await getChannelSettings(channel.id);
+
   if (!channel.isPrivate) {
     return channel;
   }
@@ -60,9 +63,17 @@ export default async (
     return new UserError("You don't have permission to view this channel");
   }
 
-  if (channel.joinToken && token !== channel.joinToken) {
+  if (!settings.joinSettings.tokenJoinEnabled) {
     return new UserError(
-      "We weren't able to authenticate this request - the token may have changed"
+      "You can't join at this time, the token may have changed"
+    );
+  }
+  if (
+    settings.joinSettings.tokenJoinEnabled &&
+    token !== settings.joinSettings.token
+  ) {
+    return new UserError(
+      "You can't join at this time, the token may have changed"
     );
   }
 
