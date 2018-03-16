@@ -39,6 +39,7 @@ export const Input = (props: InputProps) => {
         id={props.id}
         type={props.inputType}
         defaultValue={props.defaultValue}
+        value={props.value}
         placeholder={props.placeholder}
         onChange={props.onChange}
         autoFocus={props.autoFocus}

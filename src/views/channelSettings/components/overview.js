@@ -8,7 +8,7 @@ import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
-// import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
+import LoginTokenSettings from './loginTokenSettings';
 
 type Props = {
   community: Object,
@@ -25,6 +25,9 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <EditForm channel={channel} />
+          {channel.isPrivate && (
+            <LoginTokenSettings id={channel.id} channel={channel} />
+          )}
         </Column>
 
         {/*channel.isPrivate && (
