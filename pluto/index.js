@@ -28,6 +28,8 @@ import {
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
+  PROCESS_STRIPE_PAYMENT_SUCCEEDED,
+  PROCESS_STRIPE_PAYMENT_FAILED,
 } from './queues/constants';
 import processStripeChargeWebhook from './queues/processStripeChargeWebhook';
 import processStripeCustomerWebhook from './queues/processStripeCustomerWebhook';
@@ -56,6 +58,9 @@ import processCommunityEdited from './queues/processCommunityEdited';
 import processOssStatusActivated from './queues/processOssStatusActivated';
 import processOssStatusEnabled from './queues/processOssStatusEnabled';
 import processOssStatusDisabled from './queues/processOssStatusDisabled';
+
+import processPaymentSucceeded from './queues/processPaymentSucceeded';
+import processPaymentFailed from './queues/processPaymentFailed';
 
 const PORT = process.env.PORT || 3008;
 
@@ -106,6 +111,9 @@ try {
     [PROCESS_STRIPE_COMMUNITY_CREATED]: processCommunityCreated,
     [PROCESS_STRIPE_COMMUNITY_DELETED]: processCommunityDeleted,
     [PROCESS_STRIPE_COMMUNITY_EDITED]: processCommunityEdited,
+
+    [PROCESS_STRIPE_PAYMENT_SUCCEEDED]: processPaymentSucceeded,
+    [PROCESS_STRIPE_PAYMENT_FAILED]: processPaymentFailed,
   });
 } catch (err) {
   console.log('❌ Error starting worker', err);

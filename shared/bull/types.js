@@ -108,10 +108,15 @@ export type ReputationEventJobData = {
 
 export type StripeWebhookEventJobData = {
   record: Object,
+  type?: string,
 };
 
 export type StripeCommunityPaymentEventJobData = {
   communityId: string,
+};
+
+export type StripePaymentSucceededOrFailedEventJobData = {
+  customerId: string,
 };
 
 export type AdminCommunityCreatedEmailJobData = {
@@ -214,6 +219,12 @@ export type Queues = {
   >,
   stripeCommunityOpenSourceStatusDisabledQueue: BullQueue<
     StripeCommunityPaymentEventJobData
+  >,
+  stripePaymentSucceededQueue: BullQueue<
+    StripePaymentSucceededOrFailedEventJobData
+  >,
+  stripePaymentFailedQueue: BullQueue<
+    StripePaymentSucceededOrFailedEventJobData
   >,
 
   // admin

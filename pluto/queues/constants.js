@@ -47,3 +47,7 @@ export const PROCESS_STRIPE_COMMUNITY_DELETED =
   'process stripe community deleted';
 export const PROCESS_STRIPE_COMMUNITY_EDITED =
   'process stripe community edited';
+
+export const PROCESS_STRIPE_PAYMENT_SUCCEEDED =
+  'process stripe payment succeeded';
+export const PROCESS_STRIPE_PAYMENT_FAILED = 'process stripe payment failed';

@@ -26,6 +26,8 @@ import {
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
+  PROCESS_STRIPE_PAYMENT_SUCCEEDED,
+  PROCESS_STRIPE_PAYMENT_FAILED,
 } from 'pluto/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -79,6 +81,8 @@ exports.QUEUE_NAMES = {
   stripeCommunityOpenSourceStatusEnabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
   stripeCommunityOpenSourceStatusDisabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
   stripeCommunityOpenSourceStatusActivatedQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
+  stripePaymentSucceededQueue: PROCESS_STRIPE_PAYMENT_SUCCEEDED,
+  stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
 
   _adminSendCommunityCreatedEmailQueue: 'admin community created',
   _adminProcessToxicMessageQueue: 'process admin toxic message',
