@@ -1,4 +1,3 @@
-import { encode } from '../../iris/utils/base64';
 import data from '../../shared/testing/data';
 
 const user = data.users[0];
@@ -11,14 +10,7 @@ const dashboardThreads = data.threads.filter(({ channelId }) =>
 
 describe('Inbox View', () => {
   before(() => {
-    cy.setCookie(
-      'session',
-      encode(JSON.stringify({ passport: { user: user.id } })),
-      {
-        httpOnly: true,
-        secure: false,
-      }
-    );
+    cy.auth(user.id);
     cy.visit('/');
   });
 
