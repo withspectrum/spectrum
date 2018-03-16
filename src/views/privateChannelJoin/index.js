@@ -27,13 +27,7 @@ class PrivateChannelJoin extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const {
-      match,
-      history,
-      joinChannelWithToken,
-      currentUser,
-      dispatch,
-    } = this.props;
+    const { match, history, currentUser } = this.props;
     const { token, communitySlug, channelSlug } = match.params;
 
     if (!token) {
@@ -56,13 +50,7 @@ class PrivateChannelJoin extends React.Component<Props, State> {
   }
 
   handleJoin = () => {
-    const {
-      match,
-      history,
-      joinChannelWithToken,
-      currentUser,
-      dispatch,
-    } = this.props;
+    const { match, history, joinChannelWithToken, dispatch } = this.props;
     const { token, communitySlug, channelSlug } = match.params;
 
     this.setState({ isLoading: true });
@@ -76,7 +64,7 @@ class PrivateChannelJoin extends React.Component<Props, State> {
       })
       .catch(err => {
         this.setState({ isLoading: false });
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
         return history.push(`/${communitySlug}/${channelSlug}`);
       });
   };
@@ -84,8 +72,6 @@ class PrivateChannelJoin extends React.Component<Props, State> {
   render() {
     const { currentUser, match } = this.props;
     const { isLoading } = this.state;
-
-    console.log(this.props);
 
     if (!currentUser || !currentUser.id) {
       return (
