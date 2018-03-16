@@ -55,10 +55,6 @@ InvoiceEventHandler.handle = async (
       stripePaymentSucceededQueue.add({ customerId: saved.customerId });
       break;
     }
-    case 'invoice.payment_failed': {
-      stripePaymentFailedQueue.add({ customerId: saved.customerId });
-      break;
-    }
     default: {
       break;
     }
