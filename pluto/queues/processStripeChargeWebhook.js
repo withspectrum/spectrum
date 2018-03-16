@@ -1,7 +1,10 @@
 // @flow
 const debug = require('debug')('pluto:webhooks:sourceEvent');
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
-import { stripeCustomerWebhookEventQueue } from 'shared/bull/queues';
+import {
+  stripeCustomerWebhookEventQueue,
+  stripePaymentFailedQueue,
+} from 'shared/bull/queues';
 import { stripe } from 'shared/stripe';
 
 /*
@@ -11,8 +14,18 @@ import { stripe } from 'shared/stripe';
   latest customer data from stripe and update that record in our database.
 */
 export default async (job: Job<StripeWebhookEventJobData>) => {
-  const { data: { record } } = job;
+  const { data: { record, type } } = job;
   debug(`New job for source ${record.id}`);
+
+  switch (type) {
+    case 'charge.failed': {
+      stripePaymentFailedQueue.add({ customerId: record.customer });
+      break;
+    }
+    default: {
+      break;
+    }
+  }
 
   const customer = await stripe.customers.retrieve(record.customer);
   return stripeCustomerWebhookEventQueue.add({ record: customer });

@@ -57,7 +57,7 @@ const WebhookHandler = {
       '\n\n'
     );
     return await handler
-      .add({ record: event.data.object })
+      .add({ record: event.data.object, type: event.type })
       .then(() => {
         debug(
           `\n\n😈 JOB FINISHED for ${event.type} ${event.data.object.id}\n\n`

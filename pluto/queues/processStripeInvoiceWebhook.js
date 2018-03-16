@@ -3,6 +3,10 @@ const debug = require('debug')('pluto:webhooks:invoiceEvent');
 import type { CleanInvoice, RawInvoice } from 'shared/stripe/types/invoice';
 import type { Job, StripeWebhookEventJobData } from 'shared/bull/types';
 import { recordExists, insertRecord, replaceRecord } from '../models/utils';
+import {
+  stripePaymentFailedQueue,
+  stripePaymentSucceededQueue,
+} from 'shared/bull/queues';
 
 const cleanInvoice = (invoice: RawInvoice): CleanInvoice => {
   debug(`Cleaning invoice ${invoice.id}`);
@@ -38,18 +42,33 @@ export const InvoiceEventHandler = {};
 
 const { clean, save } = InvoiceEventFactory;
 
-InvoiceEventHandler.handle = async (raw: RawInvoice): Promise<CleanInvoice> => {
+InvoiceEventHandler.handle = async (
+  raw: RawInvoice,
+  type: ?string
+): Promise<CleanInvoice> => {
   debug(`Handling invoice ${raw.id}`);
   const cleaned = clean(raw);
   const saved = await save(cleaned);
-  return saved.catch(err => {
-    console.log(`Error handling invoice event ${raw.id}`);
-    throw new Error(err);
-  });
+
+  switch (type) {
+    case 'invoice.payment_succeeded': {
+      stripePaymentSucceededQueue.add({ customerId: saved.customerId });
+      break;
+    }
+    case 'invoice.payment_failed': {
+      stripePaymentFailedQueue.add({ customerId: saved.customerId });
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  return saved;
 };
 
 export default async (job: Job<StripeWebhookEventJobData>) => {
-  const { data: { record } } = job;
+  const { data: { record, type } } = job;
   debug(`New job for ${record.id}`);
-  return await InvoiceEventHandler.handle(record);
+  return await InvoiceEventHandler.handle(record, type);
 };
