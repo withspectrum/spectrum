@@ -2,6 +2,7 @@
 import type { CleanCustomer } from 'shared/stripe/types/customer';
 import { recordExists, insertRecord, replaceRecord } from './utils';
 import { db } from 'iris/models/db';
+import type { DBStripeCustomer } from 'shared/types';
 
 export const saveCustomer = async (
   customer: CleanCustomer
@@ -16,7 +17,9 @@ export const saveCustomer = async (
   }
 };
 
-export const getStripeCustomer = (customerId: string) => {
+export const getStripeCustomer = (
+  customerId: string
+): Promise<DBStripeCustomer> => {
   return db
     .table('stripeCustomers')
     .get(customerId)
