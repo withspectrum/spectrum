@@ -5,6 +5,7 @@ import {
   getUserPermissionsInChannel,
   createMemberInChannel,
   createMemberInDefaultChannels,
+  approvePendingUserInChannel,
 } from '../../models/usersChannels';
 import { getChannelBySlug } from '../../models/channel';
 import {
@@ -71,12 +72,20 @@ export default async (
       createMemberInDefaultChannels(channel.communityId, currentUser.id),
     ])
       .then(async () => {
-        return await createMemberInChannel(channel.id, currentUser.id);
+        if (channelPermissions.isPending) {
+          return await approvePendingUserInChannel(channel.id, currentUser.id);
+        } else {
+          return await createMemberInChannel(channel.id, currentUser.id);
+        }
       })
       .then(joinedChannel => joinedChannel);
   }
 
-  if (!channel.isMember) {
+  if (channelPermissions.isPending) {
+    return await approvePendingUserInChannel(channel.id, currentUser.id);
+  }
+
+  if (!channelPermissions.isMember) {
     return await createMemberInChannel(channel.id, currentUser.id);
   }
 
