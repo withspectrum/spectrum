@@ -17,7 +17,6 @@ export type DBChannel = {
   isPrivate: boolean,
   name: string,
   slug: string,
-  joinToken?: string,
 };
 
 export type DBCommunity = {
@@ -39,6 +38,15 @@ export type DBCommunitySettings = {
   communityId: string,
   brandedLogin: ?{
     customMessage: ?string,
+  },
+};
+
+export type DBChannelSettings = {
+  id: string,
+  channelId: string,
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: string,
   },
 };
 
