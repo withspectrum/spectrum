@@ -19,7 +19,7 @@ export default async (job: Job<StripeWebhookEventJobData>) => {
 
   switch (type) {
     case 'charge.failed': {
-      stripePaymentFailedQueue.add({ customerId: record.customer });
+      stripePaymentFailedQueue.add({ record });
       break;
     }
     default: {
