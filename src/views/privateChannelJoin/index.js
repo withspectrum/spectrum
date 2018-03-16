@@ -57,7 +57,6 @@ class PrivateChannelJoin extends React.Component<Props, State> {
 
     joinChannelWithToken({ channelSlug, token, communitySlug })
       .then(data => {
-        console.log('mutation dat', data);
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('success', 'Welcome!'));
         return history.push(`/${communitySlug}/${channelSlug}`);
