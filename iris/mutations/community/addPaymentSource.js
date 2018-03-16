@@ -46,10 +46,15 @@ export default async (
     );
   }
 
-  const changedSource = await StripeUtil.attachNewSource({
-    customerId: customer.id,
-    sourceId: sourceId,
-  });
+  let changedSource;
+  try {
+    changedSource = await StripeUtil.attachNewSource({
+      customerId: customer.id,
+      sourceId: sourceId,
+    });
+  } catch (err) {
+    return new UserError(err.message);
+  }
 
   const newCustomer = await StripeUtil.getCustomer(changedSource.customer);
 
