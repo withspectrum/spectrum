@@ -65,6 +65,9 @@ jobs:
     docker:
       - image: circleci/node:8-browsers
       - image: redis:3.2.7
+      - image: cypress/base:6
+    environment:
+      TERM: xterm
     steps:
       - attach_workspace:
           at: ~/spectrum
@@ -104,8 +107,11 @@ jobs:
           name: Run ESLint
           command: yarn run lint
       - run:
-          name: Run Tests
+          name: Run Unit Tests
           command: yarn run test:ci
+      - run:
+          name: Run E2E Tests
+          command: yarn run test:e2e
 
 
   # Tests native code of the mobile app
