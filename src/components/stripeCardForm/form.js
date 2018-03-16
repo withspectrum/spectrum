@@ -38,7 +38,10 @@ class Form extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     const communityId = this.props.community.id;
-    const { id: sourceId } = await this.createSource();
+    const source = await this.createSource();
+
+    if (!source) return this.setState({ isLoading: false });
+    const { id: sourceId } = source;
 
     const input = {
       communityId,
