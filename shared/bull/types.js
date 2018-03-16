@@ -140,6 +140,30 @@ export type PushNotificationsJobData = {
   notification: DBNotificationsJoin,
 };
 
+export type PaymentSucceededEmailJobData = {
+  data: {
+    invoice: Object,
+    community: DBCommunity,
+  },
+  to: string,
+};
+
+export type PaymentFailedEmailJobData = {
+  data: {
+    invoice: Object,
+    community: DBCommunity,
+  },
+  to: string,
+};
+
+export type CardExpiringWarningEmailJobData = {
+  data: {
+    invoice: Object,
+    community: DBCommunity,
+  },
+  to: string,
+};
+
 export type Queues = {
   // athena
   sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
@@ -169,6 +193,13 @@ export type Queues = {
   sendEmailValidationEmailQueue: BullQueue<EmailValidationEmailJobData>,
   sendAdministratorEmailValidationEmailQueue: BullQueue<
     AdministratorEmailValidationEmailJobData
+  >,
+  sendCommunityPaymentSucceededEmailQueue: BullQueue<
+    PaymentSucceededEmailJobData
+  >,
+  sendCommunityPaymentFailedEmailQueue: BullQueue<PaymentFailedEmailJobData>,
+  sendCommunityCardExpiringWarningEmailQueue: BullQueue<
+    CardExpiringWarningEmailJobData
   >,
 
   // mercury

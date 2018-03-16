@@ -8,7 +8,12 @@ import processSendNewDirectMessageEmail from './queues/send-new-direct-message-e
 import processSendCommunityInviteEmail from './queues/send-community-invite-email';
 import processSendUserWelcomeEmail from './queues/send-user-welcome-email';
 import processSendNewCommunityWelcomeEmail from './queues/send-new-community-welcome-email';
+
 import processSendCommunityInvoiceReceiptEmail from './queues/send-community-invoice-receipt-email';
+import processSendCommunityPaymentSucceededEmail from './queues/send-community-payment-succeeded-email';
+import processSendCommunityPaymentFailedEmail from './queues/send-community-payment-failed-email';
+import processSendCommunityCardExpiringWarningEmail from './queues/send-community-card-expiring-warning-email';
+
 import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt-email';
 import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
@@ -23,6 +28,9 @@ import processSendPrivateChannelRequestApprovedEmail from './queues/send-private
 
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
+  SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
   SEND_COMMUNITY_INVITE_EMAIL,
   SEND_NEW_MESSAGE_EMAIL,
@@ -57,7 +65,12 @@ const server = createWorker({
   [SEND_NEW_DIRECT_MESSAGE_EMAIL]: processSendNewDirectMessageEmail,
   [SEND_NEW_USER_WELCOME_EMAIL]: processSendUserWelcomeEmail,
   [SEND_NEW_COMMUNITY_WELCOME_EMAIL]: processSendNewCommunityWelcomeEmail,
+
   [SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL]: processSendCommunityInvoiceReceiptEmail,
+  [SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL]: processSendCommunityPaymentSucceededEmail,
+  [SEND_COMMUNITY_PAYMENT_FAILED_EMAIL]: processSendCommunityPaymentFailedEmail,
+  [SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL]: processSendCommunityCardExpiringWarningEmail,
+
   [SEND_PRO_INVOICE_RECEIPT_EMAIL]: processSendProInvoiceReceiptEmail,
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,

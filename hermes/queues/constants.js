@@ -7,8 +7,16 @@ export const SEND_COMMUNITY_INVITE_EMAIL = 'send community invite email';
 export const SEND_NEW_USER_WELCOME_EMAIL = 'send new user welcome email';
 export const SEND_NEW_COMMUNITY_WELCOME_EMAIL =
   'send new community welcome email';
+
 export const SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL =
   'send community invoice receipt email';
+export const SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL =
+  'send community payment succeeded email';
+export const SEND_COMMUNITY_PAYMENT_FAILED_EMAIL =
+  'send community payment failed email';
+export const SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL =
+  'send community card expiring warning email';
+
 export const SEND_PRO_INVOICE_RECEIPT_EMAIL = 'send pro invoice receipt email';
 export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
@@ -36,17 +44,26 @@ export const NEW_DIRECT_MESSAGE_TEMPLATE = 2911541;
 export const NEW_USER_WELCOME_TEMPLATE = 2462726;
 export const COMMUNITY_INVITE_TEMPLATE = 2302401;
 export const NEW_COMMUNITY_WELCOME_TEMPLATE = 2600301;
-export const COMMUNITY_INVOICE_RECEIPT_TEMPLATE = 2647483;
+
+export const COMMUNITY_INVOICE_RECEIPT_TEMPLATE = IS_PROD ? 2647483 : 12345;
+export const COMMUNITY_PAYMENT_SUCCEEDED_TEMPLATE = IS_PROD ? 2647483 : 12345;
+export const COMMUNITY_PAYMENT_FAILED_TEMPLATE = IS_PROD ? 2647483 : 12345;
+export const COMMUNITY_CARD_EXPIRING_WARNING_TEMPLATE = IS_PROD
+  ? 2647483
+  : 12345;
+
 export const PRO_INVOICE_RECEIPT_TEMPLATE = 3037461;
 export const NEW_THREAD_CREATED_TEMPLATE = IS_PROD ? 2713302 : 3786781;
 export const DIGEST_TEMPLATE = IS_PROD ? 3071361 : 4165801;
 export const DEBUG_TEMPLATE = 3374841;
 export const EMAIL_VALIDATION_TEMPLATE = 3578681;
 export const ADMINISTRATOR_EMAIL_VALIDATION_TEMPLATE = IS_PROD ? null : 4952721;
+
 export const ADMIN_COMMUNITY_CREATED_TEMPLATE = 3037441;
 export const ADMIN_TOXIC_MESSAGE_TEMPLATE = 3867921;
 export const ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE = 3934361;
 export const ADMIN_ACTIVE_COMMUNITY_REPORT_TEMPLATE = 3947362;
+
 export const PRIVATE_CHANNEL_REQUEST_SENT_TEMPLATE = IS_PROD
   ? 4550702
   : 4543221;

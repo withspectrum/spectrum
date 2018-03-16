@@ -30,6 +30,12 @@ import {
   PROCESS_STRIPE_PAYMENT_FAILED,
 } from 'pluto/queues/constants';
 
+import {
+  SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
+  SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+} from 'hermes/queues/constants';
+
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   // athena - notifications
@@ -56,6 +62,9 @@ exports.QUEUE_NAMES = {
   sendEmailValidationEmailQueue: 'send email validation email',
   sendAdministratorEmailValidationEmailQueue:
     'send administrator email validation email',
+  sendCommunityPaymentSucceededEmailQueue: SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
+  sendCommunityPaymentFailedEmailQueue: SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',
