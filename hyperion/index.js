@@ -12,6 +12,10 @@ import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 
 const PORT = process.env.PORT || 3006;
+const FORCE_DEV = process.env.FORCE_DEV;
+const BASE_DOMAIN = FORCE_DEV
+  ? 'http://localhost:3001'
+  : 'https://spectrum.chat';
 
 const app = express();
 
@@ -43,7 +47,7 @@ app.use('/api', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
+    `${BASE_DOMAIN}${redirectUrl}`
   );
 });
 
@@ -51,7 +55,7 @@ app.use('/auth', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
+    `${BASE_DOMAIN}${redirectUrl}`
   );
 });
 
@@ -59,7 +63,7 @@ app.use('/websocket', (req: express$Request, res: express$Response) => {
   const redirectUrl = `${req.baseUrl}${req.path}`;
   res.redirect(
     req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
+    `${BASE_DOMAIN}${redirectUrl}`
   );
 });
 

@@ -19,7 +19,7 @@ beforeAll(async () => {
   browser = await puppeteer.launch(config);
   page = await browser.newPage();
   // Navigate the page to the login page for all tests
-  await page.goto(`http://localhost:3000/${community.slug}`);
+  await page.goto(`http://localhost:3006/${community.slug}`);
 });
 
 // Afterwards close the browser

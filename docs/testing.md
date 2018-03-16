@@ -22,13 +22,34 @@ In edge cases it could happen that you end up with bad data locally and that tes
 
 ### End-to-end tests
 
-To run e2e tests locally you have to have both iris and the client running. You also need Iris to be connected to the test database, which you do by setting `TEST_DB`:
+e2e tests should run against our production setup in order to simulate a users experience as closely as possible. This includes the built versions of all code, but also server-side rendering.
+
+To that end, there is a couple points you need to take care of to run them locally:
+
+1. You need to have a built version of the client, hyperion and iris
+2. You need to have the production versions of hyperion and iris running, with Iris connection to the test database and both of them connecting to the local versions of all services
+3. You need to run tests with `E2E=true`
+
+Let's get these done in order. First, let's build all the things:
 
 ```sh
-TEST_DB=true yarn run dev:iris
+# Important: Building the client has to happen before building hyperion
+yarn run build:client
+yarn run build:hyperion
+yarn run build:iris
 ```
 
-Then, with both client and iris connected to the test database running, to run the full test suite including e2e tests:
+Then, let's get Iris up and running against the test database and hyperion started:
+
+```sh
+TEST_DB=true FORCE_DEV=true yarn run start:iris
+# In a second tab, start hyperion
+FORCE_DEV=true yarn run start
+```
+
+> Note: The `FORCE_DEV` environment variable takes care of connecting these servers to their local services
+
+Finally, let's run our e2e tests:
 
 ```sh
 E2E=true yarn run test
