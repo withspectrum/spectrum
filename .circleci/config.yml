@@ -101,6 +101,9 @@ jobs:
           name: Run Flow
           command: yarn run flow
       - run:
+          name: Run ESLint
+          command: yarn run lint
+      - run:
           name: Run Tests
           command: yarn run test:ci
 
