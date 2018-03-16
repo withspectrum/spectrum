@@ -38,6 +38,7 @@ export default async (job: Job<StripeCommunityPaymentEventJobData>) => {
     await processJob(job);
   } catch (err) {
     console.log('❌', err);
+    console.log('❌', job.data);
     Raven.captureException(err);
   }
 };
