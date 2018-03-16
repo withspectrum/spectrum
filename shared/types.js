@@ -367,3 +367,14 @@ export type DBExpoPushSubscription = {
   token: string,
   userId: string,
 };
+
+export type DBStripeCustomer = {
+  created: number,
+  currency: ?string,
+  customerId: string,
+  email: string,
+  metadata: ?{
+    communityId?: string,
+    communityName?: string,
+  },
+};
