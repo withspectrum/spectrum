@@ -6,6 +6,7 @@ import toggleChannelSubscription from './toggleChannelSubscription';
 import toggleChannelNotifications from './toggleChannelNotifications';
 import togglePendingUser from './togglePendingUser';
 import unblockUser from './unblockUser';
+import joinChannelWithToken from './joinChannelWithToken';
 
 module.exports = {
   Mutation: {
@@ -16,5 +17,6 @@ module.exports = {
     toggleChannelNotifications,
     togglePendingUser,
     unblockUser,
+    joinChannelWithToken,
   },
 };

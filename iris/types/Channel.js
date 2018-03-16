@@ -85,11 +85,18 @@ const Channel = /* GraphQL */ `
     channel(id: ID, channelSlug: String, communitySlug: String): Channel @cost(complexity: 1)
 	}
 
+	input JoinChannelWithTokenInput {
+		communitySlug: String!
+		channelSlug: String!
+		token: String!
+	}
+
 	extend type Mutation {
 		createChannel(input: CreateChannelInput!): Channel
 		editChannel(input: EditChannelInput!): Channel
 		deleteChannel(channelId: ID!): Boolean
 		toggleChannelSubscription(channelId: ID!): Channel
+		joinChannelWithToken(input: JoinChannelWithTokenInput!): Channel
 		toggleChannelNotifications(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
