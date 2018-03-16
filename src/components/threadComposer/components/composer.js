@@ -3,12 +3,18 @@ import compose from 'recompose/compose';
 import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import debounce from 'debounce';
 import { track } from '../../../helpers/events';
 import { closeComposer } from '../../../actions/composer';
 import { changeActiveThread } from '../../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Editor from '../../draftjs-editor';
-import { toPlainText, fromPlainText, toJSON } from 'shared/draft-utils';
+import {
+  toPlainText,
+  fromPlainText,
+  toJSON,
+  toState,
+} from 'shared/draft-utils';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
@@ -29,11 +35,10 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
+  DisconnectedWarning,
 } from '../style';
 
 type Props = {
-  title: string,
-  body: Object,
   isOpen: boolean,
   dispatch: Function,
   isLoading: boolean,
@@ -47,6 +52,8 @@ type Props = {
     refetch: Function,
     user: GetComposerType,
   },
+  networkOnline: boolean,
+  websocketConnection: string,
 };
 
 type State = {
@@ -64,14 +71,39 @@ type State = {
   fetchingLinkPreview: boolean,
   postWasPublished: boolean,
 };
+
+const LS_BODY_KEY = 'last-thread-composer-body';
+const LS_TITLE_KEY = 'last-thread-composer-title';
+let storedBody;
+let storedTitle;
+// We persist the body and title to localStorage
+// so in case the app crashes users don't loose content
+if (localStorage) {
+  try {
+    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
+    storedTitle = localStorage.getItem(LS_TITLE_KEY);
+  } catch (err) {
+    localStorage.removeItem(LS_BODY_KEY);
+    localStorage.removeItem(LS_TITLE_KEY);
+  }
+}
+
+const persistTitle = debounce((title: string) => {
+  localStorage.setItem(LS_TITLE_KEY, title);
+}, 500);
+
+const persistBody = debounce(body => {
+  localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+}, 500);
+
 class ThreadComposerWithData extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
     this.state = {
       isMounted: true,
-      title: props.title || '',
-      body: props.body || fromPlainText(''),
+      title: storedTitle || '',
+      body: storedBody || fromPlainText(''),
       availableCommunities: [],
       availableChannels: [],
       activeCommunity: '',
@@ -214,8 +246,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
     activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
 
     this.setState({
-      title: props.title || '',
-      body: props.body || fromPlainText(''),
+      title: storedTitle || '',
+      body: storedBody || fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
@@ -293,6 +325,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       this.bodyEditor.focus();
       return;
     }
+    persistTitle(title);
     this.setState({
       title,
     });
@@ -300,6 +333,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
   changeBody = body => {
     this.listenForUrl(body);
+    persistBody(body);
     this.setState({
       body,
     });
@@ -425,6 +459,29 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       isPublishing: true,
     });
 
+    const { dispatch, networkOnline, websocketConnection } = this.props;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
+
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
     const {
@@ -486,6 +543,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
+        localStorage.removeItem(LS_TITLE_KEY);
+        localStorage.removeItem(LS_BODY_KEY);
 
         // stop the loading spinner on the publish button
         this.setState({
@@ -586,7 +645,18 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen, isLoading, isInbox } = this.props;
+    const {
+      isOpen,
+      isLoading,
+      isInbox,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     if (availableCommunities && availableChannels) {
       return (
@@ -598,6 +668,12 @@ class ThreadComposerWithData extends React.Component<Props, State> {
           />
           <Composer isOpen={isOpen} isInbox={isInbox}>
             <ContentContainer isOpen={isOpen}>
+              {networkDisabled && (
+                <DisconnectedWarning>
+                  Lost connection to internet or server...
+                </DisconnectedWarning>
+              )}
+
               <Textarea
                 onChange={this.changeTitle}
                 style={ThreadTitle}
@@ -667,7 +743,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
                   <Button
                     onClick={this.publishThread}
                     loading={isPublishing}
-                    disabled={!title || isPublishing}
+                    disabled={!title || isPublishing || networkDisabled}
                     color={'brand'}
                   >
                     Publish
@@ -690,8 +766,8 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
 const map = state => ({
   isOpen: state.composer.isOpen,
-  title: state.composer.title,
-  body: state.composer.body,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 export default compose(
   // $FlowIssue

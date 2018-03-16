@@ -19,6 +19,10 @@ export type CommunityInfoType = {
     isModerator: boolean,
     reputation: number,
   },
+  brandedLogin: {
+    isEnabled: boolean,
+    message: ?string,
+  },
 };
 
 export default gql`
@@ -39,6 +43,10 @@ export default gql`
       isOwner
       isModerator
       reputation
+    }
+    brandedLogin {
+      isEnabled
+      message
     }
   }
 `;

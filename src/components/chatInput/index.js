@@ -6,31 +6,31 @@ import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
 import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
+import debounce from 'debounce';
 import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
-import { toJSON, fromPlainText, toPlainText } from 'shared/draft-utils';
-import mentionsDecorator from '../draftjs-editor/mentions-decorator';
-import linksDecorator from '../draftjs-editor/links-decorator';
+import {
+  toJSON,
+  toState,
+  fromPlainText,
+  toPlainText,
+} from 'shared/draft-utils';
+import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { closeChatInput, clearChatInput } from '../../actions/composer';
 import { openModal } from '../../actions/modals';
 import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
-import {
-  PRO_USER_MAX_IMAGE_SIZE_STRING,
-  PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
-} from '../../helpers/images';
-import MediaInput from '../mediaInput';
+import MediaUploader from './components/mediaUploader';
 
 type State = {
   isFocused: boolean,
   photoSizeError: string,
   code: boolean,
+  isSendingMediaMessage: boolean,
 };
 
 type Props = {
@@ -48,13 +48,36 @@ type Props = {
   clear: Function,
   onBlur: Function,
   onFocus: Function,
+  websocketConnection: string,
+  networkOnline: boolean,
+  threadData?: Object,
+  refetchThread?: Function,
 };
+
+const LS_KEY = 'last-chat-input-content';
+let storedContent;
+// We persist the body and title to localStorage
+// so in case the app crashes users don't loose content
+if (localStorage) {
+  try {
+    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+  } catch (err) {
+    localStorage.removeItem(LS_KEY);
+  }
+}
+
+const forcePersist = content =>
+  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+const persistContent = debounce(content => {
+  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+}, 500);
 
 class ChatInput extends React.Component<Props, State> {
   state = {
     isFocused: false,
     photoSizeError: '',
     code: false,
+    isSendingMediaMessage: false,
   };
 
   editor: any;
@@ -63,25 +86,39 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(this);
   }
 
-  shouldComponentUpdate(next) {
+  shouldComponentUpdate(next, nextState) {
     const curr = this.props;
+    const currState = this.state;
 
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
 
+    if (curr.networkOnline !== next.networkOnline) return true;
+    if (curr.websocketConnection !== next.websocketConnection) return true;
+
     // State changed
     if (curr.state !== next.state) return true;
+    if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
+      return true;
 
     return false;
   }
 
   componentWillUnmount() {
-    const { state } = this.props;
     this.props.onRef(undefined);
-    if (toPlainText(state).trim() === '')
-      return this.props.dispatch(closeChatInput(''));
-    return this.props.dispatch(closeChatInput(state));
   }
+
+  onChange = (state, ...rest) => {
+    const { onChange } = this.props;
+
+    persistContent(state);
+
+    if (toPlainText(state).trim() === '```') {
+      this.toggleCodeMessage(false);
+    } else if (onChange) {
+      onChange(state, ...rest);
+    }
+  };
 
   triggerFocus = () => {
     // NOTE(@mxstbr): This needs to be delayed for a tick, otherwise the
@@ -92,7 +129,7 @@ class ChatInput extends React.Component<Props, State> {
     }, 0);
   };
 
-  toggleCodeMessage = () => {
+  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
     const { onChange, state } = this.props;
     const { code } = this.state;
     this.setState(
@@ -101,7 +138,11 @@ class ChatInput extends React.Component<Props, State> {
       },
       () => {
         onChange(
-          changeCurrentBlockType(state, code ? 'unstyled' : 'code-block', '')
+          changeCurrentBlockType(
+            state,
+            code ? 'unstyled' : 'code-block',
+            keepCurrentText ? toPlainText(state) : ''
+          )
         );
         setTimeout(() => this.triggerFocus());
       }
@@ -121,7 +162,43 @@ class ChatInput extends React.Component<Props, State> {
       sendDirectMessage,
       clear,
       forceScrollToBottom,
+      networkOnline,
+      websocketConnection,
+      currentUser,
+      threadData,
+      refetchThread,
     } = this.props;
+
+    const isSendingMessageAsNonMember =
+      threadType === 'story' &&
+      threadData &&
+      !threadData.channel.channelPermissions.isMember;
+
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
+    }
+
+    if (
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
+    ) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
+    }
+
+    if (!currentUser) {
+      // user is trying to send a message without being signed in
+      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+    }
 
     // This doesn't exist if this is a new conversation
     if (forceScrollToBottom) {
@@ -131,6 +208,9 @@ class ChatInput extends React.Component<Props, State> {
 
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return 'handled';
+
+    // do one last persist before sending
+    forcePersist(state);
 
     this.setState({
       code: false,
@@ -160,6 +240,7 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -175,7 +256,16 @@ class ChatInput extends React.Component<Props, State> {
         },
       })
         .then(() => {
-          dispatch(clearChatInput());
+          // if the user sends a message as a non member of the community or
+          // channel, we need to refetch the thread to update any join buttons
+          // and update all clientside caching of community + channel permissions
+          if (isSendingMessageAsNonMember) {
+            if (refetchThread) {
+              refetchThread();
+            }
+          }
+
+          localStorage.removeItem(LS_KEY);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -206,10 +296,10 @@ class ChatInput extends React.Component<Props, State> {
     return 'not-handled';
   };
 
-  sendMediaMessage = e => {
+  sendMediaMessage = file => {
     // eslint-disable-next-line
     let reader = new FileReader();
-    const file = e.target.files[0];
+
     const {
       thread,
       threadType,
@@ -218,32 +308,33 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom,
       sendDirectMessage,
       sendMessage,
+      websocketConnection,
+      networkOnline,
     } = this.props;
 
-    if (!file) return;
-
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-      });
+    if (!networkOnline) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Not connected to the internet - check your internet connection or try again'
+        )
+      );
     }
 
     if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
+      websocketConnection !== 'connected' &&
+      websocketConnection !== 'reconnected'
     ) {
-      return this.setState({
-        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
-      });
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Error connecting to the server - hang tight while we try to reconnect'
+        )
+      );
     }
 
     this.setState({
-      photoSizeError: '',
+      isSendingMediaMessage: true,
     });
 
     reader.onloadend = () => {
@@ -269,7 +360,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
-            dispatch(clearChatInput());
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -277,6 +370,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       } else {
@@ -290,6 +386,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -297,6 +396,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       }
@@ -337,9 +439,30 @@ class ChatInput extends React.Component<Props, State> {
     this.setState({ photoSizeError: '' });
   };
 
+  setMediaMessageError = (error: string) => {
+    return this.setState({
+      photoSizeError: error,
+    });
+  };
+
   render() {
-    const { state, onChange, currentUser } = this.props;
-    const { isFocused, photoSizeError, code } = this.state;
+    const {
+      state,
+      currentUser,
+      networkOnline,
+      websocketConnection,
+    } = this.props;
+    const {
+      isFocused,
+      photoSizeError,
+      code,
+      isSendingMediaMessage,
+    } = this.state;
+
+    const networkDisabled =
+      !networkOnline ||
+      (websocketConnection !== 'connected' &&
+        websocketConnection !== 'reconnected');
 
     return (
       <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
@@ -362,7 +485,14 @@ class ChatInput extends React.Component<Props, State> {
             />
           </PhotoSizeError>
         )}
-        <MediaInput onChange={this.sendMediaMessage} />
+        {currentUser && (
+          <MediaUploader
+            isSendingMediaMessage={isSendingMediaMessage}
+            currentUser={currentUser}
+            onValidated={this.sendMediaMessage}
+            onError={this.setMediaMessageError}
+          />
+        )}
         <IconButton
           glyph={'code'}
           onClick={this.toggleCodeMessage}
@@ -378,13 +508,14 @@ class ChatInput extends React.Component<Props, State> {
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
             editorState={state}
             handleReturn={this.handleReturn}
-            onChange={onChange}
+            onChange={this.onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             code={code}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
             decorators={[mentionsDecorator, linksDecorator]}
+            networkDisabled={networkDisabled}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
@@ -395,19 +526,15 @@ class ChatInput extends React.Component<Props, State> {
 
 const map = state => ({
   currentUser: state.users.currentUser,
-  chatInputRedux: state.composer.chatInput,
+  websocketConnection: state.connectionStatus.websocketConnection,
+  networkOnline: state.connectionStatus.networkOnline,
 });
 export default compose(
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
   connect(map),
-  withState(
-    'state',
-    'changeState',
-    ({ chatInputRedux }) =>
-      chatInputRedux ? chatInputRedux : fromPlainText('')
-  ),
+  withState('state', 'changeState', () => storedContent || fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),

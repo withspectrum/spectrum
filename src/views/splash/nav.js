@@ -80,7 +80,7 @@ class Nav extends Component {
               </Link>
             ) : (
               <Link to="/login">
-                <Button>Log In</Button>
+                <Button>Sign In</Button>
               </Link>
             )}
           </AuthTab>
@@ -123,7 +123,7 @@ class Nav extends Component {
               ) : (
                 <AuthLink to={'/login'}>
                   <Icon glyph="welcome" />
-                  <span>Log in</span>
+                  <span>Sign in</span>
                   <Icon glyph="enter" />
                 </AuthLink>
               )}

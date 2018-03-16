@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import redraft from 'redraft';
 import Icon from '../icons';
@@ -11,47 +12,38 @@ import {
   ModActionWrapper,
   Time,
   Code,
-  Line,
-  Paragraph,
 } from './style';
-import mentionsDecorator from 'src/components/draftjs-editor/mentions-decorator';
-import linksDecorator from 'src/components/draftjs-editor/links-decorator';
+import {
+  codeRenderer,
+  messageRenderer,
+} from 'shared/clients/draft-js/message/renderer.web';
+import type { Node } from 'react';
 
-const codeRenderer = {
-  blocks: {
-    'code-block': (children, { keys }) => (
-      <Line key={keys[0]}>
-        {children.map((child, i) => [child, <br key={i} />])}
-      </Line>
-    ),
-  },
-};
-
-const messageRenderer = {
-  blocks: {
-    unstyled: (children, { keys }) =>
-      children.map((child, index) => (
-        <Paragraph key={keys[index] || index}>{child}</Paragraph>
-      )),
-  },
-  decorators: [mentionsDecorator, linksDecorator],
-};
-
-export const Body = props => {
-  const { message, openGallery, type, me } = props;
+export const Body = (props: {
+  me: boolean,
+  type: 'text' | 'media' | 'emoji' | 'draftjs',
+  openGallery: Function,
+  message: Object,
+  data: Object,
+}) => {
+  const { message, openGallery, type, me, data } = props;
   switch (type) {
     case 'text':
     default:
       return <Text me={me}>{message.body}</Text>;
-    case 'media':
+    case 'media': {
       // don't apply imgix url params to optimistic image messages
       const src = props.id
         ? message.body
         : `${message.body}?max-w=${window.innerWidth * 0.6}`;
+      if (typeof data.id === 'number' && data.id < 0) {
+        return null;
+      }
       return <Image onClick={openGallery} src={src} />;
+    }
     case 'emoji':
       return <Emoji>{message}</Emoji>;
-    case 'draftjs':
+    case 'draftjs': {
       const body = JSON.parse(message.body);
       const isCode = body.blocks[0].type === 'code-block';
 
@@ -60,6 +52,7 @@ export const Body = props => {
       } else {
         return <Text me={me}>{redraft(body, messageRenderer)}</Text>;
       }
+    }
   }
 };
 
@@ -89,14 +82,27 @@ const Action = props => {
   }
 };
 
-export const Actions = props => {
+export const Actions = (props: {
+  me: boolean,
+  reaction: Object,
+  canModerate: boolean,
+  deleteMessage: Function,
+  isOptimisticMessage: boolean,
+  children: Node,
+  message: Object,
+}) => {
   const {
     me,
     reaction,
     canModerate,
     deleteMessage,
     isOptimisticMessage,
+    message,
   } = props;
+
+  if (isOptimisticMessage && message.messageType === 'media') {
+    return null;
+  }
 
   return (
     <ActionUI me={me}>
@@ -111,4 +117,6 @@ export const Actions = props => {
   );
 };
 
-export const Timestamp = props => <Time me={props.me}>{props.time}</Time>;
+export const Timestamp = (props: { me: boolean, time: string }) => (
+  <Time me={props.me}>{props.time}</Time>
+);

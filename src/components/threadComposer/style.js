@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition, FlexRow, FlexCol, zIndex } from '../globals';
+import { hexa, Transition, FlexRow, FlexCol, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
   align-self: stretch;
@@ -45,7 +45,7 @@ export const Overlay = styled.div`
     props.isOpen
       ? `
       position: fixed;
-      top: 0;
+      top: 48px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -269,3 +269,17 @@ export const ThreadDescription = {
   position: 'relative',
   top: '6px',
 };
+
+export const DisconnectedWarning = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 48px;
+  justify-items: center;
+  align-items: center;
+  margin: 8px;
+  border-radius: 8px;
+  background: ${props => hexa(props.theme.warn.default, 0.1)};
+  color: ${props => props.theme.warn.default};
+  font-size: 16px;
+  font-weight: 500;
+`;

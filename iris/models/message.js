@@ -6,7 +6,7 @@ import {
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
 } from 'shared/bull/queues';
-import { listenToNewDocumentsIn } from './utils';
+import { NEW_DOCUMENTS, createChangefeed } from './utils';
 import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';
@@ -149,8 +149,17 @@ export const storeMessage = (
     });
 };
 
+const getNewMessageChangefeed = () =>
+  db
+    .table('messages')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS)('new_val')
+    .run();
+
 export const listenToNewMessages = (cb: Function): Function => {
-  return listenToNewDocumentsIn('messages', cb);
+  return createChangefeed(getNewMessageChangefeed, cb, 'listenToNewMessages');
 };
 
 export const getMessageCount = (threadId: string): Promise<number> => {

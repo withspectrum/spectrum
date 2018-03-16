@@ -13,7 +13,6 @@ import { GithubSigninButton } from './github';
 type Props = {
   redirectPath: ?string,
   location: Object,
-  signinType: string,
 };
 
 export type ButtonProps = {
@@ -21,7 +20,6 @@ export type ButtonProps = {
   href: string,
   preferred: boolean,
   showAfter: boolean,
-  verb: ?string,
 };
 
 class LoginButtonSet extends React.Component<Props> {
@@ -30,9 +28,7 @@ class LoginButtonSet extends React.Component<Props> {
   };
 
   render() {
-    const { redirectPath, location, signinType } = this.props;
-
-    const verb = signinType === 'login' ? 'Log in ' : 'Sign in ';
+    const { redirectPath, location } = this.props;
 
     let r;
     if (location) {
@@ -60,7 +56,6 @@ class LoginButtonSet extends React.Component<Props> {
           href={`${SERVER_URL}/auth/twitter${postAuthRedirectPath}`}
           preferred={nonePreferred ? true : preferredSigninMethod === 'twitter'}
           showAfter={preferredSigninMethod === 'twitter'}
-          verb={verb}
         />
 
         <FacebookSigninButton
@@ -70,7 +65,6 @@ class LoginButtonSet extends React.Component<Props> {
             nonePreferred ? true : preferredSigninMethod === 'facebook'
           }
           showAfter={preferredSigninMethod === 'facebook'}
-          verb={verb}
         />
 
         <GoogleSigninButton
@@ -78,7 +72,6 @@ class LoginButtonSet extends React.Component<Props> {
           href={`${SERVER_URL}/auth/google${postAuthRedirectPath}`}
           preferred={nonePreferred ? true : preferredSigninMethod === 'google'}
           showAfter={preferredSigninMethod === 'google'}
-          verb={verb}
         />
 
         <GithubSigninButton
@@ -86,7 +79,6 @@ class LoginButtonSet extends React.Component<Props> {
           href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
           preferred={nonePreferred ? true : preferredSigninMethod === 'github'}
           showAfter={preferredSigninMethod === 'github'}
-          verb={verb}
         />
       </Container>
     );

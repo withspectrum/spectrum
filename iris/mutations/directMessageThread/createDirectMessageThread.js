@@ -12,6 +12,7 @@ import {
   setUserLastSeenInDirectMessageThread,
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
+import type { FileUpload } from 'shared/types';
 
 type DMThreadInput = {
   input: {
@@ -22,12 +23,7 @@ type DMThreadInput = {
       content: {
         body: string,
       },
-      file?: {
-        name: string,
-        type: string,
-        size: number,
-        path: string,
-      },
+      file?: FileUpload,
     },
   },
 };
@@ -65,11 +61,10 @@ export default async (
   let threadId, threadToReturn;
 
   // check to see if a dm thread with this exact set of participants exists
-  const existingThreads = await checkForExistingDMThread(allMemberIds);
+  const existingThread = await checkForExistingDMThread(allMemberIds);
 
-  // if so, we will be evaulating the first result (should only ever be one)
-  if (existingThreads && existingThreads.length > 0) {
-    threadId = existingThreads[0].group;
+  if (existingThread) {
+    threadId = existingThread;
     threadToReturn = await getDirectMessageThread(threadId);
   } else {
     threadToReturn = await createDirectMessageThread(isGroup);
@@ -85,7 +80,7 @@ export default async (
       };
 
       return await storeMessage(messageWithThread, currentUser.id);
-    } else if (message.messageType === 'media') {
+    } else if (message.messageType === 'media' && message.file) {
       const url = await uploadImage(message.file, 'threads', threadId);
 
       // build a new message object with a new file field with metadata
@@ -96,9 +91,9 @@ export default async (
           body: url,
         },
         file: {
-          name: message.file && message.file.name,
-          size: message.file && message.file.size,
-          type: message.file && message.file.type,
+          name: message.file && message.file.filename,
+          size: null,
+          type: message.file && message.file.mimetype,
         },
       });
 
@@ -108,16 +103,16 @@ export default async (
     }
   };
 
-  if (existingThreads.length > 0) {
+  if (existingThread) {
     return await Promise.all([
-      handleStoreMessage(message),
       setUserLastSeenInDirectMessageThread(threadId, currentUser.id),
+      handleStoreMessage(message),
     ]).then(() => threadToReturn);
   }
 
   return await Promise.all([
-    handleStoreMessage(message),
     createMemberInDirectMessageThread(threadId, currentUser.id, true),
+    handleStoreMessage(message),
     participants.map(participant =>
       createMemberInDirectMessageThread(threadId, participant, false)
     ),

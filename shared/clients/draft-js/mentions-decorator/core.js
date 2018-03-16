@@ -1,9 +1,18 @@
 // @flow
+import React from 'react';
+import { MENTIONS } from '../../../regexps';
+import type { ComponentType, Node } from 'react';
 import type { ContentBlock } from 'draft-js/lib/ContentBlock';
-import { Mention } from './style';
-import { MENTIONS } from 'shared/regexps';
 
-const mentionDecorator = {
+export type MentionComponentPropsType = {
+  username: string,
+  children: Node,
+};
+
+let i = 0;
+const createMentionsDecorator = (
+  Component: ComponentType<MentionComponentPropsType>
+) => ({
   strategy: (
     contentBlock: ContentBlock,
     callback: (...args?: Array<any>) => any
@@ -23,7 +32,14 @@ const mentionDecorator = {
       callback(start, start + mention.length);
     });
   },
-  component: Mention,
-};
+  component: (props: { decoratedText: string, children: Node }) => (
+    <Component
+      username={props.decoratedText.substr(1)}
+      children={props.children}
+      /* NOTE(@mxstbr): This is super hacky, but I couldn't find a way to give two mentions in the same message a different key. (i.e. "Yo @mxstbr, where is @brianlovin at? I can't find @brianlovin" would only show the mention once) */
+      key={`mention-${i++}`}
+    />
+  ),
+});
 
-export default mentionDecorator;
+export default createMentionsDecorator;

@@ -4,70 +4,69 @@ import UserError from '../../utils/UserError';
 import { getThreads, setThreadLock } from '../../models/thread';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import type { DBThread } from 'shared/types';
 
-export default (
+export default async (
   _: any,
   { threadId, value }: { threadId: string, value: boolean },
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
 
   // user must be authed to edit a thread
   if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this thread.'
-    );
+    return new UserError('You must be signed in to make changes.');
   }
 
-  // get the thread being locked
-  return getThreads([threadId])
-    .then(threads => {
-      // select the thread
-      const threadToEvaluate = threads[0];
+  const thread: DBThread = await loaders.thread.load(threadId);
 
-      // if the thread doesn't exist
-      if (!threadToEvaluate || threadToEvaluate.deletedAt) {
-        return new UserError("This thread doesn't exist");
-      }
+  // if the thread doesn't exist
+  if (!thread || thread.deletedAt) {
+    return new UserError(`Could not find thread with ID '${threadId}'.`);
+  }
 
-      // get the channel permissions
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
-        threadToEvaluate.channelId,
-        currentUser.id
-      );
-      // get the community permissions
-      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
-        threadToEvaluate.communityId,
-        currentUser.id
-      );
+  // A threads author can always lock their thread, but only unlock it if
+  // it was locked by themselves. (if a mod locks a thread an author cannot
+  // unlock it anymore)
+  const isAuthor = thread.creatorId === currentUser.id;
+  const authorCanLock =
+    !thread.isLocked || thread.lockedBy === thread.creatorId;
+  if (isAuthor && authorCanLock) {
+    return setThreadLock(threadId, value, currentUser.id);
+  }
 
-      // return the thread, channels and communities
-      return Promise.all([
-        threadToEvaluate,
-        currentUserChannelPermissions,
-        currentUserCommunityPermissions,
-      ]);
-    })
-    .then(
-      ([
-        thread,
-        currentUserChannelPermissions,
-        currentUserCommunityPermissions,
-      ]) => {
-        // user owns the community or the channel, they can lock the thread
-        if (
-          currentUserChannelPermissions.isOwner ||
-          currentUserChannelPermissions.isModerator ||
-          currentUserCommunityPermissions.isOwner ||
-          currentUserCommunityPermissions.isModerator
-        ) {
-          return setThreadLock(threadId, value);
-        }
+  // get the channel permissions
+  let [
+    currentUserChannelPermissions,
+    currentUserCommunityPermissions,
+  ] = await Promise.all([
+    loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([
+      currentUser.id,
+      thread.communityId,
+    ]),
+  ]);
 
-        // if the user is not a channel or community owner, the thread can't be locked
-        return new UserError(
-          "You don't have permission to make changes to this thread."
-        );
-      }
+  if (!currentUserChannelPermissions) currentUserChannelPermissions = {};
+  if (!currentUserCommunityPermissions) currentUserCommunityPermissions = {};
+
+  // user owns the community or the channel, they can lock the thread
+  if (
+    currentUserChannelPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator
+  ) {
+    return setThreadLock(threadId, value, currentUser.id);
+  }
+
+  // if the user is not a channel or community owner, the thread can't be locked
+  if (isAuthor) {
+    return new UserError(
+      "You don't have permission to unlock this thread as it was locked by a moderator."
     );
+  }
+  return new UserError(
+    "You don't have permission to make changes to this thread."
+  );
 };

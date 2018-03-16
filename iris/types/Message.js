@@ -41,7 +41,7 @@ const Message = /* GraphQL */ `
 		threadType: ThreadTypes!
 		messageType: MessageTypes!
 		content: MessageContentInput!
-		file: File
+		file: Upload
 	}
 
 	extend type Query {

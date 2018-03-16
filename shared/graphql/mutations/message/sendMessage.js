@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { btoa } from 'abab';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
@@ -86,15 +87,16 @@ const sendMessageOptions = {
           );
 
           // Replace the optimistic reponse with the actual db message
-          if (messageInStore && typeof messageInStore.id === 'number') {
+          if (messageInStore && typeof messageInStore.node.id === 'number') {
             data.thread.messageConnection.edges = data.thread.messageConnection.edges.map(
               edge => {
-                if (edge.node.id === messageInStore.id)
+                if (edge.node.id === messageInStore.node.id) {
                   return {
                     ...edge,
-                    cursor: window.btoa(addMessage.id),
+                    cursor: btoa(addMessage.id),
                     node: addMessage,
                   };
+                }
                 return edge;
               }
             );
@@ -105,7 +107,7 @@ const sendMessageOptions = {
           } else {
             data.thread.messageConnection.edges.push({
               __typename: 'ThreadMessageEdge',
-              cursor: window.btoa(addMessage.id),
+              cursor: btoa(addMessage.id),
               node: addMessage,
             });
           }

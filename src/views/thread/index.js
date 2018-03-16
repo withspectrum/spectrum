@@ -17,8 +17,9 @@ import {
   getThreadByMatch,
   getThreadByMatchQuery,
 } from 'shared/graphql/queries/thread/getThread';
-import { NullState, UpsellSignIn } from '../../components/upsell';
+import { NullState } from '../../components/upsell';
 import JoinChannel from '../../components/upsell/joinChannel';
+import { toState } from 'shared/draft-utils';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
@@ -38,6 +39,7 @@ import {
 type Props = {
   data: {
     thread: Object,
+    refetch: Function,
   },
   isLoading: boolean,
   hasError: boolean,
@@ -53,6 +55,10 @@ type State = {
   scrollElement: any,
   isEditing: boolean,
   messagesContainer: any,
+  // Cache lastSeen and lastActive so it doesn't jump around
+  // while looking at a live thread
+  lastSeen: ?number | ?Date,
+  lastActive: ?number | ?Date,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -62,7 +68,25 @@ class ThreadContainer extends React.Component<Props, State> {
     messagesContainer: null,
     scrollElement: null,
     isEditing: false,
+    lastSeen: null,
+    lastActive: null,
   };
+
+  componentWillReceiveProps(next: Props) {
+    const curr = this.props;
+    const newThread = !curr.data.thread && next.data.thread;
+    const threadChanged =
+      curr.data.thread &&
+      next.data.thread &&
+      curr.data.thread.id !== next.data.thread.id;
+    // Update the cached lastSeen value when switching threads
+    if (newThread || threadChanged) {
+      this.setState({
+        lastSeen: next.data.thread.currentUserLastSeen,
+        lastActive: next.data.thread.lastActive,
+      });
+    }
+  }
 
   toggleEdit = () => {
     const { isEditing } = this.state;
@@ -191,6 +215,68 @@ class ThreadContainer extends React.Component<Props, State> {
     }
   };
 
+  renderChatInputOrUpsell = () => {
+    const { isEditing } = this.state;
+    const { data: { thread }, currentUser } = this.props;
+
+    if (!thread) return null;
+    if (thread.isLocked) return null;
+    if (isEditing) return null;
+
+    const { channelPermissions } = thread.channel;
+    const { communityPermissions } = thread.community;
+
+    const canSendMessages =
+      !channelPermissions.isBlocked && !communityPermissions.isBlocked;
+    if (!canSendMessages) return null;
+
+    const LS_KEY = 'last-chat-input-content';
+    let storedContent;
+    // We persist the body and title to localStorage
+    // so in case the app crashes users don't loose content
+    if (localStorage) {
+      try {
+        storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+      } catch (err) {
+        localStorage.removeItem(LS_KEY);
+      }
+    }
+
+    const chatInputComponent = (
+      <Input>
+        <ChatInputWrapper>
+          <ChatInput
+            threadType="story"
+            threadData={thread}
+            thread={thread.id}
+            currentUser={currentUser}
+            forceScrollToBottom={this.forceScrollToBottom}
+            onRef={chatInput => (this.chatInput = chatInput)}
+            refetchThread={this.props.data.refetch}
+          />
+        </ChatInputWrapper>
+      </Input>
+    );
+
+    if (!currentUser) {
+      return chatInputComponent;
+    }
+
+    if (currentUser) {
+      if (storedContent) {
+        return chatInputComponent;
+      }
+
+      if (channelPermissions.isMember) {
+        return chatInputComponent;
+      }
+
+      return (
+        <JoinChannel channel={thread.channel} community={thread.community} />
+      );
+    }
+  };
+
   render() {
     const {
       data: { thread },
@@ -200,8 +286,7 @@ class ThreadContainer extends React.Component<Props, State> {
       slider,
       threadViewContext = 'fullscreen',
     } = this.props;
-    const { isEditing } = this.state;
-    const isLoggedIn = currentUser;
+    const { isEditing, lastSeen, lastActive } = this.state;
 
     if (thread && thread.id) {
       // successful network request to get a thread
@@ -219,11 +304,6 @@ class ThreadContainer extends React.Component<Props, State> {
       const { channelPermissions } = thread.channel;
       const { communityPermissions } = thread.community;
       const { isLocked, isAuthor, participants } = thread;
-      const canSendMessages =
-        isLoggedIn &&
-        channelPermissions.isMember &&
-        !channelPermissions.isBlocked &&
-        !communityPermissions.isBlocked;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
       const isModerator = isChannelOwner || isCommunityOwner;
@@ -320,8 +400,8 @@ class ThreadContainer extends React.Component<Props, State> {
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
-                      lastSeen={thread.currentUserLastSeen}
-                      lastActive={thread.lastActive}
+                      lastSeen={lastSeen}
+                      lastActive={lastActive}
                       forceScrollToBottom={this.forceScrollToBottom}
                       forceScrollToTop={this.forceScrollToTop}
                       contextualScrollToBottom={this.contextualScrollToBottom}
@@ -334,46 +414,15 @@ class ThreadContainer extends React.Component<Props, State> {
 
                   {!isEditing &&
                     isLocked && (
-                      <NullState copy="This conversation has been frozen by a moderator." />
-                    )}
-
-                  {!isEditing &&
-                    isLoggedIn &&
-                    !canSendMessages && (
-                      <JoinChannel
-                        community={thread.community}
-                        channel={thread.channel}
-                      />
-                    )}
-
-                  {!isEditing &&
-                    !isLoggedIn && (
-                      <UpsellSignIn
-                        title={`Join the ${thread.community.name} community`}
-                        glyph={'message-new'}
-                        view={{ data: thread.community, type: 'community' }}
-                        noShadow
+                      <NullState
+                        icon="private"
+                        copy="This conversation has been locked."
                       />
                     )}
                 </Detail>
               </Content>
 
-              {!isEditing &&
-                canSendMessages &&
-                !isLocked && (
-                  <Input>
-                    <ChatInputWrapper type="only">
-                      <ChatInput
-                        threadType="story"
-                        threadData={thread}
-                        thread={thread.id}
-                        currentUser={isLoggedIn}
-                        forceScrollToBottom={this.forceScrollToBottom}
-                        onRef={chatInput => (this.chatInput = chatInput)}
-                      />
-                    </ChatInputWrapper>
-                  </Input>
-                )}
+              {this.renderChatInputOrUpsell()}
             </ThreadContentView>
           </ThreadViewContainer>
         );
@@ -429,8 +478,8 @@ class ThreadContainer extends React.Component<Props, State> {
                     id={thread.id}
                     scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
-                    lastSeen={thread.currentUserLastSeen}
-                    lastActive={thread.lastActive}
+                    lastSeen={lastSeen}
+                    lastActive={lastActive}
                     forceScrollToBottom={this.forceScrollToBottom}
                     forceScrollToTop={this.forceScrollToTop}
                     contextualScrollToBottom={this.contextualScrollToBottom}
@@ -438,51 +487,21 @@ class ThreadContainer extends React.Component<Props, State> {
                     shouldForceScrollToTopOnMessageLoad={!isParticipantOrAuthor}
                     hasMessagesToLoad={thread.messageCount > 0}
                     isModerator={isModerator}
+                    threadIsLocked={isLocked}
                   />
                 )}
 
                 {!isEditing &&
                   isLocked && (
-                    <NullState copy="This conversation has been frozen by a moderator." />
-                  )}
-
-                {!isEditing &&
-                  isLoggedIn &&
-                  !canSendMessages && (
-                    <JoinChannel
-                      community={thread.community}
-                      channel={thread.channel}
-                    />
-                  )}
-
-                {!isEditing &&
-                  !isLoggedIn && (
-                    <UpsellSignIn
-                      title={`Join the ${thread.community.name} community`}
-                      glyph={'message-new'}
-                      view={{ data: thread.community, type: 'community' }}
-                      noShadow
+                    <NullState
+                      icon="private"
+                      copy="This conversation has been locked."
                     />
                   )}
               </Detail>
             </Content>
 
-            {!isEditing &&
-              canSendMessages &&
-              !isLocked && (
-                <Input>
-                  <ChatInputWrapper type="only">
-                    <ChatInput
-                      threadType="story"
-                      threadData={thread}
-                      thread={thread.id}
-                      currentUser={isLoggedIn}
-                      forceScrollToBottom={this.forceScrollToBottom}
-                      onRef={chatInput => (this.chatInput = chatInput)}
-                    />
-                  </ChatInputWrapper>
-                </Input>
-              )}
+            {this.renderChatInputOrUpsell()}
           </ThreadContentView>
         </ThreadViewContainer>
       );

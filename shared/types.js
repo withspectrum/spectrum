@@ -33,6 +33,14 @@ export type DBCommunity = {
   watercoolerId?: string,
 };
 
+export type DBCommunitySettings = {
+  id: string,
+  communityId: string,
+  brandedLogin: ?{
+    customMessage: ?string,
+  },
+};
+
 export type DBCuratedContent = {
   type: string,
   id: string,
@@ -198,6 +206,8 @@ export type DBThread = {
   creatorId: string,
   isPublished: boolean,
   isLocked: boolean,
+  lockedBy?: string,
+  lockedAt?: Date,
   lastActive: Date,
   modifiedAt?: Date,
   attachments?: Array<DBThreadAttachment>,
@@ -348,4 +358,11 @@ export type DBExpoPushSubscription = {
   id: string,
   token: string,
   userId: string,
+};
+
+export type FileUpload = {
+  filename: string,
+  mimetype: string,
+  encoding: string,
+  stream: any,
 };

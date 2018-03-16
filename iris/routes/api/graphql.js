@@ -12,6 +12,7 @@ import schema from '../../schema';
 export default graphqlExpress(req => ({
   schema,
   formatError: createErrorFormatter(req),
+  tracing: true,
   context: {
     user: req.user,
     loaders: createLoaders(),
@@ -30,5 +31,4 @@ export default graphqlExpress(req => ({
       },
     }),
   ],
-  tracing: true,
 }));

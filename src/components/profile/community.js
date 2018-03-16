@@ -5,7 +5,7 @@ import Card from '../card';
 import compose from 'recompose/compose';
 import Link from 'src/components/link';
 import { connect } from 'react-redux';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 import { CLIENT_URL } from '../../api/constants';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';

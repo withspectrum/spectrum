@@ -25,15 +25,20 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  width: 100%;
-  max-width: 400px;
-  min-width: 400px;
+  width: 40%;
+  max-width: 480px;
+  min-width: 360px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
   flex-direction: column;
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
+
+  @media (min-resolution: 120dpi) {
+    max-width: 400px;
+    min-width: 400px;
+  }
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -60,7 +65,7 @@ export const Sidebar = styled.div`
   flex-direction: column;
   border-right: 1px solid ${props => props.theme.bg.border};
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 `;
@@ -321,7 +326,7 @@ export const HeaderWrapper = styled.div`
     grid-area: right;
   }
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     padding-left: 0;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: 1fr;
@@ -505,7 +510,7 @@ export const EmptyParticipantHead = styled.span`
   }
 `;
 
-export const MetaText = styled.span`
+export const StatusText = styled.span`
   font-size: 14px;
   color: ${props =>
     props.new
@@ -525,11 +530,11 @@ export const MetaText = styled.span`
   }
 `;
 
-export const MetaTextPill = styled(MetaText)`
+const StatusPill = styled(StatusText)`
   color: ${props =>
     props.active ? props.theme.brand.alt : props.theme.text.reverse};
   background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+    props.active ? props.theme.text.reverse : props.theme.brand.alt};
   border-radius: 20px;
   padding: 0 12px;
   font-size: 11px;
@@ -537,6 +542,27 @@ export const MetaTextPill = styled(MetaText)`
   font-weight: 700;
   display: flex;
   align-items: center;
+`;
+
+export const NewThreadPill = styled(StatusPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.reverse};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.success.alt};
+`;
+
+export const NewMessagePill = styled(StatusPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.reverse};
+  background: ${props =>
+    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+`;
+
+export const LockedTextPill = styled(StatusPill)`
+  color: ${props =>
+    props.active ? props.theme.brand.alt : props.theme.text.alt};
+  background: ${props =>
+    props.active ? props.theme.brand.wash : props.theme.bg.border};
 `;
 
 export const MetaCommunityName = styled(Link)`
@@ -828,7 +854,7 @@ export const Hint = styled.span`
 export const NarrowOnly = styled.div`
   display: none;
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     display: flex;
     flex: none;
     grid-area: left;

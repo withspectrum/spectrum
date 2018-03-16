@@ -1,7 +1,13 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { IconButton } from '../buttons';
-import { FlexRow, Transition, zIndex, monoStack } from '../globals';
+import {
+  FlexRow,
+  hexa,
+  Transition,
+  zIndex,
+  monoStack,
+} from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
 
 export const ChatInputWrapper = styled(FlexRow)`
@@ -49,9 +55,20 @@ export const InputWrapper = styled(EditorWrapper)`
   max-width: 100%;
   padding: 8px 40px 8px 16px;
   border-radius: 24px;
-  border: 1px solid ${props => props.theme.bg.border};
+  border: 1px solid
+    ${props =>
+      props.networkDisabled
+        ? props.theme.special.default
+        : props.theme.bg.border};
   transition: border 0.3s ease-out;
-  color: ${props => props.theme.text.default};
+  color: ${props =>
+    props.networkDisabled
+      ? props.theme.special.default
+      : props.theme.text.default};
+  background: ${props =>
+    props.networkDisabled
+      ? hexa(props.theme.special.default, 0.1)
+      : props.theme.bg.default};
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -60,20 +77,35 @@ export const InputWrapper = styled(EditorWrapper)`
   }
 
   &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.5)
+        : props.theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.5)
+        : props.theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.5)
+        : props.theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${props =>
+      props.networkDisabled
+        ? hexa(props.theme.special.default, 0.5)
+        : props.theme.text.placeholder};
   }
 
   &:hover {
-    border-color: ${props => props.theme.text.alt};
+    border-color: ${props =>
+      props.networkDisabled
+        ? props.theme.special.default
+        : props.theme.text.alt};
     transition: border-color 0.2s ease-in;
   }
 

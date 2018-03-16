@@ -84,7 +84,7 @@ const Thread = /* GraphQL */ `
 		threadId: ID!
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
-		filesToUpload: [File]
+		filesToUpload: [Upload]
 	}
 
 	input ThreadInput {
@@ -93,7 +93,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
-		filesToUpload: [File]
+		filesToUpload: [Upload]
 	}
 
 	extend type Mutation {
@@ -106,7 +106,7 @@ const Thread = /* GraphQL */ `
 	}
 
 	extend type Subscription {
-		threadUpdated: Thread
+    threadUpdated(channelIds: [String!]): Thread
 	}
 `;
 

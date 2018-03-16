@@ -1,33 +1,65 @@
 // @flow
-// Turn a callback-based listener into an async iterator
-const Queue = require('then-queue');
+// Turn a callback-based listener into many async iterators without buffering
+import { $$asyncIterator } from 'iterall';
 
-const asyncify = (
-  listener: (...args: any[]) => any,
-  onError?: Error => void
-) => {
-  let queues = [];
-  listener((...args) => queues.map(q => q.push(...args)));
+type Listener = ((arg: any) => void) => Promise<any>;
 
-  return () => {
-    const queue = new Queue();
-    queues.push(queue);
+const defaultOnError = (err: Error) => {
+  throw new Error(err);
+};
 
-    // I have no idea how to type generators...
-    // $FlowFixMe
-    async function* AsyncGenerator() {
-      try {
-        while (true) {
-          yield await queue.pop();
-        }
-      } catch (err) {
-        // Remove the error'ing queue from the queues array
-        queues = queues.filter(q => q !== queue);
-        onError && onError(err);
+type Options = {|
+  onError?: (err: Error) => void,
+  filter?: (arg: any) => boolean,
+|};
+
+type Watcher = {
+  filter?: (arg: any) => boolean,
+  callback?: ({ done: boolean, value: any }) => void,
+};
+
+const asyncify = (listener: Listener) => {
+  let watchers: Array<Watcher> = [];
+  listener(value => {
+    watchers.forEach(watcher => {
+      if (watcher.callback && (!watcher.filter || watcher.filter(value))) {
+        watcher.callback({ done: false, value });
       }
-    }
+    });
+  });
 
-    return AsyncGenerator();
+  return ({ filter, onError = defaultOnError }: Options = {}) => {
+    let watcher: Watcher = { filter };
+    let watching = true;
+    const cleanup = () => {
+      if (watching) {
+        watching = false;
+        watchers = watchers.filter(w => w !== watcher);
+      }
+    };
+    try {
+      return {
+        next: () =>
+          new Promise(resolve => {
+            watcher.callback = resolve;
+            watchers.push(watcher);
+          }),
+        return: () => {
+          cleanup();
+          return Promise.resolve({ done: true });
+        },
+        throw: err => {
+          cleanup();
+          onError(err);
+          return Promise.reject(err);
+        },
+        [$$asyncIterator]() {
+          return this;
+        },
+      };
+    } catch (err) {
+      onError(err);
+    }
   };
 };
 

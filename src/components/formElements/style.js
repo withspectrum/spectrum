@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { FlexRow, Transition, hexa, zIndex } from '../globals';
+import Textarea from 'react-textarea-autosize';
 
 export const StyledLabel = styled.label`
   display: flex;
@@ -100,7 +101,7 @@ export const StyledInput = styled.input`
   }
 `;
 
-export const StyledTextArea = styled.textarea`
+export const StyledTextArea = styled(Textarea)`
   flex: 1 0 auto;
   width: 100%;
   background: ${({ theme }) => theme.bg.default};

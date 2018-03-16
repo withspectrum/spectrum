@@ -74,17 +74,20 @@ const init = () => {
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
+        const name =
+          profile.displayName ||
+          profile._json.name ||
+          profile._json.screen_name ||
+          profile.username ||
+          '';
+
         const user = {
           providerId: profile.id,
           fbProviderId: null,
           googleProviderId: null,
           githubProviderId: null,
           username: null,
-          name:
-            profile.displayName ||
-            (profile.name &&
-              `${profile.name.givenName} ${profile.name.familyName}`) ||
-            null,
+          name: name,
           email:
             (profile.emails &&
               profile.emails.length > 0 &&
@@ -201,17 +204,17 @@ const init = () => {
         callbackURL: '/auth/google/callback',
       },
       (token, tokenSecret, profile, done) => {
+        const name =
+          profile.displayName || profile.name
+            ? `${profile.name.givenName} ${profile.name.familyName}`
+            : '';
         const user = {
           providerId: null,
           fbProviderId: null,
           googleProviderId: profile.id,
           githubProviderId: null,
           username: null,
-          name:
-            profile.displayName ||
-            (profile.name &&
-              `${profile.name.givenName} ${profile.name.familyName}`) ||
-            null,
+          name: name,
           firstName:
             profile.name && profile.name.givenName
               ? profile.name.givenName
@@ -269,6 +272,8 @@ const init = () => {
         passReqToCallback: true,
       },
       async (req, token, tokenSecret, profile, done) => {
+        const name =
+          profile.displayName || profile.username || profile._json.name || '';
         if (req.user) {
           // if a user exists in the request body, it means the user is already
           // authed and is trying to connect a github account. Before we do so
@@ -319,7 +324,7 @@ const init = () => {
           githubProviderId: profile.id,
           githubUsername: profile.username,
           username: null,
-          name: profile.displayName || null,
+          name: name,
           description: profile._json.bio,
           website: profile._json.blog,
           email:

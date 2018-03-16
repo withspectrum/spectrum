@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
-import { addProtocolToString } from '../../helpers/utils';
+import addProtocolToString from 'shared/normalize-url';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { openModal } from '../../actions/modals';
 import Icon from '../icons';

@@ -21,6 +21,9 @@ export default (
         token: action.token,
       };
     }
+    case 'LOGOUT': {
+      return initialState;
+    }
     default:
       return state;
   }
