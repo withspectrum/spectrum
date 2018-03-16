@@ -9,6 +9,7 @@ import type {
   DBCommunity,
   DBNotificationsJoin,
 } from '../types';
+import type { RawCharge } from '../stripe/types/charge';
 
 export type Job<JobData> = {
   id: string,
@@ -116,7 +117,7 @@ export type StripeCommunityPaymentEventJobData = {
 };
 
 export type StripePaymentSucceededOrFailedEventJobData = {
-  customerId: string,
+  record: RawCharge,
 };
 
 export type AdminCommunityCreatedEmailJobData = {
@@ -149,10 +150,8 @@ export type PaymentSucceededEmailJobData = {
 };
 
 export type PaymentFailedEmailJobData = {
-  data: {
-    invoice: Object,
-    community: DBCommunity,
-  },
+  charge: Object,
+  community: DBCommunity,
   to: string,
 };
 
