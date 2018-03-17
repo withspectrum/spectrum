@@ -56,6 +56,15 @@ export default async (
     return new UserError(err.message);
   }
 
+  try {
+    await StripeUtil.changeDefaultSource({
+      customerId: customer.id,
+      sourceId: sourceId,
+    });
+  } catch (err) {
+    console.error('Could not update default payment method');
+  }
+
   const newCustomer = await StripeUtil.getCustomer(changedSource.customer);
 
   // we only want to return from this mutation as soon as our db record
