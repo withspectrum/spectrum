@@ -406,8 +406,6 @@
                   <tr>
                     <td class="content-cell">
                       <p>{{data.introCopy}}</p>
-
-                      <p>Here's what we found on this invoice:</p>
                     </td>
                   </tr>
 
@@ -451,6 +449,14 @@
                             <p class="line-item-amount total">{{data.amount}}</p>
                           </td>
                         </tr>
+
+                        {{#data.viaSource}}
+                          <tr width="100%" cellpadding="0" cellspacing="0" class="line-item">
+                            <td valign="middle">
+                              <p>{{.}}</p>
+                            </td>
+                          </tr>
+                        {{/data.viaSource}}
                       </table>
                     </td>
                   </tr>
