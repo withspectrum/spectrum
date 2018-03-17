@@ -9,7 +9,7 @@ exports.up = function(r, conn) {
         .run(conn)
     )
     .catch(err => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
 };

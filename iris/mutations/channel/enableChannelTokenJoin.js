@@ -35,8 +35,8 @@ export default async (
   if (hasSettings) {
     return await enableChannelTokenJoin(channelId);
   } else {
-    return await createChannelSettings(channelId).then(
-      async () => await enableChannelTokenJoin(channelId)
+    return await createChannelSettings(channelId).then(() =>
+      enableChannelTokenJoin(channelId)
     );
   }
 };
