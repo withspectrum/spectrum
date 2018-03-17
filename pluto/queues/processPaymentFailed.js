@@ -65,7 +65,7 @@ const processJob = async (
     ]);
   }
 
-  debug(`Did not find communityId for payment failed charge ${record.charge}`);
+  debug(`Did not find communityId for payment failed charge ${record.id}`);
 };
 
 export default async (job: Job<StripePaymentSucceededOrFailedEventJobData>) => {

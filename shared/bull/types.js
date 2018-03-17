@@ -10,6 +10,7 @@ import type {
   DBNotificationsJoin,
 } from '../types';
 import type { RawCharge } from '../stripe/types/charge';
+import type { RawInvoice } from '../stripe/types/invoice';
 
 export type Job<JobData> = {
   id: string,
@@ -117,7 +118,7 @@ export type StripeCommunityPaymentEventJobData = {
 };
 
 export type StripePaymentSucceededOrFailedEventJobData = {
-  record: RawCharge,
+  record: RawCharge | RawInvoice,
 };
 
 export type AdminCommunityCreatedEmailJobData = {
