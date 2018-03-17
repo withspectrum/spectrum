@@ -46,8 +46,6 @@ class LoginTokenSettings extends React.Component<Props, State> {
     if (channel) {
       const { joinSettings } = channel;
 
-      console.log(channel);
-
       return (
         <SectionCard>
           <SectionTitle>Join channel via link</SectionTitle>
