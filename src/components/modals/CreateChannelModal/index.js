@@ -243,8 +243,6 @@ class CreateChannelModal extends React.Component<Props, State> {
         track('channel', 'created', null);
 
         const { createChannel: channel } = data;
-        // eslint-disable-next-line
-        window.location.href = `/${community.slug}/${channel.slug}`;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')
