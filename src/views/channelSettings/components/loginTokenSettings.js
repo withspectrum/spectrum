@@ -15,7 +15,7 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
-import BrandedLoginToggle from './loginTokenToggle';
+import LoginTokenToggle from './loginTokenToggle';
 import ResetJoinToken from './resetJoinToken';
 import { Input } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
@@ -35,7 +35,7 @@ type State = {
   isLoading: boolean,
 };
 
-class BrandedLogin extends React.Component<Props, State> {
+class LoginTokenSettings extends React.Component<Props, State> {
   state = {
     isLoading: false,
   };
@@ -46,6 +46,8 @@ class BrandedLogin extends React.Component<Props, State> {
     if (channel) {
       const { joinSettings } = channel;
 
+      console.log(channel);
+
       return (
         <SectionCard>
           <SectionTitle>Join channel via link</SectionTitle>
@@ -54,7 +56,7 @@ class BrandedLogin extends React.Component<Props, State> {
             Anyone with this link will be able to join this channel.
           </SectionSubtitle>
 
-          <BrandedLoginToggle settings={joinSettings} id={channel.id} />
+          <LoginTokenToggle settings={joinSettings} id={channel.id} />
 
           {joinSettings.tokenJoinEnabled && (
             <Clipboard
@@ -96,9 +98,6 @@ class BrandedLogin extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  getChannelSettings,
-  viewNetworkHandler,
-  saveBrandedLoginSettings,
-  connect()
-)(BrandedLogin);
+export default compose(getChannelSettings, viewNetworkHandler, connect())(
+  LoginTokenSettings
+);
