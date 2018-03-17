@@ -36,19 +36,17 @@ With the ground rules out of the way, let's talk about the coarse architecture o
 
 - **Full-stack JavaScript**: We use Node.js to power our servers, and React to power our frontend and mobile apps. Almost all of the code you'll touch in this codebase will be JavaScript.
 - **Background Jobs**: We leverage background jobs (powered by [`bull`](https://github.com/OptimalBits/bull) and Redis) a lot. These jobs are handled by a handful of small worker servers, each with its own purpose.
-- **GraphQL**: Our API is powered by GraphQL, which defines a large part of what our frontend and mobile apps look like.
 
-#### Technologies 
+Here is a list of all the big technology decisions we've made:
 
-Here is a list of all the big technology decisions we've made to built Spectrum with:
-
-- RethinkDB: Data storage
-- Redis: Caching
-- PassportJS: Authentication
-- Apollo: Everything GraphQL from front to back
-- React: Frontend
-- React Native: Mobile apps
-- DraftJS: WYSIWYG writing experience on the web
+- **RethinkDB**: Data storage
+- **Redis**: Caching
+- **GraphQL**: API
+- **PassportJS**: Authentication
+- **Apollo**: Everything GraphQL from front to back
+- **React**: Frontend
+- **React Native**: Mobile apps
+- **DraftJS**: WYSIWYG writing experience on the web
 
 #### Folder structure
 
@@ -70,6 +68,9 @@ spectrum/
 └── vulcan     # Worker server (search indexing; syncing with Algolia)
 ```
 
+<details>
+  <summary>Click to see more about the worker naming scheme</summary>
+
 ##### Naming Scheme
 
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
@@ -80,3 +81,5 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
 - Chronos (/ˈkroʊnɒs/) is the personification of Time in pre-Socratic philosophy
 - Mercury (/ˈmɜːrkjʊri/) is the patron god of financial gain, commerce, eloquence (and thus poetry), messages/communication (including divination), travelers, boundaries, luck, trickery and thieves
+
+</details>
