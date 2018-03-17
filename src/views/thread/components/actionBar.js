@@ -172,52 +172,57 @@ class ActionBar extends React.Component<Props, State> {
                 </FollowButton>
               </Link>
             )}
-
-            <ShareButtons>
-              <ShareButton facebook tipText={'Share'} tipLocation={'top-left'}>
-                <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
-                    thread.id
-                  }&t=${thread.content.title}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            {!thread.channel.isPrivate && (
+              <ShareButtons>
+                <ShareButton
+                  facebook
+                  tipText={'Share'}
+                  tipLocation={'top-left'}
                 >
-                  <Icon glyph={'facebook'} size={24} />
-                </a>
-              </ShareButton>
-
-              <ShareButton twitter tipText={'Tweet'} tipLocation={'top-left'}>
-                <a
-                  href={`https://twitter.com/share?text=${
-                    thread.content.title
-                  } on @withspectrum&url=https://spectrum.chat/thread/${
-                    thread.id
-                  }`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon glyph={'twitter'} size={24} />
-                </a>
-              </ShareButton>
-
-              <Clipboard
-                style={{ background: 'none' }}
-                data-clipboard-text={`https://spectrum.chat/thread/${
-                  thread.id
-                }`}
-                onSuccess={() =>
-                  this.props.dispatch(
-                    addToastWithTimeout('success', 'Copied to clipboard')
-                  )
-                }
-              >
-                <ShareButton tipText={'Copy link'} tipLocation={'top-left'}>
-                  <a>
-                    <Icon glyph={'link'} size={24} />
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/thread/${
+                      thread.id
+                    }&t=${thread.content.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon glyph={'facebook'} size={24} />
                   </a>
                 </ShareButton>
-              </Clipboard>
-            </ShareButtons>
+
+                <ShareButton twitter tipText={'Tweet'} tipLocation={'top-left'}>
+                  <a
+                    href={`https://twitter.com/share?text=${
+                      thread.content.title
+                    } on @withspectrum&url=https://spectrum.chat/thread/${
+                      thread.id
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon glyph={'twitter'} size={24} />
+                  </a>
+                </ShareButton>
+
+                <Clipboard
+                  style={{ background: 'none' }}
+                  data-clipboard-text={`https://spectrum.chat/thread/${
+                    thread.id
+                  }`}
+                  onSuccess={() =>
+                    this.props.dispatch(
+                      addToastWithTimeout('success', 'Copied to clipboard')
+                    )
+                  }
+                >
+                  <ShareButton tipText={'Copy link'} tipLocation={'top-left'}>
+                    <a>
+                      <Icon glyph={'link'} size={24} />
+                    </a>
+                  </ShareButton>
+                </Clipboard>
+              </ShareButtons>
+            )}
           </div>
 
           <div style={{ display: 'flex' }}>

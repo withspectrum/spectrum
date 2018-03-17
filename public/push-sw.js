@@ -7,6 +7,7 @@
  */
 
 // A new notification is coming in, yay!
+// eslint-disable-next-line
 self.addEventListener('push', function(event) {
   var notificationData = {};
 
@@ -32,11 +33,13 @@ self.addEventListener('push', function(event) {
           // (except for if we're on localhost, i.e. in development)
           if (
             windowClient.focused &&
+            // eslint-disable-next-line
             !(self.registration.scope.indexOf('http://localhost:3000') === 0)
           ) {
             return;
           }
         }
+        // eslint-disable-next-line
         return self.registration.showNotification(notificationData.title, {
           vibrate: [200],
           icon: '/img/apple-icon-144x144-precomposed.png',
@@ -55,16 +58,19 @@ self.addEventListener('push', function(event) {
 });
 
 // On notification click
+// eslint-disable-next-line
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
   const urlToOpen =
     event.notification.data && event.notification.data.href
-      ? new URL(event.notification.data.href, self.location.origin).href
+      ? // eslint-disable-next-line
+        new URL(event.notification.data.href, self.location.origin).href
       : '/';
 
   // see if the current is open and if it is focus it
   event.waitUntil(
+    // eslint-disable-next-line
     self.clients
       .matchAll({
         type: 'window',
@@ -78,6 +84,7 @@ self.addEventListener('notificationclick', function(event) {
             .then(client => client.navigate(urlToOpen));
         }
         // If there's no open Spectrum.chat window open a new one
+        // eslint-disable-next-line
         return self.clients.openWindow(urlToOpen);
       })
   );

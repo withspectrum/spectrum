@@ -195,16 +195,16 @@ const Community = /* GraphQL */ `
 		slug: String!
 		description: String!
 		website: String
-		file: File
-		coverFile: File
+		file: Upload
+		coverFile: Upload
 	}
 
 	input EditCommunityInput {
 		name: String
 		description: String
 		website: String
-		file: File
-		coverFile: File
+		file: Upload
+		coverFile: Upload
 		communityId: ID!
 	}
 

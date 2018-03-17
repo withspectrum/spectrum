@@ -24,21 +24,26 @@ export const Body = (props: {
   type: 'text' | 'media' | 'emoji' | 'draftjs',
   openGallery: Function,
   message: Object,
+  data: Object,
 }) => {
-  const { message, openGallery, type, me } = props;
+  const { message, openGallery, type, me, data } = props;
   switch (type) {
     case 'text':
     default:
       return <Text me={me}>{message.body}</Text>;
-    case 'media':
+    case 'media': {
       // don't apply imgix url params to optimistic image messages
       const src = props.id
         ? message.body
         : `${message.body}?max-w=${window.innerWidth * 0.6}`;
+      if (typeof data.id === 'number' && data.id < 0) {
+        return null;
+      }
       return <Image onClick={openGallery} src={src} />;
+    }
     case 'emoji':
       return <Emoji>{message}</Emoji>;
-    case 'draftjs':
+    case 'draftjs': {
       const body = JSON.parse(message.body);
       const isCode = body.blocks[0].type === 'code-block';
 
@@ -47,6 +52,7 @@ export const Body = (props: {
       } else {
         return <Text me={me}>{redraft(body, messageRenderer)}</Text>;
       }
+    }
   }
 };
 
@@ -83,6 +89,7 @@ export const Actions = (props: {
   deleteMessage: Function,
   isOptimisticMessage: boolean,
   children: Node,
+  message: Object,
 }) => {
   const {
     me,
@@ -90,7 +97,12 @@ export const Actions = (props: {
     canModerate,
     deleteMessage,
     isOptimisticMessage,
+    message,
   } = props;
+
+  if (isOptimisticMessage && message.messageType === 'media') {
+    return null;
+  }
 
   return (
     <ActionUI me={me}>

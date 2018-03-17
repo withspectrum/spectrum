@@ -378,3 +378,10 @@ export type DBStripeCustomer = {
     communityName?: string,
   },
 };
+
+export type FileUpload = {
+  filename: string,
+  mimetype: string,
+  encoding: string,
+  stream: any,
+};

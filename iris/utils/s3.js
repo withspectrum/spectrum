@@ -1,71 +1,74 @@
+// @flow
 require('now-env');
-const Uploader = require('s3-image-uploader');
+import AWS from 'aws-sdk';
+import shortid from 'shortid';
 const IS_PROD = process.env.NODE_ENV === 'production';
+
+import type { FileUpload } from 'shared/types';
+type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
 
 let S3_TOKEN = process.env.S3_TOKEN;
 let S3_SECRET = process.env.S3_SECRET;
 
 if (!IS_PROD) {
-  // In development or testing default the tokens to some garbage
-  // so that the s3-image-uploader doesn't throw an error
   S3_TOKEN = S3_TOKEN || 'asdf123';
   S3_SECRET = S3_SECRET || 'asdf123';
 }
 
-const uploader = new Uploader({
-  aws: {
-    key: S3_TOKEN,
-    secret: S3_SECRET,
+AWS.config.update({
+  accessKeyId: S3_TOKEN,
+  secretAccessKey: S3_SECRET,
+  apiVersions: {
+    s3: 'latest',
   },
-  websockets: false,
 });
+const s3 = new AWS.S3();
 
 const generateImageUrl = path => {
   // remove the bucket name from the path
-  let newPath = path.replace('/spectrum-chat', '');
+  const newPath = path.replace('spectrum-chat/', '');
 
   // this is the default source for our imgix account, which starts
   // at the bucket root, thus we remove the bucket from the path
-  let imgixBase = 'https://spectrum.imgix.net';
+  const imgixBase = 'https://spectrum.imgix.net';
 
   // return a new url to update the user object
-  return imgixBase + newPath;
+  return imgixBase + '/' + newPath;
 };
 
-/*
-  Adds random number to filename to avoid conflicts
-*/
-const generateFileName = (name: string) => {
-  const num = Math.random();
-  const fileName = `${name}.${num}`;
-  return fileName;
-};
-
-type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
-
-const uploadImage = (file: Object, entity: EntityTypes, id: string) =>
-  new Promise((resolve, reject) => {
-    const fileName = generateFileName(file.name);
-
-    return uploader.upload(
+const upload = async (
+  file: FileUpload,
+  entity: EntityTypes,
+  id: string
+): Promise<string> => {
+  const result = await file;
+  const { filename, stream } = result;
+  return new Promise(res => {
+    const path = `spectrum-chat/${entity}/${id}`;
+    const fileKey = `${shortid.generate()}-${filename}`;
+    return s3.upload(
       {
-        fileId: fileName,
-        bucket: `spectrum-chat/${entity}/${id}`,
-        source: file.path,
-        name: fileName,
+        Bucket: path,
+        Key: fileKey,
+        Body: stream,
+        ACL: 'public-read',
       },
-      data => {
-        const url = generateImageUrl(data.path);
-        return resolve(encodeURI(url));
-      },
-      (errMsg, errObject) => {
-        // TODO: Figure out error handling in the backend if image upload fails
-        return new Error(errMsg);
-        console.error('unable to upload: ' + errMsg + ':', errObject);
+      (err, data) => {
+        if (err) throw new Error(err);
+        if (!data || !data.Key) throw new Error('Image upload failed.');
+        const url = generateImageUrl(data.Key);
+        res(encodeURI(url));
       }
     );
   });
+};
 
-module.exports = {
-  uploadImage,
+export const uploadImage = async (
+  file: FileUpload,
+  entity: EntityTypes,
+  id: string
+): Promise<string> => {
+  return await upload(file, entity, id).catch(err => {
+    throw new Error(err);
+  });
 };

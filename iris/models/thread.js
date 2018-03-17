@@ -11,7 +11,7 @@ import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBThread } from 'shared/types';
+import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
 
 export const getThread = (threadId: string): Promise<DBThread> => {
@@ -402,12 +402,7 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     });
 };
 
-type File = {
-  name: string,
-  type: string,
-  size: number,
-  path: string,
-};
+type File = FileUpload;
 
 type Attachment = {
   attachmentType: string,

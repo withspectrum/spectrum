@@ -25,15 +25,20 @@ export const Wrapper = styled.div`
 
 export const InboxWrapper = styled.div`
   display: flex;
-  width: 100%;
-  max-width: 400px;
-  min-width: 400px;
+  width: 40%;
+  max-width: 480px;
+  min-width: 360px;
   overflow-y: hidden;
   position: relative;
   align-self: stretch;
   flex-direction: column;
   background: ${props => props.theme.bg.default};
   border-right: 1px solid ${props => props.theme.bg.border};
+
+  @media (min-resolution: 120dpi) {
+    max-width: 400px;
+    min-width: 400px;
+  }
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -60,7 +65,7 @@ export const Sidebar = styled.div`
   flex-direction: column;
   border-right: 1px solid ${props => props.theme.bg.border};
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 `;
@@ -321,7 +326,7 @@ export const HeaderWrapper = styled.div`
     grid-area: right;
   }
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     padding-left: 0;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: 1fr;
@@ -849,7 +854,7 @@ export const Hint = styled.span`
 export const NarrowOnly = styled.div`
   display: none;
 
-  @media (max-width: 956px) {
+  @media (max-width: 1280px) {
     display: flex;
     flex: none;
     grid-area: left;
