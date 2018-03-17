@@ -10,9 +10,11 @@ import { sendCommunityPaymentSucceededEmailQueue } from 'shared/bull/queues';
 import Raven from 'shared/raven';
 import { getStripeCustomer } from '../models/stripeCustomers';
 import { getCommunityById } from '../models/community';
+import { StripeUtil } from 'shared/stripe/utils';
 
 const prepareCommunityPaymentSucceededEmail = async (
   communityId: string,
+  dbStripeCustomer,
   record
 ) => {
   debug(`Preparing community payment succeeded email ${communityId}`);
@@ -30,10 +32,14 @@ const prepareCommunityPaymentSucceededEmail = async (
     return;
   }
 
+  const sources = StripeUtil.getSources(dbStripeCustomer);
+  const defaultSource = sources.find(source => source && source.isDefault);
+
   const emailData = {
     to: adminEmail,
     community: community,
     invoice: record,
+    source: defaultSource,
   };
 
   return sendCommunityPaymentSucceededEmailQueue.add(emailData);
@@ -57,6 +63,7 @@ const processJob = async (
     debug('Found communityId for customer, sending success email');
     return await prepareCommunityPaymentSucceededEmail(
       dbStripeCustomer.metadata.communityId,
+      dbStripeCustomer,
       record
     );
   }

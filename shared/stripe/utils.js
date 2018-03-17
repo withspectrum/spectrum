@@ -29,7 +29,12 @@ const getChargeableSource = (customer: RawCustomer): ?RawSource => {
   );
 };
 
-const getSources = (customer: RawCustomer): Array<?RawSource> => {
+const getSources = (
+  customer: RawCustomer
+): Array<?{
+  ...$Exact<RawSource>,
+  isDefault: boolean,
+}> => {
   if (!customer) return [];
   if (!customer.sources || customer.sources.data.length === 0) return [];
 

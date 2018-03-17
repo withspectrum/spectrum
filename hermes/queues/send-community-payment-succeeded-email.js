@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')(
-  'hermes:queue:send-community-payment-failed-email'
+  'hermes:queue:send-community-payment-succeeded-email'
 );
 import sendEmail from '../send-email';
 import {
@@ -14,7 +14,7 @@ import formatDate from '../utils/format-date';
 
 export default (job: Job<PaymentSucceededEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
-  const { to, invoice, community } = job.data;
+  const { to, invoice, community, source } = job.data;
 
   if (!to) {
     debug('community does not have an administrator email, aborting');
@@ -58,14 +58,15 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
     })
     .filter(Boolean);
 
-  // if (amount || invoice.total < 0) {
-  //   debug('Invoice amount was less than 0, credit applied to customer');
-  //   return;
-  // }
-
   if (lineItems.length === 0) {
     debug('No line items on this invoice');
     return;
+  }
+
+  let viaSource = null;
+  if (source && invoice.total > 0) {
+    debug('Creating string for default source');
+    viaSource = `Paid with ${source.card.brand} ending in ${source.card.last4}`;
   }
 
   const introCopy =
@@ -84,6 +85,7 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
           } community on Spectrum was received. Thank you for building your community on Spectrum!`;
 
   try {
+    debug('Sending email...');
     return sendEmail({
       TemplateId: COMMUNITY_PAYMENT_SUCCEEDED_TEMPLATE,
       To: to,
@@ -103,6 +105,7 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
           invoice: {
             id: invoice.id,
           },
+          viaSource,
         },
       },
     });
