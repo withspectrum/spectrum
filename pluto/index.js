@@ -30,6 +30,7 @@ import {
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
   PROCESS_STRIPE_PAYMENT_SUCCEEDED,
   PROCESS_STRIPE_PAYMENT_FAILED,
+  PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 } from './queues/constants';
 import processStripeChargeWebhook from './queues/processStripeChargeWebhook';
 import processStripeCustomerWebhook from './queues/processStripeCustomerWebhook';
@@ -61,6 +62,7 @@ import processOssStatusDisabled from './queues/processOssStatusDisabled';
 
 import processPaymentSucceeded from './queues/processPaymentSucceeded';
 import processPaymentFailed from './queues/processPaymentFailed';
+import processCardExpiringWarning from './queues/processCardExpiringWarning';
 
 const PORT = process.env.PORT || 3008;
 
@@ -114,6 +116,7 @@ try {
 
     [PROCESS_STRIPE_PAYMENT_SUCCEEDED]: processPaymentSucceeded,
     [PROCESS_STRIPE_PAYMENT_FAILED]: processPaymentFailed,
+    [PROCESS_STRIPE_CARD_EXPIRING_WARNING]: processCardExpiringWarning,
   });
 } catch (err) {
   console.log('❌ Error starting worker', err);

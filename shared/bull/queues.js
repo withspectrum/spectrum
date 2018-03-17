@@ -28,6 +28,7 @@ import {
   PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
   PROCESS_STRIPE_PAYMENT_SUCCEEDED,
   PROCESS_STRIPE_PAYMENT_FAILED,
+  PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 } from 'pluto/queues/constants';
 
 import {
@@ -92,6 +93,7 @@ exports.QUEUE_NAMES = {
   stripeCommunityOpenSourceStatusActivatedQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
   stripePaymentSucceededQueue: PROCESS_STRIPE_PAYMENT_SUCCEEDED,
   stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
+  stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
 
   _adminSendCommunityCreatedEmailQueue: 'admin community created',
   _adminProcessToxicMessageQueue: 'process admin toxic message',

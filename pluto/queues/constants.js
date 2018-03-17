@@ -51,3 +51,5 @@ export const PROCESS_STRIPE_COMMUNITY_EDITED =
 export const PROCESS_STRIPE_PAYMENT_SUCCEEDED =
   'process stripe payment succeeded';
 export const PROCESS_STRIPE_PAYMENT_FAILED = 'process stripe payment failed';
+export const PROCESS_STRIPE_CARD_EXPIRING_WARNING =
+  'process stripe card expiring warning';

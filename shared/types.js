@@ -373,7 +373,7 @@ export type DBStripeCustomer = {
   currency: ?string,
   customerId: string,
   email: string,
-  metadata: ?{
+  metadata: {
     communityId?: string,
     communityName?: string,
   },

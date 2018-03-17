@@ -9,6 +9,7 @@ import type {
   DBCommunity,
   DBNotificationsJoin,
 } from '../types';
+import type { RawSource } from '../stripe/types/source';
 import type { RawCharge } from '../stripe/types/charge';
 import type { RawInvoice } from '../stripe/types/invoice';
 
@@ -156,11 +157,13 @@ export type PaymentFailedEmailJobData = {
 };
 
 export type CardExpiringWarningEmailJobData = {
-  data: {
-    invoice: Object,
-    community: DBCommunity,
-  },
+  source: RawSource,
+  community: DBCommunity,
   to: string,
+};
+
+export type StripeCardExpiringWarningJobData = {
+  record: Object,
 };
 
 export type Queues = {
@@ -256,6 +259,7 @@ export type Queues = {
   stripePaymentFailedQueue: BullQueue<
     StripePaymentSucceededOrFailedEventJobData
   >,
+  stripeCardExpiringWarningQueue: BullQueue<StripeCardExpiringWarningJobData>,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<
