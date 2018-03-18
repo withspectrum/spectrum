@@ -28,6 +28,25 @@ Spectrum has been under full-time development since March 2017, and is continuou
   <img height="50px" src="public/img/cluster-1.svg" />
 </div>
 
+## Docs
+
+- [Contributing](#contributing)
+  - [Ground Rules](#ground-rules)
+  - [Codebase](#codebase)
+    - [Technologies](#technologies)
+    - [Folder Structure](#folder-structure)
+  - [First time setup](#first-time-setup)
+  - [Running the app locally](#running-the-app-locally)
+- Technical
+  - [Testing](docs/testing.md)
+  - [Background Jobs](docs/backend/background-jobs.md)
+  - [Deployment](docs/backend/deployment.md)
+  - [GraphQL](docs/iris/)
+    - [Fragments](docs/iris/fragments.md)
+    - [Pagination](docs/iris/pagination.md)
+    - [Testing](docs/iris/testing.md)
+    - [Tips and Tricks](docs/iris/tips-and-tricks.md)
+
 ## Contributing 
 
 **We heartily welcome any and all contributions that match our product roadmap and engineering standards!**
@@ -117,7 +136,7 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
   <img height="70px" src="public/img/cluster-3.svg" />
 </div>
 
-#### First time setup
+### First time setup
 
 The first step to running Spectrum locally is downloading the code by cloning the repository:
 
@@ -125,7 +144,7 @@ The first step to running Spectrum locally is downloading the code by cloning th
 git clone git@github.com:withspectrum/spectrum.git
 ```
 
-##### Installation
+#### Installation
 
 Spectrum has four big installation steps:
 
@@ -141,7 +160,7 @@ node shared/install-dependencies.js
 
 You've now finished installing everything! Let's migrate the database and you'll be ready to go :100:
 
-##### Migrating the database
+#### Migrating the database
 
 When you first download the code and want to run it locally you have to migrate the database and seed it with test data. First, start rethinkdb in its own terminal tab:
 
@@ -157,9 +176,9 @@ yarn run db:seed
 # ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
 ```
 
-#### Running the app locally
+### Running the app locally
 
-##### Background services
+#### Background services
 
 Whenever you want to run Spectrum locally you have to have RethinkDB and Redis running in the background. First start rethinkdb like we did to migrate the database:
 
@@ -173,7 +192,7 @@ Then (without closing the rethinkdb tab!) open another tab and start Redis:
 redis-server
 ```
 
-##### Start the servers
+#### Start the servers
 
 Depending on what you're trying to work on you'll need to start different servers. Generally, all servers run in development mode by doing `yarn run dev:<workername>`, e.g. `yarn run dev:hermes` to start the email worker.
 
@@ -183,7 +202,7 @@ No matter what you're trying to do though, you'll want to have the API (iris) ru
 yarn run dev:iris
 ```
 
-##### Develop the web UI
+#### Develop the web UI
 
 To develop the frontend and web UI run 
 
@@ -191,7 +210,7 @@ To develop the frontend and web UI run
 yarn run dev:web
 ```
 
-##### Develop the mobile apps
+#### Develop the mobile apps
 
 To start the mobile apps run:
 
