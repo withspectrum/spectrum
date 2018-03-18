@@ -84,6 +84,7 @@ schedule(
       'flow-typed/**/*.js',
       'public/**/*.js',
       'iris/migrations/**/*.js',
+      'cypress/**/*.js',
     ],
   })
 );
