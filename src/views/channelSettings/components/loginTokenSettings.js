@@ -18,7 +18,6 @@ import {
 import LoginTokenToggle from './loginTokenToggle';
 import ResetJoinToken from './resetJoinToken';
 import { Input } from 'src/components/formElements';
-import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { TokenInputWrapper } from '../style';
 
