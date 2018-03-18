@@ -108,42 +108,13 @@ Spectrum has four big installation steps:
 2. **Install Redis**: See [the Redis documentation](https://redis.io/download) for instructions on installing it with your OS.
 3. **Install yarn**: We use [yarn](https://yarnpkg.com) to handle our JavaScript dependencies. (plain `npm` doesn't work due to our monorepo setup) See [the yarn documentation](https://yarnpkg.com/en/docs/install) for instructions on installing it.
 
-Once you have RethinkDB, Redis and yarn installed locally its time to install the JavaScript dependencies. To install all necessary dependencies for the frontend and for `iris` (the web server) run this in the root of the project:
+Once you have RethinkDB, Redis and yarn installed locally its time to install the JavaScript dependencies. Because it's pretty tedious to install the dependencies for each worker individually we've created a script that goes through and runs `yarn install` for every worker for you:
 
 ```sh
-yarn install
+node shared/install-dependencies.js
 ```
 
-To install the dependencies for `athena`, `hermes`, `chronos`, `mercury` and `vulcan`:
-
-```sh
-# Hermes
-cd hermes
-yarn install
-cd ..
-# Athena
-cd athena
-yarn install
-cd ..
-# Chronos
-cd chronos
-yarn install
-cd ..
-# Mercury
-cd mercury
-yarn install
-cd ..
-# Hyperion
-cd hyperion 
-yarn install
-cd ..
-# Vulcan
-cd vulcan
-yarn install
-cd ..
-```
-
-> Note: Yes we know it's very tedious to install the dependencies for every single folder manually-unfortunately `now` (our deployment service) doesn't support monorepos very well yet so we have to make due with this.
+You've now finished installing everything! Let's migrate the database and you'll be ready to go :100:
 
 ##### Migrating the database
 
