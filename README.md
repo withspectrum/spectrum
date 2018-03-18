@@ -6,11 +6,27 @@
   
 </div>
 
-----
+This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every single line of code that's not packaged into a reusable library is in this repository.
 
-This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every single line of code that's not packaged into a library is in this repository.
+## What is Spectrum?
 
-*[Click here for more information about Spectrum](https://spectrum.chat)*
+### Vision
+
+It is difficult to grow, moderate and measure communities with existing platforms. Users want modern, chat-based communities but they're running into scaling issues beyond a couple hundred members.
+
+Spectrum aims to be the best platform for communities of any kind and size by combining the best of web 2.0 forums and real-time chat apps. Best-in-class moderation tooling, a single platform for all your communities, threaded conversations by default, community health monitoring and much more to come.
+
+> "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and iteract. Except realtime and trolling-free."
+>
+> \- [Guillermo Rauch (@rauchg)](https://twitter.com/rauchg/status/930946768841228288)
+
+### Status
+
+Spectrum has been under full-time development since March 2017, and is continuously being improved. See [the roadmap](TK) for up-to-date information about our current areas of focus.
+
+<div align="center">
+  <img height="50px" src="public/img/cluster-1.svg" />
+</div>
 
 ## Contributing 
 
@@ -29,6 +45,11 @@ If you found a technical bug on Spectrum or have ideas for features we should im
 If you find a bug on Spectrum and open a PR that fixes it we'll likely merge it given it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in our roadmap and plans for the app. (we'll likely close a PR implementing a feature that wasn't explicitly whitelisted as something we want)
 
 Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local setup instructions](#first-time-setup)!
+
+
+<div align="center">
+  <img height="70px" src="public/img/cluster-2.svg" />
+</div>
 
 ### Codebase
 
@@ -91,6 +112,10 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 </details>
 
 <br />
+
+<div align="center">
+  <img height="70px" src="public/img/cluster-3.svg" />
+</div>
 
 #### First time setup
 
@@ -185,3 +210,9 @@ yarn run open:android
 Refer to [the Expo documentation on how to install the simulators](https://docs.expo.io/versions/v25.0.0/guides/debugging.html#using-a-simulator--emulator).
 
 > Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!
+
+<br />
+<div align="center">
+  <img height="200px" src="public/img/connect.svg" />
+</div>
+
