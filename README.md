@@ -42,11 +42,11 @@ Spectrum has been under full-time development since March 2017, and is continuou
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
   - [Deployment](docs/backend/deployment.md)
-  - [GraphQL](docs/iris/)
-    - [Fragments](docs/iris/fragments.md)
-    - [Pagination](docs/iris/pagination.md)
-    - [Testing](docs/iris/testing.md)
-    - [Tips and Tricks](docs/iris/tips-and-tricks.md)
+  - [GraphQL](docs/backend/iris/)
+    - [Fragments](docs/backend/iris/fragments.md)
+    - [Pagination](docs/backend/iris/pagination.md)
+    - [Testing](docs/backend/iris/testing.md)
+    - [Tips and Tricks](docs/backend/iris/tips-and-tricks.md)
 
 ## Contributing 
 
