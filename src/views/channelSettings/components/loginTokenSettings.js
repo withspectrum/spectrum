@@ -20,6 +20,7 @@ import ResetJoinToken from './resetJoinToken';
 import { Input } from 'src/components/formElements';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { TokenInputWrapper } from '../style';
+import { CLIENT_URL } from 'src/api/constants';
 
 type Props = {
   data: {
@@ -58,9 +59,9 @@ class LoginTokenSettings extends React.Component<Props, State> {
           {joinSettings.tokenJoinEnabled && (
             <Clipboard
               style={{ background: 'none' }}
-              data-clipboard-text={`https://spectrum.chat/${
-                channel.community.slug
-              }/${channel.slug}/join/${joinSettings.token}`}
+              data-clipboard-text={`${CLIENT_URL}/${channel.community.slug}/${
+                channel.slug
+              }/join/${joinSettings.token}`}
               onSuccess={() =>
                 this.props.dispatch(
                   addToastWithTimeout('success', 'Copied to clipboard')
@@ -69,7 +70,7 @@ class LoginTokenSettings extends React.Component<Props, State> {
             >
               <TokenInputWrapper>
                 <Input
-                  value={`https://spectrum.chat/${channel.community.slug}/${
+                  value={`${CLIENT_URL}/${channel.community.slug}/${
                     channel.slug
                   }/join/${joinSettings.token}`}
                   onChange={() => {}}
