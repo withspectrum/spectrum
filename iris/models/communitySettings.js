@@ -37,15 +37,28 @@ export const getCommunitiesSettings = (
           communityId: communityIds[index],
         }));
 
-      return data.map(
-        (rec, index) =>
-          rec
-            ? rec
-            : {
-                ...defaultSettings,
-                communityId: communityIds[index],
-              }
-      );
+      if (data.length === communityIds.length) {
+        return data.map(
+          (rec, index) =>
+            rec
+              ? rec
+              : {
+                  ...defaultSettings,
+                  communityId: communityIds[index],
+                }
+        );
+      }
+
+      if (data.length < communityIds.length) {
+        return communityIds.map(community => {
+          const record = data.find(o => o.communityId === community);
+          if (record) return record;
+          return {
+            ...defaultSettings,
+            communityId: community,
+          };
+        });
+      }
     });
 };
 
