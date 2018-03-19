@@ -29,8 +29,24 @@ export const getCommunitiesSettings = (
   return db
     .table('communitySettings')
     .getAll(...communityIds, { index: 'communityId' })
-    .group('communityId')
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0)
+        return Array.from({ length: communityIds.length }, (_, index) => ({
+          ...defaultSettings,
+          communityId: communityIds[index],
+        }));
+
+      return data.map(
+        (rec, index) =>
+          rec
+            ? rec
+            : {
+                ...defaultSettings,
+                communityId: communityIds[index],
+              }
+      );
+    });
 };
 
 export const createCommunitySettings = (id: string) => {
