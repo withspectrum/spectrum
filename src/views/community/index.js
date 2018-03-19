@@ -41,6 +41,8 @@ import {
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
+import ModeratorList from './components/moderatorList';
+
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -305,6 +307,13 @@ class CommunityView extends React.Component<Props, State> {
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
+              <ColumnHeading>Team</ColumnHeading>
+              <ModeratorList
+                id={community.id}
+                filter={{ isModerator: true, isOwner: true }}
+                first={20}
+              />
+
               <ColumnHeading>Channels</ColumnHeading>
               <ChannelList
                 id={community.id}
