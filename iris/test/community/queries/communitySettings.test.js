@@ -16,7 +16,7 @@ it('should fetch a communitys settings', async () => {
 
   expect.assertions(2);
   const result = await request(query);
-  console.log('result', result);
+
   const { data: { community } } = result;
 
   expect(community.brandedLogin.isEnabled).toEqual(false);
