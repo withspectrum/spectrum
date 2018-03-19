@@ -155,7 +155,7 @@ class Search extends React.Component<Props, State> {
         }
       })
       .catch(err => {
-        console.log('Error searching for communities: ', err);
+        console.error('Error searching for communities: ', err);
       });
   };
 
