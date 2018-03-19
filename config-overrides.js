@@ -135,7 +135,7 @@ module.exports = function override(config, env) {
     })
   );
   if (process.env.ANALYZE_BUNDLE === 'true') {
-    console.log('Bundle analyzer enabled');
+    debug('Bundle analyzer enabled');
     config.plugins.push(
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
