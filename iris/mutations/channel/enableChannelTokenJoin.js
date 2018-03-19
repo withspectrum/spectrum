@@ -32,6 +32,9 @@ export default async (
   }
 
   const hasSettings = settings && settings.reduction.length > 0;
+
+  loaders.channelSettings.clear(channelId);
+
   if (hasSettings) {
     return await enableChannelTokenJoin(channelId);
   } else {
