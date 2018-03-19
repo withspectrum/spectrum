@@ -1,3 +1,4 @@
+// @flow
 import { injectGlobal } from 'styled-components';
 
 injectGlobal`
@@ -229,7 +230,7 @@ injectGlobal`
 
   .markdown pre code {
     padding: 8px 16px;
-    display: inline-block;
+    display: block;
     white-space: pre-wrap;
   }
 
@@ -391,7 +392,11 @@ injectGlobal`
 // styled-components to make sure it works when we SSR.
 /* eslint-disable import/first */
 /* eslint-disable import/no-webpack-loader-syntax */
+// $FlowIssue
 import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
+// $FlowIssue
 injectGlobal`${draftGlobalCSS}`;
+// $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/draftjs-editor/prism-theme.css';
+// $FlowIssue
 injectGlobal`${prismGlobalCSS}`;
