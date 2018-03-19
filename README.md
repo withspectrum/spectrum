@@ -56,6 +56,10 @@ That being said, this codebase isn't your typical open source project because it
 
 ### Ground Rules
 
+#### Contributions and discussion guidelines
+
+All conversations and communities on Spectrum agree to our underlying [code of conduct](https://github.com/withspectrum/code-of-conduct). This code of conduct also applies to all conversations that happen within our contributor community here on GitHub. We expect discussions in issues and pull requests to stay positive, productive, and respectful. Remember: there are real people on the other side of that screen!
+
 #### Reporting a bug or discussing a feature idea
 
 If you found a technical bug on Spectrum or have ideas for features we should implement, the issue tracker is the best place to share your ideas. Make sure to follow the issue template and you should be golden! ([click here to open a new issue](https://github.com/withspectrum/spectrum/issues/new))
@@ -65,10 +69,6 @@ If you found a technical bug on Spectrum or have ideas for features we should im
 If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in our roadmap and plans for the app.
 
 Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local setup instructions](#first-time-setup)!
-
-#### Contributions and discussion guidelines
-
-All conversations and communities on Spectrum agree to our underlying [code of conduct](https://github.com/withspectrum/code-of-conduct). This code of conduct also applies to all conversations that happen within our contributor community here on GitHub. We expect discussions in issues and pull requests to stay positive, productive, and respectful. Remember: there are real people on the other side of that screen!
 
 <div align="center">
   <img height="70px" src="public/img/cluster-2.svg" />
