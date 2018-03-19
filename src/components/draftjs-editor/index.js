@@ -39,6 +39,16 @@ import {
 } from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
+const customStyleMap = {
+  CODE: {
+    border: '1px solid #DFE7EF',
+    borderRadius: '4px',
+    backgroundColor: '#F5F8FC',
+    padding: '1px 4px',
+    fontFamily: 'monospace',
+  },
+};
+
 type Props = {
   state: Object,
   onChange: Function,
@@ -201,6 +211,7 @@ class Editor extends React.Component<Props, State> {
             autoCorrect="on"
             stripPastedStyles={true}
             decorators={[mentionsDecorator]}
+            customStyleMap={customStyleMap}
             {...rest}
           />
           {!readOnly && (
@@ -282,6 +293,7 @@ class Editor extends React.Component<Props, State> {
               autoCorrect="on"
               stripPastedStyles={true}
               decorators={[mentionsDecorator]}
+              customStyleMap={customStyleMap}
               {...rest}
             />
           </Wrapper>

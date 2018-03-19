@@ -72,13 +72,15 @@ const actorsToString = actors => {
         <Link to={`/users/${data[2].username}`}>{`${names[2]}`}</Link>
       </span>
     );
-  } else {
+  } else if (actors.length >= 4) {
     return (
       <span>
         <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link> and{' '}
         {names.length - 1} others{' '}
       </span>
     );
+  } else {
+    return null;
   }
 };
 
