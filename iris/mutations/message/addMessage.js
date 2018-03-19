@@ -175,7 +175,7 @@ export default async (
       };
     })
     .catch(err => {
-      console.log('Error sending message', err);
+      console.error('Error sending message', err);
       return new UserError('Error sending message, please try again');
     });
 };
