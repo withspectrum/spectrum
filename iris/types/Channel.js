@@ -58,6 +58,11 @@ const Channel = /* GraphQL */ `
 		userId: ID!
 	}
 
+	type JoinSettings {
+		tokenJoinEnabled: Boolean
+		token: String
+	}
+
 	type Channel {
 		id: ID!
 		createdAt: Date!
@@ -78,6 +83,7 @@ const Channel = /* GraphQL */ `
 		blockedUsers: [User] @cost(complexity: 3)
 		moderators: [User] @cost(complexity: 3)
 		owners: [User] @cost(complexity: 3)
+		joinSettings: JoinSettings
 
 	}
 
@@ -85,15 +91,37 @@ const Channel = /* GraphQL */ `
     channel(id: ID, channelSlug: String, communitySlug: String): Channel @cost(complexity: 1)
 	}
 
+	input JoinChannelWithTokenInput {
+		communitySlug: String!
+		channelSlug: String!
+		token: String!
+	}
+
+	input EnableChannelTokenJoinInput {
+		id: ID!
+	}
+
+	input DisableChannelTokenJoinInput {
+		id: ID!
+	}
+
+	input ResetChannelJoinTokenInput {
+		id: ID!
+	}
+
 	extend type Mutation {
 		createChannel(input: CreateChannelInput!): Channel
 		editChannel(input: EditChannelInput!): Channel
 		deleteChannel(channelId: ID!): Boolean
 		toggleChannelSubscription(channelId: ID!): Channel
+		joinChannelWithToken(input: JoinChannelWithTokenInput!): Channel
 		toggleChannelNotifications(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
 		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
+		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
+		disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
+		resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel
 	}
 `;
 
