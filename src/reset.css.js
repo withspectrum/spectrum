@@ -229,7 +229,7 @@ injectGlobal`
 
   .markdown pre code {
     padding: 8px 16px;
-    display: inline-block;
+    display: block;
     white-space: pre-wrap;
   }
 
