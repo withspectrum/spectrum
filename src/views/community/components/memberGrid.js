@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
 import { FlexCol } from 'src/components/globals';
 import { Card } from 'src/components/card';
-import { LoadingList } from 'src/components/loading';
+import { LoadingList, LoadingListItem } from 'src/components/loading';
 import { UserListItem } from 'src/components/listItems';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
@@ -20,27 +21,58 @@ type Props = {
   isFetchingMore: boolean,
 };
 
-class CommunityMemberGrid extends React.Component<Props> {
+type State = {
+  scrollElement: any,
+};
+
+class CommunityMemberGrid extends React.Component<Props, State> {
+  state = { scrollElement: null };
+
+  componentDidMount() {
+    this.setState({
+      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
+      // the AppViewWrapper which is the scrolling part of the site.
+      scrollElement: document.getElementById('scroller-for-thread-feed'),
+    });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   render() {
     const { data: { community }, isLoading } = this.props;
+    const { scrollElement } = this.state;
 
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
+      const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
-        <FlexCol
-          style={{ padding: '0 16px', flex: 'none', backgroundColor: '#fff' }}
+        <InfiniteList
+          pageStart={0}
+          loadMore={this.props.data.fetchMore}
+          hasMore={hasNextPage}
+          loader={<LoadingListItem />}
+          useWindow={false}
+          initialLoad={false}
+          scrollElement={scrollElement}
+          threshold={750}
         >
           {nodes.map(node => {
             if (!node) return null;
-            let { user, ...rest } = node;
-            user = Object.assign({}, user, {
-              ...rest,
-            });
-            return <UserListItem key={user.id} user={user} />;
+            return (
+              <div style={{ padding: '0 16px' }} key={node.user.id}>
+                <UserListItem key={node.user.id} user={node.user} />
+              </div>
+            );
           })}
-        </FlexCol>
+        </InfiniteList>
       );
     }
 

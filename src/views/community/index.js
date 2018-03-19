@@ -243,7 +243,7 @@ class CommunityView extends React.Component<Props, State> {
                   Threads
                 </Segment>
 
-                <MidSegment
+                <DesktopSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
@@ -251,7 +251,7 @@ class CommunityView extends React.Component<Props, State> {
                   Members ({community.metaData &&
                     community.metaData.members &&
                     community.metaData.members.toLocaleString()})
-                </MidSegment>
+                </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -309,14 +309,6 @@ class CommunityView extends React.Component<Props, State> {
                 id={community.id}
                 communitySlug={communitySlug.toLowerCase()}
               />
-
-              <ColumnHeading>
-                Top Members ({community.metaData &&
-                  community.metaData.members &&
-                  community.metaData.members.toLocaleString()}{' '}
-                total)
-              </ColumnHeading>
-              <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>
         </AppViewWrapper>
@@ -373,3 +365,11 @@ export default compose(
   getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);
+
+// <ColumnHeading>
+//                 Top Members ({community.metaData &&
+//                   community.metaData.members &&
+//                   community.metaData.members.toLocaleString()}{' '}
+//                 total)
+//               </ColumnHeading>
+//               <CommunityMemberGrid first={5} id={community.id} />
