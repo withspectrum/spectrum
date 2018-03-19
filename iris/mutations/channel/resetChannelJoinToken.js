@@ -32,6 +32,8 @@ export default async (
     return new UserError("You don't have permission to do this.");
   }
 
+  loaders.channelSettings.clear(channelId);
+
   const hasSettings = settings && settings.reduction.length > 0;
   if (hasSettings) {
     return await resetChannelJoinToken(channelId);
