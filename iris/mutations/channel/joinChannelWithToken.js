@@ -39,12 +39,12 @@ export default async (
     getChannelBySlug(channelSlug, communitySlug),
   ]);
 
+  if (!channel) return new UserError('No channel found in this community');
+
   const [communityPermissions, channelPermissions] = await Promise.all([
     getUserPermissionsInCommunity(channel.communityId, currentUser.id),
     getUserPermissionsInChannel(channel.id, currentUser.id),
   ]);
-
-  if (!channel) return new UserError('No channel found in this community');
 
   const settings = await getChannelSettings(channel.id);
 
