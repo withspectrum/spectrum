@@ -35,9 +35,7 @@ export default async (
 
   const { communitySlug, channelSlug, token } = input;
 
-  const [channel] = await Promise.all([
-    getChannelBySlug(channelSlug, communitySlug),
-  ]);
+  const channel = await getChannelBySlug(channelSlug, communitySlug);
 
   if (!channel) return new UserError('No channel found in this community');
 
