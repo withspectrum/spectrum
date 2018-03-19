@@ -148,12 +148,6 @@ export const Meta = styled(Column)`
     margin: 16px 0 0 32px;
   }
 
-  > div:last-of-type {
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
   > a > button {
     margin-top: 16px;
     margin-left: 32px;
