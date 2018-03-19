@@ -74,6 +74,7 @@ class Message extends Component {
           type={emojiOnly ? 'emoji' : message.messageType}
           openGallery={() => this.toggleOpenGallery(message.id)}
           message={emojiOnly ? parsedMessage : message.content}
+          data={message}
         />
         {actionable && (
           <Actions
@@ -83,6 +84,7 @@ class Message extends Component {
             canModerate={canModerate}
             deleteMessage={this.deleteMessage}
             isOptimisticMessage={pending}
+            message={message}
           >
             {reaction && (
               <Reaction

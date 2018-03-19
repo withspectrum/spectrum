@@ -121,8 +121,8 @@ const User = /* GraphQL */ `
 	}
 
 	input EditUserInput {
-		file: File
-		coverFile: File
+		file: Upload
+		coverFile: Upload
 		name: String
 		description: String
 		website: String

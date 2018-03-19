@@ -11,6 +11,7 @@ import {
   createParticipantWithoutNotificationsInThread,
 } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
+import type { FileUpload } from 'shared/types';
 
 type AddMessageInput = {
   message: {
@@ -20,12 +21,7 @@ type AddMessageInput = {
     content: {
       body: string,
     },
-    file?: {
-      name: string,
-      type: string,
-      size: number,
-      path: string,
-    },
+    file?: FileUpload,
   },
 };
 
@@ -57,12 +53,21 @@ export default async (
   // construct the shape of the object to be stored in the db
   let messageForDb = Object.assign({}, message);
   if (message.file && message.messageType === 'media') {
+    const { file } = message;
+
     const fileMetaData = {
-      name: message.file.name,
-      size: message.file.size,
-      type: message.file.type,
+      name: file.filename,
+      size: null,
+      type: file.mimetype,
     };
-    const url = await uploadImage(message.file, 'threads', message.threadId);
+
+    const url = await uploadImage(file, 'threads', message.threadId);
+
+    if (!url)
+      return new UserError(
+        "We weren't able to upload this image, please try again"
+      );
+
     messageForDb = Object.assign({}, messageForDb, {
       content: {
         body: url,

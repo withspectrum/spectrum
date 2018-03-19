@@ -32,7 +32,7 @@ class ChatInputLoginModal extends React.Component<Props> {
         /* TODO(@mxstbr): Fix this */
         ariaHideApp={false}
         isOpen={isOpen}
-        contentLabel={'Log in or sign up'}
+        contentLabel={'Sign in'}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}
@@ -42,7 +42,7 @@ class ChatInputLoginModal extends React.Component<Props> {
           We pass the closeModal dispatch into the container to attach
           the action to the 'close' icon in the top right corner of all modals
         */}
-        <ModalContainer title={'Log in or sign up'} closeModal={this.close}>
+        <ModalContainer title={'Sign in'} closeModal={this.close}>
           <Container>
             <LoginButtonSet
               redirectPath={redirectPath}

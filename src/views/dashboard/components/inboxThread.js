@@ -16,8 +16,9 @@ import {
   ThreadTitle,
   AttachmentsContainer,
   ThreadMeta,
-  MetaText,
-  MetaTextPill,
+  StatusText,
+  NewThreadPill,
+  NewMessagePill,
   LockedTextPill,
   MiniLinkPreview,
 } from '../style';
@@ -54,13 +55,13 @@ class InboxThread extends React.Component<Props> {
     if (!data) return null;
 
     const defaultMessageCountString = (
-      <MetaText offset={participants.length} active={active}>
+      <StatusText offset={participants.length} active={active}>
         {messageCount === 0
           ? `${messageCount} messages`
           : messageCount > 1
             ? `${messageCount} messages`
             : `${messageCount} message`}
-      </MetaText>
+      </StatusText>
     );
 
     if (isLocked) {
@@ -80,9 +81,9 @@ class InboxThread extends React.Component<Props> {
       }
 
       return (
-        <MetaTextPill offset={participants.length} active={active} new>
+        <NewThreadPill offset={participants.length} active={active}>
           New thread!
-        </MetaTextPill>
+        </NewThreadPill>
       );
     }
 
@@ -90,9 +91,9 @@ class InboxThread extends React.Component<Props> {
       if (active) return defaultMessageCountString;
 
       return (
-        <MetaTextPill offset={participants.length} active={active} new>
+        <NewMessagePill offset={participants.length} active={active} newMessage>
           New messages!
-        </MetaTextPill>
+        </NewMessagePill>
       );
     }
 
@@ -229,11 +230,11 @@ class WatercoolerThreadPure extends React.Component<Props> {
             )}
 
             {messageCount > 0 && (
-              <MetaText offset={participants.length} active={active}>
+              <StatusText offset={participants.length} active={active}>
                 {messageCount > 1
                   ? `${messageCount} messages`
                   : `${messageCount} message`}
-              </MetaText>
+              </StatusText>
             )}
           </ThreadMeta>
         </InboxThreadContent>

@@ -1,4 +1,3 @@
-'use strict';
 const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
 exports.up = function(r, conn) {

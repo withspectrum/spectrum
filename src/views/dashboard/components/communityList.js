@@ -68,8 +68,9 @@ class CommunityList extends React.Component<Props> {
       changedActiveCommunity ||
       changedActiveChannel ||
       changedCommunitiesAmount
-    )
+    ) {
       return true;
+    }
     return false;
   }
 

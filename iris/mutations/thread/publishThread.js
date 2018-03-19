@@ -8,18 +8,14 @@ import { getCommunityRecurringPayments } from '../../models/recurringPayment';
 import { getChannels } from '../../models/channel';
 import { publishThread, editThread } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
+import type { FileUpload } from 'shared/types';
 
 type Attachment = {
   attachmentType: string,
   data: string,
 };
 
-type File = {
-  name: string,
-  type: string,
-  size: number,
-  path: string,
-};
+type File = FileUpload;
 
 type PublishThreadInput = {
   thread: {
@@ -157,7 +153,9 @@ export default async (
   // if the original mutation input contained files to upload
   const urls = await Promise.all(
     // upload each of the files to s3
-    thread.filesToUpload.map(file => uploadImage(file, 'threads', dbThread.id))
+    thread.filesToUpload.map(
+      file => file && uploadImage(file, 'threads', dbThread.id)
+    )
   );
 
   // Replace the local image srcs with the remote image src
