@@ -2939,9 +2939,9 @@ danger-plugin-jest@^1.1.0:
   optionalDependencies:
     serve "^5.1.5"
 
-danger-plugin-no-console@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/danger-plugin-no-console/-/danger-plugin-no-console-1.1.1.tgz#d56ee7318c04605afd4e8881226bdeb2a09fed52"
+danger-plugin-no-console@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/danger-plugin-no-console/-/danger-plugin-no-console-1.1.2.tgz#6f5cd7797a5fc58859f5c5bed001b5db3d2a183b"
   optionalDependencies:
     esdoc "^0.5.2"
 
