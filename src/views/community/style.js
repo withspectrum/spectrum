@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
@@ -233,9 +234,18 @@ export const ToggleNotificationsContainer = styled.div`
 `;
 
 export const MessageIconContainer = styled.div`
-  color: ${props => props.theme.brand.alt};
+  color: ${props => props.theme.text.alt};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  padding: 0 16px;
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;

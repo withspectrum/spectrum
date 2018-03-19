@@ -11,11 +11,12 @@ import getCommunityMembersQuery, {
 } from 'shared/graphql/queries/community/getCommunityMembers';
 import { FlexCol } from 'src/components/globals';
 import { Card } from 'src/components/card';
-import { LoadingList, LoadingListItem } from 'src/components/loading';
+import { Loading, LoadingListItem } from 'src/components/loading';
 import { UserListItem } from 'src/components/listItems';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import { MessageIconContainer } from '../style';
+import { MessageIconContainer, UserListItemContainer } from '../style';
+import GranularUserProfile from '../../../components/granularUserProfile';
 
 type Props = {
   data: {
@@ -26,6 +27,7 @@ type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
   history: Object,
+  currentUser: ?Object,
 };
 
 type State = {
@@ -57,7 +59,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
   }
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading, currentUser } = this.props;
     const { scrollElement } = this.state;
 
     if (community) {
@@ -71,9 +73,9 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           loadMore={this.props.data.fetchMore}
           hasMore={hasNextPage}
           loader={
-            <div style={{ padding: '0 16px', background: '#fff' }}>
+            <UserListItemContainer>
               <LoadingListItem />
-            </div>
+            </UserListItemContainer>
           }
           useWindow={false}
           initialLoad={false}
@@ -83,19 +85,31 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           {nodes.map(node => {
             if (!node) return null;
             return (
-              <div
-                style={{ padding: '0 16px', background: '#fff' }}
-                key={node.user.id}
-              >
-                <UserListItem key={node.user.id} user={node.user}>
-                  <MessageIconContainer>
-                    <Icon
-                      glyph={'message'}
-                      onClick={() => this.initMessage(node.user)}
-                    />
-                  </MessageIconContainer>
-                </UserListItem>
-              </div>
+              <UserListItemContainer key={node.user.id}>
+                <GranularUserProfile
+                  id={node.user.id}
+                  name={node.user.name}
+                  username={node.user.username}
+                  description={node.user.description}
+                  isCurrentUser={currentUser && node.user.id === currentUser.id}
+                  isOnline={node.user.isOnline}
+                  onlineSize={'small'}
+                  reputation={node.reputation}
+                  profilePhoto={node.user.profilePhoto}
+                  avatarSize={'40'}
+                  badges={node.roles}
+                >
+                  {currentUser &&
+                    node.user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(node.user)}
+                        />
+                      </MessageIconContainer>
+                    )}
+                </GranularUserProfile>
+              </UserListItemContainer>
             );
           })}
         </InfiniteList>
@@ -103,7 +117,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
     }
 
     if (isLoading) {
-      return <LoadingList />;
+      return <Loading />;
     }
 
     return (
@@ -117,8 +131,11 @@ class CommunityMemberGrid extends React.Component<Props, State> {
   }
 }
 
+const map = state => ({ currentUser: state.users.currentUser });
+
 export default compose(
-  connect(),
+  // $FlowIssue
+  connect(map),
   withRouter,
   getCommunityMembersQuery,
   viewNetworkHandler
