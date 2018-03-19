@@ -35,6 +35,7 @@ Spectrum has been under full-time development since March 2017, and is continuou
   - [Codebase](#codebase)
     - [Technologies](#technologies)
     - [Folder Structure](#folder-structure)
+    - [Code Style](#code-style)
   - [First time setup](#first-time-setup)
   - [Running the app locally](#running-the-app-locally)
 - Technical
@@ -72,11 +73,6 @@ Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local
 
 ### Codebase
 
-- [Technologies](#technologies)
-- [Folder structure](#folder-structure)
-- [First time setup](#first-time-setup)
-- [Running the app locally](#running-the-app-locally)
-
 #### Technologies
 
 With the ground rules out of the way, let's talk about the coarse architecture of this mono repo:
@@ -89,6 +85,7 @@ Here is a list of all the big technologies we use:
 - **RethinkDB**: Data storage
 - **Redis**: Background jobs and caching
 - **GraphQL**: API, powered by the entire Apollo toolchain
+- **Flowtype**: Type-safe JavaScript
 - **PassportJS**: Authentication
 - **React**: Frontend and mobile apps
 - **Expo**: Mobile apps
@@ -131,6 +128,15 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 </details>
 
 <br />
+
+#### Code Style
+
+We run Prettier on-commit, which means you can write code in whatever style you want and it will be automatically formatted according to the common style when you run `git commit`. We also have ESLint setup, although we've disabled all stylistic rules since Prettier takes care of those.
+
+##### Rules
+
+- **All new `.js` files must be flow typed**: Since we only introduced Flowtype after we finished building the first version of Spectrum, we enforce in CI that all new files added to the codebase are typed. (if you've never used Flowtype before that's totally fine, just write your code in plain JS and let us know in the PR body, we can take care of it for you)
+- **No `console.log`s in any file**: We use the `debug` module across the codebase to log debugging information in development only. Never commit a file that contains a `console.log` as CI will fail your build. The only exceptions are errors, which you can log, but you have to use `console.error` to be explicit about it
 
 <div align="center">
   <img height="70px" src="public/img/cluster-3.svg" />
