@@ -30,7 +30,7 @@ export const __createChannelPendingMembersLoader = createLoader(
 
 export const __createChannelSettingsLoader = createLoader(
   channelIds => getChannelsSettings(channelIds),
-  key => (Array.isArray(key) ? `${key.channelId}` : key.channelId)
+  key => key.channelId
 );
 
 export default () => {

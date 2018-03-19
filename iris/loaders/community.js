@@ -35,7 +35,7 @@ export const __createCommunityChannelCountLoader = createLoader(
 
 export const __createCommunitySettingsLoader = createLoader(
   communityIds => getCommunitiesSettings(communityIds),
-  key => (Array.isArray(key) ? `${key.communityId}` : key.communityId)
+  key => key.communityId
 );
 
 export default () => {
