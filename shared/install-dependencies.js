@@ -23,7 +23,6 @@ const workerDirs = rootDirs.filter(dir => {
 });
 
 const installDeps = (dir, callback) => {
-  console.log(`Installing dependencies in ${dir}/...`);
   const stream = spawn(
     'yarn',
     ['install', '--no-progress', '--non-interactive'],
@@ -31,7 +30,6 @@ const installDeps = (dir, callback) => {
   );
 
   stream.on('close', code => {
-    console.log(`Finished installing dependencies in ${dir}/.`);
     callback();
   });
 };
