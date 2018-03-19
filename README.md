@@ -180,6 +180,18 @@ yarn run db:seed
 # ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
 ```
 
+#### Getting the secrets
+
+While the app will run without any secrets set up, you won't be able to sign in locally. To get that set up, copy the provided example secrets file to the real location:
+
+```
+cp now-secrets.example.json now-secrets.json
+```
+
+> Note: If you're an employee at Spectrum we've got a more complete list of secrets that also lets you upload images etc. in 1Password, search for "now-secrets.json" to find it.
+
+Now you're ready to run the app locally and sign into your local instance!
+
 ### Running the app locally
 
 #### Background services
