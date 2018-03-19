@@ -41,16 +41,19 @@ export default async (
 
   if (!channel) return new UserError('No channel found in this community');
 
-  const [communityPermissions, channelPermissions] = await Promise.all([
-    getUserPermissionsInCommunity(channel.communityId, currentUser.id),
-    getUserPermissionsInChannel(channel.id, currentUser.id),
-  ]);
-
-  const settings = await getChannelSettings(channel.id);
-
   if (!channel.isPrivate) {
     return channel;
   }
+
+  const [
+    communityPermissions,
+    channelPermissions,
+    settings,
+  ] = await Promise.all([
+    getUserPermissionsInCommunity(channel.communityId, currentUser.id),
+    getUserPermissionsInChannel(channel.id, currentUser.id),
+    getChannelSettings(channel.id),
+  ]);
 
   if (
     channelPermissions.isOwner ||
