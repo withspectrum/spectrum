@@ -30,8 +30,24 @@ export const getChannelsSettings = (
   return db
     .table('channelSettings')
     .getAll(...channelIds, { index: 'channelId' })
-    .group('channelId')
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0)
+        return Array.from({ length: channelIds.length }, (_, index) => ({
+          ...defaultSettings,
+          channelId: channelIds[index],
+        }));
+
+      return data.map(
+        (rec, index) =>
+          rec
+            ? rec
+            : {
+                ...defaultSettings,
+                channelId: channelIds[index],
+              }
+      );
+    });
 };
 
 export const createChannelSettings = (id: string) => {

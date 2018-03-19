@@ -31,8 +31,9 @@ export default async (
     return new UserError("You don't have permission to do this.");
   }
 
-  const hasSettings = settings && settings.reduction.length > 0;
-  if (hasSettings) {
+  loaders.communitySettings.clear(communityId);
+
+  if (settings) {
     return await disableCommunityBrandedLogin(communityId);
   } else {
     return await createCommunitySettings(communityId);
