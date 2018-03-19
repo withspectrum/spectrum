@@ -21,6 +21,38 @@ aliases:
       yarn
       cd ./mobile && yarn && yarn setup
 
+  - &install-rethinkdb
+    name: Install RethinkDB 2.3.5
+    command:
+      |
+        echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+        wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+        sudo apt-get update
+        sudo apt-get install rethinkdb=2.3.5~0jessie
+
+  - &start-rethinkdb
+    name: Start RethinkDB
+    command: rethinkdb --bind all
+    background: true
+
+  - &setup-and-build-web
+    name: Setup and build
+    command:
+      |
+        node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+        yarn run build:web
+        yarn run build:iris
+
+  - &start-iris
+    name: Start Iris in the background
+    command: TEST_DB=true yarn run dev:iris
+    background: true
+
+  - &start-web
+    name: Start web client in the background
+    command: yarn run dev:web
+    background: true
+
 defaults: &defaults
   working_directory: ~/spectrum
 
@@ -51,16 +83,8 @@ jobs:
           root: .
           paths: .
 
-  # Tests js of the mobile app
-  test_mobile_js:
-    <<: *js_defaults
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run: cd ./mobile && yarn test:unit
-
-  # Test the web JS
-  test_web_js:
+  # Start db and servers, then run e2e and unit tests
+  test_web:
     <<: *defaults
     docker:
       - image: circleci/node:8-browsers
@@ -71,41 +95,13 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run:
-          name: Install RethinkDB 2.3.5
-          command:
-            |
-              echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-              wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-              sudo apt-get update
-              sudo apt-get install rethinkdb=2.3.5~0jessie
-      - run:
-          name: Start RethinkDB
-          command: rethinkdb --bind all
-          background: true
+      - run: *install-rethinkdb
+      - run: *start-rethinkdb
       - run: sleep 10
-      - run:
-          name: Setup and build
-          command:
-            |
-              node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
-              yarn run build:web
-              yarn run build:iris
-      - run:
-          name: Start Iris in the background
-          command: TEST_DB=true yarn run dev:iris
-          background: true
-      - run:
-          name: Start web client in the background
-          command: yarn run dev:web
-          background: true
+      - run: *setup-and-build-web
+      - run: *start-iris
+      - run: *start-web
       - run: sleep 60
-      - run:
-          name: Run Flow
-          command: yarn run flow
-      - run:
-          name: Run ESLint
-          command: yarn run lint
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
@@ -117,6 +113,24 @@ jobs:
           when: always
           command: yarn run danger ci
 
+  # Run eslint, flow etc.
+  test_static_js:
+    <<: *js_defaults
+    steps:
+      - run:
+          name: Run Flow
+          command: yarn run flow
+      - run:
+          name: Run ESLint
+          command: yarn run lint
+
+  # Tests js of the mobile app
+  test_mobile_js:
+    <<: *js_defaults
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run: cd ./mobile && yarn test:unit
 
   # Tests native code of the mobile app
   test_mobile_native:
@@ -148,8 +162,7 @@ jobs:
 workflows:
   version: 2
 
-  # Tests mobile app
-  test_mobile:
+  test:
     jobs:
       - checkout_environment
       - test_mobile_js:
@@ -159,11 +172,9 @@ workflows:
       # - test_mobile_native:
       #     requires:
       #       - checkout_environment
-
-  # Tests web app
-  test_web:
-    jobs:
-      - checkout_environment
-      - test_web_js:
+      - test_web:
+          requires:
+            - checkout_environment
+      - test_static_js:
           requires:
             - checkout_environment
