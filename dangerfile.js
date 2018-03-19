@@ -80,6 +80,11 @@ schedule(
     created: 'fail',
     // Warn on modified untyped files
     modified: 'warn',
-    blacklist: ['flow-typed/**/*.js', 'public/**/*.js'],
+    blacklist: [
+      'flow-typed/**/*.js',
+      'public/**/*.js',
+      'iris/migrations/**/*.js',
+      'cypress/**/*.js',
+    ],
   })
 );

@@ -12,6 +12,7 @@ import {
   setUserLastSeenInDirectMessageThread,
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
+import type { FileUpload } from 'shared/types';
 
 type DMThreadInput = {
   input: {
@@ -22,12 +23,7 @@ type DMThreadInput = {
       content: {
         body: string,
       },
-      file?: {
-        name: string,
-        type: string,
-        size: number,
-        path: string,
-      },
+      file?: FileUpload,
     },
   },
 };
@@ -84,7 +80,7 @@ export default async (
       };
 
       return await storeMessage(messageWithThread, currentUser.id);
-    } else if (message.messageType === 'media') {
+    } else if (message.messageType === 'media' && message.file) {
       const url = await uploadImage(message.file, 'threads', threadId);
 
       // build a new message object with a new file field with metadata
@@ -95,9 +91,9 @@ export default async (
           body: url,
         },
         file: {
-          name: message.file && message.file.name,
-          size: message.file && message.file.size,
-          type: message.file && message.file.type,
+          name: message.file && message.file.filename,
+          size: null,
+          type: message.file && message.file.mimetype,
         },
       });
 

@@ -87,15 +87,16 @@ const sendMessageOptions = {
           );
 
           // Replace the optimistic reponse with the actual db message
-          if (messageInStore && typeof messageInStore.id === 'number') {
+          if (messageInStore && typeof messageInStore.node.id === 'number') {
             data.thread.messageConnection.edges = data.thread.messageConnection.edges.map(
               edge => {
-                if (edge.node.id === messageInStore.id)
+                if (edge.node.id === messageInStore.node.id) {
                   return {
                     ...edge,
                     cursor: btoa(addMessage.id),
                     node: addMessage,
                   };
+                }
                 return edge;
               }
             );

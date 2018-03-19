@@ -9,8 +9,5 @@ module.exports = {
   ),
   globalSetup: path.resolve(__dirname, './shared/testing/setup'),
   globalTeardown: path.resolve(__dirname, './shared/testing/teardown'),
-  testPathIgnorePatterns:
-    process.env.E2E || process.env.CI
-      ? ['/node_modules/', '/mutations/', '/mobile/']
-      : ['/node_modules/', '/mutations/', '/mobile/', '/test-e2e/'],
+  testPathIgnorePatterns: ['/node_modules/', '/mutations/', '/mobile/'],
 };

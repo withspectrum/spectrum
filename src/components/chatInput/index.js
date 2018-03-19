@@ -24,18 +24,13 @@ import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
-import {
-  PRO_USER_MAX_IMAGE_SIZE_STRING,
-  PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
-} from '../../helpers/images';
-import MediaInput from '../mediaInput';
+import MediaUploader from './components/mediaUploader';
 
 type State = {
   isFocused: boolean,
   photoSizeError: string,
   code: boolean,
+  isSendingMediaMessage: boolean,
 };
 
 type Props = {
@@ -82,6 +77,7 @@ class ChatInput extends React.Component<Props, State> {
     isFocused: false,
     photoSizeError: '',
     code: false,
+    isSendingMediaMessage: false,
   };
 
   editor: any;
@@ -90,8 +86,9 @@ class ChatInput extends React.Component<Props, State> {
     this.props.onRef(this);
   }
 
-  shouldComponentUpdate(next) {
+  shouldComponentUpdate(next, nextState) {
     const curr = this.props;
+    const currState = this.state;
 
     // User changed
     if (curr.currentUser !== next.currentUser) return true;
@@ -101,6 +98,8 @@ class ChatInput extends React.Component<Props, State> {
 
     // State changed
     if (curr.state !== next.state) return true;
+    if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
+      return true;
 
     return false;
   }
@@ -297,10 +296,10 @@ class ChatInput extends React.Component<Props, State> {
     return 'not-handled';
   };
 
-  sendMediaMessage = e => {
+  sendMediaMessage = file => {
     // eslint-disable-next-line
     let reader = new FileReader();
-    const file = e.target.files[0];
+
     const {
       thread,
       threadType,
@@ -334,30 +333,8 @@ class ChatInput extends React.Component<Props, State> {
       );
     }
 
-    if (!file) return;
-
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
-      });
-    }
-
     this.setState({
-      photoSizeError: '',
+      isSendingMediaMessage: true,
     });
 
     reader.onloadend = () => {
@@ -383,6 +360,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -390,6 +370,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       } else {
@@ -403,6 +386,9 @@ class ChatInput extends React.Component<Props, State> {
           file,
         })
           .then(() => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             return track(
               `${threadType} message`,
               'media message created',
@@ -410,6 +396,9 @@ class ChatInput extends React.Component<Props, State> {
             );
           })
           .catch(err => {
+            this.setState({
+              isSendingMediaMessage: false,
+            });
             dispatch(addToastWithTimeout('error', err.message));
           });
       }
@@ -450,6 +439,12 @@ class ChatInput extends React.Component<Props, State> {
     this.setState({ photoSizeError: '' });
   };
 
+  setMediaMessageError = (error: string) => {
+    return this.setState({
+      photoSizeError: error,
+    });
+  };
+
   render() {
     const {
       state,
@@ -457,7 +452,12 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
     } = this.props;
-    const { isFocused, photoSizeError, code } = this.state;
+    const {
+      isFocused,
+      photoSizeError,
+      code,
+      isSendingMediaMessage,
+    } = this.state;
 
     const networkDisabled =
       !networkOnline ||
@@ -485,7 +485,14 @@ class ChatInput extends React.Component<Props, State> {
             />
           </PhotoSizeError>
         )}
-        {currentUser && <MediaInput onChange={this.sendMediaMessage} />}
+        {currentUser && (
+          <MediaUploader
+            isSendingMediaMessage={isSendingMediaMessage}
+            currentUser={currentUser}
+            onValidated={this.sendMediaMessage}
+            onError={this.setMediaMessageError}
+          />
+        )}
         <IconButton
           glyph={'code'}
           onClick={this.toggleCodeMessage}
