@@ -2939,6 +2939,14 @@ danger-plugin-jest@^1.1.0:
   optionalDependencies:
     serve "^5.1.5"
 
+danger-plugin-labels@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/danger-plugin-labels/-/danger-plugin-labels-1.1.0.tgz#7d6dd4e3ca93372cac2323cd57f54c8aa1655c88"
+  dependencies:
+    github-webhook-event-types "^1.0.0"
+  optionalDependencies:
+    esdoc "^0.5.2"
+
 danger-plugin-no-console@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/danger-plugin-no-console/-/danger-plugin-no-console-1.1.2.tgz#6f5cd7797a5fc58859f5c5bed001b5db3d2a183b"
@@ -4735,6 +4743,10 @@ git-config-path@^1.0.1:
     extend-shallow "^2.0.1"
     fs-exists-sync "^0.1.0"
     homedir-polyfill "^1.0.0"
+
+github-webhook-event-types@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/github-webhook-event-types/-/github-webhook-event-types-1.0.0.tgz#54e9953e4912d2a0e844c29a9acae26ea7233e61"
 
 github@0.2.4:
   version "0.2.4"
