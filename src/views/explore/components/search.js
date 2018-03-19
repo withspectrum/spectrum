@@ -228,6 +228,7 @@ class Search extends React.Component<Props, State> {
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
+            data-e2e-id="explore-community-search-input"
             innerRef={c => {
               this.input = c;
             }}

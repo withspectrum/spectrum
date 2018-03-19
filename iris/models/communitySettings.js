@@ -29,8 +29,37 @@ export const getCommunitiesSettings = (
   return db
     .table('communitySettings')
     .getAll(...communityIds, { index: 'communityId' })
-    .group('communityId')
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0)
+        return Array.from({ length: communityIds.length }, (_, index) => ({
+          ...defaultSettings,
+          communityId: communityIds[index],
+        }));
+
+      if (data.length === communityIds.length) {
+        return data.map(
+          (rec, index) =>
+            rec
+              ? rec
+              : {
+                  ...defaultSettings,
+                  communityId: communityIds[index],
+                }
+        );
+      }
+
+      if (data.length < communityIds.length) {
+        return communityIds.map(community => {
+          const record = data.find(o => o.communityId === community);
+          if (record) return record;
+          return {
+            ...defaultSettings,
+            communityId: community,
+          };
+        });
+      }
+    });
 };
 
 export const createCommunitySettings = (id: string) => {
