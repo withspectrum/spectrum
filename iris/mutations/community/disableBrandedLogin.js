@@ -33,8 +33,7 @@ export default async (
 
   loaders.communitySettings.clear(communityId);
 
-  const hasSettings = settings && settings.reduction.length > 0;
-  if (hasSettings) {
+  if (settings) {
     return await disableCommunityBrandedLogin(communityId);
   } else {
     return await createCommunitySettings(communityId);

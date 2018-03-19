@@ -8,8 +8,7 @@ export default async (
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return loaders.channelSettings.load(id).then(result => {
-    const settings = result.reduction[0];
+  return loaders.channelSettings.load(id).then(settings => {
     return settings.joinSettings;
   });
 };

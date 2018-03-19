@@ -40,8 +40,7 @@ export default async (
 
   loaders.communitySettings.clear(communityId);
 
-  const hasSettings = settings && settings.reduction.length > 0;
-  if (hasSettings) {
+  if (settings) {
     return await updateCommunityBrandedLoginMessage(communityId, message);
   } else {
     return await createCommunitySettings(communityId).then(

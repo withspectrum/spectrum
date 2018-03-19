@@ -34,8 +34,7 @@ export default async (
 
   loaders.channelSettings.clear(channelId);
 
-  const hasSettings = settings && settings.reduction.length > 0;
-  if (hasSettings) {
+  if (settings) {
     return await resetChannelJoinToken(channelId);
   } else {
     return await createChannelSettings(channelId).then(

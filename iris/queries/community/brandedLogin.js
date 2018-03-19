@@ -8,8 +8,7 @@ export default async (
   _: any,
   { loaders }: GraphQLContext
 ) => {
-  return await loaders.communitySettings.load(id).then(res => {
-    const settings = res.reduction[0];
+  return await loaders.communitySettings.load(id).then(settings => {
     return settings.brandedLogin;
   });
 };
