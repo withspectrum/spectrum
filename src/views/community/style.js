@@ -231,3 +231,11 @@ export const ToggleNotificationsContainer = styled.div`
   cursor: pointer;
   ${Tooltip};
 `;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.brand.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
