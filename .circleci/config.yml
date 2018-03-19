@@ -117,6 +117,8 @@ jobs:
   test_static_js:
     <<: *js_defaults
     steps:
+      - attach_workspace:
+          at: ~/spectrum
       - run:
           name: Run Flow
           command: yarn run flow
