@@ -4,6 +4,7 @@
  * This is using react-app-rewired by @timarney
  */
 
+const debug = require('debug')('build:config-overrides');
 const webpack = require('webpack');
 const { injectBabelPlugin } = require('react-app-rewired');
 const rewireStyledComponents = require('react-app-rewire-styled-components');
@@ -135,7 +136,7 @@ module.exports = function override(config, env) {
     })
   );
   if (process.env.ANALYZE_BUNDLE === 'true') {
-    console.log('Bundle analyzer enabled');
+    debug('Bundle analyzer enabled');
     config.plugins.push(
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
