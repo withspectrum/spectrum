@@ -32,6 +32,9 @@ export default async (
   }
 
   const hasSettings = settings && settings.reduction.length > 0;
+
+  loaders.communitySettings.clear(communityId);
+
   if (hasSettings) {
     return await enableCommunityBrandedLogin(communityId);
   } else {
