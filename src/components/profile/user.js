@@ -153,19 +153,6 @@ const UserWithData = ({
               />
             </FullDescription>
           )}
-
-          {!user.isPro &&
-            currentUser &&
-            user.id === currentUser.id && (
-              <ProUpgrade>
-                <Button
-                  onClick={() => triggerUpgrade()}
-                  gradientTheme={'success'}
-                >
-                  Upgrade to Pro
-                </Button>
-              </ProUpgrade>
-            )}
         </FullProfile>
       );
     case 'simple':
