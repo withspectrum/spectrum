@@ -976,14 +976,12 @@ export const LoadingScreen = (): React$Element<any> => (
       <LoadingCoverPhoto />
       <Meta>
         <LoadingProfile />
-        <LoadingList />
       </Meta>
       <GridContent>
-        <LoadingComposer />
-        <LoadingFeed />
+        <Loading />
       </GridContent>
       <Extras>
-        <LoadingList />
+        <Loading />
       </Extras>
     </Grid>
   </LoadingScreenContainer>
