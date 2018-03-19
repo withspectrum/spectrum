@@ -127,8 +127,6 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 
 </details>
 
-<br />
-
 #### Code Style
 
 We run Prettier on-commit, which means you can write code in whatever style you want and it will be automatically formatted according to the common style when you run `git commit`. We also have ESLint setup, although we've disabled all stylistic rules since Prettier takes care of those.
@@ -158,7 +156,7 @@ Spectrum has four big installation steps:
 2. **Install Redis**: See [the Redis documentation](https://redis.io/download) for instructions on installing it with your OS.
 3. **Install yarn**: We use [yarn](https://yarnpkg.com) to handle our JavaScript dependencies. (plain `npm` doesn't work due to our monorepo setup) See [the yarn documentation](https://yarnpkg.com/en/docs/install) for instructions on installing it.
 
-Once you have RethinkDB, Redis and yarn installed locally its time to install the JavaScript dependencies. Because it's pretty tedious to install the dependencies for each worker individually we've created a script that goes through and runs `yarn install` for every worker for you:
+Once you have RethinkDB, Redis and yarn installed locally its time to install the JavaScript dependencies. Because it's pretty tedious to install the dependencies for each worker individually we've created a script that goes through and runs `yarn install` for every worker for you: (this takes a couple minutes, so dive into the [technical docs](./docs) in the meantime)
 
 ```sh
 node shared/install-dependencies.js

@@ -1,5 +1,4 @@
 const path = require('path');
-const ManifestPlugin = require('webpack-module-manifest-plugin');
 
 const dir = process.env.DIR;
 
@@ -27,11 +26,6 @@ module.exports = {
         ])
       );
     }
-    config.plugins.push(
-      new ManifestPlugin({
-        filename: './build/server.manifest.json',
-      })
-    );
     // Tell Sentry which server the errors are coming from
     config.plugins.push(
       new webpack.DefinePlugin({
