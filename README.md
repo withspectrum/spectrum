@@ -12,9 +12,9 @@ This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every s
 
 ### Vision
 
-It is difficult to grow, moderate and measure communities with existing platforms. Users want modern, chat-based communities but they're running into scaling issues beyond a couple hundred members.
+It is difficult to grow, manage and measure the impact of online communities. Community owners need modern, chat-based communities but are running into scaling issues when their community grows beyond a few hundred members. It becomes hard to keep track of who's who, know what conversations are happening, and ensure that the community is staying healthy and productive.
 
-Spectrum aims to be the best platform for communities of any kind and size by combining the best of web 2.0 forums and real-time chat apps. Best-in-class moderation tooling, a single platform for all your communities, threaded conversations by default, community health monitoring and much more to come.
+Spectrum aims to be the best platform to build any kind of community online by combining the best of web 2.0 forums and real-time chat apps. With best-in-class moderation tooling, a single platform for all your communities, threaded conversations by default, community health monitoring (and much more to come), we think that we will be able to help more people start and grow the best online communities.
 
 > "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and iteract. Except realtime and trolling-free."
 >
@@ -22,7 +22,7 @@ Spectrum aims to be the best platform for communities of any kind and size by co
 
 ### Status
 
-Spectrum has been under full-time development since March 2017, and is continuously being improved. See [the roadmap](TK) for up-to-date information about our current areas of focus.
+Spectrum has been under full-time development since March, 2017. See [the roadmap](TK) for up-to-date information about our current areas of focus.
 
 <div align="center">
   <img height="50px" src="public/img/cluster-1.svg" />
@@ -58,14 +58,17 @@ That being said, this codebase isn't your typical open source project because it
 
 #### Reporting a bug or discussing a feature idea
 
-If you found a technical bug on Spectrum or have ideas for features we should implement this issue tracker is the best place to put them. Make sure to follow the issue template and you should be golden! ([click here to open a new issue](https://github.com/withspectrum/spectrum/issues/new))
+If you found a technical bug on Spectrum or have ideas for features we should implement, the issue tracker is the best place to share your ideas. Make sure to follow the issue template and you should be golden! ([click here to open a new issue](https://github.com/withspectrum/spectrum/issues/new))
 
 #### Fixing a bug or implementing a new feature
 
-If you find a bug on Spectrum and open a PR that fixes it we'll likely merge it given it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in our roadmap and plans for the app. (we'll likely close a PR implementing a feature that wasn't explicitly whitelisted as something we want)
+If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in our roadmap and plans for the app.
 
 Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local setup instructions](#first-time-setup)!
 
+#### Contributions and discussion guidelines
+
+All conversations and communities on Spectrum agree to our underlying [code of conduct](https://github.com/withspectrum/code-of-conduct). This code of conduct also applies to all conversations that happen within our contributor community here on GitHub. We expect discussions in issues and pull requests to stay positive, productive, and respectful. Remember: there are real people on the other side of that screen!
 
 <div align="center">
   <img height="70px" src="public/img/cluster-2.svg" />
