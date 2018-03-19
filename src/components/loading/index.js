@@ -34,6 +34,7 @@ import {
   LogoLink,
   Logo,
   Grid,
+  GridProfile,
   Meta,
   GridContent,
   Extras,
@@ -972,7 +973,7 @@ export const LoadingSelect = () => (
 
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
-    <Grid>
+    <GridProfile>
       <LoadingCoverPhoto />
       <Meta>
         <LoadingProfile />
@@ -980,10 +981,7 @@ export const LoadingScreen = (): React$Element<any> => (
       <GridContent>
         <Loading />
       </GridContent>
-      <Extras>
-        <Loading />
-      </Extras>
-    </Grid>
+    </GridProfile>
   </LoadingScreenContainer>
 );
 

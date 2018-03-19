@@ -374,6 +374,34 @@ export const Grid = styled.div`
   }
 `;
 
+export const GridProfile = styled.div`
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) 3fr;
+  grid-template-rows: 160px 1fr;
+  grid-template-areas: 'cover cover' 'meta content';
+  grid-column-gap: 32px;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: ${props => props.theme.bg.default};
+
+  @media (max-width: 1028px) {
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas: 'cover cover' 'meta content';
+  }
+
+  @media (max-width: 768px) {
+    grid-template-rows: 80px auto 1fr;
+    grid-template-columns: 100%;
+    grid-column-gap: 0;
+    grid-row-gap: 16px;
+    grid-template-areas: 'cover' 'meta' 'content';
+  }
+`;
+
 const Column = styled.div`
   display: flex;
   flex-direction: column;

@@ -55,7 +55,7 @@ class ChannelList extends React.Component<Props> {
       data: { community },
     } = this.props;
 
-    if (community && community.id) {
+    if (community && community.channelConnection) {
       const { isMember, isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
@@ -81,8 +81,6 @@ class ChannelList extends React.Component<Props> {
 
       return (
         <StyledCard largeOnly>
-          <ColumnHeading>Channels</ColumnHeading>
-
           {/*
             user isn't logged in, channel list is used for navigation
             or
@@ -205,7 +203,11 @@ class ChannelList extends React.Component<Props> {
     }
 
     if (isLoading) {
-      return <LoadingCard />;
+      return (
+        <div style={{ padding: '32px' }}>
+          <Loading />
+        </div>
+      );
     }
 
     return null;
