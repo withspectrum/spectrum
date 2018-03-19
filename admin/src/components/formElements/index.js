@@ -24,7 +24,7 @@ type InputProps = {
   defaultValue?: ?string,
   placeholder?: string,
   onChange?: Function,
-  autofocus?: boolean,
+  autoFocus?: boolean,
   checked?: boolean,
   disabled?: boolean,
   id?: string,
@@ -40,7 +40,7 @@ export const Input = (props: InputProps) => {
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         onChange={props.onChange}
-        autofocus={props.autofocus}
+        autoFocus={props.autoFocus}
         disabled={props.disabled}
       />
     </StyledLabel>
@@ -118,7 +118,7 @@ export const TextArea = (props: InputProps) => {
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
         onChange={props.onChange}
-        autofocus={props.autofocus}
+        autoFocus={props.autoFocus}
       />
     </StyledLabel>
   );
@@ -135,7 +135,7 @@ export class UnderlineInput extends Component {
           placeholder={this.props.placeholder}
           value={this.props.value || this.props.defaultValue}
           onChange={this.props.onChange}
-          autofocus={this.props.autofocus}
+          autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
         />
       </StyledPrefixLabel>
