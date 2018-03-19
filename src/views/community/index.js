@@ -195,8 +195,9 @@ class CommunityView extends React.Component<Props, State> {
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
-                  <LoginButton>Join {community.name}</LoginButton>
-
+                  <ProfileCTA isMember={false}>
+                    Join {community.name}
+                  </ProfileCTA>
                 </Link>
               ) : !isOwner ? (
                 <ToggleCommunityMembership

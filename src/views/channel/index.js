@@ -228,8 +228,7 @@ class ChannelView extends React.Component<Props, State> {
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
-                  <LoginButton>Join {channel.name}</LoginButton>
-
+                  <ProfileCTA isMember={false}>Join {channel.name}</ProfileCTA>
                 </Link>
               ) : !isGlobalOwner ? (
                 <ToggleChannelMembership
