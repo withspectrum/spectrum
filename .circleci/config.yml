@@ -21,6 +21,38 @@ aliases:
       yarn
       cd ./mobile && yarn && yarn setup
 
+  - &install-rethinkdb
+    name: Install RethinkDB 2.3.5
+    command:
+      |
+        echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+        wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+        sudo apt-get update
+        sudo apt-get install rethinkdb=2.3.5~0jessie
+
+  - &start-rethinkdb
+    name: Start RethinkDB
+    command: rethinkdb --bind all
+    background: true
+
+  - &setup-and-build-web
+    name: Setup and build
+    command:
+      |
+        node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+        yarn run build:web
+        yarn run build:iris
+
+  - &start-iris
+    name: Start Iris in the background
+    command: TEST_DB=true yarn run dev:iris
+    background: true
+
+  - &start-web
+    name: Start web client in the background
+    command: yarn run dev:web
+    background: true
+
 defaults: &defaults
   working_directory: ~/spectrum
 
@@ -50,6 +82,49 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: .
+
+  # Start db and servers, then run e2e and unit tests
+  test_web:
+    <<: *defaults
+    docker:
+      - image: circleci/node:8-browsers
+      - image: redis:3.2.7
+      - image: cypress/base:6
+    environment:
+      TERM: xterm
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run: *install-rethinkdb
+      - run: *start-rethinkdb
+      - run: sleep 10
+      - run: *setup-and-build-web
+      - run: *start-iris
+      - run: *start-web
+      - run: sleep 60
+      - run:
+          name: Run Unit Tests
+          command: yarn run test:ci
+      - run:
+          name: Run E2E Tests
+          command: yarn run test:e2e
+      - run:
+          name: Danger
+          when: always
+          command: yarn run danger ci
+
+  # Run eslint, flow etc.
+  test_static_js:
+    <<: *js_defaults
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run:
+          name: Run Flow
+          command: yarn run flow
+      - run:
+          name: Run ESLint
+          command: yarn run lint
 
   # Tests js of the mobile app
   test_mobile_js:
@@ -89,8 +164,7 @@ jobs:
 workflows:
   version: 2
 
-  # Tests mobile app
-  test_mobile:
+  test:
     jobs:
       - checkout_environment
       - test_mobile_js:
@@ -100,3 +174,9 @@ workflows:
       # - test_mobile_native:
       #     requires:
       #       - checkout_environment
+      - test_web:
+          requires:
+            - checkout_environment
+      - test_static_js:
+          requires:
+            - checkout_environment

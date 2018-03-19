@@ -41,6 +41,15 @@ export type DBCommunitySettings = {
   },
 };
 
+export type DBChannelSettings = {
+  id: string,
+  channelId: string,
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: string,
+  },
+};
+
 export type DBCuratedContent = {
   type: string,
   id: string,
@@ -358,4 +367,11 @@ export type DBExpoPushSubscription = {
   id: string,
   token: string,
   userId: string,
+};
+
+export type FileUpload = {
+  filename: string,
+  mimetype: string,
+  encoding: string,
+  stream: any,
 };

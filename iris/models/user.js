@@ -4,7 +4,7 @@ import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
 import { sendNewUserWelcomeEmailQueue } from 'shared/bull/queues';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBUser } from 'shared/types';
+import type { DBUser, FileUpload } from 'shared/types';
 
 type GetUserInput = {
   id?: string,
@@ -184,7 +184,7 @@ const createOrFindUser = (
     })
     .catch(err => {
       if (user.id) {
-        console.log(err);
+        console.error(err);
         return new Error(`No user found for id ${user.id}.`);
       }
       return storeUser(user);
@@ -246,11 +246,11 @@ const getUsersThreadCount = (
 
 export type EditUserInput = {
   input: {
-    file?: any,
+    file?: FileUpload,
     name?: string,
     description?: string,
     website?: string,
-    coverFile?: string,
+    coverFile?: FileUpload,
     username?: string,
     timezone?: number,
   },
