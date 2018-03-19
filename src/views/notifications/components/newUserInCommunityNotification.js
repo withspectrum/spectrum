@@ -21,6 +21,7 @@ import {
 } from '../../../components/threadFeedCard/style';
 import compose from 'recompose/compose';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
+import { DEFAULT_DEPRECATION_REASON } from 'graphql';
 
 type Props = {
   notification: Object,
@@ -36,6 +37,9 @@ export class NewUserInCommunityNotification extends React.Component<Props> {
     const event = parseEvent(notification.event);
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
+
+    if (!actors.asString || !actors.asObjects || actors.asObjects.length === 0)
+      return null;
 
     return (
       <NotificationCard>
@@ -79,6 +83,9 @@ class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
     const event = parseEvent(notification.event);
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
+
+    if (!actors.asString || !actors.asObjects || actors.asObjects.length === 0)
+      return null;
 
     return (
       <NotificationListRow
