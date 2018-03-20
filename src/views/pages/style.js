@@ -323,6 +323,10 @@ export const NavContainer = styled.div`
   grid-template-columns: auto;
   grid-template-areas: 'tabs' 'goop';
   grid-area: nav;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 export const Tabs = styled.div`

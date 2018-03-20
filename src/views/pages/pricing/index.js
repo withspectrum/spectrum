@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { track } from 'src/helpers/events';
-import { PageFooter } from '../view';
+import PageFooter from '../components/footer';
 import Nav from '../components/nav';
 import { Wrapper } from '../style';
 import FreeFeaturesList from './components/freeFeaturesList';

@@ -2,14 +2,8 @@
 import * as React from 'react';
 import { track } from 'src/helpers/events';
 import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
-import {
-  Overview,
-  Centralized,
-  CommunitySearch,
-  Chat,
-  Yours,
-  PageFooter,
-} from '../view';
+import { Overview, Centralized, CommunitySearch, Chat, Yours } from '../view';
+import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 
 type State = {

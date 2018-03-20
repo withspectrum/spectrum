@@ -23,7 +23,6 @@ import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
-
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -108,8 +107,8 @@ const NewCommunity = Loadable({
 });
 
 /* prettier-ignore */
-const Splash = Loadable({
-  loader: () => import('./views/pages/home'/* webpackChunkName: "Splash" */),
+const Pages = Loadable({
+  loader: () => import('./views/pages'/* webpackChunkName: "Splash" */),
   loading: ({ isLoading }) => isLoading && null,
 });
 
@@ -117,18 +116,6 @@ const Splash = Loadable({
 const Search = Loadable({
   loader: () => import('./views/search'/* webpackChunkName: "Search" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
-});
-
-/* prettier-ignore */
-const Pricing = Loadable({
-  loader: () => import('./views/pages/pricing'/* webpackChunkName: "Pricing" */),
-  loading: ({ isLoading }) => isLoading && null,
-});
-
-/* prettier-ignore */
-const Support = Loadable({
-  loader: () => import('./views/pages/support'/* webpackChunkName: "Support" */),
-  loading: ({ isLoading }) => isLoading && null,
 });
 
 /* prettier-ignore */
@@ -149,7 +136,7 @@ const Body = styled(FlexCol)`
   }
 `;
 
-const DashboardFallback = signedOutFallback(Dashboard, Splash);
+const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
@@ -221,24 +208,26 @@ class Routes extends React.Component<{}> {
                 <Route exact path="/home" component={HomeFallback} />
 
                 {/* Public Business Pages */}
-                <Route path="/about" component={Splash} />
-                <Route path="/contact" component={Support} />
-                <Route path="/terms" component={Support} />
-                <Route path="/privacy" component={Support} />
-                <Route path="/terms.html" component={Support} />
-                <Route path="/privacy.html" component={Support} />
-                <Route path="/code-of-conduct" component={Support} />
-                <Route path="/pricing" component={Pricing} />
-                <Route path="/support" component={Support} />
-                <Route path="/new/search" component={Search} />
+                <Route path="/about" component={Pages} />
+                <Route path="/contact" component={Pages} />
+                <Route path="/terms" component={Pages} />
+                <Route path="/privacy" component={Pages} />
+                <Route path="/terms.html" component={Pages} />
+                <Route path="/privacy.html" component={Pages} />
+                <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing" component={Pages} />
+                <Route path="/support" component={Pages} />
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
                 <Route path="/new/thread" component={Composer} />
+                <Route path="/new/search" component={Search} />
+
                 <Route
                   path="/new"
                   render={() => <Redirect to="/new/community" />}
                 />
+
                 <Route path="/login" component={Login} />
                 <Route path="/explore" component={Explore} />
                 <Route path="/messages/new" component={MessagesFallback} />
