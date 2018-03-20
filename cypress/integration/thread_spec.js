@@ -35,7 +35,7 @@ describe('Thread View', () => {
   });
 });
 
-describe.only('/new/thread', () => {
+describe('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id);
     cy.visit('/new/thread');
