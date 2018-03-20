@@ -20,7 +20,7 @@ describe('Community Settings View', () => {
       cy.visit(`/${community.slug}/settings`);
     });
 
-    it('should render the settings overview', () => {
+    it('should render the settings overview and allow editing the community metadata', () => {
       cy.get('[data-e2e-id="community-settings"]').should('be.visible');
       cy.contains('Channels');
       // Make sure all channels are listed and link to their settings
@@ -32,70 +32,51 @@ describe('Community Settings View', () => {
       cy.get(`[href*="settings/analytics"]`).should('be.visible');
       cy.get(`[href*="settings/billing"]`).should('be.visible');
       cy.get(`[href*="settings/members"]`).should('be.visible');
-    });
 
-    it('should allow changing the community name', () => {
+      // Editing
       const name = 'text';
+      const description = 'text';
       // Change name
       cy
         .get('[data-e2e-id="community-settings-name-input"]')
         .clear()
-        .type(`${name}{enter}`);
-      cy.location('pathname').should('eq', `/${community.slug}`);
-      cy.contains(name);
-      // Revert name change again
-      cy.visit(`/${community.slug}/settings`);
-      cy
-        .get('[data-e2e-id="community-settings-name-input"]')
-        .clear()
-        .type(community.name + '{enter}');
-      cy.location('pathname').should('eq', `/${community.slug}`);
-      cy.contains(community.name);
-    });
-
-    it('should allow changing the community description', () => {
-      const description = 'text';
+        .type(`${name}`);
       // Change description
       cy
         .get('[data-e2e-id="community-settings-description-input"]')
         .clear()
         .type(description);
-      // TODO(@mxstbr): Make description input submit on enter
-      cy.get('button[type="submit"]').click();
-      cy.location('pathname').should('eq', `/${community.slug}`);
-      cy.contains(description);
-      // Revert description change again
-      cy.visit(`/${community.slug}/settings`);
-      cy
-        .get('[data-e2e-id="community-settings-description-input"]')
-        .clear()
-        .type(community.description);
-      // TODO(@mxstbr): Make description input submit on enter
-      cy.get('button[type="submit"]').click();
-      cy.location('pathname').should('eq', `/${community.slug}`);
-      cy.contains(community.description);
-    });
-
-    it('should allow changing the community website', () => {
       const website = 'https://mxstbr.com/bla';
       // Change website
       cy
         .get('[data-e2e-id="community-settings-website-input"]')
         .clear()
         .type(website);
-      // TODO(@mxstbr): Make website input submit on enter
+      // Submit changes
       cy.get('button[type="submit"]').click();
       cy.location('pathname').should('eq', `/${community.slug}`);
+      // Make sure changes were applied
+      cy.contains(description);
+      cy.contains(name);
       cy.contains(website);
-      // Revert website change again
+      // Revert changes
       cy.visit(`/${community.slug}/settings`);
+      cy
+        .get('[data-e2e-id="community-settings-name-input"]')
+        .clear()
+        .type(community.name);
+      cy
+        .get('[data-e2e-id="community-settings-description-input"]')
+        .clear()
+        .type(community.description);
       cy
         .get('[data-e2e-id="community-settings-website-input"]')
         .clear()
         .type(community.website);
-      // TODO(@mxstbr): Make website input submit on enter
       cy.get('button[type="submit"]').click();
       cy.location('pathname').should('eq', `/${community.slug}`);
+      cy.contains(community.name);
+      cy.contains(community.description);
       cy.contains(community.website);
     });
   });
@@ -105,7 +86,7 @@ describe('Community Settings View', () => {
       cy.auth(ownerId);
     });
 
-    it('should be reachable from the overview and have a list of the members', () => {
+    it('should have a list of the members', () => {
       cy.visit(`/${community.slug}/settings`);
       cy
         .get(`[href="/${community.slug}/settings/members"]`)
