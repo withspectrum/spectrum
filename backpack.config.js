@@ -1,10 +1,10 @@
 const path = require('path');
-const ManifestPlugin = require('webpack-module-manifest-plugin');
+const debug = require('debug')('build:backpack');
 
 const dir = process.env.DIR;
 
 if (!dir) throw new Error('Define directory to build with the -d option.');
-console.log(
+debug(
   `> Building ${dir}, entry: ${dir}/index.js, output: build-${dir}/main.js`
 );
 
@@ -27,11 +27,6 @@ module.exports = {
         ])
       );
     }
-    config.plugins.push(
-      new ManifestPlugin({
-        filename: './build/server.manifest.json',
-      })
-    );
     // Tell Sentry which server the errors are coming from
     config.plugins.push(
       new webpack.DefinePlugin({

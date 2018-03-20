@@ -13,6 +13,7 @@ import blockedUsers from './blockedUsers';
 import moderators from './moderators';
 import owners from './owners';
 import isArchived from './isArchived';
+import joinSettings from './joinSettings';
 
 module.exports = {
   Query: {
@@ -31,5 +32,6 @@ module.exports = {
     moderators,
     owners,
     isArchived,
+    joinSettings,
   },
 };

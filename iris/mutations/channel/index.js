@@ -8,6 +8,10 @@ import togglePendingUser from './togglePendingUser';
 import unblockUser from './unblockUser';
 import archiveChannel from './archiveChannel';
 import restoreChannel from './restoreChannel';
+import joinChannelWithToken from './joinChannelWithToken';
+import enableChannelTokenJoin from './enableChannelTokenJoin';
+import disableChannelTokenJoin from './disableChannelTokenJoin';
+import resetChannelJoinToken from './resetChannelJoinToken';
 
 module.exports = {
   Mutation: {
@@ -20,5 +24,9 @@ module.exports = {
     unblockUser,
     archiveChannel,
     restoreChannel,
+    joinChannelWithToken,
+    enableChannelTokenJoin,
+    disableChannelTokenJoin,
+    resetChannelJoinToken,
   },
 };

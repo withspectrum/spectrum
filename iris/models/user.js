@@ -184,7 +184,7 @@ const createOrFindUser = (
     })
     .catch(err => {
       if (user.id) {
-        console.log(err);
+        console.error(err);
         return new Error(`No user found for id ${user.id}.`);
       }
       return storeUser(user);

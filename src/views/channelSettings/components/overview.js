@@ -9,7 +9,7 @@ import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
-// import { ChannelInvitationForm } from '../../../components/emailInvitationForm';
+import LoginTokenSettings from './loginTokenSettings';
 
 type Props = {
   community: Object,
@@ -27,16 +27,10 @@ class Overview extends React.Component<Props> {
         <Column>
           <EditForm channel={channel} />
           <ArchiveForm channel={channel} />
+          {channel.isPrivate && (
+            <LoginTokenSettings id={channel.id} channel={channel} />
+          )}
         </Column>
-
-        {/*channel.isPrivate && (
-          // <Column>
-          //   <SectionCard>
-          //     <SectionTitle>Invite by email</SectionTitle>
-          //     <ChannelInvitationForm community={community} />
-          //   </SectionCard>
-          // </Column>
-        )*/}
 
         <Column>
           {channel.isPrivate && (

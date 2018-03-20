@@ -49,6 +49,15 @@ export type DBCommunitySettings = {
   },
 };
 
+export type DBChannelSettings = {
+  id: string,
+  channelId: string,
+  joinSettings: {
+    tokenJoinEnabled: boolean,
+    token: string,
+  },
+};
+
 export type DBCuratedContent = {
   type: string,
   id: string,

@@ -20,6 +20,7 @@ import {
   __createChannelMemberCountLoader,
   __createChannelThreadCountLoader,
   __createChannelPendingMembersLoader,
+  __createChannelSettingsLoader,
 } from './channel';
 import {
   __createCommunityLoader,
@@ -58,6 +59,7 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   channelMemberCount: __createChannelMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
   channelPendingUsers: __createChannelPendingMembersLoader(options),
+  channelSettings: __createChannelSettingsLoader(options),
   community: __createCommunityLoader(options),
   communityBySlug: __createCommunityBySlugLoader(options),
   communityRecurringPayments: __createCommunityRecurringPaymentsLoader(options),
