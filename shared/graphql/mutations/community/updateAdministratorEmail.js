@@ -10,7 +10,6 @@ export type UpdateAdministratorEmailType = {
       ...$Exact<CommunityInfoType>,
       billingSettings: {
         administratorEmail: ?string,
-        stripeCustomerId: ?string,
         pendingAdministratorEmail: ?string,
       },
     },
@@ -23,7 +22,6 @@ export const updateAdministratorEmailMutation = gql`
       ...communityInfo
       billingSettings {
         administratorEmail
-        stripeCustomerId
         pendingAdministratorEmail
       }
     }
