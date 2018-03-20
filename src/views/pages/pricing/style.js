@@ -3,8 +3,7 @@ import styled, { css } from 'styled-components';
 import { hexa } from 'src/components/globals';
 
 export const ContentContainer = styled.div`
-  padding: 32px;
-  padding-top: 64px;
+  padding: 64px 32px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -193,7 +192,7 @@ export const FeatureSublabel = styled.h6`
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: -0.2px;
-  margin-top: 16px;
+  margin-top: 24px;
   color: ${props => props.theme.text.default};
 `;
 
@@ -360,7 +359,7 @@ export const Illo = styled.img`
 `;
 
 export const ExtraContent = styled.div`
-  margin-top: 24px;
+  margin-top: 32px;
   padding-top: 8px;
   padding-bottom: 16px;
   border-top: 1px solid ${props => props.theme.bg.border};

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { track } from 'src/helpers/events';
+import { PageFooter } from '../view';
 import Nav from '../components/nav';
 import { Wrapper } from '../style';
 import FreeFeaturesList from './components/freeFeaturesList';
@@ -172,7 +173,16 @@ class Pricing extends React.Component<Props> {
               If you’re looking for a place to grow your community for an&nbsp;
               <Highlight>
                 open-source project, non-profit, or education program
-              </Highlight>, our paid features are 50% off.
+              </Highlight>, we want to help. Qualifying communities will have
+              access to{' '}
+              <Highlight>
+                one free moderator seat and one free private channel
+              </Highlight>.
+            </SectionDescription>
+
+            <SectionDescription>
+              Get in touch with information about your community or
+              organization, and we’ll get back to you soon.
             </SectionDescription>
 
             {ownedCommunities && (
@@ -312,10 +322,8 @@ class Pricing extends React.Component<Props> {
             </Subsection>
           </Section>
         </ContentContainer>
-        {/*<FeatureUpsell />
-        <Plans />
-        <Sell />
-        <PageFooter />*/}
+
+        <PageFooter />
       </Wrapper>
     );
   }
