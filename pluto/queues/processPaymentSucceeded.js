@@ -33,7 +33,18 @@ const prepareCommunityPaymentSucceededEmail = async (
   }
 
   const sources = StripeUtil.getSources(dbStripeCustomer);
+
+  if (!sources || sources.length === 0) {
+    debug(`A payment occurred without a source`);
+    return;
+  }
+
   const defaultSource = sources.find(source => source && source.isDefault);
+
+  if (!defaultSource) {
+    debug(`A payment occurred without a default source on file`);
+    return;
+  }
 
   const emailData = {
     to: adminEmail,
@@ -53,6 +64,7 @@ const processJob = async (
 
   debug(`Payment succeeded for customer ${customerId}`);
 
+  // $FlowFixMe
   const dbStripeCustomer = await getStripeCustomer(customerId);
 
   if (
@@ -68,7 +80,7 @@ const processJob = async (
     );
   }
 
-  debug(`Did not find communityId for payment failed charge ${record.invoice}`);
+  debug(`Did not find communityId for payment failed charge ${record.id}`);
 };
 
 export default async (job: Job<StripePaymentSucceededOrFailedEventJobData>) => {

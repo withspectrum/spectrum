@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FeaturesList } from '../style';
 import FeatureItem from './featureItem';
 
-class PaidFeaturesList extends React.Component {
+class PaidFeaturesList extends React.Component<{}> {
   render() {
     return (
       <FeaturesList>
@@ -15,6 +15,7 @@ class PaidFeaturesList extends React.Component {
           icon={'member-add'}
           color={'space'}
           priceLabel={'$10 per month per person'}
+          render={() => null}
         />
 
         <FeatureItem
@@ -25,6 +26,7 @@ class PaidFeaturesList extends React.Component {
           icon={'private-outline'}
           color={'special'}
           priceLabel={'$10 per month per channel'}
+          render={() => null}
         />
 
         <FeatureItem
@@ -35,6 +37,7 @@ class PaidFeaturesList extends React.Component {
           icon={'analytics'}
           color={'success'}
           priceLabel={'$100 per month'}
+          render={() => null}
         />
 
         <FeatureItem
@@ -45,6 +48,7 @@ class PaidFeaturesList extends React.Component {
           icon={'support'}
           color={'warn'}
           priceLabel={'Coming soon'}
+          render={() => null}
         />
       </FeaturesList>
     );

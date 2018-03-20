@@ -147,12 +147,14 @@ class ComposerWithData extends Component<Props, State> {
 
     const communities = sortCommunities(
       user.communityConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
         .filter(Boolean)
     );
 
     const channels = sortChannels(
       user.channelConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
         .filter(channel => channel && !channel.isArchived)
         .filter(Boolean)
@@ -174,7 +176,9 @@ class ComposerWithData extends Component<Props, State> {
 
     // get the channels for the active community
     const communityChannels = channels
-      .filter(channel => channel && channel.community.id === community.id)
+      .filter(
+        channel => channel && community && channel.community.id === community.id
+      )
       .filter(channel => channel && !channel.isArchived);
 
     const activeChannel = getDefaultActiveChannel(

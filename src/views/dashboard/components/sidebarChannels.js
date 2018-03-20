@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Link from 'src/components/link';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
 import Icon from '../../../components/icons';
@@ -26,13 +27,11 @@ type Props = {
   isLoading: boolean,
   queryVarIsChanging: boolean,
   activeChannel: ?string,
-  thisCommunity: {
-    slug: string,
-    communityPermissions: {
-      isOwner: boolean,
-      isModerator: boolean,
-    },
+  permissions: {
+    isOwner: boolean,
+    isModerator: boolean,
   },
+  slug: string,
   data: {
     community: GetCommunityChannelConnectionType,
   },
@@ -46,13 +45,14 @@ class SidebarChannels extends React.Component<Props> {
   render() {
     const {
       data: { community },
-      thisCommunity,
       isLoading,
       queryVarIsChanging,
       activeChannel,
+      permissions,
+      slug,
     } = this.props;
 
-    const { communityPermissions: { isOwner, isModerator } } = thisCommunity;
+    const { isOwner, isModerator } = permissions;
 
     if (community) {
       const { isOwner, isModerator } = community.communityPermissions;
@@ -88,26 +88,24 @@ class SidebarChannels extends React.Component<Props> {
             </ChannelListItem>
           </Link>
 
-          {isOwner ||
-            (isModerator && (
-              <Link to={`/${community.slug}/settings`}>
+          {(isOwner || isModerator) && (
+            <Link to={`/${community.slug}/settings`}>
+              <ChannelListItem>
+                <Icon glyph={'settings'} size={24} />
+                <CommunityListName>Settings</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
+
+          {(isOwner || isModerator) &&
+            community.hasFeatures.analytics && (
+              <Link to={`/${community.slug}/settings/analytics`}>
                 <ChannelListItem>
-                  <Icon glyph={'settings'} size={24} />
-                  <CommunityListName>Settings</CommunityListName>
+                  <Icon glyph={'link'} size={24} />
+                  <CommunityListName>Analytics</CommunityListName>
                 </ChannelListItem>
               </Link>
-            ))}
-
-          {isOwner ||
-            (isModerator &&
-              community.hasFeatures.analytics && (
-                <Link to={`/${community.slug}/settings/analytics`}>
-                  <ChannelListItem>
-                    <Icon glyph={'link'} size={24} />
-                    <CommunityListName>Analytics</CommunityListName>
-                  </ChannelListItem>
-                </Link>
-              ))}
+            )}
 
           {sortedChannels &&
             sortedChannels.length > 1 && (
@@ -142,33 +140,21 @@ class SidebarChannels extends React.Component<Props> {
     if (isLoading || queryVarIsChanging) {
       return (
         <ChannelsContainer className={'channelsContainer'}>
-          <Link to={`/${thisCommunity.slug}`}>
+          <Link to={`/${slug}`}>
             <ChannelListItem>
               <Icon glyph={'link'} size={24} />
               <CommunityListName>Visit community</CommunityListName>
             </ChannelListItem>
           </Link>
 
-          {isOwner ||
-            (isModerator && (
-              <Link to={`/${thisCommunity.slug}/settings`}>
-                <ChannelListItem>
-                  <Icon glyph={'settings'} size={24} />
-                  <CommunityListName>Settings</CommunityListName>
-                </ChannelListItem>
-              </Link>
-            ))}
-
-          {isOwner ||
-            (isModerator &&
-              thisCommunity.hasFeatures.analytics && (
-                <Link to={`/${thisCommunity.slug}/settings/analytics`}>
-                  <ChannelListItem>
-                    <Icon glyph={'link'} size={24} />
-                    <CommunityListName>Analytics</CommunityListName>
-                  </ChannelListItem>
-                </Link>
-              ))}
+          {(isOwner || isModerator) && (
+            <Link to={`/${slug}/settings`}>
+              <ChannelListItem>
+                <Icon glyph={'settings'} size={24} />
+                <CommunityListName>Settings</CommunityListName>
+              </ChannelListItem>
+            </Link>
+          )}
           <LoadingContainer>
             <LoadingBar width={56} />
             <LoadingBar width={128} />

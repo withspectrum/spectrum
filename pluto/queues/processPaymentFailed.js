@@ -48,16 +48,24 @@ const processJob = async (
 
   debug(`Payment has failed for customer ${customerId}`);
 
+  // $FlowFixMe
   const dbStripeCustomer = await getStripeCustomer(customerId);
+
+  if (!dbStripeCustomer) {
+    debug(`Could not find a stripe customer in the database for ${customerId}`);
+    return;
+  }
 
   if (
     dbStripeCustomer &&
     dbStripeCustomer.metadata &&
     dbStripeCustomer.metadata.communityId
   ) {
+    const communityId = dbStripeCustomer.metadata.communityId;
+
     debug('Found communityId for customer, removing all paid features');
     return Promise.all([
-      removeAllPaidFeatures(dbStripeCustomer.metadata.communityId),
+      removeAllPaidFeatures(communityId),
       prepareCommunityPaymentFailedEmail(
         dbStripeCustomer.metadata.communityId,
         record

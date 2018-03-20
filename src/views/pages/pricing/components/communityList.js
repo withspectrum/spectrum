@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { GetCommunityType } from 'shared/graphql/queries/getCommunity';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import Link from 'src/components/link';
 import {
   CommunityListGrid,

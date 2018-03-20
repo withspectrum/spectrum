@@ -15,7 +15,7 @@ import {
 type Props = {
   title: string,
   subtitle: string,
-  buttonLabel: string,
+  buttonLabel?: string,
   icon?: string,
   color?: string,
   priceLabel?: string,

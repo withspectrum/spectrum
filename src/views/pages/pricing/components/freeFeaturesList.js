@@ -12,7 +12,7 @@ import Link from 'src/components/link';
 import { Button } from 'src/components/buttons';
 import SampleCommunities from './sampleCommunities';
 
-class FreeFeaturesList extends React.Component {
+class FreeFeaturesList extends React.Component<{}> {
   render() {
     return (
       <FeaturesList>

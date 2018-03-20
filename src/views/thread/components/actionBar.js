@@ -106,15 +106,10 @@ class ActionBar extends React.Component<Props, State> {
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    console.log('thread', thread);
-    console.log('isChannelOwner', isChannelOwner);
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
-    console.log('isCommunityOwner', isCommunityOwner);
     const isCommunityModerator =
       thread.community.communityPermissions.isModerator;
-    console.log('isCommunityModerator', isCommunityModerator);
     const isChannelModerator = thread.channel.channelPermissions.isModerator;
-    console.log('isChannelModerator', isChannelModerator);
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     if (isEditing) {

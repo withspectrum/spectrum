@@ -26,6 +26,8 @@ import {
 
 type Props = {
   currentUser: Object,
+  location: Object,
+  dark?: boolean,
 };
 
 type State = {

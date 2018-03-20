@@ -47,6 +47,7 @@ const processJob = async (job: Job<StripeCardExpiringWarningJobData>) => {
 
   debug(`Card is expiring for customer ${customerId}`);
 
+  // $FlowFixMe
   const dbStripeCustomer = await getStripeCustomer(customerId);
 
   if (
