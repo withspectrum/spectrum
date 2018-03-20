@@ -92,7 +92,6 @@ class AdministratorEmailForm extends React.Component<Props, State> {
   render() {
     const { emailError, email, isLoading } = this.state;
     const { community } = this.props;
-    console.log(community);
 
     return (
       <SectionCard>

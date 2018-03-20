@@ -2,7 +2,6 @@
 import * as React from 'react';
 import Link from 'src/components/link';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { connect } from 'react-redux';
 import Icon from '../../../components/icons';
