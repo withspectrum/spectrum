@@ -18,4 +18,8 @@ Cypress.Commands.add('auth', userId => {
       secure: false,
     }
   );
+  localStorage.setItem(
+    'spectrum',
+    JSON.stringify({ currentUser: { id: userId } })
+  );
 });

@@ -45,7 +45,7 @@ class CommunitySettings extends React.Component<Props> {
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');
     const activeTab = pathname.substr(lastIndex + 1);
-    const communitySlug = community && community.slug;
+    const communitySlug = match.params.communitySlug;
 
     if (community && community.id) {
       const canViewCommunitySettings =
@@ -120,7 +120,7 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-e2e-id="community-settings">
           <Titlebar
             title={community.name}
             subtitle={'Settings'}
