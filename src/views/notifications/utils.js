@@ -1,5 +1,4 @@
 import React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
 import { timeDifferenceShort } from '../../helpers/utils';
 import { Timestamp } from './style';
