@@ -288,18 +288,6 @@ class Routes extends React.Component<{}> {
                   component={PrivateChannelJoin}
                 />
                 <Route
-                  path="/:communitySlug/settings/analytics"
-                  component={CommunityAnalyticsFallback}
-                />
-                <Route
-                  path="/:communitySlug/settings/members"
-                  component={CommunityMembersFallback}
-                />
-                <Route
-                  path="/:communitySlug/settings/billing"
-                  component={CommunityBillingFallback}
-                />
-                <Route
                   path="/:communitySlug/settings"
                   component={CommunitySettingsFallback}
                 />

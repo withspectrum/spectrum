@@ -2,6 +2,7 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
@@ -18,15 +19,15 @@ import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
 import Subnav from '../../components/settingsViews/subnav';
 import { View } from './style';
+import type { ContextRouter } from 'react-router';
 
 type Props = {
   data: {
     community: GetCommunityType,
   },
-  location: Object,
   isLoading: boolean,
   hasError: boolean,
-  history: Object,
+  ...$Exact<ContextRouter>,
 };
 
 class CommunitySettings extends React.Component<Props> {
@@ -34,6 +35,7 @@ class CommunitySettings extends React.Component<Props> {
     const {
       data: { community },
       location,
+      match,
       isLoading,
       hasError,
       history,
@@ -71,29 +73,6 @@ class CommunitySettings extends React.Component<Props> {
           </AppViewWrapper>
         );
       }
-
-      const ActiveView = () => {
-        switch (activeTab) {
-          case 'settings':
-            return (
-              <Overview community={community} communitySlug={communitySlug} />
-            );
-          case 'analytics':
-            return <Analytics community={community} id={community.id} />;
-          case 'members':
-            return <Members community={community} history={history} />;
-          case 'billing':
-            return (
-              <Billing
-                community={community}
-                id={community.id}
-                history={history}
-              />
-            );
-          default:
-            return null;
-        }
-      };
 
       const subnavItems = [
         {
@@ -159,7 +138,31 @@ class CommunitySettings extends React.Component<Props> {
             />
             <Subnav items={subnavItems} activeTab={activeTab} />
 
-            <ActiveView />
+            <Switch>
+              <Route path={`${match.url}/analytics`}>
+                {() => <Analytics community={community} id={community.id} />}
+              </Route>
+              <Route path={`${match.url}/members`}>
+                {() => <Members community={community} history={history} />}
+              </Route>
+              <Route path={`${match.url}/billing`}>
+                {() => (
+                  <Billing
+                    community={community}
+                    id={community.id}
+                    history={history}
+                  />
+                )}
+              </Route>
+              <Route path={`${match.url}`}>
+                {() => (
+                  <Overview
+                    community={community}
+                    communitySlug={communitySlug}
+                  />
+                )}
+              </Route>
+            </Switch>
           </View>
         </AppViewWrapper>
       );
