@@ -1,6 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
   "viewportWidth": 1300,
+  "defaultCommandTimeout": 10000,
   "env": {
     "DEBUG": "src*,testing*,build*"
   }
