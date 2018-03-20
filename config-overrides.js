@@ -122,7 +122,7 @@ module.exports = function override(config, env) {
               return;
             }
           },
-          requestType: ['same-origin'],
+          requestType: ['navigate'],
         },
       ],
       ServiceWorker: {
