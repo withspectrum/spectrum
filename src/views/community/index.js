@@ -35,7 +35,6 @@ import {
   Meta,
   Content,
   Extras,
-  MidSegment,
   ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';

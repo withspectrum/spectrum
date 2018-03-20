@@ -9,10 +9,8 @@ import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import { FlexCol } from 'src/components/globals';
 import { Card } from 'src/components/card';
 import { Loading, LoadingListItem } from 'src/components/loading';
-import { UserListItem } from 'src/components/listItems';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';

@@ -9,7 +9,7 @@ import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { LoadingCard, Loading } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { StyledCard, ListContainer } from '../../../components/listItems/style';

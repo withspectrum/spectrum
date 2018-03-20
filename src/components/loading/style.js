@@ -346,34 +346,6 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
-export const Grid = styled.div`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: 160px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  background-color: ${props => props.theme.bg.default};
-
-  @media (max-width: 1028px) {
-    grid-template-columns: 240px 1fr;
-    grid-template-rows: 80px 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
-  }
-
-  @media (max-width: 768px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
-  }
-`;
-
 export const GridProfile = styled.div`
   display: grid;
   grid-template-columns: minmax(320px, 1fr) 3fr;
@@ -413,18 +385,6 @@ export const Meta = styled(Column)`
 
 export const GridContent = styled(Column)`
   grid-area: content;
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  @media (max-width: 1028px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
-  }
 `;
 
 export const LoadingCoverPhoto = styled.div`

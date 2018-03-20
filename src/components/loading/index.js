@@ -33,11 +33,9 @@ import {
   LoadingNavbarContainer,
   LogoLink,
   Logo,
-  Grid,
   GridProfile,
   Meta,
   GridContent,
-  Extras,
   LoadingCoverPhoto,
 } from './style';
 

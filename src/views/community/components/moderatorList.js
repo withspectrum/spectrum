@@ -2,17 +2,14 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import { FlexCol } from 'src/components/globals';
 import { Card } from 'src/components/card';
-import { Loading, LoadingListItem } from 'src/components/loading';
-import { UserListItem } from 'src/components/listItems';
+import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
