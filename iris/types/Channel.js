@@ -99,7 +99,7 @@ const Channel = /* GraphQL */ `
 	input RestoreChannelInput {
 		channelId: ID!
 	}
-	
+
 	input JoinChannelWithTokenInput {
 		communitySlug: String!
 		channelSlug: String!
@@ -128,14 +128,11 @@ const Channel = /* GraphQL */ `
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
 		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
-<<<<<<< HEAD
 		archiveChannel(input: ArchiveChannelInput!): Channel
 		restoreChannel(input: RestoreChannelInput!): Channel
-=======
 		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
 		disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
 		resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel
->>>>>>> 244bb8db3546c18c6572377cf3495ee94d3fd184
 	}
 `;
 
