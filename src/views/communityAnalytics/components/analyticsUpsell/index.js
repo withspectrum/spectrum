@@ -52,6 +52,13 @@ class AnalyticsUpsell extends React.Component<Props, State> {
   };
 
   initAddPaymentMethod = () => {
+    if (!this.props.community.billingSettings.administratorEmail) {
+      return this.props.dispatch(
+        openModal('ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL', {
+          id: this.props.community.id,
+        })
+      );
+    }
     return this.props.dispatch(
       openModal('UPGRADE_ANALYTICS_MODAL', { community: this.props.community })
     );

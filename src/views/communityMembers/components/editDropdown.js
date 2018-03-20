@@ -171,6 +171,14 @@ class EditDropdown extends React.Component<Props, State> {
   toggleOpen = () => this.setState({ isOpen: true });
   close = () => this.setState({ isOpen: false });
   initUpgrade = () => {
+    if (!this.props.community.billingSettings.administratorEmail) {
+      return this.props.dispatch(
+        openModal('ADMIN_EMAIL_ADDRESS_VERIFICATION_MODAL', {
+          id: this.props.community.id,
+        })
+      );
+    }
+
     return this.props.dispatch(
       openModal('UPGRADE_MODERATOR_SEAT_MODAL', {
         input: this.input,
