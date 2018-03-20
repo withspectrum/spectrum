@@ -124,7 +124,8 @@ const map = state => ({
   isOpen: state.modals.isOpen,
 });
 export default compose(
-  connect(),
+  // $FlowIssue
+  connect(map),
   getCommunitySettings,
   addCommunityModerator,
   viewNetworkHandler
