@@ -309,8 +309,8 @@ class CommunityView extends React.Component<Props, State> {
               <ColumnHeading>Team</ColumnHeading>
               <ModeratorList
                 id={community.id}
-                filter={{ isModerator: true, isOwner: true }}
                 first={20}
+                filter={{ isModerator: true, isOwner: true }}
               />
 
               <ColumnHeading>Channels</ColumnHeading>

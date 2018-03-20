@@ -28,6 +28,13 @@ type Props = {
 };
 
 class CommunityModeratorList extends React.Component<Props> {
+  shouldComponentUpdate() {
+    const curr = this.props;
+    // never update once we have the list of team members
+    if (this.props.data && this.props.data.community) return false;
+    return true;
+  }
+
   initMessage = user => {
     this.props.dispatch(initNewThreadWithUser(user));
     return this.props.history.push('/messages/new');
