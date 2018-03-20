@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
 import { KeyBindingUtil } from 'draft-js';
-import debounce from 'debounce';
+import { throttle } from 'src/helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
@@ -95,14 +95,6 @@ if (localStorage) {
   }
 }
 
-const persistTitle = debounce((title: string) => {
-  localStorage.setItem(LS_TITLE_KEY, title);
-}, 500);
-
-const persistBody = debounce(body => {
-  localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
-}, 500);
-
 class ComposerWithData extends Component<Props, State> {
   bodyEditor: any;
 
@@ -123,6 +115,15 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview: false,
       postWasPublished: false,
     };
+
+    this.persistBodyToLocalStorageWithDebounce = throttle(
+      this.persistBodyToLocalStorageWithDebounce,
+      500
+    );
+    this.persistTitleToLocalStorageWithDebounce = throttle(
+      this.persistTitleToLocalStorageWithDebounce,
+      500
+    );
   }
 
   handleIncomingProps = props => {
@@ -230,7 +231,7 @@ class ComposerWithData extends Component<Props, State> {
       this.bodyEditor.focus();
       return;
     }
-    persistTitle(title);
+    this.persistTitleToLocalStorageWithDebounce();
     this.setState({
       title,
     });
@@ -238,7 +239,7 @@ class ComposerWithData extends Component<Props, State> {
 
   changeBody = body => {
     this.listenForUrl(body);
-    persistBody(body);
+    this.persistBodyToLocalStorageWithDebounce();
     this.setState({
       body,
     });
@@ -268,12 +269,60 @@ class ComposerWithData extends Component<Props, State> {
   closeComposer = (clear?: string) => {
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
-    if (clear) return this.props.dispatch(closeComposer('', ''));
+    if (clear) {
+      console.log('clearing when closeCompoesr has clear');
+      this.clearEditorStateAfterPublish();
+      return this.props.dispatch(closeComposer());
+    }
 
-    // otherwise, we will save the editor state to rehydrate the title and
-    // body if the user reopens the composer in the same session
-    const { title, body } = this.state;
-    this.props.dispatch(closeComposer(title, body));
+    console.log('persisting when closeClomposer is called');
+    this.persistBodyToLocalStorage();
+    console.log('persisting when closeCompoesr is called');
+    this.persistTitleToLocalStorage();
+    this.props.dispatch(closeComposer());
+  };
+
+  clearEditorStateAfterPublish = () => {
+    try {
+      console.log('clearing after publish body');
+      localStorage.removeItem(LS_BODY_KEY);
+      console.log('clearing after publish title');
+      localStorage.removeItem(LS_TITLE_KEY);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  persistBodyToLocalStorageWithDebounce = () => {
+    console.log(
+      'persisting body with debounce',
+      JSON.stringify(toJSON(this.state.body))
+    );
+    return localStorage.setItem(
+      LS_BODY_KEY,
+      JSON.stringify(toJSON(this.state.body))
+    );
+  };
+
+  persistTitleToLocalStorageWithDebounce = () => {
+    console.log('persisting title with debounce', this.state.title);
+    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+  };
+
+  persistTitleToLocalStorage = () => {
+    console.log('persisting title immediately', this.state.title);
+    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+  };
+
+  persistBodyToLocalStorage = () => {
+    console.log(
+      'persisting body immediately',
+      JSON.stringify(toJSON(this.state.body))
+    );
+    return localStorage.setItem(
+      LS_BODY_KEY,
+      JSON.stringify(toJSON(this.state.body))
+    );
   };
 
   setActiveCommunity = e => {
@@ -387,6 +436,10 @@ class ComposerWithData extends Component<Props, State> {
       filesToUpload,
     };
 
+    // one last save to localstorage
+    this.persistBodyToLocalStorage();
+    this.persistTitleToLocalStorage();
+
     this.props
       .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
@@ -396,8 +449,7 @@ class ComposerWithData extends Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
-        localStorage.removeItem(LS_BODY_KEY);
-        localStorage.removeItem(LS_TITLE_KEY);
+        this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button
         this.setState({
