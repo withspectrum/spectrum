@@ -319,7 +319,7 @@ export const LinkBlock = styled.a`
 
 export const NavContainer = styled.div`
   display: grid;
-  grid-template-rows: 60px;
+  grid-template-rows: 68px;
   grid-template-columns: auto;
   grid-template-areas: 'tabs' 'goop';
   grid-area: nav;
@@ -364,21 +364,17 @@ export const Tabs = styled.div`
 
 export const Tab = styled(Link)`
   padding: 4px 8px;
-  transition: ${Transition.hover.off};
-  font-weight: ${props => (props.selected ? '900' : '500')};
+  font-weight: ${props => (props.selected ? '600' : '500')};
   color: ${props =>
     props.selected
-      ? props.dark ? props.theme.text.reverse : props.theme.brand.alt
-      : props.dark
-        ? props.theme.text.reverse
-        : hexa(props.theme.brand.alt, 0.5)};
+      ? props.dark ? props.theme.text.reverse : props.theme.text.default
+      : props.dark ? props.theme.text.reverse : props.theme.text.alt};
 
   &:hover {
-    transition: ${Transition.hover.on};
     color: ${props =>
       props.selected
-        ? props.dark ? props.theme.text.reverse : props.theme.brand.default
-        : props.dark ? props.theme.text.reverse : props.theme.brand.alt};
+        ? props.dark ? props.theme.text.reverse : props.theme.text.default
+        : props.dark ? props.theme.text.reverse : props.theme.text.default};
     text-shadow: ${props =>
       props.dark ? `0 0 32px ${hexa(props.theme.text.reverse, 0.75)}` : 'none'};
   }

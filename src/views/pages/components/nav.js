@@ -85,7 +85,15 @@ class Nav extends React.Component<Props, State> {
               </Link>
             ) : (
               <Link to="/login">
-                <Button>Sign In</Button>
+                <Button
+                  style={{
+                    fontWeight: '700',
+                    fontSize: '16px',
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  Sign In
+                </Button>
               </Link>
             )}
           </AuthTab>
