@@ -343,6 +343,7 @@ class CreateChannelModal extends React.Component<Props, State> {
               <StripeModalWell
                 id={community.id}
                 onSourceAvailable={this.onSourceAvailable}
+                closeModal={this.close}
               />
             )}
 

@@ -86,6 +86,7 @@ class RestoreChannelModal extends React.Component<Props, State> {
               <StripeCardWell
                 id={this.props.id}
                 onSourceAvailable={this.onSourceAvailable}
+                closeModal={this.close}
               />
             )}
 
