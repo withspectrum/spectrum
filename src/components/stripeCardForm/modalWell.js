@@ -64,7 +64,13 @@ class ModalWell extends React.Component<Props> {
     if (defaultSource) {
       return (
         <Well>
-          <img src={getCardImage(defaultSource.card.brand)} width={32} />
+          <img
+            alt={`${defaultSource.card.brand} ending in ${
+              defaultSource.card.last4
+            }`}
+            src={getCardImage(defaultSource.card.brand)}
+            width={32}
+          />
           <span>
             Pay with {defaultSource.card.brand} ending in{' '}
             {defaultSource.card.last4}

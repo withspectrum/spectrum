@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { TextButton } from '../../components/buttons';
 
 export const Heading = styled.h1`

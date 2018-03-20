@@ -15,7 +15,6 @@ import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/ch
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
 import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 
 import ModalContainer from '../modalContainer';
@@ -239,10 +238,8 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     this.props
       .createChannel(input)
-      .then(({ data }: CreateChannelType) => {
+      .then(() => {
         track('channel', 'created', null);
-
-        const { createChannel: channel } = data;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')

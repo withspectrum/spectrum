@@ -65,7 +65,13 @@ class AnalyticsUpsell extends React.Component<Props, State> {
     if (!defaultSource) return null;
     return (
       <CardInfo>
-        <img src={getCardImage(defaultSource.card.brand)} width={32} />
+        <img
+          alt={`${defaultSource.card.brand} ending in ${
+            defaultSource.card.last4
+          }`}
+          src={getCardImage(defaultSource.card.brand)}
+          width={32}
+        />
         <span>
           Paying with {defaultSource.card.brand} ending in{' '}
           {defaultSource.card.last4}

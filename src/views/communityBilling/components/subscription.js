@@ -248,6 +248,8 @@ class Subscription extends React.Component<Props> {
         return this.ossModeratorSeat(lineItem);
       case 'oss-private-channel':
         return this.ossPrivateChannel(lineItem);
+      default:
+        return null;
     }
   };
 

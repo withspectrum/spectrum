@@ -187,7 +187,13 @@ class EditDropdown extends React.Component<Props, State> {
     if (!defaultSource) return null;
     return (
       <DropdownSectionCardInfo>
-        <img src={getCardImage(defaultSource.card.brand)} width={24} />
+        <img
+          alt={`${defaultSource.card.brand} ending in ${
+            defaultSource.card.last4
+          }`}
+          src={getCardImage(defaultSource.card.brand)}
+          width={24}
+        />
         <span>
           Pay with {defaultSource.card.brand} ending in{' '}
           {defaultSource.card.last4}

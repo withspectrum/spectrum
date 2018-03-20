@@ -10,7 +10,12 @@ export default class PoweredByStripe extends React.Component<{}> {
         <PoweredByStripeFooter>
           <Icon glyph={'channel-private'} size={24} />
           Secured and encrypted with
-          <img src={'/img/stripe-logo.png'} width={36} height={15} />
+          <img
+            alt={'Stripe logo'}
+            src={'/img/stripe-logo.png'}
+            width={36}
+            height={15}
+          />
         </PoweredByStripeFooter>
       </a>
     );

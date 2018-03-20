@@ -20,7 +20,10 @@ class SampleCommunities extends React.Component<Props> {
             return (
               <Link key={community.id} to={`/${community.slug}`}>
                 <TableCardButton light>
-                  <img src={`${community.profilePhoto}`} />
+                  <img
+                    alt={`${community.name} community`}
+                    src={`${community.profilePhoto}`}
+                  />
                   {community.name}
                 </TableCardButton>
               </Link>

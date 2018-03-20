@@ -6,7 +6,6 @@ import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
 import Privacy from '../../components/privacy';
 import Terms from '../../components/terms';
-import { PlanSelector } from './components/planSelector';
 import {
   hexa,
   Shadow,
