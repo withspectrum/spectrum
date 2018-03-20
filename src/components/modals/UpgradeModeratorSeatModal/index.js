@@ -28,7 +28,7 @@ type State = {
   isLoading: boolean,
 };
 
-class RepExplainerModal extends React.Component<Props, State> {
+class UpgradeModeratorSeatModal extends React.Component<Props, State> {
   state = { isLoading: false };
 
   closeModal = () => {
@@ -114,4 +114,4 @@ export default compose(
   // $FlowIssue
   connect(map),
   addCommunityModerator
-)(RepExplainerModal);
+)(UpgradeModeratorSeatModal);
