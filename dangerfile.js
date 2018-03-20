@@ -47,7 +47,8 @@ jest();
 
 // Make sure nobody does a it.only and blocks our entire test-suite from running
 noTestShortcuts({
-  testFilePredicate: filePath => filePath.endsWith('.test.js'),
+  testFilePredicate: filePath =>
+    filePath.endsWith('.test.js') || filePath.endsWith('_spec.js'),
 });
 
 schedule(noConsole({ whitelist: ['error'] }));
