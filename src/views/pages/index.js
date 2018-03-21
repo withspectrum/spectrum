@@ -4,6 +4,8 @@ import Nav from './components/nav';
 import Support from './support';
 import Pricing from './pricing';
 import Home from './home';
+import Terms from './terms';
+import Privacy from './privacy';
 
 type Props = {
   match: Object,
@@ -26,16 +28,16 @@ class Pages extends React.Component<Props> {
         return <Pricing {...this.props} />;
       }
       case '/terms': {
-        return <Support {...this.props} />;
+        return <Terms {...this.props} />;
       }
       case '/privacy': {
-        return <Support {...this.props} />;
+        return <Privacy {...this.props} />;
       }
       case '/privacy.html': {
-        return <Support {...this.props} />;
+        return <Privacy {...this.props} />;
       }
       case '/terms.html': {
-        return <Support {...this.props} />;
+        return <Terms {...this.props} />;
       }
       default: {
         return <div>404</div>;
