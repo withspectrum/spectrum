@@ -35,7 +35,7 @@ export const generateOAuthToken = (code: string, redirect_uri: string) => {
       }
     })
     .catch(error => {
-      console.log('\n\nerror', error);
+      console.error('\n\nerror', error);
       return null;
     });
 };
