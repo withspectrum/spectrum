@@ -275,7 +275,49 @@ export const Footer = styled(FlexRow)`
   }
 `;
 
-export const LinkBlock = styled.a`
+export const LinkBlock = styled(Link)`
+  display: inline-block;
+  margin: 0 24px;
+  flex: 0 0 auto;
+  position: relative;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  div {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 16px;
+    top: 4px;
+    position: relative;
+    text-align: center;
+    transition: ${Transition.hover.off};
+    border-radius: 12px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) => theme.text.default};
+      transition: ${Transition.hover.on};
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 16px;
+
+    div {
+      border-bottom: none;
+
+      &:hover {
+        border-bottom: none;
+      }
+    }
+  }
+`;
+
+export const LinkBlockA = styled.a`
   display: inline-block;
   margin: 0 24px;
   flex: 0 0 auto;

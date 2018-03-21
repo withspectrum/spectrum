@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { LinkBlock, Footer, Flexer } from '../style';
+import { LinkBlock, LinkBlockA, Footer, Flexer } from '../style';
 import { FlexRow } from 'src/components/globals';
 import Link from 'src/components/link';
 import Icon from 'src/components/icons';
@@ -14,15 +14,19 @@ export default () => {
         </Link>
       </FlexRow>
       <Flexer>
-        <LinkBlock href="/privacy">
+        <LinkBlock to="/privacy">
           <div>Privacy</div>
         </LinkBlock>
-        <LinkBlock href="/terms">
+        <LinkBlock to="/terms">
           <div>Terms</div>
         </LinkBlock>
-        <LinkBlock href="https://github.com/withspectrum/code-of-conduct">
+        <LinkBlockA
+          href="https://github.com/withspectrum/code-of-conduct"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div>Code of Conduct</div>
-        </LinkBlock>
+        </LinkBlockA>
       </Flexer>
     </Footer>
   );

@@ -7,14 +7,12 @@ import Avatar from '../../components/avatar';
 import Privacy from '../../components/privacy';
 import Terms from '../../components/terms';
 import {
-  hexa,
   Shadow,
   Gradient,
   FlexCol,
   Transition,
   HorizontalRule,
 } from '../../components/globals';
-import { Button } from '../../components/buttons';
 import Search from '../explore/components/search';
 import ViewSegment from '../../components/viewSegment';
 import { Conversation, Discover } from '../../components/illustrations';
@@ -676,172 +674,6 @@ export const Yours = (props: Props) => {
             </Link>
           </Actions>
         </FlexCol>
-      </ThisContent>
-    </Section>
-  );
-};
-
-export const ContactInfo = () => {
-  const ThisContent = styled(Content)`
-    flex-direction: column;
-    align-items: center;
-    margin-top: 92px;
-
-    > h2 {
-      margin: 0 32px;
-    }
-  `;
-
-  const Grid = styled.div`
-    margin: 32px;
-    display: grid;
-    grid-template-columns: repeat(2, 400px);
-    grid-template-rows: repeat(2, minmax(240px, auto));
-    grid-row-gap: 32px;
-    grid-column-gap: 32px;
-
-    @media (max-width: 768px) {
-      margin: 32px 0;
-      align-self: stretch;
-      grid-template-columns: 1fr;
-      grid-template-rows: repeat(4, minmax(240px, auto));
-    }
-  `;
-
-  const HelpCard = styled.div`
-    background-color: ${props => props.theme.bg.default};
-    box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.default, 0.2)};
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-row-gap: 16px;
-    grid-template-rows: auto auto auto;
-    grid-template-areas: 'lede' 'flavor' 'button';
-    padding: 32px;
-    justify-items: center;
-
-    > a > button {
-      font-size: 16px;
-      font-weight: 700;
-      align-self: end;
-    }
-
-    b {
-      font-weight: 700;
-    }
-
-    @media (max-width: 768px) {
-      padding: 32px auto;
-    }
-  `;
-
-  const BugCard = styled(HelpCard)`
-    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.warn.dark, 0.2)}; */} button {
-      background-color: ${props => props.theme.warn.alt};
-      background-image: ${props =>
-        Gradient(props.theme.warn.alt, props.theme.warn.default)};
-
-      &:hover {
-        box-shadow: 0 4px 32px ${props => hexa(props.theme.warn.dark, 0.25)};
-      }
-    }
-  `;
-
-  const FeatCard = styled(HelpCard)`
-    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.success.dark, 0.2)}; */} button {
-      background-color: ${props => props.theme.success.alt};
-      background-image: ${props =>
-        Gradient(props.theme.success.alt, props.theme.success.default)};
-
-      &:hover {
-        box-shadow: 0 4px 32px ${props => hexa(props.theme.success.dark, 0.25)};
-      }
-    }
-  `;
-
-  const EmailCard = styled(HelpCard)`
-    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.special.dark, 0.2)}; */} button {
-      background-color: ${props => props.theme.special.default};
-      background-image: ${props =>
-        Gradient(props.theme.special.alt, props.theme.special.default)};
-
-      &:hover {
-        box-shadow: 0 4px 32px ${props => hexa(props.theme.special.dark, 0.25)};
-      }
-    }
-  `;
-
-  const TweetCard = styled(HelpCard)`
-    ${'' /* box-shadow: 0 8px 32px ${props => hexa(props.theme.space.default, 0.2)}; */} button {
-      background-color: ${props => props.theme.social.twitter.alt};
-      background-image: ${props =>
-        Gradient(
-          props.theme.social.twitter.alt,
-          props.theme.social.twitter.default
-        )};
-
-      &:hover {
-        box-shadow: 0 4px 32px ${props => hexa(props.theme.space.dark, 0.25)};
-      }
-    }
-  `;
-
-  const Lede = styled.h4`
-    font-size: 24px;
-    font-weight: 900;
-    text-align: center;
-  `;
-
-  const Flavor = styled.p`
-    font-size: 16px;
-    text-align: center;
-  `;
-
-  return (
-    <Section goop={4} color="brand.alt">
-      <ThisContent>
-        <Tagline>What can we help you with?</Tagline>
-        <Grid>
-          <BugCard>
-            <Lede>Find a bug?</Lede>
-            <Flavor>
-              Join our <b>Hugs n Bugs</b> channel to check if there’s already a
-              fix or report a new issue!
-            </Flavor>
-            <Link to={'/spectrum/hugs-n-bugs'}>
-              <Button icon="bug">Join spectrum/hugs-n-bugs</Button>
-            </Link>
-          </BugCard>
-          <FeatCard>
-            <Lede>Need some more features?</Lede>
-            <Flavor>
-              Jump into our <b>Feature Requests</b> channel and tell us what you
-              want or add onto existing requests from others!
-            </Flavor>
-            <Link to={'/spectrum/feature-requests'}>
-              <Button icon="idea">Join spectrum/feature-requests</Button>
-            </Link>
-          </FeatCard>
-          <EmailCard>
-            <Lede>Something else?</Lede>
-            <Flavor>
-              Concerned about something on Spectrum? Shoot us an email and we’ll
-              take care of it right away.
-            </Flavor>
-            <a href={'mailto:support@spectrum.chat'}>
-              <Button icon="email">Email support@spectrum.chat</Button>
-            </a>
-          </EmailCard>
-          <TweetCard>
-            <Lede>Looking for updates?</Lede>
-            <Flavor>
-              We post news, release notes, and threads from all over Spectrum on
-              Twitter!
-            </Flavor>
-            <a href={'https://twitter.com/withspectrum'}>
-              <Button icon="twitter">@withspectrum on Twitter</Button>
-            </a>
-          </TweetCard>
-        </Grid>
       </ThisContent>
     </Section>
   );
