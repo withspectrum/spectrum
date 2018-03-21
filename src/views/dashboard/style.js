@@ -867,3 +867,55 @@ export const UpsellRow = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const HeaderActiveViewTitle = styled.h2`
+  padding: 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  color: ${props => props.theme.text.default};
+  max-width: 384px;
+  line-height: 1.2;
+
+  ${Truncate};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const HeaderActiveViewSubtitle = styled.h3`
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  max-width: 384px;
+  line-height: 1.2;
+
+  display: flex;
+  align-items: center;
+
+  ${Truncate};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ContextHeaderContainer = styled.div`
+  padding-top: 16px;
+  padding-bottom: 12px;
+`;
+
+export const ContextHeaderActions = styled.div`
+  display: flex;
+  background: ${props => props.theme.bg.wash};
+  margin: 0 4px 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.bg.border};
+  justify-content: space-around;
+
+  .icon {
+    margin-right: 4px;
+  }
+`;
