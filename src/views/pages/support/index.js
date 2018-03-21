@@ -11,7 +11,6 @@ import {
   PageSubtitle,
   Section,
   SectionTitle,
-  SectionSubtitle,
   SectionDescription,
   PriceTable,
   PlanSection,
@@ -144,7 +143,7 @@ class Support extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              Spectrum currently being built by{' '}
+              Spectrum is currently being built by{' '}
               <a
                 href="https://twitter.com/mxstbr"
                 target="_blank"
@@ -168,14 +167,6 @@ class Support extends React.Component<{}> {
               </a>{' '}
               from San Francisco and Vienna.
             </SectionDescription>
-          </Section>
-
-          <Section>
-            <SectionTitle>Frequently asked questions</SectionTitle>
-            <SectionSubtitle>
-              Does it cost anything to use Spectrum?
-            </SectionSubtitle>
-            <SectionDescription>bar</SectionDescription>
           </Section>
         </ContentContainer>
 

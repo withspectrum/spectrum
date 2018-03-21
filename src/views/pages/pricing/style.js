@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { hexa } from 'src/components/globals';
 
 export const ContentContainer = styled.div`
-  padding: 132px 32px 64px;
+  padding: 132px 32px 128px;
   width: 100%;
   display: flex;
   flex-direction: column;

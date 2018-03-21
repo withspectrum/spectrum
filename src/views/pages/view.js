@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import Link from 'src/components/link';
 import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
-import Privacy from './privacy';
-import Terms from './terms';
 import {
   Shadow,
   Gradient,
@@ -674,56 +672,6 @@ export const Yours = (props: Props) => {
             </Link>
           </Actions>
         </FlexCol>
-      </ThisContent>
-    </Section>
-  );
-};
-
-export const TermsSection = () => {
-  const ThisContent = styled(Content)`
-    margin: 32px;
-    align-items: flex-start;
-    justify-content: space-around;
-
-    > p:not(:first-of-type) {
-      margin-top: 0;
-    }
-
-    h1 {
-      margin-top: 16px;
-      font-size: 24px;
-      line-height: 1.2;
-      font-weight: 900;
-    }
-
-    h2 {
-      font-size: 18px;
-      line-height: 1.2;
-      font-weight: 900;
-      margin-top: 16px;
-      margin-bottom: 4px;
-    }
-
-    p,
-    ul {
-      font-size: 18px;
-      margin-top: 8px;
-    }
-
-    li {
-      margin-top: 8px;
-    }
-  `;
-
-  return (
-    <Section background={'brand'} goop={6} color="bg.reverse">
-      <ThisContent>
-        <Copy>
-          <Terms />
-        </Copy>
-        <Copy>
-          <Privacy />
-        </Copy>
       </ThisContent>
     </Section>
   );

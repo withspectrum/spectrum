@@ -73,7 +73,7 @@ class PricingPlanTable extends React.Component<Props> {
               <PricingTableFeatureRow
                 title={'Private channels'}
                 subtitle={
-                  'A private space for discussions, requiring all members to be approved before participating.'
+                  'A private space for discussions where all members must be approved.'
                 }
                 color={'special'}
                 icon={'private-outline'}
@@ -88,6 +88,16 @@ class PricingPlanTable extends React.Component<Props> {
                 }
                 icon={'analytics'}
                 priceLabel={'$100/mo'}
+                hideIconsOnMobile
+              />
+
+              <PricingTableFeatureRow
+                title={'Fair Price Promise'}
+                subtitle={
+                  'We only charge for the time that each feature is used each month.'
+                }
+                icon={'like'}
+                color={'warn'}
                 hideIconsOnMobile
               />
             </PlanFeatures>
@@ -118,90 +128,3 @@ class PricingPlanTable extends React.Component<Props> {
 }
 
 export default PricingPlanTable;
-
-// // @flow
-// import * as React from 'react';
-// import {
-//   PriceTable,
-//   TableCard,
-//   TableCardTitle,
-//   TableCardSubtitle,
-//   TableCardFeatureList,
-//   TableCardFeature,
-//   TableCardButton
-// } from '../style';
-
-// class PricingPlanTable extends React.Component<{}> {
-//   render() {
-//     return (
-//       <PriceTable>
-//         <TableCard>
-
-//             <TableCardTitle>Open</TableCardTitle>
-//             <TableCardSubtitle>Perfect for new or growing communities</TableCardSubtitle>
-//             <TableCardButton>Create a community</TableCardButton>
-//             <TableCardFeatureList>
-//               <TableCardFeature>Unlimited conversations</TableCardFeature>
-//               <TableCardFeature>Unlimited members</TableCardFeature>
-//               <TableCardFeature>Unlimited public channels</TableCardFeature>
-//               <TableCardFeature>Search engine optimized</TableCardFeature>
-//               <TableCardFeature>Reputation system</TableCardFeature>
-//               <TableCardFeature>Ad free</TableCardFeature>
-//               <TableCardFeature>Dedicated home page</TableCardFeature>
-//             </TableCardFeatureList>
-
-//             <TableCardTitle>On Demand</TableCardTitle>
-//             <TableCardSubtitle>Pay as you go</TableCardSubtitle>
-//             <TableCardFeatureList>
-//               <TableCardFeature>All Open features</TableCardFeature>
-//               <TableCardFeature>Moderator seats · $10/mo</TableCardFeature>
-//               <TableCardFeature>Private channels · $10/mo</TableCardFeature>
-//               <TableCardFeature>Analytics · $100/mo</TableCardFeature>
-//             </TableCardFeatureList>
-
-//             <TableCardTitle>Business</TableCardTitle>
-//             <TableCardSubtitle>Custom solution</TableCardSubtitle>
-//             <TableCardFeatureList>
-//               <TableCardFeature>Need a custom setup for a large community, team, or special use case? Get in touch and we will find the best solution for you.</TableCardFeature>
-//             </TableCardFeatureList>
-
-//             <TableCardButton light>Learn more</TableCardButton>
-//             <TableCardButton>Create a community</TableCardButton>
-
-//         </TableCard>
-
-//         <TableCard>
-//           <div>
-//             <TableCardTitle>On Demand</TableCardTitle>
-//             <TableCardSubtitle>Pay as you go</TableCardSubtitle>
-//             <TableCardFeatureList>
-//               <TableCardFeature>All Open features</TableCardFeature>
-//               <TableCardFeature>Moderator seats · $10/mo</TableCardFeature>
-//               <TableCardFeature>Private channels · $10/mo</TableCardFeature>
-//               <TableCardFeature>Analytics · $100/mo</TableCardFeature>
-//             </TableCardFeatureList>
-//           </div>
-//           <div>
-//             <TableCardButton light>Learn more</TableCardButton>
-//             <TableCardButton>Create a community</TableCardButton>
-//           </div>
-//         </TableCard>
-
-//         <TableCard>
-//           <div>
-//             <TableCardTitle>Business</TableCardTitle>
-//             <TableCardSubtitle>Custom solution</TableCardSubtitle>
-//             <TableCardFeatureList>
-//               <TableCardFeature>Need a custom setup for a large community, team, or special use case? Get in touch and we will find the best solution for you.</TableCardFeature>
-//             </TableCardFeatureList>
-//           </div>
-//           <div>
-//             <TableCardButton light>Get in touch</TableCardButton>
-//           </div>
-//         </TableCard>
-//       </PriceTable>
-//     );
-//   }
-// }
-
-// export default PricingPlanTable;

@@ -8,6 +8,7 @@ import {
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { TableCardButton, SampleCommunitiesWrapper } from '../style';
 import Link from 'src/components/link';
+import { Loading } from 'src/components/loading';
 
 type Props = {
   data: {
@@ -44,7 +45,12 @@ class SampleCommunities extends React.Component<Props> {
       );
     }
 
-    if (isLoading) return null;
+    if (isLoading)
+      return (
+        <div style={{ padding: '32px 16px' }}>
+          <Loading />
+        </div>
+      );
 
     return (
       <Link to={'/explore'}>

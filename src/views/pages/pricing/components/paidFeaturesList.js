@@ -23,7 +23,7 @@ class PaidFeaturesList extends React.Component<{}> {
           render={() => (
             <ExtraContent>
               <FeatureSublabel>A stronger community</FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 Moderators can create and manage channels, view analytics to
                 make more informed decisions, and manage the permissions of
                 other members in the community. If a conversation is getting out
@@ -33,7 +33,7 @@ class PaidFeaturesList extends React.Component<{}> {
               </FeatureDescription>
 
               <FeatureSublabel>Better community management</FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 Moderators are highlighted within your community with a special
                 badge and place on your community profile. This makes it easy
                 for people to contact your team with questions or concerns.
@@ -53,7 +53,7 @@ class PaidFeaturesList extends React.Component<{}> {
           render={() => (
             <ExtraContent>
               <FeatureSublabel>Privacy when you need it</FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 Private channels are a separate space within your community
                 where only specific members can read and join conversations.
                 This provides a private space when you need it to discuss more
@@ -62,7 +62,7 @@ class PaidFeaturesList extends React.Component<{}> {
               </FeatureDescription>
 
               <FeatureSublabel>Archive and restore on demand</FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 We’ve made it easy to archive and restore private channels at
                 any time so that they can be easily used for short-term
                 projects. When you’re finished, the channel can be archived to
@@ -86,44 +86,17 @@ class PaidFeaturesList extends React.Component<{}> {
               <FeatureSublabel>
                 Identify influencers and lurkers
               </FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 With community analytics it’s easy to
               </FeatureDescription>
 
               <FeatureSublabel>Keep up with the conversation</FeatureSublabel>
-              <FeatureDescription isExpanded>
+              <FeatureDescription>
                 We know it can be tough to keep up with a stream of
                 conversations happening in your community. Community analytics
                 surfaces insights about the content being talked which identify
                 popular conversations in real-time, as well as surfacing the
                 conversations that have not received replies.
-              </FeatureDescription>
-            </ExtraContent>
-          )}
-        />
-
-        <FeatureItem
-          title={'Advanced moderation tools'}
-          subtitle={
-            'Automate away the pain of moderating spam and harrassment. Coming in 2018.'
-          }
-          icon={'support'}
-          color={'warn'}
-          priceLabel={'Coming soon'}
-          render={() => (
-            <ExtraContent>
-              <FeatureSublabel>Fighting toxicity together</FeatureSublabel>
-              <FeatureDescription isExpanded>
-                Our goal is to help anyone build healthy, productive online
-                communities. We are building advanced moderation tooling that
-                will help admins automate the fight against spam and toxicity,
-                giving you more time to join conversations and connect with your
-                community members in positive ways.
-              </FeatureDescription>
-
-              <FeatureSublabel>Coming soon</FeatureSublabel>
-              <FeatureDescription isExpanded>
-                Advanced moderation tooling will be coming later this year.
               </FeatureDescription>
             </ExtraContent>
           )}
@@ -134,3 +107,32 @@ class PaidFeaturesList extends React.Component<{}> {
 }
 
 export default PaidFeaturesList;
+
+// KEEP THIS FOR FUTURE USE
+
+// <FeatureItem
+//   title={'Advanced moderation tools'}
+//   subtitle={
+//     'Automate away the pain of moderating spam and harrassment. Coming in 2018.'
+//   }
+//   icon={'support'}
+//   color={'warn'}
+//   priceLabel={'Coming soon'}
+//   render={() => (
+//     <ExtraContent>
+//       <FeatureSublabel>Fighting toxicity together</FeatureSublabel>
+//       <FeatureDescription>
+//         Our goal is to help anyone build healthy, productive online
+//         communities. We are building advanced moderation tooling that
+//         will help admins automate the fight against spam and toxicity,
+//         giving you more time to join conversations and connect with your
+//         community members in positive ways.
+//       </FeatureDescription>
+
+//       <FeatureSublabel>Coming soon</FeatureSublabel>
+//       <FeatureDescription>
+//         Advanced moderation tooling will be coming later this year.
+//       </FeatureDescription>
+//     </ExtraContent>
+//   )}
+// />

@@ -55,7 +55,7 @@ class FreeFeaturesList extends React.Component<{}> {
 
         <FeatureItem
           title={'Unlimited members'}
-          subtitle={'Never worry about growing too big.'}
+          subtitle={'A growing community should never be a source of stress.'}
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
@@ -142,6 +142,15 @@ class FreeFeaturesList extends React.Component<{}> {
                 makes conversations more accessible and provides long-term value
                 to the contributions your members add every day.
               </FeatureDescription>
+
+              <FeatureSublabel>Organic growth by default</FeatureSublabel>
+              <FeatureDescription isExpanded>
+                Being search-indexed means that people will discover your
+                community organically over time as they search for their
+                interests or seek answers to their questions. This is not
+                possible on platforms like Slack where community admins are
+                responsible for marketing and growth efforts.
+              </FeatureDescription>
             </ExtraContent>
           )}
         />
@@ -166,18 +175,21 @@ class FreeFeaturesList extends React.Component<{}> {
                 Everyone on Spectrum earns reputation based on the quality of
                 their contributions back to their communities. This makes it
                 easy for community owners and other members to find the people
-                are most engaged and most knowledgeable about a specific topic.
+                who are most engaged and most knowledgeable about a specific
+                topic.
               </FeatureDescription>
 
               <FeatureSublabel>How it works</FeatureSublabel>
               <FeatureDescription isExpanded>
-                We provide a score to different kinds of interactions on
-                Spectrum. When people start or join conversations, they earn
-                reputation for adding value back to a community. But we also
-                looker deeper into the interactions that happen downstream from
-                each person’s activity in order to ensure that conversations are
-                healthy and productive, rather than sensationalist or
-                provacative.
+                We provide a score to different interactions on Spectrum. When
+                people start or join conversations, they earn reputation for
+                adding value back to a community.
+              </FeatureDescription>
+              <FeatureDescription isExpanded>
+                But we also looker deeper into the interactions that happen
+                downstream from each person’s activity in order to ensure that
+                conversations are healthy and productive, rather than
+                sensationalist or provacative.
               </FeatureDescription>
             </ExtraContent>
           )}

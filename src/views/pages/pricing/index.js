@@ -108,8 +108,7 @@ class Pricing extends React.Component<Props> {
 
           <PageSubtitle>
             We know how hard it can be to build a great online community. We’ve
-            designed our pricing to make growing and managing a community
-            easier. The result is our{' '}
+            designed our pricing to make things easier. The result is our{' '}
             <a
               style={{ fontWeight: 'bold' }}
               onClick={this.scrollToFairPriceFaq}
@@ -134,10 +133,18 @@ class Pricing extends React.Component<Props> {
 
             <SectionDescription>
               <Highlight>
-                That’s why we promise to only charge you for the features you
-                actually used to grow and manage your community each month.
+                That’s why we automatically prorate your monthly bill to only
+                charge for the time that features were used.
               </Highlight>
             </SectionDescription>
+
+            <TableCardButton
+              light
+              onClick={this.scrollToFairPriceFaq}
+              style={{ marginTop: '24px' }}
+            >
+              Learn more about how this works
+            </TableCardButton>
           </Section>
 
           <Section
@@ -147,7 +154,7 @@ class Pricing extends React.Component<Props> {
             <SectionDescription>
               It takes time for a community to find its feet - we’ve been there
               before. That’s why all communities on Spectrum can be started and
-              maintained indefinitely, for free. Free communities come with:
+              maintained indefinitely for free. Free communities come with:
             </SectionDescription>
 
             <FreeFeaturesList />
