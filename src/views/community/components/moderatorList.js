@@ -2,7 +2,6 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import Icon from 'src/components/icons';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withRouter } from 'react-router';
@@ -10,7 +9,7 @@ import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
 import { Card } from 'src/components/card';
-import { Loading, LoadingListItem } from 'src/components/loading';
+import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
@@ -28,19 +27,15 @@ type Props = {
   currentUser: ?Object,
 };
 
-type State = {
-  scrollElement: any,
-};
-
-class CommunityMemberGrid extends React.Component<Props, State> {
-  state = { scrollElement: null };
-
-  componentDidMount() {
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
-    });
+class CommunityModeratorList extends React.Component<Props> {
+  shouldComponentUpdate() {
+    // NOTE(@brian) This is needed to avoid conflicting the the members tab in
+    // the community view. See https://github.com/withspectrum/spectrum/pull/2613#pullrequestreview-105861623
+    // for discussion
+    const curr = this.props;
+    // never update once we have the list of team members
+    if (this.props.data && this.props.data.community) return false;
+    return true;
   }
 
   initMessage = user => {
@@ -48,38 +43,15 @@ class CommunityMemberGrid extends React.Component<Props, State> {
     return this.props.history.push('/messages/new');
   };
 
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    // fetching more
-    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
-      return false;
-    return true;
-  }
-
   render() {
     const { data: { community }, isLoading, currentUser } = this.props;
-    const { scrollElement } = this.state;
 
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
-      const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
-        <InfiniteList
-          pageStart={0}
-          loadMore={this.props.data.fetchMore}
-          hasMore={hasNextPage}
-          loader={
-            <UserListItemContainer>
-              <LoadingListItem />
-            </UserListItemContainer>
-          }
-          useWindow={false}
-          initialLoad={false}
-          scrollElement={scrollElement}
-          threshold={750}
-        >
+        <div>
           {nodes.map(node => {
             if (!node) return null;
             return (
@@ -88,13 +60,11 @@ class CommunityMemberGrid extends React.Component<Props, State> {
                   id={node.user.id}
                   name={node.user.name}
                   username={node.user.username}
-                  description={node.user.description}
                   isCurrentUser={currentUser && node.user.id === currentUser.id}
                   isOnline={node.user.isOnline}
                   onlineSize={'small'}
-                  reputation={node.reputation}
                   profilePhoto={node.user.profilePhoto}
-                  avatarSize={'40'}
+                  avatarSize={'32'}
                   badges={node.roles}
                 >
                   {currentUser &&
@@ -110,19 +80,25 @@ class CommunityMemberGrid extends React.Component<Props, State> {
               </UserListItemContainer>
             );
           })}
-        </InfiniteList>
+        </div>
       );
     }
 
     if (isLoading) {
-      return <Loading />;
+      return (
+        <div style={{ padding: '32px' }}>
+          <Loading />
+        </div>
+      );
     }
 
     return (
       <Card>
         <ViewError
           refresh
-          heading={'We weren’t able to fetch the members of this community.'}
+          heading={
+            'We weren’t able to fetch the team that owns this community.'
+          }
         />
       </Card>
     );
@@ -137,4 +113,4 @@ export default compose(
   withRouter,
   getCommunityMembersQuery,
   viewNetworkHandler
-)(CommunityMemberGrid);
+)(CommunityModeratorList);

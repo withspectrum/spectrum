@@ -35,12 +35,13 @@ import {
   Meta,
   Content,
   Extras,
-  MidSegment,
   ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
+import ModeratorList from './components/moderatorList';
+
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -243,7 +244,7 @@ class CommunityView extends React.Component<Props, State> {
                   Threads
                 </Segment>
 
-                <MidSegment
+                <DesktopSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
@@ -251,7 +252,7 @@ class CommunityView extends React.Component<Props, State> {
                   Members ({community.metaData &&
                     community.metaData.members &&
                     community.metaData.members.toLocaleString()})
-                </MidSegment>
+                </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -305,18 +306,18 @@ class CommunityView extends React.Component<Props, State> {
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
+              <ColumnHeading>Team</ColumnHeading>
+              <ModeratorList
+                id={community.id}
+                first={20}
+                filter={{ isModerator: true, isOwner: true }}
+              />
+
+              <ColumnHeading>Channels</ColumnHeading>
               <ChannelList
                 id={community.id}
                 communitySlug={communitySlug.toLowerCase()}
               />
-
-              <ColumnHeading>
-                Top Members ({community.metaData &&
-                  community.metaData.members &&
-                  community.metaData.members.toLocaleString()}{' '}
-                total)
-              </ColumnHeading>
-              <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>
         </AppViewWrapper>

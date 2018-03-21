@@ -39,10 +39,6 @@ export const WrapperLi = styled.li`
   justify-content: center;
   max-width: 100%;
   list-style-type: none;
-
-  &:not(:first-of-type) {
-    border-top: 2px solid ${props => props.theme.bg.border};
-  }
 `;
 
 export const Col = styled(FlexCol)`
