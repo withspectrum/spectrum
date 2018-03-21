@@ -374,11 +374,3 @@ export default compose(
   getCommunityByMatch,
   viewNetworkHandler
 )(CommunityView);
-
-// <ColumnHeading>
-//                 Top Members ({community.metaData &&
-//                   community.metaData.members &&
-//                   community.metaData.members.toLocaleString()}{' '}
-//                 total)
-//               </ColumnHeading>
-// <CommunityMemberGrid first={5} id={community.id} />
