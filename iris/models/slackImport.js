@@ -8,7 +8,7 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
 if (!IS_PROD) {
-  SLACK_SECRET = SLACK_SECRET || 'asdf123';
+  SLACK_SECRET = process.env.SLACK_SECRET_DEVELOPMENT || 'asdf123';
 }
 
 export const generateOAuthToken = (code: string, redirect_uri: string) => {
@@ -17,7 +17,8 @@ export const generateOAuthToken = (code: string, redirect_uri: string) => {
       'https://slack.com/api/oauth.access',
       querystring.stringify({
         code: code,
-        scope: 'users:read.email,users:read,admin,chat:write',
+        scope:
+          'users:read.email,users:read,admin,chat:write,bot,chat:write:bot',
         client_id: '201769987287.200380534417',
         client_secret: SLACK_SECRET,
         redirect_uri,

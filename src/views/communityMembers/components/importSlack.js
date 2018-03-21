@@ -141,14 +141,14 @@ class ImportSlack extends React.Component<Props, State> {
       const hasAlreadyBeenSent = fullImport && community.slackImport.sent;
 
       const url = this.props.isOnboarding
-        ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,admin,chat:write:bot&state=${
+        ? `https://slack.com/oauth/authorize?client_id=327439212113.334330952054&scope=users:read.email%20users:read%20admin%20chat:write:bot&state=${
             community.id
           }&redirect_uri=${
             process.env.NODE_ENV === 'development'
               ? 'http://localhost:3001/api/slack/onboarding'
               : 'https://spectrum.chat/api/slack/onboarding'
           }`
-        : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,admin,chat:write:bot&state=${
+        : `https://slack.com/oauth/authorize?client_id=327439212113.334330952054&scope=users:read.email%20users:read%20admin%20chat:write:bot&state=${
             community.id
           }&redirect_uri=${
             process.env.NODE_ENV === 'development'
