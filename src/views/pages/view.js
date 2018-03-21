@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Link from 'src/components/link';
 import Icon from '../../components/icons';
 import Avatar from '../../components/avatar';
-import Privacy from '../../components/privacy';
-import Terms from '../../components/terms';
+import Privacy from './privacy';
+import Terms from './terms';
 import {
   Shadow,
   Gradient,
