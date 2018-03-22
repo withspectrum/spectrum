@@ -199,6 +199,7 @@
     "dev:mercury": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,mercury*,shared:middlewares*,-mercury:resolvers cross-env DIR=mercury backpack",
     "dev:vulcan": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,vulcan*,shared:middlewares*,-vulcan:resolvers cross-env DIR=vulcan backpack",
     "dev:hyperion": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hyperion*,shared:middlewares*,-hyperion:resolvers cross-env DIR=hyperion backpack",
+    "dev:pluto": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,pluto*,shared:middlewares*,-pluto:resolvers cross-env DIR=pluto backpack",
     "dev:mobile": "(cd mobile && yarn run dev)",
     "open:ios": "(cd mobile && yarn run open:ios)",
     "open:android": "(cd mobile && yarn run open:android)",
