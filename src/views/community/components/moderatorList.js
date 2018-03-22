@@ -57,9 +57,9 @@ class CommunityModeratorList extends React.Component<Props> {
             return (
               <UserListItemContainer key={node.user.id}>
                 <GranularUserProfile
+                  userObject={node.user}
                   id={node.user.id}
                   name={node.user.name}
-                  username={node.user.username}
                   isCurrentUser={currentUser && node.user.id === currentUser.id}
                   isOnline={node.user.isOnline}
                   onlineSize={'small'}
