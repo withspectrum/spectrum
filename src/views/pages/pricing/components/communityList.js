@@ -93,13 +93,14 @@ class CommunityList extends React.Component<Props, State> {
       ownedCommunities,
       ownsCommunities,
     } = this.calculateOwnedCommunities(this.props);
+
     const { hasError } = this.state;
 
     if (hasError) return null;
 
     if (ownsCommunities) {
       return (
-        <Section>
+        <Section data-e2e-id="pricing-page-owned-communities-list">
           <SectionTitle>Your communities</SectionTitle>
           <SectionDescription>
             We found these communities that you already own - you can manage

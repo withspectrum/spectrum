@@ -15,7 +15,7 @@ import SampleCommunities from './sampleCommunities';
 class FreeFeaturesList extends React.Component<{}> {
   render() {
     return (
-      <FeaturesList>
+      <FeaturesList data-e2e-id="pricing-page-free-features-list">
         <FeatureItem
           title={'Unlimited conversations'}
           subtitle={'Never worry about losing a great conversation again.'}
