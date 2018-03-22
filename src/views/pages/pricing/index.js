@@ -40,6 +40,7 @@ class Pricing extends React.Component<Props> {
   freeFeaturesSection: ?HTMLDivElement;
   fairPriceFaqSection: ?HTMLDivElement;
   ownedCommunitiesSection: ?HTMLDivElement;
+  ossSection: ?HTMLDivElement;
 
   componentDidMount() {
     track('pricing', 'viewed', null);
@@ -72,6 +73,12 @@ class Pricing extends React.Component<Props> {
 
   scrollToOwnedCommunities = () => {
     const node = this.ownedCommunitiesSection;
+    if (!node) return;
+    window.scrollTo(0, node.offsetTop);
+  };
+
+  scrollToOss = () => {
+    const node = this.ossSection;
     if (!node) return;
     window.scrollTo(0, node.offsetTop);
   };
@@ -120,6 +127,7 @@ class Pricing extends React.Component<Props> {
           <Section>
             <PricingPlanTable
               scrollToPaidFeatures={this.scrollToPaidFeatures}
+              scrollToOss={this.scrollToOss}
             />
           </Section>
 
@@ -163,19 +171,21 @@ class Pricing extends React.Component<Props> {
           <Section
             innerRef={component => (this.paidFeaturesSection = component)}
           >
-            <SectionTitle>Need a hand? We’ve got your back</SectionTitle>
+            <SectionTitle>
+              Pay as you go for powerful management features
+            </SectionTitle>
             <SectionDescription>
-              When you need it, we’ve built features that will make growing and
-              managing your community easier, save you time, and save you money.
+              For growing communities that need deeper understanding and
+              powerful management tools, we’ve got you covered. All of our paid
+              features are covered by our{' '}
+              <Highlight>Fair Price Promise</Highlight>.
             </SectionDescription>
 
             <PaidFeaturesList />
           </Section>
 
-          <Section>
-            <SectionTitle>
-              If your community gives back, we’ll give back, too
-            </SectionTitle>
+          <Section innerRef={component => (this.ossSection = component)}>
+            <SectionTitle>For communities that are giving back</SectionTitle>
             <SectionDescription>
               If you’re looking for a place to grow your community for an&nbsp;
               <Highlight>
@@ -201,6 +211,10 @@ class Pricing extends React.Component<Props> {
                 View my communities
               </TableCardButton>
             )}
+
+            <a href={'mailto:hi@spectrum.chat'} style={{ width: '100%' }}>
+              <TableCardButton light>Get in touch</TableCardButton>
+            </a>
           </Section>
 
           {ownedCommunities && (
@@ -227,8 +241,8 @@ class Pricing extends React.Component<Props> {
           <Section>
             <SectionTitle>Creating a new community?</SectionTitle>
             <SectionDescription>
-              Communities on Spectrum are free to create, so if you’re ready to
-              get started you can create your community now.
+              Communities can be created for free at any time. Get started
+              below.
             </SectionDescription>
 
             <Link style={{ width: '100%' }} to={'/new/community'}>
@@ -264,16 +278,8 @@ class Pricing extends React.Component<Props> {
               </SectionDescription>
 
               <SectionDescription>
-                However, let’s say you only need the private channel for a week.
-                When you decide to archive that private channel, we’ll calculate
-                that it was only used for one week out of a one-month billing
-                cycle (25% of the time) and automatically prorate a $7.50 credit
-                to your account.
-              </SectionDescription>
-
-              <SectionDescription>
-                This same flow works across each of our paid features: moderator
-                seats, private channels, and community analytics.
+                However, if you archive the channel after one week, we’ll
+                automatically apply credit to your account for the unused time.
               </SectionDescription>
             </Subsection>
 
@@ -284,42 +290,28 @@ class Pricing extends React.Component<Props> {
 
               <SectionDescription>
                 Spectrum calculates usage at the end of each billing cycle, and
-                then prorates back any credit for unused features.
-              </SectionDescription>
-
-              <SectionDescription>
-                Here’s how that might look using the example from above: Imagine
-                you’ve created a private channel. At the time of creation,
-                Spectrum will charge $10, which will be reflected immediately on
-                your billing statement.
-              </SectionDescription>
-
-              <SectionDescription>
-                One week later you archive that private channel. At the end of
-                the month, we will calculate that 75% of that $10 subscription
-                went unused, and a $7.50 credit will be applied to your account.
-              </SectionDescription>
-
-              <SectionDescription>
-                The next time an event comes around that needs a private
-                channel, that $7.50 credit will be used *first* to offset the
-                new $10 subscription.
+                then prorates back any credit for unused features. You may
+                receive lower-than-expected charges on your card that reflect
+                credit being used.
               </SectionDescription>
             </Subsection>
 
             <Subsection>
-              <SectionSubtitle>This is all a bit confusing...</SectionSubtitle>
+              <SectionSubtitle>
+                Will I know when I’ve received a proration for unused time?
+              </SectionSubtitle>
 
               <SectionDescription>
-                At the end of the day our promise is this:{' '}
-                <Highlight>
-                  your community will only ever be charged for the time where
-                  you’re using paid features.
-                </Highlight>{' '}
-                As a result, there will often be cases where proration changes
-                the amount you’ll see on your card statement at the end of each
-                month.
+                Yes. At the end of each billing cycle we will send you a receipt
+                email that will include line items for all charges, prorations,
+                and credit used.
               </SectionDescription>
+            </Subsection>
+
+            <Subsection>
+              <SectionSubtitle>
+                I would like to talk with the team about how this works.
+              </SectionSubtitle>
 
               <SectionDescription>
                 If you have any questions about this, or feel you’ve found an

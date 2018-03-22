@@ -215,7 +215,7 @@ export const FeatureDescription = styled.p`
 export const Highlight = styled.span`
   box-shadow: inset 0 -28px 0 rgba(74, 2, 210, 0.1);
   font-weight: 600;
-  padding: 4px 0;
+  padding: 4px 1px;
   line-height: 1.6;
 `;
 
@@ -563,7 +563,7 @@ export const PlanFeatureTitle = styled.p`
 `;
 
 export const PlanFeatureSubtitle = styled.p`
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.2;
   color: ${props => props.theme.text.alt};

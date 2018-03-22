@@ -28,11 +28,11 @@ class FreeFeaturesList extends React.Component<{}> {
                 width={300}
                 src={'/img/create.svg'}
               />
-              <FeatureSublabel>Your history, saved</FeatureSublabel>
+              <FeatureSublabel>Your history, forever</FeatureSublabel>
               <FeatureDescription isExpanded>
                 All conversations are saved, indexed, and searchable forever.
                 This makes it easy to find that one message from way-back-when,
-                without having to worry about a history limit.
+                without worrying about a history limit.
               </FeatureDescription>
 
               <FeatureSublabel>A better way to talk</FeatureSublabel>
@@ -55,7 +55,7 @@ class FreeFeaturesList extends React.Component<{}> {
 
         <FeatureItem
           title={'Unlimited members'}
-          subtitle={'A growing community should never be a source of stress.'}
+          subtitle={'Growing fast or slow with peace of mind.'}
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
@@ -78,8 +78,8 @@ class FreeFeaturesList extends React.Component<{}> {
               <FeatureDescription isExpanded>
                 As your community grows it’s important to know who people are
                 and the background they come from. We’ll keep you notified about
-                people as they join, and make it easy to search for the right
-                person at any time.
+                people as they join your community, and make it easy to search
+                for people at any time.
               </FeatureDescription>
             </ExtraContent>
           )}
@@ -147,9 +147,7 @@ class FreeFeaturesList extends React.Component<{}> {
               <FeatureDescription isExpanded>
                 Being search-indexed means that people will discover your
                 community organically over time as they search for their
-                interests or seek answers to their questions. This is not
-                possible on platforms like Slack where community admins are
-                responsible for marketing and growth efforts.
+                interests or seek answers to their questions.
               </FeatureDescription>
             </ExtraContent>
           )}
@@ -173,17 +171,16 @@ class FreeFeaturesList extends React.Component<{}> {
               <FeatureSublabel>Context is key</FeatureSublabel>
               <FeatureDescription isExpanded>
                 Everyone on Spectrum earns reputation based on the quality of
-                their contributions back to their communities. This makes it
-                easy for community owners and other members to find the people
-                who are most engaged and most knowledgeable about a specific
-                topic.
+                their contributions in their communities. This makes it easy for
+                community owners and other members to find the people who are
+                most engaged and most knowledgeable about a specific topic.
               </FeatureDescription>
 
               <FeatureSublabel>How it works</FeatureSublabel>
               <FeatureDescription isExpanded>
-                We provide a score to different interactions on Spectrum. When
-                people start or join conversations, they earn reputation for
-                adding value back to a community.
+                We provide a score to different interactions that people have
+                within your community. When people start or join conversations,
+                they earn reputation for adding value back to a community.
               </FeatureDescription>
               <FeatureDescription isExpanded>
                 But we also looker deeper into the interactions that happen
@@ -212,35 +209,35 @@ class FreeFeaturesList extends React.Component<{}> {
               <FeatureSublabel>Aligned incentives</FeatureSublabel>
               <FeatureDescription isExpanded>
                 Ad-driven business models have misaligned community platform
-                incentives for years. The result is tools that optimize for the
-                wrong metrics, ignoring what actually matters to your community.
-                When we don’t sell your data to advertisers, we can be
-                completely focused on making sure your community is successful
-                in all the right measures.
+                incentives for years. Ad-driven tools optimize for the wrong
+                metrics, ignoring what actually matters to your community. When
+                we don’t sell your data to advertisers, we can be completely
+                focused on making sure your community is successful in the ways
+                that matter to you.
               </FeatureDescription>
 
               <FeatureSublabel>Own your data</FeatureSublabel>
               <FeatureDescription isExpanded>
                 As a result of being ad-free, there is no incentive for Spectrum
                 to ever sell or compromise the security of your community’s
-                data. Your community’s data belongs to your community.
+                data.
               </FeatureDescription>
             </ExtraContent>
           )}
         />
 
         <FeatureItem
-          title={'A new home'}
+          title={'Dedicated community page'}
           subtitle={'Create your own space for your community to thrive.'}
           priceLabel={'Free'}
           render={() => (
             <ExtraContent>
-              <FeatureSublabel>A space</FeatureSublabel>
+              <FeatureSublabel>A space of your own</FeatureSublabel>
               <FeatureDescription isExpanded>
-                Every community on Spectrum has their own dedicated page where
-                people can discover content, explore channels, start
-                conversations, and see who else is in the community. Check out
-                some example communities:
+                Every community gets their own dedicated page where people can
+                discover content, explore channels, start conversations, and
+                find other members. Check out some real communities being built
+                on Spectrum:
               </FeatureDescription>
 
               <SampleCommunities

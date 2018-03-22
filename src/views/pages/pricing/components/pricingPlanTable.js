@@ -16,6 +16,7 @@ import Link from 'src/components/link';
 
 type Props = {
   scrollToPaidFeatures: Function,
+  scrollToOss: Function,
 };
 
 class PricingPlanTable extends React.Component<Props> {
@@ -60,7 +61,7 @@ class PricingPlanTable extends React.Component<Props> {
 
             <PlanFeatures>
               <PricingTableFeatureRow
-                title={'Additional moderators'}
+                title={'Moderators'}
                 subtitle={
                   'An extra set of hands to help keep conversations in your community healthy and productive.'
                 }
@@ -84,7 +85,7 @@ class PricingPlanTable extends React.Component<Props> {
               <PricingTableFeatureRow
                 title={'Analytics'}
                 subtitle={
-                  'Understand who is in your community, and what they care the most about.'
+                  'Understand who is in your community, and what they care about most.'
                 }
                 icon={'analytics'}
                 priceLabel={'$100/mo'}
@@ -120,6 +121,21 @@ class PricingPlanTable extends React.Component<Props> {
             <a href={'mailto:hi@spectrum.chat'}>
               <TableCardButton light>Get in touch</TableCardButton>
             </a>
+          </BusinessPlanAction>
+        </BusinessPlanSection>
+
+        <BusinessPlanSection>
+          <BusinessPlanContent>
+            <PlanPrice>Open Source, education & non-profit</PlanPrice>
+            <PlanDescription>
+              We’re excited to help open-source, education, and non-profit
+              communities with a free moderator seat and private channel.
+            </PlanDescription>
+          </BusinessPlanContent>
+          <BusinessPlanAction>
+            <TableCardButton onClick={this.props.scrollToOss} light>
+              Learn more
+            </TableCardButton>
           </BusinessPlanAction>
         </BusinessPlanSection>
       </PriceTable>
