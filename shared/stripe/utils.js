@@ -50,10 +50,8 @@ type AttachNewSourceInput = {
   customerId: string,
   sourceId: string,
 };
-// prettier-disable-next-line
-const attachNewSource = async (
-  input: AttachNewSourceInput
-): Promise<RawSource> => {
+// prettier-ignore
+const attachNewSource = async (input: AttachNewSourceInput): Promise<RawSource> => {
   const { customerId, sourceId } = input;
   return await stripe.customers.createSource(customerId, {
     source: sourceId,

@@ -10,10 +10,8 @@ export const getInvoices = (
     .run();
 };
 
-// prettier-disable-next-line
-export const getInvoicesByCustomerId = async (
-  customerId: ?string
-): Promise<Array<?Object>> => {
+// prettier-ignore
+export const getInvoicesByCustomerId = async (customerId: ?string): Promise<Array<?Object>> => {
   if (!customerId) return Promise.resolve([]);
   return db
     .table('stripeInvoices')
