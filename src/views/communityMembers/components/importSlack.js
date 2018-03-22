@@ -221,6 +221,7 @@ class ImportSlack extends React.Component<Props, State> {
         this.setState({
           isSendingInvites: false,
         });
+        console.error(err);
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
