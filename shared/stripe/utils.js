@@ -4,7 +4,7 @@ import { stripe } from 'shared/stripe';
 import type { RawCustomer } from 'shared/stripe/types/customer';
 import type { RawSubscription } from 'shared/stripe/types/subscription';
 import type { DBCommunity } from 'shared/types';
-import type { SubscriptionItem } from 'shared/stripe/types/subscriptionItem';
+import type { RawSubscriptionItem } from 'shared/stripe/types/subscriptionItem';
 import type { RawSource } from 'shared/stripe/types/source';
 import type { RawInvoice } from 'shared/stripe/types/invoice';
 import { getCommunityById, setStripeCustomerId } from 'iris/models/community';
@@ -129,7 +129,7 @@ type SubscriptionItemTypes =
 const getSubscriptionItemOfType = (
   customer: RawCustomer,
   type: SubscriptionItemTypes
-): ?SubscriptionItem => {
+): ?RawSubscriptionItem => {
   if (!customer) return null;
   const activeSubscription = getActiveSubscription(customer);
   if (!activeSubscription) return null;

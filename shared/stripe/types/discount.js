@@ -1,10 +1,11 @@
 // @flow
 
 export type RawDiscount = {
+  object: 'discount',
   customer: ?string,
   subscription: ?string,
-  start: Date,
-  end: Date,
+  start: number,
+  end: number,
   coupon: {
     id: string,
     created: Date,

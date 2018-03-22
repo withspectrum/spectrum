@@ -1,10 +1,11 @@
 // @flow
-import type { Plan } from './plan';
+import type { RawPlan } from './plan';
 
-export type SubscriptionItem = {
+export type RawSubscriptionItem = {
   id: string,
-  created: Date,
-  plan: Plan,
+  object: 'list',
+  created: number,
+  plan: RawPlan,
   quantity: number,
   subscription: string,
 };

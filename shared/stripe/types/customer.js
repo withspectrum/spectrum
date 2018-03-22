@@ -6,38 +6,32 @@ import type { RawDiscount } from './discount';
 // comes in from stripe
 export type RawCustomer = {
   id: string,
-  created: Date,
+  object: 'customer',
+  account_balance: ?number,
+  created: number,
   currency: string,
-  email: ?string,
-  default_source: ?string,
+  default_source: string,
+  delinquent: boolean,
+  description: ?string,
   discount: ?RawDiscount,
+  email: ?string,
+  invoice_prefix: string,
+  livemode: boolean,
+  metadata: ?{
+    communityId?: string,
+    communityName?: string,
+  },
+  shipping: ?any,
   sources: {
     data: Array<?RawSource>,
-    has_more: boolean,
-    total_count: number,
   },
   subscriptions: {
     data: Array<?RawSubscription>,
-    has_more: boolean,
-    total_count: number,
   },
 };
 
 // saved in our db
 export type CleanCustomer = {
-  id: string,
+  ...$Exact<RawCustomer>,
   customerId: string,
-  created: Date,
-  currency: string,
-  email: ?string,
-  sources: {
-    data: Array<?RawSource>,
-    has_more: boolean,
-    total_count: number,
-  },
-  subscriptions: {
-    data: Array<?RawSubscription>,
-    has_more: boolean,
-    total_count: number,
-  },
 };
