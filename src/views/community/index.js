@@ -299,7 +299,10 @@ class CommunityView extends React.Component<Props, State> {
 
               {// members grid
               selectedView === 'members' && (
-                <CommunityMemberGrid id={community.id} />
+                <CommunityMemberGrid
+                  id={community.id}
+                  filter={{ isMember: true, isBlocked: false }}
+                />
               )}
 
               {//search

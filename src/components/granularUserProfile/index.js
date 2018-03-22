@@ -26,6 +26,7 @@ import {
 } from './style';
 
 type Props = {
+  userObject: Object,
   id: string,
   avatarSize?: string,
   profilePhoto?: string,
@@ -63,6 +64,7 @@ class GranularUserProfile extends React.Component<Props> {
 
   render() {
     const {
+      userObject,
       avatarSize,
       profilePhoto,
       name,
@@ -82,7 +84,7 @@ class GranularUserProfile extends React.Component<Props> {
         <Content>
           {profilePhoto && (
             <AvatarContent>
-              <LinkHandler username={username}>
+              <LinkHandler username={userObject.username}>
                 <Avatar
                   src={profilePhoto}
                   size={avatarSize || '32'}
@@ -94,7 +96,7 @@ class GranularUserProfile extends React.Component<Props> {
           )}
 
           <MetaContent>
-            <LinkHandler username={username}>
+            <LinkHandler username={userObject.username}>
               {name && (
                 <NameContent>
                   <Name>{name}</Name>

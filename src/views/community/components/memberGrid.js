@@ -85,6 +85,7 @@ class CommunityMemberGrid extends React.Component<Props, State> {
             return (
               <UserListItemContainer key={node.user.id}>
                 <GranularUserProfile
+                  userObject={node.user}
                   id={node.user.id}
                   name={node.user.name}
                   username={node.user.username}
