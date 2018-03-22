@@ -636,6 +636,7 @@ export const setCommunityPendingAdministratorEmail = (
     .run()
     .then(() => getCommunityById(communityId));
 };
+
 export const updateCommunityAdministratorEmail = (
   communityId: string,
   administratorEmail: string
@@ -649,6 +650,17 @@ export const updateCommunityAdministratorEmail = (
     })
     .run()
     .then(() => getCommunityById(communityId));
+};
+
+export const resetCommunityAdministratorEmail = (communityId: string) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      administratorEmail: null,
+      pendingAdministratorEmail: db.literal(),
+    })
+    .run();
 };
 
 export const setStripeCustomerId = (

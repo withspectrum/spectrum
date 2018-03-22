@@ -1,6 +1,7 @@
 // @flow
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_TESTING = process.env.TEST_DB;
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
@@ -9,7 +10,10 @@ import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
 import { toggleUserChannelNotifications } from '../../models/usersChannels';
-import { updateCommunityAdministratorEmail } from '../../models/community';
+import {
+  updateCommunityAdministratorEmail,
+  resetCommunityAdministratorEmail,
+} from '../../models/community';
 import { getChannelsByCommunity } from '../../models/channel';
 
 // $FlowIssue
@@ -204,5 +208,26 @@ emailRouter.get('/validate', (req, res) => {
       );
   }
 });
+
+if (IS_TESTING) {
+  // $FlowIssue
+  emailRouter.get('/validate/test-payments/verify', (req, res) => {
+    return updateCommunityAdministratorEmail(
+      'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+      'briandlovin@gmail.com'
+    ).then(() =>
+      res.redirect('http://localhost:3000/payments-test/settings/billing')
+    );
+  });
+
+  // $FlowIssue
+  emailRouter.get('/validate/test-payments/reset', (req, res) => {
+    return resetCommunityAdministratorEmail(
+      'ce2b4488-4c75-47e0-8ebc-2539c1e6a192'
+    ).then(() =>
+      res.redirect('http://localhost:3000/payments-test/settings/billing')
+    );
+  });
+}
 
 export default emailRouter;
