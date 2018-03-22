@@ -140,7 +140,7 @@ class MembersImport extends React.Component<
             </OutlineButton>
             <Button
               gradientTheme="success"
-              onClick={sendInvites}
+              onClick={this.sendInvites}
               loading={isSendingInvites}
               disabled={hasCustomMessage && customMessageError}
             >
