@@ -331,6 +331,18 @@ const DEFAULT_USERS_COMMUNITIES = [
     reputation: 100,
   },
   {
+    id: '6a942fe5-ee63-478d-afd6-ff19ad2asdfe356',
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    receiveNotifications: true,
+    reputation: 100,
+  },
+  {
     id: '12803353-cb86-4109-8c4a-9abba79398d8',
     createdAt: new Date(DATE),
     userId: BRIAN_ID,

@@ -61,7 +61,10 @@ class ModalWell extends React.Component<Props> {
 
       if (!administratorEmail) {
         return (
-          <Well column>
+          <Well
+            column
+            data-e2e-id="community-settings-create-channel-admin-email-prompt"
+          >
             <p>
               An administrator email is required before adding paid features to
               this community. Go to{' '}
@@ -101,7 +104,10 @@ class ModalWell extends React.Component<Props> {
       }
 
       return (
-        <Well column>
+        <Well
+          column
+          data-e2e-id="community-settings-create-channel-admin-add-source-prompt"
+        >
           <p>
             Add your payment information below to create a private channel. All
             payment information is secured and encrypted by Stripe.

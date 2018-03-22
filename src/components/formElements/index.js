@@ -117,6 +117,7 @@ export const Checkbox = (props: InputProps) => {
       <StyledCheckboxWrapper
         disabled={props.disabled || false}
         align={props.align || 'center'}
+        data-e2e-id={props['e2e-id']}
       >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput

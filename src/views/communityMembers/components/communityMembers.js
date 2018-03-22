@@ -250,7 +250,7 @@ class CommunityMembers extends React.Component<Props, State> {
 
               if (members && members.length > 0) {
                 return (
-                  <ListContainer>
+                  <ListContainer data-e2e-id="community-settings-members-list">
                     {filter &&
                       filter.isBlocked && (
                         <Notice>

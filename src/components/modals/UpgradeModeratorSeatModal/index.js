@@ -72,7 +72,7 @@ class UpgradeModeratorSeatModal extends React.Component<Props, State> {
           title={null}
           closeModal={this.closeModal}
         >
-          <Section>
+          <Section data-e2e-id="upgrade-moderator-seat-modal">
             <Title>{isLoading ? 'Adding moderator...' : 'Add a card'}</Title>
 
             {isLoading && (

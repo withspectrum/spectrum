@@ -104,7 +104,12 @@ class AnalyticsUpsell extends React.Component<Props, State> {
             the health of your community‘s members and conversations.
           </Description>
           <ActionRow>
-            <Button loading={isLoading} onClick={action} large>
+            <Button
+              loading={isLoading}
+              onClick={action}
+              large
+              data-e2e-id="analytics-unlock-upsell-button"
+            >
               Unlock Analytics · $100/mo
             </Button>
             <Link to={'/pricing'}>

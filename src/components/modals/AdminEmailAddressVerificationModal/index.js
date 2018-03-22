@@ -52,7 +52,10 @@ class AdminEmailAddressVerificationModal extends React.Component<Props> {
             title={null}
             closeModal={this.closeModal}
           >
-            <div style={{ marginBottom: '-16px' }}>
+            <div
+              style={{ marginBottom: '-16px' }}
+              data-e2e-id="admin-email-address-verification-modal"
+            >
               <AdministratorEmailForm id={community.id} community={community} />
             </div>
           </ModalContainer>

@@ -74,7 +74,7 @@ class RepExplainerModal extends React.Component<Props, State> {
           title={null}
           closeModal={this.closeModal}
         >
-          <Section>
+          <Section data-e2e-id="upgrade-analytics-modal">
             <Title>{isLoading ? 'Unlocking analytics...' : 'Add a card'}</Title>
 
             {isLoading && (
