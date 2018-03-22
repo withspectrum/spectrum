@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import compose from 'recompose/compose';
 import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import Nav from '../components/nav';
@@ -10,10 +9,6 @@ import PaidFeaturesList from './components/paidFeaturesList';
 import CommunityList from './components/communityList';
 import PricingPlanTable from './components/pricingPlanTable';
 import Link from 'src/components/link';
-import {
-  getCurrentUserCommunityConnection,
-  type GetUserCommunityConnectionType,
-} from 'shared/graphql/queries/user/getUserCommunityConnection';
 import {
   ContentContainer,
   PageTitle,
@@ -30,27 +25,24 @@ import {
 import type { ContextRouter } from 'react-router';
 
 type Props = {
-  data: {
-    user: GetUserCommunityConnectionType,
-  },
   ...$Exact<ContextRouter>,
 };
-class Pricing extends React.Component<Props> {
+
+type State = {
+  ownsCommunities: boolean,
+};
+
+class Pricing extends React.Component<Props, State> {
   paidFeaturesSection: ?HTMLDivElement;
   freeFeaturesSection: ?HTMLDivElement;
   fairPriceFaqSection: ?HTMLDivElement;
   ownedCommunitiesSection: ?HTMLDivElement;
   ossSection: ?HTMLDivElement;
 
+  state = { ownsCommunities: false };
+
   componentDidMount() {
     track('pricing', 'viewed', null);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    if (curr.data.user !== nextProps.data.user) return true;
-    if (curr.location.hash !== nextProps.location.hash) return true;
-    return false;
   }
 
   scrollToPaidFeatures = () => {
@@ -83,28 +75,14 @@ class Pricing extends React.Component<Props> {
     window.scrollTo(0, node.offsetTop);
   };
 
+  setOwnsCommunities = () => {
+    return this.setState({
+      ownsCommunities: true,
+    });
+  };
+
   render() {
-    const { data: { user } } = this.props;
-
-    const isUser = user && user.communityConnection;
-
-    const hasCommunities =
-      isUser &&
-      user.communityConnection.edges &&
-      user.communityConnection.edges.length > 0;
-
-    const ownsCommunities =
-      hasCommunities &&
-      user.communityConnection.edges.some(
-        c => c && c.node.communityPermissions.isOwner
-      );
-
-    const ownedCommunities =
-      ownsCommunities &&
-      user.communityConnection.edges
-        .filter(c => c && c.node.communityPermissions.isOwner)
-        .filter(Boolean)
-        .map(c => c.node);
+    const { ownsCommunities } = this.state;
 
     return (
       <Wrapper data-e2e-id="pricing-page">
@@ -202,7 +180,7 @@ class Pricing extends React.Component<Props> {
               organization, and we’ll get back to you soon.
             </SectionDescription>
 
-            {ownedCommunities && (
+            {ownsCommunities && (
               <TableCardButton
                 light
                 onClick={this.scrollToOwnedCommunities}
@@ -217,26 +195,10 @@ class Pricing extends React.Component<Props> {
             </a>
           </Section>
 
-          {ownedCommunities && (
-            <Section
-              innerRef={component => (this.ownedCommunitiesSection = component)}
-            >
-              <SectionTitle>Your communities</SectionTitle>
-              <SectionDescription>
-                We found these communities that you already own - you can manage
-                them in their settings or apply directly for an open-source,
-                non-profit, or education discount.
-              </SectionDescription>
-
-              <SectionDescription>
-                When applying for a discount, please provide as much information
-                as possible about your project or community so that we can help
-                you as quickly as possible.
-              </SectionDescription>
-
-              <CommunityList communities={ownedCommunities} />
-            </Section>
-          )}
+          <CommunityList
+            setOwnsCommunities={this.setOwnsCommunities}
+            ref={component => (this.ownedCommunitiesSection = component)}
+          />
 
           <Section>
             <SectionTitle>Creating a new community?</SectionTitle>
@@ -327,4 +289,4 @@ class Pricing extends React.Component<Props> {
     );
   }
 }
-export default compose(getCurrentUserCommunityConnection)(Pricing);
+export default Pricing;

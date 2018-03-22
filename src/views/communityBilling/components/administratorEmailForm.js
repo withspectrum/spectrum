@@ -64,7 +64,6 @@ class AdministratorEmailForm extends React.Component<Props, State> {
     return this.props
       .updateAdministratorEmail({ input })
       .then(data => {
-        console.log(data);
         this.props.dispatch(
           addToastWithTimeout('success', `Confirmation email sent to ${email}`)
         );

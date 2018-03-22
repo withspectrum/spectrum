@@ -13,7 +13,6 @@ type Props = {
 
 class Pages extends React.Component<Props> {
   renderPage = () => {
-    console.log(this.props);
     switch (this.props.match.path) {
       case '/': {
         return <Home {...this.props} />;

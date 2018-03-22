@@ -17,9 +17,29 @@ type Props = {
   isLoading: boolean,
 };
 
-class SampleCommunities extends React.Component<Props> {
+type State = {
+  hasError: boolean,
+};
+
+class SampleCommunities extends React.Component<Props, State> {
+  state = { hasError: false };
+
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
+  }
+
   render() {
     const { data, isLoading } = this.props;
+    const { hasError } = this.state;
+
+    if (hasError) {
+      return (
+        <Link to={'/explore'}>
+          <TableCardButton>Explore communities</TableCardButton>
+        </Link>
+      );
+    }
+
     const hasCommunities = data.communities && data.communities.length > 0;
     const communities = hasCommunities ? data.communities : null;
 
