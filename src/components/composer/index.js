@@ -5,8 +5,8 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
+import debounce from 'debounce';
 import { KeyBindingUtil } from 'draft-js';
-import { throttle } from 'src/helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
@@ -85,21 +85,25 @@ let storedBody;
 let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-if (localStorage) {
-  try {
-    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-    storedTitle = localStorage.getItem(LS_TITLE_KEY);
-  } catch (err) {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
-  }
-}
-
 class ComposerWithData extends Component<Props, State> {
   bodyEditor: any;
 
   constructor(props) {
     super(props);
+
+    let storedBody;
+    let storedTitle;
+    if (localStorage) {
+      try {
+        storedBody = toState(
+          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+        );
+        storedTitle = localStorage.getItem(LS_TITLE_KEY);
+      } catch (err) {
+        localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_TITLE_KEY);
+      }
+    }
 
     this.state = {
       title: storedTitle || '',
@@ -116,11 +120,11 @@ class ComposerWithData extends Component<Props, State> {
       postWasPublished: false,
     };
 
-    this.persistBodyToLocalStorageWithDebounce = throttle(
+    this.persistBodyToLocalStorageWithDebounce = debounce(
       this.persistBodyToLocalStorageWithDebounce,
       500
     );
-    this.persistTitleToLocalStorageWithDebounce = throttle(
+    this.persistTitleToLocalStorageWithDebounce = debounce(
       this.persistTitleToLocalStorageWithDebounce,
       500
     );
@@ -191,6 +195,27 @@ class ComposerWithData extends Component<Props, State> {
     });
   };
 
+  componentWillMount() {
+    let storedBody;
+    let storedTitle;
+    if (localStorage) {
+      try {
+        storedBody = toState(
+          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+        );
+        storedTitle = localStorage.getItem(LS_TITLE_KEY);
+      } catch (err) {
+        localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_TITLE_KEY);
+      }
+    }
+
+    this.setState({
+      title: this.state.title || storedTitle || '',
+      body: this.state.body || storedBody || '',
+    });
+  }
+
   componentDidMount() {
     this.handleIncomingProps(this.props);
     // $FlowIssue
@@ -227,11 +252,11 @@ class ComposerWithData extends Component<Props, State> {
 
   changeTitle = e => {
     const title = e.target.value;
+    this.persistTitleToLocalStorageWithDebounce(title);
     if (/\n$/g.test(title)) {
       this.bodyEditor.focus();
       return;
     }
-    this.persistTitleToLocalStorageWithDebounce();
     this.setState({
       title,
     });
@@ -239,7 +264,7 @@ class ComposerWithData extends Component<Props, State> {
 
   changeBody = body => {
     this.listenForUrl(body);
-    this.persistBodyToLocalStorageWithDebounce();
+    this.persistBodyToLocalStorageWithDebounce(body);
     this.setState({
       body,
     });
@@ -267,58 +292,42 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   closeComposer = (clear?: string) => {
+    this.persistBodyToLocalStorage(this.state.body);
+    this.persistTitleToLocalStorage(this.state.title);
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
     if (clear) {
-      console.log('clearing when closeCompoesr has clear');
       this.clearEditorStateAfterPublish();
-      return this.props.dispatch(closeComposer());
     }
 
-    console.log('persisting when closeClomposer is called');
-    this.persistBodyToLocalStorage();
-    console.log('persisting when closeCompoesr is called');
-    this.persistTitleToLocalStorage();
-    this.props.dispatch(closeComposer());
+    return this.props.dispatch(closeComposer());
   };
 
   clearEditorStateAfterPublish = () => {
     try {
-      console.log('clearing after publish body');
       localStorage.removeItem(LS_BODY_KEY);
-      console.log('clearing after publish title');
       localStorage.removeItem(LS_TITLE_KEY);
     } catch (err) {
       console.error(err);
     }
   };
 
-  persistBodyToLocalStorageWithDebounce = () => {
-    console.log(
-      'persisting body with debounce',
-      JSON.stringify(toJSON(this.state.body))
-    );
+  persistBodyToLocalStorageWithDebounce = body => {
     return localStorage.setItem(
       LS_BODY_KEY,
       JSON.stringify(toJSON(this.state.body))
     );
   };
 
-  persistTitleToLocalStorageWithDebounce = () => {
-    console.log('persisting title with debounce', this.state.title);
+  persistTitleToLocalStorageWithDebounce = title => {
     return localStorage.setItem(LS_TITLE_KEY, this.state.title);
   };
 
-  persistTitleToLocalStorage = () => {
-    console.log('persisting title immediately', this.state.title);
+  persistTitleToLocalStorage = title => {
     return localStorage.setItem(LS_TITLE_KEY, this.state.title);
   };
 
-  persistBodyToLocalStorage = () => {
-    console.log(
-      'persisting body immediately',
-      JSON.stringify(toJSON(this.state.body))
-    );
+  persistBodyToLocalStorage = body => {
     return localStorage.setItem(
       LS_BODY_KEY,
       JSON.stringify(toJSON(this.state.body))
@@ -437,8 +446,8 @@ class ComposerWithData extends Component<Props, State> {
     };
 
     // one last save to localstorage
-    this.persistBodyToLocalStorage();
-    this.persistTitleToLocalStorage();
+    this.persistBodyToLocalStorage(this.state.body);
+    this.persistTitleToLocalStorage(this.state.title);
 
     this.props
       .publishThread(thread)
