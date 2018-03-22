@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
@@ -148,12 +149,6 @@ export const Meta = styled(Column)`
     margin: 16px 0 0 32px;
   }
 
-  > div:last-of-type {
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
   > a > button {
     margin-top: 16px;
     margin-left: 32px;
@@ -236,4 +231,21 @@ export const ToggleNotificationsContainer = styled.div`
   height: 100%;
   cursor: pointer;
   ${Tooltip};
+`;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  padding: 0 16px;
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;

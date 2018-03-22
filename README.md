@@ -22,7 +22,7 @@ Spectrum aims to be the best platform to build any kind of community online by c
 
 ### Status
 
-Spectrum has been under full-time development since March, 2017. See [the roadmap](TK) for up-to-date information about our current areas of focus.
+Spectrum has been under full-time development since March, 2017. See [the roadmap](https://github.com/withspectrum/spectrum/projects/19) for up-to-date information about our current areas of focus.
 
 <div align="center">
   <img height="50px" src="public/img/cluster-1.svg" />
@@ -38,6 +38,7 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
     - [Code Style](#code-style)
   - [First time setup](#first-time-setup)
   - [Running the app locally](#running-the-app-locally)
+  - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
 - Technical
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
@@ -50,7 +51,7 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
 
 ## Contributing 
 
-**We heartily welcome any and all contributions that match our product roadmap and engineering standards!**
+**We heartily welcome any and all contributions that match [our product roadmap](https://github.com/withspectrum/spectrum/projects/19) and engineering standards!**
 
 That being said, this codebase isn't your typical open source project because it's not a library or package with a limited scope—it's our entire product.
 
@@ -66,7 +67,9 @@ If you found a technical bug on Spectrum or have ideas for features we should im
 
 #### Fixing a bug or implementing a new feature
 
-If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in our roadmap and plans for the app.
+If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in [our roadmap](https://github.com/withspectrum/spectrum/projects/19) and plans for the app.
+
+If you want to contribute but are unsure to start, we have [a "good first issue" label](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) which is applied to newcomer-friendly issues. Take a look at [the full list of good first issues](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick something you like!
 
 Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local setup instructions](#first-time-setup)!
 

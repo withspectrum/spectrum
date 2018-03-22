@@ -51,7 +51,7 @@ type State = {
 
 class CommunityMembers extends React.Component<Props, State> {
   initialState = {
-    filter: { isMember: true },
+    filter: { isMember: true, isBlocked: false },
     searchIsFocused: false,
     searchString: '',
     queryString: '',
@@ -61,7 +61,7 @@ class CommunityMembers extends React.Component<Props, State> {
 
   viewMembers = () => {
     return this.setState({
-      filter: { isMember: true },
+      filter: { isMember: true, isBlocked: false },
       searchIsFocused: false,
     });
   };
@@ -113,6 +113,7 @@ class CommunityMembers extends React.Component<Props, State> {
     const { user, roles, reputation, ...permissions } = communityMember;
     return (
       <GranularUserProfile
+        userObject={user}
         key={user.id}
         id={user.id}
         name={user.name}

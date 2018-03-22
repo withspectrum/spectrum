@@ -4,7 +4,6 @@ import { warn, fail, message, markdown, schedule, danger } from 'danger';
 import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
 import flow from 'danger-plugin-flow';
-import labels from 'danger-plugin-labels';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
 import noConsole from 'danger-plugin-no-console';
 
@@ -26,17 +25,6 @@ if (danger.github.pr.body.length < 10) {
   fail('Please add a description to your PR.');
 }
 
-// Add automatic labels to the PR
-schedule(
-  labels({
-    labels: {
-      wip: 'WIP: Building',
-      'needs testing': 'WIP: Needs Testing',
-      'ready for review': 'WIP: Ready for Review',
-    },
-  })
-);
-
 // Make sure the yarn.lock file is updated when dependencies get added and log any added dependencies
 APP_FOLDERS.forEach(folder => {
   schedule(yarn(path.join(__dirname, folder, 'package.json')));
@@ -47,7 +35,8 @@ jest();
 
 // Make sure nobody does a it.only and blocks our entire test-suite from running
 noTestShortcuts({
-  testFilePredicate: filePath => filePath.endsWith('.test.js'),
+  testFilePredicate: filePath =>
+    filePath.endsWith('.test.js') || filePath.endsWith('_spec.js'),
 });
 
 schedule(noConsole({ whitelist: ['error'] }));

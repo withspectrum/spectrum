@@ -43,12 +43,16 @@ export const MetaContent = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   flex: auto;
-  padding-right: 16px;
+  padding-right: 24px;
+
+  > a {
+    width: 100%;
+  }
 `;
 
 export const NameContent = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 `;
 

@@ -1,19 +1,13 @@
 import React from 'react';
-// $FlowFixMe
 import Link from 'src/components/link';
 import Card from '../card';
-//$FlowFixMe
 import { connect } from 'react-redux';
-//$FlowFixMe
 import { withRouter } from 'react-router';
-//$FlowFixMe
 import compose from 'recompose/compose';
 import addProtocolToString from 'shared/normalize-url';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import { openModal } from '../../actions/modals';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
-import { Button } from '../buttons';
 import GithubProfile from '../../components/githubProfile';
 import type { ProfileSizeProps } from './index';
 import Avatar from '../avatar';
@@ -36,7 +30,6 @@ import {
   FullDescription,
   Title,
   ExtLink,
-  ProUpgrade,
 } from './style';
 
 type UserProps = {
@@ -82,10 +75,6 @@ const UserWithData = ({
   const initMessage = () => {
     dispatch(initNewThreadWithUser(user));
     history.push('/messages/new');
-  };
-
-  const triggerUpgrade = () => {
-    dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
   switch (componentSize) {
@@ -153,19 +142,6 @@ const UserWithData = ({
               />
             </FullDescription>
           )}
-
-          {!user.isPro &&
-            currentUser &&
-            user.id === currentUser.id && (
-              <ProUpgrade>
-                <Button
-                  onClick={() => triggerUpgrade()}
-                  gradientTheme={'success'}
-                >
-                  Upgrade to Pro
-                </Button>
-              </ProUpgrade>
-            )}
         </FullProfile>
       );
     case 'simple':
