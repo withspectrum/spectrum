@@ -10,7 +10,7 @@ export const getInvoices = (
     .run();
 };
 
-// eslint-disable-next-line
+// prettier-disable-next-line
 export const getInvoicesByCustomerId = async (
   customerId: ?string
 ): Promise<Array<?Object>> => {
