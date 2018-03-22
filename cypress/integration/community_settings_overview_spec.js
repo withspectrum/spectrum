@@ -78,4 +78,41 @@ describe('Community settings overview tab', () => {
     cy.contains(community.description);
     cy.contains(community.website);
   });
+
+  it.only('should allow managing branded login settings', () => {
+    const brandedLoginString = 'Testing branded login custom message';
+
+    cy
+      .get('[data-e2e-id="community-settings-branded-login"]')
+      .contains('Enable custom branded login')
+      .click();
+
+    // cy.get('[data-e2e-id="community-settings-branded-login"]')
+    //   .should('be.visible')
+    //   .contains('[data-e2e-id=""community-settings-branded-login-input"]')
+    //   .click()
+    //   .type(brandedLoginString)
+
+    // cy.get('[data-e2e-id="community-settings-branded-login-save"]')
+    //   .should('be.visible')
+    //   .click()
+
+    // cy.get('[data-e2e-id="community-settings-branded-login-preview"]')
+    //   .should('be.visible')
+    //   .click()
+
+    // cy.get('[data-e2e-id=data-e2e-id="community-login-page"]')
+    //   .contains(brandedLoginString)
+    //   .should('be.visible')
+
+    // cy.visit(`/${community.slug}/settings`);
+
+    // cy.get('[data-e2e-id="community-settings-branded-login"]')
+    //   .contains('Enable custom branded login')
+    //   .click()
+
+    // cy.get('[data-e2e-id="community-settings-branded-login"]')
+    //   .contains('[data-e2e-id=""community-settings-branded-login-input"]')
+    //   .should('not.be.visible')
+  });
 });

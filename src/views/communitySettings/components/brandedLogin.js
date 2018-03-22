@@ -97,7 +97,7 @@ class BrandedLogin extends React.Component<Props, State> {
     if (community) {
       const { brandedLogin } = community;
       return (
-        <SectionCard>
+        <SectionCard data-e2e-id="community-settings-branded-login">
           <SectionTitle>Branded Login</SectionTitle>
           <SectionSubtitle>
             Display a custom login message when people are signing up to
@@ -112,6 +112,7 @@ class BrandedLogin extends React.Component<Props, State> {
                 defaultValue={brandedLogin.message}
                 placeholder={'Set a custom message for the login screen'}
                 onChange={this.handleChange}
+                e2e-id="community-settings-branded-login-input"
               />
             )}
 
@@ -127,6 +128,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   flexDirection: 'row-reverse',
                   justifyContent: 'flex-start',
                 }}
+                data-e2e-id="community-settings-branded-login-save"
               >
                 <Button
                   style={{ alignSelf: 'flex-start' }}
@@ -145,6 +147,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   <OutlineButton
                     color={'text.alt'}
                     style={{ alignSelf: 'flex-start' }}
+                    data-e2e-id="community-settings-branded-login-preview"
                   >
                     Preview
                   </OutlineButton>
