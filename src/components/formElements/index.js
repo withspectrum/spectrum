@@ -169,8 +169,8 @@ export class UnderlineInput extends React.Component {
   }
 }
 
-export const Error = (props: Object) => {
-  return <StyledError>{props.children}</StyledError>;
+export const Error = ({ children, ...rest }) => {
+  return <StyledError {...rest}>{children}</StyledError>;
 };
 
 export const Success = (props: Object) => {

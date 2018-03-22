@@ -54,16 +54,20 @@ class CommunityMembersSettings extends React.Component<Props> {
     if (community && community.id && community.communityPermissions.isOwner) {
       if (!community.billingSettings.administratorEmail) {
         return (
-          <SectionsContainer>
+          <SectionsContainer data-e2e-id="community-settings-billing-admin-email-form">
             <Column>
-              <AdministratorEmailForm community={community} id={community.id} />
+              <AdministratorEmailForm
+                community={community}
+                id={community.id}
+                data
+              />
             </Column>
           </SectionsContainer>
         );
       }
 
       return (
-        <SectionsContainer>
+        <SectionsContainer data-e2e-id="community-settings-billing">
           <Column>
             <SectionCard>
               <SectionTitle>Your subscription</SectionTitle>
