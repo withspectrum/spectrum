@@ -71,9 +71,8 @@ type ChangeDefaultSourceInput = {
   customerId: string,
   sourceId: string,
 };
-const changeDefaultSource = async (
-  input: ChangeDefaultSourceInput
-): Promise<RawCustomer> => {
+// prettier-ignore
+const changeDefaultSource = async (input: ChangeDefaultSourceInput): Promise<RawCustomer> => {
   const { customerId, sourceId } = input;
   return await stripe.customers.update(customerId, {
     default_source: sourceId,
@@ -146,9 +145,8 @@ type CreateCustomerOutput = {
   customer: RawCustomer,
   community: DBCommunity,
 };
-const createCustomer = async (
-  customerInput: CreateCustomerInput
-): Promise<CreateCustomerOutput> => {
+// prettier-ignore
+const createCustomer = async (customerInput: CreateCustomerInput): Promise<CreateCustomerOutput> => {
   const customer = await stripe.customers.create({
     email: customerInput.administratorEmail,
     metadata: {
