@@ -82,37 +82,48 @@ describe('Community settings overview tab', () => {
   it.only('should allow managing branded login settings', () => {
     const brandedLoginString = 'Testing branded login custom message';
 
+    // click the enable custom branded login toggle
     cy
       .get('[data-e2e-id="community-settings-branded-login"]')
       .contains('Enable custom branded login')
       .click();
 
-    // cy.get('[data-e2e-id="community-settings-branded-login"]')
-    //   .should('be.visible')
-    //   .contains('[data-e2e-id=""community-settings-branded-login-input"]')
-    //   .click()
-    //   .type(brandedLoginString)
+    // should be enabled and input should appear
+    cy
+      .get('[data-e2e-id="community-settings-branded-login-input"]')
+      .should('be.visible');
 
-    // cy.get('[data-e2e-id="community-settings-branded-login-save"]')
-    //   .should('be.visible')
-    //   .click()
+    // type in a new branded login string
+    cy
+      .get('[data-e2e-id="community-settings-branded-login-input"]')
+      .click()
+      .type(brandedLoginString);
 
-    // cy.get('[data-e2e-id="community-settings-branded-login-preview"]')
-    //   .should('be.visible')
-    //   .click()
+    // save the string
+    cy
+      .get('[data-e2e-id="community-settings-branded-login-save"]')
+      .should('be.visible')
+      .click();
 
-    // cy.get('[data-e2e-id=data-e2e-id="community-login-page"]')
-    //   .contains(brandedLoginString)
-    //   .should('be.visible')
+    // go to the preview page
+    cy
+      .get('[data-e2e-id="community-settings-branded-login-preview"]')
+      .should('be.visible')
+      .click();
 
-    // cy.visit(`/${community.slug}/settings`);
+    // custom string should be visible
+    cy
+      .get('[data-e2e-id="community-login-page"]')
+      .contains(brandedLoginString)
+      .should('be.visible');
 
-    // cy.get('[data-e2e-id="community-settings-branded-login"]')
-    //   .contains('Enable custom branded login')
-    //   .click()
+    // go back to settings
+    cy.visit(`/${community.slug}/settings`);
 
-    // cy.get('[data-e2e-id="community-settings-branded-login"]')
-    //   .contains('[data-e2e-id=""community-settings-branded-login-input"]')
-    //   .should('not.be.visible')
+    // disable branded login
+    cy
+      .get('[data-e2e-id="community-settings-branded-login"]')
+      .contains('Enable custom branded login')
+      .click();
   });
 });

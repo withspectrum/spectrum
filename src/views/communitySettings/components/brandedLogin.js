@@ -128,7 +128,6 @@ class BrandedLogin extends React.Component<Props, State> {
                   flexDirection: 'row-reverse',
                   justifyContent: 'flex-start',
                 }}
-                data-e2e-id="community-settings-branded-login-save"
               >
                 <Button
                   style={{ alignSelf: 'flex-start' }}
@@ -136,6 +135,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   onClick={this.saveCustomMessage}
                   disabled={messageLengthError}
                   loading={this.state.isLoading}
+                  data-e2e-id="community-settings-branded-login-save"
                 >
                   Save
                 </Button>
