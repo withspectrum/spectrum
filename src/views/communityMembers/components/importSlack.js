@@ -8,7 +8,7 @@ import getSlackImport from 'shared/graphql/queries/slackImport/getSlackImport';
 import type { GetSlackImportType } from 'shared/graphql/queries/slackImport/getSlackImport';
 import sendSlackInvitationsMutation from 'shared/graphql/mutations/slackImport/sendSlackInvitations';
 import { Loading } from '../../../components/loading';
-import { Button } from '../../../components/buttons';
+import { Button, OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { CustomMessageToggle, CustomMessageTextAreaStyles } from '../style';
@@ -19,6 +19,154 @@ import {
 } from '../../../components/settingsViews/style';
 import { Description, Notice } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
+
+type MembersImportProps = {
+  status: 'unconnected' | 'connected' | 'imported' | 'sent',
+  sendInvites: (customMessage: string) => void,
+  isSendingInvites: boolean,
+  teamName?: string,
+  count?: number,
+};
+
+type MembersImportState = {
+  hasCustomMessage: boolean,
+  customMessage: string,
+};
+
+class MembersImport extends React.Component<
+  MembersImportProps,
+  MembersImportState
+> {
+  state = {
+    hasCustomMessage: false,
+    customMessage: '',
+  };
+
+  changeCustomMessage = evt => {
+    this.setState({
+      customMessage: evt.target.value,
+    });
+  };
+
+  toggleCustomMessage = () => {
+    this.setState(prev => ({
+      hasCustomMessage: !prev.hasCustomMessage,
+    }));
+  };
+
+  sendInvites = () => {
+    const { customMessage } = this.state;
+    const { sendInvites } = this.props;
+    if (customMessage.length > 500) return;
+    return sendInvites(customMessage);
+  };
+
+  render() {
+    const { hasCustomMessage, customMessage } = this.state;
+    const {
+      status,
+      teamName,
+      count,
+      sendInvites,
+      isSendingInvites,
+    } = this.props;
+    const customMessageError = customMessage.length > 500;
+
+    // TODO(@mxstbr): Make importing a second step
+    const importMembers = () => {};
+    const isImportingMembers = false;
+
+    // Connected, but nothing imported or sent yet
+    if (status === 'connected') {
+      return (
+        <React.Fragment>
+          <Description>
+            Import your team members to invite them to Spectrum.
+          </Description>
+          <SectionCardFooter>
+            <Button
+              gradientTheme="success"
+              onClick={importMembers}
+              loading={isImportingMembers}
+            >
+              Import members from Slack
+            </Button>
+          </SectionCardFooter>
+        </React.Fragment>
+      );
+    }
+
+    // Imported, but not sent yet
+    if (status === 'imported') {
+      return (
+        <React.Fragment>
+          <Description>
+            We found {count} members with email addresses - you can invite them
+            to your Spectrum community in one click.
+          </Description>
+
+          <CustomMessageToggle onClick={this.toggleCustomMessage}>
+            <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
+            {hasCustomMessage
+              ? 'Remove custom message'
+              : 'Optional: Add a custom message to your invitation'}
+          </CustomMessageToggle>
+
+          {hasCustomMessage && (
+            <Textarea
+              autoFocus
+              value={customMessage}
+              placeholder="Write something sweet here..."
+              style={{
+                ...CustomMessageTextAreaStyles,
+                border: customMessageError
+                  ? '1px solid #E3353C'
+                  : '1px solid #DFE7EF',
+              }}
+              onChange={this.changeCustomMessage}
+            />
+          )}
+
+          {hasCustomMessage &&
+            customMessageError && (
+              <Error>
+                Your custom invitation message can be up to 500 characters.
+              </Error>
+            )}
+
+          <SectionCardFooter>
+            <OutlineButton onClick={importMembers} loading={isImportingMembers}>
+              Import fresh team members
+            </OutlineButton>
+            <Button
+              gradientTheme="success"
+              onClick={sendInvites}
+              loading={isSendingInvites}
+              disabled={hasCustomMessage && customMessageError}
+            >
+              Invite {count} people to Spectrum
+            </Button>
+          </SectionCardFooter>
+        </React.Fragment>
+      );
+    }
+
+    // Sent
+    if (status === 'sent') {
+      return (
+        <React.Fragment>
+          <Description>
+            We found {count} members with email addresses - you have already
+            invited them to join your community.
+          </Description>
+        </React.Fragment>
+      );
+    }
+
+    // Unconnected/fallback
+    return null;
+  }
+}
 
 type Props = {
   data: {
@@ -35,9 +183,6 @@ type Props = {
 
 type State = {
   isSendingInvites: boolean,
-  hasCustomMessage: boolean,
-  customMessageString: string,
-  customMessageError: boolean,
 };
 
 class ImportSlack extends React.Component<Props, State> {
@@ -46,24 +191,13 @@ class ImportSlack extends React.Component<Props, State> {
 
     this.state = {
       isSendingInvites: false,
-      hasCustomMessage: false,
-      customMessageString: '',
-      customMessageError: false,
     };
   }
 
-  sendInvites = () => {
+  sendInvites = (customMessage: string) => {
     const { community } = this.props.data;
-    const {
-      customMessageError,
-      customMessageString,
-      hasCustomMessage,
-    } = this.state;
 
     this.props.hasInvitedPeople && this.props.hasInvitedPeople();
-
-    let customMessage =
-      hasCustomMessage && !customMessageError ? customMessageString : null;
 
     this.setState({
       isSendingInvites: true,
@@ -77,7 +211,6 @@ class ImportSlack extends React.Component<Props, State> {
       .then(() => {
         this.setState({
           isSendingInvites: false,
-          hasCustomMessage: false,
         });
         this.props.dispatch(
           addToastWithTimeout('success', 'Your invitations are being sent!')
@@ -92,53 +225,20 @@ class ImportSlack extends React.Component<Props, State> {
       });
   };
 
-  handleChange = e => {
-    const customMessageString = e.target.value;
-    if (customMessageString.length > 500) {
-      this.setState({
-        customMessageString,
-        customMessageError: true,
-      });
-    } else {
-      this.setState({
-        customMessageString,
-        customMessageError: false,
-      });
-    }
-  };
-
-  toggleCustomMessage = () => {
-    const { hasCustomMessage } = this.state;
-    this.setState({
-      hasCustomMessage: !hasCustomMessage,
-    });
-  };
-
   render() {
     const {
       data: { community, startPolling, stopPolling },
       isLoading,
     } = this.props;
 
-    const {
-      isSendingInvites,
-      customMessageString,
-      hasCustomMessage,
-      customMessageError,
-    } = this.state;
+    const { isSendingInvites } = this.state;
 
     if (community) {
-      // if no import has been created yet, we won't have a team name or a record at all
-      const noImport =
-        !community.slackImport || !community.slackImport.teamName;
-      // if an import has been created, but does not have members data yet
-      const partialImport =
-        community.slackImport &&
-        community.slackImport.teamName &&
-        !community.slackImport.members;
-      // if an import has been created and we have members
-      const fullImport = community.slackImport && community.slackImport.members;
-      const hasAlreadyBeenSent = fullImport && community.slackImport.sent;
+      const { teamName, members, sent } = community.slackImport || {};
+      const noImport = !teamName;
+      const partialImport = teamName && !members;
+      const fullImport = !!members;
+      const invitesSent = !!sent;
 
       const url = this.props.isOnboarding
         ? `https://slack.com/oauth/authorize?client_id=327439212113.334330952054&scope=users:read.email%20users:read%20admin%20chat:write:bot&state=${
@@ -156,114 +256,49 @@ class ImportSlack extends React.Component<Props, State> {
               : 'https://spectrum.chat/api/slack'
           }`;
 
-      if (noImport) {
-        return (
-          <div>
-            <SectionTitle>Invite a Slack Team</SectionTitle>
-            <Description>
-              Easily invite your team from an existing Slack team to Spectrum.
-              Get started by connecting your team below.{' '}
-            </Description>
-            <Notice>
-              <strong>Note:</strong> We will not invite any of your team members
-              until you’re ready. We will prompt for admin access to ensure that
-              you own the Slack team.
-            </Notice>
-            <SectionCardFooter>
-              <a href={url}>
-                <Button>Connect a Slack Team</Button>
-              </a>
-            </SectionCardFooter>
-          </div>
-        );
-      } else if (partialImport) {
-        startPolling(5000);
-        return (
-          <div>
-            <SectionTitle>Invite a Slack Team</SectionTitle>
-            <SectionCardFooter>
-              <Button loading>Connecting with Slack...</Button>
-            </SectionCardFooter>
-          </div>
-        );
-      } else if (fullImport) {
-        stopPolling();
-        const members = JSON.parse(community.slackImport.members);
-        const teamName = community.slackImport.teamName;
-        const count = members.length.toLocaleString();
+      const connected = partialImport || fullImport;
+      const status =
+        (partialImport && 'connected') ||
+        (fullImport && 'imported') ||
+        (invitesSent && 'sent') ||
+        'unconnected';
+      const count = members && JSON.parse(members).length;
 
-        if (hasAlreadyBeenSent) {
-          return (
-            <div>
-              <SectionTitle>Invite your Slack team</SectionTitle>
+      return (
+        <div>
+          <SectionTitle>
+            {connected
+              ? `Connected to the "${teamName}" Slack team`
+              : `Connect a Slack team`}
+          </SectionTitle>
+          {connected ? (
+            <MembersImport
+              isSendingInvites={isSendingInvites}
+              sendInvites={this.sendInvites}
+              status={status}
+              teamName={teamName}
+              count={count || 0}
+            />
+          ) : (
+            <React.Fragment>
               <Description>
-                This community has been connected to the{' '}
-                <strong>{teamName}</strong> Slack team. We found {count} members
-                with email addresses - you have already invited them to join
-                your community.
+                Easily invite your existing Slack team to Spectrum and get
+                notified whenever a new thread is posted in your community.
               </Description>
+              <Notice>
+                <strong>Note:</strong> We will not invite any of your team
+                members until you’re ready. We will prompt for admin access to
+                ensure that you own the Slack team.
+              </Notice>
               <SectionCardFooter>
-                <Button disabled>Invites sent to {count} people</Button>
+                <a href={url}>
+                  <Button>Connect a Slack Team</Button>
+                </a>
               </SectionCardFooter>
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <SectionTitle>Invite a Slack Team</SectionTitle>
-              <Description>
-                This community has been connected to the{' '}
-                <strong>{teamName}</strong> Slack team. We found {count} members
-                with email addresses - you can invite them to your Spectrum
-                community in one click.
-              </Description>
-
-              <CustomMessageToggle onClick={this.toggleCustomMessage}>
-                <Icon
-                  glyph={hasCustomMessage ? 'view-close' : 'post'}
-                  size={20}
-                />
-                {hasCustomMessage
-                  ? 'Remove custom message'
-                  : 'Optional: Add a custom message to your invitation'}
-              </CustomMessageToggle>
-
-              {hasCustomMessage && (
-                <Textarea
-                  autoFocus
-                  value={customMessageString}
-                  placeholder="Write something sweet here..."
-                  style={{
-                    ...CustomMessageTextAreaStyles,
-                    border: customMessageError
-                      ? '1px solid #E3353C'
-                      : '1px solid #DFE7EF',
-                  }}
-                  onChange={this.handleChange}
-                />
-              )}
-
-              {hasCustomMessage &&
-                customMessageError && (
-                  <Error>
-                    Your custom invitation message can be up to 500 characters.
-                  </Error>
-                )}
-
-              <SectionCardFooter>
-                <Button
-                  gradientTheme="success"
-                  onClick={this.sendInvites}
-                  loading={isSendingInvites}
-                  disabled={hasCustomMessage && customMessageError}
-                >
-                  Invite {count} people to Spectrum
-                </Button>
-              </SectionCardFooter>
-            </div>
-          );
-        }
-      }
+            </React.Fragment>
+          )}
+        </div>
+      );
     }
 
     if (isLoading) {
