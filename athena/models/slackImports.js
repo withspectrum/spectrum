@@ -27,6 +27,17 @@ export const getSlackUserListData = (token: string) => {
     });
 };
 
+export const getSlackImport = (communityId: string) => {
+  return db
+    .table('slackImports')
+    .getAll(communityId, { index: 'communityId' })
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0];
+    });
+};
+
 export const saveSlackImportData = (
   importId: string,
   members: Array<DBSlackUser>
