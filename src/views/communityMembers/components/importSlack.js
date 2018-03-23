@@ -124,7 +124,7 @@ class ImportSlack extends React.Component<Props, State> {
           <SectionTitle>
             {connected
               ? `Connected to the "${teamName}" Slack team`
-              : `Connect a Slack team`}
+              : `Slack Integration`}
           </SectionTitle>
           {connected ? (
             <MembersImport
@@ -143,14 +143,9 @@ class ImportSlack extends React.Component<Props, State> {
                 Easily invite your existing Slack team to Spectrum and get
                 notified whenever a new thread is posted in your community.
               </Description>
-              <Notice>
-                <strong>Note:</strong> We will not invite any of your team
-                members until you’re ready. We will prompt for admin access to
-                ensure that you own the Slack team.
-              </Notice>
               <SectionCardFooter>
                 <a href={url}>
-                  <Button>Connect a Slack Team</Button>
+                  <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
                 </a>
               </SectionCardFooter>
             </React.Fragment>
