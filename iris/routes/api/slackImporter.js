@@ -23,19 +23,21 @@ slackRouter.get('/', (req: any, res: any) => {
 
   // generate an oauth token. This token will be used to communicate with the Slack API to get user information, and we'll store the token in the db record to allow for the user to access their Slack team info in the future.
   return generateOAuthToken(code, returnURI)
-    .then(async data => {
+    .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
       const token = data.access_token;
       const teamName = data.team_name;
       const teamId = data.team_id;
+      const scope = data.scope;
       const input = {
         token,
         teamName,
         teamId,
         senderId,
         communityId,
+        scope,
       };
-      await createSlackImportRecord(input);
+      return createSlackImportRecord(input);
     })
     .then(() => {
       // once the record has been created we can redirect the user back to Spectrum to finish the importing flow. To do this we'll get the community:
@@ -64,12 +66,14 @@ slackRouter.get('/onboarding', (req: any, res: any) => {
       const token = data.access_token;
       const teamName = data.team_name;
       const teamId = data.team_id;
+      const scope = data.scope;
       const input = {
         token,
         teamName,
         teamId,
         senderId,
         communityId,
+        scope,
       };
       return createSlackImportRecord(input);
     })

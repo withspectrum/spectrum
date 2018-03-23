@@ -10,7 +10,17 @@ if (!SLACK_SECRET) {
   SLACK_SECRET = process.env.SLACK_SECRET_DEVELOPMENT || 'asdf123';
 }
 
-export const generateOAuthToken = (code: string, redirect_uri: string) => {
+type SlackData = {
+  access_token: string,
+  team_id: string,
+  team_name: string,
+  scope: string,
+};
+
+export const generateOAuthToken = (
+  code: string,
+  redirect_uri: string
+): Promise<?SlackData> => {
   return axios
     .post(
       'https://slack.com/api/oauth.access',
@@ -30,6 +40,7 @@ export const generateOAuthToken = (code: string, redirect_uri: string) => {
           access_token: response.data.access_token,
           team_id: response.data.team_id,
           team_name: response.data.team_name,
+          scope: response.data.scope,
         };
       }
     })
