@@ -140,7 +140,7 @@ class ChannelWithData extends React.Component<Props, State> {
 
     if (componentSize === 'full') {
       return (
-        <FullProfile>
+        <FullProfile data-cy="channel-profile-full">
           <Link to={`/${channel.community.slug}`}>
             <CommunityListItem community={channel.community} />
           </Link>

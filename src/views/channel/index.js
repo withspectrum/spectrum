@@ -151,6 +151,7 @@ class ChannelView extends React.Component<Props, State> {
               emoji={'✋'}
               heading={'You don’t have permission to view this channel.'}
               subheading={`Head back to the ${communitySlug} community to get back on track.`}
+              dataCy={'channel-view-blocked'}
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
@@ -185,6 +186,7 @@ class ChannelView extends React.Component<Props, State> {
                       channel.community.name
                     } will be notified.`
               }
+              dataCy={'channel-view-is-restricted'}
             >
               <RequestToJoinChannel
                 channel={channel}
@@ -226,7 +228,7 @@ class ChannelView extends React.Component<Props, State> {
               <ChannelProfile data={{ channel }} profileSize="full" />
 
               {!isLoggedIn ? (
-                <Link to={loginUrl}>
+                <Link to={loginUrl} data-cy="channel-login-join-button">
                   <LoginButton>Join {channel.name}</LoginButton>
                 </Link>
               ) : !isGlobalOwner ? (
@@ -237,6 +239,7 @@ class ChannelView extends React.Component<Props, State> {
                       isMember={isMember}
                       icon={isMember ? 'checkmark' : null}
                       loading={state.isLoading}
+                      data-cy="channel-join-button"
                     >
                       {isMember ? 'Joined' : `Join ${channel.name}`}
                     </LoginButton>
@@ -249,7 +252,11 @@ class ChannelView extends React.Component<Props, State> {
                   <Link
                     to={`/${channel.community.slug}/${channel.slug}/settings`}
                   >
-                    <LoginButton icon={'settings'} isMember>
+                    <LoginButton
+                      icon={'settings'}
+                      isMember
+                      data-cy="channel-settings-button"
+                    >
                       Settings
                     </LoginButton>
                   </Link>
@@ -284,6 +291,7 @@ class ChannelView extends React.Component<Props, State> {
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
+                  data-cy="channel-search-tab"
                 >
                   <Icon glyph={'search'} />
                   Search
