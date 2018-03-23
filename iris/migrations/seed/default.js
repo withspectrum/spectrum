@@ -135,6 +135,16 @@ const DEFAULT_CHANNELS = [
     isPrivate: false,
     isDefault: true,
   },
+  {
+    id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    createdAt: new Date(DATE),
+    name: 'Private',
+    description: 'Private chatter',
+    slug: 'private',
+    isPrivate: true,
+    isDefault: false,
+  },
 ];
 
 const DEFAULT_THREADS = [
@@ -358,6 +368,7 @@ const DEFAULT_USERS_COMMUNITIES = [
 ];
 
 const DEFAULT_USERS_CHANNELS = [
+  // GENERAL CHATTER
   {
     id: '11fa5e3e-930d-4ba9-a1d4-0664ad451012',
     createdAt: new Date(DATE),
@@ -379,6 +390,7 @@ const DEFAULT_USERS_CHANNELS = [
     isModerator: false,
     isMember: true,
     isBlocked: false,
+    isPending: false,
     receiveNotifications: true,
   },
   {
@@ -390,6 +402,7 @@ const DEFAULT_USERS_CHANNELS = [
     isModerator: true,
     isMember: true,
     isBlocked: false,
+    isPending: false,
     receiveNotifications: true,
   },
   {
@@ -401,6 +414,57 @@ const DEFAULT_USERS_CHANNELS = [
     isModerator: false,
     isMember: false,
     isBlocked: true,
+    isPending: false,
+    receiveNotifications: false,
+  },
+
+  // PRIVATE CHANNEL
+  {
+    id: '11fa5e3e-930d-4ba9-a1d4-0664ad451025125',
+    createdAt: new Date(DATE),
+    userId: MAX_ID,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+  },
+  {
+    id: '2511be41-9d36-462f-bedc-3eecc62759e3',
+    createdAt: new Date(DATE),
+    userId: BRYN_ID,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    isOwner: false,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+  },
+  {
+    id: '7411906b-54a0-4c18-b26c-2522ad59c7f9',
+    createdAt: new Date(DATE),
+    userId: BRIAN_ID,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    isOwner: false,
+    isModerator: true,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+    receiveNotifications: true,
+  },
+  {
+    id: '7411906b-54a0-4c18-b26c-2522ad59c719',
+    createdAt: new Date(DATE),
+    userId: BLOCKED_USER,
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    isOwner: false,
+    isModerator: false,
+    isMember: false,
+    isBlocked: true,
+    isPending: false,
     receiveNotifications: false,
   },
 ];
