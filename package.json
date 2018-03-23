@@ -179,6 +179,8 @@
   "resolutions": {
     "immutable": "3.7.4",
     "draft-js": "npm:draft-js-fork-mxstbr",
+    "jest-environment-node": "22.4.3",
+    "jest": "22.4.3",
     "fbjs": "0.8.16"
   },
   "scripts": {
