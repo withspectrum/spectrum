@@ -1,3 +1,4 @@
+// @flow
 import { Router } from 'express';
 import UserError from '../../utils/UserError';
 import { getCommunities } from '../../models/community';
@@ -5,12 +6,14 @@ import {
   createSlackImportRecord,
   generateOAuthToken,
 } from '../../models/slackImport';
+import { slackImportQueue } from 'shared/bull/queues';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 const slackRouter = Router();
 
-slackRouter.get('/', (req, res) => {
+// TODO: Figure out how to type this properly
+slackRouter.get('/', (req: any, res: any) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const senderId = req.user.id;
@@ -34,7 +37,12 @@ slackRouter.get('/', (req, res) => {
       };
       return createSlackImportRecord(input);
     })
-    .then(() => {
+    .then(data => {
+      const token = data.token;
+      const importId = data.id;
+
+      slackImportQueue.add({ token, importId });
+
       // once the record has been created we can redirect the user back to Spectrum to finish the importing flow. To do this we'll get the community:
       return getCommunities([communityId]).then(data => data[0].slug);
     })
@@ -45,7 +53,8 @@ slackRouter.get('/', (req, res) => {
     });
 });
 
-slackRouter.get('/onboarding', (req, res) => {
+// TODO: Figure out how to type this properly
+slackRouter.get('/onboarding', (req: any, res: any) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const senderId = req.user.id;
@@ -69,7 +78,11 @@ slackRouter.get('/onboarding', (req, res) => {
       };
       return createSlackImportRecord(input);
     })
-    .then(() => {
+    .then(data => {
+      const token = data.token;
+      const importId = data.id;
+
+      slackImportQueue.add({ token, importId });
       // once the record has been created we can redirect the user back to Spectrum to finish the importing flow. To do this we'll get the community:
       return getCommunities([communityId]).then(data => data[0]);
     })
