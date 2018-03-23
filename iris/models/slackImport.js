@@ -6,7 +6,7 @@ const { db } = require('./db');
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 let SLACK_SECRET = process.env.SLACK_SECRET;
-if (!IS_PROD) {
+if (!SLACK_SECRET) {
   SLACK_SECRET = process.env.SLACK_SECRET_DEVELOPMENT || 'asdf123';
 }
 
@@ -18,7 +18,7 @@ export const generateOAuthToken = (code: string, redirect_uri: string) => {
         code: code,
         scope:
           'users:read.email,users:read,admin,chat:write,bot,chat:write:bot',
-        client_id: '201769987287.200380534417',
+        client_id: '201769987287.271382863153',
         client_secret: SLACK_SECRET,
         redirect_uri,
       })

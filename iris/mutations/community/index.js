@@ -9,6 +9,7 @@ import pinThread from './pinThread';
 import enableBrandedLogin from './enableBrandedLogin';
 import disableBrandedLogin from './disableBrandedLogin';
 import saveBrandedLoginSettings from './saveBrandedLoginSettings';
+import importSlackMembers from './importSlackMembers';
 
 module.exports = {
   Mutation: {
@@ -22,5 +23,6 @@ module.exports = {
     enableBrandedLogin,
     disableBrandedLogin,
     saveBrandedLoginSettings,
+    importSlackMembers,
   },
 };

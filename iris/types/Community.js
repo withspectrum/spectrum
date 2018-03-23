@@ -165,6 +165,10 @@ const Community = /* GraphQL */ `
 		message: String
 	}
 
+  input ImportSlackMembersInput {
+    id: String!
+  }
+
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
 		editCommunity(input: EditCommunityInput!): Community
@@ -172,6 +176,7 @@ const Community = /* GraphQL */ `
 		toggleCommunityMembership(communityId: ID!): Community @deprecated(reason:"Use the new addCommunityMember or removeCommunityMember mutations")
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
+    importSlackMembers(input: ImportSlackMembersInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
 		downgradeCommunity(input: DowngradeCommunityInput!): Community
