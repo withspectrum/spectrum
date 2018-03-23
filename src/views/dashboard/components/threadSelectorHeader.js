@@ -30,7 +30,7 @@ const Header = ({
     </NarrowOnly>
     <ThreadSearch filter={filter} />
     <IconButton
-      data-e2e-id="inbox-view-post-button"
+      data-cy="inbox-view-post-button"
       glyph={'post'}
       onClick={() => dispatch(changeActiveThread('new'))}
       tipText={'New conversation'}

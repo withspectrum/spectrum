@@ -18,7 +18,7 @@ describe('Thread View', () => {
   });
 
   it('should render', () => {
-    cy.get('[data-e2e-id="thread-view"]').should('be.visible');
+    cy.get('[data-cy="thread-view"]').should('be.visible');
     cy.contains(thread.content.title);
     cy.contains(
       toPlainText(toState(JSON.parse(thread.content.body))).split(' ')[0]
@@ -28,7 +28,7 @@ describe('Thread View', () => {
     cy.get(`[href*="/users/${author.username}"]`).should('be.visible');
     cy.get(`[href*="/${community.slug}"]`).should('be.visible');
 
-    cy.get('[data-e2e-id="message-group"]').should('be.visible');
+    cy.get('[data-cy="message-group"]').should('be.visible');
     messages.forEach(message => {
       cy.contains(toPlainText(toState(JSON.parse(message.content.body))));
     });
@@ -44,19 +44,19 @@ describe('/new/thread', () => {
   it('should allow composing new threads', () => {
     const title = 'Some new thread';
     const body = "with some fresh content you've never seen before";
-    cy.get('[data-e2e-id="rich-text-editor"]').should('be.visible');
-    cy.get('[data-e2e-id="composer-community-selector"]').should('be.visible');
-    cy.get('[data-e2e-id="composer-channel-selector"]').should('be.visible');
+    cy.get('[data-cy="rich-text-editor"]').should('be.visible');
+    cy.get('[data-cy="composer-community-selector"]').should('be.visible');
+    cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
     cy
-      .get('[data-e2e-id="composer-title-input"]')
+      .get('[data-cy="composer-title-input"]')
       .should('be.visible')
       .type(title);
     // TODO: Cypress doesn't handle DraftJS very well, it only inlcudes the first character
     //cy.get('[contenteditable="true"]').type(body)
-    cy.get('[data-e2e-id="composer-publish-button"]').click();
+    cy.get('[data-cy="composer-publish-button"]').click();
     cy.location('pathname').should('contain', 'thread');
-    cy.get('[data-e2e-id="thread-view"]');
+    cy.get('[data-cy="thread-view"]');
     cy.contains(title);
   });
 });

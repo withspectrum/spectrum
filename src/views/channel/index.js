@@ -207,7 +207,7 @@ class ChannelView extends React.Component<Props, State> {
       });
 
       return (
-        <AppViewWrapper data-e2e-id="channel-view">
+        <AppViewWrapper data-cy="channel-view">
           <Head
             title={title}
             description={description}

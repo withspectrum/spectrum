@@ -10,7 +10,7 @@ class Support extends Component {
 
   render() {
     return (
-      <Wrapper data-e2e-id="support-page">
+      <Wrapper data-cy="support-page">
         <ContactInfo />
         <TermsSection />
         <PageFooter />

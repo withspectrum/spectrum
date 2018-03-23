@@ -12,7 +12,7 @@ describe('Channel View', () => {
   });
 
   it('should render', () => {
-    cy.get('[data-e2e-id="channel-view"]').should('be.visible');
+    cy.get('[data-cy="channel-view"]').should('be.visible');
     cy.contains(channel.description);
     cy.contains(channel.name);
     data.threads

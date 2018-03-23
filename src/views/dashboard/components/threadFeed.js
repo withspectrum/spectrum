@@ -279,7 +279,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     return (
       <div
-        data-e2e-id="inbox-thread-feed"
+        data-cy="inbox-thread-feed"
         ref={el => (this.innerScrollElement = el)}
       >
         {this.props.data.community &&

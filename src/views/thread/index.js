@@ -343,7 +343,7 @@ class ThreadContainer extends React.Component<Props, State> {
       if (thread.watercooler)
         return (
           <ThreadViewContainer
-            data-e2e-id="thread-view"
+            data-cy="thread-view"
             threadViewContext={threadViewContext}
             constrain={
               threadViewContext === 'slider' ||
@@ -429,7 +429,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <ThreadViewContainer
-          data-e2e-id="thread-view"
+          data-cy="thread-view"
           threadViewContext={threadViewContext}
           constrain={
             threadViewContext === 'slider' || threadViewContext === 'fullscreen'

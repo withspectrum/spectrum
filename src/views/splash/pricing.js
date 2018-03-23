@@ -10,7 +10,7 @@ class Pricing extends Component {
 
   render() {
     return (
-      <Wrapper data-e2e-id="pricing-page">
+      <Wrapper data-cy="pricing-page">
         <Plans />
         <Sell />
         <PageFooter />

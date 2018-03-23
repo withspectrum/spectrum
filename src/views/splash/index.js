@@ -37,7 +37,7 @@ class Splash extends PureComponent {
 
   render() {
     return (
-      <Wrapper data-e2e-id="splash-page">
+      <Wrapper data-cy="splash-page">
         <Overview />
         <Centralized />
         <CommunitySearch />

@@ -587,7 +587,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-community-selector"
+              data-cy="composer-community-selector"
               onChange={this.setActiveCommunity}
               value={activeCommunity}
             >
@@ -604,7 +604,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-channel-selector"
+              data-cy="composer-channel-selector"
               onChange={this.setActiveChannel}
               value={activeChannel}
             >
@@ -622,7 +622,7 @@ class ComposerWithData extends Component<Props, State> {
         </Dropdowns>
         <ThreadInputs>
           <Textarea
-            data-e2e-id="composer-title-input"
+            data-cy="composer-title-input"
             onChange={this.changeTitle}
             style={ThreadTitle}
             value={this.state.title}
@@ -665,7 +665,7 @@ class ComposerWithData extends Component<Props, State> {
               Cancel
             </TextButton>
             <Button
-              data-e2e-id="composer-publish-button"
+              data-cy="composer-publish-button"
               onClick={this.publishThread}
               loading={isPublishing}
               disabled={
