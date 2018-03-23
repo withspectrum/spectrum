@@ -18,7 +18,7 @@ export default async (
   const currentUser = user;
 
   if (!currentUser) {
-    return new UserError('You must be signed in to manage this community');
+    return defaultFeatures;
   }
 
   const { customer, community } = await StripeUtil.jobPreflight(id);
