@@ -46,7 +46,7 @@ class CommunityModeratorList extends React.Component<Props> {
   render() {
     const { data: { community }, isLoading, currentUser } = this.props;
 
-    if (community) {
+    if (community && community.members) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
 
