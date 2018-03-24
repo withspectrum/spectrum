@@ -399,6 +399,7 @@ class ChannelView extends React.Component<Props, State> {
         <ViewError
           heading={'We couldn’t find a channel with this name.'}
           subheading={`Head back to the ${communitySlug} community to get back on track.`}
+          dataCy="channel-not-found"
         >
           <Upsell404Channel community={communitySlug} />
         </ViewError>

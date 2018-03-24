@@ -87,7 +87,7 @@ class ChannelList extends React.Component<Props> {
             user is logged in but hasn't joined this community, channel list is used for navigation
           */}
           {(!currentUser || (currentUser && !isMember)) && (
-            <ListContainer>
+            <ListContainer data-cy="channel-list">
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
@@ -112,7 +112,7 @@ class ChannelList extends React.Component<Props> {
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
           {sortedJoinedChannels &&
             isMember && (
-              <ListContainer>
+              <ListContainer data-cy="channel-list">
                 {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (

@@ -660,11 +660,12 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     if (availableCommunities && availableChannels) {
       return (
-        <Container isOpen={isOpen} isInbox={isInbox}>
+        <Container isOpen={isOpen} isInbox={isInbox} data-cy="thread-composer">
           <Overlay
             isOpen={isOpen}
             onClick={this.closeComposer}
             isInbox={isInbox}
+            data-cy="thread-composer-overlay"
           />
           <Composer isOpen={isOpen} isInbox={isInbox}>
             <ContentContainer isOpen={isOpen}>

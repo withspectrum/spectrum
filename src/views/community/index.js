@@ -219,7 +219,11 @@ class CommunityView extends React.Component<Props, State> {
               {currentUser &&
                 isOwner && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton icon={'settings'} isMember>
+                    <LoginButton
+                      icon={'settings'}
+                      isMember
+                      data-cy="community-settings-button"
+                    >
                       Settings
                     </LoginButton>
                   </Link>

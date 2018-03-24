@@ -232,6 +232,7 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
               loading={this.state.isLoading}
               color="warn"
               onClick={this.triggerDelete}
+              dataCy={'delete-button'}
             >
               Delete
             </Button>
