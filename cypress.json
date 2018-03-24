@@ -1,4 +1,9 @@
 {
   "baseUrl": "http://localhost:3000",
-  "viewportWidth": 1300
+  "viewportWidth": 1300,
+  "defaultCommandTimeout": 10000,
+  "blacklistHosts": ["*.google-analytics.com"],
+  "env": {
+    "DEBUG": "src*,testing*,build*"
+  }
 }

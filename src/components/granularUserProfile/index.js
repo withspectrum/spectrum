@@ -26,6 +26,7 @@ import {
 } from './style';
 
 type Props = {
+  userObject: Object,
   id: string,
   avatarSize?: string,
   profilePhoto?: string,
@@ -63,6 +64,7 @@ class GranularUserProfile extends React.Component<Props> {
 
   render() {
     const {
+      userObject,
       avatarSize,
       profilePhoto,
       name,
@@ -82,41 +84,39 @@ class GranularUserProfile extends React.Component<Props> {
         <Content>
           {profilePhoto && (
             <AvatarContent>
-              <Avatar
-                src={profilePhoto}
-                size={avatarSize || '32'}
-                isOnline={isOnline}
-                onlineSize={onlineSize}
-              />
+              <LinkHandler username={userObject.username}>
+                <Avatar
+                  src={profilePhoto}
+                  size={avatarSize || '32'}
+                  isOnline={isOnline}
+                  onlineSize={onlineSize}
+                />
+              </LinkHandler>
             </AvatarContent>
           )}
 
           <MetaContent>
-            {name && (
-              <NameContent>
-                <LinkHandler username={username}>
+            <LinkHandler username={userObject.username}>
+              {name && (
+                <NameContent>
                   <Name>{name}</Name>
-                </LinkHandler>
 
-                {username && (
-                  <LinkHandler username={username}>
-                    <Username>@{username}</Username>
-                  </LinkHandler>
-                )}
+                  {username && <Username>@{username}</Username>}
 
-                {badges && (
-                  <BadgeContent>
-                    {badges.map((b, i) => <Badge key={i} type={b} />)}
-                  </BadgeContent>
-                )}
-              </NameContent>
-            )}
+                  {badges && (
+                    <BadgeContent>
+                      {badges.map((b, i) => <Badge key={i} type={b} />)}
+                    </BadgeContent>
+                  )}
+                </NameContent>
+              )}
 
-            {typeof reputation === 'number' && (
-              <Reputation reputation={reputation} />
-            )}
+              {typeof reputation === 'number' && (
+                <Reputation reputation={reputation} />
+              )}
 
-            {description && <Description>{description}</Description>}
+              {description && <Description>{description}</Description>}
+            </LinkHandler>
 
             {website && (
               <Website>

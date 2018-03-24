@@ -346,11 +346,11 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
-export const Grid = styled.div`
+export const GridProfile = styled.div`
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
+  grid-template-columns: minmax(320px, 1fr) 3fr;
   grid-template-rows: 160px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
+  grid-template-areas: 'cover cover' 'meta content';
   grid-column-gap: 32px;
   width: 100%;
   min-width: 100%;
@@ -385,18 +385,6 @@ export const Meta = styled(Column)`
 
 export const GridContent = styled(Column)`
   grid-area: content;
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  @media (max-width: 1028px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
-  }
 `;
 
 export const LoadingCoverPhoto = styled.div`

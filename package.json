@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "2.1.12",
+  "version": "2.1.13",
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -83,7 +83,7 @@
     "draft-js-image-plugin": "2.0.0-rc8",
     "draft-js-import-markdown": "^1.2.0",
     "draft-js-linkify-plugin": "^2.0.0-beta1",
-    "draft-js-markdown-plugin": "^1.0.0",
+    "draft-js-markdown-plugin": "1.2.0",
     "draft-js-plugins-editor": "^2.0.3",
     "draft-js-prism-plugin": "0.1.1",
     "draftjs-to-markdown": "^0.4.2",
@@ -109,7 +109,7 @@
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^22.1.0",
+    "jest": "22.4.3",
     "json-stringify-pretty-compact": "^1.0.4",
     "jsonwebtoken": "^8.0.1",
     "keygrip": "^1.0.2",
@@ -179,6 +179,8 @@
   "resolutions": {
     "immutable": "3.7.4",
     "draft-js": "npm:draft-js-fork-mxstbr",
+    "jest-environment-node": "22.4.3",
+    "jest": "22.4.3",
     "fbjs": "0.8.16"
   },
   "scripts": {
