@@ -26,6 +26,7 @@ describe('Community View', () => {
 
     data.channels
       .filter(channel => channel.communityId === community.id)
+      .filter(channel => !channel.isPrivate)
       .forEach(channel => {
         cy.contains(channel.name).should('be.visible');
       });
