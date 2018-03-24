@@ -193,8 +193,13 @@ class Editor extends React.Component<Props, State> {
 
     if (version === 2) {
       return (
-        <ComposerBase className={`markdown ${className || ''}`} focus={focus}>
+        <ComposerBase
+          data-e2e-id="rich-text-editor"
+          className={`markdown ${className || ''}`}
+          focus={focus}
+        >
           <DraftEditor
+            data-e2e-id="rich-text-editor"
             editorState={state}
             onChange={onChange}
             plugins={this.state.plugins}
@@ -277,6 +282,7 @@ class Editor extends React.Component<Props, State> {
         >
           <Wrapper className="markdown" focus={focus}>
             <DraftEditor
+              data-e2e-id="rich-text-editor"
               editorState={state}
               onChange={onChange}
               plugins={this.state.plugins}
