@@ -29,6 +29,7 @@ type InputProps = {
   checked?: boolean,
   disabled?: boolean,
   id?: string,
+  dataCy?: string,
 };
 
 export const Input = (props: InputProps) => {
@@ -44,6 +45,7 @@ export const Input = (props: InputProps) => {
         onChange={props.onChange}
         autoFocus={props.autoFocus}
         disabled={props.disabled}
+        data-cy={props.dataCy}
       />
     </StyledLabel>
   );
@@ -112,6 +114,7 @@ export const Checkbox = (props: InputProps) => {
       <StyledCheckboxWrapper
         disabled={props.disabled || false}
         align={props.align || 'center'}
+        data-cy={`${props.dataCy}-${props.checked ? 'checked' : 'unchecked'}`}
       >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
@@ -137,6 +140,7 @@ export const TextArea = (props: InputProps) => {
         defaultValue={props.defaultValue}
         onChange={props.onChange}
         autoFocus={props.autoFocus}
+        data-cy={props.dataCy}
       />
     </StyledLabel>
   );
@@ -155,6 +159,7 @@ export class UnderlineInput extends React.Component {
           onChange={this.props.onChange}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
+          data-cy={this.props.dataCy}
         />
       </StyledPrefixLabel>
     );
@@ -162,9 +167,9 @@ export class UnderlineInput extends React.Component {
 }
 
 export const Error = (props: Object) => {
-  return <StyledError>{props.children}</StyledError>;
+  return <StyledError data-cy={props.dataCy}>{props.children}</StyledError>;
 };
 
 export const Success = (props: Object) => {
-  return <StyledSuccess>{props.children}</StyledSuccess>;
+  return <StyledSuccess data-cy={props.dataCy}>{props.children}</StyledSuccess>;
 };
