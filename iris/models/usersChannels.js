@@ -269,7 +269,9 @@ const approvePendingUserInChannel = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(() => {
+      return db.table('channels').get(channelId);
+    });
 };
 
 // toggles all pending users to make them a member in a channel. invoked by a

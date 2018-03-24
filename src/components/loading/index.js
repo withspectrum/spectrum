@@ -33,10 +33,9 @@ import {
   LoadingNavbarContainer,
   LogoLink,
   Logo,
-  Grid,
+  GridProfile,
   Meta,
   GridContent,
-  Extras,
   LoadingCoverPhoto,
 } from './style';
 
@@ -972,20 +971,15 @@ export const LoadingSelect = () => (
 
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
-    <Grid>
+    <GridProfile>
       <LoadingCoverPhoto />
       <Meta>
         <LoadingProfile />
-        <LoadingList />
       </Meta>
       <GridContent>
-        <LoadingComposer />
-        <LoadingFeed />
+        <Loading />
       </GridContent>
-      <Extras>
-        <LoadingList />
-      </Extras>
-    </Grid>
+    </GridProfile>
   </LoadingScreenContainer>
 );
 

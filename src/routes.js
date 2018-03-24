@@ -22,6 +22,7 @@ import LoadingDashboard from './views/dashboard/components/dashboardLoading';
 import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
+import PrivateChannelJoin from './views/privateChannelJoin';
 
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
@@ -281,6 +282,14 @@ class Routes extends React.Component<{}> {
                 <Route
                   path="/:communitySlug/:channelSlug/settings"
                   component={ChannelSettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug/join/:token"
+                  component={PrivateChannelJoin}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug/join"
+                  component={PrivateChannelJoin}
                 />
                 <Route
                   path="/:communitySlug/settings/analytics"

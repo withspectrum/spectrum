@@ -19,45 +19,11 @@ const APP_FOLDERS = [
   'src',
   'vulcan',
 ];
-const CHECKBOXES = /^\s*-\s*\[x\]\s*(.+?)$/gim;
-const possibleAutoLabels = {
-  wip: 'WIP: Building',
-  'needs testing': 'WIP: Needs Testing',
-  'ready for review': 'WIP: Ready for Review',
-};
 
 // Make sure people describe what their PR is about
 if (danger.github.pr.body.length < 10) {
   fail('Please add a description to your PR.');
 }
-
-// Add automatic labels to the PR
-schedule(async () => {
-  const pr = danger.github.thisPR;
-  const api = danger.github.api;
-  const checkedBoxes = danger.github.pr.body.match(CHECKBOXES);
-  if (!checkedBoxes || checkedBoxes.length === 0) return;
-
-  const matches = checkedBoxes
-    .map(result => new RegExp(CHECKBOXES.source, 'mi').exec(result))
-    .filter(Boolean)
-    .map(res => res[1]);
-
-  const matchingLabels = matches
-    .filter(
-      match => Object.keys(possibleAutoLabels).indexOf(match.toLowerCase()) > -1
-    )
-    .map(key => possibleAutoLabels[key.toLowerCase()]);
-
-  if (!matchingLabels || matchingLabels.length === 0) return;
-
-  await api.issues.addLabels({
-    owner: pr.owner,
-    repo: pr.repo,
-    number: pr.number,
-    labels: matchingLabels,
-  });
-});
 
 // Make sure the yarn.lock file is updated when dependencies get added and log any added dependencies
 APP_FOLDERS.forEach(folder => {
@@ -69,7 +35,8 @@ jest();
 
 // Make sure nobody does a it.only and blocks our entire test-suite from running
 noTestShortcuts({
-  testFilePredicate: filePath => filePath.endsWith('.test.js'),
+  testFilePredicate: filePath =>
+    filePath.endsWith('.test.js') || filePath.endsWith('_spec.js'),
 });
 
 schedule(noConsole({ whitelist: ['error'] }));
@@ -80,6 +47,11 @@ schedule(
     created: 'fail',
     // Warn on modified untyped files
     modified: 'warn',
-    blacklist: ['flow-typed/**/*.js', 'public/**/*.js', 'cypress/**/*.js'],
+    blacklist: [
+      'flow-typed/**/*.js',
+      'public/**/*.js',
+      'iris/migrations/**/*.js',
+      'cypress/**/*.js',
+    ],
   })
 );
