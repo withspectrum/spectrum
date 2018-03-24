@@ -14,7 +14,8 @@ import { LoadingScreen } from '../../components/loading';
 import { NullState } from '../../components/upsell';
 import { Button, ButtonRow } from '../../components/buttons';
 import CommunityList from './components/communityList';
-import Search from './components/search';
+import Icon from 'src/components/icons';
+import Search from 'src/components/search/userThreads';
 import { getUserByMatch } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import getUserThreads from 'shared/graphql/queries/user/getUserThreadConnection';
@@ -22,8 +23,14 @@ import ViewError from '../../components/viewError';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
-import { LoginButton } from '../community/style';
-import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
+import { ProfileCTA } from '../../components/profile/style';
+import {
+  Grid,
+  Meta,
+  Content,
+  Extras,
+  ColumnHeading,
+} from 'src/components/profileLayout';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -155,14 +162,14 @@ class UserView extends React.Component<Props, State> {
 
               {currentUser &&
                 user.id !== currentUser.id && (
-                  <LoginButton onClick={() => this.initMessage(user)}>
+                  <ProfileCTA onClick={() => this.initMessage(user)}>
                     Message {user.name}
-                  </LoginButton>
+                  </ProfileCTA>
                 )}
               {currentUser &&
                 user.id === currentUser.id && (
                   <Link to={`/users/${username}/settings`}>
-                    <LoginButton isMember>My settings</LoginButton>
+                    <ProfileCTA isMember>My settings</ProfileCTA>
                   </Link>
                 )}
             </Meta>
@@ -173,6 +180,7 @@ class UserView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
                 >
+                  <Icon glyph={'search'} />
                   Search
                 </DesktopSegment>
 
@@ -181,36 +189,30 @@ class UserView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('participant')}
                   selected={selectedView === 'participant'}
                 >
-                  Replies
+                  All threads
                 </DesktopSegment>
-
+                <MobileSegment
+                  segmentLabel="participant"
+                  onClick={() => this.handleSegmentClick('participant')}
+                  selected={selectedView === 'participant'}
+                >
+                  <Icon glyph={'everything'} />
+                  {selectedView === 'participant' && 'Threads'}
+                </MobileSegment>
                 <DesktopSegment
                   segmentLabel="creator"
                   onClick={() => this.handleSegmentClick('creator')}
                   selected={selectedView === 'creator'}
                 >
-                  Threads
+                  Authored
                 </DesktopSegment>
                 <MobileSegment
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
                 >
-                  Search
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="participant"
-                  onClick={() => this.handleSegmentClick('participant')}
-                  selected={selectedView === 'participant'}
-                >
-                  Replies
-                </MobileSegment>
-                <MobileSegment
-                  segmentLabel="creator"
-                  onClick={() => this.handleSegmentClick('creator')}
-                  selected={selectedView === 'creator'}
-                >
-                  Threads
+                  <Icon glyph={'search'} />
+                  {selectedView === 'search' && 'Search'}
                 </MobileSegment>
               </SegmentedControl>
 

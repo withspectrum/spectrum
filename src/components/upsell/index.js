@@ -9,7 +9,7 @@ import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import Avatar from '../avatar';
-import ToggleCommunityMembership from '../toggleCommunityMembership';
+import ToggleCommunityMembership from '../toggleMembership/community';
 import { Button, OutlineButton } from '../buttons';
 import { Login } from '../../views/login';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';

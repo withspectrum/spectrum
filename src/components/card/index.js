@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import styled from 'styled-components';
 import { FlexCol } from '../globals';
 
-const StyledCard = styled(FlexCol)`
+export const StyledCard = styled(FlexCol)`
   background: ${({ theme }) => theme.bg.default};
   position: relative;
   width: 100%;

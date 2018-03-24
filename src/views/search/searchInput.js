@@ -1,20 +1,24 @@
+//@flow
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from './style';
 import Icon from '../../components/icons';
 
-type Props = {};
+type Props = {
+  handleSubmit: (searchString: string) => void,
+};
 type State = {
   isOpen: boolean,
   value: string,
   searchQueryString: string,
 };
 class SearchViewInput extends React.Component<Props, State> {
+  searchInput: ?HTMLInputElement;
   state = { isOpen: false, value: '', searchQueryString: '' };
 
   open = () => {
     this.setState({ isOpen: true });
-    this.searchInput.focus();
+    if (this.searchInput) this.searchInput.focus();
   };
 
   close = () => {
@@ -22,12 +26,12 @@ class SearchViewInput extends React.Component<Props, State> {
       this.setState({ isOpen: false, searchQueryString: '' });
       this.setState({ searchQueryString: '' });
     }
-    this.searchInput.blur();
+    if (this.searchInput) this.searchInput.blur();
   };
 
   clearClose = () => {
     this.setState({ value: '', searchQueryString: '' });
-    this.searchInput.focus();
+    if (this.searchInput) this.searchInput.focus();
   };
 
   onChange = e => {

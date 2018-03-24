@@ -92,6 +92,8 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled.div`
   flex-direction: column;
+  margin-top: 32px;
+
   display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
@@ -103,7 +105,7 @@ export const ListHeading = styled(H3)`
   font-weight: 500;
   font-size: 18px;
   padding: 16px;
-  padding-left: 0;
+  padding-left: 8px;
   color: ${({ theme }) => theme.text.default};
 `;
 

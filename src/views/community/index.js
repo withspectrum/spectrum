@@ -2,41 +2,41 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from '../../components/link';
-import { Button } from '../../components/buttons';
+import Link from 'src/components/link';
+import { Button } from 'src/components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
-import ThreadComposer from '../../components/threadComposer';
-import Head from '../../components/head';
-import Icon from '../../components/icons';
-import AppViewWrapper from '../../components/appViewWrapper';
-import ThreadFeed from '../../components/threadFeed';
-import Search from './components/search';
+import ThreadComposer from 'src/components/threadComposer';
+import Head from 'src/components/head';
+import Icon from 'src/components/icons';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import ThreadFeed from 'src/components/threadFeed';
+import Search from 'src/components/search/communityThreads';
 import CommunityMemberGrid from './components/memberGrid';
-import ToggleCommunityMembership from '../../components/toggleCommunityMembership';
-import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
-import { CoverPhoto } from '../../components/profile/coverPhoto';
+import ToggleCommunityMembership from 'src/components/toggleMembership/community';
+import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
+import { CoverPhoto } from 'src/components/profile/coverPhoto';
 import Titlebar from '../titlebar';
-import { CommunityProfile } from '../../components/profile';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import type { ViewNetworkHandlerType } from '../../components/viewNetworkHandler';
-import ViewError from '../../components/viewError';
-import { LoadingScreen } from '../../components/loading';
-import { CLIENT_URL } from '../../api/constants';
-import { Upsell404Community } from '../../components/upsell';
+import { CommunityProfile } from 'src/components/profile';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import type { ViewNetworkHandlerType } from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import { LoadingScreen } from 'src/components/loading';
+import { CLIENT_URL } from 'src/api/constants';
+import { Upsell404Community } from 'src/components/upsell';
 import {
   SegmentedControl,
-  Segment,
   DesktopSegment,
+  MidSegment,
   MobileSegment,
-} from '../../components/segmentedControl';
+} from 'src/components/segmentedControl';
 import {
-  LoginButton,
   Grid,
   Meta,
   Content,
   Extras,
   ColumnHeading,
-} from './style';
+} from 'src/components/profileLayout';
+import { ProfileCTA } from 'src/components/profile/style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
@@ -197,13 +197,15 @@ class CommunityView extends React.Component<Props, State> {
 
               {!isLoggedIn ? (
                 <Link to={loginUrl}>
-                  <LoginButton>Join {community.name}</LoginButton>
+                  <ProfileCTA isMember={false}>
+                    Join {community.name}
+                  </ProfileCTA>
                 </Link>
               ) : !isOwner ? (
                 <ToggleCommunityMembership
                   community={community}
                   render={state => (
-                    <LoginButton
+                    <ProfileCTA
                       isMember={isMember}
                       gradientTheme={isMember ? null : 'success'}
                       color={isMember ? 'text.alt' : null}
@@ -211,7 +213,7 @@ class CommunityView extends React.Component<Props, State> {
                       loading={state.isLoading}
                     >
                       {isMember ? 'Member' : `Join ${community.name}`}
-                    </LoginButton>
+                    </ProfileCTA>
                   )}
                 />
               ) : null}
@@ -219,9 +221,9 @@ class CommunityView extends React.Component<Props, State> {
               {currentUser &&
                 isOwner && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton icon={'settings'} isMember>
+                    <ProfileCTA icon={'settings'} isMember>
                       Settings
-                    </LoginButton>
+                    </ProfileCTA>
                   </Link>
                 )}
             </Meta>
@@ -236,14 +238,14 @@ class CommunityView extends React.Component<Props, State> {
                   Search
                 </DesktopSegment>
 
-                <Segment
+                <DesktopSegment
                   segmentLabel="threads"
                   onClick={() => this.handleSegmentClick('threads')}
                   selected={selectedView === 'threads'}
                 >
                   Threads
-                </Segment>
 
+                </DesktopSegment>
                 <DesktopSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -258,7 +260,8 @@ class CommunityView extends React.Component<Props, State> {
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
                 >
-                  Members
+                  <Icon glyph={'person'} />
+                  {selectedView === 'members' && 'Members'}
                 </MobileSegment>
                 <MobileSegment
                   segmentLabel="search"
@@ -266,6 +269,7 @@ class CommunityView extends React.Component<Props, State> {
                   selected={selectedView === 'search'}
                 >
                   <Icon glyph={'search'} />
+                  {selectedView === 'search' && 'Search'}
                 </MobileSegment>
               </SegmentedControl>
 

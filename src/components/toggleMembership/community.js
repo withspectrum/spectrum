@@ -9,6 +9,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { track } from '../../helpers/events';
 import type { AddCommunityMemberType } from 'shared/graphql/mutations/communityMember/addCommunityMember';
 import type { RemoveCommunityMemberType } from 'shared/graphql/mutations/communityMember/removeCommunityMember';
+import { MembershipContainer } from './style';
 
 type Props = {
   community: {
@@ -94,7 +95,11 @@ class ToggleCommunityMembership extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    return (
+      <MembershipContainer onClick={this.init}>
+        {this.props.render(this.state)}
+      </MembershipContainer>
+    );
   }
 }
 

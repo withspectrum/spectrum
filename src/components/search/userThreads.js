@@ -1,15 +1,16 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { throttle } from '../../../helpers/utils';
-import searchThreads from 'shared/graphql/queries/search/searchThreads';
-import ThreadFeed from '../../../components/threadFeed';
-import { SearchContainer, SearchInput } from '../style';
+import { throttle } from 'src/helpers/utils';
+import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
+import ThreadFeed from 'src/components/threadFeed';
+import { SearchContainer, SearchInput } from './style';
 
-const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
+const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);
 
 type Props = {
   community: Object,
+  user: Object,
 };
 
 type State = {
@@ -53,7 +54,7 @@ class Search extends React.Component<Props, State> {
   };
 
   render() {
-    const { community } = this.props;
+    const { user } = this.props;
     const { searchString, sendStringToServer } = this.state;
 
     return (
@@ -63,7 +64,7 @@ class Search extends React.Component<Props, State> {
             defaultValue={searchString}
             autoFocus={true}
             type="text"
-            placeholder={`Search all threads in ${community.name}...`}
+            placeholder={`Search ${user.name}'s threads...`}
             onChange={this.handleChange}
           />
         </SearchContainer>
@@ -71,12 +72,11 @@ class Search extends React.Component<Props, State> {
           sendStringToServer && (
             <SearchThreadFeed
               search
-              viewContext="community"
-              communityId={community.id}
+              viewContext="profile"
+              userId={user.id}
               queryString={sendStringToServer}
-              filter={{ communityId: community.id }}
-              community={community}
-              pinnedThreadId={community.pinnedThreadId}
+              filter={{ creatorId: user.id }}
+              user={user}
             />
           )}
       </div>
