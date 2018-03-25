@@ -21,7 +21,6 @@ import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
 import { Upsell404Channel } from '../../components/upsell';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
-import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 import Icon from '../../components/icons';
 import Search from './components/search';
@@ -297,16 +296,6 @@ class ChannelView extends React.Component<Props, State> {
                 )}
             </Meta>
             <Content>
-              {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
-              {isLoggedIn &&
-                userHasPermissions &&
-                channel.isPrivate &&
-                channel.isArchived && (
-                  <UpsellUpgradeCommunityPrivateChannel
-                    community={channel.community}
-                  />
-                )}
-
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
                 <DesktopSegment
                   segmentLabel="search"
