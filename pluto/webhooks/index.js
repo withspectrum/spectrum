@@ -84,11 +84,8 @@ export const handleWebhooks = async (req: any, res: any) => {
 
   // if signature isn't verifiable or if event can't be parsed
   if (!event) {
-    try {
-      console.log('❌ No event found!');
-    } catch (err) {
-      console.error('❌ Raven error', err);
-    }
+    console.error('❌ No event found!');
+    return;
   }
 
   debug(`🕒 About to process event type ${event.type}`);
