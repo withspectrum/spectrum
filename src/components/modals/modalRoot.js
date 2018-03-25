@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import CreateChannelModal from './CreateChannelModal';
 import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import UpgradeModal from './UpgradeModal';
-import CommunityUpgradeModal from './CommunityUpgradeModal';
 import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import UpgradeAnalyticsModal from './UpgradeAnalyticsModal';
@@ -17,7 +16,6 @@ const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
   UPGRADE_MODAL: UpgradeModal,
-  COMMUNITY_UPGRADE_MODAL: CommunityUpgradeModal,
   REP_EXPLAINER_MODAL: RepExplainerModal,
   CHANGE_CHANNEL: ChangeChannelModal,
   UPGRADE_ANALYTICS_MODAL: UpgradeAnalyticsModal,
