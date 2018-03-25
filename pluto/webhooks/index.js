@@ -70,17 +70,17 @@ const WebhookHandler = {
 
 export const handleWebhooks = async (req: any, res: any) => {
   // in production, verify stripe event signatures
-  let event;
-  if (process.env.NODE_ENV === 'production') {
-    let sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      stripeWebhookSigningSecret
-    );
-  } else {
-    event = JSON.parse(req.body);
-  }
+  // let event;
+  // if (process.env.NODE_ENV === 'production') {
+  //   let sig = req.headers['stripe-signature'];
+  //   event = stripe.webhooks.constructEvent(
+  //     req.body,
+  //     sig,
+  //     stripeWebhookSigningSecret
+  //   );
+  // } else {
+  let event = JSON.parse(req.body);
+  // }
 
   // if signature isn't verifiable or if event can't be parsed
   if (!event) {
