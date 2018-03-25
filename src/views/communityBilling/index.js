@@ -78,9 +78,8 @@ class CommunityMembersSettings extends React.Component<Props> {
                 <React.Fragment>
                   <SectionSubtitle>
                     You have no active subscriptions. As soon as you add
-                    moderators, private channels, analytics, or priority support
-                    to this community, your subscription information will appear
-                    here.
+                    moderators, private channels, or analytics to this
+                    community, your subscription information will appear here.
                   </SectionSubtitle>
                   <SectionSubtitle>
                     <Link to={'/pricing'}>

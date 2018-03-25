@@ -43,7 +43,7 @@ export default () => {
 
   analyticsChanged();
 
-  supportChanged();
+  // supportChanged();
 
   openSourceStatusActivated();
   openSourceStatusChanged();
