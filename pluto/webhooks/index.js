@@ -45,7 +45,7 @@ const WebhookHandler = {
 
     if (!handler || handler === undefined) {
       debug(`◽️  Unhandled event type: ${event.type}`);
-      console.log(event);
+      console.error(`◽️  Unhandled event type: ${event.type}`);
       return;
       // throw new Error(`Unhandled event type: ${event.type}`);
     }
@@ -70,25 +70,22 @@ const WebhookHandler = {
 
 export const handleWebhooks = async (req: any, res: any) => {
   // in production, verify stripe event signatures
-  let event;
-  if (process.env.NODE_ENV === 'production') {
-    let sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      stripeWebhookSigningSecret
-    );
-  } else {
-    event = JSON.parse(req.body);
-  }
+  // let event;
+  // if (process.env.NODE_ENV === 'production') {
+  //   let sig = req.headers['stripe-signature'];
+  //   event = stripe.webhooks.constructEvent(
+  //     req.body,
+  //     sig,
+  //     stripeWebhookSigningSecret
+  //   );
+  // } else {
+  let event = JSON.parse(req.body);
+  // }
 
   // if signature isn't verifiable or if event can't be parsed
   if (!event) {
-    try {
-      console.log('❌ No event found!');
-    } catch (err) {
-      console.error('❌ Raven error', err);
-    }
+    console.error('❌ No event found!');
+    return;
   }
 
   debug(`🕒 About to process event type ${event.type}`);
