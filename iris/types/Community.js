@@ -55,6 +55,73 @@ const Community = /* GraphQL */ `
 		newThreads: [Thread]
 	}
 
+	type StripeCard {
+		brand: String
+		exp_month: Int
+		exp_year: Int
+		last4: String
+	}
+
+	type StripeSource {
+		id: ID
+		card: StripeCard
+		isDefault: Boolean
+	}
+
+	type StripeItem {
+		id: ID
+		amount: Int
+		quantity: Int
+		planId: String
+		planName: String
+	}
+
+	type StripeSubscriptionItem {
+		created: Int
+		planId: String
+		planName: String
+		amount: Int
+		quantity: Int
+		id: String
+	}
+
+	type StripeDiscount {
+		amount_off: Int
+		percent_off: Int
+		id: String
+	}
+
+	type StripeSubscription {
+		id: ID
+		created: Int
+		discount: StripeDiscount
+		billing_cycle_anchor: Int
+		current_period_end: Int
+		canceled_at: Int
+		items: [StripeSubscriptionItem]
+		status: String
+	}
+
+	type StripeInvoice {
+		id: ID
+		date: Int
+		items: [StripeItem]
+		total: Int
+	}
+
+	type CommunityBillingSettings {
+		pendingAdministratorEmail: String
+		administratorEmail: String
+		sources: [StripeSource]
+		invoices: [StripeInvoice]
+		subscriptions: [StripeSubscription]
+	}
+
+	type Features {
+		analytics: Boolean
+		prioritySupport: Boolean
+	}
+	
 	type BrandedLogin {
 		isEnabled: Boolean
 		message: String
@@ -87,6 +154,10 @@ const Community = /* GraphQL */ `
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin
+
+		hasFeatures: Features
+		hasChargeableSource: Boolean
+		billingSettings: CommunityBillingSettings
 
 		memberConnection(first: Int = 10, after: String, filter: MemberConnectionFilter): CommunityMembersConnection! @deprecated(reason:"Use the new Community.members type")
 		contextPermissions: ContextPermissions @deprecated(reason:"Use the new CommunityMember type to get permissions")
@@ -152,6 +223,38 @@ const Community = /* GraphQL */ `
 		id: String!
 	}
 
+	input UpdateAdministratorEmailInput {
+		id: ID!
+		email: String!
+	}
+
+	input AddPaymentSourceInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
+	input RemovePaymentSourceInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
+	input MakePaymentSourceDefaultInput {
+		sourceId: String!
+		communityId: ID!
+	}
+
+	input CancelSubscriptionInput {
+		communityId: ID!
+	}
+
+	input EnableCommunityAnalyticsInput {
+		communityId: ID!
+	}
+
+	input DisableCommunityAnalyticsInput {
+		communityId: ID!
+	}
+	
 	input EnableBrandedLoginInput {
 		id: String!
 	}
@@ -173,8 +276,15 @@ const Community = /* GraphQL */ `
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
-		upgradeCommunity(input: UpgradeCommunityInput!): Community
-		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		upgradeCommunity(input: UpgradeCommunityInput!): Community @deprecated(reason:"Use feature level upgrade mutations like enableCommunityAnalytics")
+		downgradeCommunity(input: DowngradeCommunityInput!): Community @deprecated(reason:"Use feature level downgrade mutations like disableCommunityAnalytics")
+		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
+		addPaymentSource(input: AddPaymentSourceInput!): Community
+		removePaymentSource(input: RemovePaymentSourceInput!): Community
+		makePaymentSourceDefault(input: MakePaymentSourceDefaultInput!): Community
+		cancelSubscription(input: CancelSubscriptionInput!): Community
+		enableCommunityAnalytics(input: EnableCommunityAnalyticsInput!): Community
+		disableCommunityAnalytics(input: DisableCommunityAnalyticsInput!): Community
 		enableBrandedLogin(input: EnableBrandedLoginInput!): Community
 		disableBrandedLogin(input: DisableBrandedLoginInput!): Community
 		saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community

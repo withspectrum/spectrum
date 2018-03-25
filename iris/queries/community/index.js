@@ -24,6 +24,9 @@ import topAndNewThreads from './topAndNewThreads';
 import isPro from './isPro';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
+import billingSettings from './billingSettings';
+import hasChargeableSource from './hasChargeableSource';
+import hasFeatures from './hasFeatures';
 import brandedLogin from './brandedLogin';
 
 module.exports = {
@@ -53,6 +56,9 @@ module.exports = {
     isPro,
     contextPermissions,
     watercooler,
+    billingSettings,
+    hasChargeableSource,
+    hasFeatures,
     brandedLogin,
   },
 };

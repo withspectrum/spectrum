@@ -6,7 +6,8 @@ import {
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
 } from 'shared/bull/queues';
-import { NEW_DOCUMENTS, createChangefeed } from './utils';
+import { NEW_DOCUMENTS } from './utils';
+import { createChangefeed } from 'shared/changefeed-utils';
 import { setThreadLastActive } from './thread';
 
 export type MessageTypes = 'text' | 'media';

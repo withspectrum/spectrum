@@ -30,14 +30,22 @@ export const generateUnsubscribeToken = (
   return token;
 };
 
-export const generateEmailValidationToken = (userId: string, email: string) => {
+export const generateEmailValidationToken = (
+  userId: string,
+  email: string,
+  communityId?: string
+) => {
   if (!userId || !email) return null;
 
   let token;
   try {
-    token = jwt.sign({ userId, email }, process.env.EMAIL_JWT_SIGNATURE, {
-      expiresIn: 60 * 60 * 24 * 7,
-    });
+    token = jwt.sign(
+      { userId, email, communityId },
+      process.env.EMAIL_JWT_SIGNATURE,
+      {
+        expiresIn: 60 * 60 * 24 * 7,
+      }
+    );
   } catch (err) {
     return null;
   }

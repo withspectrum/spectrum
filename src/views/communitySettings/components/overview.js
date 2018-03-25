@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
 import EditForm from './editForm';
-import RecurringPaymentsList from './recurringPaymentsList';
 import ChannelList from './channelList';
-import Invoices from './invoices';
 import BrandedLogin from './brandedLogin';
 import {
   SectionsContainer,
@@ -22,8 +20,6 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <EditForm community={community} />
-          <RecurringPaymentsList community={community} id={community.id} />
-          <Invoices id={community.id} />
         </Column>
         <Column>
           <BrandedLogin id={community.id} />

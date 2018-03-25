@@ -3,7 +3,12 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
-import { Span, ProBadge, BlockedBadge } from './style';
+import {
+  Span,
+  ProBadge,
+  BlockedBadge,
+  DefaultPaymentMethodBadge,
+} from './style';
 
 type Props = {
   type: string,
@@ -26,6 +31,17 @@ class Badge extends React.Component<Props> {
 
   render() {
     switch (this.props.type) {
+      case 'default-payment-method':
+        return (
+          <DefaultPaymentMethodBadge
+            type={this.props.type}
+            tipText={this.props.tipText}
+            tipLocation={'top-left'}
+            onClick={this.triggerProModal}
+          >
+            Default
+          </DefaultPaymentMethodBadge>
+        );
       case 'pro':
         return (
           <ProBadge

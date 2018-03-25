@@ -87,6 +87,10 @@ export default async (
     return new UserError("This channel doesn't exist");
   }
 
+  if (channelToEvaluate.isArchived) {
+    return new UserError('This channel has been archived');
+  }
+
   // if user isn't a channel member
   if (
     !currentUserChannelPermissions.isMember ||

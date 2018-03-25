@@ -249,6 +249,16 @@ const removeModeratorInCommunity = (
     .then(result => result.changes[0].new_val);
 };
 
+// changes all moderators in a community to members
+const removeModeratorsInCommunity = (communityId: string): Promise<Object> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isModerator: true })
+    .update({ isModerator: false }, { returnChanges: true })
+    .run();
+};
+
 /*
 ===========================================================
 
@@ -437,6 +447,7 @@ module.exports = {
   createModeratorInCommunity,
   makeMemberModeratorInCommunity,
   removeModeratorInCommunity,
+  removeModeratorsInCommunity,
   // get
   DEFAULT_USER_COMMUNITY_PERMISSIONS,
   getMembersInCommunity,

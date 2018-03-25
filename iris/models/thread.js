@@ -6,7 +6,8 @@ import {
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange, createChangefeed } = require('./utils');
+const { NEW_DOCUMENTS, parseRange } = require('./utils');
+import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';

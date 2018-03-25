@@ -29,7 +29,7 @@ export default async (
     getThreads([threadId]),
   ]);
 
-  if (!permissions.isOwner) {
+  if (!permissions.isOwner && !permissions.isModerator) {
     return new UserError("You don't have permission to do this.");
   }
 

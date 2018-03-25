@@ -1,39 +1,30 @@
 // @flow
 const debug = require('debug')('iris:models:utils');
-import processChangefeed from 'rethinkdb-changefeed-reconnect';
 import { db } from './db';
-import Raven from 'shared/raven';
-import type { Cursor } from 'rethinkdbdash';
 
 export const NEW_DOCUMENTS = db
   .row('old_val')
   .eq(null)
   .and(db.not(db.row('new_val').eq(null)));
 
-export const createChangefeed = (
-  getChangefeed: () => Promise<Cursor>,
-  callback: (arg: any) => void,
-  name?: string
-) => {
-  return processChangefeed(
-    getChangefeed,
-    callback,
-    err => {
-      console.error(err);
-      Raven.captureException(err);
-    },
-    {
-      changefeedName: name,
-      attemptDelay: 60000,
-      maxAttempts: Infinity,
-      logger: {
-        // Ignore log and info logs in production
-        log: debug,
-        info: debug,
-        warn: console.warn.bind(console),
-        error: console.error.bind(console),
-      },
-    }
+export const listenToNewDocumentsIn = (table: string, cb: Function) => {
+  return (
+    db
+      .table(table)
+      .changes({
+        includeInitial: false,
+      })
+      // Filter to only include newly inserted messages in the changefeed
+      .filter(NEW_DOCUMENTS)
+      .run({ cursor: true })
+      .then(cursor => {
+        cursor.each((err, data) => {
+          if (err) throw err;
+          // Call the passed callback with the message directly
+          cb(data.new_val);
+        });
+        return cursor;
+      })
   );
 };
 

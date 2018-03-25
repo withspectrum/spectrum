@@ -57,8 +57,10 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError('This person is not blocked in your community.');
   }
 
-  if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage members.');
+  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
+    return new UserError(
+      'You must own or moderate this community to manage members.'
+    );
   }
 
   // all checks passed
