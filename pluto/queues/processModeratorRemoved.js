@@ -6,6 +6,7 @@ import type {
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
+import { FREE_MODERATOR_SEAT, MODERATOR_SEAT } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -35,16 +36,16 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  if (StripeUtil.hasSubscriptionItemOfType(customer, 'moderator-seat')) {
+  if (StripeUtil.hasSubscriptionItemOfType(customer, MODERATOR_SEAT)) {
     debug(`Has moderator seat subscription item ${communityId}`);
     const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'moderator-seat'
+      MODERATOR_SEAT
     );
 
     const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'oss-moderator-seat'
+      FREE_MODERATOR_SEAT
     );
 
     if (!subscriptionItem && !ossSubscriptionItem) {
@@ -79,7 +80,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   );
   const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'oss-moderator-seat'
+    FREE_MODERATOR_SEAT
   );
 
   if (ossSubscriptionItem) {

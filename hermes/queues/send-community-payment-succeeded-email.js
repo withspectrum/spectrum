@@ -11,6 +11,7 @@ import type { Job, PaymentSucceededEmailJobData } from 'shared/bull/types';
 import Raven from 'shared/raven';
 import { formatNumbersToDollars } from '../utils/number-to-dollars';
 import formatDate from '../utils/format-date';
+import { COMMUNITY_ANALYTICS } from 'pluto/queues/constants';
 
 export default (job: Job<PaymentSucceededEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
@@ -37,7 +38,7 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
       if (item.plan.amount === 0) return null;
 
       let quantity;
-      if (item.plan.id === 'community-analytics') {
+      if (item.plan.id === COMMUNITY_ANALYTICS) {
         quantity = null;
       } else if (item.plan.id === 'priority-support') {
         quantity = null;

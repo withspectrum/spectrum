@@ -7,6 +7,7 @@ import type {
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
 import removeAllPaidFeatures from './removeAllPaidFeatures';
+import { COMMUNITY_ANALYTICS } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -43,7 +44,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   if (activeSubscription) {
     debug(`Has existing subscription ${communityId}`);
 
-    if (StripeUtil.hasSubscriptionItemOfType(customer, 'community-analytics')) {
+    if (StripeUtil.hasSubscriptionItemOfType(customer, COMMUNITY_ANALYTICS)) {
       debug(
         `Community ${communityId} already has an analytics subscription, abort`
       );
@@ -53,7 +54,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     debug(`Adding analytics subscriptionItem ${communityId}`);
     return await StripeUtil.addSubscriptionItem({
       subscriptionId: activeSubscription.id,
-      subscriptionItemType: 'community-analytics',
+      subscriptionItemType: COMMUNITY_ANALYTICS,
     });
   }
 
@@ -61,7 +62,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   debug(`Creating initial subscription ${communityId}`);
   return await StripeUtil.createFirstSubscription({
     customerId: customer.id,
-    subscriptionItemType: 'community-analytics',
+    subscriptionItemType: COMMUNITY_ANALYTICS,
   });
 };
 

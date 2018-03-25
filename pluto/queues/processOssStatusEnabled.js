@@ -7,17 +7,23 @@ import type {
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
 import removeAllPaidFeatures from './removeAllPaidFeatures';
+import {
+  PRIVATE_CHANNEL,
+  FREE_PRIVATE_CHANNEL,
+  FREE_MODERATOR_SEAT,
+  MODERATOR_SEAT,
+} from './constants';
 
 const handleModerationSeats = async (
   customer,
   activeSubscription,
   communityId
 ) => {
-  if (StripeUtil.hasSubscriptionItemOfType(customer, 'moderator-seat')) {
+  if (StripeUtil.hasSubscriptionItemOfType(customer, MODERATOR_SEAT)) {
     debug(`Has moderator seat subscription item ${communityId}`);
     const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'moderator-seat'
+      MODERATOR_SEAT
     );
 
     if (!subscriptionItem) {
@@ -37,7 +43,7 @@ const handleModerationSeats = async (
         StripeUtil.deleteSubscriptionItem(subscriptionItem.id),
         StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'oss-moderator-seat',
+          subscriptionItemType: FREE_MODERATOR_SEAT,
         }),
       ]);
     }
@@ -53,7 +59,7 @@ const handleModerationSeats = async (
       }),
       StripeUtil.addSubscriptionItem({
         subscriptionId: activeSubscription.id,
-        subscriptionItemType: 'oss-moderator-seat',
+        subscriptionItemType: FREE_MODERATOR_SEAT,
       }),
     ]);
   }
@@ -64,11 +70,11 @@ const handlePrivateChannels = async (
   activeSubscription,
   communityId
 ) => {
-  if (StripeUtil.hasSubscriptionItemOfType(customer, 'private-channel')) {
+  if (StripeUtil.hasSubscriptionItemOfType(customer, PRIVATE_CHANNEL)) {
     debug(`Has private channel subscription item ${communityId}`);
     const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'private-channel'
+      PRIVATE_CHANNEL
     );
 
     if (!subscriptionItem) {
@@ -88,7 +94,7 @@ const handlePrivateChannels = async (
         StripeUtil.deleteSubscriptionItem(subscriptionItem.id),
         StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'oss-private-channel',
+          subscriptionItemType: FREE_PRIVATE_CHANNEL,
         }),
       ]);
     }
@@ -104,7 +110,7 @@ const handlePrivateChannels = async (
       }),
       StripeUtil.addSubscriptionItem({
         subscriptionId: activeSubscription.id,
-        subscriptionItemType: 'oss-private-channel',
+        subscriptionItemType: FREE_PRIVATE_CHANNEL,
       }),
     ]);
   }

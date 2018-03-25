@@ -4,6 +4,7 @@ import type { GraphQLContext } from '../..';
 import type { DBCommunity } from 'shared/types';
 import UserError from '../../utils/UserError';
 import { StripeUtil } from 'shared/stripe/utils';
+import { COMMUNITY_ANALYTICS } from 'pluto/queues/constants';
 
 export default async (
   { id }: DBCommunity,
@@ -35,7 +36,7 @@ export default async (
 
   const hasAnalytics = await StripeUtil.hasSubscriptionItemOfType(
     customer,
-    'community-analytics'
+    COMMUNITY_ANALYTICS
   );
   const hasPrioritySupport = await StripeUtil.hasSubscriptionItemOfType(
     customer,

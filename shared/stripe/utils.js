@@ -8,6 +8,14 @@ import type { RawSubscriptionItem } from 'shared/stripe/types/subscriptionItem';
 import type { RawSource } from 'shared/stripe/types/source';
 import type { RawInvoice } from 'shared/stripe/types/invoice';
 import { getCommunityById, setStripeCustomerId } from 'iris/models/community';
+import {
+  FREE_MODERATOR_SEAT,
+  MODERATOR_SEAT,
+  FREE_PRIVATE_CHANNEL,
+  PRIVATE_CHANNEL,
+  COMMUNITY_FEATURES,
+  COMMUNITY_ANALYTICS,
+} from 'pluto/queues/constants';
 
 const getCustomer = async (customerId: string): Promise<RawCustomer> => {
   return await stripe.customers.retrieve(customerId);
@@ -117,17 +125,15 @@ const hasSubscriptionItemOfType = (
 };
 
 type SubscriptionItemTypes =
-  | 'oss-moderator-seat'
-  | 'oss-private-channel'
-  | 'moderator-seat'
-  | 'private-channel'
-  | 'community-analytics'
-  | 'priority-support';
+  | typeof FREE_MODERATOR_SEAT
+  | typeof MODERATOR_SEAT
+  | typeof FREE_PRIVATE_CHANNEL
+  | typeof PRIVATE_CHANNEL
+  | typeof COMMUNITY_ANALYTICS
+  | typeof COMMUNITY_FEATURES;
 
-const getSubscriptionItemOfType = (
-  customer: RawCustomer,
-  type: SubscriptionItemTypes
-): ?RawSubscriptionItem => {
+// prettier-ignore
+const getSubscriptionItemOfType = (customer: RawCustomer, type: SubscriptionItemTypes): ?RawSubscriptionItem => {
   if (!customer) return null;
   const activeSubscription = getActiveSubscription(customer);
   if (!activeSubscription) return null;
@@ -188,7 +194,7 @@ const updateCustomer = async (customerInput: UpdateCustomerInput) => {
 
 type FirstSubInput = {
   customerId: string,
-  subscriptionItemType: string,
+  subscriptionItemType: SubscriptionItemTypes,
 };
 const createFirstSubscription = async (input: FirstSubInput) => {
   const { customerId, subscriptionItemType } = input;
@@ -199,7 +205,7 @@ const createFirstSubscription = async (input: FirstSubInput) => {
       // the top-level subscription from thinking it's about any
       // specific feature
       {
-        plan: 'community-features',
+        plan: COMMUNITY_FEATURES,
         quantity: 1,
       },
       {
@@ -219,7 +225,7 @@ const cleanSubscriptions = (customer: RawCustomer): Array<?Object> => {
   const formatItems = (items: Array<any>) => {
     if (!items || items.length === 0) return [];
     return items
-      .filter(item => item && item.plan.id !== 'community-features')
+      .filter(item => item && item.plan.id !== COMMUNITY_FEATURES)
       .map(
         item =>
           item && {
@@ -291,7 +297,7 @@ const cleanInvoices = (invoices: Array<?RawInvoice>) => {
 
 type AddSIInput = {
   subscriptionId: string,
-  subscriptionItemType: string,
+  subscriptionItemType: SubscriptionItemTypes,
 };
 const addSubscriptionItem = async (input: AddSIInput) => {
   const { subscriptionId, subscriptionItemType } = input;

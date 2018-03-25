@@ -1,4 +1,13 @@
 // @flow
+
+// plans
+export const MODERATOR_SEAT = 'moderator-seat';
+export const FREE_MODERATOR_SEAT = 'free-moderator-seat';
+export const PRIVATE_CHANNEL = 'private-channel';
+export const FREE_PRIVATE_CHANNEL = 'free-private-channel';
+export const COMMUNITY_ANALYTICS = 'community-analytics';
+export const COMMUNITY_FEATURES = 'community-features';
+
 export const PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT =
   'process stripe subscription webhook event';
 export const PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT =

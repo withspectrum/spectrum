@@ -6,6 +6,7 @@ import type {
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
+import { COMMUNITY_ANALYTICS } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -36,12 +37,12 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   if (activeSubscription) {
     debug(`Has an existing subscription ${communityId}`);
 
-    if (StripeUtil.hasSubscriptionItemOfType(customer, 'community-analytics')) {
+    if (StripeUtil.hasSubscriptionItemOfType(customer, COMMUNITY_ANALYTICS)) {
       debug(`Has an analytics subscription, remove it ${communityId}`);
 
       const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
-        'community-analytics'
+        COMMUNITY_ANALYTICS
       );
 
       if (!subscriptionItem) {

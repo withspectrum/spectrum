@@ -7,6 +7,7 @@ import type {
 import Raven from 'shared/raven';
 import removeAllPaidFeatures from './removeAllPaidFeatures';
 import { StripeUtil } from 'shared/stripe/utils';
+import { FREE_MODERATOR_SEAT, MODERATOR_SEAT } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -39,11 +40,11 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (activeSubscription) {
     debug(`Active subscription found ${communityId}`);
-    if (StripeUtil.hasSubscriptionItemOfType(customer, 'moderator-seat')) {
+    if (StripeUtil.hasSubscriptionItemOfType(customer, MODERATOR_SEAT)) {
       debug(`Moderator seat subscription item found ${communityId}`);
       const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
-        'moderator-seat'
+        MODERATOR_SEAT
       );
 
       if (!subscriptionItem) {
@@ -64,7 +65,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       debug(`Community is oss verified${communityId}`);
       const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
-        'oss-moderator-seat'
+        FREE_MODERATOR_SEAT
       );
 
       if (ossSubscriptionItem) {
@@ -74,7 +75,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
         );
         return await StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'moderator-seat',
+          subscriptionItemType: MODERATOR_SEAT,
         });
       } else {
         debug(`Community does not have oss moderator seat${communityId}`);
@@ -83,7 +84,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
         );
         return await StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'oss-moderator-seat',
+          subscriptionItemType: FREE_MODERATOR_SEAT,
         });
       }
     } else {
@@ -91,7 +92,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       debug(`Adding subscription item to existing subscription ${communityId}`);
       return await StripeUtil.addSubscriptionItem({
         subscriptionId: activeSubscription.id,
-        subscriptionItemType: 'moderator-seat',
+        subscriptionItemType: MODERATOR_SEAT,
       });
     }
   }
@@ -102,14 +103,14 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     debug(`Creating first oss subscription ${communityId}`);
     return await StripeUtil.createFirstSubscription({
       customerId: customer.id,
-      subscriptionItemType: 'oss-moderator-seat',
+      subscriptionItemType: FREE_MODERATOR_SEAT,
     });
   } else {
     debug(`Community is not oss verified${communityId}`);
     debug(`Creating first subscription ${communityId}`);
     return await StripeUtil.createFirstSubscription({
       customerId: customer.id,
-      subscriptionItemType: 'moderator-seat',
+      subscriptionItemType: MODERATOR_SEAT,
     });
   }
 };

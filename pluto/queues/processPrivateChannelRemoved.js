@@ -6,6 +6,7 @@ import type {
 } from 'shared/bull/types';
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
+import { FREE_PRIVATE_CHANNEL, PRIVATE_CHANNEL } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -35,16 +36,16 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     return;
   }
 
-  if (StripeUtil.hasSubscriptionItemOfType(customer, 'private-channel')) {
+  if (StripeUtil.hasSubscriptionItemOfType(customer, PRIVATE_CHANNEL)) {
     debug(`Has private channel subscription item ${communityId}`);
     const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'private-channel'
+      PRIVATE_CHANNEL
     );
 
     const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
       customer,
-      'oss-private-channel'
+      FREE_PRIVATE_CHANNEL
     );
 
     if (!subscriptionItem && !ossSubscriptionItem) {
@@ -79,7 +80,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   );
   const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'oss-private-channel'
+    FREE_PRIVATE_CHANNEL
   );
 
   if (ossSubscriptionItem) {

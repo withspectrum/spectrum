@@ -7,6 +7,12 @@ import type {
 import Raven from 'shared/raven';
 import { StripeUtil } from 'shared/stripe/utils';
 import removeAllPaidFeatures from './removeAllPaidFeatures';
+import {
+  FREE_PRIVATE_CHANNEL,
+  FREE_MODERATOR_SEAT,
+  MODERATOR_SEAT,
+  PRIVATE_CHANNEL,
+} from './constants';
 
 const handleModerationSeats = async (
   customer,
@@ -17,12 +23,12 @@ const handleModerationSeats = async (
 
   const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'moderator-seat'
+    MODERATOR_SEAT
   );
 
   const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'oss-moderator-seat'
+    FREE_MODERATOR_SEAT
   );
 
   // if the community has neither an oss moderator seat or a paid moderator seat, return
@@ -55,7 +61,7 @@ const handleModerationSeats = async (
       promises.push(
         StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'moderator-seat',
+          subscriptionItemType: MODERATOR_SEAT,
         })
       );
     }
@@ -73,12 +79,12 @@ const handlePrivateChannels = async (
 
   const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'private-channel'
+    PRIVATE_CHANNEL
   );
 
   const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
     customer,
-    'oss-private-channel'
+    FREE_PRIVATE_CHANNEL
   );
 
   // if the community has neither an oss moderator seat or a paid moderator seat, return
@@ -111,7 +117,7 @@ const handlePrivateChannels = async (
       promises.push(
         StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'private-channel',
+          subscriptionItemType: PRIVATE_CHANNEL,
         })
       );
     }

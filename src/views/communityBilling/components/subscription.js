@@ -16,6 +16,13 @@ import {
   LineItemTitleTotal,
   LineItemPrice,
 } from '../style';
+import {
+  COMMUNITY_ANALYTICS,
+  MODERATOR_SEAT,
+  PRIVATE_CHANNEL,
+  FREE_PRIVATE_CHANNEL,
+  FREE_MODERATOR_SEAT,
+} from 'pluto/queues/constants';
 
 type Props = {
   subscription: SubscriptionType,
@@ -236,17 +243,17 @@ class Subscription extends React.Component<Props> {
 
   parseLineItem = (lineItem: LineItemType) => {
     switch (lineItem.planId) {
-      case 'community-analytics':
+      case COMMUNITY_ANALYTICS:
         return this.communityAnalytics(lineItem);
       case 'priority-support':
         return this.prioritySupport(lineItem);
-      case 'moderator-seat':
+      case MODERATOR_SEAT:
         return this.moderatorSeat(lineItem);
-      case 'private-channel':
+      case PRIVATE_CHANNEL:
         return this.privateChannel(lineItem);
-      case 'oss-moderator-seat':
+      case FREE_MODERATOR_SEAT:
         return this.ossModeratorSeat(lineItem);
-      case 'oss-private-channel':
+      case FREE_PRIVATE_CHANNEL:
         return this.ossPrivateChannel(lineItem);
       default:
         return null;

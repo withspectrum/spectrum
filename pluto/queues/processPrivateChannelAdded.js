@@ -7,6 +7,7 @@ import type {
 import Raven from 'shared/raven';
 import removeAllPaidFeatures from './removeAllPaidFeatures';
 import { StripeUtil } from 'shared/stripe/utils';
+import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from './constants';
 
 const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
   const { data: { communityId } } = job;
@@ -40,12 +41,12 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
 
   if (activeSubscription) {
     debug(`Active subscription found ${communityId}`);
-    if (StripeUtil.hasSubscriptionItemOfType(customer, 'private-channel')) {
+    if (StripeUtil.hasSubscriptionItemOfType(customer, PRIVATE_CHANNEL)) {
       debug(`Private channel subscription item found ${communityId}`);
 
       const subscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
-        'private-channel'
+        PRIVATE_CHANNEL
       );
 
       if (!subscriptionItem) {
@@ -66,7 +67,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       debug(`Community is oss verified ${communityId}`);
       const ossSubscriptionItem = StripeUtil.getSubscriptionItemOfType(
         customer,
-        'oss-private-channel'
+        FREE_PRIVATE_CHANNEL
       );
 
       if (ossSubscriptionItem) {
@@ -76,7 +77,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
         );
         return await StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'private-channel',
+          subscriptionItemType: PRIVATE_CHANNEL,
         });
       } else {
         debug(
@@ -87,7 +88,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
         );
         return await StripeUtil.addSubscriptionItem({
           subscriptionId: activeSubscription.id,
-          subscriptionItemType: 'oss-private-channel',
+          subscriptionItemType: FREE_PRIVATE_CHANNEL,
         });
       }
     } else {
@@ -97,7 +98,7 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
       );
       return await StripeUtil.addSubscriptionItem({
         subscriptionId: activeSubscription.id,
-        subscriptionItemType: 'private-channel',
+        subscriptionItemType: PRIVATE_CHANNEL,
       });
     }
   }
@@ -108,13 +109,13 @@ const processJob = async (job: Job<StripeCommunityPaymentEventJobData>) => {
     debug(`Creating first oss subscription ${communityId}`);
     return await StripeUtil.createFirstSubscription({
       customerId: customer.id,
-      subscriptionItemType: 'oss-private-channel',
+      subscriptionItemType: FREE_PRIVATE_CHANNEL,
     });
   } else {
     debug(`Creating first subscription ${communityId}`);
     return await StripeUtil.createFirstSubscription({
       customerId: customer.id,
-      subscriptionItemType: 'private-channel',
+      subscriptionItemType: PRIVATE_CHANNEL,
     });
   }
 };

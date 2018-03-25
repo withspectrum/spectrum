@@ -6,6 +6,7 @@ import type { CommunityInfoType } from '../../fragments/community/communityInfo'
 import communitySettingsFragment from 'shared/graphql/fragments/community/communitySettings';
 import type { CommunitySettingsType } from '../../fragments/community/communitySettings';
 import { getCommunitySettingsByMatchQuery } from '../../queries/community/getCommunitySettings';
+import { COMMUNITY_ANALYTICS } from 'pluto/queues/constants';
 
 export type DisableCommunityAnalyticsType = {
   data: {
@@ -55,7 +56,7 @@ const disableCommunityAnalyticsOptions = {
                 sub =>
                   Object.assign({}, sub, {
                     items: sub.items.filter(
-                      item => item.planId !== 'community-analytics'
+                      item => item.planId !== COMMUNITY_ANALYTICS
                     ),
                   })
               ),

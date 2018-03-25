@@ -276,8 +276,8 @@ const Community = /* GraphQL */ `
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
-		upgradeCommunity(input: UpgradeCommunityInput!): Community
-		downgradeCommunity(input: DowngradeCommunityInput!): Community
+		upgradeCommunity(input: UpgradeCommunityInput!): Community @deprecated(reason:"Use feature level upgrade mutations like enableCommunityAnalytics")
+		downgradeCommunity(input: DowngradeCommunityInput!): Community @deprecated(reason:"Use feature level downgrade mutations like disableCommunityAnalytics")
 		updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
 		addPaymentSource(input: AddPaymentSourceInput!): Community
 		removePaymentSource(input: RemovePaymentSourceInput!): Community
