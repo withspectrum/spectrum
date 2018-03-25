@@ -5,10 +5,13 @@ import { uploadImage } from '../../utils/s3';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getCommunityRecurringPayments } from '../../models/recurringPayment';
-import { getChannels } from '../../models/channel';
+import { getChannelById } from '../../models/channel';
+import { getCommunityById } from '../../models/community';
 import { publishThread, editThread } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
+import { StripeUtil } from 'shared/stripe/utils';
 import type { FileUpload } from 'shared/types';
+import { PRIVATE_CHANNEL, FREE_PRIVATE_CHANNEL } from 'pluto/queues/constants';
 
 type Attachment = {
   attachmentType: string,
@@ -34,7 +37,7 @@ type PublishThreadInput = {
 export default async (
   _: any,
   { thread }: PublishThreadInput,
-  { user }: GraphQLContext
+  { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
 
@@ -60,34 +63,31 @@ export default async (
     currentUser.id
   );
 
-  const getParentCommunityIsPro = getCommunityRecurringPayments(
-    thread.communityId
-  ).then(subs => {
-    let filtered = subs && subs.filter(sub => sub.status === 'active');
-    return !filtered || filtered.length === 0 ? false : true;
-  });
+  const getChannel = getChannelById(thread.channelId);
+  const getCommunity = getCommunityById(thread.communityId);
 
   const [
     currentUserChannelPermissions,
     currentUserCommunityPermissions,
-    parentCommunityIsPro,
-    channels,
+    channel,
+    community,
   ] = await Promise.all([
     getCurrentUserChannelPermissions,
     getCurrentUserCommunityPermissions,
-    getParentCommunityIsPro,
-    getChannels([thread.channelId]),
+    getChannel,
+    getCommunity,
   ]);
 
-  // select the channel to evaluate
-  const channelToEvaluate = channels[0];
+  if (!community || !community.stripeCustomerId) {
+    return new UserError('This community doesn’t exist');
+  }
 
   // if channel wasn't found or is deleted
-  if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+  if (!channel || channel.deletedAt) {
     return new UserError("This channel doesn't exist");
   }
 
-  if (channelToEvaluate.isArchived) {
+  if (channel.isArchived) {
     return new UserError('This channel has been archived');
   }
 
@@ -102,9 +102,26 @@ export default async (
     );
   }
 
-  if (!parentCommunityIsPro && channelToEvaluate.isPrivate) {
+  const { customer } = await StripeUtil.jobPreflight(community.id);
+
+  if (!customer) {
     return new UserError(
-      'Communities must be on the Pro plan to publish new threads in private channels'
+      'We could not verify the billing status for this channel, please try again'
+    );
+  }
+
+  const hasPaidPrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
+    customer,
+    PRIVATE_CHANNEL
+  );
+  const hasFreePrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
+    customer,
+    FREE_PRIVATE_CHANNEL
+  );
+
+  if (channel.isPrivate && (!hasPaidPrivateChannel && !hasFreePrivateChannel)) {
+    return new UserError(
+      'This private channel does not have an active subscription'
     );
   }
 

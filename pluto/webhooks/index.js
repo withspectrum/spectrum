@@ -45,7 +45,7 @@ const WebhookHandler = {
 
     if (!handler || handler === undefined) {
       debug(`◽️  Unhandled event type: ${event.type}`);
-      console.log(event);
+      console.error(`◽️  Unhandled event type: ${event.type}`);
       return;
       // throw new Error(`Unhandled event type: ${event.type}`);
     }
