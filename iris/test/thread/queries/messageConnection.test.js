@@ -226,8 +226,8 @@ describe('messageConnection', () => {
     `;
 
     const nextResult = await request(nextQuery);
-
     const { edges, pageInfo } = nextResult.data.thread.messageConnection;
+
     expect(edges).toHaveLength(messages.length - 1);
     expect(pageInfo).toEqual({
       hasNextPage: false,

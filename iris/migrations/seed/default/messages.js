@@ -72,7 +72,7 @@ module.exports = [
 
   {
     id: '5',
-    threadId: 'thread-1',
+    threadId: 'thread-2',
     attachments: [],
     content: {
       body: JSON.stringify({
@@ -97,7 +97,7 @@ module.exports = [
   },
   {
     id: '6',
-    threadId: 'thread-1',
+    threadId: 'thread-2',
     attachments: [],
     content: {
       body: JSON.stringify(
@@ -111,7 +111,7 @@ module.exports = [
   },
   {
     id: '7',
-    threadId: 'thread-1',
+    threadId: 'thread-2',
     attachments: [],
     content: {
       body: JSON.stringify(
@@ -125,7 +125,7 @@ module.exports = [
   },
   {
     id: '8',
-    threadId: 'thread-1',
+    threadId: 'thread-2',
     attachments: [],
     content: {
       body: JSON.stringify(toJSON(fromPlainText('🎉'))),
