@@ -61,12 +61,14 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError('This person is already blocked in your community.');
   }
 
-  if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage members.');
+  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
+    return new UserError(
+      'You must own or moderate this community to manage members.'
+    );
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner) {
+  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
     const channels = await getChannelsByCommunity(community.id);
     const channelIds = channels.map(c => c.id);
     const blockInChannelPromises = channelIds.map(

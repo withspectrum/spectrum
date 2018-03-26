@@ -23,12 +23,14 @@ type InputProps = {
   children?: React.Node,
   inputType?: string,
   defaultValue?: ?string,
+  value?: ?any,
   placeholder?: string,
   onChange?: Function,
   autoFocus?: boolean,
   checked?: boolean,
   disabled?: boolean,
   id?: string,
+  'e2e-id'?: string,
 };
 
 export const Input = (props: InputProps) => {
@@ -44,6 +46,7 @@ export const Input = (props: InputProps) => {
         onChange={props.onChange}
         autoFocus={props.autoFocus}
         disabled={props.disabled}
+        data-e2e-id={props['e2e-id']}
       />
     </StyledLabel>
   );
@@ -71,6 +74,7 @@ export const PhotoInput = (props: InputProps) => {
         }
         multiple={false}
         onChange={props.onChange}
+        data-e2e-id={props['e2e-id']}
       />
     </PhotoInputLabel>
   );
@@ -101,6 +105,7 @@ export const CoverInput = (props: InputProps) => {
         }
         multiple={false}
         onChange={props.onChange}
+        data-e2e-id={props['e2e-id']}
       />
     </CoverInputLabel>
   );
@@ -112,6 +117,7 @@ export const Checkbox = (props: InputProps) => {
       <StyledCheckboxWrapper
         disabled={props.disabled || false}
         align={props.align || 'center'}
+        data-e2e-id={props['e2e-id']}
       >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
@@ -120,6 +126,7 @@ export const Checkbox = (props: InputProps) => {
           checked={props.checked}
           disabled={props.disabled || false}
           onChange={props.onChange}
+          data-e2e-id={props['e2e-id']}
         />
         {props.children}
       </StyledCheckboxWrapper>
@@ -137,6 +144,7 @@ export const TextArea = (props: InputProps) => {
         defaultValue={props.defaultValue}
         onChange={props.onChange}
         autoFocus={props.autoFocus}
+        data-e2e-id={props['e2e-id']}
       />
     </StyledLabel>
   );
@@ -155,14 +163,15 @@ export class UnderlineInput extends React.Component {
           onChange={this.props.onChange}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
+          data-e2e-id={this.props['e2e-id']}
         />
       </StyledPrefixLabel>
     );
   }
 }
 
-export const Error = (props: Object) => {
-  return <StyledError>{props.children}</StyledError>;
+export const Error = ({ children, ...rest }) => {
+  return <StyledError {...rest}>{children}</StyledError>;
 };
 
 export const Success = (props: Object) => {

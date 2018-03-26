@@ -38,6 +38,12 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     return new UserError("We couldn't find that community.");
   }
 
+  const { stripeCustomerId } = community;
+  if (!stripeCustomerId)
+    return new UserError(
+      'You must have a valid payment method for this community to add new moderators'
+    );
+
   // if no permissions exist, the user performing this mutation isn't even
   // a member of this community
   if (!currentUserPermissions || currentUserPermissions.length === 0) {
@@ -73,12 +79,14 @@ export default async (_: any, { input }: Input, { user }: GraphQLContext) => {
     );
   }
 
-  if (!currentUserPermission.isOwner) {
-    return new UserError('You must own this community to manage moderators.');
+  if (!currentUserPermission.isOwner && !currentUserPermission.isModerator) {
+    return new UserError(
+      'You must own or moderate this community to manage moderators.'
+    );
   }
 
   // all checks pass
-  if (currentUserPermission.isOwner) {
+  if (currentUserPermission.isOwner || currentUserPermission.isModerator) {
     return await makeMemberModeratorInCommunity(
       communityId,
       userToEvaluateId

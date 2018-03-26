@@ -157,6 +157,9 @@ export const createCommunity = (
         coverPhoto: null,
         slug,
         modifiedAt: null,
+        creatorId: user.id,
+        administratorEmail: user.email,
+        stripeCustomerId: null,
       },
       { returnChanges: true }
     )
@@ -618,4 +621,93 @@ export const getCommunityGrowth = async (
     prevPeriodCount,
     growth: Math.round(rate * 100),
   };
+};
+
+export const setCommunityPendingAdministratorEmail = (
+  communityId: string,
+  pendingAdministratorEmail: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      pendingAdministratorEmail,
+    })
+    .run()
+    .then(() => getCommunityById(communityId));
+};
+
+export const updateCommunityAdministratorEmail = (
+  communityId: string,
+  administratorEmail: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      administratorEmail,
+      pendingAdministratorEmail: db.literal(),
+    })
+    .run()
+    .then(() => getCommunityById(communityId));
+};
+
+export const resetCommunityAdministratorEmail = (communityId: string) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      administratorEmail: null,
+      pendingAdministratorEmail: db.literal(),
+    })
+    .run();
+};
+
+export const setStripeCustomerId = (
+  communityId: string,
+  stripeCustomerId: string
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        stripeCustomerId,
+      },
+      {
+        returnChanges: 'always',
+      }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const disablePaidFeatureFlags = (communityId: string) => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update({
+      analyticsEnabled: false,
+      prioritySupportEnabled: false,
+    })
+    .run();
+};
+
+export const updateCommunityPaidFeature = (
+  communityId: string,
+  feature: string,
+  value: boolean
+) => {
+  const obj = { [feature]: value };
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(obj, { returnChanges: 'always' })
+    .run()
+    .then(result => {
+      if (result && result.changes.length > 0) {
+        return result.changes[0].new_val || result.changes[0].old_val;
+      }
+      return { id: communityId };
+    });
 };

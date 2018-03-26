@@ -42,14 +42,14 @@ yarn run cypress:open
 All our integration tests live in `cypress/integration/`. This is what a normal integration test might look like:
 
 ```JS
-// cypress/integration/splash_spec.js
-describe('Splash View', () => {
+// cypress/integration/home_spec.js
+describe('Home View', () => {
   before(() => {
     cy.visit('/');
   });
 
-  it('should render the splash page', () => {
-    cy.get('[data-e2e-id="splash-page"]').should('be.visible');
+  it('should render the home page', () => {
+    cy.get('[data-e2e-id="home-page"]').should('be.visible');
     cy.get('[href*="/login"]').should('be.visible');
     cy.get('[href*="/new/community"]').should('be.visible');
   });
@@ -79,9 +79,9 @@ class SplashPage extends Component {
 Then you can make sure the splash page rendered correctly by waiting for that selector to appear on the page:
 
 ```JS
-// cypress/integration/splash_spec.js
+// cypress/integration/home_spec.js
 it('should render', () => {
-  cy.get('[data-e2e-id="splash-page"]').should('be.visible');
+  cy.get('[data-e2e-id="home-page"]').should('be.visible');
 });
 ```
 

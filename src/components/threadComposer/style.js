@@ -64,8 +64,9 @@ export const Overlay = styled.div`
 `;
 
 export const Placeholder = styled.div`
-  ${/* either the placeholder *or* the content container shows at a time. */ ''} display: ${props =>
-      props.isOpen ? 'none' : 'flex'};
+  ${
+    /* either the placeholder *or* the content container shows at a time. */ ''
+  } display: ${props => (props.isOpen ? 'none' : 'flex')};
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;

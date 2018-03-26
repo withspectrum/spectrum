@@ -36,7 +36,7 @@ module.exports = async () => {
           .then(() =>
             mockDb
               .table(table)
-              .insert(data[table])
+              .insert(data[table], { conflict: 'replace' })
               .run()
           )
       );

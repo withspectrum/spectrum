@@ -1,8 +1,5 @@
 // @flow
-require('now-env');
-const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
-const stripe = require('stripe')(STRIPE_TOKEN),
-  currency = 'USD';
+import { stripe } from 'shared/stripe';
 
 import { createInvoice, getInvoiceByChargeId } from '../../models/invoice';
 import {

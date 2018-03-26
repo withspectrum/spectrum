@@ -177,7 +177,9 @@ class ChannelSettings extends React.Component<Props> {
           <View>
             <Header
               subheading={subheading}
-              heading={`${channel.name} Settings`}
+              heading={`${channel.name} Settings ${
+                channel.isArchived ? '(Archived)' : ''
+              }`}
             />
             <Subnav items={subnavItems} activeTab={activeTab} />
 

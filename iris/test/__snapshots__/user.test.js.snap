@@ -25,6 +25,11 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
+              "name": "Brians Payments Test",
+            },
+          },
+          Object {
+            "node": Object {
               "name": "Spectrum",
             },
           },

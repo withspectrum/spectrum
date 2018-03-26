@@ -71,7 +71,8 @@ const Channel = /* GraphQL */ `
 		description: String!
 		slug: String!
 		isPrivate: Boolean
-    isDefault: Boolean
+		isDefault: Boolean
+		isArchived: Boolean
     channelPermissions: ChannelPermissions! @cost(complexity: 1)
 		communityPermissions: CommunityPermissions!
     community: Community! @cost(complexity: 1)
@@ -89,6 +90,14 @@ const Channel = /* GraphQL */ `
 
 	extend type Query {
     channel(id: ID, channelSlug: String, communitySlug: String): Channel @cost(complexity: 1)
+	}
+
+	input ArchiveChannelInput {
+		channelId: ID!
+	}
+
+	input RestoreChannelInput {
+		channelId: ID!
 	}
 
 	input JoinChannelWithTokenInput {
@@ -119,6 +128,8 @@ const Channel = /* GraphQL */ `
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
 		sendChannelEmailInvites(input: EmailInvitesInput!): Boolean
+		archiveChannel(input: ArchiveChannelInput!): Channel
+		restoreChannel(input: RestoreChannelInput!): Channel
 		enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
 		disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
 		resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel

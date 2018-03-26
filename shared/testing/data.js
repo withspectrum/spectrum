@@ -16,7 +16,9 @@ const {
 const data = {
   users: DEFAULT_USERS,
   communities: DEFAULT_COMMUNITIES,
+  communitySettings: [],
   channels: DEFAULT_CHANNELS,
+  channelSettings: [],
   threads: DEFAULT_THREADS,
   usersThreads: DEFAULT_USERS_THREADS,
   notifications: DEFAULT_NOTIFICATIONS,

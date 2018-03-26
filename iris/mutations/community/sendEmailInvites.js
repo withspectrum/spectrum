@@ -38,7 +38,7 @@ export default async (
     currentUser.id
   );
 
-  if (!permissions.isOwner) {
+  if (!permissions.isOwner && !permissions.isModerator) {
     return new UserError(
       "You don't have permission to invite people to this community."
     );

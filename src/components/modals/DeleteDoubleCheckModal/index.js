@@ -15,11 +15,14 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import type { DeleteThreadType } from 'shared/graphql/mutations/thread/deleteThread';
 import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
 import type { DeleteMessageType } from 'shared/graphql/mutations/message/deleteMessage';
+import archiveChannel from 'shared/graphql/mutations/channel/archiveChannel';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
+import cancelSubscription from 'shared/graphql/mutations/community/cancelSubscription';
+import disableCommunityAnalytics from 'shared/graphql/mutations/community/disableCommunityAnalytics';
 
 /*
   Generic component that should be used to confirm any 'delete' action.
@@ -46,11 +49,15 @@ type Props = {
     entity: string,
     redirect?: ?string,
     message?: ?string,
+    buttonLabel?: string,
   },
   deleteMessage: Function,
   deleteCommunity: Function,
   deleteThread: Function,
   deleteChannel: Function,
+  cancelSubscription: Function,
+  disableCommunityAnalytics: Function,
+  archiveChannel: Function,
   dispatch: Function,
   isOpen: boolean,
 };
@@ -187,6 +194,57 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             });
           });
       }
+      case 'community-subscription': {
+        return this.props
+          .cancelSubscription({ communityId: id })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Subscription canceled'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
+      case 'community-analytics': {
+        return this.props
+          .disableCommunityAnalytics({ communityId: id })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Analytics removed'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
+      case 'channel-archive': {
+        return this.props
+          .archiveChannel({ channelId: id })
+          .then(() => {
+            dispatch(addToastWithTimeout('neutral', 'Channel archived'));
+            this.setState({
+              isLoading: false,
+            });
+            return this.close();
+          })
+          .catch(err => {
+            dispatch(addToastWithTimeout('error', err.message));
+            this.setState({
+              isLoading: false,
+            });
+          });
+      }
       default: {
         this.setState({
           isLoading: false,
@@ -203,7 +261,7 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, modalProps: { message } } = this.props;
+    const { isOpen, modalProps: { message, buttonLabel } } = this.props;
     const styles = modalStyles();
 
     return (
@@ -233,7 +291,7 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
               color="warn"
               onClick={this.triggerDelete}
             >
-              Delete
+              {buttonLabel || 'Delete'}
             </Button>
           </Actions>
         </ModalContainer>
@@ -246,7 +304,10 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteCommunityMutation,
   deleteChannelMutation,
   deleteThreadMutation,
+  disableCommunityAnalytics,
   deleteMessage,
+  cancelSubscription,
+  archiveChannel,
   withRouter
 )(DeleteDoubleCheckModal);
 

@@ -385,6 +385,28 @@ injectGlobal`
   .hljs-link {
     text-decoration: underline;
   }
+
+  .StripeElement {
+    background-color: white;
+    height: 40px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #DFE7EF;
+    -webkit-transition: border 150ms ease;
+    transition: border 150ms ease;
+  }
+
+  .StripeElement--focus {
+    border: 1px solid #7B16FF;
+  }
+
+  .StripeElement--invalid {
+    border-color: #fa755a;
+  }
+
+  .StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
 `;
 
 // NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
