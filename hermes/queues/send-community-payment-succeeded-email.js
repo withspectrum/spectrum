@@ -49,11 +49,9 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
       return {
         amount:
           item.amount < 0
-            ? `-$${formatNumbersToDollars(
-                Math.abs(item.amount)
-              )} (discount for unused time)`
+            ? `-$${formatNumbersToDollars(Math.abs(item.amount))}`
             : `$${formatNumbersToDollars(item.amount)}`,
-        planName: item.plan.name,
+        description: item.description,
         quantity: quantity,
       };
     })
@@ -111,7 +109,7 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     Raven.captureException(err);
   }
 };
