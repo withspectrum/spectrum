@@ -50,6 +50,6 @@ export default (job: JobData) => {
       debug('❌ Error in job:\n');
       debug(err);
       Raven.captureException(err);
-      console.log(err);
+      console.error(err);
     });
 };
