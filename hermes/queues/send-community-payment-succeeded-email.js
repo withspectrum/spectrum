@@ -109,7 +109,7 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     Raven.captureException(err);
   }
 };
