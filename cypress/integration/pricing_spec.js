@@ -20,13 +20,13 @@ describe('Pricing View', () => {
     });
 
     it('should render key pricing page components', () => {
-      cy.get('[data-e2e-id="pricing-page"]').should('be.visible');
-      cy.get('[data-e2e-id="pricing-page-price-table"]').should('be.visible');
+      cy.get('[data-cy="pricing-page"]').should('be.visible');
+      cy.get('[data-cy="pricing-page-price-table"]').should('be.visible');
       cy
-        .get('[data-e2e-id="pricing-page-paid-features-list"]')
+        .get('[data-cy="pricing-page-paid-features-list"]')
         .should('be.visible');
       cy
-        .get('[data-e2e-id="pricing-page-free-features-list"]')
+        .get('[data-cy="pricing-page-free-features-list"]')
         .should('be.visible');
     });
   });
@@ -39,7 +39,7 @@ describe('Pricing View', () => {
     it('should render owned communities', () => {
       cy.visit(`/pricing`);
       cy
-        .get('[data-e2e-id="pricing-page-owned-communities-list"]')
+        .get('[data-cy="pricing-page-owned-communities-list"]')
         .should('be.visible');
     });
   });

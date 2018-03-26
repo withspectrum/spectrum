@@ -324,7 +324,7 @@ class EditForm extends React.Component<Props, State> {
           </ImageInputWrapper>
 
           <Input
-            e2e-id="community-settings-name-input"
+            dataCy="community-settings-name-input"
             defaultValue={name}
             onChange={this.changeName}
           >
@@ -341,7 +341,7 @@ class EditForm extends React.Component<Props, State> {
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
-            e2e-id="community-settings-description-input"
+            dataCy="community-settings-description-input"
           >
             Description
           </TextArea>
@@ -349,7 +349,7 @@ class EditForm extends React.Component<Props, State> {
           <Input
             defaultValue={website}
             onChange={this.changeWebsite}
-            e2e-id="community-settings-website-input"
+            dataCy="community-settings-website-input"
           >
             Optional: Add your community’s website
           </Input>

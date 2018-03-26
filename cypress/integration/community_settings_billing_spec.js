@@ -26,7 +26,7 @@ describe('Community settings billing tab', () => {
         .should('be.visible')
         .click();
       cy
-        .get('[data-e2e-id="community-settings-billing-admin-email-form"]')
+        .get('[data-cy="community-settings-billing-admin-email-form"]')
         .should('be.visible');
 
       // Editing
@@ -43,9 +43,7 @@ describe('Community settings billing tab', () => {
       cy.get('button[type="submit"]').click();
 
       // should show error
-      cy
-        .get('[data-e2e-id="administrator-email-form-error"]')
-        .should('be.visible');
+      cy.get('[data-cy="administrator-email-form-error"]').should('be.visible');
 
       // Enter good email
       cy
@@ -59,7 +57,7 @@ describe('Community settings billing tab', () => {
 
       // should show pending notice
       cy
-        .get('[data-e2e-id="administrator-email-form-pending-sent"]')
+        .get('[data-cy="administrator-email-form-pending-sent"]')
         .should('be.visible');
 
       // go to analytics tab
@@ -70,13 +68,13 @@ describe('Community settings billing tab', () => {
 
       // click unlock analytics
       cy
-        .get('[data-e2e-id="analytics-unlock-upsell-button"]')
+        .get('[data-cy="analytics-unlock-upsell-button"]')
         .should('be.visible')
         .click();
 
       // admin email verification modal should appear
       cy
-        .get('[data-e2e-id="admin-email-address-verification-modal"]')
+        .get('[data-cy="admin-email-address-verification-modal"]')
         .should('be.visible');
 
       // click the overlay to close the modal
@@ -93,22 +91,20 @@ describe('Community settings billing tab', () => {
 
       // create channel modal
       cy
-        .get('[data-e2e-id="community-settings-create-channel-button"]')
+        .get('[data-cy="community-settings-create-channel-button"]')
         .should('be.visible')
         .click();
 
       // toggle private channel checkbox
       cy
-        .get('[data-e2e-id="create-channel-modal-toggle-private-checkbox"]')
+        .get('[data-cy="create-channel-modal-toggle-private-checkbox"]')
         .should('be.visible')
         .first()
         .click();
 
       // should prompt user to enter admin email
       cy
-        .get(
-          '[data-e2e-id="community-settings-create-channel-admin-email-prompt"]'
-        )
+        .get('[data-cy="community-settings-create-channel-admin-email-prompt"]')
         .should('be.visible');
 
       // click the overlay to close the modal
@@ -125,24 +121,24 @@ describe('Community settings billing tab', () => {
 
       // should show list of members
       cy
-        .get('[data-e2e-id="community-settings-members-list"]')
+        .get('[data-cy="community-settings-members-list"]')
         .should('be.visible');
 
       // click on the settings icon next to first user
       cy
-        .get('[data-e2e-id="community-settings-member-edit-dropdown-trigger"]')
+        .get('[data-cy="community-settings-member-edit-dropdown-trigger"]')
         .first()
         .click();
 
       // click the moderator item in dropdown
       cy
-        .get('[data-e2e-id="community-settings-members-list"]')
+        .get('[data-cy="community-settings-members-list"]')
         .contains('Can edit and delete conversations')
         .click();
 
       // admin email verification modal should appear
       cy
-        .get('[data-e2e-id="admin-email-address-verification-modal"]')
+        .get('[data-cy="admin-email-address-verification-modal"]')
         .should('be.visible');
 
       // click the overlay to close the modal
@@ -166,7 +162,7 @@ describe('Community settings billing tab', () => {
         .get(`[href="/${community.slug}/settings/billing"]`)
         .should('be.visible')
         .click();
-      cy.get('[data-e2e-id="community-settings-billing"]').should('be.visible');
+      cy.get('[data-cy="community-settings-billing"]').should('be.visible');
 
       // go to analytics tab
       cy
@@ -176,12 +172,12 @@ describe('Community settings billing tab', () => {
 
       // click unlock analytics
       cy
-        .get('[data-e2e-id="analytics-unlock-upsell-button"]')
+        .get('[data-cy="analytics-unlock-upsell-button"]')
         .should('be.visible')
         .click();
 
       // admin email verification modal should appear
-      cy.get('[data-e2e-id="upgrade-analytics-modal"]').should('be.visible');
+      cy.get('[data-cy="upgrade-analytics-modal"]').should('be.visible');
 
       // click the overlay to close the modal
       cy
@@ -197,13 +193,13 @@ describe('Community settings billing tab', () => {
 
       // create channel modal
       cy
-        .get('[data-e2e-id="community-settings-create-channel-button"]')
+        .get('[data-cy="community-settings-create-channel-button"]')
         .should('be.visible')
         .click();
 
       // toggle private channel checkbox
       cy
-        .get('[data-e2e-id="create-channel-modal-toggle-private-checkbox"]')
+        .get('[data-cy="create-channel-modal-toggle-private-checkbox"]')
         .should('be.visible')
         .first()
         .click();
@@ -211,7 +207,7 @@ describe('Community settings billing tab', () => {
       // should prompt user to enter admin email
       cy
         .get(
-          '[data-e2e-id="community-settings-create-channel-admin-add-source-prompt"]'
+          '[data-cy="community-settings-create-channel-admin-add-source-prompt"]'
         )
         .should('be.visible');
 
@@ -229,25 +225,23 @@ describe('Community settings billing tab', () => {
 
       // should show list of members
       cy
-        .get('[data-e2e-id="community-settings-members-list"]')
+        .get('[data-cy="community-settings-members-list"]')
         .should('be.visible');
 
       // click on the settings icon next to first user
       cy
-        .get('[data-e2e-id="community-settings-member-edit-dropdown-trigger"]')
+        .get('[data-cy="community-settings-member-edit-dropdown-trigger"]')
         .first()
         .click();
 
       // click the moderator item in dropdown
       cy
-        .get('[data-e2e-id="community-settings-members-list"]')
+        .get('[data-cy="community-settings-members-list"]')
         .contains('Can edit and delete conversations')
         .click();
 
       // admin email verification modal should appear
-      cy
-        .get('[data-e2e-id="upgrade-moderator-seat-modal"]')
-        .should('be.visible');
+      cy.get('[data-cy="upgrade-moderator-seat-modal"]').should('be.visible');
 
       // click the overlay to close the modal
       cy
@@ -272,7 +266,7 @@ describe('Community settings billing tab', () => {
         .should('be.visible')
         .click();
       cy
-        .get('[data-e2e-id="community-settings-billing-admin-email-form"]')
+        .get('[data-cy="community-settings-billing-admin-email-form"]')
         .should('be.visible');
     });
   });

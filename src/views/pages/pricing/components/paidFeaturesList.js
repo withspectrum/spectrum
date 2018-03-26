@@ -11,7 +11,7 @@ import FeatureItem from './featureItem';
 class PaidFeaturesList extends React.Component<{}> {
   render() {
     return (
-      <FeaturesList data-e2e-id="pricing-page-paid-features-list">
+      <FeaturesList data-cy="pricing-page-paid-features-list">
         <FeatureItem
           title={'Moderator seats'}
           subtitle={
