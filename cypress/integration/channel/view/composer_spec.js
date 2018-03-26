@@ -10,7 +10,7 @@ const { userId: memberInChannelId } = data.usersChannels.find(
   ({ channelId, isMember, isOwner }) => channelId === channel.id && isMember
 );
 
-const NO_PERMISSIONS_USER_ID = 'e16dREgWUjGj6iN5vtOo';
+const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 describe('renders composer for logged in members', () => {
   before(() => {
@@ -31,7 +31,7 @@ describe('renders composer for logged in members', () => {
 
 describe('does not render composer for non members', () => {
   before(() => {
-    cy.auth(NO_PERMISSIONS_USER_ID);
+    cy.auth(QUIET_USER_ID);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 
