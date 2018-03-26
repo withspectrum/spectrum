@@ -62,6 +62,10 @@ describe('deleting a channel', () => {
       .should('be.visible')
       .click();
 
+    cy.get('[data-cy="delete-button"]').should('be.disabled');
+
+    cy.get('[data-cy="delete-button"]').should('not.be.disabled');
+
     cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}`);
 
     cy.get('channel-view').should('not.be.visible');

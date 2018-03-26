@@ -1,5 +1,6 @@
 // @flow
 import data from '../../../../shared/testing/data';
+import constants from '../../../../iris/migrations/seed/default/constants';
 
 const publicChannel = data.channels[0];
 const privateChannel = data.channels[1];
@@ -25,7 +26,7 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
   ({ channelId, isMember }) => channelId === privateChannel.id && isMember
 );
 
-const NO_PERMISSIONS_USER_ID = 'e16dREgWUjGj6iN5vtOo';
+const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 describe('logged out channel membership', () => {
   before(() => {
@@ -58,7 +59,7 @@ describe('channel profile as member', () => {
 
 describe('channel profile as non-member', () => {
   before(() => {
-    cy.auth(NO_PERMISSIONS_USER_ID);
+    cy.auth(QUIET_USER_ID);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
 
@@ -103,7 +104,7 @@ describe('private channel profile', () => {
 
   describe('private channel as non-member', () => {
     before(() => {
-      cy.auth(NO_PERMISSIONS_USER_ID);
+      cy.auth(QUIET_USER_ID);
       cy.visit(`/${community.slug}/${privateChannel.slug}`);
     });
 

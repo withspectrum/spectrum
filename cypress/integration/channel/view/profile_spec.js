@@ -74,7 +74,7 @@ describe('private channel profile', () => {
     });
 
     it('should render login view', () => {
-      cy.contains(`Sign in to the ${community.name} community`);
+      cy.contains(`Sign in`);
     });
   });
 });

@@ -1,6 +1,7 @@
+// @flow
 import data from '../../shared/testing/data';
 
-const community = data.communities.find(c => c.slug === 'payments-test');
+const community = data.communities.find(c => c.slug === 'payments');
 const members = data.usersCommunities
   .filter(
     ({ communityId, isMember }) => community.id === communityId && isMember
@@ -91,13 +92,15 @@ describe('Community settings billing tab', () => {
 
       // create channel modal
       cy
-        .get('[data-cy="community-settings-create-channel-button"]')
+        .get('[data-cy="create-channel-button"]')
         .should('be.visible')
         .click();
 
       // toggle private channel checkbox
       cy
-        .get('[data-cy="create-channel-modal-toggle-private-checkbox"]')
+        .get(
+          '[data-cy="create-channel-modal-toggle-private-checkbox-unchecked"]'
+        )
         .should('be.visible')
         .first()
         .click();
@@ -193,13 +196,15 @@ describe('Community settings billing tab', () => {
 
       // create channel modal
       cy
-        .get('[data-cy="community-settings-create-channel-button"]')
+        .get('[data-cy="create-channel-button"]')
         .should('be.visible')
         .click();
 
       // toggle private channel checkbox
       cy
-        .get('[data-cy="create-channel-modal-toggle-private-checkbox"]')
+        .get(
+          '[data-cy="create-channel-modal-toggle-private-checkbox-unchecked"]'
+        )
         .should('be.visible')
         .first()
         .click();

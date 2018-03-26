@@ -8,8 +8,7 @@ const community = data.communities.find(
 );
 
 const { userId: memberInChannelId } = data.usersChannels.find(
-  ({ channelId, isMember, isOwner }) =>
-    channelId === channel.id && isMember && !isOwner
+  ({ channelId, isMember, isOwner }) => channelId === channel.id && isMember
 );
 
 const NO_PERMISSIONS_USER_ID = 'e16dREgWUjGj6iN5vtOo';
@@ -21,6 +20,8 @@ describe('renders composer for logged in members', () => {
   });
 
   it('should render composer', () => {
+    cy.get('[data-cy="channel-view"]').should('be.visible');
+
     cy.get('[data-cy="thread-composer-placeholder"]').should('be.visible');
 
     cy.get('[data-cy="thread-composer-placeholder"]').click();
@@ -36,6 +37,8 @@ describe('does not render composer for non members', () => {
   });
 
   it('should not render composer', () => {
+    cy.get('[data-cy="channel-view"]').should('be.visible');
+
     cy.get('[data-cy="thread-composer-placeholder"]').should('not.be.visible');
   });
 });
@@ -46,6 +49,8 @@ describe('does not render composer for logged out users', () => {
   });
 
   it('should not render composer', () => {
+    cy.get('[data-cy="channel-view"]').should('be.visible');
+
     cy.get('[data-cy="thread-composer-placeholder"]').should('not.be.visible');
   });
 });
