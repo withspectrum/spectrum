@@ -1,4 +1,3 @@
-// @flow
 import data from '../../../../shared/testing/data';
 const channel = data.channels[0];
 const community = data.communities.find(

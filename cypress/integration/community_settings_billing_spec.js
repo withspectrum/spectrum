@@ -1,4 +1,3 @@
-// @flow
 import data from '../../shared/testing/data';
 
 const community = data.communities.find(c => c.slug === 'payments');

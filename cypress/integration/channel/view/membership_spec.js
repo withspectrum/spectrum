@@ -1,4 +1,3 @@
-// @flow
 import data from '../../../../shared/testing/data';
 import constants from '../../../../iris/migrations/seed/default/constants';
 

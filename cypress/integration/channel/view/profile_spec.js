@@ -1,4 +1,3 @@
-// @flow
 import data from '../../../../shared/testing/data';
 
 const publicChannel = data.channels[0];
