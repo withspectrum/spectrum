@@ -134,7 +134,7 @@ class AdministratorEmailForm extends React.Component<Props, State> {
         )}
 
         {emailError && (
-          <Error data-cy="administrator-email-form-error">{emailError}</Error>
+          <Error dataCy="administrator-email-form-error">{emailError}</Error>
         )}
       </SectionCard>
     );
