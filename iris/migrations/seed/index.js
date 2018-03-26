@@ -1,20 +1,18 @@
 // @flow
-//$FlowFixMe
 const faker = require('faker');
-//$FlowFixMe
 const { v4: uuid } = require('uuid');
 const {
-  DEFAULT_COMMUNITIES,
-  DEFAULT_USERS,
-  DEFAULT_CHANNELS,
-  DEFAULT_THREADS,
-  DEFAULT_USERS_THREADS,
-  DEFAULT_DIRECT_MESSAGE_THREADS,
-  DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
-  DEFAULT_USERS_COMMUNITIES,
-  DEFAULT_USERS_CHANNELS,
-  DEFAULT_MESSAGES,
-} = require('./default');
+  defaultCommunities,
+  defaultUsers,
+  defaultChannels,
+  defaultThreads,
+  defaultUsersThreads,
+  defaultDirectMessageThreads,
+  defaultUsersDirectMessageThreads,
+  defaultUsersCommunities,
+  defaultUsersChannels,
+  defaultMessages,
+} = require('./default/index');
 
 const {
   randomAmount,
@@ -34,7 +32,7 @@ const {
 
 const userAmount = faker.random.number(1000);
 const users = [
-  ...DEFAULT_USERS,
+  ...defaultUsers,
   ...randomAmount({ max: userAmount, min: 1 }, generateUser),
 ];
 
@@ -45,7 +43,7 @@ users.forEach(user => {
 
 console.log('Generating communities...');
 const communities = [
-  ...DEFAULT_COMMUNITIES,
+  ...defaultCommunities,
   ...randomAmount({ min: 10, max: 20 }, () => {
     return generateCommunity();
   }),
@@ -60,30 +58,15 @@ users.forEach(user => {
 });
 
 console.log('Generating channels...');
-let channels = DEFAULT_CHANNELS;
+let channels = defaultChannels;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
     channels.push(generateChannel(community.id));
   });
 });
 
-console.log('Generating default general channels...');
-communities.forEach(community => {
-  channels.push({
-    id: uuid(),
-    communityId: community.id,
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    name: 'General',
-    description: 'General chatter',
-    slug: 'general',
-    isPrivate: false,
-    isDefault: true,
-  });
-});
-
 console.log('Generating usersChannels...');
-let usersChannels = DEFAULT_USERS_CHANNELS;
+let usersChannels = defaultUsersChannels;
 const generatedUsersChannels = users.map(user => {
   return generateUsersChannels(channels, usersCommunities, user.id);
 });
@@ -92,7 +75,7 @@ generatedUsersChannels.map(elem => {
 });
 
 console.log('Generating threads...');
-let threads = DEFAULT_THREADS;
+let threads = defaultThreads;
 channels.forEach(channel => {
   randomAmount({ max: 10 }, () => {
     const creator = faker.random.arrayElement(users);
@@ -101,20 +84,20 @@ channels.forEach(channel => {
   });
 });
 
-let usersThreads = DEFAULT_USERS_THREADS;
+let usersThreads = defaultUsersThreads;
 threads.forEach(thread => {
   const usersThread = generateUsersThreads(thread.id, thread.creatorId);
   usersThreads.push(usersThread);
 });
 
 console.log('Generating direct message threads...');
-let directMessageThreads = DEFAULT_DIRECT_MESSAGE_THREADS;
+let directMessageThreads = defaultDirectMessageThreads;
 randomAmount({ max: 100 }, () => {
   directMessageThreads.push(generateDirectMessageThread());
 });
 
 console.log('Generating usersDirectMessageThreads...');
-let usersDirectMessageThreads = DEFAULT_USERS_DIRECT_MESSAGE_THREADS;
+let usersDirectMessageThreads = defaultUsersDirectMessageThreads;
 directMessageThreads.forEach(thread => {
   const thread_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
 
@@ -126,7 +109,7 @@ directMessageThreads.forEach(thread => {
 });
 
 console.log('Generating messages...');
-let messages = DEFAULT_MESSAGES;
+let messages = defaultMessages;
 threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
   const threadMessages = [];
@@ -171,8 +154,17 @@ const db = require('rethinkdbdash')({
 
 console.log(
   `Inserting ${users.length} users,
-  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length +
-    direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
+  ${communities.length} communities, ${channels.length} channels, ${
+    threads.length
+  } threads, ${messages.length + direct_messages.length} messages, ${
+    reactions.length
+  } reactions, ${directMessageThreads.length} direct message threads, ${
+    usersCommunities.length
+  } usersCommunities objects, ${
+    usersChannels.length
+  } usersChannels objects, and ${
+    usersDirectMessageThreads.length
+  } usersDirectMessageThreads objects into the database... (this might take a while!)`
 );
 Promise.all([
   db
