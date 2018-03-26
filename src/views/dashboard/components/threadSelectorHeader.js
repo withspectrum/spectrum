@@ -19,7 +19,7 @@ import Icon from 'src/components/icons';
 type Props = {
   dispatch: Function,
   filter: Object,
-  communities: Array<Object>,
+  communities: Array<?Object>,
   user: Object,
   activeCommunity: ?string,
   activeChannel: ?string,
