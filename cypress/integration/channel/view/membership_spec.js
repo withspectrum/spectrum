@@ -52,7 +52,12 @@ describe('channel profile as member', () => {
     cy
       .get('[data-cy="channel-join-button"]')
       .click()
-      .contains(`Join ${publicChannel.name}`);
+      .contains(`Join `);
+
+    cy
+      .get('[data-cy="channel-join-button"]')
+      .click()
+      .contains(`Joined`);
   });
 });
 
@@ -66,12 +71,17 @@ describe('channel profile as non-member', () => {
     cy
       .get('[data-cy="channel-join-button"]')
       .should('be.visible')
-      .contains(`Join ${publicChannel.name}`);
+      .contains(`Join `);
 
     cy
       .get('[data-cy="channel-join-button"]')
       .click()
       .contains(`Joined`);
+
+    cy
+      .get('[data-cy="channel-join-button"]')
+      .click()
+      .contains(`Join `);
   });
 });
 

@@ -146,7 +146,7 @@ class ChannelView extends React.Component<Props, State> {
               isMember={isChannelMember}
               icon={isChannelMember ? 'checkmark' : null}
               loading={state.isLoading}
-              data-cy="channel-join-button"
+              dataCy="channel-join-button"
             >
               {isChannelMember ? 'Joined' : `Join ${channel.name}`}
             </LoginButton>

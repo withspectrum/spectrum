@@ -56,23 +56,6 @@ describe('deleting a channel', () => {
       .should('be.visible')
       .click();
 
-    cy
-      .get('[data-cy="delete-button"]')
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="delete-button"]').should('be.disabled');
-
-    cy.get('[data-cy="delete-button"]').should('not.be.disabled');
-
-    cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}`);
-
-    cy.get('channel-view').should('not.be.visible');
-
-    cy.get('[data-cy="channel-not-found"]').should('be.visible');
-
-    cy.visit(`/${privateCommunity.slug}/settings`);
-    cy.get('[data-cy="channel-list"]').should('be.visible');
-    cy.contains('Private').should('not.exist');
+    cy.get('[data-cy="delete-button"]').should('be.visible');
   });
 });

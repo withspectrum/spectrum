@@ -15,7 +15,7 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
   ({ channelId, isMember }) => channelId === privateChannel.id && isMember
 );
 
-describe('channel profile', () => {
+describe('public channel', () => {
   before(() => {
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
   });
@@ -32,7 +32,7 @@ describe('channel profile', () => {
   });
 });
 
-describe('channel profile while blocked', () => {
+describe('blocked in public channel', () => {
   before(() => {
     cy.auth(blockedInChannelId);
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
@@ -44,36 +44,34 @@ describe('channel profile while blocked', () => {
   });
 });
 
-describe('private channel profile', () => {
-  describe('is member of channel', () => {
-    before(() => {
-      cy.auth(memberInPrivateChannelId);
-      cy.visit(`/${community.slug}/${privateChannel.slug}`);
-    });
-
-    it('should render profile', () => {
-      cy.get('[data-cy="channel-view"]').should('be.visible');
-    });
+describe('member in private channel', () => {
+  before(() => {
+    cy.auth(memberInPrivateChannelId);
+    cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
-  describe('is not member of channel', () => {
-    before(() => {
-      cy.auth(blockedInChannelId);
-      cy.visit(`/${community.slug}/${privateChannel.slug}`);
-    });
+  it('should render profile', () => {
+    cy.get('[data-cy="channel-view"]').should('be.visible');
+  });
+});
 
-    it('should render error view', () => {
-      cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
-    });
+describe('blocked in private channel', () => {
+  before(() => {
+    cy.auth(blockedInChannelId);
+    cy.visit(`/${community.slug}/${privateChannel.slug}`);
   });
 
-  describe('is not logged in', () => {
-    before(() => {
-      cy.visit(`/${community.slug}/${privateChannel.slug}`);
-    });
+  it('should render error view', () => {
+    cy.get('[data-cy="channel-view-blocked"]').should('be.visible');
+  });
+});
 
-    it('should render login view', () => {
-      cy.contains(`Sign in`);
-    });
+describe('is not logged in', () => {
+  before(() => {
+    cy.visit(`/${community.slug}/${privateChannel.slug}`);
+  });
+
+  it('should render login view', () => {
+    cy.contains(`Sign in`);
   });
 });
