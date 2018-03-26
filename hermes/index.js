@@ -8,11 +8,17 @@ import processSendNewDirectMessageEmail from './queues/send-new-direct-message-e
 import processSendCommunityInviteEmail from './queues/send-community-invite-email';
 import processSendUserWelcomeEmail from './queues/send-user-welcome-email';
 import processSendNewCommunityWelcomeEmail from './queues/send-new-community-welcome-email';
+
 import processSendCommunityInvoiceReceiptEmail from './queues/send-community-invoice-receipt-email';
+import processSendCommunityPaymentSucceededEmail from './queues/send-community-payment-succeeded-email';
+import processSendCommunityPaymentFailedEmail from './queues/send-community-payment-failed-email';
+import processSendCommunityCardExpiringWarningEmail from './queues/send-community-card-expiring-warning-email';
+
 import processSendProInvoiceReceiptEmail from './queues/send-pro-invoice-receipt-email';
 import processSendNewThreadEmail from './queues/send-new-thread-email';
 import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
+import processSendAdministratorEmailValidationEmail from './queues/send-administrator-email-validation-email';
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
 import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import processSendAdminSlackImportProcessedEmail from './queues/send-admin-slack-import-email';
@@ -22,6 +28,9 @@ import processSendPrivateChannelRequestApprovedEmail from './queues/send-private
 
 import {
   SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL,
+  SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   SEND_PRO_INVOICE_RECEIPT_EMAIL,
   SEND_COMMUNITY_INVITE_EMAIL,
   SEND_NEW_MESSAGE_EMAIL,
@@ -33,6 +42,7 @@ import {
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   SEND_DIGEST_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
+  SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
@@ -55,11 +65,17 @@ const server = createWorker({
   [SEND_NEW_DIRECT_MESSAGE_EMAIL]: processSendNewDirectMessageEmail,
   [SEND_NEW_USER_WELCOME_EMAIL]: processSendUserWelcomeEmail,
   [SEND_NEW_COMMUNITY_WELCOME_EMAIL]: processSendNewCommunityWelcomeEmail,
+
   [SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL]: processSendCommunityInvoiceReceiptEmail,
+  [SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL]: processSendCommunityPaymentSucceededEmail,
+  [SEND_COMMUNITY_PAYMENT_FAILED_EMAIL]: processSendCommunityPaymentFailedEmail,
+  [SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL]: processSendCommunityCardExpiringWarningEmail,
+
   [SEND_PRO_INVOICE_RECEIPT_EMAIL]: processSendProInvoiceReceiptEmail,
   [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
   [SEND_DIGEST_EMAIL]: processSendDigestEmail,
   [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,
+  [SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL]: processSendAdministratorEmailValidationEmail,
   [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
   [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,

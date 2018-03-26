@@ -116,7 +116,8 @@ class CommunityList extends React.Component<Props> {
                 <SidebarChannels
                   activeChannel={activeChannel}
                   communitySlug={c.slug}
-                  thisCommunity={c}
+                  permissions={c.communityPermissions}
+                  slug={c.slug}
                   id={c.id}
                 />
               )}

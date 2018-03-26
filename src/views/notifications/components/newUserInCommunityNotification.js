@@ -21,7 +21,6 @@ import {
 } from '../../../components/threadFeedCard/style';
 import compose from 'recompose/compose';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import { DEFAULT_DEPRECATION_REASON } from 'graphql';
 
 type Props = {
   notification: Object,

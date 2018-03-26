@@ -21,7 +21,6 @@ import Login from '../login';
 import { LoadingScreen } from '../../components/loading';
 import { Upsell404Channel } from '../../components/upsell';
 import RequestToJoinChannel from '../../components/upsell/requestToJoinChannel';
-import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 import Icon from '../../components/icons';
 import Search from './components/search';
@@ -92,6 +91,71 @@ class ChannelView extends React.Component<Props, State> {
     });
   };
 
+  renderActionButton = (channel: GetChannelType) => {
+    if (!channel) return null;
+
+    const {
+      isOwner: isChannelOwner,
+      isMember: isChannelMember,
+    } = channel.channelPermissions;
+    const { communityPermissions } = channel.community;
+    const { isOwner: isCommunityOwner } = communityPermissions;
+    const isGlobalOwner = isChannelOwner || isCommunityOwner;
+
+    const loginUrl = channel.community.brandedLogin.isEnabled
+      ? `/${channel.community.slug}/login?r=${CLIENT_URL}/${
+          channel.community.slug
+        }/${channel.slug}`
+      : `/login?r=${CLIENT_URL}/${channel.community.slug}/${channel.slug}`;
+
+    // logged in
+    if (!this.props.currentUser) {
+      // user isnt logged in, prompt a login-join
+      return (
+        <Link to={loginUrl}>
+          <LoginButton data-cy="channel-login-join-button">
+            Join {channel.name}
+          </LoginButton>
+        </Link>
+      );
+    }
+
+    // logged out
+    if (this.props.currentUser) {
+      // show settings button if owns channel or community
+      if (isGlobalOwner) {
+        return (
+          <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+            <LoginButton
+              icon={'settings'}
+              isMember
+              data-cy="channel-settings-button"
+            >
+              Settings
+            </LoginButton>
+          </Link>
+        );
+      }
+
+      // otherwise prompt a join
+      return (
+        <ToggleChannelMembership
+          channel={channel}
+          render={state => (
+            <LoginButton
+              isMember={isChannelMember}
+              icon={isChannelMember ? 'checkmark' : null}
+              loading={state.isLoading}
+              data-cy="channel-join-button"
+            >
+              {isChannelMember ? 'Joined' : `Join ${channel.name}`}
+            </LoginButton>
+          )}
+        />
+      );
+    }
+  };
+
   render() {
     const {
       match,
@@ -117,12 +181,6 @@ class ChannelView extends React.Component<Props, State> {
       const isRestricted = channel.isPrivate && !userHasPermissions;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
-
-      const loginUrl = channel.community.brandedLogin.isEnabled
-        ? `/${channel.community.slug}/login?r=${CLIENT_URL}/${
-            channel.community.slug
-          }/${channel.slug}`
-        : `/login?r=${CLIENT_URL}/${channel.community.slug}/${channel.slug}`;
 
       const redirectPath = `${CLIENT_URL}/${channel.community.slug}/${
         channel.slug
@@ -208,6 +266,8 @@ class ChannelView extends React.Component<Props, State> {
         },
       });
 
+      const actionButton = this.renderActionButton(channel);
+
       return (
         <AppViewWrapper data-cy="channel-view">
           <Head
@@ -227,42 +287,11 @@ class ChannelView extends React.Component<Props, State> {
             <Meta>
               <ChannelProfile data={{ channel }} profileSize="full" />
 
-              {!isLoggedIn ? (
-                <Link to={loginUrl} data-cy="channel-login-join-button">
-                  <LoginButton>Join {channel.name}</LoginButton>
-                </Link>
-              ) : !isGlobalOwner ? (
-                <ToggleChannelMembership
-                  channel={channel}
-                  render={state => (
-                    <LoginButton
-                      isMember={isMember}
-                      icon={isMember ? 'checkmark' : null}
-                      loading={state.isLoading}
-                      data-cy="channel-join-button"
-                    >
-                      {isMember ? 'Joined' : `Join ${channel.name}`}
-                    </LoginButton>
-                  )}
-                />
-              ) : null}
+              {actionButton}
 
               {isLoggedIn &&
-                (isOwner || isGlobalOwner) && (
-                  <Link
-                    to={`/${channel.community.slug}/${channel.slug}/settings`}
-                  >
-                    <LoginButton
-                      icon={'settings'}
-                      isMember
-                      data-cy="channel-settings-button"
-                    >
-                      Settings
-                    </LoginButton>
-                  </Link>
-                )}
-              {isLoggedIn &&
-                userHasPermissions && (
+                userHasPermissions &&
+                !channel.isArchived && (
                   <NotificationsToggle
                     value={channel.channelPermissions.receiveNotifications}
                     channel={channel}
@@ -276,16 +305,6 @@ class ChannelView extends React.Component<Props, State> {
                 )}
             </Meta>
             <Content>
-              {/* if the user is logged in and has permission to post, but the channel is private in an unpaid community, return an upsell to upgrade the community */}
-              {isLoggedIn &&
-                userHasPermissions &&
-                channel.isPrivate &&
-                !channel.community.isPro && (
-                  <UpsellUpgradeCommunityPrivateChannel
-                    community={channel.community}
-                  />
-                )}
-
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
                 <DesktopSegment
                   segmentLabel="search"
@@ -330,9 +349,10 @@ class ChannelView extends React.Component<Props, State> {
 
               {/* if the user is logged in and has permissions to post, and the channel is either private + paid, or is not private, show the composer */}
               {isLoggedIn &&
+                !channel.isArchived &&
                 selectedView === 'threads' &&
                 userHasPermissions &&
-                ((channel.isPrivate && channel.community.isPro) ||
+                ((channel.isPrivate && !channel.isArchived) ||
                   !channel.isPrivate) && (
                   <ThreadComposer
                     activeCommunity={communitySlug}

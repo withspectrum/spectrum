@@ -32,7 +32,10 @@ export default async (
   }
 
   // user must own the community to edit the community
-  if (!currentUserCommunityPermissions.isOwner) {
+  if (
+    !currentUserCommunityPermissions.isOwner &&
+    !currentUserCommunityPermissions.isModerator
+  ) {
     return new UserError(
       "You don't have permission to make changes to this community."
     );

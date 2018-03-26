@@ -144,7 +144,10 @@ class ChannelWithData extends React.Component<Props, State> {
           <Link to={`/${channel.community.slug}`}>
             <CommunityListItem community={channel.community} />
           </Link>
-          <FullTitle>{channel.name}</FullTitle>
+          <FullTitle>
+            {channel.name}
+            {channel.isArchived && ' (Archived)'}
+          </FullTitle>
           <FullDescription>
             {renderDescriptionWithLinks(channel.description)}
           </FullDescription>

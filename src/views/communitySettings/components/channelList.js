@@ -64,8 +64,14 @@ class ChannelList extends React.Component<Props> {
             <Button
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
+              data-e2e-id="community-settings-create-channel-button"
               onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                dispatch(
+                  openModal('CREATE_CHANNEL_MODAL', {
+                    community,
+                    id: community.id,
+                  })
+                )
               }
               dataCy="create-channel-button"
             >

@@ -23,6 +23,7 @@ type InputProps = {
   children?: React.Node,
   inputType?: string,
   defaultValue?: ?string,
+  value?: ?any,
   placeholder?: string,
   onChange?: Function,
   autoFocus?: boolean,
@@ -73,6 +74,7 @@ export const PhotoInput = (props: InputProps) => {
         }
         multiple={false}
         onChange={props.onChange}
+        data-cy={props.dataCy}
       />
     </PhotoInputLabel>
   );
@@ -103,6 +105,7 @@ export const CoverInput = (props: InputProps) => {
         }
         multiple={false}
         onChange={props.onChange}
+        data-cy={props.dataCy}
       />
     </CoverInputLabel>
   );
@@ -123,6 +126,7 @@ export const Checkbox = (props: InputProps) => {
           checked={props.checked}
           disabled={props.disabled || false}
           onChange={props.onChange}
+          data-cy={props.dataCy}
         />
         {props.children}
       </StyledCheckboxWrapper>

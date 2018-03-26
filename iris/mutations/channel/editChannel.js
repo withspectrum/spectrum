@@ -44,7 +44,9 @@ export default async (
 
   if (
     currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner
+    currentUserChannelPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator ||
+    currentUserChannelPermissions.isModerator
   ) {
     // all checks passed
     // if a channel is being converted from private to public, make

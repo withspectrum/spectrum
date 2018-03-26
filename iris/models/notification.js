@@ -1,6 +1,7 @@
 // @flow
 const { db } = require('./db');
-import { NEW_DOCUMENTS, createChangefeed } from './utils';
+import { NEW_DOCUMENTS } from './utils';
+import { createChangefeed } from 'shared/changefeed-utils';
 
 export const getNotificationsByUser = (
   userId: string,

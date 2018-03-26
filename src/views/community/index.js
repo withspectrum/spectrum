@@ -217,7 +217,7 @@ class CommunityView extends React.Component<Props, State> {
               ) : null}
 
               {currentUser &&
-                isOwner && (
+                (isOwner || isModerator) && (
                   <Link to={`/${community.slug}/settings`}>
                     <LoginButton
                       icon={'settings'}

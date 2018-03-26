@@ -6,6 +6,8 @@ import toggleChannelSubscription from './toggleChannelSubscription';
 import toggleChannelNotifications from './toggleChannelNotifications';
 import togglePendingUser from './togglePendingUser';
 import unblockUser from './unblockUser';
+import archiveChannel from './archiveChannel';
+import restoreChannel from './restoreChannel';
 import joinChannelWithToken from './joinChannelWithToken';
 import enableChannelTokenJoin from './enableChannelTokenJoin';
 import disableChannelTokenJoin from './disableChannelTokenJoin';
@@ -20,6 +22,8 @@ module.exports = {
     toggleChannelNotifications,
     togglePendingUser,
     unblockUser,
+    archiveChannel,
+    restoreChannel,
     joinChannelWithToken,
     enableChannelTokenJoin,
     disableChannelTokenJoin,

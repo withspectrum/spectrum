@@ -2,8 +2,40 @@
 // NOTE: This file needs to be CommonJS (require/module.exports) instead of ES modules
 // so that import { queueName } from 'queues' works!
 const createQueue = require('shared/bull/create-queue.js');
-const EventEmitter = require('events');
 import type { Queues } from './types';
+const EventEmitter = require('events');
+import {
+  PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT,
+  PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
+  PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT,
+  PROCESS_STRIPE_DISCOUNT_WEBHOOK_EVENT,
+  PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED,
+  PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED,
+  PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED,
+  PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED,
+  PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED,
+  PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED,
+  PROCESS_STRIPE_COMMUNITY_CREATED,
+  PROCESS_STRIPE_COMMUNITY_DELETED,
+  PROCESS_STRIPE_COMMUNITY_EDITED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
+  PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
+  PROCESS_STRIPE_PAYMENT_SUCCEEDED,
+  PROCESS_STRIPE_PAYMENT_FAILED,
+  PROCESS_STRIPE_CARD_EXPIRING_WARNING,
+} from 'pluto/queues/constants';
+
+import {
+  SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
+  SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+} from 'hermes/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
@@ -29,11 +61,40 @@ exports.QUEUE_NAMES = {
   sendNewUserWelcomeEmailQueue: 'send new user welcome email',
   sendNewCommunityWelcomeEmailQueue: 'send new community welcome email',
   sendEmailValidationEmailQueue: 'send email validation email',
+  sendAdministratorEmailValidationEmailQueue:
+    'send administrator email validation email',
+  sendCommunityPaymentSucceededEmailQueue: SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
+  sendCommunityPaymentFailedEmailQueue: SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
+  sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',
 
-  // admin queues - multiple workers
+  stripeChargeWebhookEventQueue: PROCESS_STRIPE_CHARGE_WEBHOOK_EVENT,
+  stripeCustomerWebhookEventQueue: PROCESS_STRIPE_CUSTOMER_WEBHOOK_EVENT,
+  stripeSubscriptionWebhookEventQueue: PROCESS_STRIPE_SUBSCRIPTION_WEBHOOK_EVENT,
+  stripeInvoiceWebhookEventQueue: PROCESS_STRIPE_INVOICE_WEBHOOK_EVENT,
+  stripeSourceWebhookEventQueue: PROCESS_STRIPE_SOURCE_WEBHOOK_EVENT,
+  stripeDiscountWebhookEventQueue: PROCESS_STRIPE_DISCOUNT_WEBHOOK_EVENT,
+  stripeCommunityAdministratorEmailChangedQueue: PROCESS_STRIPE_COMMUNITY_ADMINISTRATOR_EMAIL_CHANGED,
+  stripeCommunityAnalyticsAddedQueue: PROCESS_STRIPE_COMMUNITY_ANALYTICS_ADDED,
+  stripeCommunityAnalyticsRemovedQueue: PROCESS_STRIPE_COMMUNITY_ANALYTICS_REMOVED,
+  stripeCommunityCreatedQueue: PROCESS_STRIPE_COMMUNITY_CREATED,
+  stripeCommunityDeletedQueue: PROCESS_STRIPE_COMMUNITY_DELETED,
+  stripeCommunityEditedQueue: PROCESS_STRIPE_COMMUNITY_EDITED,
+  stripeCommunityModeratorAddedQueue: PROCESS_STRIPE_COMMUNITY_MODERATOR_ADDED,
+  stripeCommunityModeratorRemovedQueue: PROCESS_STRIPE_COMMUNITY_MODERATOR_REMOVED,
+  stripeCommunityPrioritySupportAddedQueue: PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_ADDED,
+  stripeCommunityPrioritySupportRemovedQueue: PROCESS_STRIPE_COMMUNITY_PRIORITY_SUPPORT_REMOVED,
+  stripeCommunityPrivateChannelAddedQueue: PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_ADDED,
+  stripeCommunityPrivateChannelRemovedQueue: PROCESS_STRIPE_COMMUNITY_PRIVATE_CHANNEL_REMOVED,
+  stripeCommunityOpenSourceStatusEnabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ENABLED,
+  stripeCommunityOpenSourceStatusDisabledQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_DISABLED,
+  stripeCommunityOpenSourceStatusActivatedQueue: PROCESS_STRIPE_COMMUNITY_OSS_STATUS_ACTIVATED,
+  stripePaymentSucceededQueue: PROCESS_STRIPE_PAYMENT_SUCCEEDED,
+  stripePaymentFailedQueue: PROCESS_STRIPE_PAYMENT_FAILED,
+  stripeCardExpiringWarningQueue: PROCESS_STRIPE_CARD_EXPIRING_WARNING,
+
   _adminSendCommunityCreatedEmailQueue: 'admin community created',
   _adminProcessToxicMessageQueue: 'process admin toxic message',
   _adminProcessToxicThreadQueue: 'process admin toxic thread',

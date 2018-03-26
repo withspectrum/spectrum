@@ -107,6 +107,9 @@ class ActionBar extends React.Component<Props, State> {
     const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner = thread.community.communityPermissions.isOwner;
+    const isCommunityModerator =
+      thread.community.communityPermissions.isModerator;
+    const isChannelModerator = thread.channel.channelPermissions.isModerator;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     if (isEditing) {
@@ -220,7 +223,11 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }}>
             {currentUser &&
               isChannelMember &&
-              (isChannelOwner || isCommunityOwner || thread.isAuthor) && (
+              (isChannelOwner ||
+                isChannelModerator ||
+                isCommunityOwner ||
+                isCommunityModerator ||
+                thread.isAuthor) && (
                 <DropWrap className={flyoutOpen ? 'open' : ''}>
                   <IconButton
                     glyph="settings"
@@ -257,7 +264,9 @@ class ActionBar extends React.Component<Props, State> {
                       </FlyoutRow>
                     )}
 
-                    {isCommunityOwner &&
+                    {(isCommunityOwner ||
+                      isCommunityModerator ||
+                      isChannelModerator) &&
                       !thread.channel.isPrivate && (
                         <FlyoutRow>
                           <TextButton
@@ -284,29 +293,33 @@ class ActionBar extends React.Component<Props, State> {
                       </TextButton>
                     </FlyoutRow>
 
-                    {(isChannelOwner ||
+                    {isChannelOwner ||
                       isCommunityOwner ||
-                      thread.isAuthor) && (
-                      <FlyoutRow>
-                        <TextButton
-                          icon={
-                            thread.isLocked ? 'private' : 'private-unlocked'
-                          }
-                          hoverColor={
-                            thread.isLocked ? 'success.default' : 'warn.alt'
-                          }
-                          onClick={this.props.threadLock}
-                        >
-                          <Label>
-                            {thread.isLocked ? 'Unlock chat' : 'Lock chat'}
-                          </Label>
-                        </TextButton>
-                      </FlyoutRow>
-                    )}
+                      isChannelModerator ||
+                      isCommunityModerator ||
+                      (thread.isAuthor && (
+                        <FlyoutRow>
+                          <TextButton
+                            icon={
+                              thread.isLocked ? 'private' : 'private-unlocked'
+                            }
+                            hoverColor={
+                              thread.isLocked ? 'success.default' : 'warn.alt'
+                            }
+                            onClick={this.props.threadLock}
+                          >
+                            <Label>
+                              {thread.isLocked ? 'Unlock chat' : 'Lock chat'}
+                            </Label>
+                          </TextButton>
+                        </FlyoutRow>
+                      ))}
 
                     {(thread.isAuthor ||
                       isChannelOwner ||
-                      isCommunityOwner) && (
+                      isCommunityOwner ||
+                      isChannelModerator ||
+                      isCommunityModerator) && (
                       <FlyoutRow>
                         <TextButton
                           icon="delete"

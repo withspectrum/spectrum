@@ -40,7 +40,8 @@ export default async (
 
   loaders.communitySettings.clear(communityId);
 
-  if (settings) {
+  // settings.id tells us that a channelSettings record exists in the db
+  if (settings.id) {
     return await updateCommunityBrandedLoginMessage(communityId, message);
   } else {
     return await createCommunitySettings(communityId).then(

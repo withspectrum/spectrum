@@ -3,14 +3,15 @@ const debug = require('debug')('vulcan:message');
 import initIndex from 'shared/algolia';
 import Raven from 'shared/raven';
 const searchIndex = initIndex('threads_and_messages');
+import { dbMessageToSearchThread } from './utils';
+import { db } from './db';
 import {
-  dbMessageToSearchThread,
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
-} from './utils';
+} from 'shared/changefeed-utils';
 
 export const newMessage = () =>
-  listenToNewDocumentsIn('messages', async data => {
+  listenToNewDocumentsIn(db, 'messages', async data => {
     const searchableMessage = await dbMessageToSearchThread(data);
     if (!searchableMessage) {
       debug('no searchable message created, exiting');
@@ -31,7 +32,7 @@ export const newMessage = () =>
   });
 
 export const deletedMessage = () =>
-  listenToDeletedDocumentsIn('messages', data => {
+  listenToDeletedDocumentsIn(db, 'messages', data => {
     return searchIndex
       .deleteObject(data.id)
       .then(() => {
