@@ -60,7 +60,10 @@ const getcommunityMembersOptions = {
       loading,
       community,
       networkStatus: networkStatus,
-      hasNextPage: community ? community.members.pageInfo.hasNextPage : false,
+      hasNextPage:
+        community && community.members
+          ? community.members.pageInfo.hasNextPage
+          : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreMembers,
