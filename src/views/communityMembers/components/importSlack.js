@@ -2,24 +2,18 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import getSlackImport from 'shared/graphql/queries/slackImport/getSlackImport';
+import { Loading } from 'src/components/loading';
 import type { GetSlackImportType } from 'shared/graphql/queries/slackImport/getSlackImport';
 import sendSlackInvitationsMutation from 'shared/graphql/mutations/slackImport/sendSlackInvitations';
-import importSlackMembers from 'shared/graphql/mutations/community/importSlackMembers';
-import { Loading } from '../../../components/loading';
-import { Button, OutlineButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { CustomMessageToggle, CustomMessageTextAreaStyles } from '../style';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   SectionCard,
   SectionCardFooter,
   SectionTitle,
-} from '../../../components/settingsViews/style';
-import { Description, Notice } from '../../../components/listItems/style';
-import { Error } from '../../../components/formElements';
+} from 'src/components/settingsViews/style';
+import { Description } from 'src/components/listItems/style';
 import MembersImport from './importMembers';
 
 type Props = {
@@ -90,7 +84,6 @@ class ImportSlack extends React.Component<Props, State> {
 
     if (community) {
       const { teamName, members, sent } = community.slackImport || {};
-      const noImport = !teamName;
       const partialImport = teamName && !members;
       const fullImport = !!members;
       const invitesSent = !!sent;

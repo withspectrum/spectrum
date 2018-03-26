@@ -3,7 +3,7 @@ import * as React from 'react';
 import Textarea from 'react-textarea-autosize';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Description, Notice } from '../../../components/listItems/style';
+import { Description } from '../../../components/listItems/style';
 import { Error } from '../../../components/formElements';
 import { SectionCardFooter } from '../../../components/settingsViews/style';
 import { CustomMessageToggle, CustomMessageTextAreaStyles } from '../style';
@@ -110,13 +110,7 @@ class MembersImport extends React.Component<
 
   render() {
     const { hasCustomMessage, customMessage, isImportingMembers } = this.state;
-    const {
-      status,
-      teamName,
-      count,
-      sendInvites,
-      isSendingInvites,
-    } = this.props;
+    const { status, count, isSendingInvites } = this.props;
     const customMessageError = customMessage.length > 500;
 
     // Connected, but nothing imported or sent yet
