@@ -23,6 +23,7 @@ type Props = {
     user: GetUserCommunityConnectionType,
   },
   setOwnsCommunities: Function,
+  onRef: Function,
 };
 
 type State = {
@@ -31,6 +32,7 @@ type State = {
 
 class CommunityList extends React.Component<Props, State> {
   state = { hasError: false };
+  ownedCommunitiesSection: ?HTMLDivElement;
 
   componentDidCatch(error, info) {
     this.setState({ hasError: true });
@@ -50,6 +52,7 @@ class CommunityList extends React.Component<Props, State> {
 
     if (ownsCommunities) {
       this.props.setOwnsCommunities();
+      this.props.onRef(this.ownedCommunitiesSection);
     }
   }
 
@@ -100,7 +103,10 @@ class CommunityList extends React.Component<Props, State> {
 
     if (ownsCommunities) {
       return (
-        <Section data-e2e-id="pricing-page-owned-communities-list">
+        <Section
+          innerRef={component => (this.ownedCommunitiesSection = component)}
+          data-e2e-id="pricing-page-owned-communities-list"
+        >
           <SectionTitle>Your communities</SectionTitle>
           <SectionDescription>
             We found these communities that you already own - you can manage
