@@ -157,9 +157,6 @@ class CommunityMembersSettings extends React.Component<Props> {
                     to all paid features, including private channels and
                     moderator seats.
                   </SectionSubtitle>
-                  <SectionSubtitle>
-                    <Link to={'/pricing'}>Learn more about canceling</Link>
-                  </SectionSubtitle>
                   <SectionCardFooter>
                     <Button gradientTheme={'warn'} onClick={this.triggerCancel}>
                       Cancel subscription
