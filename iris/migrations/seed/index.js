@@ -1,5 +1,6 @@
 // @flow
 const faker = require('faker');
+const debug = require('debug')('iris:migrations:seed');
 const { v4: uuid } = require('uuid');
 const {
   defaultCommunities,
@@ -41,7 +42,7 @@ users.forEach(user => {
   usersSettings.push(generateUsersSettings(user.id));
 });
 
-console.log('Generating communities...');
+debug('Generating communities...');
 const communities = [
   ...defaultCommunities,
   ...randomAmount({ min: 10, max: 20 }, () => {
@@ -49,7 +50,7 @@ const communities = [
   }),
 ];
 
-console.log('Generating usersCommunities...');
+debug('Generating usersCommunities...');
 let usersCommunities = [];
 users.forEach(user => {
   communities.forEach(community => {
@@ -57,7 +58,7 @@ users.forEach(user => {
   });
 });
 
-console.log('Generating channels...');
+debug('Generating channels...');
 let channels = defaultChannels;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
@@ -65,7 +66,7 @@ communities.forEach(community => {
   });
 });
 
-console.log('Generating usersChannels...');
+debug('Generating usersChannels...');
 let usersChannels = defaultUsersChannels;
 const generatedUsersChannels = users.map(user => {
   return generateUsersChannels(channels, usersCommunities, user.id);
@@ -74,7 +75,7 @@ generatedUsersChannels.map(elem => {
   usersChannels.push(...elem);
 });
 
-console.log('Generating threads...');
+debug('Generating threads...');
 let threads = defaultThreads;
 channels.forEach(channel => {
   randomAmount({ max: 10 }, () => {
@@ -90,13 +91,13 @@ threads.forEach(thread => {
   usersThreads.push(usersThread);
 });
 
-console.log('Generating direct message threads...');
+debug('Generating direct message threads...');
 let directMessageThreads = defaultDirectMessageThreads;
 randomAmount({ max: 100 }, () => {
   directMessageThreads.push(generateDirectMessageThread());
 });
 
-console.log('Generating usersDirectMessageThreads...');
+debug('Generating usersDirectMessageThreads...');
 let usersDirectMessageThreads = defaultUsersDirectMessageThreads;
 directMessageThreads.forEach(thread => {
   const thread_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
@@ -108,7 +109,7 @@ directMessageThreads.forEach(thread => {
   });
 });
 
-console.log('Generating messages...');
+debug('Generating messages...');
 let messages = defaultMessages;
 threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
@@ -121,7 +122,7 @@ threads.forEach(thread => {
   });
 });
 
-console.log('Generating direct messages...');
+debug('Generating direct messages...');
 let direct_messages = [];
 usersDirectMessageThreads.forEach(thread => {
   const threadMessages = [];
@@ -137,7 +138,7 @@ usersDirectMessageThreads.forEach(thread => {
   });
 });
 
-console.log('Generating reactions...');
+debug('Generating reactions...');
 let reactions = [];
 messages.map(message => {
   randomAmount({ max: 5 }, () => {
@@ -146,13 +147,13 @@ messages.map(message => {
   });
 });
 
-console.log('Connecting to db...');
+debug('Connecting to db...');
 // $FlowFixMe
 const db = require('rethinkdbdash')({
   db: 'spectrum',
 });
 
-console.log(
+debug(
   `Inserting ${users.length} users,
   ${communities.length} communities, ${channels.length} channels, ${
     threads.length
@@ -221,12 +222,12 @@ Promise.all([
     .run(),
 ])
   .then(() => {
-    console.log('Finished seeding database! 🎉');
+    debug('Finished seeding database! 🎉');
     process.exit();
   })
   .catch(err => {
-    console.log(
+    debug(
       'Encountered error while inserting data (see below), please run yarn run db:drop and yarn run db:migrate to restore tables to original condition, then run this script again.'
     );
-    console.log(err);
+    debug(err);
   });

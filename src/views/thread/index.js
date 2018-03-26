@@ -131,7 +131,7 @@ class ThreadContainer extends React.Component<Props, State> {
       });
     } catch (err) {
       // Errors that happen with this shouldn't crash the app
-      console.log(err);
+      console.error(err);
     }
   };
 
