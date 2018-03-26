@@ -41,7 +41,7 @@ Object {
       "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "The future of communities",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "id": "1",
       "name": "Spectrum",
       "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
       "slug": "spectrum",
@@ -59,7 +59,7 @@ Object {
         "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
         "createdAt": "2016-12-31T23:00:00.000Z",
         "description": "The future of communities",
-        "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+        "id": "1",
         "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
         "slug": "spectrum",
         "website": "https://spectrum.chat",
@@ -73,37 +73,24 @@ exports[`should fetch a list of community members 1`] = `
 Object {
   "data": Object {
     "community": Object {
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a191",
+      "id": "1",
       "members": Object {
         "edges": Array [
           Object {
-            "cursor": "VlRvS2NkZTE2ZFJFZ0RrWGNEbDNoaGNyRk4zMy0x",
+            "cursor": "My0x",
             "node": Object {
               "isBlocked": false,
               "isMember": true,
               "isModerator": false,
               "isOwner": false,
-              "reputation": 102,
+              "reputation": 100,
               "user": Object {
-                "id": "VToKcde16dREgDkXcDl3hhcrFN33",
+                "id": "3",
               },
             },
           },
           Object {
-            "cursor": "MDFwMkE3a0RDV1VqR2o2elFMbE1RVU9TUUw0Mi0y",
-            "node": Object {
-              "isBlocked": false,
-              "isMember": true,
-              "isModerator": true,
-              "isOwner": false,
-              "reputation": 101,
-              "user": Object {
-                "id": "01p2A7kDCWUjGj6zQLlMQUOSQL42",
-              },
-            },
-          },
-          Object {
-            "cursor": "Z1ZrNW1Zd2NjVU9FS2lONXZ0T291cXJvR0tvMS0z",
+            "cursor": "MS0y",
             "node": Object {
               "isBlocked": false,
               "isMember": true,
@@ -111,7 +98,20 @@ Object {
               "isOwner": true,
               "reputation": 100,
               "user": Object {
-                "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+                "id": "1",
+              },
+            },
+          },
+          Object {
+            "cursor": "Mi0z",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 100,
+              "user": Object {
+                "id": "2",
               },
             },
           },

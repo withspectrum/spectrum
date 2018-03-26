@@ -12,13 +12,13 @@ const context = {
 
 // All the messages in the test DM thread ordered by time, desc
 const messages = data.messages
-  .filter(({ threadId }) => threadId === 'first-dm-thread-asdf123')
+  .filter(({ threadId }) => threadId === 'dm-1')
   .sort((a, b) => a.timestamp - b.timestamp);
 
 it('should fetch a directMessageThread', async () => {
   const query = /* GraphQL */ `
     {
-      directMessageThread(id: "first-dm-thread-asdf123") {
+      directMessageThread(id: "dm-1") {
         id
         threadLastActive
       }
@@ -35,7 +35,7 @@ describe('messageConnection', () => {
   it('should fetch a directMessageThreads messages', async () => {
     const query = /* GraphQL */ `
       {
-        directMessageThread(id: "first-dm-thread-asdf123") {
+        directMessageThread(id: "dm-1") {
           messageConnection(first: 999999) {
             edges {
               node {
@@ -56,7 +56,7 @@ describe('messageConnection', () => {
   it('should fetch the last message first', async () => {
     const query = /* GraphQL */ `
       {
-        directMessageThread(id: "first-dm-thread-asdf123") {
+        directMessageThread(id: "dm-1") {
           messageConnection(first: 1) {
             pageInfo {
               hasNextPage
@@ -94,7 +94,7 @@ describe('messageConnection', () => {
     // Get the first message, same as above
     const query = /* GraphQL */ `
       {
-        directMessageThread(id: "first-dm-thread-asdf123") {
+        directMessageThread(id: "dm-1") {
           messageConnection(first: 1) {
             pageInfo {
               hasNextPage
@@ -124,7 +124,7 @@ describe('messageConnection', () => {
     // Generate a query of the first message after the cursor of the last message
     const nextQuery = /* GraphQL */ `
       {
-        directMessageThread(id: "first-dm-thread-asdf123") {
+        directMessageThread(id: "dm-1") {
           messageConnection(first: 1, after: "${cursor}") {
             pageInfo {
               hasNextPage

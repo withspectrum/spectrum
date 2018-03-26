@@ -7,7 +7,7 @@ Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
       "email": null,
-      "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+      "id": "1",
       "name": "Max Stoiber",
       "providerId": "2451223458",
       "username": "mxstbr",
@@ -25,7 +25,7 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
-              "name": "Brians Payments Test",
+              "name": "Payments",
             },
           },
           Object {

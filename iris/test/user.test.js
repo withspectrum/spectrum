@@ -1,10 +1,12 @@
+// @flow
 import { request } from './utils';
+import { MAX_ID } from '../migrations/seed/default/constants';
 
 describe('queries', () => {
   it('should fetch a user', async () => {
     const query = /* GraphQL */ `
 			{
-				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+				user(id: "${MAX_ID}") {
           id
           name
           description
@@ -42,7 +44,7 @@ describe('queries', () => {
   it('should fetch a users communities', async () => {
     const query = /* GraphQL */ `
       {
-        user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+        user(id: "${MAX_ID}") {
           communityConnection {
             edges {
               node {
@@ -64,7 +66,7 @@ describe('queries', () => {
     it('should return the latest thread', async () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+  				user(id: "${MAX_ID}") {
   					everything(first: 1) {
               pageInfo {
                 hasNextPage
@@ -87,7 +89,7 @@ describe('queries', () => {
     it('should paginate based on the after property', async () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+  				user(id: "${MAX_ID}") {
   					everything(first: 1, after: "c2Vjb25kLXN0b3J5") {
               pageInfo {
                 hasNextPage
@@ -110,7 +112,7 @@ describe('queries', () => {
     it('should handle first being set to 0 correctly', async () => {
       const noCursorQuery = /* GraphQL */ `
   			{
-  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+  				user(id: "${MAX_ID}") {
   					everything(first: 0) {
               pageInfo {
                 hasNextPage
@@ -126,7 +128,7 @@ describe('queries', () => {
   		`;
       const cursorQuery = /* GraphQL */ `
   			{
-  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
+  				user(id: "${MAX_ID}") {
   					everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
               pageInfo {
                 hasNextPage

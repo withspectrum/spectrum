@@ -8,14 +8,14 @@ const messageToPlainText = message =>
 
 // Get all messages in our test thread and sort them by time
 const messages = data.messages
-  .filter(({ threadId }) => threadId === 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193')
+  .filter(({ threadId }) => threadId === 'thread-1')
   .sort((a, b) => a.timestamp - b.timestamp);
 
 describe('messageConnection', () => {
   it('should fetch a threads messages', async () => {
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: 999999) {
             edges {
               node {
@@ -38,7 +38,7 @@ describe('messageConnection', () => {
   it('should fetch the first message first', async () => {
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: 1) {
             pageInfo {
               hasNextPage
@@ -78,7 +78,7 @@ describe('messageConnection', () => {
     // Get the cursor of the first message
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: 1) {
             edges {
               cursor
@@ -96,7 +96,7 @@ describe('messageConnection', () => {
     // i.e. the second message
     const nextQuery = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: 1, after: "${cursor}") {
             pageInfo {
               hasNextPage
@@ -133,7 +133,7 @@ describe('messageConnection', () => {
     // Request more messages than there are
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: ${messages.length + 1}) {
             pageInfo {
               hasNextPage
@@ -163,7 +163,7 @@ describe('messageConnection', () => {
     // Request more messages than there are
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: ${messages.length}) {
             pageInfo {
               hasNextPage
@@ -193,7 +193,7 @@ describe('messageConnection', () => {
     // Get the cursor of the first message
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: 1) {
             edges {
               cursor
@@ -211,7 +211,7 @@ describe('messageConnection', () => {
     // but get more than are available
     const nextQuery = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(first: ${messages.length}, after: "${cursor}") {
             pageInfo {
               hasNextPage
