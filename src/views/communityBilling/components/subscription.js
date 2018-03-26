@@ -272,9 +272,7 @@ class Subscription extends React.Component<Props> {
           measuring what features you used, and for how long. As a result, your
           statements may show a total bill amount higher or lower than the
           estimate above.
-          <Link to={'/pricing'}>
-            Learn more about our Fair Billing Standard
-          </Link>
+          <Link to={'/pricing'}>Learn more about our Fair Price Promise</Link>
         </LineItemDescription>
       </div>
     );
