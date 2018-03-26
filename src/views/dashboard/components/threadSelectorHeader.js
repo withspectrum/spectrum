@@ -8,7 +8,6 @@ import {
   HeaderActiveViewTitle,
   HeaderActiveViewSubtitle,
   ContextHeaderContainer,
-  ContextHeaderActions,
 } from '../style';
 import { IconButton } from '../../../components/buttons';
 import ThreadSearch from './threadSearch';
@@ -54,33 +53,6 @@ class Header extends React.Component<Props> {
               </HeaderActiveViewTitle>
             </Link>
           </ContextHeaderContainer>
-
-          {(activeChannelObject.channelPermissions.isOwner ||
-            activeCommunityObject.communityPermissions.isOwner) && (
-            <ContextHeaderActions>
-              <Link
-                to={`/${activeCommunityObject.slug}/${
-                  activeChannelObject.slug
-                }`}
-              >
-                <HeaderActiveViewSubtitle>
-                  <Icon glyph={'link'} size={24} />
-                  View channel
-                </HeaderActiveViewSubtitle>
-              </Link>
-
-              <Link
-                to={`/${activeCommunityObject.slug}/${
-                  activeChannelObject.slug
-                }/settings}`}
-              >
-                <HeaderActiveViewSubtitle>
-                  <Icon glyph={'settings'} size={24} />
-                  Channel settings
-                </HeaderActiveViewSubtitle>
-              </Link>
-            </ContextHeaderActions>
-          )}
         </React.Fragment>
       );
     }

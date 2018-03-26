@@ -905,17 +905,3 @@ export const ContextHeaderContainer = styled.div`
   padding-top: 16px;
   padding-bottom: 12px;
 `;
-
-export const ContextHeaderActions = styled.div`
-  display: flex;
-  background: ${props => props.theme.bg.wash};
-  margin: 0 4px 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid ${props => props.theme.bg.border};
-  justify-content: space-around;
-
-  .icon {
-    margin-right: 4px;
-  }
-`;
