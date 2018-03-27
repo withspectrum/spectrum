@@ -10,8 +10,6 @@ import {
   FourUp,
   Heading,
   Copy,
-  SectionTitle,
-  SectionDescription,
   PlanSection,
   PlanPrice,
   PlanDescription,

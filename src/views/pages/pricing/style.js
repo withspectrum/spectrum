@@ -1,7 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
 import { Button } from 'src/components/buttons';
-import { hexa, Shadow, zIndex } from 'src/components/globals';
+import { hexa, zIndex } from 'src/components/globals';
 
 export const ContentContainer = styled.div`
   padding: 128px 32px 72px;

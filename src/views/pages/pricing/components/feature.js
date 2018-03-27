@@ -6,7 +6,6 @@ import {
   FeatureTitle,
   FeatureDescription,
   FeaturePrice,
-  PriceLabel,
 } from '../style';
 
 type Props = {
@@ -18,7 +17,7 @@ type Props = {
   hideIconsOnMobile?: boolean,
 };
 
-const Feature = props => {
+const Feature = (props: Props) => {
   const {
     title,
     subtitle,

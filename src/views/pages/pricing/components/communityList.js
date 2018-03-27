@@ -13,7 +13,6 @@ import { Button, IconButton } from 'src/components/buttons';
 import {
   CommunityListGrid,
   CommunityCard,
-  CommunityCardAvatar,
   CommunityCardName,
   CommunityListActions,
   Content,
@@ -25,8 +24,6 @@ type Props = {
   data: {
     user: GetUserCommunityConnectionType,
   },
-  setOwnsCommunities: Function,
-  onRef: Function,
 };
 
 type State = {
@@ -35,7 +32,6 @@ type State = {
 
 class CommunityList extends React.Component<Props, State> {
   state = { hasError: false };
-  ownedCommunitiesSection: ?HTMLDivElement;
 
   componentDidCatch(error, info) {
     this.setState({ hasError: true });
@@ -47,16 +43,6 @@ class CommunityList extends React.Component<Props, State> {
     if (curr.data && curr.data.user && curr.data.user.communityConnection)
       return false;
     return true;
-  }
-
-  componentDidUpdate() {
-    const curr = this.props;
-    const { ownsCommunities } = this.calculateOwnedCommunities(curr);
-
-    if (ownsCommunities) {
-      this.props.setOwnsCommunities();
-      this.props.onRef(this.ownedCommunitiesSection);
-    }
   }
 
   calculateOwnedCommunities = (props: Props) => {

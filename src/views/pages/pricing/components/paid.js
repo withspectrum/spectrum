@@ -16,12 +16,7 @@ import {
 import Feature from './feature';
 import Link from 'src/components/link';
 
-type Props = {
-  scrollToPaidFeatures: Function,
-  scrollToOss: Function,
-};
-
-class Paid extends React.Component<Props> {
+class Paid extends React.Component<> {
   render() {
     return (
       <Section background={'brand'} goop={4} color={'bg.default'}>

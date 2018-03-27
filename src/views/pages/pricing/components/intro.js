@@ -1,13 +1,11 @@
 import React from 'react';
 import Section from 'src/components/themedSection';
-import Nav from 'src/views/pages/components/nav';
 import Link from 'src/components/link';
 import Feature from './feature';
 import {
   TwoUp,
   Left,
   Right,
-  Content,
   Heading,
   Copy,
   CTA,

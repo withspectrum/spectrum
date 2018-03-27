@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import Section from 'src/components/themedSection';
-import Feature from './feature';
 import { Content, Heading, Copy, CTA } from '../style';
 
 const Discount = () => {
