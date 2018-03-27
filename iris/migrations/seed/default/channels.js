@@ -9,6 +9,7 @@ const {
   PAYMENTS_GENERAL_CHANNEL_ID,
   PAYMENTS_PRIVATE_CHANNEL_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
+  SPECTRUM_DELETED_CHANNEL_ID,
 } = constants;
 
 module.exports = [
@@ -66,5 +67,17 @@ module.exports = [
     isPrivate: false,
     isDefault: true,
     archivedAt: new Date(DATE),
+  },
+
+  {
+    id: SPECTRUM_DELETED_CHANNEL_ID,
+    communityId: SPECTRUM_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    name: 'Deleted',
+    description: 'Testing deleted channel',
+    slug: 'deleted',
+    isPrivate: false,
+    isDefault: false,
+    deletedAt: new Date(DATE),
   },
 ];
