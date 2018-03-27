@@ -26,6 +26,7 @@ type Props = {
     user: GetUserCommunityConnectionType,
   },
   setOwnsCommunities: Function,
+  onRef: Function,
 };
 
 type State = {
@@ -34,6 +35,7 @@ type State = {
 
 class CommunityList extends React.Component<Props, State> {
   state = { hasError: false };
+  ownedCommunitiesSection: ?HTMLDivElement;
 
   componentDidCatch(error, info) {
     this.setState({ hasError: true });
@@ -53,6 +55,7 @@ class CommunityList extends React.Component<Props, State> {
 
     if (ownsCommunities) {
       this.props.setOwnsCommunities();
+      this.props.onRef(this.ownedCommunitiesSection);
     }
   }
 
