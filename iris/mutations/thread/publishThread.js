@@ -78,7 +78,7 @@ export default async (
     getCommunity,
   ]);
 
-  if (!community || !community.stripeCustomerId) {
+  if (!community) {
     return new UserError('This community doesn’t exist');
   }
 

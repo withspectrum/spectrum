@@ -113,7 +113,9 @@ class ChannelView extends React.Component<Props, State> {
       // user isnt logged in, prompt a login-join
       return (
         <Link to={loginUrl}>
-          <LoginButton>Join {channel.name}</LoginButton>
+          <LoginButton data-cy="channel-login-join-button">
+            Join {channel.name}
+          </LoginButton>
         </Link>
       );
     }
@@ -124,7 +126,11 @@ class ChannelView extends React.Component<Props, State> {
       if (isGlobalOwner) {
         return (
           <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
-            <LoginButton icon={'settings'} isMember>
+            <LoginButton
+              icon={'settings'}
+              isMember
+              data-cy="channel-settings-button"
+            >
               Settings
             </LoginButton>
           </Link>
@@ -140,6 +146,7 @@ class ChannelView extends React.Component<Props, State> {
               isMember={isChannelMember}
               icon={isChannelMember ? 'checkmark' : null}
               loading={state.isLoading}
+              dataCy="channel-join-button"
             >
               {isChannelMember ? 'Joined' : `Join ${channel.name}`}
             </LoginButton>
@@ -202,6 +209,7 @@ class ChannelView extends React.Component<Props, State> {
               emoji={'✋'}
               heading={'You don’t have permission to view this channel.'}
               subheading={`Head back to the ${communitySlug} community to get back on track.`}
+              dataCy={'channel-view-blocked'}
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
@@ -236,6 +244,7 @@ class ChannelView extends React.Component<Props, State> {
                       channel.community.name
                     } will be notified.`
               }
+              dataCy={'channel-view-is-restricted'}
             >
               <RequestToJoinChannel
                 channel={channel}
@@ -260,7 +269,7 @@ class ChannelView extends React.Component<Props, State> {
       const actionButton = this.renderActionButton(channel);
 
       return (
-        <AppViewWrapper data-e2e-id="channel-view">
+        <AppViewWrapper data-cy="channel-view">
           <Head
             title={title}
             description={description}
@@ -301,6 +310,7 @@ class ChannelView extends React.Component<Props, State> {
                   segmentLabel="search"
                   onClick={() => this.handleSegmentClick('search')}
                   selected={selectedView === 'search'}
+                  data-cy="channel-search-tab"
                 >
                   <Icon glyph={'search'} />
                   Search
@@ -409,6 +419,7 @@ class ChannelView extends React.Component<Props, State> {
         <ViewError
           heading={'We couldn’t find a channel with this name.'}
           subheading={`Head back to the ${communitySlug} community to get back on track.`}
+          dataCy="channel-not-found"
         >
           <Upsell404Channel community={communitySlug} />
         </ViewError>

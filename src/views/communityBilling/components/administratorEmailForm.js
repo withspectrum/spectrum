@@ -118,14 +118,14 @@ class AdministratorEmailForm extends React.Component<Props, State> {
             type="submit"
             onClick={this.init}
             loading={isLoading}
-            data-e2e-id="administrator-email-submit"
+            dataCy="administrator-email-submit"
           >
             Submit
           </Button>
         </EmailForm>
 
         {community.billingSettings.pendingAdministratorEmail && (
-          <Notice data-e2e-id="administrator-email-form-pending-sent">
+          <Notice data-cy="administrator-email-form-pending-sent">
             A confirmation link was sent to{' '}
             {community.billingSettings.pendingAdministratorEmail}. Click the
             confirmation link and then return to this page. You can resend the
@@ -134,9 +134,7 @@ class AdministratorEmailForm extends React.Component<Props, State> {
         )}
 
         {emailError && (
-          <Error data-e2e-id="administrator-email-form-error">
-            {emailError}
-          </Error>
+          <Error dataCy="administrator-email-form-error">{emailError}</Error>
         )}
       </SectionCard>
     );

@@ -49,7 +49,7 @@ class Pricing extends React.Component<Props, State> {
     const { ownsCommunities } = this.state;
 
     return (
-      <Wrapper data-e2e-id="pricing-page">
+      <Wrapper data-cy="pricing-page">
         <Intro />
         <Paid />
         <Discount />

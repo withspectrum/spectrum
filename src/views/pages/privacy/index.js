@@ -20,7 +20,7 @@ class Privacy extends React.Component<{}> {
 
   render() {
     return (
-      <Wrapper data-e2e-id="privacy-page">
+      <Wrapper data-cy="privacy-page">
         <ContentContainer>
           <Heading>Privacy Policy</Heading>
           <Copy>Last updated March 15th, 2017</Copy>

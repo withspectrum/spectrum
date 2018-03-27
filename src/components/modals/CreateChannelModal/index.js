@@ -335,7 +335,7 @@ class CreateChannelModal extends React.Component<Props, State> {
               id="isPrivate"
               checked={isPrivate}
               onChange={this.changePrivate}
-              e2e-id="create-channel-modal-toggle-private-checkbox"
+              dataCy="create-channel-modal-toggle-private-checkbox"
             >
               Private channel · $10/mo
             </Checkbox>

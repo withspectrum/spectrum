@@ -30,6 +30,7 @@ type Props = {
   activeCommunity: ?string,
   activeChannel: ?string,
   communities: Array<GetCommunityType>,
+  setActiveChannelObject: Function,
 };
 
 class CommunityList extends React.Component<Props> {
@@ -83,7 +84,7 @@ class CommunityList extends React.Component<Props> {
     });
 
     return (
-      <CommunityListWrapper data-e2e-id="inbox-community-list">
+      <CommunityListWrapper data-cy="inbox-community-list">
         <CommunityListScroller>
           <CommunityListItem
             active={!activeCommunity}
@@ -119,6 +120,7 @@ class CommunityList extends React.Component<Props> {
                   permissions={c.communityPermissions}
                   slug={c.slug}
                   id={c.id}
+                  setActiveChannelObject={this.props.setActiveChannelObject}
                 />
               )}
             </CommunityListItem>

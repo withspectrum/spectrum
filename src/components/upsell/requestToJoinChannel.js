@@ -93,6 +93,7 @@ class RequestToJoinChannel extends Component<Props, State> {
             onClick={this.toggleRequest}
             icon="minus"
             loading={isLoading}
+            data-cy="cancel-request-to-join-private-channel-button"
           >
             Cancel request
           </OutlineButton>
@@ -110,6 +111,7 @@ class RequestToJoinChannel extends Component<Props, State> {
             onClick={this.toggleRequest}
             icon="private-unlocked"
             loading={isLoading}
+            data-cy="request-to-join-private-channel-button"
           >
             Request to join {channel.name}
           </Button>

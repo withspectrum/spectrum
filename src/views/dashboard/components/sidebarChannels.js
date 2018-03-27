@@ -26,6 +26,7 @@ type Props = {
   isLoading: boolean,
   queryVarIsChanging: boolean,
   activeChannel: ?string,
+  setActiveChannelObject: Function,
   permissions: {
     isOwner: boolean,
     isModerator: boolean,
@@ -120,6 +121,7 @@ class SidebarChannels extends React.Component<Props> {
                   onClick={evt => {
                     evt.stopPropagation();
                     this.changeChannel(channel.id);
+                    this.props.setActiveChannelObject(channel);
                   }}
                 >
                   {channel.isPrivate ? (

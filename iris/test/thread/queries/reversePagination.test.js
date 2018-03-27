@@ -8,7 +8,7 @@ const messageToPlainText = message =>
 
 // Get all messages in our test thread and sort them by time
 const messages = data.messages
-  .filter(({ threadId }) => threadId === 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193')
+  .filter(({ threadId }) => threadId === 'thread-1')
   .sort((a, b) => a.timestamp - b.timestamp);
 
 describe('reverse pagination', () => {
@@ -16,7 +16,7 @@ describe('reverse pagination', () => {
     // Get the first three messages
     const query = /* GraphQL */ `
         {
-          thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+          thread(id: "thread-1") {
             messageConnection(first: 3) {
               pageInfo {
                 hasNextPage
@@ -63,7 +63,7 @@ describe('reverse pagination', () => {
     // Get one message before the last message of the first page we just got
     const nextQuery = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(last: 1, before: "${cursor}") {
             pageInfo {
               hasNextPage
@@ -98,7 +98,7 @@ describe('reverse pagination', () => {
     // Request more messages than there are
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(last: ${messages.length + 1}) {
             pageInfo {
               hasNextPage
@@ -128,7 +128,7 @@ describe('reverse pagination', () => {
     // Request more messages than there are
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(last: ${messages.length}) {
             pageInfo {
               hasNextPage
@@ -158,7 +158,7 @@ describe('reverse pagination', () => {
     // Get the cursor of the last message
     const query = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(last: 1) {
             edges {
               cursor
@@ -176,7 +176,7 @@ describe('reverse pagination', () => {
     // but get more than are available
     const nextQuery = /* GraphQL */ `
       {
-        thread(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a193") {
+        thread(id: "thread-1") {
           messageConnection(last: ${messages.length}, before: "${cursor}") {
             pageInfo {
               hasNextPage

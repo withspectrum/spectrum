@@ -105,7 +105,7 @@ class CommunityList extends React.Component<Props, State> {
       return (
         <Section
           background={'reverse'}
-          data-e2e-id="pricing-page-owned-communities-list"
+          data-cy="pricing-page-owned-communities-list"
         >
           <Content>
             <Heading reverse>Your communities</Heading>

@@ -215,7 +215,7 @@ class EditDropdown extends React.Component<Props, State> {
     const configuration = this.getRolesConfiguration();
 
     return (
-      <EditDropdownContainer data-e2e-id="community-settings-member-edit-dropdown-trigger">
+      <EditDropdownContainer data-cy="community-settings-member-edit-dropdown-trigger">
         <Icon onClick={this.toggleOpen} isOpen={isOpen} glyph={'settings'} />
 
         {isOpen && (

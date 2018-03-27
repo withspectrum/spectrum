@@ -40,7 +40,7 @@ class ChannelList extends React.Component<Props> {
       const channels = community.channelConnection.edges.map(c => c && c.node);
 
       return (
-        <SectionCard>
+        <SectionCard data-cy="channel-list">
           <SectionTitle>Channels</SectionTitle>
 
           <ListContainer>
@@ -64,7 +64,6 @@ class ChannelList extends React.Component<Props> {
             <Button
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
-              data-e2e-id="community-settings-create-channel-button"
               onClick={() =>
                 dispatch(
                   openModal('CREATE_CHANNEL_MODAL', {
@@ -73,6 +72,7 @@ class ChannelList extends React.Component<Props> {
                   })
                 )
               }
+              dataCy="create-channel-button"
             >
               Create Channel
             </Button>

@@ -8,22 +8,22 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
-              "id": "0063e9e6-8960-4dd4-96ab-f18bca4cf75f",
+              "id": "1",
             },
           },
           Object {
             "node": Object {
-              "id": "46814c43-9011-4f88-8ba0-94d52c316e71",
+              "id": "2",
             },
           },
           Object {
             "node": Object {
-              "id": "e0392713-adbb-461a-bcb6-f81d0e6c21f8",
+              "id": "3",
             },
           },
           Object {
             "node": Object {
-              "id": "78ce5bb4-3015-4eb9-ad4e-3e921883ceb3",
+              "id": "4",
             },
           },
         ],

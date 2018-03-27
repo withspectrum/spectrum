@@ -24,7 +24,7 @@ class Support extends React.Component<{}> {
 
   render() {
     return (
-      <Wrapper data-e2e-id="support-page">
+      <Wrapper data-cy="support-page">
         <Section>
           <FourUp>
             <div style={{ gridArea: 'copy' }}>

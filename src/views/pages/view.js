@@ -12,7 +12,7 @@ import {
   HorizontalRule,
 } from '../../components/globals';
 import Search from '../explore/components/search';
-import Section from '../../components/viewSegment';
+import Section from '../../components/themedSection';
 import { Conversation, Discover } from '../../components/illustrations';
 import {
   AbstractLogo,
