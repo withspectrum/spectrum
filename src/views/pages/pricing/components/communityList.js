@@ -92,7 +92,7 @@ class CommunityList extends React.Component<Props, State> {
 
     if (ownsCommunities && this.props.upgrade) {
       return (
-        <CommunityListCard>
+        <CommunityListCard data-cy="owned-communities-list">
           <CardTitle>Your communities</CardTitle>
           <CommunityListGrid>
             {ownedCommunities.map(community => {

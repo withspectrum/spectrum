@@ -30,7 +30,7 @@ class Paid extends React.Component<{}> {
                 communicate securely with customers, and know your ROI.
               </PlanDescription>
 
-              <PlanFeatures>
+              <PlanFeatures data-cy="paid-features-list">
                 <Feature
                   title={'Extra moderator seat'}
                   subtitle={

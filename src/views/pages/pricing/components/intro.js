@@ -41,12 +41,12 @@ const Intro = () => {
               We won't show you ads. We won't sell your personal data. No
               gimmicks.
             </PlanDescription>
-            <PlanFeatures>
+            <PlanFeatures data-cy="free-features-list">
               <Feature title={'Public community'} />
               <Feature title={'Search indexed conversations'} />
               <Feature title={'Unlimited chat messages'} />
               <Feature title={'Unlimited members'} />
-              <Feature title={'AI-enhanced moderation'} />
+              <Feature title={'Unlimited channels'} />
               <Feature title={'Member reputation system'} />
             </PlanFeatures>
           </PlanSection>
