@@ -17,7 +17,7 @@ import {
 import Feature from './feature';
 import Link from 'src/components/link';
 
-class Paid extends React.Component<> {
+class Paid extends React.Component<{}> {
   render() {
     return (
       <Section background={'brand'} goop={4} color={'space.dark'}>

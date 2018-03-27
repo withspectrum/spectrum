@@ -6,7 +6,6 @@ import { Wrapper } from '../style';
 import Paid from './components/paid';
 import Intro from './components/intro';
 import Discount from './components/discount';
-import CommunityList from './components/communityList';
 import Faq from './components/faq';
 import type { ContextRouter } from 'react-router';
 

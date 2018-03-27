@@ -1,7 +1,6 @@
 import React from 'react';
 import Section from 'src/components/themedSection';
 import Link from 'src/components/link';
-import CommunityList from './communityList';
 import Feature from './feature';
 import {
   TwoUp,

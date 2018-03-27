@@ -527,14 +527,3 @@ export const FeatureDescription = styled.p`
   padding-right: 24px;
   margin-top: 8px;
 `;
-
-export const SampleCommunitiesWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 90%;
-
-  a {
-    display: inline-block;
-    margin-right: 16px;
-  }
-`;

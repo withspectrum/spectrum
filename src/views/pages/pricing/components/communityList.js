@@ -7,9 +7,8 @@ import {
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
-import Section from 'src/components/themedSection';
 import Avatar from 'src/components/avatar';
-import { Button, IconButton } from 'src/components/buttons';
+import { Button } from 'src/components/buttons';
 import {
   CommunityListGrid,
   CommunityListRow,
@@ -17,9 +16,7 @@ import {
   CommunityCardName,
   CommunityListActions,
   CommunityListCard,
-  Content,
   CardTitle,
-  Copy,
 } from '../style';
 
 type Props = {
