@@ -12,11 +12,13 @@ import Avatar from 'src/components/avatar';
 import { Button, IconButton } from 'src/components/buttons';
 import {
   CommunityListGrid,
+  CommunityListRow,
   CommunityCard,
   CommunityCardName,
   CommunityListActions,
+  CommunityListCard,
   Content,
-  Heading,
+  CardTitle,
   Copy,
 } from '../style';
 
@@ -24,6 +26,7 @@ type Props = {
   data: {
     user: GetUserCommunityConnectionType,
   },
+  upgrade?: boolean,
 };
 
 type State = {
@@ -90,66 +93,68 @@ class CommunityList extends React.Component<Props, State> {
 
     if (hasError) return null;
 
+    if (ownsCommunities && this.props.upgrade) {
+      return (
+        <CommunityListCard>
+          <CardTitle>Your communities</CardTitle>
+          <CommunityListGrid>
+            {ownedCommunities.map(community => {
+              if (!community) return null;
+              return (
+                <CommunityCard key={community.id}>
+                  <Avatar src={community.profilePhoto} community={community} />
+                  <CommunityCardName>{community.name}</CommunityCardName>
+                  <CommunityListActions>
+                    <Link to={`/${community.slug}/settings`}>
+                      <Button
+                        style={{
+                          flex: '1 0 auto',
+                          width: 'calc(100%)',
+                          fontSize: '16px',
+                        }}
+                      >
+                        Upgrade
+                      </Button>
+                    </Link>
+                  </CommunityListActions>
+                </CommunityCard>
+              );
+            })}
+          </CommunityListGrid>
+        </CommunityListCard>
+      );
+    }
+
     if (ownsCommunities) {
       return (
-        <Section
-          background={'reverse'}
-          data-cy="pricing-page-owned-communities-list"
-        >
-          <Content>
-            <Heading reverse>Your communities</Heading>
-            <Copy reverse>
-              We found these communities that you already own - you can manage
-              them in their settings or apply directly for an open-source,
-              non-profit, or education discount.
-            </Copy>
-
-            <Copy reverse>
-              When applying for a discount, please provide as much information
-              as possible about your project or community so that we can help
-              you as quickly as possible.
-            </Copy>
-
-            <CommunityListGrid>
-              {ownedCommunities.map(community => {
-                if (!community) return null;
-                return (
-                  <CommunityCard key={community.id}>
-                    <Avatar
-                      src={community.profilePhoto}
-                      community={community}
-                    />
-                    <CommunityCardName>{community.name}</CommunityCardName>
-                    <CommunityListActions>
-                      <Link to={`/${community.slug}/settings`}>
-                        <Button
-                          style={{
-                            flex: '1 0 auto',
-                            width: 'calc(100% - 8px)',
-                            fontSize: '16px',
-                          }}
-                        >
-                          Manage
-                        </Button>
-                      </Link>
-                      <a
-                        href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
-                          community.name
-                        } community`}
-                      >
-                        <IconButton
-                          tipText={'Apply for discount'}
-                          tipLocation="top-left"
-                          glyph={'payment'}
-                        />
-                      </a>
-                    </CommunityListActions>
-                  </CommunityCard>
-                );
-              })}
-            </CommunityListGrid>
-          </Content>
-        </Section>
+        <CommunityListRow>
+          {ownedCommunities.map(community => {
+            if (!community) return null;
+            return (
+              <CommunityCard key={community.id}>
+                <Avatar src={community.profilePhoto} community={community} />
+                <CommunityCardName>{community.name}</CommunityCardName>
+                <CommunityListActions>
+                  <a
+                    href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
+                      community.name
+                    } community`}
+                  >
+                    <Button
+                      style={{
+                        flex: '1 0 auto',
+                        width: 'calc(100%)',
+                        fontSize: '16px',
+                      }}
+                    >
+                      Apply for discount
+                    </Button>
+                  </a>
+                </CommunityListActions>
+              </CommunityCard>
+            );
+          })}
+        </CommunityListRow>
       );
     }
 

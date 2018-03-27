@@ -32,12 +32,20 @@ export const Heading = styled.h1`
   color: ${props =>
     props.reverse ? props.theme.text.reverse : props.theme.text.default};
   line-height: 1.2;
-  margin-bottom: 24px;
 
   @media (max-width: 768px) {
     margin-top: 48px;
     font-size: 32px;
   }
+`;
+
+export const Subhead = styled.h2`
+  font-size: 24px;
+  font-weight: 700;
+  color: ${props =>
+    props.reverse ? props.theme.text.reverse : props.theme.text.default};
+  line-height: 1.2;
+  margin-top: 24px;
 `;
 
 export const Copy = styled.p`
@@ -46,9 +54,19 @@ export const Copy = styled.p`
   color: ${props =>
     props.reverse ? props.theme.text.reverse : props.theme.text.secondary};
   line-height: 1.6;
+  margin-top: 24px;
 
   & + & {
     margin-top: 16px;
+  }
+
+  a {
+    color: ${props => props.theme.brand.alt};
+    text-decoration: underline;
+
+    &:hover {
+      color: ${props => props.theme.brand.dark};
+    }
   }
 `;
 
@@ -96,13 +114,13 @@ export const TwoUp = styled(ContentContainer)`
 export const FourUp = styled.div`
   display: grid;
   max-width: 100%;
-  padding: 128px 5% 48px;
-  grid-template-columns: 1fr 1fr;
+  padding: 128px 5% 128px;
+  grid-template-columns: minmax(400, auto) minmax(400, auto);
   grid-template-rows: min-content auto 1fr;
   grid-template-areas: 'copy copy' 'one two' 'three four';
   grid-column-gap: 32px;
   grid-row-gap: 32px;
-  align-items: stretch;
+  justify-content: center;
   justify-items: stretch;
 
   > div {
@@ -128,10 +146,22 @@ export const FourUp = styled.div`
 
 export const Left = styled.div`
   grid-area: left;
+
+  @media (max-width: 768px) {
+    > a > button {
+      margin-left: 32px;
+    }
+  }
 `;
 
 export const Right = styled.div`
   grid-area: right;
+
+  @media (max-width: 768px) {
+    > a > button {
+      margin-left: 32px;
+    }
+  }
 `;
 
 export const Section = styled.div`
@@ -201,47 +231,114 @@ export const Divider = styled.div`
   }
 `;
 
-export const CommunityListGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 16px;
-  justify-content: center;
-  margin: 48px -64px 0;
-  width: calc(100% + 128px);
-
-  @media (max-width: 896px) {
-    width: 100%;
-    margin: 48px 0 0;
-    grid-template-columns: repeat(2, 1fr);
-  }
+export const PlanSection = styled.div`
+  display: flex;
+  justify-self: center;
+  margin: auto;
+  flex-direction: column;
+  padding: 32px;
+  box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.25)};
+  background-color: ${props => props.theme.bg.default};
+  border-radius: 8px;
+  max-width: 480px;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    max-width: 100%;
+    padding: 18px 24px;
+    border-radius: 0;
+    box-shadow: none;
   }
+`;
+
+export const CommunityListCard = styled(PlanSection)`
+  justify-self: flex-start;
+  padding: 24px;
+  margin: 0;
+  margin-top: 24px;
+
+  & + a {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    display: none;
+
+    & + a {
+      display: inline-block;
+    }
+  }
+`;
+
+export const CardTitle = styled(Subhead)`
+  margin-top: 0;
+`;
+
+export const CommunityListGrid = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-rows: minmax(auto, 1fr);
+  grid-row-gap: 16px;
+  justify-content: stretch;
+  margin-top: 32px;
 `;
 
 export const CommunityCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 24px 16px 16px;
-  border-radius: 8px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.06);
-  background: ${props => props.theme.bg.default};
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  grid-column-gap: 16px;
   align-items: center;
+  grid-template-areas: 'avatar title button';
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  padding-bottom: 16px;
+
+  &:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
 `;
 
-export const CommunityCardAvatar = styled.img`
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  display: inline-block;
-  margin-bottom: 8px;
+export const CommunityListRow = styled(CommunityListGrid)`
+  display: grid;
+  grid-template-columns: minmax(auto, 240px) minmax(auto, 240px) minmax(
+      auto,
+      240px
+    );
+  grid-auto-rows: min-content;
+  grid-gap: 32px;
+  margin-top: 32px;
+  justify-content: center;
+
+  @media (max-width: 860px) {
+    grid-template-columns: minmax(auto, 240px) minmax(auto, 240px);
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(auto, 240px);
+  }
+  & + a {
+    display: none;
+  }
+
+  ${CommunityCard} {
+    justify-items: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: 'avatar' 'title' 'button';
+    grid-column-gap: 0;
+    grid-row-gap: 16px;
+    border-bottom: none;
+    padding-bottom: 0;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: ${props => props.theme.bg.default};
+  }
 `;
 
 export const CommunityCardName = styled.h6`
+  grid-area: title;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 16px;
   color: ${props => props.theme.text.default};
 `;
 
@@ -257,10 +354,6 @@ export const CommunityListActions = styled.div`
 
   a:first-of-type {
     flex: auto;
-  }
-
-  a:last-of-type {
-    flex: none;
   }
 `;
 
@@ -310,25 +403,6 @@ export const PriceTable = styled.div`
     grid-template-columns: 1fr;
     width: 100%;
     margin: 0;
-  }
-`;
-
-export const PlanSection = styled.div`
-  display: flex;
-  justify-self: center;
-  margin: auto;
-  flex-direction: column;
-  padding: 32px;
-  box-shadow: 0 8px 32px ${props => hexa(props.theme.brand.alt, 0.25)};
-  background-color: ${props => props.theme.bg.default};
-  border-radius: 8px;
-  max-width: 480px;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    padding: 18px 24px;
-    border-radius: 0;
-    box-shadow: none;
   }
 `;
 

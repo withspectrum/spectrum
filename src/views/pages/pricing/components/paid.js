@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Section from 'src/components/themedSection';
+import CommunityList from './communityList';
 import { PrimaryCTA } from '../../style';
 import {
   TwoUp,
@@ -19,13 +20,13 @@ import Link from 'src/components/link';
 class Paid extends React.Component<> {
   render() {
     return (
-      <Section background={'brand'} goop={4} color={'bg.default'}>
+      <Section background={'brand'} goop={4} color={'space.dark'}>
         <TwoUp reverse>
           <Left>
             <PlanSection>
               <PlanPrice>Upgrade your community.</PlanPrice>
               <PlanDescription>
-                Make your business more effective - enable your team,
+                Make your organization more effective - enable your team,
                 communicate securely with customers, and know your ROI.
               </PlanDescription>
 
@@ -74,6 +75,7 @@ class Paid extends React.Component<> {
               Want to use a private channel for a two-day project? Archive it
               when you're done and we'll only bill you for the two days.
             </Copy>
+            <CommunityList upgrade />
             <Link to={`/new/community`}>
               <PrimaryCTA
                 icon={'welcome'}
