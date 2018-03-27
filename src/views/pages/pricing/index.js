@@ -197,7 +197,7 @@ class Pricing extends React.Component<Props, State> {
 
           <CommunityList
             setOwnsCommunities={this.setOwnsCommunities}
-            ref={component => (this.ownedCommunitiesSection = component)}
+            onRef={component => (this.ownedCommunitiesSection = component)}
           />
 
           <Section>
