@@ -23,7 +23,7 @@ class Overview extends React.Component<Props> {
     const { channel } = this.props;
 
     return (
-      <SectionsContainer>
+      <SectionsContainer data-cy="channel-overview">
         <Column>
           <EditForm channel={channel} />
           <ArchiveForm channel={channel} />

@@ -20,6 +20,7 @@ type ButtonProps = {
   gradientTheme?: string,
   icon?: string,
   children?: any,
+  dataCy?: string,
 };
 
 type IconProps = {
@@ -40,7 +41,7 @@ type IconProps = {
 };
 
 export const Button = (props: ButtonProps) => (
-  <StyledSolidButton disabled={props.loading} {...props}>
+  <StyledSolidButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -60,7 +61,7 @@ export const Button = (props: ButtonProps) => (
 );
 
 export const OutlineButton = (props: ButtonProps) => (
-  <StyledOutlineButton {...props}>
+  <StyledOutlineButton data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -81,7 +82,7 @@ export const OutlineButton = (props: ButtonProps) => (
 
 // looks like a button, but isn't a button so it won't submit forms
 export const FauxOutlineButton = (props: ButtonProps) => (
-  <StyledFauxOutlineButton {...props}>
+  <StyledFauxOutlineButton data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -101,7 +102,7 @@ export const FauxOutlineButton = (props: ButtonProps) => (
 );
 
 export const TextButton = (props: ButtonProps) => (
-  <StyledTextButton {...props}>
+  <StyledTextButton data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -119,7 +120,7 @@ export const TextButton = (props: ButtonProps) => (
 );
 
 export const IconButton = (props: IconProps) => (
-  <StyledIconButton {...props}>
+  <StyledIconButton data-cy={props.dataCy} {...props}>
     <Icon
       glyph={props.glyph}
       tipText={props.tipText}

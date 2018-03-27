@@ -71,6 +71,7 @@ class NotificationsTogglePure extends React.Component<Props, State> {
           id="isPrivate"
           checked={isReceiving}
           onChange={this.handleChange}
+          dataCy="notifications-checkbox"
         >
           Get notified when new threads are published in {channel.name}
         </Checkbox>

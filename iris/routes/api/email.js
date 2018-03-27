@@ -2,6 +2,7 @@
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_TESTING = process.env.TEST_DB;
+import { PAYMENTS_COMMUNITY_ID } from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
@@ -117,7 +118,7 @@ emailRouter.get('/unsubscribe', (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res
       .status(400)
       .send(
@@ -178,7 +179,7 @@ emailRouter.get('/validate', (req, res) => {
               )
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res
         .status(400)
         .send(
@@ -200,7 +201,7 @@ emailRouter.get('/validate', (req, res) => {
             )
     );
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res
       .status(400)
       .send(
@@ -213,7 +214,7 @@ if (IS_TESTING) {
   // $FlowIssue
   emailRouter.get('/validate/test-payments/verify', (req, res) => {
     return updateCommunityAdministratorEmail(
-      'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+      PAYMENTS_COMMUNITY_ID,
       'briandlovin@gmail.com'
     ).then(() =>
       res.redirect('http://localhost:3000/payments-test/settings/billing')
@@ -222,9 +223,7 @@ if (IS_TESTING) {
 
   // $FlowIssue
   emailRouter.get('/validate/test-payments/reset', (req, res) => {
-    return resetCommunityAdministratorEmail(
-      'ce2b4488-4c75-47e0-8ebc-2539c1e6a192'
-    ).then(() =>
+    return resetCommunityAdministratorEmail(PAYMENTS_COMMUNITY_ID).then(() =>
       res.redirect('http://localhost:3000/payments-test/settings/billing')
     );
   });

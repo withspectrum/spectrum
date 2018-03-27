@@ -63,7 +63,7 @@ class ModalWell extends React.Component<Props> {
         return (
           <Well
             column
-            data-e2e-id="community-settings-create-channel-admin-email-prompt"
+            data-cy="community-settings-create-channel-admin-email-prompt"
           >
             <p>
               An administrator email is required before adding paid features to
@@ -106,7 +106,7 @@ class ModalWell extends React.Component<Props> {
       return (
         <Well
           column
-          data-e2e-id="community-settings-create-channel-admin-add-source-prompt"
+          data-cy="community-settings-create-channel-admin-add-source-prompt"
         >
           <p>
             Add your payment information below to create a private channel. All

@@ -54,7 +54,7 @@ class AdminEmailAddressVerificationModal extends React.Component<Props> {
           >
             <div
               style={{ marginBottom: '-16px' }}
-              data-e2e-id="admin-email-address-verification-modal"
+              data-cy="admin-email-address-verification-modal"
             >
               <AdministratorEmailForm id={community.id} community={community} />
             </div>

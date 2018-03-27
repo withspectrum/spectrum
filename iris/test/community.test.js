@@ -1,10 +1,11 @@
 // @flow
 import { request } from './utils';
+import { SPECTRUM_COMMUNITY_ID } from '../migrations/seed/default/constants';
 
 it('should fetch a community', async () => {
   const query = /* GraphQL */ `
     {
-      community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
+      community(id: "${SPECTRUM_COMMUNITY_ID}") {
         id
         createdAt
         name
@@ -26,7 +27,7 @@ it('should fetch a community', async () => {
 it('should fetch a communities threads', async () => {
   const query = /* GraphQL */ `
     {
-      community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
+      community(id: "${SPECTRUM_COMMUNITY_ID}") {
         threadConnection {
           edges {
             node {
@@ -70,7 +71,7 @@ it('should fetch a list of communities', async () => {
 it('should fetch a list of community members', async () => {
   const query = /* GraphQL */ `
     {
-      community(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a191") {
+      community(id: "${SPECTRUM_COMMUNITY_ID}") {
         id
         members {
           pageInfo {

@@ -5,7 +5,7 @@ describe('Privacy View', () => {
     });
 
     it('should render the privacy page', () => {
-      cy.get('[data-e2e-id="privacy-page"]').should('be.visible');
+      cy.get('[data-cy="privacy-page"]').should('be.visible');
     });
   });
 
@@ -15,7 +15,7 @@ describe('Privacy View', () => {
     });
 
     it('should render the privacy page', () => {
-      cy.get('[data-e2e-id="privacy-page"]').should('be.visible');
+      cy.get('[data-cy="privacy-page"]').should('be.visible');
     });
   });
 });

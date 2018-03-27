@@ -22,7 +22,7 @@ type Props = {
 class PricingPlanTable extends React.Component<Props> {
   render() {
     return (
-      <PriceTable data-e2e-id="pricing-page-price-table">
+      <PriceTable data-cy="pricing-page-price-table">
         <PlanSection>
           <div>
             <PlanPrice>Free</PlanPrice>

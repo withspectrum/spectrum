@@ -66,6 +66,7 @@ class Search extends React.Component<Props, State> {
             type="text"
             placeholder={`Search all threads in ${channel.name}...`}
             onChange={this.handleChange}
+            data-cy="channel-search-input"
           />
         </SearchContainer>
         {searchString &&

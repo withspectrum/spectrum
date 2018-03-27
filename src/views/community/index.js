@@ -140,7 +140,7 @@ class CommunityView extends React.Component<Props, State> {
 
       if (isBlocked) {
         return (
-          <AppViewWrapper data-e2e-id="community-view">
+          <AppViewWrapper data-cy="community-view">
             <Titlebar
               title={community.name}
               provideBack={true}
@@ -178,7 +178,7 @@ class CommunityView extends React.Component<Props, State> {
         ? `/${community.slug}/login?r=${CLIENT_URL}/${community.slug}`
         : `/login?r=${CLIENT_URL}/${community.slug}`;
       return (
-        <AppViewWrapper data-e2e-id="community-view">
+        <AppViewWrapper data-cy="community-view">
           <Head
             title={title}
             description={description}
@@ -219,7 +219,11 @@ class CommunityView extends React.Component<Props, State> {
               {currentUser &&
                 (isOwner || isModerator) && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton icon={'settings'} isMember>
+                    <LoginButton
+                      icon={'settings'}
+                      isMember
+                      data-cy="community-settings-button"
+                    >
                       Settings
                     </LoginButton>
                   </Link>
