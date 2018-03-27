@@ -84,7 +84,7 @@ class CommunityList extends React.Component<Props> {
     });
 
     return (
-      <CommunityListWrapper data-e2e-id="inbox-community-list">
+      <CommunityListWrapper data-cy="inbox-community-list">
         <CommunityListScroller>
           <CommunityListItem
             active={!activeCommunity}

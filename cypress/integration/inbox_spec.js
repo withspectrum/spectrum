@@ -15,7 +15,7 @@ describe('Inbox View', () => {
   });
 
   it('should render the inbox view', () => {
-    cy.get('[data-e2e-id="inbox-view"]').should('be.visible');
+    cy.get('[data-cy="inbox-view"]').should('be.visible');
     dashboardThreads.forEach(thread => {
       cy.contains(thread.content.title);
     });
@@ -27,6 +27,6 @@ describe('Inbox View', () => {
     usersCommunities.forEach(community => {
       cy.contains(community.name);
     });
-    cy.get('[data-e2e-id="thread-view"]').should('be.visible');
+    cy.get('[data-cy="thread-view"]').should('be.visible');
   });
 });

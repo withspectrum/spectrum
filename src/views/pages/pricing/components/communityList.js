@@ -105,7 +105,7 @@ class CommunityList extends React.Component<Props, State> {
       return (
         <Section
           innerRef={component => (this.ownedCommunitiesSection = component)}
-          data-e2e-id="pricing-page-owned-communities-list"
+          data-cy="pricing-page-owned-communities-list"
         >
           <SectionTitle>Your communities</SectionTitle>
           <SectionDescription>

@@ -146,7 +146,7 @@ class Dashboard extends React.Component<Props, State> {
       )[0];
 
       return (
-        <DashboardWrapper data-e2e-id="inbox-view">
+        <DashboardWrapper data-cy="inbox-view">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>

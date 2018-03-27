@@ -32,7 +32,7 @@ class Splash extends React.Component<{}, State> {
 
   render() {
     return (
-      <Wrapper data-e2e-id="home-page">
+      <Wrapper data-cy="home-page">
         <Overview />
         <Centralized />
         <CommunitySearch />

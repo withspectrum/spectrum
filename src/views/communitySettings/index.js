@@ -120,7 +120,7 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <AppViewWrapper data-e2e-id="community-settings">
+        <AppViewWrapper data-cy="community-settings">
           <Titlebar
             title={community.name}
             subtitle={'Settings'}

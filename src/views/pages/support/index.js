@@ -25,7 +25,7 @@ class Support extends React.Component<{}> {
 
   render() {
     return (
-      <Wrapper data-e2e-id="support-page">
+      <Wrapper data-cy="support-page">
         <ContentContainer>
           <PageTitle>What can we help you with?</PageTitle>
 

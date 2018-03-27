@@ -20,7 +20,7 @@ class Terms extends React.Component<{}> {
 
   render() {
     return (
-      <Wrapper data-e2e-id="terms-page">
+      <Wrapper data-cy="terms-page">
         <ContentContainer>
           <PageTitle>Terms of Service</PageTitle>
 

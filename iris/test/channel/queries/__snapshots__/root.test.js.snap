@@ -6,7 +6,7 @@ Object {
     "channel": Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "General chatter",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
+      "id": "1",
       "isPrivate": false,
       "name": "General",
       "slug": "general",
@@ -21,7 +21,7 @@ Object {
     "channel": Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "General chatter",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a192",
+      "id": "1",
       "isPrivate": false,
       "name": "General",
       "slug": "general",

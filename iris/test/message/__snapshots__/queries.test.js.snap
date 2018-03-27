@@ -5,7 +5,7 @@ Object {
   "data": Object {
     "message": Object {
       "author": Object {
-        "id": "6a942fe5-ee63-478d-afd6-ff19ad2d4677",
+        "id": "1",
         "user": Object {
           "username": "mxstbr",
         },
@@ -22,7 +22,7 @@ Object {
       "content": Object {
         "body": "{\\"blocks\\":[{\\"key\\":\\"9u8bg\\",\\"text\\":\\"This is the first message!\\",\\"type\\":\\"unstyled\\",\\"depth\\":0,\\"inlineStyleRanges\\":[],\\"entityRanges\\":[],\\"data\\":{}}],\\"entityMap\\":{}}",
       },
-      "id": "0063e9e6-8960-4dd4-96ab-f18bca4cf75f",
+      "id": "1",
       "messageType": "draftjs",
       "timestamp": "2016-12-31T23:00:00.000Z",
     },

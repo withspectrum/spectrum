@@ -49,7 +49,7 @@ describe('Home View', () => {
   });
 
   it('should render the home page', () => {
-    cy.get('[data-e2e-id="home-page"]').should('be.visible');
+    cy.get('[data-cy="home-page"]').should('be.visible');
     cy.get('[href*="/login"]').should('be.visible');
     cy.get('[href*="/new/community"]').should('be.visible');
   });
@@ -62,13 +62,13 @@ Also note that Cypress uses Mocha under the hood, where our unit tests use Jest.
 
 #### Test IDs
 
-To verify that certain elements are or aren't on the page we use custom `data-e2e-id` attributes. You render them from React like so:
+To verify that certain elements are or aren't on the page we use custom `data-cy` attributes. You render them from React like so:
 
 ```JS
-class SplashPage extends Component {
+class HomePage extends Component {
   render() {
     return (
-      <Wrapper data-e2e-id="splash-page">
+      <Wrapper data-cy="home-page">
         {/*...*/}
       </Wrapper>
     )
@@ -81,7 +81,7 @@ Then you can make sure the splash page rendered correctly by waiting for that se
 ```JS
 // cypress/integration/home_spec.js
 it('should render', () => {
-  cy.get('[data-e2e-id="home-page"]').should('be.visible');
+  cy.get('[data-cy="home-page"]').should('be.visible');
 });
 ```
 

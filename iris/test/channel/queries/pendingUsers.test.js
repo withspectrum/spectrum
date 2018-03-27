@@ -1,10 +1,11 @@
 //@flow
 import { request } from '../../utils';
+import { SPECTRUM_PRIVATE_CHANNEL_ID } from '../../../migrations/seed/default/constants';
 
 it('should fetch a channels pending users', async () => {
   const query = /* GraphQL */ `
     {
-      channel(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a192") {
+      channel(id: "${SPECTRUM_PRIVATE_CHANNEL_ID}") {
         id
         pendingUsers {
           id

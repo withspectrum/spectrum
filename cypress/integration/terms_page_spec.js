@@ -5,7 +5,7 @@ describe('Terms View', () => {
     });
 
     it('should render the terms page', () => {
-      cy.get('[data-e2e-id="terms-page"]').should('be.visible');
+      cy.get('[data-cy="terms-page"]').should('be.visible');
     });
   });
 
@@ -15,7 +15,7 @@ describe('Terms View', () => {
     });
 
     it('should render the terms page', () => {
-      cy.get('[data-e2e-id="terms-page"]').should('be.visible');
+      cy.get('[data-cy="terms-page"]').should('be.visible');
     });
   });
 });

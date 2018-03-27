@@ -44,7 +44,7 @@ export class Login extends React.Component<Props> {
       return (
         <FullscreenView hasBackground noCloseButton={true} close={null}>
           <FullscreenContent
-            data-e2e-id="community-login-page"
+            data-cy="community-login-page"
             style={{ justifyContent: 'center' }}
           >
             <LoginImageContainer>
