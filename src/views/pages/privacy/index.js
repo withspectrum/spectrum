@@ -5,8 +5,8 @@ import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 import {
   ContentContainer,
-  PageTitle,
-  PageSubtitle,
+  Heading,
+  Copy,
   Section,
   SectionTitle,
   SectionDescription,
@@ -22,8 +22,8 @@ class Privacy extends React.Component<{}> {
     return (
       <Wrapper data-e2e-id="privacy-page">
         <ContentContainer>
-          <PageTitle>Privacy Policy</PageTitle>
-          <PageSubtitle>Last updated March 15th, 2017</PageSubtitle>
+          <Heading>Privacy Policy</Heading>
+          <Copy>Last updated March 15th, 2017</Copy>
 
           <Section>
             <SectionDescription>

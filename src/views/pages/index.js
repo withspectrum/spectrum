@@ -6,6 +6,7 @@ import Pricing from './pricing';
 import Home from './home';
 import Terms from './terms';
 import Privacy from './privacy';
+import { Page } from './style';
 
 type Props = {
   match: Object,
@@ -49,10 +50,10 @@ class Pages extends React.Component<Props> {
     const dark = path === '/' || path === '/about';
 
     return (
-      <div style={{ backgroundColor: '#fff' }}>
+      <Page>
         <Nav dark={dark} location={this.props.match.path.substr(1)} />
         {this.renderPage()}
-      </div>
+      </Page>
     );
   }
 }

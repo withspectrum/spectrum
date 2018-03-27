@@ -7,15 +7,18 @@ import {
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
+import Section from 'src/components/themedSection';
+import Avatar from 'src/components/avatar';
+import { Button, IconButton } from 'src/components/buttons';
 import {
   CommunityListGrid,
   CommunityCard,
   CommunityCardAvatar,
   CommunityCardName,
-  CommunityCardButton,
-  Section,
-  SectionTitle,
-  SectionDescription,
+  CommunityListActions,
+  Content,
+  Heading,
+  Copy,
 } from '../style';
 
 type Props = {
@@ -100,43 +103,63 @@ class CommunityList extends React.Component<Props, State> {
 
     if (ownsCommunities) {
       return (
-        <Section data-e2e-id="pricing-page-owned-communities-list">
-          <SectionTitle>Your communities</SectionTitle>
-          <SectionDescription>
-            We found these communities that you already own - you can manage
-            them in their settings or apply directly for an open-source,
-            non-profit, or education discount.
-          </SectionDescription>
+        <Section
+          background={'reverse'}
+          data-e2e-id="pricing-page-owned-communities-list"
+        >
+          <Content>
+            <Heading reverse>Your communities</Heading>
+            <Copy reverse>
+              We found these communities that you already own - you can manage
+              them in their settings or apply directly for an open-source,
+              non-profit, or education discount.
+            </Copy>
 
-          <SectionDescription>
-            When applying for a discount, please provide as much information as
-            possible about your project or community so that we can help you as
-            quickly as possible.
-          </SectionDescription>
+            <Copy reverse>
+              When applying for a discount, please provide as much information
+              as possible about your project or community so that we can help
+              you as quickly as possible.
+            </Copy>
 
-          <CommunityListGrid>
-            {ownedCommunities.map(community => {
-              if (!community) return null;
-              return (
-                <CommunityCard key={community.id}>
-                  <CommunityCardAvatar src={community.profilePhoto} />
-                  <CommunityCardName>{community.name}</CommunityCardName>
-                  <Link to={`/${community.slug}/settings`}>
-                    <CommunityCardButton>Manage</CommunityCardButton>
-                  </Link>
-                  <a
-                    href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
-                      community.name
-                    } community`}
-                  >
-                    <CommunityCardButton>
-                      Apply for discount
-                    </CommunityCardButton>
-                  </a>
-                </CommunityCard>
-              );
-            })}
-          </CommunityListGrid>
+            <CommunityListGrid>
+              {ownedCommunities.map(community => {
+                if (!community) return null;
+                return (
+                  <CommunityCard key={community.id}>
+                    <Avatar
+                      src={community.profilePhoto}
+                      community={community}
+                    />
+                    <CommunityCardName>{community.name}</CommunityCardName>
+                    <CommunityListActions>
+                      <Link to={`/${community.slug}/settings`}>
+                        <Button
+                          style={{
+                            flex: '1 0 auto',
+                            width: 'calc(100% - 8px)',
+                            fontSize: '16px',
+                          }}
+                        >
+                          Manage
+                        </Button>
+                      </Link>
+                      <a
+                        href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
+                          community.name
+                        } community`}
+                      >
+                        <IconButton
+                          tipText={'Apply for discount'}
+                          tipLocation="top-left"
+                          glyph={'payment'}
+                        />
+                      </a>
+                    </CommunityListActions>
+                  </CommunityCard>
+                );
+              })}
+            </CommunityListGrid>
+          </Content>
         </Section>
       );
     }

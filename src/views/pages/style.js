@@ -14,10 +14,18 @@ import {
   Gradient,
 } from '../../components/globals';
 
+export const Page = styled.div`
+  position: relative;
+`;
+
 export const Wrapper = styled(FlexCol)`
-  flex: 1 0 auto;
+  flex: 0 0 auto;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg.wash};
+  max-width: 100vw;
+  background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
   overflow-x: hidden;
   z-index: ${zIndex.base};
@@ -413,14 +421,14 @@ export const Tab = styled(Link)`
   font-weight: ${props => (props.selected ? '600' : '500')};
   color: ${props =>
     props.selected
-      ? props.dark ? props.theme.text.reverse : props.theme.text.default
+      ? props.dark ? props.theme.text.reverse : props.theme.brand.alt
       : props.dark ? props.theme.text.reverse : props.theme.text.alt};
 
   &:hover {
     color: ${props =>
       props.selected
-        ? props.dark ? props.theme.text.reverse : props.theme.text.default
-        : props.dark ? props.theme.text.reverse : props.theme.text.default};
+        ? props.dark ? props.theme.text.reverse : props.theme.brand.alt
+        : props.dark ? props.theme.text.reverse : props.theme.brand.alt};
     text-shadow: ${props =>
       props.dark ? `0 0 32px ${hexa(props.theme.text.reverse, 0.75)}` : 'none'};
   }

@@ -98,7 +98,7 @@ export const Illustrated = styled(Default)`
 
 type ThemeProps = Object;
 
-const Theme = (props: ThemeProps) => {
+const Section = (props: ThemeProps) => {
   switch (props.background) {
     default:
       return (
@@ -186,4 +186,4 @@ const Theme = (props: ThemeProps) => {
   }
 };
 
-export default Theme;
+export default Section;

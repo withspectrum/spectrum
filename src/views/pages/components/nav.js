@@ -56,7 +56,7 @@ class Nav extends React.Component<Props, State> {
           />
         </Head>
         <Tabs>
-          <LogoTab dark={this.props.dark} to="/">
+          <LogoTab dark={this.props.dark} to="/about">
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
