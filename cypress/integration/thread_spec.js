@@ -35,7 +35,7 @@ describe('Thread View', () => {
   });
 });
 
-describe('/new/thread', () => {
+describe.only('/new/thread', () => {
   beforeEach(() => {
     cy.auth(author.id);
     cy.visit('/new/thread');
@@ -48,15 +48,12 @@ describe('/new/thread', () => {
     cy.get('[data-cy="composer-community-selector"]').should('be.visible');
     cy.get('[data-cy="composer-channel-selector"]').should('be.visible');
     // Type title and body
-    cy
-      .get('[data-cy="composer-title-input"]')
-      .should('be.visible')
-      .type(title);
-    // TODO: Cypress doesn't handle DraftJS very well, it only inlcudes the first character
-    //cy.get('[contenteditable="true"]').type(body)
+    cy.get('[data-cy="composer-title-input"]').type(title);
+    cy.get('[contenteditable="true"]').type(body);
     cy.get('[data-cy="composer-publish-button"]').click();
     cy.location('pathname').should('contain', 'thread');
     cy.get('[data-cy="thread-view"]');
     cy.contains(title);
+    cy.contains(body);
   });
 });
