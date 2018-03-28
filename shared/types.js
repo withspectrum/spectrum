@@ -2,7 +2,7 @@
 /*
 
   The purpose of this is file is to share flowtypes of our database records across
-  Iris and our workers. When type checking results directly from a database query,
+  API and our workers. When type checking results directly from a database query,
   attempt to use or update the types here
 
 */
@@ -17,6 +17,7 @@ export type DBChannel = {
   isPrivate: boolean,
   name: string,
   slug: string,
+  archivedAt?: Date,
 };
 
 export type DBCommunity = {
@@ -31,6 +32,13 @@ export type DBCommunity = {
   deletedAt?: Date,
   pinnedThreadId?: string,
   watercoolerId?: string,
+  creatorId: string,
+  administratorEmail: ?string,
+  hasAnalytics: boolean,
+  hasPrioritySupport: boolean,
+  stripeCustomerId: ?string,
+  pendingAdministratorEmail?: string,
+  ossVerified?: boolean,
 };
 
 export type DBCommunitySettings = {
@@ -367,6 +375,17 @@ export type DBExpoPushSubscription = {
   id: string,
   token: string,
   userId: string,
+};
+
+export type DBStripeCustomer = {
+  created: number,
+  currency: ?string,
+  customerId: string,
+  email: string,
+  metadata: {
+    communityId?: string,
+    communityName?: string,
+  },
 };
 
 export type FileUpload = {

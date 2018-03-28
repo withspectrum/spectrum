@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a communities threads 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "threadConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Yet another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "The first thread! 🎉",
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`should fetch a community 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "The future of communities",
+      "id": "1",
+      "name": "Spectrum",
+      "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
+      "slug": "spectrum",
+      "website": "https://spectrum.chat",
+    },
+  },
+}
+`;
+
+exports[`should fetch a list of communities 1`] = `
+Object {
+  "data": Object {
+    "communities": Array [
+      Object {
+        "coverPhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434",
+        "createdAt": "2016-12-31T23:00:00.000Z",
+        "description": "The future of communities",
+        "id": "1",
+        "profilePhoto": "https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693",
+        "slug": "spectrum",
+        "website": "https://spectrum.chat",
+      },
+    ],
+  },
+}
+`;
+
+exports[`should fetch a list of community members 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "members": Object {
+        "edges": Array [
+          Object {
+            "cursor": "My0x",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 100,
+              "user": Object {
+                "id": "3",
+              },
+            },
+          },
+          Object {
+            "cursor": "MS0y",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": true,
+              "reputation": 100,
+              "user": Object {
+                "id": "1",
+              },
+            },
+          },
+          Object {
+            "cursor": "Mi0z",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 100,
+              "user": Object {
+                "id": "2",
+              },
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
+          "hasPreviousPage": null,
+        },
+      },
+    },
+  },
+}
+`;

@@ -38,3 +38,15 @@ export const BlockedBadge = styled(Span)`
     cursor: pointer;
   }
 `;
+
+export const DefaultPaymentMethodBadge = styled(Span)`
+  background-color: ${props => props.theme.space.default};
+  background-image: ${props =>
+    Gradient(props.theme.space.default, props.theme.space.default)};
+  cursor: pointer;
+  margin-left: 8px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

@@ -131,7 +131,7 @@ class ThreadContainer extends React.Component<Props, State> {
       });
     } catch (err) {
       // Errors that happen with this shouldn't crash the app
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -306,7 +306,14 @@ class ThreadContainer extends React.Component<Props, State> {
       const { isLocked, isAuthor, participants } = thread;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
-      const isModerator = isChannelOwner || isCommunityOwner;
+      const isChannelModerator = currentUser && channelPermissions.isModerator;
+      const isCommunityModerator =
+        currentUser && communityPermissions.isModerator;
+      const isModerator =
+        isChannelOwner ||
+        isCommunityOwner ||
+        isChannelModerator ||
+        isCommunityModerator;
       const isParticipantOrAuthor =
         currentUser &&
         (isAuthor ||
@@ -343,7 +350,7 @@ class ThreadContainer extends React.Component<Props, State> {
       if (thread.watercooler)
         return (
           <ThreadViewContainer
-            data-e2e-id="thread-view"
+            data-cy="thread-view"
             threadViewContext={threadViewContext}
             constrain={
               threadViewContext === 'slider' ||
@@ -429,7 +436,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <ThreadViewContainer
-          data-e2e-id="thread-view"
+          data-cy="thread-view"
           threadViewContext={threadViewContext}
           constrain={
             threadViewContext === 'slider' || threadViewContext === 'fullscreen'

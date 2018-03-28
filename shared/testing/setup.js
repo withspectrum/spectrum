@@ -15,7 +15,7 @@ module.exports = async () => {
     driver: 'rethinkdbdash',
     host: 'localhost',
     port: 28015,
-    migrationsDirectory: path.resolve(__dirname, '../../iris/migrations'),
+    migrationsDirectory: path.resolve(__dirname, '../../api/migrations'),
     db: 'testing',
     op: 'up',
   });
@@ -36,7 +36,7 @@ module.exports = async () => {
           .then(() =>
             mockDb
               .table(table)
-              .insert(data[table])
+              .insert(data[table], { conflict: 'replace' })
               .run()
           )
       );

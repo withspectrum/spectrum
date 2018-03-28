@@ -17,7 +17,11 @@ class ComposerPlaceholder extends React.Component<Props> {
     const { isOpen, showCommunityOwnerUpsell, isInbox, dispatch } = this.props;
 
     return (
-      <Container isOpen={isOpen} isInbox={isInbox}>
+      <Container
+        isOpen={isOpen}
+        isInbox={isInbox}
+        data-cy="thread-composer-placeholder"
+      >
         <Composer
           isOpen={isOpen}
           onClick={() => dispatch(openComposer())}

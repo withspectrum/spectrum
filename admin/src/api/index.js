@@ -63,6 +63,6 @@ export const clearApolloStore = () => {
   try {
     client.resetStore();
   } catch (e) {
-    console.log('error clearing store');
+    console.error('error clearing store');
   }
 };

@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('athena:utils:send-expo-push-notifications');
 import Expo from 'expo-server-sdk';
-import { removeExpoSubscription } from 'iris/models/expo-push-subscription';
+import { removeExpoSubscription } from 'api/models/expo-push-subscription';
 import Raven from 'shared/raven';
 import type { DBExpoPushSubscription } from 'shared/types';
 

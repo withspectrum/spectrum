@@ -53,6 +53,7 @@ const DashboardWrapper = props => <Wrapper {...props} />;
 
 type State = {
   isHovered: boolean,
+  activeChannelObject: ?Object,
 };
 
 type Props = {
@@ -71,6 +72,7 @@ type Props = {
 class Dashboard extends React.Component<Props, State> {
   state = {
     isHovered: false,
+    activeChannelObject: null,
   };
 
   setHover = () => {
@@ -87,6 +89,12 @@ class Dashboard extends React.Component<Props, State> {
     });
   };
 
+  setActiveChannelObject = (channel: Object) => {
+    this.setState({
+      activeChannelObject: channel,
+    });
+  };
+
   render() {
     const {
       data: { user },
@@ -98,6 +106,7 @@ class Dashboard extends React.Component<Props, State> {
       hasError,
       searchQueryString,
     } = this.props;
+    const { activeChannelObject } = this.state;
 
     let searchFilter = {};
     if (activeChannel) {
@@ -137,7 +146,7 @@ class Dashboard extends React.Component<Props, State> {
       )[0];
 
       return (
-        <DashboardWrapper data-e2e-id="inbox-view">
+        <DashboardWrapper data-cy="inbox-view">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
             <Menu darkContext hasTabBar>
@@ -155,6 +164,7 @@ class Dashboard extends React.Component<Props, State> {
               user={user}
               activeCommunity={activeCommunity}
               activeChannel={activeChannel}
+              setActiveChannelObject={this.setActiveChannelObject}
             />
           </Sidebar>
           <InboxWrapper>
@@ -164,7 +174,9 @@ class Dashboard extends React.Component<Props, State> {
                 communities={communities}
                 user={user}
                 activeCommunity={activeCommunity}
+                activeCommunityObject={activeCommunityObject}
                 activeChannel={activeChannel}
+                activeChannelObject={activeChannelObject}
               />
             </FeedHeaderContainer>
             {newActivityIndicator && (

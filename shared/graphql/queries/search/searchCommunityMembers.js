@@ -18,7 +18,7 @@ export type SearchCommunityMembersType = {
 };
 
 export const searchCommunityMembersQuery = gql`
-  query search(
+  query searchCommunityMembers(
     $queryString: String!
     $type: SearchType!
     $filter: SearchFilter

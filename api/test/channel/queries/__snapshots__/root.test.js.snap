@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a channel by id 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "General chatter",
+      "id": "1",
+      "isPrivate": false,
+      "name": "General",
+      "slug": "general",
+    },
+  },
+}
+`;
+
+exports[`should fetch a channel by slug and community slug 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "General chatter",
+      "id": "1",
+      "isPrivate": false,
+      "name": "General",
+      "slug": "general",
+    },
+  },
+}
+`;

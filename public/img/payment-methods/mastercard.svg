@@ -1,0 +1,12 @@
+<svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 21">
+  <g id="Page-1" fill="none" fill-rule="evenodd">
+    <g id="mastercard">
+      <g id="card" transform="translate(0 2)">
+        <path id="shape" fill="#003663" d="M26.58 19H2.42A2.4 2.4 0 0 1 0 16.62V2.38A2.4 2.4 0 0 1 2.42 0h24.16A2.4 2.4 0 0 1 29 2.38v14.25A2.4 2.4 0 0 1 26.58 19z"/>
+        <circle id="shape" cx="10.5" cy="9.5" r="6.5" fill="#EB1C26"/>
+        <circle id="shape" cx="18.5" cy="9.5" r="6.5" fill="#F99F1B"/>
+        <path id="shape" fill="#EF5D20" d="M14.5 4.38a6.49 6.49 0 0 0 0 10.24 6.49 6.49 0 0 0 0-10.24z"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -20,11 +20,11 @@ In edge cases it could happen that you end up with bad data locally and that tes
 
 ## End-to-end tests
 
-We use [Cypress](https://cypress.io) to run our e2e tests, which gives you a nice GUI that you can use for your test runs. To run e2e tests you have to have both iris and the client running. You also need Iris to be connected to the test database, which you do by setting `TEST_DB`:
+We use [Cypress](https://cypress.io) to run our e2e tests, which gives you a nice GUI that you can use for your test runs. To run e2e tests you have to have both api and the client running. You also need API to be connected to the test database, which you do by setting `TEST_DB`:
 
 ```sh
 # In one tab
-TEST_DB=true yarn run dev:iris
+TEST_DB=true yarn run dev:api
 # In another tab
 yarn run dev:web
 ```
@@ -42,14 +42,14 @@ yarn run cypress:open
 All our integration tests live in `cypress/integration/`. This is what a normal integration test might look like:
 
 ```JS
-// cypress/integration/splash_spec.js
-describe('Splash View', () => {
+// cypress/integration/home_spec.js
+describe('Home View', () => {
   before(() => {
     cy.visit('/');
   });
 
-  it('should render the splash page', () => {
-    cy.get('[data-e2e-id="splash-page"]').should('be.visible');
+  it('should render the home page', () => {
+    cy.get('[data-cy="home-page"]').should('be.visible');
     cy.get('[href*="/login"]').should('be.visible');
     cy.get('[href*="/new/community"]').should('be.visible');
   });
@@ -62,13 +62,13 @@ Also note that Cypress uses Mocha under the hood, where our unit tests use Jest.
 
 #### Test IDs
 
-To verify that certain elements are or aren't on the page we use custom `data-e2e-id` attributes. You render them from React like so:
+To verify that certain elements are or aren't on the page we use custom `data-cy` attributes. You render them from React like so:
 
 ```JS
-class SplashPage extends Component {
+class HomePage extends Component {
   render() {
     return (
-      <Wrapper data-e2e-id="splash-page">
+      <Wrapper data-cy="home-page">
         {/*...*/}
       </Wrapper>
     )
@@ -79,9 +79,9 @@ class SplashPage extends Component {
 Then you can make sure the splash page rendered correctly by waiting for that selector to appear on the page:
 
 ```JS
-// cypress/integration/splash_spec.js
+// cypress/integration/home_spec.js
 it('should render', () => {
-  cy.get('[data-e2e-id="splash-page"]').should('be.visible');
+  cy.get('[data-cy="home-page"]').should('be.visible');
 });
 ```
 

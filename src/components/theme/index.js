@@ -1,3 +1,4 @@
+// @flow
 // export our theme to the provider
 // This is globally available in styled-components when interpolating a function like so:
 // ${(props) => props.theme}
@@ -70,6 +71,7 @@ export const theme = {
     alt: '#828C99',
     reverse: '#FFFFFF',
     placeholder: '#A3AFBF',
+    secondary: '#494C57',
   },
   warn: {
     default: '#C21F3A',

@@ -27,6 +27,7 @@ type ChannelNode = {
     slug: string,
     isDefault: boolean,
     isPrivate: boolean,
+    isArchived: boolean,
     community: {
       id: string,
       isPro: boolean,
@@ -80,6 +81,7 @@ export const getComposerCommunitiesAndChannelsQuery = gql`
             slug
             isDefault
             isPrivate
+            isArchived
             community {
               id
               isPro

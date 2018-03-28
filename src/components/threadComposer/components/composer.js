@@ -162,8 +162,12 @@ class ThreadComposerWithData extends React.Component<Props, State> {
       .filter(channel => {
         if (!channel) return null;
         if (!channel.isPrivate) return channel;
-        if (!channel.community.isPro) return null;
+        if (channel.isArchived) return null;
         return channel;
+      })
+      .filter(channel => {
+        if (!channel) return null;
+        return !channel.isArchived;
       });
 
     /*
@@ -660,11 +664,12 @@ class ThreadComposerWithData extends React.Component<Props, State> {
 
     if (availableCommunities && availableChannels) {
       return (
-        <Container isOpen={isOpen} isInbox={isInbox}>
+        <Container isOpen={isOpen} isInbox={isInbox} data-cy="thread-composer">
           <Overlay
             isOpen={isOpen}
             onClick={this.closeComposer}
             isInbox={isInbox}
+            data-cy="thread-composer-overlay"
           />
           <Composer isOpen={isOpen} isInbox={isInbox}>
             <ContentContainer isOpen={isOpen}>

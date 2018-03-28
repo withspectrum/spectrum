@@ -10,6 +10,7 @@ export type ChannelInfoType = {
   description: ?string,
   isPrivate: boolean,
   createdAt: Date,
+  isArchived: boolean,
   channelPermissions: {
     isMember: boolean,
     isPending: boolean,
@@ -31,6 +32,7 @@ export default gql`
     description
     isPrivate
     createdAt
+    isArchived
     channelPermissions {
       isMember
       isPending

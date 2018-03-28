@@ -3,15 +3,16 @@ const debug = require('debug')('vulcan:community');
 import initIndex from 'shared/algolia';
 import Raven from 'shared/raven';
 const searchIndex = initIndex('communities');
+import { dbCommunityToSearchCommunity } from './utils';
 import {
-  dbCommunityToSearchCommunity,
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
   listenToChangedFieldIn,
-} from './utils';
+} from 'shared/changefeed-utils';
+import { db } from './db';
 
 export const newCommunity = () =>
-  listenToNewDocumentsIn('communities', data => {
+  listenToNewDocumentsIn(db, 'communities', data => {
     const searchableCommunity = dbCommunityToSearchCommunity(data);
     return searchIndex
       .saveObject(searchableCommunity)
@@ -27,7 +28,7 @@ export const newCommunity = () =>
   });
 
 export const deletedCommunity = () =>
-  listenToDeletedDocumentsIn('communities', data => {
+  listenToDeletedDocumentsIn(db, 'communities', data => {
     return searchIndex
       .deleteObject(data.id)
       .then(() => {
@@ -42,7 +43,7 @@ export const deletedCommunity = () =>
   });
 
 export const editedCommunity = () =>
-  listenToChangedFieldIn('modifiedAt')('communities', data => {
+  listenToChangedFieldIn(db, 'modifiedAt')('communities', data => {
     const searchableCommunity = dbCommunityToSearchCommunity(data);
     return searchIndex
       .partialUpdateObject({

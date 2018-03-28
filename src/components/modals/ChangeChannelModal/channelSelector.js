@@ -39,7 +39,8 @@ class ChannelSelector extends React.Component<Props> {
 
           return channel;
         })
-        .filter(channel => channel && !channel.channelPermissions.isBlocked);
+        .filter(channel => channel && !channel.channelPermissions.isBlocked)
+        .filter(channel => channel && !channel.isArchived);
 
       return (
         <SelectorContainer>

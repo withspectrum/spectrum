@@ -26,7 +26,7 @@ const getUserByIdOptions = {
 };
 
 export const getUserByUsernameQuery = gql`
-  query getUserById($username: String) {
+  query getUserByUsername($username: String) {
     user(username: $username) {
       ...userInfo
     }
