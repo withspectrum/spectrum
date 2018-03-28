@@ -3460,12 +3460,26 @@ draft-js-plugins-editor@^2.0.3:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-prism-plugin@0.1.1, draft-js-prism-plugin@^0.1.1:
+draft-js-prism-plugin@0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/draft-js-prism-plugin/-/draft-js-prism-plugin-0.1.3.tgz#b33669bae009749d876986c6b19b0d6936f311fd"
+  dependencies:
+    draft-js-prism "^1.0.6"
+    react "*"
+
+draft-js-prism-plugin@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/draft-js-prism-plugin/-/draft-js-prism-plugin-0.1.1.tgz#c8cdf3841e6e3fdfc766f2131e47a49fb972367e"
   dependencies:
     draft-js-prism ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb
     react "*"
+
+draft-js-prism@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/draft-js-prism/-/draft-js-prism-1.0.6.tgz#880c5e5ae1a161646cdacc7296a01bf48b0030b4"
+  dependencies:
+    extend "^3.0.0"
+    immutable "*"
 
 draft-js-prism@ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb:
   version "1.0.3"

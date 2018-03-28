@@ -85,7 +85,7 @@
     "draft-js-linkify-plugin": "^2.0.0-beta1",
     "draft-js-markdown-plugin": "1.3.0",
     "draft-js-plugins-editor": "^2.0.3",
-    "draft-js-prism-plugin": "0.1.1",
+    "draft-js-prism-plugin": "0.1.3",
     "draftjs-to-markdown": "^0.4.2",
     "emoji-regex": "^6.1.1",
     "expo-server-sdk": "^2.3.3",
