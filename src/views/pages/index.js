@@ -5,7 +5,6 @@ import Support from './support';
 import Pricing from './pricing';
 import Home from './home';
 import Terms from './terms';
-import Features from './features';
 import Privacy from './privacy';
 import { Page } from './style';
 
