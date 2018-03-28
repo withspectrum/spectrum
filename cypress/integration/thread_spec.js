@@ -13,7 +13,7 @@ const messages = data.messages.filter(
 
 describe('Thread View', () => {
   // Before every test suite set up a new browser and page
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/thread/${thread.id}`);
   });
 
@@ -31,6 +31,35 @@ describe('Thread View', () => {
     cy.get('[data-cy="message-group"]').should('be.visible');
     messages.forEach(message => {
       cy.contains(toPlainText(toState(JSON.parse(message.content.body))));
+    });
+  });
+
+  it('should prompt logged-out users to log in', () => {
+    const newMessage = 'A new message!';
+    cy.get('[data-cy="thread-view"]').should('be.visible');
+    cy.get('[contenteditable="true"]').type(newMessage);
+    // Wait for the messages to be loaded before sending new message
+    cy.get('[data-cy="message-group"]').should('be.visible');
+    cy.get('[data-cy="chat-input-send-button"]').click();
+    cy.contains('Sign in');
+  });
+
+  describe('authenticated', () => {
+    beforeEach(() => {
+      cy.auth(author.id);
+    });
+
+    it('should allow logged-in users to send messages', () => {
+      cy.auth(author.id);
+      const newMessage = 'A new message!';
+      cy.get('[data-cy="thread-view"]').should('be.visible');
+      cy.get('[contenteditable="true"]').type(newMessage);
+      // Wait for the messages to be loaded before sending new message
+      cy.get('[data-cy="message-group"]').should('be.visible');
+      cy.get('[data-cy="chat-input-send-button"]').click();
+      // Clear the chat input and make sure the message was sent by matching the text
+      cy.get('[contenteditable="true"]').type('');
+      cy.contains(newMessage);
     });
   });
 });
