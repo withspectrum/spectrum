@@ -81,8 +81,6 @@ type Props = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
-let storedBody;
-let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 class ComposerWithData extends Component<Props, State> {

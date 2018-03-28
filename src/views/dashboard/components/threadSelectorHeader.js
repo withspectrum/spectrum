@@ -14,7 +14,6 @@ import ThreadSearch from './threadSearch';
 import Menu from '../../../components/menu';
 import CommunityList from './communityList';
 import Link from 'src/components/link';
-import Icon from 'src/components/icons';
 
 type Props = {
   dispatch: Function,

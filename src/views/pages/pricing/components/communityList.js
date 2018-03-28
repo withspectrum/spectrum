@@ -7,23 +7,23 @@ import {
 import Link from 'src/components/link';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import compose from 'recompose/compose';
+import Avatar from 'src/components/avatar';
+import { Button } from 'src/components/buttons';
 import {
   CommunityListGrid,
+  CommunityListRow,
   CommunityCard,
-  CommunityCardAvatar,
   CommunityCardName,
-  CommunityCardButton,
-  Section,
-  SectionTitle,
-  SectionDescription,
+  CommunityListActions,
+  CommunityListCard,
+  CardTitle,
 } from '../style';
 
 type Props = {
   data: {
     user: GetUserCommunityConnectionType,
   },
-  setOwnsCommunities: Function,
-  onRef: Function,
+  upgrade?: boolean,
 };
 
 type State = {
@@ -32,7 +32,6 @@ type State = {
 
 class CommunityList extends React.Component<Props, State> {
   state = { hasError: false };
-  ownedCommunitiesSection: ?HTMLDivElement;
 
   componentDidCatch(error, info) {
     this.setState({ hasError: true });
@@ -44,16 +43,6 @@ class CommunityList extends React.Component<Props, State> {
     if (curr.data && curr.data.user && curr.data.user.communityConnection)
       return false;
     return true;
-  }
-
-  componentDidUpdate() {
-    const curr = this.props;
-    const { ownsCommunities } = this.calculateOwnedCommunities(curr);
-
-    if (ownsCommunities) {
-      this.props.setOwnsCommunities();
-      this.props.onRef(this.ownedCommunitiesSection);
-    }
   }
 
   calculateOwnedCommunities = (props: Props) => {
@@ -101,49 +90,68 @@ class CommunityList extends React.Component<Props, State> {
 
     if (hasError) return null;
 
-    if (ownsCommunities) {
+    if (ownsCommunities && this.props.upgrade) {
       return (
-        <Section
-          innerRef={component => (this.ownedCommunitiesSection = component)}
-          data-cy="pricing-page-owned-communities-list"
-        >
-          <SectionTitle>Your communities</SectionTitle>
-          <SectionDescription>
-            We found these communities that you already own - you can manage
-            them in their settings or apply directly for an open-source,
-            non-profit, or education discount.
-          </SectionDescription>
-
-          <SectionDescription>
-            When applying for a discount, please provide as much information as
-            possible about your project or community so that we can help you as
-            quickly as possible.
-          </SectionDescription>
-
+        <CommunityListCard data-cy="owned-communities-list">
+          <CardTitle>Your communities</CardTitle>
           <CommunityListGrid>
             {ownedCommunities.map(community => {
               if (!community) return null;
               return (
                 <CommunityCard key={community.id}>
-                  <CommunityCardAvatar src={community.profilePhoto} />
+                  <Avatar src={community.profilePhoto} community={community} />
                   <CommunityCardName>{community.name}</CommunityCardName>
-                  <Link to={`/${community.slug}/settings`}>
-                    <CommunityCardButton>Manage</CommunityCardButton>
-                  </Link>
+                  <CommunityListActions>
+                    <Link to={`/${community.slug}/settings`}>
+                      <Button
+                        style={{
+                          flex: '1 0 auto',
+                          width: 'calc(100%)',
+                          fontSize: '16px',
+                        }}
+                      >
+                        Upgrade
+                      </Button>
+                    </Link>
+                  </CommunityListActions>
+                </CommunityCard>
+              );
+            })}
+          </CommunityListGrid>
+        </CommunityListCard>
+      );
+    }
+
+    if (ownsCommunities) {
+      return (
+        <CommunityListRow>
+          {ownedCommunities.map(community => {
+            if (!community) return null;
+            return (
+              <CommunityCard key={community.id}>
+                <Avatar src={community.profilePhoto} community={community} />
+                <CommunityCardName>{community.name}</CommunityCardName>
+                <CommunityListActions>
                   <a
                     href={`mailto:hi@spectrum.chat?subject=Discount request for the ${
                       community.name
                     } community`}
                   >
-                    <CommunityCardButton>
+                    <Button
+                      style={{
+                        flex: '1 0 auto',
+                        width: 'calc(100%)',
+                        fontSize: '16px',
+                      }}
+                    >
                       Apply for discount
-                    </CommunityCardButton>
+                    </Button>
                   </a>
-                </CommunityCard>
-              );
-            })}
-          </CommunityListGrid>
-        </Section>
+                </CommunityListActions>
+              </CommunityCard>
+            );
+          })}
+        </CommunityListRow>
       );
     }
 
