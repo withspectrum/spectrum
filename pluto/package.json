@@ -1,0 +1,25 @@
+{
+  "name": "pluto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.213.1",
+    "body-parser": "^1.18.2",
+    "bull": "^3.3.10",
+    "express": "^4.16.2",
+    "faker": "^4.1.0",
+    "http": "^0.0.0",
+    "ioredis": "^3.2.2",
+    "node-env-file": "^0.1.8",
+    "now-env": "^3.0.3",
+    "raven": "^2.4.0",
+    "rethinkdb-changefeed-reconnect": "^0.3.2",
+    "rethinkdbdash": "^2.3.31",
+    "shortid": "^2.2.8",
+    "source-map-support": "^0.5.4",
+    "stripe": "^5.4.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node main.js"
+  }
+}

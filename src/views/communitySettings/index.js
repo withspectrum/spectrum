@@ -2,29 +2,32 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import { Route, Switch } from 'react-router-dom';
+import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { Loading } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { Upsell404Community } from '../../components/upsell';
 import viewNetworkHandler from '../../components/viewNetworkHandler';
+import Head from '../../components/head';
 import ViewError from '../../components/viewError';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
+import Billing from '../communityBilling';
 import Overview from './components/overview';
 import Titlebar from '../titlebar';
 import Header from '../../components/settingsViews/header';
 import Subnav from '../../components/settingsViews/subnav';
 import { View } from './style';
+import type { ContextRouter } from 'react-router';
 
 type Props = {
   data: {
     community: GetCommunityType,
   },
-  location: Object,
   isLoading: boolean,
   hasError: boolean,
-  history: Object,
+  ...$Exact<ContextRouter>,
 };
 
 class CommunitySettings extends React.Component<Props> {
@@ -32,6 +35,7 @@ class CommunitySettings extends React.Component<Props> {
     const {
       data: { community },
       location,
+      match,
       isLoading,
       hasError,
       history,
@@ -41,10 +45,14 @@ class CommunitySettings extends React.Component<Props> {
     const pathname = location.pathname;
     const lastIndex = pathname.lastIndexOf('/');
     const activeTab = pathname.substr(lastIndex + 1);
-    const communitySlug = community && community.slug;
+    const communitySlug = match.params.communitySlug;
 
     if (community && community.id) {
-      if (!community.communityPermissions.isOwner) {
+      const canViewCommunitySettings =
+        community.communityPermissions.isOwner ||
+        community.communityPermissions.isModerator;
+
+      if (!canViewCommunitySettings) {
         return (
           <AppViewWrapper>
             <Titlebar
@@ -66,21 +74,6 @@ class CommunitySettings extends React.Component<Props> {
         );
       }
 
-      const ActiveView = () => {
-        switch (activeTab) {
-          case 'settings':
-            return (
-              <Overview community={community} communitySlug={communitySlug} />
-            );
-          case 'analytics':
-            return <Analytics community={community} id={community.id} />;
-          case 'members':
-            return <Members community={community} history={history} />;
-          default:
-            return null;
-        }
-      };
-
       const subnavItems = [
         {
           to: `/${community.slug}/settings`,
@@ -99,6 +92,14 @@ class CommunitySettings extends React.Component<Props> {
         },
       ];
 
+      if (community.communityPermissions.isOwner) {
+        subnavItems.push({
+          to: `/${community.slug}/settings/billing`,
+          label: 'Billing',
+          activeLabel: 'billing',
+        });
+      }
+
       const subheading = {
         to: `/${community.slug}`,
         label: `Return to ${community.name}`,
@@ -109,8 +110,17 @@ class CommunitySettings extends React.Component<Props> {
         community,
       };
 
+      const activeItem = subnavItems.find(
+        ({ activeLabel }) => activeLabel === activeTab
+      );
+      let title = community.name;
+      if (activeItem && activeItem.label !== 'Settings') {
+        title += ` ${activeItem.label} Settings`;
+      } else {
+        title += ' Settings';
+      }
       return (
-        <AppViewWrapper>
+        <AppViewWrapper data-cy="community-settings">
           <Titlebar
             title={community.name}
             subtitle={'Settings'}
@@ -118,6 +128,7 @@ class CommunitySettings extends React.Component<Props> {
             backRoute={`/${communitySlug}`}
             noComposer
           />
+          <Head title={title} />
 
           <View>
             <Header
@@ -127,7 +138,31 @@ class CommunitySettings extends React.Component<Props> {
             />
             <Subnav items={subnavItems} activeTab={activeTab} />
 
-            <ActiveView />
+            <Switch>
+              <Route path={`${match.url}/analytics`}>
+                {() => <Analytics community={community} id={community.id} />}
+              </Route>
+              <Route path={`${match.url}/members`}>
+                {() => <Members community={community} history={history} />}
+              </Route>
+              <Route path={`${match.url}/billing`}>
+                {() => (
+                  <Billing
+                    community={community}
+                    id={community.id}
+                    history={history}
+                  />
+                )}
+              </Route>
+              <Route path={`${match.url}`}>
+                {() => (
+                  <Overview
+                    community={community}
+                    communitySlug={communitySlug}
+                  />
+                )}
+              </Route>
+            </Switch>
           </View>
         </AppViewWrapper>
       );
@@ -174,6 +209,8 @@ class CommunitySettings extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityByMatch, viewNetworkHandler)(
-  CommunitySettings
-);
+export default compose(
+  connect(),
+  getCommunitySettingsByMatch,
+  viewNetworkHandler
+)(CommunitySettings);

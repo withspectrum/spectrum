@@ -76,6 +76,7 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
               <Icon glyph={'channel'} size={32} />
             )}
             {props.contents.name}
+            {props.contents.isArchived && ' (Archived)'}
           </Heading>
           <Meta>{props.meta && props.meta}</Meta>
         </Col>

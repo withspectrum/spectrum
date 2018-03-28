@@ -8,12 +8,12 @@ describe('User View', () => {
   });
 
   it('should render', () => {
-    cy.get('[data-e2e-id="user-view"]').should('be.visible');
+    cy.get('[data-cy="user-view"]').should('be.visible');
     cy.contains(user.username);
     cy.contains(user.name);
     cy.contains(user.description);
     cy.contains(user.website);
-    cy.get('[data-e2e-id="thread-feed"]').should('be.visible');
+    cy.get('[data-cy="thread-feed"]').should('be.visible');
     data.threads
       .filter(thread => thread.creatorId === user.id)
       .forEach(thread => {

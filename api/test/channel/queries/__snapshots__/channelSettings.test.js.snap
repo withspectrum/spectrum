@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a private channels token join settings 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "id": "1",
+      "joinSettings": Object {
+        "token": null,
+        "tokenJoinEnabled": false,
+      },
+    },
+  },
+}
+`;

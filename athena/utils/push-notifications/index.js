@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('athena:utils:send-push-notifications');
 import { getSubscriptions } from '../../models/web-push-subscription';
-import { getExpoSubscriptions } from 'iris/models/expo-push-subscription';
+import { getExpoSubscriptions } from 'api/models/expo-push-subscription';
 import { markSingleNotificationSeen } from '../../models/usersNotifications';
 import formatNotification from './notification-formatting';
 import { sendWebPushNotification } from './send-web-push-notification';

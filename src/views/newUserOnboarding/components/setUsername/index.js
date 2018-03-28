@@ -143,7 +143,7 @@ class SetUsername extends React.Component<Props, State> {
           }
         })
         .catch(err => {
-          console.log('Error looking up username: ', err);
+          console.error('Error looking up username: ', err);
         });
     }
   };

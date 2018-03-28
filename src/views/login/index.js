@@ -37,7 +37,7 @@ export class Login extends React.Component<Props> {
         close={this.props.close && this.props.close}
       >
         <FullscreenContent
-          data-e2e-id="login-page"
+          data-cy="login-page"
           style={{ justifyContent: 'center' }}
         >
           <UpsellIconContainer>

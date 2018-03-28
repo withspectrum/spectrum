@@ -194,7 +194,7 @@ class NewThread extends React.Component<Props, State> {
         return;
       })
       .catch(err => {
-        console.log('Error searching users', err);
+        console.error('Error searching users', err);
       });
   };
 
@@ -555,7 +555,7 @@ class NewThread extends React.Component<Props, State> {
           }
         )
         .catch(err => {
-          console.log('Error finding existing conversation: ', err);
+          console.error('Error finding existing conversation: ', err);
         });
     }
   };

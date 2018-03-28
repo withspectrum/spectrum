@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sender should fetch a user 1`] = `
+Object {
+  "data": Object {
+    "message": Object {
+      "author": Object {
+        "id": "1",
+        "user": Object {
+          "username": "mxstbr",
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`should fetch a message 1`] = `
+Object {
+  "data": Object {
+    "message": Object {
+      "content": Object {
+        "body": "{\\"blocks\\":[{\\"key\\":\\"9u8bg\\",\\"text\\":\\"This is the first message!\\",\\"type\\":\\"unstyled\\",\\"depth\\":0,\\"inlineStyleRanges\\":[],\\"entityRanges\\":[],\\"data\\":{}}],\\"entityMap\\":{}}",
+      },
+      "id": "1",
+      "messageType": "draftjs",
+      "timestamp": "2016-12-31T23:00:00.000Z",
+    },
+  },
+}
+`;

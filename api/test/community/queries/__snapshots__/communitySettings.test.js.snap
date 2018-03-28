@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a communitys settings 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "brandedLogin": Object {
+        "isEnabled": false,
+        "message": null,
+      },
+      "id": "1",
+    },
+  },
+}
+`;

@@ -3,10 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex, Shadow, hexa } from '../../../components/globals';
-import ViewSegment from '../../../components/viewSegment';
+import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
 import { CLIENT_URL } from '../../../api/constants';
-import { Tagline, Copy, Content } from '../../splash/style';
+import { Tagline, Copy, Content } from '../../pages/style';
 
 // $FlowFixMe
 const CommunitySearchWrapper = props => {
@@ -50,7 +50,9 @@ const CommunitySearchWrapper = props => {
     margin-bottom: 0;
   `;
 
-  const ThisTagline = styled(Tagline)`margin-bottom: 0;`;
+  const ThisTagline = styled(Tagline)`
+    margin-bottom: 0;
+  `;
 
   const SecondaryTagline = styled(ThisTagline)`
     font-size: 20px;
@@ -71,7 +73,9 @@ const CommunitySearchWrapper = props => {
     }
   `;
 
-  const SecondaryCopy = styled(ThisCopy)`margin-bottom: 16px;`;
+  const SecondaryCopy = styled(ThisCopy)`
+    margin-bottom: 16px;
+  `;
 
   return (
     <ViewSegment goop={3} background="constellations">
@@ -87,7 +91,7 @@ const CommunitySearchWrapper = props => {
             Building communities on Spectrum is easy and free!
           </SecondaryCopy>
           {props.currentUser ? (
-            <Link to={`/new/community`}>
+            <Link to={'/new/community'}>
               <PrimaryCTA>Get Started</PrimaryCTA>
             </Link>
           ) : (

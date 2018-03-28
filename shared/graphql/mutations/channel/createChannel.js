@@ -1,8 +1,10 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import channelInfoFragment from '../../fragments/channel/channelInfo';
-import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
+import channelInfoFragment, {
+  type ChannelInfoType,
+} from '../../fragments/channel/channelInfo';
+import { getCommunityChannelConnectionQuery } from '../../queries/community/getCommunityChannelConnection';
 
 type CreateChannelInput = {
   communityId: string,
@@ -37,6 +39,14 @@ const createChannelOptions = {
         variables: {
           input,
         },
+        refetchQueries: [
+          {
+            query: getCommunityChannelConnectionQuery,
+            variables: {
+              id: input.communityId,
+            },
+          },
+        ],
       }),
   }),
 };

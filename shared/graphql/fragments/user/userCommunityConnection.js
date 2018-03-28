@@ -6,6 +6,9 @@ import type { CommunityInfoType } from '../community/communityInfo';
 type Edge = {
   node: {
     ...$Exact<CommunityInfoType>,
+    hasFeatures: {
+      analytics: boolean,
+    },
     contextPermissions: {
       communityId: string,
       isOwner: boolean,
@@ -35,6 +38,9 @@ export default gql`
       edges {
         node {
           ...communityInfo
+          hasFeatures {
+            analytics
+          }
           contextPermissions {
             communityId
             isOwner

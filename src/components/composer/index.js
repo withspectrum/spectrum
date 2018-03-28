@@ -81,8 +81,6 @@ type Props = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
-let storedBody;
-let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 class ComposerWithData extends Component<Props, State> {
@@ -152,13 +150,16 @@ class ComposerWithData extends Component<Props, State> {
 
     const communities = sortCommunities(
       user.communityConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
         .filter(Boolean)
     );
 
     const channels = sortChannels(
       user.channelConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
+        .filter(channel => channel && !channel.isArchived)
         .filter(Boolean)
     );
 
@@ -177,10 +178,11 @@ class ComposerWithData extends Component<Props, State> {
     if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
-    const communityChannels = channels.filter(
-      // $FlowIssue
-      channel => channel.community.id === community.id
-    );
+    const communityChannels = channels
+      .filter(
+        channel => channel && community && channel.community.id === community.id
+      )
+      .filter(channel => channel && !channel.isArchived);
 
     const activeChannel = getDefaultActiveChannel(
       communityChannels,
@@ -587,7 +589,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-community-selector"
+              data-cy="composer-community-selector"
               onChange={this.setActiveCommunity}
               value={activeCommunity}
             >
@@ -604,7 +606,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-channel-selector"
+              data-cy="composer-channel-selector"
               onChange={this.setActiveChannel}
               value={activeChannel}
             >
@@ -622,7 +624,7 @@ class ComposerWithData extends Component<Props, State> {
         </Dropdowns>
         <ThreadInputs>
           <Textarea
-            data-e2e-id="composer-title-input"
+            data-cy="composer-title-input"
             onChange={this.changeTitle}
             style={ThreadTitle}
             value={this.state.title}
@@ -665,7 +667,7 @@ class ComposerWithData extends Component<Props, State> {
               Cancel
             </TextButton>
             <Button
-              data-e2e-id="composer-publish-button"
+              data-cy="composer-publish-button"
               onClick={this.publishThread}
               loading={isPublishing}
               disabled={

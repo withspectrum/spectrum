@@ -20,7 +20,7 @@ export type SearchCommunitiesType = {
 };
 
 export const searchCommunitiesQuery = gql`
-  query search($queryString: String!, $type: SearchType!) {
+  query searchCommunities($queryString: String!, $type: SearchType!) {
     search(queryString: $queryString, type: $type) {
       searchResultsConnection {
         edges {

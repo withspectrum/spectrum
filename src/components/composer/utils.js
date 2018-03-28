@@ -1,7 +1,6 @@
 // @flow
-
-// TODO(@mxstbr): Transform GraphQL type
-type Community = Object;
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel.js';
 
 const hasCommunityPermissions = ({ communityPermissions }) =>
   communityPermissions.isMember || communityPermissions.isOwner;
@@ -15,27 +14,23 @@ const sortByRep = (a, b) => {
   return bc <= ac ? -1 : 1;
 };
 
-export const sortCommunities = (communities: Array<Community>): Community[] => {
+export const sortCommunities = (
+  communities: Array<GetCommunityType>
+): GetCommunityType[] => {
   return communities.filter(hasCommunityPermissions).sort(sortByRep);
 };
 
-// TODO(@mxstbr): Transform GraphQL type
-type Channel = Object;
-
-export const sortChannels = (channels: Channel[]): Channel[] => {
+export const sortChannels = (channels: GetChannelType[]): GetChannelType[] => {
   return channels.filter(hasChannelPermissions).filter(channel => {
-    if (!channel.isPrivate) return true;
-    // If it's a private channel, but the community has downgraded don't give
-    // users the option to post there
-    if (!channel.community.isPro) return false;
+    if (!channel.isPrivate && !channel.isArchived) return true;
     return true;
   });
 };
 
 export const getDefaultActiveChannel = (
-  channels: Array<Channel>,
+  channels: Array<GetChannelType>,
   activeChannelId: ?string
-): ?Channel => {
+): ?GetChannelType => {
   // If there's an active channel, use that
   const activeChannel = channels.find(
     channel => channel.id === activeChannelId
@@ -43,12 +38,11 @@ export const getDefaultActiveChannel = (
   if (activeChannel) return activeChannel;
 
   // Otherwise, try to use the "General" channel
-  const generalChannel = channels.find(
-    channel => channel.slug === 'general' && channel.isDefault
-  );
+  const generalChannel = channels.find(channel => channel.slug === 'general');
   if (generalChannel) return generalChannel;
 
   // Otherwise, try to use any default channel
+  // $FlowIssue
   const defaultChannel = channels.find(channel => channel.isDefault);
   if (defaultChannel) return defaultChannel;
 

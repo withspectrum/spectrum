@@ -10,6 +10,7 @@ export const communityInfoFragment = gql`
     website
     profilePhoto
     coverPhoto
+    hasChargeableSource
     communityPermissions {
       isMember
       isBlocked

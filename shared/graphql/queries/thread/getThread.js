@@ -9,7 +9,7 @@ export type GetThreadType = {
 };
 
 export const getThreadByIdQuery = gql`
-  query getThread($id: ID!) {
+  query getThreadById($id: ID!) {
     thread(id: $id) {
       ...threadInfo
     }
@@ -28,7 +28,7 @@ const getThreadByIdOptions = {
 export const getThreadById = graphql(getThreadByIdQuery, getThreadByIdOptions);
 
 export const getThreadByMatchQuery = gql`
-  query getThread($id: ID!) {
+  query getThreadByMatch($id: ID!) {
     thread(id: $id) {
       ...threadInfo
     }
@@ -49,7 +49,7 @@ export const getThreadByMatchOptions = {
         ? threadId
         : match
           ? match.params.threadId
-          : console.log('bad arg supplied to getThreadByMatch') || null,
+          : console.error('bad arg supplied to getThreadByMatch') || null,
     },
     fetchPolicy: 'cache-first',
   }),
