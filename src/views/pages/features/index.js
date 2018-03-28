@@ -4,20 +4,7 @@ import { track } from 'src/helpers/events';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
-import Feature from '../pricing/components/feature';
-import {
-  Content,
-  TwoUp,
-  Left,
-  Right,
-  Heading,
-  Subhead,
-  Copy,
-  PlanSection,
-  PlanPrice,
-  PlanDescription,
-  PlanFeatures,
-} from '../pricing/style';
+import { Content, Heading, Subhead, Copy } from '../pricing/style';
 import type { ContextRouter } from 'react-router';
 
 type Props = {
