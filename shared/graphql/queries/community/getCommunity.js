@@ -12,7 +12,7 @@ export type GetCommunityType = {
 };
 
 export const getCommunityByIdQuery = gql`
-  query getCommunity($id: ID) {
+  query getCommunityById($id: ID) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
@@ -36,7 +36,7 @@ export const getCommunityById = graphql(
 );
 
 export const getCommunityBySlugQuery = gql`
-  query getCommunity($slug: String) {
+  query getCommunityBySlug($slug: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
@@ -60,7 +60,7 @@ export const getCommunityBySlug = graphql(
 );
 
 export const getCommunityByMatchQuery = gql`
-  query getCommunity($slug: String) {
+  query getCommunityByMatch($slug: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
