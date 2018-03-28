@@ -33,7 +33,7 @@ var getSharedApolloClientOptions = function getSharedApolloClientOptions() {
   return {
     queryDeduplication: true,
     dataIdFromObject: dataIdFromObject,
-    cacheResolvers: {
+    cacheRedirects: {
       Query: {
         thread: function thread(_, _ref) {
           var id = _ref.id;
