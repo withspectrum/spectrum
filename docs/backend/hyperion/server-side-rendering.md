@@ -4,7 +4,7 @@ In production we server our React-based frontend (`src/`) server-side rendered, 
 
 ## Normal development workflow
 
-When you develop Spectrum you're running two processes, `yarn run dev:web` for the frontend and `yarn run dev:iris` for Iris, the GraphQL API. This means in your browser you access `localhost:3000`, which is a fully client-side React app, and that then fetches data from `localhost:3001/api`.
+When you develop Spectrum you're running two processes, `yarn run dev:web` for the frontend and `yarn run dev:api` for API, the GraphQL API. This means in your browser you access `localhost:3000`, which is a fully client-side React app, and that then fetches data from `localhost:3001/api`.
 
 In production, the client-side app is bundled and server-side rendered by hyperion.
 

@@ -7,7 +7,7 @@ import type { DBCommunity } from 'shared/types';
 import type { RawSubscriptionItem } from 'shared/stripe/types/subscriptionItem';
 import type { RawSource } from 'shared/stripe/types/source';
 import type { RawInvoice } from 'shared/stripe/types/invoice';
-import { getCommunityById, setStripeCustomerId } from 'iris/models/community';
+import { getCommunityById, setStripeCustomerId } from 'api/models/community';
 import {
   FREE_MODERATOR_SEAT,
   MODERATOR_SEAT,

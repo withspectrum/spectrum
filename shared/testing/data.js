@@ -1,5 +1,5 @@
 // @flow
-const seed = require('../../iris/migrations/seed/default/index');
+const seed = require('../../api/migrations/seed/default/index');
 
 const {
   defaultUsers,

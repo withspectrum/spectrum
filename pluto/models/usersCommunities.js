@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 
 export const removeAllCommunityModerators = (communityId: string) => {
   return db

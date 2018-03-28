@@ -13,7 +13,7 @@ const APP_FOLDERS = [
   'chronos',
   'hermes',
   'hyperion',
-  'iris',
+  'api',
   'mercury',
   'shared',
   'src',
@@ -50,7 +50,7 @@ schedule(
     blacklist: [
       'flow-typed/**/*.js',
       'public/**/*.js',
-      'iris/migrations/**/*.js',
+      'api/migrations/**/*.js',
       'cypress/**/*.js',
     ],
   })

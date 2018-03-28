@@ -1,7 +1,7 @@
 // @flow
 import type { CleanCustomer } from 'shared/stripe/types/customer';
 import { recordExists, insertRecord, replaceRecord } from './utils';
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 import type { DBStripeCustomer } from 'shared/types';
 
 export const saveCustomer = async (

@@ -7,7 +7,7 @@ require('isomorphic-fetch');
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
-import { getUser } from 'iris/models/user';
+import { getUser } from 'api/models/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 
