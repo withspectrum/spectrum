@@ -62,13 +62,13 @@ class Nav extends React.Component<Props, State> {
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
-          <FeaturesTab
+          {/* <FeaturesTab
             dark={this.props.dark}
             selected={this.props.location === 'features'}
             to="/features"
           >
             Features
-          </FeaturesTab>
+          </FeaturesTab> */}
           <PricingTab
             dark={this.props.dark}
             selected={this.props.location === 'pricing'}
@@ -114,12 +114,12 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              <FeaturesLink
+              {/* <FeaturesLink
                 to="/features"
                 selected={this.props.location === 'features'}
               >
                 <Icon glyph="checkmark" />Features<Icon glyph="enter" />
-              </FeaturesLink>
+              </FeaturesLink> */}
               <PricingLink
                 to="/pricing"
                 selected={this.props.location === 'pricing'}

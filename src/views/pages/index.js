@@ -22,9 +22,9 @@ class Pages extends React.Component<Props> {
       case '/pricing': {
         return <Pricing {...this.props} />;
       }
-      case '/features': {
-        return <Features {...this.props} />;
-      }
+      // case '/features': {
+      //   return <Features {...this.props} />;
+      // }
       case '/terms':
       case '/terms.html': {
         return <Terms {...this.props} />;

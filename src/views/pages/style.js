@@ -15,10 +15,11 @@ import {
 } from '../../components/globals';
 
 export const Page = styled.div`
+  position: relative;
   display: grid;
-  grid-template-rows: 68px 1fr;
+  grid-template-rows: 1fr;
   grid-template-columns: 1fr;
-  grid-template-areas: 'nav' 'content';
+  grid-template-areas: 'content';
   overflow: auto;
   overflow-x: hidden;
   background-color: ${({ theme }) => theme.bg.default};
@@ -377,16 +378,19 @@ export const NavContainer = styled.div`
   grid-template-rows: 68px;
   grid-template-columns: auto;
   grid-template-areas: 'tabs';
-  grid-area: nav;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 export const Tabs = styled.div`
   display: grid;
   padding: 0 16px;
-  grid-template-columns: auto 1fr repeat(4, auto);
+  grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . pricing features support auth';
+  grid-template-areas: 'logo . pricing support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -517,7 +521,7 @@ export const LogoLink = styled(DropdownLink)`
 
 export const FeaturesLink = styled(DropdownLink)`
   grid-area: features;
-  border: none;
+  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const PricingLink = styled(DropdownLink)`
@@ -572,8 +576,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(4, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'pricing' 'features' 'support' 'explore' '.' 'auth';
+  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'pricing' 'support' 'explore' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
