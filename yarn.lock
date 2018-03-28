@@ -3450,7 +3450,7 @@ draft-js-modifiers@^0.1.5:
     draft-js "~0.10.0"
     immutable "~3.7.4"
 
-draft-js-plugins-editor@^2.0.3:
+draft-js-plugins-editor@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/draft-js-plugins-editor/-/draft-js-plugins-editor-2.0.4.tgz#ab7178de886d6d11f9f43a448c844da6266053e0"
   dependencies:
