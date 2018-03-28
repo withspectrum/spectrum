@@ -7,7 +7,7 @@ import {
 } from '../models/slackImports';
 
 /*
-	Receives a token from Iris which will be used to fetch the user list from a slack team.
+	Receives a token from API which will be used to fetch the user list from a slack team.
 	That list will then get filtered to remove bots, banned users, etc. and result in writing
 	a members array back to the slackInvite record in the db
 */

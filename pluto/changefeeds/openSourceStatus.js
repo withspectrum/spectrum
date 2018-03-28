@@ -5,7 +5,7 @@ import {
   listenToNewFieldIn,
 } from 'shared/changefeed-utils';
 import type { DBCommunity } from 'shared/types';
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 import {
   stripeCommunityOpenSourceStatusEnabledQueue,
   stripeCommunityOpenSourceStatusDisabledQueue,

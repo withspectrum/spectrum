@@ -7,7 +7,7 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-import { encode } from '../../iris/utils/base64';
+import { encode } from '../../api/utils/base64';
 
 Cypress.Commands.add('auth', userId => {
   cy.setCookie(

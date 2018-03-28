@@ -8,7 +8,7 @@ import {
   listenToDeletedFieldIn,
 } from 'shared/changefeed-utils';
 import type { DBChannel } from 'shared/types';
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 import {
   stripeCommunityPrivateChannelAddedQueue,
   stripeCommunityPrivateChannelRemovedQueue,

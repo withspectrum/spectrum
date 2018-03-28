@@ -43,11 +43,11 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
   - [Deployment](docs/backend/deployment.md)
-  - [GraphQL](docs/backend/iris/)
-    - [Fragments](docs/backend/iris/fragments.md)
-    - [Pagination](docs/backend/iris/pagination.md)
-    - [Testing](docs/backend/iris/testing.md)
-    - [Tips and Tricks](docs/backend/iris/tips-and-tricks.md)
+  - [GraphQL](docs/backend/api/)
+    - [Fragments](docs/backend/api/fragments.md)
+    - [Pagination](docs/backend/api/pagination.md)
+    - [Testing](docs/backend/api/testing.md)
+    - [Tips and Tricks](docs/backend/api/tips-and-tricks.md)
 
 ## Contributing 
 
@@ -101,13 +101,13 @@ Here is a list of all the big technologies we use:
 
 ```sh
 spectrum/
+├── api        # API server
 ├── athena     # Worker server (notifications and general processing)
 ├── chronos    # Worker server (cron jobs)
 ├── docs
 ├── email-templates
 ├── hermes     # Worker server (email sending)
 ├── hyperion   # Server rendering server
-├── iris       # API server
 ├── mercury    # Worker server (reputation)
 ├── mobile     # Mobile apps
 ├── pluto      # Worker server (payments; syncing with Stripe)
@@ -124,7 +124,6 @@ spectrum/
 
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
 
-- Iris (/ˈaɪrᵻs/) is one of the goddesses of the sea and the sky and was the messenger of the gods during the Titanomachy. (the battle between the titans and the gods)
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
 - Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
@@ -218,10 +217,10 @@ redis-server
 
 Depending on what you're trying to work on you'll need to start different servers. Generally, all servers run in development mode by doing `yarn run dev:<workername>`, e.g. `yarn run dev:hermes` to start the email worker.
 
-No matter what you're trying to do though, you'll want to have the API (iris) running, so start that in a background tab:
+No matter what you're trying to do though, you'll want to have the API running, so start that in a background tab:
 
 ```
-yarn run dev:iris
+yarn run dev:api
 ```
 
 #### Develop the web UI

@@ -20,11 +20,11 @@ In edge cases it could happen that you end up with bad data locally and that tes
 
 ## End-to-end tests
 
-We use [Cypress](https://cypress.io) to run our e2e tests, which gives you a nice GUI that you can use for your test runs. To run e2e tests you have to have both iris and the client running. You also need Iris to be connected to the test database, which you do by setting `TEST_DB`:
+We use [Cypress](https://cypress.io) to run our e2e tests, which gives you a nice GUI that you can use for your test runs. To run e2e tests you have to have both api and the client running. You also need API to be connected to the test database, which you do by setting `TEST_DB`:
 
 ```sh
 # In one tab
-TEST_DB=true yarn run dev:iris
+TEST_DB=true yarn run dev:api
 # In another tab
 yarn run dev:web
 ```

@@ -2,7 +2,7 @@
 /*
 
   The purpose of this is file is to share flowtypes of our database records across
-  Iris and our workers. When type checking results directly from a database query,
+  API and our workers. When type checking results directly from a database query,
   attempt to use or update the types here
 
 */

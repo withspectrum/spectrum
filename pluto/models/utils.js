@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 const debug = require('debug')('pluto:models:utils');
 
 export const recordExists = async (
