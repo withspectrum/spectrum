@@ -12,11 +12,13 @@ import {
   Tabs,
   LogoTab,
   MenuTab,
+  FeaturesTab,
   PricingTab,
   SupportTab,
   AuthTab,
   LogoLink,
   AuthLink,
+  FeaturesLink,
   PricingLink,
   SupportLink,
   ExploreLink,
@@ -60,7 +62,13 @@ class Nav extends React.Component<Props, State> {
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
-
+          <FeaturesTab
+            dark={this.props.dark}
+            selected={this.props.location === 'features'}
+            to="/features"
+          >
+            Features
+          </FeaturesTab>
           <PricingTab
             dark={this.props.dark}
             selected={this.props.location === 'pricing'}
@@ -106,6 +114,12 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
+              <FeaturesLink
+                to="/features"
+                selected={this.props.location === 'features'}
+              >
+                <Icon glyph="checkmark" />Features<Icon glyph="enter" />
+              </FeaturesLink>
               <PricingLink
                 to="/pricing"
                 selected={this.props.location === 'pricing'}

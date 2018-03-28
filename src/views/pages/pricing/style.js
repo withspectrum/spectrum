@@ -24,6 +24,10 @@ export const ContentContainer = styled.div`
 
 export const Content = styled(ContentContainer)`
   position: relative;
+
+  > a > button {
+    margin-top: 24px;
+  }
 `;
 
 export const Heading = styled.h1`
@@ -50,7 +54,7 @@ export const Subhead = styled.h2`
 
 export const Copy = styled.p`
   font-size: 20px;
-  font-weight: 500;
+  font-weight: ${props => (props.reverse ? '500' : '400')};
   color: ${props =>
     props.reverse ? props.theme.text.reverse : props.theme.text.secondary};
   line-height: 1.6;
@@ -67,6 +71,10 @@ export const Copy = styled.p`
     &:hover {
       color: ${props => props.theme.brand.dark};
     }
+  }
+
+  b {
+    font-weight: 700;
   }
 `;
 

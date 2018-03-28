@@ -15,19 +15,24 @@ import {
 } from '../../components/globals';
 
 export const Page = styled.div`
-  position: relative;
+  display: grid;
+  grid-template-rows: 68px 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'nav' 'content';
+  overflow: auto;
+  overflow-x: hidden;
+  background-color: ${({ theme }) => theme.bg.default};
 `;
 
 export const Wrapper = styled(FlexCol)`
-  flex: 0 0 auto;
+  grid-area: content;
   height: 100%;
   min-height: 100vh;
   min-width: 100vw;
   width: 100%;
   max-width: 100vw;
   background-color: ${({ theme }) => theme.bg.default};
-  overflow: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: ${zIndex.base};
 `;
 
@@ -371,21 +376,17 @@ export const NavContainer = styled.div`
   display: grid;
   grid-template-rows: 68px;
   grid-template-columns: auto;
-  grid-template-areas: 'tabs' 'goop';
+  grid-template-areas: 'tabs';
   grid-area: nav;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
 `;
 
 export const Tabs = styled.div`
   display: grid;
   padding: 0 16px;
-  grid-template-columns: auto 1fr repeat(3, auto);
+  grid-template-columns: auto 1fr repeat(4, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . pricing support auth';
+  grid-template-areas: 'logo . pricing features support auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -418,17 +419,18 @@ export const Tabs = styled.div`
 
 export const Tab = styled(Link)`
   padding: 4px 8px;
-  font-weight: ${props => (props.selected ? '600' : '500')};
+  font-size: 16px;
+  font-weight: ${props => (props.selected ? '700' : '500')};
   color: ${props =>
     props.selected
-      ? props.dark ? props.theme.text.reverse : props.theme.brand.alt
+      ? props.dark ? props.theme.text.reverse : props.theme.text.default
       : props.dark ? props.theme.text.reverse : props.theme.text.alt};
 
   &:hover {
     color: ${props =>
       props.selected
-        ? props.dark ? props.theme.text.reverse : props.theme.brand.alt
-        : props.dark ? props.theme.text.reverse : props.theme.brand.alt};
+        ? props.dark ? props.theme.text.reverse : props.theme.text.default
+        : props.dark ? props.theme.text.reverse : props.theme.text.alt};
     text-shadow: ${props =>
       props.dark ? `0 0 32px ${hexa(props.theme.text.reverse, 0.75)}` : 'none'};
   }
@@ -513,6 +515,11 @@ export const LogoLink = styled(DropdownLink)`
   }
 `;
 
+export const FeaturesLink = styled(DropdownLink)`
+  grid-area: features;
+  border: none;
+`;
+
 export const PricingLink = styled(DropdownLink)`
   grid-area: pricing;
   border: none;
@@ -565,8 +572,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'pricing' 'support' 'explore' '.' 'auth';
+  grid-template-rows: auto 16px repeat(4, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'pricing' 'features' 'support' 'explore' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
@@ -623,6 +630,14 @@ export const MenuTab = styled.div`
 
 export const PricingTab = styled(Tab)`
   grid-area: pricing;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const FeaturesTab = styled(Tab)`
+  grid-area: features;
 
   @media (max-width: 768px) {
     display: none;

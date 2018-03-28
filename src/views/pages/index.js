@@ -5,6 +5,7 @@ import Support from './support';
 import Pricing from './pricing';
 import Home from './home';
 import Terms from './terms';
+import Features from './features';
 import Privacy from './privacy';
 import { Page } from './style';
 
@@ -15,32 +16,27 @@ type Props = {
 class Pages extends React.Component<Props> {
   renderPage = () => {
     switch (this.props.match.path) {
-      case '/': {
-        return <Home {...this.props} />;
-      }
-      case '/about': {
-        return <Home {...this.props} />;
-      }
       case '/support': {
         return <Support {...this.props} />;
       }
       case '/pricing': {
         return <Pricing {...this.props} />;
       }
-      case '/terms': {
-        return <Terms {...this.props} />;
+      case '/features': {
+        return <Features {...this.props} />;
       }
-      case '/privacy': {
-        return <Privacy {...this.props} />;
-      }
-      case '/privacy.html': {
-        return <Privacy {...this.props} />;
-      }
+      case '/terms':
       case '/terms.html': {
         return <Terms {...this.props} />;
       }
+      case '/privacy':
+      case '/privacy.html': {
+        return <Privacy {...this.props} />;
+      }
+      case '/':
+      case '/about':
       default: {
-        return <div>404</div>;
+        return <Home {...this.props} />;
       }
     }
   };
