@@ -34,7 +34,8 @@ export default async (
 
   loaders.channelSettings.clear(channelId);
 
-  if (settings) {
+  // settings.id tells us that a channelSettings record exists in the db
+  if (settings.id) {
     return await resetChannelJoinToken(channelId);
   } else {
     return await createChannelSettings(channelId).then(

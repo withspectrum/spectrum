@@ -54,7 +54,11 @@ class TokenJoinToggle extends React.Component<Props> {
     const { tokenJoinEnabled } = this.props.settings;
 
     return (
-      <Checkbox checked={tokenJoinEnabled} onChange={this.init}>
+      <Checkbox
+        checked={tokenJoinEnabled}
+        onChange={this.init}
+        dataCy="toggle-token-link-invites"
+      >
         Enable users to join via link
       </Checkbox>
     );

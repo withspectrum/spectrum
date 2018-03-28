@@ -53,7 +53,11 @@ class ResetJoinToken extends React.Component<Props, State> {
           marginTop: '16px',
         }}
       >
-        <OutlineButton loading={isLoading} onClick={this.reset}>
+        <OutlineButton
+          loading={isLoading}
+          onClick={this.reset}
+          dataCy="refresh-join-link-token"
+        >
           Reset this link
         </OutlineButton>
       </div>
