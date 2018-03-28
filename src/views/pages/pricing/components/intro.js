@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Section from 'src/components/themedSection';
 import Link from 'src/components/link';
