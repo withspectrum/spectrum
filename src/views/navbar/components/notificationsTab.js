@@ -225,7 +225,7 @@ class NotificationsTab extends React.Component<Props, State> {
     this.processAndMarkSeenNotifications(newNotifications);
     // otherwise
     return markAllNotificationsSeen().catch(err => {
-      console.log(err);
+      console.error(err);
       // Undo the optimistic update from above
       this.processAndMarkSeenNotifications(oldNotifications);
     });

@@ -122,7 +122,7 @@ class AvatarImage extends Component<ImageProps> {
       delete this.i.src;
       delete this.i;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       delete this.i;
     }
   };

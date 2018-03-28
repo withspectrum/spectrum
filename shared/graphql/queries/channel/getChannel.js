@@ -12,7 +12,7 @@ export type GetChannelType = {
 };
 
 export const getChannelByIdQuery = gql`
-  query getChannel($id: ID) {
+  query getChannelById($id: ID) {
     channel(id: $id) {
       ...channelInfo
       ...channelMetaData
@@ -43,7 +43,10 @@ export const getChannelById = graphql(
   be used as a way to get a channel based on url params.
 */
 export const getChannelBySlugAndCommunitySlugQuery = gql`
-  query getChannel($channelSlug: String, $communitySlug: String) {
+  query getChannelBySlugAndCommunitySlug(
+    $channelSlug: String
+    $communitySlug: String
+  ) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo
       ...channelMetaData

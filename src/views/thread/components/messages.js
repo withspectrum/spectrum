@@ -113,7 +113,7 @@ class MessagesWithData extends React.Component<Props, State> {
       // $FlowFixMe
       this.unsubscribe()
         .then(() => this.subscribe())
-        .catch(err => console.log('Error unsubscribing: ', err));
+        .catch(err => console.error('Error unsubscribing: ', err));
     }
   }
 

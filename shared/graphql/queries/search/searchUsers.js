@@ -17,7 +17,7 @@ export type SearchUsersType = {
 };
 
 export const searchUsersQuery = gql`
-  query search(
+  query searchUsers(
     $queryString: String!
     $type: SearchType!
     $filter: SearchFilter

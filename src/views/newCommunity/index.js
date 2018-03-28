@@ -97,7 +97,7 @@ class NewCommunity extends React.Component<Props, State> {
         }
       )
       .catch(err => {
-        console.log('error creating community', err);
+        console.error('error creating community', err);
       });
   }
 

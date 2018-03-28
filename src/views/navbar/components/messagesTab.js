@@ -193,7 +193,7 @@ class MessagesTab extends React.Component<Props, State> {
       })
       .then(() => this.setCount(this.props))
       .catch(err => {
-        console.log('error marking dm notifications seen', err);
+        console.error('error marking dm notifications seen', err);
       });
   };
 

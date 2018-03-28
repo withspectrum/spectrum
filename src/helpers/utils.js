@@ -222,7 +222,7 @@ export const getLinkPreviewFromUrl = (url: string) =>
       return response.json();
     })
     .catch(err => {
-      console.log('Error getting link preview: ', err);
+      console.error('Error getting link preview: ', err);
     });
 
 // Truncate a string nicely to a certain length

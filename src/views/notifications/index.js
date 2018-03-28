@@ -72,7 +72,7 @@ class NotificationsPure extends React.Component<Props, State> {
   markAllNotificationsSeen = () => {
     this.props.markAllNotificationsSeen &&
       this.props.markAllNotificationsSeen().catch(err => {
-        console.log('Error marking all notifications seen: ', err);
+        console.error('Error marking all notifications seen: ', err);
       });
   };
 
@@ -106,11 +106,11 @@ class NotificationsPure extends React.Component<Props, State> {
             return;
           })
           .catch(err => {
-            console.log('Error getting subscription:', err);
+            console.error('Error getting subscription:', err);
           });
       })
       .catch(err => {
-        console.log('Error getting permission state:', err);
+        console.error('Error getting permission state:', err);
       });
   }
 

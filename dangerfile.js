@@ -39,7 +39,7 @@ noTestShortcuts({
     filePath.endsWith('.test.js') || filePath.endsWith('_spec.js'),
 });
 
-schedule(noConsole({ whitelist: ['error'] }));
+schedule(noConsole({ whitelist: ['error', 'warn'] }));
 
 schedule(
   flow({
