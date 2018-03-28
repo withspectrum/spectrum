@@ -26,7 +26,7 @@ class Overview extends React.Component<Props> {
       <SectionsContainer data-cy="channel-overview">
         <Column>
           <EditForm channel={channel} />
-          <ArchiveForm channel={channel} />
+          {channel.slug !== 'general' && <ArchiveForm channel={channel} />}
           {channel.isPrivate && (
             <LoginTokenSettings id={channel.id} channel={channel} />
           )}
