@@ -65,7 +65,19 @@ class ThreadDetailPure extends React.Component<Props, State> {
   state = {
     isLockingThread: false,
     isPinningThread: false,
+    isEditing: false,
+    body: null,
+    title: '',
+    linkPreview: null,
+    linkPreviewTrueUrl: '',
+    fetchingLinkPreview: false,
+    receiveNotifications: false,
+    isSavingEdit: false,
+    flyoutOpen: false,
+    error: '',
+    linkPreviewLength: 0,
   };
+
   // $FlowFixMe
   bodyEditor: any;
   titleTextarea: React.Node;
