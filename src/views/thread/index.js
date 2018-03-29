@@ -294,8 +294,6 @@ class ThreadContainer extends React.Component<Props, State> {
     } = this.props;
     const { isEditing, lastSeen, lastActive } = this.state;
 
-    console.log(thread);
-
     if (thread && thread.id) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
