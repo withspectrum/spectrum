@@ -61,7 +61,7 @@ describe('does not render composer for logged out users', () => {
   });
 });
 
-describe.only('does not render composer for archived channel', () => {
+describe('does not render composer for archived channel', () => {
   before(() => {
     cy.auth(memberInArchivedChannelId);
     cy.visit(`/${community.slug}/${archivedChannel.slug}`);
