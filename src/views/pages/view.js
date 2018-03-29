@@ -12,7 +12,7 @@ import {
   HorizontalRule,
 } from '../../components/globals';
 import Search from '../explore/components/search';
-import ViewSegment from '../../components/viewSegment';
+import Section from '../../components/themedSection';
 import { Conversation, Discover } from '../../components/illustrations';
 import {
   AbstractLogo,
@@ -40,10 +40,6 @@ import {
 } from './style';
 
 type Props = Object;
-
-const Section = (props: Props) => (
-  <ViewSegment {...props}>{props.children}</ViewSegment>
-);
 
 export const Overview = (props: Props) => {
   const ThisContent = styled(Content)`

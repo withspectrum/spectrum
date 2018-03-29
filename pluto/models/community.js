@@ -1,5 +1,5 @@
 // @flow
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 import type { DBCommunity } from 'shared/types';
 
 export const getCommunityById = (

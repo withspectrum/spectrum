@@ -10,17 +10,17 @@ const ga = window.ga;
 
 export const set = id => {
   /**
-	*
-	* This get sets on login or on authentication. This helps us track the UID in GA
-	* which will allow for us to have more meaningful understanding of future experiments
-	*
-	*/
+   *
+   * This get sets on login or on authentication. This helps us track the UID in GA
+   * which will allow for us to have more meaningful understanding of future experiments
+   *
+   */
 
   if (!ga) return;
   try {
     ga('set', 'userId', id); // Set the user ID using signed-in user_id.
   } catch (err) {
-    console.log('error logging user event', err);
+    console.error('error logging user event', err);
   }
 };
 
@@ -48,14 +48,14 @@ export const track = (category, action, label) => {
 
   // console log tracking events locally so that we can quickly make sure things are firing properly
   if (process.env.NODE_ENV !== 'production') {
-    console.log('tracking: ', category, action, label);
+    console.warn('tracking: ', category, action, label);
   } else {
     if (!ga) return;
     // only send events from production
     try {
       ga('send', 'event', category, action, label);
     } catch (err) {
-      console.log('error logging event', err);
+      console.error('error logging event', err);
     }
   }
 };

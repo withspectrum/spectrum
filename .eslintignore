@@ -12,6 +12,7 @@ rethinkdb_data
 debug
 now-secrets.json
 build-iris
+build-api
 build-athena
 build-hermes
 build-chronos
@@ -28,6 +29,7 @@ queries-by-time.js
 test-extend.js
 stats.json
 iris/.env
+api/.env
 .expo
 mobile/.expo
 test-results.json

@@ -2,7 +2,7 @@
 
 The backend of Spectrum.chat is built on RethinkDB (data storage) and Redis. (background job queue) There are currently three parts to it:
 
-- Iris: A Node.js server running our API based on Express.js and GraphQL.
+- API: A Node.js server running our API based on Express.js and GraphQL.
 - Hyperion: A Node.js server for server-side rendering our frontend.
 - Athena: A Node.js worker for notification processing.
 - Hermes: A Node.js worker for sending emails.
@@ -15,7 +15,6 @@ Each one of these can be run and developed independently with matching `npm run 
 
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
 
-- Iris (/ˈaɪrᵻs/) is one of the goddesses of the sea and the sky and was the messenger of the gods during the Titanomachy. (the battle between the titans and the gods)
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
 - Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.

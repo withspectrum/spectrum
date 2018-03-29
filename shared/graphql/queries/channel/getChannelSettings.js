@@ -14,7 +14,7 @@ export type GetChannelSettingsType = {
 };
 
 export const getChannelSettingsByIdQuery = gql`
-  query getChannel($id: ID) {
+  query getChannelSettings($id: ID) {
     channel(id: $id) {
       ...channelInfo
       joinSettings {

@@ -10,7 +10,7 @@ windows:
   - window_name: servers
     layout: tiled
     panes:
-      - yarn run dev:iris
+      - yarn run dev:api
       - yarn run dev:web
       - yarn run dev:hermes
       - yarn run dev:athena

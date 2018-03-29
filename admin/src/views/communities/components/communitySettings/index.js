@@ -91,7 +91,7 @@ class CommunitySettings extends Component {
         this.setState({
           isLoading: false,
         });
-        console.log('error', err);
+        console.error('error', err);
       });
   };
 

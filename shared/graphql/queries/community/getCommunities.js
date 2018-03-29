@@ -14,7 +14,7 @@ type Node = {
 export type GetCommunitiesType = Array<?Node>;
 
 export const getCommunitiesByIdsQuery = gql`
-  query getCommunity($ids: [ID]) {
+  query getCommunitiesByIds($ids: [ID]) {
     community(ids: $ids) {
       ...communityInfo
       ...communityMetaData
@@ -39,7 +39,7 @@ export const getCommunitiesByIds = graphql(
 );
 
 export const getCommunitiesBySlugsQuery = gql`
-  query getCommunities($slugs: [String]) {
+  query getCommunitiesBySlugs($slugs: [String]) {
     community(slugs: $slugs) {
       ...communityInfo
       ...communityMetaData

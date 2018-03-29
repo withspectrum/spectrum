@@ -1,5 +1,5 @@
 import data from '../../../../shared/testing/data';
-import constants from '../../../../iris/migrations/seed/default/constants';
+import constants from '../../../../api/migrations/seed/default/constants';
 
 const publicChannel = data.channels[0];
 const privateChannel = data.channels[1];

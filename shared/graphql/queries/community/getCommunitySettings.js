@@ -15,7 +15,7 @@ export type GetCommunitySettingsType = {
 };
 
 export const getCommunitySettingsQuery = gql`
-  query getCommunitySettings($id: ID) {
+  query getCommunitySettingsById($id: ID) {
     community(id: $id) {
       ...communityInfo
       ...communityMetaData
@@ -37,7 +37,7 @@ const getCommunitySettingsOptions = {
 };
 
 export const getCommunitySettingsByMatchQuery = gql`
-  query getCommunitySettings($slug: String) {
+  query getCommunitySettingsByMatch($slug: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData

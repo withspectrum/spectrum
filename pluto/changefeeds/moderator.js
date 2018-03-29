@@ -2,7 +2,7 @@
 const debug = require('debug')('pluto:changefeeds:moderator');
 import { listenToChangedFieldIn } from 'shared/changefeed-utils';
 import type { DBUsersCommunities } from 'shared/types';
-import { db } from 'iris/models/db';
+import { db } from 'api/models/db';
 import {
   stripeCommunityModeratorAddedQueue,
   stripeCommunityModeratorRemovedQueue,

@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexCol } from '../globals';
 import { Tagline, Copy } from 'src/views/pages/style';
-import ViewSegment from '../../components/viewSegment';
+import ViewSegment from '../../components/themedSection';
 
 const Emoji = styled.div`
   font-size: 3em;

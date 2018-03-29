@@ -14,12 +14,26 @@ import {
   Gradient,
 } from '../../components/globals';
 
-export const Wrapper = styled(FlexCol)`
-  flex: 1 0 auto;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg.wash};
+export const Page = styled.div`
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas: 'content';
   overflow: auto;
   overflow-x: hidden;
+  background-color: ${({ theme }) => theme.bg.default};
+`;
+
+export const Wrapper = styled(FlexCol)`
+  grid-area: content;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100%;
+  max-width: 100vw;
+  background-color: ${({ theme }) => theme.bg.default};
+  overflow: hidden;
   z-index: ${zIndex.base};
 `;
 
@@ -363,8 +377,7 @@ export const NavContainer = styled.div`
   display: grid;
   grid-template-rows: 68px;
   grid-template-columns: auto;
-  grid-template-areas: 'tabs' 'goop';
-  grid-area: nav;
+  grid-template-areas: 'tabs';
   position: absolute;
   top: 0;
   left: 0;
@@ -410,7 +423,8 @@ export const Tabs = styled.div`
 
 export const Tab = styled(Link)`
   padding: 4px 8px;
-  font-weight: ${props => (props.selected ? '600' : '500')};
+  font-size: 16px;
+  font-weight: ${props => (props.selected ? '700' : '500')};
   color: ${props =>
     props.selected
       ? props.dark ? props.theme.text.reverse : props.theme.text.default
@@ -420,7 +434,7 @@ export const Tab = styled(Link)`
     color: ${props =>
       props.selected
         ? props.dark ? props.theme.text.reverse : props.theme.text.default
-        : props.dark ? props.theme.text.reverse : props.theme.text.default};
+        : props.dark ? props.theme.text.reverse : props.theme.text.alt};
     text-shadow: ${props =>
       props.dark ? `0 0 32px ${hexa(props.theme.text.reverse, 0.75)}` : 'none'};
   }
@@ -503,6 +517,11 @@ export const LogoLink = styled(DropdownLink)`
   &:hover {
     color: ${props => props.theme.brand.alt};
   }
+`;
+
+export const FeaturesLink = styled(DropdownLink)`
+  grid-area: features;
+  border-top: 2px solid ${props => props.theme.bg.border};
 `;
 
 export const PricingLink = styled(DropdownLink)`
@@ -615,6 +634,14 @@ export const MenuTab = styled.div`
 
 export const PricingTab = styled(Tab)`
   grid-area: pricing;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const FeaturesTab = styled(Tab)`
+  grid-area: features;
 
   @media (max-width: 768px) {
     display: none;

@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex, Shadow, hexa } from '../../../components/globals';
-import ViewSegment from '../../../components/viewSegment';
+import ViewSegment from '../../../components/themedSection';
 import { Button } from '../../../components/buttons';
 import { CLIENT_URL } from '../../../api/constants';
 import { Tagline, Copy, Content } from '../../pages/style';

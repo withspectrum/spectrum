@@ -17,7 +17,7 @@ export type SearchThreadsType = {
 };
 
 const searchThreadsQuery = gql`
-  query search(
+  query searchThreads(
     $queryString: String!
     $type: SearchType!
     $filter: SearchFilter

@@ -41,11 +41,11 @@ aliases:
       |
         node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
         yarn run build:web
-        yarn run build:iris
+        yarn run build:api
 
-  - &start-iris
-    name: Start Iris in the background
-    command: TEST_DB=true yarn run dev:iris
+  - &start-api
+    name: Start the API in the background
+    command: TEST_DB=true yarn run dev:api
     background: true
 
   - &start-web
@@ -99,7 +99,7 @@ jobs:
       - run: *start-rethinkdb
       - run: sleep 10
       - run: *setup-and-build-web
-      - run: *start-iris
+      - run: *start-api
       - run: *start-web
       - run: sleep 60
       - run:
