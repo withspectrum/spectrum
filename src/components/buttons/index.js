@@ -61,7 +61,11 @@ export const Button = (props: ButtonProps) => (
 );
 
 export const OutlineButton = (props: ButtonProps) => (
-  <StyledOutlineButton data-cy={props.dataCy} {...props}>
+  <StyledOutlineButton
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -82,7 +86,11 @@ export const OutlineButton = (props: ButtonProps) => (
 
 // looks like a button, but isn't a button so it won't submit forms
 export const FauxOutlineButton = (props: ButtonProps) => (
-  <StyledFauxOutlineButton data-cy={props.dataCy} {...props}>
+  <StyledFauxOutlineButton
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -102,7 +110,7 @@ export const FauxOutlineButton = (props: ButtonProps) => (
 );
 
 export const TextButton = (props: ButtonProps) => (
-  <StyledTextButton data-cy={props.dataCy} {...props}>
+  <StyledTextButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -115,12 +123,14 @@ export const TextButton = (props: ButtonProps) => (
       ''
     )}
     {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}
-    <Label loading={props.loading}>{props.children}</Label>
+    <Label loading={props.loading} hasIcon={props.icon}>
+      {props.children}
+    </Label>
   </StyledTextButton>
 );
 
 export const IconButton = (props: IconProps) => (
-  <StyledIconButton data-cy={props.dataCy} {...props}>
+  <StyledIconButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     <Icon
       glyph={props.glyph}
       tipText={props.tipText}

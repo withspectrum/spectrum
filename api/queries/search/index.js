@@ -11,11 +11,12 @@ module.exports = {
   },
   SearchResultNode: {
     __resolveType(root: any) {
-      if (root.creatorId) {
-        return 'Thread';
-      }
       if (root.slug) {
         return 'Community';
+      }
+
+      if (root.creatorId) {
+        return 'Thread';
       }
       if (root.hasOwnProperty('username')) {
         return 'User';

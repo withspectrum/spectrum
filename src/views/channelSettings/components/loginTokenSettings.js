@@ -47,7 +47,7 @@ class LoginTokenSettings extends React.Component<Props, State> {
       const { joinSettings } = channel;
 
       return (
-        <SectionCard>
+        <SectionCard data-cy="login-with-token-settings">
           <SectionTitle>Join channel via link</SectionTitle>
           <SectionSubtitle>
             Allow people to join this private channel by visiting a unique link.
@@ -74,6 +74,7 @@ class LoginTokenSettings extends React.Component<Props, State> {
                     channel.slug
                   }/join/${joinSettings.token}`}
                   onChange={() => {}}
+                  dataCy={'join-link-input'}
                 />
               </TokenInputWrapper>
             </Clipboard>
