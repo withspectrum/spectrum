@@ -8,15 +8,23 @@ Object {
       "memberConnection": Object {
         "edges": Array [
           Object {
-            "cursor": "My0x",
+            "cursor": "OC0x",
             "node": Object {
               "contextPermissions": null,
-              "id": "3",
-              "name": "Bryn Jackson",
+              "id": "8",
+              "name": "Channel moderator",
             },
           },
           Object {
-            "cursor": "MS0y",
+            "cursor": "OS0y",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "9",
+              "name": "Community moderator",
+            },
+          },
+          Object {
+            "cursor": "MS0z",
             "node": Object {
               "contextPermissions": null,
               "id": "1",
@@ -24,11 +32,19 @@ Object {
             },
           },
           Object {
-            "cursor": "Mi0z",
+            "cursor": "Mi00",
             "node": Object {
               "contextPermissions": null,
               "id": "2",
               "name": "Brian Lovin",
+            },
+          },
+          Object {
+            "cursor": "My01",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "3",
+              "name": "Bryn Jackson",
             },
           },
         ],

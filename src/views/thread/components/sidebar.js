@@ -90,7 +90,7 @@ class Sidebar extends React.Component<Props> {
     return (
       <ThreadSidebarView>
         {!currentUser && (
-          <SidebarSection>
+          <SidebarSection data-cy="thread-sidebar-login">
             <SidebarSectionTitle>Join the conversation</SidebarSectionTitle>
             <SidebarSectionBody>
               Sign in to join this conversation, and others like it, in the
@@ -111,7 +111,7 @@ class Sidebar extends React.Component<Props> {
           </SidebarSection>
         )}
 
-        <SidebarSection>
+        <SidebarSection data-cy="thread-sidebar-community-info">
           <Link to={`/${thread.community.slug}`}>
             <SidebarCommunityCover src={thread.community.coverPhoto} />
             <SidebarCommunityProfile
@@ -129,7 +129,9 @@ class Sidebar extends React.Component<Props> {
           <SidebarSectionActions>
             {thread.community.communityPermissions.isMember ? (
               <Link to={`/${thread.community.slug}`}>
-                <TextButton>View community</TextButton>
+                <TextButton dataCy="thread-sidebar-view-community-button">
+                  View community
+                </TextButton>
               </Link>
             ) : currentUser ? (
               <ToggleCommunityMembership
@@ -139,24 +141,27 @@ class Sidebar extends React.Component<Props> {
                     gradientTheme={'success'}
                     color={'success.default'}
                     loading={isLoading}
+                    dataCy="thread-sidebar-join-community-button"
                   >
                     Join community
                   </Button>
                 )}
               />
             ) : (
-              <Link to={loginUrl}>
-                <Button gradientTheme={'success'} color={'success.default'}>
-                  Join community
-                </Button>
-              </Link>
+              <Button
+                gradientTheme={'success'}
+                color={'success.default'}
+                dataCy="thread-sidebar-join-login-button"
+              >
+                Join community
+              </Button>
             )}
           </SidebarSectionActions>
         </SidebarSection>
 
         {threadsToRender &&
           threadsToRender.length > 0 && (
-            <SidebarSection>
+            <SidebarSection data-cy="thread-sidebar-more-threads">
               <SidebarSectionTitle>More conversations</SidebarSectionTitle>
               <SidebarRelatedThreadList>
                 {threadsToRender.map(t => {

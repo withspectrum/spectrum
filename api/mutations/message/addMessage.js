@@ -97,13 +97,24 @@ export default async (
     return new UserError("Can't reply in a locked thread.");
   }
 
-  const [communityPermissions, channelPermissions] = await Promise.all([
-    loaders.userPermissionsInCommunity.load([
-      currentUser.id,
-      thread.communityId,
-    ]),
-    loaders.userPermissionsInChannel.load([thread.channelId, currentUser.id]),
-  ]);
+  const [communityPermissions, channelPermissions, channel] = await Promise.all(
+    [
+      loaders.userPermissionsInCommunity.load([
+        currentUser.id,
+        thread.communityId,
+      ]),
+      loaders.userPermissionsInChannel.load([thread.channelId, currentUser.id]),
+      loaders.channel.load(thread.channelId),
+    ]
+  );
+
+  if (!channel || channel.deletedAt) {
+    return new UserError('This channel doesn’t exist');
+  }
+
+  if (channel.archivedAt) {
+    return new UserError('This channel has been archived');
+  }
 
   const isBlockedInCommunity =
     communityPermissions && communityPermissions.isBlocked;
@@ -113,6 +124,15 @@ export default async (
   if (isBlockedInCommunity || isBlockedInChannel) {
     return new UserError(
       "You don't have permission to post in this conversation"
+    );
+  }
+
+  if (
+    channel.isPrivate &&
+    (!channelPermissions || !channelPermissions.isMember)
+  ) {
+    return new UserError(
+      'You dont’t have permission to post in this conversation'
     );
   }
 

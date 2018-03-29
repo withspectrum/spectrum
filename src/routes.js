@@ -156,6 +156,9 @@ const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
 const NotificationsFallback = signedOutFallback(Notifications, () => (
   <Redirect to="/login" />
 ));
+const ComposerFallback = signedOutFallback(Composer, () => (
+  <Redirect to="/login" />
+));
 
 class Routes extends React.Component<{}> {
   render() {
@@ -221,7 +224,7 @@ class Routes extends React.Component<{}> {
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
-                <Route path="/new/thread" component={Composer} />
+                <Route path="/new/thread" component={ComposerFallback} />
                 <Route path="/new/search" component={Search} />
 
                 <Route

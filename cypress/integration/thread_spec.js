@@ -2,7 +2,6 @@ import { toPlainText, toState } from '../../shared/draft-utils';
 import data from '../../shared/testing/data';
 
 const thread = data.threads[0];
-const channel = data.channels.find(channel => channel.id === thread.channelId);
 const community = data.communities.find(
   community => community.id === thread.communityId
 );
