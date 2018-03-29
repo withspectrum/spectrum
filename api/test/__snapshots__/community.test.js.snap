@@ -16,6 +16,27 @@ Object {
           Object {
             "node": Object {
               "content": Object {
+                "title": "Yet another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Yet another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
+                "title": "Yet another thread",
+              },
+            },
+          },
+          Object {
+            "node": Object {
+              "content": Object {
                 "title": "Another thread",
               },
             },
@@ -90,7 +111,20 @@ Object {
             },
           },
           Object {
-            "cursor": "MS0y",
+            "cursor": "OC0y",
+            "node": Object {
+              "isBlocked": false,
+              "isMember": true,
+              "isModerator": false,
+              "isOwner": false,
+              "reputation": 100,
+              "user": Object {
+                "id": "8",
+              },
+            },
+          },
+          Object {
+            "cursor": "MS0z",
             "node": Object {
               "isBlocked": false,
               "isMember": true,
@@ -103,7 +137,7 @@ Object {
             },
           },
           Object {
-            "cursor": "Mi0z",
+            "cursor": "Mi00",
             "node": Object {
               "isBlocked": false,
               "isMember": true,
