@@ -390,6 +390,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 this.titleTextarea = c;
               }}
               autoFocus
+              data-cy="thread-editor-title-input"
             />
           ) : (
             <ThreadHeading>{thread.content.title}</ThreadHeading>

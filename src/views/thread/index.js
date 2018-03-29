@@ -58,8 +58,8 @@ type State = {
   messagesContainer: any,
   // Cache lastSeen and lastActive so it doesn't jump around
   // while looking at a live thread
-  lastSeen: ?number | ?Date,
-  lastActive: ?number | ?Date,
+  lastSeen: ?number | ?string,
+  lastActive: ?number | ?string,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -83,8 +83,12 @@ class ThreadContainer extends React.Component<Props, State> {
     // Update the cached lastSeen value when switching threads
     if (newThread || threadChanged) {
       this.setState({
-        lastSeen: next.data.thread.currentUserLastSeen,
-        lastActive: next.data.thread.lastActive,
+        lastSeen: next.data.thread.currentUserLastSeen
+          ? next.data.thread.currentUserLastSeen
+          : null,
+        lastActive: next.data.thread.lastActive
+          ? next.data.thread.lastActive
+          : null,
       });
     }
   }
@@ -290,6 +294,8 @@ class ThreadContainer extends React.Component<Props, State> {
     } = this.props;
     const { isEditing, lastSeen, lastActive } = this.state;
 
+    console.log(thread);
+
     if (thread && thread.id) {
       // successful network request to get a thread
       const { title, description } = generateMetaInfo({
@@ -322,7 +328,7 @@ class ThreadContainer extends React.Component<Props, State> {
           (participants &&
             participants.length > 0 &&
             participants.some(
-              participant => participant.id === currentUser.id
+              participant => participant && participant.id === currentUser.id
             )));
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
@@ -335,6 +341,7 @@ class ThreadContainer extends React.Component<Props, State> {
               threadViewContext === 'slider' ||
               threadViewContext === 'fullscreen'
             }
+            data-cy="blocked-thread-view"
           >
             <ThreadContentView slider={slider}>
               <ViewError
@@ -405,7 +412,6 @@ class ThreadContainer extends React.Component<Props, State> {
                   {!isEditing && (
                     <Messages
                       threadMessageCount={thread.messageCount}
-                      threadType={thread.threadType}
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
@@ -483,7 +489,6 @@ class ThreadContainer extends React.Component<Props, State> {
                 {!isEditing && (
                   <Messages
                     threadMessageCount={thread.messageCount}
-                    threadType={thread.threadType}
                     id={thread.id}
                     scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
@@ -521,7 +526,10 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadViewContainer threadViewContext={threadViewContext}>
+      <ThreadViewContainer
+        threadViewContext={threadViewContext}
+        data-cy="null-thread-view"
+      >
         <ThreadContentView
           threadViewContext={threadViewContext}
           slider={slider}
