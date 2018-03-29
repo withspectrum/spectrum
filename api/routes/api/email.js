@@ -217,14 +217,14 @@ if (IS_TESTING) {
       PAYMENTS_COMMUNITY_ID,
       'briandlovin@gmail.com'
     ).then(() =>
-      res.redirect('http://localhost:3000/payments-test/settings/billing')
+      res.redirect('http://localhost:3000/payments/settings/billing')
     );
   });
 
   // $FlowIssue
   emailRouter.get('/validate/test-payments/reset', (req, res) => {
     return resetCommunityAdministratorEmail(PAYMENTS_COMMUNITY_ID).then(() =>
-      res.redirect('http://localhost:3000/payments-test/settings/billing')
+      res.redirect('http://localhost:3000/payments/settings/billing')
     );
   });
 }

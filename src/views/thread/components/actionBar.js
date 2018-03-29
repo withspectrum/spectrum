@@ -36,6 +36,8 @@ type Props = {
   threadLock: Function,
   isSavingEdit: boolean,
   title: string,
+  isLockingThread: boolean,
+  isPinningThread: boolean,
 };
 type State = {
   notificationStateLoading: boolean,
@@ -205,7 +207,15 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { thread, currentUser, isEditing, isSavingEdit, title } = this.props;
+    const {
+      thread,
+      currentUser,
+      isEditing,
+      isSavingEdit,
+      title,
+      isLockingThread,
+      isPinningThread,
+    } = this.props;
     const { notificationStateLoading, flyoutOpen } = this.state;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
@@ -227,7 +237,7 @@ class ActionBar extends React.Component<Props, State> {
             <EditDone>
               <Button
                 loading={isSavingEdit}
-                disabled={title.trim().length === 0}
+                disabled={title.trim().length === 0 || isSavingEdit}
                 onClick={this.props.saveEdit}
                 dataCy="save-thread-edit-button"
               >
@@ -386,6 +396,8 @@ class ActionBar extends React.Component<Props, State> {
                         }
                         onClick={this.props.togglePinThread}
                         dataCy={'thread-dropdown-pin'}
+                        loading={isPinningThread}
+                        disabled={isPinningThread}
                       >
                         <Label>
                           {isPinned ? 'Unpin thread' : 'Pin thread'}
@@ -416,6 +428,8 @@ class ActionBar extends React.Component<Props, State> {
                         }
                         onClick={this.props.threadLock}
                         dataCy={'thread-dropdown-lock'}
+                        loading={isLockingThread}
+                        disabled={isLockingThread}
                       >
                         <Label>
                           {thread.isLocked ? 'Unlock chat' : 'Lock chat'}

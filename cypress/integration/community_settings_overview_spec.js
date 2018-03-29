@@ -1,17 +1,12 @@
 import data from '../../shared/testing/data';
 
 const community = data.communities[0];
-const members = data.usersCommunities
-  .filter(
-    ({ communityId, isMember }) => community.id === communityId && isMember
-  )
-  .map(({ userId }) => data.users.find(({ id }) => id === userId));
 const { userId: ownerId } = data.usersCommunities.find(
   ({ communityId, isOwner }) => communityId === community.id && isOwner
 );
-const channels = data.channels.filter(
-  ({ communityId }) => community.id === communityId
-);
+const channels = data.channels
+  .filter(({ communityId }) => community.id === communityId)
+  .filter(c => !c.deletedAt);
 
 describe('Community settings overview tab', () => {
   beforeEach(() => {

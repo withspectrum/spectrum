@@ -123,7 +123,9 @@ export const TextButton = (props: ButtonProps) => (
       ''
     )}
     {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}
-    <Label loading={props.loading}>{props.children}</Label>
+    <Label loading={props.loading} hasIcon={props.icon}>
+      {props.children}
+    </Label>
   </StyledTextButton>
 );
 

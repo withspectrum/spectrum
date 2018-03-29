@@ -47,6 +47,8 @@ type State = {
   isSavingEdit?: boolean,
   flyoutOpen?: ?boolean,
   error?: ?string,
+  isLockingThread: boolean,
+  isPinningThread: boolean,
 };
 
 type Props = {
@@ -60,7 +62,10 @@ type Props = {
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
-  state = {};
+  state = {
+    isLockingThread: false,
+    isPinningThread: false,
+  };
   // $FlowFixMe
   bodyEditor: any;
   titleTextarea: React.Node;
@@ -121,11 +126,18 @@ class ThreadDetailPure extends React.Component<Props, State> {
     const value = !thread.isLocked;
     const threadId = thread.id;
 
+    this.setState({
+      isLockingThread: true,
+    });
+
     setThreadLock({
       threadId,
       value,
     })
       .then(({ data: { setThreadLock } }) => {
+        this.setState({
+          isLockingThread: false,
+        });
         if (setThreadLock.isLocked) {
           track('thread', 'locked', null);
           return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
@@ -135,6 +147,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
         }
       })
       .catch(err => {
+        this.setState({
+          isLockingThread: false,
+        });
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -350,11 +365,26 @@ class ThreadDetailPure extends React.Component<Props, State> {
       );
     }
 
+    this.setState({
+      isPinningThread: true,
+    });
+
     return pinThread({
       threadId: thread.id,
       communityId,
       value: isPinned ? null : thread.id,
-    }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
+    })
+      .then(() => {
+        this.setState({
+          isPinningThread: false,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          isPinningThread: false,
+        });
+        dispatch(addToastWithTimeout('error', err.message));
+      });
   };
 
   render() {
@@ -366,6 +396,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
       body,
       fetchingLinkPreview,
       isSavingEdit,
+      isLockingThread,
+      isPinningThread,
     } = this.state;
 
     const editedTimestamp = thread.modifiedAt
@@ -436,6 +468,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
           triggerDelete={this.triggerDelete}
           isEditing={isEditing}
           title={this.state.title}
+          isLockingThread={isLockingThread}
+          isPinningThread={isPinningThread}
         />
       </ThreadWrapper>
     );

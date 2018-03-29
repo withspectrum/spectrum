@@ -229,7 +229,7 @@ class CommunityView extends React.Component<Props, State> {
                   </Link>
                 )}
             </Meta>
-            <Content>
+            <Content data-cy="community-view-content">
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
                 <DesktopSegment
                   segmentLabel="search"
