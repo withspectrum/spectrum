@@ -42,6 +42,11 @@ class SidebarChannels extends React.Component<Props> {
     this.props.dispatch(changeActiveChannel(id));
   };
 
+  setActiveChannelObject = channel => {
+    if (!this.props.setActiveChannelObject || !channel) return;
+    return this.props.setActiveChannelObject(channel);
+  };
+
   render() {
     const {
       data: { community },
@@ -121,7 +126,7 @@ class SidebarChannels extends React.Component<Props> {
                   onClick={evt => {
                     evt.stopPropagation();
                     this.changeChannel(channel.id);
-                    this.props.setActiveChannelObject(channel);
+                    this.setActiveChannelObject(channel);
                   }}
                 >
                   {channel.isPrivate ? (
