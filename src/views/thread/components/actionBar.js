@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { openModal } from '../../../actions/modals';
-import Link from 'src/components/link';
 import Icon from '../../../components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
@@ -132,9 +131,6 @@ class ActionBar extends React.Component<Props, State> {
 
   shouldRenderMoveThreadAction = () => {
     const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
       isCommunityOwner,
       isCommunityModerator,
     } = this.getThreadActionPermissions();
@@ -181,9 +177,6 @@ class ActionBar extends React.Component<Props, State> {
   shouldRenderPinThreadAction = () => {
     const { thread } = this.props;
     const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
       isCommunityOwner,
       isCommunityModerator,
     } = this.getThreadActionPermissions();
