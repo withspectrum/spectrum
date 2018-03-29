@@ -6,12 +6,18 @@ const {
   BRIAN_ID,
   MAX_ID,
   BRYN_ID,
+  CHANNEL_MODERATOR_USER_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
   PAYMENTS_GENERAL_CHANNEL_ID,
   PAYMENTS_PRIVATE_CHANNEL_ID,
+  SPECTRUM_DELETED_CHANNEL_ID,
+  DELETED_COMMUNITY_DELETED_CHANNEL_ID,
+  MODERATOR_CREATED_CHANNEL_ID,
+  DELETED_COMMUNITY_ID,
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
+  SPECTRUM_ARCHIVED_CHANNEL_ID,
 } = constants;
 
 module.exports = [
@@ -171,6 +177,128 @@ module.exports = [
     createdAt: new Date(DATE + 2),
     creatorId: BRYN_ID,
     channelId: SPECTRUM_PRIVATE_CHANNEL_ID,
+    communityId: SPECTRUM_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+  },
+  {
+    id: 'thread-7',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: DELETED_COMMUNITY_DELETED_CHANNEL_ID,
+    communityId: DELETED_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+    deletedAt: new Date(DATE + 3),
+  },
+  {
+    id: 'thread-8',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: SPECTRUM_ARCHIVED_CHANNEL_ID,
+    communityId: SPECTRUM_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+  },
+  {
+    id: 'thread-9',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: SPECTRUM_GENERAL_CHANNEL_ID,
+    communityId: SPECTRUM_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: true,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    attachments: [],
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+  },
+
+  {
+    id: 'thread-10',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: MODERATOR_CREATED_CHANNEL_ID,
     communityId: SPECTRUM_COMMUNITY_ID,
     isPublished: true,
     isLocked: false,
