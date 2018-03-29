@@ -23,6 +23,7 @@ import { toState } from 'shared/draft-utils';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   ThreadViewContainer,
   ThreadContentView,
@@ -38,7 +39,7 @@ import {
 
 type Props = {
   data: {
-    thread: Object,
+    thread: GetThreadType,
     refetch: Function,
   },
   isLoading: boolean,
@@ -222,6 +223,7 @@ class ThreadContainer extends React.Component<Props, State> {
     if (!thread) return null;
     if (thread.isLocked) return null;
     if (isEditing) return null;
+    if (thread.channel.isArchived) return null;
 
     const { channelPermissions } = thread.channel;
     const { communityPermissions } = thread.community;
