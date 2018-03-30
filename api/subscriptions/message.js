@@ -57,7 +57,18 @@ module.exports = {
         debug(`${moniker} listening to new messages in ${thread}`);
         try {
           return addMessageListener({
-            filter: message => message.threadId === thread,
+            filter: message => {
+              if (message.threadId === thread) {
+                trackUserThreadLastSeenQueue.add({
+                  userId: user.id,
+                  threadId: message.threadId,
+                  timestamp: new Date(message.timestamp).getTime() + 100,
+                });
+                return true;
+              }
+
+              return false;
+            },
             onError: err => {
               // Don't crash the whole API server on error in the listener
               console.error(err);

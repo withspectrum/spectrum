@@ -11,6 +11,7 @@ import {
   createParticipantWithoutNotificationsInThread,
 } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
+import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
 
 type AddMessageInput = {
@@ -188,6 +189,12 @@ export default async (
           : false,
         isOwner: communityPermissions ? communityPermissions.isOwner : false,
       };
+
+      trackUserThreadLastSeenQueue.add({
+        userId: currentUser.id,
+        threadId: message.threadId,
+        timestamp: Date.now(),
+      });
 
       return {
         ...dbMessage,
