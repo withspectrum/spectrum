@@ -8,7 +8,7 @@ const { userId: ownerInChannelId } = data.usersChannels.find(
   ({ channelId, isOwner }) => channelId === channel.id && isOwner
 );
 
-describe('private channel invite link settings', () => {
+describe.skip('private channel invite link settings', () => {
   beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}/settings`);
