@@ -17,10 +17,9 @@
 import './commands';
 
 before(() => {
-  cy.exec(
-    `node -e "const teardown = require('./shared/testing/teardown.js')().then(() => process.exit())"`
-  );
-  cy.exec(
-    `node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"`
-  );
+  cy.resetdb();
+});
+
+beforeEach(() => {
+  cy.resetdb();
 });
