@@ -103,7 +103,7 @@ export default async (
         currentUser.id,
         thread.communityId,
       ]),
-      loaders.userPermissionsInChannel.load([thread.channelId, currentUser.id]),
+      loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
       loaders.channel.load(thread.channelId),
     ]
   );
