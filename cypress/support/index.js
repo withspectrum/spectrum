@@ -18,8 +18,10 @@ import './commands';
 
 before(() => {
   cy.resetdb();
+  cy.clearLocalStorage();
 });
 
 beforeEach(() => {
   cy.resetdb();
+  cy.clearLocalStorage();
 });

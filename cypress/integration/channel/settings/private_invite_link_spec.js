@@ -8,26 +8,32 @@ const { userId: ownerInChannelId } = data.usersChannels.find(
   ({ channelId, isOwner }) => channelId === channel.id && isOwner
 );
 
-describe.skip('private channel invite link settings', () => {
+const enable = () => {
+  cy.get('[data-cy="channel-overview"]').should('be.visible');
+
+  cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
+
+  cy
+    .get('[data-cy="toggle-token-link-invites-unchecked"]')
+    .should('be.visible')
+    .click();
+
+  cy.get('[data-cy="join-link-input"]').should('be.visible');
+};
+
+describe('private channel invite link settings', () => {
   beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}/settings`);
   });
 
   it('should enable private invite link', () => {
-    cy.get('[data-cy="channel-overview"]').should('be.visible');
-
-    cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
-
-    cy
-      .get('[data-cy="toggle-token-link-invites-unchecked"]')
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="join-link-input"]').should('be.visible');
+    enable();
   });
 
   it('should refresh invite link token', () => {
+    enable();
+
     cy.get('[data-cy="channel-overview"]').should('be.visible');
 
     cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
@@ -58,6 +64,8 @@ describe.skip('private channel invite link settings', () => {
   });
 
   it('should disable private invite link', () => {
+    enable();
+
     cy.get('[data-cy="channel-overview"]').should('be.visible');
 
     cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
