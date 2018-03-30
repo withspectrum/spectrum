@@ -3,6 +3,7 @@
   "viewportWidth": 1300,
   "defaultCommandTimeout": 10000,
   "blacklistHosts": ["*.google-analytics.com"],
+  "videoRecording": false,
   "env": {
     "DEBUG": "src*,testing*,build*"
   }
