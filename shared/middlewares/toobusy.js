@@ -8,7 +8,8 @@ export default (
   res: express$Response,
   next: express$NextFunction
 ) => {
-  if (toobusy()) {
+  // Don't send 503s in testing, that's dumb, just wait it out
+  if (process.env.NODE_ENV !== 'testing' && toobusy()) {
     res.status(503);
     res.send(
       'It looks like Spectrum is very busy right now, please try again in a minute.'
