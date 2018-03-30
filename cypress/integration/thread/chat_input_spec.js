@@ -26,7 +26,7 @@ const memberInChannelUser = data.users.find(u => u.id === constants.BRIAN_ID);
 
 describe('chat input', () => {
   describe('non authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
@@ -45,7 +45,7 @@ describe('chat input', () => {
   });
 
   describe('authed non member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -84,7 +84,7 @@ describe('chat input', () => {
   });
 
   describe('locked thread', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${lockedThread.id}`);
     });
@@ -96,7 +96,7 @@ describe('chat input', () => {
   });
 
   describe('thread in archived channel', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${archivedThread.id}`);
     });

@@ -20,7 +20,7 @@ const { userId: ownerInPrivateChannelId } = data.usersChannels.find(
 );
 
 describe('deleting general channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
@@ -38,7 +38,7 @@ describe('deleting general channel', () => {
 });
 
 describe('deleting a channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInPrivateChannelId);
     cy.visit(`/${privateCommunity.slug}/${privateChannel.slug}`);
   });

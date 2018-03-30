@@ -6,7 +6,7 @@ const { userId: ownerId } = data.usersCommunities.find(
 );
 
 describe('Renders pricing page features lists', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/pricing`);
   });
 
@@ -24,7 +24,7 @@ describe('Renders pricing page features lists', () => {
 });
 
 describe('Renders pricing page owned communities', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerId);
     cy.visit(`/pricing`);
   });

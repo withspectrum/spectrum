@@ -9,7 +9,7 @@ const dashboardThreads = data.threads.filter(({ channelId }) =>
 );
 
 describe('Inbox View', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(user.id);
     cy.visit('/');
   });

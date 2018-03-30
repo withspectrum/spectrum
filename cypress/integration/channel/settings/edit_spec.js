@@ -16,7 +16,7 @@ const ORIGINAL_NAME = ' General';
 const ORIGINAL_DESCRIPTION = 'General chatter';
 
 describe('edit a channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
@@ -60,7 +60,7 @@ describe('edit a channel', () => {
 });
 
 describe('undo editing a channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });

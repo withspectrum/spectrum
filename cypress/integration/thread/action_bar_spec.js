@@ -75,7 +75,7 @@ const triggerMovingThread = () => {
 
 describe('action bar renders', () => {
   describe('non authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
@@ -94,7 +94,7 @@ describe('action bar renders', () => {
   });
 
   describe('authed non member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -112,7 +112,7 @@ describe('action bar renders', () => {
   });
 
   describe('authed member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -130,7 +130,7 @@ describe('action bar renders', () => {
   });
 
   describe('authed private channel member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${privateThread.id}`);
     });
@@ -148,7 +148,7 @@ describe('action bar renders', () => {
   });
 
   describe('thread author', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(publicThreadAuthor.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -220,7 +220,7 @@ describe('action bar renders', () => {
   });
 
   describe('channel moderator', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -260,7 +260,7 @@ describe('action bar renders', () => {
   });
 
   describe('channel owner', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(constants.CHANNEL_MODERATOR_USER_ID);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -299,7 +299,7 @@ describe('action bar renders', () => {
   });
 
   describe('community moderator', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(constants.COMMUNITY_MODERATOR_USER_ID);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -350,7 +350,7 @@ describe('action bar renders', () => {
   });
 
   describe('community owner', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(constants.MAX_ID);
       cy.visit(`/thread/${publicThread.id}`);
     });

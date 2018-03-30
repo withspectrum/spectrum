@@ -13,7 +13,7 @@ const { userId: ownerInChannelId } = data.usersChannels.find(
 // NOTE @brian: I will finish this after payments-api-v2 merges
 
 describe('create a channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(ownerInChannelId);
     // NOTE @brian: I can not get this to auth directly into /settings, having to work around for now
     cy.visit(`/${community.slug}`);

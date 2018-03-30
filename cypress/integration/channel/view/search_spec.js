@@ -5,7 +5,7 @@ const community = data.communities.find(
 );
 
 describe('renders search on channel view', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 
