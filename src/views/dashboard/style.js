@@ -431,13 +431,14 @@ export const ThreadTitle = styled.h3`
   font-weight: 500;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.default};
-  margin: 12px 16px;
+  margin: 12px 16px 4px;
   max-width: 100%;
   line-height: 1.4;
 `;
 
 export const AttachmentsContainer = styled.div`
-  margin: 8px 16px;
+  margin: 4px 16px;
+  max-width: calc(100% - 40px);
 
   a {
     color: ${props =>
@@ -682,7 +683,7 @@ export const MiniLinkPreview = styled.a`
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: ${props => (props.active ? '500' : '400')};
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   pointer-events: auto;
   min-width: 0;
   ${Truncate};
@@ -865,4 +866,42 @@ export const UpsellRow = styled.div`
   padding: 8px;
   display: flex;
   justify-content: space-between;
+`;
+
+export const HeaderActiveViewTitle = styled.h2`
+  padding: 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  color: ${props => props.theme.text.default};
+  max-width: 384px;
+  line-height: 1.2;
+
+  ${Truncate};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const HeaderActiveViewSubtitle = styled.h3`
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+  max-width: 384px;
+  line-height: 1.2;
+
+  display: flex;
+  align-items: center;
+
+  ${Truncate};
+
+  &:hover {
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const ContextHeaderContainer = styled.div`
+  padding-top: 16px;
+  padding-bottom: 12px;
 `;

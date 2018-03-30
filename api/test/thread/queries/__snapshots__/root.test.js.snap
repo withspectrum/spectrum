@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a thread 1`] = `
+Object {
+  "data": Object {
+    "thread": Object {
+      "content": Object {
+        "title": "The first thread! 🎉",
+      },
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "id": "thread-1",
+      "isLocked": false,
+      "isPublished": true,
+      "lastActive": "2016-12-31T23:00:00.000Z",
+      "modifiedAt": "2016-12-31T23:00:00.000Z",
+      "type": "DRAFTJS",
+    },
+  },
+}
+`;

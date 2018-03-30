@@ -35,12 +35,13 @@ import {
   Meta,
   Content,
   Extras,
-  MidSegment,
   ColumnHeading,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
 import ChannelList from './components/channelList';
+import ModeratorList from './components/moderatorList';
+
 const CommunityThreadFeed = compose(connect(), getCommunityThreads)(ThreadFeed);
 
 type Props = {
@@ -139,7 +140,7 @@ class CommunityView extends React.Component<Props, State> {
 
       if (isBlocked) {
         return (
-          <AppViewWrapper data-e2e-id="community-view">
+          <AppViewWrapper data-cy="community-view">
             <Titlebar
               title={community.name}
               provideBack={true}
@@ -177,7 +178,7 @@ class CommunityView extends React.Component<Props, State> {
         ? `/${community.slug}/login?r=${CLIENT_URL}/${community.slug}`
         : `/login?r=${CLIENT_URL}/${community.slug}`;
       return (
-        <AppViewWrapper data-e2e-id="community-view">
+        <AppViewWrapper data-cy="community-view">
           <Head
             title={title}
             description={description}
@@ -216,15 +217,19 @@ class CommunityView extends React.Component<Props, State> {
               ) : null}
 
               {currentUser &&
-                isOwner && (
+                (isOwner || isModerator) && (
                   <Link to={`/${community.slug}/settings`}>
-                    <LoginButton icon={'settings'} isMember>
+                    <LoginButton
+                      icon={'settings'}
+                      isMember
+                      data-cy="community-settings-button"
+                    >
                       Settings
                     </LoginButton>
                   </Link>
                 )}
             </Meta>
-            <Content>
+            <Content data-cy="community-view-content">
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>
                 <DesktopSegment
                   segmentLabel="search"
@@ -243,7 +248,7 @@ class CommunityView extends React.Component<Props, State> {
                   Threads
                 </Segment>
 
-                <MidSegment
+                <DesktopSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
                   selected={selectedView === 'members'}
@@ -251,7 +256,7 @@ class CommunityView extends React.Component<Props, State> {
                   Members ({community.metaData &&
                     community.metaData.members &&
                     community.metaData.members.toLocaleString()})
-                </MidSegment>
+                </DesktopSegment>
                 <MobileSegment
                   segmentLabel="members"
                   onClick={() => this.handleSegmentClick('members')}
@@ -298,25 +303,28 @@ class CommunityView extends React.Component<Props, State> {
 
               {// members grid
               selectedView === 'members' && (
-                <CommunityMemberGrid id={community.id} />
+                <CommunityMemberGrid
+                  id={community.id}
+                  filter={{ isMember: true, isBlocked: false }}
+                />
               )}
 
               {//search
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
+              <ColumnHeading>Team</ColumnHeading>
+              <ModeratorList
+                id={community.id}
+                first={20}
+                filter={{ isModerator: true, isOwner: true }}
+              />
+
+              <ColumnHeading>Channels</ColumnHeading>
               <ChannelList
                 id={community.id}
                 communitySlug={communitySlug.toLowerCase()}
               />
-
-              <ColumnHeading>
-                Top Members ({community.metaData &&
-                  community.metaData.members &&
-                  community.metaData.members.toLocaleString()}{' '}
-                total)
-              </ColumnHeading>
-              <CommunityMemberGrid first={5} id={community.id} />
             </Extras>
           </Grid>
         </AppViewWrapper>

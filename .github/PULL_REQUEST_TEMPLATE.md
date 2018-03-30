@@ -5,7 +5,7 @@
 - [ ] Needs testing
 
 **Deploy after merge (delete what needn't be deployed)**
-- iris (api)
+- api
 - hyperion (frontend)
 - athena
 - vulcan

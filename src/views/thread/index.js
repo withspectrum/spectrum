@@ -23,6 +23,7 @@ import { toState } from 'shared/draft-utils';
 import LoadingView from './components/loading';
 import ThreadCommunityBanner from './components/threadCommunityBanner';
 import Sidebar from './components/sidebar';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   ThreadViewContainer,
   ThreadContentView,
@@ -38,7 +39,7 @@ import {
 
 type Props = {
   data: {
-    thread: Object,
+    thread: GetThreadType,
     refetch: Function,
   },
   isLoading: boolean,
@@ -57,8 +58,8 @@ type State = {
   messagesContainer: any,
   // Cache lastSeen and lastActive so it doesn't jump around
   // while looking at a live thread
-  lastSeen: ?number | ?Date,
-  lastActive: ?number | ?Date,
+  lastSeen: ?number | ?string,
+  lastActive: ?number | ?string,
 };
 
 class ThreadContainer extends React.Component<Props, State> {
@@ -82,8 +83,12 @@ class ThreadContainer extends React.Component<Props, State> {
     // Update the cached lastSeen value when switching threads
     if (newThread || threadChanged) {
       this.setState({
-        lastSeen: next.data.thread.currentUserLastSeen,
-        lastActive: next.data.thread.lastActive,
+        lastSeen: next.data.thread.currentUserLastSeen
+          ? next.data.thread.currentUserLastSeen
+          : null,
+        lastActive: next.data.thread.lastActive
+          ? next.data.thread.lastActive
+          : null,
       });
     }
   }
@@ -131,7 +136,7 @@ class ThreadContainer extends React.Component<Props, State> {
       });
     } catch (err) {
       // Errors that happen with this shouldn't crash the app
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -222,6 +227,7 @@ class ThreadContainer extends React.Component<Props, State> {
     if (!thread) return null;
     if (thread.isLocked) return null;
     if (isEditing) return null;
+    if (thread.channel.isArchived) return null;
 
     const { channelPermissions } = thread.channel;
     const { communityPermissions } = thread.community;
@@ -306,14 +312,21 @@ class ThreadContainer extends React.Component<Props, State> {
       const { isLocked, isAuthor, participants } = thread;
       const isChannelOwner = currentUser && channelPermissions.isOwner;
       const isCommunityOwner = currentUser && communityPermissions.isOwner;
-      const isModerator = isChannelOwner || isCommunityOwner;
+      const isChannelModerator = currentUser && channelPermissions.isModerator;
+      const isCommunityModerator =
+        currentUser && communityPermissions.isModerator;
+      const isModerator =
+        isChannelOwner ||
+        isCommunityOwner ||
+        isChannelModerator ||
+        isCommunityModerator;
       const isParticipantOrAuthor =
         currentUser &&
         (isAuthor ||
           (participants &&
             participants.length > 0 &&
             participants.some(
-              participant => participant.id === currentUser.id
+              participant => participant && participant.id === currentUser.id
             )));
 
       const shouldRenderThreadSidebar = threadViewContext === 'fullscreen';
@@ -326,6 +339,7 @@ class ThreadContainer extends React.Component<Props, State> {
               threadViewContext === 'slider' ||
               threadViewContext === 'fullscreen'
             }
+            data-cy="blocked-thread-view"
           >
             <ThreadContentView slider={slider}>
               <ViewError
@@ -343,7 +357,7 @@ class ThreadContainer extends React.Component<Props, State> {
       if (thread.watercooler)
         return (
           <ThreadViewContainer
-            data-e2e-id="thread-view"
+            data-cy="thread-view"
             threadViewContext={threadViewContext}
             constrain={
               threadViewContext === 'slider' ||
@@ -396,7 +410,6 @@ class ThreadContainer extends React.Component<Props, State> {
                   {!isEditing && (
                     <Messages
                       threadMessageCount={thread.messageCount}
-                      threadType={thread.threadType}
                       id={thread.id}
                       scrollContainer={this.state.messagesContainer}
                       currentUser={currentUser}
@@ -429,7 +442,7 @@ class ThreadContainer extends React.Component<Props, State> {
 
       return (
         <ThreadViewContainer
-          data-e2e-id="thread-view"
+          data-cy="thread-view"
           threadViewContext={threadViewContext}
           constrain={
             threadViewContext === 'slider' || threadViewContext === 'fullscreen'
@@ -474,7 +487,6 @@ class ThreadContainer extends React.Component<Props, State> {
                 {!isEditing && (
                   <Messages
                     threadMessageCount={thread.messageCount}
-                    threadType={thread.threadType}
                     id={thread.id}
                     scrollContainer={this.state.messagesContainer}
                     currentUser={currentUser}
@@ -512,7 +524,10 @@ class ThreadContainer extends React.Component<Props, State> {
     }
 
     return (
-      <ThreadViewContainer threadViewContext={threadViewContext}>
+      <ThreadViewContainer
+        threadViewContext={threadViewContext}
+        data-cy="null-thread-view"
+      >
         <ThreadContentView
           threadViewContext={threadViewContext}
           slider={slider}

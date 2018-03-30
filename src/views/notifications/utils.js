@@ -135,7 +135,7 @@ export const parseEvent = event => {
       return <span>approved your request to join</span>;
     }
     default: {
-      console.log('Not a valid event type');
+      console.error('Not a valid event type');
     }
   }
 };
@@ -211,7 +211,7 @@ export const parseContext = (context, currentUser) => {
       };
     }
     default: {
-      console.log('Invalid notification context type');
+      console.error('Invalid notification context type');
     }
   }
 };

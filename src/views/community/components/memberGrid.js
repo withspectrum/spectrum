@@ -1,51 +1,122 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
+import { connect } from 'react-redux';
+import InfiniteList from 'react-infinite-scroller-with-scroll-element';
+import Icon from 'src/components/icons';
+import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
+import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
-import { FlexCol } from 'src/components/globals';
 import { Card } from 'src/components/card';
-import { LoadingList } from 'src/components/loading';
-import { UserListItem } from 'src/components/listItems';
+import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
+import { MessageIconContainer, UserListItemContainer } from '../style';
+import GranularUserProfile from '../../../components/granularUserProfile';
 
 type Props = {
   data: {
     community: GetCommunityMembersType,
     fetchMore: Function,
   },
+  dispatch: Function,
   isLoading: boolean,
   isFetchingMore: boolean,
+  history: Object,
+  currentUser: ?Object,
 };
 
-class CommunityMemberGrid extends React.Component<Props> {
+type State = {
+  scrollElement: any,
+};
+
+class CommunityMemberGrid extends React.Component<Props, State> {
+  state = { scrollElement: null };
+
+  componentDidMount() {
+    this.setState({
+      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
+      // the AppViewWrapper which is the scrolling part of the site.
+      scrollElement: document.getElementById('scroller-for-thread-feed'),
+    });
+  }
+
+  initMessage = user => {
+    this.props.dispatch(initNewThreadWithUser(user));
+    return this.props.history.push('/messages/new');
+  };
+
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    // fetching more
+    if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
+      return false;
+    return true;
+  }
+
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const { data: { community }, isLoading, currentUser } = this.props;
+    const { scrollElement } = this.state;
 
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
+      const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
-        <FlexCol
-          style={{ padding: '0 16px', flex: 'none', backgroundColor: '#fff' }}
+        <InfiniteList
+          pageStart={0}
+          loadMore={this.props.data.fetchMore}
+          hasMore={hasNextPage}
+          loader={
+            <UserListItemContainer>
+              <LoadingListItem />
+            </UserListItemContainer>
+          }
+          useWindow={false}
+          initialLoad={false}
+          scrollElement={scrollElement}
+          threshold={750}
         >
           {nodes.map(node => {
             if (!node) return null;
-            let { user, ...rest } = node;
-            user = Object.assign({}, user, {
-              ...rest,
-            });
-            return <UserListItem key={user.id} user={user} />;
+            return (
+              <UserListItemContainer key={node.user.id}>
+                <GranularUserProfile
+                  userObject={node.user}
+                  id={node.user.id}
+                  name={node.user.name}
+                  username={node.user.username}
+                  description={node.user.description}
+                  isCurrentUser={currentUser && node.user.id === currentUser.id}
+                  isOnline={node.user.isOnline}
+                  onlineSize={'small'}
+                  reputation={node.reputation}
+                  profilePhoto={node.user.profilePhoto}
+                  avatarSize={'40'}
+                  badges={node.roles}
+                >
+                  {currentUser &&
+                    node.user.id !== currentUser.id && (
+                      <MessageIconContainer>
+                        <Icon
+                          glyph={'message'}
+                          onClick={() => this.initMessage(node.user)}
+                        />
+                      </MessageIconContainer>
+                    )}
+                </GranularUserProfile>
+              </UserListItemContainer>
+            );
           })}
-        </FlexCol>
+        </InfiniteList>
       );
     }
 
     if (isLoading) {
-      return <LoadingList />;
+      return <Loading />;
     }
 
     return (
@@ -59,6 +130,12 @@ class CommunityMemberGrid extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMembersQuery, viewNetworkHandler)(
-  CommunityMemberGrid
-);
+const map = state => ({ currentUser: state.users.currentUser });
+
+export default compose(
+  // $FlowIssue
+  connect(map),
+  withRouter,
+  getCommunityMembersQuery,
+  viewNetworkHandler
+)(CommunityMemberGrid);

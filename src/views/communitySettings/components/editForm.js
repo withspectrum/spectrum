@@ -56,6 +56,9 @@ type Props = {
     profilePhoto: string,
     coverPhoto: string,
     website: ?string,
+    communityPermissions: {
+      isOwner: boolean,
+    },
   },
   dispatch: Function,
   editCommunity: Function,
@@ -237,12 +240,7 @@ class EditForm extends React.Component<Props, State> {
           isLoading: false,
         });
 
-        this.props.dispatch(
-          addToastWithTimeout(
-            'error',
-            `Something went wrong and we weren’t able to save these changes. ${err}`
-          )
-        );
+        this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
@@ -325,7 +323,11 @@ class EditForm extends React.Component<Props, State> {
             />
           </ImageInputWrapper>
 
-          <Input defaultValue={name} onChange={this.changeName}>
+          <Input
+            dataCy="community-settings-name-input"
+            defaultValue={name}
+            onChange={this.changeName}
+          >
             Name
           </Input>
           <UnderlineInput defaultValue={slug} disabled>
@@ -339,11 +341,16 @@ class EditForm extends React.Component<Props, State> {
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
+            dataCy="community-settings-description-input"
           >
             Description
           </TextArea>
 
-          <Input defaultValue={website} onChange={this.changeWebsite}>
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            dataCy="community-settings-website-input"
+          >
             Optional: Add your community’s website
           </Input>
 
@@ -357,14 +364,16 @@ class EditForm extends React.Component<Props, State> {
               Save
             </Button>
             <TertiaryActionContainer>
-              <IconButton
-                glyph="delete"
-                tipText={`Delete ${name}`}
-                tipLocation="top-right"
-                color="text.placeholder"
-                hoverColor={'warn.alt'}
-                onClick={e => this.triggerDeleteCommunity(e, community.id)}
-              />
+              {community.communityPermissions.isOwner && (
+                <IconButton
+                  glyph="delete"
+                  tipText={`Delete ${name}`}
+                  tipLocation="top-right"
+                  color="text.placeholder"
+                  hoverColor={'warn.alt'}
+                  onClick={e => this.triggerDeleteCommunity(e, community.id)}
+                />
+              )}
             </TertiaryActionContainer>
           </Actions>
 

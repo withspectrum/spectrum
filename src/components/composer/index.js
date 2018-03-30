@@ -5,8 +5,8 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
-import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
+import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
@@ -81,33 +81,27 @@ type Props = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
-let storedBody;
-let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
-if (localStorage) {
-  try {
-    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-    storedTitle = localStorage.getItem(LS_TITLE_KEY);
-  } catch (err) {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
-  }
-}
-
-const persistTitle = debounce((title: string) => {
-  localStorage.setItem(LS_TITLE_KEY, title);
-}, 500);
-
-const persistBody = debounce(body => {
-  localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
-}, 500);
-
 class ComposerWithData extends Component<Props, State> {
   bodyEditor: any;
 
   constructor(props) {
     super(props);
+
+    let storedBody;
+    let storedTitle;
+    if (localStorage) {
+      try {
+        storedBody = toState(
+          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+        );
+        storedTitle = localStorage.getItem(LS_TITLE_KEY);
+      } catch (err) {
+        localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_TITLE_KEY);
+      }
+    }
 
     this.state = {
       title: storedTitle || '',
@@ -123,6 +117,15 @@ class ComposerWithData extends Component<Props, State> {
       fetchingLinkPreview: false,
       postWasPublished: false,
     };
+
+    this.persistBodyToLocalStorageWithDebounce = debounce(
+      this.persistBodyToLocalStorageWithDebounce,
+      500
+    );
+    this.persistTitleToLocalStorageWithDebounce = debounce(
+      this.persistTitleToLocalStorageWithDebounce,
+      500
+    );
   }
 
   handleIncomingProps = props => {
@@ -147,13 +150,16 @@ class ComposerWithData extends Component<Props, State> {
 
     const communities = sortCommunities(
       user.communityConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
         .filter(Boolean)
     );
 
     const channels = sortChannels(
       user.channelConnection.edges
+        // $FlowFixMe
         .map(edge => edge && edge.node)
+        .filter(channel => channel && !channel.isArchived)
         .filter(Boolean)
     );
 
@@ -172,10 +178,11 @@ class ComposerWithData extends Component<Props, State> {
     if (!community || !community.id) return props.data.refetch();
 
     // get the channels for the active community
-    const communityChannels = channels.filter(
-      // $FlowIssue
-      channel => channel.community.id === community.id
-    );
+    const communityChannels = channels
+      .filter(
+        channel => channel && community && channel.community.id === community.id
+      )
+      .filter(channel => channel && !channel.isArchived);
 
     const activeChannel = getDefaultActiveChannel(
       communityChannels,
@@ -189,6 +196,27 @@ class ComposerWithData extends Component<Props, State> {
       activeChannel: activeChannel ? activeChannel.id : null,
     });
   };
+
+  componentWillMount() {
+    let storedBody;
+    let storedTitle;
+    if (localStorage) {
+      try {
+        storedBody = toState(
+          JSON.parse(localStorage.getItem(LS_BODY_KEY) || '')
+        );
+        storedTitle = localStorage.getItem(LS_TITLE_KEY);
+      } catch (err) {
+        localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_TITLE_KEY);
+      }
+    }
+
+    this.setState({
+      title: this.state.title || storedTitle || '',
+      body: this.state.body || storedBody || '',
+    });
+  }
 
   componentDidMount() {
     this.handleIncomingProps(this.props);
@@ -226,11 +254,11 @@ class ComposerWithData extends Component<Props, State> {
 
   changeTitle = e => {
     const title = e.target.value;
+    this.persistTitleToLocalStorageWithDebounce(title);
     if (/\n$/g.test(title)) {
       this.bodyEditor.focus();
       return;
     }
-    persistTitle(title);
     this.setState({
       title,
     });
@@ -238,7 +266,7 @@ class ComposerWithData extends Component<Props, State> {
 
   changeBody = body => {
     this.listenForUrl(body);
-    persistBody(body);
+    this.persistBodyToLocalStorageWithDebounce(body);
     this.setState({
       body,
     });
@@ -266,14 +294,46 @@ class ComposerWithData extends Component<Props, State> {
   }
 
   closeComposer = (clear?: string) => {
+    this.persistBodyToLocalStorage(this.state.body);
+    this.persistTitleToLocalStorage(this.state.title);
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
-    if (clear) return this.props.dispatch(closeComposer('', ''));
+    if (clear) {
+      this.clearEditorStateAfterPublish();
+    }
 
-    // otherwise, we will save the editor state to rehydrate the title and
-    // body if the user reopens the composer in the same session
-    const { title, body } = this.state;
-    this.props.dispatch(closeComposer(title, body));
+    return this.props.dispatch(closeComposer());
+  };
+
+  clearEditorStateAfterPublish = () => {
+    try {
+      localStorage.removeItem(LS_BODY_KEY);
+      localStorage.removeItem(LS_TITLE_KEY);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  persistBodyToLocalStorageWithDebounce = body => {
+    return localStorage.setItem(
+      LS_BODY_KEY,
+      JSON.stringify(toJSON(this.state.body))
+    );
+  };
+
+  persistTitleToLocalStorageWithDebounce = title => {
+    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+  };
+
+  persistTitleToLocalStorage = title => {
+    return localStorage.setItem(LS_TITLE_KEY, this.state.title);
+  };
+
+  persistBodyToLocalStorage = body => {
+    return localStorage.setItem(
+      LS_BODY_KEY,
+      JSON.stringify(toJSON(this.state.body))
+    );
   };
 
   setActiveCommunity = e => {
@@ -387,6 +447,10 @@ class ComposerWithData extends Component<Props, State> {
       filesToUpload,
     };
 
+    // one last save to localstorage
+    this.persistBodyToLocalStorage(this.state.body);
+    this.persistTitleToLocalStorage(this.state.title);
+
     this.props
       .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
@@ -396,8 +460,7 @@ class ComposerWithData extends Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
-        localStorage.removeItem(LS_BODY_KEY);
-        localStorage.removeItem(LS_TITLE_KEY);
+        this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button
         this.setState({
@@ -526,7 +589,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-community-selector"
+              data-cy="composer-community-selector"
               onChange={this.setActiveCommunity}
               value={activeCommunity}
             >
@@ -543,7 +606,7 @@ class ComposerWithData extends Component<Props, State> {
             <LoadingSelect />
           ) : (
             <RequiredSelector
-              data-e2e-id="composer-channel-selector"
+              data-cy="composer-channel-selector"
               onChange={this.setActiveChannel}
               value={activeChannel}
             >
@@ -561,7 +624,7 @@ class ComposerWithData extends Component<Props, State> {
         </Dropdowns>
         <ThreadInputs>
           <Textarea
-            data-e2e-id="composer-title-input"
+            data-cy="composer-title-input"
             onChange={this.changeTitle}
             style={ThreadTitle}
             value={this.state.title}
@@ -604,7 +667,7 @@ class ComposerWithData extends Component<Props, State> {
               Cancel
             </TextButton>
             <Button
-              data-e2e-id="composer-publish-button"
+              data-cy="composer-publish-button"
               onClick={this.publishThread}
               loading={isPublishing}
               disabled={

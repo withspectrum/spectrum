@@ -95,7 +95,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     if (threadConnection && threadConnection.edges.length > 0) {
       return (
-        <View data-e2e-id="thread-feed">
+        <View data-cy="thread-feed">
           <InfiniteList
             data={threadConnection.edges}
             renderItem={({ item }) => (

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import Link from 'src/components/link';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
@@ -14,12 +13,13 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import type { CreateChannelType } from 'shared/graphql/mutations/channel/createChannel';
+import StripeModalWell from 'src/components/stripeCardForm/modalWell';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
-import { modalStyles, Description, UpsellDescription } from '../styles';
+import { modalStyles, UpsellDescription } from '../styles';
 import {
   Input,
   UnderlineInput,
@@ -40,13 +40,14 @@ type State = {
   nameError: boolean,
   createError: boolean,
   loading: boolean,
+  hasChargeableSource: boolean,
 };
 
 type Props = {
   client: Object,
   dispatch: Function,
   isOpen: boolean,
-  modalProps: any,
+  community: GetCommunityType,
   createChannel: Function,
 };
 
@@ -65,6 +66,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError: false,
       createError: false,
       loading: false,
+      hasChargeableSource: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -73,6 +75,8 @@ class CreateChannelModal extends React.Component<Props, State> {
   close = () => {
     this.props.dispatch(closeModal());
   };
+
+  onSourceAvailable = () => this.setState({ hasChargeableSource: true });
 
   changeName = e => {
     const name = e.target.value;
@@ -125,7 +129,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   };
 
   checkSlug = (slug: string) => {
-    const communitySlug = this.props.modalProps.slug;
+    const communitySlug = this.props.community.slug;
 
     if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
       return this.setState({
@@ -202,7 +206,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       nameError,
       descriptionError,
     } = this.state;
-    const { modalProps: { id }, modalProps } = this.props;
+    const { community } = this.props;
 
     // if an error is present, ensure the client cant submit the form
     if (slugTaken || nameError || descriptionError || slugError) {
@@ -224,7 +228,7 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     // create the mutation input
     const input = {
-      communityId: id,
+      communityId: community.id,
       name,
       slug,
       description,
@@ -234,12 +238,8 @@ class CreateChannelModal extends React.Component<Props, State> {
 
     this.props
       .createChannel(input)
-      .then(({ data }: CreateChannelType) => {
+      .then(() => {
         track('channel', 'created', null);
-
-        const { createChannel: channel } = data;
-        // eslint-disable-next-line
-        window.location.href = `/${modalProps.slug}/${channel.slug}`;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')
@@ -256,7 +256,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, modalProps } = this.props;
+    const { isOpen, community } = this.props;
 
     const {
       name,
@@ -269,9 +269,10 @@ class CreateChannelModal extends React.Component<Props, State> {
       descriptionError,
       createError,
       loading,
+      hasChargeableSource,
     } = this.state;
 
-    const styles = modalStyles();
+    const styles = modalStyles(420);
 
     return (
       <Modal
@@ -304,7 +305,7 @@ class CreateChannelModal extends React.Component<Props, State> {
             )}
 
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-              {`/${modalProps.slug}/`}
+              {`/${community.slug}/`}
             </UnderlineInput>
 
             {slugTaken && (
@@ -334,46 +335,38 @@ class CreateChannelModal extends React.Component<Props, State> {
               id="isPrivate"
               checked={isPrivate}
               onChange={this.changePrivate}
-              disabled={!modalProps.isPro}
+              dataCy="create-channel-modal-toggle-private-checkbox"
             >
-              Private channel
+              Private channel · $10/mo
             </Checkbox>
 
-            {!modalProps.isPro && (
-              <UpsellDescription>
-                Standard communities can create private channels to protect
-                threads, messages, and manually approve all new members.
-                <Link onClick={this.close} to={`/${modalProps.slug}/settings`}>
-                  Learn more
-                </Link>
-              </UpsellDescription>
+            {isPrivate && (
+              <StripeModalWell
+                id={community.id}
+                onSourceAvailable={this.onSourceAvailable}
+                closeModal={this.close}
+              />
             )}
 
-            {modalProps.isPro &&
-              isPrivate && (
-                <Description>
-                  Only approved people on Spectrum can see the threads,
-                  messages, and members in this channel. You can manually
-                  approve users who request to join this channel.
-                </Description>
-              )}
-
-            {modalProps.isPro &&
-              !isPrivate && (
-                <Description>
-                  Anyone on Spectrum can join this channel, post threads and
-                  messages, and will be able to see other members.
-                </Description>
-              )}
+            <UpsellDescription>
+              Private channels protect all conversations and messages, and all
+              new members must be manually approved.
+            </UpsellDescription>
 
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
-                disabled={!name || !slug || slugTaken || !description}
+                disabled={
+                  !name ||
+                  !slug ||
+                  slugTaken ||
+                  !description ||
+                  (isPrivate && !hasChargeableSource)
+                }
                 loading={loading}
                 onClick={this.create}
               >
-                Save
+                Create Channel
               </Button>
             </Actions>
 
@@ -389,19 +382,14 @@ class CreateChannelModal extends React.Component<Props, State> {
   }
 }
 
-const CreateChannelModalWithMutation = compose(
+const map = state => ({
+  currentUser: state.users.currentUser,
+  isOpen: state.modals.isOpen,
+});
+export default compose(
+  // $FlowIssue
+  connect(map),
+  withApollo,
   createChannelMutation,
   withRouter
 )(CreateChannelModal);
-
-const mapStateToProps = state => ({
-  isOpen: state.modals.isOpen,
-  modalProps: state.modals.modalProps,
-});
-
-// $FlowIssue
-const CreateChannelModalWithState = connect(mapStateToProps)(
-  CreateChannelModalWithMutation
-);
-const CreateChannelModalWithQuery = withApollo(CreateChannelModalWithState);
-export default CreateChannelModalWithQuery;

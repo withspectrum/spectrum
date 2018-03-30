@@ -11,6 +11,7 @@ export const ReputationWrapper = styled.div`
   position: relative;
   z-index: ${zIndex.fullScreen};
   ${Tooltip};
+  width: fit-content;
 `;
 
 export const ReputationLabel = styled.span`

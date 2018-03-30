@@ -14,7 +14,7 @@ npm install -g now
 
 ## Naming scheme
 
-All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the Iris (the API server) which runs at `api.spectrum.chat`. 
+All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the API (the API server) which runs at `api.spectrum.chat`. 
 
 ### Path aliases
 

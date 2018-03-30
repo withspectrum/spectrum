@@ -9,7 +9,7 @@ import { OutlineButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { LoadingCard, Loading } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { StyledCard, ListContainer } from '../../../components/listItems/style';
@@ -55,7 +55,7 @@ class ChannelList extends React.Component<Props> {
       data: { community },
     } = this.props;
 
-    if (community && community.id) {
+    if (community && community.channelConnection) {
       const { isMember, isOwner } = community.communityPermissions;
       const channels = community.channelConnection.edges
         .map(channel => channel && channel.node)
@@ -81,15 +81,13 @@ class ChannelList extends React.Component<Props> {
 
       return (
         <StyledCard largeOnly>
-          <ColumnHeading>Channels</ColumnHeading>
-
           {/*
             user isn't logged in, channel list is used for navigation
             or
             user is logged in but hasn't joined this community, channel list is used for navigation
           */}
           {(!currentUser || (currentUser && !isMember)) && (
-            <ListContainer>
+            <ListContainer data-cy="channel-list">
               {sortedChannels.map(channel => {
                 if (!channel) return null;
                 return (
@@ -114,7 +112,7 @@ class ChannelList extends React.Component<Props> {
           {/* user is logged in and is a member of community, channel list is used to join/leave */}
           {sortedJoinedChannels &&
             isMember && (
-              <ListContainer>
+              <ListContainer data-cy="channel-list">
                 {sortedJoinedChannels.map(channel => {
                   if (!channel) return null;
                   return (
@@ -194,7 +192,7 @@ class ChannelList extends React.Component<Props> {
               }}
               glyph="plus"
               onClick={() =>
-                dispatch(openModal('CREATE_CHANNEL_MODAL', community))
+                dispatch(openModal('CREATE_CHANNEL_MODAL', { community }))
               }
             >
               Create a channel
@@ -205,7 +203,11 @@ class ChannelList extends React.Component<Props> {
     }
 
     if (isLoading) {
-      return <LoadingCard />;
+      return (
+        <div style={{ padding: '32px' }}>
+          <Loading />
+        </div>
+      );
     }
 
     return null;

@@ -202,7 +202,12 @@ class ChannelWithData extends React.Component<Props, State> {
           </Location>
           <SectionTitle>Channel Settings</SectionTitle>
           <Form onSubmit={this.save}>
-            <Input defaultValue={name} id="name" onChange={this.handleChange}>
+            <Input
+              defaultValue={name}
+              id="name"
+              onChange={this.handleChange}
+              dataCy="channel-name-input"
+            >
               Name
             </Input>
             <UnderlineInput defaultValue={slug} disabled>
@@ -212,6 +217,7 @@ class ChannelWithData extends React.Component<Props, State> {
               id="description"
               defaultValue={description}
               onChange={this.handleChange}
+              dataCy="channel-description-input"
             >
               Description
             </TextArea>
@@ -252,7 +258,11 @@ class ChannelWithData extends React.Component<Props, State> {
               )}
 
             <Actions>
-              <Button onClick={this.save} loading={isLoading}>
+              <Button
+                onClick={this.save}
+                loading={isLoading}
+                dataCy="save-button"
+              >
                 Save
               </Button>
               {slug !== 'general' && (
@@ -264,6 +274,7 @@ class ChannelWithData extends React.Component<Props, State> {
                     color="text.placeholder"
                     hoverColor="warn.alt"
                     onClick={e => this.triggerDeleteChannel(e, channel.id)}
+                    dataCy="delete-channel-button"
                   />
                 </TertiaryActionContainer>
               )}

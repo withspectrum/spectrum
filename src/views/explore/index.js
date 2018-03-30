@@ -21,7 +21,7 @@ const ExplorePure = props => {
 
   return (
     <AppViewWrapper>
-      <Wrapper data-e2e-id="explore-page">
+      <Wrapper data-cy="explore-page">
         <Head title={title} description={description} />
         <Titlebar title={'Explore'} noComposer />
         <CommunitySearchWrapper

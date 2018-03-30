@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch a channels member connection 1`] = `
+Object {
+  "data": Object {
+    "channel": Object {
+      "id": "1",
+      "memberConnection": Object {
+        "edges": Array [
+          Object {
+            "cursor": "OC0x",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "8",
+              "name": "Channel moderator",
+            },
+          },
+          Object {
+            "cursor": "OS0y",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "9",
+              "name": "Community moderator",
+            },
+          },
+          Object {
+            "cursor": "MS0z",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "1",
+              "name": "Max Stoiber",
+            },
+          },
+          Object {
+            "cursor": "Mi00",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "2",
+              "name": "Brian Lovin",
+            },
+          },
+          Object {
+            "cursor": "My01",
+            "node": Object {
+              "contextPermissions": null,
+              "id": "3",
+              "name": "Bryn Jackson",
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
+          "hasPreviousPage": null,
+        },
+      },
+    },
+  },
+}
+`;

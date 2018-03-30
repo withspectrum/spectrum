@@ -3,15 +3,16 @@ const debug = require('debug')('vulcan:user');
 import initIndex from 'shared/algolia';
 import Raven from 'shared/raven';
 const searchIndex = initIndex('users');
+import { dbUserToSearchUser } from './utils';
 import {
-  dbUserToSearchUser,
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
   listenToChangedFieldIn,
-} from './utils';
+} from 'shared/changefeed-utils';
+import { db } from './db';
 
 export const newUser = () =>
-  listenToNewDocumentsIn('users', data => {
+  listenToNewDocumentsIn(db, 'users', data => {
     // dont save any user without a username - they can't be linked to!
     if (!data.username) {
       debug('new user without a username, returning');
@@ -32,7 +33,7 @@ export const newUser = () =>
   });
 
 export const deletedUser = () =>
-  listenToDeletedDocumentsIn('users', data => {
+  listenToDeletedDocumentsIn(db, 'users', data => {
     return searchIndex
       .deleteObject(data.id)
       .then(() => {
@@ -47,7 +48,7 @@ export const deletedUser = () =>
   });
 
 export const editedUser = () =>
-  listenToChangedFieldIn('modifiedAt')('users', data => {
+  listenToChangedFieldIn(db, 'modifiedAt')('users', data => {
     // if we deleted the users email or username, we are deleting their account
     if (!data.username) {
       return searchIndex

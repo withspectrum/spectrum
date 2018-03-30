@@ -21,6 +21,7 @@ type Props = {
   refresh?: boolean,
   children?: React.Node,
   small?: boolean,
+  dataCy?: string,
 };
 
 class ViewError extends React.Component<Props> {
@@ -33,6 +34,7 @@ class ViewError extends React.Component<Props> {
       emoji,
       children,
       small,
+      dataCy,
     } = this.props;
 
     if (clearStorage) {
@@ -44,7 +46,7 @@ class ViewError extends React.Component<Props> {
     const subhead = subheading || 'Refresh this page to try again.';
 
     return (
-      <FillSpaceError small={small}>
+      <FillSpaceError small={small} data-cy={dataCy}>
         <LargeEmoji small={small} role="img" aria-label="Emoji">
           {moji}
         </LargeEmoji>

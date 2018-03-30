@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`queries should fetch a user 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
+      "email": null,
+      "id": "1",
+      "name": "Max Stoiber",
+      "providerId": "2451223458",
+      "username": "mxstbr",
+      "website": "https://mxstbr.com",
+    },
+  },
+}
+`;
+
+exports[`queries should fetch a users communities 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "communityConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "name": "Payments",
+            },
+          },
+          Object {
+            "node": Object {
+              "name": "Spectrum",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;
+
+exports[`queries should return null for a non-existant id 1`] = `
+Object {
+  "data": Object {
+    "user": null,
+  },
+}
+`;

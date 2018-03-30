@@ -8,7 +8,7 @@ describe('Community View', () => {
   });
 
   it('should render all the communities data, and show a list of channels and threads', () => {
-    cy.get('[data-e2e-id="community-view"]').should('be.visible');
+    cy.get('[data-cy="community-view"]').should('be.visible');
     cy.contains(community.description);
     cy.contains(community.name);
     cy.contains(community.website);
@@ -18,6 +18,11 @@ describe('Community View', () => {
       expect(document.body.toString().indexOf(community.coverPhoto) > -1);
     });
 
+    cy
+      .get('[data-cy="community-view-content"]')
+      .scrollIntoView()
+      .should('be.visible');
+
     data.threads
       .filter(thread => thread.communityId === community.id)
       .forEach(thread => {
@@ -26,6 +31,8 @@ describe('Community View', () => {
 
     data.channels
       .filter(channel => channel.communityId === community.id)
+      .filter(channel => !channel.isPrivate)
+      .filter(channel => !channel.deletedAt)
       .forEach(channel => {
         cy.contains(channel.name).should('be.visible');
       });

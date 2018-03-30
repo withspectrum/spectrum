@@ -517,7 +517,11 @@ class ChatInput extends React.Component<Props, State> {
             decorators={[mentionsDecorator, linksDecorator]}
             networkDisabled={networkDisabled}
           />
-          <SendButton glyph="send-fill" onClick={this.submit} />
+          <SendButton
+            data-cy="chat-input-send-button"
+            glyph="send-fill"
+            onClick={this.submit}
+          />
         </Form>
       </ChatInputWrapper>
     );

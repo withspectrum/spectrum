@@ -23,7 +23,6 @@ import Composer from './components/composer';
 import signedOutFallback from './helpers/signed-out-fallback';
 import AuthViewHandler from './views/authViewHandler';
 import PrivateChannelJoin from './views/privateChannelJoin';
-
 import ThreadSlider from './views/threadSlider';
 import Navbar from './views/navbar';
 import Status from './views/status';
@@ -72,12 +71,6 @@ const ChannelView = Loadable({
 });
 
 /* prettier-ignore */
-const StyleGuide = Loadable({
-  loader: () => import('./views/pages/styleGuide'/* webpackChunkName: "StyleGuide" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
-});
-
-/* prettier-ignore */
 const Dashboard = Loadable({
   loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
   loading: ({ isLoading }) => isLoading && <LoadingDashboard />,
@@ -114,27 +107,15 @@ const NewCommunity = Loadable({
 });
 
 /* prettier-ignore */
-const Splash = Loadable({
-  loader: () => import('./views/splash'/* webpackChunkName: "Splash" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+const Pages = Loadable({
+  loader: () => import('./views/pages'/* webpackChunkName: "Splash" */),
+  loading: ({ isLoading }) => isLoading && null,
 });
 
 /* prettier-ignore */
 const Search = Loadable({
   loader: () => import('./views/search'/* webpackChunkName: "Search" */),
   loading: ({ isLoading }) => isLoading && <LoadingScreen />,
-});
-
-/* prettier-ignore */
-const Pricing = Loadable({
-  loader: () => import('./views/splash/pricing'/* webpackChunkName: "Pricing" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
-});
-
-/* prettier-ignore */
-const Support = Loadable({
-  loader: () => import('./views/splash/support'/* webpackChunkName: "Support" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
 });
 
 /* prettier-ignore */
@@ -155,7 +136,7 @@ const Body = styled(FlexCol)`
   }
 `;
 
-const DashboardFallback = signedOutFallback(Dashboard, Splash);
+const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
@@ -169,16 +150,13 @@ const UserSettingsFallback = signedOutFallback(UserSettings, () => (
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
   <Redirect to="/login" />
 ));
-const CommunityAnalyticsFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
-));
-const CommunityMembersFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
-));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
   <Redirect to="/login" />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
+  <Redirect to="/login" />
+));
+const ComposerFallback = signedOutFallback(Composer, () => (
   <Redirect to="/login" />
 ));
 
@@ -233,25 +211,27 @@ class Routes extends React.Component<{}> {
                 <Route exact path="/home" component={HomeFallback} />
 
                 {/* Public Business Pages */}
-                <Route path="/about" component={Splash} />
-                <Route path="/contact" component={Support} />
-                <Route path="/terms" component={Support} />
-                <Route path="/privacy" component={Support} />
-                <Route path="/terms.html" component={Support} />
-                <Route path="/privacy.html" component={Support} />
-                <Route path="/code-of-conduct" component={Support} />
-                <Route path="/pricing" component={Pricing} />
-                <Route path="/support" component={Support} />
-                <Route path="/style-guide" component={StyleGuide} />
-                <Route path="/new/search" component={Search} />
+                <Route path="/about" component={Pages} />
+                <Route path="/contact" component={Pages} />
+                <Route path="/terms" component={Pages} />
+                <Route path="/privacy" component={Pages} />
+                <Route path="/terms.html" component={Pages} />
+                <Route path="/privacy.html" component={Pages} />
+                <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing" component={Pages} />
+                <Route path="/support" component={Pages} />
+                <Route path="/features" component={Pages} />
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
-                <Route path="/new/thread" component={Composer} />
+                <Route path="/new/thread" component={ComposerFallback} />
+                <Route path="/new/search" component={Search} />
+
                 <Route
                   path="/new"
                   render={() => <Redirect to="/new/community" />}
                 />
+
                 <Route path="/login" component={Login} />
                 <Route path="/explore" component={Explore} />
                 <Route path="/messages/new" component={MessagesFallback} />
@@ -275,10 +255,10 @@ class Routes extends React.Component<{}> {
                 />
 
                 {/*
-                We check communitySlug last to ensure none of the above routes
-                pass. We handle null communitySlug values downstream by either
-                redirecting to home or showing a 404
-              */}
+                  We check communitySlug last to ensure none of the above routes
+                  pass. We handle null communitySlug values downstream by either
+                  redirecting to home or showing a 404
+                */}
                 <Route
                   path="/:communitySlug/:channelSlug/settings"
                   component={ChannelSettingsFallback}
@@ -290,14 +270,6 @@ class Routes extends React.Component<{}> {
                 <Route
                   path="/:communitySlug/:channelSlug/join"
                   component={PrivateChannelJoin}
-                />
-                <Route
-                  path="/:communitySlug/settings/analytics"
-                  component={CommunityAnalyticsFallback}
-                />
-                <Route
-                  path="/:communitySlug/settings/members"
-                  component={CommunityMembersFallback}
                 />
                 <Route
                   path="/:communitySlug/settings"

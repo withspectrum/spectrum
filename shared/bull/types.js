@@ -9,8 +9,12 @@ import type {
   DBCommunity,
   DBNotificationsJoin,
 } from '../types';
+import type { RawSource } from '../stripe/types/source';
+import type { RawCharge } from '../stripe/types/charge';
+import type { RawInvoice } from '../stripe/types/invoice';
 
 export type Job<JobData> = {
+  id: string,
   data: JobData,
 };
 
@@ -92,10 +96,30 @@ export type SlackImportJobData = {
 
 export type EmailValidationEmailJobData = { email: string, userId: string };
 
+export type AdministratorEmailValidationEmailJobData = {
+  email: string,
+  userId: string,
+  communityId: string,
+  community: DBCommunity,
+};
+
 export type ReputationEventJobData = {
   userId: string,
   type: string, // TODO: Type this with the actual possible types
   entityId: string,
+};
+
+export type StripeWebhookEventJobData = {
+  record: Object,
+  type?: string,
+};
+
+export type StripeCommunityPaymentEventJobData = {
+  communityId: string,
+};
+
+export type StripePaymentSucceededOrFailedEventJobData = {
+  record: RawCharge | RawInvoice,
 };
 
 export type AdminCommunityCreatedEmailJobData = {
@@ -117,6 +141,29 @@ export type AdminSlackImportJobData = {
 export type PushNotificationsJobData = {
   // This gets passed a join of the userNotification and the notification record
   notification: DBNotificationsJoin,
+};
+
+export type PaymentSucceededEmailJobData = {
+  invoice: Object,
+  community: DBCommunity,
+  source: Object,
+  to: string,
+};
+
+export type PaymentFailedEmailJobData = {
+  charge: Object,
+  community: DBCommunity,
+  to: string,
+};
+
+export type CardExpiringWarningEmailJobData = {
+  source: RawSource,
+  community: DBCommunity,
+  to: string,
+};
+
+export type StripeCardExpiringWarningJobData = {
+  record: Object,
 };
 
 export type Queues = {
@@ -146,9 +193,73 @@ export type Queues = {
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
   sendNewCommunityWelcomeEmailQueue: BullQueue<NewCommunityWelcomeEmailJobData>,
   sendEmailValidationEmailQueue: BullQueue<EmailValidationEmailJobData>,
+  sendAdministratorEmailValidationEmailQueue: BullQueue<
+    AdministratorEmailValidationEmailJobData
+  >,
+  sendCommunityPaymentSucceededEmailQueue: BullQueue<
+    PaymentSucceededEmailJobData
+  >,
+  sendCommunityPaymentFailedEmailQueue: BullQueue<PaymentFailedEmailJobData>,
+  sendCommunityCardExpiringWarningEmailQueue: BullQueue<
+    CardExpiringWarningEmailJobData
+  >,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
+
+  // pluto
+  stripeChargeWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeCustomerWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeSourceWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeInvoiceWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeSubscriptionWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeDiscountWebhookEventQueue: BullQueue<StripeWebhookEventJobData>,
+  stripeCommunityAdministratorEmailChangedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityAnalyticsAddedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityAnalyticsRemovedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityCreatedQueue: BullQueue<StripeCommunityPaymentEventJobData>,
+  stripeCommunityDeletedQueue: BullQueue<StripeCommunityPaymentEventJobData>,
+  stripeCommunityEditedQueue: BullQueue<StripeCommunityPaymentEventJobData>,
+  stripeCommunityModeratorAddedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityModeratorRemovedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityPrioritySupportAddedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityPrioritySupportRemovedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityPrivateChannelAddedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityPrivateChannelRemovedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityOpenSourceStatusActivatedQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityOpenSourceStatusEnabledQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripeCommunityOpenSourceStatusDisabledQueue: BullQueue<
+    StripeCommunityPaymentEventJobData
+  >,
+  stripePaymentSucceededQueue: BullQueue<
+    StripePaymentSucceededOrFailedEventJobData
+  >,
+  stripePaymentFailedQueue: BullQueue<
+    StripePaymentSucceededOrFailedEventJobData
+  >,
+  stripeCardExpiringWarningQueue: BullQueue<StripeCardExpiringWarningJobData>,
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<

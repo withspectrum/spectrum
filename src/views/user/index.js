@@ -131,7 +131,7 @@ class UserView extends React.Component<Props, State> {
           : ThreadParticipantFeedWithData;
 
       return (
-        <AppViewWrapper data-e2e-id="user-view">
+        <AppViewWrapper data-cy="user-view">
           <Head
             title={title}
             description={description}

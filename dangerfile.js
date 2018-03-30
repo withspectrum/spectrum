@@ -4,7 +4,6 @@ import { warn, fail, message, markdown, schedule, danger } from 'danger';
 import yarn from 'danger-plugin-yarn';
 import jest from 'danger-plugin-jest';
 import flow from 'danger-plugin-flow';
-import labels from 'danger-plugin-labels';
 import noTestShortcuts from 'danger-plugin-no-test-shortcuts';
 import noConsole from 'danger-plugin-no-console';
 
@@ -14,7 +13,7 @@ const APP_FOLDERS = [
   'chronos',
   'hermes',
   'hyperion',
-  'iris',
+  'api',
   'mercury',
   'shared',
   'src',
@@ -25,17 +24,6 @@ const APP_FOLDERS = [
 if (danger.github.pr.body.length < 10) {
   fail('Please add a description to your PR.');
 }
-
-// Add automatic labels to the PR
-schedule(
-  labels({
-    labels: {
-      wip: 'WIP: Building',
-      'needs testing': 'WIP: Needs Testing',
-      'ready for review': 'WIP: Ready for Review',
-    },
-  })
-);
 
 // Make sure the yarn.lock file is updated when dependencies get added and log any added dependencies
 APP_FOLDERS.forEach(folder => {
@@ -51,7 +39,7 @@ noTestShortcuts({
     filePath.endsWith('.test.js') || filePath.endsWith('_spec.js'),
 });
 
-schedule(noConsole({ whitelist: ['error'] }));
+schedule(noConsole({ whitelist: ['error', 'warn'] }));
 
 schedule(
   flow({
@@ -62,7 +50,7 @@ schedule(
     blacklist: [
       'flow-typed/**/*.js',
       'public/**/*.js',
-      'iris/migrations/**/*.js',
+      'api/migrations/**/*.js',
       'cypress/**/*.js',
     ],
   })

@@ -4,9 +4,7 @@ describe('Login View', () => {
   });
 
   it('should render', () => {
-    cy.get('[data-e2e-id="explore-page"]').should('be.visible');
-    cy
-      .get('[data-e2e-id="explore-community-search-input"]')
-      .should('be.visible');
+    cy.get('[data-cy="explore-page"]').should('be.visible');
+    cy.get('[data-cy="explore-community-search-input"]').should('be.visible');
   });
 });

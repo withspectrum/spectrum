@@ -1,5 +1,5 @@
 //@flow
-import { request } from '../../../../../iris/test/utils';
+import { request } from '../../../../../api/test/utils';
 import db from 'shared/testing/db';
 import data from 'shared/testing/data';
 

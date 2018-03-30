@@ -4,6 +4,6 @@ const mockDb = require('./db');
 jest.setTimeout(30000);
 
 // Mock the database
-jest.mock('iris/models/db', () => ({
+jest.mock('api/models/db', () => ({
   db: mockDb,
 }));

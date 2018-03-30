@@ -20,6 +20,7 @@ type ButtonProps = {
   gradientTheme?: string,
   icon?: string,
   children?: any,
+  dataCy?: string,
 };
 
 type IconProps = {
@@ -40,7 +41,7 @@ type IconProps = {
 };
 
 export const Button = (props: ButtonProps) => (
-  <StyledSolidButton disabled={props.loading} {...props}>
+  <StyledSolidButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -60,7 +61,11 @@ export const Button = (props: ButtonProps) => (
 );
 
 export const OutlineButton = (props: ButtonProps) => (
-  <StyledOutlineButton {...props}>
+  <StyledOutlineButton
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -81,7 +86,11 @@ export const OutlineButton = (props: ButtonProps) => (
 
 // looks like a button, but isn't a button so it won't submit forms
 export const FauxOutlineButton = (props: ButtonProps) => (
-  <StyledFauxOutlineButton {...props}>
+  <StyledFauxOutlineButton
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -101,7 +110,7 @@ export const FauxOutlineButton = (props: ButtonProps) => (
 );
 
 export const TextButton = (props: ButtonProps) => (
-  <StyledTextButton {...props}>
+  <StyledTextButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
@@ -114,12 +123,14 @@ export const TextButton = (props: ButtonProps) => (
       ''
     )}
     {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}
-    <Label loading={props.loading}>{props.children}</Label>
+    <Label loading={props.loading} hasIcon={props.icon}>
+      {props.children}
+    </Label>
   </StyledTextButton>
 );
 
 export const IconButton = (props: IconProps) => (
-  <StyledIconButton {...props}>
+  <StyledIconButton disabled={props.loading} data-cy={props.dataCy} {...props}>
     <Icon
       glyph={props.glyph}
       tipText={props.tipText}

@@ -193,7 +193,7 @@ class ThreadFeed extends React.Component<Props, State> {
       // $FlowFixMe
       this.unsubscribe()
         .then(() => this.subscribe())
-        .catch(err => console.log('Error unsubscribing: ', err));
+        .catch(err => console.error('Error unsubscribing: ', err));
     }
   }
 
@@ -279,7 +279,7 @@ class ThreadFeed extends React.Component<Props, State> {
 
     return (
       <div
-        data-e2e-id="inbox-thread-feed"
+        data-cy="inbox-thread-feed"
         ref={el => (this.innerScrollElement = el)}
       >
         {this.props.data.community &&
