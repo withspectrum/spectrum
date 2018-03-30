@@ -24,7 +24,7 @@ export default async (
   } = await getUserPermissionsInCommunity(thread.communityId, currentUser.id);
 
   if (isBlocked) {
-    throw new UserError("You don't have permission to post in that channelId.");
+    throw new UserError("You don't have permission to post in that channel.");
   }
 
   if (thread.creatorId !== currentUser.id && (!isOwner && !isModerator))

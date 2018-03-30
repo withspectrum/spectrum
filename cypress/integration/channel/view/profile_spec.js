@@ -2,6 +2,8 @@ import data from '../../../../shared/testing/data';
 
 const publicChannel = data.channels[0];
 const privateChannel = data.channels[1];
+const archivedChannel = data.channels.find(c => c.slug === 'archived');
+const deletedChannel = data.channels.find(c => c.slug === 'deleted');
 
 const community = data.communities.find(
   community => community.id === publicChannel.communityId
@@ -29,6 +31,32 @@ describe('public channel', () => {
     cy.contains(community.name);
     cy.contains(publicChannel.description);
     cy.contains(publicChannel.name);
+  });
+});
+
+describe('archived channel', () => {
+  before(() => {
+    cy.visit(`/${community.slug}/${archivedChannel.slug}`);
+  });
+
+  it('should render profile', () => {
+    cy.get('[data-cy="channel-view"]').should('be.visible');
+  });
+
+  it('should contain archived tag', () => {
+    cy.get('[data-cy="channel-profile-full"]').should('be.visible');
+    cy.contains('(Archived)');
+  });
+});
+
+describe('deleted channel', () => {
+  before(() => {
+    cy.visit(`/${community.slug}/${deletedChannel.slug}`);
+  });
+
+  it('should render error view', () => {
+    cy.get('[data-cy="channel-not-found"]').should('be.visible');
+    cy.contains('We couldn’t find a channel with this name');
   });
 });
 

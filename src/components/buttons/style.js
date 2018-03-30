@@ -53,9 +53,9 @@ export const Label = styled.span`
 
 export const StyledSolidButton = styled.button`
   ${baseButton} background-color: ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
+  props.disabled
+    ? props.theme.bg.inactive
+    : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
   background-image: ${props =>
     props.disabled || props.gradientTheme === 'none'
       ? 'none'
@@ -93,6 +93,14 @@ export const StyledTextButton = styled(StyledSolidButton)`
       ? props.theme.bg.inactive
       : eval(`props.theme.${props.color ? props.color : 'text.alt'}`)};
   transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out, padding: 0.2s ease-out;
+  ${props =>
+    props.loading
+      ? css`
+          justify-content: center;
+        `
+      : css`
+          justify-content: flex-start;
+        `}
 
   &:hover {
     background-color: transparent;
@@ -140,9 +148,9 @@ export const StyledOutlineButton = styled(StyledTextButton)`
 
 export const StyledFauxOutlineButton = styled.span`
   ${baseButton} box-shadow: inset 0 0 0 1px ${props =>
-      props.disabled
-        ? props.theme.bg.inactive
-        : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  props.disabled
+    ? props.theme.bg.inactive
+    : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
   color: ${props =>
     props.disabled
       ? props.theme.bg.inactive

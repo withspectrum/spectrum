@@ -27,6 +27,36 @@ const { userId: memberInPrivateChannelId } = data.usersChannels.find(
 
 const QUIET_USER_ID = constants.QUIET_USER_ID;
 
+const leave = () => {
+  cy
+    .get('[data-cy="channel-join-button"]')
+    .should('be.visible')
+    .contains('Joined');
+
+  cy.get('[data-cy="channel-join-button"]').click();
+
+  cy.get('[data-cy="channel-join-button"]').should('be.disabled');
+
+  cy.get('[data-cy="channel-join-button"]').should('not.be.disabled');
+
+  cy.get('[data-cy="channel-join-button"]').contains(`Join `);
+};
+
+const join = () => {
+  cy
+    .get('[data-cy="channel-join-button"]')
+    .should('be.visible')
+    .contains('Join ');
+
+  cy.get('[data-cy="channel-join-button"]').click();
+
+  cy.get('[data-cy="channel-join-button"]').should('be.disabled');
+
+  cy.get('[data-cy="channel-join-button"]').should('not.be.disabled');
+
+  cy.get('[data-cy="channel-join-button"]').contains(`Joined`);
+};
+
 describe('logged out channel membership', () => {
   before(() => {
     cy.visit(`/${community.slug}/${publicChannel.slug}`);
@@ -44,20 +74,8 @@ describe('channel profile as member', () => {
   });
 
   it('should render leave channel button', () => {
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .should('be.visible')
-      .contains('Joined');
-
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .click()
-      .contains(`Join `);
-
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .click()
-      .contains(`Joined`);
+    leave();
+    join();
   });
 });
 
@@ -68,20 +86,8 @@ describe('channel profile as non-member', () => {
   });
 
   it('should render join channel button', () => {
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .should('be.visible')
-      .contains(`Join `);
-
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .click()
-      .contains(`Joined`);
-
-    cy
-      .get('[data-cy="channel-join-button"]')
-      .click()
-      .contains(`Join `);
+    join();
+    leave();
   });
 });
 

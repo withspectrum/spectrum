@@ -18,6 +18,11 @@ describe('Community View', () => {
       expect(document.body.toString().indexOf(community.coverPhoto) > -1);
     });
 
+    cy
+      .get('[data-cy="community-view-content"]')
+      .scrollIntoView()
+      .should('be.visible');
+
     data.threads
       .filter(thread => thread.communityId === community.id)
       .forEach(thread => {
@@ -27,6 +32,7 @@ describe('Community View', () => {
     data.channels
       .filter(channel => channel.communityId === community.id)
       .filter(channel => !channel.isPrivate)
+      .filter(channel => !channel.deletedAt)
       .forEach(channel => {
         cy.contains(channel.name).should('be.visible');
       });

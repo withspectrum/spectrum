@@ -7,6 +7,8 @@ const {
   QUIET_USER_ID,
   BLOCKED_USER_ID,
   PREVIOUS_MEMBER_USER_ID,
+  CHANNEL_MODERATOR_USER_ID,
+  COMMUNITY_MODERATOR_USER_ID,
   DATE,
 } = constants;
 
@@ -95,6 +97,34 @@ module.exports = [
     coverPhoto:
       'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
     email: 'hi@previousboy.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: CHANNEL_MODERATOR_USER_ID,
+    name: 'Channel moderator',
+    description: 'I moderate all channels',
+    website: '',
+    username: 'channel-moderator-user',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@channelmoderatorboy.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: COMMUNITY_MODERATOR_USER_ID,
+    name: 'Community moderator',
+    description: 'I moderate all communities',
+    website: '',
+    username: 'community-moderator-user',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@communitymoderatorboy.io',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },

@@ -22,11 +22,13 @@ describe('create a channel', () => {
   it('should go through create a channel flow', () => {
     cy
       .get('[data-cy="community-settings-button"]')
+      .scrollIntoView()
       .should('be.visible')
       .click();
 
     cy
       .get('[data-cy="create-channel-button"]')
+      .scrollIntoView()
       .should('be.visible')
       .click();
   });
