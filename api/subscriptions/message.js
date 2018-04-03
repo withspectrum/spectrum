@@ -58,7 +58,7 @@ module.exports = {
         try {
           return addMessageListener({
             filter: message => {
-              if (message.threadId === thread) {
+              if (message.threadId === thread && user) {
                 trackUserThreadLastSeenQueue.add({
                   userId: user.id,
                   threadId: message.threadId,
