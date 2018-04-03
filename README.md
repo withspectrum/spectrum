@@ -16,7 +16,7 @@ It is difficult to grow, manage and measure the impact of online communities. Co
 
 Spectrum aims to be the best platform to build any kind of community online by combining the best of web 2.0 forums and real-time chat apps. With best-in-class moderation tooling, a single platform for all your communities, threaded conversations by default, community health monitoring (and much more to come), we think that we will be able to help more people start and grow the best online communities.
 
-> "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and iteract. Except realtime and trolling-free."
+> "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and interact. Except realtime and trolling-free."
 >
 > \- [Guillermo Rauch (@rauchg)](https://twitter.com/rauchg/status/930946768841228288)
 
