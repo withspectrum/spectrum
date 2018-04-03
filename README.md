@@ -1,6 +1,7 @@
 <div align="center">
 
   [![Spectrum](./public/img/media.png)](https://spectrum.chat)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwithspectrum%2Fspectrum.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwithspectrum%2Fspectrum?ref=badge_shield)
 
   ### Simple, powerful online communities.
   
@@ -260,3 +261,6 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
 
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.
 
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwithspectrum%2Fspectrum.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwithspectrum%2Fspectrum?ref=badge_large)
