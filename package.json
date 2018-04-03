@@ -238,7 +238,7 @@
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json",
     "test:e2e": "cypress run",
-    "dev:api:test": "nodemon -x \"TEST_DB=true yarn run dev:api\"",
+    "dev:api:test": "nodemon -x \"TEST_DB=true yarn run dev:api\" -w ./api",
     "cypress:open": "cypress open",
     "lint": "eslint .",
     "flow": "flow",
