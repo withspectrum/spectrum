@@ -99,6 +99,7 @@ jobs:
       - run: *start-rethinkdb
       - run: sleep 10
       - run: *setup-and-build-web
+      - run: yarn add --dev nodemon
       - run: *start-api
       - run: *start-web
       - run: sleep 60
