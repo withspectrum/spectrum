@@ -45,7 +45,7 @@ aliases:
 
   - &start-api
     name: Start the API in the background
-    command: TEST_DB=true yarn run dev:api
+    command: nodemon -x "TEST_DB=true yarn run dev:api"
     background: true
 
   - &start-web
