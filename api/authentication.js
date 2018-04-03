@@ -274,6 +274,12 @@ const init = () => {
       async (req, token, tokenSecret, profile, done) => {
         const name =
           profile.displayName || profile.username || profile._json.name || '';
+
+        const splitProfileUrl = profile.profileUrl.split('/');
+        const fallbackUsername = splitProfileUrl[splitProfileUrl.length - 1];
+        const githubUsername =
+          profile.username || profile._json.login || fallbackUsername;
+
         if (req.user) {
           // if a user exists in the request body, it means the user is already
           // authed and is trying to connect a github account. Before we do so
@@ -284,6 +290,23 @@ const init = () => {
           // 1
           // if the user already has a githubProviderId, don't override it
           if (req.user.githubProviderId) {
+            if (!req.user.githubUsername) {
+              return saveUserProvider(
+                req.user.id,
+                'githubProviderId',
+                profile.id,
+                { githubUsername: githubUsername }
+              )
+                .then(user => {
+                  done(null, user);
+                  return user;
+                })
+                .catch(err => {
+                  done(err);
+                  return null;
+                });
+            }
+
             return done(null, req.user);
           }
 
@@ -299,7 +322,7 @@ const init = () => {
               req.user.id,
               'githubProviderId',
               profile.id,
-              { githubUsername: profile.username }
+              { githubUsername: githubUsername }
             )
               .then(user => {
                 done(null, user);
@@ -322,7 +345,7 @@ const init = () => {
           fbProviderId: null,
           googleProviderId: null,
           githubProviderId: profile.id,
-          githubUsername: profile.username,
+          githubUsername: githubUsername,
           username: null,
           name: name,
           description: profile._json.bio,
