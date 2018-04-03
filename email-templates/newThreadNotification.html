@@ -482,18 +482,18 @@
                 <ul>
                   {{#muteChannelToken}}
                     <li>
-                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Mute the {{../data.thread.channel.name}} channel in {{../data.thread.community.name}}</a>
+                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Unsubscribe the {{../data.thread.channel.name}} channel in {{../data.thread.community.name}}</a>
                     </li>
                   {{/muteChannelToken}}
 
                   {{#muteCommunityToken}}
                     <li>
-                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Mute the {{../data.thread.community.name}} community</a>
+                      <a href="https://spectrum.chat/api/email/unsubscribe?token={{.}}">Unsubscribe the {{../data.thread.community.name}} community</a>
                     </li>
                   {{/muteCommunityToken}}
 
                   <li>
-                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Mute all new thread notification emails</a>
+                    <a href="https://spectrum.chat/api/email/unsubscribe?token={{unsubscribeToken}}">Unsubscribe all new thread notification emails</a>
                   </li>
 
                   {{#recipient.username}}
