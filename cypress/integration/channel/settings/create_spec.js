@@ -16,16 +16,10 @@ describe('create a channel', () => {
   beforeEach(() => {
     cy.auth(ownerInChannelId);
     // NOTE @brian: I can not get this to auth directly into /settings, having to work around for now
-    cy.visit(`/${community.slug}`);
+    cy.visit(`/${community.slug}/settings`);
   });
 
   it('should go through create a channel flow', () => {
-    cy
-      .get('[data-cy="community-settings-button"]')
-      .scrollIntoView()
-      .should('be.visible')
-      .click();
-
     cy
       .get('[data-cy="create-channel-button"]')
       .scrollIntoView()

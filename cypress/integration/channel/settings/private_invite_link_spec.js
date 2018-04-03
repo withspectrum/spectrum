@@ -27,17 +27,12 @@ describe('private channel invite link settings', () => {
     cy.visit(`/${community.slug}/${channel.slug}/settings`);
   });
 
-  it('should enable private invite link', () => {
-    enable();
-  });
-
-  it('should refresh invite link token', () => {
+  it('should handle enable, reset, and disable', () => {
+    // enable
     enable();
 
-    cy.get('[data-cy="channel-overview"]').should('be.visible');
-
+    // reset token
     cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
-
     cy
       .get('[data-cy="join-link-input"]')
       .invoke('val')
@@ -61,15 +56,8 @@ describe('private channel invite link settings', () => {
             expect(val1).not.to.eq(val2);
           });
       });
-  });
 
-  it('should disable private invite link', () => {
-    enable();
-
-    cy.get('[data-cy="channel-overview"]').should('be.visible');
-
-    cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
-
+    // disable
     cy
       .get('[data-cy="toggle-token-link-invites-checked"]')
       .should('be.visible')
