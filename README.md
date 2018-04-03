@@ -3,7 +3,7 @@
   [![Spectrum](./public/img/media.png)](https://spectrum.chat)
 
   ### Simple, powerful online communities.
-  
+
 </div>
 
 This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every single line of code that's not packaged into a reusable library is in this repository.
@@ -39,17 +39,17 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
   - [First time setup](#first-time-setup)
   - [Running the app locally](#running-the-app-locally)
   - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
-- Technical
+- [Technical](docs/)
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
   - [Deployment](docs/backend/deployment.md)
-  - [GraphQL](docs/backend/api/)
+  - [API](docs/backend/api/)
     - [Fragments](docs/backend/api/fragments.md)
     - [Pagination](docs/backend/api/pagination.md)
     - [Testing](docs/backend/api/testing.md)
     - [Tips and Tricks](docs/backend/api/tips-and-tricks.md)
 
-## Contributing 
+## Contributing
 
 **We heartily welcome any and all contributions that match [our product roadmap](https://github.com/withspectrum/spectrum/projects/19) and engineering standards!**
 
@@ -225,7 +225,7 @@ yarn run dev:api
 
 #### Develop the web UI
 
-To develop the frontend and web UI run 
+To develop the frontend and web UI run
 
 ```
 yarn run dev:web
@@ -239,12 +239,12 @@ To start the mobile apps run:
 yarn run dev:mobile
 ```
 
-And then open either the iOS simulator or the Android simulator with 
+And then open either the iOS simulator or the Android simulator with
 
 ```sh
-yarn run open:ios 
+yarn run open:ios
 # or
-yarn run open:android 
+yarn run open:android
 ```
 
 Refer to [the Expo documentation on how to install the simulators](https://docs.expo.io/versions/v25.0.0/guides/debugging.html#using-a-simulator--emulator).
@@ -256,7 +256,7 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
   <img height="200px" src="public/img/connect.svg" />
 </div>
 
-## License 
+## License
 
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.
 
