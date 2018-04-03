@@ -33,13 +33,13 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
       debug(
         `old lastSeen ${
           record.lastSeen
-        } is later than new lastSeen ${date}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
+        } is later than new lastSeen ${date.toString()}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
           timestamp
         ).toString()}`
       );
       return;
     }
-    
+
     debug(
       `existing usersThread, updating usersThreads#${record.id} with lastSeen`
     );

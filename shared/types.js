@@ -328,6 +328,7 @@ export type DBUsersThreads = {
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
+  lastSeen: Date,
 };
 
 export type Mention = {
