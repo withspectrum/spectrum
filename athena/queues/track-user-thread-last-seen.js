@@ -29,6 +29,17 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
   const record = await getUsersThread(userId, threadId);
 
   if (record) {
+    if (record.lastSeen > date) {
+      debug(
+        `old lastSeen ${
+          record.lastSeen
+        } is later than new lastSeen ${date}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
+          timestamp
+        ).toString()}`
+      );
+      return;
+    }
+    
     debug(
       `existing usersThread, updating usersThreads#${record.id} with lastSeen`
     );
