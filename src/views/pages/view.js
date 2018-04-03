@@ -165,7 +165,7 @@ export const Overview = (props: Props) => {
             </Link>
           </Actions>
         </ThisText>
-        <Img src={'/img/diagram.svg'} />
+        <Img src={'/img/diagram.svg'} alt="" />
       </ThisContent>
     </Section>
   );
