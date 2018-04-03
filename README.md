@@ -256,3 +256,7 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
   <img height="200px" src="public/img/connect.svg" />
 </div>
 
+## License 
+
+BSD 3-Clause, see the [LICENSE](./LICENSE) file.
+
