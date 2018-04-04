@@ -31,6 +31,20 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
+export type SendPrivateChannelRequestApprovedEmailJobData = {
+  recipient: {
+    email: string,
+  },
+  channel: {
+    name: string,
+    slug: string,
+  },
+  community: {
+    name: string,
+    slug: string,
+  },
+};
+
 export type SendPrivateChannelRequestEmailJobData = {
   recipient: {
     email: string,
@@ -312,6 +326,9 @@ export type Queues = {
   sendNewMentionThreadEmailQueue: BullQueue<SendNewThreadMentionEmailJobData>,
   sendPrivateChannelRequestEmailQueue: BullQueue<
     SendPrivateChannelRequestEmailJobData
+  >,
+  sendPrivateChannelRequestApprovedEmailQueue: BullQueue<
+    SendPrivateChannelRequestApprovedEmailJobData
   >,
 
   // mercury

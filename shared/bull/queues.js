@@ -40,6 +40,7 @@ import {
   SEND_NEW_MENTION_MESSAGE_EMAIL,
   SEND_NEW_MENTION_THREAD_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
 } from 'hermes/queues/constants';
 
 import { MENTION_NOTIFICATION } from 'athena/queues/constants';
@@ -55,7 +56,6 @@ exports.QUEUE_NAMES = {
     'community invoice paid notification',
   sendReactionNotificationQueue: 'reaction notification',
   sendPrivateChannelRequestQueue: 'private channel request sent',
-  sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: 'community invite notification',
@@ -79,6 +79,8 @@ exports.QUEUE_NAMES = {
   sendNewDirectMessageEmailQueue: SEND_NEW_DIRECT_MESSAGE_EMAIL,
   sendNewMentionMessageEmailQueue: SEND_NEW_MENTION_MESSAGE_EMAIL,
   sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
+  sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  sendPrivateChannelRequestApprovedEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',
