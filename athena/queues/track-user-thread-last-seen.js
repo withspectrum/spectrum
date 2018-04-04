@@ -26,7 +26,7 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
     ).toString()}`
   );
 
-  const record = await getUsersThread(userId, threadId);
+  const record: ?DBUsersThreads = await getUsersThread(userId, threadId);
 
   if (record) {
     if (
@@ -34,9 +34,7 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
       new Date(record.lastSeen).getTime() > new Date(date).getTime()
     ) {
       debug(
-        `old lastSeen ${
-          record.lastSeen
-        } is later than new lastSeen ${date.toString()}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
+        `old lastSeen ${record.lastSeen.toString()} is later than new lastSeen ${date.toString()}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
           timestamp
         ).toString()}`
       );
