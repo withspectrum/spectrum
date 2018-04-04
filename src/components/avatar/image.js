@@ -164,7 +164,9 @@ class AvatarImage extends Component<ImageProps> {
     if (this.state.isLoaded) {
       // clear non img props
       let { src, loader, unloader, decode, ...rest } = this.props; //eslint-disable-line
-      return <Img src={this.sourceList[this.state.currentIndex]} {...rest} />;
+      return (
+        <Img src={this.sourceList[this.state.currentIndex]} {...rest} alt="" />
+      );
     }
 
     // if we are still trying to load, show img and a loader if requested
