@@ -31,6 +31,37 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
+export type SendNewThreadNotificationEmailJobData = {
+  recipient: {
+    id: string,
+    email: string,
+    username: string,
+  },
+  primaryActionLabel: string,
+  thread: {
+    community: {
+      id: string,
+      slug: string,
+      profilePhoto: string,
+      name: string,
+    },
+    creator: {
+      profilePhoto: string,
+      username: string,
+      name: string,
+    },
+    channel: {
+      id: string,
+      name: string,
+    },
+    id: string,
+    content: {
+      title: string,
+      body?: string,
+    },
+  },
+};
+
 export type SendPrivateChannelRequestApprovedEmailJobData = {
   recipient: {
     email: string,
@@ -329,6 +360,9 @@ export type Queues = {
   >,
   sendPrivateChannelRequestApprovedEmailQueue: BullQueue<
     SendPrivateChannelRequestApprovedEmailJobData
+  >,
+  sendThreadCreatedNotificationEmailQueue: BullQueue<
+    SendNewThreadNotificationEmailJobData
   >,
 
   // mercury

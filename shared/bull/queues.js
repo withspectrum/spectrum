@@ -41,6 +41,7 @@ import {
   SEND_NEW_MENTION_THREAD_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
 } from 'hermes/queues/constants';
 
 import { MENTION_NOTIFICATION } from 'athena/queues/constants';
@@ -81,6 +82,7 @@ exports.QUEUE_NAMES = {
   sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
   sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   sendPrivateChannelRequestApprovedEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',
