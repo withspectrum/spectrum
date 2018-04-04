@@ -7,6 +7,7 @@ import {
   createUserThread,
 } from '../models/usersThreads';
 import type { Job, UserThreadLastSeenJobData } from 'shared/bull/types';
+import type { DBUsersThreads } from 'shared/types';
 
 export default async (job: Job<UserThreadLastSeenJobData>) => {
   const { userId, threadId, timestamp } = job.data;
