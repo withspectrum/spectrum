@@ -1,4 +1,6 @@
-## Unit tests
+[Table of contents](../readme.md) / [Testing](./intro.md)
+
+# Unit tests
 
 We use [`Jest`](https://github.com/facebook/jest) for our unit testing needs. To run Jest in watch mode locally so the tests run automatically while you're developing run:
 

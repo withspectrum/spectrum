@@ -1,3 +1,5 @@
+[Table of contents](../readme.md)
+
 # Workers
 
 Our asynchronos background job processing is powered by a series of worker servers.

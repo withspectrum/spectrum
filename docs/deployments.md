@@ -1,8 +1,10 @@
-# Deployment
+[Table of contents](./readme.md)
+
+# Deployments
 
 We use [`now`](https://now.sh) by Zeit for all of our deployments.
 
-## Installation
+### Installation
 
 We recommend installing the [now desktop app](http://zeit.co/download) as it'll keep the command line tool up to date automatically!
 
@@ -12,11 +14,11 @@ If you'd rather not install an app (or are using Windows Substem for Linux) you 
 npm install -g now
 ```
 
-## Naming scheme
+### Naming scheme
 
 All our workers are aliased to `<workername>.workers.spectrum.chat`, with the one exception being the API (the API server) which runs at `api.spectrum.chat`. 
 
-### Path aliases
+#### Path aliases
 
 [Now's path alias feature](https://zeit.co/docs/features/path-aliases) takes care of routing requests to the right workers. To see our current production aliases check the `rules.json` file in the root of the project.
 
@@ -28,11 +30,11 @@ now alias spectrum.chat -r rules.json
 
 The same command with a different URL and slightly adapted rules can also be used to create an alpha/beta/staging/... version of the site.
 
-## Frontend and Hyperion 
+### Frontend and Hyperion 
 
 Since the frontend is the part that changes the most often the repo is set up such that typing `now` in the root directory will deploy the frontend with hyperion. (the server-side rendering worker)
 
-### Deploying
+#### Deploying
 
 First, make sure you're in the Space Program `now` team:
 
@@ -60,11 +62,11 @@ now alias spectrum-grtertb34.now.sh hyperion.workers.spectrum.chat
 
 And that's it, you've now deployed a new version of hyperion and the frontend!
 
-## Other workers
+### Other workers
 
 We use [`backpack`](https://github.com/palmerhq/backpack) to get a nice development setup and build process in place for our workers. Since this is a mono-repo and `now` doesn't have any special functionality to handle monorepos we have to deploy the _built_ version of the workers. (compared to the frontend deploy where you deploy the raw code which gets built on the server)
 
-### Deploying
+#### Deploying
 
 First, build the worker you want to deploy to get a bundle with the newest code rather than deploying a stale version:
 
@@ -91,7 +93,7 @@ now build-athena
 
 This will give you an immutable deploy with a unique URL of this worker, something like `https://build-athena-ahsgut23sdyf.now.sh`.
 
-### Replacing the old deploy
+#### Replacing the old deploy
 
 Since we want to keep the workers alive even if nobody sends a request to their healthcheck endpoints we alias them to `<workername>.workers.spectrum.chat`. This ensures `now` overrides the older deploy and only the newest code is running.
 

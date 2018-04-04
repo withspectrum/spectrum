@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [Workers](../intro.md)
+
 # Mercury
 
 *HMercury (/ˈmɜːrkjʊri/) is the patron god of financial gain, commerce, eloquence (and thus poetry), messages/communication (including divination), travelers, boundaries, luck, trickery and thieves*

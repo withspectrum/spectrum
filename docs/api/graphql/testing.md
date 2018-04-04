@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [API](../intro.md) / [GraphQL](./intro.md)
+
 # Testing
 
 We use [Jest](https://facebook.github.io/jest/) for testing. (we recommend reading through the documentation, since it has a lot of great features you might not expect) Most of our tests are "e2e". That's in quotes because with GraphQL "e2e" tests don't do any network request, they still hit our database though and all that. (which is awesome since it's much faster!)

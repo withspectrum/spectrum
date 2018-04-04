@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [API](../intro.md) / [GraphQL](./intro.md)
+
 # Fragments
 
 Fragments help us to always know exactly what kind of data will be returned for a given query and ensure that we are consistent in what data should be returned to any given component.

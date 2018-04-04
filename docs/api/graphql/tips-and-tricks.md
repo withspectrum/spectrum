@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [API](../intro.md) / [GraphQL](./intro.md)
+
 # Tips and Tricks
 
 ## Keep resolvers as small as possible

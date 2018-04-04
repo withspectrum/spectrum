@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [API](../intro.md)
+
 # GraphQL Intro
 
 We use [`graphql-tools`](http://dev.apollodata.com/tools/graphql-tools/index.html) which lets us use the GraphQL schema language to design our schema. This schema written in the schema language is then combined with our resolvers (which live somewhere else) using `graphql-tools`, which outputs our finished schema that's then used.

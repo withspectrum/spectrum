@@ -1,3 +1,5 @@
+[Table of contents](../readme.md)
+
 # Hyperion
 
 *Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.*

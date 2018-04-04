@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [API](../intro.md) / [GraphQL](./intro.md)
+
 # Pagination with GraphQL
 
 Even though there is no specific built-in way to paginate GraphQL queries there is a quasi-standard that most people (including us) follow called [Relay Connections Specification](https://facebook.github.io/relay/graphql/connections.htm). Rather than reading a spec that might not help you in pratical applications we recommend reading these two article to get a grasp of the why and how:

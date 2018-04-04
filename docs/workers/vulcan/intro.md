@@ -1,3 +1,5 @@
+[Table of contents](../../readme.md) / [Workers](../intro.md)
+
 # Vulcan
 
 *Vulcan is the god of fire, including the fire of volcanoes, metalworking, and the forge.*
