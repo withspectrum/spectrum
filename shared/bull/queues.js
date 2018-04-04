@@ -35,13 +35,11 @@ import {
   SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  SEND_NEW_DIRECT_MESSAGE_EMAIL,
   SEND_NEW_MESSAGE_EMAIL,
 } from 'hermes/queues/constants';
 
-import {
-  MENTION_NOTIFICATION,
-  SEND_NEW_DIRECT_MESSAGE_EMAIL,
-} from 'athena/queues/constants';
+import { MENTION_NOTIFICATION } from 'athena/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
