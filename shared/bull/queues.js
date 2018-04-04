@@ -39,6 +39,7 @@ import {
   SEND_NEW_MESSAGE_EMAIL,
   SEND_NEW_MENTION_MESSAGE_EMAIL,
   SEND_NEW_MENTION_THREAD_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
 } from 'hermes/queues/constants';
 
 import { MENTION_NOTIFICATION } from 'athena/queues/constants';
@@ -54,6 +55,7 @@ exports.QUEUE_NAMES = {
     'community invoice paid notification',
   sendReactionNotificationQueue: 'reaction notification',
   sendPrivateChannelRequestQueue: 'private channel request sent',
+  sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   sendPrivateChannelInviteNotificationQueue:
     'private channel invite notification',
   sendCommunityInviteNotificationQueue: 'community invite notification',
