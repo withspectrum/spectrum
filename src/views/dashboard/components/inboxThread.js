@@ -54,6 +54,10 @@ class InboxThread extends React.Component<Props> {
 
     if (!data) return null;
 
+    const now = new Date().getTime() / 1000;
+    const createdAtTime = new Date(createdAt).getTime() / 1000;
+    const lastActiveTime = lastActive && new Date(lastActive).getTime() / 1000;
+
     const defaultMessageCountString = (
       <StatusText offset={participants.length} active={active}>
         {messageCount === 0
@@ -73,9 +77,6 @@ class InboxThread extends React.Component<Props> {
     }
 
     if (!currentUserLastSeen) {
-      const createdAtTime = new Date(createdAt).getTime() / 1000;
-      const now = new Date().getTime() / 1000;
-
       if (now - createdAtTime > 86400) {
         return defaultMessageCountString;
       }
@@ -89,6 +90,10 @@ class InboxThread extends React.Component<Props> {
 
     if (currentUserLastSeen && lastActive && currentUserLastSeen < lastActive) {
       if (active) return defaultMessageCountString;
+
+      if (lastActiveTime && now - lastActiveTime > 86400 * 7) {
+        return defaultMessageCountString;
+      }
 
       return (
         <NewMessagePill offset={participants.length} active={active} newMessage>
