@@ -14,10 +14,6 @@ export const THREAD_NOTIFICATION = 'thread notification';
 export const COMMUNITY_INVITE_NOTIFICATION = 'community invite notification';
 export const SEND_COMMUNITY_INVITE_EMAIL = 'send community invite email';
 export const SLACK_IMPORT = 'slack import';
-export const SEND_MENTION_THREAD_NOTIFICATION_EMAIL =
-  'send thread mention email';
-export const SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL =
-  'send message mention email';
 export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
 export const PROCESS_ADMIN_TOXIC_MESSAGE = 'process admin toxic message';

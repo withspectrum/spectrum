@@ -16,9 +16,9 @@ import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getThreadById } from '../models/thread';
 import { getUserByUsername, getUserById } from '../models/user';
 import {
-  SEND_MENTION_THREAD_NOTIFICATION_EMAIL,
-  SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL,
-} from './constants';
+  SEND_NEW_MENTION_THREAD_EMAIL,
+  SEND_NEW_MENTION_MESSAGE_EMAIL,
+} from 'hermes/queues/constants';
 import type { Job, MentionNotificationJobData } from 'shared/bull/types';
 
 export default async ({ data }: Job<MentionNotificationJobData>) => {
@@ -153,8 +153,8 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   // otherwise send an email and add the in-app notification
   const QUEUE_NAME =
     mentionType === 'thread'
-      ? SEND_MENTION_THREAD_NOTIFICATION_EMAIL
-      : SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL;
+      ? SEND_NEW_MENTION_THREAD_EMAIL
+      : SEND_NEW_MENTION_MESSAGE_EMAIL;
 
   return Promise.all([
     addQueue(QUEUE_NAME, {
