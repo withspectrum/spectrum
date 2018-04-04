@@ -35,7 +35,17 @@ import {
   SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  SEND_NEW_DIRECT_MESSAGE_EMAIL,
+  SEND_NEW_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_THREAD_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
+  SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 } from 'hermes/queues/constants';
+
+import { MENTION_NOTIFICATION } from 'athena/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
@@ -54,6 +64,7 @@ exports.QUEUE_NAMES = {
   sendChannelNotificationQueue: 'channel notification',
   sendDirectMessageNotificationQueue: 'direct message notification',
   sendMessageNotificationQueue: 'message notification',
+  sendMentionNotificationQueue: MENTION_NOTIFICATION,
   sendNotificationAsPushQueue: 'push notifications',
   slackImportQueue: 'slack import',
 
@@ -66,6 +77,13 @@ exports.QUEUE_NAMES = {
   sendCommunityPaymentSucceededEmailQueue: SEND_COMMUNITY_PAYMENT_SUCCEEDED_EMAIL,
   sendCommunityPaymentFailedEmailQueue: SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
+  sendNewMessageEmailQueue: SEND_NEW_MESSAGE_EMAIL,
+  sendNewDirectMessageEmailQueue: SEND_NEW_DIRECT_MESSAGE_EMAIL,
+  sendNewMentionMessageEmailQueue: SEND_NEW_MENTION_MESSAGE_EMAIL,
+  sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
+  sendPrivateChannelRequestEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
+  sendPrivateChannelRequestApprovedEmailQueue: SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
+  sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',
@@ -99,6 +117,7 @@ exports.QUEUE_NAMES = {
   _adminProcessToxicMessageQueue: 'process admin toxic message',
   _adminProcessToxicThreadQueue: 'process admin toxic thread',
   _adminProcessSlackImportQueue: 'admin slack import process email',
+  _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

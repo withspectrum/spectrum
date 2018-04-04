@@ -330,14 +330,6 @@ export type DBUsersThreads = {
   userId: string,
 };
 
-export type Mention = {
-  threadId: string,
-  messageId?: string,
-  senderId: string,
-  username: string,
-  type: 'thread' | 'message',
-};
-
 export type SearchThread = {
   channelId: string,
   communityId: string,

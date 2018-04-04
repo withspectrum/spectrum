@@ -6,9 +6,8 @@ import getEmailStatus from '../utils/get-email-status';
 import { getUserById } from '../models/user';
 import { getCommunityById } from '../models/community';
 import { getChannelById } from '../models/channel';
-import { SEND_THREAD_CREATED_NOTIFICATION_EMAIL } from './constants';
 import { toPlainText, toState } from 'shared/draft-utils';
-import addQueue from '../utils/addQueue';
+import { sendThreadCreatedNotificationEmailQueue } from 'shared/bull/queues';
 import type { DBThread, DBUser } from 'shared/types';
 
 const createThreadNotificationEmail = async (
@@ -47,11 +46,13 @@ const createThreadNotificationEmail = async (
 
     const primaryActionLabel = 'View conversation';
 
-    return addQueue(SEND_THREAD_CREATED_NOTIFICATION_EMAIL, {
+    return sendThreadCreatedNotificationEmailQueue.add({
+      // $FlowIssue
       recipient,
       primaryActionLabel,
       thread: {
         ...thread,
+        // $FlowIssue
         creator,
         community,
         channel,
@@ -68,7 +69,6 @@ const createThreadNotificationEmail = async (
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };
 

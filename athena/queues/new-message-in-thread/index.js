@@ -2,7 +2,6 @@
 const debug = require('debug')('athena:queue:message-notification');
 import { toState, toPlainText } from 'shared/draft-utils';
 import getMentions from 'shared/get-mentions';
-import addQueue from '../../utils/addQueue';
 import Raven from 'shared/raven';
 import { fetchPayload, createPayload } from '../../utils/payloads';
 import { getDistinctActors } from '../../utils/actors';
@@ -19,6 +18,7 @@ import {
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 
 export default async (job: Job<MessageNotificationJobData>) => {
@@ -99,7 +99,7 @@ export default async (job: Job<MessageNotificationJobData>) => {
   const mentions = getMentions(body);
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
-      addQueue('mention notification', {
+      sendMentionNotificationQueue.add({
         messageId: incomingMessage.id,
         threadId: incomingMessage.threadId,
         senderId: incomingMessage.senderId,
@@ -131,7 +131,7 @@ export default async (job: Job<MessageNotificationJobData>) => {
 
   // send each recipient a notification
   const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
-    if (!recipient) return;
+    if (!recipient) return Promise.resolve();
 
     formatData(recipient, thread, sender, message, notification);
 
@@ -144,6 +144,5 @@ export default async (job: Job<MessageNotificationJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };
