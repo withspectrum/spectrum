@@ -47,12 +47,17 @@ class InboxThread extends React.Component<Props> {
         lastActive,
         messageCount,
         createdAt,
+        channel,
+        community,
       },
       data,
       active,
     } = this.props;
 
     if (!data) return null;
+
+    const isChannelMember = channel.channelPermissions.isMember;
+    const isCommunityMember = community.communityPermissions.isMember;
 
     const now = new Date().getTime() / 1000;
     const createdAtTime = new Date(createdAt).getTime() / 1000;
@@ -67,6 +72,10 @@ class InboxThread extends React.Component<Props> {
             : `${messageCount} message`}
       </StatusText>
     );
+
+    if (!isChannelMember || !isCommunityMember) {
+      return defaultMessageCountString;
+    }
 
     if (isLocked) {
       return (
