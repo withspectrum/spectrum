@@ -80,6 +80,5 @@ export default async (job: Job<PrivateChannelRequestJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

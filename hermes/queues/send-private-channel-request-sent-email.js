@@ -40,6 +40,6 @@ export default (job: Job<SendPrivateChannelRequestEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

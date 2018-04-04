@@ -24,7 +24,7 @@ export default async (job: Job<AdminToxicMessageJobData>) => {
     getSpectrumScore(text, message.id, message.senderId),
     getPerspectiveScore(text),
   ]).catch(err =>
-    console.log('Error getting message moderation scores from providers', err)
+    console.error('Error getting message moderation scores from providers', err)
   );
 
   const spectrumScore = scores && scores[0];

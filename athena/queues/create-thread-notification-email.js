@@ -69,7 +69,6 @@ const createThreadNotificationEmail = async (
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };
 

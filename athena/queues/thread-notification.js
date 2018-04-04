@@ -128,6 +128,5 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

@@ -44,6 +44,6 @@ export default async (job: Job<SendNewDirectMessageEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

@@ -82,7 +82,7 @@ const timedOut = async recipient => {
 
   const threadsWithGroupedReplies = await Promise.all([
     ...threadsWithGroupedRepliesPromises,
-  ]).catch(err => console.log('error grouping threads and replies', err));
+  ]).catch(err => console.error('error grouping threads and replies', err));
 
   const filteredThreadsWithGroupedReplies =
     threadsWithGroupedReplies &&

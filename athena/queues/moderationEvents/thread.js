@@ -29,7 +29,7 @@ export default async (job: Job<AdminToxicThreadJobData>) => {
     getSpectrumScore(text, thread.id, thread.creatorId),
     getPerspectiveScore(text),
   ]).catch(err =>
-    console.log('Error getting thread moderation scores from providers', err)
+    console.error('Error getting thread moderation scores from providers', err)
   );
 
   const spectrumScore = scores && scores[0];

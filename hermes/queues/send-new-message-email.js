@@ -95,6 +95,6 @@ export default async (job: Job<SendNewMessageEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
