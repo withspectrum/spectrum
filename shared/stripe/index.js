@@ -1,5 +1,8 @@
 require('now-env');
-const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
+const IS_PROD = process.env.NODE_ENV === 'production';
+const STRIPE_TOKEN = IS_PROD
+  ? process.env.STRIPE_TOKEN
+  : process.env.STRIPE_TOKEN_DEVELOPMENT;
 const STRIPE_WEBHOOK_SIGNING_SECRET = process.env.STRIPE_WEBHOOK_SIGNING_SECRET;
 export const stripe = require('stripe')(STRIPE_TOKEN);
 export const stripeWebhookSigningSecret = STRIPE_WEBHOOK_SIGNING_SECRET;
