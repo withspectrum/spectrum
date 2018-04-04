@@ -13,7 +13,7 @@ import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
-import GranularUserProfile from '../../../components/granularUserProfile';
+import GranularUserProfile from 'src/components/granularUserProfile';
 
 type Props = {
   data: {
