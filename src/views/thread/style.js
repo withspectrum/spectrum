@@ -546,6 +546,12 @@ export const PillLabel = styled.span`
     `};
 `;
 
+export const SidebarChannelPill = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 8px 16px 16px;
+`;
+
 export const Lock = styled.span`
   margin-right: 4px;
 `;
