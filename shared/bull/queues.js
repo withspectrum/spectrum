@@ -42,6 +42,7 @@ import {
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
+  SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 } from 'hermes/queues/constants';
 
 import { MENTION_NOTIFICATION } from 'athena/queues/constants';
@@ -116,6 +117,7 @@ exports.QUEUE_NAMES = {
   _adminProcessToxicMessageQueue: 'process admin toxic message',
   _adminProcessToxicThreadQueue: 'process admin toxic thread',
   _adminProcessSlackImportQueue: 'admin slack import process email',
+  _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

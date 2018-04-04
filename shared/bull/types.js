@@ -429,4 +429,6 @@ export type Queues = {
   _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
   _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
+  // TODO: Properly type this
+  _adminSendToxicContentEmailQueue: BullQueue<any>,
 };
