@@ -10,7 +10,7 @@
     - [Tips & Tricks](api/graphql/tips-and-tricks.md)
 - [Hyperion (server side rendering)](hyperion/intro.md)
   - [Development](hyperion/development.md)
-- [Operations]
+- Operations
   - [Deleting users](operations/deleting-users.md)
   - [Importing RethinkDB backups](operations/importing-rethinkdb-backups.md)
 - [Testing](testing/intro.md)

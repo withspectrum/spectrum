@@ -4,12 +4,12 @@
 
 Our asynchronos background job processing is powered by a series of worker servers.
 
-- Athena: processes notifications
-- Chronos: processes cron jobs
-- Hermes: sends emails
-- Mercury: processes reputation events
-- Pluto: processes payments events
-- Vulan: indexes content for search
+- [Athena](athena/intro.md): processes notifications
+- [Chronos](chronos/intro.md): processes cron jobs
+- [Hermes](hermes/intro.md): sends emails
+- [Mercury](mercury/intro.md): processes reputation events
+- [Pluto](pluto/intro.md): processes payments events
+- [Vulan](vulcan/intro.md): indexes content for search
 
 Each one of these can be run and developed independently with matching `npm run dev:x` and `npm run build:x` commands. (where `x` is the name of the server)
 
@@ -27,3 +27,5 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 ### Background jobs
 
 Many of our workers run off of our [Redis queue](background-jobs.md) to handle asynchronous events.
+
+[Learn more about background jobs](background-jobs.md)
