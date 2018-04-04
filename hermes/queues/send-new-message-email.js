@@ -8,49 +8,9 @@ import {
   TYPE_MUTE_THREAD,
   SEND_NEW_MESSAGE_EMAIL,
 } from './constants';
+import type { Job, SendNewMessageEmailJobData } from 'shared/bull/types';
 
-type ReplyData = {
-  sender: {
-    name: string,
-    username: string,
-    profilePhoto: string,
-  },
-  content: {
-    body: string,
-  },
-};
-
-type ThreadData = {
-  id: string,
-  content: {
-    title: string,
-  },
-  community: {
-    slug: string,
-    name: string,
-  },
-  channel: {
-    name: string,
-  },
-  replies: Array<ReplyData>,
-  repliesCount: number,
-};
-
-type SendNewMessageEmailJobData = {
-  recipient: {
-    userId: string,
-    email: string,
-    username: string,
-  },
-  threads: Array<ThreadData>,
-};
-
-type SendNewMessageEmailJob = {
-  data: SendNewMessageEmailJobData,
-  id: string,
-};
-
-export default async (job: SendNewMessageEmailJob) => {
+export default async (job: Job<SendNewMessageEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, threads } = job.data;
 
@@ -69,9 +29,11 @@ export default async (job: SendNewMessageEmailJob) => {
   const firstName = totalNames.splice(0, 1)[0];
   const restNames = totalNames.length > 0 ? totalNames : null;
   const numUsersText = restNames
-    ? ` and ${restNames.length === 1
-        ? `${restNames.length} other person`
-        : `${restNames.length} others`}`
+    ? ` and ${
+        restNames.length === 1
+          ? `${restNames.length} other person`
+          : `${restNames.length} others`
+      }`
     : '';
   const threadsText =
     threadsAmount === 1
@@ -86,9 +48,11 @@ export default async (job: SendNewMessageEmailJob) => {
     0
   );
   const preheaderSubtext = restNames
-    ? ` and ${restNames.length === 1
-        ? `${restNames.length} other person`
-        : `${restNames.length} others`}...`
+    ? ` and ${
+        restNames.length === 1
+          ? `${restNames.length} other person`
+          : `${restNames.length} others`
+      }...`
     : '';
   const preheader = `View ${newMessagesLength} new messages from ${firstName}${preheaderSubtext}`;
 

@@ -31,6 +31,69 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
+type ReplyData = {
+  sender: {
+    name: string,
+    username: string,
+    profilePhoto: string,
+  },
+  content: {
+    body: string,
+  },
+};
+
+type ThreadData = {
+  id: string,
+  content: {
+    title: string,
+  },
+  community: {
+    slug: string,
+    name: string,
+  },
+  channel: {
+    name: string,
+  },
+  replies: Array<ReplyData>,
+  repliesCount: number,
+};
+
+export type SendNewMessageEmailJobData = {
+  recipient: {
+    userId: string,
+    email: string,
+    username: string,
+  },
+  threads: Array<ThreadData>,
+};
+
+export type SendNewDirectMessageEmailJobData = {
+  recipient: {
+    email: string,
+    name: string,
+    username: string,
+    userId: string,
+  },
+  user: {
+    displayName: string,
+    username: string,
+    id: string,
+    name: string,
+  },
+  thread: {
+    content: {
+      title: string,
+    },
+    path: string,
+    id: string,
+  },
+  message: {
+    content: {
+      body: string,
+    },
+  },
+};
+
 export type MentionNotificationJobData = {
   messageId?: string, // This is only set if it's a message mention notification
   threadId: string, // This is always set, no matter if it's a message or thread mention notification
@@ -212,6 +275,8 @@ export type Queues = {
   sendCommunityCardExpiringWarningEmailQueue: BullQueue<
     CardExpiringWarningEmailJobData
   >,
+  sendNewMessageEmailQueue: BullQueue<SendNewMessageEmailJobData>,
+  sendNewDirectMessageEmailQueue: BullQueue<SendNewDirectMessageEmailJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
