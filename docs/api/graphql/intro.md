@@ -1,10 +1,4 @@
-# `api`: The web server
-
-API is a Node.js web server based on Express.js and GraphQL. It's also houses a websocket server for all of our subscription needs.
-
-## Structure
-
-This server follows a GraphQL-first philosophy. That means we design the GraphQL schema first and then start implementing business logic. This is great because it gives us a clear separation of concerns (business logic vs. schema), and it's how Facebook recommends to use GraphQL.
+# GraphQL Intro
 
 We use [`graphql-tools`](http://dev.apollodata.com/tools/graphql-tools/index.html) which lets us use the GraphQL schema language to design our schema. This schema written in the schema language is then combined with our resolvers (which live somewhere else) using `graphql-tools`, which outputs our finished schema that's then used.
 
@@ -15,7 +9,7 @@ This folder setup was inspired by a bunch of open (and some closed) source proje
 This is the current folder structure annotated:
 
 ```sh
-server/
+api/
 ├── migrations     # Migrations for seeding the database with some initial data
 ├── models         # Handle talking to the database
 ├── mutations      # Mutation     resolvers
