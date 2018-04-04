@@ -31,6 +31,14 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
+export type MentionNotificationJobData = {
+  messageId?: string, // This is only set if it's a message mention notification
+  threadId: string, // This is always set, no matter if it's a message or thread mention notification
+  senderId: string,
+  username: ?string,
+  type: 'message' | 'thread',
+};
+
 export type ChannelNotificationJobData = {
   channel: DBChannel,
   userId: string,
@@ -186,6 +194,7 @@ export type Queues = {
     DirectMessageNotificationJobData
   >,
   sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
+  sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
   sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
   slackImportQueue: BullQueue<SlackImportJobData>,
 

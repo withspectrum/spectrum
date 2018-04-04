@@ -19,10 +19,9 @@ import {
   SEND_MENTION_THREAD_NOTIFICATION_EMAIL,
   SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL,
 } from './constants';
-import type { Mention } from 'shared/types';
+import type { Job, MentionNotificationJobData } from 'shared/bull/types';
 
-type JobData = Mention;
-export default async ({ data }: { data: JobData }) => {
+export default async ({ data }: Job<MentionNotificationJobData>) => {
   debug('mention job created');
   const { threadId, messageId, senderId, username, type: mentionType } = data;
   // if we have incomplete data

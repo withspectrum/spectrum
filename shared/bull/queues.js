@@ -37,6 +37,8 @@ import {
   SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
 } from 'hermes/queues/constants';
 
+import { MENTION_NOTIFICATION } from 'athena/queues/constants';
+
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   // athena - notifications
@@ -54,6 +56,7 @@ exports.QUEUE_NAMES = {
   sendChannelNotificationQueue: 'channel notification',
   sendDirectMessageNotificationQueue: 'direct message notification',
   sendMessageNotificationQueue: 'message notification',
+  sendMentionNotificationQueue: MENTION_NOTIFICATION,
   sendNotificationAsPushQueue: 'push notifications',
   slackImportQueue: 'slack import',
 
