@@ -18,7 +18,7 @@ export const getThreadNotificationUsers = (
 export const getUsersThread = (
   userId: string,
   threadId: string
-): Promise<?DBUsersThreads> => {
+): Promise<DBUsersThreads> => {
   return db
     .table('usersThreads')
     .getAll(userId, { index: 'userId' })
