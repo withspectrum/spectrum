@@ -187,7 +187,7 @@ const bufferMessageNotificationEmail = async (
     const timeout = job.data;
     // If we already have a timeout going
     debug(`timeout exists for ${recipient.email}, clearing`);
-
+    await job.remove();
     debug(`adding new thread to ${recipient.email}'s threads`);
     timeout.threads.push(thread);
     timeout.notifications.push(notification);
