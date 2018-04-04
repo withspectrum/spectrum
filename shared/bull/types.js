@@ -31,6 +31,19 @@ interface BullQueue<JobData> {
   ) => void;
 }
 
+export type SendNewMessageMentionEmailJobData = {
+  recipient: DBUser,
+  sender: DBUser,
+  thread: DBThread,
+  message: DBMessage,
+};
+
+export type SendNewThreadMentionEmailJobData = {
+  recipient: DBUser,
+  sender: DBUser,
+  thread: DBThread,
+};
+
 type ReplyData = {
   sender: {
     name: string,
@@ -277,6 +290,8 @@ export type Queues = {
   >,
   sendNewMessageEmailQueue: BullQueue<SendNewMessageEmailJobData>,
   sendNewDirectMessageEmailQueue: BullQueue<SendNewDirectMessageEmailJobData>,
+  sendNewMentionMessageEmailQueue: BullQueue<SendNewMessageMentionEmailJobData>,
+  sendNewMentionThreadEmailQueue: BullQueue<SendNewThreadMentionEmailJobData>,
 
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,

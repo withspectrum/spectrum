@@ -37,6 +37,8 @@ import {
   SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
   SEND_NEW_DIRECT_MESSAGE_EMAIL,
   SEND_NEW_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_MESSAGE_EMAIL,
+  SEND_NEW_MENTION_THREAD_EMAIL,
 } from 'hermes/queues/constants';
 
 import { MENTION_NOTIFICATION } from 'athena/queues/constants';
@@ -73,6 +75,8 @@ exports.QUEUE_NAMES = {
   sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
   sendNewMessageEmailQueue: SEND_NEW_MESSAGE_EMAIL,
   sendNewDirectMessageEmailQueue: SEND_NEW_DIRECT_MESSAGE_EMAIL,
+  sendNewMentionMessageEmailQueue: SEND_NEW_MENTION_MESSAGE_EMAIL,
+  sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,
 
   // mercury - reputation
   processReputationEventQueue: 'process reputation event',

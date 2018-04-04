@@ -1,6 +1,5 @@
 // @flow
 const debug = require('debug')('athena:queue:mention-notification');
-import addQueue from '../utils/addQueue';
 import { toPlainText, toState } from 'shared/draft-utils';
 import truncate from 'shared/truncate';
 import { fetchPayload } from '../utils/payloads';
@@ -16,9 +15,9 @@ import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getThreadById } from '../models/thread';
 import { getUserByUsername, getUserById } from '../models/user';
 import {
-  SEND_NEW_MENTION_THREAD_EMAIL,
-  SEND_NEW_MENTION_MESSAGE_EMAIL,
-} from 'hermes/queues/constants';
+  sendNewMentionThreadEmailQueue,
+  sendNewMentionMessageEmailQueue,
+} from 'shared/bull/queues';
 import type { Job, MentionNotificationJobData } from 'shared/bull/types';
 
 export default async ({ data }: Job<MentionNotificationJobData>) => {
@@ -142,22 +141,20 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   const primaryActionLabel = 'View conversation';
 
   const rawMessageBody = message
-    ? message.content.body
-      ? toPlainText(toState(JSON.parse(message.content.body)))
-      : ''
-    : null;
+    ? toPlainText(toState(JSON.parse(message.content.body)))
+    : '';
 
   // if the message was super long, truncate it
   const messageBody = rawMessageBody && truncate(rawMessageBody.trim(), 280);
 
   // otherwise send an email and add the in-app notification
-  const QUEUE_NAME =
+  const queue =
     mentionType === 'thread'
-      ? SEND_NEW_MENTION_THREAD_EMAIL
-      : SEND_NEW_MENTION_MESSAGE_EMAIL;
+      ? sendNewMentionThreadEmailQueue
+      : sendNewMentionMessageEmailQueue;
 
   return Promise.all([
-    addQueue(QUEUE_NAME, {
+    queue.add({
       recipient,
       sender,
       primaryActionLabel,

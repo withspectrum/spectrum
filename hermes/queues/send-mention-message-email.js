@@ -8,21 +8,9 @@ import {
   TYPE_MUTE_THREAD,
   SEND_NEW_MENTION_MESSAGE_EMAIL,
 } from './constants';
-import type { DBThread, DBUser, DBMessage } from 'shared/types';
+import type { SendNewMessageMentionEmailJobData, Job } from 'shared/bull/types';
 
-type SendNewMentionEmailJobData = {
-  recipient: DBUser,
-  sender: DBUser,
-  thread: DBThread,
-  message: DBMessage,
-};
-
-type SendNewMentionEmailJob = {
-  data: SendNewMentionEmailJobData,
-  id: string,
-};
-
-export default async (job: SendNewMentionEmailJob) => {
+export default async (job: Job<SendNewMessageMentionEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
 
   const { recipient, sender, thread, message } = job.data;
