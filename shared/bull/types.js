@@ -7,29 +7,43 @@ import type {
   DBMessage,
   DBUser,
   DBCommunity,
+  DBNotification,
   DBNotificationsJoin,
 } from '../types';
 import type { RawSource } from '../stripe/types/source';
 import type { RawCharge } from '../stripe/types/charge';
 import type { RawInvoice } from '../stripe/types/invoice';
+import type {
+  Recipient,
+  NewMessageNotificationEmailThread,
+} from 'athena/queues/new-message-in-thread/buffer-email';
 
-export type Job<JobData> = {
+export type Job<JobData> = {|
   id: string,
   data: JobData,
-};
+|};
 
-type JobOptions = {
+type JobOptions = {|
   jobId?: number | string,
+  delay?: number,
   removeOnComplete?: boolean,
   removeOnFail?: boolean,
-};
+|};
 
 interface BullQueue<JobData> {
   add: (data: JobData, options?: JobOptions) => Promise<any>;
   process: (
     cb: (job: Job<JobData>, done: Function) => void | Promise<any>
   ) => void;
+  getJob: (id: string) => Promise<Job<JobData> | null>;
 }
+
+export type BufferNewMessageEmailJobData = {
+  threads: Array<NewMessageNotificationEmailThread>,
+  notifications: Array<DBNotification>,
+  recipient: Recipient,
+  firstTimeout: number,
+};
 
 export type SendNewThreadNotificationEmailJobData = {
   recipient: {
@@ -135,11 +149,7 @@ type ThreadData = {
 };
 
 export type SendNewMessageEmailJobData = {
-  recipient: {
-    userId: string,
-    email: string,
-    username: string,
-  },
+  recipient: Recipient,
   threads: Array<ThreadData>,
 };
 
@@ -352,6 +362,7 @@ export type Queues = {
     CardExpiringWarningEmailJobData
   >,
   sendNewMessageEmailQueue: BullQueue<SendNewMessageEmailJobData>,
+  bufferNewMessageEmailQueue: BullQueue<BufferNewMessageEmailJobData>,
   sendNewDirectMessageEmailQueue: BullQueue<SendNewDirectMessageEmailJobData>,
   sendNewMentionMessageEmailQueue: BullQueue<SendNewMessageMentionEmailJobData>,
   sendNewMentionThreadEmailQueue: BullQueue<SendNewThreadMentionEmailJobData>,

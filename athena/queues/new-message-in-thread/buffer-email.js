@@ -3,7 +3,10 @@ const debug = require('debug')('athena::send-message-notification-email');
 import { getNotifications } from '../../models/notification';
 import groupReplies from './group-replies';
 import getEmailStatus from '../../utils/get-email-status';
-import { sendNewMessageEmailQueue } from 'shared/bull/queues';
+import {
+  sendNewMessageEmailQueue,
+  bufferNewMessageEmailQueue,
+} from 'shared/bull/queues';
 import type {
   DBThread,
   DBNotification,
@@ -17,15 +20,11 @@ const BUFFER = IS_PROD ? 180000 : 10000;
 // wait at most 10 minutes before sending an email notification
 const MAX_WAIT = 600000;
 
-// Called when the buffer time is over to actually send an email
-const timedOut = async recipient => {
-  const threadsInScope = timeouts[recipient.email].threads;
-
-  // array of DBNotifications
-  const notificationsInScope = timeouts[recipient.email].notifications;
-
-  // Clear timeout buffer for this recipient
-  delete timeouts[recipient.email];
+bufferNewMessageEmailQueue.process(async job => {
+  const threadsInScope = job.data.threads;
+  const notificationsInScope = job.data.notifications;
+  const recipient = job.data.recipient;
+  if (!recipient) return;
   debug(
     `send notification email for ${threadsInScope.length} threads to @${
       recipient.username
@@ -86,9 +85,9 @@ const timedOut = async recipient => {
     repliesCount: threads[threadId].replies.length,
   }));
 
-  const threadsWithGroupedReplies = await Promise.all([
-    ...threadsWithGroupedRepliesPromises,
-  ]).catch(err => console.error('error grouping threads and replies', err));
+  const threadsWithGroupedReplies = await Promise.all(
+    threadsWithGroupedRepliesPromises
+  ).catch(err => console.error('error grouping threads and replies', err));
 
   const filteredThreadsWithGroupedReplies =
     threadsWithGroupedReplies &&
@@ -109,7 +108,7 @@ const timedOut = async recipient => {
     recipient,
     threads: filteredThreadsWithGroupedReplies,
   });
-};
+});
 
 type Timeouts = {
   [email: string]: {
@@ -131,7 +130,7 @@ const timeouts: Timeouts = {};
  * - We repeat this process for each further message notification until we have a one minute break
  * - Because we do want people to get emails in a timely manner we force push them out after 10 minutes. Basically, if we get a message notification and no email has been sent but it's been more than 10 minutes since the very first notification we send the email with all current notifications batched into one email.
  */
-type Recipient = {
+export type Recipient = {
   email: string,
   username: string,
   userId: string,
@@ -149,14 +148,15 @@ type Reply = {
     body: string,
   },
 };
-const bufferMessageNotificationEmail = (
+export type NewMessageNotificationEmailThread = {
+  ...$Exact<DBThread>,
+  community: DBCommunity,
+  channel: DBChannel,
+  replies: Array<Reply>,
+};
+const bufferMessageNotificationEmail = async (
   recipient: Recipient,
-  thread: {
-    ...$Exact<DBThread>,
-    community: DBCommunity,
-    channel: DBChannel,
-    replies: Array<Reply>,
-  },
+  thread: NewMessageNotificationEmailThread,
   notification: DBNotification
 ) => {
   debug(
@@ -164,46 +164,56 @@ const bufferMessageNotificationEmail = (
       thread.id
     }`
   );
-  if (!timeouts[recipient.email]) {
+  const job = await bufferNewMessageEmailQueue.getJob(recipient.email);
+  if (!job) {
     debug(
       `creating new timeout for ${
         recipient.email
       }, sending email after ${BUFFER}ms`
     );
-    timeouts[recipient.email] = {
-      timeout: setTimeout(() => timedOut(recipient), BUFFER),
-      firstTimeout: Date.now(),
-      threads: [thread],
-      notifications: [notification],
-    };
+    return bufferNewMessageEmailQueue.add(
+      {
+        threads: [thread],
+        notifications: [notification],
+        firstTimeout: Date.now(),
+        recipient,
+      },
+      {
+        delay: BUFFER,
+        jobId: recipient.email,
+      }
+    );
   } else {
+    const timeout = job.data;
     // If we already have a timeout going
     debug(`timeout exists for ${recipient.email}, clearing`);
-    clearTimeout(timeouts[recipient.email].timeout);
 
     debug(`adding new thread to ${recipient.email}'s threads`);
-    timeouts[recipient.email].threads.push(thread);
-    timeouts[recipient.email].notifications.push(notification);
+    timeout.threads.push(thread);
+    timeout.notifications.push(notification);
 
     // If it's been a few minutes and we still haven't sent an email because messages
     // keep coming send an email now to avoid not sending a notification for hours
-    if (timeouts[recipient.email].firstTimeout < Date.now() - MAX_WAIT) {
+    if (timeout.firstTimeout < Date.now() - MAX_WAIT) {
       debug(
         `force send email to ${
           recipient.email
         } because it's been over ${MAX_WAIT}ms without an email`
       );
-      timedOut(recipient);
+      return bufferNewMessageEmailQueue.add(timeout, {
+        delay: 0,
+        jobId: recipient.email,
+      });
     } else {
       debug(
         `refresh  ${BUFFER}ms timeout for ${recipient.email} with new thread#${
           thread.id
         }`
       );
-      timeouts[recipient.email].timeout = setTimeout(
-        () => timedOut(recipient),
-        BUFFER
-      );
+      return bufferNewMessageEmailQueue.add(timeout, {
+        delay: BUFFER,
+        jobId: recipient.email,
+      });
     }
   }
 };
