@@ -6,31 +6,18 @@ import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
 import { toPlainText, toState } from 'shared/draft-utils';
 import bufferNotificationEmail from './buffer-email';
+import type { DBUser, DBMessage, DBThread, DBNotification } from 'shared/types';
 
-type UserType = {
-  id: string,
-  profilePhoto: string,
-  name: string,
-  username: string,
-};
-type MessageType = {
-  id: string,
-  content: {
-    body: string,
-  },
-};
+type UserType = DBUser;
+type MessageType = DBMessage;
 type RecipientType = {
   email: string,
   username: string,
   userId: string,
   name: string,
 };
-type NotificationType = {};
-type ThreadType = {
-  id: string,
-  channelId: string,
-  communityId: string,
-};
+type NotificationType = DBNotification;
+type ThreadType = DBThread;
 
 export default async (
   recipient: RecipientType,
@@ -51,14 +38,12 @@ export default async (
     return Promise.resolve();
   }
 
-  const { communityId, channelId, ...restOfThread } = thread;
-
   return bufferNotificationEmail(
     recipient,
     {
-      ...restOfThread,
-      community: await getCommunityById(communityId),
-      channel: await getChannelById(channelId),
+      ...thread,
+      community: await getCommunityById(thread.communityId),
+      channel: await getChannelById(thread.channelId),
       replies: [
         {
           id: message.id,

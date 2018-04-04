@@ -4,6 +4,12 @@ import { getNotifications } from '../../models/notification';
 import groupReplies from './group-replies';
 import getEmailStatus from '../../utils/get-email-status';
 import { sendNewMessageEmailQueue } from 'shared/bull/queues';
+import type {
+  DBThread,
+  DBNotification,
+  DBChannel,
+  DBCommunity,
+} from 'shared/types';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // Change buffer in dev to 10 seconds vs 3 minutes in prod
@@ -131,10 +137,27 @@ type Recipient = {
   userId: string,
   name: string,
 };
+type Reply = {
+  id: string,
+  sender: {
+    id: string,
+    profilePhoto: string,
+    name: string,
+    username: ?string,
+  },
+  content: {
+    body: string,
+  },
+};
 const bufferMessageNotificationEmail = (
   recipient: Recipient,
-  thread: any,
-  notification: any
+  thread: {
+    ...$Exact<DBThread>,
+    community: DBCommunity,
+    channel: DBChannel,
+    replies: Array<Reply>,
+  },
+  notification: DBNotification
 ) => {
   debug(
     `send message notification email to ${recipient.email} for thread#${
