@@ -29,7 +29,10 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
   const record = await getUsersThread(userId, threadId);
 
   if (record) {
-    if (new Date(record.lastSeen).getTime() > new Date(date).getTime()) {
+    if (
+      record.lastSeen &&
+      new Date(record.lastSeen).getTime() > new Date(date).getTime()
+    ) {
       debug(
         `old lastSeen ${
           record.lastSeen
