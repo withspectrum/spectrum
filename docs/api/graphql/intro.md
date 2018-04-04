@@ -25,7 +25,7 @@ api/
 ```
 
 Learn more about:
-- [Fragments](graphql/fragments.md)
-- [Pagination](graphql/pagination.md)
-- [Testing](graphql/testing.md)
-- [Tips & Tricks](graphql/tips-and-tricks.md)
+- [Fragments](fragments.md)
+- [Pagination](pagination.md)
+- [Testing](testing.md)
+- [Tips & Tricks](tips-and-tricks.md)
