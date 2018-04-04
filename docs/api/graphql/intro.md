@@ -23,3 +23,9 @@ api/
 ├── index.js       # Runs the actual servers (GraphQL + WebSocket for subscriptions)
 └── schema.js      # Combines the types from types/ and the resolvers together with graphql-tools
 ```
+
+Learn more about:
+- [Fragments](graphql/fragments.md)
+- [Pagination](graphql/pagination.md)
+- [Testing](graphql/testing.md)
+- [Tips & Tricks](graphql/tips-and-tricks.md)
