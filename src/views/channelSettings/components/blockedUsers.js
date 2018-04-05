@@ -8,14 +8,14 @@ import { TextButton } from 'src/components/buttons';
 import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
-import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import {
+  SectionCard,
+  SectionTitle,
+  SectionSubtitle,
+} from 'src/components/settingsViews/style';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import {
-  ListContainer,
-  Description,
-  Notice,
-} from 'src/components/listItems/style';
+import { ListContainer, Notice } from 'src/components/listItems/style';
 import Icon from 'src/components/icons';
 
 type Props = {
@@ -39,12 +39,12 @@ class BlockedUsers extends React.Component<Props> {
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
           {blockedUsers.length > 0 && (
-            <Description>
+            <SectionSubtitle>
               Blocked users can not see threads or messages posted in this
               channel. They will still be able to join any other public channels
               in the Spectrum community and request access to other private
               channels.
-            </Description>
+            </SectionSubtitle>
           )}
 
           {blockedUsers.length > 0 && (
@@ -98,9 +98,9 @@ class BlockedUsers extends React.Component<Props> {
               })}
 
             {blockedUsers.length <= 0 && (
-              <Description>
+              <SectionSubtitle>
                 There are no blocked users in this channel.
-              </Description>
+              </SectionSubtitle>
             )}
           </ListContainer>
         </SectionCard>

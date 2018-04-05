@@ -45,4 +45,8 @@ export const MessageIconContainer = styled.div`
 
 export const UserListItemContainer = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};
+
+  &:last-of-type {
+    border-bottom: none;
+  }
 `;

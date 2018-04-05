@@ -10,8 +10,12 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import ViewError from 'src/components/viewError';
-import { ListContainer, Description } from 'src/components/listItems/style';
-import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import { ListContainer } from 'src/components/listItems/style';
+import {
+  SectionCard,
+  SectionTitle,
+  SectionSubtitle,
+} from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 
 type Props = {
@@ -41,11 +45,11 @@ class PendingUsers extends React.Component<Props> {
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
           {pendingUsers.length > 0 && (
-            <Description>
+            <SectionSubtitle>
               Approving requests will allow a person to view all threads and
               messages in this channel, as well as allow them to post their own
               threads.
-            </Description>
+            </SectionSubtitle>
           )}
 
           <ListContainer>
@@ -103,9 +107,9 @@ class PendingUsers extends React.Component<Props> {
               })}
 
             {pendingUsers.length <= 0 && (
-              <Description>
+              <SectionSubtitle>
                 There are no pending requests to join this channel.
-              </Description>
+              </SectionSubtitle>
             )}
           </ListContainer>
         </SectionCard>
