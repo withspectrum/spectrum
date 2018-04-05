@@ -1,6 +1,7 @@
+// @flow
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol, Transition, zIndex } from '../../components/globals';
+import { Transition, zIndex } from '../../components/globals';
 import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
@@ -114,17 +115,6 @@ export const Content = styled(Column)`
 export const Extras = styled(Column)`
   grid-area: extras;
 
-  > ${FlexCol} > div {
-    border-top: 0;
-    padding: 0;
-    padding-top: 24px;
-
-    h3 {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-  }
-
   @media (max-width: 1280px) {
     display: none;
   }
@@ -178,4 +168,20 @@ export const SearchInput = styled.input`
   margin-left: 8px;
   width: 97%;
   border-radius: 12px;
+`;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;

@@ -13,7 +13,7 @@ import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { MessageIconContainer, UserListItemContainer } from '../style';
-import GranularUserProfile from '../../../components/granularUserProfile';
+import GranularUserProfile from 'src/components/granularUserProfile';
 
 type Props = {
   data: {
@@ -47,7 +47,9 @@ class CommunityModeratorList extends React.Component<Props> {
 
     if (community && community.members) {
       const { edges: members } = community.members;
-      const nodes = members.map(member => member && member.node);
+      const nodes = members
+        .map(member => member && member.node)
+        .filter(node => node && (node.isOwner || node.isModerator));
 
       return (
         <div>

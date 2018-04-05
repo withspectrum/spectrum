@@ -7,6 +7,7 @@ export const Content = styled.div`
   padding: 12px 0;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 export const Row = styled.div`
@@ -42,7 +43,7 @@ export const MetaContent = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  flex: auto;
+  flex: 1 0;
   padding-right: 24px;
 
   > a {
