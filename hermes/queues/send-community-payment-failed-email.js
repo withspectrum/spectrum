@@ -47,7 +47,8 @@ export default (job: Job<PaymentFailedEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
   }
 };

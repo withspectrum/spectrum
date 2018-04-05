@@ -30,8 +30,6 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
   } community · ${month}, ${year}`;
   const preheader = 'Thank you for building your community with Spectrum';
 
-  const amount = formatNumbersToDollars(invoice.total);
-
   const lineItems = invoice.lines.data
     .map(item => {
       if (!item) return null;
@@ -109,7 +107,8 @@ export default (job: Job<PaymentSucceededEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
   }
 };
