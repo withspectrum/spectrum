@@ -1,10 +1,9 @@
 // @flow
 const debug = require('debug')('athena::send-message-notification-email');
-import addQueue from '../../utils/addQueue';
-import { SEND_NEW_MESSAGE_EMAIL } from '../constants';
 import { getNotifications } from '../../models/notification';
 import groupReplies from './group-replies';
 import getEmailStatus from '../../utils/get-email-status';
+import { sendNewMessageEmailQueue } from 'shared/bull/queues';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // Change buffer in dev to 10 seconds vs 3 minutes in prod
@@ -22,7 +21,9 @@ const timedOut = async recipient => {
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
   debug(
-    `send notification email for ${threadsInScope.length} threads to @${recipient.username} (${recipient.email})`
+    `send notification email for ${threadsInScope.length} threads to @${
+      recipient.username
+    } (${recipient.email})`
   );
 
   const shouldGetEmail = await getEmailStatus(
@@ -81,7 +82,7 @@ const timedOut = async recipient => {
 
   const threadsWithGroupedReplies = await Promise.all([
     ...threadsWithGroupedRepliesPromises,
-  ]).catch(err => console.log('error grouping threads and replies', err));
+  ]).catch(err => console.error('error grouping threads and replies', err));
 
   const filteredThreadsWithGroupedReplies =
     threadsWithGroupedReplies &&
@@ -90,7 +91,7 @@ const timedOut = async recipient => {
 
   // this would happen if someone sends a message in a thread then deletes that message
   if (
-    filteredThreadsWithGroupedReplies &&
+    !filteredThreadsWithGroupedReplies ||
     filteredThreadsWithGroupedReplies.length === 0
   ) {
     debug('no threads with at least one reply');
@@ -98,7 +99,7 @@ const timedOut = async recipient => {
   }
 
   debug(`adding email for @${recipient.username} to queue`);
-  return addQueue(SEND_NEW_MESSAGE_EMAIL, {
+  return sendNewMessageEmailQueue.add({
     recipient,
     threads: filteredThreadsWithGroupedReplies,
   });
@@ -136,11 +137,15 @@ const bufferMessageNotificationEmail = (
   notification: any
 ) => {
   debug(
-    `send message notification email to ${recipient.email} for thread#${thread.id}`
+    `send message notification email to ${recipient.email} for thread#${
+      thread.id
+    }`
   );
   if (!timeouts[recipient.email]) {
     debug(
-      `creating new timeout for ${recipient.email}, sending email after ${BUFFER}ms`
+      `creating new timeout for ${
+        recipient.email
+      }, sending email after ${BUFFER}ms`
     );
     timeouts[recipient.email] = {
       timeout: setTimeout(() => timedOut(recipient), BUFFER),
@@ -161,12 +166,16 @@ const bufferMessageNotificationEmail = (
     // keep coming send an email now to avoid not sending a notification for hours
     if (timeouts[recipient.email].firstTimeout < Date.now() - MAX_WAIT) {
       debug(
-        `force send email to ${recipient.email} because it's been over ${MAX_WAIT}ms without an email`
+        `force send email to ${
+          recipient.email
+        } because it's been over ${MAX_WAIT}ms without an email`
       );
       timedOut(recipient);
     } else {
       debug(
-        `refresh  ${BUFFER}ms timeout for ${recipient.email} with new thread#${thread.id}`
+        `refresh  ${BUFFER}ms timeout for ${recipient.email} with new thread#${
+          thread.id
+        }`
       );
       timeouts[recipient.email].timeout = setTimeout(
         () => timedOut(recipient),

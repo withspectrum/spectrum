@@ -1,3 +1,5 @@
+[Table of contents](../readme.md)
+
 # Importing production data locally
 
 Sometimes it's useful to have production data running locally in rethinkdb for debugging and testing. To get production data running locally, follow these steps:

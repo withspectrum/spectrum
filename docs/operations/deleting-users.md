@@ -1,4 +1,6 @@
-# How to delete users on Spectrum
+[Table of contents](../readme.md)
+
+# Deleting users
 
 Occassionally people request that their account gets deleted on Spectrum. We have a safe way to do this so that it respects the integrity of data across the rest of the database.
 
