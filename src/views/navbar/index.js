@@ -88,6 +88,13 @@ class Navbar extends React.Component<Props, State> {
   handleSkipLinkFocus = () => this.setState({ isSkipLinkFocused: true });
   handleSkipLinkBlur = () => this.setState({ isSkipLinkFocused: false });
 
+  getTabProps(isActive: boolean) {
+    return {
+      'data-active': isActive,
+      'aria-current': isActive ? 'page' : undefined,
+    };
+  }
+
   render() {
     const { history, match, currentUser, notificationCounts } = this.props;
 
@@ -168,7 +175,10 @@ class Navbar extends React.Component<Props, State> {
             Skip to content
           </SkipLink>
 
-          <HomeTab data-active={match.url === '/' && match.isExact} to="/">
+          <HomeTab
+            {...this.getTabProps(match.url === '/' && match.isExact)}
+            to="/"
+          >
             <Icon glyph="home" />
             <Label>Home</Label>
           </HomeTab>
@@ -178,7 +188,7 @@ class Navbar extends React.Component<Props, State> {
           />
 
           <ExploreTab
-            data-active={history.location.pathname === '/explore'}
+            {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
           >
             <Icon glyph="explore" />
@@ -194,9 +204,9 @@ class Navbar extends React.Component<Props, State> {
           <ProfileDrop>
             <Tab
               className={'hideOnMobile'}
-              data-active={
+              {...this.getTabProps(
                 history.location.pathname === `/users/${loggedInUser.username}`
-              }
+              )}
               to={
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
@@ -212,9 +222,9 @@ class Navbar extends React.Component<Props, State> {
 
           <ProfileTab
             className={'hideOnDesktop'}
-            data-active={
+            {...this.getTabProps(
               history.location.pathname === `/users/${loggedInUser.username}`
-            }
+            )}
             to={loggedInUser.username ? `/users/${loggedInUser.username}` : '/'}
           >
             <Icon glyph="profile" />
@@ -246,14 +256,14 @@ class Navbar extends React.Component<Props, State> {
 
           <HomeTab
             className={'hideOnDesktop'}
-            data-active={match.url === '/' && match.isExact}
+            {...this.getTabProps(match.url === '/' && match.isExact)}
             to="/"
           >
             <Icon glyph="logo" />
             <Label>About</Label>
           </HomeTab>
           <ExploreTab
-            data-active={history.location.pathname === '/explore'}
+            {...this.getTabProps(history.location.pathname === '/explore')}
             to="/explore"
             loggedOut={!loggedInUser}
           >
@@ -261,14 +271,14 @@ class Navbar extends React.Component<Props, State> {
             <Label>Explore</Label>
           </ExploreTab>
           <SupportTab
-            data-active={history.location.pathname === '/support'}
+            {...this.getTabProps(history.location.pathname === '/support')}
             to="/support"
           >
             <Icon glyph="like" />
             <Label>Support</Label>
           </SupportTab>
           <PricingTab
-            data-active={history.location.pathname === '/pricing'}
+            {...this.getTabProps(history.location.pathname === '/pricing')}
             to="/pricing"
           >
             <Icon glyph="payment" />
