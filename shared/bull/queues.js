@@ -101,6 +101,7 @@ exports.QUEUE_NAMES = {
   sendCommunityPaymentFailedEmailQueue: SEND_COMMUNITY_PAYMENT_FAILED_EMAIL,
   sendCommunityCardExpiringWarningEmailQueue: SEND_COMMUNITY_CARD_EXPIRING_WARNING_EMAIL,
   sendNewMessageEmailQueue: SEND_NEW_MESSAGE_EMAIL,
+  bufferNewMessageEmailQueue: 'buffer new message email queue',
   sendNewDirectMessageEmailQueue: SEND_NEW_DIRECT_MESSAGE_EMAIL,
   sendNewMentionMessageEmailQueue: SEND_NEW_MENTION_MESSAGE_EMAIL,
   sendNewMentionThreadEmailQueue: SEND_NEW_MENTION_THREAD_EMAIL,

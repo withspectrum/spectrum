@@ -6,6 +6,7 @@ import Raven from 'shared/raven';
 import { fetchPayload, createPayload } from '../../utils/payloads';
 import { getDistinctActors } from '../../utils/actors';
 import formatData from './format-data';
+import bufferNotificationEmail from './buffer-email';
 import {
   storeNotification,
   updateNotification,
@@ -130,15 +131,28 @@ export default async (job: Job<MessageNotificationJobData>) => {
     : storeUsersNotifications;
 
   // send each recipient a notification
-  const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
-    if (!recipient) return Promise.resolve();
+  const formatAndBufferPromises = recipientsWithoutMentions.map(
+    async recipient => {
+      if (!recipient || !recipient.email || !thread || !message) {
+        debug(
+          '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
+          recipient,
+          thread,
+          message
+        );
+        return Promise.resolve();
+      }
 
-    formatData(recipient, thread, sender, message, notification);
-
-    // store or update the notification in the db to trigger a ui update in app
-    debug('Updating the notification record in the db');
-    return dbMethod(notification.id, recipient.userId);
-  });
+      debug(
+        'format data, buffer notification email and store/update notification in db'
+      );
+      const data = await formatData(thread, sender, message);
+      return Promise.all([
+        bufferNotificationEmail(recipient, data, notification),
+        dbMethod(notification.id, recipient.userId),
+      ]);
+    }
+  );
 
   return Promise.all(formatAndBufferPromises).catch(err => {
     debug('❌ Error in job:\n');
