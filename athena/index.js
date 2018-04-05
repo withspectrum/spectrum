@@ -42,9 +42,9 @@ import {
 
 const PORT = process.env.PORT || 3003;
 
-console.log('\n🛠 Athena, the processing worker, is starting...');
+debug('\n🛠 Athena, the processing worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
+debug('');
 
 const server = createWorker({
   [MESSAGE_NOTIFICATION]: processMessageNotification,
@@ -68,7 +68,7 @@ const server = createWorker({
 
 startNotificationsListener();
 
-console.log(
+debug(
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
     // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
@@ -77,7 +77,7 @@ console.log(
 
 // $FlowIssue
 server.listen(PORT, 'localhost', () => {
-  console.log(
+  debug(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
     }`
