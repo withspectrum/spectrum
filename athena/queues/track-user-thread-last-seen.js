@@ -63,6 +63,5 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
       );
       debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
 };
