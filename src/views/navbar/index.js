@@ -135,7 +135,7 @@ class Navbar extends React.Component<Props> {
             )}
           </Head>
 
-          <Logo to="/">
+          <Logo to="/" aria-hidden tabIndex="-1">
             <Icon glyph="logo" size={28} />
           </Logo>
 
@@ -198,7 +198,7 @@ class Navbar extends React.Component<Props> {
     if (!loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
-          <Logo to="/">
+          <Logo to="/" aria-hidden tabIndex="-1">
             <Icon glyph="logo" size={28} />
           </Logo>
           <HomeTab
