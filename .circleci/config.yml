@@ -86,6 +86,8 @@ jobs:
   build_web:
     <<: *js_defaults
     steps:
+      - attach_workspace:
+          at: ~/spectrum
       - run: *setup-and-build-web
 
   test_web_unit:
@@ -93,6 +95,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/spectrum
+      - run: *install-rethinkdb
+      - run: *start-rethinkdb
+      - run: sleep 10
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
