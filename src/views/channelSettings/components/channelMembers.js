@@ -1,6 +1,5 @@
 //@flow
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Loading } from 'src/components/loading';
@@ -9,7 +8,6 @@ import type { GetChannelMemberConnectionType } from 'shared/graphql/queries/chan
 import { FetchMoreButton } from 'src/components/threadFeed/style';
 import ViewError from 'src/components/viewError';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import GranularUserProfile from 'src/components/granularUserProfile';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { MessageIconContainer, UserListItemContainer } from '../style';
@@ -24,16 +22,11 @@ type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
   dispatch: Function,
-  history: Object,
+  initMessage: Function,
   currentUser: ?Object,
 };
 
 class ChannelMembers extends Component<Props> {
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    return this.props.history.push('/messages/new');
-  };
-
   render() {
     const {
       data: { channel, fetchMore },
@@ -41,6 +34,7 @@ class ChannelMembers extends Component<Props> {
       isLoading,
       isFetchingMore,
       currentUser,
+      initMessage,
     } = this.props;
 
     if (data && data.channel) {
@@ -81,7 +75,7 @@ class ChannelMembers extends Component<Props> {
                           <MessageIconContainer>
                             <Icon
                               glyph={'message'}
-                              onClick={() => this.initMessage(user)}
+                              onClick={() => initMessage(user)}
                             />
                           </MessageIconContainer>
                         )}
@@ -128,6 +122,5 @@ export default compose(
   // $FlowIssue
   connect(map),
   getChannelMembersQuery,
-  withRouter,
   viewNetworkHandler
 )(ChannelMembers);

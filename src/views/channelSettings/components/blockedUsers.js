@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { MessageIconContainer, UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
@@ -18,7 +17,6 @@ import {
   Notice,
 } from 'src/components/listItems/style';
 import Icon from 'src/components/icons';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 
 type Props = {
   data: {
@@ -26,19 +24,13 @@ type Props = {
   },
   unblock: Function,
   isLoading: boolean,
-  dispatch: Function,
-  history: Object,
+  initMessage: Function,
   currentUser: ?Object,
 };
 
 class BlockedUsers extends React.Component<Props> {
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    return this.props.history.push('/messages/new');
-  };
-
   render() {
-    const { data, unblock, isLoading, currentUser } = this.props;
+    const { data, unblock, isLoading, currentUser, initMessage } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -95,7 +87,7 @@ class BlockedUsers extends React.Component<Props> {
                             <MessageIconContainer>
                               <Icon
                                 glyph={'message'}
-                                onClick={() => this.initMessage(user)}
+                                onClick={() => initMessage(user)}
                               />
                             </MessageIconContainer>
                           )}
@@ -136,7 +128,6 @@ const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
   // $FlowIssue
   connect(map),
-  withRouter,
   getBlockedUsersQuery,
   viewNetworkHandler
 )(BlockedUsers);
