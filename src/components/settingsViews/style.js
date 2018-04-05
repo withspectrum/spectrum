@@ -34,6 +34,7 @@ export const Column = styled.div`
   @media (max-width: 768px) {
     flex: 1 0 100%;
     padding: 0;
+    max-width: 100%;
 
     &:first-of-type {
       padding-top: 8px;
