@@ -1,3 +1,4 @@
+// @flow
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import Avatar from '../../components/avatar';
@@ -544,6 +545,12 @@ export const PillLabel = styled.span`
     css`
       position: relative;
     `};
+`;
+
+export const SidebarChannelPill = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 8px 16px 16px;
 `;
 
 export const Lock = styled.span`
