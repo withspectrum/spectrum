@@ -1,6 +1,7 @@
+// @flow
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol, Transition, zIndex } from '../../components/globals';
+import { Transition, zIndex } from '../../components/globals';
 import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';

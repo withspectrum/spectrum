@@ -104,26 +104,26 @@ export default async (
 
   const { customer } = await StripeUtil.jobPreflight(community.id);
 
-  if (!customer) {
-    return new UserError(
-      'We could not verify the billing status for this channel, please try again'
-    );
-  }
+  // if (!customer) {
+  //   return new UserError(
+  //     'We could not verify the billing status for this channel, please try again'
+  //   );
+  // }
 
-  const hasPaidPrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
-    customer,
-    PRIVATE_CHANNEL
-  );
-  const hasFreePrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
-    customer,
-    FREE_PRIVATE_CHANNEL
-  );
+  // const hasPaidPrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
+  //   customer,
+  //   PRIVATE_CHANNEL
+  // );
+  // const hasFreePrivateChannel = await StripeUtil.hasSubscriptionItemOfType(
+  //   customer,
+  //   FREE_PRIVATE_CHANNEL
+  // );
 
-  if (channel.isPrivate && (!hasPaidPrivateChannel && !hasFreePrivateChannel)) {
-    return new UserError(
-      'This private channel does not have an active subscription'
-    );
-  }
+  // if (channel.isPrivate && (!hasPaidPrivateChannel && !hasFreePrivateChannel)) {
+  //   return new UserError(
+  //     'This private channel does not have an active subscription'
+  //   );
+  // }
 
   /*
   If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
