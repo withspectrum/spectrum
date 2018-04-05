@@ -1,4 +1,4 @@
-import React from 'react';
+// @flow
 import styled from 'styled-components';
 
 const VisuallyHidden = styled.span`
