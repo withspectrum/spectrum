@@ -21,7 +21,7 @@ import type {
 export type Job<JobData> = {|
   id: string,
   data: JobData,
-  remove: () => Promise<>,
+  remove: () => Promise<void>,
 |};
 
 type JobOptions = {|
