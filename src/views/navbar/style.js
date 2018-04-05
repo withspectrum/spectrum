@@ -100,13 +100,15 @@ export const Tab = styled(Link)`
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
 
-      &:hover {
+      &:hover,
+      &:focus {
         box-shadow: inset 0 -6px 0 ${({ theme }) => theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
