@@ -92,7 +92,7 @@ jobs:
     <<: *js_defaults
     steps:
       - attach_workspace:
-        at: ~/spectrum
+          at: ~/spectrum
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
