@@ -20,6 +20,7 @@ import {
   Tab,
   Label,
   Navatar,
+  SkipLink,
 } from './style';
 
 type Props = {
@@ -36,9 +37,21 @@ type Props = {
   activeInboxThread: ?string,
 };
 
-class Navbar extends React.Component<Props> {
-  shouldComponentUpdate(nextProps) {
+type State = {
+  isSkipLinkFocused: boolean,
+};
+
+class Navbar extends React.Component<Props, State> {
+  state = {
+    isSkipLinkFocused: false,
+  };
+
+  shouldComponentUpdate(nextProps, nextState) {
     const currProps = this.props;
+
+    // If the update was caused by the focus on the skip link
+    if (nextState.isSkipLinkFocused !== this.state.isSkipLinkFocused)
+      return true;
 
     // if route changes
     if (currProps.location.pathname !== nextProps.location.pathname)
@@ -71,6 +84,9 @@ class Navbar extends React.Component<Props> {
 
     return false;
   }
+
+  handleSkipLinkFocus = () => this.setState({ isSkipLinkFocused: true });
+  handleSkipLinkBlur = () => this.setState({ isSkipLinkFocused: false });
 
   render() {
     const { history, match, currentUser, notificationCounts } = this.props;
@@ -135,9 +151,22 @@ class Navbar extends React.Component<Props> {
             )}
           </Head>
 
-          <Logo to="/" aria-hidden tabIndex="-1">
+          <Logo
+            to="/"
+            aria-hidden
+            tabIndex="-1"
+            isHidden={this.state.isSkipLinkFocused}
+          >
             <Icon glyph="logo" size={28} />
           </Logo>
+
+          <SkipLink
+            href="#main"
+            onFocus={this.handleSkipLinkFocus}
+            onBlur={this.handleSkipLinkBlur}
+          >
+            Skip to content
+          </SkipLink>
 
           <HomeTab data-active={match.url === '/' && match.isExact} to="/">
             <Icon glyph="home" />
@@ -198,9 +227,23 @@ class Navbar extends React.Component<Props> {
     if (!loggedInUser) {
       return (
         <Nav hideOnMobile={hideNavOnMobile} loggedOut={!loggedInUser}>
-          <Logo to="/" aria-hidden tabIndex="-1">
+          <Logo
+            to="/"
+            aria-hidden
+            tabIndex="-1"
+            isHidden={this.state.isSkipLinkFocused}
+          >
             <Icon glyph="logo" size={28} />
           </Logo>
+
+          <SkipLink
+            href="#main"
+            onFocus={this.handleSkipLinkFocus}
+            onBlur={this.handleSkipLinkBlur}
+          >
+            Skip to content
+          </SkipLink>
+
           <HomeTab
             className={'hideOnDesktop'}
             data-active={match.url === '/' && match.isExact}
