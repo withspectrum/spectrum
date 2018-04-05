@@ -70,7 +70,8 @@ export default async (job: DigestJob) => {
         }
       );
     } catch (err) {
-      console.log('Error adding to queue: ', err);
+      debug(err);
+      Raven.captureException(err);
     }
   });
 

@@ -81,10 +81,8 @@ export default async (job: Job<ReactionNotificationJobData>) => {
     return Promise.all([
       markUsersNotificationsAsNew(updatedNotification.id, message.senderId),
     ]).catch(err => {
-      debug('❌ Error in job:\n');
       debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
   } else {
     // if no notification was found that matches our bundling criteria, create a new notification
