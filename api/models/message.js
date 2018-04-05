@@ -104,6 +104,7 @@ export const getMediaMessagesForThread = (
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
     .filter({ messageType: 'media' })
+    .filter(db.row.hasFields('deletedAt').not())
     .run();
 };
 
