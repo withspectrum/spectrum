@@ -129,6 +129,7 @@ export const StyledSubnav = styled.div`
     padding: 0 16px;
     display: block;
     justify-content: center;
+    overflow-x: scroll;
   }
 `;
 

@@ -49,7 +49,7 @@ class CommunityModeratorList extends React.Component<Props> {
       const { edges: members } = community.members;
       const nodes = members
         .map(member => member && member.node)
-        .filter(node => node.isOwner || node.isModerator);
+        .filter(node => node && (node.isOwner || node.isModerator));
 
       return (
         <div>
