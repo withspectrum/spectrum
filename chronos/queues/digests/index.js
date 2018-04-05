@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:send-digest-email');
+import Raven from 'shared/raven';
 import { addQueue } from '../../jobs/utils';
 import { PROCESS_INDIVIDUAL_DIGEST } from '../constants';
 import { getThreadsForDigest, attachDataToThreads } from './processThreads';
@@ -77,6 +78,8 @@ export default async (job: DigestJob) => {
   try {
     return Promise.all(usersPromises);
   } catch (err) {
-    console.log('Error processing digests:', err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };
