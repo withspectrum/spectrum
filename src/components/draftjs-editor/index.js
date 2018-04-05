@@ -131,11 +131,7 @@ class Editor extends React.Component<Props, State> {
 
     const { state, onChange } = this.props;
     onChange(this.state.addEmbed(state, parseEmbedUrl(this.state.embedUrl)));
-    this.setState({
-      embedUrl: '',
-      embedding: false,
-      inserting: false,
-    });
+    this.closeToolbar();
   };
 
   addImages = (files: FileList) => {
@@ -150,6 +146,15 @@ class Editor extends React.Component<Props, State> {
 
   addImage = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.addImages(e.target.files);
+    this.closeToolbar();
+  };
+
+  closeToolbar = () => {
+    this.setState({
+      embedUrl: '',
+      embedding: false,
+      inserting: false,
+    });
   };
 
   handleDroppedFiles = (_: any, files: FileList) => {
@@ -203,6 +208,7 @@ class Editor extends React.Component<Props, State> {
             editorState={state}
             onChange={onChange}
             plugins={this.state.plugins}
+            onFocus={this.closeToolbar}
             handleDroppedFiles={this.handleDroppedFiles}
             ref={editor => {
               this.editor = editor;
@@ -286,6 +292,7 @@ class Editor extends React.Component<Props, State> {
               editorState={state}
               onChange={onChange}
               plugins={this.state.plugins}
+              onFocus={this.closeToolbar}
               handleDroppedFiles={this.handleDroppedFiles}
               ref={editor => {
                 this.editor = editor;
