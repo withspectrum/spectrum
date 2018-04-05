@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import isURL from 'validator/lib/isURL';
 import debounce from 'debounce';
+import queryString from 'query-string';
 import { KeyBindingUtil } from 'draft-js';
 import { URLS } from '../../helpers/regexps';
 import { track } from '../../helpers/events';
@@ -245,11 +246,20 @@ class ComposerWithData extends Component<Props, State> {
       // Community/channel view
       this.closeComposer();
       // Dashboard
-      this.props.dispatch(changeActiveThread(null));
+      this.activateLastThread();
       return;
     }
 
     if (cmdEnter) return this.publishThread();
+  };
+
+  activateLastThread = () => {
+    // we get the last thread id from the query params and dispatch it
+    // as the active thread.
+    const { location } = this.props;
+    const { t: threadId } = queryString.parse(location.search);
+
+    this.props.dispatch(changeActiveThread(threadId));
   };
 
   changeTitle = e => {
@@ -312,6 +322,10 @@ class ComposerWithData extends Component<Props, State> {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  onCancelClick = () => {
+    this.activateLastThread();
   };
 
   persistBodyToLocalStorageWithDebounce = body => {
@@ -664,10 +678,7 @@ class ComposerWithData extends Component<Props, State> {
           )}
 
           <FlexRow>
-            <TextButton
-              hoverColor="warn.alt"
-              onClick={() => this.props.dispatch(changeActiveThread(null))}
-            >
+            <TextButton hoverColor="warn.alt" onClick={this.onCancelClick}>
               Cancel
             </TextButton>
             <Button
