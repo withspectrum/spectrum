@@ -98,6 +98,8 @@ module.exports = function override(config, env) {
   // Get all public files so they're cached by the SW
   let externals = [];
   walkFolder('./public/', file => {
+    // HOTFIX: Don't cache images
+    if (file.indexOf('img') > -1) return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
