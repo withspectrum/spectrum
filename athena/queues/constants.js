@@ -30,3 +30,5 @@ export const COMMUNITY_INVOICE_PAID_NOTIFICATION =
 export const SEND_PRO_INVOICE_RECEIPT_EMAIL = 'send pro invoice receipt email';
 export const SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL =
   'send community invoice receipt email';
+
+export const TRACK_USER_LAST_SEEN = 'track user thread last seen';

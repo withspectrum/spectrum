@@ -1,22 +1,22 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { UserListItem } from '../../../components/listItems';
-import { TextButton } from '../../../components/buttons';
-import { Loading } from '../../../components/loading';
+import { connect } from 'react-redux';
+import { MessageIconContainer, UserListItemContainer } from '../style';
+import GranularUserProfile from 'src/components/granularUserProfile';
+import { TextButton } from 'src/components/buttons';
+import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import {
   SectionCard,
   SectionTitle,
-} from '../../../components/settingsViews/style';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
-import {
-  ListContainer,
-  Description,
-  Notice,
-} from '../../../components/listItems/style';
+  SectionSubtitle,
+} from 'src/components/settingsViews/style';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import { ListContainer, Notice } from 'src/components/listItems/style';
+import Icon from 'src/components/icons';
 
 type Props = {
   data: {
@@ -24,11 +24,13 @@ type Props = {
   },
   unblock: Function,
   isLoading: boolean,
+  initMessage: Function,
+  currentUser: ?Object,
 };
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, unblock, isLoading } = this.props;
+    const { data, unblock, isLoading, currentUser, initMessage } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -37,12 +39,12 @@ class BlockedUsers extends React.Component<Props> {
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
           {blockedUsers.length > 0 && (
-            <Description>
+            <SectionSubtitle>
               Blocked users can not see threads or messages posted in this
               channel. They will still be able to join any other public channels
               in the Spectrum community and request access to other private
               channels.
-            </Description>
+            </SectionSubtitle>
           )}
 
           {blockedUsers.length > 0 && (
@@ -59,23 +61,46 @@ class BlockedUsers extends React.Component<Props> {
                 if (!user || !user.id) return null;
 
                 return (
-                  <section key={user.id}>
-                    <UserListItem user={user}>
-                      <TextButton
-                        onClick={() => user && unblock(user.id)}
-                        hoverColor={'warn.alt'}
-                      >
-                        Unblock
-                      </TextButton>
-                    </UserListItem>
-                  </section>
+                  <UserListItemContainer key={user.id}>
+                    <GranularUserProfile
+                      userObject={user}
+                      id={user.id}
+                      name={user.name}
+                      username={user.username}
+                      isCurrentUser={currentUser && user.id === currentUser.id}
+                      isOnline={user.isOnline}
+                      onlineSize={'small'}
+                      profilePhoto={user.profilePhoto}
+                      avatarSize={'32'}
+                      description={user.description}
+                    >
+                      <div style={{ display: 'flex' }}>
+                        <TextButton
+                          onClick={() => user && unblock(user.id)}
+                          hoverColor={'warn.alt'}
+                        >
+                          Unblock
+                        </TextButton>
+
+                        {currentUser &&
+                          user.id !== currentUser.id && (
+                            <MessageIconContainer>
+                              <Icon
+                                glyph={'message'}
+                                onClick={() => initMessage(user)}
+                              />
+                            </MessageIconContainer>
+                          )}
+                      </div>
+                    </GranularUserProfile>
+                  </UserListItemContainer>
                 );
               })}
 
             {blockedUsers.length <= 0 && (
-              <Description>
+              <SectionSubtitle>
                 There are no blocked users in this channel.
-              </Description>
+              </SectionSubtitle>
             )}
           </ListContainer>
         </SectionCard>
@@ -98,4 +123,11 @@ class BlockedUsers extends React.Component<Props> {
   }
 }
 
-export default compose(getBlockedUsersQuery, viewNetworkHandler)(BlockedUsers);
+const map = state => ({ currentUser: state.users.currentUser });
+
+export default compose(
+  // $FlowIssue
+  connect(map),
+  getBlockedUsersQuery,
+  viewNetworkHandler
+)(BlockedUsers);

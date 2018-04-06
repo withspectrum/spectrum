@@ -30,3 +30,23 @@ export const TokenInputWrapper = styled.div`
     }
   }
 `;
+
+export const MessageIconContainer = styled.div`
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
+export const UserListItemContainer = styled.div`
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+`;

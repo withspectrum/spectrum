@@ -11,7 +11,7 @@ export const GithubSigninButton = (props: ButtonProps) => {
     <A onClick={() => onClickHandler && onClickHandler('github')} href={href}>
       <GithubButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'github'} />
-        <Label>Sign in with Github</Label>
+        <Label>Sign in with GitHub</Label>
       </GithubButton>
     </A>
   );

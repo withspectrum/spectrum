@@ -1,6 +1,8 @@
 export const clearStorage = () => localStorage.clear();
 
 export const getItemFromStorage = (key: string) => {
+  if (!localStorage) return;
+
   try {
     return JSON.parse(localStorage.getItem(key));
   } catch (err) {
@@ -9,6 +11,8 @@ export const getItemFromStorage = (key: string) => {
 };
 
 export const storeItem = (key: string, item: any) => {
+  if (!localStorage) return;
+
   try {
     return localStorage.setItem(key, JSON.stringify(item));
   } catch (err) {
@@ -17,6 +21,8 @@ export const storeItem = (key: string, item: any) => {
 };
 
 export const removeItemFromStorage = (key: string) => {
+  if (!localStorage) return;
+
   try {
     return localStorage.removeItem(key);
   } catch (err) {

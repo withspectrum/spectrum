@@ -315,6 +315,7 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   persistBodyToLocalStorageWithDebounce = body => {
+    if (!localStorage) return;
     return localStorage.setItem(
       LS_BODY_KEY,
       JSON.stringify(toJSON(this.state.body))
@@ -322,14 +323,17 @@ class ComposerWithData extends Component<Props, State> {
   };
 
   persistTitleToLocalStorageWithDebounce = title => {
+    if (!localStorage) return;
     return localStorage.setItem(LS_TITLE_KEY, this.state.title);
   };
 
   persistTitleToLocalStorage = title => {
+    if (!localStorage) return;
     return localStorage.setItem(LS_TITLE_KEY, this.state.title);
   };
 
   persistBodyToLocalStorage = body => {
+    if (!localStorage) return;
     return localStorage.setItem(
       LS_BODY_KEY,
       JSON.stringify(toJSON(this.state.body))
