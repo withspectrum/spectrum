@@ -74,10 +74,13 @@ export default async (
     community,
     usersPreviousPublishedThreads,
   ] = await Promise.all([
-    getUserPermissionsInChannel(thread.channelId, currentUser.id),
-    getUserPermissionsInCommunity(thread.communityId, currentUser.id),
-    getChannelById(thread.channelId),
-    getCommunityById(thread.communityId),
+    loaders.userPermissionsInChannel.load([currentUser.id, thread.channelId]),
+    loaders.userPermissionsInCommunity.load([
+      currentUser.id,
+      thread.communityId,
+    ]),
+    loaders.channel.load(thread.channelId),
+    loaders.community.load(thread.communityId),
     getThreadsByUserAsSpamCheck(currentUser.id),
   ]);
 
@@ -147,6 +150,7 @@ export default async (
 
       const incomingTitle = thread.content.title;
       const thisTitle = t.content.title;
+
       const titleSimilarity = stringSimilarity.compareTwoStrings(
         incomingTitle,
         thisTitle
@@ -157,6 +161,9 @@ export default async (
       if (thread.content.body) {
         const incomingBody = threadBodyToPlainText(thread.content.body);
         const thisBody = threadBodyToPlainText(t.content.body);
+
+        if (incomingBody.length === 0 || thisBody.length === 0) return false;
+
         const bodySimilarity = stringSimilarity.compareTwoStrings(
           incomingBody,
           thisBody
