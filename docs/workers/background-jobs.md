@@ -1,3 +1,5 @@
+[Table of contents](../readme.md) / [Workers](intro.md)
+
 # Background jobs
 
 We use [`bull`](https://github.com/OptimalBits/bull) for all of our background job needs. (at the moment that mostly means notification processing and emails) `bull` uses redis under the hood (see docs/setup.md for instructions on how to install redis) to store information about these jobs.

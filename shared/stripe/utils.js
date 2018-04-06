@@ -47,7 +47,7 @@ const getSources = (
   if (!customer.sources || customer.sources.data.length === 0) return [];
 
   return customer.sources.data.map(source => {
-    if (!source) return;
+    if (!source) return null;
     return Object.assign({}, source, {
       isDefault: source.id === customer.default_source,
     });
@@ -357,7 +357,11 @@ const jobPreflight = async (communityId: string): Promise<PreflightCheck> => {
   let customer;
   if (stripeCustomerId) {
     debug('Fetching customer from stripe in jobPreflight');
-    customer = await getCustomer(stripeCustomerId);
+    try {
+      customer = await getCustomer(stripeCustomerId);
+    } catch (err) {
+      return defaultResult;
+    }
   } else {
     debug('Creating customer on stripe in jobPreflight');
     const createdCustomer = await createCustomer({
@@ -370,6 +374,8 @@ const jobPreflight = async (communityId: string): Promise<PreflightCheck> => {
     // the updated community with the stripeCustomerId field set
     dbCommunity = await getCommunityById(communityId);
   }
+
+  if (!customer) return defaultResult;
 
   debug('Preflight check completing...');
 

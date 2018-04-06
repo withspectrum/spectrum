@@ -1,18 +1,19 @@
 // @flow
 import * as React from 'react';
 import replace from 'string-replace-to-array';
-import { Button, TextButton } from '../../../components/buttons';
+import { Button, TextButton } from 'src/components/buttons';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import {
   LoadingProfileThreadDetail,
   LoadingListThreadDetail,
-} from '../../../components/loading';
-import ToggleCommunityMembership from '../../../components/toggleCommunityMembership';
+} from 'src/components/loading';
+import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
 import Link from 'src/components/link';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { CLIENT_URL } from 'src/api/constants';
+import Icon from 'src/components/icons';
 import {
   SidebarSection,
   SidebarSectionTitle,
@@ -28,6 +29,10 @@ import {
   SidebarRelatedThread,
   RelatedTitle,
   RelatedCount,
+  PillLink,
+  PillLabel,
+  Lock,
+  SidebarChannelPill,
 } from '../style';
 
 type RecommendedThread = {
@@ -120,6 +125,19 @@ class Sidebar extends React.Component<Props> {
               src={thread.community.profilePhoto}
             />
             <SidebarCommunityName>{thread.community.name}</SidebarCommunityName>
+
+            <SidebarChannelPill>
+              <PillLink to={`/${thread.community.slug}/${thread.channel.slug}`}>
+                {thread.channel.isPrivate && (
+                  <Lock>
+                    <Icon glyph="private" size={12} />
+                  </Lock>
+                )}
+                <PillLabel isPrivate={thread.channel.isPrivate}>
+                  {thread.channel.name}
+                </PillLabel>
+              </PillLink>
+            </SidebarChannelPill>
           </Link>
 
           <SidebarCommunityDescription>

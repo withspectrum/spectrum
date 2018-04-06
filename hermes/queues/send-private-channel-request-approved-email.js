@@ -2,32 +2,18 @@
 const debug = require('debug')(
   'hermes:queue:send-request-join-private-channel'
 );
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
   PRIVATE_CHANNEL_REQUEST_APPROVED_TEMPLATE,
 } from './constants';
+import type {
+  Job,
+  SendPrivateChannelRequestApprovedEmailJobData,
+} from 'shared/bull/types';
 
-type JobData = {
-  recipient: {
-    email: string,
-  },
-  channel: {
-    name: string,
-    slug: string,
-  },
-  community: {
-    name: string,
-    slug: string,
-  },
-};
-
-type SendEmail = {
-  data: JobData,
-  id: string,
-};
-
-export default (job: SendEmail) => {
+export default (job: Job<SendPrivateChannelRequestApprovedEmailJobData>) => {
   debug(`\nnew job: ${job.id}`);
   const { recipient, channel, community } = job.data;
   debug(`\nsending notification to user: ${recipient.email}`);
@@ -55,6 +41,8 @@ export default (job: SendEmail) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

@@ -552,11 +552,9 @@ export const NewThreadPill = styled(StatusPill)`
     props.active ? props.theme.text.reverse : props.theme.success.alt};
 `;
 
-export const NewMessagePill = styled(StatusPill)`
+export const NewMessagePill = styled(StatusText)`
   color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.reverse};
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+    props.active ? props.theme.brand.alt : props.theme.warn.alt};
 `;
 
 export const LockedTextPill = styled(StatusPill)`

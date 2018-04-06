@@ -125,6 +125,5 @@ export default async (job: SendWeeklyDigestJob) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   }
 };

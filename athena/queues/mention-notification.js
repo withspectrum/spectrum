@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:mention-notification');
-import addQueue from '../utils/addQueue';
+import Raven from '../../shared/raven';
 import { toPlainText, toState } from 'shared/draft-utils';
 import truncate from 'shared/truncate';
 import { fetchPayload } from '../utils/payloads';
@@ -16,13 +16,12 @@ import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getThreadById } from '../models/thread';
 import { getUserByUsername, getUserById } from '../models/user';
 import {
-  SEND_MENTION_THREAD_NOTIFICATION_EMAIL,
-  SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL,
-} from './constants';
-import type { Mention } from 'shared/types';
+  sendNewMentionThreadEmailQueue,
+  sendNewMentionMessageEmailQueue,
+} from 'shared/bull/queues';
+import type { Job, MentionNotificationJobData } from 'shared/bull/types';
 
-type JobData = Mention;
-export default async ({ data }: { data: JobData }) => {
+export default async ({ data }: Job<MentionNotificationJobData>) => {
   debug('mention job created');
   const { threadId, messageId, senderId, username, type: mentionType } = data;
   // if we have incomplete data
@@ -143,22 +142,20 @@ export default async ({ data }: { data: JobData }) => {
   const primaryActionLabel = 'View conversation';
 
   const rawMessageBody = message
-    ? message.content.body
-      ? toPlainText(toState(JSON.parse(message.content.body)))
-      : ''
-    : null;
+    ? toPlainText(toState(JSON.parse(message.content.body)))
+    : '';
 
   // if the message was super long, truncate it
   const messageBody = rawMessageBody && truncate(rawMessageBody.trim(), 280);
 
   // otherwise send an email and add the in-app notification
-  const QUEUE_NAME =
+  const queue =
     mentionType === 'thread'
-      ? SEND_MENTION_THREAD_NOTIFICATION_EMAIL
-      : SEND_MENTION_MESSAGE_NOTIFICATION_EMAIL;
+      ? sendNewMentionThreadEmailQueue
+      : sendNewMentionMessageEmailQueue;
 
   return Promise.all([
-    addQueue(QUEUE_NAME, {
+    queue.add({
       recipient,
       sender,
       primaryActionLabel,
@@ -181,5 +178,9 @@ export default async ({ data }: { data: JobData }) => {
       },
     }),
     storeUsersNotifications(storedNotification.id, recipient.id),
-  ]);
+  ]).catch(err => {
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
+  });
 };

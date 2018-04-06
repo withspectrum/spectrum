@@ -2,11 +2,11 @@
 const debug = require('debug')('athena:queue:message-notification');
 import { toState, toPlainText } from 'shared/draft-utils';
 import getMentions from 'shared/get-mentions';
-import addQueue from '../../utils/addQueue';
 import Raven from 'shared/raven';
 import { fetchPayload, createPayload } from '../../utils/payloads';
 import { getDistinctActors } from '../../utils/actors';
 import formatData from './format-data';
+import bufferNotificationEmail from './buffer-email';
 import {
   storeNotification,
   updateNotification,
@@ -19,6 +19,7 @@ import {
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
+import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 
 export default async (job: Job<MessageNotificationJobData>) => {
@@ -99,7 +100,7 @@ export default async (job: Job<MessageNotificationJobData>) => {
   const mentions = getMentions(body);
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
-      addQueue('mention notification', {
+      sendMentionNotificationQueue.add({
         messageId: incomingMessage.id,
         threadId: incomingMessage.threadId,
         senderId: incomingMessage.senderId,
@@ -130,20 +131,32 @@ export default async (job: Job<MessageNotificationJobData>) => {
     : storeUsersNotifications;
 
   // send each recipient a notification
-  const formatAndBufferPromises = recipientsWithoutMentions.map(recipient => {
-    if (!recipient) return;
+  const formatAndBufferPromises = recipientsWithoutMentions.map(
+    async recipient => {
+      if (!recipient || !recipient.email || !thread || !message) {
+        debug(
+          '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
+          recipient,
+          thread,
+          message
+        );
+        return Promise.resolve();
+      }
 
-    formatData(recipient, thread, sender, message, notification);
-
-    // store or update the notification in the db to trigger a ui update in app
-    debug('Updating the notification record in the db');
-    return dbMethod(notification.id, recipient.userId);
-  });
+      debug(
+        'format data, buffer notification email and store/update notification in db'
+      );
+      const data = await formatData(thread, sender, message);
+      return Promise.all([
+        bufferNotificationEmail(recipient, data, notification),
+        dbMethod(notification.id, recipient.userId),
+      ]);
+    }
+  );
 
   return Promise.all(formatAndBufferPromises).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

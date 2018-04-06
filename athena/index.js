@@ -37,13 +37,14 @@ import {
   PRIVATE_CHANNEL_REQUEST_SENT,
   PRIVATE_CHANNEL_REQUEST_APPROVED,
   SEND_PUSH_NOTIFICATIONS,
+  TRACK_USER_LAST_SEEN,
 } from './queues/constants';
 
 const PORT = process.env.PORT || 3003;
 
-console.log('\n🛠 Athena, the processing worker, is starting...');
+debug('\n🛠 Athena, the processing worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
+debug('');
 
 const server = createWorker({
   [MESSAGE_NOTIFICATION]: processMessageNotification,
@@ -57,7 +58,7 @@ const server = createWorker({
   [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
   [PRO_INVOICE_PAID_NOTIFICATION]: processProInvoicePaid,
-  'track user thread last seen': trackUserThreadLastSeen,
+  [TRACK_USER_LAST_SEEN]: trackUserThreadLastSeen,
   [PROCESS_ADMIN_TOXIC_MESSAGE]: processAdminMessageModeration,
   [PROCESS_ADMIN_TOXIC_THREAD]: processAdminThreadModeration,
   [PRIVATE_CHANNEL_REQUEST_SENT]: processUserRequestedJoinPrivateChannel,
@@ -67,7 +68,7 @@ const server = createWorker({
 
 startNotificationsListener();
 
-console.log(
+debug(
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
     // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
@@ -76,7 +77,7 @@ console.log(
 
 // $FlowIssue
 server.listen(PORT, 'localhost', () => {
-  console.log(
+  debug(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
     }`

@@ -11,7 +11,9 @@ export default job => {
   debug(`\nnew job: ${job.id}`);
   const { user, community, invitedCount, teamName } = job.data;
   const subject = `New Slack import: ${invitedCount} invites from the ${teamName} Slack team`;
-  const preheader = `${invitedCount} invites sent for the ${community.name} community`;
+  const preheader = `${invitedCount} invites sent for the ${
+    community.name
+  } community`;
   try {
     return sendEmail({
       TemplateId: ADMIN_SLACK_IMPORT_PROCESSED_TEMPLATE,
@@ -29,6 +31,8 @@ export default job => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

@@ -442,8 +442,8 @@ const returnTooltip = props => {
           top: calc(100% + 3px);
           left: 50%;
           transform: translateX(-50%);
-          border-bottom-width: 0;
-          border-top-color: ${
+          border-top-width: 0;
+          border-bottom-color: ${
             props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
           };
         }

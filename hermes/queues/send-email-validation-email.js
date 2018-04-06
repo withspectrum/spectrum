@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-email-validation-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   EMAIL_VALIDATION_TEMPLATE,
@@ -40,7 +41,9 @@ export default async (job: SendEmailValidationJob) => {
         },
       });
     } catch (err) {
-      console.log(err);
+      debug('❌ Error in job:\n');
+      debug(err);
+      Raven.captureException(err);
     }
   }
 };
