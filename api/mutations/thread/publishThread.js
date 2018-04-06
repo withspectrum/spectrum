@@ -4,10 +4,6 @@ import stringSimilarity from 'string-similarity';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/s3';
-import { getUserPermissionsInChannel } from '../../models/usersChannels';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getChannelById } from '../../models/channel';
-import { getCommunityById } from '../../models/community';
 import {
   publishThread,
   editThread,
@@ -129,6 +125,12 @@ export default async (
     }
   }
 
+  const isOwnerOrModerator =
+    currentUserChannelPermissions.isOwner ||
+    currentUserChannelPermissions.isModerator ||
+    currentUserCommunityPermissions.isOwner ||
+    currentUserCommunityPermissions.isModerator;
+
   // if user has published other threads in the last hour, check for spam
   if (
     usersPreviousPublishedThreads &&
@@ -138,7 +140,7 @@ export default async (
       'User has posted at least once in the previous 10m - running spam checks'
     );
 
-    if (usersPreviousPublishedThreads.length >= 3) {
+    if (usersPreviousPublishedThreads.length >= 3 && !isOwnerOrModerator) {
       debug('User has posted at least 3 times in the previous 10m');
       return new UserError(
         'You’ve been posting a lot! Please wait a few minutes before posting more.'
@@ -176,7 +178,8 @@ export default async (
     });
 
     const isSpamming = checkForSpam.filter(Boolean).length > 0;
-    if (isSpamming) {
+
+    if (isSpamming && !isOwnerOrModerator) {
       debug('User is spamming similar content');
       return new UserError(
         'It looks like you’ve been posting about a similar topic recently - please wait a while before posting more.'
@@ -229,6 +232,8 @@ export default async (
   // prevent some abuse and spam if we ensure people dont get email notifications
   // with titles like "fuck you"
   const threadIsToxic = async () => {
+    if (isOwnerOrModerator) return false;
+
     const body = thread.content.body
       ? threadBodyToPlainText(thread.content.body)
       : '';
