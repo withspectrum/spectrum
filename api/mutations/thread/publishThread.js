@@ -18,6 +18,7 @@ import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
+  _adminProcessUserSpammingThreadsQueue,
 } from 'shared/bull/queues';
 import getSpectrumScore from 'athena/queues/moderationEvents/spectrum';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
@@ -142,6 +143,14 @@ export default async (
 
     if (usersPreviousPublishedThreads.length >= 3 && !isOwnerOrModerator) {
       debug('User has posted at least 3 times in the previous 10m');
+      _adminProcessUserSpammingThreadsQueue.add({
+        user: currentUser,
+        threads: usersPreviousPublishedThreads,
+        publishing: thread,
+        community: community,
+        channel: channel,
+      });
+
       return new UserError(
         'You’ve been posting a lot! Please wait a few minutes before posting more.'
       );
@@ -181,6 +190,15 @@ export default async (
 
     if (isSpamming && !isOwnerOrModerator) {
       debug('User is spamming similar content');
+
+      _adminProcessUserSpammingThreadsQueue.add({
+        user: currentUser,
+        threads: usersPreviousPublishedThreads,
+        publishing: thread,
+        community: community,
+        channel: channel,
+      });
+
       return new UserError(
         'It looks like you’ve been posting about a similar topic recently - please wait a while before posting more.'
       );
@@ -231,7 +249,7 @@ export default async (
   // email notifications - the thread will be published regardless, but we can
   // prevent some abuse and spam if we ensure people dont get email notifications
   // with titles like "fuck you"
-  const threadIsToxic = async () => {
+  const checkToxicity = async () => {
     if (isOwnerOrModerator) return false;
 
     const body = thread.content.body
@@ -240,8 +258,11 @@ export default async (
     const title = thread.content.title;
     const text = `${title} ${body}`;
 
+    // $FlowFixMe
     const scores = await Promise.all([
+      // $FlowFixMe
       getSpectrumScore(text, dbThread.id, dbThread.creatorId),
+      // $FlowFixMe
       getPerspectiveScore(text),
     ]).catch(err =>
       console.error(
@@ -254,16 +275,21 @@ export default async (
     const perspectiveScore = scores && scores[1];
 
     // if neither models returned results
-    if (!spectrumScore && !perspectiveScore) return false;
+    if (!spectrumScore && !perspectiveScore) {
+      debug('Toxicity checks from providers say not toxic');
+      return false;
+    }
 
     // if both services agree that the thread is >= 98% toxic
     if ((spectrumScore + perspectiveScore) / 2 >= 0.98) {
+      debug('Thread is toxic according to both providers');
       return true;
     }
 
     return false;
   };
 
+  const threadIsToxic = await checkToxicity();
   if (threadIsToxic) {
     debug(
       'Thread determined to be toxic, not sending notifications or adding rep'

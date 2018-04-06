@@ -22,6 +22,7 @@ import processSendAdministratorEmailValidationEmail from './queues/send-administ
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
 import processSendAdminToxicContentEmail from './queues/send-admin-toxic-content-email';
 import processSendAdminSlackImportProcessedEmail from './queues/send-admin-slack-import-email';
+import processSendAdminUserSpammingThreadsNotificationEmail from './queues/send-admin-user-spamming-threads-notification-email';
 import processSendAdminActiveCommunityReportEmail from './queues/send-admin-active-community-report-email';
 import processSendRequestJoinPrivateChannelEmail from './queues/send-private-channel-request-sent-email';
 import processSendPrivateChannelRequestApprovedEmail from './queues/send-private-channel-request-approved-email';
@@ -46,6 +47,7 @@ import {
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
   SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
+  SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,
   SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL,
   SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL,
@@ -79,6 +81,7 @@ const server = createWorker({
   [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
   [SEND_ADMIN_TOXIC_MESSAGE_EMAIL]: processSendAdminToxicContentEmail,
   [SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL]: processSendAdminSlackImportProcessedEmail,
+  [SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL]: processSendAdminUserSpammingThreadsNotificationEmail,
   [SEND_ACTIVE_COMMUNITY_ADMIN_REPORT_EMAIL]: processSendAdminActiveCommunityReportEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_SENT_EMAIL]: processSendRequestJoinPrivateChannelEmail,
   [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
