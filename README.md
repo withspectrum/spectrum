@@ -3,7 +3,7 @@
   [![Spectrum](./public/img/media.png)](https://spectrum.chat)
 
   ### Simple, powerful online communities.
-  
+
 </div>
 
 This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every single line of code that's not packaged into a reusable library is in this repository.
@@ -16,7 +16,7 @@ It is difficult to grow, manage and measure the impact of online communities. Co
 
 Spectrum aims to be the best platform to build any kind of community online by combining the best of web 2.0 forums and real-time chat apps. With best-in-class moderation tooling, a single platform for all your communities, threaded conversations by default, community health monitoring (and much more to come), we think that we will be able to help more people start and grow the best online communities.
 
-> "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and iteract. Except realtime and trolling-free."
+> "[Spectrum] will take the place that Reddit used to have a long time ago for communities (especially tech) to freely share ideas and interact. Except realtime and trolling-free."
 >
 > \- [Guillermo Rauch (@rauchg)](https://twitter.com/rauchg/status/930946768841228288)
 
@@ -39,17 +39,17 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
   - [First time setup](#first-time-setup)
   - [Running the app locally](#running-the-app-locally)
   - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
-- Technical
+- [Technical](docs/)
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
   - [Deployment](docs/backend/deployment.md)
-  - [GraphQL](docs/backend/api/)
+  - [API](docs/backend/api/)
     - [Fragments](docs/backend/api/fragments.md)
     - [Pagination](docs/backend/api/pagination.md)
     - [Testing](docs/backend/api/testing.md)
     - [Tips and Tricks](docs/backend/api/tips-and-tricks.md)
 
-## Contributing 
+## Contributing
 
 **We heartily welcome any and all contributions that match [our product roadmap](https://github.com/withspectrum/spectrum/projects/19) and engineering standards!**
 
@@ -67,9 +67,9 @@ If you found a technical bug on Spectrum or have ideas for features we should im
 
 #### Fixing a bug or implementing a new feature
 
-If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in [our roadmap](https://github.com/withspectrum/spectrum/projects/19) and plans for the app.
+If you find a bug on Spectrum and open a PR that fixes it we'll review it as soon as possible to ensure it matches our engineering standards. If you want to implement a new feature, open an issue first to discuss what it'd look like and to ensure it fits in [our roadmap](https://github.com/withspectrum/spectrum/projects/19) and plans for the app.
 
-If you want to contribute but are unsure to start, we have [a "good first issue" label](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) which is applied to newcomer-friendly issues. Take a look at [the full list of good first issues](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick something you like!
+If you want to contribute but are unsure to start, we have [a "good first issue" label](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) which is applied to newcomer-friendly issues. Take a look at [the full list of good first issues](https://github.com/withspectrum/spectrum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and pick something you like! There is also [an "open" channel in the Spectrum community on Spectrum](https://spectrum.chat/spectrum/open) (how meta), if you run into troubles while trying to contribute that is the best place to talk to us.
 
 Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local setup instructions](#first-time-setup)!
 
@@ -225,7 +225,7 @@ yarn run dev:api
 
 #### Develop the web UI
 
-To develop the frontend and web UI run 
+To develop the frontend and web UI run
 
 ```
 yarn run dev:web
@@ -239,12 +239,12 @@ To start the mobile apps run:
 yarn run dev:mobile
 ```
 
-And then open either the iOS simulator or the Android simulator with 
+And then open either the iOS simulator or the Android simulator with
 
 ```sh
-yarn run open:ios 
+yarn run open:ios
 # or
-yarn run open:android 
+yarn run open:android
 ```
 
 Refer to [the Expo documentation on how to install the simulators](https://docs.expo.io/versions/v25.0.0/guides/debugging.html#using-a-simulator--emulator).
@@ -255,4 +255,8 @@ Refer to [the Expo documentation on how to install the simulators](https://docs.
 <div align="center">
   <img height="200px" src="public/img/connect.svg" />
 </div>
+
+## License
+
+BSD 3-Clause, see the [LICENSE](./LICENSE) file.
 

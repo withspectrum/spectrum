@@ -67,9 +67,9 @@ if (localStorage) {
 }
 
 const forcePersist = content =>
-  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 const persistContent = debounce(content => {
-  localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {

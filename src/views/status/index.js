@@ -56,6 +56,7 @@ class Status extends React.Component<Props, State> {
 
   handleWsChange = () => {
     const { websocketConnection } = this.props;
+
     if (websocketConnection === 'connected') {
       return setTimeout(() => this.setState(this.initialState), 1000);
     }
@@ -65,6 +66,7 @@ class Status extends React.Component<Props, State> {
         color: 'special',
         label: 'Reconnecting to server...',
         wsConnected: false,
+        hidden: false,
       });
     }
 
@@ -72,6 +74,7 @@ class Status extends React.Component<Props, State> {
       this.setState({
         color: 'success',
         label: 'Reconnected!',
+        hidden: false,
       });
 
       return setTimeout(() => this.setState(this.initialState), 1000);
@@ -82,6 +85,16 @@ class Status extends React.Component<Props, State> {
     const curr = this.props;
 
     if (prevProps.websocketConnection !== curr.websocketConnection) {
+      this.setState({
+        hidden: true,
+      });
+
+      if (curr.websocketConnection === 'disconnected') {
+        return setTimeout(() => {
+          return this.handleWsChange();
+        }, 5000);
+      }
+
       return this.handleWsChange();
     }
   }

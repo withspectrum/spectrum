@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-admin-toxic-content-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import {
   ADMIN_TOXIC_MESSAGE_TEMPLATE,
@@ -56,6 +57,8 @@ export default job => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

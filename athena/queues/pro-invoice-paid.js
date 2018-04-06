@@ -61,6 +61,5 @@ export default async (job: Job<InvoiceJobData>) => {
       debug('❌ Error in job:\n');
       debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
 };

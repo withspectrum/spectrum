@@ -91,8 +91,8 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       sender,
       customMessage
     ).catch(err => {
+      debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
   } else {
     // the user exists on spectrum
@@ -142,7 +142,6 @@ export default async (job: Job<CommunityInviteNotificationJobData>) => {
       debug('❌ Error in job:\n');
       debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
   }
 };

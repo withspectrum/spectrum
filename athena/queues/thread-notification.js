@@ -1,7 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:new-thread-notification');
 import Raven from 'shared/raven';
-import addQueue from '../utils/addQueue';
 import getMentions from 'shared/get-mentions';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -18,6 +17,7 @@ import {
 import { getUsers } from '../models/user';
 import { getMembersInChannelWithNotifications } from '../models/usersChannels';
 import createThreadNotificationEmail from './create-thread-notification-email';
+import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { DBThread } from 'shared/types';
 import type { Job, ThreadNotificationJobData } from 'shared/bull/types';
 
@@ -97,7 +97,7 @@ export default async (job: Job<ThreadNotificationJobData>) => {
   // if people were mentioned in the thread, let em know
   if (mentions && mentions.length > 0) {
     mentions.forEach(username => {
-      addQueue('mention notification', {
+      sendMentionNotificationQueue.add({
         threadId: incomingThread.id, // thread where the mention happened
         senderId: incomingThread.creatorId, // user who created the mention
         username: username,
@@ -128,6 +128,5 @@ export default async (job: Job<ThreadNotificationJobData>) => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };
