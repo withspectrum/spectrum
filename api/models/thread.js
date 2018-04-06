@@ -1,11 +1,7 @@
 // @flow
 const { db } = require('./db');
 import intersection from 'lodash.intersection';
-import {
-  processReputationEventQueue,
-  sendThreadNotificationQueue,
-  _adminProcessToxicThreadQueue,
-} from 'shared/bull/queues';
+import { processReputationEventQueue } from 'shared/bull/queues';
 const { NEW_DOCUMENTS, parseRange } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
@@ -111,6 +107,18 @@ export const getThreadsInTimeframe = (
     .table('threads')
     .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
+// We do not filter by deleted threads intentionally to prevent users from spam
+// creating/deleting threads
+export const getThreadsByUserAsSpamCheck = (
+  userId: string
+): Promise<Array<?DBThread>> => {
+  return db
+    .table('threads')
+    .getAll(userId, { index: 'creatorId' })
+    .filter(db.row('createdAt').during(db.now().sub(60 * 30), db.now()))
     .run();
 };
 
@@ -313,14 +321,6 @@ export const publishThread = (
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
-      sendThreadNotificationQueue.add({ thread });
-      processReputationEventQueue.add({
-        userId,
-        type: 'thread created',
-        entityId: thread.id,
-      });
-      _adminProcessToxicThreadQueue.add({ thread });
-
       return thread;
     });
 };
