@@ -73,6 +73,7 @@ type Props = {
   history: Object,
   location: Object,
   activeCommunity?: string,
+  activeCommunityId: ?string,
   activeChannel?: string,
   threadSliderIsOpen?: boolean,
   isInbox: boolean,
@@ -171,6 +172,10 @@ class ComposerWithData extends Component<Props, State> {
     if (activeSlug) {
       community = communities.find(
         community => community.slug.toLowerCase() === activeSlug.toLowerCase()
+      );
+    } else if (props.activeCommunityId) {
+      community = communities.find(
+        community => community.id === props.activeCommunityId
       );
     } else {
       community = communities && communities.length > 0 ? communities[0] : null;
@@ -713,6 +718,7 @@ const mapStateToProps = state => ({
   threadSliderIsOpen: state.threadSlider.isOpen,
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
+  activeCommunityId: state.dashboardFeed.activeCommunity,
 });
 
 // $FlowIssue
