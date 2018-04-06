@@ -239,7 +239,7 @@ class WatercoolerThreadPure extends React.Component<Props> {
               <Facepile
                 active={active}
                 participants={participants}
-                author={author}
+                author={author.user}
               />
             )}
 
