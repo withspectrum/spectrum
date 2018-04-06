@@ -131,26 +131,14 @@ export default async (
     usersPreviousPublishedThreads &&
     usersPreviousPublishedThreads.length > 0
   ) {
-    debug('User has posted more than one thread in the previous 30m');
-
-    // dont allow user to post more than three times across all communities in a timeframe
-    if (usersPreviousPublishedThreads.length > 3) {
-      debug('User has posted more than 3 times in previous 30m');
-      return new UserError(
-        'You’ve been posting a lot recently - please wait a while before posting more.'
-      );
-    }
-
-    // dont allow user to post in same community more than 3 times in a timeframe
-    const threadsPublishedInSameCommunity = usersPreviousPublishedThreads.filter(
-      t => t && t.communityId === thread.communityId
+    debug(
+      'User has posted at least once in the previous 10m - running spam checks'
     );
-    if (threadsPublishedInSameCommunity.length >= 3) {
-      debug(
-        'User has posted at least 3 times in the same community in previous 30m'
-      );
+
+    if (usersPreviousPublishedThreads.length >= 3) {
+      debug('User has posted at least 3 times in the previous 10m');
       return new UserError(
-        'You’ve been posting a lot in this community - please wait a while before posting more.'
+        'You’ve been posting a lot! Please wait a few minutes before posting more.'
       );
     }
 
