@@ -301,6 +301,7 @@ export default async (
 
   // $FlowFixMe
   const imageKeys = Object.keys(body.entityMap).filter(
+    // $FlowFixMe
     key => body.entityMap[key].type === 'image'
   );
   urls.forEach((url, index) => {
