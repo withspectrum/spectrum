@@ -21,6 +21,7 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
+import OutsideClickHandler from '../outsideClickHandler';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
@@ -149,14 +150,6 @@ class Editor extends React.Component<Props, State> {
     this.closeToolbar();
   };
 
-  closeToolbar = () => {
-    this.setState({
-      embedUrl: '',
-      embedding: false,
-      inserting: false,
-    });
-  };
-
   handleDroppedFiles = (_: any, files: FileList) => {
     this.addImages(files);
   };
@@ -167,6 +160,14 @@ class Editor extends React.Component<Props, State> {
     this.setState({
       inserting: !inserting,
       embedding: false,
+    });
+  };
+
+  closeToolbar = () => {
+    this.setState({
+      embedUrl: '',
+      embedding: false,
+      inserting: false,
     });
   };
 
@@ -208,7 +209,6 @@ class Editor extends React.Component<Props, State> {
             editorState={state}
             onChange={onChange}
             plugins={this.state.plugins}
-            onFocus={this.closeToolbar}
             handleDroppedFiles={this.handleDroppedFiles}
             ref={editor => {
               this.editor = editor;
@@ -226,40 +226,42 @@ class Editor extends React.Component<Props, State> {
             {...rest}
           />
           {!readOnly && (
-            <SideToolbar editorState={state} editorRef={this.editor}>
-              <Expander inserting={inserting}>
-                <IconButton
-                  glyph={'inserter'}
-                  onClick={this.toggleToolbarDisplayState}
-                />
-                <Action>
-                  <MediaInput
-                    onChange={this.addImage}
-                    multiple
-                    tipLocation={'right'}
+            <OutsideClickHandler onOutsideClick={this.closeToolbar}>
+              <SideToolbar editorState={state} editorRef={this.editor}>
+                <Expander inserting={inserting}>
+                  <IconButton
+                    glyph={'inserter'}
+                    onClick={this.toggleToolbarDisplayState}
                   />
-                </Action>
-                <Action embedding={embedding}>
-                  <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
-                    <label htmlFor="embed-input">
-                      <Icon
-                        glyph={'embed'}
-                        tipText={'Embed a URL'}
-                        onClick={this.toggleEmbedInputState}
-                      />
-                      <input
-                        id="embed-input"
-                        type="url"
-                        placeholder="Enter a URL to embed"
-                        value={this.state.embedUrl}
-                        onChange={this.changeEmbedUrl}
-                      />
-                    </label>
-                    <button onClick={this.addEmbed}>Embed</button>
-                  </EmbedUI>
-                </Action>
-              </Expander>
-            </SideToolbar>
+                  <Action>
+                    <MediaInput
+                      onChange={this.addImage}
+                      multiple
+                      tipLocation={'right'}
+                    />
+                  </Action>
+                  <Action embedding={embedding}>
+                    <EmbedUI onSubmit={this.addEmbed} embedding={embedding}>
+                      <label htmlFor="embed-input">
+                        <Icon
+                          glyph={'embed'}
+                          tipText={'Embed a URL'}
+                          onClick={this.toggleEmbedInputState}
+                        />
+                        <input
+                          id="embed-input"
+                          type="url"
+                          placeholder="Enter a URL to embed"
+                          value={this.state.embedUrl}
+                          onChange={this.changeEmbedUrl}
+                        />
+                      </label>
+                      <button onClick={this.addEmbed}>Embed</button>
+                    </EmbedUI>
+                  </Action>
+                </Expander>
+              </SideToolbar>
+            </OutsideClickHandler>
           )}
           {showLinkPreview &&
             linkPreview &&
@@ -292,7 +294,6 @@ class Editor extends React.Component<Props, State> {
               editorState={state}
               onChange={onChange}
               plugins={this.state.plugins}
-              onFocus={this.closeToolbar}
               handleDroppedFiles={this.handleDroppedFiles}
               ref={editor => {
                 this.editor = editor;
