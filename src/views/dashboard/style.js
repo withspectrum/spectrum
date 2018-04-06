@@ -686,7 +686,6 @@ export const MiniLinkPreview = styled.a`
   margin-bottom: 4px;
   pointer-events: auto;
   min-width: 0;
-  ${Truncate};
 
   .icon {
     margin-right: 4px;
@@ -904,4 +903,8 @@ export const HeaderActiveViewSubtitle = styled.h3`
 export const ContextHeaderContainer = styled.div`
   padding-top: 16px;
   padding-bottom: 12px;
+`;
+
+export const EllipsisText = styled.div`
+  ${Truncate};
 `;
