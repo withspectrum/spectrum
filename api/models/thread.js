@@ -118,7 +118,7 @@ export const getThreadsByUserAsSpamCheck = (
   return db
     .table('threads')
     .getAll(userId, { index: 'creatorId' })
-    .filter(db.row('createdAt').during(db.now().sub(60 * 30), db.now()))
+    .filter(db.row('createdAt').during(db.now().sub(60 * 10), db.now()))
     .run();
 };
 
