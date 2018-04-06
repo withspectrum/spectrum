@@ -10,7 +10,7 @@
 import passport from 'passport';
 import { URL } from 'url';
 import isSpectrumUrl from '../../utils/is-spectrum-url';
-import { signCookie } from 'shared/cookie-utils';
+import { signCookie, getCookies } from 'shared/cookie-utils';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const FALLBACK_URL = IS_PROD
@@ -63,11 +63,13 @@ export const createSigninRoutes = (
           req.cookies.session &&
           req.cookies['session.sig']
         ) {
+          const cookies = getCookies(req.session.passport);
+
           redirectUrl.searchParams.append(
             'accessToken',
             signCookie(
-              `session=${req.cookies.session}; session.sig=${
-                req.cookies['session.sig']
+              `session=${cookies.session}; session.sig=${
+                cookies['session.sig']
               }`
             )
           );
