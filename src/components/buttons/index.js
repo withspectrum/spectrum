@@ -41,7 +41,12 @@ type IconProps = {
 };
 
 export const Button = (props: ButtonProps) => (
-  <StyledSolidButton disabled={props.loading} data-cy={props.dataCy} {...props}>
+  <StyledSolidButton
+    isBtnLoading={props.loading}
+    disabled={props.loading}
+    data-cy={props.dataCy}
+    {...props}
+  >
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
