@@ -196,7 +196,7 @@ export const PhotoSizeError = styled.div`
   }
 `;
 
-export const Image = styled.img`
+export const ImagePreview = styled.img`
   display: block;
   clear: both;
   flex: 0 0 auto;
