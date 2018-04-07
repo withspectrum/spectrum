@@ -45,7 +45,11 @@ export const Button = (props: ButtonProps) => (
     {props.icon ? (
       props.loading ? (
         <SpinnerContainer>
-          <Spinner color="text.reverse" size="16" />
+          <Spinner
+            isBtnLoading={props.loading}
+            color="text.reverse"
+            size="16"
+          />
         </SpinnerContainer>
       ) : (
         <Icon glyph={props.icon} />
@@ -53,7 +57,10 @@ export const Button = (props: ButtonProps) => (
     ) : (
       ''
     )}
-    {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
+    {props.loading &&
+      !props.icon && (
+        <Spinner isBtnLoading={props.loading} color="text.reverse" size="16" />
+      )}
     <Label loading={props.loading} hasIcon={props.icon}>
       {props.children}
     </Label>
