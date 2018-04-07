@@ -80,11 +80,16 @@ export default async (
 
   if (!input.filesToUpload) return editedThread;
 
-  const urls = await Promise.all(
-    input.filesToUpload.map(file =>
-      uploadImage(file, 'threads', editedThread.id)
-    )
-  );
+  let urls;
+  try {
+    urls = await Promise.all(
+      input.filesToUpload.map(file =>
+        uploadImage(file, 'threads', editedThread.id)
+      )
+    );
+  } catch (err) {
+    return new UserError(err.message);
+  }
 
   if (!urls || urls.length === 0) return editedThread;
 

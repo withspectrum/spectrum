@@ -2,6 +2,8 @@
 require('now-env');
 import AWS from 'aws-sdk';
 import shortid from 'shortid';
+import _ from 'lodash';
+
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 import type { FileUpload } from 'shared/types';
@@ -68,6 +70,13 @@ export const uploadImage = async (
   entity: EntityTypes,
   id: string
 ): Promise<string> => {
+  const validMediaTypes = ['image/gif', 'image/jpeg', 'image/png', 'video/mp4'];
+  let { mimetype } = await file;
+  // mimetype not in the validMediaType collection
+  if (_.indexOf(validMediaTypes, _.toLower(mimetype)) < 0) {
+    throw new Error(`Unsupported media type ${mimetype}`);
+  }
+
   return await upload(file, entity, id).catch(err => {
     throw new Error(err);
   });
