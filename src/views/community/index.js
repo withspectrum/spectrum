@@ -36,6 +36,7 @@ import {
   Content,
   Extras,
   ColumnHeading,
+  MetaMemberships,
 } from './style';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
@@ -228,6 +229,20 @@ class CommunityView extends React.Component<Props, State> {
                     </LoginButton>
                   </Link>
                 )}
+
+              <MetaMemberships>
+                <ColumnHeading>Channels</ColumnHeading>
+                <ChannelList
+                  id={community.id}
+                  communitySlug={communitySlug.toLowerCase()}
+                />
+                <ColumnHeading>Team</ColumnHeading>
+                <ModeratorList
+                  id={community.id}
+                  first={20}
+                  filter={{ isModerator: true, isOwner: true }}
+                />
+              </MetaMemberships>
             </Meta>
             <Content data-cy="community-view-content">
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>

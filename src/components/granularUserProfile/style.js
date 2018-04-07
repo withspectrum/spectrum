@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip } from '../globals';
+import { Tooltip, Truncate } from '../globals';
 
 export const Content = styled.div`
   border-bottom: 1px solid ${props => props.theme.bg.wash};
@@ -11,50 +11,26 @@ export const Content = styled.div`
 `;
 
 export const Row = styled.div`
+  display: grid;
+  grid-template-columns: 32px minmax(0px, 1fr) 32px;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 'avatar name action' '. description .';
+  grid-column-gap: 16px;
+  padding: 12px 16px;
   background: ${props => props.theme.bg.default};
-  width: 100%;
-  margin-left: -16px;
-  margin-right: -16px;
-  width: calc(100% + 32px);
-  padding-left: 16px;
-  padding-right: 16px;
-
-  &:hover {
-    background: ${props => props.theme.bg.wash};
-  }
+  border-bottom: 1px solid ${props => props.theme.bg.wash};
 
   &:last-of-type {
     > ${Content} {
       border-bottom: 0;
     }
   }
-`;
-
-export const AvatarContent = styled.div`
-  display: flex;
-  align-self: flex-start;
-  justify-content: center;
-  margin-right: 16px;
-  padding-top: 4px;
-`;
-
-export const MetaContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex: 1 0;
-  padding-right: 24px;
 
   > a {
-    width: 100%;
+    grid-area: name;
+    display: flex;
+    align-items: center;
   }
-`;
-
-export const NameContent = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 `;
 
 export const Name = styled.h3`
@@ -63,6 +39,7 @@ export const Name = styled.h3`
   font-weight: 600;
   margin-right: 6px;
   line-height: 1.2;
+  ${Truncate};
 
   &:hover {
     color: ${props => props.theme.brand.alt};
@@ -88,19 +65,10 @@ export const BadgeContent = styled.div`
 `;
 
 export const Description = styled.p`
+  grid-area: description;
   font-size: 14px;
   margin-bottom: 2px;
   color: ${props => props.theme.text.alt};
-`;
-
-export const Website = styled.p`
-  display: block;
-  color: ${props => props.theme.text.alt};
-  font-size: 14px;
-
-  &:hover {
-    color: ${props => props.theme.text.default};
-  }
 `;
 
 export const MessageIcon = styled.div`
@@ -110,6 +78,7 @@ export const MessageIcon = styled.div`
 `;
 
 export const Actions = styled.div`
+  grid-area: action;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

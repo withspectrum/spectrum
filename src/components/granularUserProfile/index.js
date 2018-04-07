@@ -38,6 +38,7 @@ type Props = {
   isCurrentUser?: boolean,
   reputation?: number,
   messageButton?: boolean,
+  withDescription?: boolean,
   children?: React.Node,
   isOnline?: boolean,
   onlineSize?: 'small' | 'large',
@@ -64,83 +65,62 @@ class GranularUserProfile extends React.Component<Props> {
 
   render() {
     const {
-      userObject,
+      userObject: {
+        profilePhoto,
+        name,
+        username,
+        description,
+        reputation,
+        isOnline,
+      },
       avatarSize,
-      profilePhoto,
-      name,
-      username,
-      description,
-      website,
       badges,
-      reputation,
       children,
       messageButton,
-      isOnline,
       onlineSize,
+      withDescription,
     } = this.props;
 
     return (
       <Row>
-        <Content>
-          {profilePhoto && (
-            <AvatarContent>
-              <LinkHandler username={userObject.username}>
-                <Avatar
-                  src={profilePhoto}
-                  size={avatarSize || '32'}
-                  isOnline={isOnline}
-                  onlineSize={onlineSize}
-                />
-              </LinkHandler>
-            </AvatarContent>
+        {profilePhoto && (
+          <Avatar
+            src={profilePhoto}
+            size={avatarSize || '32'}
+            isOnline={isOnline}
+            onlineSize={onlineSize}
+            link={`/users/${username}`}
+          />
+        )}
+        <LinkHandler username={username}>
+          {name && <Name>{name}</Name>}
+
+          {badges && (
+            <BadgeContent>
+              {badges.map((b, i) => <Badge key={i} type={b} />)}
+            </BadgeContent>
           )}
 
-          <MetaContent>
-            <LinkHandler username={userObject.username}>
-              {name && (
-                <NameContent>
-                  <Name>{name}</Name>
+          {typeof reputation === 'number' && (
+            <Reputation reputation={reputation} />
+          )}
+        </LinkHandler>
+        {withDescription &&
+          description && <Description>{description}</Description>}
 
-                  {username && <Username>@{username}</Username>}
+        <Actions>
+          {messageButton && (
+            <MessageIcon
+              tipText={name ? `Message ${name}` : 'Message'}
+              tipLocation={'top-left'}
+              onClick={this.initMessage}
+            >
+              <Icon glyph="message-new" size={32} />
+            </MessageIcon>
+          )}
 
-                  {badges && (
-                    <BadgeContent>
-                      {badges.map((b, i) => <Badge key={i} type={b} />)}
-                    </BadgeContent>
-                  )}
-                </NameContent>
-              )}
-
-              {typeof reputation === 'number' && (
-                <Reputation reputation={reputation} />
-              )}
-
-              {description && <Description>{description}</Description>}
-            </LinkHandler>
-
-            {website && (
-              <Website>
-                <a href={addProtocolToString(website)} target={'_blank'}>
-                  {website}
-                </a>
-              </Website>
-            )}
-          </MetaContent>
-
-          <Actions>
-            {messageButton && (
-              <MessageIcon
-                tipText={name ? `Message ${name}` : 'Message'}
-                tipLocation={'top-left'}
-                onClick={this.initMessage}
-              >
-                <Icon glyph="message-new" size={32} />
-              </MessageIcon>
-            )}
-
-            {children}
-          </Actions>
-        </Content>
+          {children}
+        </Actions>
       </Row>
     );
   }

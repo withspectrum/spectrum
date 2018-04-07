@@ -12,7 +12,7 @@ import { Card } from 'src/components/card';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { MessageIconContainer, ListColumn } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
 
 type Props = {
@@ -25,6 +25,7 @@ type Props = {
   isFetchingMore: boolean,
   history: Object,
   currentUser: ?Object,
+  showDescriptions?: boolean,
 };
 
 class CommunityModeratorList extends React.Component<Props> {
@@ -43,7 +44,12 @@ class CommunityModeratorList extends React.Component<Props> {
   };
 
   render() {
-    const { data: { community }, isLoading, currentUser } = this.props;
+    const {
+      data: { community },
+      isLoading,
+      currentUser,
+      showDescriptions,
+    } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;
@@ -52,36 +58,31 @@ class CommunityModeratorList extends React.Component<Props> {
         .filter(node => node && (node.isOwner || node.isModerator));
 
       return (
-        <div>
+        <ListColumn>
           {nodes.map(node => {
             if (!node) return null;
             return (
-              <UserListItemContainer key={node.user.id}>
-                <GranularUserProfile
-                  userObject={node.user}
-                  id={node.user.id}
-                  name={node.user.name}
-                  isCurrentUser={currentUser && node.user.id === currentUser.id}
-                  isOnline={node.user.isOnline}
-                  onlineSize={'small'}
-                  profilePhoto={node.user.profilePhoto}
-                  avatarSize={'32'}
-                  badges={node.roles}
-                >
-                  {currentUser &&
-                    node.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(node.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
-              </UserListItemContainer>
+              <GranularUserProfile
+                key={node.user.id}
+                userObject={node.user}
+                isCurrentUser={currentUser && node.user.id === currentUser.id}
+                onlineSize={'small'}
+                badges={node.roles}
+                withDescription={showDescriptions}
+              >
+                {currentUser &&
+                  node.user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(node.user)}
+                      />
+                    </MessageIconContainer>
+                  )}
+              </GranularUserProfile>
             );
           })}
-        </div>
+        </ListColumn>
       );
     }
 

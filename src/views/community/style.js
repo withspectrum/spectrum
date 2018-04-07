@@ -139,6 +139,11 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
+export const ListColumn = styled(Column)`
+  align-items: stretch;
+  overflow: hidden;
+`;
+
 export const Meta = styled(Column)`
   grid-area: meta;
 
@@ -166,6 +171,18 @@ export const Meta = styled(Column)`
     > div {
       margin-left: 0;
     }
+  }
+`;
+
+export const MetaMemberships = styled.div`
+  margin-left: 32px;
+
+  @media (min-width: 1279px) {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -246,6 +263,5 @@ export const MessageIconContainer = styled.div`
 `;
 
 export const UserListItemContainer = styled.div`
-  padding: 0 16px;
   border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;
