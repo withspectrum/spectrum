@@ -51,6 +51,31 @@ export default async (
     );
   }
 
+  if (message.messageType === 'draftjs') {
+    let body;
+    try {
+      body = JSON.parse(message.content.body);
+    } catch (err) {
+      throw new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (!body.blocks || !Array.isArray(body.blocks) || !body.entityMap) {
+      throw new UserError(
+        'Please provide serialized raw DraftJS content state as content.body'
+      );
+    }
+    if (
+      body.blocks.some(
+        ({ type }) => !type || (type !== 'unstyled' && type !== 'code-block')
+      )
+    ) {
+      throw new UserError(
+        'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
+      );
+    }
+  }
+
   // construct the shape of the object to be stored in the db
   let messageForDb = Object.assign({}, message);
   if (message.file && message.messageType === 'media') {
