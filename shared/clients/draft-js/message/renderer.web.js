@@ -41,6 +41,10 @@ const messageRenderer = {
       children.map((child, index) => (
         <Paragraph key={keys[index] || index}>{child}</Paragraph>
       )),
+    'code-block': (
+      children: Array<Node>,
+      { keys }: { keys: Array<string> }
+    ) => <code key={keys.join('|')}>{children}</code>,
   },
   decorators: [mentionsDecorator, linksDecorator],
 };

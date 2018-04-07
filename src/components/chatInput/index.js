@@ -288,12 +288,21 @@ class ChatInput extends React.Component<Props, State> {
       return this.submit(e);
     }
 
-    // Also submit non-code messages on ENTER
-    if (!this.state.code && !e.shiftKey) {
-      return this.submit(e);
+    // SHIFT+Enter should always add a new line
+    if (e.shiftKey) return 'not-handled';
+
+    const currentContent = this.props.state.getCurrentContent();
+    const selection = this.props.state.getSelection();
+    const key = selection.getStartKey();
+    const blockMap = currentContent.getBlockMap();
+    const block = blockMap.get(key);
+
+    // If we're in a code block or starting one don't submit on enter
+    if (block.get('type') === 'code-block' || block.get('text') === '```') {
+      return 'not-handled';
     }
 
-    return 'not-handled';
+    return this.submit(e);
   };
 
   sendMediaMessage = file => {
