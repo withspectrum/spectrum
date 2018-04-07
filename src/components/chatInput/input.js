@@ -3,6 +3,7 @@ import React from 'react';
 import DraftEditor from 'draft-js-plugins-editor';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
@@ -70,6 +71,11 @@ class Input extends React.Component<Props, State> {
       );
     } else {
       plugins.push(
+        createMarkdownPlugin({
+          features: {
+            inline: ['BOLD', 'ITALIC', 'CODE'],
+          },
+        }),
         createLinkifyPlugin({
           target: '_blank',
         })

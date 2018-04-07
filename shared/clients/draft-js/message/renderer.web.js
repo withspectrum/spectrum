@@ -5,6 +5,10 @@ import linksDecorator from '../links-decorator/index.web';
 import { Line, Paragraph } from 'src/components/message/style';
 import type { Node } from 'react';
 
+type KeyObj = {
+  key: string,
+};
+
 const codeRenderer = {
   blocks: {
     'code-block': (
@@ -19,6 +23,19 @@ const codeRenderer = {
 };
 
 const messageRenderer = {
+  inline: {
+    BOLD: (children: Array<Node>, { key }: KeyObj) => (
+      <span style={{ fontWeight: 700 }} key={key}>
+        {children}
+      </span>
+    ),
+    ITALIC: (children: Array<Node>, { key }: KeyObj) => (
+      <em key={key}>{children}</em>
+    ),
+    CODE: (children: Array<Node>, { key }: KeyObj) => (
+      <code key={key}>{children}</code>
+    ),
+  },
   blocks: {
     unstyled: (children: Array<Node>, { keys }: { keys: Array<string> }) =>
       children.map((child, index) => (
