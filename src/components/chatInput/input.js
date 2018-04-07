@@ -17,7 +17,7 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 
-import { InputWrapper } from './style';
+import { InputWrapper, Image } from './style';
 
 type Props = {
   editorState: Object,
@@ -29,6 +29,7 @@ type Props = {
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
+  imagePreview?: string,
 };
 
 type State = {
@@ -97,12 +98,14 @@ class Input extends React.Component<Props, State> {
       editorRef,
       code,
       networkDisabled,
+      imagePreview,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
       <InputWrapper code={code} focus={focus} networkDisabled={networkDisabled}>
+        {imagePreview && <Image src={imagePreview} />}
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

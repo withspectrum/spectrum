@@ -31,6 +31,8 @@ type State = {
   photoSizeError: string,
   code: boolean,
   isSendingMediaMessage: boolean,
+  imagePreview: string,
+  imagePreviewFile: object,
 };
 
 type Props = {
@@ -78,11 +80,14 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
+    imagePreview: null,
+    imagePreviewFile: null,
   };
 
   editor: any;
 
   componentDidMount() {
+    document.addEventListener('keydown', this.handleKeydown, true);
     this.props.onRef(this);
   }
 
@@ -100,13 +105,30 @@ class ChatInput extends React.Component<Props, State> {
     if (curr.state !== next.state) return true;
     if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
       return true;
+    if (currState.imagePreview !== nextState.imagePreview) return true;
 
     return false;
   }
 
   componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeydown);
     this.props.onRef(undefined);
   }
+
+  handleKeydown = event => {
+    const key = event.keyCode || event.charCode;
+    // Detect esc key or backspace key (and empty message) to remove
+    // the previewed image
+    if (
+      key === 27 ||
+      ((key === 8 || key === 46) && toPlainText(this.props.state).length === 0)
+    ) {
+      this.setState({
+        imagePreview: null,
+        imagePreviewFile: null,
+      });
+    }
+  };
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
@@ -206,6 +228,10 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom();
     }
 
+    if (this.state.imagePreviewFile !== null) {
+      this.sendMediaMessage(this.state.imagePreviewFile);
+    }
+
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return 'handled';
 
@@ -297,6 +323,11 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   sendMediaMessage = file => {
+    this.setState({
+      imagePreview: null,
+      imagePreviewFile: null,
+    });
+
     // eslint-disable-next-line
     let reader = new FileReader();
 
@@ -445,6 +476,23 @@ class ChatInput extends React.Component<Props, State> {
     });
   };
 
+  previewMedia = blob => {
+    if (this.state.isSendingMediaMessage) {
+      return;
+    }
+    this.setState({
+      isSendingMediaMessage: true,
+      imagePreviewFile: blob,
+    });
+    const reader = new FileReader();
+    reader.onload = () =>
+      this.setState({
+        imagePreview: reader.result,
+        isSendingMediaMessage: false,
+      });
+    reader.readAsDataURL(blob);
+  };
+
   render() {
     const {
       state,
@@ -457,6 +505,7 @@ class ChatInput extends React.Component<Props, State> {
       photoSizeError,
       code,
       isSendingMediaMessage,
+      imagePreview,
     } = this.state;
 
     const networkDisabled =
@@ -489,8 +538,10 @@ class ChatInput extends React.Component<Props, State> {
           <MediaUploader
             isSendingMediaMessage={isSendingMediaMessage}
             currentUser={currentUser}
-            onValidated={this.sendMediaMessage}
+            onValidatedUpload={this.sendMediaMessage}
+            onValidatedPreview={this.previewMedia}
             onError={this.setMediaMessageError}
+            isFocused={isFocused}
           />
         )}
         <IconButton
@@ -504,6 +555,7 @@ class ChatInput extends React.Component<Props, State> {
         />
         <Form focus={isFocused}>
           <Input
+            imagePreview={imagePreview}
             focus={isFocused}
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
             editorState={state}

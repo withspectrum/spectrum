@@ -195,3 +195,13 @@ export const PhotoSizeError = styled.div`
     align-self: center;
   }
 `;
+
+export const Image = styled.img`
+  display: block;
+  clear: both;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  border-radius: 16px;
+  max-width: 37%;
+  padding-bottom: 10px;
+`;
