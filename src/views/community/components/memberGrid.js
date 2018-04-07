@@ -83,32 +83,24 @@ class CommunityMemberGrid extends React.Component<Props, State> {
           {nodes.map(node => {
             if (!node) return null;
             return (
-              <UserListItemContainer key={node.user.id}>
-                <GranularUserProfile
-                  userObject={node.user}
-                  id={node.user.id}
-                  name={node.user.name}
-                  username={node.user.username}
-                  description={node.user.description}
-                  isCurrentUser={currentUser && node.user.id === currentUser.id}
-                  isOnline={node.user.isOnline}
-                  onlineSize={'small'}
-                  reputation={node.reputation}
-                  profilePhoto={node.user.profilePhoto}
-                  avatarSize={'40'}
-                  badges={node.roles}
-                >
-                  {currentUser &&
-                    node.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(node.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
-              </UserListItemContainer>
+              <GranularUserProfile
+                key={node.user.id}
+                userObject={node.user}
+                isCurrentUser={currentUser && node.user.id === currentUser.id}
+                onlineSize={'small'}
+                badges={node.roles}
+                withDescription={true}
+              >
+                {currentUser &&
+                  node.user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(node.user)}
+                      />
+                    </MessageIconContainer>
+                  )}
+              </GranularUserProfile>
             );
           })}
         </InfiniteList>
