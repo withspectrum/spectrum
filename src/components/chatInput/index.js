@@ -538,8 +538,7 @@ class ChatInput extends React.Component<Props, State> {
           <MediaUploader
             isSendingMediaMessage={isSendingMediaMessage}
             currentUser={currentUser}
-            onValidatedUpload={this.sendMediaMessage}
-            onValidatedPreview={this.previewMedia}
+            onValidated={this.previewMedia}
             onError={this.setMediaMessageError}
             isFocused={isFocused}
           />

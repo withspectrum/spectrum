@@ -11,8 +11,7 @@ import {
 } from 'src/helpers/images';
 
 type Props = {
-  onValidatedUpload: Function,
-  onValidatedPreview: Function,
+  onValidated: Function,
   onError: Function,
   currentUser: ?Object,
   isSendingMediaMessage: boolean,
@@ -50,18 +49,6 @@ class MediaUploader extends React.Component<Props> {
     return null;
   };
 
-  validateUpload = (validity: Object, file: ?Object) => {
-    const validationResult = this.validate(validity, file);
-    if (validationResult !== null) {
-      return this.props.onError(validationResult);
-    }
-    this.props.onError('');
-    // send back the validated file
-    this.props.onValidatedUpload(file);
-    // clear the form so that another image can be uploaded
-    return this.clearForm();
-  };
-
   validatePreview = (validity: Object, file: ?Object) => {
     const validationResult = this.validate(validity, file);
     if (validationResult !== null) {
@@ -69,7 +56,7 @@ class MediaUploader extends React.Component<Props> {
     }
     this.props.onError('');
     // send back the validated file
-    return this.props.onValidatedPreview(file);
+    return this.props.onValidated(file);
   };
 
   onChange = (e: any) => {
@@ -77,7 +64,7 @@ class MediaUploader extends React.Component<Props> {
 
     if (!file) return;
 
-    return this.validateUpload(validity, file);
+    return this.validatePreview(validity, file);
   };
 
   clearForm = () => {
