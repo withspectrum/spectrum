@@ -8,7 +8,7 @@ import { Error, Success } from '../../../../components/formElements';
 import { Spinner } from '../../../../components/globals';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Form, Input, Loading, Row, InputLabel, InputSubLabel } from './style';
-import { throttle } from '../../../../helpers/utils';
+import { debounce } from '../../../../helpers/utils';
 import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
@@ -51,7 +51,7 @@ class SetUsername extends React.Component<Props, State> {
       isLoading: false,
     };
 
-    this.search = throttle(this.search, 500);
+    this.search = debounce(this.search, 500);
   }
 
   componentDidMount() {
@@ -74,78 +74,74 @@ class SetUsername extends React.Component<Props, State> {
       username,
     });
 
-    if (username.length > 20) {
-      return this.setState({
-        error: 'Usernames can be up to 20 characters',
-      });
-    } else if (username.length === 0) {
-      return this.setState({
-        error: 'Be sure to set a username so that people can find you!',
-        success: '',
-      });
-    } else {
-      this.setState({
-        error: '',
-      });
+    if (!this.isUsernameValid(username)) {
+      return this.changeStateBasedOnUsernameLength(username);
     }
 
     // $FlowIssue
     return this.search(username);
   };
 
-  search = (username: string) => {
+  isUsernameValid = username => username.length > 0 && username.length <= 20;
+
+  changeStateBasedOnUsernameLength = username => {
     if (username.length > 20) {
-      return this.setState({
+      this.setState({
         error: 'Usernames can be up to 20 characters',
         success: '',
         isSearching: false,
       });
     } else if (username.length === 0) {
-      return this.setState({
-        error: "Your username can't be nothing...",
+      this.setState({
+        error: 'Be sure to set a username so that people can find you!',
         success: '',
         isSearching: false,
       });
     } else {
       this.setState({
         error: '',
-        isSearching: true,
       });
-
-      // check the db to see if this channel slug exists
-      this.props.client
-        .query({
-          query: getUserByUsernameQuery,
-          variables: {
-            username,
-          },
-        })
-        .then(({ data: { user } }: { data: { user: GetUserType } }) => {
-          if (this.state.username.length > 20) {
-            return this.setState({
-              error: 'Usernames can be up to 20 characters because of reasons.',
-              success: '',
-              isSearching: false,
-            });
-          } else if (user && user.id) {
-            return this.setState({
-              error:
-                'Someone already swooped this username – not feeling too original today, huh?',
-              isSearching: false,
-              success: '',
-            });
-          } else {
-            return this.setState({
-              error: '',
-              isSearching: false,
-              success: 'That username is available!',
-            });
-          }
-        })
-        .catch(err => {
-          console.error('Error looking up username: ', err);
-        });
     }
+  };
+
+  search = (username: string) => {
+    // username in state could not be the same as username argument here
+    // so dont make a call with previous username
+    if (!this.isUsernameValid(this.state.username)) return;
+
+    // username argument here is already validated
+    this.setState({
+      error: '',
+      isSearching: true,
+    });
+
+    // check the db to see if this channel slug exists
+    this.props.client
+      .query({
+        query: getUserByUsernameQuery,
+        variables: {
+          username,
+        },
+      })
+      .then(({ data: { user } }: { data: { user: GetUserType } }) => {
+        if (user && user.id) {
+          return this.setState({
+            error:
+              'Someone already swooped this username – not feeling too original today, huh?',
+            isSearching: false,
+            success: '',
+          });
+        } else {
+          return this.setState({
+            error: '',
+            isSearching: false,
+            success: 'That username is available!',
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Error looking up username: ', err);
+      });
   };
 
   saveUsername = e => {
