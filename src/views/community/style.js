@@ -115,7 +115,6 @@ export const Grid = styled.div`
   width: 100%;
   min-width: 100%;
   max-width: 100%;
-  height: 100%;
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
@@ -164,6 +163,10 @@ export const Meta = styled(Column)`
     > div {
       margin-left: 0;
     }
+  }
+
+  > .member-button {
+    margin-left: 32px;
   }
 `;
 
