@@ -147,13 +147,6 @@ export const ListColumn = styled(Column)`
 export const Meta = styled(Column)`
   grid-area: meta;
 
-  > div:nth-of-type(2) {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    margin: 16px 0 0 32px;
-  }
-
   > a > button {
     margin-top: 16px;
     margin-left: 32px;
