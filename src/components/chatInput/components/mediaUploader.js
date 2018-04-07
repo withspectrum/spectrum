@@ -83,7 +83,7 @@ class MediaUploader extends React.Component<Props> {
     return this.clearForm();
   }
 
-  onPaste = event => {
+  onPaste = (event: any) => {
     if (!this.props.isFocused) {
       return;
     }

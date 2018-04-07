@@ -32,7 +32,7 @@ type State = {
   code: boolean,
   isSendingMediaMessage: boolean,
   imagePreview: string,
-  imagePreviewFile: object,
+  imagePreviewFile: Blob,
 };
 
 type Props = {
@@ -80,14 +80,14 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
-    imagePreview: null,
-    imagePreviewFile: null,
+    imagePreview: '',
+    imagePreviewFile: new Blob(),
   };
 
   editor: any;
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeydown, true);
+    document.addEventListener('keydown', this.handleKeyDown, true);
     this.props.onRef(this);
   }
 
@@ -111,11 +111,11 @@ class ChatInput extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeydown);
+    document.removeEventListener('keydown', this.handleKeyDown);
     this.props.onRef(undefined);
   }
 
-  handleKeydown = event => {
+  handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
     // Detect esc key or backspace key (and empty message) to remove
     // the previewed image
@@ -124,8 +124,7 @@ class ChatInput extends React.Component<Props, State> {
       ((key === 8 || key === 46) && toPlainText(this.props.state).length === 0)
     ) {
       this.setState({
-        imagePreview: null,
-        imagePreviewFile: null,
+        imagePreview: '',
       });
     }
   };
@@ -228,7 +227,7 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom();
     }
 
-    if (this.state.imagePreviewFile !== null) {
+    if (this.state.imagePreview.length) {
       this.sendMediaMessage(this.state.imagePreviewFile);
     }
 
@@ -322,10 +321,10 @@ class ChatInput extends React.Component<Props, State> {
     return 'not-handled';
   };
 
-  sendMediaMessage = file => {
+  sendMediaMessage = (file: Blob) => {
     this.setState({
-      imagePreview: null,
-      imagePreviewFile: null,
+      imagePreview: '',
+      imagePreviewFile: new Blob(),
     });
 
     // eslint-disable-next-line
@@ -487,7 +486,7 @@ class ChatInput extends React.Component<Props, State> {
     const reader = new FileReader();
     reader.onload = () =>
       this.setState({
-        imagePreview: reader.result,
+        imagePreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
     reader.readAsDataURL(blob);
