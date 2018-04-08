@@ -37,18 +37,9 @@ import {
   Expander,
   Action,
   EmbedUI,
+  customStyleMap,
 } from './style';
 import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
-
-const customStyleMap = {
-  CODE: {
-    border: '1px solid #DFE7EF',
-    borderRadius: '4px',
-    backgroundColor: '#F5F8FC',
-    padding: '1px 4px',
-    fontFamily: 'monospace',
-  },
-};
 
 type Props = {
   state: Object,

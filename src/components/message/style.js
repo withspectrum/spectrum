@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, monoStack } from '../globals';
+import { Gradient, zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -32,11 +32,14 @@ const Bubble = styled.div`
 
   code {
     border: 1px solid
-      ${props => (props.me ? `rgba(255,255,255,0.2)` : props.theme.bg.border)};
+      ${props =>
+        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
     border-radius: 4px;
     padding: 1px 4px;
     background: ${props =>
-      props.me ? `rgba(255,255,255,0.1)` : `rgba(255,255,255,0.3)`};
+      props.me
+        ? hexa(props.theme.bg.default, 0.1)
+        : hexa(props.theme.bg.default, 0.3)};
     color: ${props =>
       props.me ? props.theme.text.reverse : props.theme.warn.alt};
   }

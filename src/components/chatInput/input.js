@@ -5,6 +5,7 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
+import { customStyleMap } from 'src/components/draftjs-editor/style';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
 import 'prismjs/components/prism-go';
@@ -34,17 +35,6 @@ type Props = {
 
 type State = {
   plugins: Array<mixed>,
-};
-
-const customStyleMap = {
-  CODE: {
-    border: '1px solid #DFE7EF',
-    borderRadius: '4px',
-    backgroundColor: '#F5F8FC',
-    padding: '1px 4px',
-    fontFamily: 'monospace',
-    color: '#E2197A',
-  },
 };
 
 class Input extends React.Component<Props, State> {
