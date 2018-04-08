@@ -23,11 +23,11 @@ import {
 } from './models/user';
 import createServer from './server';
 
-console.log('\n✉️ Vulcan, the search worker, is starting...');
+debug('\n✉️ Vulcan, the search worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
+debug('');
 
-console.log(
+debug(
   `🗄 Vulcan open for business ${(process.env.NODE_ENV === 'production' &&
     // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
@@ -54,7 +54,7 @@ deletedMessage();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
-  console.log(
+  debug(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
     }`
