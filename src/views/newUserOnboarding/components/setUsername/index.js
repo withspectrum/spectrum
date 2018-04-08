@@ -51,7 +51,7 @@ class SetUsername extends React.Component<Props, State> {
       isLoading: false,
     };
 
-    this.search = debounce(this.search, 500);
+    this.search = debounce(this.search, 500, false);
   }
 
   componentDidMount() {
