@@ -81,7 +81,7 @@ export const privateChannelArchived = () =>
 
 export const privateChannelRestored = () =>
   listenToDeletedFieldIn(db, 'archivedAt')('channels', (channel: DBChannel) => {
-    debug('Channel archived');
+    debug('Channel restored');
 
     if (channel.isPrivate && channel.archivedAt) {
       debug(`Private channel ${channel.name} archived`);

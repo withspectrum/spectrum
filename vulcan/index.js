@@ -14,7 +14,13 @@ import {
   editedCommunity,
 } from './models/community';
 import { newMessage, deletedMessage } from './models/message';
-import { newUser, deletedUser, editedUser } from './models/user';
+import {
+  newUser,
+  deletedUser,
+  editedUser,
+  bannedUser,
+  unbannedUser,
+} from './models/user';
 import createServer from './server';
 
 console.log('\n✉️ Vulcan, the search worker, is starting...');
@@ -39,6 +45,8 @@ editedCommunity();
 
 newUser();
 deletedUser();
+bannedUser();
+unbannedUser();
 editedUser();
 
 newMessage();
@@ -47,8 +55,9 @@ deletedMessage();
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
   console.log(
-    `💉 Healthcheck server running at ${server.address()
-      .address}:${server.address().port}`
+    `💉 Healthcheck server running at ${server.address().address}:${
+      server.address().port
+    }`
   );
 });
 
