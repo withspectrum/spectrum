@@ -152,6 +152,11 @@ The first step to running Spectrum locally is downloading the code by cloning th
 ```sh
 git clone git@github.com:withspectrum/spectrum.git
 ```
+ If you get `Permission denied` error using `ssh` refer [here](https://help.github.com/articles/error-permission-denied-publickey/)
+or use `https` link as a fallback.
+```sh
+git clone https://github.com/withspectrum/spectrum.git
+```
 
 #### Installation
 
