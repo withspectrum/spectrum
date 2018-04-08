@@ -29,6 +29,17 @@ const Bubble = styled.div`
     background-color: ${props =>
       props.me ? props.theme.text.default : props.theme.brand.alt};
   }
+
+  code {
+    border: 1px solid
+      ${props => (props.me ? `rgba(255,255,255,0.2)` : props.theme.bg.border)};
+    border-radius: 4px;
+    padding: 1px 4px;
+    background: ${props =>
+      props.me ? `rgba(255,255,255,0.1)` : `rgba(255,255,255,0.3)`};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.warn.alt};
+  }
 `;
 
 export const Indicator = styled.div`

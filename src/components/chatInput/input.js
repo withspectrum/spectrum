@@ -36,6 +36,17 @@ type State = {
   plugins: Array<mixed>,
 };
 
+const customStyleMap = {
+  CODE: {
+    border: '1px solid #DFE7EF',
+    borderRadius: '4px',
+    backgroundColor: '#F5F8FC',
+    padding: '1px 4px',
+    fontFamily: 'monospace',
+    color: '#E2197A',
+  },
+};
+
 class Input extends React.Component<Props, State> {
   editor: any;
 
@@ -121,6 +132,7 @@ class Input extends React.Component<Props, State> {
           autoComplete="on"
           autoCorrect="on"
           stripPastedStyles={true}
+          customStyleMap={customStyleMap}
           {...rest}
         />
       </InputWrapper>
