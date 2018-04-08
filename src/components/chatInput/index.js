@@ -31,8 +31,8 @@ type State = {
   photoSizeError: string,
   code: boolean,
   isSendingMediaMessage: boolean,
-  imagePreview: string,
-  imagePreviewFile: Blob,
+  mediaPreview: string,
+  mediaPreviewFile: Blob,
 };
 
 type Props = {
@@ -80,8 +80,8 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
-    imagePreview: '',
-    imagePreviewFile: new Blob(),
+    mediaPreview: '',
+    mediaPreviewFile: new Blob(),
   };
 
   editor: any;
@@ -105,7 +105,7 @@ class ChatInput extends React.Component<Props, State> {
     if (curr.state !== next.state) return true;
     if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
       return true;
-    if (currState.imagePreview !== nextState.imagePreview) return true;
+    if (currState.mediaPreview !== nextState.mediaPreview) return true;
 
     return false;
   }
@@ -123,9 +123,7 @@ class ChatInput extends React.Component<Props, State> {
       key === 27 ||
       ((key === 8 || key === 46) && toPlainText(this.props.state).length === 0)
     ) {
-      this.setState({
-        imagePreview: '',
-      });
+      this.removeMediaPreview();
     }
   };
 
@@ -227,8 +225,8 @@ class ChatInput extends React.Component<Props, State> {
       forceScrollToBottom();
     }
 
-    if (this.state.imagePreview.length) {
-      this.sendMediaMessage(this.state.imagePreviewFile);
+    if (this.state.mediaPreview.length) {
+      this.sendMediaMessage(this.state.mediaPreviewFile);
     }
 
     // If the input is empty don't do anything
@@ -321,11 +319,15 @@ class ChatInput extends React.Component<Props, State> {
     return 'not-handled';
   };
 
-  sendMediaMessage = (file: Blob) => {
+  removeMediaPreview = () => {
     this.setState({
-      imagePreview: '',
-      imagePreviewFile: new Blob(),
+      mediaPreview: '',
+      mediaPreviewFile: new Blob(),
     });
+  };
+
+  sendMediaMessage = (file: Blob) => {
+    this.removeMediaPreview();
 
     // eslint-disable-next-line
     let reader = new FileReader();
@@ -481,12 +483,12 @@ class ChatInput extends React.Component<Props, State> {
     }
     this.setState({
       isSendingMediaMessage: true,
-      imagePreviewFile: blob,
+      mediaPreviewFile: blob,
     });
     const reader = new FileReader();
     reader.onload = () =>
       this.setState({
-        imagePreview: reader.result.toString(),
+        mediaPreview: reader.result.toString(),
         isSendingMediaMessage: false,
       });
     reader.readAsDataURL(blob);
@@ -504,7 +506,7 @@ class ChatInput extends React.Component<Props, State> {
       photoSizeError,
       code,
       isSendingMediaMessage,
-      imagePreview,
+      mediaPreview,
     } = this.state;
 
     const networkDisabled =
@@ -539,7 +541,7 @@ class ChatInput extends React.Component<Props, State> {
             currentUser={currentUser}
             onValidated={this.previewMedia}
             onError={this.setMediaMessageError}
-            isFocused={isFocused}
+            inputFocused={isFocused}
           />
         )}
         <IconButton
@@ -553,7 +555,8 @@ class ChatInput extends React.Component<Props, State> {
         />
         <Form focus={isFocused}>
           <Input
-            imagePreview={imagePreview}
+            mediaPreview={mediaPreview}
+            onRemoveMedia={this.removeMediaPreview}
             focus={isFocused}
             placeholder={`Your ${code ? 'code' : 'message'} here...`}
             editorState={state}

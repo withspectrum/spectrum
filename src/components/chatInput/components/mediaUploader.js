@@ -15,7 +15,7 @@ type Props = {
   onError: Function,
   currentUser: ?Object,
   isSendingMediaMessage: boolean,
-  isFocused: boolean,
+  inputFocused: boolean,
 };
 
 class MediaUploader extends React.Component<Props> {
@@ -55,6 +55,8 @@ class MediaUploader extends React.Component<Props> {
       return this.props.onError(validationResult);
     }
     this.props.onError('');
+    // clear the form so that another image can be uploaded
+    this.clearForm();
     // send back the validated file
     return this.props.onValidated(file);
   };
@@ -84,11 +86,15 @@ class MediaUploader extends React.Component<Props> {
   }
 
   onPaste = (event: any) => {
-    if (!this.props.isFocused) {
+    // Ensure that the image is only pasted if user focuses input
+    if (!this.props.inputFocused) {
       return;
     }
     const items = (event.clipboardData || event.originalEvent.clipboardData)
       .items;
+    if (!items) {
+      return;
+    }
     for (let item of items) {
       if (item.kind === 'file' && item.type.includes('image/')) {
         this.validatePreview({ valid: true }, item.getAsFile());
