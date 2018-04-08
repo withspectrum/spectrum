@@ -265,7 +265,11 @@ class ThreadContainer extends React.Component<Props, State> {
       </Input>
     );
 
-    if (!currentUser || !currentUser.id) {
+    if (!currentUser) {
+      return chatInputComponent;
+    }
+
+    if (currentUser && !currentUser.id) {
       return chatInputComponent;
     }
 
