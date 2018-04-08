@@ -123,7 +123,7 @@ class MediaUploader extends React.Component<Props> {
         <MediaLabel>
           <MediaInput
             type="file"
-            accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+            accept={'.png, .jpg, .jpeg, .gif'}
             multiple={false}
             onChange={this.onChange}
           />
