@@ -22,6 +22,10 @@ export default function dashboardFeed(state = initialState, action) {
     case 'SELECT_FEED_CHANNEL':
       return Object.assign({}, state, {
         activeChannel: action.channelId,
+        search: {
+          ...state.search,
+          queryString: '',
+        },
       });
     case 'REMOVE_MOUNTED_THREAD_ID':
       return Object.assign({}, state, {
