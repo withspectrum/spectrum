@@ -1,4 +1,4 @@
-[Table of contents](../readme.md)
+[Table of contents](../readme.md) / [Operations](./index.md)
 
 # Deleting users
 
