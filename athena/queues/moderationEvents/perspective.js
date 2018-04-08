@@ -46,7 +46,7 @@ export default async (text: string) => {
   const { value } = TOXICITY.summaryScore;
 
   // if the toxicity probability is above 50%, alert us
-  if (value > 0.5) return value;
+  if (value > 0.9) return value;
 
   return null;
 };

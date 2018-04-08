@@ -113,12 +113,13 @@ export const getThreadsInTimeframe = (
 // We do not filter by deleted threads intentionally to prevent users from spam
 // creating/deleting threads
 export const getThreadsByUserAsSpamCheck = (
-  userId: string
+  userId: string,
+  timeframe: number = 60 * 10
 ): Promise<Array<?DBThread>> => {
   return db
     .table('threads')
     .getAll(userId, { index: 'creatorId' })
-    .filter(db.row('createdAt').during(db.now().sub(60 * 10), db.now()))
+    .filter(db.row('createdAt').during(db.now().sub(timeframe), db.now()))
     .run();
 };
 

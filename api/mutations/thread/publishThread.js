@@ -26,6 +26,10 @@ import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
 
+const OWNER_MODERATOR_SPAM_LIMIT = 5;
+const MEMBER_SPAM_LMIT = 3;
+const SPAM_TIMEFRAME = 60 * 10;
+
 type Attachment = {
   attachmentType: string,
   data: string,
@@ -78,7 +82,7 @@ export default async (
     ]),
     loaders.channel.load(thread.channelId),
     loaders.community.load(thread.communityId),
-    getThreadsByUserAsSpamCheck(currentUser.id),
+    getThreadsByUserAsSpamCheck(currentUser.id, SPAM_TIMEFRAME),
   ]);
 
   if (!community || community.deletedAt) {
@@ -141,7 +145,12 @@ export default async (
       'User has posted at least once in the previous 10m - running spam checks'
     );
 
-    if (usersPreviousPublishedThreads.length >= 3 && !isOwnerOrModerator) {
+    if (
+      (isOwnerOrModerator &&
+        usersPreviousPublishedThreads.length >= OWNER_MODERATOR_SPAM_LIMIT) ||
+      (!isOwnerOrModerator &&
+        usersPreviousPublishedThreads.length >= MEMBER_SPAM_LMIT)
+    ) {
       debug('User has posted at least 3 times in the previous 10m');
       _adminProcessUserSpammingThreadsQueue.add({
         user: currentUser,
@@ -188,7 +197,7 @@ export default async (
 
     const isSpamming = checkForSpam.filter(Boolean).length > 0;
 
-    if (isSpamming && !isOwnerOrModerator) {
+    if (isSpamming) {
       debug('User is spamming similar content');
 
       _adminProcessUserSpammingThreadsQueue.add({
@@ -250,20 +259,15 @@ export default async (
   // prevent some abuse and spam if we ensure people dont get email notifications
   // with titles like "fuck you"
   const checkToxicity = async () => {
-    if (isOwnerOrModerator) return false;
-
     const body = thread.content.body
       ? threadBodyToPlainText(thread.content.body)
       : '';
     const title = thread.content.title;
     const text = `${title} ${body}`;
 
-    // $FlowFixMe
     const scores = await Promise.all([
-      // $FlowFixMe
-      getSpectrumScore(text, dbThread.id, dbThread.creatorId),
-      // $FlowFixMe
-      getPerspectiveScore(text),
+      getSpectrumScore(text, dbThread.id, dbThread.creatorId).catch(err => 0),
+      getPerspectiveScore(text).catch(err => 0),
     ]).catch(err =>
       console.error(
         'Error getting thread moderation scores from providers',
@@ -281,7 +285,7 @@ export default async (
     }
 
     // if both services agree that the thread is >= 98% toxic
-    if ((spectrumScore + perspectiveScore) / 2 >= 0.98) {
+    if ((spectrumScore + perspectiveScore) / 2 >= 0.9) {
       debug('Thread is toxic according to both providers');
       return true;
     }
@@ -296,6 +300,11 @@ export default async (
     );
     // generate an alert for admins
     _adminProcessToxicThreadQueue.add({ thread: dbThread });
+    processReputationEventQueue.add({
+      userId: currentUser.id,
+      type: 'thread created',
+      entityId: dbThread.id,
+    });
   } else {
     debug('Thread is not toxic, send notifications and add rep');
     // thread is clean, send notifications and process reputation

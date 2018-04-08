@@ -26,9 +26,9 @@ export default async (text: string, contextId: string, userId: string) => {
 
   if (!data || !data.result) return;
 
-  const { toxic, toxicityConfidence } = data.result;
+  const { toxicityConfidence } = data.result;
 
-  if (toxic) return toxicityConfidence;
+  if (toxicityConfidence > 0.9) return toxicityConfidence;
 
   return null;
 };
