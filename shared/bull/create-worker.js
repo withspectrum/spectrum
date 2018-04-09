@@ -6,6 +6,7 @@ const EventEmitter = require('events');
 const createQueue = require('./create-queue');
 const Raven = require('shared/raven');
 import type { Queues } from './types';
+import toobusy from '../middlewares/toobusy';
 
 type QueueMap = {
   [name: string]: (job: Object) => ?Promise<any>,
@@ -33,18 +34,20 @@ const createWorker = (queueMap: QueueMap, queueOptions?: Object = {}) => {
 
   // Return the job count when requesting anything via HTTP
   return http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    // Summarize the data across all the queues
-    Promise.all(queues.map(queue => queue.getJobCounts())).then(jobCounts => {
-      const data = {
-        waiting: sumArr(jobCounts, 'waiting'),
-        active: sumArr(jobCounts, 'active'),
-        completed: sumArr(jobCounts, 'completed'),
-        failed: sumArr(jobCounts, 'failed'),
-        delayed: sumArr(jobCounts, 'delayed'),
-      };
+    toobusy(req, res, () => {
+      res.setHeader('Content-Type', 'application/json');
+      // Summarize the data across all the queues
+      Promise.all(queues.map(queue => queue.getJobCounts())).then(jobCounts => {
+        const data = {
+          waiting: sumArr(jobCounts, 'waiting'),
+          active: sumArr(jobCounts, 'active'),
+          completed: sumArr(jobCounts, 'completed'),
+          failed: sumArr(jobCounts, 'failed'),
+          delayed: sumArr(jobCounts, 'delayed'),
+        };
 
-      res.end(JSON.stringify(data, null, 2));
+        res.end(JSON.stringify(data, null, 2));
+      });
     });
   });
 };
