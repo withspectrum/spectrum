@@ -14,14 +14,20 @@ import {
   editedCommunity,
 } from './models/community';
 import { newMessage, deletedMessage } from './models/message';
-import { newUser, deletedUser, editedUser } from './models/user';
+import {
+  newUser,
+  deletedUser,
+  editedUser,
+  bannedUser,
+  unbannedUser,
+} from './models/user';
 import createServer from './server';
 
-console.log('\n✉️ Vulcan, the search worker, is starting...');
+debug('\n✉️ Vulcan, the search worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
+debug('');
 
-console.log(
+debug(
   `🗄 Vulcan open for business ${(process.env.NODE_ENV === 'production' &&
     // $FlowIssue
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
@@ -39,6 +45,8 @@ editedCommunity();
 
 newUser();
 deletedUser();
+bannedUser();
+unbannedUser();
 editedUser();
 
 newMessage();
@@ -46,9 +54,10 @@ deletedMessage();
 
 const server = createServer();
 server.listen(PORT, 'localhost', () => {
-  console.log(
-    `💉 Healthcheck server running at ${server.address()
-      .address}:${server.address().port}`
+  debug(
+    `💉 Healthcheck server running at ${server.address().address}:${
+      server.address().port
+    }`
   );
 });
 

@@ -14,7 +14,7 @@ export default graphqlExpress(req => ({
   formatError: createErrorFormatter(req),
   tracing: true,
   context: {
-    user: req.user,
+    user: req.user ? (req.user.bannedAt ? null : req.user) : null,
     loaders: createLoaders(),
   },
   validationRules: [
