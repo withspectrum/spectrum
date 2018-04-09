@@ -9,19 +9,6 @@ type KeyObj = {
   key: string,
 };
 
-const codeRenderer = {
-  blocks: {
-    'code-block': (
-      children: Array<Node>,
-      { keys }: { keys: Array<string> }
-    ) => (
-      <Line key={keys[0]}>
-        {children.map((child, i) => [child, <br key={i} />])}
-      </Line>
-    ),
-  },
-};
-
 const messageRenderer = {
   inline: {
     BOLD: (children: Array<Node>, { key }: KeyObj) => (
@@ -44,9 +31,13 @@ const messageRenderer = {
     'code-block': (
       children: Array<Node>,
       { keys }: { keys: Array<string> }
-    ) => <code key={keys.join('|')}>{children}</code>,
+    ) => (
+      <Line key={keys.join('|')}>
+        {children.map((child, i) => [child, <br key={i} />])}
+      </Line>
+    ),
   },
   decorators: [mentionsDecorator, linksDecorator],
 };
 
-export { messageRenderer, codeRenderer };
+export { messageRenderer };
