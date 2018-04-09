@@ -46,13 +46,13 @@ class Input extends React.Component<Props, State> {
         createPrismPlugin({
           prism: Prism,
         }),
-        createCodeEditorPlugin(),
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
             block: ['CODE', 'ordered-list-item', 'unordered-list-item'],
           },
         }),
+        createCodeEditorPlugin(),
         createLinkifyPlugin({
           target: '_blank',
         }),
