@@ -203,7 +203,6 @@ export const MediaPreview = styled.div`
   & > img {
     border-radius: 16px;
     max-width: 37%;
-    opacity: 0.2;
   }
 
   button {
