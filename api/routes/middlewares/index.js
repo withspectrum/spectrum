@@ -50,6 +50,9 @@ import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
 
+import rateLimiter from './rateLimiter';
+middlewares.use(rateLimiter);
+
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
 middlewares.use(threadParamRedirect);
