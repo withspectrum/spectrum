@@ -39,7 +39,8 @@ export default (job: Job<CardExpiringWarningEmailJobData>) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
   }
 };

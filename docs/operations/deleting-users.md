@@ -24,6 +24,9 @@ r.db('spectrum')
   providerId: null,
   fbProviderId: null,
   googleProviderId: null,
+  githubProviderId: null,
+  githubUsername: null,
+  profilePhoto: null,
 })
 ```
 4. Remove that user as a member from all communities and channels:

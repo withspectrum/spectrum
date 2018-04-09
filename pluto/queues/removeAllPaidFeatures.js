@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('pluto:queues:remove-all-paid-features');
 import { removeAllCommunityModerators } from '../models/usersCommunities';
 import { archiveAllCommunityPrivateChannels } from '../models/channel';
 import { setCommunityAnalytics, setPrioritySupport } from '../models/community';
@@ -13,8 +14,8 @@ export default async (communityId: string) => {
     setCommunityAnalytics(communityId, false),
     setPrioritySupport(communityId, false),
   ]).catch(err => {
-    console.log('❌', err);
-    console.log('❌', communityId);
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
   });
 };
