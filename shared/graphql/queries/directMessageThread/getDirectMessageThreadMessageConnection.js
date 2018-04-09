@@ -48,7 +48,9 @@ export const getDMThreadMessageConnectionOptions = {
     data: {
       ...data,
       messages:
-        directMessageThread && directMessageThread.messageConnection.edges,
+        directMessageThread &&
+        directMessageThread.messageConnection &&
+        directMessageThread.messageConnection.edges,
       hasNextPage: directMessageThread
         ? directMessageThread.messageConnection.pageInfo.hasNextPage
         : false,
