@@ -195,3 +195,47 @@ export const PhotoSizeError = styled.div`
     align-self: center;
   }
 `;
+
+export const MediaPreview = styled.div`
+  padding-top: 8px;
+  padding-bottom: 10px;
+
+  & > img {
+    border-radius: 16px;
+    max-width: 37%;
+    opacity: 0.2;
+  }
+
+  button {
+    position: relative;
+    top: -5px;
+    left: -25px;
+    vertical-align: top;
+    background: #16171a;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+    border: none;
+    border-radius: 40px;
+    outline: none;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  button:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: '\\d7';
+    font-size: 21px;
+    color: #fff;
+    line-height: 28px;
+    text-align: center;
+  }
+
+  button:hover {
+    box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+  }
+`;
