@@ -29,7 +29,6 @@ import MediaUploader from './components/mediaUploader';
 type State = {
   isFocused: boolean,
   photoSizeError: string,
-  code: boolean,
   isSendingMediaMessage: boolean,
 };
 
@@ -112,12 +111,7 @@ class ChatInput extends React.Component<Props, State> {
     const { onChange } = this.props;
 
     persistContent(state);
-
-    if (toPlainText(state).trim() === '```') {
-      this.toggleCodeMessage(false);
-    } else if (onChange) {
-      onChange(state, ...rest);
-    }
+    onChange(state, ...rest);
   };
 
   triggerFocus = () => {
@@ -127,26 +121,6 @@ class ChatInput extends React.Component<Props, State> {
     setTimeout(() => {
       this.editor && this.editor.focus();
     }, 0);
-  };
-
-  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
-    const { onChange, state } = this.props;
-    const { code } = this.state;
-    this.setState(
-      {
-        code: !code,
-      },
-      () => {
-        onChange(
-          changeCurrentBlockType(
-            state,
-            code ? 'unstyled' : 'code-block',
-            keepCurrentText ? toPlainText(state) : ''
-          )
-        );
-        setTimeout(() => this.triggerFocus());
-      }
-    );
   };
 
   submit = e => {
@@ -211,10 +185,6 @@ class ChatInput extends React.Component<Props, State> {
 
     // do one last persist before sending
     forcePersist(state);
-
-    this.setState({
-      code: false,
-    });
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -298,7 +268,10 @@ class ChatInput extends React.Component<Props, State> {
     const block = blockMap.get(key);
 
     // If we're in a code block or starting one don't submit on enter
-    if (block.get('type') === 'code-block' || block.get('text') === '```') {
+    if (
+      block.get('type') === 'code-block' ||
+      block.get('text').indexOf('```') === 0
+    ) {
       return 'not-handled';
     }
 
@@ -461,12 +434,7 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
     } = this.props;
-    const {
-      isFocused,
-      photoSizeError,
-      code,
-      isSendingMediaMessage,
-    } = this.state;
+    const { isFocused, photoSizeError, isSendingMediaMessage } = this.state;
 
     const networkDisabled =
       !networkOnline ||
@@ -502,25 +470,16 @@ class ChatInput extends React.Component<Props, State> {
             onError={this.setMediaMessageError}
           />
         )}
-        <IconButton
-          glyph={'code'}
-          onClick={this.toggleCodeMessage}
-          tipText={'Write code'}
-          tipLocation={'top'}
-          style={{ margin: '0 4px' }}
-          color={code ? 'brand.alt' : 'text.placeholder'}
-          hoverColor={'brand.alt'}
-        />
         <Form focus={isFocused}>
           <Input
             focus={isFocused}
-            placeholder={`Your ${code ? 'code' : 'message'} here...`}
+            placeholder={`Your message here...`}
             editorState={state}
             handleReturn={this.handleReturn}
             onChange={this.onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            code={code}
+            code={false}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
             decorators={[mentionsDecorator, linksDecorator]}

@@ -26,7 +26,6 @@ type Props = {
   placeholder: string,
   className?: string,
   focus?: boolean,
-  code?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
@@ -43,34 +42,11 @@ class Input extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      plugins: [],
-    };
-  }
-
-  componentWillMount() {
-    this.setPlugins();
-  }
-
-  componentWillReceiveProps(next: Props) {
-    const curr = this.props;
-    if (next.code !== curr.code) {
-      this.setPlugins(next);
-    }
-  }
-
-  setPlugins = (next?: Props) => {
-    const props = next || this.props;
-    const plugins = [];
-
-    if (props.code) {
-      plugins.push(
+      plugins: [
         createPrismPlugin({
           prism: Prism,
         }),
-        createCodeEditorPlugin()
-      );
-    } else {
-      plugins.push(
+        createCodeEditorPlugin(),
         createMarkdownPlugin({
           features: {
             inline: ['BOLD', 'ITALIC', 'CODE'],
@@ -79,14 +55,10 @@ class Input extends React.Component<Props, State> {
         }),
         createLinkifyPlugin({
           target: '_blank',
-        })
-      );
-    }
-
-    this.setState({
-      plugins: plugins,
-    });
-  };
+        }),
+      ],
+    };
+  }
 
   setRef = (editor: any) => {
     const { editorRef } = this.props;
@@ -102,14 +74,13 @@ class Input extends React.Component<Props, State> {
       placeholder,
       readOnly,
       editorRef,
-      code,
       networkDisabled,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
-      <InputWrapper code={code} focus={focus} networkDisabled={networkDisabled}>
+      <InputWrapper focus={focus} networkDisabled={networkDisabled}>
         <DraftEditor
           editorState={editorState}
           onChange={onChange}

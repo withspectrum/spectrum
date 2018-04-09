@@ -109,14 +109,12 @@ export const InputWrapper = styled(EditorWrapper)`
     transition: border-color 0.2s ease-in;
   }
 
-  ${props =>
-    props.code &&
-    css`
-      ${monoStack};
-      font-size: 14px;
-      font-weight: 500;
-      background-color: #f5f8fc;
-    `};
+  pre {
+    ${monoStack};
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f5f8fc;
+  }
 `;
 
 export const SendButton = styled(IconButton)`
