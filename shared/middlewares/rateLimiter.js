@@ -2,9 +2,9 @@ import debugCreator from 'debug';
 import requestIp from 'request-ip';
 import ms from 'ms';
 import Limiter from 'ratelimiter';
-import createRedis from 'shared/bull/create-redis';
+import createRedis from '../bull/create-redis';
 
-const debug = debugCreator('api:rateLimiter');
+const debug = debugCreator('shared:middlewares:rateLimiter');
 
 const config =
   process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV

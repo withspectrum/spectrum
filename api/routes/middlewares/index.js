@@ -50,7 +50,8 @@ import passport from 'passport';
 middlewares.use(passport.initialize());
 middlewares.use(passport.session());
 
-import rateLimiter from './rateLimiter';
+// rate limiter middleware to reduce API calls to server within time frame
+import rateLimiter from 'shared/middlewares/rateLimiter';
 middlewares.use(rateLimiter);
 
 // This needs to come after passport otherwise we'll always redirect logged-in users
