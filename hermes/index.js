@@ -55,9 +55,9 @@ import {
 
 const PORT = process.env.PORT || 3002;
 
-console.log('\n✉️ Hermes, the email worker, is starting...');
+debug('\n✉️ Hermes, the email worker, is starting...');
 debug('Logging with debug enabled!');
-console.log('');
+debug('');
 
 const server = createWorker({
   [SEND_COMMUNITY_INVITE_EMAIL]: processSendCommunityInviteEmail,
@@ -87,7 +87,7 @@ const server = createWorker({
   [SEND_PRIVATE_CHANNEL_REQUEST_APPROVED_EMAIL]: processSendPrivateChannelRequestApprovedEmail,
 });
 
-console.log(
+debug(
   // $FlowIssue
   `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
     // $FlowIssue
@@ -97,7 +97,7 @@ console.log(
 
 // $FlowIssue
 server.listen(PORT, 'localhost', () => {
-  console.log(
+  debug(
     `💉 Healthcheck server running at ${server.address().address}:${
       server.address().port
     }`
