@@ -13,7 +13,7 @@ type Node = {
 
 export type GetChannelBlockedUsersType = {
   ...$Exact<ChannelInfoType>,
-  blockedUsers: Array<?Node>,
+  blockedUsers?: Array<?Node>,
 };
 
 export const getChannelBlockedUsersQuery = gql`

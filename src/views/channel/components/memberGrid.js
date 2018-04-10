@@ -84,11 +84,15 @@ class ChannelMemberGrid extends React.Component<Props> {
               );
             })}
 
-          {channel.memberConnection.pageInfo.hasNextPage && (
-            <StyledButton loading={isFetchingMore} onClick={() => fetchMore()}>
-              View more...
-            </StyledButton>
-          )}
+          {channel.memberConnection &&
+            channel.memberConnection.pageInfo.hasNextPage && (
+              <StyledButton
+                loading={isFetchingMore}
+                onClick={() => fetchMore()}
+              >
+                View more...
+              </StyledButton>
+            )}
         </FlexCol>
       );
     }

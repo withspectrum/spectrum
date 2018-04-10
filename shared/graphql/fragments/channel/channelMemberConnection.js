@@ -15,7 +15,7 @@ type Edge = {
 };
 
 export type ChannelMemberConnectionType = {
-  memberConnection: {
+  memberConnection?: {
     pageInfo: {
       hasNextPage: boolean,
       hasPreviousPage: boolean,
