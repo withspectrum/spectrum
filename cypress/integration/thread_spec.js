@@ -1,4 +1,4 @@
-import { toPlainText, toState } from '../../ehared/draft-utils';
+import { toPlainText, toState } from '../../shared/draft-utils';
 import data from '../../shared/testing/data';
 
 const thread = data.threads[0];
