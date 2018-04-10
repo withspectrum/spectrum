@@ -97,6 +97,10 @@ passport.deserializeUser((id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// rate limiter middleware to reduce API calls to server within time frame
+import rateLimiter from 'shared/middlewares/rateLimiter';
+app.use(rateLimiter('hyperion', 2500, 3600000));
+
 // This needs to come after passport otherwise we'll always redirect logged-in users
 import threadParamRedirect from 'shared/middlewares/thread-param';
 app.use(threadParamRedirect);

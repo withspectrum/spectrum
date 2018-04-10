@@ -20,36 +20,43 @@ const redis = createRedis({
   ...config,
 });
 
-const rateLimiter = (req, res, next) => {
-  // if user is logged in than use his id, otherwise his ip address
-  const id = req.isAuthenticated() ? req.user.id : requestIp.getClientIp(req);
-  const limiterObj = new Limiter({ id, db: redis });
-  limiterObj.get(function(err, limit) {
-    if (err) return next(err);
+const rateLimiter = (keyPrefix, max, duration) => {
+  return (req, res, next) => {
+    // if user is logged in than use his id, otherwise his ip address
+    const id = req.isAuthenticated() ? req.user.id : requestIp.getClientIp(req);
+    const limiterObj = new Limiter({
+      id: `${keyPrefix}:${id}`,
+      db: redis,
+      max,
+      duration,
+    });
+    limiterObj.get(function(err, limit) {
+      if (err) return next(err);
 
-    res.set('X-RateLimit-Limit', limit.total);
-    res.set('X-RateLimit-Remaining', limit.remaining - 1);
-    res.set('X-RateLimit-Reset', limit.reset);
+      res.set('X-RateLimit-Limit', limit.total);
+      res.set('X-RateLimit-Remaining', limit.remaining - 1);
+      res.set('X-RateLimit-Reset', limit.reset);
 
-    // all good
-    const after = (limit.reset - Date.now() / 1000) | 0;
-    const remainingTime = ms(after * 1000, { long: true });
-    debug(
-      'remaining requests %s/%s in (%s) for userId: %s',
-      limit.remaining - 1,
-      limit.total,
-      remainingTime,
-      id
-    );
-    if (limit.remaining) return next();
+      // all good
+      const after = (limit.reset - Date.now() / 1000) | 0;
+      const remainingTime = ms(after * 1000, { long: true });
+      debug(
+        'remaining requests %s/%s in (%s) for userId: %s',
+        limit.remaining - 1,
+        limit.total,
+        remainingTime,
+        id
+      );
+      if (limit.remaining) return next();
 
-    // not good
-    const delta = (limit.reset * 1000 - Date.now()) | 0;
-    res.set('Retry-After', after);
-    res
-      .status(429)
-      .send('Rate limit exceeded, retry in ' + ms(delta, { long: true }));
-  });
+      // not good
+      const delta = (limit.reset * 1000 - Date.now()) | 0;
+      res.set('Retry-After', after);
+      res
+        .status(429)
+        .send('Rate limit exceeded, retry in ' + ms(delta, { long: true }));
+    });
+  };
 };
 
 export default rateLimiter;
