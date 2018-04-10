@@ -25,7 +25,6 @@ type Props = {
   isFetchingMore: boolean,
   history: Object,
   currentUser: ?Object,
-  showDescriptions?: boolean,
 };
 
 class CommunityModeratorList extends React.Component<Props> {
@@ -44,12 +43,7 @@ class CommunityModeratorList extends React.Component<Props> {
   };
 
   render() {
-    const {
-      data: { community },
-      isLoading,
-      currentUser,
-      showDescriptions,
-    } = this.props;
+    const { data: { community }, isLoading, currentUser } = this.props;
 
     if (community && community.members) {
       const { edges: members } = community.members;
@@ -61,14 +55,18 @@ class CommunityModeratorList extends React.Component<Props> {
         <ListColumn>
           {nodes.map(node => {
             if (!node) return null;
+            const { user, isOnline, roles } = node;
+
             return (
               <GranularUserProfile
-                key={node.user.id}
-                userObject={node.user}
-                isCurrentUser={currentUser && node.user.id === currentUser.id}
+                key={user.id}
+                userObject={user}
+                name={user.name}
+                profilePhoto={user.profilePhoto}
+                isCurrentUser={currentUser && user.id === currentUser.id}
+                isOnline={isOnline}
                 onlineSize={'small'}
-                badges={node.roles}
-                withDescription={showDescriptions}
+                badges={roles}
               >
                 {currentUser &&
                   node.user.id !== currentUser.id && (

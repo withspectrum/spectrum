@@ -9,18 +9,11 @@ import Reputation from '../reputation';
 import Badge from '../badges';
 import Icon from '../icons';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import addProtocolToString from 'shared/normalize-url';
 import {
   Row,
-  Content,
-  MetaContent,
-  AvatarContent,
-  NameContent,
   Name,
   Username,
-  BadgeContent,
   Description,
-  Website,
   MessageIcon,
   Actions,
 } from './style';
@@ -38,13 +31,15 @@ type Props = {
   isCurrentUser?: boolean,
   reputation?: number,
   messageButton?: boolean,
-  withDescription?: boolean,
   children?: React.Node,
   isOnline?: boolean,
   onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Function,
 };
+
+// Each prop both provides data AND indicates that the element should be included in the instance of the profile,
+// so each instance must manually call out which pieces of the profile it wants included.
 
 const LinkHandler = ({
   username,
@@ -65,24 +60,22 @@ class GranularUserProfile extends React.Component<Props> {
 
   render() {
     const {
-      userObject: {
-        profilePhoto,
-        name,
-        username,
-        description,
-        reputation,
-        isOnline,
-      },
+      userObject,
+      profilePhoto,
+      name,
+      username,
+      description,
+      reputation,
+      isOnline,
       avatarSize,
       badges,
       children,
       messageButton,
       onlineSize,
-      withDescription,
     } = this.props;
 
     return (
-      <Row>
+      <Row avatarSize={avatarSize}>
         {profilePhoto && (
           <Avatar
             src={profilePhoto}
@@ -92,32 +85,34 @@ class GranularUserProfile extends React.Component<Props> {
             link={`/users/${username}`}
           />
         )}
-        <LinkHandler username={username}>
-          {name && <Name>{name}</Name>}
-
-          {badges && (
-            <BadgeContent>
-              {badges.map((b, i) => <Badge key={i} type={b} />)}
-            </BadgeContent>
-          )}
+        <LinkHandler username={userObject.username}>
+          <span>
+            {name && (
+              <Name>
+                {name}
+                {username && <Username>@{username}</Username>}
+              </Name>
+            )}
+            {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+          </span>
 
           {typeof reputation === 'number' && (
             <Reputation reputation={reputation} />
           )}
         </LinkHandler>
-        {withDescription &&
-          description && <Description>{description}</Description>}
+        {description && <Description>{description}</Description>}
 
         <Actions>
-          {messageButton && (
-            <MessageIcon
-              tipText={name ? `Message ${name}` : 'Message'}
-              tipLocation={'top-left'}
-              onClick={this.initMessage}
-            >
-              <Icon glyph="message-new" size={32} />
-            </MessageIcon>
-          )}
+          {messageButton &&
+            !children && (
+              <MessageIcon
+                tipText={name ? `Message ${name}` : 'Message'}
+                tipLocation={'top-left'}
+                onClick={this.initMessage}
+              >
+                <Icon glyph="message-new" size={32} />
+              </MessageIcon>
+            )}
 
           {children}
         </Actions>

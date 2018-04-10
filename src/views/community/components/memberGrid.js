@@ -82,21 +82,28 @@ class CommunityMemberGrid extends React.Component<Props, State> {
         >
           {nodes.map(node => {
             if (!node) return null;
+
+            const { user, roles, reputation } = node;
             return (
               <GranularUserProfile
-                key={node.user.id}
-                userObject={node.user}
-                isCurrentUser={currentUser && node.user.id === currentUser.id}
+                key={user.id}
+                userObject={user}
+                name={user.name}
+                username={user.username}
+                profilePhoto={user.profilePhoto}
+                description={user.description}
+                isCurrentUser={currentUser && user.id === currentUser.id}
+                isOnline={user.isOnline}
                 onlineSize={'small'}
-                badges={node.roles}
-                withDescription={true}
+                badges={roles}
+                reputation={reputation}
               >
                 {currentUser &&
-                  node.user.id !== currentUser.id && (
+                  user.id !== currentUser.id && (
                     <MessageIconContainer>
                       <Icon
                         glyph={'message'}
-                        onClick={() => this.initMessage(node.user)}
+                        onClick={() => this.initMessage(user)}
                       />
                     </MessageIconContainer>
                   )}
