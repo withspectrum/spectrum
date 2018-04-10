@@ -8,7 +8,7 @@ let client;
 if (process.env.POSTMARK_SERVER_KEY) {
   client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
 } else {
-  console.log(
+  debug(
     '\nℹ️ POSTMARK_SERVER_KEY not provided, debug mode enabled. Will log emails instead of actually sending them.'
   );
   // If no postmark API key is provided don't crash the server but log instead
