@@ -46,6 +46,8 @@ class TopCommunitiesPure extends React.Component<Props> {
         </Row>
       );
     }
+
+    return null;
   }
 }
 
