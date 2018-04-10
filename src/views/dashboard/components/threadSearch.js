@@ -37,6 +37,14 @@ class ThreadSearch extends React.Component<Props, State> {
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
+  componentWillReceiveProps({ queryString }) {
+    if (this.state.value !== queryString) {
+      this.setState({
+        value: queryString,
+      });
+    }
+  }
+
   handleKeyPress = (e: any) => {
     // escape
     if (e.keyCode === 27) {
