@@ -32,7 +32,7 @@ type State = {
   code: boolean,
   isSendingMediaMessage: boolean,
   mediaPreview: string,
-  mediaPreviewFile: Blob,
+  mediaPreviewFile: ?Blob,
 };
 
 type Props = {
@@ -81,7 +81,7 @@ class ChatInput extends React.Component<Props, State> {
     code: false,
     isSendingMediaMessage: false,
     mediaPreview: '',
-    mediaPreviewFile: new Blob(),
+    mediaPreviewFile: null,
   };
 
   editor: any;
@@ -322,7 +322,7 @@ class ChatInput extends React.Component<Props, State> {
   removeMediaPreview = () => {
     this.setState({
       mediaPreview: '',
-      mediaPreviewFile: new Blob(),
+      mediaPreviewFile: null,
     });
   };
 
