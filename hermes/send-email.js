@@ -46,19 +46,18 @@ const sendEmail = (options: Options) => {
       },
       async err => {
         if (err) {
-          console.error('Error sending email:');
-          console.error(err);
-
           // 406 means the user became inactive, either by having an email
-          // hard bounce or they marked as as spam
+          // hard bounce or they marked as spam
           if (err.code === 406) {
             console.error(`Deactivating future notifications for ${To}`);
             return await deactiveUserEmailNotifications(To)
               .then(() => rej(err))
               .catch(e => rej(e));
-          } else {
-            return rej(err);
           }
+
+          console.error('Error sending email:');
+          console.error(err);
+          return rej(err);
         }
         res();
         debug(`email to ${To} sent successfully`);

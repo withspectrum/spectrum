@@ -23,6 +23,6 @@ const config = IS_PROD
       ...DEFAULT_CONFIG,
     };
 
-var r = require('rethinkdbdash')(config);
+const r = require('rethinkdbdash')(config);
 
 module.exports = { db: r };
