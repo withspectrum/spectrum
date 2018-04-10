@@ -32,7 +32,6 @@ type Props = {
   reputation?: number,
   messageButton?: boolean,
   children?: React.Node,
-  isOnline?: boolean,
   onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Function,
@@ -66,7 +65,6 @@ class GranularUserProfile extends React.Component<Props> {
       username,
       description,
       reputation,
-      isOnline,
       avatarSize,
       badges,
       children,
@@ -80,9 +78,9 @@ class GranularUserProfile extends React.Component<Props> {
           <Avatar
             src={profilePhoto}
             size={avatarSize || '32'}
-            isOnline={isOnline}
-            onlineSize={onlineSize}
-            link={`/users/${username}`}
+            isOnline={userObject.isOnline}
+            onlineSize={onlineSize || 'small'}
+            link={`/users/${userObject.username}`}
           />
         )}
         <LinkHandler username={userObject.username}>
