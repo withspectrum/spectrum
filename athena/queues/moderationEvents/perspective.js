@@ -1,12 +1,11 @@
 // @flow
+const debug = require('debug')('athena:queue:moderation-events:perspective');
 require('now-env');
 import axios from 'axios';
 const PERSPECTIVE_API_KEY = process.env.PERSPECTIVE_API_KEY;
 
 if (!PERSPECTIVE_API_KEY) {
-  console.log(
-    'No API key for Perspective provided, not sending moderation events.'
-  );
+  debug('No API key for Perspective provided, not sending moderation events.');
 }
 
 export default async (text: string) => {
