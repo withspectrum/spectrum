@@ -1,10 +1,9 @@
 // @flow
-const debug = require('debug')('athena:queue:channel-notification');
+const debug = require('debug')('athena:queue:moderation-events:message');
 import { getUserById } from '../../models/user';
 import { getThreadById } from '../../models/thread';
 import { getCommunityById } from '../../models/community';
 import { getChannelById } from '../../models/channel';
-import type { DBMessage } from 'shared/types';
 import { toState, toPlainText } from 'shared/draft-utils';
 import getSpectrumScore from './spectrum';
 import getPerspectiveScore from './perspective';
