@@ -136,6 +136,11 @@ const Body = styled(FlexCol)`
   }
 `;
 
+const Main = styled.main`
+  display: flex;
+  flex: 1 1 100%;
+`;
+
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
 const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
@@ -203,7 +208,7 @@ class Routes extends React.Component<{}> {
               <Route component={ThreadSlider} />
 
               {/* This id is needed for the “Skip to content” button in the NavBar. */}
-              <main id="main">
+              <Main id="main">
                 {/*
                   Switch only renders the first match. Subrouting happens downstream
                   https://reacttraining.com/react-router/web/api/Switch
@@ -225,7 +230,10 @@ class Routes extends React.Component<{}> {
                   <Route path="/features" component={Pages} />
 
                   {/* App Pages */}
-                  <Route path="/new/community" component={NewCommunityFallback} />
+                  <Route
+                    path="/new/community"
+                    component={NewCommunityFallback}
+                  />
                   <Route path="/new/thread" component={ComposerFallback} />
                   <Route path="/new/search" component={Search} />
 
@@ -244,7 +252,11 @@ class Routes extends React.Component<{}> {
                   <Route path="/messages" component={MessagesFallback} />
                   <Route path="/thread/:threadId" component={Thread} />
                   <Route path="/thread" render={() => <Redirect to="/" />} />
-                  <Route exact path="/users" render={() => <Redirect to="/" />} />
+                  <Route
+                    exact
+                    path="/users"
+                    render={() => <Redirect to="/" />}
+                  />
                   <Route exact path="/users/:username" component={UserView} />
                   <Route
                     exact
@@ -287,7 +299,7 @@ class Routes extends React.Component<{}> {
                   />
                   <Route path="/:communitySlug" component={CommunityView} />
                 </Switch>
-              </main>
+              </Main>
             </Body>
           </ScrollManager>
         </ErrorBoundary>
