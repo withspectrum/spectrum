@@ -326,7 +326,11 @@ class ChatInput extends React.Component<Props, State> {
     });
   };
 
-  sendMediaMessage = (file: Blob) => {
+  sendMediaMessage = (file: ?Blob) => {
+    if (file == null) {
+      return;
+    }
+
     this.removeMediaPreview();
 
     // eslint-disable-next-line
