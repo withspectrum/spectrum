@@ -1,3 +1,4 @@
+// @flow
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from '../../components/globals';
 import Card from '../../components/card';
