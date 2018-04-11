@@ -12,7 +12,7 @@ const { userId: memberInChannelId } = data.usersChannels.find(
 const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 describe('channel notification preferences logged out', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 
@@ -24,7 +24,7 @@ describe('channel notification preferences logged out', () => {
 });
 
 describe('channel notification preferences as member', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
@@ -45,7 +45,7 @@ describe('channel notification preferences as member', () => {
 });
 
 describe('channel profile as non-member', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(QUIET_USER_ID);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });

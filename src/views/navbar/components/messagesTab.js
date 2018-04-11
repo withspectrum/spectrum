@@ -203,6 +203,7 @@ class MessagesTab extends React.Component<Props, State> {
     return (
       <Tab
         data-active={active}
+        aria-current={active ? 'page' : undefined}
         to="/messages"
         rel="nofollow"
         onClick={this.markAllAsSeen}

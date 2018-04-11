@@ -150,7 +150,7 @@ const Community = /* GraphQL */ `
     isPro: Boolean @cost(complexity: 1)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
-    topMembers: [User] @cost(complexity: 10)
+    topMembers: [CommunityMember] @cost(complexity: 10)
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
 		watercooler: Thread
 		brandedLogin: BrandedLogin

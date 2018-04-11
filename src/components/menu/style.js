@@ -57,7 +57,7 @@ export const MenuContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  height: ${props => (props.hasTabBar ? 'calc(100% - 48px)' : '100%')};
+  height: 100%;
   width: 300px;
   color: ${props => props.theme.brand.alt};
   background-color: ${props => props.theme.bg.default};

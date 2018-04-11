@@ -85,17 +85,18 @@ class ChannelMembers extends Component<Props> {
               })}
           </ListContainer>
 
-          {channel.memberConnection.pageInfo.hasNextPage && (
-            <ListFooter>
-              <FetchMoreButton
-                color={'brand.default'}
-                loading={isFetchingMore}
-                onClick={() => fetchMore()}
-              >
-                Load more
-              </FetchMoreButton>
-            </ListFooter>
-          )}
+          {channel.memberConnection &&
+            channel.memberConnection.pageInfo.hasNextPage && (
+              <ListFooter>
+                <FetchMoreButton
+                  color={'brand.default'}
+                  loading={isFetchingMore}
+                  onClick={() => fetchMore()}
+                >
+                  Load more
+                </FetchMoreButton>
+              </ListFooter>
+            )}
         </SectionCard>
       );
     }

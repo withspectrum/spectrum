@@ -39,13 +39,12 @@ aliases:
     name: Setup and build
     command:
       |
-        node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
         yarn run build:web
         yarn run build:api
 
   - &start-api
     name: Start the API in the background
-    command: TEST_DB=true yarn run dev:api
+    command: yarn run dev:api:test
     background: true
 
   - &start-web
@@ -83,6 +82,13 @@ jobs:
           root: .
           paths: .
 
+  build_web:
+    <<: *js_defaults
+    steps:
+      - attach_workspace:
+          at: ~/spectrum
+      - run: *setup-and-build-web
+
   # Start db and servers, then run e2e and unit tests
   test_web:
     <<: *defaults
@@ -98,7 +104,7 @@ jobs:
       - run: *install-rethinkdb
       - run: *start-rethinkdb
       - run: sleep 10
-      - run: *setup-and-build-web
+      - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
       - run: *start-api
       - run: *start-web
       - run: sleep 60
@@ -106,12 +112,12 @@ jobs:
           name: Run Unit Tests
           command: yarn run test:ci
       - run:
-          name: Run E2E Tests
-          command: yarn run test:e2e
-      - run:
           name: Danger
           when: always
           command: yarn run danger ci
+      - run:
+          name: Run E2E Tests
+          command: yarn run test:e2e
 
   # Run eslint, flow etc.
   test_static_js:
@@ -167,9 +173,13 @@ workflows:
   test:
     jobs:
       - checkout_environment
+      - build_web:
+          requires:
+            - checkout_environment
       - test_mobile_js:
           requires:
             - checkout_environment
+
       # Disabled as Expo is fixing their critical issue with Detox
       # - test_mobile_native:
       #     requires:
@@ -177,6 +187,7 @@ workflows:
       - test_web:
           requires:
             - checkout_environment
+            - build_web
       - test_static_js:
           requires:
             - checkout_environment
