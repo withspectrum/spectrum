@@ -2,20 +2,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { BillingListItem } from '../../../components/listItems';
-import { IconButton } from '../../../components/buttons';
-import { UpsellUpgradeToPro } from '../../../components/upsell';
-import { openModal } from '../../../actions/modals';
-import { convertTimestampToDate } from '../../../helpers/utils';
+import { BillingListItem } from 'src/components/listItems';
+import { IconButton } from 'src/components/buttons';
+import { UpsellUpgradeToPro } from 'src/components/upsell';
+import { openModal } from 'src/actions/modals';
+import { convertTimestampToDate } from 'src/helpers/utils';
 import getCurrentUserRecurringPayments from 'shared/graphql/queries/user/getCurrentUserRecurringPayments';
 import type { GetCurrentUserRecurringPaymentsType } from 'shared/graphql/queries/user/getCurrentUserRecurringPayments';
-import { displayLoadingCard } from '../../../components/loading';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { displayLoadingCard } from 'src/components/loading';
+import { ListContainer } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 type Props = {
   dispatch: Function,
@@ -44,10 +40,8 @@ class RecurringPaymentsList extends React.Component<Props> {
 
     if (filteredRecurringPayments.length > 0) {
       return (
-        <StyledCard>
-          <ListHeader>
-            <LargeListHeading>Pro</LargeListHeading>
-          </ListHeader>
+        <SectionCard>
+          <SectionTitle>Pro</SectionTitle>
           <ListContainer>
             {filteredRecurringPayments.map(payment => {
               if (!payment) return null;
@@ -68,7 +62,7 @@ class RecurringPaymentsList extends React.Component<Props> {
               );
             })}
           </ListContainer>
-        </StyledCard>
+        </SectionCard>
       );
     } else {
       return <UpsellUpgradeToPro />;

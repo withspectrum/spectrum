@@ -5,40 +5,39 @@ import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Link from 'src/components/link';
-import { track } from '../../helpers/events';
-import { Button } from '../buttons';
-import Icon from '../../components/icons';
-import { SERVER_URL, CLIENT_URL } from '../../api/constants';
-import GithubProfile from '../../components/githubProfile';
-import { GithubSigninButton } from '../../components/loginButtonSet/github';
+import { track } from 'src/helpers/events';
+import { Button } from 'src/components/buttons';
+import Icon from 'src/components/icons';
+import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
+import GithubProfile from 'src/components/githubProfile';
+import { GithubSigninButton } from 'src/components/loginButtonSet/github';
 import {
   Input,
   TextArea,
   Error,
   PhotoInput,
   CoverInput,
-} from '../formElements';
-import UsernameSearch from '../usernameSearch';
-import { StyledLabel } from '../formElements/style';
+} from 'src/components/formElements';
+import UsernameSearch from 'src/components/usernameSearch';
+import { StyledLabel } from 'src/components/formElements/style';
 import {
-  StyledCard,
   Form,
-  FormTitle,
   Actions,
   ImageInputWrapper,
   Location,
   GithubSignin,
-} from './style';
+} from '../style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import type { EditUserType } from 'shared/graphql/mutations/user/editUser';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_STRING,
-} from '../../helpers/images';
-import { Notice } from '../../components/listItems/style';
+} from 'src/helpers/images';
+import { Notice } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 type State = {
   website: ?string,
@@ -335,12 +334,12 @@ class UserWithData extends React.Component<Props, State> {
     const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
 
     return (
-      <StyledCard>
+      <SectionCard>
         <Location>
           <Icon glyph="view-back" size={16} />
           <Link to={`/users/${username}`}>Return to Profile</Link>
         </Location>
-        <FormTitle>Profile Settings</FormTitle>
+        <SectionTitle>Profile Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
@@ -369,6 +368,8 @@ class UserWithData extends React.Component<Props, State> {
               </span>
             </Notice>
           )}
+
+          <div style={{ height: '8px' }} />
 
           <Input
             type="text"
@@ -451,7 +452,7 @@ class UserWithData extends React.Component<Props, State> {
             <Error>Please fix any errors above to save your profile.</Error>
           )}
         </Form>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

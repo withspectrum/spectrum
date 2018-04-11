@@ -2,23 +2,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
 import toggleUserNotificationSettingsMutation from 'shared/graphql/mutations/user/toggleUserNotificationSettings';
-import { Checkbox } from '../../../components/formElements';
-import Icon from '../../../components/icons';
+import { Checkbox } from 'src/components/formElements';
+import Icon from 'src/components/icons';
 import {
-  StyledCard,
-  LargeListHeading,
-  ListHeader,
   ListContainer,
   Notice,
   InlineIcon,
   Description,
-} from '../../../components/listItems/style';
+} from 'src/components/listItems/style';
 import { EmailListItem, CheckboxContent } from '../style';
 import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import UserEmailConfirmation from '../../../components/userEmailConfirmation';
+import UserEmailConfirmation from 'src/components/userEmailConfirmation';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -122,13 +120,11 @@ class EmailSettings extends React.Component<Props> {
 
     if (!currentUser.email) {
       return (
-        <StyledCard
+        <SectionCard
           smallOnly={this.props.smallOnly}
           largeOnly={this.props.largeOnly}
         >
-          <ListHeader>
-            <LargeListHeading>Turn on email notifications</LargeListHeading>
-          </ListHeader>
+          <SectionTitle>Turn on email notifications</SectionTitle>
           <ListContainer>
             <Description>
               You can customize your email notifications to keep up to date on
@@ -138,18 +134,16 @@ class EmailSettings extends React.Component<Props> {
 
             <UserEmailConfirmation user={currentUser} />
           </ListContainer>
-        </StyledCard>
+        </SectionCard>
       );
     }
 
     return (
-      <StyledCard
+      <SectionCard
         smallOnly={this.props.smallOnly}
         largeOnly={this.props.largeOnly}
       >
-        <ListHeader>
-          <LargeListHeading>Email Preferences</LargeListHeading>
-        </ListHeader>
+        <SectionTitle>Email Preferences</SectionTitle>
         <ListContainer>
           {settings.map((setting, i) => {
             return (
@@ -194,7 +188,7 @@ class EmailSettings extends React.Component<Props> {
             );
           })}
         </ListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }
