@@ -49,7 +49,6 @@ const sendEmail = (options: Options) => {
           // 406 means the user became inactive, either by having an email
           // hard bounce or they marked as spam
           if (err.code === 406) {
-            console.error(`Deactivating future notifications for ${To}`);
             return await deactiveUserEmailNotifications(To)
               .then(() => rej(err))
               .catch(e => rej(e));
