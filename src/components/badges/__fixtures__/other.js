@@ -5,7 +5,8 @@ export default {
   component: Badge,
 
   props: {
-    type: 'default-payment-method',
+    type: 'other',
+    onClick: () => console.log('Badge pressed!'),
   },
 
   reduxState: {},

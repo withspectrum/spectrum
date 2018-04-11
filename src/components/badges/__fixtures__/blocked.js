@@ -5,7 +5,7 @@ export default {
   component: Badge,
 
   props: {
-    type: 'default-payment-method',
+    type: 'blocked',
   },
 
   reduxState: {},

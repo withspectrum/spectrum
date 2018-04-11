@@ -1,3 +1,4 @@
+// @flow
 import Badge from '..';
 
 export default {

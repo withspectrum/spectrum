@@ -1,3 +1,4 @@
+// @flow
 import { OutlineButton } from '../..';
 
 export default {

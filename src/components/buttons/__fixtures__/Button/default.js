@@ -1,3 +1,4 @@
+// @flow
 import { Button } from '../..';
 
 export default {

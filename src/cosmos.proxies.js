@@ -1,5 +1,4 @@
 // @flow
-
 import React from 'react';
 import createReduxProxy from 'react-cosmos-redux-proxy';
 import { ThemeProvider } from 'styled-components';
