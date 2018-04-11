@@ -39,6 +39,8 @@
 		"ALGOLIA_API_SECRET": "@algolia-api-secret",
 		"APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key",
 		"API_TOKEN_SECRET": "@api-token-secret",
+		"SENTRY_DSN_CLIENT": "@sentry-dsn-client",
+		"SENTRY_DSN_SERVER": "@sentry-dsn-server",
 		"SPECTRUM_MODERATION_API_KEY": "@spectrum-moderation-api-key"
 	}
 }
