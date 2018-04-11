@@ -33,9 +33,10 @@ const getUserByEmail = (email: string): Promise<DBUser> => {
 };
 
 const getUserByUsername = (username: string): Promise<DBUser> => {
+  const lowercase = username.toLowerCase();
   return db
     .table('users')
-    .getAll(username, { index: 'username' })
+    .getAll(lowercase, { index: 'username' })
     .run()
     .then(result => (result ? result[0] : null));
 };
@@ -43,9 +44,10 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
 const getUsersByUsername = (
   usernames: Array<string>
 ): Promise<Array<DBUser>> => {
+  const lowercase = usernames.map(name => name.toLowerCase());
   return db
     .table('users')
-    .getAll(...usernames, { index: 'username' })
+    .getAll(...lowercase, { index: 'username' })
     .run();
 };
 
@@ -54,19 +56,6 @@ const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
     .table('users')
     .getAll(...userIds)
     .run();
-};
-
-const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
-  return (
-    db
-      .table('users')
-      // get users whose username or displayname matches a case insensitive string
-      .filter(user => user.coerceTo('string').match(`(?i)${string}`))
-      // only return the 10 users who match to avoid overloading the dom and sending
-      // down too much data at once
-      .limit(10)
-      .run()
-  );
 };
 
 const storeUser = (user: Object): Promise<DBUser> => {
@@ -260,6 +249,7 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
   const {
     input: { name, description, website, file, coverFile, username, timezone },
   } = input;
+  const lowercaseUsername = username ? username.toLowerCase() : null;
   return db
     .table('users')
     .get(userId)
@@ -269,7 +259,7 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
         name,
         description,
         website,
-        username,
+        username: lowercaseUsername,
         timezone,
         modifiedAt: new Date(),
       });
@@ -456,7 +446,6 @@ module.exports = {
   getUsersByUsername,
   getUsersThreadCount,
   getUsers,
-  getUsersBySearchString,
   getUserByIndex,
   saveUserProvider,
   createOrFindUser,
