@@ -54,7 +54,7 @@ export const Label = styled.span`
 export const StyledSolidButton = styled.button`
   ${baseButton} 
   
-  ${props => props.isBtnLoading && 'span + span {margin: 0;}'}
+  ${props => props.disabled && 'span + span {margin: 0;}'}
   background-color: ${props =>
     props.disabled
       ? props.theme.bg.inactive
