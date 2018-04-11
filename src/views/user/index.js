@@ -144,7 +144,7 @@ class UserView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer
           />
-          <Grid>
+          <Grid id="main">
             <CoverPhoto src={user.coverPhoto} />
             <Meta>
               <UserProfile
