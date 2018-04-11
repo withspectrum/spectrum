@@ -159,6 +159,7 @@ const User = /* GraphQL */ `
 		unsubscribeWebPush(endpoint: String!): Boolean
     subscribeExpoPush(token: String!): Boolean
 		updateUserEmail(email: String!): User
+		deleteCurrentUser: Boolean
 	}
 `;
 
