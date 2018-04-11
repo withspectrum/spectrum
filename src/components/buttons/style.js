@@ -52,13 +52,10 @@ export const Label = styled.span`
 `;
 
 export const StyledSolidButton = styled.button`
-  ${baseButton} 
-  
-  ${props => props.disabled && 'span + span {margin: 0;}'}
-  background-color: ${props =>
-    props.disabled
-      ? props.theme.bg.inactive
-      : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
+  ${baseButton} background-color: ${props =>
+  props.disabled
+    ? props.theme.bg.inactive
+    : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
   background-image: ${props =>
     props.disabled || props.gradientTheme === 'none'
       ? 'none'
