@@ -943,6 +943,10 @@ async-to-gen@1.3.3:
     babylon "^6.14.0"
     magic-string "^0.19.0"
 
+async-until@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/async-until/-/async-until-1.0.0.tgz#5db55a07b89b1446f9ca541cdb37b29989f681f0"
+
 async@2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/async/-/async-2.1.4.tgz#2d2160c7788032e4dd6cbe2502f1f9a2c8f6cde4"
@@ -3444,6 +3448,13 @@ detect-node@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.3.tgz#a2033c09cc8e158d37748fbde7507832bd6ce127"
 
+detect-port-alt@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/detect-port-alt/-/detect-port-alt-1.1.3.tgz#a4d2f061d757a034ecf37c514260a98750f2b131"
+  dependencies:
+    address "^1.0.1"
+    debug "^2.6.0"
+
 detect-port-alt@1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/detect-port-alt/-/detect-port-alt-1.1.6.tgz#24707deabe932d4a3cf621302027c2b266568275"
@@ -4416,7 +4427,7 @@ express-session@^1.15.2:
     uid-safe "~2.1.5"
     utils-merge "1.0.1"
 
-express@^4.13.3, express@^4.15.2, express@^4.16.2:
+express@^4.13.3, express@^4.15.2, express@^4.15.4, express@^4.16.2:
   version "4.16.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
   dependencies:
@@ -4849,6 +4860,14 @@ fs-extra@^0.30.0:
     klaw "^1.0.0"
     path-is-absolute "^1.0.0"
     rimraf "^2.2.8"
+
+fs-extra@^4.0.1:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-4.0.3.tgz#0d852122e5bc5beb453fb028e9c0c9bf36340c94"
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
 
 fs-extra@^5.0.0:
   version "5.0.0"
@@ -5534,7 +5553,7 @@ http-parser-js@>=0.4.0:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.4.11.tgz#5b720849c650903c27e521633d94696ee95f3529"
 
-http-proxy-middleware@~0.17.4:
+http-proxy-middleware@^0.17.4, http-proxy-middleware@~0.17.4:
   version "0.17.4"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-0.17.4.tgz#642e8848851d66f09d4f124912846dbaeb41b833"
   dependencies:
@@ -5633,6 +5652,12 @@ imgix-core-js@^1.0.6:
 immutable@*, immutable@3.7.4, immutable@3.x, immutable@^3.8.1, immutable@~3.7.4:
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.4.tgz#40ab3ec87b4ac95e0331a6d359a4b1fa73b2ddf3"
+
+import-from@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/import-from/-/import-from-2.1.0.tgz#335db7f2a7affd53aaa471d4b8021dee36b7f3b1"
+  dependencies:
+    resolve-from "^3.0.0"
 
 import-lazy@^2.1.0:
   version "2.1.0"
@@ -7022,6 +7047,10 @@ lodash.isempty@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isempty/-/lodash.isempty-4.4.0.tgz#6f86cbedd8be4ec987be9aaf33c9684db1b31e7e"
 
+lodash.isequal@^4.4.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+
 lodash.isinteger@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz#619c0af3d03f8b04c31f5882840b77b11cd68343"
@@ -7054,13 +7083,17 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
-lodash.merge@^4.4.0:
+lodash.merge@^4.4.0, lodash.merge@^4.6.0:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
 
 lodash.noop@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/lodash.noop/-/lodash.noop-3.0.1.tgz#38188f4d650a3a474258439b96ec45b32617133c"
+
+lodash.omit@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.omit/-/lodash.omit-4.5.0.tgz#6eb19ae5a1ee1dd9df0b969e66ce0b7fa30b5e60"
 
 lodash.once@^4.0.0, lodash.once@^4.1.1:
   version "4.1.1"
@@ -8756,7 +8789,7 @@ querystring-es3@^0.2.0, querystring-es3@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring-es3/-/querystring-es3-0.2.1.tgz#9ec61f79049875707d69414596fd907a4d711e73"
 
-querystring@0.2.0:
+querystring@0.2.0, querystring@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
@@ -8891,6 +8924,124 @@ react-clipboard.js@^1.1.3:
     clipboard "^1.6.1"
     prop-types "^15.5.0"
 
+react-cosmos-config@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-config/-/react-cosmos-config-4.0.0-beta.15.tgz#da9a8e9becc161ddfb6924bbae9b4c801058abe6"
+  dependencies:
+    react-cosmos-shared "^4.0.0-beta.15"
+    yargs "^11.0.0"
+
+react-cosmos-flow@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-flow/-/react-cosmos-flow-4.0.0-beta.15.tgz#1c655bb647819be1e92bbfc228f9c4d025990ba4"
+
+react-cosmos-loader@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-loader/-/react-cosmos-loader-4.0.0-beta.15.tgz#a387500b506ee2fbe84a76cbd9a85c5985260b9c"
+  dependencies:
+    async-until "^1.0.0"
+    deep-equal "^1.0.1"
+    lodash.merge "^4.6.0"
+    prop-types "^15.5.10"
+    react-cosmos-shared "^4.0.0-beta.15"
+    react-cosmos-state-proxy "^4.0.0-beta.15"
+
+react-cosmos-playground@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-playground/-/react-cosmos-playground-4.0.0-beta.15.tgz#fd5f40e2512345b43f668a75557a6c70d7ef353c"
+
+react-cosmos-redux-proxy@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-redux-proxy/-/react-cosmos-redux-proxy-4.0.0-beta.15.tgz#1fedcfdbed58f73e298edabf2868e0338566ab91"
+  dependencies:
+    lodash.omit "^4.5.0"
+    react-cosmos-shared "^4.0.0-beta.15"
+    redux "^3.7.2"
+
+react-cosmos-shared@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-shared/-/react-cosmos-shared-4.0.0-beta.15.tgz#0190f90c542ca2ced3fd666a3a61ebe7a58d51d8"
+  dependencies:
+    lodash.isplainobject "^4.0.6"
+    prop-types "^15.5.10"
+    resolve-from "^3.0.0"
+    slash "^1.0.0"
+
+react-cosmos-state-proxy@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-state-proxy/-/react-cosmos-state-proxy-4.0.0-beta.15.tgz#641a9e866064cbd9e8dce380acb1e198964addc8"
+  dependencies:
+    lodash.isempty "^4.4.0"
+    lodash.isequal "^4.4.0"
+    lodash.omit "^4.5.0"
+    react-cosmos-shared "^4.0.0-beta.15"
+
+react-cosmos-voyager2@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-voyager2/-/react-cosmos-voyager2-4.0.0-beta.15.tgz#3058559cd565c8c62247edb2b3ce79f5e7739041"
+  dependencies:
+    babel-types "^6.26.0"
+    babylon "^6.18.0"
+    commondir "^1.0.1"
+    glob "^7.1.2"
+    lodash.sortby "^4.7.0"
+    micromatch "^3.1.4"
+    react-cosmos-shared "^4.0.0-beta.15"
+    util.promisify "^1.0.0"
+
+react-cosmos-voyager@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos-voyager/-/react-cosmos-voyager-4.0.0-beta.15.tgz#21da0a064b4e98814ed6096bb5ddcab10442f6fe"
+  dependencies:
+    glob "^7.1.1"
+    traverse "^0.6.6"
+
+react-cosmos@^4.0.0-beta.15:
+  version "4.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/react-cosmos/-/react-cosmos-4.0.0-beta.15.tgz#f0c1543c0aae9981085f05f23a3560ca9f2b8944"
+  dependencies:
+    express "^4.15.4"
+    fs-extra "^4.0.1"
+    glob "^7.1.1"
+    http-proxy-middleware "^0.17.4"
+    import-from "^2.1.0"
+    lodash.omit "^4.5.0"
+    react-cosmos-config "^4.0.0-beta.15"
+    react-cosmos-loader "^4.0.0-beta.15"
+    react-cosmos-playground "^4.0.0-beta.15"
+    react-cosmos-shared "^4.0.0-beta.15"
+    react-cosmos-voyager "^4.0.0-beta.15"
+    react-cosmos-voyager2 "^4.0.0-beta.15"
+    react-dev-utils "^4.2.1"
+    react-error-overlay "^4.0.0"
+    resolve-from "^3.0.0"
+    webpack-dev-middleware "^1.12.0"
+    webpack-hot-middleware "^2.18.2"
+    yargs "^11.0.0"
+
+react-dev-utils@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.1.tgz#9f2763e7bafa1a1b9c52254d2a479deec280f111"
+  dependencies:
+    address "1.0.3"
+    babel-code-frame "6.26.0"
+    chalk "1.1.3"
+    cross-spawn "5.1.0"
+    detect-port-alt "1.1.3"
+    escape-string-regexp "1.0.5"
+    filesize "3.5.11"
+    global-modules "1.0.0"
+    gzip-size "3.0.0"
+    inquirer "3.3.0"
+    is-root "1.0.0"
+    opn "5.1.0"
+    react-error-overlay "^3.0.0"
+    recursive-readdir "2.2.1"
+    shell-quote "1.6.1"
+    sockjs-client "1.1.4"
+    strip-ansi "3.0.1"
+    text-table "0.2.0"
+
 react-dev-utils@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-5.0.1.tgz#1f396e161fe44b595db1b186a40067289bf06613"
@@ -8926,6 +9077,10 @@ react-dom@16.2.0:
 react-error-boundary@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-1.2.1.tgz#60600750bf2ec03ca22a1e933ea371f38aa20fa3"
+
+react-error-overlay@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
 react-error-overlay@^4.0.0:
   version "4.0.0"
@@ -9276,7 +9431,7 @@ redux-thunk@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.2.0.tgz#e615a16e16b47a19a515766133d1e3e99b7852e5"
 
-redux@^3.6.0:
+redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
@@ -10682,6 +10837,10 @@ tr46@~0.0.1:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.3.9.tgz#717b8f220cc0bb7b44e40514c22b2e8bbc70d8b9"
 
+traverse@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
+
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
@@ -11163,7 +11322,7 @@ webpack-bundle-analyzer@^2.9.1:
     opener "^1.4.3"
     ws "^4.0.0"
 
-webpack-dev-middleware@^1.11.0:
+webpack-dev-middleware@^1.11.0, webpack-dev-middleware@^1.12.0:
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-1.12.2.tgz#f8fc1120ce3b4fc5680ceecb43d777966b21105e"
   dependencies:
@@ -11204,6 +11363,15 @@ webpack-dev-server@2.9.4:
     supports-color "^4.2.1"
     webpack-dev-middleware "^1.11.0"
     yargs "^6.6.0"
+
+webpack-hot-middleware@^2.18.2:
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/webpack-hot-middleware/-/webpack-hot-middleware-2.22.0.tgz#db58c9dd2bd78e7f3868cccb42a20d24b00a7ade"
+  dependencies:
+    ansi-html "0.0.7"
+    html-entities "^1.2.0"
+    querystring "^0.2.0"
+    strip-ansi "^3.0.0"
 
 webpack-manifest-plugin@1.3.2:
   version "1.3.2"
