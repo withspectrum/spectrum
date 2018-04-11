@@ -17,6 +17,7 @@ build-mercury
 build-vulcan
 build-hyperion
 build-pluto
+build-electron
 package-lock.json
 .vscode
 dump.rdb

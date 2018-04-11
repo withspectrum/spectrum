@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import isElectron from 'is-electron';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
@@ -199,6 +200,12 @@ class MessagesTab extends React.Component<Props, State> {
 
   render() {
     const { active, count } = this.props;
+
+    // Electron context
+    // add a dock icon notification count indicator
+    if (isElectron()) {
+      window.interop.setBadgeCount(count);
+    }
 
     return (
       <Tab

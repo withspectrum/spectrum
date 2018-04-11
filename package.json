@@ -2,6 +2,7 @@
   "name": "Spectrum",
   "version": "2.1.6",
   "license": "BSD-3-Clause",
+  "main": "electron/main.js",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^8.2.2",
@@ -17,6 +18,7 @@
     "babel-preset-env": "^1.5.2",
     "backpack-core": "^0.4.1",
     "cheerio": "^1.0.0-rc.2",
+    "concurrently": "^3.5.1",
     "cross-env": "^5.0.5",
     "cypress": "^2.1.0",
     "danger": "^3.1.8",
@@ -24,6 +26,8 @@
     "danger-plugin-labels": "^1.1.0",
     "danger-plugin-no-console": "1.1.2",
     "danger-plugin-yarn": "^1.2.1",
+    "electron": "^1.8.4",
+    "electron-packager": "^12.0.1",
     "eslint": "^4.1.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.34.1",
@@ -43,6 +47,7 @@
     "rimraf": "^2.6.1",
     "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
+    "wait-on": "^2.1.0",
     "webpack-bundle-analyzer": "^2.9.1",
     "write-file-webpack-plugin": "^4.1.0"
   },
@@ -110,6 +115,7 @@
     "hoist-non-react-statics": "^2.3.1",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.1.4",
+    "is-electron": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "22.4.3",
     "json-stringify-pretty-compact": "^1.0.4",
@@ -205,6 +211,7 @@
     "dev:hyperion": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hyperion*,shared:middlewares*,-hyperion:resolvers cross-env DIR=hyperion backpack",
     "dev:pluto": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,pluto*,shared:middlewares*,-pluto:resolvers cross-env DIR=pluto backpack",
     "dev:mobile": "(cd mobile && yarn run dev)",
+    "dev:electron": "concurrently \"cross-env BROWSER=none yarn dev:web\" \"wait-on http://localhost:3000 && electron .\"",
     "open:ios": "(cd mobile && yarn run open:ios)",
     "open:android": "(cd mobile && yarn run open:android)",
     "build": "npm run build:web && npm run build:hyperion",
@@ -246,7 +253,10 @@
     "db:reset": "yarn run db:drop && yarn run db:migrate && yarn run db:seed",
     "rethinkdb:migrate": "rethinkdb-migrate -f ./api/migrations/config.js",
     "eject": "react-scripts eject",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "electron:package-mac": "electron-packager ./electron/ --overwrite --platform=darwin --arch=x64 --icon=electron/assets/mac/icon.icns --prune=true --out=build-electron",
+    "electron:package-linux": "electron-packager ./electron/ --overwrite --platform=linux --arch=x64 --icon=electron/assets/png/icon.png --prune=true --out=build-electron",
+    "electron:package-win": "electron-packager . --overwrite --asar=true --platform=win32 --arch=ia32 --icon=electron/assets/win/icon.ico --prune=true --out=build-electron --version-string.CompanyName=withspectrum --version-string.FileDescription=\"The community platform for the future\" --version-string.ProductName=Spectrum"
   },
   "lint-staged": {
     "*.js": [

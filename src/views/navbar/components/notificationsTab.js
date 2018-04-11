@@ -4,6 +4,7 @@ import { withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import compose from 'recompose/compose';
+import isElectron from 'is-electron';
 import Icon from '../../../components/icons';
 import viewNetworkHandler from '../../../components/viewNetworkHandler';
 import { updateNotificationsCount } from '../../../actions/notifications';
@@ -379,6 +380,12 @@ class NotificationsTab extends React.Component<Props, State> {
   render() {
     const { active, currentUser, isLoading, count } = this.props;
     const { notifications, shouldRenderDropdown } = this.state;
+
+    // Electron context
+    // add a dock icon notification count indicator
+    if (isElectron()) {
+      window.interop.setBadgeCount(count);
+    }
 
     return (
       <NotificationTab padOnHover onMouseOver={this.setHover}>
