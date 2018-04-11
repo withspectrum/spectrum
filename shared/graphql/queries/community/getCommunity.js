@@ -49,7 +49,7 @@ export const getCommunityBySlugQuery = gql`
 const getCommunityBySlugOptions = {
   options: ({ slug }) => ({
     variables: {
-      slug: slug.toLowerCase(),
+      slug: slug,
     },
   }),
 };
@@ -73,7 +73,7 @@ export const getCommunityByMatchQuery = gql`
 const getCommunityByMatchOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: communitySlug.toLowerCase(),
+      slug: communitySlug,
     },
   }),
 };

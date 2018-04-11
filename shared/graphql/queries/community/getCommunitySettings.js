@@ -52,7 +52,7 @@ export const getCommunitySettingsByMatchQuery = gql`
 const getCommunitySettingsByMatchOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: communitySlug.toLowerCase(),
+      slug: communitySlug,
     },
     fetchPolicy: 'cache-and-network',
   }),

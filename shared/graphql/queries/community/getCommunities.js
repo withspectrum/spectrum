@@ -52,7 +52,7 @@ export const getCommunitiesBySlugsQuery = gql`
 const getCommunitiesBySlugOptions = {
   options: ({ slugs }: { slugs: Array<string> }) => ({
     variables: {
-      slugs: slugs.map(s => s.toLowerCase()),
+      slugs: slugs,
     },
     fetchPolicy: 'cache-first',
   }),

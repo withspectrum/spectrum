@@ -25,9 +25,10 @@ const getUserById = (userId: string): Promise<DBUser> => {
 };
 
 const getUserByEmail = (email: string): Promise<DBUser> => {
+  const lowercaseEmail = email.toLowerCase();
   return db
     .table('users')
-    .getAll(email, { index: 'email' })
+    .getAll(lowercaseEmail, { index: 'email' })
     .run()
     .then(results => (results.length > 0 ? results[0] : null));
 };
@@ -417,21 +418,23 @@ const setUserPendingEmail = (
   userId: string,
   pendingEmail: string
 ): Promise<Object> => {
+  const lowercasePendingEmail = pendingEmail.toLowerCase();
   return db
     .table('users')
     .get(userId)
     .update({
-      pendingEmail,
+      pendingEmail: lowercasePendingEmail,
     })
     .run()
     .then(() => getUserById(userId));
 };
 const updateUserEmail = (userId: string, email: string): Promise<Object> => {
+  const lowercaseEmail = email.toLowerCase();
   return db
     .table('users')
     .get(userId)
     .update({
-      email,
+      email: lowercaseEmail,
       pendingEmail: db.literal(),
     })
     .run()
