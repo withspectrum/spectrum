@@ -4,11 +4,6 @@ exports.up = async (r, conn) => {
       .table('users')
       .update({
         username: r.row('username').downcase(),
-      })
-      .run(conn),
-    r
-      .table('users')
-      .update({
         email: r.row('email').downcase(),
       })
       .run(conn),
