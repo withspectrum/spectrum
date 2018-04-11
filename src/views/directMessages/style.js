@@ -1,13 +1,17 @@
 import styled, { css } from 'styled-components';
 import { FlexCol, FlexRow } from '../../components/globals';
 
-export const View = styled(FlexRow)`
+export const View = styled.main`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: stretch;
   background: #fff;
   flex: auto;
-  max-height: 100%;
+  max-height: calc(100% - 48px);
 
   @media (max-width: 768px) {
+    max-height: 100%;
     flex-direction: column;
     flex: auto;
   }
