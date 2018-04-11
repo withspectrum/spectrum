@@ -15,7 +15,8 @@ type Props = {
   username: string,
   label: string,
   size: string,
-  onValidationResult: Function,
+  onValidationResult: ({ error: string, success: string }) => void,
+  onError: (err: Error) => void,
 };
 
 type State = {
