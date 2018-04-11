@@ -147,7 +147,7 @@ class Dashboard extends React.Component<Props, State> {
         <DashboardWrapper data-cy="inbox-view" id="main">
           <Head title={title} description={description} />
           <Titlebar hasChildren hasSearch filter={searchFilter}>
-            <Menu darkContext>
+            <Menu darkContext hasTabBar>
               <CommunityList
                 communities={communities}
                 user={user}
