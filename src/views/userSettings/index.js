@@ -56,7 +56,6 @@ class UserSettings extends React.Component<Props> {
     if ((currentUser && !user) || (currentUser && !user && !user.id)) {
       return (
         <React.Fragment>
-          >
           <Titlebar
             title={'No User Found'}
             provideBack={true}

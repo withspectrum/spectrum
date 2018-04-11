@@ -5,6 +5,7 @@ import UserEditForm from './editForm';
 import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
 import Invoices from './invoices';
+import DeleteAccountForm from './deleteAccountForm';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 
 type Props = {
@@ -19,12 +20,13 @@ class Overview extends React.Component<Props> {
       <SectionsContainer>
         <Column>
           <UserEditForm user={user} />
+          <DeleteAccountForm id={user.id} />
         </Column>
         <Column>
           <EmailSettings currentUser={user} />
           {'serviceWorker' in navigator &&
             'PushManager' in window && <NotificationSettings largeOnly />}
-          <Invoices id={user.id} />
+          <Invoices />
         </Column>
       </SectionsContainer>
     );
