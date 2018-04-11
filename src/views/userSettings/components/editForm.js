@@ -285,7 +285,6 @@ class UserWithData extends React.Component<Props, State> {
           this.setState({
             file: null,
           });
-          window.location.href = `/users/${user.username}`;
         }
 
         return;
@@ -440,7 +439,9 @@ class UserWithData extends React.Component<Props, State> {
 
           <Actions>
             <Button
-              disabled={!name || nameError || !username || usernameError}
+              disabled={
+                !name || nameError || !username || usernameError || isLoading
+              }
               loading={isLoading}
               onClick={this.save}
             >
