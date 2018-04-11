@@ -34,6 +34,9 @@ export default (
     return getCuratedCommunities(args.curatedContentType);
   }
   if (args.ids) return loaders.community.loadMany(args.ids);
-  if (args.slugs) return loaders.communityBySlug.loadMany(args.slugs);
+  if (args.slugs)
+    return loaders.communityBySlug.loadMany(
+      args.slugs.map(slug => slug.toLowerCase())
+    );
   return null;
 };

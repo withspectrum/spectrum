@@ -11,7 +11,10 @@ export default async (
 ) => {
   if (args.id) return await loaders.channel.load(args.id);
   if (args.channelSlug && args.communitySlug) {
-    return await getChannelBySlug(args.channelSlug, args.communitySlug);
+    return await getChannelBySlug(
+      args.channelSlug.toLowerCase(),
+      args.communitySlug.toLowerCase()
+    );
   }
   return new UserError('We couldn’t find this channel');
 };

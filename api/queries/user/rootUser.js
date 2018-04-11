@@ -7,6 +7,7 @@ export default (
   { loaders }: GraphQLContext
 ) => {
   if (args.id) return loaders.user.load(args.id);
-  if (args.username) return loaders.userByUsername.load(args.username);
+  if (args.username)
+    return loaders.userByUsername.load(args.username.toLowerCase());
   return null;
 };

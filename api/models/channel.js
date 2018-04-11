@@ -257,7 +257,6 @@ const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
 }: EditChannelInput): Promise<DBChannel> => {
   const lowercaseSlug = slug.toLowerCase();
-
   const channelRecord = await db
     .table('channels')
     .get(channelId)

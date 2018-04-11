@@ -35,7 +35,7 @@ export const getCommunities = (
 export const getCommunitiesBySlug = (
   slugs: Array<string>
 ): Promise<Array<DBCommunity>> => {
-  const lowercaseSlugs = slugs.map(slug => slug.toLocaleLowerCase());
+  const lowercaseSlugs = slugs.map(slug => slug.toLowerCase());
   return db
     .table('communities')
     .getAll(...lowercaseSlugs, { index: 'slug' })
