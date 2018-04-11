@@ -354,7 +354,9 @@ class CreateChannelModal extends React.Component<Props, State> {
             </UpsellDescription>
 
             <Actions>
-              <TextButton color={'warn.alt'}>Cancel</TextButton>
+              <TextButton onClick={this.close} color={'warn.alt'}>
+                Cancel
+              </TextButton>
               <Button
                 disabled={
                   !name ||
