@@ -51,12 +51,12 @@ export const MessagesContainer = styled(FlexCol)`
   max-height: 100%;
 
   @media (max-width: 768px) {
-    max-height: calc(100% - 48px)
-      ${props =>
-        props.hideOnMobile &&
-        css`
-          display: none;
-        `};
+    max-height: calc(100% - 48px);
+    ${props =>
+      props.hideOnMobile &&
+      css`
+        display: none;
+      `};
   }
 `;
 
