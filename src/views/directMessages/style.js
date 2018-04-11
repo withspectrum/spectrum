@@ -11,7 +11,6 @@ export const View = styled.main`
   max-height: calc(100% - 48px);
 
   @media (max-width: 768px) {
-    max-height: 100%;
     flex-direction: column;
     flex: auto;
   }
