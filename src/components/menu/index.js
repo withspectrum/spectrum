@@ -1,15 +1,22 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { IconButton } from '../../components/buttons';
 import { Wrapper, MenuContainer, MenuOverlay, Absolute } from './style';
 
-class Menu extends Component {
-  constructor() {
-    super();
+type Props = {
+  hasNavBar?: boolean,
+  darkContext?: boolean,
+  hasTabBar?: boolean,
+  children: React.Node,
+};
 
-    this.state = {
-      menuIsOpen: false,
-    };
-  }
+type State = {
+  menuIsOpen: boolean,
+};
+class Menu extends React.Component<Props, State> {
+  state = {
+    menuIsOpen: false,
+  };
 
   toggleMenu() {
     this.setState({ menuIsOpen: !this.state.menuIsOpen });
