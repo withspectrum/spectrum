@@ -64,21 +64,42 @@ type Props = {
 };
 
 const LS_KEY = 'last-chat-input-content';
+const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
 let storedContent;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 if (localStorage) {
   try {
-    storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+    const expireTime = localStorage.getItem(LS_KEY_EXPIRE);
+    const currTime = new Date().getTime();
+    /////if current time is greater than valid till of text then please expire text back to ''
+    if (currTime > expireTime) {
+      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_KEY_EXPIRE);
+    } else {
+      storedContent = toState(JSON.parse(localStorage.getItem(LS_KEY) || ''));
+    }
   } catch (err) {
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_KEY_EXPIRE);
   }
 }
 
-const forcePersist = content =>
+const forcePersist = content => {
   localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage &&
+    localStorage.setItem(
+      LS_KEY_EXPIRE,
+      new Date().getTime() + 60 * 60 * 24 * 1000
+    );
+};
 const persistContent = debounce(content => {
   localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
+  localStorage &&
+    localStorage.setItem(
+      LS_KEY_EXPIRE,
+      new Date().getTime() + 60 * 60 * 24 * 1000
+    );
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
@@ -262,6 +283,7 @@ class ChatInput extends React.Component<Props, State> {
       })
         .then(() => {
           localStorage.removeItem(LS_KEY);
+          localStorage.removeItem(LS_KEY_EXPIRE);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
@@ -289,6 +311,7 @@ class ChatInput extends React.Component<Props, State> {
           }
 
           localStorage.removeItem(LS_KEY);
+          localStorage.removeItem(LS_KEY_EXPIRE);
           return track(`${threadType} message`, 'text message created', null);
         })
         .catch(err => {
