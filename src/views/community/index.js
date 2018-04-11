@@ -155,6 +155,7 @@ class CommunityView extends React.Component<Props, State> {
             />
 
             <ViewError
+              id="main"
               emoji={'✋'}
               heading={`You are blocked from ${community.name}`}
               subheading={
@@ -190,7 +191,7 @@ class CommunityView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
           />
-          <Grid>
+          <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <CommunityProfile data={{ community }} profileSize="full" />

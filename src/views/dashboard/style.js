@@ -9,7 +9,7 @@ import {
   hexa,
 } from '../../components/globals';
 
-export const Wrapper = styled.div`
+export const DashboardWrapper = styled.main`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;

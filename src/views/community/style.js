@@ -106,7 +106,7 @@ export const StyledButton = styled(Button)`
   }
 `;
 
-export const Grid = styled.div`
+export const Grid = styled.main`
   display: grid;
   grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
   grid-template-rows: 240px 1fr;
