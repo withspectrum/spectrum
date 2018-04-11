@@ -48,6 +48,7 @@ export const MessagesContainer = styled(FlexCol)`
   flex: auto;
 
   @media (max-width: 768px) {
+    max-height: 100%;
     ${props =>
       props.hideOnMobile &&
       css`
