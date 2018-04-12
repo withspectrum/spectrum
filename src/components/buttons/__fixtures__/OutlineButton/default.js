@@ -1,11 +1,10 @@
 // @flow
-import { createFixture } from 'react-cosmos-flow/fixture';
 import { OutlineButton } from '../..';
 
-export default createFixture({
+export default {
   component: OutlineButton,
 
   props: {
     children: 'Push it real good',
   },
-});
+};
