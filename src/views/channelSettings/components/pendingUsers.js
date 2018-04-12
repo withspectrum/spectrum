@@ -39,7 +39,13 @@ type Props = {
 
 class PendingUsers extends React.Component<Props> {
   render() {
-    const { data, isLoading, currentUser, togglePending } = this.props;
+    const {
+      data,
+      isLoading,
+      currentUser,
+      togglePending,
+      initMessage,
+    } = this.props;
 
     if (data && data.channel) {
       const { pendingUsers } = data.channel;
@@ -79,7 +85,7 @@ class PendingUsers extends React.Component<Props> {
                           <Dropdown>
                             <DropdownSection
                               style={{ borderBottom: '0' }}
-                              onClick={() => this.props.initMessage(user)}
+                              onClick={() => initMessage(user)}
                             >
                               <DropdownAction>
                                 <Icon glyph={'message'} size={'32'} />
@@ -94,9 +100,7 @@ class PendingUsers extends React.Component<Props> {
                             <DropdownSectionDivider />
 
                             <DropdownSection
-                              onClick={() =>
-                                user && togglePending(user.id, 'approve')
-                              }
+                              onClick={() => togglePending(user.id, 'approve')}
                             >
                               <DropdownAction>
                                 <Icon glyph={'plus'} size={'32'} />

@@ -39,7 +39,7 @@ type Props = {
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, isLoading, currentUser, unblock } = this.props;
+    const { data, isLoading, currentUser, unblock, initMessage } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -90,7 +90,7 @@ class BlockedUsers extends React.Component<Props> {
                           <Dropdown>
                             <DropdownSection
                               style={{ borderBottom: '0' }}
-                              onClick={() => this.props.initMessage(user)}
+                              onClick={() => initMessage(user)}
                             >
                               <DropdownAction>
                                 <Icon glyph={'message'} size={'32'} />
@@ -104,9 +104,7 @@ class BlockedUsers extends React.Component<Props> {
 
                             <DropdownSectionDivider />
 
-                            <DropdownSection
-                              onClick={() => user && unblock(user.id)}
-                            >
+                            <DropdownSection onClick={() => unblock(user.id)}>
                               <DropdownAction>
                                 <Icon glyph={'minus'} size={'32'} />
                               </DropdownAction>
