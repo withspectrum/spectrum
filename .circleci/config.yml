@@ -89,14 +89,12 @@ jobs:
       - image: circleci/node:8-browsers
       - image: redis:3.2.7
       - image: cypress/base:6
+      - image: rethinkdb:2.3.5
     environment:
       TERM: xterm
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: *install-rethinkdb
-      - run: *start-rethinkdb
-      - run: sleep 10
       - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
       - run: *setup-and-build-web
       - run: *start-api
