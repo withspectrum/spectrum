@@ -239,7 +239,7 @@
     "test": "npm run jest -- --runInBand --watch",
     "test:ci": "npm run jest -- --forceExit --outputFile test-results.json --json",
     "test:e2e": "cypress run",
-    "dev:api:test": "node shared/testing/start-api.js",
+    "start:api:test": "TEST_DB=true FORCE_DEV=true node build-api/main.js",
     "cypress:open": "cypress open",
     "lint": "eslint .",
     "flow": "flow",
