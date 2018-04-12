@@ -199,8 +199,8 @@ export const createCommunity = (
       if (file || coverFile) {
         if (file && !coverFile) {
           const { coverPhoto } = getRandomDefaultPhoto();
-          return uploadImage(file, 'communities', community.id).then(
-            profilePhoto => {
+          return uploadImage(file, 'communities', community.id)
+            .then(profilePhoto => {
               return (
                 db
                   .table('communities')
@@ -227,12 +227,14 @@ export const createCommunity = (
                     }
                   })
               );
-            }
-          );
+            })
+            .then(err => {
+              console.error(err);
+            });
         } else if (!file && coverFile) {
           const { profilePhoto } = getRandomDefaultPhoto();
-          return uploadImage(coverFile, 'communities', community.id).then(
-            coverPhoto => {
+          return uploadImage(coverFile, 'communities', community.id)
+            .then(coverPhoto => {
               // update the community with the profilePhoto
               return (
                 db
@@ -262,15 +264,23 @@ export const createCommunity = (
                     return null;
                   })
               );
-            }
-          );
+            })
+            .catch(err => {
+              console.error(err);
+            });
         } else if (file && coverFile) {
           const uploadFile = file => {
-            return uploadImage(file, 'communities', community.id);
+            return uploadImage(file, 'communities', community.id).catch(err => {
+              console.error(err);
+            });
           };
 
           const uploadCoverFile = coverFile => {
-            return uploadImage(coverFile, 'communities', community.id);
+            return uploadImage(coverFile, 'communities', community.id).catch(
+              err => {
+                console.error(err);
+              }
+            );
           };
 
           return Promise.all([
