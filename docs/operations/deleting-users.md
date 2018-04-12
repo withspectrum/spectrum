@@ -1,4 +1,4 @@
-[Table of contents](../readme.md)
+[Table of contents](../readme.md) / [Operations](./index.md)
 
 # Deleting users
 
@@ -35,6 +35,8 @@ r.db('spectrum')
 .table('usersCommunities')
 .getAll(ID, { index: 'userId' })
 .update({
+  isOwner: false,
+  isModerator: false,
   isMember: false,
   receiveNotifications: false
 })
@@ -43,6 +45,8 @@ r.db('spectrum')
 .table('usersChannels')
 .getAll(ID, { index: 'userId' })
 .update({
+  isOwner: false,
+  isModerator: false,
   isMember: false,
   receiveNotifications: false,
 })

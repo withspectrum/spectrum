@@ -5,6 +5,7 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
+import { customStyleMap } from 'src/components/draftjs-editor/style';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
 import 'prismjs/components/prism-go';
@@ -18,7 +19,7 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 
-import { InputWrapper } from './style';
+import { InputWrapper, MediaPreview } from './style';
 
 type Props = {
   editorState: Object,
@@ -29,6 +30,8 @@ type Props = {
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
+  mediaPreview?: string,
+  onRemoveMedia: Object => void,
 };
 
 type State = {
@@ -75,12 +78,20 @@ class Input extends React.Component<Props, State> {
       readOnly,
       editorRef,
       networkDisabled,
+      mediaPreview,
+      onRemoveMedia,
       ...rest
     } = this.props;
     const { plugins } = this.state;
 
     return (
       <InputWrapper focus={focus} networkDisabled={networkDisabled}>
+        {mediaPreview && (
+          <MediaPreview>
+            <img src={mediaPreview} alt="" />
+            <button onClick={onRemoveMedia} />
+          </MediaPreview>
+        )}
         <DraftEditor
           editorState={editorState}
           onChange={onChange}
@@ -93,6 +104,7 @@ class Input extends React.Component<Props, State> {
           autoComplete="on"
           autoCorrect="on"
           stripPastedStyles={true}
+          customStyleMap={customStyleMap}
           {...rest}
         />
       </InputWrapper>

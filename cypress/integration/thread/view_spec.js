@@ -36,7 +36,7 @@ const blockedCommunityUser = data.usersCommunities.find(
 
 describe('sidebar components on thread view', () => {
   describe('non authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
@@ -58,7 +58,7 @@ describe('sidebar components on thread view', () => {
   });
 
   describe('authed non member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -81,7 +81,7 @@ describe('sidebar components on thread view', () => {
   });
 
   describe('authed member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -106,7 +106,7 @@ describe('sidebar components on thread view', () => {
 
 describe('public thread', () => {
   describe('not authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${publicThread.id}`);
     });
 
@@ -132,7 +132,7 @@ describe('public thread', () => {
   });
 
   describe('authed as non member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -144,7 +144,7 @@ describe('public thread', () => {
   });
 
   describe('authed as member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -155,7 +155,7 @@ describe('public thread', () => {
   });
 
   describe('authed as blocked channel user', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(blockedChannelUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -167,7 +167,7 @@ describe('public thread', () => {
   });
 
   describe('authed as blocked community user', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(blockedCommunityUser.id);
       cy.visit(`/thread/${publicThread.id}`);
     });
@@ -181,7 +181,7 @@ describe('public thread', () => {
 
 describe('private thread', () => {
   describe('not authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${privateThread.id}`);
     });
 
@@ -193,7 +193,7 @@ describe('private thread', () => {
   });
 
   describe('authed as non member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${privateThread.id}`);
     });
@@ -205,7 +205,7 @@ describe('private thread', () => {
   });
 
   describe('authed as member', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(memberInChannelUser.id);
       cy.visit(`/thread/${privateThread.id}`);
     });
@@ -216,7 +216,7 @@ describe('private thread', () => {
   });
 
   describe('authed as blocked channel user', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(blockedChannelUser.id);
       cy.visit(`/thread/${privateThread.id}`);
     });
@@ -228,7 +228,7 @@ describe('private thread', () => {
   });
 
   describe('authed as blocked community user', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(blockedCommunityUser.id);
       cy.visit(`/thread/${privateThread.id}`);
     });
@@ -242,7 +242,7 @@ describe('private thread', () => {
 
 describe('deleted thread', () => {
   describe('not authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.visit(`/thread/${deletedThread.id}`);
     });
 
@@ -253,7 +253,7 @@ describe('deleted thread', () => {
   });
 
   describe('authed', () => {
-    before(() => {
+    beforeEach(() => {
       cy.auth(nonMemberUser.id);
       cy.visit(`/thread/${deletedThread.id}`);
     });

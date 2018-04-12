@@ -100,13 +100,15 @@ export const Tab = styled(Link)`
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
 
-      &:hover {
+      &:hover,
+      &:focus {
         box-shadow: inset 0 -6px 0 ${({ theme }) => theme.text.reverse};
         transition: ${Transition.hover.on};
       }
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       box-shadow: inset 0 -4px 0 ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.placeholder : theme.warn.border)};
       color: ${props => props.theme.text.reverse};
       transition: ${Transition.hover.on};
@@ -197,7 +199,9 @@ export const Logo = styled(Tab)`
   @media (max-width: 768px) {
     display: none;
   }
-`;
+
+  ${props => props.isHidden && css`display: none;`}
+`
 
 export const HomeTab = styled(Tab)`grid-area: home;`;
 
@@ -344,5 +348,19 @@ export const MarkAllSeen = styled.span`
   &:hover {
     color: ${props =>
       props.isActive ? props.theme.brand.default : props.theme.text.alt};
+  }
+`;
+
+// We make it a real link element because anchor links don’t work properly with React Router.
+// Ref: https://github.com/ReactTraining/react-router/issues/394.
+export const SkipLink = Tab.withComponent('a').extend`
+  grid-area: logo;
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+
+  &:focus {
+    height: auto;
+    width: auto;
   }
 `;

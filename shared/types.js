@@ -205,7 +205,7 @@ type DBThreadEdits = {
     photos: Array<DBThreadAttachment>,
   },
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   timestamp: Date,
@@ -216,7 +216,7 @@ export type DBThread = {
   channelId: string,
   communityId: string,
   content: {
-    body?: string,
+    body?: any,
     title: string,
   },
   createdAt: Date,

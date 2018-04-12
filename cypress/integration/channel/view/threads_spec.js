@@ -12,7 +12,7 @@ const { userId: memberInChannelId } = data.usersChannels.find(
 );
 
 describe('channel threads logged out', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 
@@ -26,7 +26,7 @@ describe('channel threads logged out', () => {
 });
 
 describe('channel threads logged in', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });

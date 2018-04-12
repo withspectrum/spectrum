@@ -59,11 +59,10 @@ export const createSigninRoutes = (
         if (
           // $FlowIssue
           req.session.authType === 'token' &&
-          req.cookies &&
-          req.cookies.session &&
-          req.cookies['session.sig']
+          req.session.passport &&
+          req.session.passport.user
         ) {
-          const cookies = getCookies(req.session.passport);
+          const cookies = getCookies({ userId: req.session.passport.user });
 
           redirectUrl.searchParams.append(
             'accessToken',
@@ -73,10 +72,10 @@ export const createSigninRoutes = (
               }`
             )
           );
-          // $FlowIssue
-          req.session.authType = undefined;
         }
 
+        // $FlowIssue
+        req.session.authType = undefined;
         // Delete the redirectURL from the session again so we don't redirect
         // to the old URL the next time around
         // $FlowIssue

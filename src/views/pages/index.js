@@ -45,7 +45,7 @@ class Pages extends React.Component<Props> {
     const dark = path === '/' || path === '/about';
 
     return (
-      <Page>
+      <Page id="main">
         <Nav dark={dark} location={this.props.match.path.substr(1)} />
         {this.renderPage()}
       </Page>

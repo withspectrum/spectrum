@@ -90,7 +90,7 @@ class Sidebar extends React.Component<Props> {
 
     const loginUrl = thread.community.brandedLogin.isEnabled
       ? `/${thread.community.slug}/login?r=${CLIENT_URL}/thread/${thread.id}`
-      : `/login?r=${CLIENT_URL}/${thread.community.slug}/thread/${thread.id}`;
+      : `/login?r=${CLIENT_URL}/thread/${thread.id}`;
 
     return (
       <ThreadSidebarView>
@@ -166,13 +166,15 @@ class Sidebar extends React.Component<Props> {
                 )}
               />
             ) : (
-              <Button
-                gradientTheme={'success'}
-                color={'success.default'}
-                dataCy="thread-sidebar-join-login-button"
-              >
-                Join community
-              </Button>
+              <Link to={loginUrl}>
+                <Button
+                  gradientTheme={'success'}
+                  color={'success.default'}
+                  dataCy="thread-sidebar-join-login-button"
+                >
+                  Join community
+                </Button>
+              </Link>
             )}
           </SidebarSectionActions>
         </SidebarSection>

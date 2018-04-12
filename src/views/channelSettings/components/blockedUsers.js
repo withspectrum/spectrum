@@ -38,22 +38,24 @@ class BlockedUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
-          {blockedUsers.length > 0 && (
-            <SectionSubtitle>
-              Blocked users can not see threads or messages posted in this
-              channel. They will still be able to join any other public channels
-              in the Spectrum community and request access to other private
-              channels.
-            </SectionSubtitle>
-          )}
+          {blockedUsers &&
+            blockedUsers.length > 0 && (
+              <SectionSubtitle>
+                Blocked users can not see threads or messages posted in this
+                channel. They will still be able to join any other public
+                channels in the Spectrum community and request access to other
+                private channels.
+              </SectionSubtitle>
+            )}
 
-          {blockedUsers.length > 0 && (
-            <Notice>
-              Unblocking a user will <b>not</b> add them to this channel. It
-              will only allow them to re-request access in the future as long as
-              this channel remains private.
-            </Notice>
-          )}
+          {blockedUsers &&
+            blockedUsers.length > 0 && (
+              <Notice>
+                Unblocking a user will <b>not</b> add them to this channel. It
+                will only allow them to re-request access in the future as long
+                as this channel remains private.
+              </Notice>
+            )}
 
           <ListContainer>
             {blockedUsers &&
@@ -97,11 +99,12 @@ class BlockedUsers extends React.Component<Props> {
                 );
               })}
 
-            {blockedUsers.length <= 0 && (
-              <SectionSubtitle>
-                There are no blocked users in this channel.
-              </SectionSubtitle>
-            )}
+            {blockedUsers &&
+              blockedUsers.length <= 0 && (
+                <SectionSubtitle>
+                  There are no blocked users in this channel.
+                </SectionSubtitle>
+              )}
           </ListContainer>
         </SectionCard>
       );

@@ -30,6 +30,8 @@ type State = {
   isFocused: boolean,
   photoSizeError: string,
   isSendingMediaMessage: boolean,
+  mediaPreview: string,
+  mediaPreviewFile: ?Blob,
 };
 
 type Props = {
@@ -77,11 +79,14 @@ class ChatInput extends React.Component<Props, State> {
     photoSizeError: '',
     code: false,
     isSendingMediaMessage: false,
+    mediaPreview: '',
+    mediaPreviewFile: null,
   };
 
   editor: any;
 
   componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown, true);
     this.props.onRef(this);
   }
 
@@ -99,13 +104,27 @@ class ChatInput extends React.Component<Props, State> {
     if (curr.state !== next.state) return true;
     if (currState.isSendingMediaMessage !== nextState.isSendingMediaMessage)
       return true;
+    if (currState.mediaPreview !== nextState.mediaPreview) return true;
 
     return false;
   }
 
   componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
     this.props.onRef(undefined);
   }
+
+  handleKeyDown = (event: any) => {
+    const key = event.keyCode || event.charCode;
+    // Detect esc key or backspace key (and empty message) to remove
+    // the previewed image
+    if (
+      key === 27 ||
+      ((key === 8 || key === 46) && toPlainText(this.props.state).length === 0)
+    ) {
+      this.removeMediaPreview();
+    }
+  };
 
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
@@ -178,6 +197,10 @@ class ChatInput extends React.Component<Props, State> {
     if (forceScrollToBottom) {
       // if a user sends a message, force a scroll to bottom
       forceScrollToBottom();
+    }
+
+    if (this.state.mediaPreview.length) {
+      this.sendMediaMessage(this.state.mediaPreviewFile);
     }
 
     // If the input is empty don't do anything
@@ -278,7 +301,20 @@ class ChatInput extends React.Component<Props, State> {
     return this.submit(e);
   };
 
-  sendMediaMessage = file => {
+  removeMediaPreview = () => {
+    this.setState({
+      mediaPreview: '',
+      mediaPreviewFile: null,
+    });
+  };
+
+  sendMediaMessage = (file: ?Blob) => {
+    if (file == null) {
+      return;
+    }
+
+    this.removeMediaPreview();
+
     // eslint-disable-next-line
     let reader = new FileReader();
 
@@ -427,6 +463,23 @@ class ChatInput extends React.Component<Props, State> {
     });
   };
 
+  previewMedia = blob => {
+    if (this.state.isSendingMediaMessage) {
+      return;
+    }
+    this.setState({
+      isSendingMediaMessage: true,
+      mediaPreviewFile: blob,
+    });
+    const reader = new FileReader();
+    reader.onload = () =>
+      this.setState({
+        mediaPreview: reader.result.toString(),
+        isSendingMediaMessage: false,
+      });
+    reader.readAsDataURL(blob);
+  };
+
   render() {
     const {
       state,
@@ -434,7 +487,7 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
     } = this.props;
-    const { isFocused, photoSizeError, isSendingMediaMessage } = this.state;
+    const { isFocused, photoSizeError, isSendingMediaMessage, mediaPreview } = this.state;
 
     const networkDisabled =
       !networkOnline ||
@@ -443,7 +496,7 @@ class ChatInput extends React.Component<Props, State> {
 
     return (
       <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
-        {photoSizeError && (
+       {photoSizeError && (
           <PhotoSizeError>
             <p
               onClick={() =>
@@ -466,12 +519,15 @@ class ChatInput extends React.Component<Props, State> {
           <MediaUploader
             isSendingMediaMessage={isSendingMediaMessage}
             currentUser={currentUser}
-            onValidated={this.sendMediaMessage}
+            onValidated={this.previewMedia}
             onError={this.setMediaMessageError}
+            inputFocused={isFocused}
           />
         )}
         <Form focus={isFocused}>
           <Input
+            mediaPreview={mediaPreview}
+            onRemoveMedia={this.removeMediaPreview}
             focus={isFocused}
             placeholder={`Your message here...`}
             editorState={state}

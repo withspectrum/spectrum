@@ -7,9 +7,9 @@ const data = require('./data');
 
 const tables = Object.keys(data);
 
-module.exports = async () => {
+module.exports = () => {
   debug(`clearing data in database "testing"`);
-  await Promise.all(
+  return Promise.all(
     tables.map(table =>
       mockDb
         .table(table)
@@ -17,5 +17,4 @@ module.exports = async () => {
         .run()
     )
   );
-  debug(`database "testing" cleared, finishing`);
 };

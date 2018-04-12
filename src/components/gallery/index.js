@@ -29,7 +29,7 @@ class Gallery extends React.Component<Props> {
         />
       );
     } else {
-      return <span />;
+      return null;
     }
   }
 }

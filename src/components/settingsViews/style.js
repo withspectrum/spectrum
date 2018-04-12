@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import { Tooltip } from '../globals';
 
-export const View = styled.div`
+export const View = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;

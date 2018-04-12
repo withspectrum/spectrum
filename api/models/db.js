@@ -29,6 +29,15 @@ const config = IS_PROD
 
 var r = require('rethinkdbdash')(config);
 
+// Exit the process on unhealthy db in test env
+if (process.env.TEST_DB) {
+  r.getPoolMaster().on('healthy', healthy => {
+    if (!healthy) {
+      process.exit(1);
+    }
+  });
+}
+
 if (process.env.NODE_ENV === 'development') {
   const fs = require('fs');
   const inspect = require('rethinkdb-inspector');

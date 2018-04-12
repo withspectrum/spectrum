@@ -48,10 +48,13 @@ export const getDMThreadMessageConnectionOptions = {
     data: {
       ...data,
       messages:
-        directMessageThread && directMessageThread.messageConnection.edges,
-      hasNextPage: directMessageThread
-        ? directMessageThread.messageConnection.pageInfo.hasNextPage
-        : false,
+        directMessageThread &&
+        directMessageThread.messageConnection &&
+        directMessageThread.messageConnection.edges,
+      hasNextPage:
+        directMessageThread && directMessageThread.messageConnection
+          ? directMessageThread.messageConnection.pageInfo.hasNextPage
+          : false,
       fetchMore: () =>
         data.fetchMore({
           query: LoadMoreMessages,

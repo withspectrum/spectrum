@@ -6,7 +6,7 @@ import { SegmentedControl } from '../../components/segmentedControl';
 import { FullProfile, FullDescription } from 'src/components/profile/style';
 import { ListContainer } from 'src/components/listItems/style';
 
-export const Grid = styled.div`
+export const Grid = styled.main`
   display: grid;
   grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
   grid-template-rows: 160px 1fr;
