@@ -2,7 +2,11 @@ require('now-env');
 const debug = require('debug')('shared:raven');
 
 let Raven;
-if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_SERVER) {
+if (
+  process.env.NODE_ENV === 'production' &&
+  !process.env.FORCE_DEV &&
+  process.env.SENTRY_DSN_SERVER
+) {
   Raven = require('raven');
   Raven.config(process.env.SENTRY_DSN_SERVER, {
     environment: process.env.NODE_ENV,
