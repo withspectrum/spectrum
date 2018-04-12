@@ -15,6 +15,7 @@ import {
   toState,
   fromPlainText,
   toPlainText,
+  isAndroid,
 } from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
@@ -29,7 +30,6 @@ import MediaUploader from './components/mediaUploader';
 type State = {
   isFocused: boolean,
   photoSizeError: string,
-  code: boolean,
   isSendingMediaMessage: boolean,
   mediaPreview: string,
   mediaPreviewFile: ?Blob,
@@ -131,12 +131,7 @@ class ChatInput extends React.Component<Props, State> {
     const { onChange } = this.props;
 
     persistContent(state);
-
-    if (toPlainText(state).trim() === '```') {
-      this.toggleCodeMessage(false);
-    } else if (onChange) {
-      onChange(state, ...rest);
-    }
+    onChange(state, ...rest);
   };
 
   triggerFocus = () => {
@@ -146,26 +141,6 @@ class ChatInput extends React.Component<Props, State> {
     setTimeout(() => {
       this.editor && this.editor.focus();
     }, 0);
-  };
-
-  toggleCodeMessage = (keepCurrentText?: boolean = true) => {
-    const { onChange, state } = this.props;
-    const { code } = this.state;
-    this.setState(
-      {
-        code: !code,
-      },
-      () => {
-        onChange(
-          changeCurrentBlockType(
-            state,
-            code ? 'unstyled' : 'code-block',
-            keepCurrentText ? toPlainText(state) : ''
-          )
-        );
-        setTimeout(() => this.triggerFocus());
-      }
-    );
   };
 
   submit = e => {
@@ -235,16 +210,14 @@ class ChatInput extends React.Component<Props, State> {
     // do one last persist before sending
     forcePersist(state);
 
-    this.setState({
-      code: false,
-    });
-
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       createThread({
-        messageBody: JSON.stringify(toJSON(state)),
+        messageBody: !isAndroid()
+          ? JSON.stringify(toJSON(state))
+          : toPlainText(state),
         messageType: 'draftjs',
       });
       clear();
@@ -256,10 +229,12 @@ class ChatInput extends React.Component<Props, State> {
     if (threadType === 'directMessageThread') {
       sendDirectMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -272,10 +247,12 @@ class ChatInput extends React.Component<Props, State> {
     } else {
       sendMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -311,12 +288,24 @@ class ChatInput extends React.Component<Props, State> {
       return this.submit(e);
     }
 
-    // Also submit non-code messages on ENTER
-    if (!this.state.code && !e.shiftKey) {
-      return this.submit(e);
+    // SHIFT+Enter should always add a new line
+    if (e.shiftKey) return 'not-handled';
+
+    const currentContent = this.props.state.getCurrentContent();
+    const selection = this.props.state.getSelection();
+    const key = selection.getStartKey();
+    const blockMap = currentContent.getBlockMap();
+    const block = blockMap.get(key);
+
+    // If we're in a code block or starting one don't submit on enter
+    if (
+      block.get('type') === 'code-block' ||
+      block.get('text').indexOf('```') === 0
+    ) {
+      return 'not-handled';
     }
 
-    return 'not-handled';
+    return this.submit(e);
   };
 
   removeMediaPreview = () => {
@@ -508,7 +497,6 @@ class ChatInput extends React.Component<Props, State> {
     const {
       isFocused,
       photoSizeError,
-      code,
       isSendingMediaMessage,
       mediaPreview,
     } = this.state;
@@ -548,27 +536,18 @@ class ChatInput extends React.Component<Props, State> {
             inputFocused={isFocused}
           />
         )}
-        <IconButton
-          glyph={'code'}
-          onClick={this.toggleCodeMessage}
-          tipText={'Write code'}
-          tipLocation={'top'}
-          style={{ margin: '0 4px' }}
-          color={code ? 'brand.alt' : 'text.placeholder'}
-          hoverColor={'brand.alt'}
-        />
         <Form focus={isFocused}>
           <Input
             mediaPreview={mediaPreview}
             onRemoveMedia={this.removeMediaPreview}
             focus={isFocused}
-            placeholder={`Your ${code ? 'code' : 'message'} here...`}
+            placeholder={`Your message here...`}
             editorState={state}
             handleReturn={this.handleReturn}
             onChange={this.onChange}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
-            code={code}
+            code={false}
             editorRef={editor => (this.editor = editor)}
             editorKey="chat-input"
             decorators={[mentionsDecorator, linksDecorator]}
