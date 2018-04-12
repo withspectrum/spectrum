@@ -228,7 +228,7 @@ export const createCommunity = (
                   })
               );
             })
-            .then(err => {
+            .catch(err => {
               console.error(err);
             });
         } else if (!file && coverFile) {
