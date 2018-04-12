@@ -96,11 +96,12 @@ jobs:
           at: ~/spectrum
       - run: *install-rethinkdb
       - run: *start-rethinkdb
-      - run: ./node_modules/.bin/wait-on http://localhost:8080 # This is the RethinkDB admin interface port, once that's up we should be ready to migrate the db
+      - run: sleep 10
       - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
       - run: *setup-and-build-web
       - run: *start-api
       - run: *start-web
+      # Wait for the API and webserver to start
       - run: ./node_modules/.bin/wait-on http://localhost:3000
       - run: ./node_modules/.bin/wait-on http://localhost:3001
       - run:
