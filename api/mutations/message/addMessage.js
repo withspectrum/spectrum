@@ -54,6 +54,13 @@ export default async (
     );
   }
 
+  if (message.messageType === 'text') {
+    const contentState = stateFromMarkdown(message.content.body);
+    const editorState = EditorState.createWithContent(contentState);
+    message.content.body = JSON.stringify(toJSON(editorState));
+    message.messageType = 'draftjs';
+  }
+
   if (message.messageType === 'draftjs') {
     let body;
     try {
@@ -77,13 +84,6 @@ export default async (
         'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
-  }
-
-  if (message.messageType === 'text') {
-    const contentState = stateFromMarkdown(message.content.body);
-    const editorState = EditorState.createWithContent(contentState);
-    message.content.body = JSON.stringify(toJSON(editorState));
-    message.messageType = 'draftjs';
   }
 
   // construct the shape of the object to be stored in the db
