@@ -1,4 +1,6 @@
 // @flow
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { EditorState } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/s3';
@@ -12,6 +14,7 @@ import {
 } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
+import { toJSON } from 'shared/draft-utils';
 import type { FileUpload } from 'shared/types';
 
 type AddMessageInput = {
@@ -74,6 +77,13 @@ export default async (
         'Invalid DraftJS block type specified. Supported block types: "unstyled", "code-block".'
       );
     }
+  }
+
+  if (message.messageType === 'text') {
+    const contentState = stateFromMarkdown(message.content.body);
+    const editorState = EditorState.createWithContent(contentState);
+    message.content.body = JSON.stringify(toJSON(editorState));
+    message.messageType = 'draftjs';
   }
 
   // construct the shape of the object to be stored in the db
