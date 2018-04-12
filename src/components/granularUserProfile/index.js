@@ -58,14 +58,6 @@ class GranularUserProfile extends React.Component<Props> {
     this.props.history.push('/messages/new');
   };
 
-  componentDidMount() {
-    if (React.Children.count(this.props.children) > 1) {
-      this.setState({
-        tooManyActions: true,
-      });
-    }
-  }
-
   render() {
     const {
       userObject,
