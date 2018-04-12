@@ -2,9 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
-import { TextButton } from 'src/components/buttons';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
@@ -15,6 +14,16 @@ import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
+} from 'src/components/settingsViews/style';
+import EditDropdown from './editDropdown';
+import {
+  Dropdown,
+  DropdownSectionDivider,
+  DropdownSection,
+  DropdownSectionSubtitle,
+  DropdownSectionText,
+  DropdownSectionTitle,
+  DropdownAction,
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 
@@ -30,13 +39,7 @@ type Props = {
 
 class PendingUsers extends React.Component<Props> {
   render() {
-    const {
-      data,
-      isLoading,
-      togglePending,
-      currentUser,
-      initMessage,
-    } = this.props;
+    const { data, isLoading, currentUser, togglePending } = this.props;
 
     if (data && data.channel) {
       const { pendingUsers } = data.channel;
@@ -69,48 +72,68 @@ class PendingUsers extends React.Component<Props> {
                       onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
                       avatarSize={'32'}
-                      multiAction
-                      messageButton={currentUser && user.id !== currentUser.id}
                       description={user.description}
                     >
-                      <div
-                        style={{
-                          display: 'flex',
-                          width: '100%',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
-                        {/* {currentUser &&
-                            user.id !== currentUser.id && (
-                              <MessageIconContainer>
-                                <Icon
-                                  glyph={'message'}
-                                  onClick={() => initMessage(user)}
-                                />
-                              </MessageIconContainer>
-                            )} */}
-                        <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'block')
-                          }
-                          hoverColor={'warn.alt'}
-                          icon="minus"
-                          style={{ padding: '0' }}
-                        >
-                          Block
-                        </TextButton>
+                      <EditDropdown
+                        render={() => (
+                          <Dropdown>
+                            <DropdownSection
+                              style={{ borderBottom: '0' }}
+                              onClick={() => this.props.initMessage(user)}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'message'} size={'32'} />
+                              </DropdownAction>
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Send Direct Message
+                                </DropdownSectionTitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
 
-                        <TextButton
-                          onClick={() =>
-                            user && togglePending(user.id, 'approve')
-                          }
-                          hoverColor={'success.default'}
-                          icon="plus-fill"
-                          style={{ padding: '0', marginLeft: '16px' }}
-                        >
-                          Approve
-                        </TextButton>
-                      </div>
+                            <DropdownSectionDivider />
+
+                            <DropdownSection
+                              onClick={() =>
+                                user && togglePending(user.id, 'approve')
+                              }
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'plus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Approve
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  This user will be able to see and join all
+                                  conversations in this channel
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+
+                            <DropdownSection
+                              onClick={() =>
+                                user && togglePending(user.id, 'block')
+                              }
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'minus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Block
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  Block this user from joining this channel
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+                          </Dropdown>
+                        )}
+                      />
                     </GranularUserProfile>
                   </UserListItemContainer>
                 );

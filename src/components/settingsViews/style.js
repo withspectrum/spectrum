@@ -185,6 +185,9 @@ export const EditDropdownContainer = styled.div`
   position: relative;
   color: ${props => props.theme.text.alt};
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Dropdown = styled.div`

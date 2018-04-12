@@ -2,9 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import GranularUserProfile from 'src/components/granularUserProfile';
-import { TextButton } from 'src/components/buttons';
 import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
@@ -16,6 +15,16 @@ import {
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
+import EditDropdown from './editDropdown';
+import {
+  Dropdown,
+  DropdownSectionDivider,
+  DropdownSection,
+  DropdownSectionSubtitle,
+  DropdownSectionText,
+  DropdownSectionTitle,
+  DropdownAction,
+} from 'src/components/settingsViews/style';
 import Icon from 'src/components/icons';
 
 type Props = {
@@ -30,7 +39,7 @@ type Props = {
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, unblock, isLoading, currentUser, initMessage } = this.props;
+    const { data, isLoading, currentUser, unblock } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -74,20 +83,48 @@ class BlockedUsers extends React.Component<Props> {
                       onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
                       avatarSize={'32'}
-                      multiAction
-                      messageButton={currentUser && user.id !== currentUser.id}
                       description={user.description}
                     >
-                      <div style={{ display: 'flex' }}>
-                        <TextButton
-                          onClick={() => user && unblock(user.id)}
-                          hoverColor={'warn.alt'}
-                          icon="minus-fill"
-                          style={{ padding: '0' }}
-                        >
-                          Unblock
-                        </TextButton>
-                      </div>
+                      <EditDropdown
+                        render={() => (
+                          <Dropdown>
+                            <DropdownSection
+                              style={{ borderBottom: '0' }}
+                              onClick={() => this.props.initMessage(user)}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'message'} size={'32'} />
+                              </DropdownAction>
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Send Direct Message
+                                </DropdownSectionTitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+
+                            <DropdownSectionDivider />
+
+                            <DropdownSection
+                              onClick={() => user && unblock(user.id)}
+                            >
+                              <DropdownAction>
+                                <Icon glyph={'minus'} size={'32'} />
+                              </DropdownAction>
+
+                              <DropdownSectionText>
+                                <DropdownSectionTitle>
+                                  Unblock
+                                </DropdownSectionTitle>
+                                <DropdownSectionSubtitle>
+                                  Allow this user to re-request access in the
+                                  future. They will not be joined to the
+                                  channel.
+                                </DropdownSectionSubtitle>
+                              </DropdownSectionText>
+                            </DropdownSection>
+                          </Dropdown>
+                        )}
+                      />
                     </GranularUserProfile>
                   </UserListItemContainer>
                 );
