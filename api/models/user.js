@@ -448,6 +448,24 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
     .then(() => getUserById(userId));
 };
 
+const deleteUser = (userId: string) => {
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      username: null,
+      email: null,
+      deletedAt: new Date(),
+      providerId: null,
+      fbProviderId: null,
+      googleProviderId: null,
+      githubProviderId: null,
+      githubUsername: null,
+      profilePhoto: null,
+    })
+    .run();
+};
+
 module.exports = {
   getUser,
   getUserById,
@@ -466,4 +484,5 @@ module.exports = {
   setUserOnline,
   setUserPendingEmail,
   updateUserEmail,
+  deleteUser,
 };

@@ -259,6 +259,19 @@ const removeModeratorsInCommunity = (communityId: string): Promise<Object> => {
     .run();
 };
 
+const removeUsersCommunityMemberships = (userId: string) => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .update({
+      isOwner: false,
+      isModerator: false,
+      isMember: false,
+      receiveNotifications: false,
+    })
+    .run();
+};
+
 /*
 ===========================================================
 
@@ -448,6 +461,7 @@ module.exports = {
   makeMemberModeratorInCommunity,
   removeModeratorInCommunity,
   removeModeratorsInCommunity,
+  removeUsersCommunityMemberships,
   // get
   DEFAULT_USER_COMMUNITY_PERMISSIONS,
   getMembersInCommunity,
