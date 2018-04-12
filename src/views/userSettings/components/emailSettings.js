@@ -84,7 +84,7 @@ type Props = {
   toggleNotificationSettings: Function,
   smallOnly: boolean,
   largeOnly: boolean,
-  currentUser: GetCurrentUserSettingsType,
+  user: GetCurrentUserSettingsType,
 };
 
 class EmailSettings extends React.Component<Props> {
@@ -109,16 +109,13 @@ class EmailSettings extends React.Component<Props> {
   };
 
   render() {
-    const {
-      currentUser: { settings: { notifications } },
-      currentUser,
-    } = this.props;
+    const { user: { settings: { notifications } }, user } = this.props;
 
     const settings = parseNotificationTypes(notifications).filter(
       notification => notification.hasOwnProperty('emailValue')
     );
 
-    if (!currentUser.email) {
+    if (!user.email) {
       return (
         <SectionCard
           smallOnly={this.props.smallOnly}
@@ -132,7 +129,7 @@ class EmailSettings extends React.Component<Props> {
               we’ll send you a confirmation link.
             </Description>
 
-            <UserEmailConfirmation user={currentUser} />
+            <UserEmailConfirmation user={user} />
           </ListContainer>
         </SectionCard>
       );

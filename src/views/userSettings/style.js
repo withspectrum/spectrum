@@ -126,4 +126,13 @@ export const Location = styled(FlexRow)`
   }
 `;
 
-export const GithubSignin = styled.div``;
+export const GithubSignin = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  a {
+    margin-top: 8px;
+  }
+`;

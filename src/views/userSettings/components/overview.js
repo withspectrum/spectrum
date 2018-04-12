@@ -6,6 +6,7 @@ import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
 import Invoices from './invoices';
 import DeleteAccountForm from './deleteAccountForm';
+import RecurringPaymentsList from './recurringPaymentsList';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 
 type Props = {
@@ -23,7 +24,8 @@ class Overview extends React.Component<Props> {
           <DeleteAccountForm id={user.id} />
         </Column>
         <Column>
-          <EmailSettings currentUser={user} />
+          <RecurringPaymentsList user={user} />
+          <EmailSettings user={user} />
           {'serviceWorker' in navigator &&
             'PushManager' in window && <NotificationSettings largeOnly />}
           <Invoices />

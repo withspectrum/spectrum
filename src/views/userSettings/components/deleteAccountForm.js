@@ -19,6 +19,7 @@ import { Button, TextButton, OutlineButton } from 'src/components/buttons';
 import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurrentUser';
 import { SERVER_URL } from 'src/api/constants';
 import Link from 'src/components/link';
+import { Loading } from 'src/components/loading';
 
 type State = {
   isLoading: boolean,
@@ -77,55 +78,81 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
   render() {
     const { isLoading, ownsCommunities, deleteInited } = this.state;
+    const { data: { user } } = this.props;
 
-    return (
-      <SectionCard>
-        <SectionTitle>Delete my account</SectionTitle>
-        <SectionSubtitle>
-          You can delete your account at any time.{' '}
-          <Link to={'/faq'}>Read more about how we delete accounts</Link>.
-        </SectionSubtitle>
+    if (user && user.isPro) {
+      return (
+        <SectionCard>
+          <SectionTitle>Delete my account</SectionTitle>
+          <SectionSubtitle>
+            Please downgrade from the Pro plan before deleting your account.
+          </SectionSubtitle>
+        </SectionCard>
+      );
+    }
 
-        {ownsCommunities && (
-          <Notice>
-            You currently own communities on Spectrum. When your account is
-            deleted these communities will not be deleted. After 30 days
-            Spectrum reserves the right to manage your communities.
-          </Notice>
-        )}
+    if (user) {
+      return (
+        <SectionCard>
+          <SectionTitle>Delete my account</SectionTitle>
+          <SectionSubtitle>
+            You can delete your account at any time.{' '}
+            <Link to={'/faq'}>Read more about how we delete accounts</Link>.
+          </SectionSubtitle>
 
-        <SectionCardFooter>
-          {deleteInited ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-              }}
-            >
-              <OutlineButton
-                onClick={this.cancelDelete}
-                style={{ marginBottom: '16px', alignSelf: 'stretch' }}
-              >
-                Cancel
-              </OutlineButton>
-              <Button
-                loading={isLoading}
-                disabled={isLoading}
-                gradientTheme={'warn'}
-                onClick={this.confirmDelete}
-              >
-                Confirm and delete my account
-              </Button>
-            </div>
-          ) : (
-            <TextButton color={'warn.default'} onClick={this.initDelete}>
-              Delete my account
-            </TextButton>
+          {ownsCommunities && (
+            <Notice>
+              You currently own communities on Spectrum. When your account is
+              deleted these communities will not be deleted. After 30 days
+              Spectrum reserves the right to manage your communities.
+            </Notice>
           )}
-        </SectionCardFooter>
-      </SectionCard>
-    );
+
+          <SectionCardFooter>
+            {deleteInited ? (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                }}
+              >
+                {!isLoading && (
+                  <OutlineButton
+                    onClick={this.cancelDelete}
+                    style={{ marginBottom: '16px', alignSelf: 'stretch' }}
+                  >
+                    Cancel
+                  </OutlineButton>
+                )}
+                <Button
+                  loading={isLoading}
+                  disabled={isLoading}
+                  gradientTheme={'warn'}
+                  onClick={this.confirmDelete}
+                >
+                  Confirm and delete my account
+                </Button>
+              </div>
+            ) : (
+              <TextButton color={'warn.default'} onClick={this.initDelete}>
+                Delete my account
+              </TextButton>
+            )}
+          </SectionCardFooter>
+        </SectionCard>
+      );
+    }
+
+    if (this.props.isLoading) {
+      return (
+        <SectionCard>
+          <Loading />
+        </SectionCard>
+      );
+    }
+
+    return null;
   }
 }
 

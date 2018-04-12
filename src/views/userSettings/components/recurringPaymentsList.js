@@ -15,7 +15,6 @@ import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 type Props = {
   dispatch: Function,
-  currentUser: Object,
   data: {
     user: GetCurrentUserRecurringPaymentsType,
   },
@@ -24,7 +23,7 @@ type Props = {
 class RecurringPaymentsList extends React.Component<Props> {
   openProModal = () => {
     this.props.dispatch(
-      openModal('UPGRADE_MODAL', { user: this.props.currentUser })
+      openModal('UPGRADE_MODAL', { user: this.props.data.user })
     );
   };
 
@@ -65,7 +64,11 @@ class RecurringPaymentsList extends React.Component<Props> {
         </SectionCard>
       );
     } else {
-      return <UpsellUpgradeToPro />;
+      return (
+        <SectionCard>
+          <UpsellUpgradeToPro />
+        </SectionCard>
+      );
     }
   }
 }
