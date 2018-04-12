@@ -82,13 +82,6 @@ jobs:
           root: .
           paths: .
 
-  build_web:
-    <<: *js_defaults
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run: *setup-and-build-web
-
   # Start db and servers, then run e2e and unit tests
   test_web:
     <<: *defaults
@@ -105,6 +98,7 @@ jobs:
       - run: *start-rethinkdb
       - run: sleep 10
       - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: *setup-and-build-web
       - run: *start-api
       - run: *start-web
       - run: sleep 60
@@ -173,9 +167,6 @@ workflows:
   test:
     jobs:
       - checkout_environment
-      - build_web:
-          requires:
-            - checkout_environment
       - test_mobile_js:
           requires:
             - checkout_environment
@@ -187,7 +178,6 @@ workflows:
       - test_web:
           requires:
             - checkout_environment
-            - build_web
       - test_static_js:
           requires:
             - checkout_environment
