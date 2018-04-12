@@ -57,8 +57,6 @@ var toState = function toState(json /*: Object */) /*: typeof EditorState */ {
 };
 
 var isAndroid = function isAndroid() /*: bool */ {
-  // TODO: Remove this
-  return true;
   return navigator.userAgent.toLowerCase().indexOf('android') > -1;
 };
 
