@@ -72,25 +72,19 @@ class BlockedUsers extends React.Component<Props> {
                       onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
                       avatarSize={'32'}
+                      multiAction
+                      messageButton={currentUser && user.id !== currentUser.id}
                       description={user.description}
                     >
                       <div style={{ display: 'flex' }}>
                         <TextButton
                           onClick={() => user && unblock(user.id)}
                           hoverColor={'warn.alt'}
+                          icon="minus-fill"
+                          style={{ padding: '0' }}
                         >
                           Unblock
                         </TextButton>
-
-                        {currentUser &&
-                          user.id !== currentUser.id && (
-                            <MessageIconContainer>
-                              <Icon
-                                glyph={'message'}
-                                onClick={() => initMessage(user)}
-                              />
-                            </MessageIconContainer>
-                          )}
                       </div>
                     </GranularUserProfile>
                   </UserListItemContainer>

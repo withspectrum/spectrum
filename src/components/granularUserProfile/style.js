@@ -14,8 +14,12 @@ export const Row = styled.div`
   display: grid;
   grid-template-columns: ${props =>
       props.avatarSize ? `${props.avatarSize}px` : '32px'} minmax(0px, 1fr) 32px;
-  grid-template-rows: 1fr auto;
-  grid-template-areas: 'avatar name action' '. description .';
+  grid-template-rows: ${props =>
+    props.multiAction ? '1fr auto auto' : '1fr auto'};
+  grid-template-areas: ${props =>
+    props.multiAction
+      ? `'avatar name message' 'action action action' '. description .'`
+      : `'avatar name action' '. description .'`};
   grid-column-gap: 16px;
   grid-row-gap: 8px;
   padding: 12px 16px;
@@ -38,6 +42,11 @@ export const Row = styled.div`
     flex-direction: column;
     align-items: flex-start;
     align-self: center;
+
+    > span {
+      ${Truncate};
+      max-width: 100%;
+    }
   }
 `;
 
@@ -47,7 +56,6 @@ export const Name = styled.span`
   font-weight: 600;
   line-height: 1;
   vertical-align: middle;
-  ${Truncate};
 
   &:hover {
     color: ${props => props.theme.brand.alt};
@@ -73,6 +81,8 @@ export const Description = styled.p`
 `;
 
 export const MessageIcon = styled.div`
+  grid-area: message;
+  height: 32px;
   color: ${props => props.theme.brand.alt};
   cursor: pointer;
   ${Tooltip};

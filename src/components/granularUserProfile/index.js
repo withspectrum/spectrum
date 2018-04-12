@@ -31,6 +31,7 @@ type Props = {
   isCurrentUser?: boolean,
   reputation?: number,
   messageButton?: boolean,
+  multiAction?: boolean,
   children?: React.Node,
   onlineSize?: 'small' | 'large',
   history: Object,
@@ -57,6 +58,14 @@ class GranularUserProfile extends React.Component<Props> {
     this.props.history.push('/messages/new');
   };
 
+  componentDidMount() {
+    if (React.Children.count(this.props.children) > 1) {
+      this.setState({
+        tooManyActions: true,
+      });
+    }
+  }
+
   render() {
     const {
       userObject,
@@ -69,11 +78,12 @@ class GranularUserProfile extends React.Component<Props> {
       badges,
       children,
       messageButton,
+      multiAction,
       onlineSize,
     } = this.props;
 
     return (
-      <Row avatarSize={avatarSize}>
+      <Row avatarSize={avatarSize} multiAction={multiAction}>
         {profilePhoto && (
           <Avatar
             src={profilePhoto}
@@ -99,21 +109,16 @@ class GranularUserProfile extends React.Component<Props> {
           )}
         </LinkHandler>
         {description && <Description>{description}</Description>}
-
-        <Actions>
-          {messageButton &&
-            !children && (
-              <MessageIcon
-                tipText={name ? `Message ${name}` : 'Message'}
-                tipLocation={'top-left'}
-                onClick={this.initMessage}
-              >
-                <Icon glyph="message-new" size={32} />
-              </MessageIcon>
-            )}
-
-          {children}
-        </Actions>
+        {messageButton && (
+          <MessageIcon
+            tipText={name ? `Message ${name}` : 'Message'}
+            tipLocation={'top-left'}
+            onClick={this.initMessage}
+          >
+            <Icon glyph="message-new" size={32} />
+          </MessageIcon>
+        )}
+        <Actions>{children}</Actions>
       </Row>
     );
   }

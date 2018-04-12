@@ -68,15 +68,33 @@ class PendingUsers extends React.Component<Props> {
                       onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
                       avatarSize={'32'}
+                      multiAction
+                      messageButton={currentUser && user.id !== currentUser.id}
                       description={user.description}
                     >
-                      <div style={{ display: 'flex' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          width: '100%',
+                          justifyContent: 'flex-end',
+                        }}
+                      >
+                        {/* {currentUser &&
+                            user.id !== currentUser.id && (
+                              <MessageIconContainer>
+                                <Icon
+                                  glyph={'message'}
+                                  onClick={() => initMessage(user)}
+                                />
+                              </MessageIconContainer>
+                            )} */}
                         <TextButton
                           onClick={() =>
                             user && togglePending(user.id, 'block')
                           }
                           hoverColor={'warn.alt'}
                           icon="minus"
+                          style={{ padding: '0' }}
                         >
                           Block
                         </TextButton>
@@ -85,21 +103,12 @@ class PendingUsers extends React.Component<Props> {
                           onClick={() =>
                             user && togglePending(user.id, 'approve')
                           }
-                          hoverColor={'brand.default'}
-                          icon="plus"
+                          hoverColor={'success.default'}
+                          icon="plus-fill"
+                          style={{ padding: '0', marginLeft: '16px' }}
                         >
                           Approve
                         </TextButton>
-
-                        {currentUser &&
-                          user.id !== currentUser.id && (
-                            <MessageIconContainer>
-                              <Icon
-                                glyph={'message'}
-                                onClick={() => initMessage(user)}
-                              />
-                            </MessageIconContainer>
-                          )}
                       </div>
                     </GranularUserProfile>
                   </UserListItemContainer>
