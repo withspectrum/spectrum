@@ -13,10 +13,7 @@ import {
   Time,
   Code,
 } from './style';
-import {
-  codeRenderer,
-  messageRenderer,
-} from 'shared/clients/draft-js/message/renderer.web';
+import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import type { Node } from 'react';
 
 export const Body = (props: {
@@ -44,14 +41,11 @@ export const Body = (props: {
     case 'emoji':
       return <Emoji>{message}</Emoji>;
     case 'draftjs': {
-      const body = JSON.parse(message.body);
-      const isCode = body.blocks[0].type === 'code-block';
-
-      if (isCode) {
-        return <Code>{redraft(body, codeRenderer)}</Code>;
-      } else {
-        return <Text me={me}>{redraft(body, messageRenderer)}</Text>;
-      }
+      return (
+        <Text me={me}>
+          {redraft(JSON.parse(message.body), messageRenderer)}
+        </Text>
+      );
     }
   }
 };

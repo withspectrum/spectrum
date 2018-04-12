@@ -5,7 +5,7 @@ import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
 import Prism from 'prismjs';
-import { customStyleMap } from 'src/components/draftjs-editor/style';
+import debounce from 'debounce';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-scala';
 import 'prismjs/components/prism-go';
@@ -18,16 +18,24 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
+import {
+  toPlainText,
+  toState,
+  fromPlainText,
+  toJSON,
+  isAndroid,
+} from 'shared/draft-utils';
+import { customStyleMap } from 'src/components/draftjs-editor/style';
+import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
 import { InputWrapper, MediaPreview } from './style';
 
 type Props = {
-  editorState: Object,
-  onChange: Object => void,
+  editorState: DraftEditorState,
+  onChange: DraftEditorState => void,
   placeholder: string,
   className?: string,
   focus?: boolean,
-  code?: boolean,
   readOnly?: boolean,
   editorRef?: any => void,
   networkDisabled: boolean,
@@ -37,63 +45,70 @@ type Props = {
 
 type State = {
   plugins: Array<mixed>,
+  value: ?string,
 };
 
+/*
+ * NOTE(@mxstbr): DraftJS has huge troubles on Android, it's basically unusable
+ * We work around this by replacing the DraftJS editor with a plain text Input
+ * on Android, and then converting the plain text to DraftJS content State
+ * debounced every couple ms
+ */
 class Input extends React.Component<Props, State> {
   editor: any;
 
   constructor(props: Props) {
     super(props);
 
+    this.debouncedPropsOnChange = debounce(this.debouncedPropsOnChange, 100);
     this.state = {
-      plugins: [],
+      value: isAndroid() ? toPlainText(props.editorState) : null,
+      plugins: [
+        createPrismPlugin({
+          prism: Prism,
+        }),
+        createMarkdownPlugin({
+          features: {
+            inline: ['BOLD', 'ITALIC', 'CODE'],
+            block: ['CODE', 'ordered-list-item', 'unordered-list-item'],
+          },
+        }),
+        createCodeEditorPlugin(),
+        createLinkifyPlugin({
+          target: '_blank',
+        }),
+      ],
     };
-  }
-
-  componentWillMount() {
-    this.setPlugins();
   }
 
   componentWillReceiveProps(next: Props) {
     const curr = this.props;
-    if (next.code !== curr.code) {
-      this.setPlugins(next);
+    if (next.editorState !== curr.editorState) {
+      this.setState({
+        value: toPlainText(next.editorState),
+      });
     }
   }
-
-  setPlugins = (next?: Props) => {
-    const props = next || this.props;
-    const plugins = [];
-
-    if (props.code) {
-      plugins.push(
-        createPrismPlugin({
-          prism: Prism,
-        }),
-        createCodeEditorPlugin()
-      );
-    } else {
-      plugins.push(
-        createMarkdownPlugin({
-          features: {
-            inline: ['BOLD', 'ITALIC', 'CODE'],
-          },
-        }),
-        createLinkifyPlugin({
-          target: '_blank',
-        })
-      );
-    }
-
-    this.setState({
-      plugins: plugins,
-    });
-  };
 
   setRef = (editor: any) => {
     const { editorRef } = this.props;
     this.editor = editor;
     if (editorRef && typeof editorRef === 'function') editorRef(editor);
+  };
+
+  // When we're on Android, we only send onChange to the parent every couple ms
+  // because it's very expensive to convert plain text to DraftJS content state
+  debouncedPropsOnChange = () => {
+    this.props.onChange(fromPlainText(this.state.value || ''));
+  };
+
+  plainTextOnChange = (e: SyntheticInputEvent<>) => {
+    const { value } = e.target;
+    this.setState({
+      value,
+    });
+
+    this.debouncedPropsOnChange();
   };
 
   render() {
@@ -104,37 +119,61 @@ class Input extends React.Component<Props, State> {
       placeholder,
       readOnly,
       editorRef,
-      code,
       networkDisabled,
       mediaPreview,
       onRemoveMedia,
       ...rest
     } = this.props;
-    const { plugins } = this.state;
+    const { plugins, value } = this.state;
 
     return (
-      <InputWrapper code={code} focus={focus} networkDisabled={networkDisabled}>
+      <InputWrapper focus={focus} networkDisabled={networkDisabled}>
         {mediaPreview && (
           <MediaPreview>
             <img src={mediaPreview} alt="" />
             <button onClick={onRemoveMedia} />
           </MediaPreview>
         )}
-        <DraftEditor
-          editorState={editorState}
-          onChange={onChange}
-          plugins={plugins}
-          ref={this.setRef}
-          readOnly={readOnly}
-          placeholder={!readOnly && placeholder}
-          spellCheck={true}
-          autoCapitalize="sentences"
-          autoComplete="on"
-          autoCorrect="on"
-          stripPastedStyles={true}
-          customStyleMap={customStyleMap}
-          {...rest}
-        />
+        {isAndroid() ? (
+          // NOTE(@mxstbr): This mimics the Draft Editor's DOM structure and classes
+          // so that the styling looks correct
+          <div className="DraftEditor-root">
+            <div className="DraftEditor-editorContainer">
+              <input
+                type="text"
+                value={value}
+                onChange={this.plainTextOnChange}
+                placeholder={!readOnly && placeholder}
+                spellCheck={true}
+                autoCapitalize="sentences"
+                autoComplete="on"
+                autoCorrect="on"
+                stripPastedStyles={true}
+                ref={this.setRef}
+                className={`DraftEditor-content ${this.props.className || ''}`}
+                // NOTE(@mxstbr): For some reason this is necessary
+                // to align the styling
+                style={{ width: '100%', fontSize: '14px' }}
+              />
+            </div>
+          </div>
+        ) : (
+          <DraftEditor
+            editorState={editorState}
+            onChange={onChange}
+            plugins={plugins}
+            ref={this.setRef}
+            readOnly={readOnly}
+            placeholder={!readOnly && placeholder}
+            spellCheck={true}
+            autoCapitalize="sentences"
+            autoComplete="on"
+            autoCorrect="on"
+            stripPastedStyles={true}
+            customStyleMap={customStyleMap}
+            {...rest}
+          />
+        )}
       </InputWrapper>
     );
   }
