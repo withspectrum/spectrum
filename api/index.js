@@ -8,6 +8,7 @@ const debug = require('debug')('api');
 debug('logging with debug enabled!');
 import { createServer } from 'http';
 import express from 'express';
+import helmet from 'helmet';
 import Raven from 'shared/raven';
 import { ApolloEngine } from 'apollo-engine';
 import toobusy from 'shared/middlewares/toobusy';
@@ -27,6 +28,8 @@ app.set('trust proxy', true);
 
 // Return the request if the server is too busy
 app.use(toobusy);
+
+app.use(helmet());
 
 // Send all responses as gzip
 app.use(compression());
