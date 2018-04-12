@@ -60,7 +60,7 @@ class Input extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.debouncedPropsOnChange = debounce(this.debouncedPropsOnChange, 200);
+    this.debouncedPropsOnChange = debounce(this.debouncedPropsOnChange, 100);
     this.state = {
       value: isAndroid() ? toPlainText(props.editorState) : null,
       plugins: [
@@ -135,19 +135,28 @@ class Input extends React.Component<Props, State> {
           </MediaPreview>
         )}
         {isAndroid() ? (
-          <input
-            type="text"
-            value={value}
-            onChange={this.plainTextOnChange}
-            placeholder={!readOnly && placeholder}
-            spellCheck={true}
-            autoCapitalize="sentences"
-            autoComplete="on"
-            autoCorrect="on"
-            stripPastedStyles={true}
-            ref={this.setRef}
-            className={this.props.className}
-          />
+          // NOTE(@mxstbr): This mimics the Draft Editor's DOM structure and classes
+          // so that the styling looks correct
+          <div className="DraftEditor-root">
+            <div className="DraftEditor-editorContainer">
+              <input
+                type="text"
+                value={value}
+                onChange={this.plainTextOnChange}
+                placeholder={!readOnly && placeholder}
+                spellCheck={true}
+                autoCapitalize="sentences"
+                autoComplete="on"
+                autoCorrect="on"
+                stripPastedStyles={true}
+                ref={this.setRef}
+                className={`DraftEditor-content ${this.props.className || ''}`}
+                // NOTE(@mxstbr): For some reason this is necessary
+                // to align the styling
+                style={{ width: '100%', fontSize: '14px' }}
+              />
+            </div>
+          </div>
         ) : (
           <DraftEditor
             editorState={editorState}
