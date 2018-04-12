@@ -15,6 +15,7 @@ import {
   toState,
   fromPlainText,
   toPlainText,
+  isAndroid,
 } from 'shared/draft-utils';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
@@ -214,7 +215,9 @@ class ChatInput extends React.Component<Props, State> {
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       createThread({
-        messageBody: JSON.stringify(toJSON(state)),
+        messageBody: !isAndroid()
+          ? JSON.stringify(toJSON(state))
+          : toPlainText(state),
         messageType: 'draftjs',
       });
       clear();
@@ -226,10 +229,12 @@ class ChatInput extends React.Component<Props, State> {
     if (threadType === 'directMessageThread') {
       sendDirectMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -242,10 +247,12 @@ class ChatInput extends React.Component<Props, State> {
     } else {
       sendMessage({
         threadId: thread,
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
         threadType,
         content: {
-          body: JSON.stringify(toJSON(state)),
+          body: !isAndroid()
+            ? JSON.stringify(toJSON(state))
+            : toPlainText(state),
         },
       })
         .then(() => {
@@ -487,7 +494,12 @@ class ChatInput extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
     } = this.props;
-    const { isFocused, photoSizeError, isSendingMediaMessage, mediaPreview } = this.state;
+    const {
+      isFocused,
+      photoSizeError,
+      isSendingMediaMessage,
+      mediaPreview,
+    } = this.state;
 
     const networkDisabled =
       !networkOnline ||
@@ -496,7 +508,7 @@ class ChatInput extends React.Component<Props, State> {
 
     return (
       <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
-       {photoSizeError && (
+        {photoSizeError && (
           <PhotoSizeError>
             <p
               onClick={() =>

@@ -23,6 +23,7 @@ import {
   toState,
   fromPlainText,
   toJSON,
+  isAndroid,
 } from 'shared/draft-utils';
 import { customStyleMap } from 'src/components/draftjs-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
@@ -47,9 +48,6 @@ type State = {
   value: ?string,
 };
 
-// TODO: Make this an actual thing
-const isAndroid = true;
-
 /*
  * NOTE(@mxstbr): DraftJS has huge troubles on Android, it's basically unusable
  * We work around this by replacing the DraftJS editor with a plain text Input
@@ -64,7 +62,7 @@ class Input extends React.Component<Props, State> {
 
     this.debouncedPropsOnChange = debounce(this.debouncedPropsOnChange, 200);
     this.state = {
-      value: isAndroid ? toPlainText(props.editorState) : null,
+      value: isAndroid() ? toPlainText(props.editorState) : null,
       plugins: [
         createPrismPlugin({
           prism: Prism,
@@ -136,7 +134,7 @@ class Input extends React.Component<Props, State> {
             <button onClick={onRemoveMedia} />
           </MediaPreview>
         )}
-        {isAndroid ? (
+        {isAndroid() ? (
           <input
             type="text"
             value={value}
@@ -148,6 +146,7 @@ class Input extends React.Component<Props, State> {
             autoCorrect="on"
             stripPastedStyles={true}
             ref={this.setRef}
+            className={this.props.className}
           />
         ) : (
           <DraftEditor
