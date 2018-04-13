@@ -115,14 +115,13 @@ export const Grid = styled.main`
   width: 100%;
   min-width: 100%;
   max-width: 100%;
-  height: 100%;
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
   @media (max-width: 1280px) {
     grid-template-columns: 320px 1fr;
-    grid-template-rows: 160px 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
+    grid-template-rows: 160px auto 1fr;
+    grid-template-areas: 'cover cover' 'meta content' 'extras content';
   }
 
   @media (max-width: 768px) {
@@ -139,15 +138,13 @@ const Column = styled.div`
   flex-direction: column;
 `;
 
+export const ListColumn = styled(Column)`
+  align-items: stretch;
+  overflow: hidden;
+`;
+
 export const Meta = styled(Column)`
   grid-area: meta;
-
-  > div:nth-of-type(2) {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    margin: 16px 0 0 32px;
-  }
 
   > a > button {
     margin-top: 16px;
@@ -164,6 +161,14 @@ export const Meta = styled(Column)`
     padding: 0 32px;
 
     > div {
+      margin-left: 0;
+    }
+  }
+
+  > .member-button {
+    margin-left: 32px;
+
+    @media (max-width: 768px) {
       margin-left: 0;
     }
   }
@@ -199,12 +204,18 @@ export const Extras = styled(Column)`
     }
   }
 
-  @media (max-width: 1280px) {
-    display: none;
+  @media (min-width: 768px) {
+    padding-left: 32px;
+    padding-right: 0;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1281px) {
     padding-right: 32px;
+    padding-left: 0;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -246,6 +257,5 @@ export const MessageIconContainer = styled.div`
 `;
 
 export const UserListItemContainer = styled.div`
-  padding: 0 16px;
   border-bottom: 1px solid ${props => props.theme.bg.wash};
 `;

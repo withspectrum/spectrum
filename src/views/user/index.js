@@ -23,7 +23,14 @@ import viewNetworkHandler from '../../components/viewNetworkHandler';
 import Titlebar from '../titlebar';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { LoginButton } from '../community/style';
-import { Grid, Meta, Content, Extras, ColumnHeading } from './style';
+import {
+  Grid,
+  Meta,
+  Content,
+  Extras,
+  ColumnHeading,
+  MetaMemberships,
+} from './style';
 import {
   SegmentedControl,
   DesktopSegment,
@@ -165,6 +172,14 @@ class UserView extends React.Component<Props, State> {
                     <LoginButton isMember>My settings</LoginButton>
                   </Link>
                 )}
+              <MetaMemberships>
+                <ColumnHeading>Member of</ColumnHeading>
+                <CommunityList
+                  currentUser={currentUser}
+                  user={user}
+                  id={user.id}
+                />
+              </MetaMemberships>
             </Meta>
             <Content>
               <SegmentedControl style={{ margin: '16px 0 0 0' }}>

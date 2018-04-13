@@ -84,12 +84,11 @@ export const Grid = styled.main`
   width: 100%;
   min-width: 100%;
   max-width: 100%;
-  height: 100%;
   min-height: 100vh;
   background-color: ${props => props.theme.bg.default};
 
   @media (max-width: 1028px) {
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 320px 1fr;
     grid-template-rows: 160px 1fr;
     grid-template-areas: 'cover cover' 'meta content';
   }
@@ -129,6 +128,18 @@ export const Meta = styled(Column)`
     > div {
       margin-left: 0;
     }
+  }
+`;
+
+export const MetaMemberships = styled.div`
+  margin-left: 32px;
+
+  @media (min-width: 1279px) {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
