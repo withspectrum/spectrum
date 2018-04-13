@@ -470,6 +470,7 @@ const deleteUser = (userId: string) => {
       firstName: null,
       lastName: null,
       pendingEmail: null,
+      name: 'Deleted',
     })
     .run();
 };
