@@ -43,6 +43,23 @@ const Bubble = styled.div`
     color: ${props =>
       props.me ? props.theme.text.reverse : props.theme.warn.alt};
   }
+
+  pre {
+    margin: 4px -16px;
+    padding: 8px 16px;
+    width: calc(100% + 32px);
+    border: 1px solid
+      ${props =>
+        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
+    border-left: 0;
+    border-right: 0;
+    background: ${props =>
+      props.me
+        ? hexa(props.theme.bg.default, 0.1)
+        : hexa(props.theme.bg.default, 0.3)};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
+  }
 `;
 
 export const Indicator = styled.div`
@@ -227,10 +244,6 @@ export const Text = styled(Bubble)`
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
-  background-image: ${props =>
-    props.me
-      ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-      : Gradient(props.theme.generic.alt, props.theme.generic.default)};
   color: ${props =>
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};
