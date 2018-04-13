@@ -298,6 +298,7 @@ export const Image = styled.img`
           props.theme.brand.default
         }`
       : ''};
+  cursor: pointer;
 `;
 
 export const Code = styled(Bubble)`
