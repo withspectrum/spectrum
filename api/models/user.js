@@ -462,6 +462,14 @@ const deleteUser = (userId: string) => {
       githubProviderId: null,
       githubUsername: null,
       profilePhoto: null,
+      description: null,
+      website: null,
+      timezone: null,
+      lastSeen: null,
+      modifiedAt: null,
+      firstName: null,
+      lastName: null,
+      pendingEmail: null,
     })
     .run();
 };
