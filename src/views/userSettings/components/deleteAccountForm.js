@@ -93,7 +93,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
 
     if (user) {
       return (
-        <SectionCard>
+        <SectionCard data-cy="delete-account-container">
           <SectionTitle>Delete my account</SectionTitle>
           <SectionSubtitle>
             You can delete your account at any time.{' '}
@@ -101,7 +101,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
           </SectionSubtitle>
 
           {ownsCommunities && (
-            <Notice>
+            <Notice data-cy="owns-communities-notice">
               You currently own communities on Spectrum. When your account is
               deleted these communities will not be deleted. After 30 days
               Spectrum reserves the right to manage your communities.
@@ -119,6 +119,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
               >
                 {!isLoading && (
                   <OutlineButton
+                    dataCy="delete-account-cancel-button"
                     onClick={this.cancelDelete}
                     style={{ marginBottom: '16px', alignSelf: 'stretch' }}
                   >
@@ -126,6 +127,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
                   </OutlineButton>
                 )}
                 <Button
+                  dataCy="delete-account-confirm-button"
                   loading={isLoading}
                   disabled={isLoading}
                   gradientTheme={'warn'}
@@ -135,7 +137,11 @@ class DeleteAccountForm extends React.Component<Props, State> {
                 </Button>
               </div>
             ) : (
-              <TextButton color={'warn.default'} onClick={this.initDelete}>
+              <TextButton
+                dataCy="delete-account-init-button"
+                color={'warn.default'}
+                onClick={this.initDelete}
+              >
                 Delete my account
               </TextButton>
             )}
