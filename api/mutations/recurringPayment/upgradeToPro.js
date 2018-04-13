@@ -64,24 +64,13 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
     // we still want to know globally if a user has a customerId already so that we avoid create duplicate customers in Stripe
     const hasCustomerId = rPayments && rPayments.length > 0;
 
-    console.log('hasCustomerId', hasCustomerId);
-    console.log('here');
-
     // if no recurringPaymentToEvaluate is found, it means the user has never been pro and we can go ahead and create a new subscription
     if (!recurringPaymentToEvaluate && currentUser.email) {
-      console.log('1');
-      console.log('rpayments', rPayments);
       const customer = hasCustomerId
         ? await getStripeCustomer(rPayments[0].customerId)
-        : await createStripeCustomer(currentUser.email, token.card).then(res =>
-            console.log('res', res)
-          );
-
-      console.log('customer', customer);
+        : await createStripeCustomer(currentUser.email, token.id);
 
       const stripeData = await createStripeSubscription(customer.id, plan, 1);
-
-      console.log('stripe dta', stripeData);
 
       return await createRecurringPayment({
         userId: currentUser.id,
@@ -97,12 +86,10 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       recurringPaymentToEvaluate &&
       recurringPaymentToEvaluate.status === 'active'
     ) {
-      console.log('2');
       return new UserError("You're already a Pro member - thank you!");
     }
 
     if (recurringPaymentToEvaluate && currentUser.email) {
-      console.log('3');
       const customer = await updateStripeCustomer(
         recurringPaymentToEvaluate.customerId,
         currentUser.email,
@@ -110,7 +97,6 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       );
 
       const subscription = await createStripeSubscription(customer.id, plan, 1);
-      console.log('subscription', subscription);
       return await updateRecurringPayment({
         id: recurringPaymentToEvaluate.id,
         stripeData: {
@@ -128,7 +114,7 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       // return the user record to update the cilent side cache for isPro
       .then(() => getUserById(currentUser.id))
       .catch(err => {
-        console.log('Error upgrading to Pro: ', err.message);
+        console.error('Error upgrading to Pro: ', err.message);
         return new UserError(
           "We weren't able to upgrade you to Pro: " + err.message
         );
