@@ -44,7 +44,7 @@ aliases:
 
   - &start-api
     name: Start the API in the background
-    command: yarn run dev:api:test
+    command: yarn run start:api:test
     background: true
 
   - &start-web
@@ -82,13 +82,6 @@ jobs:
           root: .
           paths: .
 
-  build_web:
-    <<: *js_defaults
-    steps:
-      - attach_workspace:
-          at: ~/spectrum
-      - run: *setup-and-build-web
-
   # Start db and servers, then run e2e and unit tests
   test_web:
     <<: *defaults
@@ -96,18 +89,18 @@ jobs:
       - image: circleci/node:8-browsers
       - image: redis:3.2.7
       - image: cypress/base:6
+      - image: rethinkdb:2.3.5
     environment:
       TERM: xterm
     steps:
       - attach_workspace:
           at: ~/spectrum
-      - run: *install-rethinkdb
-      - run: *start-rethinkdb
-      - run: sleep 10
       - run: node -e "const setup = require('./shared/testing/setup.js')().then(() => process.exit())"
+      - run: *setup-and-build-web
       - run: *start-api
       - run: *start-web
-      - run: sleep 60
+      # Wait for the API and webserver to start
+      - run: ./node_modules/.bin/wait-on http://localhost:3000 http://localhost:3001
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
@@ -173,9 +166,6 @@ workflows:
   test:
     jobs:
       - checkout_environment
-      - build_web:
-          requires:
-            - checkout_environment
       - test_mobile_js:
           requires:
             - checkout_environment
@@ -187,7 +177,6 @@ workflows:
       - test_web:
           requires:
             - checkout_environment
-            - build_web
       - test_static_js:
           requires:
             - checkout_environment

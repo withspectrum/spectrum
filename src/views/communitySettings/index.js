@@ -130,7 +130,7 @@ class CommunitySettings extends React.Component<Props> {
           />
           <Head title={title} />
 
-          <View>
+          <View id="main">
             <Header
               avatar={avatar}
               subheading={subheading}
