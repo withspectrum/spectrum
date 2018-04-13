@@ -19,7 +19,7 @@ export default (
   { loaders }: GraphQLContext
 ) => {
   if (args.id) return loaders.community.load(args.id);
-  if (args.slug) return loaders.communityBySlug.load(args.slug.toLowerCase());
+  if (args.slug) return loaders.communityBySlug.load(args.slug);
 
   return null;
 };

@@ -85,17 +85,17 @@ const User = /* GraphQL */ `
 		firstName: String
 		description: String
 		website: String
-		username: String
+		username: LowercaseString
 		profilePhoto: String
 		coverPhoto: String
-		email: String
+		email: LowercaseString
 		providerId: String
 		createdAt: Date!
 		lastSeen: Date!
 		isOnline: Boolean
 		timezone: Int
 		totalReputation: Int
-		pendingEmail: String
+		pendingEmail: LowercaseString
 
 		# non-schema fields
     threadCount: Int @cost(complexity: 1)
@@ -115,7 +115,7 @@ const User = /* GraphQL */ `
 	}
 
 	extend type Query {
-		user(id: ID, username: String): User
+		user(id: ID, username: LowercaseString): User
 		currentUser: User
 		searchUsers(string: String): [User] @deprecated(reason:"Use the new Search query endpoint")
 	}
@@ -126,7 +126,7 @@ const User = /* GraphQL */ `
 		name: String
 		description: String
 		website: String
-		username: String
+		username: LowercaseString
 		timezone: Int
 	}
 
@@ -158,7 +158,7 @@ const User = /* GraphQL */ `
 		subscribeWebPush(subscription: WebPushSubscription!): Boolean
 		unsubscribeWebPush(endpoint: String!): Boolean
     subscribeExpoPush(token: String!): Boolean
-		updateUserEmail(email: String!): User
+		updateUserEmail(email: LowercaseString!): User
 	}
 `;
 

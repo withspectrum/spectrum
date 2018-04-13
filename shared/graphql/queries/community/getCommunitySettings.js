@@ -37,7 +37,7 @@ const getCommunitySettingsOptions = {
 };
 
 export const getCommunitySettingsByMatchQuery = gql`
-  query getCommunitySettingsByMatch($slug: String) {
+  query getCommunitySettingsByMatch($slug: LowercaseString) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData

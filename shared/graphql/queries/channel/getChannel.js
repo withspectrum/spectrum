@@ -44,8 +44,8 @@ export const getChannelById = graphql(
 */
 export const getChannelBySlugAndCommunitySlugQuery = gql`
   query getChannelBySlugAndCommunitySlug(
-    $channelSlug: String
-    $communitySlug: String
+    $channelSlug: LowercaseString
+    $communitySlug: LowercaseString
   ) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo

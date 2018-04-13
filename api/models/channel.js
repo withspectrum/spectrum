@@ -88,18 +88,15 @@ const getChannelBySlug = (
   channelSlug: string,
   communitySlug: string
 ): Promise<DBChannel> => {
-  const lowercaseChannelSlug = channelSlug.toLowerCase();
-  const lowercaseCommunitySlug = communitySlug.toLowerCase();
-
   return db
     .table('channels')
     .filter(channel =>
       channel('slug')
-        .eq(lowercaseChannelSlug)
+        .eq(channelSlug)
         .and(db.not(channel.hasFields('deletedAt')))
     )
     .eqJoin('communityId', db.table('communities'))
-    .filter({ right: { slug: lowercaseCommunitySlug } })
+    .filter({ right: { slug: communitySlug } })
     .run()
     .then(result => {
       if (result && result[0]) {
@@ -207,7 +204,6 @@ const createChannel = (
   }: CreateChannelInput,
   userId: string
 ): Promise<DBChannel> => {
-  const lowercaseSlug = slug.toLowerCase();
   return db
     .table('channels')
     .insert(
@@ -216,7 +212,7 @@ const createChannel = (
         createdAt: new Date(),
         name,
         description,
-        slug: lowercaseSlug,
+        slug,
         isPrivate,
         isDefault: isDefault ? true : false,
       },
@@ -256,7 +252,6 @@ const createGeneralChannel = (
 const editChannel = async ({
   input: { name, slug, description, isPrivate, channelId },
 }: EditChannelInput): Promise<DBChannel> => {
-  const lowercaseSlug = slug.toLowerCase();
   const channelRecord = await db
     .table('channels')
     .get(channelId)
@@ -265,7 +260,7 @@ const editChannel = async ({
       return Object.assign({}, result, {
         name,
         description,
-        slug: lowercaseSlug,
+        slug,
         isPrivate,
       });
     });

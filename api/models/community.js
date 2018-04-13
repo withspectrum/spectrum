@@ -35,10 +35,9 @@ export const getCommunities = (
 export const getCommunitiesBySlug = (
   slugs: Array<string>
 ): Promise<Array<DBCommunity>> => {
-  const lowercaseSlugs = slugs.map(slug => slug.toLowerCase());
   return db
     .table('communities')
-    .getAll(...lowercaseSlugs, { index: 'slug' })
+    .getAll(...slugs, { index: 'slug' })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
@@ -146,7 +145,6 @@ export const createCommunity = (
   }: CreateCommunityInput,
   user: CommunityCreator
 ): Promise<DBCommunity> => {
-  const lowercaseSlug = slug.toLowerCase();
   return db
     .table('communities')
     .insert(
@@ -157,7 +155,7 @@ export const createCommunity = (
         website,
         profilePhoto: null,
         coverPhoto: null,
-        slug: lowercaseSlug,
+        slug: slug,
         modifiedAt: null,
         creatorId: user.id,
         administratorEmail: user.email,
@@ -316,7 +314,6 @@ export const createCommunity = (
 export const editCommunity = ({
   input: { name, slug, description, website, file, coverFile, communityId },
 }: EditCommunityInput): Promise<DBCommunity> => {
-  const lowercaseSlug = slug ? slug.toLowerCase() : null;
   return db
     .table('communities')
     .get(communityId)
@@ -324,7 +321,7 @@ export const editCommunity = ({
     .then(result => {
       return Object.assign({}, result, {
         name,
-        slug: lowercaseSlug,
+        slug: slug,
         description,
         website,
         modifiedAt: new Date(),

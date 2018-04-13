@@ -25,19 +25,17 @@ const getUserById = (userId: string): Promise<DBUser> => {
 };
 
 const getUserByEmail = (email: string): Promise<DBUser> => {
-  const lowercaseEmail = email.toLowerCase();
   return db
     .table('users')
-    .getAll(lowercaseEmail, { index: 'email' })
+    .getAll(email, { index: 'email' })
     .run()
     .then(results => (results.length > 0 ? results[0] : null));
 };
 
 const getUserByUsername = (username: string): Promise<DBUser> => {
-  const lowercase = username.toLowerCase();
   return db
     .table('users')
-    .getAll(lowercase, { index: 'username' })
+    .getAll(username, { index: 'username' })
     .run()
     .then(result => (result ? result[0] : null));
 };
@@ -45,10 +43,9 @@ const getUserByUsername = (username: string): Promise<DBUser> => {
 const getUsersByUsername = (
   usernames: Array<string>
 ): Promise<Array<DBUser>> => {
-  const lowercase = usernames.map(name => name.toLowerCase());
   return db
     .table('users')
-    .getAll(...lowercase, { index: 'username' })
+    .getAll(...usernames, { index: 'username' })
     .run();
 };
 
@@ -250,7 +247,6 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
   const {
     input: { name, description, website, file, coverFile, username, timezone },
   } = input;
-  const lowercaseUsername = username ? username.toLowerCase() : null;
   return db
     .table('users')
     .get(userId)
@@ -260,7 +256,7 @@ const editUser = (input: EditUserInput, userId: string): Promise<DBUser> => {
         name,
         description,
         website,
-        username: lowercaseUsername,
+        username,
         timezone,
         modifiedAt: new Date(),
       });
@@ -418,23 +414,21 @@ const setUserPendingEmail = (
   userId: string,
   pendingEmail: string
 ): Promise<Object> => {
-  const lowercasePendingEmail = pendingEmail.toLowerCase();
   return db
     .table('users')
     .get(userId)
     .update({
-      pendingEmail: lowercasePendingEmail,
+      pendingEmail,
     })
     .run()
     .then(() => getUserById(userId));
 };
 const updateUserEmail = (userId: string, email: string): Promise<Object> => {
-  const lowercaseEmail = email.toLowerCase();
   return db
     .table('users')
     .get(userId)
     .update({
-      email: lowercaseEmail,
+      email,
       pendingEmail: db.literal(),
     })
     .run()
