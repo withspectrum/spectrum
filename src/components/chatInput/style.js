@@ -114,6 +114,10 @@ export const InputWrapper = styled(EditorWrapper)`
     font-size: 14px;
     font-weight: 500;
     background-color: #f5f8fc;
+    border: 1px solid ${props => props.theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
   }
 `;
 
