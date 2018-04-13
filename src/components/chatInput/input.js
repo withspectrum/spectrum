@@ -18,13 +18,7 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
-import {
-  toPlainText,
-  toState,
-  fromPlainText,
-  toJSON,
-  isAndroid,
-} from 'shared/draft-utils';
+import { toPlainText, fromPlainText, isAndroid } from 'shared/draft-utils';
 import { customStyleMap } from 'src/components/draftjs-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 

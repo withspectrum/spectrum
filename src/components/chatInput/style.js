@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { IconButton } from '../buttons';
 import {
   FlexRow,

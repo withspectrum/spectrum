@@ -4,11 +4,9 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import { connect } from 'react-redux';
-import changeCurrentBlockType from 'draft-js-markdown-plugin/lib/modifiers/changeCurrentBlockType';
 import { KeyBindingUtil } from 'draft-js';
 import debounce from 'debounce';
 import Icon from '../../components/icons';
-import { IconButton } from '../../components/buttons';
 import { track } from '../../helpers/events';
 import {
   toJSON,
