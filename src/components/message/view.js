@@ -11,7 +11,6 @@ import {
   ActionWrapper,
   ModActionWrapper,
   Time,
-  Code,
 } from './style';
 import { messageRenderer } from 'shared/clients/draft-js/message/renderer.web';
 import type { Node } from 'react';
