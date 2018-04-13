@@ -63,11 +63,7 @@ app.use(
 );
 
 app.use('/', (req: express$Request, res: express$Response) => {
-  res.redirect(
-    process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
-      ? 'https://spectrum.chat'
-      : 'http://localhost:3000'
-  );
+  res.send('API active.');
 });
 
 import type { Loader } from './loaders/types';
