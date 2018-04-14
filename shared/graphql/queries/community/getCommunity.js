@@ -36,7 +36,7 @@ export const getCommunityById = graphql(
 );
 
 export const getCommunityBySlugQuery = gql`
-  query getCommunityBySlug($slug: String) {
+  query getCommunityBySlug($slug: LowercaseString) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
@@ -49,7 +49,7 @@ export const getCommunityBySlugQuery = gql`
 const getCommunityBySlugOptions = {
   options: ({ slug }) => ({
     variables: {
-      slug: slug.toLowerCase(),
+      slug: slug,
     },
   }),
 };
@@ -60,7 +60,7 @@ export const getCommunityBySlug = graphql(
 );
 
 export const getCommunityByMatchQuery = gql`
-  query getCommunityByMatch($slug: String) {
+  query getCommunityByMatch($slug: LowercaseString) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
@@ -73,7 +73,7 @@ export const getCommunityByMatchQuery = gql`
 const getCommunityByMatchOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: communitySlug.toLowerCase(),
+      slug: communitySlug,
     },
   }),
 };

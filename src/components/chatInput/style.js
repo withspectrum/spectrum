@@ -1,5 +1,5 @@
 // @flow
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { IconButton } from '../buttons';
 import {
   FlexRow,
@@ -109,14 +109,16 @@ export const InputWrapper = styled(EditorWrapper)`
     transition: border-color 0.2s ease-in;
   }
 
-  ${props =>
-    props.code &&
-    css`
-      ${monoStack};
-      font-size: 14px;
-      font-weight: 500;
-      background-color: #f5f8fc;
-    `};
+  pre {
+    ${monoStack};
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f5f8fc;
+    border: 1px solid ${props => props.theme.bg.border};
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 16px;
+  }
 `;
 
 export const SendButton = styled(IconButton)`

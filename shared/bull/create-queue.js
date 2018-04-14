@@ -35,6 +35,15 @@ function createQueue(name: string, queueOptions?: Object = {}) {
     // In production log stalled job to Sentry
     Raven.captureException(new Error(message));
   });
+  queue.on('failed', (job, err) => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(`Job#${job.id} failed, with following reason`);
+      console.error(err);
+      return;
+    }
+    // In production log failed job to Sentry
+    Raven.captureException(err);
+  });
   return queue;
 }
 

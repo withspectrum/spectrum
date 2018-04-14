@@ -14,7 +14,7 @@ import {
   Gradient,
 } from '../../components/globals';
 
-export const Page = styled.div`
+export const Page = styled.main`
   position: relative;
   display: grid;
   grid-template-rows: 1fr;

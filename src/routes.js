@@ -128,17 +128,8 @@ const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
   height: 100vh;
+  max-height: 100vh;
   background: ${props => props.theme.bg.wash};
-
-  @media (max-width: 768px) {
-    height: 100vh;
-    max-height: 100vh;
-  }
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex: 1 1 100%;
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
@@ -207,99 +198,89 @@ class Routes extends React.Component<{}> {
               <Route component={Gallery} />
               <Route component={ThreadSlider} />
 
-              {/* This id is needed for the “Skip to content” button in the NavBar. */}
-              <Main id="main">
-                {/*
+              {/*
                   Switch only renders the first match. Subrouting happens downstream
                   https://reacttraining.com/react-router/web/api/Switch
                 */}
-                <Switch>
-                  <Route exact path="/" component={DashboardFallback} />
-                  <Route exact path="/home" component={HomeFallback} />
+              <Switch>
+                <Route exact path="/" component={DashboardFallback} />
+                <Route exact path="/home" component={HomeFallback} />
 
-                  {/* Public Business Pages */}
-                  <Route path="/about" component={Pages} />
-                  <Route path="/contact" component={Pages} />
-                  <Route path="/terms" component={Pages} />
-                  <Route path="/privacy" component={Pages} />
-                  <Route path="/terms.html" component={Pages} />
-                  <Route path="/privacy.html" component={Pages} />
-                  <Route path="/code-of-conduct" component={Pages} />
-                  <Route path="/pricing" component={Pages} />
-                  <Route path="/support" component={Pages} />
-                  <Route path="/features" component={Pages} />
+                {/* Public Business Pages */}
+                <Route path="/about" component={Pages} />
+                <Route path="/contact" component={Pages} />
+                <Route path="/terms" component={Pages} />
+                <Route path="/privacy" component={Pages} />
+                <Route path="/terms.html" component={Pages} />
+                <Route path="/privacy.html" component={Pages} />
+                <Route path="/code-of-conduct" component={Pages} />
+                <Route path="/pricing" component={Pages} />
+                <Route path="/support" component={Pages} />
+                <Route path="/features" component={Pages} />
 
-                  {/* App Pages */}
-                  <Route
-                    path="/new/community"
-                    component={NewCommunityFallback}
-                  />
-                  <Route path="/new/thread" component={ComposerFallback} />
-                  <Route path="/new/search" component={Search} />
+                {/* App Pages */}
+                <Route path="/new/community" component={NewCommunityFallback} />
+                <Route path="/new/thread" component={ComposerFallback} />
+                <Route path="/new/search" component={Search} />
 
-                  <Route
-                    path="/new"
-                    render={() => <Redirect to="/new/community" />}
-                  />
+                <Route
+                  path="/new"
+                  render={() => <Redirect to="/new/community" />}
+                />
 
-                  <Route path="/login" component={Login} />
-                  <Route path="/explore" component={Explore} />
-                  <Route path="/messages/new" component={MessagesFallback} />
-                  <Route
-                    path="/messages/:threadId"
-                    component={MessagesFallback}
-                  />
-                  <Route path="/messages" component={MessagesFallback} />
-                  <Route path="/thread/:threadId" component={Thread} />
-                  <Route path="/thread" render={() => <Redirect to="/" />} />
-                  <Route
-                    exact
-                    path="/users"
-                    render={() => <Redirect to="/" />}
-                  />
-                  <Route exact path="/users/:username" component={UserView} />
-                  <Route
-                    exact
-                    path="/users/:username/settings"
-                    component={UserSettingsFallback}
-                  />
-                  <Route
-                    path="/notifications"
-                    component={NotificationsFallback}
-                  />
+                <Route path="/login" component={Login} />
+                <Route path="/explore" component={Explore} />
+                <Route path="/messages/new" component={MessagesFallback} />
+                <Route
+                  path="/messages/:threadId"
+                  component={MessagesFallback}
+                />
+                <Route path="/messages" component={MessagesFallback} />
+                <Route path="/thread/:threadId" component={Thread} />
+                <Route path="/thread" render={() => <Redirect to="/" />} />
+                <Route exact path="/users" render={() => <Redirect to="/" />} />
+                <Route exact path="/users/:username" component={UserView} />
+                <Route
+                  exact
+                  path="/users/:username/settings"
+                  component={UserSettingsFallback}
+                />
+                <Route
+                  path="/notifications"
+                  component={NotificationsFallback}
+                />
 
-                  {/*
+                {/*
                     We check communitySlug last to ensure none of the above routes
                     pass. We handle null communitySlug values downstream by either
                     redirecting to home or showing a 404
                   */}
-                  <Route
-                    path="/:communitySlug/:channelSlug/settings"
-                    component={ChannelSettingsFallback}
-                  />
-                  <Route
-                    path="/:communitySlug/:channelSlug/join/:token"
-                    component={PrivateChannelJoin}
-                  />
-                  <Route
-                    path="/:communitySlug/:channelSlug/join"
-                    component={PrivateChannelJoin}
-                  />
-                  <Route
-                    path="/:communitySlug/settings"
-                    component={CommunitySettingsFallback}
-                  />
-                  <Route
-                    path="/:communitySlug/login"
-                    component={CommunityLoginView}
-                  />
-                  <Route
-                    path="/:communitySlug/:channelSlug"
-                    component={ChannelView}
-                  />
-                  <Route path="/:communitySlug" component={CommunityView} />
-                </Switch>
-              </Main>
+                <Route
+                  path="/:communitySlug/:channelSlug/settings"
+                  component={ChannelSettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug/join/:token"
+                  component={PrivateChannelJoin}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug/join"
+                  component={PrivateChannelJoin}
+                />
+                <Route
+                  path="/:communitySlug/settings"
+                  component={CommunitySettingsFallback}
+                />
+                <Route
+                  path="/:communitySlug/login"
+                  component={CommunityLoginView}
+                />
+                <Route
+                  path="/:communitySlug/:channelSlug"
+                  component={ChannelView}
+                />
+                <Route path="/:communitySlug" component={CommunityView} />
+              </Switch>
             </Body>
           </ScrollManager>
         </ErrorBoundary>

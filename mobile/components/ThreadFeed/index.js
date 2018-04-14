@@ -26,6 +26,8 @@ type Props = {
   isRefetching: boolean,
   hasError: boolean,
   navigation: Object,
+  // This is necessary so we can listen to updates
+  channels?: string[],
   data: {
     subscribeToUpdatedThreads: Function,
     fetchMore: () => Promise<any>,
@@ -49,11 +51,23 @@ class ThreadFeed extends React.Component<Props, State> {
     this.subscribe();
   }
 
+  componentDidUpdate(prev) {
+    const curr = this.props;
+    if (
+      !this.state.subscription &&
+      JSON.stringify(prev.channels) !== JSON.stringify(curr.channels)
+    ) {
+      this.subscribe();
+    }
+  }
+
   subscribe = () => {
+    const { channels } = this.props;
+    if (!channels) return;
     this.setState({
       subscription:
         this.props.data.subscribeToUpdatedThreads &&
-        this.props.data.subscribeToUpdatedThreads(),
+        this.props.data.subscribeToUpdatedThreads(channels),
     });
   };
 

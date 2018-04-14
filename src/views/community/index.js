@@ -155,6 +155,7 @@ class CommunityView extends React.Component<Props, State> {
             />
 
             <ViewError
+              id="main"
               emoji={'✋'}
               heading={`You are blocked from ${community.name}`}
               subheading={
@@ -190,7 +191,7 @@ class CommunityView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer={!community.communityPermissions.isMember}
           />
-          <Grid>
+          <Grid id="main">
             <CoverPhoto src={community.coverPhoto} />
             <Meta>
               <CommunityProfile data={{ community }} profileSize="full" />
@@ -313,17 +314,16 @@ class CommunityView extends React.Component<Props, State> {
               selectedView === 'search' && <Search community={community} />}
             </Content>
             <Extras>
+              <ColumnHeading>Channels</ColumnHeading>
+              <ChannelList
+                id={community.id}
+                communitySlug={communitySlug.toLowerCase()}
+              />
               <ColumnHeading>Team</ColumnHeading>
               <ModeratorList
                 id={community.id}
                 first={20}
                 filter={{ isModerator: true, isOwner: true }}
-              />
-
-              <ColumnHeading>Channels</ColumnHeading>
-              <ChannelList
-                id={community.id}
-                communitySlug={communitySlug.toLowerCase()}
               />
             </Extras>
           </Grid>

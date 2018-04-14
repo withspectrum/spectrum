@@ -282,7 +282,7 @@ class ChannelView extends React.Component<Props, State> {
             backRoute={`/${communitySlug}`}
             noComposer={!isMember}
           />
-          <Grid>
+          <Grid id="main">
             <CoverPhoto src={channel.community.coverPhoto} />
             <Meta>
               <ChannelProfile data={{ channel }} profileSize="full" />
