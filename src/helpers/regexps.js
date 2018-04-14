@@ -1,14 +1,64 @@
+// @flow
 /* eslint no-useless-escape: 0 */
+import querystring from 'querystring';
 export const URLS = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&\/\/=]*)/gi;
 export const FIGMA_URLS = /https:\/\/([w.-]+.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/gi;
-export const YOUTUBE_URLS = /(?:[?&]v=|\/embed\/|\/1\/|\/v\/|https:\/\/(?:www\.)?youtu\.be\/)([^&\n?#]+)/gi;
-export const VIMEO_URLS = /\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/gi;
 export const IFRAME_TAG = /(<iframe.*?src=['"](.*?)['"])/gi;
-export const FRAMER_URLS = /(https?:\/\/(.+?\.)?framer\.cloud(\/[A-Za-z0-9\-._~:\/?#\[\]@!$&'()*+,;=]*)?)/gi;
 export const ENDS_IN_WHITESPACE = /(\s|\n)$/;
-export const TWITCH_URLS = /https?:\/\/www.twitch.tv\/(?!videos)(?!.*\/v\/)([a-zA-Z0-9_]+)/g;
+
+export interface MediaProvider {
+  name: string;
+  regex: string;
+  url: string | ((url: string) => string);
+  query: string | ((url: string) => string);
+  width?: number;
+  height?: number;
+  aspectRatio?: string;
+}
 
 export const MEDIA_PROVIDERS = [
+  {
+    name: 'YouTube',
+    regex:
+      '(?:[?&]v=|\\/embed\\/|\\/1\\/|\\/v\\/|https:\\/\\/(?:www\\.)?youtu\\.be\\/)(?<ID>[^&\\n?#]+)',
+    url: 'https://www.youtube.com/embed/{$ID}',
+    aspectRatio: '56.25%',
+    query: url => {
+      url = new URL(url);
+      const urlQuery = querystring.parse(url.search);
+      const hasTimestamp = Object.prototype.hasOwnProperty.call(urlQuery, 't');
+      return querystring.stringify({
+        ...(hasTimestamp && { start: getSecondsFromTimestamp(urlQuery.t) }),
+      });
+
+      function getSecondsFromTimestamp(timestamp: string): number {
+        const regExp = new RegExp(
+          '(?:(?<HOURS>[0-9]+)h)?(?:(?<MINUTES>[0-9]+)m)?(?<SECONDS>[0-9]+)s'
+        );
+        return timestamp.replace(regExp, (_, _1, _2, _3, _4, _5, values) => {
+          const hours = parseInt(values.HOURS || 0, 10);
+          const minutes = parseInt(values.MINUTES || 0, 10);
+          const seconds = parseInt(values.SECONDS || 0, 10);
+          return parseInt(hours * 60 * 60 + minutes * 60 + seconds, 10);
+        });
+      }
+    },
+  },
+  {
+    name: 'Vimeo',
+    regex:
+      '\\/\\/(www\\.)?vimeo.com\\/(?:channels\\/(?:\\w+\\/)?|groups\\/([^\\/]*)\\/videos\\/|)(?<ID>\\d+)(?:|\\/\\?)',
+    url: 'https://player.vimeo.com/video/{$ID}',
+    aspectRatio: '56.25%',
+  },
+  {
+    name: 'Figma',
+    regex:
+      "(https?:\\/\\/(.+?\\.)?framer\\.cloud\\/([A-Za-z0-9\\-._~:\\/?#\\[\\]@!$&'()*+,;=]*)?)",
+    url: url => url,
+    width: 600,
+    height: 800,
+  },
   {
     name: 'Twitch Channel',
     regex:

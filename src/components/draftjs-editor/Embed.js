@@ -1,22 +1,24 @@
+// @flow
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/1a913e15ef5225b8a4e2253b282af3a5c382e7b0/draft-js-embed-plugin/src/embed/index.js
 // slightly adapted to work with arbitrary data passed from the entity
+import type { MediaProvider } from '../../helpers/regexps';
 import { Entity, EditorState, AtomicBlockUtils } from 'draft-js';
 import React, { Component } from 'react';
 import isURL from 'validator/lib/isURL';
 import { AspectRatio, EmbedContainer, EmbedComponent } from './style';
-import {
-  FRAMER_URLS,
-  FIGMA_URLS,
-  IFRAME_TAG,
-  YOUTUBE_URLS,
-  VIMEO_URLS,
-  MEDIA_PROVIDERS,
-} from '../../helpers/regexps';
+import { FIGMA_URLS, IFRAME_TAG, MEDIA_PROVIDERS } from '../../helpers/regexps';
 import addProtocolToString from 'shared/normalize-url';
+
+export interface ParsedEmbed {
+  url: string;
+  width?: number;
+  height?: number;
+  aspectRatio?: string;
+}
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe
-export const addEmbed = (editorState, attrs) => {
+export const addEmbed = (editorState: Object, attrs: ParsedEmbed): Object => {
   const urlType = 'embed';
   const entityKey = Entity.create(urlType, 'IMMUTABLE', {
     src: (attrs && attrs.url) || null,
@@ -35,7 +37,7 @@ export const addEmbed = (editorState, attrs) => {
   );
 };
 
-export const parseEmbedUrl = incomingUrl => {
+export const parseEmbedUrl = (incomingUrl: string): ParsedEmbed => {
   const isIframeTag = incomingUrl.match(IFRAME_TAG);
   if (isIframeTag)
     return {
@@ -51,32 +53,9 @@ export const parseEmbedUrl = incomingUrl => {
       aspectRatio: '56.25%', // 16:9 aspect ratio
     };
 
-  const isYouTubeUrl = url.match(YOUTUBE_URLS);
-  if (isYouTubeUrl)
-    return {
-      url: `https://www.youtube.com/embed/${YOUTUBE_URLS.exec(url)[1]}`,
-      aspectRatio: '56.25%', // 16:9 aspect ratio
-    };
-
-  const isVimeoUrl = url.match(VIMEO_URLS);
-  if (isVimeoUrl)
-    return {
-      url: `https://player.vimeo.com/video/${VIMEO_URLS.exec(url)[1]}`,
-      aspectRatio: '56.25%', // 16:9 aspect ratio
-    };
-
-  const isFramerUrl = url.match(FRAMER_URLS);
-  if (isFramerUrl) {
-    return {
-      url,
-      width: 600,
-      height: 800,
-    };
-  }
-
   if (!isURL(url)) return null;
 
-  const mediaProvider = MEDIA_PROVIDERS.map(provider => {
+  const mediaProvider = MEDIA_PROVIDERS.map((provider: MediaProvider) => {
     let match;
     if (Array.isArray(provider.regex)) {
       const findRegex = provider.regex
@@ -94,16 +73,31 @@ export const parseEmbedUrl = incomingUrl => {
     .filter(result => result.match)
     .reduce(item => item);
 
-  console.warn(mediaProvider);
   if (mediaProvider && mediaProvider.match && mediaProvider.match.length) {
+    if (typeof mediaProvider.provider.url === 'function') {
+      return {
+        ...mediaProvider.provider,
+        url: mediaProvider.provider.url(url),
+      };
+    }
+
     const result = mediaProvider.match;
     let replacedUrl = mediaProvider.provider.url;
-    mediaProvider.provider.replacements.forEach(replacement => {
+    const replacements = replacedUrl.match(/{\$([A-Z]+)}/);
+
+    replacements.forEach(replacement => {
       replacedUrl = replacedUrl.replace(
         `{$${replacement}}`,
         result.groups[replacement]
       );
     });
+
+    if (mediaProvider.provider.query) {
+      const query = mediaProvider.provider.query;
+      const queryToAdd = typeof query === 'function' ? query(url) : query;
+      replacedUrl = `${replacedUrl}?${queryToAdd}`;
+    }
+
     return {
       ...mediaProvider.provider,
       url: replacedUrl,
