@@ -3741,6 +3741,10 @@ electron-download@^4.0.0:
     semver "^5.3.0"
     sumchecker "^2.0.1"
 
+electron-is-dev@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
+
 electron-osx-sign@^0.4.1:
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/electron-osx-sign/-/electron-osx-sign-0.4.10.tgz#be4f3b89b2a75a1dc5f1e7249081ab2929ca3a26"

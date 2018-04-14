@@ -27,6 +27,7 @@
     "danger-plugin-no-console": "1.1.2",
     "danger-plugin-yarn": "^1.2.1",
     "electron": "^1.8.4",
+    "electron-is-dev": "^0.3.0",
     "electron-packager": "^12.0.1",
     "eslint": "^4.1.1",
     "eslint-config-react-app": "^2.1.0",
