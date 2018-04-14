@@ -9,7 +9,7 @@ import {
   hexa,
 } from '../../components/globals';
 
-export const Wrapper = styled.div`
+export const DashboardWrapper = styled.main`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -552,11 +552,9 @@ export const NewThreadPill = styled(StatusPill)`
     props.active ? props.theme.text.reverse : props.theme.success.alt};
 `;
 
-export const NewMessagePill = styled(StatusPill)`
+export const NewMessagePill = styled(StatusText)`
   color: ${props =>
-    props.active ? props.theme.brand.alt : props.theme.text.reverse};
-  background: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.warn.alt};
+    props.active ? props.theme.brand.alt : props.theme.warn.alt};
 `;
 
 export const LockedTextPill = styled(StatusPill)`
@@ -686,7 +684,6 @@ export const MiniLinkPreview = styled.a`
   margin-bottom: 4px;
   pointer-events: auto;
   min-width: 0;
-  ${Truncate};
 
   .icon {
     margin-right: 4px;
@@ -904,4 +901,8 @@ export const HeaderActiveViewSubtitle = styled.h3`
 export const ContextHeaderContainer = styled.div`
   padding-top: 16px;
   padding-bottom: 12px;
+`;
+
+export const EllipsisText = styled.div`
+  ${Truncate};
 `;

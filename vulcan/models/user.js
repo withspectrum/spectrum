@@ -8,8 +8,11 @@ import {
   listenToNewDocumentsIn,
   listenToDeletedDocumentsIn,
   listenToChangedFieldIn,
+  listenToNewFieldIn,
+  listenToDeletedFieldIn,
 } from 'shared/changefeed-utils';
 import { db } from './db';
+import type { DBUser } from 'shared/types';
 
 export const newUser = () =>
   listenToNewDocumentsIn(db, 'users', data => {
@@ -27,7 +30,7 @@ export const newUser = () =>
       })
       .catch(err => {
         debug('error indexing a user');
-        console.log(err);
+        console.error(err);
         Raven.captureException(err);
       });
   });
@@ -42,7 +45,47 @@ export const deletedUser = () =>
       })
       .catch(err => {
         debug('error deleting a user');
-        console.log(err);
+        console.error(err);
+        Raven.captureException(err);
+      });
+  });
+
+export const bannedUser = () =>
+  listenToNewFieldIn(db, 'bannedAt')('users', (user: DBUser) => {
+    debug('User banned');
+
+    return searchIndex
+      .deleteObject(user.id)
+      .then(() => {
+        debug('deleted user in search');
+        return;
+      })
+      .catch(err => {
+        debug('error deleting a user');
+        console.error(err);
+        Raven.captureException(err);
+      });
+  });
+
+export const unbannedUser = () =>
+  listenToDeletedFieldIn(db, 'bannedAt')('users', (user: DBUser) => {
+    debug('User unbanned');
+
+    if (user.bannedAt) {
+      debug('User still has banned field, returning');
+      return;
+    }
+
+    const searchableUser = dbUserToSearchUser(user);
+    return searchIndex
+      .saveObject(searchableUser)
+      .then(() => {
+        debug('stored unbanned in search');
+        return;
+      })
+      .catch(err => {
+        debug('error indexing a user');
+        console.error(err);
         Raven.captureException(err);
       });
   });
@@ -59,7 +102,7 @@ export const editedUser = () =>
         })
         .catch(err => {
           debug('error deleting a user');
-          console.log(err);
+          console.error(err);
           Raven.captureException(err);
         });
     }
@@ -76,7 +119,7 @@ export const editedUser = () =>
       })
       .catch(err => {
         debug('error editing a user');
-        console.log(err);
+        console.error(err);
         Raven.captureException(err);
       });
   });

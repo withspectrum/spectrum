@@ -7,6 +7,7 @@ import {
   createUserThread,
 } from '../models/usersThreads';
 import type { Job, UserThreadLastSeenJobData } from 'shared/bull/types';
+import type { DBUsersThreads } from 'shared/types';
 
 export default async (job: Job<UserThreadLastSeenJobData>) => {
   const { userId, threadId, timestamp } = job.data;
@@ -26,9 +27,21 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
     ).toString()}`
   );
 
-  const record = await getUsersThread(userId, threadId);
+  const record: ?DBUsersThreads = await getUsersThread(userId, threadId);
 
   if (record) {
+    if (
+      record.lastSeen &&
+      new Date(record.lastSeen).getTime() > new Date(date).getTime()
+    ) {
+      debug(
+        `old lastSeen ${record.lastSeen.toString()} is later than new lastSeen ${date.toString()}, not running job:\nuserId: ${userId}\nthreadId: ${threadId}\ntimestamp: ${new Date(
+          timestamp
+        ).toString()}`
+      );
+      return;
+    }
+
     debug(
       `existing usersThread, updating usersThreads#${record.id} with lastSeen`
     );
@@ -50,6 +63,5 @@ export default async (job: Job<UserThreadLastSeenJobData>) => {
       );
       debug(err);
       Raven.captureException(err);
-      console.log(err);
     });
 };

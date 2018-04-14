@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('chronos:queue:process-core-metrics');
+import Raven from 'shared/raven';
 import { intersection, difference } from 'lodash';
 import { getLastTwoCoreMetrics } from '../../models/coreMetrics';
 import { addQueue } from '../../jobs/utils';
@@ -66,6 +67,8 @@ export default async () => {
       }
     );
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

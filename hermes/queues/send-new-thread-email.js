@@ -1,5 +1,6 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-thread-email');
+import Raven from 'shared/raven';
 import sendEmail from '../send-email';
 import truncate from 'shared/truncate';
 import { generateUnsubscribeToken } from '../utils/generate-jwt';
@@ -60,8 +61,9 @@ export default async (job: SendNewThreadEmailJob) => {
 
   if (!unsubscribeToken || !recipient.email) return;
 
-  const subject = `${truncate(thread.content.title, 80)} by ${thread.creator
-    .name} · ${thread.community.name} (${thread.channel.name})`;
+  const subject = `${truncate(thread.content.title, 80)} by ${
+    thread.creator.name
+  } · ${thread.community.name} (${thread.channel.name})`;
   const preheader = thread.content.body
     ? truncate(thread.content.body, 80)
     : 'Published just now';
@@ -93,6 +95,8 @@ export default async (job: SendNewThreadEmailJob) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    debug('❌ Error in job:\n');
+    debug(err);
+    Raven.captureException(err);
   }
 };

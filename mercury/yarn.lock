@@ -6,18 +6,6 @@
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
-bull@3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.1.tgz#6a15daf08ccfd5bf0e543eeb4544323157c0e1db"
-  dependencies:
-    bluebird "^3.5.0"
-    cron-parser "^2.4.1"
-    debuglog "^1.0.0"
-    ioredis "^3.1.4"
-    lodash "^4.17.4"
-    semver "^5.4.1"
-    uuid "^3.1.0"
-
 bull@^3.3.10:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/bull/-/bull-3.3.10.tgz#32e76281902070b4720bc37b3793f09db635f646"

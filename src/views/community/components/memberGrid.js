@@ -82,33 +82,32 @@ class CommunityMemberGrid extends React.Component<Props, State> {
         >
           {nodes.map(node => {
             if (!node) return null;
+
+            const { user, roles, reputation } = node;
             return (
-              <UserListItemContainer key={node.user.id}>
-                <GranularUserProfile
-                  userObject={node.user}
-                  id={node.user.id}
-                  name={node.user.name}
-                  username={node.user.username}
-                  description={node.user.description}
-                  isCurrentUser={currentUser && node.user.id === currentUser.id}
-                  isOnline={node.user.isOnline}
-                  onlineSize={'small'}
-                  reputation={node.reputation}
-                  profilePhoto={node.user.profilePhoto}
-                  avatarSize={'40'}
-                  badges={node.roles}
-                >
-                  {currentUser &&
-                    node.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(node.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
-              </UserListItemContainer>
+              <GranularUserProfile
+                key={user.id}
+                userObject={user}
+                name={user.name}
+                username={user.username}
+                profilePhoto={user.profilePhoto}
+                description={user.description}
+                isCurrentUser={currentUser && user.id === currentUser.id}
+                isOnline={user.isOnline}
+                onlineSize={'small'}
+                badges={roles}
+                reputation={reputation}
+              >
+                {currentUser &&
+                  user.id !== currentUser.id && (
+                    <MessageIconContainer>
+                      <Icon
+                        glyph={'message'}
+                        onClick={() => this.initMessage(user)}
+                      />
+                    </MessageIconContainer>
+                  )}
+              </GranularUserProfile>
             );
           })}
         </InfiniteList>

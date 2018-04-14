@@ -1,7 +1,8 @@
+// @flow
 import styled from 'styled-components';
 import { Tooltip } from '../globals';
 
-export const View = styled.div`
+export const View = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -34,6 +35,7 @@ export const Column = styled.div`
   @media (max-width: 768px) {
     flex: 1 0 100%;
     padding: 0;
+    max-width: 100%;
 
     &:first-of-type {
       padding-top: 8px;
@@ -128,6 +130,7 @@ export const StyledSubnav = styled.div`
     padding: 0 16px;
     display: block;
     justify-content: center;
+    overflow-x: scroll;
   }
 `;
 
@@ -182,6 +185,9 @@ export const EditDropdownContainer = styled.div`
   position: relative;
   color: ${props => props.theme.text.alt};
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Dropdown = styled.div`

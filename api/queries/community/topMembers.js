@@ -6,7 +6,7 @@ const { getTopMembersInCommunity } = require('../../models/reputationEvents');
 
 export default async (
   { id }: DBCommunity,
-  __: any,
+  _: any,
   { user, loaders }: GraphQLContext
 ) => {
   const currentUser = user;
@@ -26,8 +26,16 @@ export default async (
     );
   }
 
-  return getTopMembersInCommunity(id).then(users => {
-    if (!users) return [];
-    return loaders.user.loadMany(users);
+  // $FlowFixMe
+  const userIds = await getTopMembersInCommunity(id);
+
+  if (!userIds || userIds.length === 0) {
+    return [];
+  }
+
+  return getTopMembersInCommunity(id).then(usersIds => {
+    const permissionsArray = usersIds.map(userId => [userId, id]);
+    // $FlowIssue
+    return loaders.userPermissionsInCommunity.loadMany(permissionsArray);
   });
 };

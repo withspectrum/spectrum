@@ -56,19 +56,6 @@ const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
     .run();
 };
 
-const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
-  return (
-    db
-      .table('users')
-      // get users whose username or displayname matches a case insensitive string
-      .filter(user => user.coerceTo('string').match(`(?i)${string}`))
-      // only return the 10 users who match to avoid overloading the dom and sending
-      // down too much data at once
-      .limit(10)
-      .run()
-  );
-};
-
 const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
@@ -456,7 +443,6 @@ module.exports = {
   getUsersByUsername,
   getUsersThreadCount,
   getUsers,
-  getUsersBySearchString,
   getUserByIndex,
   saveUserProvider,
   createOrFindUser,

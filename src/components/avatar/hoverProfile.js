@@ -34,6 +34,8 @@ type ProfileProps = {
   left: ?Boolean,
   bottom: ?Boolean,
   right: ?Boolean,
+  innerRef: (?HTMLElement) => void,
+  style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
@@ -42,16 +44,19 @@ class HoverProfile extends Component<ProfileProps> {
   };
 
   render() {
-    const { user, community, dispatch, source, currentUser } = this.props;
+    const {
+      user,
+      community,
+      dispatch,
+      source,
+      currentUser,
+      innerRef,
+      style,
+    } = this.props;
 
     if (community) {
       return (
-        <HoverWrapper
-          top={this.props.top ? true : this.props.bottom ? false : true}
-          bottom={this.props.bottom}
-          right={this.props.right ? true : this.props.left ? false : true}
-          left={this.props.left}
-        >
+        <HoverWrapper popperStyle={style} innerRef={innerRef}>
           <Container>
             <CoverPhoto url={community.coverPhoto} />
             <CoverLink to={`/${community.slug}`}>
@@ -74,12 +79,7 @@ class HoverProfile extends Component<ProfileProps> {
 
     if (user) {
       return (
-        <HoverWrapper
-          top={this.props.top ? true : this.props.bottom ? false : true}
-          bottom={this.props.bottom}
-          right={this.props.right ? true : this.props.left ? false : true}
-          left={this.props.left}
-        >
+        <HoverWrapper popperStyle={style} innerRef={innerRef}>
           <Card
             style={{
               boxShadow: '0 4px 8px rgba(18, 22, 23, .25)',

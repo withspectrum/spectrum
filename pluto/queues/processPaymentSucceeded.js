@@ -87,8 +87,8 @@ export default async (job: Job<StripePaymentSucceededOrFailedEventJobData>) => {
   try {
     await processJob(job);
   } catch (err) {
-    console.log('❌', err);
-    console.log('❌', job.data);
+    debug('❌ Error in job:\n');
+    debug(err);
     Raven.captureException(err);
   }
 };

@@ -3,13 +3,13 @@ const debug = require('debug')(
   'athena:queue:user-request-private-channel-approved'
 );
 import Raven from 'shared/raven';
-import addQueue from '../utils/addQueue';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
 import { storeUsersNotifications } from '../models/usersNotifications';
 import { getUsers } from '../models/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
+import { sendPrivateChannelRequestApprovedEmailQueue } from 'shared/bull/queues';
 
 type JobData = {
   data: {
@@ -52,30 +52,28 @@ export default async (job: JobData) => {
   const filteredRecipients = recipients.filter(user => isEmail(user.email));
 
   // for each owner, create a notification for the app
-  const usersNotificationPromises = filteredRecipients.map(
-    async recipient =>
-      await storeUsersNotifications(updatedNotification.id, recipient.id)
+  const usersNotificationPromises = filteredRecipients.map(recipient =>
+    storeUsersNotifications(updatedNotification.id, recipient.id)
   );
 
   // for each owner,send an email
   const channelPayload = JSON.parse(entity.payload);
   const community = await getCommunityById(communityId);
-  const usersEmailPromises = filteredRecipients.map(
-    async recipient =>
-      await addQueue('send private channel request approved email', {
-        recipient,
-        channel: channelPayload,
-        community,
-      })
+  const usersEmailPromises = filteredRecipients.map(recipient =>
+    sendPrivateChannelRequestApprovedEmailQueue.add({
+      // $FlowIssue
+      recipient,
+      channel: channelPayload,
+      community,
+    })
   );
 
   return await Promise.all([
-    usersEmailPromises, // handle emails separately
-    usersNotificationPromises, // update or store usersNotifications in-app
+    ...usersEmailPromises, // handle emails separately
+    ...usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
     debug('❌ Error in job:\n');
     debug(err);
     Raven.captureException(err);
-    console.log(err);
   });
 };

@@ -1,9 +1,11 @@
 import Raven from 'raven-js';
-if (process.env.NODE_ENV === 'production') {
-  Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', {
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN_CLIENT) {
+  Raven.config(process.env.SENTRY_DSN_CLIENT, {
     whitelistUrls: [/spectrum\.chat/, /www\.spectrum\.chat/],
     environment: process.env.NODE_ENV,
   }).install();
+} else {
+  console.error('Raven not enabled locally');
 }
 
 const ga = window.ga;

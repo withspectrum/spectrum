@@ -17,10 +17,11 @@ type Props = {
   communitySlug: string,
   togglePending: Function,
   unblock: Function,
+  initMessage: Function,
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { channel } = this.props;
+    const { channel, initMessage } = this.props;
 
     return (
       <SectionsContainer data-cy="channel-overview">
@@ -35,16 +36,22 @@ class Overview extends React.Component<Props> {
         <Column>
           {channel.isPrivate && (
             <span>
-              <ChannelMembers channel={channel} id={channel.id} />
+              <ChannelMembers
+                channel={channel}
+                id={channel.id}
+                initMessage={initMessage}
+              />
               <PendingUsers
                 togglePending={this.props.togglePending}
                 channel={channel}
                 id={channel.id}
+                initMessage={initMessage}
               />
               <BlockedUsers
                 unblock={this.props.unblock}
                 channel={channel}
                 id={channel.id}
+                initMessage={initMessage}
               />
             </span>
           )}

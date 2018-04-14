@@ -35,9 +35,6 @@ const sendSlackInvitationsOptions = {
         },
       }),
   }),
-  options: {
-    fetchPolicy: 'cache-first',
-  },
 };
 
 export default graphql(

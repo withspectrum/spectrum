@@ -1,14 +1,25 @@
-# Documentation
-
-This folder contains most of the technical documentation around Spectrum.
-
 ## Table of Contents
 
-- [Unit and e2e Testing](testing.md)
-- [Background Jobs](backend/background-jobs.md)
-- [Deployment](backend/deployment.md)
-- [GraphQL](backend/api/)
-  - [Fragments](backend/api/fragments.md)
-  - [Pagination](backend/api/pagination.md)
-  - [GraphQL Testing](backend/api/testing.md)
-  - [Tips and Tricks](backend/api/tips-and-tricks.md)
+- [Deployments](deployments.md)
+- [Admin](admin/intro.md)
+- [API](api/intro.md)
+  - [GraphQL](api/graphql/intro.md)
+    - [Fragments](api/graphql/fragments.md)
+    - [Pagination](api/graphql/pagination.md)
+    - [Testing](api/graphql/testing.md)
+    - [Tips & Tricks](api/graphql/tips-and-tricks.md)
+- [Hyperion (server side rendering)](hyperion%20(server%20side%20rendering)/intro.md)
+  - [Development](hyperion%20(server%20side%20rendering)/development.md)
+- [Operations](operations/intro.md)
+  - [Deleting users](operations/deleting-users.md)
+  - [Importing RethinkDB backups](operations/importing-rethinkdb-backups.md)
+- [Testing](testing/intro.md)
+  - [Integration](testing/integration.md)
+  - [Unit](testing/unit.md)
+- [Workers](workers/intro.md)
+  - [Background jobs with Redis](workers/background-jobs.md)
+  - [Athena](workers/athena/intro.md)
+  - [Chronos](workers/chronos/intro.md)
+  - [Mercury](workers/mercury/intro.md)
+  - [Pluto](workers/pluto/intro.md)
+  - [Vulcan](workers/vulcan/intro.md)

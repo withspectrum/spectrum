@@ -1,7 +1,20 @@
+// @flow
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Link from 'src/components/link';
 import { Transition, zIndex } from '../globals';
+import { theme } from 'src/components/theme';
+
+export const customStyleMap = {
+  CODE: {
+    border: `1px solid ${theme.bg.border}`,
+    borderRadius: '4px',
+    backgroundColor: theme.bg.wash,
+    padding: '1px 4px',
+    fontFamily: 'monospace',
+    color: theme.warn.alt,
+  },
+};
 
 export const Wrapper = styled.div`
   position: relative;
@@ -171,7 +184,7 @@ export const EmbedUI = styled.form`
     `};
 `;
 
-export const Mention = props => {
+export const Mention = (props: any) => {
   return <Link to={`/users/${props.username}`}>{props.children}</Link>;
 };
 

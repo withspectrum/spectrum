@@ -31,7 +31,7 @@ const MODAL_COMPONENTS = {
 */
 const modalRoot = ({ modalType, modalProps }) => {
   if (!modalType) {
-    return <span />; // after React v15 you can return null here
+    return null;
   }
 
   const SpecificModal = MODAL_COMPONENTS[modalType];

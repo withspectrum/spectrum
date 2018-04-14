@@ -42,8 +42,12 @@ export const hasDeletedField = (db: any, field: string) =>
   db
     .row('old_val')
     .hasFields(field)
-    .and(db.row('new_val').hasFields(field))
-    .not();
+    .and(
+      db
+        .row('new_val')
+        .hasFields(field)
+        .not()
+    );
 
 export const createChangefeed = (
   getChangefeed: () => Promise<Cursor>,
