@@ -15,7 +15,7 @@ export type UpdateUserEmailType = {
 };
 
 export const updateUserEmailMutation = gql`
-  mutation updateUserEmail($email: String!) {
+  mutation updateUserEmail($email: LowercaseString!) {
     updateUserEmail(email: $email) {
       ...userInfo
       email
