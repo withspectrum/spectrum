@@ -3,6 +3,7 @@ const debug = require('debug')('pluto');
 import Raven from 'shared/raven';
 import createWorker from './create-worker-with-express';
 import express from 'express';
+import helmet from 'helmet';
 import { createServer } from 'http';
 import { handleWebhooks } from './webhooks';
 import startChangefeeds from './changefeeds';
@@ -73,6 +74,8 @@ const app = express();
 
 // Trust the now proxy
 app.set('trust proxy', true);
+
+app.use(helmet());
 
 // Parse incoming request bodies for webhooks
 app.use(require('body-parser').raw({ type: '*/*' }));

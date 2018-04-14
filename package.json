@@ -106,6 +106,7 @@
     "graphql-subscriptions": "0.5.6",
     "graphql-tag": "^2.6.1",
     "graphql-tools": "1.2.3",
+    "helmet": "^3.12.0",
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
     "hoist-non-react-statics": "^2.3.1",

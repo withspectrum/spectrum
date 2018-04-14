@@ -5,6 +5,7 @@ debug('logging with debug enabled');
 // $FlowFixMe
 require('isomorphic-fetch');
 import express from 'express';
+import helmet from 'helmet';
 import Loadable from 'react-loadable';
 import path from 'path';
 import { getUser } from 'api/models/user';
@@ -19,6 +20,7 @@ const app = express();
 app.set('trust proxy', true);
 
 app.use(toobusy);
+app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
