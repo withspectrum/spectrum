@@ -1,7 +1,7 @@
 // @flow
 import Badge from '..';
 
-// TODO: Create utils for generate state
+// TODO: Create utils for generating state
 const currentUser = {
   id: 'fde20b69-448d-4c5d-855b-bba365020b06',
   profilePhoto:
