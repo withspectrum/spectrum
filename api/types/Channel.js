@@ -27,7 +27,7 @@ const Channel = /* GraphQL */ `
 
 	input CreateChannelInput {
 		name: String!
-		slug: String!
+		slug: LowercaseString!
 		description: String
 		communityId: ID!
 		isPrivate: Boolean
@@ -36,7 +36,7 @@ const Channel = /* GraphQL */ `
 
 	input EditChannelInput {
 		name: String
-		slug: String
+		slug: LowercaseString
 		description: String
 		isPrivate: Boolean
 		channelId: ID!
@@ -69,7 +69,7 @@ const Channel = /* GraphQL */ `
 		modifiedAt: Date
 		name: String!
 		description: String!
-		slug: String!
+		slug: LowercaseString!
 		isPrivate: Boolean
 		isDefault: Boolean
 		isArchived: Boolean
@@ -89,7 +89,7 @@ const Channel = /* GraphQL */ `
 	}
 
 	extend type Query {
-    channel(id: ID, channelSlug: String, communitySlug: String): Channel @cost(complexity: 1)
+    channel(id: ID, channelSlug: LowercaseString, communitySlug: LowercaseString): Channel @cost(complexity: 1)
 	}
 
 	input ArchiveChannelInput {
@@ -101,8 +101,8 @@ const Channel = /* GraphQL */ `
 	}
 
 	input JoinChannelWithTokenInput {
-		communitySlug: String!
-		channelSlug: String!
+		communitySlug: LowercaseString!
+		channelSlug: LowercaseString!
 		token: String!
 	}
 
