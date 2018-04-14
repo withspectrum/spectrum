@@ -155,7 +155,7 @@ export const createCommunity = (
         website,
         profilePhoto: null,
         coverPhoto: null,
-        slug: slug,
+        slug,
         modifiedAt: null,
         creatorId: user.id,
         administratorEmail: user.email,
@@ -321,7 +321,7 @@ export const editCommunity = ({
     .then(result => {
       return Object.assign({}, result, {
         name,
-        slug: slug,
+        slug,
         description,
         website,
         modifiedAt: new Date(),
