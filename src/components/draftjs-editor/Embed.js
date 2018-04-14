@@ -10,6 +10,7 @@ import {
   IFRAME_TAG,
   YOUTUBE_URLS,
   VIMEO_URLS,
+  MEDIA_PROVIDERS,
 } from '../../helpers/regexps';
 import addProtocolToString from 'shared/normalize-url';
 
@@ -75,6 +76,40 @@ export const parseEmbedUrl = incomingUrl => {
 
   if (!isURL(url)) return null;
 
+  const mediaProvider = MEDIA_PROVIDERS.map(provider => {
+    let match;
+    if (Array.isArray(provider.regex)) {
+      const findRegex = provider.regex
+        .map(regex => new RegExp(regex).exec(url))
+        .filter(match => match);
+      match = findRegex && findRegex.length ? findRegex[0] : null;
+    } else {
+      match = new RegExp(provider.regex).exec(url);
+    }
+    return {
+      match,
+      provider,
+    };
+  })
+    .filter(result => result.match)
+    .reduce(item => item);
+
+  console.warn(mediaProvider);
+  if (mediaProvider && mediaProvider.match && mediaProvider.match.length) {
+    const result = mediaProvider.match;
+    let replacedUrl = mediaProvider.provider.url;
+    mediaProvider.provider.replacements.forEach(replacement => {
+      replacedUrl = replacedUrl.replace(
+        `{$${replacement}}`,
+        result.groups[replacement]
+      );
+    });
+    return {
+      ...mediaProvider.provider,
+      url: replacedUrl,
+    };
+  }
+
   return {
     url,
   };
@@ -133,6 +168,7 @@ export default class Embed extends Component {
             {...rest}
             src={src}
             className={theme.embedStyles.embed}
+            sandbox="allow-popups allow-forms allow-scripts allow-same-origin"
           />
         </EmbedContainer>
       );
