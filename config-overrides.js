@@ -103,7 +103,6 @@ module.exports = function override(config, env) {
       return;
     externals.push(file.replace(/public/, ''));
   });
-  console.log(externals);
   config.plugins.push(
     new OfflinePlugin({
       // Don't cache anything in dev
