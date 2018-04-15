@@ -4,7 +4,7 @@
 - [ ] Ready for review
 - [ ] Needs testing
 
-**Deploy after merge (delete what needn't be deployed)**
+**Deploy after merge:**
 - api
 - hyperion (frontend)
 - athena
@@ -14,9 +14,14 @@
 - chronos
 - mobile
 
-**Run database migrations (delete if no migration was added)**
+**Run database migrations?**
 YES
 
-**Release notes for users (delete if codebase-only change)**
+**Release notes for users:**
 -
 
+<!--
+
+If your pull request introduces changes to the user interface on Spectrum, please share before and after screenshots of the changes (gifs or videos are encouraged for interaction changes). Please include screenshots of desktop and mobile viewports to ensure that all responsive cases are reviewed.
+
+-->
