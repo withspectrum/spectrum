@@ -18,7 +18,10 @@ export interface ParsedEmbed {
 
 // Taken from https://github.com/vacenz/last-draft-js-plugins/blob/master/draft-js-embed-plugin/src/modifiers/addEmbed.js
 // adapted to pass additional attrs onto the iframe
-export const addEmbed = (editorState: Object, attrs: ParsedEmbed): Object => {
+export const addEmbed = (
+  editorState: Object,
+  attrs: ParsedEmbed | null
+): Object => {
   const urlType = 'embed';
   const entityKey = Entity.create(urlType, 'IMMUTABLE', {
     src: (attrs && attrs.url) || null,
@@ -37,7 +40,7 @@ export const addEmbed = (editorState: Object, attrs: ParsedEmbed): Object => {
   );
 };
 
-export const parseEmbedUrl = (incomingUrl: string): ParsedEmbed => {
+export const parseEmbedUrl = (incomingUrl: string): ParsedEmbed | null => {
   const isIframeTag = incomingUrl.match(IFRAME_TAG);
   if (isIframeTag)
     return {

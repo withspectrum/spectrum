@@ -10,7 +10,7 @@ export interface MediaProvider {
   name: string;
   regex: string;
   url: string | ((url: string) => string);
-  query: string | ((url: string) => string);
+  query?: string | ((url: string) => string);
   width?: number;
   height?: number;
   aspectRatio?: string;
@@ -23,24 +23,30 @@ export const MEDIA_PROVIDERS = [
       '(?:[?&]v=|\\/embed\\/|\\/1\\/|\\/v\\/|https:\\/\\/(?:www\\.)?youtu\\.be\\/)(?<ID>[^&\\n?#]+)',
     url: 'https://www.youtube.com/embed/{$ID}',
     aspectRatio: '56.25%',
-    query: url => {
-      url = new URL(url);
-      const urlQuery = querystring.parse(url.search);
+    query: (url: string) => {
+      const parsedUrl = new URL(url);
+      const urlQuery = querystring.parse(parsedUrl.search);
       const hasTimestamp = Object.prototype.hasOwnProperty.call(urlQuery, 't');
-      return querystring.stringify({
-        ...(hasTimestamp && { start: getSecondsFromTimestamp(urlQuery.t) }),
-      });
+      const query = hasTimestamp
+        ? { start: getSecondsFromTimestamp(urlQuery.t) }
+        : {};
+      return querystring.stringify(query);
 
       function getSecondsFromTimestamp(timestamp: string): number {
         const regExp = new RegExp(
           '(?:(?<HOURS>[0-9]+)h)?(?:(?<MINUTES>[0-9]+)m)?(?<SECONDS>[0-9]+)s'
         );
-        return timestamp.replace(regExp, (_, _1, _2, _3, _4, _5, values) => {
-          const hours = parseInt(values.HOURS || 0, 10);
-          const minutes = parseInt(values.MINUTES || 0, 10);
-          const seconds = parseInt(values.SECONDS || 0, 10);
-          return parseInt(hours * 60 * 60 + minutes * 60 + seconds, 10);
-        });
+        return parseInt(
+          timestamp.replace(regExp, (_, _1, _2, _3, _4, _5, values) => {
+            const hours = parseInt(values.HOURS || 0, 10);
+            const minutes = parseInt(values.MINUTES || 0, 10);
+            const seconds = parseInt(values.SECONDS || 0, 10);
+            return String(
+              parseInt(hours * 60 * 60 + minutes * 60 + seconds, 10)
+            );
+          }),
+          10
+        );
       }
     },
   },
@@ -55,7 +61,7 @@ export const MEDIA_PROVIDERS = [
     name: 'Figma',
     regex:
       "(https?:\\/\\/(.+?\\.)?framer\\.cloud\\/([A-Za-z0-9\\-._~:\\/?#\\[\\]@!$&'()*+,;=]*)?)",
-    url: url => url,
+    url: (url: string) => url,
     width: 600,
     height: 800,
   },
