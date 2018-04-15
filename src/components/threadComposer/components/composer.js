@@ -78,6 +78,12 @@ const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
 
 const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
 
+const REMOVE_STORAGE = () => {
+  localStorage.removeItem(LS_BODY_KEY);
+  localStorage.removeItem(LS_TITLE_KEY);
+  localStorage.removeItem(LS_COMPOSER_EXPIRE);
+};
+
 let storedBody;
 let storedTitle;
 // We persist the body and title to localStorage
@@ -88,17 +94,13 @@ if (localStorage) {
     const currTime = new Date().getTime();
     /////if current time is greater than valid till of text then please expire title/body back to ''
     if (currTime > expireTime) {
-      localStorage.removeItem(LS_BODY_KEY);
-      localStorage.removeItem(LS_TITLE_KEY);
-      localStorage.removeItem(LS_COMPOSER_EXPIRE);
+      REMOVE_STORAGE();
     } else {
       storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
       storedTitle = localStorage.getItem(LS_TITLE_KEY);
     }
   } catch (err) {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
-    localStorage.removeItem(LS_COMPOSER_EXPIRE);
+    REMOVE_STORAGE();
   }
 }
 
@@ -567,9 +569,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         const id = data.publishThread.id;
 
         track('thread', 'published', null);
-        localStorage.removeItem(LS_TITLE_KEY);
-        localStorage.removeItem(LS_BODY_KEY);
-        localStorage.removeItem(LS_COMPOSER_EXPIRE);
+        REMOVE_STORAGE();
 
         // stop the loading spinner on the publish button
         this.setState({
