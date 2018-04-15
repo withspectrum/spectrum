@@ -581,7 +581,6 @@ class ChatInput extends React.Component<Props, State> {
           <div>
             <b>*bold*</b>
             <i>_italics_</i>
-            <span>~strike~</span>
             <Preformated>`code`</Preformated>
             <Preformated>```preformatted```</Preformated>
           </div>

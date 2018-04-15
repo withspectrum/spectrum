@@ -261,8 +261,7 @@ export const MarkdownHint = styled.div`
   }
   i,
   b,
-  code,
-  span {
+  code {
     margin-right: 3px;
   }
 `;
