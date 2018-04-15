@@ -25,6 +25,7 @@ import OutsideClickHandler from '../outsideClickHandler';
 import Icon from '../icons';
 import { IconButton } from '../buttons';
 import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.web.js';
+import { renderLanguageSelect } from './LanguageSelect';
 
 import Image from './Image';
 import Embed, { addEmbed, parseEmbedUrl } from './Embed';
@@ -98,7 +99,13 @@ class Editor extends React.Component<Props, State> {
         imagePlugin,
         prismPlugin,
         embedPlugin,
-        createMarkdownPlugin(),
+        // TODO(@mxstbr): Reinject this when props.readOnly changes so that when users click
+        // "Edit thread" they can edit the language of a code block
+        createMarkdownPlugin({
+          renderLanguageSelect: props.readOnly
+            ? () => null
+            : renderLanguageSelect,
+        }),
         codePlugin,
         linkifyPlugin,
         dndPlugin,

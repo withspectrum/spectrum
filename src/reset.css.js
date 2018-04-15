@@ -232,6 +232,7 @@ injectGlobal`
     padding: 8px 16px;
     display: block;
     white-space: pre-wrap;
+    position: relative;
   }
 
   .markdown div[data-block='true'] {
