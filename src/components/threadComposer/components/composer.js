@@ -74,17 +74,31 @@ type State = {
 
 const LS_BODY_KEY = 'last-thread-composer-body';
 const LS_TITLE_KEY = 'last-thread-composer-title';
+const LS_COMPOSER_EXPIRE = 'last-thread-composer-expire';
+
+const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
+
 let storedBody;
 let storedTitle;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
 if (localStorage) {
   try {
-    storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
-    storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
+    const currTime = new Date().getTime();
+    /////if current time is greater than valid till of text then please expire title/body back to ''
+    if (currTime > expireTime) {
+      localStorage.removeItem(LS_BODY_KEY);
+      localStorage.removeItem(LS_TITLE_KEY);
+      localStorage.removeItem(LS_COMPOSER_EXPIRE);
+    } else {
+      storedBody = toState(JSON.parse(localStorage.getItem(LS_BODY_KEY) || ''));
+      storedTitle = localStorage.getItem(LS_TITLE_KEY);
+    }
   } catch (err) {
     localStorage.removeItem(LS_BODY_KEY);
     localStorage.removeItem(LS_TITLE_KEY);
+    localStorage.removeItem(LS_COMPOSER_EXPIRE);
   }
 }
 
@@ -92,12 +106,14 @@ const persistTitle =
   localStorage &&
   debounce((title: string) => {
     localStorage.setItem(LS_TITLE_KEY, title);
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 const persistBody =
   localStorage &&
   debounce(body => {
     localStorage.setItem(LS_BODY_KEY, JSON.stringify(toJSON(body)));
+    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   }, 500);
 
 class ThreadComposerWithData extends React.Component<Props, State> {
@@ -553,6 +569,7 @@ class ThreadComposerWithData extends React.Component<Props, State> {
         track('thread', 'published', null);
         localStorage.removeItem(LS_TITLE_KEY);
         localStorage.removeItem(LS_BODY_KEY);
+        localStorage.removeItem(LS_COMPOSER_EXPIRE);
 
         // stop the loading spinner on the publish button
         this.setState({

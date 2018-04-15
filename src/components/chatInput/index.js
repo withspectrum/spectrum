@@ -65,6 +65,8 @@ type Props = {
 
 const LS_KEY = 'last-chat-input-content';
 const LS_KEY_EXPIRE = 'last-chat-input-content-expire';
+
+const ONE_DAY = () => new Date().getTime() + 60 * 60 * 24 * 1000;
 let storedContent;
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
@@ -87,19 +89,11 @@ if (localStorage) {
 
 const forcePersist = content => {
   localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
-  localStorage &&
-    localStorage.setItem(
-      LS_KEY_EXPIRE,
-      new Date().getTime() + 60 * 60 * 24 * 1000
-    );
+  localStorage && localStorage.setItem(LS_KEY_EXPIRE, ONE_DAY());
 };
 const persistContent = debounce(content => {
   localStorage && localStorage.setItem(LS_KEY, JSON.stringify(toJSON(content)));
-  localStorage &&
-    localStorage.setItem(
-      LS_KEY_EXPIRE,
-      new Date().getTime() + 60 * 60 * 24 * 1000
-    );
+  localStorage && localStorage.setItem(LS_KEY_EXPIRE, ONE_DAY());
 }, 500);
 
 class ChatInput extends React.Component<Props, State> {
