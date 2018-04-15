@@ -233,7 +233,7 @@ class ChatInput extends React.Component<Props, State> {
 <<<<<<< HEAD
 =======
   toggleCodeMessage = (keepCurrentText?: boolean = true) => {
-    const { onChange, state, threadType } = this.props;
+    const { onChange, state } = this.props;
 
     const { code } = this.state;
     this.setState(
