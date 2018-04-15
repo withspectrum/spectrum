@@ -1,11 +1,7 @@
 // @flow
 import * as React from 'react';
 import Avatar from '../Avatar';
-import {
-  FacepileContainer,
-  ParticipantHead,
-  EmptyParticipantHead,
-} from './style';
+import { FacepileContainer, EmptyParticipantHead } from './style';
 const NUM_TO_DISPLAY = 5;
 
 const messageAvatars = list => {
@@ -15,24 +11,7 @@ const messageAvatars = list => {
     if (!participant) {
       return null;
     }
-
-    return (
-      <ParticipantHead
-        offset={i + 1}
-        key={participant.id}
-        tipText={participant.name}
-        tipLocation={'top-right'}
-      >
-        <Avatar
-          user={participant}
-          size={24}
-          isOnline={false}
-          link={participant.username ? `/users/${participant.username}` : null}
-          src={`${participant.profilePhoto}`}
-          role="presentation"
-        />
-      </ParticipantHead>
-    );
+    return <Avatar src={participant.profilePhoto} size={30} radius={15} />;
   });
 };
 
@@ -51,22 +30,7 @@ const Facepile = ({ participants, creator }: FacepileProps) => {
   if (!participants || participants.length === 0) {
     return (
       <FacepileContainer>
-        <ParticipantHead
-          offset={0}
-          role="presentation"
-          key={creator.id}
-          tipText={`Posted by ${creator.name}`}
-          tipLocation={'top-right'}
-        >
-          <Avatar
-            user={creator}
-            size={24}
-            isOnline={false}
-            link={creator.username ? `/users/${creator.username}` : null}
-            src={creator.profilePhoto}
-            role="presentation"
-          />
-        </ParticipantHead>
+        <Avatar src={creator.profilePhoto} size={30} radius={15} />;
       </FacepileContainer>
     );
   }
@@ -84,25 +48,10 @@ const Facepile = ({ participants, creator }: FacepileProps) => {
 
   return (
     <FacepileContainer>
-      <ParticipantHead
-        offset={0}
-        role="presentation"
-        key={creator.id}
-        tipText={`Posted by ${creator.name}`}
-        tipLocation={'top-right'}
-      >
-        <Avatar
-          user={creator}
-          size={24}
-          isOnline={false}
-          link={creator.username ? `/users/${creator.username}` : null}
-          src={creator.profilePhoto}
-          role="presentation"
-        />
-      </ParticipantHead>
+      <Avatar src={creator.profilePhoto} size={30} radius={15} />
       {messageAvatars(participantList)}
       {hasOverflow && (
-        <EmptyParticipantHead offset={NUM_TO_DISPLAY + 1}>
+        <EmptyParticipantHead adjustsFontSizeToFit>
           {overflowAmount}
         </EmptyParticipantHead>
       )}
