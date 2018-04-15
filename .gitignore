@@ -31,3 +31,4 @@ api/.env
 .expo
 mobile/.expo
 test-results.json
+desktop/release

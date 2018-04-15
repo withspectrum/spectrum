@@ -1,0 +1,69 @@
+{
+  "name": "Spectrum",
+  "description": "The community platform for the future.",
+  "version": "2.1.6",
+  "main": "src/main.js",
+  "private": true,
+  "dependencies": {
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.14",
+    "electron-updater": "^2.21.4"
+  },
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-builder": "^20.8.1"
+  },
+  "scripts": {
+    "dev": "cd ../ && concurrently \"cross-env BROWSER=none yarn dev:web\" \"wait-on http://localhost:3000 && electron .\"",
+    "package": "build --dir",
+    "package:mac": "build --mac",
+    "package:linux": "build --linux",
+    "package:win": "build --win --x64",
+    "package:all": "build -mwl",
+    "ship": "build -p always"
+  },
+  "build": {
+    "productName": "Spectrum",
+    "appId": "com.spectrum",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "default",
+      "icon": "resources/icons/mac/icon.icns"
+    },
+    "dmg": {
+      "backgroundColor": "#6618f7",
+      "contents": [
+        {
+          "x": 110,
+          "y": 150,
+          "type": "file"
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "squirrel",
+      "icon": "resources/icons/win/icon.ico"
+    }
+  }
+}
