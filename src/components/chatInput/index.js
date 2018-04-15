@@ -19,7 +19,14 @@ import mentionsDecorator from 'shared/clients/draft-js/mentions-decorator/index.
 import linksDecorator from 'shared/clients/draft-js/links-decorator/index.web.js';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
-import { Form, ChatInputWrapper, SendButton, PhotoSizeError } from './style';
+import {
+  Form,
+  ChatInputWrapper,
+  SendButton,
+  PhotoSizeError,
+  MarkdownHint,
+  Preformated,
+} from './style';
 import Input from './input';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
@@ -31,6 +38,7 @@ type State = {
   isSendingMediaMessage: boolean,
   mediaPreview: string,
   mediaPreviewFile: ?Blob,
+  markdownHint: boolean,
 };
 
 type Props = {
@@ -80,6 +88,7 @@ class ChatInput extends React.Component<Props, State> {
     isSendingMediaMessage: false,
     mediaPreview: '',
     mediaPreviewFile: null,
+    markdownHint: false,
   };
 
   editor: any;
@@ -128,8 +137,16 @@ class ChatInput extends React.Component<Props, State> {
   onChange = (state, ...rest) => {
     const { onChange } = this.props;
 
+    this.toogleMarkdownHint(state);
     persistContent(state);
     onChange(state, ...rest);
+  };
+
+  toogleMarkdownHint = state => {
+    const inputLenght = toPlainText(state).length;
+    this.setState({
+      markdownHint: inputLenght >= 3 ? true : false,
+    });
   };
 
   triggerFocus = () => {
@@ -497,6 +514,7 @@ class ChatInput extends React.Component<Props, State> {
       photoSizeError,
       isSendingMediaMessage,
       mediaPreview,
+      markdownHint,
     } = this.state;
 
     const networkDisabled =
@@ -505,59 +523,70 @@ class ChatInput extends React.Component<Props, State> {
         websocketConnection !== 'reconnected');
 
     return (
-      <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
-        {photoSizeError && (
-          <PhotoSizeError>
-            <p
-              onClick={() =>
-                this.props.dispatch(
-                  openModal('UPGRADE_MODAL', { user: currentUser })
-                )
-              }
-            >
-              {photoSizeError}
-            </p>
-            <Icon
-              onClick={() => this.clearError()}
-              glyph="view-close"
-              size={16}
-              color={'warn.default'}
+      <React.Fragment>
+        <ChatInputWrapper focus={isFocused} onClick={this.triggerFocus}>
+          {photoSizeError && (
+            <PhotoSizeError>
+              <p
+                onClick={() =>
+                  this.props.dispatch(
+                    openModal('UPGRADE_MODAL', { user: currentUser })
+                  )
+                }
+              >
+                {photoSizeError}
+              </p>
+              <Icon
+                onClick={() => this.clearError()}
+                glyph="view-close"
+                size={16}
+                color={'warn.default'}
+              />
+            </PhotoSizeError>
+          )}
+          {currentUser && (
+            <MediaUploader
+              isSendingMediaMessage={isSendingMediaMessage}
+              currentUser={currentUser}
+              onValidated={this.previewMedia}
+              onError={this.setMediaMessageError}
+              inputFocused={isFocused}
             />
-          </PhotoSizeError>
-        )}
-        {currentUser && (
-          <MediaUploader
-            isSendingMediaMessage={isSendingMediaMessage}
-            currentUser={currentUser}
-            onValidated={this.previewMedia}
-            onError={this.setMediaMessageError}
-            inputFocused={isFocused}
-          />
-        )}
-        <Form focus={isFocused}>
-          <Input
-            mediaPreview={mediaPreview}
-            onRemoveMedia={this.removeMediaPreview}
-            focus={isFocused}
-            placeholder={`Your message here...`}
-            editorState={state}
-            handleReturn={this.handleReturn}
-            onChange={this.onChange}
-            onFocus={this.onFocus}
-            onBlur={this.onBlur}
-            code={false}
-            editorRef={editor => (this.editor = editor)}
-            editorKey="chat-input"
-            decorators={[mentionsDecorator, linksDecorator]}
-            networkDisabled={networkDisabled}
-          />
-          <SendButton
-            data-cy="chat-input-send-button"
-            glyph="send-fill"
-            onClick={this.submit}
-          />
-        </Form>
-      </ChatInputWrapper>
+          )}
+          <Form focus={isFocused}>
+            <Input
+              mediaPreview={mediaPreview}
+              onRemoveMedia={this.removeMediaPreview}
+              focus={isFocused}
+              placeholder={`Your message here...`}
+              editorState={state}
+              handleReturn={this.handleReturn}
+              onChange={this.onChange}
+              onFocus={this.onFocus}
+              onBlur={this.onBlur}
+              code={false}
+              editorRef={editor => (this.editor = editor)}
+              editorKey="chat-input"
+              decorators={[mentionsDecorator, linksDecorator]}
+              networkDisabled={networkDisabled}
+            />
+            <SendButton
+              data-cy="chat-input-send-button"
+              glyph="send-fill"
+              onClick={this.submit}
+            />
+          </Form>
+        </ChatInputWrapper>
+        <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
+          <div>
+            <b>*bold*</b>
+            <i>_italics_</i>
+            <span>~strike~</span>
+            <Preformated>`code`</Preformated>
+            <Preformated>```preformatted```</Preformated>
+          </div>
+        </MarkdownHint>
+      </React.Fragment>
     );
   }
 }
