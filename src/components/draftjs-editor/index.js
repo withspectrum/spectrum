@@ -71,6 +71,25 @@ class Editor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const pluginState = this.getPluginState(props);
+
+    this.state = {
+      ...pluginState,
+      inserting: false,
+      embedding: false,
+      embedUrl: '',
+    };
+  }
+
+  componentDidUpdate(prev: Props) {
+    if (prev.readOnly !== this.props.readOnly) {
+      this.setState({
+        ...this.getPluginState(this.props),
+      });
+    }
+  }
+
+  getPluginState = (props: Props) => {
     const focusPlugin = createFocusPlugin();
     const dndPlugin = createBlockDndPlugin();
     const linkifyPlugin = createLinkifyPlugin({
@@ -94,13 +113,11 @@ class Editor extends React.Component<Props, State> {
       imageComponent: Image,
     });
 
-    this.state = {
+    return {
       plugins: [
         imagePlugin,
         prismPlugin,
         embedPlugin,
-        // TODO(@mxstbr): Reinject this when props.readOnly changes so that when users click
-        // "Edit thread" they can edit the language of a code block
         createMarkdownPlugin({
           renderLanguageSelect: props.readOnly
             ? () => null
@@ -111,13 +128,10 @@ class Editor extends React.Component<Props, State> {
         dndPlugin,
         focusPlugin,
       ],
-      addEmbed: addEmbed,
       addImage: imagePlugin.addImage,
-      inserting: false,
-      embedding: false,
-      embedUrl: '',
+      addEmbed: addEmbed,
     };
-  }
+  };
 
   changeEmbedUrl = (evt: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({

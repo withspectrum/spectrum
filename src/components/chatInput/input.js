@@ -4,7 +4,6 @@ import DraftEditor from 'draft-js-plugins-editor';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createCodeEditorPlugin from 'draft-js-code-editor-plugin';
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
-import styled from 'styled-components';
 import Prism from 'prismjs';
 import debounce from 'debounce';
 import 'prismjs/components/prism-java';
