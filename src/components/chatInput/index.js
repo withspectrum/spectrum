@@ -205,10 +205,7 @@ class ChatInput extends React.Component<Props, State> {
   };
 =======
     const { onChange, threadType } = this.props;
-    console.log(
-      '=== state index.js [171]/Users/zend/Documents/gitwork/spectrum/src/components/chatInput/index.js ===',
-      state
-    );
+
     persistContent(state, threadType);
 >>>>>>> seperated DM and other chats
 
@@ -248,7 +245,7 @@ class ChatInput extends React.Component<Props, State> {
           changeCurrentBlockType(
             state,
             code ? 'unstyled' : 'code-block',
-            keepCurrentText ? toPlainText(state(threadType)) : ''
+            keepCurrentText ? toPlainText(state) : ''
           )
         );
         setTimeout(() => this.triggerFocus());
@@ -320,11 +317,15 @@ class ChatInput extends React.Component<Props, State> {
 
     // If the input is empty don't do anything
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!state.getCurrentContent().hasText()) return 'handled';
 
 =======
     if (toPlainText(state(threadType)).trim() === '') return 'handled';
 >>>>>>> seperated DM and other chats
+=======
+    if (toPlainText(state).trim() === '') return 'handled';
+>>>>>>> seperated DM and other chats- fixed code
     // do one last persist before sending
     forcePersist(state, threadType);
 
@@ -351,12 +352,16 @@ class ChatInput extends React.Component<Props, State> {
         threadType,
         content: {
 <<<<<<< HEAD
+<<<<<<< HEAD
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
             : toPlainText(state),
 =======
           body: JSON.stringify(toJSON(state(threadType))),
 >>>>>>> seperated DM and other chats
+=======
+          body: JSON.stringify(toJSON(state)),
+>>>>>>> seperated DM and other chats- fixed code
         },
       })
         .then(() => {
@@ -374,12 +379,16 @@ class ChatInput extends React.Component<Props, State> {
         threadType,
         content: {
 <<<<<<< HEAD
+<<<<<<< HEAD
           body: !isAndroid()
             ? JSON.stringify(toJSON(state))
             : toPlainText(state),
 =======
           body: JSON.stringify(toJSON(state(threadType))),
 >>>>>>> seperated DM and other chats
+=======
+          body: JSON.stringify(toJSON(state)),
+>>>>>>> seperated DM and other chats- fixed code
         },
       })
         .then(() => {
