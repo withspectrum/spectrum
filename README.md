@@ -42,7 +42,7 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
 - [Technical](docs/)
   - [Testing](docs/testing.md)
   - [Background Jobs](docs/backend/background-jobs.md)
-  - [Deployment](docs/backend/deployment.md)
+  - [Deployment](docs/deployments.md)
   - [API](docs/backend/api/)
     - [Fragments](docs/backend/api/fragments.md)
     - [Pagination](docs/backend/api/pagination.md)
