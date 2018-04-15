@@ -37,6 +37,7 @@ export const getHeader = ({ metaTags }: { metaTags: string }) => {
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width,initial-scale=1">
           <link rel="mask-icon" href="/img/pinned-tab.svg" color="#171A21">
+          <link rel="shortcut icon" href="/img/favicon.ico">
           <meta name="theme-color" content="#171A21">
           <link rel="manifest" href="/manifest.json">
           <meta name="og:type" content="website">
@@ -72,7 +73,6 @@ export const getFooter = ({
       <script>window.__SERVER_STATE__=${serialize(state)}</script>
       <script>window.__DATA__=${serialize(data)}</script>
       <script defer="defer" type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-      <script type="text/javascript" src="/static/js/bootstrap.js"></script>
       ${bundles.map(src => createScriptTag({ src }))}
       ${createScriptTag({ src: `/static/js/${mainBundle}` })}
     </body>
