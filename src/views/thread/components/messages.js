@@ -222,6 +222,9 @@ class MessagesWithData extends React.Component<Props, State> {
             scrollElement={scrollContainer}
             threshold={750}
           >
+            <div onClick={forceScrollToBottom}>
+              You're viewing old messages, click here to jump to the newest
+            </div>
             <ChatMessages
               threadId={data.thread.id}
               thread={data.thread}
