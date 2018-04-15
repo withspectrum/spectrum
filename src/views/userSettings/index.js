@@ -120,7 +120,7 @@ class UserSettings extends React.Component<Props> {
       };
 
       return (
-        <AppViewWrapper data-cy="community-settings">
+        <AppViewWrapper data-cy="user-settings">
           <Titlebar
             title={'Settings'}
             subtitle={user.name}

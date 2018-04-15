@@ -9,10 +9,11 @@ describe('can view delete controls in settings', () => {
 
   it('should render delete account section', () => {
     // scroll to delete account segment
-    cy
-      .get('[data-cy="delete-account-container"]')
-      .scrollIntoView()
-      .should('be.visible');
+    cy.get('[data-cy="user-settings"]').should('be.visible');
+
+    cy.get('[data-cy="delete-account-container"]').scrollIntoView();
+
+    cy.get('[data-cy="delete-account-container"]').should('be.visible');
 
     // should warn about owning communities since users[0] is max
     cy.get('[data-cy="owns-communities-notice"]').should('be.visible');
