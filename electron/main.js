@@ -5,6 +5,7 @@ const https = require('https');
 const path = require('path');
 const url = require('url');
 
+const checkForUpdates = require('./autoUpdate');
 const buildMenu = require('./menu');
 const CONFIG = require('./config');
 
@@ -15,6 +16,11 @@ let win;
 const startUrl = isDev ? CONFIG.APP_DEV_URL : CONFIG.APP_REMOTE_URL;
 
 function createWindow() {
+  if (!isDev) {
+    // trigger autoupdate check
+    checkForUpdates();
+  }
+
   // create a `splash` window
   splash = new BrowserWindow({
     width: 768,
