@@ -19,7 +19,7 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import { toPlainText, fromPlainText, isAndroid } from 'shared/draft-utils';
-import { customStyleMap } from 'src/components/draftjs-editor/style';
+import { customStyleMap } from 'src/components/rich-text-editor/style';
 import type { DraftEditorState } from 'draft-js/lib/EditorState';
 
 import { InputWrapper, MediaPreview } from './style';

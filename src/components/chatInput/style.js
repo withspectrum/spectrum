@@ -8,7 +8,7 @@ import {
   zIndex,
   monoStack,
 } from 'src/components/globals';
-import { Wrapper as EditorWrapper } from '../draftjs-editor/style';
+import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;

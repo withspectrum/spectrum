@@ -20,7 +20,7 @@ import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { track } from '../../../helpers/events';
-import Editor from '../../../components/draftjs-editor';
+import Editor from '../../../components/rich-text-editor';
 import { toJSON, toPlainText, toState } from 'shared/draft-utils';
 import Textarea from 'react-textarea-autosize';
 import ActionBar from './actionBar';
