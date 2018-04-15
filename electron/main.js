@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
-const WebSocketServer = require('ws').Server;
 const https = require('https');
 const path = require('path');
 const url = require('url');
