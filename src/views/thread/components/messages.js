@@ -61,6 +61,7 @@ type Props = {
 class MessagesWithData extends React.Component<Props, State> {
   state = {
     subscription: null,
+    scrolledDown: false,
   };
 
   componentDidUpdate(prev = {}) {
@@ -137,6 +138,13 @@ class MessagesWithData extends React.Component<Props, State> {
       // This unsubscribes the subscription
       return Promise.resolve(subscription());
     }
+  };
+
+  scrollToBottom = () => {
+    this.props.forceScrollToBottom();
+    this.setState({
+      scrolledDown: true,
+    });
   };
 
   render() {
@@ -222,9 +230,11 @@ class MessagesWithData extends React.Component<Props, State> {
             scrollElement={scrollContainer}
             threshold={750}
           >
-            <div onClick={forceScrollToBottom}>
-              You're viewing old messages, click here to jump to the newest
-            </div>
+            {!this.state.scrolledDown && (
+              <div onClick={this.scrollToBottom}>
+                You're viewing old messages, click here to jump to the newest
+              </div>
+            )}
             <ChatMessages
               threadId={data.thread.id}
               thread={data.thread}
