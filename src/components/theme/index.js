@@ -44,6 +44,10 @@ export const theme = {
       default: '#D85537',
       alt: '#D85537',
     },
+    discord: {
+      default: '#7289DA',
+      alt: '#7289DA',
+    },
   },
   space: {
     default: '#0062D6',

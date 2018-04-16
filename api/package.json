@@ -72,6 +72,7 @@
     "offline-plugin": "^4.8.4",
     "optics-agent": "^1.1.2",
     "passport": "^0.3.2",
+    "passport-discord": "^0.1.3",
     "passport-facebook": "^2.1.1",
     "passport-github2": "^0.1.10",
     "passport-google-oauth2": "^0.1.6",

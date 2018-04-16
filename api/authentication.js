@@ -5,6 +5,7 @@ const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
+const { Strategy: DiscordStrategy } = require('passport-discord');
 const {
   getUser,
   createOrFindUser,
@@ -34,6 +35,10 @@ const GITHUB_OAUTH_CLIENT_SECRET = IS_PROD
   ? process.env.GITHUB_OAUTH_CLIENT_SECRET
   : process.env.GITHUB_OAUTH_CLIENT_SECRET_DEVELOPMENT;
 
+const DISCORD_OAUTH_CLIENT_SECRET = IS_PROD
+  ? process.env.DISCORD_OAUTH_CLIENT_SECRET
+  : process.env.DISCORD_OAUTH_CLIENT_SECRET_DEVELOPMENT;
+
 const TWITTER_OAUTH_CLIENT_ID = IS_PROD
   ? 'vxmsICGyIIoT5NEYi1I8baPrf'
   : 'Qk7BWFe44JKswEw2sNaDAA4x7';
@@ -45,6 +50,10 @@ const GOOGLE_OAUTH_CLIENT_ID = IS_PROD
 const GITHUB_OAUTH_CLIENT_ID = IS_PROD
   ? '208a2e8684d88883eded'
   : 'ed3e924f4a599313c83b';
+
+const DISCORD_OAUTH_CLIENT_ID = IS_PROD
+  ? '435556268749357057'
+  : '435556268749357057';
 
 const init = () => {
   // Setup use serialization
@@ -166,7 +175,7 @@ const init = () => {
           description: profile.about ? profile.about : '',
           website: profile.website ? profile.website : '',
           email:
-            profile.emails &&
+            profile.mails &&
             profile.emails.length > 0 &&
             profile.emails[0].value !== undefined
               ? profile.emails[0].value
@@ -362,6 +371,46 @@ const init = () => {
         };
 
         return createOrFindUser(user, 'githubProviderId')
+          .then(user => {
+            done(null, user);
+            return user;
+          })
+          .catch(err => {
+            done(err);
+            return null;
+          });
+      }
+    )
+  );
+
+  passport.use(
+    new DiscordStrategy(
+      {
+        clientID: DISCORD_OAUTH_CLIENT_ID,
+        clientSecret: DISCORD_OAUTH_CLIENT_SECRET,
+        callbackURL: '/auth/discord/callback',
+        scope: ['identify', 'email'],
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        const user = {
+          providerId: null,
+          fbProviderId: null,
+          googleProviderId: null,
+          githubProviderId: null,
+          discordProviderId: profile.id,
+          username: null,
+          name: profile.username,
+          email: profile.email,
+          profilePhoto:
+            profile.avatar &&
+            `https://cdn.discordapp.com/avatars/${profile.id}/${
+              profile.avatar
+            }.png`,
+          createdAt: new Date(),
+          lastSeen: new Date(),
+        };
+
+        return createOrFindUser(user, 'discordProviderId')
           .then(user => {
             done(null, user);
             return user;

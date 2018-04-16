@@ -448,6 +448,7 @@ const deleteUser = (userId: string) => {
       googleProviderId: null,
       githubProviderId: null,
       githubUsername: null,
+      discordProviderId: null,
       profilePhoto: null,
       description: null,
       website: null,
