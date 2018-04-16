@@ -9,7 +9,7 @@ const usersChannels = data.usersChannels
 const members = data.users.filter(user => usersChannels.indexOf(user.id) >= 0);
 
 describe('renders members list on channel view', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 

@@ -21,6 +21,7 @@ import {
   NewMessagePill,
   LockedTextPill,
   MiniLinkPreview,
+  EllipsisText,
 } from '../style';
 
 type Props = {
@@ -179,7 +180,7 @@ class InboxThread extends React.Component<Props> {
                   <AttachmentsContainer active={active} key={url}>
                     <MiniLinkPreview href={url} target="_blank">
                       <Icon glyph="link" size={18} />
-                      {url}
+                      <EllipsisText>{url}</EllipsisText>
                     </MiniLinkPreview>
                   </AttachmentsContainer>
                 );

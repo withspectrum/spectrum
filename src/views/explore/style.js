@@ -25,7 +25,11 @@ import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
 
-export const Wrapper = styled(FlexCol)`
+export const Wrapper = styled.main`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   flex: 1 0 auto;
   width: 100%;
   background-color: ${({ theme }) => theme.bg.default};
@@ -176,8 +180,7 @@ export const Item = styled(FlexCol)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    box-shadow: ${Shadow.high} ${props =>
-        hexa(props.theme.text.placeholder, 1)};
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
@@ -370,7 +373,9 @@ export const SearchLink = styled(Link)`
 
 export const SearchResultImage = styled(Avatar)``;
 
-export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
+export const SearchResultMetaWrapper = styled(FlexCol)`
+  margin-left: 16px;
+`;
 
 export const SearchResultName = styled.h2`
   font-size: 16px;
@@ -416,7 +421,9 @@ export const SearchResultNull = styled.div`
   }
 `;
 
-export const ListWithTitle = styled(FlexCol)`flex: auto;`;
+export const ListWithTitle = styled(FlexCol)`
+  flex: auto;
+`;
 
 export const ListTitle = styled(H2)`
   border-bottom: 1px solid ${props => props.theme.bg.border};
@@ -463,4 +470,6 @@ export const CategoryWrapper = styled.div`
   flex: none;
 `;
 
-export const LoadingContainer = styled.div`padding: 32px;`;
+export const LoadingContainer = styled.div`
+  padding: 32px;
+`;

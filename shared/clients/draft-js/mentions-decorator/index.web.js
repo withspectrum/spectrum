@@ -1,5 +1,5 @@
 // @flow
 import createMentionsDecorator from './core';
-import { Mention } from 'src/components/draftjs-editor/style.js';
+import { Mention } from 'src/components/rich-text-editor/style.js';
 
 export default createMentionsDecorator(Mention);

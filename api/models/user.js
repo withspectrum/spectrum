@@ -56,19 +56,6 @@ const getUsers = (userIds: Array<string>): Promise<Array<DBUser>> => {
     .run();
 };
 
-const getUsersBySearchString = (string: string): Promise<Array<DBUser>> => {
-  return (
-    db
-      .table('users')
-      // get users whose username or displayname matches a case insensitive string
-      .filter(user => user.coerceTo('string').match(`(?i)${string}`))
-      // only return the 10 users who match to avoid overloading the dom and sending
-      // down too much data at once
-      .limit(10)
-      .run()
-  );
-};
-
 const storeUser = (user: Object): Promise<DBUser> => {
   return db
     .table('users')
@@ -448,6 +435,33 @@ const updateUserEmail = (userId: string, email: string): Promise<Object> => {
     .then(() => getUserById(userId));
 };
 
+const deleteUser = (userId: string) => {
+  return db
+    .table('users')
+    .get(userId)
+    .update({
+      username: null,
+      email: null,
+      deletedAt: new Date(),
+      providerId: null,
+      fbProviderId: null,
+      googleProviderId: null,
+      githubProviderId: null,
+      githubUsername: null,
+      profilePhoto: null,
+      description: null,
+      website: null,
+      timezone: null,
+      lastSeen: null,
+      modifiedAt: null,
+      firstName: null,
+      lastName: null,
+      pendingEmail: null,
+      name: 'Deleted',
+    })
+    .run();
+};
+
 module.exports = {
   getUser,
   getUserById,
@@ -456,7 +470,6 @@ module.exports = {
   getUsersByUsername,
   getUsersThreadCount,
   getUsers,
-  getUsersBySearchString,
   getUserByIndex,
   saveUserProvider,
   createOrFindUser,
@@ -466,4 +479,5 @@ module.exports = {
   setUserOnline,
   setUserPendingEmail,
   updateUserEmail,
+  deleteUser,
 };

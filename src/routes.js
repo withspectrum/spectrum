@@ -128,12 +128,8 @@ const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
   height: 100vh;
+  max-height: 100vh;
   background: ${props => props.theme.bg.wash};
-
-  @media (max-width: 768px) {
-    height: 100vh;
-    max-height: 100vh;
-  }
 `;
 
 const DashboardFallback = signedOutFallback(Dashboard, Pages);
@@ -203,9 +199,9 @@ class Routes extends React.Component<{}> {
               <Route component={ThreadSlider} />
 
               {/*
-                Switch only renders the first match. Subrouting happens downstream
-                https://reacttraining.com/react-router/web/api/Switch
-              */}
+                  Switch only renders the first match. Subrouting happens downstream
+                  https://reacttraining.com/react-router/web/api/Switch
+                */}
               <Switch>
                 <Route exact path="/" component={DashboardFallback} />
                 <Route exact path="/home" component={HomeFallback} />
@@ -221,6 +217,7 @@ class Routes extends React.Component<{}> {
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
+                <Route path="/faq" component={Pages} />
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
@@ -255,10 +252,10 @@ class Routes extends React.Component<{}> {
                 />
 
                 {/*
-                  We check communitySlug last to ensure none of the above routes
-                  pass. We handle null communitySlug values downstream by either
-                  redirecting to home or showing a 404
-                */}
+                    We check communitySlug last to ensure none of the above routes
+                    pass. We handle null communitySlug values downstream by either
+                    redirecting to home or showing a 404
+                  */}
                 <Route
                   path="/:communitySlug/:channelSlug/settings"
                   component={ChannelSettingsFallback}

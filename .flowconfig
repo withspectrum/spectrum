@@ -1,8 +1,20 @@
 [ignore]
-.*/node_modules/.*
 .*/build.*
 .*/*.test.js
 .*/.expo
+.*/node_modules/expo
+.*/node_modules/react-native
+.*/node_modules/cypress
+.*/node_modules/draft-js
+.*/node_modules/graphql
+.*/node_modules/protobufjs-no-cli
+.*/node_modules/react-navigation
+.*/node_modules/reqwest
+.*/node_modules/sentry-expo
+
+.*/node_modules/react-apollo
+.*/node_modules/dataloader
+
 
 [include]
 
@@ -13,7 +25,7 @@ suppress_comment=.*\\$FlowFixMe
 suppress_comment=.*\\$FlowIssue
 esproposal.class_instance_fields=enable
 module.system.node.resolve_dirname=node_modules
-module.system.node.resolve_dirname=spectrum
+module.system.node.resolve_dirname=.
 module.file_ext=.ios.js
 module.file_ext=.android.js
 module.file_ext=.native.js

@@ -12,9 +12,8 @@ import schema from '../../schema';
 export default graphqlExpress(req => ({
   schema,
   formatError: createErrorFormatter(req),
-  tracing: true,
   context: {
-    user: req.user,
+    user: req.user ? (req.user.bannedAt ? null : req.user) : null,
     loaders: createLoaders(),
   },
   validationRules: [

@@ -47,9 +47,10 @@ const getChannelMemberConnectionOptions = {
       loading,
       channel,
       networkStatus: networkStatus,
-      hasNextPage: channel
-        ? channel.memberConnection.pageInfo.hasNextPage
-        : false,
+      hasNextPage:
+        channel && channel.memberConnection
+          ? channel.memberConnection.pageInfo.hasNextPage
+          : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreMembers,

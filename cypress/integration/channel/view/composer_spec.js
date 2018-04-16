@@ -20,7 +20,7 @@ const { userId: memberInArchivedChannelId } = data.usersChannels.find(
 const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 describe('renders composer for logged in members', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInChannelId);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
@@ -37,7 +37,7 @@ describe('renders composer for logged in members', () => {
 });
 
 describe('does not render composer for non members', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(QUIET_USER_ID);
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
@@ -50,7 +50,7 @@ describe('does not render composer for non members', () => {
 });
 
 describe('does not render composer for logged out users', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit(`/${community.slug}/${channel.slug}`);
   });
 
@@ -62,7 +62,7 @@ describe('does not render composer for logged out users', () => {
 });
 
 describe('does not render composer for archived channel', () => {
-  before(() => {
+  beforeEach(() => {
     cy.auth(memberInArchivedChannelId);
     cy.visit(`/${community.slug}/${archivedChannel.slug}`);
   });

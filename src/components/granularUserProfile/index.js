@@ -9,18 +9,11 @@ import Reputation from '../reputation';
 import Badge from '../badges';
 import Icon from '../icons';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-import addProtocolToString from 'shared/normalize-url';
 import {
   Row,
-  Content,
-  MetaContent,
-  AvatarContent,
-  NameContent,
   Name,
   Username,
-  BadgeContent,
   Description,
-  Website,
   MessageIcon,
   Actions,
 } from './style';
@@ -38,12 +31,15 @@ type Props = {
   isCurrentUser?: boolean,
   reputation?: number,
   messageButton?: boolean,
+  multiAction?: boolean,
   children?: React.Node,
-  isOnline?: boolean,
   onlineSize?: 'small' | 'large',
   history: Object,
   dispatch: Function,
 };
+
+// Each prop both provides data AND indicates that the element should be included in the instance of the profile,
+// so each instance must manually call out which pieces of the profile it wants included.
 
 const LinkHandler = ({
   username,
@@ -65,82 +61,56 @@ class GranularUserProfile extends React.Component<Props> {
   render() {
     const {
       userObject,
-      avatarSize,
       profilePhoto,
       name,
       username,
       description,
-      website,
-      badges,
       reputation,
+      avatarSize,
+      badges,
       children,
       messageButton,
-      isOnline,
+      multiAction,
       onlineSize,
     } = this.props;
 
     return (
-      <Row>
-        <Content>
-          {profilePhoto && (
-            <AvatarContent>
-              <LinkHandler username={userObject.username}>
-                <Avatar
-                  src={profilePhoto}
-                  size={avatarSize || '32'}
-                  isOnline={isOnline}
-                  onlineSize={onlineSize}
-                />
-              </LinkHandler>
-            </AvatarContent>
+      <Row avatarSize={avatarSize} multiAction={multiAction}>
+        {profilePhoto && (
+          <Avatar
+            src={profilePhoto}
+            size={avatarSize || '32'}
+            isOnline={userObject.isOnline}
+            onlineSize={onlineSize || 'small'}
+            link={`/users/${userObject.username}`}
+          />
+        )}
+        <LinkHandler username={userObject.username}>
+          <span>
+            {name && (
+              <Name>
+                {name}
+                {username && <Username>@{username}</Username>}
+              </Name>
+            )}
+            {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+          </span>
+
+          {typeof reputation === 'number' && (
+            <Reputation reputation={reputation} />
           )}
-
-          <MetaContent>
-            <LinkHandler username={userObject.username}>
-              {name && (
-                <NameContent>
-                  <Name>{name}</Name>
-
-                  {username && <Username>@{username}</Username>}
-
-                  {badges && (
-                    <BadgeContent>
-                      {badges.map((b, i) => <Badge key={i} type={b} />)}
-                    </BadgeContent>
-                  )}
-                </NameContent>
-              )}
-
-              {typeof reputation === 'number' && (
-                <Reputation reputation={reputation} />
-              )}
-
-              {description && <Description>{description}</Description>}
-            </LinkHandler>
-
-            {website && (
-              <Website>
-                <a href={addProtocolToString(website)} target={'_blank'}>
-                  {website}
-                </a>
-              </Website>
-            )}
-          </MetaContent>
-
-          <Actions>
-            {messageButton && (
-              <MessageIcon
-                tipText={name ? `Message ${name}` : 'Message'}
-                tipLocation={'top-left'}
-                onClick={this.initMessage}
-              >
-                <Icon glyph="message-new" size={32} />
-              </MessageIcon>
-            )}
-
-            {children}
-          </Actions>
-        </Content>
+        </LinkHandler>
+        {description && <Description>{description}</Description>}
+        {messageButton && (
+          <MessageIcon
+            tipText={name ? `Message ${name}` : 'Message'}
+            tipLocation={'top-left'}
+            onClick={this.initMessage}
+          >
+            <Icon glyph="message-new" size={32} />
+          </MessageIcon>
+        )}
+        <Actions>{children}</Actions>
       </Row>
     );
   }

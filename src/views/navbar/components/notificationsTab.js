@@ -384,6 +384,7 @@ class NotificationsTab extends React.Component<Props, State> {
       <NotificationTab padOnHover onMouseOver={this.setHover}>
         <Tab
           data-active={active}
+          aria-current={active ? 'page' : undefined}
           to="/notifications"
           rel="nofollow"
           onClick={this.markAllAsSeen}

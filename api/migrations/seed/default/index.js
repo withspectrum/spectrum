@@ -9,6 +9,7 @@ const defaultDirectMessageThreads = require('./directMessageThreads');
 const defaultUsersDirectMessageThreads = require('./usersDirectMessageThreads');
 const defaultUsersCommunities = require('./usersCommunities');
 const defaultUsersChannels = require('./usersChannels');
+const defaultUsersSettings = require('./usersSettings')();
 const defaultMessages = require('./messages');
 
 module.exports = {
@@ -23,8 +24,8 @@ module.exports = {
   defaultUsersCommunities,
   defaultUsersChannels,
   defaultMessages,
+  defaultUsersSettings,
   defaultNotifications: [],
   defaultCommunitySettings: [],
   defaultChannelSettings: [],
-  defaultUsersSettings: [],
 };

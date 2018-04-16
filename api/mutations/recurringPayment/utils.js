@@ -1,8 +1,7 @@
 // @flow
 require('now-env');
 import UserError from '../../utils/UserError';
-const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
-const stripe = require('stripe')(STRIPE_TOKEN);
+import { stripe } from 'shared/stripe';
 
 type Err = {
   type: string,
@@ -48,7 +47,7 @@ export const getStripeCustomer = (customerId: string) => {
   try {
     return stripe.customers.retrieve(customerId);
   } catch (err) {
-    return console.log(err) || err;
+    return console.error(err) || err;
   }
 };
 
@@ -59,7 +58,7 @@ export const createStripeCustomer = (email: string, source: string) => {
       source,
     });
   } catch (err) {
-    return console.log(err) || err;
+    return console.error(err) || err;
   }
 };
 
@@ -74,7 +73,7 @@ export const updateStripeCustomer = (
       source,
     });
   } catch (err) {
-    return console.log(err) || err;
+    return console.error(err) || err;
   }
 };
 
@@ -94,7 +93,7 @@ export const createStripeSubscription = (
       ],
     });
   } catch (err) {
-    return console.log(err) || err;
+    return console.error(err) || err;
   }
 };
 
@@ -102,6 +101,6 @@ export const deleteStripeSubscription = (subscription: string) => {
   try {
     return stripe.subscriptions.del(subscription);
   } catch (err) {
-    return console.log(err) || err;
+    return console.error(err) || err;
   }
 };

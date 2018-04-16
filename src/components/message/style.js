@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { Gradient, zIndex, Transition, monoStack } from '../globals';
+import { zIndex, Transition, monoStack, hexa } from '../globals';
 
 const Bubble = styled.div`
   display: inline-block;
@@ -28,6 +28,37 @@ const Bubble = styled.div`
   &::selection {
     background-color: ${props =>
       props.me ? props.theme.text.default : props.theme.brand.alt};
+  }
+
+  code {
+    border: 1px solid
+      ${props =>
+        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
+    border-radius: 4px;
+    padding: 1px 4px;
+    background: ${props =>
+      props.me
+        ? hexa(props.theme.bg.default, 0.1)
+        : hexa(props.theme.bg.default, 0.3)};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.warn.alt};
+  }
+
+  pre {
+    margin: 4px -16px;
+    padding: 8px 16px;
+    width: calc(100% + 32px);
+    border: 1px solid
+      ${props =>
+        props.me ? hexa(props.theme.bg.default, 0.2) : props.theme.bg.border};
+    border-left: 0;
+    border-right: 0;
+    background: ${props =>
+      props.me
+        ? hexa(props.theme.bg.default, 0.1)
+        : hexa(props.theme.bg.default, 0.3)};
+    color: ${props =>
+      props.me ? props.theme.text.reverse : props.theme.text.default};
   }
 `;
 
@@ -213,10 +244,6 @@ export const Text = styled(Bubble)`
   line-height: 1.4;
   background-color: ${props =>
     props.me ? props.theme.brand.default : props.theme.generic.default};
-  background-image: ${props =>
-    props.me
-      ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-      : Gradient(props.theme.generic.alt, props.theme.generic.default)};
   color: ${props =>
     props.me ? props.theme.text.reverse : props.theme.text.default};
   font-weight: ${props => (props.me ? `500` : `400`)};
@@ -284,6 +311,7 @@ export const Image = styled.img`
           props.theme.brand.default
         }`
       : ''};
+  cursor: pointer;
 `;
 
 export const Code = styled(Bubble)`
