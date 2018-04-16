@@ -17,7 +17,7 @@ export const ChatInputWrapper = styled(FlexRow)`
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 8px;
+  padding: 16px 16px 0px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -27,6 +27,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
+    padding: 8px;
   }
 
   a {
@@ -238,5 +239,35 @@ export const MediaPreview = styled.div`
 
   button:hover {
     box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+export const Preformated = styled.code`
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+  white-space: nowrap;
+`;
+
+export const MarkdownHint = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 12px;
+  font-size: 11px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
+  padding: 6px 0;
+  opacity: ${({ showHint }) => (showHint ? 1 : 0)};
+  transition: opacity 200ms ease-in-out;
+  b {
+    font-weight: 600;
+  }
+  i,
+  b,
+  code {
+    margin-right: 3px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;

@@ -34,9 +34,11 @@ describe('chat input', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').should('be.visible');
       cy.get('[data-cy="chat-input-media-uploader"]').should('not.be.visible');
+      cy.get('[data-cy="markdownHint"]').should('have.css', 'opacity', '0');
 
       const newMessage = 'A new message!';
       cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="markdownHint"]').should('have.css', 'opacity', '1');
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
