@@ -9,6 +9,7 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
+import { NullState } from '../../../components/upsell';
 import { MessagesContainer, ViewContent } from '../style';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
@@ -717,6 +718,8 @@ class NewThread extends React.Component<Props, State> {
     } = this.state;
     const { currentUser, hideOnMobile } = this.props;
 
+    console.log(this.state);
+
     const { title, description } = generateMetaInfo({
       type: 'directMessage',
       data: {
@@ -831,6 +834,13 @@ class NewThread extends React.Component<Props, State> {
 
           {!existingThreadBasedOnSelectedUsers && (
             <Grow>
+              {!existingThreadWithMessages.id && (
+                <NullState
+                  icon="private"
+                  heading={`Sometimes you want a little privacy...`}
+                  copy={`We know that not everything you want to say should be public. Direct Messages are private chat conversations between you and any other user(s) on Spectrum - even groups!`}
+                />
+              )}
               {loadingExistingThreadMessages && (
                 <Spinner size={16} color={'brand.default'} />
               )}

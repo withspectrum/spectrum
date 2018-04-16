@@ -50,6 +50,14 @@ export const MessagesContainer = styled(FlexCol)`
   flex: auto;
   max-height: 100%;
 
+  @media (min-width: 768px) {
+    ${props =>
+      props.hideOnDesktop &&
+      css`
+        display: none;
+      `};
+  }
+
   @media (max-width: 768px) {
     max-height: calc(100% - 48px);
     ${props =>
