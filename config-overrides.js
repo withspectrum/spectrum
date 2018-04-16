@@ -99,7 +99,8 @@ module.exports = function override(config, env) {
   let externals = [];
   walkFolder('./public/', file => {
     // HOTFIX: Don't cache images
-    if (file.indexOf('img') > -1) return;
+    if (file.indexOf('img') > -1 && file.indexOf('homescreen-icon') === -1)
+      return;
     externals.push(file.replace(/public/, ''));
   });
   config.plugins.push(
