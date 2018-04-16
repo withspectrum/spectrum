@@ -63,6 +63,7 @@ class Input extends React.Component<Props, State> {
             inline: ['BOLD', 'ITALIC', 'CODE'],
             block: ['CODE', 'ordered-list-item', 'unordered-list-item'],
           },
+          renderLanguageSelect: () => null,
         }),
         createCodeEditorPlugin(),
         createLinkifyPlugin({
