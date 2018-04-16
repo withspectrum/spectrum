@@ -124,11 +124,16 @@ class ChatInput extends React.Component<Props, State> {
 
   handleKeyDown = (event: any) => {
     const key = event.keyCode || event.charCode;
+    console.log('handleKeyDown');
     // Detect esc key or backspace key (and empty message) to remove
     // the previewed image
     if (
       key === 27 ||
-      ((key === 8 || key === 46) && toPlainText(this.props.state).length === 0)
+      ((key === 8 || key === 46) &&
+        this.props.state
+          .getCurrentContent()
+          .getFirstBlock()
+          .getLength() === 0)
     ) {
       this.removeMediaPreview();
     }
@@ -143,9 +148,17 @@ class ChatInput extends React.Component<Props, State> {
   };
 
   toogleMarkdownHint = state => {
-    const inputLenght = toPlainText(state).length;
+    let inputLength;
+    try {
+      inputLength = state
+        .getCurrentContent()
+        .getFirstBlock()
+        .getLength();
+    } catch (err) {
+      inputLength = 0;
+    }
     this.setState({
-      markdownHint: inputLenght >= 3 ? true : false,
+      markdownHint: inputLength >= 3 ? true : false,
     });
   };
 
@@ -220,7 +233,13 @@ class ChatInput extends React.Component<Props, State> {
     }
 
     // If the input is empty don't do anything
-    if (toPlainText(state).trim() === '') return 'handled';
+    if (
+      state
+        .getCurrentContent()
+        .getFirstBlock()
+        .getLength() === 0
+    )
+      return 'handled';
 
     // do one last persist before sending
     forcePersist(state);
