@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Avatar from '../Avatar';
+import type { UserInfoType } from '../../../shared/graphql/fragments/user/userInfo';
 import { FacepileContainer, EmptyParticipantHead } from './style';
 const NUM_TO_DISPLAY = 5;
 
@@ -15,15 +16,9 @@ const messageAvatars = list => {
   });
 };
 
-type UserType = {
-  profilePhoto: string,
-  username: string,
-  name: string,
-  id: string,
-};
 type FacepileProps = {
-  participants: Array<?UserType>,
-  creator: UserType,
+  participants: Array<?UserInfoType>,
+  creator: UserInfoType,
 };
 
 const Facepile = ({ participants, creator }: FacepileProps) => {
