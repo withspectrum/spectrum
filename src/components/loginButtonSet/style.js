@@ -108,3 +108,14 @@ export const GithubButton = styled(SigninButton)`
     color: ${props => props.theme.text.default};
   }
 `;
+
+export const DiscordButton = styled(SigninButton)`
+  background: ${props =>
+    props.preferred ? props.theme.social.discord.default : 'none'};
+  color: ${props =>
+    props.preferred ? '#fff' : props.theme.social.discord.default};
+
+  &:after {
+    color: ${props => props.theme.social.discord.default};
+  }
+`;

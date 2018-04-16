@@ -17,7 +17,7 @@ const FALLBACK_URL = IS_PROD
   ? 'https://spectrum.chat/home'
   : 'http://localhost:3000/home';
 
-type Strategy = 'twitter' | 'facebook' | 'github' | 'google';
+type Strategy = 'twitter' | 'facebook' | 'github' | 'google' | 'discord';
 
 export const createSigninRoutes = (
   strategy: Strategy,

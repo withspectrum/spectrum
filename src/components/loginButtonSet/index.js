@@ -9,6 +9,7 @@ import { TwitterSigninButton } from './twitter';
 import { FacebookSigninButton } from './facebook';
 import { GoogleSigninButton } from './google';
 import { GithubSigninButton } from './github';
+import { DiscordSigninButton } from './discord';
 
 type Props = {
   redirectPath: ?string,
@@ -79,6 +80,13 @@ class LoginButtonSet extends React.Component<Props> {
           href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
           preferred={nonePreferred ? true : preferredSigninMethod === 'github'}
           showAfter={preferredSigninMethod === 'github'}
+        />
+
+        <DiscordSigninButton
+          onClickHandler={this.saveLoginMethod}
+          href={`${SERVER_URL}/auth/discord${postAuthRedirectPath}`}
+          preferred={nonePreferred ? true : preferredSigninMethod === 'discord'}
+          showAfter={preferredSigninMethod === 'discord'}
         />
       </Container>
     );
