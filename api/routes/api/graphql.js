@@ -2,6 +2,7 @@
 import { graphqlExpress } from 'graphql-server-express';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
+import rateLimiter from '../../utils/graphql-rate-limiter';
 import Raven from 'shared/raven';
 import UserError from '../../utils/UserError';
 import createLoaders from '../../loaders/';
@@ -18,6 +19,7 @@ export default graphqlExpress(req => ({
   },
   validationRules: [
     depthLimit(10),
+    rateLimiter(),
     costAnalysis({
       variables: req.body.variables,
       maximumCost: 750,

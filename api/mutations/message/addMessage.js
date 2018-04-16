@@ -125,8 +125,8 @@ export default async (
   // at this point we are only dealing with thread messages
   const thread = await loaders.thread.load(message.threadId);
 
-  if (thread.isDeleted) {
-    return new UserError("Can't reply in a deleted thread.");
+  if (!thread || thread.isDeleted) {
+    return new UserError("Can't post message in non-existant thread.");
   }
 
   if (thread.isLocked) {
