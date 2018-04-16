@@ -10,11 +10,13 @@
     "electron-updater": "^2.21.4"
   },
   "devDependencies": {
+    "concurrently": "^3.5.1",
     "electron": "^1.8.4",
-    "electron-builder": "^20.8.1"
+    "electron-builder": "^20.8.1",
+    "wait-on": "^2.1.0"
   },
   "scripts": {
-    "dev": "cd ../ && concurrently \"cross-env BROWSER=none yarn dev:web\" \"wait-on http://localhost:3000 && electron .\"",
+    "dev": "cd ../ && concurrently \"cross-env BROWSER=none yarn dev:web\" \"wait-on http://localhost:3000 && electron ./desktop/src/main.js\"",
     "package": "build --dir",
     "package:mac": "build --mac",
     "package:linux": "build --linux",
