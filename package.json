@@ -208,7 +208,7 @@
     "dev:hyperion": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hyperion*,shared:middlewares*,-hyperion:resolvers cross-env DIR=hyperion backpack",
     "dev:pluto": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,pluto*,shared:middlewares*,-pluto:resolvers cross-env DIR=pluto backpack",
     "dev:mobile": "(cd mobile && yarn run dev)",
-    "dev:electron": "(cd desktop && yarn run dev)",
+    "dev:desktop": "(cd desktop && yarn run dev)",
     "open:ios": "(cd mobile && yarn run open:ios)",
     "open:android": "(cd mobile && yarn run open:android)",
     "build": "npm run build:web && npm run build:hyperion",
