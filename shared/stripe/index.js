@@ -1,5 +1,5 @@
 require('now-env');
-const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 const STRIPE_TOKEN = IS_PROD
   ? process.env.STRIPE_TOKEN
   : process.env.STRIPE_TOKEN_DEVELOPMENT;
