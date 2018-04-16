@@ -1,4 +1,5 @@
 {
+  "regions": ["sfo1"],
 	"env": {
 		"S3_TOKEN": "@s3-token",
 		"S3_SECRET": "@s3-secret",
@@ -37,7 +38,9 @@
 		"ALGOLIA_APP_ID": "@algolia-app-id",
 		"ALGOLIA_API_SECRET": "@algolia-api-secret",
 		"APOLLO_ENGINE_API_KEY": "@apollo-engine-api-key",
-    "API_TOKEN_SECRET": "@api-token-secret",
+		"API_TOKEN_SECRET": "@api-token-secret",
+		"SENTRY_DSN_CLIENT": "@sentry-dsn-client",
+		"SENTRY_DSN_SERVER": "@sentry-dsn-server",
 		"SPECTRUM_MODERATION_API_KEY": "@spectrum-moderation-api-key"
 	}
 }

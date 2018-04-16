@@ -7,7 +7,7 @@ export default async (
   _: any,
   { user, loaders }: GraphQLContext
 ) => {
-  if (!stripeCustomerId) return false;
+  if (!stripeCustomerId || !user) return false;
 
   const {
     isOwner,

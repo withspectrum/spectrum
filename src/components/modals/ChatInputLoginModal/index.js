@@ -23,7 +23,7 @@ class ChatInputLoginModal extends React.Component<Props> {
   render() {
     const { isOpen } = this.props;
 
-    const styles = modalStyles();
+    const styles = modalStyles(480);
     const redirectPath = `${window.location.href}`;
     const signinType = 'signin';
 

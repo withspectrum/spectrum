@@ -37,7 +37,7 @@ const getCommunitySettingsOptions = {
 };
 
 export const getCommunitySettingsByMatchQuery = gql`
-  query getCommunitySettingsByMatch($slug: String) {
+  query getCommunitySettingsByMatch($slug: LowercaseString) {
     community(slug: $slug) {
       ...communityInfo
       ...communityMetaData
@@ -52,7 +52,7 @@ export const getCommunitySettingsByMatchQuery = gql`
 const getCommunitySettingsByMatchOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: communitySlug.toLowerCase(),
+      slug: communitySlug,
     },
     fetchPolicy: 'cache-and-network',
   }),

@@ -198,3 +198,13 @@ export const turnOffAllThreadNotifications = (
     })
     .run();
 };
+
+export const disableAllThreadNotificationsForUser = (userId: string) => {
+  return db
+    .table('usersThreads')
+    .getAll(userId, { index: 'userId' })
+    .update({
+      receiveNotifications: false,
+    })
+    .run();
+};

@@ -22,25 +22,12 @@ module.exports = async () => {
 
   debug(`migrations complete, inserting data into "testing"`);
   await Promise.all(
-    tables.map(table => {
-      debug(`inserting test data into ${table}`);
-      // Soft durability for all tables by default because that's faster, we don't
-      // actually care about writing stuff to disk while testing
-      return (
-        mockDb
-          .table(table)
-          .config()
-          .update({ durability: 'soft' })
-          .run()
-          // Then insert the data
-          .then(() =>
-            mockDb
-              .table(table)
-              .insert(data[table], { conflict: 'replace' })
-              .run()
-          )
-      );
-    })
+    tables.map(table =>
+      mockDb
+        .table(table)
+        .insert(data[table], { conflict: 'replace' })
+        .run()
+    )
   );
 
   debug(`setup complete`);

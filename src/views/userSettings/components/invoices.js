@@ -4,14 +4,11 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getUserInvoices from 'shared/graphql/queries/user/getCurrentUserInvoices';
 import type { GetCurrentUserInvoicesType } from 'shared/graphql/queries/user/getCurrentUserInvoices';
-import { displayLoadingCard } from '../../../components/loading';
-import { InvoiceListItem } from '../../../components/listItems';
-import { sortByDate } from '../../../helpers/utils';
-import {
-  StyledCard,
-  LargeListHeading,
-  ListContainer,
-} from '../../../components/listItems/style';
+import { displayLoadingCard } from 'src/components/loading';
+import { InvoiceListItem } from 'src/components/listItems';
+import { sortByDate } from 'src/helpers/utils';
+import { ListContainer } from 'src/components/listItems/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 
 type Props = {
   data: {
@@ -32,8 +29,8 @@ class InvoicesPure extends React.Component<Props> {
     const sortedInvoices = sortByDate(invoices.slice(), 'paidAt', 'desc');
 
     return (
-      <StyledCard>
-        <LargeListHeading>Payment History</LargeListHeading>
+      <SectionCard>
+        <SectionTitle>Payment History</SectionTitle>
 
         <ListContainer style={{ marginTop: '16px' }}>
           {sortedInvoices &&
@@ -41,7 +38,7 @@ class InvoicesPure extends React.Component<Props> {
               return <InvoiceListItem invoice={invoice} key={invoice.id} />;
             })}
         </ListContainer>
-      </StyledCard>
+      </SectionCard>
     );
   }
 }

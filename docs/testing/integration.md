@@ -2,12 +2,14 @@
 
 # Integration tests
 
-We use [Cypress](https://cypress.io) to run our integration tests, which gives you a nice GUI that you can use for your test runs. To run integration tests you have to have both api and the client running. You also need API to be connected to the test database, which you do by setting `TEST_DB`:
+We use [Cypress](https://cypress.io) to run our integration tests, which gives you a nice GUI that you can use for your test runs. To run integration tests you have to have the api running in production mode and connected to the test database and the client running.
 
 ```sh
-# In one tab
-TEST_DB=true yarn run dev:api
-# In another tab
+# First, build the API
+yarn run build:api
+# Then, in one tab start the API in test mode
+yarn run start:api:test
+# In another tab start the web client
 yarn run dev:web
 ```
 

@@ -232,9 +232,10 @@ class ThreadContainer extends React.Component<Props, State> {
     const { channelPermissions } = thread.channel;
     const { communityPermissions } = thread.community;
 
-    const canSendMessages =
-      !channelPermissions.isBlocked && !communityPermissions.isBlocked;
-    if (!canSendMessages) return null;
+    const isBlockedInChannelOrCommunity =
+      channelPermissions.isBlocked || communityPermissions.isBlocked;
+
+    if (isBlockedInChannelOrCommunity) return null;
 
     const LS_KEY = 'last-chat-input-content';
     let storedContent;
@@ -268,19 +269,21 @@ class ThreadContainer extends React.Component<Props, State> {
       return chatInputComponent;
     }
 
-    if (currentUser) {
-      if (storedContent) {
-        return chatInputComponent;
-      }
-
-      if (channelPermissions.isMember) {
-        return chatInputComponent;
-      }
-
-      return (
-        <JoinChannel channel={thread.channel} community={thread.community} />
-      );
+    if (currentUser && !currentUser.id) {
+      return chatInputComponent;
     }
+
+    if (storedContent) {
+      return chatInputComponent;
+    }
+
+    if (channelPermissions.isMember) {
+      return chatInputComponent;
+    }
+
+    return (
+      <JoinChannel channel={thread.channel} community={thread.community} />
+    );
   };
 
   render() {
@@ -358,11 +361,11 @@ class ThreadContainer extends React.Component<Props, State> {
         return (
           <ThreadViewContainer
             data-cy="thread-view"
-            threadViewContext={threadViewContext}
             constrain={
               threadViewContext === 'slider' ||
               threadViewContext === 'fullscreen'
             }
+            threadViewContext={threadViewContext}
           >
             {shouldRenderThreadSidebar && (
               <Sidebar
@@ -443,10 +446,10 @@ class ThreadContainer extends React.Component<Props, State> {
       return (
         <ThreadViewContainer
           data-cy="thread-view"
-          threadViewContext={threadViewContext}
           constrain={
             threadViewContext === 'slider' || threadViewContext === 'fullscreen'
           }
+          threadViewContext={threadViewContext}
         >
           {shouldRenderThreadSidebar && (
             <Sidebar

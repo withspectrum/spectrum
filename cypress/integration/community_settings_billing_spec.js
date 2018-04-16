@@ -13,6 +13,10 @@ const channels = data.channels.filter(
   ({ communityId }) => community.id === communityId
 );
 
+const verify = () => {
+  cy.visit(`http://localhost:3001/api/email/validate/test-payments/verify`);
+};
+
 describe('Community settings billing tab', () => {
   beforeEach(() => {
     cy.auth(ownerId);
@@ -153,12 +157,14 @@ describe('Community settings billing tab', () => {
 
   describe('should force verification of administration email', () => {
     it('should verify email address', () => {
-      cy.visit(`http://localhost:3001/api/email/validate/test-payments/verify`);
+      verify();
     });
   });
 
   describe('should be able to view billing settings with save administrator email', () => {
     it('should load community billing settings', () => {
+      verify();
+
       cy.visit(`/${community.slug}/settings`);
       cy
         .get(`[href="/${community.slug}/settings/billing"]`)
