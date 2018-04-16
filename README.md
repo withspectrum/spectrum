@@ -40,7 +40,7 @@ Spectrum has been under full-time development since March, 2017. See [the roadma
   - [Running the app locally](#running-the-app-locally)
   - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
 - [Technical](docs/)
-  - [Testing](docs/testing.md)
+  - [Testing](docs/testing/intro.md)
   - [Background Jobs](docs/backend/background-jobs.md)
   - [Deployment](docs/deployments.md)
   - [API](docs/backend/api/)
