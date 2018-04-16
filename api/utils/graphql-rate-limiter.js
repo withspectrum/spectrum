@@ -37,11 +37,16 @@ export default (options?: {}) => (context: ValidationContext) => {
         const type = fields[field.name.value];
         if (!type) return;
 
-        const rateLimitingDirective = type.astNode.directives.find(
+        const directive = type.astNode.directives.find(
           ({ name }) => name.value === 'rateLimit'
         );
-        if (!rateLimitingDirective) return;
-        console.log(rateLimitingDirective);
+        if (!directive) return;
+        const { limit, window } = directive.arguments.reduce((obj, arg) => {
+          if (arg.name.value === 'limit') obj.limit = arg.value.value;
+          if (arg.name.value === 'window') obj.window = arg.value.value;
+          return obj;
+        }, {});
+        if (!limit || !window) return;
       },
     },
   };
