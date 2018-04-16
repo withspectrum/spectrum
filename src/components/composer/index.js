@@ -13,7 +13,7 @@ import { track } from '../../helpers/events';
 import { closeComposer } from '../../actions/composer';
 import { changeActiveThread } from '../../actions/dashboardFeed';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor from '../draftjs-editor';
+import Editor from '../rich-text-editor';
 import {
   toPlainText,
   fromPlainText,

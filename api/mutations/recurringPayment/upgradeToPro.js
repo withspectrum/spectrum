@@ -97,7 +97,6 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       );
 
       const subscription = await createStripeSubscription(customer.id, plan, 1);
-
       return await updateRecurringPayment({
         id: recurringPaymentToEvaluate.id,
         stripeData: {
@@ -115,7 +114,7 @@ export default (_: any, args: UpgradeToProInput, { user }: GraphQLContext) => {
       // return the user record to update the cilent side cache for isPro
       .then(() => getUserById(currentUser.id))
       .catch(err => {
-        console.log('Error upgrading to Pro: ', err.message);
+        console.error('Error upgrading to Pro: ', err.message);
         return new UserError(
           "We weren't able to upgrade you to Pro: " + err.message
         );

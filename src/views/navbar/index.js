@@ -63,14 +63,13 @@ class Navbar extends React.Component<Props, State> {
     // Had no user, now have user or user changed
     if (nextProps.currentUser !== currProps.currentUser) return true;
 
-    // if the badge counts change
-    const thisBadgeSum =
-      currProps.notificationCounts.notifications +
-      currProps.notificationCounts.directMessageNotifications;
-    const prevBadgeSum =
-      nextProps.notificationCounts.notifications +
+    const newDMNotifications =
+      currProps.notificationCounts.directMessageNotifications !==
       nextProps.notificationCounts.directMessageNotifications;
-    if (thisBadgeSum !== prevBadgeSum) return true;
+    const newNotifications =
+      currProps.notificationCounts.notifications !==
+      nextProps.notificationCounts.notifications;
+    if (newDMNotifications || newNotifications) return true;
 
     // if the user is mobile and is viewing a thread or DM thread, re-render
     // the navbar when they exit the thread
@@ -114,6 +113,7 @@ class Navbar extends React.Component<Props, State> {
       viewing === '/support' ||
       viewing === '/terms' ||
       viewing === '/terms.html' ||
+      viewing === '/faq' ||
       viewing === '/features';
 
     // Bail out if the splash page is showing

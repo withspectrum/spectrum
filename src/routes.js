@@ -217,6 +217,7 @@ class Routes extends React.Component<{}> {
                 <Route path="/pricing" component={Pages} />
                 <Route path="/support" component={Pages} />
                 <Route path="/features" component={Pages} />
+                <Route path="/faq" component={Pages} />
 
                 {/* App Pages */}
                 <Route path="/new/community" component={NewCommunityFallback} />
