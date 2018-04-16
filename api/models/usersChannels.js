@@ -439,6 +439,19 @@ const toggleUserChannelNotifications = (
     .run();
 };
 
+const removeUsersChannelMemberships = (userId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .update({
+      isOwner: false,
+      isModerator: false,
+      isMember: false,
+      receiveNotifications: false,
+    })
+    .run();
+};
+
 /*
 ===========================================================
 
@@ -609,6 +622,7 @@ module.exports = {
   removeModeratorInChannel,
   createMemberInDefaultChannels,
   toggleUserChannelNotifications,
+  removeUsersChannelMemberships,
   // get
   getMembersInChannel,
   getPendingUsersInChannel,

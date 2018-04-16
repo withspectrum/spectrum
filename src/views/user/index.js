@@ -290,7 +290,10 @@ class UserView extends React.Component<Props, State> {
             backRoute={'/'}
             noComposer
           />
-          <ViewError heading={'We couldn’t find anyone with this username.'}>
+          <ViewError
+            dataCy="user-not-found"
+            heading={'We couldn’t find anyone with this username.'}
+          >
             <ButtonRow>
               <Link to={'/'}>
                 <Button large>Take me home</Button>
