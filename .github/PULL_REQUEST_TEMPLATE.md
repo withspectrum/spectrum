@@ -20,3 +20,8 @@ YES
 **Release notes for users (delete if codebase-only change)**
 -
 
+<!--
+
+If your pull request introduces changes to the user interface on Spectrum, please share before and after screenshots of the changes (gifs or videos are encouraged for interaction changes). Please include screenshots of desktop and mobile viewports to ensure that all responsive cases are reviewed.
+
+-->
