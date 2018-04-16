@@ -4,7 +4,7 @@
 - [ ] Ready for review
 - [ ] Needs testing
 
-**Deploy after merge:**
+**Deploy after merge (delete what needn't be deployed)**
 - api
 - hyperion (frontend)
 - athena
@@ -14,10 +14,10 @@
 - chronos
 - mobile
 
-**Run database migrations?**
+**Run database migrations (delete if no migration was added)**
 YES
 
-**Release notes for users:**
+**Release notes for users (delete if codebase-only change)**
 -
 
 <!--
