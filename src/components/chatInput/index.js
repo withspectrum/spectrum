@@ -216,7 +216,7 @@ class ChatInput extends React.Component<Props, State> {
         messageBody: !isAndroid()
           ? JSON.stringify(toJSON(state))
           : toPlainText(state),
-        messageType: 'draftjs',
+        messageType: !isAndroid() ? 'draftjs' : 'text',
       });
       clear();
       return 'handled';
