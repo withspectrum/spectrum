@@ -15,7 +15,9 @@ type Props = {
 };
 
 class Login extends React.Component<Props> {
-  authenticate = (provider: 'twitter' | 'facebook' | 'google') => async () => {
+  authenticate = (
+    provider: 'twitter' | 'facebook' | 'google' | 'github'
+  ) => async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
     const result = await AuthSession.startAsync({
       authUrl: `${API_URL}/auth/${provider}?r=${redirectUrl}&authType=token`,
@@ -47,6 +49,10 @@ class Login extends React.Component<Props> {
         <Button
           title="Login/Signup with Facebook"
           onPress={this.authenticate('facebook')}
+        />
+        <Button
+          title="Login/Signup with Github"
+          onPress={this.authenticate('github')}
         />
       </View>
     );
