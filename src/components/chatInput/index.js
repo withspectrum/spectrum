@@ -583,12 +583,10 @@ class ChatInput extends React.Component<Props, State> {
           </Form>
         </ChatInputWrapper>
         <MarkdownHint showHint={markdownHint} data-cy="markdownHint">
-          <div>
-            <b>**bold**</b>
-            <i>*italics*</i>
-            <Preformated>`code`</Preformated>
-            <Preformated>```preformatted```</Preformated>
-          </div>
+          <b>**bold**</b>
+          <i>*italics*</i>
+          <Preformated>`code`</Preformated>
+          <Preformated>```preformatted```</Preformated>
         </MarkdownHint>
       </React.Fragment>
     );

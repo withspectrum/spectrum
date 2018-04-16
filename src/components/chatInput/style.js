@@ -17,7 +17,7 @@ export const ChatInputWrapper = styled(FlexRow)`
   position: relative;
   width: 100%;
   margin: 0;
-  padding: 20px 8px 8px;
+  padding: 16px 16px 0px;
   background-color: ${props => props.theme.bg.default};
   border-top: 1px solid ${({ theme }) => theme.bg.border};
   box-shadow: -1px 0 0 ${props => props.theme.bg.border},
@@ -27,6 +27,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
+    padding: 8px;
   }
 
   a {
@@ -250,10 +251,11 @@ export const Preformated = styled.code`
 export const MarkdownHint = styled.div`
   display: flex;
   justify-content: flex-end;
-  height: 20px;
-  margin-right: 18px;
+  margin-right: 12px;
   font-size: 11px;
-  color: #717274;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
+  padding: 6px 0;
   opacity: ${({ showHint }) => (showHint ? 1 : 0)};
   transition: opacity 200ms ease-in-out;
   b {
@@ -263,5 +265,9 @@ export const MarkdownHint = styled.div`
   b,
   code {
     margin-right: 3px;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
