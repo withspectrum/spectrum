@@ -34,9 +34,11 @@ describe('chat input', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').should('be.visible');
       cy.get('[data-cy="chat-input-media-uploader"]').should('not.be.visible');
+      cy.get('[data-cy="markdownHint"]').should('not.be.visible');
 
       const newMessage = 'A new message!';
       cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="markdownHint"]').should('be.visible');
       // Wait for the messages to be loaded before sending new message
       cy.get('[data-cy="message-group"]').should('be.visible');
       cy.get('[data-cy="chat-input-send-button"]').click();
@@ -80,6 +82,13 @@ describe('chat input', () => {
       // Clear the chat input and make sure the message was sent by matching the text
       cy.get('[contenteditable="true"]').type('');
       cy.contains(newMessage);
+    });
+
+    it('should shows a cheat sheet of supported markdown features when user type a message', () => {
+      const newMessage = 'A new message!';
+      cy.get('[data-cy="chat-input-media-uploader"]').should('not.be.visible');
+      cy.get('[contenteditable="true"]').type(newMessage);
+      cy.get('[data-cy="markdownHint"]').should('be.visible');
     });
   });
 
