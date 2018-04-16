@@ -83,13 +83,6 @@ describe('chat input', () => {
       cy.get('[contenteditable="true"]').type('');
       cy.contains(newMessage);
     });
-
-    it('should shows a cheat sheet of supported markdown features when user type a message', () => {
-      const newMessage = 'A new message!';
-      cy.get('[data-cy="chat-input-media-uploader"]').should('not.be.visible');
-      cy.get('[contenteditable="true"]').type(newMessage);
-      cy.get('[data-cy="markdownHint"]').should('be.visible');
-    });
   });
 
   // NOTE(@mxstbr): This fails in CI, but not locally for some reason
