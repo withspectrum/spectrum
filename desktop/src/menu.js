@@ -1,4 +1,4 @@
-const electron = require('electron');
+const { app, dialog, Menu, shell } = require('electron');
 
 const CONFIG = require('./config');
 
@@ -6,15 +6,16 @@ const CONFIG = require('./config');
  * Applications menu
  **/
 
-const { app, Menu, shell } = electron;
-const appVersion = app.getVersion();
-const name = 'Spectrum';
-
 const template = [
   {
-    label: name,
+    label: CONFIG.APP_NAME,
     submenu: [
-      { label: `${CONFIG.APP_NAME} v ${CONFIG.APP_VERSION}` },
+      {
+        label: `About ${CONFIG.APP_NAME}`,
+        click() {
+          showAbout();
+        },
+      },
       { type: 'separator' },
       {
         label: 'License',
@@ -107,6 +108,16 @@ const template = [
     ],
   },
 ];
+
+function showAbout() {
+  dialog.showMessageBox({
+    title: `About ${CONFIG.APP_NAME}`,
+    message: `${CONFIG.APP_NAME} ${CONFIG.APP_VERSION}`,
+    detail: `The community platform for the future.`,
+    buttons: [],
+    icon: CONFIG.ICON,
+  });
+}
 
 function createMenu() {
   const menu = Menu.buildFromTemplate(template);

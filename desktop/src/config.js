@@ -1,4 +1,6 @@
 const { app } = require('electron');
+const { resolve } = require('path');
+
 /**
  * Applications Configuration
  **/
@@ -17,4 +19,6 @@ module.exports = {
   WINDOW_MIN_HEIGHT: 768,
   WINDOW_MIN_WIDTH: 425,
   WINDOW_BG_COLOR: '#FFFFFF',
+
+  ICON: resolve(__dirname, '../resources/icons/png/icon.png'),
 };
