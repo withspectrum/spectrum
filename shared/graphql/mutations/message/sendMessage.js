@@ -44,7 +44,7 @@ const sendMessageOptions = {
             messageType: message.messageType,
             author: {
               user: {
-                ...ownProps.currentUser,
+                ...(ownProps.currentUser || message.author),
                 __typename: 'User',
               },
               isMember: true,
