@@ -9,7 +9,10 @@ import type {
   Schema,
 } from 'graphql';
 
-const getFields = (schema: Schema, operation: OperationDefinitionNode) => {
+const getFieldsByType = (
+  schema: Schema,
+  operation: OperationDefinitionNode
+) => {
   switch (operation.operation) {
     case 'query': {
       return schema.getQueryType().getFields();
@@ -23,30 +26,44 @@ const getFields = (schema: Schema, operation: OperationDefinitionNode) => {
   }
 };
 
+const getRateLimitedFields = (
+  fields: any,
+  operation: OperationDefinitionNode
+) => {
+  return operation.selectionSet.selections
+    .filter(node => {
+      if (node.kind !== 'Field') return false;
+      const type = fields[node.name.value];
+      if (
+        !type ||
+        !type.astNode.directives.find(({ name }) => name.value === 'rateLimit')
+      )
+        return false;
+      return true;
+    })
+    .map(field => fields[field.name.value]);
+};
+
 export default (options?: {}) => (context: ValidationContext) => {
   return {
     OperationDefinition: {
       enter: (operation: OperationDefinitionNode) => {
         const schema = context.getSchema();
-        const fields = getFields(schema, operation);
-        const field = operation.selectionSet.selections.find(
-          ({ kind }) => kind === 'Field'
+        const fields = getFieldsByType(schema, operation);
+        const rateLimitedFields = getRateLimitedFields(fields, operation).map(
+          field => {
+            const directive = field.astNode.directives.find(
+              ({ name }) => name.value === 'rateLimit'
+            );
+            const { limit, window } = directive.arguments.reduce((obj, arg) => {
+              if (arg.name.value === 'limit') obj.limit = arg.value.value;
+              if (arg.name.value === 'window') obj.window = arg.value.value;
+              return obj;
+            }, {});
+            return { limit, window, field };
+          }
         );
-        if (!fields || !field) return;
-
-        const type = fields[field.name.value];
-        if (!type) return;
-
-        const directive = type.astNode.directives.find(
-          ({ name }) => name.value === 'rateLimit'
-        );
-        if (!directive) return;
-        const { limit, window } = directive.arguments.reduce((obj, arg) => {
-          if (arg.name.value === 'limit') obj.limit = arg.value.value;
-          if (arg.name.value === 'window') obj.window = arg.value.value;
-          return obj;
-        }, {});
-        if (!limit || !window) return;
+        console.log(rateLimitedFields);
       },
     },
   };
